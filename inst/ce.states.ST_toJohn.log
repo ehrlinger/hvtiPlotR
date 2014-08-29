@@ -1,0 +1,996 @@
+1                                                          The SAS System                            16:09 Thursday, August 28, 2014
+
+NOTE: Copyright (c) 1999-2001 by SAS Institute Inc., Cary, NC, USA. 
+NOTE: SAS (r) Proprietary Software Release 8.2 (TS2M0)
+      Licensed to CLEVELAND CLINIC FOUNDATION, Site 0007023003.
+NOTE: This session is executing on the SunOS 5.10 platform.
+
+
+
+
+This message is contained in the SAS news file, and is presented upon
+initialization.  Edit the files "news" in the "misc/base" directory to
+display site-specific news and information in the program log.
+The command line option "-nonews" will prevent this display.
+
+
+
+NOTE: SAS initialization used:
+      real time           0.05 seconds
+      cpu time            0.01 seconds
+      
+1          /*
+2          // JOB ce.states.ST_toJohn.sas
+3          sas8.2 ce.states.ST_toJohn.sas
+4          //cp ce.states.ST_toJohn.l*\
+5          //   /studies/cardiac/valves/aortic/replacement/partner_publication_office/partner1b/mortality_5y/graphs/.
+6          //spool cont printer 'lptxt -l110 -s6 -f LetterGothic-Bold'
+7          spool cont to email
+8          splfile ce.states.ST_toJohn.l*
+9          // FILE ce.states.ST_toJohn.sas
+10         */
+11         *______________________________________________________________________________;
+12         *                                                                              ;
+13         * /graphs/ce.states.ST_toJohn.sas
+14         *______________________________________________________________________________;
+15         *                                                                              ;
+16           %let STUDY=/studies/cardiac/valves/aortic/replacement/partner_publication_office/partner1b/mortality_5y;
+17         *______________________________________________________________________________;
+18         *                                                                              ;
+19         * Partner 1B: TAVR vs Standard Therapy (5 Year Events Data)
+20         * Multi-Center n=358
+21         *
+22         * Analysis of 3 states: alive without stroke, death before stroke,
+23         * and stroke
+24         *
+25         * Plot of competing events
+26         *______________________________________________________________________________;
+27         *                                                                              ;
+28           options pagesize=107 linesize=132 nofmterr;
+29           libname library "&STUDY/datasets";
+NOTE: Libref LIBRARY was successfully assigned as follows: 
+      Engine:        V8 
+      Physical Name: /studies/cardiac/valves/aortic/replacement/partner_publication_office/partner1b/mortality_5y/datasets
+30           libname est     "&STUDY/estimates";
+NOTE: Libref EST was successfully assigned as follows: 
+      Engine:        V8 
+      Physical Name: /studies/cardiac/valves/aortic/replacement/partner_publication_office/partner1b/mortality_5y/estimates
+31           libname graphs  "&STUDY/graphs";
+NOTE: Libref GRAPHS was successfully assigned as follows: 
+      Engine:        V8 
+      Physical Name: /studies/cardiac/valves/aortic/replacement/partner_publication_office/partner1b/mortality_5y/graphs
+32           data built; set library.built;
+33             if TAVR = 0;
+34           run;
+
+NOTE: Format $ARM was not found or could not be loaded.
+NOTE: Format CENSOR was not found or could not be loaded.
+NOTE: Format CENSOR was not found or could not be loaded.
+NOTE: Format CENSOR was not found or could not be loaded.
+NOTE: There were 358 observations read from the data set LIBRARY.BUILT.
+NOTE: The data set WORK.BUILT has 179 observations and 1203 variables.
+NOTE: DATA statement used:
+      real time           0.15 seconds
+      cpu time            0.12 seconds
+      
+
+35           title1 "Partner 1B: TAVR vs Standard Therapy (5 Year Events Data)";
+36           title2 "Multi-Center n=358";
+37           title3 "Competing Risks: Death Before Stroke and Stroke";
+38           title4 "States:  Alive, Dead before Stroke, and Stroke";
+39         *******************************************************************************;
+40         * Data transformations                                                         ;
+41         /*  filename vars "&STUDY/datasets/vars.sas"; %inc vars; %vars;  */
+42         *______________________________________________________________________________;
+43         *                                                                              ;
+44         *         M U L T I P L E   D E C R E M E N T   E S T I M A T E S              ;
+45         *                                                                              ;
+46         *             F R O M   L I F E   T A B L E   A N A L Y S I S                  ;
+47         *______________________________________________________________________________;
+48         *                                                                              ;
+49         * Bring in multiple decrement macro                                            ;
+50           filename  greenwod  "!MACROS/markov.sas";  %inc  greenwod;
+375        *______________________________________________________________________________;
+376        *                                                                              ;
+377        *               D E S C R I P T I O N   O F   P A R A M E T E R S              ;
+378        *______________________________________________________________________________;
+379        *                                                                              ;
+380        *  Input data set:  SAS dataset or view  Unchanged by the algorithm            ;
+381        *                                                                              ;
+382        *  Output data set:  New SAS data set, whose name is a macro parameter         ;
+383        *                                                                              ;
+384        *  Other interactions:  Creates data sets temp and tempset.  These are not     ;
+385        *      needed at end of execution of the macro.                                ;
+386        *                                                                              ;
+387        *******************************************************************************;
+388        *  Input data set variables used                                               ;
+389        *                                                                              ;
+2                                                          The SAS System                            16:09 Thursday, August 28, 2014
+
+390        *      The variable names are passed as parameters to the macro. The values of ;
+391        *      the variables are as further stated below.                              ;
+392        *      below.                                                                  ;
+393        *                                                                              ;
+394        *  &timevar    The numeric variable containing outcome times.  There will be   ;
+395        *              exactly one outcome for each time.  Multiple outcomes are       ;
+396        *              handled by multiple records, with the same value of the outcome ;
+397        *              time.                                                           ;
+398        *                                                                              ;
+399        *  &eventvar   the numeric variable containing event info.  Values:            ;
+400        *                   1 --- &lastevnt   transitions to a new state               ;
+401        *                   others            censored, for this use of the macro      ;
+402        *              THE CODE ASSUMES THAT EVENTVAR CONTAINS INTEGERS ONLY, AND DOES ;
+403        *              NOT CHECK FOR THIS CONDITION.  IF THE CONDITION IS VIOLATED,    ;
+404        *              THE RESULTS ARE UNDEFINED.                                      ;
+405        *                                                                              ;
+406        *  &lastevnt   The highest event value that will be analyzed.  This must be an ;
+407        *              integer >= 1. The SAS statements in the code will in principle  ;
+408        *              allow values of &lastevnt <= 99, but the number of variables    ;
+409        *              will become so large as to cause poor execution long before     ;
+410        *              that time.  (Interpretation of large values of &lastevnt is     ;
+411        *              questionable, so this limitation is one of form, rather than    ;
+412        *              substance.)                                                     ;
+413        *                                                                              ;
+414        *              In a typical use of the macro, event 1 will be an event of      ;
+415        *              primary interest, such as structural valve failure, event 2     ;
+416        *              will be death, and other values will represent different forms  ;
+417        *              of censoring.  Using the macro with &lastevnt = 1 will produce  ;
+418        *              the ordinary Kaplan-Meier analysis with death being just one    ;
+419        *              form of censoring.  Using the macro with &lastevnt = 2 will     ;
+420        *              produce the actual incidence of the event of interest, as well  ;
+421        *              as the actual incidence of death.                               ;
+422        *                                                                              ;
+423        *******************************************************************************;
+424        *  Output  Variable names are fixed in the macro, and some labels are          ;
+425        *              supplied.                                                       ;
+426        *                                                                              ;
+427        *  &timevar    The same name as in the input data set. There is one output     ;
+428        *              record for each distinct value in the input data set, as long   ;
+429        *              as there is at least one event occurring at that time.  Other   ;
+430        *              times are ignored.                                              ;
+431        *                                                                              ;
+432        *  atrisk      The number of patients at risk at the time                      ;
+433        *                                                                              ;
+434        *  event1      event&lastevnt                                                  ;
+435        *              The number of events of that type at that time.                 ;
+436        *                                                                              ;
+437        *  censored    The number of censored observations.                            ;
+438        *                                                                              ;
+439        *  incid0      The estimated probability of remaining in state 0.  This is the ;
+440        *              ordinary Kaplan-Meier estimate of freedom from all events.      ;
+441        *                                                                              ;
+442        *  incid1      incid&lastevnt                                                  ;
+443        *              The incidence of that event, up to and including the time.      ;
+444        *              Freedom from event is 1 - incidence.                            ;
+445        *                                                                              ;
+446        *  error0      error&lastevnt                                                  ;
+447        *              The standard errors of each incidence estimate.  These are the  ;
+448        *              square roots of the corresponding entries of the variance       ;
+449        *              matrix.  The user may capture the entire variance matrix for    ;
+450        *              other use.                                                      ;
+451        *______________________________________________________________________________;
+452        *                                                                              ;
+453          data built; set built;
+454          title6 "Greenwood Multiple Decrements";
+455          event=0;
+456          if st_dead then event=1;
+457          if st_strk then event=2;
+458          %greenwod(inset=built, outset=green, timevar=iv_state, eventvar=event,
+459                    lastevnt=2);
+
+NOTE: Format $ARM was not found or could not be loaded.
+NOTE: Format CENSOR was not found or could not be loaded.
+NOTE: Format CENSOR was not found or could not be loaded.
+NOTE: Format CENSOR was not found or could not be loaded.
+NOTE: There were 179 observations read from the data set WORK.BUILT.
+NOTE: The data set WORK.BUILT has 179 observations and 1204 variables.
+NOTE: DATA statement used:
+      real time           0.06 seconds
+      cpu time            0.05 seconds
+      
+
+
+NOTE: Format $ARM was not found or could not be loaded.
+NOTE: Format CENSOR was not found or could not be loaded.
+NOTE: Format CENSOR was not found or could not be loaded.
+NOTE: Format CENSOR was not found or could not be loaded.
+NOTE: There were 179 observations read from the data set WORK.BUILT.
+NOTE: The data set WORK.TEMPSET has 179 observations and 2 variables.
+NOTE: DATA statement used:
+      real time           0.03 seconds
+      cpu time            0.03 seconds
+      
+
+
+NOTE: There were 179 observations read from the data set WORK.TEMPSET.
+NOTE: The data set WORK.TEMPSET has 181 observations and 2 variables.
+NOTE: DATA statement used:
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+
+NOTE: There were 181 observations read from the data set WORK.TEMPSET.
+NOTE: The data set WORK.TEMPSET has 181 observations and 2 variables.
+3                                                          The SAS System                            16:09 Thursday, August 28, 2014
+
+NOTE: PROCEDURE SORT used:
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+
+NOTE: There were 181 observations read from the data set WORK.TEMPSET.
+NOTE: The data set WORK.TEMP has 166 observations and 4 variables.
+NOTE: PROCEDURE FREQ used:
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+
+NOTE: There were 166 observations read from the data set WORK.TEMP.
+NOTE: The data set WORK.GREEN has 161 observations and 6 variables.
+NOTE: PROCEDURE TRANSPOSE used:
+      real time           0.00 seconds
+      cpu time            0.02 seconds
+      
+
+
+NOTE: There were 161 observations read from the data set WORK.GREEN.
+NOTE: The data set WORK.GREEN has 160 observations and 6 variables.
+NOTE: DATA statement used:
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+
+NOTE: There were 160 observations read from the data set WORK.GREEN.
+NOTE: The data set WORK.GREEN has 160 observations and 7 variables.
+NOTE: DATA statement used:
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+
+NOTE: There were 160 observations read from the data set WORK.GREEN.
+NOTE: The data set WORK.GREEN has 160 observations and 61 variables.
+NOTE: DATA statement used:
+      real time           0.02 seconds
+      cpu time            0.02 seconds
+      
+
+
+NOTE: There were 160 observations read from the data set WORK.GREEN.
+NOTE: The data set WORK.GREEN has 160 observations and 11 variables.
+NOTE: DATA statement used:
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+460          data green; set green(where=(event1>0 or event2>0));
+461          checksum=pk0_0+pk0_1+pk0_2;
+462          sginit=pk0_0;
+463          sgdead=pk0_1;
+464          sgstrk=pk0_2;
+465        *******************************************************************************;
+466        * Confidence limits from SEs                                                   ;
+467          stlinit=1; stuinit=1;
+468          if sginit<1 then do;
+469            sinit=error0/(sginit*(1-sginit));
+470            stuinit=1/(1 + ((1-sginit)/sginit)*exp(-sinit));
+471            stlinit=1/(1 + ((1-sginit)/sginit)*exp(sinit));
+472          end;
+473        
+474          stldead=0; studead=0;
+475          if sgdead>0 then do;
+476            sdead=error1/(sgdead*(1-sgdead));
+477            studead=1/(1+((1-sgdead)/sgdead)*exp(-sdead));
+478            stldead=1/(1+((1-sgdead)/sgdead)*exp(sdead));
+479          end;
+480        
+481          stlstrk=0; stustrk=0;
+482          if sgstrk>0 then do;
+483            sstrk=error2/(sgstrk*(1-sgstrk));
+484            stustrk=1/(1+((1-sgstrk)/sgstrk)*exp(-sstrk));
+485            stlstrk=1/(1+((1-sgstrk)/sgstrk)*exp(sstrk));
+486          end;
+487        *******************************************************************************;
+488        * Print and plot results                                                       ;
+
+NOTE: There were 126 observations read from the data set WORK.GREEN.
+      WHERE (event1>0) or (event2>0);
+NOTE: The data set WORK.GREEN has 126 observations and 24 variables.
+NOTE: DATA statement used:
+      real time           0.01 seconds
+      cpu time            0.00 seconds
+      
+
+489          proc print label data=green;
+490               var iv_state event1 event2 censored atrisk sginit error0 stlinit
+491                   stuinit
+492                   sgdead error1 stldead studead
+493                   sgstrk error2 stlstrk stustrk
+494                   checksum;
+
+NOTE: There were 126 observations read from the data set WORK.GREEN.
+NOTE: The PROCEDURE PRINT printed pages 1-3.
+NOTE: PROCEDURE PRINT used:
+      real time           0.01 seconds
+      cpu time            0.00 seconds
+      
+
+4                                                          The SAS System                            16:09 Thursday, August 28, 2014
+
+495          proc plot;
+496               plot sginit*iv_state='A' sgdead*iv_state='D' sgstrk*iv_state='S'
+497                    checksum*iv_state='T'
+498                    /overlay vaxis=0 to 1 by 0.1;
+499          run;
+
+500        *______________________________________________________________________________;
+501        *                                                                              ;
+502        *    P A R A M E T R I C   C O M P E T I N G   R I S K   E S T I M A T E S     ;
+503        *______________________________________________________________________________;
+504        *                                                                              ;
+505        * Generate and output time points                                              ;
+506        * NOTE:  We need plenty of points since we are not using a robust integration  ;
+507        * NOTE:  algorithm.                                                            ;
+508          title6 "Parametric Cumulative Incidence Estimates";
+
+NOTE: There were 126 observations read from the data set WORK.GREEN.
+NOTE: The PROCEDURE PLOT printed page 4.
+NOTE: PROCEDURE PLOT used:
+      real time           0.00 seconds
+      cpu time            0.01 seconds
+      
+
+509          data predict;
+510          max=log(5); min=-15; inc=(max-min)/999.9;
+511          do ln_time=min to max by inc, max; years=exp(ln_time); output; end;
+512          drop min max inc ln_time;
+513        
+
+NOTE: The data set WORK.PREDICT has 1001 observations and 1 variables.
+NOTE: DATA statement used:
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+514          data pred2;
+515          max=5; min=0.01; inc=(max-min)/999.9;
+516          do years=min to max by inc; output; end;
+517        
+
+NOTE: The data set WORK.PRED2 has 1000 observations and 4 variables.
+NOTE: DATA statement used:
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+518          data predict; set predict pred2;
+519          months=years*12;
+520        
+
+NOTE: There were 1001 observations read from the data set WORK.PREDICT.
+NOTE: There were 1000 observations read from the data set WORK.PRED2.
+NOTE: The data set WORK.PREDICT has 2001 observations and 5 variables.
+NOTE: DATA statement used:
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+521          proc sort; by years;
+
+NOTE: There were 2001 observations read from the data set WORK.PREDICT.
+NOTE: The data set WORK.PREDICT has 2001 observations and 5 variables.
+NOTE: PROCEDURE SORT used:
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+522          data predict; set predict;
+523          retain prevtime 0;
+524          if (years-prevtime)=0 then delete; else prevtime=years;
+525        *______________________________________________________________________________;
+526        *                                                                              ;
+527        * Death before stroke                                                 ;
+528        *______________________________________________________________________________;
+529        *                                                                              ;
+530        * Do predictions for death before stroke                               ;
+531          %hazpred(
+532          proc hazpred data=predict inhaz=est.hzstdeadst out=preddead; time years; );
+
+NOTE: There were 2001 observations read from the data set WORK.PREDICT.
+NOTE: The data set WORK.PREDICT has 2001 observations and 6 variables.
+NOTE: DATA statement used:
+      real time           0.01 seconds
+      cpu time            0.02 seconds
+      
+
+"Operating System Detector solaris"
+
+NOTE: The file "/tmp/hzp.J12557.X8.sas" is:
+      File Name=/tmp/hzp.J12557.X8.sas,
+      Owner Name=rajeswj,Group Name=ctsurg,
+      Access Permission=rw-rw-r--
+
+NOTE: 1 record was written to the file "/tmp/hzp.J12557.X8.sas".
+      The minimum record length was 78.
+      The maximum record length was 78.
+NOTE: DATA statement used:
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+NOTE: Libref HZRCALL was successfully assigned as follows: 
+      Engine:        XPORT 
+      Physical Name: /tmp/hzp.J12557.X8.dta
+
+5                                                          The SAS System                            16:09 Thursday, August 28, 2014
+
+NOTE: There were 2001 observations read from the data set WORK.PREDICT.
+NOTE: The data set HZRCALL.HZRCALL has 2001 observations and 6 variables.
+NOTE: DATA statement used:
+      real time           0.00 seconds
+      cpu time            0.01 seconds
+      
+
+NOTE: Libref HZRCALL was successfully assigned as follows: 
+      Engine:        XPORT 
+      Physical Name: /tmp/hzp.J12557.X8.haz
+
+NOTE: There were 17 observations read from the data set EST.HZSTDEADST.
+NOTE: The data set HZRCALL.HZRCALL has 17 observations and 14 variables.
+NOTE: DATA statement used:
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+
+NOTE: The file "/tmp/hzp.J12557.X8.sas" is:
+      File Name=/tmp/hzp.J12557.X8.sas,
+      Owner Name=rajeswj,Group Name=ctsurg,
+      Access Permission=rw-rw-r--,
+      File Size (bytes)=79
+
+NOTE: 4 records were written to the file "/tmp/hzp.J12557.X8.sas".
+      The minimum record length was 9.
+      The maximum record length was 15.
+NOTE: DATA statement used:
+      real time           0.01 seconds
+      cpu time            0.00 seconds
+      
+
+
+NOTE: The infile "/tmp/hzp.J12557.X8.lst" is:
+      File Name=/tmp/hzp.J12557.X8.lst,
+      Owner Name=rajeswj,Group Name=ctsurg,
+      Access Permission=rw-rw-r--,
+      File Size (bytes)=254
+
+
+Note: Procedure HAZPRED (C-Version 4.2.1)
+      The Cleveland Clinic Foundation
+      9500 Euclid Avenue
+      Cleveland, Ohio 44195
+      Phone: (216) 444-6712
+      Email: hazard@bio.ri.ccf.org
+Note: Procedure HAZPRED completed successfully.
+NOTE: 0 lines were written to file PRINT.
+NOTE: 8 records were read from the infile "/tmp/hzp.J12557.X8.lst".
+      The minimum record length was 2.
+      The maximum record length was 48.
+NOTE: DATA statement used:
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+NOTE: Libref HZRCALL was successfully assigned as follows: 
+      Engine:        XPORT 
+      Physical Name: /tmp/hzp.J12557.X8.out
+
+NOTE: There were 2001 observations read from the data set HZRCALL.HZRCALL.
+NOTE: The data set WORK.PREDDEAD has 2001 observations and 18 variables.
+NOTE: DATA statement used:
+      real time           0.01 seconds
+      cpu time            0.00 seconds
+      
+
+533        *******************************************************************************;
+534        * Save the computations we have, and keep only what is necessary, since        ;
+535        * PROC HAZPRED does not want to find variables in the input data set that are  ;
+536        * reserved for itself (it will not write over such variables). Also compute    ;
+537        * variance of the survivorship function.                                       ;
+538          data preddead; set preddead;
+539          sedeath=_surviv; sldeath=_cllsurv; sudeath=_clusurv;
+540          hedeath=_hazard; hldeath=_cllhaz; hudeath=_cluhaz;
+541          zsurv=log((1/_surviv)-1);
+542            cluz=log((1/_clusurv)-1);
+543            vedeath=(cluz-zsurv)**2;
+544          keep months years sedeath sldeath sudeath hedeath hldeath hudeath vedeath;
+545        * proc print;
+546        *______________________________________________________________________________;
+547        *                                                                              ;
+548        * Stroke                                                ;
+549        *______________________________________________________________________________;
+550        *                                                                              ;
+551        * Do predictions for CABG as first reintervention                              ;
+552          %hazpred(
+553          proc hazpred data=predict inhaz=est.hzststrkst out=predstrk; time years; );
+
+NOTE: There were 2001 observations read from the data set WORK.PREDDEAD.
+NOTE: The data set WORK.PREDDEAD has 2001 observations and 9 variables.
+NOTE: DATA statement used:
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+"Operating System Detector solaris"
+
+NOTE: The file "/tmp/hzp.J12557.X16.sas" is:
+      File Name=/tmp/hzp.J12557.X16.sas,
+      Owner Name=rajeswj,Group Name=ctsurg,
+      Access Permission=rw-rw-r--
+
+NOTE: 1 record was written to the file "/tmp/hzp.J12557.X16.sas".
+6                                                          The SAS System                            16:09 Thursday, August 28, 2014
+
+      The minimum record length was 78.
+      The maximum record length was 78.
+NOTE: DATA statement used:
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+NOTE: Libref HZRCALL was successfully assigned as follows: 
+      Engine:        XPORT 
+      Physical Name: /tmp/hzp.J12557.X16.dta
+
+NOTE: There were 2001 observations read from the data set WORK.PREDICT.
+NOTE: The data set HZRCALL.HZRCALL has 2001 observations and 6 variables.
+NOTE: DATA statement used:
+      real time           0.00 seconds
+      cpu time            0.01 seconds
+      
+
+NOTE: Libref HZRCALL was successfully assigned as follows: 
+      Engine:        XPORT 
+      Physical Name: /tmp/hzp.J12557.X16.haz
+
+NOTE: There were 17 observations read from the data set EST.HZSTSTRKST.
+NOTE: The data set HZRCALL.HZRCALL has 17 observations and 14 variables.
+NOTE: DATA statement used:
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+
+NOTE: The file "/tmp/hzp.J12557.X16.sas" is:
+      File Name=/tmp/hzp.J12557.X16.sas,
+      Owner Name=rajeswj,Group Name=ctsurg,
+      Access Permission=rw-rw-r--,
+      File Size (bytes)=79
+
+NOTE: 4 records were written to the file "/tmp/hzp.J12557.X16.sas".
+      The minimum record length was 10.
+      The maximum record length was 15.
+NOTE: DATA statement used:
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+
+NOTE: The infile "/tmp/hzp.J12557.X16.lst" is:
+      File Name=/tmp/hzp.J12557.X16.lst,
+      Owner Name=rajeswj,Group Name=ctsurg,
+      Access Permission=rw-rw-r--,
+      File Size (bytes)=254
+
+
+Note: Procedure HAZPRED (C-Version 4.2.1)
+      The Cleveland Clinic Foundation
+      9500 Euclid Avenue
+      Cleveland, Ohio 44195
+      Phone: (216) 444-6712
+      Email: hazard@bio.ri.ccf.org
+Note: Procedure HAZPRED completed successfully.
+NOTE: 0 lines were written to file PRINT.
+NOTE: 8 records were read from the infile "/tmp/hzp.J12557.X16.lst".
+      The minimum record length was 2.
+      The maximum record length was 48.
+NOTE: DATA statement used:
+      real time           0.00 seconds
+      cpu time            0.01 seconds
+      
+
+NOTE: Libref HZRCALL was successfully assigned as follows: 
+      Engine:        XPORT 
+      Physical Name: /tmp/hzp.J12557.X16.out
+
+NOTE: There were 2001 observations read from the data set HZRCALL.HZRCALL.
+NOTE: The data set WORK.PREDSTRK has 2001 observations and 18 variables.
+NOTE: DATA statement used:
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+554          data predstrk; set predstrk;
+555          sestrk=_surviv; slstrk=_cllsurv; sustrk=_clusurv;
+556          hestrk=_hazard; hlstrk=_cllhaz; hustrk=_cluhaz;
+557          zsurv=log((1/_surviv)-1);
+558            cluz=log((1/_clusurv)-1);
+559            vestrk=(cluz-zsurv)**2;
+560          keep months years sestrk slstrk sustrk hestrk hlstrk hustrk vestrk;
+561        * proc print;
+562        *______________________________________________________________________________;
+563        *                                                                              ;
+564        * Cumulative incidence calculations                                            ;
+565        *______________________________________________________________________________;
+566        *                                                                              ;
+567        * Merge all predictions                                                        ;
+
+NOTE: There were 2001 observations read from the data set WORK.PREDSTRK.
+NOTE: The data set WORK.PREDSTRK has 2001 observations and 9 variables.
+NOTE: DATA statement used:
+      real time           0.00 seconds
+      cpu time            0.01 seconds
+      
+
+568          data all; merge preddead predstrk;
+569          time=years;
+570        * proc print;
+571        *******************************************************************************;
+7                                                          The SAS System                            16:09 Thursday, August 28, 2014
+
+572        * Calculate cumulative incidences                                              ;
+
+NOTE: There were 2001 observations read from the data set WORK.PREDDEAD.
+NOTE: There were 2001 observations read from the data set WORK.PREDSTRK.
+NOTE: The data set WORK.ALL has 2001 observations and 17 variables.
+NOTE: DATA statement used:
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+573          data all; set all;
+574          retain lag_time 0 no1init  100;
+575          retain tx1death 0 no1death   0;
+576          retain tx1strk  0 no1strk    0;
+577        *******************************************************************************;
+578        * Patients alive and without a completed repair (joint survival distribution)  ;
+579          noinit=sedeath*sestrk*100;
+580        *******************************************************************************;
+581        * Transition (TX) from initial state to each terminating state is the product  ;
+582        * of the hazard function by the number of individuals at risk (the same for all;
+583        * these states, since everyone gets there from the initial state).             ;
+584          txdeath=no1init*hedeath;
+585          txstrk =no1init*hestrk;
+586        *******************************************************************************;
+587        * Get increment of time for the integration (DT)                               ;
+588          no1init=noinit;
+589          dt=time-lag_time;
+590          lag_time=time;
+591        *******************************************************************************;
+592        * Cumulative incidence (number) in each state by integration (trapezoid rule)  ;
+593        * This will be the integration of the transition rate.                         ;
+594          nodeath=no1death + dt*(txdeath + tx1death)/2;
+595          nostrk =no1strk  + dt*(txstrk  + tx1strk) /2;
+596        *******************************************************************************;
+597        * Lags for next integration (NO1 and TX1 will then be the previous values)     ;
+598          no1death=nodeath; tx1death=txdeath;
+599          no1strk =nostrk;  tx1strk =txstrk;
+600        *******************************************************************************;
+601        * All cumulative incidences should add to the original number (or 1), and      ;
+602        * should be similar to SEINITL*(1 or original number)                          ;
+603          check=noinit + nodeath + nostrk;
+604        *******************************************************************************;
+605        * Confidence limits for the estimates                                          ;
+606          cldeath=0; cudeath=0;
+607          if nodeath>0 then do;
+608            z=-log((100/nodeath)-1);
+609            sez=sqrt(vedeath);
+610            cluz=z-sez; cllz=z+sez;
+611            cldeath=100/(1 + exp(-cluz));
+612            cudeath=100/(1 + exp(-cllz));
+613          end;
+614        
+615          clstrk=0; custrk=0;
+616          if nostrk>0 then do;
+617            z=-log((100/nostrk)-1);
+618            sez=sqrt(vestrk);
+619            cluz=z-sez; cllz=z+sez;
+620            clstrk=100/(1 + exp(-cluz));
+621            custrk=100/(1 + exp(-cllz));
+622          end;
+623        
+624          clinit=1; cuinit=1;
+625          if noinit<100 then do;
+626            z=log((100/noinit)-1);
+627            sez=sqrt((vedeath+vestrk)/3);
+628            cluz=z+sez; cllz=z-sez;
+629            clinit=100/(1 + exp(cluz));
+630            cuinit=100/(1 + exp(cllz));
+631          end;
+632        *******************************************************************************;
+633        * Print result                                                                 ;
+
+NOTE: There were 2001 observations read from the data set WORK.ALL.
+NOTE: The data set WORK.ALL has 2001 observations and 40 variables.
+NOTE: DATA statement used:
+      real time           0.00 seconds
+      cpu time            0.02 seconds
+      
+
+634          proc print; var time sedeath hedeath txdeath nodeath
+635                               sestrk hestrk txstrk nostrk check;
+
+NOTE: There were 2001 observations read from the data set WORK.ALL.
+NOTE: The PROCEDURE PRINT printed pages 5-25.
+NOTE: PROCEDURE PRINT used:
+      real time           0.02 seconds
+      cpu time            0.01 seconds
+      
+
+636          proc print; var time nodeath cldeath cudeath
+637                               nostrk clstrk custrk
+638                               noinit clinit cuinit;
+639        *******************************************************************************;
+640        * Plot result                                                                  ;
+
+NOTE: There were 2001 observations read from the data set WORK.ALL.
+NOTE: The PROCEDURE PRINT printed pages 26-46.
+NOTE: PROCEDURE PRINT used:
+      real time           0.01 seconds
+      cpu time            0.02 seconds
+      
+
+641          proc plot;
+642               plot noinit*time='A' nodeath*time='D' nostrk*time='S'
+643              /overlay vaxis=0 to 100 by 10 haxis=0 to 5 by 1;
+8                                                          The SAS System                            16:09 Thursday, August 28, 2014
+
+644          run;
+
+645        *______________________________________________________________________________;
+646        *                                                                              ;
+647        *                              P L O T S
+648        *______________________________________________________________________________;
+649        *                                                                              ;
+650        * Scale nonparametric estimates                                                ;
+
+NOTE: There were 2001 observations read from the data set WORK.ALL.
+NOTE: The PROCEDURE PLOT printed page 47.
+NOTE: PROCEDURE PLOT used:
+      real time           0.00 seconds
+      cpu time            0.01 seconds
+      
+
+651         data green; set green;
+652          sginit=sginit*100; stlinit=.; stuinit=.;
+653        
+654          sgdead1=sgdead*100; sgstrk1=sgstrk*100; sgptca1=sgptca*100;
+655          stldead1=.; studead1=.; stlstrk1=.; stustrk1=.; stlptca1=.; stuptca1=.;
+656        
+657        
+658          /* for dead before reop*/
+659           if atrisk in (121, 85, 48, 20, 12, 5)
+660            then do;
+661            stldead1=stldead*100;
+662            studead1=studead*100;
+663            sgdead1=sgdead*100;
+664           end;
+665        
+666         /* for reop cabg*/
+667          if atrisk in (122, 100, 9)
+668            then do;
+669            stlstrk1=stlstrk*100;
+670            stustrk1=stustrk*100;
+671          end;
+672        
+673        
+674          if event1=0 then do; sgdead1=.; end;
+675          if event2=0 then do; sgstrk1=.; end;
+676        
+677          run;
+
+NOTE: Variable sgptca is uninitialized.
+NOTE: Missing values were generated as a result of performing an operation on missing values.
+      Each place is given by: (Number of times) at (Line):(Column).
+      126 at 654:57   
+NOTE: There were 126 observations read from the data set WORK.GREEN.
+NOTE: The data set WORK.GREEN has 126 observations and 34 variables.
+NOTE: DATA statement used:
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+678        
+679          run;
+680        *******************************************************************************;
+681        * Scale parametric estimates                                                   ;
+682          data predstrk; set predstrk;
+683          sestrk=100*sestrk; slstrk=100*slstrk; sustrk=100*sustrk;
+684          hestrk=100*hestrk; hlstrk=100*hlstrk; hustrk=100*hustrk;
+685        
+
+NOTE: There were 2001 observations read from the data set WORK.PREDSTRK.
+NOTE: The data set WORK.PREDSTRK has 2001 observations and 9 variables.
+NOTE: DATA statement used:
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+686          data preddead; set preddead;
+687          sedeath=100*sedeath; sldeath=100*sldeath; sudeath=100*sudeath;
+688          hedeath=100*hedeath; hldeath=100*hldeath; hudeath=100*hudeath;
+689        
+
+NOTE: There were 2001 observations read from the data set WORK.PREDDEAD.
+NOTE: The data set WORK.PREDDEAD has 2001 observations and 9 variables.
+NOTE: DATA statement used:
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+690          data all; set all;
+691          cestrk=100-nostrk;
+692        
+693        
+
+NOTE: There were 2001 observations read from the data set WORK.ALL.
+NOTE: The data set WORK.ALL has 2001 observations and 41 variables.
+NOTE: DATA statement used:
+      real time           0.00 seconds
+      cpu time            0.01 seconds
+      
+
+694        data green_j; set green; keep iv_state sginit stlinit stuinit
+695                                               sgdead1 stldead1 studead1
+696                                               sgstrk1 stlstrk1 stustrk1;
+697        
+698        libname out xport "&STUDY/datasets/npar_cst.xpt";
+NOTE: Libref OUT was successfully assigned as follows: 
+      Engine:        XPORT 
+      Physical Name: 
+      /studies/cardiac/valves/aortic/replacement/partner_publication_office/partner1b/mortality_5y/datasets/npar_cst.xpt
+
+9                                                          The SAS System                            16:09 Thursday, August 28, 2014
+
+NOTE: There were 126 observations read from the data set WORK.GREEN.
+NOTE: The data set WORK.GREEN_J has 126 observations and 10 variables.
+NOTE: DATA statement used:
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+699          data out.npar_cst;
+700                   set green_j;
+701        run;
+
+NOTE: There were 126 observations read from the data set WORK.GREEN_J.
+NOTE: The data set OUT.NPAR_CST has 126 observations and 10 variables.
+NOTE: DATA statement used:
+      real time           0.00 seconds
+      cpu time            0.01 seconds
+      
+
+702        
+703        
+704        data all_j; set all;  keep years   noinit clinit cuinit
+705                                           nodeath cldeath cudeath
+706                                           nostrk clstrk custrk  ;
+707        
+708        libname out xport "&STUDY/datasets/par_cst.xpt";
+NOTE: Libref OUT was successfully assigned as follows: 
+      Engine:        XPORT 
+      Physical Name: 
+      /studies/cardiac/valves/aortic/replacement/partner_publication_office/partner1b/mortality_5y/datasets/par_cst.xpt
+
+NOTE: There were 2001 observations read from the data set WORK.ALL.
+NOTE: The data set WORK.ALL_J has 2001 observations and 10 variables.
+NOTE: DATA statement used:
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+709          data out.par_cst;
+710                   set all;
+711        run;
+
+NOTE: There were 2001 observations read from the data set WORK.ALL.
+NOTE: The data set OUT.PAR_CST has 2001 observations and 41 variables.
+NOTE: DATA statement used:
+      real time           0.01 seconds
+      cpu time            0.01 seconds
+      
+
+712        
+713        *******************************************************************************;
+714        * Bring in PostScript plot macro                                               ;
+715          filename plt "!MACROS/plot.sas"; %inc plt;
+2153         filename gsasfile pipe 'lp';
+2154       *______________________________________________________________________________;
+2155       *                                                                              ;
+2156       *                       P O S T S C R I P   P L O T S
+2157       *______________________________________________________________________________;
+2158       *                                                                              ;
+2159       * Multiple decrement, nonparametric and parametric                             ;
+2160         filename gsasfile "&STUDY/graphs/ce.states.ST_toJohn.both.ps";
+2161         %plot(goptions gsfmode=replace, device=pscolor, gaccess=gsasfile end;
+2162           id l="&STUDY/graphs/ce.states.ST_toJohn.sas percent", end;
+2163           labelx l="Years After Randomization", end;
+2164             axisx order=(0 to 5 by 1), minor=none, end;
+2165           labely l="Percent in Each Category (ST)", end;
+2166             axisy order=(0 to 100 by 10), minor=none, end;
+2167       
+2168       
+2169       /******NON-PARAMETRIC: SYMBOLS AND CONFIDENCE BARS *******/
+2170           tuple set=green, symbol=dot, symbsize=1/2, linepe=0, linecl=0,
+2171             ebarsize=3/4, ebar=1,
+2172             x=iv_state, y=sginit, cll=stlinit, clu=stuinit, color=black, end;
+2173           tuple set=green, symbol=circle, symbsize=1/2, linepe=0, linecl=0,
+2174             ebarsize=3/4, ebar=1,
+2175             x=iv_state, y=sgdead1, cll=stldead1, clu=studead1, color=blue, end;
+2176            tuple set=green, symbol=square, symbsize=1/2, linepe=0, linecl=0,
+2177             ebarsize=3/4, ebar=1,
+2178             x=iv_state, y=sgstrk1, cll=stlstrk1, clu=stustrk1, color=blue, end;
+2179       
+2180       
+2181       /**********PARAMETRIC : SOLID LINES AND CONFIDENCE INTERVALS**********/
+2182           tuple set=all, x=years, y=noinit, cll=clinit, clu=cuinit,
+2183             width=0.5,color=black, end;
+2184       
+2185           tuple set=all, x=years, y=nodeath, cll=cldeath, clu=cudeath,
+2186             width=0.5,color=blue, end;
+2187       
+2188           tuple set=all, x=years, y=nostrk, cll=clstrk, clu=custrk,
+2189             linecl=2, width=0.5,color=blue, end;
+2190         );
+*** ==>  sas version is 8.2
+GOPTIONS reset=all ctitle=BLACK ctext=BLACK cback=WHITE csymbol=BLACK fontres=presentation gunit=in   DEVICE=pscolor  htext= 
+0.22950 rotate=landscape GACCESS=gsasfile GSFMODE=replace ftext=SWISS GEPILOG="" NODASH
+
+NOTE: There were 2127 observations read from the data set WORK._ZZPLZZ_.
+NOTE: There were 72 observations read from the data set WORK._ZZANZZ_.
+NOTE: PROCEDURE GPLOT used:
+      real time           0.15 seconds
+      cpu time            0.14 seconds
+      
+
+2191         run;
+2192       *******************************************************************************;
+2193       
+2194       *______________________________________________________________________________;
+10                                                         The SAS System                            16:09 Thursday, August 28, 2014
+
+2195       *                                                                              ;
+2196       *       C G M   F I L E S   F O R   P O W E R P O I N T   S L I D E S
+2197       *______________________________________________________________________________;
+2198       *                                                                              ;
+2199       * Competing risks, parametric only                                             ;
+2200         filename gsasfile "&STUDY/graphs/ce.states.ST_toJohn.cgm";
+2201         %plot(goptions gsfmode=replace, device=cgmmppa, ftext=hwcgm001, end;
+2202           axisx order=(0 to 5 by 1), minor=none, value=(height=2.4), end;
+2203           axisy order=(0 to 100 by 20), minor=none, value=(height=2.4),
+2204             value=(height=2.4 j=r ' ' '20' '40' '60' '80' '100'), end;
+2205           tuple set=all, x=years, y=noinit, width=3, color=gray, end;
+2206           tuple set=all, x=years, y=nostrk, width=3, color=red, end;
+2207           tuple set=all, x=years, y=nodeath, width=3, color=blue, end;
+2208         );
+*** ==>  sas version is 8.2
+GOPTIONS reset=all ctitle=BLACK ctext=BLACK cback=WHITE csymbol=BLACK fontres=presentation gunit=in   DEVICE=cgmmppa  htext= 
+0.26010 rotate=landscape gaccess=gsasfile GSFMODE=replace ftext=hwcgm001 GEPILOG="" NODASH
+
+NOTE: There were 2001 observations read from the data set WORK._ZZPLZZ_.
+NOTE: PROCEDURE GPLOT used:
+      real time           0.12 seconds
+      cpu time            0.10 seconds
+      
+
+2209         run;
+
+NOTE: SAS Institute Inc., SAS Campus Drive, Cary, NC USA 27513-2414
+NOTE: The SAS System used:
+      real time           2.74 seconds
+      cpu time            1.71 seconds
+      
