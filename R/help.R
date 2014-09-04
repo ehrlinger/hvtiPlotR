@@ -1,10 +1,10 @@
 ###############################################################################
 # Package documentation
 ###############################################################################
-#' @title ccf_plots package for plotting standard graphics for manuscripts
+#' @title ccfPlotting package for plotting standard graphics for manuscripts
 #' and presentations using \code{R} and the \code{ggplot2} package.
 #' 
-#' @description ccf_plots is a replacement package for the \code{plot.sas}
+#' @description ccfPlotting is a replacement package for the \code{plot.sas}
 #' macro for creating publication quality graphics.
 #' 
 #' \itemize{ 
@@ -15,7 +15,7 @@
 #'  figures to their liking. 
 #' }
 #'
-#' The ccf_plots package contains the following functions:
+#' The ccfPlotting package contains the following functions:
 #' \itemize{
 #' \item \code{\link{gg_rfsrc}}: 
 #' }
@@ -27,7 +27,7 @@
 #' Wickham, H. ggplot2: elegant graphics for data analysis. Springer New York, 2009.
 #' 
 #' @docType package
-#' @name ggRandomForests
+#' @name ccfPlotting
 #' 
 ################
 NULL

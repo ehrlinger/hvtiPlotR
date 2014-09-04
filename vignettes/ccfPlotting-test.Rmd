@@ -1,5 +1,5 @@
 ---
-title: "Using ccc_plots and ggplot2 for publication graphics"
+title: "plot.sas macro replacement with ggplot2 and ccfPlotting packages."
 author: "John Ehrlinger"
 date: "August 29, 2014"
 output: html_document
@@ -99,7 +99,7 @@ library(dplyr)
 ```
 You can also embed plots, for example:
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
 ## To reproduce the plot.sas function, line by line.
 ###-------------
 ## There are SAS options we will not use here.
@@ -152,7 +152,7 @@ ccf_plot
 ```
 
 
-```{r parametric}
+```{r parametric, echo=FALSE,warning=FALSE, message=FALSE}
 
 # /**********PARAMETRIC : SOLID LINES AND CONFIDENCE INTERVALS**********/      
 # tuple set=all, x=years, y=noinit, cll=clinit, clu=cuinit,
