@@ -1,3 +1,3 @@
 library(testthat)
 
-test_check("ggRandomForests")
+test_check("hviciPlotting")

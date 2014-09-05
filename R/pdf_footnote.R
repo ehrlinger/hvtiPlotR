@@ -24,6 +24,8 @@
 #' @examples
 #' plot(1:10)
 #' makeFootnote()
+#' 
+#' @importFrom grid pushViewport viewport popViewport gpar
 # 
 # scriptName <- "filename.R"
 # author <- "mh"
@@ -31,11 +33,12 @@
 
 #                   author, sep=" / ")
 makeFootnote <- function(footnoteText=getwd(),
-                         size= .7, color= grey(.5))
-{
-  require(grid)
-  
-  footnoteText  <- paste(footnoteText, Sys.time(), sep=" ")
+                         size= .7, color= grey(.5), 
+                         timestamp=TRUE)
+{  
+  if(timestamp){
+    footnoteText  <- paste(footnoteText, Sys.time(), sep=" ")
+  }
   pushViewport(viewport())
   grid.text(label= footnoteText ,
             x = unit(1,"npc") - unit(2, "mm"),
