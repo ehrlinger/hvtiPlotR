@@ -13,11 +13,12 @@ theme_man <- function(base_size = 12, base_family = "") {
   theme_grey(base_size = base_size, base_family = base_family) %+replace% 
     theme(axis.text = element_text(size = rel(0.8)), 
           axis.ticks = element_line(colour = "black"), 
+          #axis.line = element_line(color="black"),
           
           legend.key = element_rect(colour = "grey80"), 
           
           panel.background = element_rect(fill = "white", colour = NA), 
-          panel.border = element_rect(fill = NA, colour = "grey50"), 
+          panel.border = element_blank(), 
           panel.grid.major = element_blank(), 
           panel.grid.minor = element_blank(), 
           
