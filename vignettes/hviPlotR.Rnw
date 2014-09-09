@@ -4,28 +4,28 @@
 %% declarations for jss.cls %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %\VignetteEngine{knitr::knitr}
-%\VignetteIndexEntry{hviciPlotting}
+%\VignetteIndexEntry{hviPlotR}
 %\VignetteIndexEntry{Generating plot.sas style figures in R}
 %\VignetteKeywords{publication graphics, powerpoint, ggplot2, plot.sas}
 %\VignetteDepends{ggplot2}
-%\VignettePackage{hviciPlotting} 
+%\VignettePackage{hviPlotR} 
 
 %% almost as usual
 \author{John Ehrlinger\\Cleveland Clinic} %\And \\Plus Affiliation}
-\title{{\pkg{hviciPlotting}}: Generating \code{plot.sas} style figures in \proglang{R}}
+\title{{\pkg{hviPlotR}}: Generating \code{plot.sas} style figures in \proglang{R}}
 
 %% for pretty printing and a nice hypersummary also set:
 \Plainauthor{John Ehrlinger} %% comma-separated
-\Plaintitle{hviciPlotting: Generating plot.sas style figures in R} %% without formatting
-\Shorttitle{hviciPlotting: Generating plot.sas style figures}
+\Plaintitle{hviPlotR: Generating plot.sas style figures in R} %% without formatting
+\Shorttitle{hviPlotR: Generating plot.sas style figures}
 
 %% an abstract and keywords
 \Abstract{ 
-We introduce the \proglang{R} package \pkg{hviciPlotting}, a set of tools for creating publication quality graphics in \proglang{R}. The \pkg{hviciPlotting} package is designed to replace the \code{plot.sas} macro we currently use in \proglang{SAS}. The package includes both \proglang{R} recipes for generating our standard graphics using \pkg{ggplot2} commands and a set of themes designed to format those figures for both manuscript and \code{PowerPoint} targets. 
+We introduce the \proglang{R} package \pkg{hviPlotR}, a set of tools for creating publication quality graphics in \proglang{R}. The \pkg{hviPlotR} package is designed to replace the \code{plot.sas} macro we currently use in \proglang{SAS}. The package includes both \proglang{R} recipes for generating our standard graphics using \pkg{ggplot2} commands and a set of themes designed to format those figures for both manuscript and \code{PowerPoint} targets. 
 
-The goal of this package vignette is to introduce the \pkg{hviciPlotting} methodology, as well as to document the best practices of creating our publication quality graphics for both manuscripts and power point presentations.
+The goal of this package vignette is to introduce the \pkg{hviPlotR} methodology, as well as to document the best practices of creating our publication quality graphics for both manuscripts and power point presentations.
 
-This document is included with the \pkg{hviciPlotting} package as a package vignette, installed into \proglang{R} when the package is installed, and view able using the \code{vignette("hviciPlotting")} command.
+This document is included with the \pkg{hviPlotR} package as a package vignette, installed into \proglang{R} when the package is installed, and view able using the \code{vignette("hviPlotR")} command.
 }
 \Keywords{publication graphics, powerpoint, ggplot2, plot.sas}
 \Plainkeywords{publication graphics, powerpoint, ggplot2, plot.sas}
@@ -107,10 +107,10 @@ library(dplyr) # Better data manipulations
 library(knitr)
 library(ggplot2)
 library(dplyr)
-library(hviciPlotting)
+library(hviPlotR)
 
-data(parametric, package="hviciPlotting")
-data(nonparametric, package="hviciPlotting")
+data(parametric, package="hviPlotR")
+data(nonparametric, package="hviPlotR")
 
 
 theme_set(theme_man())
@@ -120,9 +120,10 @@ theme_set(theme_man())
 ## There are SAS options we will not use here.
 #
 #  %plot(goptions gsfmode=replace, device=pscolor, gaccess=gsasfile end;
-ccf_plot <- ggplot()+
-  geom_vline(xintercept=0)+
-  geom_hline(yintercept=0)
+ccf_plot <- ggplot()
+# +
+#   geom_vline(xintercept=0)+
+#   geom_hline(yintercept=0)
 
 #    id l="&STUDY/graphs/ce.states.ST_toJohn.sas percent", end;
 
@@ -199,12 +200,12 @@ ccf_plot+ coord_cartesian(xlim=c(-.1,5.2), ylim=c(-1,101))
 % -----------------------------------------------------
 \section{About this document}
 % -----------------------------------------------------
-This document is an introduction to the \proglang{R} package \pkg{hviciPlotting}, a set of tools for creating publication quality graphics in \proglang{R}. The package and this document describe the process of creating graphics in \proglang{R} that conform to the standards of the clinical investigations statistics group within The Heart \& Vascular Institute at the Cleveland Clinic. These graphics are analogous to those generated with the \code{plot.sas} macro in \proglang{SAS}.
+This document is an introduction to the \proglang{R} package \pkg{hviPlotR}, a set of tools for creating publication quality graphics in \proglang{R}. The package and this document describe the process of creating graphics in \proglang{R} that conform to the standards of the clinical investigations statistics group within The Heart \& Vascular Institute at the Cleveland Clinic. These graphics are analogous to those generated with the \code{plot.sas} macro in \proglang{SAS}.
 
-This document is the package vignette for the \pkg{hviciPlotting} package, and as such is the primary documentation for the package. The latest version of the document can be obtained with the 
+This document is the package vignette for the \pkg{hviPlotR} package, and as such is the primary documentation for the package. The latest version of the document can be obtained with the 
 \begin{CodeChunk}
 \begin{CodeInput}
-R> vignette("hviciPlotting", package = "hviciplotting")
+R> vignette("hviPlotR", package = "hviPlotR")
 \end{CodeInput}
 \end{CodeChunk}
 
@@ -215,13 +216,13 @@ The goal is to update this document as the package is updated to include all rel
 % -----------------------------------------------------
 For many years, the mainstay for generating graphics for manuscripts and presentations in the statistics group in HVI has been the \code{plot.sas} macro using \proglang{SAS}. However, recently, we have had issues migrating this macro to newer versions of \proglang{SAS} ($> 8.0$) and MicroSoft Office products ($> 2003$). 
 
-In an effort to alleviate the versifying problems, and to standardize the generation of figures within \proglang{R}, we have developed the \pkg{hviciPlotting} \proglang{R} package. The goal of the package, and this document, is simplify the creation of publication quality graphics in  \proglang{R}. We are specifically encoding the best practices of the HVI Clinical Investigations formatting, so that our statisticians will be able to simply create graphics for publication with a minimal amount of effort.
+In an effort to alleviate the versifying problems, and to standardize the generation of figures within \proglang{R}, we have developed the \pkg{hviPlotR} \proglang{R} package. The goal of the package, and this document, is simplify the creation of publication quality graphics in  \proglang{R}. We are specifically encoding the best practices of the HVI Clinical Investigations formatting, so that our statisticians will be able to simply create graphics for publication with a minimal amount of effort.
 
-The \pkg{hviciPlotting} package also implements best practices for \proglang{R} graphics by leveraging the \pkg{ggplot2} package~\citep{Wickham:2009}. The \pkg{ggplot2} package is an implementation of the Grammar of Graphics~\citep{Wilkinson:2005}, which is a formalization of graphical concepts, and the building of graphical objects from a sequence of independent components. These components can be combined in many different ways.
+The \pkg{hviPlotR} package also implements best practices for \proglang{R} graphics by leveraging the \pkg{ggplot2} package~\citep{Wickham:2009}. The \pkg{ggplot2} package is an implementation of the Grammar of Graphics~\citep{Wilkinson:2005}, which is a formalization of graphical concepts, and the building of graphical objects from a sequence of independent components. These components can be combined in many different ways.
 
 The \code{plot.sas} macro is also an implementation of a graphics grammar. The grammar is derived from the ZETA pen plotters, which used GML (Graphics Machine Language) to control between 4 and and 8 colored pens for generating color line and point figures. Because both systems use a graphics language it is straight forward to translate commands between the two methods. 
 
-This document outlines how to generate figures using the \pkg{ggplot2} and \pkg{hviciPlotting} packages. Our approach is to demonstrate the \proglang{R} commands to generate the same elements created with \code{plot.sas} commands. Section~\ref{S:plot.sas} gives an overview of the methodology of the \code{plot.sas} macro and Section~\ref{S:ggplot2tuple} details how to create line and point plots with \pkg{ggplot2}. A key part of \pkg{hviciPlotting} package is custom themes for figures. Once you have created your figure, Section~\ref{S:themes} details how to get the formatting correct for manuscripts or presentations. Section~\ref{S:saving} describes functions for saving the figures to simplify the import into publication documents.
+This document outlines how to generate figures using the \pkg{ggplot2} and \pkg{hviPlotR} packages. Our approach is to demonstrate the \proglang{R} commands to generate the same elements created with \code{plot.sas} commands. Section~\ref{S:plot.sas} gives an overview of the methodology of the \code{plot.sas} macro and Section~\ref{S:ggplot2tuple} details how to create line and point plots with \pkg{ggplot2}. A key part of \pkg{hviPlotR} package is custom themes for figures. Once you have created your figure, Section~\ref{S:themes} details how to get the formatting correct for manuscripts or presentations. Section~\ref{S:saving} describes functions for saving the figures to simplify the import into publication documents.
 
 % -----------------------------------------------------
 \section[The plot.sas macro]{The \code{plot.sas} macro}\label{S:plot.sas}
@@ -377,14 +378,14 @@ Differences include the target \code{device} and \code{ftext} as well as some ha
 % =======================================
 \section{Conclusions} \label{S:concl}
 % =======================================
-In this article, we present some functions in the \pkg{hviciPlotting} package for \proglang{R} 
+In this article, we present some functions in the \pkg{hviPlotR} package for \proglang{R} 
 
 % =======================================
 % \section{Literatur} \label{sec: references}
 % =======================================
 %\nocite{*}
 
-\bibliography{hviciPlotting}
+\bibliography{hviPlotR}
 
 
 
