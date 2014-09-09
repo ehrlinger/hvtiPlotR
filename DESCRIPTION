@@ -1,4 +1,4 @@
-Package: hviciPlotting
+Package: hviPlotR
 Type: Package
 Title: Generating plot.sas style figures in R
 Version: 0.0.99

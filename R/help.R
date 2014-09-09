@@ -1,10 +1,10 @@
 ###############################################################################
 # Package documentation
 ###############################################################################
-#' @title hviciPlotting package for plotting standard graphics for manuscripts
+#' @title hviPlotR package for plotting standard graphics for manuscripts
 #' and presentations using \code{R} and the \code{ggplot2} package.
 #' 
-#' @description hviciPlotting is a replacement package for the \code{plot.sas}
+#' @description hviPlotR is a replacement package for the \code{plot.sas}
 #' macro for creating publication quality graphics.
 #' 
 #' \itemize{ 
@@ -15,11 +15,11 @@
 #'  figures to their liking. 
 #' }
 #'
-#' The hviciPlotting package contains the following functions:
+#' The hviPlotR package contains the following functions:
 #' \itemize{
 #' \item \code{\link{theme_man}}: 
 #' \item \code{\link{theme_ppt}}:
-#' \item \code{\link{save.hviplot}}: 
+#' \item \code{\link{save.hviplotr}}: 
 #' }
 #' 
 #' All functions have an associated plotting function that returns ggplot2 graphics, either 
@@ -29,7 +29,7 @@
 #' Wickham, H. ggplot2: elegant graphics for data analysis. Springer New York, 2009.
 #' 
 #' @docType package
-#' @name hviciPlotting
+#' @name hviPlotR
 #' 
 ################
 NULL

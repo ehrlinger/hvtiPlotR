@@ -3,10 +3,12 @@
 \alias{theme_ppt}
 \title{Theme for generating powerpoint figures}
 \usage{
-theme_ppt(base_size = 32)
+theme_ppt(base_size = 32, base_family = "")
 }
 \arguments{
 \item{base_size}{the base font size}
+
+\item{base_family}{base font family}
 }
 \description{
 Theme for generating powerpoint figures

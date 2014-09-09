@@ -5,8 +5,8 @@
 #' @param height height of the saved figure in inches
 #' @param width width of the saved figure in inches
 #' 
-#' @export save.hviplot
-save.hviplot <- function(object,
+#' @export save.hviplotr
+save.hviplotr <- function(object,
                           filename,
                           height,
                           width

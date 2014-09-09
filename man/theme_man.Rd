@@ -3,10 +3,12 @@
 \alias{theme_man}
 \title{Theme for generating manuscript figures}
 \usage{
-theme_man(base_size = 12)
+theme_man(base_size = 12, base_family = "")
 }
 \arguments{
 \item{base_size}{the base font size}
+
+\item{base_family}{base font family}
 }
 \description{
 Theme for generating manuscript figures
