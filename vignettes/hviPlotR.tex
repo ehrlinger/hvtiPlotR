@@ -124,7 +124,7 @@ URL: \url{https://github.com/ehrlinger/hviPlotR}
 %% Note that you should use the \pkg{}, \proglang{} and \code{} commands.
 
 \begin{knitrout}\footnotesize
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{figure}[!htpb]
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{figure}[htpb]
 
 
 {\centering \includegraphics[width=\maxwidth]{figure/beamer-introFigure} 
@@ -184,6 +184,10 @@ filename gsasfile pipe 'lp';
 *                                                                              ;
 * Multiple decrement, nonparametric and parametric                             ;
 filename gsasfile "&STUDY/graphs/ce.states.ST_toJohn.both.ps";
+
+*______________________________________________________________________________;
+* Create the figure here   !                                                   ;
+*______________________________________________________________________________;
 %plot(goptions gsfmode=replace, device=pscolor, gaccess=gsasfile end;
 id l="&STUDY/graphs/ce.states.ST_toJohn.sas percent", end;
 labelx l="Years After Randomization", end;
@@ -286,12 +290,33 @@ Differences include the target \code{device} and \code{ftext} as well as some ha
 \section[Generating ggplot2 graphics]{Generating \pkg{ggplot2} graphics}\label{S:ggplot2tuple}
 % -----------------------------------------------------
 
+In order to create figures similar to the \code{plot.sas} macro, using \proglang{R}, we will make extensive use of the \pkg{ggplot2} package. This will require translating from the graphics language of \code{plot.sas} to the graphics language of \pkg{ggplot2}. 
+
+For the remainder of this document, \proglang{R} code will be highlighted in grey boxes, as shown below. We will refer to these blocks as \emph{code chunks}. You can run each code chunk individuallym, using copy/paste into an interactive \proglang{R} session, or a stand alone \proglang{R} script.
+
+This tutorial requires the \pkg{hviPlotR} package for data and themes we will be discussing. You can load it with the following commands:
+\begin{knitrout}\footnotesize
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{# Install the latest hviPlotR package.}
+\hlcom{#}
+\hlcom{# The devtools package is installed on all our }
+\hlcom{# jjnb-gen servers as well as other R instances.}
+\hlkwd{library}\hlstd{(devtools)}
+
+\hlcom{# To get the latest version.}
+\hlkwd{install_github}\hlstd{(}\hlstr{"ehrlinger/hviPlotR"}\hlstd{)}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+
+
+\subsection{Initialize the figure}\label{S:initial}
+Refering back to the \proglang{SAS} code chunks in Section~\ref{S:plot.sas}, the first section of the code sets the current working directory, and does some house keeping, including loading the \code{plot.sas} macro. Similarly, to get started in \proglang{R}, we first load the required libraries: \pkg{ggplot2} for graphics, and \pkg{hviPlotR} for themes. The following code chunk also sets the initial default theme to a generic black and white format, and brings in a pair of example datasets. 
 \begin{knitrout}\footnotesize
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
 \hlcom{# load required libraries}
-\hlkwd{library}\hlstd{(dplyr)}   \hlcom{# Data manipulation}
-
 \hlkwd{library}\hlstd{(ggplot2)}   \hlcom{# Plotting environment}
 \hlkwd{library}\hlstd{(hviPlotR)}  \hlcom{# CCF HVI plotting functionality }
 
@@ -305,6 +330,7 @@ Differences include the target \code{device} and \code{ftext} as well as some ha
 \end{knitrout}
 
 
+One advantage of \pkg{ggplot2} is that figures can be built up in successive statements. This tutorial will make extensive use of this to demonstrate the process. Starting in this code chunk, we will save the intermediate objects in the \code{ccf_plot} variable. Here we simply create an empty \pkg{ggplot2} figure that we will be adding to as we work through the commands in the \code{plot.sas} macro. Note that we include the  \code{\%plot()} command in the comment above the equivalent \pkg{ggplot2} command.
 \begin{knitrout}\footnotesize
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
@@ -318,10 +344,8 @@ Differences include the target \code{device} and \code{ftext} as well as some ha
 \end{kframe}
 \end{knitrout}
 
-
-
 \subsection{Labels}\label{S:labels}
-
+The next section of the \proglang{SAS} code in Section~\ref{S:plot.sas} sets the x and y axis titles, as well as the location of the majoe axis tick marks. We will splot this up for our \proglang{R} code.  \pkg{ggplot2} uses a \code{labs} function to set the axis labels. 
 \begin{knitrout}\footnotesize
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
@@ -329,9 +353,7 @@ Differences include the target \code{device} and \code{ftext} as well as some ha
 \hlcom{## Labels are a single command, scales control the axis}
 \hlcom{#}
 \hlcom{#    labelx l="Years After Randomization", end;}
-\hlcom{#      axisx order=(0 to 5 by 1), minor=none, end;}
 \hlcom{#    labely l="Percent in Each Category (ST)", end;}
-\hlcom{#      axisy order=(0 to 100 by 10), minor=none, end;}
 \hlstd{ccf_plot} \hlkwb{<-} \hlstd{ccf_plot} \hlopt{+}
   \hlkwd{labs}\hlstd{(}\hlkwc{x}\hlstd{=}\hlstr{"Years After Randomization"}\hlstd{,}
        \hlkwc{y}\hlstd{=}\hlstr{"Percent in Each Category (ST)"}\hlstd{)}
@@ -339,16 +361,20 @@ Differences include the target \code{device} and \code{ftext} as well as some ha
 \end{kframe}
 \end{knitrout}
 
+The \code{labs} function can also be used to set the plot \code{title} and legend titles. We will not cover that functionality here, details are available in~\cite{Wickham:2009} or through the Internet.
+
 \subsection{Scales}\label{S:scales}
+Axis ticks are controled with the \code{scale} functions. \pkg{ggplot2} has many different \code{scale} functions. These functions will work on one axis at a time, so for a typical continous axis, we refer to the \code{scale_x_continuous} or \code{scale_y_continuous} functions. Major axis are controlled using the \code{breaks} argument. This code uses a sequence of numbers to set the location of major tick marks (\code{seq(0,5,1)}). One mark for every year starting at 0, and ending at 5. Minor tick marks are automatically generated, but can also be specified using a \code{minor_breaks=} argument. You could also specifiy the breaks using a vector of values (\code{c(0,1,2,3,4,5)}), as well as relabel the ticks manually using a \code{labels=} argument.
+
+Note that the \code{scale_} functions do not restrict the figure viewport at all. They are simply used to setup the axis tick marks. You can specify that the y-axis ticks are only from 0 to 50, and the figure would have a blank from 50 to the limits of the data. We discuss controlling the figure viewport in Section~\ref{S:globals}.
+
 \begin{knitrout}\footnotesize
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
 \hlcom{###-------------}
 \hlcom{## Labels are a single command, scales control the axis}
 \hlcom{#}
-\hlcom{#    labelx l="Years After Randomization", end;}
 \hlcom{#      axisx order=(0 to 5 by 1), minor=none, end;}
-\hlcom{#    labely l="Percent in Each Category (ST)", end;}
 \hlcom{#      axisy order=(0 to 100 by 10), minor=none, end;}
 \hlstd{ccf_plot} \hlkwb{<-} \hlstd{ccf_plot} \hlopt{+}
   \hlkwd{scale_x_continuous}\hlstd{(}\hlkwc{breaks}\hlstd{=}\hlkwd{seq}\hlstd{(}\hlnum{0}\hlstd{,}\hlnum{5}\hlstd{,}\hlnum{1}\hlstd{))}\hlopt{+}
@@ -357,8 +383,14 @@ Differences include the target \code{device} and \code{ftext} as well as some ha
 \end{kframe}
 \end{knitrout}
 
-
 \subsection{Points}\label{S:points}
+Up to this point, we have only created and \emph{decorated} the plot object stored in the \code{ccf_plot} variable. Showing the figure (\code{show}) or saving the figure would result in an error, since we have not added any data to the object, or described how we want it displayed. 
+
+The fundamental statement of the \code{plot.sas} macro is the \code{tuple} statement. The first \code{tuple} statement we see in the example code sets the \emph{data} set (\code{set=green}), the symbol \emph{shape} (\code{symbol=dot}), \emph{size} (\code{symbsize=1/2}) and \emph{color} (\code{color=black}). It turns off lines so only points will be shown (\code{linepe=0, linecl=0,}). It also handles error bars (\code{ebarsize=3/4, ebar=1}), which will be discuss in Section~\ref{S:errorbars}. The last line tells the macro about the point placement (\code{x=iv_state, y=sginit, cll=stlinit, clu=stuinit}) for the points (x, y) and upper (\code{clu}) and lower (\code{cll}) error bar limits. 
+
+The \code{geom_} set of functions in \pkg{ggplot2} is the functional equivalent to the \code{tuple} statement. The difference is the user specifies the graphical element desired using separate function calls. So points are plotting using the \code{geom_point} function, lines are generated with the \code{geom_line} (Section~\ref{S:lines}) and error bars are generated with the \code{geom_errorbar} function (Section~\ref{S:errorbars}).
+
+Each of these functions takes a \code{data} argument, and an aesthetica function (\code{aes()}) is used to describe point within the graph using variables within the data set. The following code chunk demonstrates this use plotting the \code{iv_state} variable on the x-axis and the \code{sginit} variable along the y-axis. The variables are defined in the \code{nonparametric} data set we loaded in the setup code chunk in Section~\ref{S:ggplot2tuple}.
 \begin{knitrout}\footnotesize
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
@@ -375,17 +407,25 @@ Differences include the target \code{device} and \code{ftext} as well as some ha
 
 \hlkwd{show}\hlstd{(ccf_plot)}
 \end{alltt}
-\end{kframe}
+\end{kframe}\begin{figure}[htpb]
+
 
 {\centering \includegraphics[width=\maxwidth]{figure/beamer-points} 
 
 }
 
+\caption[Point Plot]{Point Plot\label{F:points}}
+\end{figure}
 
 
 \end{knitrout}
+Once we have added data to the \code{ggplot} object, we can display the figure as shown in Figure~\ref{F:points}. Until know the figure has been manipulated by sequentially adding function calls to the \code{ccf_plot} object. To display the figure you can either use the \code{show()} function, or simply use the object name at the command line.
+
+Note that we have used the default \emph{shape}, \emph{size} and \emph{color} for this figure. These can be manipulated by adding arguments to the \code{geom_} functions, outside of the \code{aes()} function, as we will demonstrate in the following sections.
 
 \subsection{ErrorBars}\label{S:errorbars}
+
+Instead of using a single function to set points, lines and error bars, \pkg{ggplot2} uses individual function calls to control these elements. The \code{geom_errorbar} function takes the same arguments as the other \code{geom_} functions. However, since an errorbar is defined with upper and lower limits, we need to supply an \code{ymax} and \code{ymin} argument to the graphic aesthetic function. This code chunk plots both points, and error bars for the next two data series, the \code{sgdead1} variable with errorbars running from \code{stldead1} to \code{studead1} and \code{sgstrk1} variable with errorbars running from \code{stlstrk1} to \code{stustrk1}. As we see in Figure~\ref{F:errorBars}, both series were added in \code{color="blue"}, with different point shapes (\code{shape=1} and \code{shape=0}). We manipulated the error bar size with the \code{width} argument
 
 \begin{knitrout}\footnotesize
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
@@ -395,28 +435,38 @@ Differences include the target \code{device} and \code{ftext} as well as some ha
 \hlcom{#       x=iv_state, y=sgdead1, cll=stldead1, clu=studead1, color=blue, end;}
 \hlstd{ccf_plot} \hlkwb{<-} \hlstd{ccf_plot} \hlopt{+}
   \hlkwd{geom_point}\hlstd{(}\hlkwc{data}\hlstd{=nonparametric,} \hlkwd{aes}\hlstd{(}\hlkwc{x}\hlstd{=iv_state,} \hlkwc{y}\hlstd{=sgdead1),}\hlkwc{color}\hlstd{=}\hlstr{"blue"}\hlstd{,}\hlkwc{shape}\hlstd{=}\hlnum{1}\hlstd{)} \hlopt{+}
-  \hlkwd{geom_errorbar}\hlstd{(}\hlkwc{data}\hlstd{=nonparametric,} \hlkwd{aes}\hlstd{(}\hlkwc{x}\hlstd{=iv_state,} \hlkwc{ymin}\hlstd{=stldead1,} \hlkwc{ymax}\hlstd{=studead1),} \hlkwc{color}\hlstd{=}\hlstr{"blue"}\hlstd{,} \hlkwc{width}\hlstd{=}\hlnum{.1}\hlstd{)}
+  \hlkwd{geom_errorbar}\hlstd{(}\hlkwc{data}\hlstd{=nonparametric,} \hlkwd{aes}\hlstd{(}\hlkwc{x}\hlstd{=iv_state,} \hlkwc{ymin}\hlstd{=stldead1,} \hlkwc{ymax}\hlstd{=studead1),}
+                \hlkwc{color}\hlstd{=}\hlstr{"blue"}\hlstd{,} \hlkwc{width}\hlstd{=}\hlnum{.1}\hlstd{)}
 
 \hlcom{#      tuple set=green, symbol=square, symbsize=1/2, linepe=0, linecl=0,}
 \hlcom{#       ebarsize=3/4, ebar=1,}
 \hlcom{#       x=iv_state, y=sgstrk1, cll=stlstrk1, clu=stustrk1, color=blue, end;}
 \hlstd{ccf_plot} \hlkwb{<-} \hlstd{ccf_plot} \hlopt{+}
   \hlkwd{geom_point}\hlstd{(}\hlkwc{data}\hlstd{=nonparametric,} \hlkwd{aes}\hlstd{(}\hlkwc{x}\hlstd{=iv_state,} \hlkwc{y}\hlstd{=sgstrk1),}\hlkwc{color}\hlstd{=}\hlstr{"blue"}\hlstd{,}\hlkwc{shape}\hlstd{=}\hlnum{0}\hlstd{)} \hlopt{+}
-  \hlkwd{geom_errorbar}\hlstd{(}\hlkwc{data}\hlstd{=nonparametric,} \hlkwd{aes}\hlstd{(}\hlkwc{x}\hlstd{=iv_state,} \hlkwc{ymin}\hlstd{=stlstrk1,} \hlkwc{ymax}\hlstd{=stustrk1),} \hlkwc{color}\hlstd{=}\hlstr{"blue"}\hlstd{,} \hlkwc{width}\hlstd{=}\hlnum{.1}\hlstd{)}
+  \hlkwd{geom_errorbar}\hlstd{(}\hlkwc{data}\hlstd{=nonparametric,} \hlkwd{aes}\hlstd{(}\hlkwc{x}\hlstd{=iv_state,} \hlkwc{ymin}\hlstd{=stlstrk1,} \hlkwc{ymax}\hlstd{=stustrk1),}
+                \hlkwc{color}\hlstd{=}\hlstr{"blue"}\hlstd{,} \hlkwc{width}\hlstd{=}\hlnum{.1}\hlstd{)}
 
 \hlkwd{show}\hlstd{(ccf_plot)}
 \end{alltt}
-\end{kframe}
+
+
+{\ttfamily\noindent\color{warningcolor}{Warning: Removed 7 rows containing missing values (geom\_point).\\Warning: Removed 117 rows containing missing values (geom\_point).}}\end{kframe}\begin{figure}[htpb]
+
 
 {\centering \includegraphics[width=\maxwidth]{figure/beamer-errorBars} 
 
 }
 
+\caption[Error Bar Plot]{Error Bar Plot\label{F:errorBars}}
+\end{figure}
 
 
 \end{knitrout}
 
+Note that the \code{x} variable is the same for all three data series and the associated error bars. Also, since we do not want an error bar at every data point, a large number points have the upper and lower error bar variables set to \code{NA}. This is the same behavior as the \code{plot.sas} macro. \pkg{ggplot2} does print warnings when we attempt to plot a series with missing values. We typically suppress those warnings, but left them here for illustration purposes only.
+
 \subsection{Lines}\label{S:lines}
+Similar to points and error bars, the \code{geom_line} function is used to plot lines. We use the \code{linetype} argument to specify the line styles. We do have to generate a seperate \code{geom_line} function call for each limit of the confidence limit, since it is constructed of two lines (the upper and lower confidence limit). Alternatively, we can use the \code{geom_ribbon} to generate the confidence band using a shaded region and only a single call. The aesthetic argument for \code{geom_ribbon} takes a \code{ymax} and \code{ymin} argument just as the \code{geom_errorbar} function.
 \begin{knitrout}\footnotesize
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
@@ -445,20 +495,56 @@ Differences include the target \code{device} and \code{ftext} as well as some ha
 
 \hlkwd{show}\hlstd{(ccf_plot)}
 \end{alltt}
-\end{kframe}
+\end{kframe}\begin{figure}[htpb]
+
 
 {\centering \includegraphics[width=\maxwidth]{figure/beamer-lines} 
 
 }
 
+\caption[Line Plot with confidence bands]{Line Plot with confidence bands\label{F:lines}}
+\end{figure}
 
 
 \end{knitrout}
+
+This time, we used the \code{parametric} data set in the \code{data} argument, as we want to use a different set of points for generating these lines. 
+
+\subsection{Linetypes}\label{S:linetypes}
+
+\begin{knitrout}\footnotesize
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{figure}[htpb]
+
+
+{\centering \includegraphics[width=\maxwidth]{figure/beamer-linetypes} 
+
+}
+
+\caption[ggplot2 linetype table]{ggplot2 linetype table\label{F:linetypes}}
+\end{figure}
+
+
+\end{knitrout}
+
 \subsection{Shapes}\label{S:shapes}
+
+\begin{knitrout}\footnotesize
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{figure}[htpb]
+
+
+{\centering \includegraphics[width=\maxwidth]{figure/beamer-shapes} 
+
+}
+
+\caption[ggplot2 shape table]{ggplot2 shape table\label{F:shapes}}
+\end{figure}
+
+
+\end{knitrout}
 
 \subsection{Colors}\label{S:colors}
 
-\subsection{Global Commands}\label{Sglobals}
+\subsection{Global Commands}\label{S:globals}
 
 \begin{knitrout}\footnotesize
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
@@ -471,12 +557,15 @@ Differences include the target \code{device} and \code{ftext} as well as some ha
 
 \hlkwd{show}\hlstd{(ccf_plot)}
 \end{alltt}
-\end{kframe}
+\end{kframe}\begin{figure}[htpb]
 
-{\centering \includegraphics[width=\maxwidth]{figure/beamer-global} 
+
+{\centering \includegraphics[width=\maxwidth]{figure/beamer-global_} 
 
 }
 
+\caption[Adjusting the viewport]{Adjusting the viewport\label{F:global,}}
+\end{figure}
 
 
 \end{knitrout}
@@ -485,6 +574,9 @@ Differences include the target \code{device} and \code{ftext} as well as some ha
 % -----------------------------------------------------
 \section{PowerPoint Figures}\label{S:powerPointFigures}
 % -----------------------------------------------------
+
+As a second example, we recreate a figure that was created for PowerPoint with the \code{plot.sas} macro. In most cases, we do not include points when generating presentation figures, so this figure was generated with only \code{geom_line} function calls. We also show how the figure can be created in a single set of function calls.
+
 \begin{knitrout}\footnotesize
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
@@ -505,12 +597,15 @@ Differences include the target \code{device} and \code{ftext} as well as some ha
 
 \hlkwd{show}\hlstd{(ccf_pptPlot)}
 \end{alltt}
-\end{kframe}
+\end{kframe}\begin{figure}[htpb]
+
 
 {\centering \includegraphics[width=\maxwidth]{figure/beamer-powerpoint} 
 
 }
 
+\caption[PowerPoint Figures]{PowerPoint Figures\label{F:powerpoint}}
+\end{figure}
 
 
 \end{knitrout}
@@ -529,27 +624,38 @@ Differences include the target \code{device} and \code{ftext} as well as some ha
 
 \hlkwd{theme_set}\hlstd{(}\hlkwd{theme_bw}\hlstd{())}
 \end{alltt}
-\end{kframe}
+\end{kframe}\begin{figure}[htpb]
+
 
 {\centering \includegraphics[width=\maxwidth]{figure/beamer-manuscriptTheme} 
 
 }
 
+\caption[Theme for Manuscripts]{Theme for Manuscripts\label{F:manuscriptTheme}}
+\end{figure}
 
 
 \end{knitrout}
+
+
 \subsection{Theme for Presentations}
 \begin{knitrout}\footnotesize
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlstd{ccf_pptPlot}\hlopt{+}\hlkwd{theme_ppt}\hlstd{()}
+\hlstd{ccf_pptPlot}\hlopt{+}
+  \hlkwd{labs}\hlstd{(}\hlkwc{x}\hlstd{=}\hlstr{""}\hlstd{,}\hlkwc{y}\hlstd{=}\hlstr{""}\hlstd{)}\hlopt{+}
+  \hlkwd{theme_ppt}\hlstd{()} \hlopt{+}
+  \hlkwd{theme}\hlstd{(}\hlkwc{plot.background} \hlstd{=} \hlkwd{element_rect}\hlstd{(}\hlkwc{fill}\hlstd{=}\hlstr{'blue'}\hlstd{,} \hlkwc{colour}\hlstd{=}\hlstr{'blue'}\hlstd{,} \hlkwc{size}\hlstd{=}\hlnum{2}\hlstd{))}
 \end{alltt}
-\end{kframe}
+\end{kframe}\begin{figure}[htpb]
+
 
 {\centering \includegraphics[width=\maxwidth]{figure/beamer-powerpointTheme} 
 
 }
 
+\caption[Theme for Presentations]{Theme for Presentations\label{F:powerpointTheme}}
+\end{figure}
 
 
 \end{knitrout}
