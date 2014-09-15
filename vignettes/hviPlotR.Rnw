@@ -76,8 +76,9 @@ opts_chunk$set(fig.path='figure/beamer-',
                fig.pos="!htpb",
                fig.show='hold', 
                fig.lp="F:",
+               fig.height=5/4*3, fig.width=5,
                size='footnotesize',
-               comment="", echo=FALSE, results=FALSE, message=FALSE, warnings=FALSE,
+               comment="", echo=TRUE, results=FALSE, message=FALSE, warning=FALSE,
                error=FALSE, dev='pdf')
 
 # Setup the R environment
@@ -104,7 +105,7 @@ library(dplyr) # Better data manipulations
 %% include your article here, just as usual
 %% Note that you should use the \pkg{}, \proglang{} and \code{} commands.
 
-<<introFigure, fig.height=5/4*3, fig.width=5, message=FALSE, warning=FALSE, echo=FALSE, fig.cap="Demonstration figure">>=
+<<introFigure, message=FALSE, warning=FALSE, echo=FALSE, fig.cap="Demonstration figure">>=
 library(knitr)
 library(ggplot2)
 library(dplyr)
@@ -195,9 +196,8 @@ ccf_plot+ coord_cartesian(xlim=c(0,5.2), ylim=c(0,101))
 #   expand_limits(x = 0, y = 0) +
 #   scale_x_continuous(expand = c(-0.1, 0.1)) + 
 #   scale_y_continuous(expand = c(-1, 0.1))
-
-
 @
+
 % -----------------------------------------------------
 \section{About this document}
 % -----------------------------------------------------
@@ -233,7 +233,7 @@ To demonstrate the process, we first look at some example code using the \code{p
 \begin{CodeChunk}\small
 \begin{CodeInput}
 %let STUDY=/studies/cardiac/valves/aortic/replacement/
-           partner_publication_office/partner1b/mortality_5y
+partner_publication_office/partner1b/mortality_5y
 *******************************************************************************;
 * Bring in PostScript plot macro                                               ;
 filename plt "!MACROS/plot.sas"; %inc plt;
@@ -263,17 +263,17 @@ The \code{tuple} command builds up graphics objects within the figure plot windo
 \begin{CodeInput}
 /******NON-PARAMETRIC: SYMBOLS AND CONFIDENCE BARS *******/
 tuple set=green, symbol=dot, symbsize=1/2, linepe=0, linecl=0,
-      ebarsize=3/4, ebar=1,
-      x=iv_state, y=sginit, cll=stlinit, clu=stuinit, color=black, 
-      end;
+ebarsize=3/4, ebar=1,
+x=iv_state, y=sginit, cll=stlinit, clu=stuinit, color=black, 
+end;
 tuple set=green, symbol=circle, symbsize=1/2, linepe=0, linecl=0,
-      ebarsize=3/4, ebar=1,
-      x=iv_state, y=sgdead1, cll=stldead1, clu=studead1, color=blue, 
-      end;
+ebarsize=3/4, ebar=1,
+x=iv_state, y=sgdead1, cll=stldead1, clu=studead1, color=blue, 
+end;
 tuple set=green, symbol=square, symbsize=1/2, linepe=0, linecl=0,
-      ebarsize=3/4, ebar=1,
-      x=iv_state, y=sgstrk1, cll=stlstrk1, clu=stustrk1, color=blue, 
-      end;
+ebarsize=3/4, ebar=1,
+x=iv_state, y=sgstrk1, cll=stlstrk1, clu=stustrk1, color=blue, 
+end;
 \end{CodeInput}
 \end{CodeChunk}
 Symbols shapes and sizes are specified with the \code{symbol} and \code{symbsize} commands (Section~\ref{S:shapes}).
@@ -284,16 +284,16 @@ The second set of \code{tuple} statements build up a set of three elements conta
 
 /**********PARAMETRIC : SOLID LINES AND CONFIDENCE INTERVALS**********/      
 tuple set=all, x=years, y=noinit, cll=clinit, clu=cuinit,
-      width=0.5,color=black, 
-      end;
+width=0.5,color=black, 
+end;
 
 tuple set=all, x=years, y=nodeath, cll=cldeath, clu=cudeath,
-      width=0.5,color=blue, 
-      end;
+width=0.5,color=blue, 
+end;
 
 tuple set=all, x=years, y=nostrk, cll=clstrk, clu=custrk,
-      linecl=2, width=0.5,color=blue, 
-      end;
+linecl=2, width=0.5,color=blue, 
+end;
 );
 run;
 *******************************************************************************;
@@ -303,17 +303,17 @@ run;
 The \code{plot.sas} macro code is closed by the ending \code{);} characters, and \proglang{SAS} is instructed to \code{run;} the code. Running combines building the figure by combining elements from \code{label}, \code{axis} and \code{tuple} statements and saving it into the file specified by the \code{gsasfile} variable. The resulting figure is shown in Figure~\ref{F:sasManuscript}.
 
 \begin{figure}[!htpb]
-    \centering
-    \includegraphics[width=0.8\textwidth]{../inst/ceStatesST.pdf}
-    \caption{Manuscript figure (SAS version)}
-    \label{F:sasManuscript}
+\centering
+\includegraphics[width=0.8\textwidth]{../inst/ceStatesST.pdf}
+\caption{Manuscript figure (SAS version)}
+\label{F:sasManuscript}
 \end{figure}
 
 Note that much of the figure formatting is mixed within the \code{tuple} statements using \code{width}, \code{color}, \code{linepe} and \code{linecl} commands. In the \code{plot.sas} macro, omitting these commands will generate a figure with the default values specified within the \code{device} theme (Section~\ref{S:themes}).
 
 
 A similar set of \code{plot.sas} commands is used to create presentation graphics.
-\begin{CodeChunk}\small
+\begin{CodeChunk}\small\label{C:powerPoint}
 \begin{CodeInput}
 *______________________________________________________________________________;
 *                                                                              ;
@@ -333,33 +333,207 @@ tuple set=all, x=years, y=nodeath, width=3, color=blue, end;
 run;  
 \end{CodeInput}
 \end{CodeChunk}
+%\caption{SAS Code for powerpoint figure.\label{C:powerpoint}}
 Differences include the target \code{device} and \code{ftext} as well as some handling of figure labels with \code{value} instead of \code{label} commands. We also have rules for what to and not to include in presentation graphics (Section~\ref{S:rules}).
 
 \begin{figure}[!htpb]
-    \centering
-    \includegraphics[width=0.8\textwidth]{../inst/ceStatesST_ppt.pdf}
-    \caption{PowerPoint figure (SAS version)}
-    \label{F:sasPowerPoint}
+\centering
+\includegraphics[width=0.8\textwidth]{../inst/ceStatesST_ppt.pdf}
+\caption{PowerPoint figure (SAS version)}
+\label{F:sasPowerPoint}
 \end{figure}
 
 % -----------------------------------------------------
 \section[Generating ggplot2 graphics]{Generating \pkg{ggplot2} graphics}\label{S:ggplot2tuple}
 % -----------------------------------------------------
 
-\subsection{Lines}\label{S:lines}
+<<gettingStarted, message=FALSE, warning=FALSE>>=
+# load required libraries
+library(dplyr)   # Data manipulation
 
-\subsection{Points}\label{S:points}
-\subsection{Shapes}\label{S:shapes}
+library(ggplot2)   # Plotting environment
+library(hviPlotR)  # CCF HVI plotting functionality 
+
+theme_set(theme_bw()) # A reasonable default plotting theme
+
+# Load the example datasets 
+data(parametric, package="hviPlotR")
+data(nonparametric, package="hviPlotR")
+@
 
 
-\subsection{ErrorBars}\label{S:errorbars}
+<<openPlot>>=
+## To reproduce the plot.sas function, line by line.
+###-------------
+## There are SAS options we will not use here.
+#
+#  %plot(goptions gsfmode=replace, device=pscolor, gaccess=gsasfile end;
+ccf_plot <- ggplot()
+@
+
+
 
 \subsection{Labels}\label{S:labels}
 
-\subsection{Colors}\label{S:colors}
-
+<<labels>>=
+###-------------
+## Labels are a single command, scales control the axis
+#
+#    labelx l="Years After Randomization", end;
+#      axisx order=(0 to 5 by 1), minor=none, end;
+#    labely l="Percent in Each Category (ST)", end;
+#      axisy order=(0 to 100 by 10), minor=none, end;
+ccf_plot <- ccf_plot +
+  labs(x="Years After Randomization",
+       y="Percent in Each Category (ST)")
+@
 
 \subsection{Scales}\label{S:scales}
+<<scales>>=
+###-------------
+## Labels are a single command, scales control the axis
+#
+#    labelx l="Years After Randomization", end;
+#      axisx order=(0 to 5 by 1), minor=none, end;
+#    labely l="Percent in Each Category (ST)", end;
+#      axisy order=(0 to 100 by 10), minor=none, end;
+ccf_plot <- ccf_plot +
+  scale_x_continuous(breaks=seq(0,5,1))+
+  scale_y_continuous(breaks=seq(0,100,10))
+@
+
+
+\subsection{Points}\label{S:points}
+<<points>>=
+###-------------
+## /******NON-PARAMETRIC: SYMBOLS AND CONFIDENCE BARS *******/
+##
+## Each tuple statement corresponds to one or more geom_ statements
+#     tuple set=green, symbol=dot, symbsize=1/2, linepe=0, linecl=0,
+#       ebarsize=3/4, ebar=1,
+#       x=iv_state, y=sginit, cll=stlinit, clu=stuinit, color=black, end;
+
+ccf_plot <- ccf_plot +
+  geom_point(data=nonparametric, aes(x=iv_state, y=sginit))
+
+show(ccf_plot)
+@
+
+\subsection{ErrorBars}\label{S:errorbars}
+
+<<errorBars, warning=FALSE>>=
+#     tuple set=green, symbol=circle, symbsize=1/2, linepe=0, linecl=0,
+#       ebarsize=3/4, ebar=1,
+#       x=iv_state, y=sgdead1, cll=stldead1, clu=studead1, color=blue, end;
+ccf_plot <- ccf_plot +
+  geom_point(data=nonparametric, aes(x=iv_state, y=sgdead1),color="blue",shape=1) + 
+  geom_errorbar(data=nonparametric, aes(x=iv_state, ymin=stldead1, ymax=studead1), color="blue", width=.1)
+
+#      tuple set=green, symbol=square, symbsize=1/2, linepe=0, linecl=0,
+#       ebarsize=3/4, ebar=1,
+#       x=iv_state, y=sgstrk1, cll=stlstrk1, clu=stustrk1, color=blue, end;
+ccf_plot <- ccf_plot +
+  geom_point(data=nonparametric, aes(x=iv_state, y=sgstrk1),color="blue",shape=0) + 
+  geom_errorbar(data=nonparametric, aes(x=iv_state, ymin=stlstrk1, ymax=stustrk1), color="blue", width=.1)
+
+show(ccf_plot)
+@
+
+\subsection{Lines}\label{S:lines}
+<<lines>>=
+# /**********PARAMETRIC : SOLID LINES AND CONFIDENCE INTERVALS**********/      
+# tuple set=all, x=years, y=noinit, cll=clinit, clu=cuinit,
+# width=0.5,color=black, end;
+
+ccf_plot <- ccf_plot+
+  geom_line(data=parametric, aes(x=years, y=noinit))+
+  geom_line(data=parametric, aes(x=years, y=clinit), linetype="dashed")+
+  geom_line(data=parametric, aes(x=years, y=cuinit), linetype="dashed")
+# 
+# tuple set=all, x=years, y=nodeath, cll=cldeath, clu=cudeath,
+# width=0.5,color=blue, end;
+ccf_plot <- ccf_plot+
+  geom_line(data=parametric, aes(x=years, y=nodeath), color="blue")+
+  geom_line(data=parametric, aes(x=years, y=cldeath), linetype="dashed", color="blue")+
+  geom_line(data=parametric, aes(x=years, y=cudeath), linetype="dashed", color="blue")
+# 
+# tuple set=all, x=years, y=nostrk, cll=clstrk, clu=custrk,
+# linecl=2, width=0.5,color=blue, end;
+ccf_plot <- ccf_plot+
+  geom_line(data=parametric, aes(x=years, y=nostrk), color="blue")+
+  geom_line(data=parametric, aes(x=years, y=clstrk), linetype="dashed", color="blue")+
+  geom_line(data=parametric, aes(x=years, y=custrk), linetype="dashed", color="blue")
+
+show(ccf_plot)
+@
+\subsection{Shapes}\label{S:shapes}
+
+\subsection{Colors}\label{S:colors}
+
+\subsection{Global Commands}\label{Sglobals}
+
+<<global>>=
+# Special commands to force origin to 0,0
+ccf_plot <- ccf_plot+ coord_cartesian(xlim=c(0,5.2), ylim=c(0,101))
+#   expand_limits(x = 0, y = 0) +
+#   scale_x_continuous(expand = c(-0.1, 0.1)) + 
+#   scale_y_continuous(expand = c(-1, 0.1))
+
+show(ccf_plot)
+@
+
+
+% -----------------------------------------------------
+\section{PowerPoint Figures}\label{S:powerPointFigures}
+% -----------------------------------------------------
+<<powerpoint>>=
+# %plot(goptions gsfmode=replace, device=cgmmppa, ftext=hwcgm001, end;
+# axisx order=(0 to 5 by 1), minor=none, value=(height=2.4), end;
+# axisy order=(0 to 100 by 20), minor=none, value=(height=2.4), 
+# value=(height=2.4 j=r ' ' '20' '40' '60' '80' '100'), end;
+# tuple set=all, x=years, y=noinit, width=3, color=gray, end;
+# tuple set=all, x=years, y=nostrk, width=3, color=red, end;
+# tuple set=all, x=years, y=nodeath, width=3, color=blue, end;
+# );
+ccf_pptPlot <- ggplot()+
+  scale_x_continuous(breaks=seq(0,5,1))+
+  scale_y_continuous(breaks=seq(0,100,20))+
+  geom_line(data=parametric, aes(x=years, y=noinit), color="grey", width=4)+
+  geom_line(data=parametric, aes(x=years, y=nostrk), color="red", width=4)+
+  geom_line(data=parametric, aes(x=years, y=nodeath), color="blue", width=4)
+
+show(ccf_pptPlot)
+@
+
+
+% -----------------------------------------------------
+\section[Themes for publications]{\pkg{ggplot2} themes for publication}\label{S:themes}
+% -----------------------------------------------------
+
+\subsection{Theme for Manuscripts}
+<<manuscriptTheme>>=
+theme_set(theme_man())
+ccf_plot
+
+theme_set(theme_bw())
+@
+\subsection{Theme for Presentations}
+<<powerpointTheme>>=
+ccf_pptPlot+
+  labs(x="",y="")+
+  theme_ppt()
+@
+% -----------------------------------------------------
+\section{Saving Publication graphics}\label{S:saving}
+% -----------------------------------------------------
+
+\subsection{Manuscript graphics}
+<<storage>>=
+#    id l="&STUDY/graphs/ce.states.ST_toJohn.sas percent", end;
+@
+
+\subsection{PowerPoint graphics}
+
 
 % -----------------------------------------------------
 \section{Generating other figure types}\label{S:alternateFigures}
@@ -371,22 +545,6 @@ Differences include the target \code{device} and \code{ftext} as well as some ha
 
 \subsection{Additional Figure Types}
 
-
-% -----------------------------------------------------
-\section[Themes for publications]{\pkg{ggplot2} themes for publication}\label{S:themes}
-% -----------------------------------------------------
-
-\subsection{Theme for Manuscripts}
-
-\subsection{Theme for Presentations}
-
-% -----------------------------------------------------
-\section{Saving Publication graphics}\label{S:saving}
-% -----------------------------------------------------
-
-\subsection{Manuscript graphics}
-
-\subsection{PowerPoint graphics}
 
 % -----------------------------------------------------
 \section{Graphics rules to live by}\label{S:rules}
