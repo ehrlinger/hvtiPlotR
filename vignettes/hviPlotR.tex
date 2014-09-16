@@ -264,7 +264,7 @@ A similar set of \code{plot.sas} commands is used to create presentation graphic
 *______________________________________________________________________________;
 *                                                                              ;
 * Competing risks, parametric only                                             ;
-filename gsasfile "&STUDY/graphs/ce.states.ST_toJohn.cgm";
+filename gsasfile "&STUDY/graphs/ce.states.ST.cgm";
 %plot(goptions gsfmode=replace, device=cgmmppa, ftext=hwcgm001, end;
 axisx order=(0 to 5 by 1), minor=none, value=(height=2.4), end;
 axisy order=(0 to 100 by 20), minor=none, value=(height=2.4), 
@@ -591,9 +591,9 @@ As a second example, we recreate a figure that was created for PowerPoint with t
 \hlstd{ccf_pptPlot} \hlkwb{<-} \hlkwd{ggplot}\hlstd{()}\hlopt{+}
   \hlkwd{scale_x_continuous}\hlstd{(}\hlkwc{breaks}\hlstd{=}\hlkwd{seq}\hlstd{(}\hlnum{0}\hlstd{,}\hlnum{5}\hlstd{,}\hlnum{1}\hlstd{))}\hlopt{+}
   \hlkwd{scale_y_continuous}\hlstd{(}\hlkwc{breaks}\hlstd{=}\hlkwd{seq}\hlstd{(}\hlnum{0}\hlstd{,}\hlnum{100}\hlstd{,}\hlnum{20}\hlstd{))}\hlopt{+}
-  \hlkwd{geom_line}\hlstd{(}\hlkwc{data}\hlstd{=parametric,} \hlkwd{aes}\hlstd{(}\hlkwc{x}\hlstd{=years,} \hlkwc{y}\hlstd{=noinit),} \hlkwc{color}\hlstd{=}\hlstr{"grey"}\hlstd{,} \hlkwc{width}\hlstd{=}\hlnum{4}\hlstd{)}\hlopt{+}
-  \hlkwd{geom_line}\hlstd{(}\hlkwc{data}\hlstd{=parametric,} \hlkwd{aes}\hlstd{(}\hlkwc{x}\hlstd{=years,} \hlkwc{y}\hlstd{=nostrk),} \hlkwc{color}\hlstd{=}\hlstr{"red"}\hlstd{,} \hlkwc{width}\hlstd{=}\hlnum{4}\hlstd{)}\hlopt{+}
-  \hlkwd{geom_line}\hlstd{(}\hlkwc{data}\hlstd{=parametric,} \hlkwd{aes}\hlstd{(}\hlkwc{x}\hlstd{=years,} \hlkwc{y}\hlstd{=nodeath),} \hlkwc{color}\hlstd{=}\hlstr{"blue"}\hlstd{,} \hlkwc{width}\hlstd{=}\hlnum{4}\hlstd{)}
+  \hlkwd{geom_line}\hlstd{(}\hlkwc{data}\hlstd{=parametric,} \hlkwd{aes}\hlstd{(}\hlkwc{x}\hlstd{=years,} \hlkwc{y}\hlstd{=noinit),} \hlkwc{color}\hlstd{=}\hlstr{"grey"}\hlstd{,} \hlkwc{size}\hlstd{=}\hlnum{4}\hlstd{)}\hlopt{+}
+  \hlkwd{geom_line}\hlstd{(}\hlkwc{data}\hlstd{=parametric,} \hlkwd{aes}\hlstd{(}\hlkwc{x}\hlstd{=years,} \hlkwc{y}\hlstd{=nostrk),} \hlkwc{color}\hlstd{=}\hlstr{"red"}\hlstd{,} \hlkwc{size}\hlstd{=}\hlnum{4}\hlstd{)}\hlopt{+}
+  \hlkwd{geom_line}\hlstd{(}\hlkwc{data}\hlstd{=parametric,} \hlkwd{aes}\hlstd{(}\hlkwc{x}\hlstd{=years,} \hlkwc{y}\hlstd{=nodeath),} \hlkwc{color}\hlstd{=}\hlstr{"blue"}\hlstd{,} \hlkwc{size}\hlstd{=}\hlnum{4}\hlstd{)}
 
 \hlkwd{show}\hlstd{(ccf_pptPlot)}
 \end{alltt}
@@ -673,6 +673,43 @@ As a second example, we recreate a figure that was created for PowerPoint with t
 \end{knitrout}
 
 \subsection{PowerPoint graphics}
+\begin{knitrout}\footnotesize
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{library}\hlstd{(ReporteRs)}
+\hlcom{#    id l="&STUDY/graphs/ce.states.ST_toJohn.sas percent", end;}
+
+\hlcom{# Create a powerPoint document using ../inst/RDPresentation.pptx }
+\hlcom{# as a template document.}
+\hlstd{doc} \hlkwb{=} \hlkwd{pptx}\hlstd{(}\hlkwc{template}\hlstd{=}\hlkwd{paste}\hlstd{(}\hlstr{"../inst/RDPresentation.pptx"}\hlstd{,} \hlkwc{sep}\hlstd{=}\hlstr{""}\hlstd{))}
+
+\hlcom{# Here we define powerpoint document filename to write}
+\hlcom{# the presentation. This will be overwritten}
+\hlstd{pptx.file} \hlkwb{=} \hlkwd{paste}\hlstd{(}\hlstr{"RDExample.pptx"}\hlstd{,} \hlkwc{sep}\hlstd{=}\hlstr{""}\hlstd{)}
+
+\hlcom{##--------}
+\hlcom{# For each graph, addSlide. The graphs require the }
+\hlcom{# “Title and Content” template.}
+\hlstd{doc} \hlkwb{=} \hlkwd{addSlide}\hlstd{( doc,} \hlstr{"Title and Content"} \hlstd{)}
+
+\hlcom{# Place a title}
+\hlstd{doc}\hlkwb{=}\hlkwd{addTitle}\hlstd{( doc,} \hlstr{"Treatment Difference"} \hlstd{)}
+
+\hlcom{# Now add the graph into the powerPoint doc }
+\hlstd{doc} \hlkwb{=} \hlkwd{addPlot}\hlstd{(} \hlkwc{doc}\hlstd{=doc,} \hlkwc{fun}\hlstd{=print,}
+               \hlkwc{x}\hlstd{=ccf_pptPlot}\hlopt{+}\hlkwd{theme_ppt}\hlstd{() ,}
+               \hlkwc{editable} \hlstd{=} \hlnum{TRUE}\hlstd{,}
+               \hlkwc{offx}\hlstd{=}\hlnum{.75}\hlstd{,} \hlkwc{offy}\hlstd{=}\hlnum{1.1}\hlstd{,} \hlkwc{width}\hlstd{=}\hlnum{8}\hlstd{,} \hlkwc{height}\hlstd{=}\hlnum{6}\hlstd{)}
+\hlcom{##--------}
+\hlcom{## IF you want to add more, just repeat between the “—————“ comments}
+\hlcom{##--------}
+
+\hlcom{# write the output powerpoint doc. }
+\hlcom{# This will not overwrite an open document, since open PPT files are locked.}
+\hlkwd{writeDoc}\hlstd{( doc, pptx.file )}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
 
 
 % -----------------------------------------------------

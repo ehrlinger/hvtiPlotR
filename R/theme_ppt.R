@@ -21,10 +21,10 @@ theme_ppt <- function(base_size = 32, base_family = "") {
           panel.background = element_rect(fill = "black", colour = "white", size=1), 
           axis.ticks = element_line(colour = "white", size = 1), 
           legend.position="none",
-          panel.grid.major.x = element_line(colour = "transparent"),
-          panel.grid.major.y = element_line(colour = "transparent", linetype=2),
-          panel.grid.minor = element_line(colour = "transparent"))
-  
+          panel.grid.major.x =  element_blank(),
+          panel.grid.major.y =  element_blank(),
+          panel.grid.minor =  element_blank()
+          )
 }
 
 #===========================================================================================
