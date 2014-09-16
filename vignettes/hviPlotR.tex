@@ -731,7 +731,7 @@ As a second example, we recreate a figure that was created for PowerPoint with t
 \begin{alltt}
 \hlkwd{library}\hlstd{(gridExtra)}
 
-\hlstd{ccf_savePlot} \hlkwb{<-} \hlkwd{arrangeGrob}\hlstd{(ccf_plot,}
+\hlstd{ccf_savePlot} \hlkwb{<-} \hlkwd{arrangeGrob}\hlstd{(ccf_plot}\hlopt{+}\hlkwd{theme_man}\hlstd{(),}
                             \hlkwc{sub} \hlstd{=} \hlkwd{textGrob}\hlstd{(}\hlkwd{getwd}\hlstd{(),}
                                            \hlkwc{x} \hlstd{=} \hlnum{0}\hlstd{,} \hlkwc{hjust} \hlstd{=} \hlopt{-}\hlnum{.01}\hlstd{,} \hlkwc{vjust}\hlstd{=}\hlnum{1}\hlstd{,}
                                            \hlkwc{gp} \hlstd{=} \hlkwd{gpar}\hlstd{(}\hlkwc{fontface} \hlstd{=} \hlstr{"italic"}\hlstd{,} \hlkwc{fontsize} \hlstd{=} \hlnum{10}\hlstd{)))}
