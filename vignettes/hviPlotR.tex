@@ -59,9 +59,44 @@
 %\VignetteDepends{ggplot2}
 %\VignettePackage{hviPlotR} 
 
+\usepackage{float}
+\usepackage{listings}
+\usepackage{color}
+
+\definecolor{mygreen}{rgb}{0,0.6,0}
+\definecolor{mygray}{rgb}{0.95,0.95,0.95}
+\definecolor{mymauve}{rgb}{0.58,0,0.82}
+\lstset{
+backgroundcolor=\color{mygray},   % choose the background color; you must add \usepackage{color} or \usepackage{xcolor}
+basicstyle=\ttfamily\footnotesize,
+breakatwhitespace=false,         % sets if automatic breaks should only happen at whitespace
+breaklines=true,                 % sets automatic line breaking
+captionpos=b,                    % sets the caption-position to bottom
+commentstyle=\color{mygreen},    % comment style
+%deletekeywords={...},            % if you want to delete keywords from the given language
+escapeinside={\%*}{*)},          % if you want to add LaTeX within your code
+extendedchars=true,              % lets you use non-ASCII characters; for 8-bits encodings only, does not work with UTF-8
+%frame=single,                    % adds a frame around the code
+keepspaces=true,                 % keeps spaces in text, useful for keeping indentation of code (possibly needs columns=flexible)
+keywordstyle=\color{blue},       % keyword style
+language={SAS},                  % the language of the code
+morekeywords={*,...},            % if you want to add more keywords to the set
+numbers=none,                    % where to put the line-numbers; possible values are (none, left, right)
+%numbersep=5pt,                   % how far the line-numbers are from the code
+%numberstyle=\tiny\color{mygray}, % the style that is used for the line-numbers
+%rulecolor=\color{black},         % if not set, the frame-color may be changed on line-breaks within not-black text (e.g. comments (green here))
+showspaces=false,                % show spaces everywhere adding particular underscores; it overrides 'showstringspaces'
+showstringspaces=false,          % underline spaces within strings only
+showtabs=false,                  % show tabs within strings adding particular underscores
+%stepnumber=2,                    % the step between two line-numbers. If it's 1, each line will be numbered
+stringstyle=\color{mymauve},     % string literal style
+tabsize=2,                       % sets default tabsize to 2 spaces
+title=\lstname                   % show the filename of files included with \lstinputlisting; also try caption instead of title
+}
+
 %% almost as usual
-\author{John Ehrlinger\\Cleveland Clinic} %\And \\Plus Affiliation}
-\title{{\pkg{hviPlotR}}: Generating \code{plot.sas} style figures in \proglang{R}}
+\author{John Ehrlinger\\Quantitative Health Sciences\\Lerner Research Institute\\Cleveland Clinic} %\And \\Plus Affiliation}
+\title{The {\pkg{hviPlotR}} package: Generating \code{plot.sas} style figures in \proglang{R}}
 
 %% for pretty printing and a nice hypersummary also set:
 \Plainauthor{John Ehrlinger} %% comma-separated
@@ -167,81 +202,73 @@ This document outlines how to generate figures using the \pkg{ggplot2} and \pkg{
 % -----------------------------------------------------
 \section[The plot.sas macro]{The \code{plot.sas} macro}\label{S:plot.sas}
 % -----------------------------------------------------
-To demonstrate the process, we first look at some example code using the \code{plot.sas} macro. This code is intended to generate a figure for manuscript publication and was modified to generate Figure~\ref{F:introFigure}. Note the first line of the code block indicates the location of the file.
 
-\begin{CodeChunk}\small
-\begin{CodeInput}
-%let STUDY=/studies/cardiac/valves/aortic/replacement/
-partner_publication_office/partner1b/mortality_5y
-*******************************************************************************;
-* Bring in PostScript plot macro                                               ;
+To demonstrate the process, we first look at some example code using the \code{plot.sas} macro. This code is intended to generate a figure for manuscript publication and was modified to generate Figure~\ref{F:introFigure}.
+\begin{lstlisting}[float,floatplacement=!htpb, caption={plot.sas commands: Figure setup.},label={plot.sas:figureSetup}]
+%let STUDY=/studies/cardiac/valves/aortic/replacement/partner_publication_office/partner1b/mortality_5y
+*****************************************************************************;
+* Bring in PostScript plot macro                                             ;
 filename plt "!MACROS/plot.sas"; %inc plt;
 filename gsasfile pipe 'lp';
-*______________________________________________________________________________;
-*                                                                              ;
+*____________________________________________________________________________;
+*                                                                            ;
 *                       P O S T S C R I P T   P L O T S
-*______________________________________________________________________________;
-*                                                                              ;
-* Multiple decrement, nonparametric and parametric                             ;
-filename gsasfile "&STUDY/graphs/ce.states.ST_toJohn.both.ps";
+*____________________________________________________________________________;
+* Multiple decrement, nonparametric and parametric                           ;
+filename gsasfile "&STUDY/graphs/ce.states.ST.ps";
 
-*______________________________________________________________________________;
-* Create the figure here   !                                                   ;
-*______________________________________________________________________________;
+*____________________________________________________________________________;
+* Create the figure here   !                                                 ;
+*____________________________________________________________________________;
 %plot(goptions gsfmode=replace, device=pscolor, gaccess=gsasfile end;
-id l="&STUDY/graphs/ce.states.ST_toJohn.sas percent", end;
-labelx l="Years After Randomization", end;
-axisx order=(0 to 5 by 1), minor=none, end;
-labely l="Percent in Each Category (ST)", end;
-axisy order=(0 to 100 by 10), minor=none, end;
-\end{CodeInput}
-\end{CodeChunk}
+      id l="&STUDY/graphs/ce.states.ST.sas percent", end;
+     labelx l="Years After Randomization", end;
+     axisx order=(0 to 5 by 1), minor=none, end;
+     labely l="Percent in Each Category (ST)", end;
+     axisy order=(0 to 100 by 10), minor=none, end;
+\end{lstlisting}
 
-We interupt this command here for some explanation. The \code{plot.sas} macro call starts with the \code{\%plot} command. The first line sets global graphic values, including the file where the figure will be saved (see Section~\ref{S:saving}). Each \code{plot.sas} command is terminated with the \code{end;} statement. We'll look at each command type individually.
+Note the first line of the code block in Listing~\ref{plot.sas:figureSetup} indicates the path to the file location. The \code{filename} statments bring in the \code{plot.sas} macro, indicate how to print, and where to save the graphics file. The \code{plot.sas} macro call starts with the \code{\%plot} command. The first line sets global graphic values, including the file where the figure will be saved (see Section~\ref{S:saving}). Each \code{plot.sas} command is terminated with the \code{end;} statement. We'll look at each command type individually.
 
 The \code{id l=} command sets the footnote text used for manuscript figures to identify where the figure is saved (see Section~\ref{S:saving}). The \code{labelx} and \code{labely} commands set the axis label text (Section~\ref{S:labels}) and the \code{axisx} and \code{axisy} set the scales for each axis locating text and tics (Section~\ref{S:scales}).
 
-The \code{tuple} command builds up graphics objects within the figure plot window. The first set of tuple commands builds up a set of three elements containing both points (Section~\ref{S:points}) and errorbars (Section~\ref{S:errorbars}). Each \code{tuple} statement operates on a dataset indicated by the \code{set} command. 
-\begin{CodeChunk}\small
-\begin{CodeInput}
+\begin{lstlisting}[float,floatplacement=!htpb, caption={plot.sas commands: points and errorbar tuple statements.}\label{plot.sas:pointTuple}]
 /******NON-PARAMETRIC: SYMBOLS AND CONFIDENCE BARS *******/
 tuple set=green, symbol=dot, symbsize=1/2, linepe=0, linecl=0,
-ebarsize=3/4, ebar=1,
-x=iv_state, y=sginit, cll=stlinit, clu=stuinit, color=black, 
-end;
+     ebarsize=3/4, ebar=1,
+     x=iv_state, y=sginit, cll=stlinit, clu=stuinit, color=black, 
+     end;
 tuple set=green, symbol=circle, symbsize=1/2, linepe=0, linecl=0,
-ebarsize=3/4, ebar=1,
-x=iv_state, y=sgdead1, cll=stldead1, clu=studead1, color=blue, 
-end;
+     ebarsize=3/4, ebar=1,
+     x=iv_state, y=sgdead1, cll=stldead1, clu=studead1, color=blue, 
+     end;
 tuple set=green, symbol=square, symbsize=1/2, linepe=0, linecl=0,
-ebarsize=3/4, ebar=1,
-x=iv_state, y=sgstrk1, cll=stlstrk1, clu=stustrk1, color=blue, 
-end;
-\end{CodeInput}
-\end{CodeChunk}
+     ebarsize=3/4, ebar=1,
+     x=iv_state, y=sgstrk1, cll=stlstrk1, clu=stustrk1, color=blue, 
+     end;
+\end{lstlisting}
+The \code{tuple} command builds up graphics objects within the figure plot window. The first set of tuple commands builds up a set of three elements containing both points (Section~\ref{S:points}) and errorbars (Section~\ref{S:errorbars}). Each \code{tuple} statement operates on a dataset indicated by the \code{set} command. 
+
 Symbols shapes and sizes are specified with the \code{symbol} and \code{symbsize} commands (Section~\ref{S:shapes}).
 
 The second set of \code{tuple} statements build up a set of three elements containing lines and confidence intervals (Section~\ref{S:lines}).
-\begin{CodeChunk}\small
-\begin{CodeInput}
-
+\begin{lstlisting}[float,floatplacement=!htpb, caption={plot.sas commands: lines tuple statements.}, label={plot.sas:linesTuple}]
 /**********PARAMETRIC : SOLID LINES AND CONFIDENCE INTERVALS**********/      
 tuple set=all, x=years, y=noinit, cll=clinit, clu=cuinit,
-width=0.5,color=black, 
-end;
+     width=0.5,color=black, 
+     end;
 
 tuple set=all, x=years, y=nodeath, cll=cldeath, clu=cudeath,
-width=0.5,color=blue, 
-end;
+     width=0.5,color=blue, 
+     end;
 
 tuple set=all, x=years, y=nostrk, cll=clstrk, clu=custrk,
-linecl=2, width=0.5,color=blue, 
-end;
+     linecl=2, width=0.5,color=blue, 
+     end;
 );
 run;
-*******************************************************************************;
-\end{CodeInput}
-\end{CodeChunk}
+*****************************************************************************;
+\end{lstlisting}
 
 The \code{plot.sas} macro code is closed by the ending \code{);} characters, and \proglang{SAS} is instructed to \code{run;} the code. Running combines building the figure by combining elements from \code{label}, \code{axis} and \code{tuple} statements and saving it into the file specified by the \code{gsasfile} variable. The resulting figure is shown in Figure~\ref{F:sasManuscript}.
 
@@ -256,26 +283,23 @@ Note that much of the figure formatting is mixed within the \code{tuple} stateme
 
 
 A similar set of \code{plot.sas} commands is used to create presentation graphics.
-\begin{CodeChunk}\small\label{C:powerPoint}
-\begin{CodeInput}
-*______________________________________________________________________________;
-*                                                                              ;
+\begin{lstlisting}[float,floatplacement=!htpb, caption={plot.sas commands: CGM instructions.}, label={plot.sas:cgm}]
+*____________________________________________________________________________;
+*                                                                            ;
 *       C G M   F I L E S   F O R   P O W E R P O I N T   S L I D E S
-*______________________________________________________________________________;
-*                                                                              ;
-* Competing risks, parametric only                                             ;
+*____________________________________________________________________________;
+* Competing risks, parametric only                                           ;
 filename gsasfile "&STUDY/graphs/ce.states.ST.cgm";
 %plot(goptions gsfmode=replace, device=cgmmppa, ftext=hwcgm001, end;
-axisx order=(0 to 5 by 1), minor=none, value=(height=2.4), end;
-axisy order=(0 to 100 by 20), minor=none, value=(height=2.4), 
-value=(height=2.4 j=r ' ' '20' '40' '60' '80' '100'), end;
-tuple set=all, x=years, y=noinit, width=3, color=gray, end;
-tuple set=all, x=years, y=nostrk, width=3, color=red, end;
-tuple set=all, x=years, y=nodeath, width=3, color=blue, end;
+     axisx order=(0 to 5 by 1), minor=none, value=(height=2.4), end;
+     axisy order=(0 to 100 by 20), minor=none, value=(height=2.4), 
+     value=(height=2.4 j=r ' ' '20' '40' '60' '80' '100'), end;
+     tuple set=all, x=years, y=noinit, width=3, color=gray, end;
+     tuple set=all, x=years, y=nostrk, width=3, color=red, end;
+     tuple set=all, x=years, y=nodeath, width=3, color=blue, end;
 );
 run;  
-\end{CodeInput}
-\end{CodeChunk}
+\end{lstlisting}
 %\caption{SAS Code for powerpoint figure.\label{C:powerpoint}}
 Differences include the target \code{device} and \code{ftext} as well as some handling of figure labels with \code{value} instead of \code{label} commands. We also have rules for what to and not to include in presentation graphics (Section~\ref{S:rules}).
 
@@ -511,7 +535,7 @@ Similar to points and error bars, the \code{geom_line} function is used to plot 
 This time, we used the \code{parametric} data set in the \code{data} argument, as we want to use a different set of points for generating these lines. 
 
 \subsection{Linetypes}\label{S:linetypes}
-
+The \code{linetype} argument takes a named string as a value, to set the different line styles. The set of styles is shown in Figure~\ref{F:linetypes}. 
 \begin{knitrout}\footnotesize
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{figure}[htpb]
 
@@ -527,6 +551,7 @@ This time, we used the \code{parametric} data set in the \code{data} argument, a
 \end{knitrout}
 
 \subsection{Shapes}\label{S:shapes}
+The \code{shape} argument takes numeric arguments. Though not user freindly, it is at least consistent. Figure~\ref{F:shapes} shows the catalog of shapes with corresponding numeric argument constructed using the ones place along the x-axis, and tens along the y-axis. So the filled dot, default point shape shown in black in Figure~\ref{F:lines} is shape 20.
 
 \begin{knitrout}\footnotesize
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{figure}[htpb]
@@ -543,6 +568,25 @@ This time, we used the \code{parametric} data set in the \code{data} argument, a
 \end{knitrout}
 
 \subsection{Colors}\label{S:colors}
+You can specify colors in \proglang{R} by numeric index, name (as we have done), hexadecimal, or RGB specification. For example \code{col=1} and \code{col="white"}  are equivalent. The chart in Figure~\ref{F:colorChart} was produced with code developed by~\cite{Glynn:2005}. See his \proglang{R}  Color Chart website for all the details you would ever need about using colors in R.
+
+\begin{knitrout}\footnotesize
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{figure}[htpb]
+
+
+{\centering \includegraphics[width=\maxwidth]{figure/beamer-colorChart} 
+
+}
+
+\caption[R colors]{R colors\label{F:colorChart}}
+\end{figure}
+
+
+\end{knitrout}
+
+Color theory encompasses a multitude of definitions, concepts and design applications - enough to fill several encyclopedias. However, there are three basic categories of color theory that are logical and useful : The color wheel, color harmony, and the context of how colors are used. ColorBrewer~\citep{Brewer:2003} is an online tool~(\url{http://colorbrewer2.org/}) designed to help people select good color schemes for maps and other graphics. We encourage the use of ColorBrewer as a good, safe introduction to selecting colors based on theoretically good practices. 
+
+The \pkg{RColorBrewer} package~citep{Neuwirth:2011} simplifies the selection of ColorBrewer colors into \proglang{R}. We have used \pkg{RColorBrewer} to get a list of colors, and assign colors manually to specific variable values using the \pkg{ggplot2} \code{aes()} mechanism. The ColorBrewer palletes have also been built into the \pkg{ggplot2} \code{scale_} functions in the \code{scale_color_brewer} function. We have made extensive use of the \code{palette="Set1"} color palette in figures we have generated. There are also a series of other \code{scale_color_} functions in \pkg{ggplot2} to aid the user in selecting good color schemes for many different settings.
 
 \subsection{Global Commands}\label{S:globals}
 
@@ -550,10 +594,8 @@ This time, we used the \code{parametric} data set in the \code{data} argument, a
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
 \hlcom{# Special commands to force origin to 0,0}
-\hlstd{ccf_plot} \hlkwb{<-} \hlstd{ccf_plot}\hlopt{+} \hlkwd{coord_cartesian}\hlstd{(}\hlkwc{xlim}\hlstd{=}\hlkwd{c}\hlstd{(}\hlnum{0}\hlstd{,}\hlnum{5.2}\hlstd{),} \hlkwc{ylim}\hlstd{=}\hlkwd{c}\hlstd{(}\hlnum{0}\hlstd{,}\hlnum{101}\hlstd{))}
-\hlcom{#   expand_limits(x = 0, y = 0) +}
-\hlcom{#   scale_x_continuous(expand = c(-0.1, 0.1)) + }
-\hlcom{#   scale_y_continuous(expand = c(-1, 0.1))}
+\hlstd{ccf_plot} \hlkwb{<-} \hlstd{ccf_plot} \hlopt{+}
+  \hlkwd{coord_cartesian}\hlstd{(}\hlkwc{xlim}\hlstd{=}\hlkwd{c}\hlstd{(}\hlnum{0}\hlstd{,}\hlnum{5.2}\hlstd{),} \hlkwc{ylim}\hlstd{=}\hlkwd{c}\hlstd{(}\hlnum{0}\hlstd{,}\hlnum{101}\hlstd{))}
 
 \hlkwd{show}\hlstd{(ccf_plot)}
 \end{alltt}
@@ -570,6 +612,9 @@ This time, we used the \code{parametric} data set in the \code{data} argument, a
 
 \end{knitrout}
 
+% #   expand_limits(x = 0, y = 0) +
+% #   scale_x_continuous(expand = c(-0.1, 0.1)) + 
+% #   scale_y_continuous(expand = c(-1, 0.1))
 
 % -----------------------------------------------------
 \section{PowerPoint Figures}\label{S:powerPointFigures}
@@ -591,9 +636,9 @@ As a second example, we recreate a figure that was created for PowerPoint with t
 \hlstd{ccf_pptPlot} \hlkwb{<-} \hlkwd{ggplot}\hlstd{()}\hlopt{+}
   \hlkwd{scale_x_continuous}\hlstd{(}\hlkwc{breaks}\hlstd{=}\hlkwd{seq}\hlstd{(}\hlnum{0}\hlstd{,}\hlnum{5}\hlstd{,}\hlnum{1}\hlstd{))}\hlopt{+}
   \hlkwd{scale_y_continuous}\hlstd{(}\hlkwc{breaks}\hlstd{=}\hlkwd{seq}\hlstd{(}\hlnum{0}\hlstd{,}\hlnum{100}\hlstd{,}\hlnum{20}\hlstd{))}\hlopt{+}
-  \hlkwd{geom_line}\hlstd{(}\hlkwc{data}\hlstd{=parametric,} \hlkwd{aes}\hlstd{(}\hlkwc{x}\hlstd{=years,} \hlkwc{y}\hlstd{=noinit),} \hlkwc{color}\hlstd{=}\hlstr{"grey"}\hlstd{,} \hlkwc{size}\hlstd{=}\hlnum{4}\hlstd{)}\hlopt{+}
-  \hlkwd{geom_line}\hlstd{(}\hlkwc{data}\hlstd{=parametric,} \hlkwd{aes}\hlstd{(}\hlkwc{x}\hlstd{=years,} \hlkwc{y}\hlstd{=nostrk),} \hlkwc{color}\hlstd{=}\hlstr{"red"}\hlstd{,} \hlkwc{size}\hlstd{=}\hlnum{4}\hlstd{)}\hlopt{+}
-  \hlkwd{geom_line}\hlstd{(}\hlkwc{data}\hlstd{=parametric,} \hlkwd{aes}\hlstd{(}\hlkwc{x}\hlstd{=years,} \hlkwc{y}\hlstd{=nodeath),} \hlkwc{color}\hlstd{=}\hlstr{"blue"}\hlstd{,} \hlkwc{size}\hlstd{=}\hlnum{4}\hlstd{)}
+  \hlkwd{geom_line}\hlstd{(}\hlkwc{data}\hlstd{=parametric,} \hlkwd{aes}\hlstd{(}\hlkwc{x}\hlstd{=years,} \hlkwc{y}\hlstd{=noinit),} \hlkwc{color}\hlstd{=}\hlstr{"grey"}\hlstd{,} \hlkwc{size}\hlstd{=}\hlnum{1.5}\hlstd{)}\hlopt{+}
+  \hlkwd{geom_line}\hlstd{(}\hlkwc{data}\hlstd{=parametric,} \hlkwd{aes}\hlstd{(}\hlkwc{x}\hlstd{=years,} \hlkwc{y}\hlstd{=nostrk),} \hlkwc{color}\hlstd{=}\hlstr{"red"}\hlstd{,} \hlkwc{size}\hlstd{=}\hlnum{1.5}\hlstd{)}\hlopt{+}
+  \hlkwd{geom_line}\hlstd{(}\hlkwc{data}\hlstd{=parametric,} \hlkwd{aes}\hlstd{(}\hlkwc{x}\hlstd{=years,} \hlkwc{y}\hlstd{=nodeath),} \hlkwc{color}\hlstd{=}\hlstr{"blue"}\hlstd{,} \hlkwc{size}\hlstd{=}\hlnum{1.5}\hlstd{)}
 
 \hlkwd{show}\hlstd{(ccf_pptPlot)}
 \end{alltt}
@@ -645,7 +690,7 @@ As a second example, we recreate a figure that was created for PowerPoint with t
 \hlstd{ccf_pptPlot}\hlopt{+}
   \hlkwd{labs}\hlstd{(}\hlkwc{x}\hlstd{=}\hlstr{""}\hlstd{,}\hlkwc{y}\hlstd{=}\hlstr{""}\hlstd{)}\hlopt{+}
   \hlkwd{theme_ppt}\hlstd{()} \hlopt{+}
-  \hlkwd{theme}\hlstd{(}\hlkwc{plot.background} \hlstd{=} \hlkwd{element_rect}\hlstd{(}\hlkwc{fill}\hlstd{=}\hlstr{'blue'}\hlstd{,} \hlkwc{colour}\hlstd{=}\hlstr{'blue'}\hlstd{,} \hlkwc{size}\hlstd{=}\hlnum{2}\hlstd{))}
+  \hlkwd{theme}\hlstd{(}\hlkwc{plot.background} \hlstd{=} \hlkwd{element_rect}\hlstd{(}\hlkwc{fill}\hlstd{=}\hlstr{'blue'}\hlstd{,} \hlkwc{colour}\hlstd{=}\hlstr{'blue'}\hlstd{))}
 \end{alltt}
 \end{kframe}\begin{figure}[htpb]
 
@@ -673,12 +718,27 @@ As a second example, we recreate a figure that was created for PowerPoint with t
 \end{knitrout}
 
 \subsection{PowerPoint graphics}
+We use the \pkg{ReporteRs} package~\citep{Gohel:2014} to insert vector based figures from \proglang{R} into PowerPoint documents. The latest version of the \pkg{ReporteRs} package is available from \url{http://davidgohel.github.io/ReporteRs/}. We install this package as we installed the \pkg{hviPlotR} package.
+\begin{knitrout}\footnotesize
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{# Install the latest ReporteRs package.}
+\hlcom{#}
+\hlcom{# The devtools package is installed on all our }
+\hlcom{# jjnb-gen servers as well as other R instances.}
+\hlkwd{library}\hlstd{(devtools)}
+
+\hlcom{# To get the latest version.}
+\hlkwd{install_github}\hlstd{(}\hlstr{"davidgohel/ReporteRs"}\hlstd{)}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+
+
 \begin{knitrout}\footnotesize
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
 \hlkwd{library}\hlstd{(ReporteRs)}
-\hlcom{#    id l="&STUDY/graphs/ce.states.ST_toJohn.sas percent", end;}
-
 \hlcom{# Create a powerPoint document using ../inst/RDPresentation.pptx }
 \hlcom{# as a template document.}
 \hlstd{doc} \hlkwb{=} \hlkwd{pptx}\hlstd{(}\hlkwc{template}\hlstd{=}\hlkwd{paste}\hlstd{(}\hlstr{"../inst/RDPresentation.pptx"}\hlstd{,} \hlkwc{sep}\hlstd{=}\hlstr{""}\hlstd{))}
@@ -693,7 +753,7 @@ As a second example, we recreate a figure that was created for PowerPoint with t
 \hlstd{doc} \hlkwb{=} \hlkwd{addSlide}\hlstd{( doc,} \hlstr{"Title and Content"} \hlstd{)}
 
 \hlcom{# Place a title}
-\hlstd{doc}\hlkwb{=}\hlkwd{addTitle}\hlstd{( doc,} \hlstr{"Treatment Difference"} \hlstd{)}
+\hlstd{doc} \hlkwb{=} \hlkwd{addTitle}\hlstd{( doc,} \hlstr{"Treatment Difference"} \hlstd{)}
 
 \hlcom{# Now add the graph into the powerPoint doc }
 \hlstd{doc} \hlkwb{=} \hlkwd{addPlot}\hlstd{(} \hlkwc{doc}\hlstd{=doc,} \hlkwc{fun}\hlstd{=print,}
@@ -701,7 +761,7 @@ As a second example, we recreate a figure that was created for PowerPoint with t
                \hlkwc{editable} \hlstd{=} \hlnum{TRUE}\hlstd{,}
                \hlkwc{offx}\hlstd{=}\hlnum{.75}\hlstd{,} \hlkwc{offy}\hlstd{=}\hlnum{1.1}\hlstd{,} \hlkwc{width}\hlstd{=}\hlnum{8}\hlstd{,} \hlkwc{height}\hlstd{=}\hlnum{6}\hlstd{)}
 \hlcom{##--------}
-\hlcom{## IF you want to add more, just repeat between the “—————“ comments}
+\hlcom{## IF you want to add more, just repeat between the ##-------- comments}
 \hlcom{##--------}
 
 \hlcom{# write the output powerpoint doc. }

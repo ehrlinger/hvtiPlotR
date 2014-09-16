@@ -1,4 +1,4 @@
-\begin{thebibliography}{2}
+\begin{thebibliography}{5}
 \newcommand{\enquote}[1]{``#1''}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
@@ -8,6 +8,29 @@
   \providecommand{\doi}{doi:\discretionary{}{}{}\begingroup
   \urlstyle{rm}\Url}\fi
 \providecommand{\eprint}[2][]{\url{#2}}
+
+\bibitem[{Glynn(2005)}]{Glynn:2005}
+Glynn EF (2005).
+\newblock \enquote{R Color Chart.}
+\newblock
+  \url{http://research.stowers-institute.org/efg/R/Color/Chart/index.htm}.
+\newblock Accessed: 2014-09-16.
+
+\bibitem[{Gohel(2014)}]{Gohel:2014}
+Gohel D (2014).
+\newblock \emph{ReporteRs: Microsoft Word, Microsoft Powerpoint and HTML
+  documents generation from R}.
+\newblock R package version 0.6.1,
+  \urlprefix\url{http://davidgohel.github.io/ReporteRs/index.html,
+  http://groups.google.com/group/reporters-package}.
+
+\bibitem[{Harrower and Brewer(2003)}]{Brewer:2003}
+Harrower M, Brewer CA (2003).
+\newblock \enquote{ColorBrewer.org: An Online Tool for Selecting Colour Schemes
+  for Maps.}
+\newblock \emph{The Cartographic Journal}, pp. 27--37.
+\newblock \doi{10.1179/000870403235002042}.
+\newblock \urlprefix\url{http://colorbrewer2.org/}.
 
 \bibitem[{Wickham(2009)}]{Wickham:2009}
 Wickham H (2009).
