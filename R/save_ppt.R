@@ -16,10 +16,10 @@
 #' @param height graphic object height
 #'
 #' @export save_ppt
-#' @importFrom ReporteRs pptx addSlide addTitle addPlot writeDoc
+# @importFrom ReporteRs pptx addSlide addTitle addPlot writeDoc
 #' 
 #' @examples
-#' dontrun{
+#' \dontrun{
 #' # Create a plot
 #' d.plt <- ggplot(plt.dta) + geom_smooth(aes(x=x, y=yhat, color=inductCRT), se=FALSE, width=4)+
 #'   scale_color_brewer(palette = "Set3")+

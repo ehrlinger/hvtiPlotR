@@ -31,7 +31,7 @@ Function for saving a ggplot object, or list of ggplot
 objects to a powerpoint document for presentations.
 }
 \examples{
-dontrun{
+\dontrun{
 # Create a plot
 d.plt <- ggplot(plt.dta) + geom_smooth(aes(x=x, y=yhat, color=inductCRT), se=FALSE, width=4)+
   scale_color_brewer(palette = "Set3")+

@@ -22,7 +22,10 @@ theme_man <- function(base_size = 12, base_family = "") {
           panel.grid.major = element_blank(), 
           panel.grid.minor = element_blank(), 
           
-          strip.background = element_rect(fill = "grey80", colour = "grey50", size = 0.2))
+          strip.background = element_rect(fill = "grey80", colour = "grey50", size = 0.2),
+          
+          plot.margin = unit(c(1,1,1,1), "cm"))
+  
 }
 
 #===========================================================================================

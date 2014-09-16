@@ -639,30 +639,55 @@ show(ccf_pptPlot)
 % -----------------------------------------------------
 
 \subsection{Theme for Manuscripts}
+
+
 <<manuscriptTheme, fig.cap="Theme for Manuscripts">>=
+# Set the theme for manuscripts,
 theme_set(theme_man())
+
+# show the figure.
 ccf_plot
 
+# Reset the theme to the resonable default used previously.
 theme_set(theme_bw())
 @
 
 
-\subsection{Theme for Presentations}
+\subsection{Theme for Presentations}\label{S:themesPPT}
+
 <<powerpointTheme, fig.cap="Theme for Presentations">>=
-ccf_pptPlot+
+# Update the PowerPoint Figure to include the PPT Theme, and remove axis labels.
+# Axis labels will be added manually in powerpoint.
+ccf_pptPlot <- ccf_pptPlot+
   labs(x="",y="")+
-  theme_ppt() +
+  theme_ppt()
+
+# Show the figure... the theme statement is used so the axis tick marks and values
+# are visible in this document.
+ccf_pptPlot +
   theme(plot.background = element_rect(fill='blue', colour='blue'))
 @
+
 % -----------------------------------------------------
 \section{Saving Publication graphics}\label{S:saving}
 % -----------------------------------------------------
 
 \subsection{Manuscript graphics}
-<<storage>>=
-#    id l="&STUDY/graphs/ce.states.ST_toJohn.sas percent", end;
+
+
+
+<<manuscriptFootnote>>=
+library(gridExtra)
+
+ccf_savePlot <- arrangeGrob(ccf_plot+theme_man(), 
+                            sub = textGrob(getwd(), 
+                                           x = 0, hjust = -.01, vjust=1, 
+                                           gp = gpar(fontface = "italic", fontsize = 10)))
+ccf_savePlot
 @
 
+
+ggsav
 \subsection{PowerPoint graphics}
 We use the \pkg{ReporteRs} package~\citep{Gohel:2014} to insert vector based figures from \proglang{R} into PowerPoint documents. The latest version of the \pkg{ReporteRs} package is available from \url{http://davidgohel.github.io/ReporteRs/}. We install this package as we installed the \pkg{hviPlotR} package.
 <<installReporteRs, eval=FALSE>>=
@@ -676,7 +701,11 @@ library(devtools)
 install_github("davidgohel/ReporteRs")
 @
 
+Basically, the package works by opening a saved PowerPoint Presentation, and inserting new slides containing graphs or tables into the document. The resulting document is then saved to a new presentation. We then pass this presentation to our collaborators, who then copy and paste the \pkg{ggplot2} slides into their own presentations. 
 
+The \pkg{ggplot2} graphics that are inserted into the presentation are converted into an editable vector based format. When the document is edited in PowerPoint, graphical components like points, lines, text can be easily modified to match the presenters style.
+
+The following code block is an \proglang{R} recipe for saving the \code{ccf_pptPlot} created in Section~\ref{S:themesPPT}. 
 <<PPTstorage, eval=FALSE>>=
 library(ReporteRs)
 # Create a powerPoint document using ../inst/RDPresentation.pptx 
@@ -709,6 +738,7 @@ doc = addPlot( doc=doc, fun=print,
 writeDoc( doc, pptx.file )
 @
 
+The only modification possibly require for this recipe may be moving the insertion point (\code{offx} and \code{offy} arguments) and/or size (\code{width} and \code{height}) of the figure in the \code{addPlot()} function call.
 
 % -----------------------------------------------------
 \section{Generating other figure types}\label{S:alternateFigures}
