@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2014) (preloaded format=pdflatex 2014.5.25)  16 SEP 2014 16:16
+This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2014) (preloaded format=pdflatex 2014.5.25)  17 SEP 2014 14:28
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -378,6 +378,10 @@ File: lstlang3.sty 2014/03/04 1.5c listings language file
 (/usr/local/texlive/2014/texmf-dist/tex/latex/listings/lstmisc.sty
 File: lstmisc.sty 2014/03/04 1.5c (Carsten Heinz)
 )
+
+LaTeX Warning: Unused global option(s):
+    [letterpaper].
+
 (./hviPlotR.aux)
 \openout1 = `hviPlotR.aux'.
 
@@ -480,9 +484,6 @@ Package pdftex.def Info: figure/beamer-introFigure.pdf used on input line 165.
  [1
 
 {/usr/local/texlive/2014/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
-Underfull \vbox (badness 1742) has occurred while \output is active []
-
-
 Overfull \hbox (5.47499pt too wide) has occurred while \output is active
 \T1/aer/m/n/10.95 2 []
  []
@@ -495,39 +496,35 @@ has been already used, duplicate ignored
 l.201 
        <./figure/beamer-introFigure.pdf>]
 Package hyperref Info: bookmark level for unknown lstlisting defaults to 0 on i
-nput line 207.
-LaTeX Font Info:    Try loading font information for TS1+aett on input line 212
+nput line 211.
+LaTeX Font Info:    Try loading font information for TS1+aett on input line 216
 .
 
 (/Library/Frameworks/R.framework/Resources/share/texmf/tex/latex/ts1aett.fd
 File: ts1aett.fd 
 )
-LaTeX Font Info:    Try loading font information for TS1+cmtt on input line 212
+LaTeX Font Info:    Try loading font information for TS1+cmtt on input line 216
 .
 
 (/usr/local/texlive/2014/texmf-dist/tex/latex/base/ts1cmtt.fd
 File: ts1cmtt.fd 1999/05/25 v2.5h Standard LaTeX font definitions
 )
 LaTeX Font Info:    Font shape `TS1/aett/m/n' in size <9> not available
-(Font)              Font shape `TS1/cmtt/m/n' tried instead on input line 212.
+(Font)              Font shape `TS1/cmtt/m/n' tried instead on input line 216.
 
 Overfull \hbox (5.47499pt too wide) has occurred while \output is active
 [] \T1/aer/m/n/10.95 3
  []
 
-[3] <../inst/ceStatesST.pdf, id=201, 794.97pt x 614.295pt>
+[3] <../inst/ceStatesST.pdf, id=200, 794.97pt x 614.295pt>
 File: ../inst/ceStatesST.pdf Graphic file (type pdf)
 
 <use ../inst/ceStatesST.pdf>
-Package pdftex.def Info: ../inst/ceStatesST.pdf used on input line 277.
+Package pdftex.def Info: ../inst/ceStatesST.pdf used on input line 280.
 (pdftex.def)             Requested size: 354.12434pt x 273.6463pt.
 
-<../inst/ceStatesST_ppt.pdf, id=204, 613.18196pt x 461.6739pt>
-File: ../inst/ceStatesST_ppt.pdf Graphic file (type pdf)
+Underfull \vbox (badness 1533) has occurred while \output is active []
 
-<use ../inst/ceStatesST_ppt.pdf>
-Package pdftex.def Info: ../inst/ceStatesST_ppt.pdf used on input line 308.
-(pdftex.def)             Requested size: 354.12434pt x 266.62982pt.
 
 Overfull \hbox (5.47499pt too wide) has occurred while \output is active
 \T1/aer/m/n/10.95 4 []
@@ -543,15 +540,20 @@ has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.318 
+l.307 
        <../inst/ceStatesST.pdf>]
-Package color Info: Redefining color shadecolor on input line 323.
+<../inst/ceStatesST_ppt.pdf, id=272, 613.18196pt x 461.6739pt>
+File: ../inst/ceStatesST_ppt.pdf Graphic file (type pdf)
+
+<use ../inst/ceStatesST_ppt.pdf>
+Package pdftex.def Info: ../inst/ceStatesST_ppt.pdf used on input line 310.
+(pdftex.def)             Requested size: 354.12434pt x 266.62982pt.
+Package color Info: Redefining color shadecolor on input line 327.
 
 
 LaTeX Font Warning: Font shape `T1/aett/bx/n' undefined
-(Font)              using `T1/aett/m/n' instead on input line 329.
+(Font)              using `T1/aett/m/n' instead on input line 335.
 
-Package color Info: Redefining color shadecolor on input line 341.
 
 Overfull \hbox (5.47499pt too wide) has occurred while \output is active
 \T1/aer/m/n/10.95 6 []
@@ -562,32 +564,31 @@ has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.341 ....969, 0.969}\color{fgcolor}\begin{kframe}
-                                                   <../inst/ceStatesST_ppt.pdf>
-]
-Package color Info: Redefining color shadecolor on input line 359.
-Package color Info: Redefining color shadecolor on input line 374.
+l.343 \end{kframe}
+                   <../inst/ceStatesST_ppt.pdf>]
+Package color Info: Redefining color shadecolor on input line 350.
+Package color Info: Redefining color shadecolor on input line 367.
+Package color Info: Redefining color shadecolor on input line 384.
 
 Overfull \hbox (5.47499pt too wide) has occurred while \output is active
 [] \T1/aer/m/n/10.95 7
  []
 
 [7]
-Package color Info: Redefining color shadecolor on input line 396.
-Package color Info: Redefining color shadecolor on input line 419.
- <figure/beamer-points.pdf, id=306, 361.35pt x 271.0125pt>
-File: figure/beamer-points.pdf Graphic file (type pdf)
-
-<use figure/beamer-points.pdf>
-Package pdftex.def Info: figure/beamer-points.pdf used on input line 437.
-(pdftex.def)             Requested size: 361.34912pt x 271.01183pt.
+Package color Info: Redefining color shadecolor on input line 406.
 
 Overfull \hbox (5.47499pt too wide) has occurred while \output is active
 \T1/aer/m/n/10.95 8 []
  []
 
 [8]
-Package color Info: Redefining color shadecolor on input line 455.
+Package color Info: Redefining color shadecolor on input line 430.
+ <figure/beamer-points.pdf, id=321, 361.35pt x 271.0125pt>
+File: figure/beamer-points.pdf Graphic file (type pdf)
+
+<use figure/beamer-points.pdf>
+Package pdftex.def Info: figure/beamer-points.pdf used on input line 448.
+(pdftex.def)             Requested size: 361.34912pt x 271.01183pt.
 
 Overfull \hbox (5.47499pt too wide) has occurred while \output is active
 [] \T1/aer/m/n/10.95 9
@@ -598,102 +599,93 @@ has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.477 ...ssing values (geom\_point).}}\end{kframe}
-                                                  \begin{figure}[htpb] <./figur
-e/beamer-points.pdf>]
-<figure/beamer-errorBars.pdf, id=325, 361.35pt x 271.0125pt>
+l.460 
+       <./figure/beamer-points.pdf>]
+Package color Info: Redefining color shadecolor on input line 466.
+
+<figure/beamer-errorBars.pdf, id=336, 361.35pt x 271.0125pt>
 File: figure/beamer-errorBars.pdf Graphic file (type pdf)
 
 <use figure/beamer-errorBars.pdf>
-Package pdftex.def Info: figure/beamer-errorBars.pdf used on input line 480.
+Package pdftex.def Info: figure/beamer-errorBars.pdf used on input line 491.
 (pdftex.def)             Requested size: 361.34912pt x 271.01183pt.
-Package color Info: Redefining color shadecolor on input line 495.
+Package color Info: Redefining color shadecolor on input line 506.
 
 Overfull \hbox (10.94998pt too wide) has occurred while \output is active
 \T1/aer/m/n/10.95 10 []
  []
 
-[10pdfTeX warning (ext4): destination with the same identifier (name{figure.5})
- has been already used, duplicate ignored
-
-\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
-                                                  \fi \fi 
-l.495 ....969, 0.969}\color{fgcolor}\begin{kframe}
-                                                   <./figure/beamer-errorBars.p
-df>] <figure/beamer-lines.pdf, id=335, 361.35pt x 271.0125pt>
+[10] <figure/beamer-lines.pdf, id=347, 361.35pt x 271.0125pt>
 File: figure/beamer-lines.pdf Graphic file (type pdf)
 
 <use figure/beamer-lines.pdf>
-Package pdftex.def Info: figure/beamer-lines.pdf used on input line 525.
+Package pdftex.def Info: figure/beamer-lines.pdf used on input line 536.
 (pdftex.def)             Requested size: 361.34912pt x 271.01183pt.
 
 Overfull \hbox (10.94998pt too wide) has occurred while \output is active
 [] \T1/aer/m/n/10.95 11
  []
 
-[11pdfTeX warning (ext4): destination with the same identifier (name{figure.6})
+[11pdfTeX warning (ext4): destination with the same identifier (name{figure.5})
  has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.537 \subsection{Linetypes}
-                            \label{S:linetypes} <./figure/beamer-lines.pdf>]
-Package color Info: Redefining color shadecolor on input line 540.
+l.547 
+       <./figure/beamer-errorBars.pdf>]
+Package color Info: Redefining color shadecolor on input line 551.
 
-<figure/beamer-linetypes.pdf, id=347, 361.35pt x 271.0125pt>
+<figure/beamer-linetypes.pdf, id=358, 361.35pt x 271.0125pt>
 File: figure/beamer-linetypes.pdf Graphic file (type pdf)
 
 <use figure/beamer-linetypes.pdf>
-Package pdftex.def Info: figure/beamer-linetypes.pdf used on input line 543.
+Package pdftex.def Info: figure/beamer-linetypes.pdf used on input line 554.
 (pdftex.def)             Requested size: 361.34912pt x 271.01183pt.
-Package color Info: Redefining color shadecolor on input line 557.
+Package color Info: Redefining color shadecolor on input line 568.
 
-<figure/beamer-shapes.pdf, id=350, 361.35pt x 271.0125pt>
+<figure/beamer-shapes.pdf, id=361, 361.35pt x 271.0125pt>
 File: figure/beamer-shapes.pdf Graphic file (type pdf)
 
 <use figure/beamer-shapes.pdf>
-Package pdftex.def Info: figure/beamer-shapes.pdf used on input line 560.
+Package pdftex.def Info: figure/beamer-shapes.pdf used on input line 571.
 (pdftex.def)             Requested size: 361.34912pt x 271.01183pt.
-Package color Info: Redefining color shadecolor on input line 574.
+Package color Info: Redefining color shadecolor on input line 585.
 
-<figure/beamer-colorChart.pdf, id=354, 361.35pt x 361.35pt>
+<figure/beamer-colorChart.pdf, id=365, 361.35pt x 361.35pt>
 File: figure/beamer-colorChart.pdf Graphic file (type pdf)
 
 <use figure/beamer-colorChart.pdf>
-Package pdftex.def Info: figure/beamer-colorChart.pdf used on input line 577.
+Package pdftex.def Info: figure/beamer-colorChart.pdf used on input line 588.
 (pdftex.def)             Requested size: 361.34912pt x 361.34912pt.
 
 Overfull \hbox (10.94998pt too wide) has occurred while \output is active
 \T1/aer/m/n/10.95 12 []
  []
 
-[12pdfTeX warning (ext4): destination with the same identifier (name{figure.7})
+[12pdfTeX warning (ext4): destination with the same identifier (name{figure.6})
  has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.588 
-       <./figure/beamer-linetypes.pdf>]
-Package color Info: Redefining color shadecolor on input line 594.
-
-<figure/beamer-global_.pdf, id=373, 361.35pt x 271.0125pt>
-File: figure/beamer-global_.pdf Graphic file (type pdf)
-
-<use figure/beamer-global_.pdf>
-Package pdftex.def Info: figure/beamer-global_.pdf used on input line 605.
-(pdftex.def)             Requested size: 361.34912pt x 271.01183pt.
-
+l.599 
+       <./figure/beamer-lines.pdf>]
 Overfull \hbox (10.94998pt too wide) has occurred while \output is active
 [] \T1/aer/m/n/10.95 13
  []
 
-[13pdfTeX warning (ext4): destination with the same identifier (name{figure.8})
+[13pdfTeX warning (ext4): destination with the same identifier (name{figure.7})
  has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.624 
-       <./figure/beamer-shapes.pdf>]
+l.599 
+      pdfTeX warning (ext4): destination with the same identifier (name{figure.
+8}) has been already used, duplicate ignored
+
+\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
+                                                  \fi \fi 
+l.599 
+       <./figure/beamer-linetypes.pdf> <./figure/beamer-shapes.pdf>]
 Overfull \hbox (10.94998pt too wide) has occurred while \output is active
 \T1/aer/m/n/10.95 14 []
  []
@@ -703,60 +695,68 @@ Overfull \hbox (10.94998pt too wide) has occurred while \output is active
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.624 
+l.599 
        <./figure/beamer-colorChart.pdf>]
-Package color Info: Redefining color shadecolor on input line 626.
+
+LaTeX Warning: Reference `F:global' on page 15 undefined on input line 603.
+
+Package color Info: Redefining color shadecolor on input line 605.
+<figure/beamer-global_.pdf, id=406, 361.35pt x 271.0125pt>
+File: figure/beamer-global_.pdf Graphic file (type pdf)
+
+<use figure/beamer-global_.pdf>
+Package pdftex.def Info: figure/beamer-global_.pdf used on input line 616.
+(pdftex.def)             Requested size: 361.34912pt x 271.01183pt.
+Package color Info: Redefining color shadecolor on input line 635.
 LaTeX Font Info:    Font shape `TS1/aett/m/it' in size <9> not available
-(Font)              Font shape `TS1/cmtt/m/it' tried instead on input line 631.
+(Font)              Font shape `TS1/cmtt/m/it' tried instead on input line 640.
 
 
-<figure/beamer-powerpoint.pdf, id=395, 361.35pt x 271.0125pt>
+<figure/beamer-powerpoint.pdf, id=407, 361.35pt x 271.0125pt>
 File: figure/beamer-powerpoint.pdf Graphic file (type pdf)
 
 <use figure/beamer-powerpoint.pdf>
-Package pdftex.def Info: figure/beamer-powerpoint.pdf used on input line 648.
+Package pdftex.def Info: figure/beamer-powerpoint.pdf used on input line 657.
 (pdftex.def)             Requested size: 361.34912pt x 271.01183pt.
-Package color Info: Redefining color shadecolor on input line 667.
 
 Overfull \hbox (10.94998pt too wide) has occurred while \output is active
 [] \T1/aer/m/n/10.95 15
  []
 
-[15pdfTeX warning (ext4): destination with the same identifier (name{figure.10}
-) has been already used, duplicate ignored
-
-\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
-                                                  \fi \fi 
-l.667 ....969, 0.969}\color{fgcolor}\begin{kframe}
-                                                   <./figure/beamer-global_.pdf
->] <figure/beamer-manuscriptTheme.pdf, id=408, 361.35pt x 271.0125pt>
-File: figure/beamer-manuscriptTheme.pdf Graphic file (type pdf)
-
-<use figure/beamer-manuscriptTheme.pdf>
-Package pdftex.def Info: figure/beamer-manuscriptTheme.pdf used on input line 6
-81.
-(pdftex.def)             Requested size: 361.34912pt x 271.01183pt.
-Package color Info: Redefining color shadecolor on input line 695.
-
-<figure/beamer-powerpointTheme.pdf, id=409, 361.35pt x 271.0125pt>
-File: figure/beamer-powerpointTheme.pdf Graphic file (type pdf)
-
-<use figure/beamer-powerpointTheme.pdf>
-Package pdftex.def Info: figure/beamer-powerpointTheme.pdf used on input line 7
-11.
-(pdftex.def)             Requested size: 361.34912pt x 271.01183pt.
-
+[15]
 Overfull \hbox (10.94998pt too wide) has occurred while \output is active
 \T1/aer/m/n/10.95 16 []
  []
 
-[16pdfTeX warning (ext4): destination with the same identifier (name{figure.11}
+[16pdfTeX warning (ext4): destination with the same identifier (name{figure.10}
 ) has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.725 \subsection{Manuscript graphics}
-                                       <./figure/beamer-powerpoint.pdf>]
+l.671 T
+       he theming system in \pkg{ggplot2} enables a user to control non-data...
+pdfTeX warning (ext4): destination with the same identifier (name{figure.11}) h
+as been already used, duplicate ignored
+
+\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
+                                                  \fi \fi 
+l.671 T
+       he theming system in \pkg{ggplot2} enables a user to control non-data...
+ <./figure/beamer-global_.pdf> <./figure/beamer-powerpoint.pdf>]
+Package color Info: Redefining color shadecolor on input line 679.
+
+<figure/beamer-manuscriptTheme.pdf, id=436, 361.35pt x 271.0125pt>
+File: figure/beamer-manuscriptTheme.pdf Graphic file (type pdf)
+
+<use figure/beamer-manuscriptTheme.pdf>
+Package pdftex.def Info: figure/beamer-manuscriptTheme.pdf used on input line 6
+93.
+(pdftex.def)             Requested size: 361.34912pt x 271.01183pt.
+
+
+LaTeX Warning: Reference `F:global' on page 17 undefined on input line 703.
+
+
 Overfull \hbox (10.94998pt too wide) has occurred while \output is active
 [] \T1/aer/m/n/10.95 17
  []
@@ -766,74 +766,121 @@ Overfull \hbox (10.94998pt too wide) has occurred while \output is active
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.725 \subsection{Manuscript graphics}
-                                      pdfTeX warning (ext4): destination with t
-he same identifier (name{figure.13}) has been already used, duplicate ignored
+l.704 
+       <./figure/beamer-manuscriptTheme.pdf>]
+Package color Info: Redefining color shadecolor on input line 709.
 
-\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
-                                                  \fi \fi 
-l.725 \subsection{Manuscript graphics}
-                                       <./figure/beamer-manuscriptTheme.pdf> <.
-/figure/beamer-powerpointTheme.pdf>]
-Package color Info: Redefining color shadecolor on input line 730.
+<figure/beamer-powerpointThemeC.pdf, id=450, 361.35pt x 271.0125pt>
+File: figure/beamer-powerpointThemeC.pdf Graphic file (type pdf)
 
-<figure/beamer-manuscriptFootnote.pdf, id=438, 361.35pt x 271.0125pt>
-File: figure/beamer-manuscriptFootnote.pdf Graphic file (type pdf)
-
-<use figure/beamer-manuscriptFootnote.pdf>
-Package pdftex.def Info: figure/beamer-manuscriptFootnote.pdf used on input lin
-e 742.
+<use figure/beamer-powerpointThemeC.pdf>
+Package pdftex.def Info: figure/beamer-powerpointThemeC.pdf used on input line 
+722.
 (pdftex.def)             Requested size: 361.34912pt x 271.01183pt.
-Package color Info: Redefining color shadecolor on input line 755.
+Package color Info: Redefining color shadecolor on input line 735.
+
+<figure/beamer-powerpointTheme.pdf, id=453, 361.35pt x 271.0125pt>
+File: figure/beamer-powerpointTheme.pdf Graphic file (type pdf)
+
+<use figure/beamer-powerpointTheme.pdf>
+Package pdftex.def Info: figure/beamer-powerpointTheme.pdf used on input line 7
+45.
+(pdftex.def)             Requested size: 361.34912pt x 271.01183pt.
 
 Overfull \hbox (10.94998pt too wide) has occurred while \output is active
 \T1/aer/m/n/10.95 18 []
  []
 
-[18 <./figure/beamer-manuscriptFootnote.pdf>]
-Package color Info: Redefining color shadecolor on input line 775.
+[18pdfTeX warning (ext4): destination with the same identifier (name{figure.13}
+) has been already used, duplicate ignored
 
-Underfull \vbox (badness 10000) has occurred while \output is active []
+\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
+                                                  \fi \fi 
+l.759 O
+       nce we have created the figure, and formatted it as desired, we need ...
+ <./figure/beamer-powerpointThemeC.pdf>]
+Package color Info: Redefining color shadecolor on input line 765.
 
+<figure/beamer-manuscriptFootnote.pdf, id=467, 361.35pt x 271.0125pt>
+File: figure/beamer-manuscriptFootnote.pdf Graphic file (type pdf)
+
+<use figure/beamer-manuscriptFootnote.pdf>
+Package pdftex.def Info: figure/beamer-manuscriptFootnote.pdf used on input lin
+e 778.
+(pdftex.def)             Requested size: 361.34912pt x 271.01183pt.
+Package color Info: Redefining color shadecolor on input line 791.
 
 Overfull \hbox (10.94998pt too wide) has occurred while \output is active
 [] \T1/aer/m/n/10.95 19
  []
 
-[19] (./hviPlotR.bbl
-Underfull \hbox (badness 1286) in paragraph at lines 28--34
-[]\T1/aer/m/n/10.95 Harrower M, Brewer CA (2003).  ``Col-or-Brewer.org: An On-l
-ine Tool for Se-lect-ing
- []
+[19pdfTeX warning (ext4): destination with the same identifier (name{figure.14}
+) has been already used, duplicate ignored
 
-)
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 841.
+\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
+                                                  \fi \fi 
+l.791 ....969, 0.969}\color{fgcolor}\begin{kframe}
+                                                   <./figure/beamer-powerpointT
+heme.pdf>]
+Package color Info: Redefining color shadecolor on input line 804.
 
 Overfull \hbox (10.94998pt too wide) has occurred while \output is active
 \T1/aer/m/n/10.95 20 []
  []
 
-[20]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 841.
+[20pdfTeX warning (ext4): destination with the same identifier (name{figure.15}
+) has been already used, duplicate ignored
+
+\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
+                                                  \fi \fi 
+l.821 
+       <./figure/beamer-manuscriptFootnote.pdf>]
+Package color Info: Redefining color shadecolor on input line 824.
+
+Underfull \vbox (badness 4634) has occurred while \output is active []
+
+
+Overfull \hbox (10.94998pt too wide) has occurred while \output is active
+[] \T1/aer/m/n/10.95 21
+ []
+
+[21] (./hviPlotR.bbl
+Underfull \hbox (badness 1286) in paragraph at lines 34--40
+[]\T1/aer/m/n/10.95 Harrower M, Brewer CA (2003).  ``Col-or-Brewer.org: An On-l
+ine Tool for Se-lect-ing
+ []
+
+)
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 892.
+
+Overfull \hbox (10.94998pt too wide) has occurred while \output is active
+\T1/aer/m/n/10.95 22 []
+ []
+
+[22]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 892.
  (./hviPlotR.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 841.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 841.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 892.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 892.
 Package rerunfilecheck Info: File `hviPlotR.out' has not changed.
-(rerunfilecheck)             Checksum: 4E38FD03C5947A600E3F1D063CECCEF0;2636.
+(rerunfilecheck)             Checksum: 106ABA514189E279B8CD37DEDCC278DE;2695.
 
 
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 841.
+
+LaTeX Warning: There were undefined references.
+
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 892.
  ) 
 Here is how much of TeX's memory you used:
- 9003 strings out of 493117
- 132142 string characters out of 6135433
- 566184 words of memory out of 5000000
- 12121 multiletter control sequences out of 15000+600000
- 53456 words of font info for 99 fonts, out of 8000000 for 9000
+ 9026 strings out of 493117
+ 132614 string characters out of 6135433
+ 519219 words of memory out of 5000000
+ 12135 multiletter control sequences out of 15000+600000
+ 54123 words of font info for 101 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 36i,9n,49p,912b,1481s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 36i,9n,49p,976b,1477s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/local/texlive/2014/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc
 }</usr/local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmb10.pfb><
 /usr/local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></
@@ -845,16 +892,17 @@ local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmsl10.pfb></usr/l
 ocal/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmsltt10.pfb></usr/
 local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmss10.pfb></usr/l
 ocal/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmssbx10.pfb></usr/
-local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/l
-ocal/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb></usr/lo
-cal/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt12.pfb></usr/loc
-al/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt9.pfb></usr/local
-/texlive/2014/texmf-dist/fonts/type1/public/cm-super/sfit0900.pfb></usr/local/t
-exlive/2014/texmf-dist/fonts/type1/public/cm-super/sftt0900.pfb>
-Output written on hviPlotR.pdf (20 pages, 3550579 bytes).
+local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/l
+ocal/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/lo
+cal/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb></usr/loc
+al/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt12.pfb></usr/loca
+l/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt9.pfb></usr/local/
+texlive/2014/texmf-dist/fonts/type1/public/cm-super/sfit0900.pfb></usr/local/te
+xlive/2014/texmf-dist/fonts/type1/public/cm-super/sftt0900.pfb>
+Output written on hviPlotR.pdf (22 pages, 3590452 bytes).
 PDF statistics:
- 569 PDF objects out of 1000 (max. 8388607)
- 496 compressed objects within 5 object streams
- 161 named destinations out of 1000 (max. 500000)
- 287 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 619 PDF objects out of 1000 (max. 8388607)
+ 540 compressed objects within 6 object streams
+ 167 named destinations out of 1000 (max. 500000)
+ 292 words of extra memory for PDF output out of 10000 (max. 10000000)
 

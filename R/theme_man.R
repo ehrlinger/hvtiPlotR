@@ -24,7 +24,7 @@ theme_man <- function(base_size = 12, base_family = "") {
           
           strip.background = element_rect(fill = "grey80", colour = "grey50", size = 0.2),
           
-          plot.margin = unit(c(1,2,.5,.5), "cm"))
+          plot.margin = unit(c(1,1,3,.5), "lines"))
   
 }
 

@@ -1,4 +1,4 @@
-\begin{thebibliography}{5}
+\begin{thebibliography}{6}
 \newcommand{\enquote}[1]{``#1''}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
@@ -8,6 +8,12 @@
   \providecommand{\doi}{doi:\discretionary{}{}{}\begingroup
   \urlstyle{rm}\Url}\fi
 \providecommand{\eprint}[2][]{\url{#2}}
+
+\bibitem[{Auguie(2012)}]{Auguie:2012}
+Auguie B (2012).
+\newblock \emph{gridExtra: functions in Grid graphics}.
+\newblock R package version 0.9.1,
+  \urlprefix\url{http://CRAN.R-project.org/package=gridExtra}.
 
 \bibitem[{Glynn(2005)}]{Glynn:2005}
 Glynn EF (2005).
