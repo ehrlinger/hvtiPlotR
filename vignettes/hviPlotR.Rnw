@@ -1,4 +1,4 @@
-\documentclass[nojss, letterpaper]{jss}
+\documentclass[nojss]{jss}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% declarations for jss.cls %%
@@ -58,7 +58,7 @@ title=\lstname                   % show the filename of files included with \lst
 \Abstract{ 
 We introduce the \proglang{R} package \pkg{hviPlotR}, tools for creating publication quality graphics in \proglang{R} for the Heart \& Vascular Institute Clinical Investigations statistics group at the Cleveland Clinic. The \pkg{hviPlotR} package contains a tutorial for generating figures (this vignette) and small set of functions for formatting and saving those figures. These tools describe how to generate figures in \proglang{R} to replace the \code{plot.sas} macro we currently use in \proglang{SAS}.
 
-This package vignette is a tutorial for generating our standard figures using the \pkg{ggplot2} package commands in \proglang{R}. The tutorial presents a series of \proglang{R} recipes for generateing figures. The \pkg{hviPlotR} package includes a set of themes designed to format those figures for inclusion in manuscript and \code{PowerPoint} targets. 
+This package vignette is a tutorial for generating our standard figures using the \pkg{ggplot2} package commands in \proglang{R}. The tutorial presents a series of \proglang{R} recipes for generating figures. The \pkg{hviPlotR} package includes a set of themes designed to format those figures for inclusion in manuscript and \code{PowerPoint} targets. 
 
 This document is included with the \pkg{hviPlotR} package as a package vignette. The vignette is installed into \proglang{R} when the \pkg{hviPlotR} package is installed, and viewable using the \code{vignette("hviPlotR")} command. The goal of the vignette is as a tutorial to document the best practices of creating our publication quality graphics for both manuscripts and power point presentations. It is our intent to update this vignette as our standards and the \pkg{hviPlotR} package are modified.
 }
@@ -252,7 +252,7 @@ The goal is to update this vignette as the package, and our graphing standards, 
 % -----------------------------------------------------
 \section{Introduction}
 % -----------------------------------------------------
-For many years, the mainstay for generating graphics for manuscripts and presentations in the statistics group in The Heart \& Vascular Institute has been the \code{plot.sas} macro using \proglang{SAS}. However, recently, we have had issues migrating this macro to newer versions of \proglang{SAS} ($> 8.0$) and MicroSoft Office products ($> 2003$). 
+For many years, the mainstay for generating graphics for manuscripts and presentations in the statistics group in The Heart \& Vascular Institute has been the \code{plot.sas} macro using \proglang{SAS}. However, recently, we have had issues migrating this macro to newer versions of \proglang{SAS} ($> 8.0$) and Microsoft Office products ($> 2003$). 
 
 In an effort to alleviate these version issues, and to standardize the generation of figures within \proglang{R}, we have developed the \pkg{hviPlotR} \proglang{R} package. The goal of the package, and this vignette, is simplify the creation of publication quality graphics in  \proglang{R}. We are specifically encoding the best practices of the HVI Clinical Investigations formatting, so that our statisticians will be able to create graphics for publications and presentations with a minimal amount of effort.
 
@@ -404,7 +404,7 @@ install_github("ehrlinger/hviPlotR")
 
 
 \subsection{Initialize the figure}\label{S:initial}
-Refering back to the \proglang{SAS} code chunks in Section~\ref{S:plot.sas},  Listing~\ref{plot.sas:figureSetup} sets the current working directory, and does some house keeping, including loading the \code{plot.sas} macro. Similarly, to get started in \proglang{R}, we first load the required libraries: \pkg{ggplot2} for graphics, and \pkg{hviPlotR} for themes. The following code chunk also sets the initial default theme to a generic black and white format, and brings in a pair of example datasets. 
+Referring back to the \proglang{SAS} code chunks in Section~\ref{S:plot.sas},  Listing~\ref{plot.sas:figureSetup} sets the current working directory, and does some house keeping, including loading the \code{plot.sas} macro. Similarly, to get started in \proglang{R}, we first load the required libraries: \pkg{ggplot2} for graphics, and \pkg{hviPlotR} for themes. The following code chunk also sets the initial default theme to a generic black and white format, and brings in a pair of example datasets. 
 <<gettingStarted, message=FALSE, warning=FALSE>>=
 # load required libraries
 library(ggplot2)   # Plotting environment
@@ -445,7 +445,7 @@ ccf_plot <- ccf_plot +
 The \code{labs} function can also be used to set the plot \code{title} and legend titles. We will not cover that functionality here, details are available in~\cite{Wickham:2009} or through the Internet.
 
 \subsection{Scales}\label{S:scales}
-Axis ticks are controled with the \code{scale_} functions. \pkg{ggplot2} has many different \code{scale_} functions. These functions will work on one axis at a time, so for a typical continuous axis, we use the \code{scale_x_continuous} or \code{scale_y_continuous} functions. Major axis are controlled using the \code{breaks} argument. Listing~\ref{plot.sas:figureSetup} uses a sequence of numbers to set the location of major tick marks (\code{seq(0,5,1)}). One mark for every year starting at 0, and ending at 5. Minor tick marks are automatically generated, but can also be specified using a \code{minor_breaks=} argument. You could also specifiy the breaks using a vector of values (\code{c(0,1,2,3,4,5)}), as well as relabel the ticks manually using a \code{labels=} argument.
+Axis ticks are controlled with the \code{scale_} functions. \pkg{ggplot2} has many different \code{scale_} functions. These functions will work on one axis at a time, so for a typical continuous axis, we use the \code{scale_x_continuous} or \code{scale_y_continuous} functions. Major axis are controlled using the \code{breaks} argument. Listing~\ref{plot.sas:figureSetup} uses a sequence of numbers to set the location of major tick marks (\code{seq(0,5,1)}). One mark for every year starting at 0, and ending at 5. Minor tick marks are automatically generated, but can also be specified using a \code{minor_breaks=} argument. You could also specify the breaks using a vector of values (\code{c(0,1,2,3,4,5)}), as well as relabel the ticks manually using a \code{labels=} argument.
 
 Note that the \code{scale_} functions do not restrict the figure viewport at all. They are simply used to setup and label the axis tick marks. You can specify that the y-axis ticks are only from 0 to 50, and the figure would have a blank axis from 50 to the limits of the data. We discuss controlling the figure viewport in Section~\ref{S:globals}.
 
@@ -483,13 +483,15 @@ ccf_plot <- ccf_plot +
 
 show(ccf_plot)
 @
+The \code{aes()} mechanism is a powerful way to communicate data level assignment to \code{geom_} functions. If you want to stratify a dataset by a variable, you can specify that within the \code{aes()} function call using the \code{by=} argument. For points, we often want the stratifying to be either a different \code{color=} or \code{shape=} for stratified data. We can then use the \code{scale_color_} functions (See Section~\ref{S:colors}) or the \code{scale_shape_} functions (See Section~\ref{S:shapes}) to control how these are assigned to the stratifying variable.
+
 Once we have added data to the \code{ggplot} object, we can display the figure as shown in Figure~\ref{F:points}. Until now the figure has been manipulated by sequentially adding function calls to the \code{ccf_plot} object. To display the figure you can either use the \code{show()} function, or simply call the object name at the command line.
 
 Note that we have used the default \emph{shape}, \emph{size} and \emph{color} for this figure. These can be manipulated by adding arguments to the \code{geom_} functions, outside of the \code{aes()} function, as we will demonstrate in the following sections.
 
-\subsection{ErrorBars}\label{S:errorbars}
+\subsection{Error Bars}\label{S:errorbars}
 
-Instead of using a single function to set points, lines and error bars, \pkg{ggplot2} uses individual function calls to control these elements. The \code{geom_errorbar} function takes the same arguments as the other \code{geom_} functions. However, since an errorbar is defined with upper and lower limits, we need to supply an \code{ymax} and \code{ymin} argument to the graphic aesthetic function. This code chunk plots both points, and error bars for the next two data series, the \code{sgdead1} variable with errorbars running from \code{stldead1} to \code{studead1} and \code{sgstrk1} variable with errorbars running from \code{stlstrk1} to \code{stustrk1}. As we see in Figure~\ref{F:errorBars}, both series were added in \code{color="blue"} (Section~\ref{S:colors}), with different point shapes \code{shape=1} and \code{shape=0} for each series (Section~\ref{S:shapes}). We manipulated the error bar size with the \code{width} argument
+Instead of using a single function to set points, lines and error bars, \pkg{ggplot2} uses individual function calls to control these elements. The \code{geom_errorbar} function takes the same arguments as the other \code{geom_} functions. However, since an errorbar is defined with upper and lower limits, we need to supply an \code{ymax} and \code{ymin} argument to the graphic aesthetic function. This code chunk plots both points, and error bars for the next two data series, the \code{sgdead1} variable with error bars running from \code{stldead1} to \code{studead1} and \code{sgstrk1} variable with error bars running from \code{stlstrk1} to \code{stustrk1}. As we see in Figure~\ref{F:errorBars}, both series were added in \code{color="blue"} (Section~\ref{S:colors}), with different point shapes \code{shape=1} and \code{shape=0} for each series (Section~\ref{S:shapes}). We manipulated the error bar size with the \code{width} argument
 
 <<errorBars, warning=TRUE, fig.cap="Error Bar Plot">>=
 #     tuple set=green, symbol=circle, symbsize=1/2, linepe=0, linecl=0,
@@ -514,7 +516,7 @@ show(ccf_plot)
 Note that the \code{x} variable is the same (\code{iv_state}) for all three data series as well as the associated error bars. This is not a requirement, as we could have specified a different variable name for each \code{geom_} function call. Also note that just as in the \code{plot.sas} macro, since we do not want an error bar placed at at every data point, a large number points have the upper and lower error bar y values have been set to missing (\code{NA}). The \pkg{ggplot2} package does print warning messages when we attempt to plot a series with missing values. We typically suppress those warnings, but left them here for illustration purposes only.
 
 \subsection{Lines}\label{S:lines}
-Similar to points and error bars, the \code{geom_line} function is used to plot lines. We use the \code{linetype} argument to specify the line styles (Section~\ref{S:linetypes}). We do have to generate a seperate \code{geom_line} function call for each limit of the confidence limit, since it is constructed of two lines (the upper and lower confidence limit). The resulting graph is shown in Figure~\ref{F:lines}.
+Similar to points and error bars, the \code{geom_line} function is used to plot lines. We use the \code{linetype} argument to specify the line styles (Section~\ref{S:linetypes}). We do have to generate a separate \code{geom_line} function call for each limit of the confidence limit, since it is constructed of two lines (the upper and lower confidence limit). The resulting graph is shown in Figure~\ref{F:lines}.
 <<lines, fig.cap="Line Plot with confidence bands">>=
 # /**********PARAMETRIC : SOLID LINES AND CONFIDENCE INTERVALS**********/      
 # tuple set=all, x=years, y=noinit, cll=clinit, clu=cuinit,
@@ -544,7 +546,7 @@ show(ccf_plot)
 
 Alternatively, we could use the \code{geom_ribbon} to generate a confidence band using a shaded region with only a single call. The aesthetic argument for \code{geom_ribbon} takes a \code{ymax} and \code{ymin} argument just as the \code{geom_errorbar} function. Note that we used a different data set (\code{data=parametric}) to use a different set of points for generating these lines. 
 
-\subsection{Linetypes}\label{S:linetypes}
+\subsection{Line types}\label{S:linetypes}
 The \code{linetype} argument takes a named string as a value, to set the different line styles. We show a set of frequently used styles in Figure~\ref{F:linetypes} for reference.
 <<linetypes, echo=FALSE, fig.cap="ggplot2 linetype table">>=
 d=data.frame(lt=c("blank", "solid", "dashed", "dotted", "dotdash", "longdash", "twodash", "1F", "F1", "4C88C488", "12345678"))
@@ -603,10 +605,10 @@ for (j in 0:(rowCount-1)){
 
 Color theory encompasses a multitude of definitions, concepts and design applications - enough to fill several encyclopedias. However, there are three basic categories of color theory that are logical and useful : The color wheel, color harmony, and the context of how colors are used. ColorBrewer~\citep{Brewer:2003} is an online tool~(\url{http://colorbrewer2.org/}) designed to help people select good color schemes for maps and other graphics. We encourage the use of ColorBrewer as a good, safe introduction to selecting colors based on theoretically good practices. 
 
-The \pkg{RColorBrewer} package~citep{Neuwirth:2011} simplifies the selection of ColorBrewer colors into \proglang{R}. We have used \pkg{RColorBrewer} to get a list of colors, and assign colors manually to specific variable values using the \pkg{ggplot2} \code{aes()} mechanism. The ColorBrewer palletes have also been built into the \pkg{ggplot2} \code{scale_} functions in the \code{scale_color_brewer} function. We have made extensive use of the \code{palette="Set1"} color palette in figures we have generated. There are also a series of other \code{scale_color_} functions in \pkg{ggplot2} to aid the user in selecting good color schemes for many different settings.
+The \pkg{RColorBrewer} package~\citep{Neuwirth:2011} simplifies the selection of ColorBrewer colors into \proglang{R}. We have used \pkg{RColorBrewer} to get a list of colors, and assign colors manually to specific variable values using the \pkg{ggplot2} \code{aes()} mechanism. The ColorBrewer palettes have also been built into the \pkg{ggplot2} \code{scale_} functions in the \code{scale_color_brewer} function. We have made extensive use of the \code{palette="Set1"} color palette in figures we have generated. There are also a series of other \code{scale_color_} functions in \pkg{ggplot2} to aid the user in selecting good color schemes for many different settings.
 
 \subsection{Global Figure Commands}\label{S:globals}
-By default, the \pkg{ggplot2} package adds space to the figures around the data. We often want to remove this space, or focus in on a smaller window of the figure. This is accomplished with the \code{coord_cartesian} function. By specifying the \code{xlim} and/or \code{ylim} coordinates, we can crop the figure into whatever viewport we are interested in without manipulating the orignal dataset. Figure~\ref{F:global} sets the origin to (0,0) and clips the x axis at 5.1, and the y axis at 101. We have added the .1 and 1 to each axis for aesthetic reasons to avid chopping off the tick labels when they occur at the end of the viewport.
+By default, the \pkg{ggplot2} package adds space to the figures around the data. We often want to remove this space, or focus in on a smaller window of the figure. This is accomplished with the \code{coord_cartesian} function. By specifying the \code{xlim} and/or \code{ylim} coordinates, we can crop the figure into whatever viewport we are interested in without manipulating the original dataset. Figure~\ref{F:global} sets the origin to (0,0) and clips the x axis at 5.1, and the y axis at 101. We have added the .1 and 1 to each axis for aesthetic reasons to avid chopping off the tick labels when they occur at the end of the viewport.
 <<global,, fig.cap="Adjusting the viewport">>=
 # Special commands to force origin to 0,0
 ccf_plot <- ccf_plot + 
@@ -646,9 +648,9 @@ show(ccf_pptPlot)
 % -----------------------------------------------------
 \section[Themes for publications]{\pkg{ggplot2} themes for publication}\label{S:themes}
 % -----------------------------------------------------
-The theming system in \pkg{ggplot2} enables a user to control non-data elements of a \code{ggplot} object. Where we use color palattes (Section~\ref{S:colors}), shapes (Section~\ref{S:shapes}) and linetypes (Section~\ref{S:linetypes}) to control the data elements, we use themes to control the visual details of most of the remaining aspects of our figures. 
+The themes system in \pkg{ggplot2} enables a user to control non-data elements of a \code{ggplot} object. Where we use color palettes (Section~\ref{S:colors}), shapes (Section~\ref{S:shapes}) and linetypes (Section~\ref{S:linetypes}) to control the data elements, we use themes to control the visual details of most of the remaining aspects of our figures. 
 
-The \pkg{hviPlotR} package contains two custom themes. The \code{theme_man()} theme is used for manuscripts, and the \code{theme_ppt()} theme is used for powerpoint documents.
+The \pkg{hviPlotR} package contains two custom themes. The \code{theme_man()} theme is used for manuscripts, and the \code{theme_ppt()} theme is used for powerpoint documents. These themes can be applied to any figure that was created using the \pkg{ggplot2} package.  
 
 \subsection{Theme for Manuscripts}\label{S:theme_man}
 
@@ -692,7 +694,7 @@ ccf_pptPlot +
 \section{Saving Publication graphics}\label{S:saving}
 % -----------------------------------------------------
 
-Once we have created the figure, and formatted it as desired, we need to save the figure in a format that can easily be imported into our publications. 
+Once we have created the figure, and formatted it as desired (using a \pkg{hviPlotR} theme), we need to save the figure in a format that can easily be imported into our publications. 
 
 \subsection{Manuscript graphics}
 
@@ -767,28 +769,30 @@ writeDoc( doc, pptx.file )
 @
 
 The only modification possibly require for this recipe may be moving the insertion point (\code{offx} and \code{offy} arguments) and/or size (\code{width} and \code{height}) of the figure in the \code{addPlot()} function call.
-
-% -----------------------------------------------------
-\section{Generating other figure types}\label{S:alternateFigures}
-% -----------------------------------------------------
-
-\subsection{Bar Charts}
-\code{geom_boxplot} \code{geom_bar}
-
-\subsection{Histograms}
-\code{geom_histogram}
-
-\subsection{Additional Figure Types}
-
+% 
+% % -----------------------------------------------------
+% \section{Generating other figure types}\label{S:alternateFigures}
+% % -----------------------------------------------------
+% 
+% \subsection{Bar Charts}
+% \code{geom_boxplot} \code{geom_bar}
+% 
+% \subsection{Histograms}
+% \code{geom_histogram}
+% 
+% \subsection{Additional Figure Types}
+% 
 
 % -----------------------------------------------------
 \section{Graphics rules to live by}\label{S:rules}
 % -----------------------------------------------------
+This section is in progress\ldots
 
 % =======================================
 \section{Conclusions} \label{S:concl}
 % =======================================
-In this article, we present some functions in the \pkg{hviPlotR} package for \proglang{R} 
+
+In this article, we present the \pkg{hviPlotR} package for \proglang{R}. The package is made up of \pkg{ggplot2} themes for publication quality graphics, as well as this tutorial document included as a package vignette. The package is available from \url{https://github.com/ehrlinger/hviPlotR} and can be installed using the \code{devtools::install_github("ehrlinger/hviPlotR")} command. 
 
 % =======================================
 % \section{Literatur} \label{sec: references}

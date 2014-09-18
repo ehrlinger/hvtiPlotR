@@ -1,4 +1,4 @@
-\begin{thebibliography}{6}
+\begin{thebibliography}{7}
 \newcommand{\enquote}[1]{``#1''}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
@@ -37,6 +37,12 @@ Harrower M, Brewer CA (2003).
 \newblock \emph{The Cartographic Journal}, pp. 27--37.
 \newblock \doi{10.1179/000870403235002042}.
 \newblock \urlprefix\url{http://colorbrewer2.org/}.
+
+\bibitem[{Neuwirth(2011)}]{Neuwirth:2011}
+Neuwirth E (2011).
+\newblock \emph{RColorBrewer: ColorBrewer palettes}.
+\newblock R package version 1.0-5,
+  \urlprefix\url{http://CRAN.R-project.org/package=RColorBrewer}.
 
 \bibitem[{Wickham(2009)}]{Wickham:2009}
 Wickham H (2009).
