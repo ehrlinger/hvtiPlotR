@@ -402,6 +402,36 @@ library(devtools)
 install_github("ehrlinger/hviPlotR")
 @
 
+\subsection{Importing the data}\label{S:sasData}
+For most of this document, we assume that the data analysis has been completed in \proglang{SAS}. In this case, the first step in creating figures in \proglang{R} is to get the data out of \proglang{SAS}. There are many ways to do this, but we have had success using the \code{tp.bd.SAStoR.sas} program (under the \code{datasets} folder) to export a data set into a \proglang{SAS} \code{xport} file.
+
+Once an \code{xport} file has been created, we read it into \proglang{R} with the \pkg{foreign} package. This recipe reads an \code{xport} into a \code{data.frame} and then re-reads the \code{xport} file to pull out the \proglang{SAS} labels to describe the variables. The labels will be stored in a vector, which we can index by the variable names.
+
+
+<<readData, eval=FALSE>>=
+library(foreign)
+
+# The xport file name
+dtFilename = "../datasets/par_cst.xpt"
+
+# Read the xport file into a data.frame
+dta<- read.xport(dtFilename)
+
+# Reading in the labels takes 2 more commands.
+dta.info <- lookup.xport(dtFilename)
+dta.labels <- dta.info[[1]]$label
+
+## Fill in empty labels with the variable name
+dta.labels<-sapply(1:length(dta.labels), function(ind){
+  if(dta.labels[ind] == "")
+    colnames(dta)[ind]
+  else
+    dta.labels[ind]
+})
+
+## For indexing the labels, 
+names(dta.labels) = colnames(dta)
+@
 
 \subsection{Initialize the figure}\label{S:initial}
 Referring back to the \proglang{SAS} code chunks in Section~\ref{S:plot.sas},  Listing~\ref{plot.sas:figureSetup} sets the current working directory, and does some house keeping, including loading the \code{plot.sas} macro. Similarly, to get started in \proglang{R}, we first load the required libraries: \pkg{ggplot2} for graphics, and \pkg{hviPlotR} for themes. The following code chunk also sets the initial default theme to a generic black and white format, and brings in a pair of example datasets. 

@@ -1,4 +1,5 @@
 ## The hviPlotR package ##
+[![DOI](https://zenodo.org/badge/5745/ehrlinger/hviPlotR.png)](http://dx.doi.org/10.5281/zenodo.11780)
 
 A set of tools for creating publication quality graphics in *R* conforming to the standards of the clinical investigations statistics group within The Heart \& Vascular Institute at the Cleveland Clinic.. 
 

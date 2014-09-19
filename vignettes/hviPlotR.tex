@@ -343,6 +343,41 @@ This tutorial requires the \pkg{hviPlotR} package to load the data and themes we
 \end{kframe}
 \end{knitrout}
 
+\subsection{Importing the data}\label{S:sasData}
+For most of this document, we assume that the data analysis has been completed in \proglang{SAS}. In this case, the first step in creating figures in \proglang{R} is to get the data out of \proglang{SAS}. There are many ways to do this, but we have had success using the \code{tp.bd.SAStoR.sas} program (under the \code{datasets} folder) to export a data set into a \proglang{SAS} \code{xport} file.
+
+Once an \code{xport} file has been created, we read it into \proglang{R} with the \pkg{foreign} package. This recipe reads an \code{xport} into a \code{data.frame} and then re-reads the \code{xport} file to pull out the \proglang{SAS} labels to describe the variables. The labels will be stored in a vector, which we can index by the variable names.
+
+
+\begin{knitrout}\footnotesize
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{library}\hlstd{(foreign)}
+
+\hlcom{# The xport file name}
+\hlstd{dtFilename} \hlkwb{=} \hlstr{"../datasets/par_cst.xpt"}
+
+\hlcom{# Read the xport file into a data.frame}
+\hlstd{dta}\hlkwb{<-} \hlkwd{read.xport}\hlstd{(dtFilename)}
+
+\hlcom{# Reading in the labels takes 2 more commands.}
+\hlstd{dta.info} \hlkwb{<-} \hlkwd{lookup.xport}\hlstd{(dtFilename)}
+\hlstd{dta.labels} \hlkwb{<-} \hlstd{dta.info[[}\hlnum{1}\hlstd{]]}\hlopt{$}\hlstd{label}
+
+\hlcom{## Fill in empty labels with the variable name}
+\hlstd{dta.labels}\hlkwb{<-}\hlkwd{sapply}\hlstd{(}\hlnum{1}\hlopt{:}\hlkwd{length}\hlstd{(dta.labels),} \hlkwa{function}\hlstd{(}\hlkwc{ind}\hlstd{)\{}
+  \hlkwa{if}\hlstd{(dta.labels[ind]} \hlopt{==} \hlstr{""}\hlstd{)}
+    \hlkwd{colnames}\hlstd{(dta)[ind]}
+  \hlkwa{else}
+    \hlstd{dta.labels[ind]}
+\hlstd{\})}
+
+\hlcom{## For indexing the labels, }
+\hlkwd{names}\hlstd{(dta.labels)} \hlkwb{=} \hlkwd{colnames}\hlstd{(dta)}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+
 
 \subsection{Initialize the figure}\label{S:initial}
 Referring back to the \proglang{SAS} code chunks in Section~\ref{S:plot.sas},  Listing~\ref{plot.sas:figureSetup} sets the current working directory, and does some house keeping, including loading the \code{plot.sas} macro. Similarly, to get started in \proglang{R}, we first load the required libraries: \pkg{ggplot2} for graphics, and \pkg{hviPlotR} for themes. The following code chunk also sets the initial default theme to a generic black and white format, and brings in a pair of example datasets. 
