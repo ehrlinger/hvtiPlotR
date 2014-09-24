@@ -393,7 +393,7 @@ This tutorial requires the \pkg{hviPlotR} package to load the data and themes we
 # jjnb-gen servers as well as other R instances.
 #
 # For working on your own install, first use the install command
-install.packages("devtools")
+# install.packages("devtools")
 
 # Load the package
 library(devtools) 
@@ -733,12 +733,12 @@ It is a best practice that we include a footnote containing the figure path in e
 library(gridExtra)
 
 ccf_savePlot <- arrangeGrob(ccf_plot+theme_man(), 
-                            sub = textGrob(getwd(), 
+                            sub = textGrob(paste(getwd(), Sys.Date(), sep=" "), 
                                            x = 0, hjust = -.1, vjust=.01, 
                                            gp = gpar(fontface = "italic", fontsize = 6)))
 ccf_savePlot
 @
-Figure~\ref{F:manuscriptFootnote} uses the same plot in Figure~\ref{F:manuscriptTheme} with the code \code{ccf_plot+theme_man()}. The current working directory is obtained using the \code{getwd()} function. The footnote is placed with the \code{x = 0, hjust = -.1, vjust=.01,} and formatted with the \code{gp = gpar(fontface = "italic", fontsize = 6)}.
+Figure~\ref{F:manuscriptFootnote} uses the same plot in Figure~\ref{F:manuscriptTheme} with the code \code{ccf_plot+theme_man()}. The current working directory is obtained using the \code{getwd()} function. The \code{Sys.Date()} function returns the system date for timestamping the figure. The footnote is placed with the \code{x = 0, hjust = -.1, vjust=.01,} and formatted with the \code{gp = gpar(fontface = "italic", fontsize = 6)}.
 
 For Word documents (Office $\ge 2007$) we can import PDF graphics as a vector based format. Saving the figure is accomplished using either the \code{ggsave} function, or the \code{pdf(); show();dev.off()} combination. We have a specific set of \code{width} and \code{height} dimensions required for saving the figure with footnote included to get the font sizes to import correctly in Word. 
 <<savingFigure, eval=FALSE>>=

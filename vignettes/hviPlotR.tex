@@ -332,7 +332,7 @@ This tutorial requires the \pkg{hviPlotR} package to load the data and themes we
 \hlcom{# jjnb-gen servers as well as other R instances.}
 \hlcom{#}
 \hlcom{# For working on your own install, first use the install command}
-\hlkwd{install.packages}\hlstd{(}\hlstr{"devtools"}\hlstd{)}
+\hlcom{# install.packages("devtools")}
 
 \hlcom{# Load the package}
 \hlkwd{library}\hlstd{(devtools)}
@@ -377,7 +377,6 @@ Once an \code{xport} file has been created, we read it into \proglang{R} with th
 \end{alltt}
 \end{kframe}
 \end{knitrout}
-
 
 \subsection{Initialize the figure}\label{S:initial}
 Referring back to the \proglang{SAS} code chunks in Section~\ref{S:plot.sas},  Listing~\ref{plot.sas:figureSetup} sets the current working directory, and does some house keeping, including loading the \code{plot.sas} macro. Similarly, to get started in \proglang{R}, we first load the required libraries: \pkg{ggplot2} for graphics, and \pkg{hviPlotR} for themes. The following code chunk also sets the initial default theme to a generic black and white format, and brings in a pair of example datasets. 
@@ -804,7 +803,7 @@ It is a best practice that we include a footnote containing the figure path in e
 \hlkwd{library}\hlstd{(gridExtra)}
 
 \hlstd{ccf_savePlot} \hlkwb{<-} \hlkwd{arrangeGrob}\hlstd{(ccf_plot}\hlopt{+}\hlkwd{theme_man}\hlstd{(),}
-                            \hlkwc{sub} \hlstd{=} \hlkwd{textGrob}\hlstd{(}\hlkwd{getwd}\hlstd{(),}
+                            \hlkwc{sub} \hlstd{=} \hlkwd{textGrob}\hlstd{(}\hlkwd{paste}\hlstd{(}\hlkwd{getwd}\hlstd{(),} \hlkwd{Sys.Date}\hlstd{(),} \hlkwc{sep}\hlstd{=}\hlstr{" "}\hlstd{),}
                                            \hlkwc{x} \hlstd{=} \hlnum{0}\hlstd{,} \hlkwc{hjust} \hlstd{=} \hlopt{-}\hlnum{.1}\hlstd{,} \hlkwc{vjust}\hlstd{=}\hlnum{.01}\hlstd{,}
                                            \hlkwc{gp} \hlstd{=} \hlkwd{gpar}\hlstd{(}\hlkwc{fontface} \hlstd{=} \hlstr{"italic"}\hlstd{,} \hlkwc{fontsize} \hlstd{=} \hlnum{6}\hlstd{)))}
 \hlstd{ccf_savePlot}
@@ -821,7 +820,7 @@ It is a best practice that we include a footnote containing the figure path in e
 
 
 \end{knitrout}
-Figure~\ref{F:manuscriptFootnote} uses the same plot in Figure~\ref{F:manuscriptTheme} with the code \code{ccf_plot+theme_man()}. The current working directory is obtained using the \code{getwd()} function. The footnote is placed with the \code{x = 0, hjust = -.1, vjust=.01,} and formatted with the \code{gp = gpar(fontface = "italic", fontsize = 6)}.
+Figure~\ref{F:manuscriptFootnote} uses the same plot in Figure~\ref{F:manuscriptTheme} with the code \code{ccf_plot+theme_man()}. The current working directory is obtained using the \code{getwd()} function. The \code{Sys.Date()} function returns the system date for timestamping the figure. The footnote is placed with the \code{x = 0, hjust = -.1, vjust=.01,} and formatted with the \code{gp = gpar(fontface = "italic", fontsize = 6)}.
 
 For Word documents (Office $\ge 2007$) we can import PDF graphics as a vector based format. Saving the figure is accomplished using either the \code{ggsave} function, or the \code{pdf(); show();dev.off()} combination. We have a specific set of \code{width} and \code{height} dimensions required for saving the figure with footnote included to get the font sizes to import correctly in Word. 
 \begin{knitrout}\footnotesize
