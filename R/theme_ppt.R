@@ -16,6 +16,7 @@ theme_ppt <- function(base_size = 32, base_family = "") {
           ## For forest plots, we need smaller y axis text for labels
           axis.text.y  = element_text(size=32, color="white"),
           #axis.text.y  = element_text(size=16, color="white"),
+          axis.line = element_line(color="white", size=1),
           strip.text = element_text(size=16),
           panel.border = element_blank(),
           panel.background = element_rect(fill = "black", colour = "white", size=1), 
