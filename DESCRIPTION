@@ -10,9 +10,9 @@ Description: Generating plot.sas style figures in R
 Depends:
     R (>= 3.0.0),
     ggplot2,
-    grid
+    grid,
+    ReporteRs
 Suggests:
     knitr,
-    testthat,
-    ReporteRs
+    testthat
 Packaged: 2014-09-05 13:37:44 UTC; ehrlinj

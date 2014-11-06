@@ -25,7 +25,7 @@
 #' plot(1:10)
 #' makeFootnote()
 #' 
-#' @importFrom grid pushViewport viewport popViewport gpar
+#' @importFrom grid pushViewport viewport popViewport gpar grid.text unit 
 # 
 # scriptName <- "filename.R"
 # author <- "mh"

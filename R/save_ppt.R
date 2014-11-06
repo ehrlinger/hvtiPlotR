@@ -16,7 +16,7 @@
 #' @param height graphic object height
 #'
 #' @export save_ppt
-# @importFrom ReporteRs pptx addSlide addTitle addPlot writeDoc
+#' @importFrom ReporteRs pptx addSlide addTitle addPlot writeDoc
 #' 
 #' @examples
 #' \dontrun{
