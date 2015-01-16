@@ -5,9 +5,9 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %\VignetteEngine{knitr::knitr}
 %\VignetteIndexEntry{hviPlotR}
-%\VignetteIndexEntry{Generating plot.sas style figures in R}
-%\VignetteKeywords{publication graphics, powerpoint, ggplot2, plot.sas}
-%\VignetteDepends{ggplot2}
+%\VignetteIndexEntry{hviPlotR: Generating plot.sas style figures in R}
+%\VignetteKeywords{publication, manuscript, powerpoint, ggplot2, plot.sas}
+%\VignetteDepends{hviPlotR}
 %\VignettePackage{hviPlotR} 
 
 \usepackage{float}
@@ -102,7 +102,7 @@ URL: \url{https://github.com/ehrlinger/hviPlotR}
 %% end of declarations %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 <<setup,include=FALSE, cache=FALSE, echo=FALSE>>=
-#' @import RColorBrewer devtools gridExtra reporttools scales xtable
+# import RColorBrewer devtools gridExtra reporttools scales xtable
 
 library(knitr)
 # set global chunk options for knitr. These can be changed in the header for each individual R code chunk
@@ -236,7 +236,7 @@ ccf_plot+ coord_cartesian(xlim=c(0,5.2), ylim=c(0,101))
 @
 
 % -----------------------------------------------------
-\section{About this document}
+\section*{About this document}
 % -----------------------------------------------------
 This package vignette is an introduction to the \proglang{R} package \pkg{hviPlotR}, and a tutorial for creating publication quality graphics in \proglang{R}. The package and this document describe the process of creating graphics in \proglang{R} that conform to the standards of the clinical investigations statistics group within The Heart \& Vascular Institute at the Cleveland Clinic. These graphics are analogous to those generated with the \code{plot.sas} macro in \proglang{SAS}.
 
@@ -247,7 +247,7 @@ R> vignette("hviPlotR", package = "hviPlotR")
 \end{CodeInput}
 \end{CodeChunk}
 
-The goal is to update this vignette as the package, and our graphing standards, are updated. 
+The goal is to update this vignette as the package, and our graphing standards, are updated. A development version of the \pkg{hviPlotR} package is also available on Github (\url{https://github.com}). We invite comments, feature requests and bug reports for this package at \url{https://github.com/ehrlinger/hviPlotR}.
 
 % -----------------------------------------------------
 \section{Introduction}

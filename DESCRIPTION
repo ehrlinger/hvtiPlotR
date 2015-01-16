@@ -6,6 +6,9 @@ Date: 2014-09-04
 Author: John Ehrlinger <john.ehrlinger@gmail.com>
 Maintainer: John Ehrlinger <john.ehrlinger@gmail.com>
 License: GPL-3
+VignetteBuilder: knitr
+URL: https://github.com/ehrlinger/hviPlotR
+BugReports: https://github.com/ehrlinger/hviPlotR/issues
 Description: ggplot2 themes and methodology documentation for creating publication quality graphics in 
   R conforming to the standards of the clinical investigations statistics group within 
   The Heart \& Vascular Institute at the Cleveland Clinic.
@@ -17,5 +20,10 @@ Imports:
     ReporteRs (>= 0.7)
 Suggests:
     knitr,
-    testthat
+    testthat,
+    RColorBrewer,
+    dplyr,
+    gridExtra,
+    reshape2,
+    scales
 Packaged: 2014-09-05 13:37:44 UTC; ehrlinj
