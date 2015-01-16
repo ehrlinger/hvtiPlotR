@@ -1,4 +1,53 @@
-\documentclass[nojss]{jss}
+\documentclass[nojss]{jss}\usepackage[]{graphicx}\usepackage[]{color}
+%% maxwidth is the original width if it is less than linewidth
+%% otherwise use linewidth (to make sure the graphics do not exceed the margin)
+\makeatletter
+\def\maxwidth{ %
+  \ifdim\Gin@nat@width>\linewidth
+    \linewidth
+  \else
+    \Gin@nat@width
+  \fi
+}
+\makeatother
+
+\definecolor{fgcolor}{rgb}{0.345, 0.345, 0.345}
+\newcommand{\hlnum}[1]{\textcolor[rgb]{0.686,0.059,0.569}{#1}}%
+\newcommand{\hlstr}[1]{\textcolor[rgb]{0.192,0.494,0.8}{#1}}%
+\newcommand{\hlcom}[1]{\textcolor[rgb]{0.678,0.584,0.686}{\textit{#1}}}%
+\newcommand{\hlopt}[1]{\textcolor[rgb]{0,0,0}{#1}}%
+\newcommand{\hlstd}[1]{\textcolor[rgb]{0.345,0.345,0.345}{#1}}%
+\newcommand{\hlkwa}[1]{\textcolor[rgb]{0.161,0.373,0.58}{\textbf{#1}}}%
+\newcommand{\hlkwb}[1]{\textcolor[rgb]{0.69,0.353,0.396}{#1}}%
+\newcommand{\hlkwc}[1]{\textcolor[rgb]{0.333,0.667,0.333}{#1}}%
+\newcommand{\hlkwd}[1]{\textcolor[rgb]{0.737,0.353,0.396}{\textbf{#1}}}%
+
+\usepackage{framed}
+\makeatletter
+\newenvironment{kframe}{%
+ \def\at@end@of@kframe{}%
+ \ifinner\ifhmode%
+  \def\at@end@of@kframe{\end{minipage}}%
+  \begin{minipage}{\columnwidth}%
+ \fi\fi%
+ \def\FrameCommand##1{\hskip\@totalleftmargin \hskip-\fboxsep
+ \colorbox{shadecolor}{##1}\hskip-\fboxsep
+     % There is no \\@totalrightmargin, so:
+     \hskip-\linewidth \hskip-\@totalleftmargin \hskip\columnwidth}%
+ \MakeFramed {\advance\hsize-\width
+   \@totalleftmargin\z@ \linewidth\hsize
+   \@setminipage}}%
+ {\par\unskip\endMakeFramed%
+ \at@end@of@kframe}
+\makeatother
+
+\definecolor{shadecolor}{rgb}{.97, .97, .97}
+\definecolor{messagecolor}{rgb}{0, 0, 0}
+\definecolor{warningcolor}{rgb}{1, 0, 1}
+\definecolor{errorcolor}{rgb}{1, 0, 0}
+\newenvironment{knitrout}{}{} % an empty environment to be redefined in TeX
+
+\usepackage{alltt}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% declarations for jss.cls %%
@@ -101,139 +150,26 @@ URL: \url{https://github.com/ehrlinger/hviPlotR}
 
 %% end of declarations %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-<<setup,include=FALSE, cache=FALSE, echo=FALSE>>=
-# import RColorBrewer devtools gridExtra reporttools scales xtable
 
-library(knitr)
-# set global chunk options for knitr. These can be changed in the header for each individual R code chunk
-opts_chunk$set(fig.path='figure/beamer-', 
-               fig.align='center',
-               fig.pos="htpb",
-               fig.show='hold', 
-               fig.lp="F:",
-               fig.height=5/4*3, fig.width=5,
-               size='footnotesize',
-               comment="", echo=TRUE, results=FALSE, message=FALSE, warning=FALSE,
-               error=FALSE, dev='pdf')
 
-# Setup the R environment
-options(replace.assign=TRUE,object.size=Inf,expressions=100000,memory=Inf, width=100)
-
-#################
-# Load_packages #
-#################
-library(ggplot2) # Graphics engine for generating all types of plots
-library(reshape2) # Used to modify the data for plotting
-library(gridExtra) # for combined ggplots
-library(RColorBrewer) # Color schemes
-library(scales) # For modifying ggplot
-
-library(dplyr) # Better data manipulations
-
-#########################################################################
-# Default computation settings
-#########################################################################
-@
-
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
 \begin{document}
 
 %% include your article here, just as usual
 %% Note that you should use the \pkg{}, \proglang{} and \code{} commands.
 
-<<introFigure, message=FALSE, warning=FALSE, echo=FALSE, fig.cap="Demonstration figure">>=
-library(knitr)
-library(ggplot2)
-library(dplyr)
-library(hviPlotR)
+\begin{knitrout}\footnotesize
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{figure}[htpb]
 
-data(parametric, package="hviPlotR")
-data(nonparametric, package="hviPlotR")
+{\centering \includegraphics[width=\maxwidth]{figure/beamer-introFigure-1} 
 
+}
 
-theme_set(theme_man())
-
-## To reproduce the plot.sas function, line by line.
-###-------------
-## There are SAS options we will not use here.
-#
-#  %plot(goptions gsfmode=replace, device=pscolor, gaccess=gsasfile end;
-ccf_plot <- ggplot()
-# +
-#   geom_vline(xintercept=0)+
-#   geom_hline(yintercept=0)
-
-#    id l="&STUDY/graphs/ce.states.ST_toJohn.sas percent", end;
-
-###-------------
-## Labels are a single command, scales control the axis
-#
-#    labelx l="Years After Randomization", end;
-#      axisx order=(0 to 5 by 1), minor=none, end;
-#    labely l="Percent in Each Category (ST)", end;
-#      axisy order=(0 to 100 by 10), minor=none, end;
-ccf_plot <- ccf_plot +
-  labs(x="Years After Randomization",
-       y="Percent in Each Category (ST)")+
-  scale_x_continuous(breaks=seq(0,5,1))+
-  scale_y_continuous(breaks=seq(0,100,10))
+\caption[Demonstration figure]{Demonstration figure\label{F:introFigure}}
+\end{figure}
 
 
-###-------------
-## /******NON-PARAMETRIC: SYMBOLS AND CONFIDENCE BARS *******/
-##
-## Each tuple statement corresponds to one or more geom_ statements
-#     tuple set=green, symbol=dot, symbsize=1/2, linepe=0, linecl=0,
-#       ebarsize=3/4, ebar=1,
-#       x=iv_state, y=sginit, cll=stlinit, clu=stuinit, color=black, end;
-
-ccf_plot <- ccf_plot +
-  geom_point(data=nonparametric, aes(x=iv_state, y=sginit))
-
-#     tuple set=green, symbol=circle, symbsize=1/2, linepe=0, linecl=0,
-#       ebarsize=3/4, ebar=1,
-#       x=iv_state, y=sgdead1, cll=stldead1, clu=studead1, color=blue, end;
-ccf_plot <- ccf_plot +
-  geom_point(data=nonparametric, aes(x=iv_state, y=sgdead1),color="blue",shape=1) + 
-  geom_errorbar(data=nonparametric, aes(x=iv_state, ymin=stldead1, ymax=studead1), 
-                color="blue", width=.1)
-
-#      tuple set=green, symbol=square, symbsize=1/2, linepe=0, linecl=0,
-#       ebarsize=3/4, ebar=1,
-#       x=iv_state, y=sgstrk1, cll=stlstrk1, clu=stustrk1, color=blue, end;
-ccf_plot <- ccf_plot +
-  geom_point(data=nonparametric, aes(x=iv_state, y=sgstrk1),color="blue",shape=0) + 
-  geom_errorbar(data=nonparametric, aes(x=iv_state, ymin=stlstrk1, ymax=stustrk1), 
-                color="blue", width=.1)
-
-# /**********PARAMETRIC : SOLID LINES AND CONFIDENCE INTERVALS**********/      
-# tuple set=all, x=years, y=noinit, cll=clinit, clu=cuinit,
-# width=0.5,color=black, end;
-
-ccf_plot <- ccf_plot+
-  geom_line(data=parametric, aes(x=years, y=noinit))+
-  geom_line(data=parametric, aes(x=years, y=clinit), linetype="dashed")+
-  geom_line(data=parametric, aes(x=years, y=cuinit), linetype="dashed")
-# 
-# tuple set=all, x=years, y=nodeath, cll=cldeath, clu=cudeath,
-# width=0.5,color=blue, end;
-ccf_plot <- ccf_plot+
-  geom_line(data=parametric, aes(x=years, y=nodeath), color="blue")+
-  geom_line(data=parametric, aes(x=years, y=cldeath), linetype="dashed", color="blue")+
-  geom_line(data=parametric, aes(x=years, y=cudeath), linetype="dashed", color="blue")
-# 
-# tuple set=all, x=years, y=nostrk, cll=clstrk, clu=custrk,
-# linecl=2, width=0.5,color=blue, end;
-ccf_plot <- ccf_plot+
-  geom_line(data=parametric, aes(x=years, y=nostrk), color="blue")+
-  geom_line(data=parametric, aes(x=years, y=clstrk), linetype="dashed", color="blue")+
-  geom_line(data=parametric, aes(x=years, y=custrk), linetype="dashed", color="blue")
-
-# Special commands to force origin to 0,0
-ccf_plot+ coord_cartesian(xlim=c(0,5.2), ylim=c(0,101))
-#   expand_limits(x = 0, y = 0) +
-#   scale_x_continuous(expand = c(-0.1, 0.1)) + 
-#   scale_y_continuous(expand = c(-1, 0.1))
-@
+\end{knitrout}
 
 % -----------------------------------------------------
 \section*{About this document}
@@ -386,21 +322,25 @@ In order to create figures similar to using \code{plot.sas} macro, using \progla
 For the remainder of this document, \proglang{R} code will be highlighted in grey boxes, as shown below. We will refer to these blocks as \emph{code chunks}. You can run each code chunk individually, using copy/paste into an interactive \proglang{R} session, or within a stand alone \proglang{R} script.
 
 This tutorial requires the \pkg{hviPlotR} package to load the data and themes we will be discussing. You can install the package with the following commands:
-<<installhviPlotR, eval=FALSE>>=
-# Install the latest hviPlotR package.
-#
-# The devtools package is installed on all our 
-# jjnb-gen servers as well as other R instances.
-#
-# For working on your own install, first use the install command
-# install.packages("devtools")
+\begin{knitrout}\footnotesize
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{# Install the latest hviPlotR package.}
+\hlcom{#}
+\hlcom{# The devtools package is installed on all our }
+\hlcom{# jjnb-gen servers as well as other R instances.}
+\hlcom{#}
+\hlcom{# For working on your own install, first use the install command}
+\hlcom{# install.packages("devtools")}
 
-# Load the package
-library(devtools) 
+\hlcom{# Load the package}
+\hlkwd{library}\hlstd{(devtools)}
 
-# To get the latest version of hviPlotR.
-install_github("ehrlinger/hviPlotR")
-@
+\hlcom{# To get the latest version of hviPlotR.}
+\hlkwd{install_github}\hlstd{(}\hlstr{"ehrlinger/hviPlotR"}\hlstd{)}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
 
 \subsection{Importing the data}\label{S:sasData}
 For most of this document, we assume that the data analysis has been completed in \proglang{SAS}. In this case, the first step in creating figures in \proglang{R} is to get the data out of \proglang{SAS}. There are many ways to do this, but we have had success using the \code{tp.bd.SAStoR.sas} program (under the \code{datasets} folder) to export a data set into a \proglang{SAS} \code{xport} file.
@@ -408,69 +348,85 @@ For most of this document, we assume that the data analysis has been completed i
 Once an \code{xport} file has been created, we read it into \proglang{R} with the \pkg{foreign} package. This recipe reads an \code{xport} into a \code{data.frame} and then re-reads the \code{xport} file to pull out the \proglang{SAS} labels to describe the variables. The labels will be stored in a vector, which we can index by the variable names.
 
 
-<<readData, eval=FALSE>>=
-library(foreign)
+\begin{knitrout}\footnotesize
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{library}\hlstd{(foreign)}
 
-# The xport file name
-dtFilename = "../datasets/par_cst.xpt"
+\hlcom{# The xport file name}
+\hlstd{dtFilename} \hlkwb{=} \hlstr{"../datasets/par_cst.xpt"}
 
-# Read the xport file into a data.frame
-dta<- read.xport(dtFilename)
+\hlcom{# Read the xport file into a data.frame}
+\hlstd{dta}\hlkwb{<-} \hlkwd{read.xport}\hlstd{(dtFilename)}
 
-# Reading in the labels takes 2 more commands.
-dta.info <- lookup.xport(dtFilename)
-dta.labels <- dta.info[[1]]$label
+\hlcom{# Reading in the labels takes 2 more commands.}
+\hlstd{dta.info} \hlkwb{<-} \hlkwd{lookup.xport}\hlstd{(dtFilename)}
+\hlstd{dta.labels} \hlkwb{<-} \hlstd{dta.info[[}\hlnum{1}\hlstd{]]}\hlopt{$}\hlstd{label}
 
-## Fill in empty labels with the variable name
-dta.labels<-sapply(1:length(dta.labels), function(ind){
-  if(dta.labels[ind] == "")
-    colnames(dta)[ind]
-  else
-    dta.labels[ind]
-})
+\hlcom{## Fill in empty labels with the variable name}
+\hlstd{dta.labels}\hlkwb{<-}\hlkwd{sapply}\hlstd{(}\hlnum{1}\hlopt{:}\hlkwd{length}\hlstd{(dta.labels),} \hlkwa{function}\hlstd{(}\hlkwc{ind}\hlstd{)\{}
+  \hlkwa{if}\hlstd{(dta.labels[ind]} \hlopt{==} \hlstr{""}\hlstd{)}
+    \hlkwd{colnames}\hlstd{(dta)[ind]}
+  \hlkwa{else}
+    \hlstd{dta.labels[ind]}
+\hlstd{\})}
 
-## For indexing the labels, 
-names(dta.labels) = colnames(dta)
-@
+\hlcom{## For indexing the labels, }
+\hlkwd{names}\hlstd{(dta.labels)} \hlkwb{=} \hlkwd{colnames}\hlstd{(dta)}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
 
 \subsection{Initialize the figure}\label{S:initial}
 Referring back to the \proglang{SAS} code chunks in Section~\ref{S:plot.sas},  Listing~\ref{plot.sas:figureSetup} sets the current working directory, and does some house keeping, including loading the \code{plot.sas} macro. Similarly, to get started in \proglang{R}, we first load the required libraries: \pkg{ggplot2} for graphics, and \pkg{hviPlotR} for themes. The following code chunk also sets the initial default theme to a generic black and white format, and brings in a pair of example datasets. 
-<<gettingStarted, message=FALSE, warning=FALSE>>=
-# load required libraries
-library(ggplot2)   # Plotting environment
-library(hviPlotR)  # CCF HVI plotting functionality 
+\begin{knitrout}\footnotesize
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{# load required libraries}
+\hlkwd{library}\hlstd{(ggplot2)}   \hlcom{# Plotting environment}
+\hlkwd{library}\hlstd{(hviPlotR)}  \hlcom{# CCF HVI plotting functionality }
 
-theme_set(theme_bw()) # A reasonable default plotting theme
+\hlkwd{theme_set}\hlstd{(}\hlkwd{theme_bw}\hlstd{())} \hlcom{# A reasonable default plotting theme}
 
-# Load the example datasets 
-data(parametric, package="hviPlotR")
-data(nonparametric, package="hviPlotR")
-@
+\hlcom{# Load the example datasets }
+\hlkwd{data}\hlstd{(parametric,} \hlkwc{package}\hlstd{=}\hlstr{"hviPlotR"}\hlstd{)}
+\hlkwd{data}\hlstd{(nonparametric,} \hlkwc{package}\hlstd{=}\hlstr{"hviPlotR"}\hlstd{)}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
 
 One advantage of \pkg{ggplot2} is that figures can be built up in successive statements. This tutorial will make extensive use of this to demonstrate the process. Starting in this code chunk, we will save the intermediate objects in the \code{ccf_plot} variable. Here we simply create an empty \pkg{ggplot2} figure that we will be adding to as we work through the commands in the \code{plot.sas} macro. Note that we include the \code{\%plot()} commands in the comments above the equivalent \pkg{ggplot2} command for comparison.
-<<openPlot>>=
-## To reproduce the plot.sas function, line by line.
-###-------------
-## There are SAS options we will not use here.
-#
-#  %plot(goptions gsfmode=replace, device=pscolor, gaccess=gsasfile end;
-ccf_plot <- ggplot()
-@
+\begin{knitrout}\footnotesize
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{## To reproduce the plot.sas function, line by line.}
+\hlcom{###-------------}
+\hlcom{## There are SAS options we will not use here.}
+\hlcom{#}
+\hlcom{#  %plot(goptions gsfmode=replace, device=pscolor, gaccess=gsasfile end;}
+\hlstd{ccf_plot} \hlkwb{<-} \hlkwd{ggplot}\hlstd{()}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
 
 In \proglang{R}, we set the equivalent variables \code{gsmode}, \code{device} and \code{gaccess} when saving the figure (Section~\ref{S:saving}).
 
 \subsection{Labels}\label{S:labels}
 The next section of Listing~\ref{plot.sas:figureSetup} in Section~\ref{S:plot.sas} sets the x and y axis titles, as well as the location of the major axis tick marks. We will split this up in our \proglang{R} code. The \pkg{ggplot2} package uses the \code{labs} function to set the axis labels. 
-<<labels>>=
-###-------------
-## Labels are a single command, scales control the axis
-#
-#    labelx l="Years After Randomization", end;
-#    labely l="Percent in Each Category (ST)", end;
-ccf_plot <- ccf_plot +
-  labs(x="Years After Randomization",
-       y="Percent in Each Category (ST)")
-@
+\begin{knitrout}\footnotesize
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{###-------------}
+\hlcom{## Labels are a single command, scales control the axis}
+\hlcom{#}
+\hlcom{#    labelx l="Years After Randomization", end;}
+\hlcom{#    labely l="Percent in Each Category (ST)", end;}
+\hlstd{ccf_plot} \hlkwb{<-} \hlstd{ccf_plot} \hlopt{+}
+  \hlkwd{labs}\hlstd{(}\hlkwc{x}\hlstd{=}\hlstr{"Years After Randomization"}\hlstd{,}
+       \hlkwc{y}\hlstd{=}\hlstr{"Percent in Each Category (ST)"}\hlstd{)}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
 
 The \code{labs} function can also be used to set the plot \code{title} and legend titles. We will not cover that functionality here, details are available in~\cite{Wickham:2009} or through the Internet.
 
@@ -479,16 +435,20 @@ Axis ticks are controlled with the \code{scale_} functions. \pkg{ggplot2} has ma
 
 Note that the \code{scale_} functions do not restrict the figure viewport at all. They are simply used to setup and label the axis tick marks. You can specify that the y-axis ticks are only from 0 to 50, and the figure would have a blank axis from 50 to the limits of the data. We discuss controlling the figure viewport in Section~\ref{S:globals}.
 
-<<scales>>=
-###-------------
-## Labels are a single command, scales control the axis
-#
-#      axisx order=(0 to 5 by 1), minor=none, end;
-#      axisy order=(0 to 100 by 10), minor=none, end;
-ccf_plot <- ccf_plot +
-  scale_x_continuous(breaks=seq(0,5,1))+
-  scale_y_continuous(breaks=seq(0,100,10))
-@
+\begin{knitrout}\footnotesize
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{###-------------}
+\hlcom{## Labels are a single command, scales control the axis}
+\hlcom{#}
+\hlcom{#      axisx order=(0 to 5 by 1), minor=none, end;}
+\hlcom{#      axisy order=(0 to 100 by 10), minor=none, end;}
+\hlstd{ccf_plot} \hlkwb{<-} \hlstd{ccf_plot} \hlopt{+}
+  \hlkwd{scale_x_continuous}\hlstd{(}\hlkwc{breaks}\hlstd{=}\hlkwd{seq}\hlstd{(}\hlnum{0}\hlstd{,}\hlnum{5}\hlstd{,}\hlnum{1}\hlstd{))}\hlopt{+}
+  \hlkwd{scale_y_continuous}\hlstd{(}\hlkwc{breaks}\hlstd{=}\hlkwd{seq}\hlstd{(}\hlnum{0}\hlstd{,}\hlnum{100}\hlstd{,}\hlnum{10}\hlstd{))}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
 
 Up to this point, we have only created and \emph{decorated} the plot object stored in the \code{ccf_plot} variable. Showing the figure (\code{show()}) or saving the figure would result in an error, since we have not added any data to the object, or described how we want it displayed. 
 
@@ -499,20 +459,33 @@ The fundamental statement of the \code{plot.sas} macro is the \code{tuple} state
 The \code{geom_} set of functions in \pkg{ggplot2} is the functional equivalent to the \code{tuple} statement. The difference is the user specifies the graphical element desired using separate function calls. So points are plotting using the \code{geom_point} function, lines are generated with the \code{geom_line} (Section~\ref{S:lines}) and error bars are generated with the \code{geom_errorbar} function (Section~\ref{S:errorbars}).
 
 Each of these functions can take a \code{data} argument as well as a large set of decorator arguments (i.e.\ \code{color}, \code{size}, \code{shape}, \code{linetype}, \ldots). The aesthetic function (\code{aes()}) call is used to describe point within \code{geom_}  function using variable names defined in the data set. The following code chunk demonstrates this by plotting the \code{iv_state} variable on the x-axis and the \code{sginit} variable along the y-axis. The variables are defined in the \code{nonparametric} data set we loaded in the setup code chunk in Section~\ref{S:ggplot2tuple}.
-<<points, fig.cap="Point Plot">>=
-###-------------
-## /******NON-PARAMETRIC: SYMBOLS AND CONFIDENCE BARS *******/
-##
-## Each tuple statement corresponds to one or more geom_ statements
-#     tuple set=green, symbol=dot, symbsize=1/2, linepe=0, linecl=0,
-#       ebarsize=3/4, ebar=1,
-#       x=iv_state, y=sginit, cll=stlinit, clu=stuinit, color=black, end;
+\begin{knitrout}\footnotesize
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{###-------------}
+\hlcom{## /******NON-PARAMETRIC: SYMBOLS AND CONFIDENCE BARS *******/}
+\hlcom{##}
+\hlcom{## Each tuple statement corresponds to one or more geom_ statements}
+\hlcom{#     tuple set=green, symbol=dot, symbsize=1/2, linepe=0, linecl=0,}
+\hlcom{#       ebarsize=3/4, ebar=1,}
+\hlcom{#       x=iv_state, y=sginit, cll=stlinit, clu=stuinit, color=black, end;}
 
-ccf_plot <- ccf_plot +
-  geom_point(data=nonparametric, aes(x=iv_state, y=sginit))
+\hlstd{ccf_plot} \hlkwb{<-} \hlstd{ccf_plot} \hlopt{+}
+  \hlkwd{geom_point}\hlstd{(}\hlkwc{data}\hlstd{=nonparametric,} \hlkwd{aes}\hlstd{(}\hlkwc{x}\hlstd{=iv_state,} \hlkwc{y}\hlstd{=sginit))}
 
-show(ccf_plot)
-@
+\hlkwd{show}\hlstd{(ccf_plot)}
+\end{alltt}
+\end{kframe}\begin{figure}[htpb]
+
+{\centering \includegraphics[width=\maxwidth]{figure/beamer-points-1} 
+
+}
+
+\caption[Point Plot]{Point Plot\label{F:points}}
+\end{figure}
+
+
+\end{knitrout}
 The \code{aes()} mechanism is a powerful way to communicate data level assignment to \code{geom_} functions. If you want to stratify a dataset by a variable, you can specify that within the \code{aes()} function call using the \code{by=} argument. For points, we often want the stratifying to be either a different \code{color=} or \code{shape=} for stratified data. We can then use the \code{scale_color_} functions (See Section~\ref{S:colors}) or the \code{scale_shape_} functions (See Section~\ref{S:shapes}) to control how these are assigned to the stratifying variable.
 
 Once we have added data to the \code{ggplot} object, we can display the figure as shown in Figure~\ref{F:points}. Until now the figure has been manipulated by sequentially adding function calls to the \code{ccf_plot} object. To display the figure you can either use the \code{show()} function, or simply call the object name at the command line.
@@ -523,115 +496,135 @@ Note that we have used the default \emph{shape}, \emph{size} and \emph{color} fo
 
 Instead of using a single function to set points, lines and error bars, \pkg{ggplot2} uses individual function calls to control these elements. The \code{geom_errorbar} function takes the same arguments as the other \code{geom_} functions. However, since an errorbar is defined with upper and lower limits, we need to supply an \code{ymax} and \code{ymin} argument to the graphic aesthetic function. This code chunk plots both points, and error bars for the next two data series, the \code{sgdead1} variable with error bars running from \code{stldead1} to \code{studead1} and \code{sgstrk1} variable with error bars running from \code{stlstrk1} to \code{stustrk1}. As we see in Figure~\ref{F:errorBars}, both series were added in \code{color="blue"} (Section~\ref{S:colors}), with different point shapes \code{shape=1} and \code{shape=0} for each series (Section~\ref{S:shapes}). We manipulated the error bar size with the \code{width} argument
 
-<<errorBars, warning=TRUE, fig.cap="Error Bar Plot">>=
-#     tuple set=green, symbol=circle, symbsize=1/2, linepe=0, linecl=0,
-#       ebarsize=3/4, ebar=1,
-#       x=iv_state, y=sgdead1, cll=stldead1, clu=studead1, color=blue, end;
-ccf_plot <- ccf_plot +
-  geom_point(data=nonparametric, aes(x=iv_state, y=sgdead1),color="blue",shape=1) + 
-  geom_errorbar(data=nonparametric, aes(x=iv_state, ymin=stldead1, ymax=studead1), 
-                color="blue", width=.1)
+\begin{knitrout}\footnotesize
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{#     tuple set=green, symbol=circle, symbsize=1/2, linepe=0, linecl=0,}
+\hlcom{#       ebarsize=3/4, ebar=1,}
+\hlcom{#       x=iv_state, y=sgdead1, cll=stldead1, clu=studead1, color=blue, end;}
+\hlstd{ccf_plot} \hlkwb{<-} \hlstd{ccf_plot} \hlopt{+}
+  \hlkwd{geom_point}\hlstd{(}\hlkwc{data}\hlstd{=nonparametric,} \hlkwd{aes}\hlstd{(}\hlkwc{x}\hlstd{=iv_state,} \hlkwc{y}\hlstd{=sgdead1),}\hlkwc{color}\hlstd{=}\hlstr{"blue"}\hlstd{,}\hlkwc{shape}\hlstd{=}\hlnum{1}\hlstd{)} \hlopt{+}
+  \hlkwd{geom_errorbar}\hlstd{(}\hlkwc{data}\hlstd{=nonparametric,} \hlkwd{aes}\hlstd{(}\hlkwc{x}\hlstd{=iv_state,} \hlkwc{ymin}\hlstd{=stldead1,} \hlkwc{ymax}\hlstd{=studead1),}
+                \hlkwc{color}\hlstd{=}\hlstr{"blue"}\hlstd{,} \hlkwc{width}\hlstd{=}\hlnum{.1}\hlstd{)}
 
-#      tuple set=green, symbol=square, symbsize=1/2, linepe=0, linecl=0,
-#       ebarsize=3/4, ebar=1,
-#       x=iv_state, y=sgstrk1, cll=stlstrk1, clu=stustrk1, color=blue, end;
-ccf_plot <- ccf_plot +
-  geom_point(data=nonparametric, aes(x=iv_state, y=sgstrk1),color="blue",shape=0) + 
-  geom_errorbar(data=nonparametric, aes(x=iv_state, ymin=stlstrk1, ymax=stustrk1), 
-                color="blue", width=.1)
+\hlcom{#      tuple set=green, symbol=square, symbsize=1/2, linepe=0, linecl=0,}
+\hlcom{#       ebarsize=3/4, ebar=1,}
+\hlcom{#       x=iv_state, y=sgstrk1, cll=stlstrk1, clu=stustrk1, color=blue, end;}
+\hlstd{ccf_plot} \hlkwb{<-} \hlstd{ccf_plot} \hlopt{+}
+  \hlkwd{geom_point}\hlstd{(}\hlkwc{data}\hlstd{=nonparametric,} \hlkwd{aes}\hlstd{(}\hlkwc{x}\hlstd{=iv_state,} \hlkwc{y}\hlstd{=sgstrk1),}\hlkwc{color}\hlstd{=}\hlstr{"blue"}\hlstd{,}\hlkwc{shape}\hlstd{=}\hlnum{0}\hlstd{)} \hlopt{+}
+  \hlkwd{geom_errorbar}\hlstd{(}\hlkwc{data}\hlstd{=nonparametric,} \hlkwd{aes}\hlstd{(}\hlkwc{x}\hlstd{=iv_state,} \hlkwc{ymin}\hlstd{=stlstrk1,} \hlkwc{ymax}\hlstd{=stustrk1),}
+                \hlkwc{color}\hlstd{=}\hlstr{"blue"}\hlstd{,} \hlkwc{width}\hlstd{=}\hlnum{.1}\hlstd{)}
 
-show(ccf_plot)
-@
+\hlkwd{show}\hlstd{(ccf_plot)}
+\end{alltt}
+
+
+{\ttfamily\noindent\color{warningcolor}{Warning: Removed 7 rows containing missing values (geom\_point).}}
+
+{\ttfamily\noindent\color{warningcolor}{Warning: Removed 117 rows containing missing values (geom\_point).}}\end{kframe}\begin{figure}[htpb]
+
+{\centering \includegraphics[width=\maxwidth]{figure/beamer-errorBars-1} 
+
+}
+
+\caption[Error Bar Plot]{Error Bar Plot\label{F:errorBars}}
+\end{figure}
+
+
+\end{knitrout}
 
 Note that the \code{x} variable is the same (\code{iv_state}) for all three data series as well as the associated error bars. This is not a requirement, as we could have specified a different variable name for each \code{geom_} function call. Also note that just as in the \code{plot.sas} macro, since we do not want an error bar placed at at every data point, a large number points have the upper and lower error bar y values have been set to missing (\code{NA}). The \pkg{ggplot2} package does print warning messages when we attempt to plot a series with missing values. We typically suppress those warnings, but left them here for illustration purposes only.
 
 \subsection{Lines}\label{S:lines}
 Similar to points and error bars, the \code{geom_line} function is used to plot lines. We use the \code{linetype} argument to specify the line styles (Section~\ref{S:linetypes}). We do have to generate a separate \code{geom_line} function call for each limit of the confidence limit, since it is constructed of two lines (the upper and lower confidence limit). The resulting graph is shown in Figure~\ref{F:lines}.
-<<lines, fig.cap="Line Plot with confidence bands">>=
-# /**********PARAMETRIC : SOLID LINES AND CONFIDENCE INTERVALS**********/      
-# tuple set=all, x=years, y=noinit, cll=clinit, clu=cuinit,
-# width=0.5,color=black, end;
+\begin{knitrout}\footnotesize
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{# /**********PARAMETRIC : SOLID LINES AND CONFIDENCE INTERVALS**********/      }
+\hlcom{# tuple set=all, x=years, y=noinit, cll=clinit, clu=cuinit,}
+\hlcom{# width=0.5,color=black, end;}
 
-ccf_plot <- ccf_plot+
-  geom_line(data=parametric, aes(x=years, y=noinit))+
-  geom_line(data=parametric, aes(x=years, y=clinit), linetype="dashed")+
-  geom_line(data=parametric, aes(x=years, y=cuinit), linetype="dashed")
-# 
-# tuple set=all, x=years, y=nodeath, cll=cldeath, clu=cudeath,
-# width=0.5,color=blue, end;
-ccf_plot <- ccf_plot+
-  geom_line(data=parametric, aes(x=years, y=nodeath), color="blue")+
-  geom_line(data=parametric, aes(x=years, y=cldeath), linetype="dashed", color="blue")+
-  geom_line(data=parametric, aes(x=years, y=cudeath), linetype="dashed", color="blue")
-# 
-# tuple set=all, x=years, y=nostrk, cll=clstrk, clu=custrk,
-# linecl=2, width=0.5,color=blue, end;
-ccf_plot <- ccf_plot+
-  geom_line(data=parametric, aes(x=years, y=nostrk), color="blue")+
-  geom_line(data=parametric, aes(x=years, y=clstrk), linetype="dashed", color="blue")+
-  geom_line(data=parametric, aes(x=years, y=custrk), linetype="dashed", color="blue")
+\hlstd{ccf_plot} \hlkwb{<-} \hlstd{ccf_plot}\hlopt{+}
+  \hlkwd{geom_line}\hlstd{(}\hlkwc{data}\hlstd{=parametric,} \hlkwd{aes}\hlstd{(}\hlkwc{x}\hlstd{=years,} \hlkwc{y}\hlstd{=noinit))}\hlopt{+}
+  \hlkwd{geom_line}\hlstd{(}\hlkwc{data}\hlstd{=parametric,} \hlkwd{aes}\hlstd{(}\hlkwc{x}\hlstd{=years,} \hlkwc{y}\hlstd{=clinit),} \hlkwc{linetype}\hlstd{=}\hlstr{"dashed"}\hlstd{)}\hlopt{+}
+  \hlkwd{geom_line}\hlstd{(}\hlkwc{data}\hlstd{=parametric,} \hlkwd{aes}\hlstd{(}\hlkwc{x}\hlstd{=years,} \hlkwc{y}\hlstd{=cuinit),} \hlkwc{linetype}\hlstd{=}\hlstr{"dashed"}\hlstd{)}
+\hlcom{# }
+\hlcom{# tuple set=all, x=years, y=nodeath, cll=cldeath, clu=cudeath,}
+\hlcom{# width=0.5,color=blue, end;}
+\hlstd{ccf_plot} \hlkwb{<-} \hlstd{ccf_plot}\hlopt{+}
+  \hlkwd{geom_line}\hlstd{(}\hlkwc{data}\hlstd{=parametric,} \hlkwd{aes}\hlstd{(}\hlkwc{x}\hlstd{=years,} \hlkwc{y}\hlstd{=nodeath),} \hlkwc{color}\hlstd{=}\hlstr{"blue"}\hlstd{)}\hlopt{+}
+  \hlkwd{geom_line}\hlstd{(}\hlkwc{data}\hlstd{=parametric,} \hlkwd{aes}\hlstd{(}\hlkwc{x}\hlstd{=years,} \hlkwc{y}\hlstd{=cldeath),} \hlkwc{linetype}\hlstd{=}\hlstr{"dashed"}\hlstd{,} \hlkwc{color}\hlstd{=}\hlstr{"blue"}\hlstd{)}\hlopt{+}
+  \hlkwd{geom_line}\hlstd{(}\hlkwc{data}\hlstd{=parametric,} \hlkwd{aes}\hlstd{(}\hlkwc{x}\hlstd{=years,} \hlkwc{y}\hlstd{=cudeath),} \hlkwc{linetype}\hlstd{=}\hlstr{"dashed"}\hlstd{,} \hlkwc{color}\hlstd{=}\hlstr{"blue"}\hlstd{)}
+\hlcom{# }
+\hlcom{# tuple set=all, x=years, y=nostrk, cll=clstrk, clu=custrk,}
+\hlcom{# linecl=2, width=0.5,color=blue, end;}
+\hlstd{ccf_plot} \hlkwb{<-} \hlstd{ccf_plot}\hlopt{+}
+  \hlkwd{geom_line}\hlstd{(}\hlkwc{data}\hlstd{=parametric,} \hlkwd{aes}\hlstd{(}\hlkwc{x}\hlstd{=years,} \hlkwc{y}\hlstd{=nostrk),} \hlkwc{color}\hlstd{=}\hlstr{"blue"}\hlstd{)}\hlopt{+}
+  \hlkwd{geom_line}\hlstd{(}\hlkwc{data}\hlstd{=parametric,} \hlkwd{aes}\hlstd{(}\hlkwc{x}\hlstd{=years,} \hlkwc{y}\hlstd{=clstrk),} \hlkwc{linetype}\hlstd{=}\hlstr{"dashed"}\hlstd{,} \hlkwc{color}\hlstd{=}\hlstr{"blue"}\hlstd{)}\hlopt{+}
+  \hlkwd{geom_line}\hlstd{(}\hlkwc{data}\hlstd{=parametric,} \hlkwd{aes}\hlstd{(}\hlkwc{x}\hlstd{=years,} \hlkwc{y}\hlstd{=custrk),} \hlkwc{linetype}\hlstd{=}\hlstr{"dashed"}\hlstd{,} \hlkwc{color}\hlstd{=}\hlstr{"blue"}\hlstd{)}
 
-show(ccf_plot)
-@
+\hlkwd{show}\hlstd{(ccf_plot)}
+\end{alltt}
+\end{kframe}\begin{figure}[htpb]
+
+{\centering \includegraphics[width=\maxwidth]{figure/beamer-lines-1} 
+
+}
+
+\caption[Line Plot with confidence bands]{Line Plot with confidence bands\label{F:lines}}
+\end{figure}
+
+
+\end{knitrout}
 
 Alternatively, we could use the \code{geom_ribbon} to generate a confidence band using a shaded region with only a single call. The aesthetic argument for \code{geom_ribbon} takes a \code{ymax} and \code{ymin} argument just as the \code{geom_errorbar} function. Note that we used a different data set (\code{data=parametric}) to use a different set of points for generating these lines. 
 
 \subsection{Line types}\label{S:linetypes}
 The \code{linetype} argument takes a named string as a value, to set the different line styles. We show a set of frequently used styles in Figure~\ref{F:linetypes} for reference.
-<<linetypes, echo=FALSE, fig.cap="ggplot2 linetype table">>=
-d=data.frame(lt=c("blank", "solid", "dashed", "dotted", "dotdash", "longdash", "twodash", "1F", "F1", "4C88C488", "12345678"))
-ggplot() +
-  scale_x_continuous(name="", limits=c(0,1), breaks=NULL) +
-  scale_y_discrete(name="") +
-  scale_linetype_identity() +
-  geom_segment(data=d, mapping=aes(x=0, xend=1, y=lt, yend=lt, linetype=lt))
-@
+\begin{knitrout}\footnotesize
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{figure}[htpb]
+
+{\centering \includegraphics[width=\maxwidth]{figure/beamer-linetypes-1} 
+
+}
+
+\caption[ggplot2 linetype table]{ggplot2 linetype table\label{F:linetypes}}
+\end{figure}
+
+
+\end{knitrout}
 
 \subsection{Shapes}\label{S:shapes}
 The \code{shape} argument takes numeric arguments. Though not user friendly, this method is at least consistent. Figure~\ref{F:shapes} shows a catalog of shapes with corresponding numeric argument constructed using the ones place from the x-axis, and tens from the y-axis. For example, the filled dot, default point shape shown in black in Figure~\ref{F:lines} is shape 20.
 
-<<shapes, echo=FALSE, fig.cap="ggplot2 shape table">>=
-df <- data.frame(x=c(0:127))
-ggplot(df, aes(x=x%%10, y=floor(x/10), shape=factor(x), size=10)) +
-  geom_point() +
-  scale_shape_manual(values=df$x) + theme(legend.position='none') +
-  scale_x_continuous(breaks=0:10) + scale_y_continuous(breaks=0:12) +
-  labs(x="ones", y="tens")
-@
+\begin{knitrout}\footnotesize
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{figure}[htpb]
+
+{\centering \includegraphics[width=\maxwidth]{figure/beamer-shapes-1} 
+
+}
+
+\caption[ggplot2 shape table]{ggplot2 shape table\label{F:shapes}}
+\end{figure}
+
+
+\end{knitrout}
 
 \subsection{Colors}\label{S:colors}
 You can specify colors in \proglang{R} by numeric index, name (as we have done), hexadecimal, or RGB specification. For example \code{col=1} and \code{col="white"}  are equivalent. The chart in Figure~\ref{F:colorChart} was produced with code developed by~\cite{Glynn:2005}. See his \proglang{R}  Color Chart website for all the details you would ever need about using colors in R.
 
-<<colorChart, fig.cap="R colors", echo=FALSE, fig.height=5, fig.width=5>>=
-SetTextContrastColor <- function(color){
-  ifelse( mean(col2rgb(color)) > 127, "black", "white")
+\begin{knitrout}\footnotesize
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{figure}[htpb]
+
+{\centering \includegraphics[width=\maxwidth]{figure/beamer-colorChart-1} 
+
 }
-# Define this array of text contrast colors that correponds to each
-# member of the colors() array.
-TextContrastColor <- unlist( lapply(colors(), SetTextContrastColor) )
-par(mar=c(0,0,0,0))
+
+\caption[R colors]{R colors\label{F:colorChart}}
+\end{figure}
 
 
-# 1a. Plot matrix of R colors, in index order, 25 per row.
-# This example plots each row of rectangles one at a time.
-colCount <- 25 # number per row
-rowCount <- 27
-
-
-plot( c(1,colCount), c(0,rowCount), type="n", ylab="", xlab="",
-      axes=FALSE, ylim=c(rowCount,0))
-
-for (j in 0:(rowCount-1)){
-  base <- j*colCount
-  remaining <- length(colors()) - base
-  RowSize <- ifelse(remaining < colCount, remaining, colCount)
-  rect((1:RowSize)-0.5,j-0.5, (1:RowSize)+0.5,j+0.5,
-       border="black",
-       col=colors()[base + (1:RowSize)])
-  text((1:RowSize), j, paste(base + (1:RowSize)), cex=0.7,
-       col=TextContrastColor[base + (1:RowSize)])
-}
-@
+\end{knitrout}
 
 Color theory encompasses a multitude of definitions, concepts and design applications - enough to fill several encyclopedias. However, there are three basic categories of color theory that are logical and useful : The color wheel, color harmony, and the context of how colors are used. ColorBrewer~\citep{Brewer:2003} is an online tool~(\url{http://colorbrewer2.org/}) designed to help people select good color schemes for maps and other graphics. We encourage the use of ColorBrewer as a good, safe introduction to selecting colors based on theoretically good practices. 
 
@@ -639,13 +632,26 @@ The \pkg{RColorBrewer} package~\citep{Neuwirth:2011} simplifies the selection of
 
 \subsection{Global Figure Commands}\label{S:globals}
 By default, the \pkg{ggplot2} package adds space to the figures around the data. We often want to remove this space, or focus in on a smaller window of the figure. This is accomplished with the \code{coord_cartesian} function. By specifying the \code{xlim} and/or \code{ylim} coordinates, we can crop the figure into whatever viewport we are interested in without manipulating the original dataset. Figure~\ref{F:global} sets the origin to (0,0) and clips the x axis at 5.1, and the y axis at 101. We have added the .1 and 1 to each axis for aesthetic reasons to avid chopping off the tick labels when they occur at the end of the viewport.
-<<global,, fig.cap="Adjusting the viewport">>=
-# Special commands to force origin to 0,0
-ccf_plot <- ccf_plot + 
-  coord_cartesian(xlim=c(0,5.1), ylim=c(0,101))
+\begin{knitrout}\footnotesize
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{# Special commands to force origin to 0,0}
+\hlstd{ccf_plot} \hlkwb{<-} \hlstd{ccf_plot} \hlopt{+}
+  \hlkwd{coord_cartesian}\hlstd{(}\hlkwc{xlim}\hlstd{=}\hlkwd{c}\hlstd{(}\hlnum{0}\hlstd{,}\hlnum{5.1}\hlstd{),} \hlkwc{ylim}\hlstd{=}\hlkwd{c}\hlstd{(}\hlnum{0}\hlstd{,}\hlnum{101}\hlstd{))}
 
-show(ccf_plot)
-@
+\hlkwd{show}\hlstd{(ccf_plot)}
+\end{alltt}
+\end{kframe}\begin{figure}[htpb]
+
+{\centering \includegraphics[width=\maxwidth]{figure/beamer-global_-1} 
+
+}
+
+\caption[Adjusting the viewport]{Adjusting the viewport\label{F:global,}}
+\end{figure}
+
+
+\end{knitrout}
 
 % #   expand_limits(x = 0, y = 0) +
 % #   scale_x_continuous(expand = c(-0.1, 0.1)) + 
@@ -655,24 +661,37 @@ show(ccf_plot)
 
 As a second example, we recreate a figure that was created for PowerPoint with the \code{plot.sas} macro. In most cases, we do not include points when generating presentation figures, so this figure was generated with only \code{geom_line} function calls. We also show how the figure can be created in a single set of function calls.
 
-<<powerpoint, fig.cap="PowerPoint Figures">>=
-# %plot(goptions gsfmode=replace, device=cgmmppa, ftext=hwcgm001, end;
-# axisx order=(0 to 5 by 1), minor=none, value=(height=2.4), end;
-# axisy order=(0 to 100 by 20), minor=none, value=(height=2.4), 
-# value=(height=2.4 j=r ' ' '20' '40' '60' '80' '100'), end;
-# tuple set=all, x=years, y=noinit, width=3, color=gray, end;
-# tuple set=all, x=years, y=nostrk, width=3, color=red, end;
-# tuple set=all, x=years, y=nodeath, width=3, color=blue, end;
-# );
-ccf_pptPlot <- ggplot()+
-  scale_x_continuous(breaks=seq(0,5,1))+
-  scale_y_continuous(breaks=seq(0,100,20))+
-  geom_line(data=parametric, aes(x=years, y=noinit), color="grey", size=1.5)+
-  geom_line(data=parametric, aes(x=years, y=nostrk), color="red", size=1.5)+
-  geom_line(data=parametric, aes(x=years, y=nodeath), color="blue", size=1.5)
+\begin{knitrout}\footnotesize
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{# %plot(goptions gsfmode=replace, device=cgmmppa, ftext=hwcgm001, end;}
+\hlcom{# axisx order=(0 to 5 by 1), minor=none, value=(height=2.4), end;}
+\hlcom{# axisy order=(0 to 100 by 20), minor=none, value=(height=2.4), }
+\hlcom{# value=(height=2.4 j=r ' ' '20' '40' '60' '80' '100'), end;}
+\hlcom{# tuple set=all, x=years, y=noinit, width=3, color=gray, end;}
+\hlcom{# tuple set=all, x=years, y=nostrk, width=3, color=red, end;}
+\hlcom{# tuple set=all, x=years, y=nodeath, width=3, color=blue, end;}
+\hlcom{# );}
+\hlstd{ccf_pptPlot} \hlkwb{<-} \hlkwd{ggplot}\hlstd{()}\hlopt{+}
+  \hlkwd{scale_x_continuous}\hlstd{(}\hlkwc{breaks}\hlstd{=}\hlkwd{seq}\hlstd{(}\hlnum{0}\hlstd{,}\hlnum{5}\hlstd{,}\hlnum{1}\hlstd{))}\hlopt{+}
+  \hlkwd{scale_y_continuous}\hlstd{(}\hlkwc{breaks}\hlstd{=}\hlkwd{seq}\hlstd{(}\hlnum{0}\hlstd{,}\hlnum{100}\hlstd{,}\hlnum{20}\hlstd{))}\hlopt{+}
+  \hlkwd{geom_line}\hlstd{(}\hlkwc{data}\hlstd{=parametric,} \hlkwd{aes}\hlstd{(}\hlkwc{x}\hlstd{=years,} \hlkwc{y}\hlstd{=noinit),} \hlkwc{color}\hlstd{=}\hlstr{"grey"}\hlstd{,} \hlkwc{size}\hlstd{=}\hlnum{1.5}\hlstd{)}\hlopt{+}
+  \hlkwd{geom_line}\hlstd{(}\hlkwc{data}\hlstd{=parametric,} \hlkwd{aes}\hlstd{(}\hlkwc{x}\hlstd{=years,} \hlkwc{y}\hlstd{=nostrk),} \hlkwc{color}\hlstd{=}\hlstr{"red"}\hlstd{,} \hlkwc{size}\hlstd{=}\hlnum{1.5}\hlstd{)}\hlopt{+}
+  \hlkwd{geom_line}\hlstd{(}\hlkwc{data}\hlstd{=parametric,} \hlkwd{aes}\hlstd{(}\hlkwc{x}\hlstd{=years,} \hlkwc{y}\hlstd{=nodeath),} \hlkwc{color}\hlstd{=}\hlstr{"blue"}\hlstd{,} \hlkwc{size}\hlstd{=}\hlnum{1.5}\hlstd{)}
 
-show(ccf_pptPlot)
-@
+\hlkwd{show}\hlstd{(ccf_pptPlot)}
+\end{alltt}
+\end{kframe}\begin{figure}[htpb]
+
+{\centering \includegraphics[width=\maxwidth]{figure/beamer-powerpoint-1} 
+
+}
+
+\caption[PowerPoint Figures]{PowerPoint Figures\label{F:powerpoint}}
+\end{figure}
+
+
+\end{knitrout}
 
 
 % -----------------------------------------------------
@@ -685,40 +704,79 @@ The \pkg{hviPlotR} package contains two custom themes. The \code{theme_man()} th
 \subsection{Theme for Manuscripts}\label{S:theme_man}
 
 As before, there are multiple ways to assign a theme to use. Using the \code{theme_set()} function will apply the theme for all subsequent figures. Even if the figure was created before the \code{theme_set} call, displaying a figure after the call will apply the new theme. It is then best to revert to the default theme when at the end of a section. The following code chunk demonstrates this process using the manuscript theme (\code{theme_man()}). The resulting manuscript graphic is show in Figure~\ref{F:manuscriptTheme}.
-<<manuscriptTheme, fig.cap="Theme for Manuscripts">>=
-# Set the theme for manuscripts,
-theme_set(theme_man())
+\begin{knitrout}\footnotesize
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{# Set the theme for manuscripts,}
+\hlkwd{theme_set}\hlstd{(}\hlkwd{theme_man}\hlstd{())}
 
-# show the figure.
-ccf_plot
+\hlcom{# show the figure.}
+\hlstd{ccf_plot}
 
-# Reset the theme to the resonable default used previously.
-theme_set(theme_bw())
-@
+\hlcom{# Reset the theme to the resonable default used previously.}
+\hlkwd{theme_set}\hlstd{(}\hlkwd{theme_bw}\hlstd{())}
+\end{alltt}
+\end{kframe}\begin{figure}[htpb]
+
+{\centering \includegraphics[width=\maxwidth]{figure/beamer-manuscriptTheme-1} 
+
+}
+
+\caption[Theme for Manuscripts]{Theme for Manuscripts\label{F:manuscriptTheme}}
+\end{figure}
+
+
+\end{knitrout}
 
 Note that we are plotting the same figure show in Figure~\ref{F:global}. However, we have modified the box around the plot window as well as made some other minor modifications targeted at creating publication quality graphics. 
 
 \subsection{Theme for Presentations}\label{S:theme_ppt}
 
 In this example, we apply the powerpoint theme to only effect the figure constructed in Figure~\ref{F:powerpoint}. This code chunk removes the x and y axis label, since we prefer to add those within PowerPoint directly. The results are shown in Figure~\ref{F:powerpointThemeC}.
-<<powerpointThemeC, fig.cap="PowerPoint theme">>=
-# Update the PowerPoint Figure to include the PPT Theme, and remove axis labels.
-# Axis labels will be added manually in powerpoint.
-ccf_pptPlot <- ccf_pptPlot+
-  labs(x="",y="")+
-  theme_ppt()
+\begin{knitrout}\footnotesize
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{# Update the PowerPoint Figure to include the PPT Theme, and remove axis labels.}
+\hlcom{# Axis labels will be added manually in powerpoint.}
+\hlstd{ccf_pptPlot} \hlkwb{<-} \hlstd{ccf_pptPlot}\hlopt{+}
+  \hlkwd{labs}\hlstd{(}\hlkwc{x}\hlstd{=}\hlstr{""}\hlstd{,}\hlkwc{y}\hlstd{=}\hlstr{""}\hlstd{)}\hlopt{+}
+  \hlkwd{theme_ppt}\hlstd{()}
 
-ccf_pptPlot
-@
+\hlstd{ccf_pptPlot}
+\end{alltt}
+\end{kframe}\begin{figure}[htpb]
+
+{\centering \includegraphics[width=\maxwidth]{figure/beamer-powerpointThemeC-1} 
+
+}
+
+\caption[PowerPoint theme]{PowerPoint theme\label{F:powerpointThemeC}}
+\end{figure}
+
+
+\end{knitrout}
 
 
 The theme for presentations is significantly different from what we showed in Figure~\ref{F:powerpoint}. Since our presentations are displayed on a blue background, we have changed the axis tick labels to white. The axis labels, frame and tick mark are there, on an invisible background so that changes to the slide background are visible through the figure.  To see the full effect, we modify the theme of the plot background from "transparent" to "blue" in Figure~\ref{F:powerpointThemeC}.
-<<powerpointTheme, fig.cap="Theme for Presentations">>=
-# Show the figure... the theme statement is used so the axis tick marks and values
-# are visible in this document.
-ccf_pptPlot +
-  theme(plot.background = element_rect(fill='blue', colour='blue'))
-@
+\begin{knitrout}\footnotesize
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{# Show the figure... the theme statement is used so the axis tick marks and values}
+\hlcom{# are visible in this document.}
+\hlstd{ccf_pptPlot} \hlopt{+}
+  \hlkwd{theme}\hlstd{(}\hlkwc{plot.background} \hlstd{=} \hlkwd{element_rect}\hlstd{(}\hlkwc{fill}\hlstd{=}\hlstr{'blue'}\hlstd{,} \hlkwc{colour}\hlstd{=}\hlstr{'blue'}\hlstd{))}
+\end{alltt}
+\end{kframe}\begin{figure}[htpb]
+
+{\centering \includegraphics[width=\maxwidth]{figure/beamer-powerpointTheme-1} 
+
+}
+
+\caption[Theme for Presentations]{Theme for Presentations\label{F:powerpointTheme}}
+\end{figure}
+
+
+\end{knitrout}
 
 % -----------------------------------------------------
 \section{Saving Publication graphics}\label{S:saving}
@@ -729,74 +787,99 @@ Once we have created the figure, and formatted it as desired (using a \pkg{hviPl
 \subsection{Manuscript graphics}
 
 It is a best practice that we include a footnote containing the figure path in each figure we save. This way, when a user sends the file to a collaborator, we can reverse engineer where the file and generating code resides in case changes are required. We use the \pkg{gridExtra} package~\citep{Auguie:2012} to add this footnote with the following recipe.
-<<manuscriptFootnote, fig.cap="Manuscript figure format with path footnote.">>=
-library(gridExtra)
+\begin{knitrout}\footnotesize
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{library}\hlstd{(gridExtra)}
 
-ccf_savePlot <- arrangeGrob(ccf_plot+theme_man(), 
-                            sub = textGrob(paste(getwd(), Sys.Date(), sep=" "), 
-                                           x = 0, hjust = -.1, vjust=.01, 
-                                           gp = gpar(fontface = "italic", fontsize = 6)))
-ccf_savePlot
-@
+\hlstd{ccf_savePlot} \hlkwb{<-} \hlkwd{arrangeGrob}\hlstd{(ccf_plot}\hlopt{+}\hlkwd{theme_man}\hlstd{(),}
+                            \hlkwc{sub} \hlstd{=} \hlkwd{textGrob}\hlstd{(}\hlkwd{paste}\hlstd{(}\hlkwd{getwd}\hlstd{(),} \hlkwd{Sys.Date}\hlstd{(),} \hlkwc{sep}\hlstd{=}\hlstr{" "}\hlstd{),}
+                                           \hlkwc{x} \hlstd{=} \hlnum{0}\hlstd{,} \hlkwc{hjust} \hlstd{=} \hlopt{-}\hlnum{.1}\hlstd{,} \hlkwc{vjust}\hlstd{=}\hlnum{.01}\hlstd{,}
+                                           \hlkwc{gp} \hlstd{=} \hlkwd{gpar}\hlstd{(}\hlkwc{fontface} \hlstd{=} \hlstr{"italic"}\hlstd{,} \hlkwc{fontsize} \hlstd{=} \hlnum{6}\hlstd{)))}
+\hlstd{ccf_savePlot}
+\end{alltt}
+\end{kframe}\begin{figure}[htpb]
+
+{\centering \includegraphics[width=\maxwidth]{figure/beamer-manuscriptFootnote-1} 
+
+}
+
+\caption[Manuscript figure format with path footnote]{Manuscript figure format with path footnote.\label{F:manuscriptFootnote}}
+\end{figure}
+
+
+\end{knitrout}
 Figure~\ref{F:manuscriptFootnote} uses the same plot in Figure~\ref{F:manuscriptTheme} with the code \code{ccf_plot+theme_man()}. The current working directory is obtained using the \code{getwd()} function. The \code{Sys.Date()} function returns the system date for timestamping the figure. The footnote is placed with the \code{x = 0, hjust = -.1, vjust=.01,} and formatted with the \code{gp = gpar(fontface = "italic", fontsize = 6)}.
 
 For Word documents (Office $\ge 2007$) we can import PDF graphics as a vector based format. Saving the figure is accomplished using either the \code{ggsave} function, or the \code{pdf(); show();dev.off()} combination. We have a specific set of \code{width} and \code{height} dimensions required for saving the figure with footnote included to get the font sizes to import correctly in Word. 
-<<savingFigure, eval=FALSE>>=
-ggsave(filename="manuscript.pdf",
-       height=4, width=5,
-       ccf_savePlot)
-@
+\begin{knitrout}\footnotesize
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{ggsave}\hlstd{(}\hlkwc{filename}\hlstd{=}\hlstr{"manuscript.pdf"}\hlstd{,}
+       \hlkwc{height}\hlstd{=}\hlnum{4}\hlstd{,} \hlkwc{width}\hlstd{=}\hlnum{5}\hlstd{,}
+       \hlstd{ccf_savePlot)}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
 
 
 \subsection{PowerPoint graphics}
 We use the \pkg{ReporteRs} package~\citep{Gohel:2014} to insert vector based figures from \proglang{R} into PowerPoint documents. The latest version of the \pkg{ReporteRs} package is available from \url{http://davidgohel.github.io/ReporteRs/}. We install this package as we installed the \pkg{hviPlotR} package.
-<<installReporteRs, eval=FALSE>>=
-# Install the latest ReporteRs package.
-#
-# The devtools package is installed on all our 
-# jjnb-gen servers as well as other R instances.
-library(devtools) 
+\begin{knitrout}\footnotesize
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{# Install the latest ReporteRs package.}
+\hlcom{#}
+\hlcom{# The devtools package is installed on all our }
+\hlcom{# jjnb-gen servers as well as other R instances.}
+\hlkwd{library}\hlstd{(devtools)}
 
-# To get the latest version.
-install_github("davidgohel/ReporteRs")
-@
+\hlcom{# To get the latest version.}
+\hlkwd{install_github}\hlstd{(}\hlstr{"davidgohel/ReporteRs"}\hlstd{)}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
 
 Basically, the package works by opening a saved PowerPoint Presentation, and inserting new slides containing graphs or tables into the document. The resulting document is then saved to a new presentation. We then pass this presentation to our collaborators, who then copy and paste the \pkg{ggplot2} slides into their own presentations. 
 
 The \pkg{ggplot2} graphics that are inserted into the presentation are converted into an editable vector based format. When the document is edited in PowerPoint, graphical components like points, lines, text can be easily modified to match the presenters style.
 
 The following code block is an \proglang{R} recipe for saving the \code{ccf_pptPlot} created in Section~\ref{S:theme_ppt}. 
-<<PPTstorage, eval=FALSE>>=
-library(ReporteRs)
-# Create a powerPoint document using ../inst/RDPresentation.pptx 
-# as a template document.
-doc = pptx(template=paste("../inst/RDPresentation.pptx", sep=""))
+\begin{knitrout}\footnotesize
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{library}\hlstd{(ReporteRs)}
+\hlcom{# Create a powerPoint document using ../inst/RDPresentation.pptx }
+\hlcom{# as a template document.}
+\hlstd{doc} \hlkwb{=} \hlkwd{pptx}\hlstd{(}\hlkwc{template}\hlstd{=}\hlkwd{paste}\hlstd{(}\hlstr{"../inst/RDPresentation.pptx"}\hlstd{,} \hlkwc{sep}\hlstd{=}\hlstr{""}\hlstd{))}
 
-# Here we define powerpoint document filename to write
-# the presentation. This will be overwritten
-pptx.file = paste("RDExample.pptx", sep="")
+\hlcom{# Here we define powerpoint document filename to write}
+\hlcom{# the presentation. This will be overwritten}
+\hlstd{pptx.file} \hlkwb{=} \hlkwd{paste}\hlstd{(}\hlstr{"RDExample.pptx"}\hlstd{,} \hlkwc{sep}\hlstd{=}\hlstr{""}\hlstd{)}
 
-##--------
-# For each graph, addSlide. The graphs require the 
-# “Title and Content” template.
-doc = addSlide( doc, "Title and Content" )
+\hlcom{##--------}
+\hlcom{# For each graph, addSlide. The graphs require the }
+\hlcom{# “Title and Content” template.}
+\hlstd{doc} \hlkwb{=} \hlkwd{addSlide}\hlstd{( doc,} \hlstr{"Title and Content"} \hlstd{)}
 
-# Place a title
-doc = addTitle( doc, "Treatment Difference" )
+\hlcom{# Place a title}
+\hlstd{doc} \hlkwb{=} \hlkwd{addTitle}\hlstd{( doc,} \hlstr{"Treatment Difference"} \hlstd{)}
 
-# Now add the graph into the powerPoint doc 
-doc = addPlot( doc=doc, fun=print, 
-               x=ccf_pptPlot+theme_ppt() ,
-               editable = TRUE,
-               offx=.75, offy=1.1, width=8, height=6)
-##--------
-## IF you want to add more, just repeat between the ##-------- comments
-##--------
+\hlcom{# Now add the graph into the powerPoint doc }
+\hlstd{doc} \hlkwb{=} \hlkwd{addPlot}\hlstd{(} \hlkwc{doc}\hlstd{=doc,} \hlkwc{fun}\hlstd{=print,}
+               \hlkwc{x}\hlstd{=ccf_pptPlot}\hlopt{+}\hlkwd{theme_ppt}\hlstd{() ,}
+               \hlkwc{editable} \hlstd{=} \hlnum{TRUE}\hlstd{,}
+               \hlkwc{offx}\hlstd{=}\hlnum{.75}\hlstd{,} \hlkwc{offy}\hlstd{=}\hlnum{1.1}\hlstd{,} \hlkwc{width}\hlstd{=}\hlnum{8}\hlstd{,} \hlkwc{height}\hlstd{=}\hlnum{6}\hlstd{)}
+\hlcom{##--------}
+\hlcom{## IF you want to add more, just repeat between the ##-------- comments}
+\hlcom{##--------}
 
-# write the output powerpoint doc. 
-# This will not overwrite an open document, since open PPT files are locked.
-writeDoc( doc, pptx.file )
-@
+\hlcom{# write the output powerpoint doc. }
+\hlcom{# This will not overwrite an open document, since open PPT files are locked.}
+\hlkwd{writeDoc}\hlstd{( doc, pptx.file )}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
 
 The only modification possibly require for this recipe may be moving the insertion point (\code{offx} and \code{offy} arguments) and/or size (\code{width} and \code{height}) of the figure in the \code{addPlot()} function call.
 % 
