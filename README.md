@@ -2,6 +2,7 @@
 [![DOI](https://zenodo.org/badge/5745/ehrlinger/hviPlotR.png)](http://dx.doi.org/10.5281/zenodo.11780)
 
 [![Build Status](https://travis-ci.org/ehrlinger/hviPlotR.svg?branch=master)](https://travis-ci.org/ehrlinger/hviPlotR)
+[![Coverage Status](https://coveralls.io/repos/ehrlinger/hviPlotR/badge.svg)](https://coveralls.io/r/ehrlinger/hviPlotR)
 
 ggplot2 themes and methodology documentation for creating publication quality graphics in *R* conforming to the standards of the clinical investigations statistics group within The Heart \& Vascular Institute at the Cleveland Clinic.
 
