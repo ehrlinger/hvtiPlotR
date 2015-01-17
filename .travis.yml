@@ -3,6 +3,10 @@
 # See README.md for instructions, or for more configuration options,
 # see the wiki:
 #   https://github.com/craigcitro/r-travis/wiki
+#
+# To get this particular package to run, I used the rJava example 
+# (rJava is a dependency of the ReporteRs package)
+# https://github.com/csgillespie/travis-examples/tree/rjava
 
 language: java
 
