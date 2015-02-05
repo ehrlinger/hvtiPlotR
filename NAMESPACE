@@ -3,6 +3,7 @@
 export(makeFootnote)
 export(save.hviplotr)
 export(save_ppt)
+export(theme_dark_ppt)
 export(theme_man)
 export(theme_ppt)
 import(ggplot2)

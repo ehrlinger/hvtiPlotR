@@ -1,11 +1,13 @@
 #' Theme for generating powerpoint figures
 #' 
+#' White background with black text.
+#' 
 #' @param base_size the base font size
 #' @param base_family base font family
 #' 
 #' @seealso \code{theme_set} \code{theme_grey} \code{\link{theme_man}}
 #'
-#' @export theme_ppt
+#' @export theme_dark_ppt
 #' 
 #' @import ggplot2
 
