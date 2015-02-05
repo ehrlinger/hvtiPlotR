@@ -11,7 +11,7 @@
 #' 
 #' @import ggplot2
 
-theme_ppt <- function(base_size = 32, base_family = "") {
+theme_dark_ppt <- function(base_size = 32, base_family = "") {
   theme_grey(base_size = base_size, base_family = base_family) %+replace% 
     theme(plot.background = element_rect(fill='transparent', colour='transparent', size=2), 
           axis.text.x  = element_text(size=32, color="black"), 
