@@ -5,11 +5,11 @@
 #' 
 #' @seealso \code{theme_set} \code{theme_grey} \code{\link{theme_ppt}}
 #'
-#' @export theme_man
-#' 
+#' @export theme_manuscript theme_man
+#' @aliases theme_man theme_manuscript
 #' @import ggplot2
 
-theme_man <- function(base_size = 12, base_family = "") {
+theme_manuscript <- function(base_size = 12, base_family = "") {
   theme_grey(base_size = base_size, base_family = base_family) %+replace% 
     theme(axis.text = element_text(size = rel(0.8)), 
           axis.ticks = element_line(colour = "black"), 
@@ -27,7 +27,7 @@ theme_man <- function(base_size = 12, base_family = "") {
           plot.margin = unit(c(1,1,3,.5), "lines"))
   
 }
-
+theme_man <- theme_manuscript
 #===========================================================================================
 # For reference, this is the theme_grey definition, which has most, if not all possible
 # theme elements.
