@@ -9,23 +9,23 @@
 #' 
 #' @import ggplot2
 
-theme_poster <- function(base_size = 32, base_family = "") {
+theme_poster <- function(base_size = 16, base_family = "") {
   theme_grey(base_size = base_size, base_family = base_family) %+replace% 
     theme(plot.background = element_rect(fill='transparent', colour='transparent', size=2), 
-          axis.text.x  = element_text(size=32, color="black"), 
-          ## For forest plots, we need smaller y axis text for labels
-          axis.text.y  = element_text(size=32, color="black"),
-          #axis.text.y  = element_text(size=16, color="black"),
+          #axis.text.x  = element_text(size=32, color="black"), 
+          #  For forest plots, we need smaller y axis text for labels
+          #axis.text.y  = element_text(size=32, color="black"),
+          axis.text  = element_text(size=16, color="black"),
           axis.line = element_line(color="black", size=1),
-          strip.text = element_text(size=16),
+          strip.text = element_text(size=8),
           panel.border = element_blank(),
           panel.background = element_rect(fill = "white", colour = "black", size=1), 
           axis.ticks = element_line(colour = "black", size = 1), 
-          legend.position="none",
+          # legend.position="none",
           panel.grid.major.x =  element_blank(),
           panel.grid.major.y =  element_blank(),
           panel.grid.minor =  element_blank()
-          )
+    )
 }
 
 #===========================================================================================
