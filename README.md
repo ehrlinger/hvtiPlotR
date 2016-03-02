@@ -1,6 +1,7 @@
 ## The hviPlotR package ##
 [![DOI](https://zenodo.org/badge/5745/ehrlinger/hviPlotR.png)](http://dx.doi.org/10.5281/zenodo.11780)
 
+![active](http://www.repostatus.org/badges/latest/active.svg)
 [![Build Status](https://travis-ci.org/ehrlinger/hviPlotR.svg?branch=master)](https://travis-ci.org/ehrlinger/hviPlotR)
 [![Coverage Status](https://coveralls.io/repos/ehrlinger/hviPlotR/badge.svg?branch=master)](https://coveralls.io/r/ehrlinger/hviPlotR?branch=master)
 
