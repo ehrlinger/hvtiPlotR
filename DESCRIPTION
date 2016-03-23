@@ -17,7 +17,7 @@ Depends:
 Imports:
     ggplot2,
     grid,
-    ReporteRs (>= 0.7)
+    ReporteRs
 Suggests:
     knitr,
     testthat,
