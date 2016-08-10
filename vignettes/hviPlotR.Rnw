@@ -13,6 +13,7 @@
 \usepackage{float}
 \usepackage{listings}
 \usepackage{color}
+\usepackage[utf8]{inputenc}
 
 \definecolor{mygreen}{rgb}{0,0.6,0}
 \definecolor{mygray}{rgb}{0.95,0.95,0.95}
@@ -104,7 +105,7 @@ URL: \url{https://github.com/ehrlinger/hviPlotR}
 <<setup,include=FALSE, cache=FALSE, echo=FALSE>>=
 # import RColorBrewer devtools gridExtra reporttools scales xtable
 
-library(knitr)
+library("knitr")
 # set global chunk options for knitr. These can be changed in the header for each individual R code chunk
 opts_chunk$set(fig.path='figure/beamer-', 
                fig.align='center',
@@ -117,18 +118,19 @@ opts_chunk$set(fig.path='figure/beamer-',
                error=FALSE, dev='pdf')
 
 # Setup the R environment
-options(replace.assign=TRUE,object.size=Inf,expressions=100000,memory=Inf, width=100)
+options(replace.assign=TRUE,object.size=Inf,expressions=100000,
+        memory=Inf, width=100, useFancyQuotes=FALSE)
 
 #################
 # Load_packages #
 #################
-library(ggplot2) # Graphics engine for generating all types of plots
-library(reshape2) # Used to modify the data for plotting
-library(gridExtra) # for combined ggplots
-library(RColorBrewer) # Color schemes
-library(scales) # For modifying ggplot
+library("ggplot2") # Graphics engine for generating all types of plots
+library("reshape2") # Used to modify the data for plotting
+library("gridExtra") # for combined ggplots
+library("RColorBrewer") # Color schemes
+library("scales") # For modifying ggplot
 
-library(dplyr) # Better data manipulations
+library("dplyr") # Better data manipulations
 
 #########################################################################
 # Default computation settings
@@ -141,10 +143,10 @@ library(dplyr) # Better data manipulations
 %% Note that you should use the \pkg{}, \proglang{} and \code{} commands.
 
 <<introFigure, message=FALSE, warning=FALSE, echo=FALSE, fig.cap="Demonstration figure">>=
-library(knitr)
-library(ggplot2)
-library(dplyr)
-library(hviPlotR)
+library("knitr")
+library("ggplot2")
+library("dplyr")
+library("hviPlotR")
 
 data(parametric, package="hviPlotR")
 data(nonparametric, package="hviPlotR")
@@ -396,7 +398,7 @@ This tutorial requires the \pkg{hviPlotR} package to load the data and themes we
 # install.packages("devtools")
 
 # Load the package
-library(devtools) 
+library("devtools") 
 
 # To get the latest version of hviPlotR.
 install_github("ehrlinger/hviPlotR")
@@ -409,7 +411,7 @@ Once an \code{xport} file has been created, we read it into \proglang{R} with th
 
 
 <<readData, eval=FALSE>>=
-library(foreign)
+library("foreign")
 
 # The xport file name
 dtFilename = "../datasets/par_cst.xpt"
@@ -437,8 +439,8 @@ names(dta.labels) = colnames(dta)
 Referring back to the \proglang{SAS} code chunks in Section~\ref{S:plot.sas},  Listing~\ref{plot.sas:figureSetup} sets the current working directory, and does some house keeping, including loading the \code{plot.sas} macro. Similarly, to get started in \proglang{R}, we first load the required libraries: \pkg{ggplot2} for graphics, and \pkg{hviPlotR} for themes. The following code chunk also sets the initial default theme to a generic black and white format, and brings in a pair of example datasets. 
 <<gettingStarted, message=FALSE, warning=FALSE>>=
 # load required libraries
-library(ggplot2)   # Plotting environment
-library(hviPlotR)  # CCF HVI plotting functionality 
+library("ggplot2")   # Plotting environment
+library("hviPlotR")  # CCF HVI plotting functionality 
 
 theme_set(theme_bw()) # A reasonable default plotting theme
 
@@ -730,7 +732,8 @@ Once we have created the figure, and formatted it as desired (using a \pkg{hviPl
 
 It is a best practice that we include a footnote containing the figure path in each figure we save. This way, when a user sends the file to a collaborator, we can reverse engineer where the file and generating code resides in case changes are required. We use the \pkg{gridExtra} package~\citep{Auguie:2012} to add this footnote with the following recipe.
 <<manuscriptFootnote, fig.cap="Manuscript figure format with path footnote.">>=
-library(gridExtra)
+library("grid")
+library("gridExtra")
 
 ccf_savePlot <- arrangeGrob(ccf_plot+theme_man(), 
                             sub = textGrob(paste(getwd(), Sys.Date(), sep=" "), 
@@ -755,7 +758,7 @@ We use the \pkg{ReporteRs} package~\citep{Gohel:2014} to insert vector based fig
 #
 # The devtools package is installed on all our 
 # jjnb-gen servers as well as other R instances.
-library(devtools) 
+library("devtools") 
 
 # To get the latest version.
 install_github("davidgohel/ReporteRs")
@@ -767,7 +770,7 @@ The \pkg{ggplot2} graphics that are inserted into the presentation are converted
 
 The following code block is an \proglang{R} recipe for saving the \code{ccf_pptPlot} created in Section~\ref{S:theme_ppt}. 
 <<PPTstorage, eval=FALSE>>=
-library(ReporteRs)
+library("ReporteRs")
 # Create a powerPoint document using ../inst/RDPresentation.pptx 
 # as a template document.
 doc = pptx(template=paste("../inst/RDPresentation.pptx", sep=""))

@@ -26,7 +26,8 @@
 #' makeFootnote()
 #' 
 #' @importFrom grid pushViewport viewport popViewport gpar grid.text unit 
-# 
+#' @importFrom grDevices grey
+#'
 # scriptName <- "filename.R"
 # author <- "mh"
 # footnote <- paste(scriptName, format(Sys.time(), "%d %b %Y"),
