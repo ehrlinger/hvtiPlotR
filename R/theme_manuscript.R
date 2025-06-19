@@ -11,21 +11,21 @@
 
 theme_manuscript <- function(base_size = 12, base_family = "") {
   theme_grey(base_size = base_size, base_family = base_family) %+replace% 
-    theme(axis.text = element_text(size = rel(0.8)), 
-          axis.ticks = element_line(colour = "black"), 
-          axis.line = element_line(color="black"),
-          
-          legend.key = element_rect(colour = "grey80"), 
-          
-          panel.background = element_rect(fill = "white", colour = NA), 
-          panel.border = element_blank(), 
-          panel.grid.major = element_blank(), 
-          panel.grid.minor = element_blank(), 
-          
-          strip.background = element_rect(fill = "grey80", colour = "grey50", size = 0.2),
-          
-          plot.margin = unit(c(1,1,3,.5), "lines"))
-  
+    theme(
+      strip.text = element_text(size = 10),
+      legend.position = "none",
+      legend.key = element_blank(),
+      panel.grid.major = element_blank(),
+      panel.grid.minor = element_blank(),
+      legend.title = element_blank(),
+      panel.background = element_blank(),
+      panel.border = element_blank(),
+      axis.line.x = element_line(color = "black", size = 0.8),
+      axis.line.y = element_line(color = "black", size = 0.8),
+      axis.text = element_text(size = 12, color = "black"),
+      plot.margin=unit(c(0.65,0.65,0.25,0.25),"cm"), #AML added. Add to template?
+      axis.title = element_text(size = 15)
+    )
 }
 theme_man <- theme_manuscript
 #===========================================================================================

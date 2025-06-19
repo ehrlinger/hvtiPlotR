@@ -16,7 +16,7 @@
 #' @param height graphic object height
 #'
 #' @export save_ppt
-#' @importFrom officer pptx add_slide addTitle addPlot writeDoc
+#' @importFrom officer read_pptx add_slide body_add_plot
 #' 
 #' @examples
 #' \dontrun{
@@ -36,18 +36,19 @@ save_ppt <- function(object,
                      height=6){
   
   # Create a powerPoint document.
-  doc = pptx(template=template)
+  doc = officer::read_pptx(template=template)
   
   if(inherits(object,"ggplot")){  
     ##--------
     # For each graph, add_slide. The graphs require the 
     # “Title and Content” template.
-    doc = add_slide( doc, "Title and Content" )
+    doc = add_slide( doc, 
+                     layout="Title and Content",
+                     'Title 1'=slide_title )
     
-    # Place a title
-    doc=addTitle( doc, slide_title )
+    # Place a title)
     
-    doc = addPlot( doc=doc, fun=print, x=object, editable = TRUE,
+    doc = body_add_plot( doc=doc, value=object, editable = TRUE,
                    offx=offx, offy=offy, width=width, height=height)
   }else if(inherits(object,"list")){
     # For a list, we want to place one slide per ggplot object
@@ -57,18 +58,17 @@ save_ppt <- function(object,
         ##--------
         # For each graph, add_slide. The graphs require the 
         # “Title and Content” template.
-        doc = add_slide( doc, "Title and Content" )
+        doc = add_slide(doc, 
+                        layout="Title and Content",
+                        'Title 1'=slide_title)
         
-        # Place a title
-        doc=addTitle( doc, slide_title )
-        
-        doc = addPlot( doc=doc, fun=print, x=object[[ind]], editable = TRUE,
+        doc = body_add_plot( doc=doc, value=object[[ind]], editable = TRUE,
                        offx=offx, offy=offy, width=width, height=height)
       }
     }
   }
   
   # write the powerpoint doc. This will not overwrite an open document.
-  writeDoc( doc, powerpoint )
+  print( doc, powerpoint )
   
 }
