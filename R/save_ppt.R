@@ -16,7 +16,7 @@
 #' @param height graphic object height
 #'
 #' @export save_ppt
-#' @importFrom ReporteRs pptx addSlide addTitle addPlot writeDoc
+#' @importFrom officer pptx add_slide addTitle addPlot writeDoc
 #' 
 #' @examples
 #' \dontrun{
@@ -40,9 +40,9 @@ save_ppt <- function(object,
   
   if(inherits(object,"ggplot")){  
     ##--------
-    # For each graph, addSlide. The graphs require the 
+    # For each graph, add_slide. The graphs require the 
     # “Title and Content” template.
-    doc = addSlide( doc, "Title and Content" )
+    doc = add_slide( doc, "Title and Content" )
     
     # Place a title
     doc=addTitle( doc, slide_title )
@@ -55,9 +55,9 @@ save_ppt <- function(object,
     for(ind in 1:length(object)){
       if(inherits(object[[ind]],"ggplot")){  
         ##--------
-        # For each graph, addSlide. The graphs require the 
+        # For each graph, add_slide. The graphs require the 
         # “Title and Content” template.
-        doc = addSlide( doc, "Title and Content" )
+        doc = add_slide( doc, "Title and Content" )
         
         # Place a title
         doc=addTitle( doc, slide_title )

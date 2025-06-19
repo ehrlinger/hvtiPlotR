@@ -18,4 +18,3 @@ save.hviplotr(object, filename, height, width)
 \description{
 Generic save function for hviplot objects
 }
-

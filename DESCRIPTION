@@ -1,13 +1,14 @@
 Package: hviPlotR
 Type: Package
-Title: Porting the "plot.sas" macro to R Using ggplot2 and ReporteRs Packages
-Version: 0.1.1.99
-Date: 2016-08-10
+Title: Porting the "plot.sas" macro to R Using ggplot2 and officer Packages
+Version: 0.2.0
+Date: 2025-0619
 Author: John Ehrlinger <john.ehrlinger@gmail.com>
 Maintainer: John Ehrlinger <john.ehrlinger@gmail.com>
 License: GPL-3
+Encoding: UTF-8
 VignetteBuilder: knitr
-URL: https://github.com/ehrlinger/hviPlotR
+URL: https://github.com/ehrlinger/hviPlotR, http://ehrlinger.github.io/hviPlotR/
 BugReports: https://github.com/ehrlinger/hviPlotR/issues
 Description: ggplot2 themes and methodology documentation for creating
     publication quality graphics in R conforming to the standards of the clinical
@@ -16,16 +17,14 @@ Description: ggplot2 themes and methodology documentation for creating
 Depends:
     R (>= 3.0.0)
 Imports:
+    tidyverse,
     ggplot2,
     grid,
-    ReporteRs
+    officer
 Suggests:
     knitr,
     testthat,
     RColorBrewer,
-    dplyr,
     gridExtra,
-    reshape2,
     scales
-Packaged: 2014-09-05 13:37:44 UTC; ehrlinj
-RoxygenNote: 5.0.1
+RoxygenNote: 7.3.2
