@@ -4,11 +4,11 @@
 %% declarations for jss.cls %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %\VignetteEngine{knitr::knitr}
-%\VignetteIndexEntry{hviPlotR}
-%\VignetteIndexEntry{hviPlotR: Generating plot.sas style figures in R}
+%\VignetteIndexEntry{hvtiPlotR}
+%\VignetteIndexEntry{hvtiPlotR: Generating plot.sas style figures in R}
 %\VignetteKeywords{publication, manuscript, powerpoint, ggplot2, plot.sas}
-%\VignetteDepends{hviPlotR}
-%\VignettePackage{hviPlotR} 
+%\VignetteDepends{hvtiPlotR}
+%\VignettePackage{hvtiPlotR} 
 
 \usepackage{float}
 \usepackage{listings}
@@ -48,20 +48,20 @@ title=\lstname                   % show the filename of files included with \lst
 
 %% almost as usual
 \author{John Ehrlinger\\Quantitative Health Sciences\\Lerner Research Institute\\Cleveland Clinic} %\And \\Plus Affiliation}
-\title{The {\pkg{hviPlotR}} package: Generating \code{plot.sas} style figures in \proglang{R}}
+\title{The {\pkg{hvtiPlotR}} package: Generating \code{plot.sas} style figures in \proglang{R}}
 
 %% for pretty printing and a nice hypersummary also set:
 \Plainauthor{John Ehrlinger} %% comma-separated
-\Plaintitle{hviPlotR: Generating plot.sas style figures in R} %% without formatting
-\Shorttitle{hviPlotR: Generating plot.sas style figures}
+\Plaintitle{hvtiPlotR: Generating plot.sas style figures in R} %% without formatting
+\Shorttitle{hvtiPlotR: Generating plot.sas style figures}
 \Submitdate{\today}
 %% an abstract and keywords
 \Abstract{ 
-We introduce the \proglang{R} package \pkg{hviPlotR}, tools for creating publication quality graphics in \proglang{R} for the Heart \& Vascular Institute Clinical Investigations statistics group at the Cleveland Clinic. The \pkg{hviPlotR} package contains a tutorial for generating figures (this vignette) and small set of functions for formatting and saving those figures. These tools describe how to generate figures in \proglang{R} to replace the \code{plot.sas} macro we currently use in \proglang{SAS}.
+We introduce the \proglang{R} package \pkg{hvtiPlotR}, tools for creating publication quality graphics in \proglang{R} for the Heart \& Vascular Institute Clinical Investigations statistics group at the Cleveland Clinic. The \pkg{hvtiPlotR} package contains a tutorial for generating figures (this vignette) and small set of functions for formatting and saving those figures. These tools describe how to generate figures in \proglang{R} to replace the \code{plot.sas} macro we currently use in \proglang{SAS}.
 
-This package vignette is a tutorial for generating our standard figures using the \pkg{ggplot2} package commands in \proglang{R}. The tutorial presents a series of \proglang{R} recipes for generating figures. The \pkg{hviPlotR} package includes a set of themes designed to format those figures for inclusion in manuscript and \code{PowerPoint} targets. 
+This package vignette is a tutorial for generating our standard figures using the \pkg{ggplot2} package commands in \proglang{R}. The tutorial presents a series of \proglang{R} recipes for generating figures. The \pkg{hvtiPlotR} package includes a set of themes designed to format those figures for inclusion in manuscript and \code{PowerPoint} targets. 
 
-This document is included with the \pkg{hviPlotR} package as a package vignette. The vignette is installed into \proglang{R} when the \pkg{hviPlotR} package is installed, and viewable using the \code{vignette("hviPlotR")} command. The goal of the vignette is as a tutorial to document the best practices of creating our publication quality graphics for both manuscripts and power point presentations. It is our intent to update this vignette as our standards and the \pkg{hviPlotR} package are modified.
+This document is included with the \pkg{hvtiPlotR} package as a package vignette. The vignette is installed into \proglang{R} when the \pkg{hvtiPlotR} package is installed, and viewable using the \code{vignette("hvtiPlotR")} command. The goal of the vignette is as a tutorial to document the best practices of creating our publication quality graphics for both manuscripts and power point presentations. It is our intent to update this vignette as our standards and the \pkg{hvtiPlotR} package are modified.
 }
 \Keywords{publication graphics, powerpoint, ggplot2, plot.sas}
 \Plainkeywords{publication graphics, powerpoint, ggplot2, plot.sas}
@@ -89,7 +89,7 @@ Cleveland, Ohio 44195\\
 %  Fax: +41/0/44634-4386 \\
 E-mail: \email{john.ehrlinger@gmail.com}\\
 URL: \url{http://www.lerner.ccf.org/qhs/people/ehrlinj/}\\
-URL: \url{https://github.com/ehrlinger/hviPlotR}
+URL: \url{https://github.com/ehrlinger/hvtiPlotR}
 }
 
 %% It is also possible to add a telephone and fax number
@@ -143,10 +143,10 @@ library("scales") # For modifying ggplot
 <<introFigure, message=FALSE, warning=FALSE, echo=FALSE, fig.cap="Demonstration figure">>=
 library("knitr")
 library("ggplot2")
-library("hviPlotR")
+library("hvtiPlotR")
 
-data(parametric, package="hviPlotR")
-data(nonparametric, package="hviPlotR")
+data(parametric, package="hvtiPlotR")
+data(nonparametric, package="hvtiPlotR")
 
 
 theme_set(theme_man())
@@ -237,31 +237,31 @@ ccf_plot+ coord_cartesian(xlim=c(0,5.2), ylim=c(0,101))
 % -----------------------------------------------------
 \section*{About this document}
 % -----------------------------------------------------
-This package vignette is an introduction to the \proglang{R} package \pkg{hviPlotR}, and a tutorial for creating publication quality graphics in \proglang{R}. The package and this document describe the process of creating graphics in \proglang{R} that conform to the standards of the clinical investigations statistics group within The Heart \& Vascular Institute at the Cleveland Clinic. These graphics are analogous to those generated with the \code{plot.sas} macro in \proglang{SAS}.
+This package vignette is an introduction to the \proglang{R} package \pkg{hvtiPlotR}, and a tutorial for creating publication quality graphics in \proglang{R}. The package and this document describe the process of creating graphics in \proglang{R} that conform to the standards of the clinical investigations statistics group within The Heart \& Vascular Institute at the Cleveland Clinic. These graphics are analogous to those generated with the \code{plot.sas} macro in \proglang{SAS}.
 
-The document is a package vignette for the \pkg{hviPlotR} package, and is the primary documentation for the package. The latest version of the document can be obtained with the following command: 
+The document is a package vignette for the \pkg{hvtiPlotR} package, and is the primary documentation for the package. The latest version of the document can be obtained with the following command: 
 \begin{CodeChunk}
 \begin{CodeInput}
-R> vignette("hviPlotR", package = "hviPlotR")
+R> vignette("hvtiPlotR", package = "hvtiPlotR")
 \end{CodeInput}
 \end{CodeChunk}
 
-The goal is to update this vignette as the package, and our graphing standards, are updated. A development version of the \pkg{hviPlotR} package is also available on Github (\url{https://github.com}). We invite comments, feature requests and bug reports for this package at \url{https://github.com/ehrlinger/hviPlotR}.
+The goal is to update this vignette as the package, and our graphing standards, are updated. A development version of the \pkg{hvtiPlotR} package is also available on Github (\url{https://github.com}). We invite comments, feature requests and bug reports for this package at \url{https://github.com/ehrlinger/hvtiPlotR}.
 
 % -----------------------------------------------------
 \section{Introduction}
 % -----------------------------------------------------
 For many years, the mainstay for generating graphics for manuscripts and presentations in the statistics group in The Heart \& Vascular Institute has been the \code{plot.sas} macro using \proglang{SAS}. However, recently, we have had issues migrating this macro to newer versions of \proglang{SAS} ($> 8.0$) and Microsoft Office products ($> 2003$). 
 
-In an effort to alleviate these version issues, and to standardize the generation of figures within \proglang{R}, we have developed the \pkg{hviPlotR} \proglang{R} package. The goal of the package, and this vignette, is simplify the creation of publication quality graphics in  \proglang{R}. We are specifically encoding the best practices of the HVI Clinical Investigations formatting, so that our statisticians will be able to create graphics for publications and presentations with a minimal amount of effort.
+In an effort to alleviate these version issues, and to standardize the generation of figures within \proglang{R}, we have developed the \pkg{hvtiPlotR} \proglang{R} package. The goal of the package, and this vignette, is simplify the creation of publication quality graphics in  \proglang{R}. We are specifically encoding the best practices of the HVI Clinical Investigations formatting, so that our statisticians will be able to create graphics for publications and presentations with a minimal amount of effort.
 
-The \pkg{hviPlotR} package implements best practices for \proglang{R} graphics by leveraging the \pkg{ggplot2} package~\citep{Wickham:2009}. The \pkg{ggplot2} package is an implementation of the Grammar of Graphics~\citep{Wilkinson:2005}, which is a formalization of graphical concepts, and the building of graphical objects from a sequence of independent components. These components can be combined in many different ways.
+The \pkg{hvtiPlotR} package implements best practices for \proglang{R} graphics by leveraging the \pkg{ggplot2} package~\citep{Wickham:2009}. The \pkg{ggplot2} package is an implementation of the Grammar of Graphics~\citep{Wilkinson:2005}, which is a formalization of graphical concepts, and the building of graphical objects from a sequence of independent components. These components can be combined in many different ways.
 
 The \code{plot.sas} macro is also an implementation of a graphics grammar. The grammar \code{plot.sas} is derived from the ZETA pen plotters, which used GML (Graphics Machine Language) to control between 4 and and 8 colored pens for generating color line and point figures. Because both systems use a graphics language it is a straight forward exercise to translate commands between the two systems. 
 
 This document outlines how to generate figures using the \pkg{ggplot2} package in \proglang{R}. Our approach is to demonstrate the \proglang{R} commands to generate the same elements created with \code{plot.sas} commands. Section~\ref{S:plot.sas} gives an overview of the methodology of the \code{plot.sas} macro and Section~\ref{S:ggplot2tuple} details how to create line and point plots with similar \pkg{ggplot2} commands. 
 
-The \pkg{hviPlotR} package contains custom themes for figures. Once a figure has been created using \pkg{ggplot2} commands, Section~\ref{S:themes} details how to use the themes contained in the \pkg{hviPlotR} package to get the formatting correct for manuscripts or presentations. Section~\ref{S:saving} describes how to save these figures to simplify the import into publication documents.
+The \pkg{hvtiPlotR} package contains custom themes for figures. Once a figure has been created using \pkg{ggplot2} commands, Section~\ref{S:themes} details how to use the themes contained in the \pkg{hvtiPlotR} package to get the formatting correct for manuscripts or presentations. Section~\ref{S:saving} describes how to save these figures to simplify the import into publication documents.
 
 
 % -----------------------------------------------------
@@ -384,9 +384,9 @@ In order to create figures similar to using \code{plot.sas} macro, using \progla
 
 For the remainder of this document, \proglang{R} code will be highlighted in grey boxes, as shown below. We will refer to these blocks as \emph{code chunks}. You can run each code chunk individually, using copy/paste into an interactive \proglang{R} session, or within a stand alone \proglang{R} script.
 
-This tutorial requires the \pkg{hviPlotR} package to load the data and themes we will be discussing. You can install the package with the following commands:
-<<installhviPlotR, eval=FALSE>>=
-# Install the latest hviPlotR package.
+This tutorial requires the \pkg{hvtiPlotR} package to load the data and themes we will be discussing. You can install the package with the following commands:
+<<installhvtiPlotR, eval=FALSE>>=
+# Install the latest hvtiPlotR package.
 #
 # The devtools package is installed on all our 
 # jjnb-gen servers as well as other R instances.
@@ -397,8 +397,8 @@ This tutorial requires the \pkg{hviPlotR} package to load the data and themes we
 # Load the package
 library("devtools") 
 
-# To get the latest version of hviPlotR.
-install_github("ehrlinger/hviPlotR")
+# To get the latest version of hvtiPlotR.
+install_github("ehrlinger/hvtiPlotR")
 @
 
 \subsection{Importing the data}\label{S:sasData}
@@ -433,17 +433,17 @@ names(dta.labels) = colnames(dta)
 @
 
 \subsection{Initialize the figure}\label{S:initial}
-Referring back to the \proglang{SAS} code chunks in Section~\ref{S:plot.sas},  Listing~\ref{plot.sas:figureSetup} sets the current working directory, and does some house keeping, including loading the \code{plot.sas} macro. Similarly, to get started in \proglang{R}, we first load the required libraries: \pkg{ggplot2} for graphics, and \pkg{hviPlotR} for themes. The following code chunk also sets the initial default theme to a generic black and white format, and brings in a pair of example datasets. 
+Referring back to the \proglang{SAS} code chunks in Section~\ref{S:plot.sas},  Listing~\ref{plot.sas:figureSetup} sets the current working directory, and does some house keeping, including loading the \code{plot.sas} macro. Similarly, to get started in \proglang{R}, we first load the required libraries: \pkg{ggplot2} for graphics, and \pkg{hvtiPlotR} for themes. The following code chunk also sets the initial default theme to a generic black and white format, and brings in a pair of example datasets. 
 <<gettingStarted, message=FALSE, warning=FALSE>>=
 # load required libraries
 library("ggplot2")   # Plotting environment
-library("hviPlotR")  # CCF HVI plotting functionality 
+library("hvtiPlotR")  # CCF HVI plotting functionality 
 
 theme_set(theme_bw()) # A reasonable default plotting theme
 
 # Load the example datasets 
-data(parametric, package="hviPlotR")
-data(nonparametric, package="hviPlotR")
+data(parametric, package="hvtiPlotR")
+data(nonparametric, package="hvtiPlotR")
 @
 
 One advantage of \pkg{ggplot2} is that figures can be built up in successive statements. This tutorial will make extensive use of this to demonstrate the process. Starting in this code chunk, we will save the intermediate objects in the \code{ccf_plot} variable. Here we simply create an empty \pkg{ggplot2} figure that we will be adding to as we work through the commands in the \code{plot.sas} macro. Note that we include the \code{\%plot()} commands in the comments above the equivalent \pkg{ggplot2} command for comparison.
@@ -679,7 +679,7 @@ show(ccf_pptPlot)
 % -----------------------------------------------------
 The themes system in \pkg{ggplot2} enables a user to control non-data elements of a \code{ggplot} object. Where we use color palettes (Section~\ref{S:colors}), shapes (Section~\ref{S:shapes}) and linetypes (Section~\ref{S:linetypes}) to control the data elements, we use themes to control the visual details of most of the remaining aspects of our figures. 
 
-The \pkg{hviPlotR} package contains two custom themes. The \code{theme_man()} theme is used for manuscripts, and the \code{theme_ppt()} theme is used for powerpoint documents. These themes can be applied to any figure that was created using the \pkg{ggplot2} package.  
+The \pkg{hvtiPlotR} package contains two custom themes. The \code{theme_man()} theme is used for manuscripts, and the \code{theme_ppt()} theme is used for powerpoint documents. These themes can be applied to any figure that was created using the \pkg{ggplot2} package.  
 
 \subsection{Theme for Manuscripts}\label{S:theme_man}
 
@@ -723,7 +723,7 @@ ccf_pptPlot +
 \section{Saving Publication graphics}\label{S:saving}
 % -----------------------------------------------------
 
-Once we have created the figure, and formatted it as desired (using a \pkg{hviPlotR} theme), we need to save the figure in a format that can easily be imported into our publications. 
+Once we have created the figure, and formatted it as desired (using a \pkg{hvtiPlotR} theme), we need to save the figure in a format that can easily be imported into our publications. 
 
 \subsection{Manuscript graphics}
 
@@ -749,7 +749,7 @@ ggsave(filename="manuscript.pdf",
 
 
 \subsection{PowerPoint graphics}
-We use the \pkg{ReporteRs} package~\citep{Gohel:2014} to insert vector based figures from \proglang{R} into PowerPoint documents. The latest version of the \pkg{ReporteRs} package is available from \url{http://davidgohel.github.io/ReporteRs/}. We install this package as we installed the \pkg{hviPlotR} package.
+We use the \pkg{ReporteRs} package~\citep{Gohel:2014} to insert vector based figures from \proglang{R} into PowerPoint documents. The latest version of the \pkg{ReporteRs} package is available from \url{http://davidgohel.github.io/ReporteRs/}. We install this package as we installed the \pkg{hvtiPlotR} package.
 <<installReporteRs, eval=FALSE>>=
 # Install the latest ReporteRs package.
 #
@@ -822,14 +822,14 @@ This section is in progress\ldots
 \section{Conclusions} \label{S:concl}
 % =======================================
 
-In this article, we present the \pkg{hviPlotR} package for \proglang{R}. The package is made up of \pkg{ggplot2} themes for publication quality graphics, as well as this tutorial document included as a package vignette. The package is available from \url{https://github.com/ehrlinger/hviPlotR} and can be installed using the \code{devtools::install_github("ehrlinger/hviPlotR")} command. 
+In this article, we present the \pkg{hvtiPlotR} package for \proglang{R}. The package is made up of \pkg{ggplot2} themes for publication quality graphics, as well as this tutorial document included as a package vignette. The package is available from \url{https://github.com/ehrlinger/hvtiPlotR} and can be installed using the \code{devtools::install_github("ehrlinger/hvtiPlotR")} command. 
 
 % =======================================
 % \section{Literatur} \label{sec: references}
 % =======================================
 %\nocite{*}
 
-\bibliography{hviPlotR}
+\bibliography{hvtiPlotR}
 
 
 

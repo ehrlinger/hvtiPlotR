@@ -1,8 +1,8 @@
-Package: hviPlotR
+Package: hvtiPlotR
 Type: Package
 Title: Porting the "plot.sas" macro to R Using ggplot2 and officer Packages
 Version: 0.2.0
-Date: 2025-06-19
+Date: 2025-06-20
 Author: John Ehrlinger <john.ehrlinger@gmail.com>
 Maintainer: John Ehrlinger <john.ehrlinger@gmail.com>
 License: GPL-3
@@ -15,7 +15,7 @@ Description: ggplot2 themes and methodology documentation for creating
     investigations statistics group within The Heart \& Vascular Institute at the
     Cleveland Clinic.
 Depends:
-    R (>= 3.0.0)
+    R (>= 4.1.0)
 Imports:
     ggplot2,
     grid,
