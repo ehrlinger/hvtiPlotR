@@ -2,7 +2,7 @@ Package: hviPlotR
 Type: Package
 Title: Porting the "plot.sas" macro to R Using ggplot2 and officer Packages
 Version: 0.2.0
-Date: 2025-0619
+Date: 2025-06-19
 Author: John Ehrlinger <john.ehrlinger@gmail.com>
 Maintainer: John Ehrlinger <john.ehrlinger@gmail.com>
 License: GPL-3
