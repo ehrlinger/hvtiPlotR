@@ -4,9 +4,10 @@
 \name{parametric}
 \alias{parametric}
 \title{parametric survival estimates}
-\format{A data.frame object containing parametric survival estimates}
+\format{
+A data.frame object containing parametric survival estimates
+}
 \description{
 parametric survival estimates
 }
 \keyword{datasets}
-

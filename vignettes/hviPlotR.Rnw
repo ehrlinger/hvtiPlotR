@@ -125,12 +125,10 @@ options(replace.assign=TRUE,object.size=Inf,expressions=100000,
 # Load_packages #
 #################
 library("ggplot2") # Graphics engine for generating all types of plots
-library("reshape2") # Used to modify the data for plotting
+library("tidyverse") # Used to modify the data for plotting
 library("gridExtra") # for combined ggplots
 library("RColorBrewer") # Color schemes
 library("scales") # For modifying ggplot
-
-library("dplyr") # Better data manipulations
 
 #########################################################################
 # Default computation settings
@@ -145,7 +143,6 @@ library("dplyr") # Better data manipulations
 <<introFigure, message=FALSE, warning=FALSE, echo=FALSE, fig.cap="Demonstration figure">>=
 library("knitr")
 library("ggplot2")
-library("dplyr")
 library("hviPlotR")
 
 data(parametric, package="hviPlotR")

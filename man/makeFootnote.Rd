@@ -4,8 +4,12 @@
 \alias{makeFootnote}
 \title{Create a footnote for figures.}
 \usage{
-makeFootnote(footnoteText = getwd(), size = 0.7, color = grey(0.5),
-  timestamp = TRUE)
+makeFootnote(
+  footnoteText = getwd(),
+  size = 0.7,
+  color = grey(0.5),
+  timestamp = TRUE
+)
 }
 \arguments{
 \item{footnoteText}{text to place in footnote. Defaults to 
@@ -28,4 +32,3 @@ makeFootnote()
 \references{
 http://ryouready.wordpress.com/2009/02/17/r-good-practice-adding-footnotes-to-graphics/
 }
-

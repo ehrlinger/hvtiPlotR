@@ -26,3 +26,8 @@ framed.sty
 #^inst/doc/randomForest\.*
 #^inst/doc/Regression-rfsrc*
 
+^codecov\.yml$
+^\.github$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$

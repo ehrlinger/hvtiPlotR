@@ -1,7 +1,7 @@
 ###############################################################################
 # Package documentation
 ###############################################################################
-#' @title hviPlotR package for plotting standard graphics for manuscripts
+#' hviPlotR package for plotting standard graphics for manuscripts
 #' and presentations using \code{R} and the \code{ggplot2} package.
 #' 
 #' @description hviPlotR is a replacement package for the \code{plot.sas}
@@ -28,8 +28,7 @@
 #' @references
 #' Wickham, H. ggplot2: elegant graphics for data analysis. Springer New York, 2009.
 #' 
-#' @docType package
-#' @name hviPlotR
+#' @name hviPlotR-package
 #' 
 ################
 NULL

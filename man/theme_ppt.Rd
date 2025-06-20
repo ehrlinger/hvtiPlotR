@@ -17,4 +17,3 @@ Theme for generating powerpoint figures
 \seealso{
 \code{theme_set} \code{theme_grey} \code{\link{theme_man}}
 }
-

@@ -4,7 +4,9 @@
 \name{nonparametric}
 \alias{nonparametric}
 \title{nonparametric survival estimates}
-\format{A data.frame object containing nonparametric survival estimates}
+\format{
+A data.frame object containing nonparametric survival estimates
+}
 \description{
 nonparametric survival estimates
 }
@@ -23,4 +25,3 @@ nonparametric survival estimates
 }
 }
 \keyword{datasets}
-
