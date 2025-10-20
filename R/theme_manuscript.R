@@ -22,9 +22,9 @@ theme_manuscript <- function(base_size = 12, base_family = "") {
       panel.border = element_blank(),
       axis.line.x = element_line(color = "black", size = 0.8),
       axis.line.y = element_line(color = "black", size = 0.8),
-      axis.text = element_text(size = 12, color = "black"),
+      axis.text = element_text(size = base_size, color = "black"),
       plot.margin=unit(c(0.65,0.65,0.25,0.25),"cm"), #AML added. Add to template?
-      axis.title = element_text(size = 15)
+      axis.title = element_text(size = base_size)
     )
 }
 theme_man <- theme_manuscript
