@@ -4,12 +4,33 @@
 \alias{theme_ppt}
 \title{Theme for generating powerpoint figures}
 \usage{
-theme_ppt(base_size = 32, base_family = "")
+theme_ppt(
+  base_size = 32,
+  base_family = "",
+  header_family = NULL,
+  base_line_size = base_size/22,
+  base_rect_size = base_size/22,
+  ink = "white",
+  paper = "transparent",
+  accent = "#3366FF"
+)
 }
 \arguments{
 \item{base_size}{the base font size}
 
 \item{base_family}{base font family}
+
+\item{header_family}{= NULL,}
+
+\item{base_line_size}{= base_size / 22,}
+
+\item{base_rect_size}{= base_size / 22,}
+
+\item{ink}{= "white",}
+
+\item{paper}{= "transparent",}
+
+\item{accent}{= "#3366FF"}
 }
 \description{
 Theme for generating powerpoint figures

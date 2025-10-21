@@ -1,8 +1,8 @@
 Package: hvtiPlotR
 Type: Package
 Title: Porting the "plot.sas" macro to R Using ggplot2 and officer Packages
-Version: 0.2.1
-Date: 2025-10-20
+Version: 0.2.2
+Date: 2025-10-21
 Authors@R: c(
     person(
       "John", "Ehrlinger",
@@ -33,4 +33,4 @@ Suggests:
     gridExtra,
     scales,
     tidyverse
-RoxygenNote: 7.3.2
+RoxygenNote: 7.3.3
