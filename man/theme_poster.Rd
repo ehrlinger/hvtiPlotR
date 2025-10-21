@@ -4,12 +4,33 @@
 \alias{theme_poster}
 \title{Theme for generating poster figures through powerpoint}
 \usage{
-theme_poster(base_size = 16, base_family = "")
+theme_poster(
+  base_size = 16,
+  base_family = "",
+  header_family = NULL,
+  base_line_size = base_size/22,
+  base_rect_size = base_size/22,
+  ink = "black",
+  paper = "white",
+  accent = "#3366FF"
+)
 }
 \arguments{
 \item{base_size}{the base font size}
 
 \item{base_family}{base font family}
+
+\item{header_family}{= NULL,}
+
+\item{base_line_size}{= base_size / 22,}
+
+\item{base_rect_size}{= base_size / 22,}
+
+\item{ink}{= "white",}
+
+\item{paper}{= "transparent",}
+
+\item{accent}{= "#3366FF"}
 }
 \description{
 Theme for generating poster figures through powerpoint

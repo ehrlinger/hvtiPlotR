@@ -12,7 +12,7 @@ makeFootnote(
 )
 }
 \arguments{
-\item{footnoteText}{text to place in footnote. Defaults to 
+\item{footnoteText}{text to place in footnote. Defaults to
 the local working directory.}
 
 \item{size}{font size}

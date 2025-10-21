@@ -38,7 +38,7 @@ theme_dark_ppt <- function(base_size = 32,
       ),
       axis.text  = element_text(size = 32, color = "white"),
       ## For forest plots, we need smaller y axis text for labels
-      axis.line = element_line(color = "white", size = 1),
+      axis.line = element_line(color = "white", linewidth = 1),
       strip.text = element_text(size = 16),
       panel.border = element_blank(),
       panel.background = element_rect(
@@ -46,7 +46,7 @@ theme_dark_ppt <- function(base_size = 32,
         colour = "white",
         size = 1
       ),
-      axis.ticks = element_line(colour = "white", size = 1),
+      axis.ticks = element_line(colour = "white", linewidth = 1),
       legend.position = "none",
       panel.grid.major.x =  element_blank(),
       panel.grid.major.y =  element_blank(),

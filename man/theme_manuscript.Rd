@@ -5,12 +5,33 @@
 \alias{theme_man}
 \title{Theme for generating manuscript figures}
 \usage{
-theme_manuscript(base_size = 12, base_family = "")
+theme_manuscript(
+  base_size = 12,
+  base_family = "",
+  header_family = NULL,
+  base_line_size = base_size/22,
+  base_rect_size = base_size/22,
+  ink = "black",
+  paper = "white",
+  accent = "#3366FF"
+)
 }
 \arguments{
 \item{base_size}{the base font size}
 
 \item{base_family}{base font family}
+
+\item{header_family}{= NULL,}
+
+\item{base_line_size}{= base_size / 22,}
+
+\item{base_rect_size}{= base_size / 22,}
+
+\item{ink}{= "white",}
+
+\item{paper}{= "transparent",}
+
+\item{accent}{= "#3366FF"}
 }
 \description{
 Theme for generating manuscript figures
