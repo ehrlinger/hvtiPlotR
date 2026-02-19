@@ -2,8 +2,7 @@
 % Please edit documentation in R/mirror-histogram.R
 \name{plot_mirror_histogram}
 \alias{plot_mirror_histogram}
-\title{Plot Mirrored Propensity Score Histogram
-(Refactored for modularity)}
+\title{Plot Mirrored Propensity Score Histogram}
 \usage{
 plot_mirror_histogram(
   data,
@@ -20,7 +19,42 @@ plot_mirror_histogram(
   height = 6
 )
 }
+\arguments{
+\item{data}{A data frame containing at least the score, group, and match
+indicators.}
+
+\item{score_col}{Column name holding the numeric propensity score.}
+
+\item{group_col}{Column name identifying the grouping/treatment indicator.}
+
+\item{match_col}{Column name indicating whether an observation is matched.}
+
+\item{group_levels}{Length-2 vector giving the values in `group_col` that
+should be plotted (order determines the panel orientation).}
+
+\item{group_labels}{Length-2 character vector supplying human readable labels
+for each group.}
+
+\item{matched_value}{Value in `match_col` that denotes a matched observation.}
+
+\item{score_multiplier}{Multiplier applied to `score_col` prior to plotting
+(defaults to percentages).}
+
+\item{binwidth}{Bin width, on the scaled score scale, used when computing the
+histograms.}
+
+\item{output_file}{Optional file path for saving the figure via `ggsave()`.}
+
+\item{width, height}{Dimensions (inches) used when saving `output_file`.}
+}
+\value{
+A list with elements `plot` (ggplot object), `diagnostics` (list of
+  summary statistics), and `data` (the filtered data frame that was plotted).
+}
 \description{
-Plot Mirrored Propensity Score Histogram
-(Refactored for modularity)
+Generates mirrored propensity score histograms for two treatment groups,
+highlighting the distribution before and after matching. The returned list
+contains the rendered plot, the filtered data used to draw it, and a set of
+diagnostics (group counts, SMD values, summary statistics) that can be logged
+or displayed in reports.
 }

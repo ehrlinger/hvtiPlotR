@@ -30,3 +30,4 @@ framed.sty
 ^docs$
 ^pkgdown$
 hviPlotR.Rproj
+^vignettes/*_files$

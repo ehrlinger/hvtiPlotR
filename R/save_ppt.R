@@ -28,7 +28,7 @@ officer_safe_call <- function(expr, action) {
 #' @param height graphic object height
 #'
 #' @export save_ppt
-#' @importFrom officer read_pptx add_slide body_add_plot print
+#' @importFrom officer read_pptx add_slide body_add_plot
 #' 
 #' @examples
 #' \dontrun{
@@ -139,7 +139,7 @@ save_ppt <- function(object,
   
   # write the powerpoint doc. This will not overwrite an open document.
   officer_safe_call(
-    officer::print(doc, target = powerpoint),
+    print(doc, target = powerpoint),
     action = "write PowerPoint file"
   )
   

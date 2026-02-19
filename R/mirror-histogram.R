@@ -278,8 +278,32 @@ mirror_histogram_diagnostics <- function(working, matched_idx, group_levels, n_i
 }
 
 #' Plot Mirrored Propensity Score Histogram
-#' (Refactored for modularity)
-#' @inheritParams plot_mirror_histogram
+#'
+#' Generates mirrored propensity score histograms for two treatment groups,
+#' highlighting the distribution before and after matching. The returned list
+#' contains the rendered plot, the filtered data used to draw it, and a set of
+#' diagnostics (group counts, SMD values, summary statistics) that can be logged
+#' or displayed in reports.
+#'
+#' @param data A data frame containing at least the score, group, and match
+#'   indicators.
+#' @param score_col Column name holding the numeric propensity score.
+#' @param group_col Column name identifying the grouping/treatment indicator.
+#' @param match_col Column name indicating whether an observation is matched.
+#' @param group_levels Length-2 vector giving the values in `group_col` that
+#'   should be plotted (order determines the panel orientation).
+#' @param group_labels Length-2 character vector supplying human readable labels
+#'   for each group.
+#' @param matched_value Value in `match_col` that denotes a matched observation.
+#' @param score_multiplier Multiplier applied to `score_col` prior to plotting
+#'   (defaults to percentages).
+#' @param binwidth Bin width, on the scaled score scale, used when computing the
+#'   histograms.
+#' @param output_file Optional file path for saving the figure via `ggsave()`.
+#' @param width,height Dimensions (inches) used when saving `output_file`.
+#'
+#' @return A list with elements `plot` (ggplot object), `diagnostics` (list of
+#'   summary statistics), and `data` (the filtered data frame that was plotted).
 #' @export
 plot_mirror_histogram <- function(data,
                                   score_col = "prob_t",
@@ -325,7 +349,7 @@ plot_mirror_histogram <- function(data,
 ##' Creates a sample data frame suitable for testing plot_mirror_histogram.
 ##'
 ##' @param n Number of samples per group (default 100).
-##' @return Data frame with columns: prob_t (numeric score), tavr (group), match (matched status)\
+##' @return Data frame with columns: prob_t (numeric score), tavr (group), match (matched status)
 ##' @importFrom stats rbeta rbinom
 ##' @export
 sample_mirror_histogram_data <- function(n = 100) {

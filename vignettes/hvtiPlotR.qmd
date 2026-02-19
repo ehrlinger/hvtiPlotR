@@ -1,10 +1,17 @@
 ---
 title: "The **hvtiPlotR** package: Generating plot.sas style in R"
 author: "John Ehrlinger <ehrlinj@ccf.org>"
-output: html
+format: 
+  html:
+    toc: true
+    html-math-method: mathjax
 editor: 
   markdown: 
     wrap: 80
+vignette: >
+  %\VignetteIndexEntry{Vignette's Title}
+  %\VignetteEngine{quarto::html}
+  %\VignetteEncoding{UTF-8}
 ---
 
 # Abstract
