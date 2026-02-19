@@ -82,6 +82,18 @@ test_that("makeFootnote accepts all parameters together", {
   dev.off()
 })
 
+test_that("makeFootnote validates inputs", {
+  pdf(NULL)
+  plot(1:10)
+
+  expect_error(makeFootnote(footnoteText = c("a", "b")), "single string")
+  expect_error(makeFootnote(size = -0.1), "positive number")
+  expect_error(makeFootnote(color = c("red", "blue")), "length-1 value")
+  expect_error(makeFootnote(timestamp = "yes"), "TRUE or FALSE")
+
+  dev.off()
+})
+
 # ============================================================================
 # Default parameter tests
 # ============================================================================

@@ -1,9 +1,9 @@
 # Test suite for mirror-histogram.R
 #
 library(testthat)
-source("../R/constants.R")
-source("../R/mirror-histogram.R")
-source("../R/generics.R")
+source("../../R/constants.R")
+source("../../R/mirror-histogram.R")
+source("../../R/generics.R")
 
 # Test sample data generation
 test_that("sample_mirror_histogram_data generates correct structure", {
@@ -14,6 +14,10 @@ test_that("sample_mirror_histogram_data generates correct structure", {
   expect_true(is.numeric(df$prob_t))
   expect_true(is.numeric(df$tavr))
   expect_true(is.numeric(df$match))
+})
+
+test_that("sample_mirror_histogram_data validates positive n", {
+  expect_error(sample_mirror_histogram_data(0), "positive integer")
 })
 
 # Test calc_smd function
@@ -51,6 +55,33 @@ test_that("plot_mirror_histogram returns expected list structure", {
   expect_true("plot" %in% names(result))
   expect_true("diagnostics" %in% names(result))
   expect_true("data" %in% names(result))
+})
+
+test_that("plot_mirror_histogram errors when required columns are missing", {
+  df <- sample_mirror_histogram_data(25)
+  df$match <- NULL
+  expect_error(
+    plot_mirror_histogram(data = df),
+    "Missing required columns"
+  )
+})
+
+test_that("plot_mirror_histogram errors for non-positive binwidth", {
+  df <- sample_mirror_histogram_data(25)
+  expect_error(
+    plot_mirror_histogram(data = df, binwidth = 0),
+    "binwidth"
+  )
+})
+
+test_that("plot_mirror_histogram errors when output directory is missing", {
+  df <- sample_mirror_histogram_data(10)
+  bad_dir <- file.path(tempdir(), "nonexistent_dir")
+  bad_file <- file.path(bad_dir, "mirror.pdf")
+  expect_error(
+    plot_mirror_histogram(data = df, output_file = bad_file),
+    "does not exist"
+  )
 })
 
 test_that("hvti_plot dispatches mirror histogram plot", {

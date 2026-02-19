@@ -7,11 +7,10 @@ Authors@R: c(
     person(
       "John", "Ehrlinger",
       email = "ehrlinj@ccf.org",
-      email = "john.ehrlinger@gmail.com",
       role = c("aut", "cre")
     )
   )
-Maintainer: John Ehrlinger <ehrlinj@ccf.org>
+Maintainer: John Ehrlinger <john.ehrlinger@gmail.com>
 License: GPL-3
 Encoding: UTF-8
 VignetteBuilder: knitr
@@ -24,6 +23,7 @@ Description: ggplot2 themes and methodology documentation for creating
 Depends:
     R (>= 4.1.0)
 Imports:
+    assertthat,
     ggplot2,
     grid,
     officer

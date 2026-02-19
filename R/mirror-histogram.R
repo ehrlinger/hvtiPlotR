@@ -85,26 +85,24 @@ build_hist_counts <- function(x, breaks) {
 
 # Internal: Validate input for mirrored histogram
 validate_mirror_histogram_input <- function(data, score_col, group_col, match_col, group_levels, group_labels, binwidth) {
-  if (!is.data.frame(data)) {
-    stop("`data` must be a data.frame.")
-  }
+  assertthat::assert_that(is.data.frame(data), msg = "`data` must be a data.frame.")
   required_cols <- c(score_col, group_col, match_col)
   missing_cols <- setdiff(required_cols, names(data))
-  if (length(missing_cols) > 0) {
-    stop(sprintf(
+  assertthat::assert_that(
+    length(missing_cols) == 0,
+    msg = sprintf(
       "Missing required columns: %s",
       paste(missing_cols, collapse = ", ")
-    ))
-  }
-  if (length(group_levels) != 2 || length(group_labels) != 2) {
-    stop("`group_levels` and `group_labels` must each contain exactly 2 values.")
-  }
-  if (!is.numeric(data[[score_col]])) {
-    stop(sprintf("`%s` must be numeric.", score_col))
-  }
-  if (!is.numeric(binwidth) || length(binwidth) != 1 || binwidth <= 0) {
-    stop("`binwidth` must be a positive numeric scalar.")
-  }
+    )
+  )
+  assertthat::assert_that(length(group_levels) == 2, msg = "`group_levels` must contain exactly 2 values.")
+  assertthat::assert_that(length(group_labels) == 2, msg = "`group_labels` must contain exactly 2 values.")
+  assertthat::assert_that(is.numeric(data[[score_col]]), msg = sprintf("`%s` must be numeric.", score_col))
+  assertthat::assert_that(
+    assertthat::is.number(binwidth),
+    binwidth > 0,
+    msg = "`binwidth` must be a positive numeric scalar."
+  )
 }
 
 # Internal: Prepare and filter data for mirrored histogram
@@ -116,12 +114,12 @@ prepare_mirror_histogram_data <- function(data, score_col, group_col, match_col,
   working <- working[stats::complete.cases(working), ]
   n_dropped <- n_input - nrow(working)
   working <- working[working$group %in% group_levels, ]
-  if (nrow(working) == 0) {
-    stop("No rows remain after filtering to `group_levels` and complete cases.")
-  }
-  if (!all(group_levels %in% unique(working$group))) {
-    stop("Not all `group_levels` are present in the filtered data.")
-  }
+  assertthat::assert_that(nrow(working) > 0,
+                          msg = "No rows remain after filtering to `group_levels` and complete cases.")
+  assertthat::assert_that(
+    all(group_levels %in% unique(working$group)),
+    msg = "Not all `group_levels` are present in the filtered data."
+  )
   working$score <- working$score_raw * score_multiplier
   if (any(working$score < HVTI_SCORE_MIN | working$score > HVTI_SCORE_MAX)) {
     stop(
@@ -236,6 +234,32 @@ build_mirror_histogram_plot <- function(plot_df, group_labels, binwidth, lower, 
     theme_minimal(base_size = 12)
 }
 
+# Internal: Safely persist mirrored histogram to disk
+save_mirror_histogram_plot <- function(plot_obj, output_file, width, height) {
+  assertthat::assert_that(assertthat::is.string(output_file), nzchar(output_file),
+                          msg = "`output_file` must be a non-empty string.")
+  target_dir <- dirname(output_file)
+  if (target_dir %in% c("", ".")) {
+    target_dir <- "."
+  }
+  assertthat::assert_that(dir.exists(target_dir),
+                          msg = sprintf("Directory for `output_file` (%s) does not exist.", target_dir))
+  tryCatch(
+    ggplot2::ggsave(
+      filename = output_file,
+      plot = plot_obj,
+      width = width,
+      height = height
+    ),
+    error = function(e) {
+      stop(
+        sprintf("Failed to save mirrored histogram to '%s': %s", output_file, e$message),
+        call. = FALSE
+      )
+    }
+  )
+}
+
 # Internal: Compute diagnostics for mirrored histogram
 mirror_histogram_diagnostics <- function(working, matched_idx, group_levels, n_input, n_dropped) {
   list(
@@ -289,12 +313,7 @@ plot_mirror_histogram <- function(data,
   p <- build_mirror_histogram_plot(plot_df, group_labels, binwidth, lower, upper, y_breaks)
   diagnostics <- mirror_histogram_diagnostics(working, matched_idx, group_levels, n_input, n_dropped)
   if (!is.null(output_file)) {
-    ggsave(
-      filename = output_file,
-      plot = p,
-      width = width,
-      height = height
-    )
+    save_mirror_histogram_plot(p, output_file, width, height)
   }
   list(plot = p,
        diagnostics = diagnostics,
@@ -309,6 +328,7 @@ plot_mirror_histogram <- function(data,
 ##' @return Data frame with columns: prob_t (numeric score), tavr (group), match (matched status)
 ##' @export
 sample_mirror_histogram_data <- function(n = 100) {
+  assertthat::assert_that(assertthat::is.count(n), msg = "`n` must be a positive integer.")
   set.seed(123)
   # Generate scores for two groups
   group0_scores <- rbeta(n, 2, 5)

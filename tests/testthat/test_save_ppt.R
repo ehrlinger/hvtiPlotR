@@ -23,8 +23,8 @@ test_that("save_ppt accepts a single ggplot object", {
 
   # Create a minimal template
   temp_template <- tempfile(fileext = ".pptx")
-  officer::read_pptx() %>%
-    officer::add_slide(layout = "Title and Content") %>%
+  officer::read_pptx() |>
+    officer::add_slide(layout = "Title and Content") |>
     print(target = temp_template)
 
   expect_error(
@@ -46,8 +46,8 @@ test_that("save_ppt accepts a list of ggplot objects", {
   temp_ppt <- tempfile(fileext = ".pptx")
   temp_template <- tempfile(fileext = ".pptx")
 
-  officer::read_pptx() %>%
-    officer::add_slide(layout = "Title and Content") %>%
+  officer::read_pptx() |>
+    officer::add_slide(layout = "Title and Content") |>
     print(target = temp_template)
 
   expect_error(
@@ -65,8 +65,8 @@ test_that("save_ppt works with custom dimensions", {
   temp_ppt <- tempfile(fileext = ".pptx")
   temp_template <- tempfile(fileext = ".pptx")
 
-  officer::read_pptx() %>%
-    officer::add_slide(layout = "Title and Content") %>%
+  officer::read_pptx() |>
+    officer::add_slide(layout = "Title and Content") |>
     print(target = temp_template)
 
   expect_error(
@@ -90,8 +90,8 @@ test_that("save_ppt works with custom slide title", {
   temp_ppt <- tempfile(fileext = ".pptx")
   temp_template <- tempfile(fileext = ".pptx")
 
-  officer::read_pptx() %>%
-    officer::add_slide(layout = "Title and Content") %>%
+  officer::read_pptx() |>
+    officer::add_slide(layout = "Title and Content") |>
     print(target = temp_template)
 
   expect_error(
@@ -116,8 +116,8 @@ test_that("save_ppt works with theme_ppt", {
   temp_ppt <- tempfile(fileext = ".pptx")
   temp_template <- tempfile(fileext = ".pptx")
 
-  officer::read_pptx() %>%
-    officer::add_slide(layout = "Title and Content") %>%
+  officer::read_pptx() |>
+    officer::add_slide(layout = "Title and Content") |>
     print(target = temp_template)
 
   expect_error(
@@ -140,8 +140,8 @@ test_that("save_ppt works with all theme types", {
   temp_ppt <- tempfile(fileext = ".pptx")
   temp_template <- tempfile(fileext = ".pptx")
 
-  officer::read_pptx() %>%
-    officer::add_slide(layout = "Title and Content") %>%
+  officer::read_pptx() |>
+    officer::add_slide(layout = "Title and Content") |>
     print(target = temp_template)
 
   expect_error(
@@ -156,26 +156,25 @@ test_that("save_ppt works with all theme types", {
 # Edge case tests
 # ============================================================================
 
-test_that("save_ppt handles empty list gracefully", {
+test_that("save_ppt errors on empty list", {
   skip_if_not_installed("officer")
 
   temp_ppt <- tempfile(fileext = ".pptx")
   temp_template <- tempfile(fileext = ".pptx")
 
-  officer::read_pptx() %>%
-    officer::add_slide(layout = "Title and Content") %>%
+  officer::read_pptx() |>
+    officer::add_slide(layout = "Title and Content") |>
     print(target = temp_template)
 
-  # Empty list should not create any slides but shouldn't error
   expect_error(
     save_ppt(list(), template = temp_template, powerpoint = temp_ppt),
-    NA
+    "list cannot be empty"
   )
 
   unlink(c(temp_ppt, temp_template))
 })
 
-test_that("save_ppt handles list with non-ggplot objects", {
+test_that("save_ppt errors when list contains non-ggplot objects", {
   skip_if_not_installed("officer")
 
   mixed_list <- list(
@@ -187,17 +186,29 @@ test_that("save_ppt handles list with non-ggplot objects", {
   temp_ppt <- tempfile(fileext = ".pptx")
   temp_template <- tempfile(fileext = ".pptx")
 
-  officer::read_pptx() %>%
-    officer::add_slide(layout = "Title and Content") %>%
+  officer::read_pptx() |>
+    officer::add_slide(layout = "Title and Content") |>
     print(target = temp_template)
 
-  # Should handle non-ggplot objects gracefully (skip them)
   expect_error(
     save_ppt(mixed_list, template = temp_template, powerpoint = temp_ppt),
-    NA
+    "must be ggplot objects"
   )
 
   unlink(c(temp_ppt, temp_template))
+})
+
+test_that("save_ppt errors when template path is invalid", {
+  skip_if_not_installed("officer")
+
+  p <- create_test_plot()
+  temp_ppt <- tempfile(fileext = ".pptx")
+  bogus_template <- tempfile(fileext = ".pptx")
+
+  expect_error(
+    save_ppt(p, template = bogus_template, powerpoint = temp_ppt),
+    "existing PowerPoint file"
+  )
 })
 
 test_that("save_ppt works with complex plots", {
@@ -215,8 +226,8 @@ test_that("save_ppt works with complex plots", {
   temp_ppt <- tempfile(fileext = ".pptx")
   temp_template <- tempfile(fileext = ".pptx")
 
-  officer::read_pptx() %>%
-    officer::add_slide(layout = "Title and Content") %>%
+  officer::read_pptx() |>
+    officer::add_slide(layout = "Title and Content") |>
     print(target = temp_template)
 
   expect_error(
@@ -237,8 +248,8 @@ test_that("save_ppt handles various dimension values", {
   p <- create_test_plot()
   temp_template <- tempfile(fileext = ".pptx")
 
-  officer::read_pptx() %>%
-    officer::add_slide(layout = "Title and Content") %>%
+  officer::read_pptx() |>
+    officer::add_slide(layout = "Title and Content") |>
     print(target = temp_template)
 
   # Very small dimensions
@@ -267,8 +278,8 @@ test_that("save_ppt handles various offset values", {
   temp_ppt <- tempfile(fileext = ".pptx")
   temp_template <- tempfile(fileext = ".pptx")
 
-  officer::read_pptx() %>%
-    officer::add_slide(layout = "Title and Content") %>%
+  officer::read_pptx() |>
+    officer::add_slide(layout = "Title and Content") |>
     print(target = temp_template)
 
   expect_error(
@@ -278,4 +289,20 @@ test_that("save_ppt handles various offset values", {
   )
 
   unlink(c(temp_ppt, temp_template))
+})
+
+test_that("save_ppt errors when object is not ggplot or list", {
+  skip_if_not_installed("officer")
+
+  temp_template <- tempfile(fileext = ".pptx")
+  officer::read_pptx() |>
+    officer::add_slide(layout = "Title and Content") |>
+    print(target = temp_template)
+
+  expect_error(
+    save_ppt("not a plot", template = temp_template, powerpoint = tempfile(fileext = ".pptx")),
+    "ggplot object"
+  )
+
+  unlink(temp_template)
 })
