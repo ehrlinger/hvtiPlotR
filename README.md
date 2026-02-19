@@ -10,6 +10,6 @@ ggplot2 themes and methodology documentation for creating publication quality gr
 
 The *hvtiPlotR* is an *R* implementation of the *plot.sas* macro we currently use in *SAS*.  This package includes a set of themes designed to format those figures for both manuscript and presentation publication targets as well as helper functions to simplify the specific needs of the HVI statistics group.
 
-This package can be installed using the [devtools](https:\\CRAN.R-project.org/package=devtools) using the command `devtools::install_github("ehrlinger/hvtiPlotR")`.
+This package can be installed using the [remotes](https://CRAN.R-project.org/package=remotes) package using the command `remotes::install_github("ehrlinger/hvtiPlotR")`.
 
-We include a package vignette which has detailed recipes for generating our standard graphics using *ggplot2* commands and the routines found in this package. The package also uses the *ReporteRs* package, available at (https://github.com/davidgohel/ReporteRs), for figures conforming to the HVI PowerPoint standards. 
+We include a package vignette which has detailed recipes for generating our standard graphics using *ggplot2* commands and the routines found in this package. The package uses the *officer* package for creating figures that conform to the HVI PowerPoint standards. 

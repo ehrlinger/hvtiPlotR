@@ -53,7 +53,7 @@ save_ppt <- function(object,
   }else if(inherits(object,"list")){
     # For a list, we want to place one slide per ggplot object
     
-    for(ind in 1:length(object)){
+    for(ind in seq_along(object)){
       if(inherits(object[[ind]],"ggplot")){  
         ##--------
         # For each graph, add_slide. The graphs require the 

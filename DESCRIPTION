@@ -1,16 +1,17 @@
 Package: hvtiPlotR
 Type: Package
 Title: Porting the "plot.sas" macro to R Using ggplot2 and officer Packages
-Version: 0.2.2
-Date: 2025-10-21
+Version: 1.0.0
+Date: 2026-02-19
 Authors@R: c(
     person(
       "John", "Ehrlinger",
+      email = "ehrlinj@ccf.org",
       email = "john.ehrlinger@gmail.com",
       role = c("aut", "cre")
     )
   )
-Maintainer: John Ehrlinger <john.ehrlinger@gmail.com>
+Maintainer: John Ehrlinger <ehrlinj@ccf.org>
 License: GPL-3
 Encoding: UTF-8
 VignetteBuilder: knitr

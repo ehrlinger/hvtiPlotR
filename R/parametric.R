@@ -1,14 +1,7 @@
-#' parametric survival estimates
+#' Parametric survival estimates
 #'
-#'
-#
-# @seealso \code{airquality} \code{rfsrc} \code{\link{airq_vs}} \code{\link{airq_interaction}}
-#
-# @examples
-# \dontrun{
-# }
-#'
-# @references
+#' A dataset containing parametric survival estimates used for examples
+#' in the package vignettes.
 #'
 #' @docType data
 #' @keywords datasets
