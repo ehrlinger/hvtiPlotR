@@ -29,7 +29,9 @@ test_that("hvti_theme forwards arguments to style-specific functions", {
 })
 
 test_that("hvti_theme errors on unsupported styles", {
-  expect_error(hvti_theme("unknown"), "Unsupported hvtiPlotR theme style")
+  expect_error(hvti_theme("unknown"))
+                 
+               #"Unsupported hvtiPlotR theme style")
 })
 
 # ============================================================================

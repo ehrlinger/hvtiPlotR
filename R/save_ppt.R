@@ -28,7 +28,7 @@ officer_safe_call <- function(expr, action) {
 #' @param height graphic object height
 #'
 #' @export save_ppt
-#' @importFrom officer read_pptx add_slide body_add_plot
+#' @importFrom officer read_pptx add_slide body_add_plot print
 #' 
 #' @examples
 #' \dontrun{

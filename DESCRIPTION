@@ -13,7 +13,6 @@ Authors@R: c(
 Maintainer: John Ehrlinger <john.ehrlinger@gmail.com>
 License: GPL-3
 Encoding: UTF-8
-VignetteBuilder: knitr
 URL: https://github.com/ehrlinger/hvtiPlotR, https://ehrlinger.github.io/hvtiPlotR/
 BugReports: https://github.com/ehrlinger/hvtiPlotR/issues
 Description: ggplot2 themes and methodology documentation for creating
@@ -26,6 +25,7 @@ Imports:
     assertthat,
     ggplot2,
     grid,
+    tidyverse,
     officer
 Suggests:
     knitr,
@@ -33,5 +33,6 @@ Suggests:
     RColorBrewer,
     gridExtra,
     scales,
-    tidyverse
+    quarto
+VignetteBuilder: quarto
 RoxygenNote: 7.3.3

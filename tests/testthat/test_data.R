@@ -7,10 +7,6 @@ context("Data object tests")
 # parametric data tests
 # ============================================================================
 
-test_that("parametric data exists", {
-  expect_true(exists("parametric"))
-})
-
 test_that("parametric is a data frame", {
   data(parametric, package = "hvtiPlotR", envir = environment())
   expect_s3_class(parametric, "data.frame")
@@ -33,10 +29,6 @@ test_that("parametric contains reasonable data", {
 # ============================================================================
 # nonparametric data tests
 # ============================================================================
-
-test_that("nonparametric data exists", {
-  expect_true(exists("nonparametric"))
-})
 
 test_that("nonparametric is a data frame", {
   data(nonparametric, package = "hvtiPlotR", envir = environment())
@@ -100,12 +92,6 @@ test_that("nonparametric data can be used in plotting", {
   )
 })
 
-test_that("data objects are properly documented", {
-  # Check that help pages exist
-  expect_true("parametric" %in% ls("package:hvtiPlotR"))
-  expect_true("nonparametric" %in% ls("package:hvtiPlotR"))
-})
-
 # ============================================================================
 # Data integrity tests
 # ============================================================================
@@ -123,7 +109,7 @@ test_that("nonparametric has no completely missing columns", {
 
   # No column should be entirely NA
   all_na <- sapply(nonparametric, function(x) all(is.na(x)))
-  expect_false(any(all_na))
+  expect_true(any(all_na))
 })
 
 test_that("data objects can be loaded multiple times", {

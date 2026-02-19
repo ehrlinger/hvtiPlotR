@@ -11,6 +11,7 @@
 #'
 #' @seealso \code{theme_set} \code{theme_grey} \code{\link{theme_man}}
 #'
+#' @import ggplot2
 #' @export hvti_theme_poster
 #' @aliases theme_poster
 

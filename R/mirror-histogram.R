@@ -30,8 +30,6 @@
 # }
 ###############################################################################
 
-library(ggplot2)
-
 ##' Calculate Standardized Mean Difference (SMD)
 ##'
 ##' Computes the standardized mean difference between two groups for a given score.
@@ -70,6 +68,7 @@ calc_smd <- function(score, group, group_levels) {
 ##' @param breaks Numeric vector of break points for bins.
 ##' @return Data frame with columns `x` (bin midpoints) and `count` (counts per bin).
 ##' @keywords internal
+##' @importFrom graphics hist
 build_hist_counts <- function(x, breaks) {
   # Compute histogram without plotting
   h <- hist(
@@ -180,6 +179,7 @@ assemble_mirror_histogram_plot_df <- function(working, group_levels, group_label
 }
 
 # Internal: Build ggplot object for mirrored histogram
+#' @importFrom ggplot2 ggplot geom_hline geom_col scale_fill_manual scale_x_continuous scale_y_continuous labs annotate coord_cartesian aes theme_minimal
 build_mirror_histogram_plot <- function(plot_df, group_labels, binwidth, lower, upper, y_breaks) {
   ggplot() +
     geom_hline(yintercept = 0,
@@ -325,7 +325,8 @@ plot_mirror_histogram <- function(data,
 ##' Creates a sample data frame suitable for testing plot_mirror_histogram.
 ##'
 ##' @param n Number of samples per group (default 100).
-##' @return Data frame with columns: prob_t (numeric score), tavr (group), match (matched status)
+##' @return Data frame with columns: prob_t (numeric score), tavr (group), match (matched status)\
+##' @importFrom stats rbeta rbinom
 ##' @export
 sample_mirror_histogram_data <- function(n = 100) {
   assertthat::assert_that(assertthat::is.count(n), msg = "`n` must be a positive integer.")

@@ -12,6 +12,7 @@
 #' @param accent = "#3366FF"
 #' @seealso \code{theme_set} \code{theme_grey} \code{\link{theme_man}}
 #'
+#' @import ggplot2
 #' @export hvti_theme_dark_ppt
 #' @aliases theme_dark_ppt
 

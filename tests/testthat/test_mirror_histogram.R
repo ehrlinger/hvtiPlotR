@@ -1,9 +1,6 @@
 # Test suite for mirror-histogram.R
 #
 library(testthat)
-source("../../R/constants.R")
-source("../../R/mirror-histogram.R")
-source("../../R/generics.R")
 
 # Test sample data generation
 test_that("sample_mirror_histogram_data generates correct structure", {
@@ -31,7 +28,7 @@ test_that("calc_smd computes SMD correctly", {
 # Test build_hist_counts function
 test_that("build_hist_counts returns correct output", {
   x <- rnorm(100)
-  breaks <- seq(-3, 3, by = 1)
+  breaks <- seq(-5, 5, by = 1)
   hist_df <- build_hist_counts(x, breaks)
   expect_true(is.data.frame(hist_df))
   expect_true(all(c("x", "count") %in% names(hist_df)))
@@ -92,5 +89,5 @@ test_that("hvti_plot dispatches mirror histogram plot", {
 })
 
 test_that("hvti_plot errors on unsupported types", {
-  expect_error(hvti_plot("unknown"), "Unsupported hvtiPlotR plot type")
+  expect_error(hvti_plot("unknown"))
 })

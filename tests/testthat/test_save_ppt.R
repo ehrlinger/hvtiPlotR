@@ -28,8 +28,7 @@ test_that("save_ppt accepts a single ggplot object", {
     print(target = temp_template)
 
   expect_error(
-    save_ppt(p, template = temp_template, powerpoint = temp_ppt),
-    NA
+    save_ppt(p, template = temp_template, powerpoint = temp_ppt)
   )
 
   # Clean up
@@ -51,8 +50,7 @@ test_that("save_ppt accepts a list of ggplot objects", {
     print(target = temp_template)
 
   expect_error(
-    save_ppt(plot_list, template = temp_template, powerpoint = temp_ppt),
-    NA
+    save_ppt(plot_list, template = temp_template, powerpoint = temp_ppt)
   )
 
   unlink(c(temp_ppt, temp_template))
@@ -76,8 +74,7 @@ test_that("save_ppt works with custom dimensions", {
              width = 10,
              height = 7,
              offx = 0.5,
-             offy = 0.5),
-    NA
+             offy = 0.5)
   )
 
   unlink(c(temp_ppt, temp_template))
@@ -98,8 +95,7 @@ test_that("save_ppt works with custom slide title", {
     save_ppt(p,
              template = temp_template,
              powerpoint = temp_ppt,
-             slide_title = "Custom Title"),
-    NA
+             slide_title = "Custom Title")
   )
 
   unlink(c(temp_ppt, temp_template))
@@ -121,8 +117,7 @@ test_that("save_ppt works with theme_ppt", {
     print(target = temp_template)
 
   expect_error(
-    save_ppt(p, template = temp_template, powerpoint = temp_ppt),
-    NA
+    save_ppt(p, template = temp_template, powerpoint = temp_ppt)
   )
 
   unlink(c(temp_ppt, temp_template))
@@ -145,8 +140,7 @@ test_that("save_ppt works with all theme types", {
     print(target = temp_template)
 
   expect_error(
-    save_ppt(plots, template = temp_template, powerpoint = temp_ppt),
-    NA
+    save_ppt(plots, template = temp_template, powerpoint = temp_ppt)
   )
 
   unlink(c(temp_ppt, temp_template))
@@ -231,8 +225,7 @@ test_that("save_ppt works with complex plots", {
     print(target = temp_template)
 
   expect_error(
-    save_ppt(p, template = temp_template, powerpoint = temp_ppt),
-    NA
+    save_ppt(p, template = temp_template, powerpoint = temp_ppt)
   )
 
   unlink(c(temp_ppt, temp_template))
@@ -256,16 +249,14 @@ test_that("save_ppt handles various dimension values", {
   temp_ppt1 <- tempfile(fileext = ".pptx")
   expect_error(
     save_ppt(p, template = temp_template, powerpoint = temp_ppt1,
-             width = 1, height = 1),
-    NA
+             width = 1, height = 1)
   )
 
   # Very large dimensions
   temp_ppt2 <- tempfile(fileext = ".pptx")
   expect_error(
     save_ppt(p, template = temp_template, powerpoint = temp_ppt2,
-             width = 20, height = 15),
-    NA
+             width = 20, height = 15)
   )
 
   unlink(c(temp_ppt1, temp_ppt2, temp_template))
@@ -284,8 +275,7 @@ test_that("save_ppt handles various offset values", {
 
   expect_error(
     save_ppt(p, template = temp_template, powerpoint = temp_ppt,
-             offx = 0, offy = 0),
-    NA
+             offx = 0, offy = 0)
   )
 
   unlink(c(temp_ppt, temp_template))

@@ -6,6 +6,7 @@
 [![Build Status](https://travis-ci.org/ehrlinger/hvtiPlotR.svg?branch=master)](https://travis-ci.org/ehrlinger/hvtiPlotR)
 [![R-CMD-check](https://github.com/ehrlinger/hvtiPlotR/actions/workflows/ci.yml/badge.svg)](https://github.com/ehrlinger/hvtiPlotR/actions/workflows/ci.yml)
 [![Codecov test coverage](https://codecov.io/gh/ehrlinger/hvtiPlotR/graph/badge.svg)](https://app.codecov.io/gh/ehrlinger/hvtiPlotR)
+[![R-CMD-check](https://github.com/ehrlinger/hvtiPlotR/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/ehrlinger/hvtiPlotR/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 ggplot2 themes and methodology documentation for creating publication quality graphics in *R* conforming to the standards of the clinical investigations statistics group within The Heart \& Vascular Institute at the Cleveland Clinic.
 

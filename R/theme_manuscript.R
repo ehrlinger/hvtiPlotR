@@ -12,6 +12,7 @@
 #'
 #' @seealso \code{theme_set} \code{theme_grey} \code{\link{theme_ppt}}
 #'
+#' @import ggplot2
 #' @export hvti_theme_manuscript
 #' @aliases theme_manuscript theme_man
 
