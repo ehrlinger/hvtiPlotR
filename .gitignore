@@ -23,3 +23,8 @@ docs
 hviPlotR.Rproj
 NAMESPACE
 
+.Rcheck*
+.Rbuildignore
+.Rproj.user
+.Rhistory
+.RData
