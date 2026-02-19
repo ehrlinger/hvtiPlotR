@@ -18,9 +18,12 @@ macro for creating publication quality graphics.
 
 The hvtiPlotR package contains the following functions:
 \itemize{
-\item \code{\link{theme_man}}: 
-\item \code{\link{theme_ppt}}:
-\item \code{\link{save_ppt}}: 
+\item \code{\link{theme_man}}: Theme for manuscript figures
+\item \code{\link{theme_ppt}}: Theme for PowerPoint presentation figures
+\item \code{\link{theme_dark_ppt}}: Dark theme for PowerPoint presentations
+\item \code{\link{theme_poster}}: Theme for poster figures
+\item \code{\link{save_ppt}}: Save ggplot objects to PowerPoint presentations
+\item \code{\link{makeFootnote}}: Add footnotes to graphics
 }
 
 All functions have an associated plotting function that returns ggplot2 graphics, either 

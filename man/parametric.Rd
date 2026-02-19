@@ -3,11 +3,12 @@
 \docType{data}
 \name{parametric}
 \alias{parametric}
-\title{parametric survival estimates}
+\title{Parametric survival estimates}
 \format{
 A data.frame object containing parametric survival estimates
 }
 \description{
-parametric survival estimates
+A dataset containing parametric survival estimates used for examples
+in the package vignettes.
 }
 \keyword{datasets}

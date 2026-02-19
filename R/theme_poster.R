@@ -11,18 +11,18 @@
 #'
 #' @seealso \code{theme_set} \code{theme_grey} \code{\link{theme_man}}
 #'
-#' @export theme_poster
-#'
 #' @import ggplot2
+#' @export hvti_theme_poster
+#' @aliases theme_poster
 
-theme_poster <- function(base_size = 16,
-                         base_family = "",
-                         header_family = NULL,
-                         base_line_size = base_size / 22,
-                         base_rect_size = base_size / 22,
-                         ink = "black",
-                         paper = "white",
-                         accent = "#3366FF") {
+hvti_theme_poster <- function(base_size = HVTI_THEME_POSTER_BASE_SIZE,
+                              base_family = "",
+                              header_family = NULL,
+                              base_line_size = base_size / 22,
+                              base_rect_size = base_size / 22,
+                              ink = "black",
+                              paper = "white",
+                              accent = "#3366FF") {
   theme_grey(
     base_size = base_size,
     base_family = base_family,
@@ -37,16 +37,16 @@ theme_poster <- function(base_size = 16,
       plot.background = element_rect(
         fill = 'transparent',
         colour = 'transparent',
-        size = 2
+        linewidth = 2
       ),
-      axis.text  = element_text(size = 16, color = "black"),
+      axis.text  = element_text(size = HVTI_THEME_POSTER_AXIS_TEXT_SIZE, color = "black"),
       axis.line = element_line(color = "black", linewidth = 1),
       strip.text = element_text(size = 8),
       panel.border = element_blank(),
       panel.background = element_rect(
         fill = "white",
         colour = "black",
-        size = 1
+        linewidth = 1
       ),
       axis.ticks = element_line(colour = "black", linewidth = 1),
       # legend.position="none",
@@ -56,6 +56,4 @@ theme_poster <- function(base_size = 16,
     )
 }
 
-#===========================================================================================
-# For reference, this is the theme_grey definition, which has most, if not all possible
-# theme elements.
+theme_poster <- hvti_theme_poster

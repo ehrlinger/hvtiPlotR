@@ -1,10 +1,17 @@
 ---
 title: "The **hvtiPlotR** package: Generating plot.sas style in R"
 author: "John Ehrlinger <ehrlinj@ccf.org>"
-output: html
+format: 
+  html:
+    toc: true
+    html-math-method: mathjax
 editor: 
   markdown: 
     wrap: 80
+vignette: >
+  %\VignetteIndexEntry{Vignette's Title}
+  %\VignetteEngine{quarto::html}
+  %\VignetteEncoding{UTF-8}
 ---
 
 # Abstract
@@ -210,7 +217,7 @@ data(parametric, package = "hvtiPlotR")
 data(nonparametric, package = "hvtiPlotR")
 
 # Set a default hvtiPlotR plotting theme
-theme_set(hvtiPlotR::theme_man()) 
+theme_set(hvtiPlotR::hvti_theme("manuscript")) 
 ```
 
 One advantage of ggplot2 is that figures can be built up in successive statements. This tutorial will make extensive use of this to demonstrate the process. Starting in this code chunk, we will save the intermediate objects in the ccf_plot variable. Here we simply create an empty ggplot2 figure that we will be adding to as we work through the commands in the plot.sas macro. Note that we include the %plot() commands in the comments above the equivalent ggplot2 command for comparison.
@@ -464,16 +471,16 @@ show(ccf_pptPlot)
 
 The themes system in `ggplot` enables a user to control non-data elements of a `ggplot` object. Where we use `color` palettes (Section 3.10), `shapes` (Section 3.9) and `linetypes` (Section 3.8) to control the data elements, we use themes to control the visual details of most of the remaining aspects of our figures.
 
-The **hvtiPlotR** package contains two custom themes. The {\code theme_man()} theme is used for manuscripts, and the {\code theme_dark_ppt()} and {\code theme_ppt()} themes are used for powerpoint documents. These themes can be applied to any figure that was created using the ggplot2 package.
+The **hvtiPlotR** package contains two custom themes. The {\code hvti_theme("manuscript")} theme is used for manuscripts, and the {\code hvti_theme("ppt")} and {\code theme_ppt()} themes are used for powerpoint documents. These themes can be applied to any figure that was created using the ggplot2 package.
 
 ## Theme for Manuscripts 
-As before, there are multiple ways to assign a theme to use. Using the theme_set() function will apply the theme for all subsequent figures. Even if the figure was created before the theme_set call, displaying a figure after the call will apply the new theme. It is then best to revert to the default theme when at the end of a section. The following code chunk demonstrates this process using the manuscript theme (theme_man()). The resulting manuscript graphic is show in Figure 12.
+As before, there are multiple ways to assign a theme to use. Using the theme_set() function will apply the theme for all subsequent figures. Even if the figure was created before the theme_set call, displaying a figure after the call will apply the new theme. It is then best to revert to the default theme when at the end of a section. The following code chunk demonstrates this process using the manuscript theme (hvti_theme("manuscript")). The resulting manuscript graphic is show in Figure 12.
 
 ```{r}
 #| label: man_theme
 #| caption: Theme for Manuscripts
 # Set the theme for manuscripts,
-theme_set(theme_man())
+theme_set(hvti_theme("manuscript"))
 # show the figure.
 ccf_plot
 ```
@@ -489,7 +496,7 @@ In this example, we apply the powerpoint theme to only eﬀect the figure constr
 # Update the PowerPoint Figure to include the PPT Theme, and remove axis labels. 
 # Axis labels will be added manually in powerpoint. 
 ccf_pptPlot <- ccf_pptPlot + 
-  theme_dark_ppt()
+  hvti_theme("ppt")
 ccf_pptPlot
 ```
 
@@ -512,7 +519,7 @@ It is a best practice that we include a footnote containing the figure path in e
 ```{r}
 library("grid") 
 library("gridExtra")
-ccf_savePlot <- arrangeGrob(ccf_plot + theme_man(),
+ccf_savePlot <- arrangeGrob(ccf_plot + hvti_theme("manuscript"),
                             sub = textGrob(
                               paste(getwd(), Sys.Date(), sep = " "),
                               x = 0,
@@ -524,7 +531,7 @@ ccf_savePlot
 ```
 
 
-Figure ?? uses the same plot in Figure 12 with the code `ccf_plot+theme_man()`. The current working directory is obtained using the `getwd()` function. The `Sys.Date()` function returns the system date for timestamping the figure. The footnote is placed with the `x = 0, hjust = -.1, vjust=.01`, and formatted with the `gp = gpar(fontface = "italic", fontsize = 6)`. For Word documents (Oﬃce ≥ 2007) we can import PDF graphics as a vector based format. Saving the figure is accomplished using either the `ggsave()` function, or `pdf(); show(); dev.off()` combination. We have a specific set of width and height dimensions required for saving the figure with footnote included to get the font sizes to import correctly in Word. `ggsave(filename="manuscript.pdf", height=4, width=5, ccf_savePlot)` 
+Figure ?? uses the same plot in Figure 12 with the code `ccf_plot+hvti_theme("manuscript")`. The current working directory is obtained using the `getwd()` function. The `Sys.Date()` function returns the system date for timestamping the figure. The footnote is placed with the `x = 0, hjust = -.1, vjust=.01`, and formatted with the `gp = gpar(fontface = "italic", fontsize = 6)`. For Word documents (Oﬃce ≥ 2007) we can import PDF graphics as a vector based format. Saving the figure is accomplished using either the `ggsave()` function, or `pdf(); show(); dev.off()` combination. We have a specific set of width and height dimensions required for saving the figure with footnote included to get the font sizes to import correctly in Word. `ggsave(filename="manuscript.pdf", height=4, width=5, ccf_savePlot)` 
 
 ## PowerPoint graphics 
 We use the ReporteRs package (Gohel 2014) to insert vector based figures from R into PowerPoint documents. The latest version of the ReporteRs package is available from http://davidgohel.github.io/ReporteRs/. We install this package as we installed the **hvtiPlotR** package. 

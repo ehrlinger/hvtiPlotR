@@ -20,3 +20,11 @@ jsslogo.jpg
 
 inst/doc
 docs
+hviPlotR.Rproj
+NAMESPACE
+
+.Rcheck*
+.Rbuildignore
+.Rproj.user
+.Rhistory
+.RData

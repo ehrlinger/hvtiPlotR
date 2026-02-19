@@ -1,3 +1,3 @@
 library(testthat)
 
-test_check("hviPlotR")
+test_check("hvtiPlotR")

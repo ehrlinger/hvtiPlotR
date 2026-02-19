@@ -1,19 +1,18 @@
 Package: hvtiPlotR
 Type: Package
 Title: Porting the "plot.sas" macro to R Using ggplot2 and officer Packages
-Version: 0.2.2
-Date: 2025-10-21
+Version: 1.0.0
+Date: 2026-02-19
 Authors@R: c(
     person(
       "John", "Ehrlinger",
-      email = "john.ehrlinger@gmail.com",
+      email = "ehrlinj@ccf.org",
       role = c("aut", "cre")
     )
   )
 Maintainer: John Ehrlinger <john.ehrlinger@gmail.com>
 License: GPL-3
 Encoding: UTF-8
-VignetteBuilder: knitr
 URL: https://github.com/ehrlinger/hvtiPlotR, https://ehrlinger.github.io/hvtiPlotR/
 BugReports: https://github.com/ehrlinger/hvtiPlotR/issues
 Description: ggplot2 themes and methodology documentation for creating
@@ -23,14 +22,18 @@ Description: ggplot2 themes and methodology documentation for creating
 Depends:
     R (>= 4.1.0)
 Imports:
+    assertthat,
     ggplot2,
     grid,
+    tidyverse,
     officer
 Suggests:
     knitr,
     testthat,
+    devtools,
     RColorBrewer,
     gridExtra,
     scales,
-    tidyverse
+    quarto
+VignetteBuilder: quarto
 RoxygenNote: 7.3.3

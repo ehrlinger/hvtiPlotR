@@ -40,6 +40,14 @@ makeFootnote <- function(footnoteText = getwd(),
                          color = grey(.5),
                          timestamp = TRUE)
 {
+  assertthat::assert_that(is.character(footnoteText), length(footnoteText) == 1,
+                          msg = "`footnoteText` must be a single string.")
+  assertthat::assert_that(assertthat::is.number(size), size > 0,
+                          msg = "`size` must be a positive number.")
+  assertthat::assert_that(length(color) == 1,
+                          msg = "`color` must be a length-1 value.")
+  assertthat::assert_that(assertthat::is.flag(timestamp),
+                          msg = "`timestamp` must be TRUE or FALSE.")
   if (timestamp) {
     footnoteText  <- paste(footnoteText, Sys.time(), sep = " ")
   }

@@ -12,18 +12,18 @@
 #'
 #' @seealso \code{theme_set} \code{theme_grey} \code{\link{theme_ppt}}
 #'
-#' @export theme_manuscript theme_man
-#' @aliases theme_man theme_manuscript
 #' @import ggplot2
+#' @export hvti_theme_manuscript
+#' @aliases theme_manuscript theme_man
 
-theme_manuscript <- function(base_size = 12,
-                             base_family = "",
-                             header_family = NULL,
-                             base_line_size = base_size / 22,
-                             base_rect_size = base_size / 22,
-                             ink = "black",
-                             paper = "white",
-                             accent = "#3366FF") {
+hvti_theme_manuscript <- function(base_size = 12,
+                                  base_family = "",
+                                  header_family = NULL,
+                                  base_line_size = base_size / 22,
+                                  base_rect_size = base_size / 22,
+                                  ink = "black",
+                                  paper = "white",
+                                  accent = "#3366FF") {
   theme_grey(
     base_size = base_size,
     base_family = base_family,
@@ -46,13 +46,10 @@ theme_manuscript <- function(base_size = 12,
       axis.line.x = element_line(color = "black", linewidth = 0.8),
       axis.line.y = element_line(color = "black", linewidth = 0.8),
       axis.text = element_text(size = base_size, color = "black"),
-      plot.margin = unit(c(0.65, 0.65, 0.25, 0.25), "cm"),
-      #AML added. Add to template?
+      plot.margin = unit(HVTI_THEME_MANUSCRIPT_MARGIN, "cm"),
       axis.title = element_text(size = base_size)
     )
 }
-theme_man <- theme_manuscript
-#===========================================================================================
-# For reference, this is the theme_grey definition, which has most, if not all possible
-# theme elements.
-#
+
+theme_manuscript <- hvti_theme_manuscript
+theme_man <- hvti_theme_manuscript

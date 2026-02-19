@@ -1,28 +1,23 @@
-#' nonparametric survival estimates
-#' 
-#' @details 
-#' 
-#' \itemize{ 
-#' \item iv_state:
-#' \item sginit:
-#' \item stlinit:
-#' \item stuinit :
-#' \item sgdead1:
-#' \item sgstrk1:
-#' \item stldead1:
-#' \item studead1:
-#' \item stlstrk1:
-#' \item stustrk1:
+#' Nonparametric survival estimates
+#'
+#' A dataset containing nonparametric survival estimates used for examples
+#' in the package vignettes.
+#'
+#' @details
+#'
+#' \itemize{
+#' \item iv_state: Initial valve state
+#' \item sginit: Initial SG
+#' \item stlinit: Initial STL
+#' \item stuinit: Initial STU
+#' \item sgdead1: SG death indicator
+#' \item sgstrk1: SG stroke indicator
+#' \item stldead1: STL death indicator
+#' \item studead1: STU death indicator
+#' \item stlstrk1: STL stroke indicator
+#' \item stustrk1: STU stroke indicator
 #' }
-# 
-# @seealso \code{airquality} \code{rfsrc} \code{\link{airq_vs}} \code{\link{airq_interaction}} 
-# 
-# @examples
-# \dontrun{
-# }
-#' 
-# @references 
-#' 
+#'
 #' @docType data
 #' @keywords datasets
 #' @format A data.frame object containing nonparametric survival estimates
