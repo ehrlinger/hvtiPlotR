@@ -1,6 +1,7 @@
 ---
 title: "The **hvtiPlotR** package: Generating plot.sas style in R"
 author: "John Ehrlinger <ehrlinj@ccf.org>"
+date: today
 format: 
   html:
     toc: true
