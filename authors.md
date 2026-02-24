@@ -7,7 +7,7 @@
 ## Citation
 
 Source:
-[`DESCRIPTION`](https://github.com/ehrlinger/hvtiPlotR/blob/master/DESCRIPTION)
+[`DESCRIPTION`](https://github.com/ehrlinger/hvtiPlotR/blob/main/DESCRIPTION)
 
 Ehrlinger J (2026). *hvtiPlotR: Porting the "plot.sas" macro to R Using
 ggplot2 and officer Packages*. R package version 1.0.0,
