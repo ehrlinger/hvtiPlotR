@@ -57,4 +57,6 @@ hvti_theme_dark_ppt <- function(base_size = HVTI_THEME_DARK_PPT_BASE_SIZE,
     )
 }
 
+#' @export
+#' @rdname hvti_theme_dark_ppt
 theme_dark_ppt <- hvti_theme_dark_ppt

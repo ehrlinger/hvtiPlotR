@@ -56,4 +56,6 @@ hvti_theme_poster <- function(base_size = HVTI_THEME_POSTER_BASE_SIZE,
     )
 }
 
+#' @export
+#' @rdname hvti_theme_poster
 theme_poster <- hvti_theme_poster
