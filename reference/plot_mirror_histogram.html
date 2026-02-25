@@ -134,6 +134,128 @@ histograms.</p></dd>
   summary statistics), and `data` (the filtered data frame that was plotted).</p>
     </div>
 
+    <div class="section level2">
+    <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># Create a sample data set</span></span></span>
+<span class="r-in"><span><span class="va">mirror_dta</span> <span class="op">&lt;-</span> <span class="fu"><a href="sample_mirror_histogram_data.html">sample_mirror_histogram_data</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">4000</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Generate the figure</span></span></span>
+<span class="r-in"><span><span class="va">mhist</span> <span class="op">&lt;-</span> <span class="fu">plot_mirror_histogram</span><span class="op">(</span><span class="va">mirror_dta</span> <span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># The plot is returned in a list.</span></span></span>
+<span class="r-in"><span><span class="va">mhist</span><span class="op">$</span><span class="va">p</span></span></span>
+<span class="r-plt img"><img src="plot_mirror_histogram-1.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Diagnostics are also returned, which can be logged or displayed in reports.</span></span></span>
+<span class="r-in"><span><span class="va">mhist</span><span class="op">$</span><span class="va">diagnostics</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $n_input</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 8000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $n_analyzed</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 8000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $n_dropped_missing_or_other_group</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $group_counts_before</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    0    1 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4000 4000 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $group_counts_matched</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    0    1 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2438 2359 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $matched_rate_by_group</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       0       1 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.60950 0.58975 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $score_summary_before</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> working$group: 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   0.506  16.432  26.597  28.661  38.997  89.089 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ------------------------------------------------------------ </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> working$group: 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   5.868  60.964  73.585  71.312  84.054  99.760 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $score_summary_matched</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> working$group[matched_idx]: 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   0.506  16.516  26.585  28.827  39.346  83.929 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ------------------------------------------------------------ </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> working$group[matched_idx]: 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   5.868  60.922  73.683  71.229  83.943  99.760 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $smd_before</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 2.648481</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $smd_matched</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 2.605724</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># The data used to draw the figure is also returned, which can be useful for</span></span></span>
+<span class="r-in"><span><span class="co"># debugging or further analysis.</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">mhist</span><span class="op">$</span><span class="va">data</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   score_raw group matched    score</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 0.1855938     0       0 18.55938</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 0.2414701     0       1 24.14701</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 0.6889674     0       1 68.89674</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4 0.3001684     0       1 30.01684</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5 0.3125460     0       0 31.25460</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6 0.3879990     0       1 38.79990</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># By default, the figure uses the manuscript theme, but you can set it to</span></span></span>
+<span class="r-in"><span><span class="co"># any hvtiPlotR theme you like. For example:</span></span></span>
+<span class="r-in"><span><span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/get_theme.html" class="external-link">set_theme</a></span><span class="op">(</span><span class="fu"><a href="hvti_theme.html">hvti_theme</a></span><span class="op">(</span><span class="st">"manuscript"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">mhist</span><span class="op">$</span><span class="va">p</span></span></span>
+<span class="r-plt img"><img src="plot_mirror_histogram-2.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># You can modify the figure using scales:</span></span></span>
+<span class="r-in"><span><span class="va">mhist</span><span class="op">$</span><span class="va">p</span> <span class="op">+</span></span></span>
+<span class="r-in"><span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_fill_manual</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>    values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>      before_g0 <span class="op">=</span> <span class="st">"white"</span>,</span></span>
+<span class="r-in"><span>      matched_g0 <span class="op">=</span> <span class="st">"green1"</span>,</span></span>
+<span class="r-in"><span>      before_g1 <span class="op">=</span> <span class="st">"white"</span>,</span></span>
+<span class="r-in"><span>      matched_g1 <span class="op">=</span> <span class="st">"green4"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>    guide <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Scale for <span style="color: #00BB00;">fill</span> is already present.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Adding another scale for <span style="color: #00BB00;">fill</span>, which will replace the existing scale.</span>
+<span class="r-plt img"><img src="plot_mirror_histogram-3.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span> </span></span>
+<span class="r-in"><span> <span class="co"># and annotations:</span></span></span>
+<span class="r-in"><span><span class="va">group_labels</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"SAVR"</span>, <span class="st">"TF-TAVR"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">mhist</span><span class="op">$</span><span class="va">p</span> <span class="op">+</span></span></span>
+<span class="r-in"><span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_fill_manual</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>    values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>      before_g0 <span class="op">=</span> <span class="st">"white"</span>,</span></span>
+<span class="r-in"><span>      matched_g0 <span class="op">=</span> <span class="st">"green1"</span>,</span></span>
+<span class="r-in"><span>      before_g1 <span class="op">=</span> <span class="st">"white"</span>,</span></span>
+<span class="r-in"><span>      matched_g1 <span class="op">=</span> <span class="st">"green4"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>    guide <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span><span class="op">+</span></span></span>
+<span class="r-in"><span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/annotate.html" class="external-link">annotate</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>    <span class="st">"text"</span>,</span></span>
+<span class="r-in"><span>    x <span class="op">=</span> <span class="fl">0.8</span>,</span></span>
+<span class="r-in"><span>    y <span class="op">=</span> <span class="fl">0.80</span>,</span></span>
+<span class="r-in"><span>    label <span class="op">=</span> <span class="va">group_labels</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>,</span></span>
+<span class="r-in"><span>    size <span class="op">=</span> <span class="fl">6</span></span></span>
+<span class="r-in"><span>  <span class="op">)</span> <span class="op">+</span></span></span>
+<span class="r-in"><span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/annotate.html" class="external-link">annotate</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>    <span class="st">"text"</span>,</span></span>
+<span class="r-in"><span>    x <span class="op">=</span> <span class="fl">0.8</span>,</span></span>
+<span class="r-in"><span>    y <span class="op">=</span> <span class="op">-</span><span class="fl">0.80</span>,</span></span>
+<span class="r-in"><span>    label <span class="op">=</span> <span class="va">group_labels</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span>,</span></span>
+<span class="r-in"><span>    size <span class="op">=</span> <span class="fl">6</span></span></span>
+<span class="r-in"><span>  <span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Scale for <span style="color: #00BB00;">fill</span> is already present.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Adding another scale for <span style="color: #00BB00;">fill</span>, which will replace the existing scale.</span>
+<span class="r-plt img"><img src="plot_mirror_histogram-4.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span></span></span>
+</code></pre></div>
+    </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
 
