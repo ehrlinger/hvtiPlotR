@@ -28,3 +28,6 @@ NAMESPACE
 .Rproj.user
 .Rhistory
 .RData
+man/*.Rd
+
+NAMESPACE

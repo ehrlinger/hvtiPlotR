@@ -304,6 +304,65 @@ mirror_histogram_diagnostics <- function(working, matched_idx, group_levels, n_i
 #'
 #' @return A list with elements `plot` (ggplot object), `diagnostics` (list of
 #'   summary statistics), and `data` (the filtered data frame that was plotted).
+#'   
+#' @examples
+#' # Create a sample data set
+#' mirror_dta <- sample_mirror_histogram_data(n = 4000)
+#' 
+#' # Generate the figure
+#' mhist <- plot_mirror_histogram(mirror_dta )
+#' 
+#' # The plot is returned in a list.
+#' mhist$p
+#'
+#' # Diagnostics are also returned, which can be logged or displayed in reports.
+#' mhist$diagnostics
+#'
+#' # The data used to draw the figure is also returned, which can be useful for
+#' # debugging or further analysis.
+#' head(mhist$data)
+#' 
+#' # By default, the figure uses the manuscript theme, but you can set it to
+#' # any hvtiPlotR theme you like. For example:
+#' ggplot2::set_theme(hvti_theme("manuscript"))
+#' mhist$p
+#' 
+#' # You can modify the figure using scales:
+#' mhist$p +
+#'   ggplot2::scale_fill_manual(
+#'     values = c(
+#'       before_g0 = "white",
+#'       matched_g0 = "green1",
+#'       before_g1 = "white",
+#'       matched_g1 = "green4"),
+#'     guide = "none")
+#'  
+#'  # and annotations:
+#' group_labels = c("SAVR", "TF-TAVR")
+#' mhist$p +
+#'   ggplot2::scale_fill_manual(
+#'     values = c(
+#'       before_g0 = "white",
+#'       matched_g0 = "green1",
+#'       before_g1 = "white",
+#'       matched_g1 = "green4"),
+#'     guide = "none")+
+#'   ggplot2::annotate(
+#'     "text",
+#'     x = 0.8,
+#'     y = 0.80,
+#'     label = group_labels[1],
+#'     size = 6
+#'   ) +
+#'   ggplot2::annotate(
+#'     "text",
+#'     x = 0.8,
+#'     y = -0.80,
+#'     label = group_labels[2],
+#'     size = 6
+#'   )
+#' 
+#' @importFrom ggplot2 ggplot geom_hline geom_col scale_fill_manual scale_x_continuous scale_y_continuous labs annotate coord_cartesian aes theme_minimal set_theme
 #' @export
 plot_mirror_histogram <- function(data,
                                   score_col = "prob_t",

@@ -9,7 +9,6 @@
 #' @param paper = "transparent",
 #' @param accent = "#3366FF"
 #'
-#'
 #' @seealso \code{theme_set} \code{theme_grey} \code{\link{theme_ppt}}
 #'
 #' @import ggplot2
