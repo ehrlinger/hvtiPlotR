@@ -50,5 +50,10 @@ hvti_theme_manuscript <- function(base_size = 12,
     )
 }
 
+#' @export
+#' @rdname hvti_theme_manuscript
 theme_manuscript <- hvti_theme_manuscript
+
+#' @export
+#' @rdname hvti_theme_manuscript
 theme_man <- hvti_theme_manuscript
