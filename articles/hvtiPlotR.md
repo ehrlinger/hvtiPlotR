@@ -818,6 +818,79 @@ ccf_pptPlot + theme(plot.background = element_rect(fill='blue', colour='blue'))
 
 ![](hvtiPlotR_files/figure-html/powerpoint_fig3-1.png)
 
+## Mirrored Propensity Score Histogram
+
+A common figure in propensity-matched analyses is the mirrored
+histogram, which displays the propensity score distributions for two
+treatment groups before and after matching. The **hvtiPlotR** package
+provides the `mirror_histogram()` function to generate this figure.
+
+The function accepts a data frame with columns for the propensity score,
+group indicator, and match indicator. The
+`sample_mirror_histogram_data()` function generates example data
+suitable for testing.
+
+``` r
+# Generate sample data for the mirrored histogram
+mirror_dta <- sample_mirror_histogram_data(n = 2000)
+
+# Generate the mirrored histogram
+mhist <- mirror_histogram(
+  data = mirror_dta,
+  score_col = "prob_t",
+  group_col = "tavr",
+  match_col = "match",
+  group_levels = c(0, 1),
+  group_labels = c("SAVR", "TF-TAVR"),
+  matched_value = 1,
+  score_multiplier = 100,
+  binwidth = 5
+)
+
+# Display the plot
+mhist$plot
+```
+
+![](hvtiPlotR_files/figure-html/mirror_histogram-1.png)
+
+The lighter bars show the full (pre-match) propensity score distribution
+for each group, while the darker overlaid bars show the matched subset.
+The upper panel corresponds to the first group label and the lower panel
+to the second.
+
+The function also returns diagnostics summarising group counts and
+standardized mean differences (SMD) before and after matching:
+
+``` r
+# Standardized mean difference before matching
+mhist$diagnostics$smd_before
+```
+
+    [1] 2.677426
+
+``` r
+# Standardized mean difference after matching
+mhist$diagnostics$smd_matched
+```
+
+    [1] 2.679721
+
+``` r
+# Group counts before matching
+mhist$diagnostics$group_counts_before
+```
+
+       0    1
+    2000 2000 
+
+``` r
+# Group counts after matching
+mhist$diagnostics$group_counts_matched
+```
+
+       0    1
+    1209 1197 
+
 ## Saving publication graphics
 
 Once we have created the figure, and formatted it as desired (using a
@@ -858,7 +931,7 @@ ccf_savePlot
     TableGrob (2 x 1) "arrange": 2 grobs
         z     cells    name                grob
         1 (1-1,1-1) arrange      gtable[layout]
-    sub 2 (2-2,1-1) arrange text[GRID.text.320]
+    sub 2 (2-2,1-1) arrange text[GRID.text.382]
 
 Figure ?? uses the same plot in Figure 12 with the code
 `ccf_plot+hvti_theme("manuscript")`. The current working directory is

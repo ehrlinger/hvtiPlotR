@@ -1,11 +1,5 @@
 ## The hvtiPlotR package
 
-![active](http://www.repostatus.org/badges/latest/active.svg)[![Build
-Status](https://travis-ci.org/ehrlinger/hvtiPlotR.svg?branch=master)](https://travis-ci.org/ehrlinger/hvtiPlotR)
-[![R-CMD-check](https://github.com/ehrlinger/hvtiPlotR/actions/workflows/ci.yml/badge.svg)](https://github.com/ehrlinger/hvtiPlotR/actions/workflows/ci.yml)
-[![Codecov test
-coverage](https://codecov.io/gh/ehrlinger/hvtiPlotR/graph/badge.svg)](https://app.codecov.io/gh/ehrlinger/hvtiPlotR)
-[![R-CMD-check](https://github.com/ehrlinger/hvtiPlotR/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/ehrlinger/hvtiPlotR/actions/workflows/R-CMD-check.yaml)
 ggplot2 themes and methodology documentation for creating publication
 quality graphics in *R* conforming to the standards of the clinical
 investigations statistics group within The Heart & Vascular Institute at
@@ -14,13 +8,13 @@ the Cleveland Clinic.
 The *hvtiPlotR* package is the modern *R* implementation of the
 historical *plot.sas* macro. It provides:
 
-- A cohesive ggplot2 theme family accessible through the
-  [`hvti_theme()`](http://ehrlinger.github.io/hviPlotR/reference/hvti_theme.md)
+- A cohesive ggplot2 theme family accessible through the `hvti_theme()`
   generic (e.g., `hvti_theme("ppt")`, `hvti_theme("manuscript")`).
-- Presentation-ready mirrored propensity score visualizations via
-  `hvti_plot("mirror_histogram", ...)`.
-- Helpers for exporting plots to PowerPoint (powered by `officer`) and
-  adding consistent figure footers.
+- Convenience theme aliases: `theme_manuscript()` / `theme_man()`,
+  `theme_ppt()`, `theme_poster()`, `theme_dark_ppt()`.
+- Mirrored propensity score histograms via `mirror_histogram()`.
+- Helpers for exporting plots to PowerPoint (powered by `officer`) via
+  `save_ppt()`.
 
 ## Installation
 
@@ -47,32 +41,51 @@ publication standards:
 ``` r
 library(ggplot2)
 p <- ggplot(mtcars, aes(wt, mpg, color = factor(cyl))) + geom_point()
+
+# Via generic
+p + hvti_theme("manuscript")
 p + hvti_theme("ppt")
-p + hvti_theme("manuscript", base_size = 14)
+
+# Or using the exported aliases directly
+p + theme_manuscript()
+p + theme_man()
+p + theme_ppt()
+p + theme_poster()
+p + theme_dark_ppt()
 ```
 
 ### Mirrored Propensity Score Histograms
 
 ``` r
-data <- sample_mirror_histogram_data(120)
-mirror <- hvti_plot(
-    "mirror_histogram",
-    data = data,
-    group_labels = c("SAVR", "TF-TAVR"),
-    output_file = "plots/mirror.pdf"
+dta <- sample_mirror_histogram_data(n = 2000)
+
+mhist <- mirror_histogram(
+  data = dta,
+  group_labels = c("SAVR", "TF-TAVR")
 )
-mirror$plot  # ggplot object
-mirror$diagnostics  # SMD + summary tables
+
+mhist$plot        # ggplot object
+mhist$diagnostics # SMD + group count tables
+mhist$data        # filtered data frame used for plotting
+```
+
+The `hvti_plot()` generic is also available as an alternative entry
+point:
+
+``` r
+mhist <- hvti_plot("mirror_histogram", data = dta, group_labels = c("SAVR", "TF-TAVR"))
 ```
 
 ### PowerPoint Export
 
 ``` r
+template <- system.file("ClevelandClinic.pptx", package = "hvtiPlotR")
+
 save_ppt(
-    object = mirror$plot,
-    template = "inst/templates/HVI.pptx",
-    powerpoint = "outputs/analysis.pptx",
-    slide_title = "Propensity Balance"
+  object      = mhist$plot,
+  template    = template,
+  powerpoint  = "outputs/analysis.pptx",
+  slide_title = "Propensity Balance"
 )
 ```
 
@@ -95,14 +108,11 @@ devtools::check()
 ### Test Coverage Highlights
 
 - `tests/testthat/test_mirror_histogram.R`: validates helper
-  calculations, diagnostics, error handling, and
-  [`hvti_plot()`](http://ehrlinger.github.io/hviPlotR/reference/hvti_plot.md)
-  dispatch.
+  calculations, diagnostics, error handling, and `hvti_plot()` dispatch.
 - `tests/testthat/test_save_ppt.R`: covers happy paths plus all
   validation and failure scenarios for PowerPoint exports.
-- `tests/testthat/test_footnote.R`: ensures
-  [`makeFootnote()`](http://ehrlinger.github.io/hviPlotR/reference/makeFootnote.md)
-  works across plotting contexts and rejects invalid inputs.
+- `tests/testthat/test_footnote.R`: ensures `makeFootnote()` works
+  across plotting contexts and rejects invalid inputs.
 
 ## Vignettes and Extended Docs
 

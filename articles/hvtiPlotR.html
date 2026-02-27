@@ -24,7 +24,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">hvtiPlotR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.6</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -63,7 +63,7 @@
       <h1>The <strong>hvtiPlotR</strong> package: Generating plot.sas style in R</h1>
 
       <p class="author">John Ehrlinger <a href="mailto:ehrlinj@ccf.org" class="email">ehrlinj@ccf.org</a></p>
-      <p class="date">2026-02-25</p>
+      <p class="date">2026-02-27</p>
 
       <small class="dont-index">Source: <a href="https://github.com/ehrlinger/hvtiPlotR/blob/main/vignettes/hvtiPlotR.qmd" class="external-link"><code>vignettes/hvtiPlotR.qmd</code></a></small>
       <div class="d-none name"><code></code></div>
@@ -221,7 +221,7 @@ run;</code></pre>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">nonparametric</span>, package <span class="op">=</span> <span class="st">"hvtiPlotR"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Set a default hvtiPlotR plotting theme</span></span>
-<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/get_theme.html" class="external-link">theme_set</a></span><span class="op">(</span><span class="fu">hvtiPlotR</span><span class="fu">::</span><span class="fu"><a href="../reference/hvti_theme.html">hvti_theme</a></span><span class="op">(</span><span class="st">"manuscript"</span><span class="op">)</span><span class="op">)</span> </span></code></pre></div>
+<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/get_theme.html" class="external-link">theme_set</a></span><span class="op">(</span><span class="fu">hvtiPlotR</span><span class="fu">::</span><span class="fu">hvti_theme</span><span class="op">(</span><span class="st">"manuscript"</span><span class="op">)</span><span class="op">)</span> </span></code></pre></div>
 </div>
 <p>One advantage of ggplot2 is that figures can be built up in successive statements. This tutorial will make extensive use of this to demonstrate the process. Starting in this code chunk, we will save the intermediate objects in the ccf_plot variable. Here we simply create an empty ggplot2 figure that we will be adding to as we work through the commands in the plot.sas macro. Note that we include the %plot() commands in the comments above the equivalent ggplot2 command for comparison.</p>
 <div class="cell">
@@ -509,7 +509,7 @@ run;</code></pre>
 <div class="cell" data-caption="Theme for Manuscripts">
 <div class="sourceCode cell-code" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Set the theme for manuscripts,</span></span>
-<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/get_theme.html" class="external-link">theme_set</a></span><span class="op">(</span><span class="fu"><a href="../reference/hvti_theme.html">hvti_theme</a></span><span class="op">(</span><span class="st">"manuscript"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/get_theme.html" class="external-link">theme_set</a></span><span class="op">(</span><span class="fu">hvti_theme</span><span class="op">(</span><span class="st">"manuscript"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co"># show the figure.</span></span>
 <span><span class="va">ccf_plot</span></span></code></pre></div>
 <div class="cell-output cell-output-stderr">
@@ -536,7 +536,7 @@ run;</code></pre>
 <code class="sourceCode R"><span><span class="co"># Update the PowerPoint Figure to include the PPT Theme, and remove axis labels. </span></span>
 <span><span class="co"># Axis labels will be added manually in powerpoint. </span></span>
 <span><span class="va">ccf_pptPlot</span> <span class="op">&lt;-</span> <span class="va">ccf_pptPlot</span> <span class="op">+</span> </span>
-<span>  <span class="fu"><a href="../reference/hvti_theme.html">hvti_theme</a></span><span class="op">(</span><span class="st">"ppt"</span><span class="op">)</span></span>
+<span>  <span class="fu">hvti_theme</span><span class="op">(</span><span class="st">"ppt"</span><span class="op">)</span></span>
 <span><span class="va">ccf_pptPlot</span></span></code></pre></div>
 <div class="cell-output-display">
 <div>
@@ -558,17 +558,80 @@ run;</code></pre>
 </div>
 </div>
 </div>
-</section></section><section class="section level2"><h2 id="saving-publication-graphics">Saving publication graphics<a class="anchor" aria-label="anchor" href="#saving-publication-graphics"></a>
+</section></section><section class="section level2"><h2 id="mirrored-propensity-score-histogram">Mirrored Propensity Score Histogram<a class="anchor" aria-label="anchor" href="#mirrored-propensity-score-histogram"></a>
+</h2>
+<p>A common figure in propensity-matched analyses is the mirrored histogram, which displays the propensity score distributions for two treatment groups before and after matching. The <strong>hvtiPlotR</strong> package provides the <code>mirror_histogram()</code> function to generate this figure.</p>
+<p>The function accepts a data frame with columns for the propensity score, group indicator, and match indicator. The <code>sample_mirror_histogram_data()</code> function generates example data suitable for testing.</p>
+<div class="cell" data-caption="Mirrored Propensity Score Histogram">
+<div class="sourceCode cell-code" id="cb29"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Generate sample data for the mirrored histogram</span></span>
+<span><span class="va">mirror_dta</span> <span class="op">&lt;-</span> <span class="fu">sample_mirror_histogram_data</span><span class="op">(</span>n <span class="op">=</span> <span class="fl">2000</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Generate the mirrored histogram</span></span>
+<span><span class="va">mhist</span> <span class="op">&lt;-</span> <span class="fu">mirror_histogram</span><span class="op">(</span></span>
+<span>  data <span class="op">=</span> <span class="va">mirror_dta</span>,</span>
+<span>  score_col <span class="op">=</span> <span class="st">"prob_t"</span>,</span>
+<span>  group_col <span class="op">=</span> <span class="st">"tavr"</span>,</span>
+<span>  match_col <span class="op">=</span> <span class="st">"match"</span>,</span>
+<span>  group_levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span>,</span>
+<span>  group_labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"SAVR"</span>, <span class="st">"TF-TAVR"</span><span class="op">)</span>,</span>
+<span>  matched_value <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  score_multiplier <span class="op">=</span> <span class="fl">100</span>,</span>
+<span>  binwidth <span class="op">=</span> <span class="fl">5</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Display the plot</span></span>
+<span><span class="va">mhist</span><span class="op">$</span><span class="va">plot</span></span></code></pre></div>
+<div class="cell-output-display">
+<div>
+<figure><p><img src="hvtiPlotR_files/figure-html/mirror_histogram-1.png" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The lighter bars show the full (pre-match) propensity score distribution for each group, while the darker overlaid bars show the matched subset. The upper panel corresponds to the first group label and the lower panel to the second.</p>
+<p>The function also returns diagnostics summarising group counts and standardized mean differences (SMD) before and after matching:</p>
+<div class="cell" data-caption="Mirrored Histogram Diagnostics">
+<div class="sourceCode cell-code" id="cb30"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Standardized mean difference before matching</span></span>
+<span><span class="va">mhist</span><span class="op">$</span><span class="va">diagnostics</span><span class="op">$</span><span class="va">smd_before</span></span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 2.677426</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb32"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Standardized mean difference after matching</span></span>
+<span><span class="va">mhist</span><span class="op">$</span><span class="va">diagnostics</span><span class="op">$</span><span class="va">smd_matched</span></span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 2.679721</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb34"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Group counts before matching</span></span>
+<span><span class="va">mhist</span><span class="op">$</span><span class="va">diagnostics</span><span class="op">$</span><span class="va">group_counts_before</span></span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+   0    1
+2000 2000 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb36"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Group counts after matching</span></span>
+<span><span class="va">mhist</span><span class="op">$</span><span class="va">diagnostics</span><span class="op">$</span><span class="va">group_counts_matched</span></span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+   0    1
+1209 1197 </code></pre>
+</div>
+</div>
+</section><section class="section level2"><h2 id="saving-publication-graphics">Saving publication graphics<a class="anchor" aria-label="anchor" href="#saving-publication-graphics"></a>
 </h2>
 <p>Once we have created the figure, and formatted it as desired (using a <strong>hvtiPlotR</strong> theme), we need to save the figure in a format that can easily be imported into our publications.</p>
 <section class="level2"><h3 id="manuscript-graphics">Manuscript graphics<a class="anchor" aria-label="anchor" href="#manuscript-graphics"></a>
 </h3>
 <p>It is a best practice that we include a footnote containing the figure path in each figure we save. This way, when a user sends the file to a collaborator, we can reverse engineer where the file and generating code resides in case changes are required. We use the gridExtra package (Auguie 2012) to add this footnote with the following recipe.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb29"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb38"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st">"grid"</span><span class="op">)</span> </span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st">"gridExtra"</span><span class="op">)</span></span>
-<span><span class="va">ccf_savePlot</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/gridExtra/man/arrangeGrob.html" class="external-link">arrangeGrob</a></span><span class="op">(</span><span class="va">ccf_plot</span> <span class="op">+</span> <span class="fu"><a href="../reference/hvti_theme.html">hvti_theme</a></span><span class="op">(</span><span class="st">"manuscript"</span><span class="op">)</span>,</span>
+<span><span class="va">ccf_savePlot</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/gridExtra/man/arrangeGrob.html" class="external-link">arrangeGrob</a></span><span class="op">(</span><span class="va">ccf_plot</span> <span class="op">+</span> <span class="fu">hvti_theme</span><span class="op">(</span><span class="st">"manuscript"</span><span class="op">)</span>,</span>
 <span>                            sub <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grid/grid.text.html" class="external-link">textGrob</a></span><span class="op">(</span></span>
 <span>                              <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/getwd.html" class="external-link">getwd</a></span><span class="op">(</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.Date</a></span><span class="op">(</span><span class="op">)</span>, sep <span class="op">=</span> <span class="st">" "</span><span class="op">)</span>,</span>
 <span>                              x <span class="op">=</span> <span class="fl">0</span>,</span>
@@ -584,13 +647,13 @@ run;</code></pre>
 <pre><code>Warning: Removed 117 rows containing missing values or values outside the scale range
 (`geom_point()`).</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb32"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb41"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ccf_savePlot</span></span></code></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>TableGrob (2 x 1) "arrange": 2 grobs
     z     cells    name                grob
     1 (1-1,1-1) arrange      gtable[layout]
-sub 2 (2-2,1-1) arrange text[GRID.text.320]</code></pre>
+sub 2 (2-2,1-1) arrange text[GRID.text.382]</code></pre>
 </div>
 </div>
 <p>Figure ?? uses the same plot in Figure 12 with the code <code>ccf_plot+hvti_theme("manuscript")</code>. The current working directory is obtained using the <code><a href="https://rdrr.io/r/base/getwd.html" class="external-link">getwd()</a></code> function. The <code><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.Date()</a></code> function returns the system date for timestamping the figure. The footnote is placed with the <code>x = 0, hjust = -.1, vjust=.01</code>, and formatted with the <code>gp = gpar(fontface = "italic", fontsize = 6)</code>. For Word documents (Oﬃce ≥ 2007) we can import PDF graphics as a vector based format. Saving the figure is accomplished using either the <code><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave()</a></code> function, or <code><a href="https://rdrr.io/r/grDevices/pdf.html" class="external-link">pdf(); show(); dev.off()</a></code> combination. We have a specific set of width and height dimensions required for saving the figure with footnote included to get the font sizes to import correctly in Word. <code>ggsave(filename="manuscript.pdf", height=4, width=5, ccf_savePlot)</code></p>
@@ -598,7 +661,7 @@ sub 2 (2-2,1-1) arrange text[GRID.text.320]</code></pre>
 </h3>
 <p>We use the ReporteRs package (Gohel 2014) to insert vector based figures from R into PowerPoint documents. The latest version of the ReporteRs package is available from http://davidgohel.github.io/ReporteRs/. We install this package as we installed the <strong>hvtiPlotR</strong> package.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb34"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb43"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Install the latest ReporteRs package. </span></span>
 <span><span class="co"># </span></span>
 <span><span class="co"># The devtools package is installed on all our </span></span>
@@ -607,13 +670,13 @@ sub 2 (2-2,1-1) arrange text[GRID.text.320]</code></pre>
 <div class="cell-output cell-output-stderr">
 <pre><code>Loading required package: usethis</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb36"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb45"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># To get the latest version. </span></span>
 <span><span class="co">#install_github("davidgohel/ReporteRs") </span></span></code></pre></div>
 </div>
 <p>Basically, the package works by opening a saved PowerPoint Presentation, and inserting new slides containing graphs or tables into the document. The resulting document is then saved to a new presentation. We then pass this presentation to our collaborators, who then copy and paste the <code>ggplot2</code> slides into their own presentations. The <code>ggplot2</code> graphics that are inserted into the presentation are converted into an editable vector based format. When the document is edited in PowerPoint, graphical components like points, lines, text can be easily modified to match the presenters style. The following code block is an R recipe for saving the <code>ccf_pptPlot</code> created in Section 4.2.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb37"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb46"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span>  <span class="co"># library("ReporteRs")</span></span>
 <span>  <span class="co"># </span></span>
 <span>  <span class="co"># # Create a powerPoint document using ../inst/RDPresentation.pptx</span></span>
