@@ -511,7 +511,56 @@ The theme for presentations is significantly diﬀerent from what we showed in F
 ccf_pptPlot + theme(plot.background = element_rect(fill='blue', colour='blue')) 
 ```
 
-# Saving publication graphics 
+# Mirrored Propensity Score Histogram
+
+A common figure in propensity-matched analyses is the mirrored histogram, which displays the propensity score distributions for two treatment groups before and after matching. The **hvtiPlotR** package provides the `mirror_histogram()` function to generate this figure.
+
+The function accepts a data frame with columns for the propensity score, group indicator, and match indicator. The `sample_mirror_histogram_data()` function generates example data suitable for testing.
+
+```{r}
+#| label: mirror_histogram
+#| caption: Mirrored Propensity Score Histogram
+# Generate sample data for the mirrored histogram
+mirror_dta <- sample_mirror_histogram_data(n = 2000)
+
+# Generate the mirrored histogram
+mhist <- mirror_histogram(
+  data = mirror_dta,
+  score_col = "prob_t",
+  group_col = "tavr",
+  match_col = "match",
+  group_levels = c(0, 1),
+  group_labels = c("SAVR", "TF-TAVR"),
+  matched_value = 1,
+  score_multiplier = 100,
+  binwidth = 5
+)
+
+# Display the plot
+mhist$plot
+```
+
+The lighter bars show the full (pre-match) propensity score distribution for each group, while the darker overlaid bars show the matched subset. The upper panel corresponds to the first group label and the lower panel to the second.
+
+The function also returns diagnostics summarising group counts and standardized mean differences (SMD) before and after matching:
+
+```{r}
+#| label: mirror_histogram_diagnostics
+#| caption: Mirrored Histogram Diagnostics
+# Standardized mean difference before matching
+mhist$diagnostics$smd_before
+
+# Standardized mean difference after matching
+mhist$diagnostics$smd_matched
+
+# Group counts before matching
+mhist$diagnostics$group_counts_before
+
+# Group counts after matching
+mhist$diagnostics$group_counts_matched
+```
+
+# Saving publication graphics
 Once we have created the figure, and formatted it as desired (using a **hvtiPlotR** theme), we need to save the figure in a format that can easily be imported into our publications. 
 
 ## Manuscript graphics 

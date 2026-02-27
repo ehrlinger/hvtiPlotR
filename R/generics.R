@@ -63,5 +63,5 @@ hvti_plot.default <- function(type, ...) {
 
 #' @export
 hvti_plot.hvti_plot_mirror_histogram <- function(type, ...) {
-  plot_mirror_histogram(...)
+  mirror_histogram(...)
 }

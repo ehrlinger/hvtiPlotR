@@ -21,7 +21,6 @@ jsslogo.jpg
 inst/doc
 docs
 hviPlotR.Rproj
-NAMESPACE
 
 .Rcheck*
 .Rbuildignore

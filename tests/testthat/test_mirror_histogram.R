@@ -34,10 +34,10 @@ test_that("build_hist_counts returns correct output", {
   expect_true(all(c("x", "count") %in% names(hist_df)))
 })
 
-# Test plot_mirror_histogram function
-test_that("plot_mirror_histogram returns expected list structure", {
+# Test mirror_histogram function
+test_that("mirror_histogram returns expected list structure", {
   df <- sample_mirror_histogram_data(50)
-  result <- plot_mirror_histogram(
+  result <- mirror_histogram(
     data = df,
     score_col = "prob_t",
     group_col = "tavr",
@@ -54,29 +54,29 @@ test_that("plot_mirror_histogram returns expected list structure", {
   expect_true("data" %in% names(result))
 })
 
-test_that("plot_mirror_histogram errors when required columns are missing", {
+test_that("mirror_histogram errors when required columns are missing", {
   df <- sample_mirror_histogram_data(25)
   df$match <- NULL
   expect_error(
-    plot_mirror_histogram(data = df),
+    mirror_histogram(data = df),
     "Missing required columns"
   )
 })
 
-test_that("plot_mirror_histogram errors for non-positive binwidth", {
+test_that("mirror_histogram errors for non-positive binwidth", {
   df <- sample_mirror_histogram_data(25)
   expect_error(
-    plot_mirror_histogram(data = df, binwidth = 0),
+    mirror_histogram(data = df, binwidth = 0),
     "binwidth"
   )
 })
 
-test_that("plot_mirror_histogram errors when output directory is missing", {
+test_that("mirror_histogram errors when output directory is missing", {
   df <- sample_mirror_histogram_data(10)
   bad_dir <- file.path(tempdir(), "nonexistent_dir")
   bad_file <- file.path(bad_dir, "mirror.pdf")
   expect_error(
-    plot_mirror_histogram(data = df, output_file = bad_file),
+    mirror_histogram(data = df, output_file = bad_file),
     "does not exist"
   )
 })
