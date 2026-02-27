@@ -1,20 +1,19 @@
-## The hvtiPlotR package ##
+## The hvtiPlotR package
 <!-- badges: start -->
 [![DOI](https://zenodo.org/badge/5745/ehrlinger/hvtiPlotR.png)](http://dx.doi.org/10.5281/zenodo.11780)
-
 ![active](http://www.repostatus.org/badges/latest/active.svg)
-[![Build Status](https://travis-ci.org/ehrlinger/hvtiPlotR.svg?branch=master)](https://travis-ci.org/ehrlinger/hvtiPlotR)
-[![R-CMD-check](https://github.com/ehrlinger/hvtiPlotR/actions/workflows/ci.yml/badge.svg)](https://github.com/ehrlinger/hvtiPlotR/actions/workflows/ci.yml)
-[![Codecov test coverage](https://codecov.io/gh/ehrlinger/hvtiPlotR/graph/badge.svg)](https://app.codecov.io/gh/ehrlinger/hvtiPlotR)
 [![R-CMD-check](https://github.com/ehrlinger/hvtiPlotR/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/ehrlinger/hvtiPlotR/actions/workflows/R-CMD-check.yaml)
+[![Codecov test coverage](https://codecov.io/gh/ehrlinger/hvtiPlotR/graph/badge.svg)](https://app.codecov.io/gh/ehrlinger/hvtiPlotR)
 <!-- badges: end -->
-ggplot2 themes and methodology documentation for creating publication quality graphics in *R* conforming to the standards of the clinical investigations statistics group within The Heart \& Vascular Institute at the Cleveland Clinic.
+
+ggplot2 themes and methodology documentation for creating publication quality graphics in *R* conforming to the standards of the clinical investigations statistics group within The Heart & Vascular Institute at the Cleveland Clinic.
 
 The *hvtiPlotR* package is the modern *R* implementation of the historical *plot.sas* macro. It provides:
 
 - A cohesive ggplot2 theme family accessible through the `hvti_theme()` generic (e.g., `hvti_theme("ppt")`, `hvti_theme("manuscript")`).
-- Presentation-ready mirrored propensity score visualizations via `hvti_plot("mirror_histogram", ...)`.
-- Helpers for exporting plots to PowerPoint (powered by `officer`) and adding consistent figure footers.
+- Convenience theme aliases: `theme_manuscript()` / `theme_man()`, `theme_ppt()`, `theme_poster()`, `theme_dark_ppt()`.
+- Mirrored propensity score histograms via `mirror_histogram()`.
+- Helpers for exporting plots to PowerPoint (powered by `officer`) via `save_ppt()`.
 
 ## Installation
 
@@ -39,32 +38,50 @@ Use the unified theme generic to apply styles aligned with HVI publication stand
 ```r
 library(ggplot2)
 p <- ggplot(mtcars, aes(wt, mpg, color = factor(cyl))) + geom_point()
+
+# Via generic
+p + hvti_theme("manuscript")
 p + hvti_theme("ppt")
-p + hvti_theme("manuscript", base_size = 14)
+
+# Or using the exported aliases directly
+p + theme_manuscript()
+p + theme_man()
+p + theme_ppt()
+p + theme_poster()
+p + theme_dark_ppt()
 ```
 
 ### Mirrored Propensity Score Histograms
 
 ```r
-data <- sample_mirror_histogram_data(120)
-mirror <- hvti_plot(
-	"mirror_histogram",
-	data = data,
-	group_labels = c("SAVR", "TF-TAVR"),
-	output_file = "plots/mirror.pdf"
+dta <- sample_mirror_histogram_data(n = 2000)
+
+mhist <- mirror_histogram(
+  data = dta,
+  group_labels = c("SAVR", "TF-TAVR")
 )
-mirror$plot  # ggplot object
-mirror$diagnostics  # SMD + summary tables
+
+mhist$plot        # ggplot object
+mhist$diagnostics # SMD + group count tables
+mhist$data        # filtered data frame used for plotting
+```
+
+The `hvti_plot()` generic is also available as an alternative entry point:
+
+```r
+mhist <- hvti_plot("mirror_histogram", data = dta, group_labels = c("SAVR", "TF-TAVR"))
 ```
 
 ### PowerPoint Export
 
 ```r
+template <- system.file("ClevelandClinic.pptx", package = "hvtiPlotR")
+
 save_ppt(
-	object = mirror$plot,
-	template = "inst/templates/HVI.pptx",
-	powerpoint = "outputs/analysis.pptx",
-	slide_title = "Propensity Balance"
+  object      = mhist$plot,
+  template    = template,
+  powerpoint  = "outputs/analysis.pptx",
+  slide_title = "Propensity Balance"
 )
 ```
 
