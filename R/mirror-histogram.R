@@ -197,15 +197,7 @@ build_mirror_histogram_plot <- function(plot_df, group_labels, binwidth, lower, 
       width = binwidth * HVTI_SCORE_FILL_RATIO,
       color = "black"
     ) +
-    scale_fill_manual(
-      values = c(
-        before_g0 = "white",
-        matched_g0 = "green1",
-        before_g1 = "white",
-        matched_g1 = "green4"
-      ),
-      guide = "none"
-    ) +
+   
     scale_x_continuous(
       limits = c(HVTI_SCORE_MIN, HVTI_SCORE_MAX),
       breaks = seq(HVTI_SCORE_MIN, HVTI_SCORE_MAX, HVTI_SCORE_BREAK_STEP)
@@ -216,20 +208,6 @@ build_mirror_histogram_plot <- function(plot_df, group_labels, binwidth, lower, 
       labels = abs(y_breaks)
     ) +
     labs(x = "Propensity Score (%)", y = "Number of Patients") +
-    annotate(
-      "text",
-      x = HVTI_ANNOTATION_X,
-      y = upper * 0.80,
-      label = group_labels[1],
-      size = 6
-    ) +
-    annotate(
-      "text",
-      x = HVTI_ANNOTATION_X,
-      y = lower * 0.80,
-      label = group_labels[2],
-      size = 6
-    ) +
     coord_cartesian(clip = "off") +
     theme_minimal(base_size = 12)
 }
@@ -310,7 +288,7 @@ mirror_histogram_diagnostics <- function(working, matched_idx, group_levels, n_i
 #' mirror_dta <- sample_mirror_histogram_data(n = 4000)
 #' 
 #' # Generate the figure
-#' mhist <- plot_mirror_histogram(mirror_dta )
+#' mhist <- mirror_histogram(mirror_dta )
 #' 
 #' # The plot is returned in a list.
 #' mhist$p
@@ -349,22 +327,22 @@ mirror_histogram_diagnostics <- function(working, matched_idx, group_levels, n_i
 #'     guide = "none")+
 #'   ggplot2::annotate(
 #'     "text",
-#'     x = 0.8,
-#'     y = 0.80,
+#'     x = 10,
+#'     y = 500,
 #'     label = group_labels[1],
 #'     size = 6
 #'   ) +
 #'   ggplot2::annotate(
 #'     "text",
-#'     x = 0.8,
-#'     y = -0.80,
+#'     x = 10,
+#'     y = -500,
 #'     label = group_labels[2],
 #'     size = 6
 #'   )
 #' 
 #' @importFrom ggplot2 ggplot geom_hline geom_col scale_fill_manual scale_x_continuous scale_y_continuous labs annotate coord_cartesian aes theme_minimal set_theme
 #' @export
-plot_mirror_histogram <- function(data,
+mirror_histogram <- function(data,
                                   score_col = "prob_t",
                                   group_col = "tavr",
                                   match_col = "match",
@@ -405,7 +383,7 @@ plot_mirror_histogram <- function(data,
 
 ##' Generate Sample Data for Mirrored Histogram
 ##'
-##' Creates a sample data frame suitable for testing plot_mirror_histogram.
+##' Creates a sample data frame suitable for testing mirror_histogram.
 ##'
 ##' @param n Number of samples per group (default 100).
 ##' @return Data frame with columns: prob_t (numeric score), tavr (group), match (matched status)
