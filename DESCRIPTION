@@ -33,6 +33,7 @@ Suggests:
     devtools,
     RColorBrewer,
     gridExtra,
+    haven,
     scales,
     quarto
 VignetteBuilder: quarto
