@@ -1,3 +1,8 @@
+# Bind ggplot columns up-front to silence R CMD check notes about global vars.
+if (getRversion() >= "2.15.1") {
+  utils::globalVariables(c("operation_year", "follow_up", "segment_end", "state"))
+}
+
 #' Build goodness-of-follow-up plots
 #'
 #' Converts raw follow-up extracts (either in-memory data frames or SAS
