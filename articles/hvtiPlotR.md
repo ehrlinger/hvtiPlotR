@@ -316,7 +316,11 @@ datasets.
 ``` r
 # load required libraries
 library("ggplot2") # Plotting environment
-library("hvtiPlotR") # CCF HVI plotting functionality
+if (requireNamespace("hvtiPlotR", quietly = TRUE)) {
+  library("hvtiPlotR") # Use installed package when available
+} else {
+  pkgload::load_all(export_all = FALSE, helpers = FALSE, quiet = TRUE)
+}
 
 # Load the example datasets
 data(parametric, package = "hvtiPlotR")
