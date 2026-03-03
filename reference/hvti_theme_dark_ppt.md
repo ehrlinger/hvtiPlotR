@@ -15,6 +15,17 @@ hvti_theme_dark_ppt(
   paper = "transparent",
   accent = "#3366FF"
 )
+
+theme_dark_ppt(
+  base_size = HVTI_THEME_DARK_PPT_BASE_SIZE,
+  base_family = "",
+  header_family = NULL,
+  base_line_size = base_size/22,
+  base_rect_size = base_size/22,
+  ink = "white",
+  paper = "transparent",
+  accent = "#3366FF"
+)
 ```
 
 ## Arguments

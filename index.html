@@ -66,10 +66,10 @@
 <p>ggplot2 themes and methodology documentation for creating publication quality graphics in <em>R</em> conforming to the standards of the clinical investigations statistics group within The Heart &amp; Vascular Institute at the Cleveland Clinic.</p>
 <p>The <em>hvtiPlotR</em> package is the modern <em>R</em> implementation of the historical <em>plot.sas</em> macro. It provides:</p>
 <ul>
-<li>A cohesive ggplot2 theme family accessible through the <code>hvti_theme()</code> generic (e.g., <code>hvti_theme("ppt")</code>, <code>hvti_theme("manuscript")</code>).</li>
-<li>Convenience theme aliases: <code>theme_manuscript()</code> / <code>theme_man()</code>, <code>theme_ppt()</code>, <code>theme_poster()</code>, <code>theme_dark_ppt()</code>.</li>
-<li>Mirrored propensity score histograms via <code>mirror_histogram()</code>.</li>
-<li>Helpers for exporting plots to PowerPoint (powered by <code>officer</code>) via <code>save_ppt()</code>.</li>
+<li>A cohesive ggplot2 theme family accessible through the <code><a href="reference/hvti_theme.html">hvti_theme()</a></code> generic (e.g., <code>hvti_theme("ppt")</code>, <code>hvti_theme("manuscript")</code>).</li>
+<li>Convenience theme aliases: <code><a href="reference/hvti_theme_manuscript.html">theme_manuscript()</a></code> / <code><a href="reference/hvti_theme_manuscript.html">theme_man()</a></code>, <code><a href="reference/hvti_theme_ppt.html">theme_ppt()</a></code>, <code><a href="reference/hvti_theme_poster.html">theme_poster()</a></code>, <code><a href="reference/hvti_theme_dark_ppt.html">theme_dark_ppt()</a></code>.</li>
+<li>Mirrored propensity score histograms via <code><a href="reference/mirror_histogram.html">mirror_histogram()</a></code>.</li>
+<li>Helpers for exporting plots to PowerPoint (powered by <code>officer</code>) via <code><a href="reference/save_ppt.html">save_ppt()</a></code>.</li>
 </ul>
 </div>
 <div class="section level2">
@@ -94,23 +94,23 @@
 <span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">wt</span>, <span class="va">mpg</span>, color <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">cyl</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Via generic</span></span>
-<span><span class="va">p</span> <span class="op">+</span> <span class="fu">hvti_theme</span><span class="op">(</span><span class="st">"manuscript"</span><span class="op">)</span></span>
-<span><span class="va">p</span> <span class="op">+</span> <span class="fu">hvti_theme</span><span class="op">(</span><span class="st">"ppt"</span><span class="op">)</span></span>
+<span><span class="va">p</span> <span class="op">+</span> <span class="fu"><a href="reference/hvti_theme.html">hvti_theme</a></span><span class="op">(</span><span class="st">"manuscript"</span><span class="op">)</span></span>
+<span><span class="va">p</span> <span class="op">+</span> <span class="fu"><a href="reference/hvti_theme.html">hvti_theme</a></span><span class="op">(</span><span class="st">"ppt"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Or using the exported aliases directly</span></span>
-<span><span class="va">p</span> <span class="op">+</span> <span class="fu">theme_manuscript</span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="va">p</span> <span class="op">+</span> <span class="fu">theme_man</span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="va">p</span> <span class="op">+</span> <span class="fu">theme_ppt</span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="va">p</span> <span class="op">+</span> <span class="fu">theme_poster</span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="va">p</span> <span class="op">+</span> <span class="fu">theme_dark_ppt</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">p</span> <span class="op">+</span> <span class="fu"><a href="reference/hvti_theme_manuscript.html">theme_manuscript</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">p</span> <span class="op">+</span> <span class="fu"><a href="reference/hvti_theme_manuscript.html">theme_man</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">p</span> <span class="op">+</span> <span class="fu"><a href="reference/hvti_theme_ppt.html">theme_ppt</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">p</span> <span class="op">+</span> <span class="fu"><a href="reference/hvti_theme_poster.html">theme_poster</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">p</span> <span class="op">+</span> <span class="fu"><a href="reference/hvti_theme_dark_ppt.html">theme_dark_ppt</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="mirrored-propensity-score-histograms">Mirrored Propensity Score Histograms<a class="anchor" aria-label="anchor" href="#mirrored-propensity-score-histograms"></a>
 </h3>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">dta</span> <span class="op">&lt;-</span> <span class="fu">sample_mirror_histogram_data</span><span class="op">(</span>n <span class="op">=</span> <span class="fl">2000</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">dta</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/sample_mirror_histogram_data.html">sample_mirror_histogram_data</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">2000</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">mhist</span> <span class="op">&lt;-</span> <span class="fu">mirror_histogram</span><span class="op">(</span></span>
+<span><span class="va">mhist</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/mirror_histogram.html">mirror_histogram</a></span><span class="op">(</span></span>
 <span>  data <span class="op">=</span> <span class="va">dta</span>,</span>
 <span>  group_labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"SAVR"</span>, <span class="st">"TF-TAVR"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
@@ -118,9 +118,9 @@
 <span><span class="va">mhist</span><span class="op">$</span><span class="va">plot</span>        <span class="co"># ggplot object</span></span>
 <span><span class="va">mhist</span><span class="op">$</span><span class="va">diagnostics</span> <span class="co"># SMD + group count tables</span></span>
 <span><span class="va">mhist</span><span class="op">$</span><span class="va">data</span>        <span class="co"># filtered data frame used for plotting</span></span></code></pre></div>
-<p>The <code>hvti_plot()</code> generic is also available as an alternative entry point:</p>
+<p>The <code><a href="reference/hvti_plot.html">hvti_plot()</a></code> generic is also available as an alternative entry point:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">mhist</span> <span class="op">&lt;-</span> <span class="fu">hvti_plot</span><span class="op">(</span><span class="st">"mirror_histogram"</span>, data <span class="op">=</span> <span class="va">dta</span>, group_labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"SAVR"</span>, <span class="st">"TF-TAVR"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">mhist</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/hvti_plot.html">hvti_plot</a></span><span class="op">(</span><span class="st">"mirror_histogram"</span>, data <span class="op">=</span> <span class="va">dta</span>, group_labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"SAVR"</span>, <span class="st">"TF-TAVR"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="powerpoint-export">PowerPoint Export<a class="anchor" aria-label="anchor" href="#powerpoint-export"></a>
@@ -128,7 +128,7 @@
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">template</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"ClevelandClinic.pptx"</span>, package <span class="op">=</span> <span class="st">"hvtiPlotR"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">save_ppt</span><span class="op">(</span></span>
+<span><span class="fu"><a href="reference/save_ppt.html">save_ppt</a></span><span class="op">(</span></span>
 <span>  object      <span class="op">=</span> <span class="va">mhist</span><span class="op">$</span><span class="va">plot</span>,</span>
 <span>  template    <span class="op">=</span> <span class="va">template</span>,</span>
 <span>  powerpoint  <span class="op">=</span> <span class="st">"outputs/analysis.pptx"</span>,</span>
@@ -155,11 +155,11 @@
 </h3>
 <ul>
 <li>
-<code>tests/testthat/test_mirror_histogram.R</code>: validates helper calculations, diagnostics, error handling, and <code>hvti_plot()</code> dispatch.</li>
+<code>tests/testthat/test_mirror_histogram.R</code>: validates helper calculations, diagnostics, error handling, and <code><a href="reference/hvti_plot.html">hvti_plot()</a></code> dispatch.</li>
 <li>
 <code>tests/testthat/test_save_ppt.R</code>: covers happy paths plus all validation and failure scenarios for PowerPoint exports.</li>
 <li>
-<code>tests/testthat/test_footnote.R</code>: ensures <code>makeFootnote()</code> works across plotting contexts and rejects invalid inputs.</li>
+<code>tests/testthat/test_footnote.R</code>: ensures <code><a href="reference/makeFootnote.html">makeFootnote()</a></code> works across plotting contexts and rejects invalid inputs.</li>
 </ul>
 </div>
 </div>

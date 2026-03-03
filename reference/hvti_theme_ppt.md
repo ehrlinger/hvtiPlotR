@@ -15,6 +15,17 @@ hvti_theme_ppt(
   paper = "transparent",
   accent = "#3366FF"
 )
+
+theme_ppt(
+  base_size = HVTI_THEME_PPT_BASE_SIZE,
+  base_family = "",
+  header_family = NULL,
+  base_line_size = base_size/22,
+  base_rect_size = base_size/22,
+  ink = "black",
+  paper = "transparent",
+  accent = "#3366FF"
+)
 ```
 
 ## Arguments

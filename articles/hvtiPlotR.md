@@ -823,12 +823,14 @@ ccf_pptPlot + theme(plot.background = element_rect(fill='blue', colour='blue'))
 A common figure in propensity-matched analyses is the mirrored
 histogram, which displays the propensity score distributions for two
 treatment groups before and after matching. The **hvtiPlotR** package
-provides the `mirror_histogram()` function to generate this figure.
+provides the
+[`mirror_histogram()`](http://ehrlinger.github.io/hviPlotR/reference/mirror_histogram.md)
+function to generate this figure.
 
 The function accepts a data frame with columns for the propensity score,
 group indicator, and match indicator. The
-`sample_mirror_histogram_data()` function generates example data
-suitable for testing.
+[`sample_mirror_histogram_data()`](http://ehrlinger.github.io/hviPlotR/reference/sample_mirror_histogram_data.md)
+function generates example data suitable for testing.
 
 ``` r
 # Generate sample data for the mirrored histogram

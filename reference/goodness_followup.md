@@ -1,0 +1,122 @@
+# Build goodness-of-follow-up plots
+
+Converts raw follow-up extracts (either in-memory data frames or SAS
+transport files) into tidy frames, then draws the classic HVI goodness
+of follow-up visualizations focused on mortality. The function focuses
+on preparing the data, mapping states to aesthetics, and drawing the
+scaffolding geoms; callers are expected to finish the styling via
+standard \`ggplot2\` modifiers (\`scale\_\*()\`, \`labs()\`,
+\`theme\_\*()\`), keeping the plotting workflow flexible. The
+visualizations focus solely on death.
+
+## Usage
+
+``` r
+goodness_followup(
+  data,
+  iv_opyrs_col = "iv_opyrs",
+  death_col = "dead",
+  death_time_col = "iv_dead",
+  origin_year = 1990,
+  study_start = as.Date("1990-01-01"),
+  study_end = as.Date("2019-12-31"),
+  close_date = as.Date("2021-08-06"),
+  tolower_names = TRUE,
+  death_levels = c("Alive", "Dead"),
+  alpha = 0.8,
+  segment_drop = 0.2,
+  diagonal_color = "orange",
+  diagonal_linetype = "dashed",
+  diagonal_linewidth = 0.6
+)
+```
+
+## Arguments
+
+- data:
+
+  Data frame or path to a SAS transport (\`.xpt\`) file containing the
+  follow-up data.
+
+- iv_opyrs_col:
+
+  Column name holding the numeric interval (in years) from
+  \`origin_year\` to the operation date.
+
+- death_col:
+
+  Logical (or coercible) indicator for death.
+
+- death_time_col:
+
+  Column containing follow-up time to death (or censoring) expressed in
+  years.
+
+- origin_year:
+
+  Reference calendar year that matches zero in \`iv_opyrs_col\`.
+
+- study_start, study_end, close_date:
+
+  Dates that define the diagonal potential follow-up line.
+
+- tolower_names:
+
+  When TRUE, column names are converted to lower case prior to
+  processing. This mirrors the behavior of the legacy template.
+
+- death_levels:
+
+  Length-2 character vector used to name the "alive" and "dead" states.
+
+- alpha:
+
+  Transparency passed to the point and segment layers.
+
+- segment_drop:
+
+  Amount (in years) subtracted from each follow-up value to draw the
+  short vertical segment beneath each point.
+
+- diagonal_color, diagonal_linetype, diagonal_linewidth:
+
+  Styling controls for the potential follow-up reference line.
+
+## Value
+
+A list containing: \* \`death_plot\`: ggplot object displaying the death
+follow-up chart. \* \`death_data\`: transformed data frame used in the
+plot. \* \`diagonal\`: reference line data frame.
+
+## Details
+
+The helper automatically normalizes column names (when requested),
+converts logical indicators, and trims incomplete rows prior to
+plotting. Because all scales, shapes, legends, and labels are left
+untouched, consumers can compose the final appearance with standard
+\`ggplot2\` calls. The visualizations emphasize death-only
+functionality.
+
+## Examples
+
+``` r
+set.seed(42)
+example_followup <- data.frame(
+  iv_opyrs = runif(40, 0, 30),
+  iv_dead = runif(40, 0, 25),
+  dead = sample(c(TRUE, FALSE), 40, TRUE)
+)
+
+plots <- goodness_followup(example_followup)
+#> Warning: Ignoring unknown aesthetics: shape
+
+plots$death_plot +
+  ggplot2::scale_color_brewer(palette = "Set1") +
+  ggplot2::scale_shape_manual(values = c(1, 4)) +
+  ggplot2::labs(
+    x = "Operation Date",
+    y = "Follow-up (years)",
+    color = "Death",
+    shape = "Death"
+  )
+```

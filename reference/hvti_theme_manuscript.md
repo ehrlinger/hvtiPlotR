@@ -15,6 +15,28 @@ hvti_theme_manuscript(
   paper = "white",
   accent = "#3366FF"
 )
+
+theme_manuscript(
+  base_size = 12,
+  base_family = "",
+  header_family = NULL,
+  base_line_size = base_size/22,
+  base_rect_size = base_size/22,
+  ink = "black",
+  paper = "white",
+  accent = "#3366FF"
+)
+
+theme_man(
+  base_size = 12,
+  base_family = "",
+  header_family = NULL,
+  base_line_size = base_size/22,
+  base_rect_size = base_size/22,
+  ink = "black",
+  paper = "white",
+  accent = "#3366FF"
+)
 ```
 
 ## Arguments

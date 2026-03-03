@@ -63,9 +63,9 @@
       <h1>The <strong>hvtiPlotR</strong> package: Generating plot.sas style in R</h1>
 
       <p class="author">John Ehrlinger <a href="mailto:ehrlinj@ccf.org" class="email">ehrlinj@ccf.org</a></p>
-      <p class="date">2026-02-27</p>
+      <p class="date">2026-03-03</p>
 
-      <small class="dont-index">Source: <a href="https://github.com/ehrlinger/hvtiPlotR/blob/1.0.6/vignettes/hvtiPlotR.qmd" class="external-link"><code>vignettes/hvtiPlotR.qmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/ehrlinger/hvtiPlotR/blob/main/vignettes/hvtiPlotR.qmd" class="external-link"><code>vignettes/hvtiPlotR.qmd</code></a></small>
       <div class="d-none name"><code></code></div>
     </div>
 
@@ -221,7 +221,7 @@ run;</code></pre>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">nonparametric</span>, package <span class="op">=</span> <span class="st">"hvtiPlotR"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Set a default hvtiPlotR plotting theme</span></span>
-<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/get_theme.html" class="external-link">theme_set</a></span><span class="op">(</span><span class="fu">hvtiPlotR</span><span class="fu">::</span><span class="fu">hvti_theme</span><span class="op">(</span><span class="st">"manuscript"</span><span class="op">)</span><span class="op">)</span> </span></code></pre></div>
+<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/get_theme.html" class="external-link">theme_set</a></span><span class="op">(</span><span class="fu">hvtiPlotR</span><span class="fu">::</span><span class="fu"><a href="../reference/hvti_theme.html">hvti_theme</a></span><span class="op">(</span><span class="st">"manuscript"</span><span class="op">)</span><span class="op">)</span> </span></code></pre></div>
 </div>
 <p>One advantage of ggplot2 is that figures can be built up in successive statements. This tutorial will make extensive use of this to demonstrate the process. Starting in this code chunk, we will save the intermediate objects in the ccf_plot variable. Here we simply create an empty ggplot2 figure that we will be adding to as we work through the commands in the plot.sas macro. Note that we include the %plot() commands in the comments above the equivalent ggplot2 command for comparison.</p>
 <div class="cell">
@@ -509,7 +509,7 @@ run;</code></pre>
 <div class="cell" data-caption="Theme for Manuscripts">
 <div class="sourceCode cell-code" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Set the theme for manuscripts,</span></span>
-<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/get_theme.html" class="external-link">theme_set</a></span><span class="op">(</span><span class="fu">hvti_theme</span><span class="op">(</span><span class="st">"manuscript"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/get_theme.html" class="external-link">theme_set</a></span><span class="op">(</span><span class="fu"><a href="../reference/hvti_theme.html">hvti_theme</a></span><span class="op">(</span><span class="st">"manuscript"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co"># show the figure.</span></span>
 <span><span class="va">ccf_plot</span></span></code></pre></div>
 <div class="cell-output cell-output-stderr">
@@ -536,7 +536,7 @@ run;</code></pre>
 <code class="sourceCode R"><span><span class="co"># Update the PowerPoint Figure to include the PPT Theme, and remove axis labels. </span></span>
 <span><span class="co"># Axis labels will be added manually in powerpoint. </span></span>
 <span><span class="va">ccf_pptPlot</span> <span class="op">&lt;-</span> <span class="va">ccf_pptPlot</span> <span class="op">+</span> </span>
-<span>  <span class="fu">hvti_theme</span><span class="op">(</span><span class="st">"ppt"</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="../reference/hvti_theme.html">hvti_theme</a></span><span class="op">(</span><span class="st">"ppt"</span><span class="op">)</span></span>
 <span><span class="va">ccf_pptPlot</span></span></code></pre></div>
 <div class="cell-output-display">
 <div>
@@ -560,15 +560,15 @@ run;</code></pre>
 </div>
 </section></section><section class="section level2"><h2 id="mirrored-propensity-score-histogram">Mirrored Propensity Score Histogram<a class="anchor" aria-label="anchor" href="#mirrored-propensity-score-histogram"></a>
 </h2>
-<p>A common figure in propensity-matched analyses is the mirrored histogram, which displays the propensity score distributions for two treatment groups before and after matching. The <strong>hvtiPlotR</strong> package provides the <code>mirror_histogram()</code> function to generate this figure.</p>
-<p>The function accepts a data frame with columns for the propensity score, group indicator, and match indicator. The <code>sample_mirror_histogram_data()</code> function generates example data suitable for testing.</p>
+<p>A common figure in propensity-matched analyses is the mirrored histogram, which displays the propensity score distributions for two treatment groups before and after matching. The <strong>hvtiPlotR</strong> package provides the <code><a href="../reference/mirror_histogram.html">mirror_histogram()</a></code> function to generate this figure.</p>
+<p>The function accepts a data frame with columns for the propensity score, group indicator, and match indicator. The <code><a href="../reference/sample_mirror_histogram_data.html">sample_mirror_histogram_data()</a></code> function generates example data suitable for testing.</p>
 <div class="cell" data-caption="Mirrored Propensity Score Histogram">
 <div class="sourceCode cell-code" id="cb29"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Generate sample data for the mirrored histogram</span></span>
-<span><span class="va">mirror_dta</span> <span class="op">&lt;-</span> <span class="fu">sample_mirror_histogram_data</span><span class="op">(</span>n <span class="op">=</span> <span class="fl">2000</span><span class="op">)</span></span>
+<span><span class="va">mirror_dta</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sample_mirror_histogram_data.html">sample_mirror_histogram_data</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">2000</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Generate the mirrored histogram</span></span>
-<span><span class="va">mhist</span> <span class="op">&lt;-</span> <span class="fu">mirror_histogram</span><span class="op">(</span></span>
+<span><span class="va">mhist</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mirror_histogram.html">mirror_histogram</a></span><span class="op">(</span></span>
 <span>  data <span class="op">=</span> <span class="va">mirror_dta</span>,</span>
 <span>  score_col <span class="op">=</span> <span class="st">"prob_t"</span>,</span>
 <span>  group_col <span class="op">=</span> <span class="st">"tavr"</span>,</span>
@@ -631,7 +631,7 @@ run;</code></pre>
 <div class="sourceCode cell-code" id="cb38"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st">"grid"</span><span class="op">)</span> </span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st">"gridExtra"</span><span class="op">)</span></span>
-<span><span class="va">ccf_savePlot</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/gridExtra/man/arrangeGrob.html" class="external-link">arrangeGrob</a></span><span class="op">(</span><span class="va">ccf_plot</span> <span class="op">+</span> <span class="fu">hvti_theme</span><span class="op">(</span><span class="st">"manuscript"</span><span class="op">)</span>,</span>
+<span><span class="va">ccf_savePlot</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/gridExtra/man/arrangeGrob.html" class="external-link">arrangeGrob</a></span><span class="op">(</span><span class="va">ccf_plot</span> <span class="op">+</span> <span class="fu"><a href="../reference/hvti_theme.html">hvti_theme</a></span><span class="op">(</span><span class="st">"manuscript"</span><span class="op">)</span>,</span>
 <span>                            sub <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grid/grid.text.html" class="external-link">textGrob</a></span><span class="op">(</span></span>
 <span>                              <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/getwd.html" class="external-link">getwd</a></span><span class="op">(</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.Date</a></span><span class="op">(</span><span class="op">)</span>, sep <span class="op">=</span> <span class="st">" "</span><span class="op">)</span>,</span>
 <span>                              x <span class="op">=</span> <span class="fl">0</span>,</span>

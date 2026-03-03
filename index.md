@@ -8,13 +8,20 @@ the Cleveland Clinic.
 The *hvtiPlotR* package is the modern *R* implementation of the
 historical *plot.sas* macro. It provides:
 
-- A cohesive ggplot2 theme family accessible through the `hvti_theme()`
+- A cohesive ggplot2 theme family accessible through the
+  [`hvti_theme()`](http://ehrlinger.github.io/hviPlotR/reference/hvti_theme.md)
   generic (e.g., `hvti_theme("ppt")`, `hvti_theme("manuscript")`).
-- Convenience theme aliases: `theme_manuscript()` / `theme_man()`,
-  `theme_ppt()`, `theme_poster()`, `theme_dark_ppt()`.
-- Mirrored propensity score histograms via `mirror_histogram()`.
+- Convenience theme aliases:
+  [`theme_manuscript()`](http://ehrlinger.github.io/hviPlotR/reference/hvti_theme_manuscript.md)
+  /
+  [`theme_man()`](http://ehrlinger.github.io/hviPlotR/reference/hvti_theme_manuscript.md),
+  [`theme_ppt()`](http://ehrlinger.github.io/hviPlotR/reference/hvti_theme_ppt.md),
+  [`theme_poster()`](http://ehrlinger.github.io/hviPlotR/reference/hvti_theme_poster.md),
+  [`theme_dark_ppt()`](http://ehrlinger.github.io/hviPlotR/reference/hvti_theme_dark_ppt.md).
+- Mirrored propensity score histograms via
+  [`mirror_histogram()`](http://ehrlinger.github.io/hviPlotR/reference/mirror_histogram.md).
 - Helpers for exporting plots to PowerPoint (powered by `officer`) via
-  `save_ppt()`.
+  [`save_ppt()`](http://ehrlinger.github.io/hviPlotR/reference/save_ppt.md).
 
 ## Installation
 
@@ -69,8 +76,9 @@ mhist$diagnostics # SMD + group count tables
 mhist$data        # filtered data frame used for plotting
 ```
 
-The `hvti_plot()` generic is also available as an alternative entry
-point:
+The
+[`hvti_plot()`](http://ehrlinger.github.io/hviPlotR/reference/hvti_plot.md)
+generic is also available as an alternative entry point:
 
 ``` r
 mhist <- hvti_plot("mirror_histogram", data = dta, group_labels = c("SAVR", "TF-TAVR"))
@@ -108,11 +116,14 @@ devtools::check()
 ### Test Coverage Highlights
 
 - `tests/testthat/test_mirror_histogram.R`: validates helper
-  calculations, diagnostics, error handling, and `hvti_plot()` dispatch.
+  calculations, diagnostics, error handling, and
+  [`hvti_plot()`](http://ehrlinger.github.io/hviPlotR/reference/hvti_plot.md)
+  dispatch.
 - `tests/testthat/test_save_ppt.R`: covers happy paths plus all
   validation and failure scenarios for PowerPoint exports.
-- `tests/testthat/test_footnote.R`: ensures `makeFootnote()` works
-  across plotting contexts and rejects invalid inputs.
+- `tests/testthat/test_footnote.R`: ensures
+  [`makeFootnote()`](http://ehrlinger.github.io/hviPlotR/reference/makeFootnote.md)
+  works across plotting contexts and rejects invalid inputs.
 
 ## Vignettes and Extended Docs
 

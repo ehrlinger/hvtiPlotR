@@ -1,6 +1,6 @@
 # Generate Sample Data for Mirrored Histogram
 
-Creates a sample data frame suitable for testing plot_mirror_histogram.
+Creates a sample data frame suitable for testing mirror_histogram.
 
 ## Usage
 
