@@ -4,7 +4,7 @@
 \alias{km_build_cumhaz_plot}
 \title{Build bare cumulative hazard ggplot}
 \usage{
-km_build_cumhaz_plot(km_df)
+km_build_cumhaz_plot(km_df, alpha)
 }
 \arguments{
 \item{km_df}{Tidy KM data frame.}

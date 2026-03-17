@@ -15,6 +15,7 @@ mirror_histogram(
   score_multiplier = HVTI_SCORE_DEFAULT_MULTIPLIER,
   binwidth = 5,
   weight_col = NULL,
+  alpha = 0.8,
   output_file = NULL,
   width = 8,
   height = 6
@@ -50,6 +51,8 @@ the function operates in weighted mode: "Before" bars show raw counts,
 "Weighted" bars show per-bin weight sums, and \code{match_col} is not
 required. The column must be numeric and non-negative.}
 
+\item{alpha}{Transparency of the histogram bars, in [0, 1]. Default \code{0.8}.}
+
 \item{output_file}{Optional file path; when provided the plot is saved via
 \code{ggsave()}.}
 
@@ -82,7 +85,7 @@ counts (before weighting); overlaid bars show per-bin weight sums.
 # --- Binary-match mode ---------------------------------------------------
 # separation = 1.5 leaves many high/low-score patients unmatched at tails
 mirror_dta <- sample_mirror_histogram_data(n = 500, separation = 1.5)
-mhist <- mirror_histogram(mirror_dta)
+mhist <- mirror_histogram(mirror_dta, alpha = 0.8)
 mhist$plot
 mhist$diagnostics$smd_before
 mhist$diagnostics$smd_matched
@@ -97,7 +100,7 @@ mhist$plot +
 
 # --- Weighted IPTW mode --------------------------------------------------
 wt_dta <- sample_mirror_histogram_data(n = 500, add_weights = TRUE)
-mhist_wt <- mirror_histogram(wt_dta, weight_col = "mt_wt")
+mhist_wt <- mirror_histogram(wt_dta, weight_col = "mt_wt", alpha = 0.8)
 mhist_wt$plot
 mhist_wt$diagnostics$smd_weighted
 mhist_wt$diagnostics$effective_n_by_group

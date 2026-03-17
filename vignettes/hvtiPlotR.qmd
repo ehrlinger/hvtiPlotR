@@ -537,7 +537,8 @@ mhist <- mirror_histogram(
   group_labels = c("SAVR", "TF-TAVR"),
   matched_value = 1,
   score_multiplier = 100,
-  binwidth = 5
+  binwidth = 5,
+  alpha = 0.8
 )
 
 # Display the plot
@@ -679,7 +680,8 @@ gfup <- goodness_followup(
   origin_year = 1990,
   study_start = as.Date("1990-01-01"),
   study_end   = as.Date("2019-12-31"),
-  close_date  = as.Date("2021-08-06")
+  close_date  = as.Date("2021-08-06"),
+  alpha       = 0.8
 )
 
 # Bare plot — no scales or labels yet
@@ -799,7 +801,8 @@ gfup2 <- goodness_followup(
   event_col           = "ev_event",
   event_time_col      = "iv_event",
   death_for_event_col = "deads",
-  event_levels        = c("No event", "Relapse", "Death")
+  event_levels        = c("No event", "Relapse", "Death"),
+  alpha               = 0.8
 )
 
 gfup2$event_plot +
@@ -855,7 +858,7 @@ head(dta_cb)
 
 ```{r}
 #| label: cov_balance_bare
-covariate_balance(dta_cb)
+covariate_balance(dta_cb, alpha = 0.8)
 ```
 
 ## Adding colour, shape, and axis scales
@@ -868,7 +871,7 @@ positions.
 #| label: cov_balance_scales
 library(RColorBrewer)
 
-covariate_balance(dta_cb) +
+covariate_balance(dta_cb, alpha = 0.8) +
   scale_color_manual(
     values = c("Before match" = "red4", "After match" = "blue3"),
     name   = NULL
@@ -897,7 +900,7 @@ direction of imbalance favours each group.
 #| label: cov_balance_annotated
 n_vars <- length(unique(dta_cb$variable))
 
-covariate_balance(dta_cb) +
+covariate_balance(dta_cb, alpha = 0.8) +
   scale_color_manual(
     values = c("Before match" = "red4", "After match" = "blue3"),
     name   = NULL
@@ -934,7 +937,8 @@ Pass `var_levels` to control the bottom-to-top display order of covariates.
 # Reverse the default order so the first covariate appears at the top
 covariate_balance(
   dta_cb,
-  var_levels = rev(unique(dta_cb$variable))
+  var_levels = rev(unique(dta_cb$variable)),
+  alpha      = 0.8
 ) +
   scale_color_manual(
     values = c("Before match" = "red4", "After match" = "blue3"),
@@ -953,7 +957,7 @@ covariate_balance(
 ```{r}
 #| label: cov_balance_save
 #| eval: false
-cb_final <- covariate_balance(dta_cb) +
+cb_final <- covariate_balance(dta_cb, alpha = 0.8) +
   scale_color_manual(
     values = c("Before match" = "red4", "After match" = "blue3"),
     name   = NULL
@@ -998,7 +1002,7 @@ head(dta_km)
 
 ```{r}
 #| label: km_result
-km <- survival_curve(dta_km)
+km <- survival_curve(dta_km, alpha = 0.8)
 
 # Bare plot — no scales or labels yet
 km$survival_plot
@@ -1065,7 +1069,7 @@ dta_km_s <- sample_survival_data(
   seed          = 42
 )
 
-km_s <- survival_curve(dta_km_s, strata_col = "valve_type")
+km_s <- survival_curve(dta_km_s, strata_col = "valve_type", alpha = 0.8)
 
 km_s$survival_plot +
   scale_color_manual(

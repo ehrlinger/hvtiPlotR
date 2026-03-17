@@ -12,6 +12,7 @@ survival_curve(
   conf_int = TRUE,
   conf_level = 0.6827,
   report_times = c(1, 5, 10, 15, 20, 25),
+  alpha = 0.8,
   method = c("kaplan-meier", "nelson-aalen")
 )
 }
@@ -38,6 +39,9 @@ macro default.}
 \item{report_times}{Numeric vector of time points at which survival
 estimates and numbers at risk are reported. Defaults to
 \code{c(1, 5, 10, 15, 20, 25)}.}
+
+\item{alpha}{Transparency of plot lines and points, in [0, 1].
+Default \code{0.8}. The CI ribbon uses a fixed transparency of \code{0.2}.}
 
 \item{method}{Estimator to use.  \code{"kaplan-meier"} (default) computes
 the product-limit estimate with a logit CI — corresponding to the SAS
@@ -86,7 +90,7 @@ so the caller can layer on their own choices with \code{+}.
 \examples{
 # --- Unstratified ---
 dta <- sample_survival_data(n = 500, seed = 42)
-result <- survival_curve(dta)
+result <- survival_curve(dta, alpha = 0.8)
 
 # Bare survival plot
 result$survival_plot
@@ -115,13 +119,15 @@ result$risk_table
 result$report_table
 
 # --- Stratified ---
+# supply strata_levels to sample_survival_data() to generate the
+# "valve_type" column used by strata_col below.
 # dta_s <- sample_survival_data(
 #   n = 500,
-#   strata_levels  = c("Type A", "Type B"),
+#   strata_levels  = c("Type A", "Type B"),  # adds valve_type column
 #   hazard_ratios  = c(1, 1.4),
 #   seed = 42
 # )
-# result_s <- survival_curve(dta_s, strata_col = "valve_type")
+# result_s <- survival_curve(dta_s, strata_col = "valve_type", alpha = 0.8)
 #
 # result_s$survival_plot +
 #   ggplot2::scale_color_manual(
@@ -162,7 +168,7 @@ result$report_table
 #   hvti_theme("manuscript")
 #
 # --- Nelson-Aalen (use when S(t) falls to zero; mirrors SAS \%nelsont) ---
-# result_na <- survival_curve(dta, method = "nelson-aalen")
+# result_na <- survival_curve(dta, alpha = 0.8, method = "nelson-aalen")
 # result_na$survival_plot +
 #   ggplot2::scale_color_manual(values = c(All = "steelblue"), guide = "none") +
 #   ggplot2::scale_fill_manual(values  = c(All = "steelblue"), guide = "none") +

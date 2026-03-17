@@ -4,7 +4,7 @@
 \alias{km_build_survival_plot}
 \title{Build bare survival curve ggplot}
 \usage{
-km_build_survival_plot(km_df, conf_int)
+km_build_survival_plot(km_df, conf_int, alpha)
 }
 \arguments{
 \item{km_df}{Tidy KM data frame.}

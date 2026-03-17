@@ -12,6 +12,7 @@ covariate_balance(
   var_levels = NULL,
   threshold = 10,
   point_size = 3,
+  alpha = 0.8,
   hline_linetype = "dashed",
   hline_linewidth = 0.25,
   vline_linewidth = 0.2,
@@ -41,6 +42,8 @@ Defaults to the order of first appearance in \code{data[[variable_col]]}.}
 reference lines drawn at \verb{+/-threshold}. Default \code{10}.}
 
 \item{point_size}{Passed to \code{\link[ggplot2:geom_point]{ggplot2::geom_point()}}. Default \code{3}.}
+
+\item{alpha}{Transparency of the point glyphs, in [0, 1]. Default \code{0.8}.}
 
 \item{hline_linetype}{Linetype for the horizontal covariate guide lines.
 Default \code{"dashed"}.}
@@ -79,10 +82,10 @@ library(ggplot2)
 dta <- sample_covariate_balance_data()
 
 # Bare plot
-covariate_balance(dta)
+covariate_balance(dta, alpha = 0.8)
 
 # Add colour, shape, and axis scales
-covariate_balance(dta) +
+covariate_balance(dta, alpha = 0.8) +
   scale_color_manual(
     values = c("Before match" = "red4", "After match" = "blue3"),
     name   = NULL
@@ -99,7 +102,7 @@ covariate_balance(dta) +
   theme(legend.position = c(0.20, 0.95))
 
 # Add directional annotations and theme
-covariate_balance(dta) +
+covariate_balance(dta, alpha = 0.8) +
   scale_color_manual(
     values = c("Before match" = "red4", "After match" = "blue3"),
     name   = NULL

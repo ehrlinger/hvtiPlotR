@@ -62,7 +62,7 @@ cb_validate_params <- function(threshold, point_size, hline_linewidth,
 #' @importFrom ggplot2 ggplot aes geom_vline geom_hline geom_point
 #'   scale_y_continuous
 cb_build_plot <- function(data, std_diff_col, group_col, var_levels,
-                          threshold, point_size,
+                          threshold, point_size, alpha,
                           hline_linetype, hline_linewidth,
                           vline_linewidth, threshold_linetype) {
   n_vars <- length(var_levels)
@@ -100,7 +100,8 @@ cb_build_plot <- function(data, std_diff_col, group_col, var_levels,
         shape  = .data[[group_col]],
         colour = .data[[group_col]]
       ),
-      size = point_size
+      size  = point_size,
+      alpha = alpha
     ) +
     # Y-axis: integer positions labelled with covariate names
     ggplot2::scale_y_continuous(
@@ -149,6 +150,7 @@ cb_build_plot <- function(data, std_diff_col, group_col, var_levels,
 #'   Default `0.25`.
 #' @param vline_linewidth Linewidth for the solid zero reference line.
 #'   Default `0.2`.
+#' @param alpha Transparency of the point glyphs, in \[0, 1\]. Default `0.8`.
 #' @param threshold_linetype Linetype for the +/-threshold reference lines.
 #'   Default `"dotted"`.
 #'
@@ -163,10 +165,10 @@ cb_build_plot <- function(data, std_diff_col, group_col, var_levels,
 #' dta <- sample_covariate_balance_data()
 #'
 #' # Bare plot
-#' covariate_balance(dta)
+#' covariate_balance(dta, alpha = 0.8)
 #'
 #' # Add colour, shape, and axis scales
-#' covariate_balance(dta) +
+#' covariate_balance(dta, alpha = 0.8) +
 #'   scale_color_manual(
 #'     values = c("Before match" = "red4", "After match" = "blue3"),
 #'     name   = NULL
@@ -183,7 +185,7 @@ cb_build_plot <- function(data, std_diff_col, group_col, var_levels,
 #'   theme(legend.position = c(0.20, 0.95))
 #'
 #' # Add directional annotations and theme
-#' covariate_balance(dta) +
+#' covariate_balance(dta, alpha = 0.8) +
 #'   scale_color_manual(
 #'     values = c("Before match" = "red4", "After match" = "blue3"),
 #'     name   = NULL
@@ -209,6 +211,7 @@ covariate_balance <- function(
   var_levels         = NULL,
   threshold          = 10,
   point_size         = 3,
+  alpha              = 0.8,
   hline_linetype     = "dashed",
   hline_linewidth    = 0.25,
   vline_linewidth    = 0.2,
@@ -216,6 +219,10 @@ covariate_balance <- function(
 ) {
   cb_validate_input(data, variable_col, group_col, std_diff_col)
   cb_validate_params(threshold, point_size, hline_linewidth, vline_linewidth)
+  assertthat::assert_that(
+    assertthat::is.number(alpha) && alpha > 0 && alpha <= 1,
+    msg = "`alpha` must be a number in (0, 1]."
+  )
 
   # Work on a local copy to avoid mutating inputs (e.g., data.table) by reference
   working <- as.data.frame(data)
@@ -234,6 +241,7 @@ covariate_balance <- function(
     var_levels         = var_levels,
     threshold          = threshold,
     point_size         = point_size,
+    alpha              = alpha,
     hline_linetype     = hline_linetype,
     hline_linewidth    = hline_linewidth,
     vline_linewidth    = vline_linewidth,

@@ -44,10 +44,10 @@
 ##' @param event_col Name of the event indicator column.
 ##' @param strata_col Name of an optional stratification column, or \code{NULL}.
 ##' @param conf_level Confidence level for the CI band (default 0.6827 = 1 SD).
-##' @param method Method for survival curve estimation: \code{"kaplan-meier"} uses
-##'   product-limit S(t) with logit CI (matches SAS \%kaplan), or
-##'   \code{"nelson-aalen"} uses Fleming-Harrington H(t) with log CI (matches
-##'   SAS \%nelsont).
+##' @param method Method for survival curve estimation: `"kaplan-meier"` uses
+##'   product-limit S(t) with logit CI (matches SAS `%kaplan`), or
+##'   `"nelson-aalen"` uses Fleming-Harrington H(t) with log CI (matches
+##'   SAS `%nelsont`).
 ##' @return A \code{survfit} object.
 ##' @importFrom survival Surv survfit
 ##' @keywords internal
@@ -274,7 +274,7 @@ km_report_table <- function(km_df, report_times) {
 ##' @importFrom ggplot2 ggplot aes geom_step geom_ribbon geom_hline scale_y_continuous
 ##' @importFrom rlang .data
 ##' @keywords internal
-km_build_survival_plot <- function(km_df, conf_int) {
+km_build_survival_plot <- function(km_df, conf_int, alpha) {
   p <- ggplot2::ggplot(
     km_df,
     ggplot2::aes(
@@ -299,7 +299,7 @@ km_build_survival_plot <- function(km_df, conf_int) {
       )
   }
 
-  p + ggplot2::geom_step()
+  p + ggplot2::geom_step(alpha = alpha)
 }
 
 ##' Build bare cumulative hazard ggplot
@@ -309,7 +309,7 @@ km_build_survival_plot <- function(km_df, conf_int) {
 ##' @importFrom ggplot2 ggplot aes geom_step
 ##' @importFrom rlang .data
 ##' @keywords internal
-km_build_cumhaz_plot <- function(km_df) {
+km_build_cumhaz_plot <- function(km_df, alpha) {
   ggplot2::ggplot(
     km_df,
     ggplot2::aes(
@@ -318,7 +318,7 @@ km_build_cumhaz_plot <- function(km_df) {
       color = .data[["strata"]]
     )
   ) +
-    ggplot2::geom_step()
+    ggplot2::geom_step(alpha = alpha)
 }
 
 ##' Build bare hazard rate ggplot
@@ -335,7 +335,7 @@ km_build_cumhaz_plot <- function(km_df) {
 ##' @importFrom ggplot2 ggplot aes geom_point
 ##' @importFrom rlang .data
 ##' @keywords internal
-km_build_hazard_plot <- function(km_df) {
+km_build_hazard_plot <- function(km_df, alpha) {
   hz_df <- km_df[!is.na(km_df$hazard) & !is.na(km_df$mid_time), ]
 
   ggplot2::ggplot(
@@ -346,7 +346,7 @@ km_build_hazard_plot <- function(km_df) {
       color = .data[["strata"]]
     )
   ) +
-    ggplot2::geom_point()
+    ggplot2::geom_point(alpha = alpha)
 }
 
 ##' Build bare log-log survival ggplot (PLOTC extension)
@@ -362,7 +362,7 @@ km_build_hazard_plot <- function(km_df) {
 ##' @importFrom ggplot2 ggplot aes geom_step
 ##' @importFrom rlang .data
 ##' @keywords internal
-km_build_loglog_plot <- function(km_df) {
+km_build_loglog_plot <- function(km_df, alpha) {
   ll_df <- km_df[!is.na(km_df$log_cumhaz) & !is.na(km_df$log_time), ]
 
   ggplot2::ggplot(
@@ -373,7 +373,7 @@ km_build_loglog_plot <- function(km_df) {
       color = .data[["strata"]]
     )
   ) +
-    ggplot2::geom_step()
+    ggplot2::geom_step(alpha = alpha)
 }
 
 ##' Build bare integrated survivorship ggplot (PLOTL)
@@ -389,7 +389,7 @@ km_build_loglog_plot <- function(km_df) {
 ##' @importFrom ggplot2 ggplot aes geom_step
 ##' @importFrom rlang .data
 ##' @keywords internal
-km_build_life_plot <- function(km_df) {
+km_build_life_plot <- function(km_df, alpha) {
   life_df <- km_df[!is.na(km_df$life), ]
 
   ggplot2::ggplot(
@@ -400,7 +400,7 @@ km_build_life_plot <- function(km_df) {
       color = .data[["strata"]]
     )
   ) +
-    ggplot2::geom_step()
+    ggplot2::geom_step(alpha = alpha)
 }
 
 # ---------------------------------------------------------------------------
@@ -427,6 +427,8 @@ km_build_life_plot <- function(km_df) {
 #'   estimate.
 #' @param conf_int     Logical; draw a confidence-interval ribbon on the
 #'   survival plot. Defaults to \code{TRUE}.
+#' @param alpha        Transparency of plot lines and points, in \[0, 1\].
+#'   Default `0.8`. The CI ribbon uses a fixed transparency of `0.2`.
 #' @param conf_level   Confidence level for the CI band. Defaults to
 #'   \code{0.6827} (one standard deviation), matching the SAS \code{\%kaplan}
 #'   macro default.
@@ -470,7 +472,7 @@ km_build_life_plot <- function(km_df) {
 #' @examples
 #' # --- Unstratified ---
 #' dta <- sample_survival_data(n = 500, seed = 42)
-#' result <- survival_curve(dta)
+#' result <- survival_curve(dta, alpha = 0.8)
 #'
 #' # Bare survival plot
 #' result$survival_plot
@@ -499,13 +501,15 @@ km_build_life_plot <- function(km_df) {
 #' result$report_table
 #'
 #' # --- Stratified ---
+#' # supply strata_levels to sample_survival_data() to generate the
+#' # "valve_type" column used by strata_col below.
 #' # dta_s <- sample_survival_data(
 #' #   n = 500,
-#' #   strata_levels  = c("Type A", "Type B"),
+#' #   strata_levels  = c("Type A", "Type B"),  # adds valve_type column
 #' #   hazard_ratios  = c(1, 1.4),
 #' #   seed = 42
 #' # )
-#' # result_s <- survival_curve(dta_s, strata_col = "valve_type")
+#' # result_s <- survival_curve(dta_s, strata_col = "valve_type", alpha = 0.8)
 #' #
 #' # result_s$survival_plot +
 #' #   ggplot2::scale_color_manual(
@@ -546,7 +550,7 @@ km_build_life_plot <- function(km_df) {
 #' #   hvti_theme("manuscript")
 #' #
 #' # --- Nelson-Aalen (use when S(t) falls to zero; mirrors SAS %nelsont) ---
-#' # result_na <- survival_curve(dta, method = "nelson-aalen")
+#' # result_na <- survival_curve(dta, alpha = 0.8, method = "nelson-aalen")
 #' # result_na$survival_plot +
 #' #   ggplot2::scale_color_manual(values = c(All = "steelblue"), guide = "none") +
 #' #   ggplot2::scale_fill_manual(values  = c(All = "steelblue"), guide = "none") +
@@ -573,6 +577,7 @@ survival_curve <- function(data,
                            conf_int     = TRUE,
                            conf_level   = 0.6827,
                            report_times = c(1, 5, 10, 15, 20, 25),
+                           alpha        = 0.8,
                            method       = c("kaplan-meier",
                                             "nelson-aalen")) {
 
@@ -596,6 +601,10 @@ survival_curve <- function(data,
     assertthat::is.number(conf_level) && conf_level > 0 && conf_level < 1,
     msg = "`conf_level` must be a number in (0, 1)."
   )
+  assertthat::assert_that(
+    assertthat::is.number(alpha) && alpha > 0 && alpha <= 1,
+    msg = "`alpha` must be a number in (0, 1]."
+  )
 
   assertthat::assert_that(
     is.numeric(report_times) && length(report_times) > 0,
@@ -611,11 +620,11 @@ survival_curve <- function(data,
   report_tbl <- km_report_table(km_df, report_times)
 
   # --- Plots ----------------------------------------------------------------
-  s_plot  <- km_build_survival_plot(km_df, conf_int)
-  c_plot  <- km_build_cumhaz_plot(km_df)
-  h_plot  <- km_build_hazard_plot(km_df)
-  ll_plot <- km_build_loglog_plot(km_df)
-  lf_plot <- km_build_life_plot(km_df)
+  s_plot  <- km_build_survival_plot(km_df, conf_int, alpha)
+  c_plot  <- km_build_cumhaz_plot(km_df, alpha)
+  h_plot  <- km_build_hazard_plot(km_df, alpha)
+  ll_plot <- km_build_loglog_plot(km_df, alpha)
+  lf_plot <- km_build_life_plot(km_df, alpha)
 
   list(
     survival_plot = s_plot,

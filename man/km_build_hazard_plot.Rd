@@ -4,7 +4,7 @@
 \alias{km_build_hazard_plot}
 \title{Build bare hazard rate ggplot}
 \usage{
-km_build_hazard_plot(km_df)
+km_build_hazard_plot(km_df, alpha)
 }
 \arguments{
 \item{km_df}{Tidy KM data frame from \code{km_extract_tidy}.}

@@ -245,20 +245,22 @@ assemble_mirror_histogram_plot_df <- function(working, group_levels, group_label
 # Internal: Build ggplot object for mirrored histogram
 #' @importFrom ggplot2 ggplot geom_hline geom_col scale_fill_manual scale_x_continuous scale_y_continuous labs annotate coord_cartesian aes theme_minimal
 build_mirror_histogram_plot <- function(plot_df, group_labels, binwidth,
-                                        lower, upper, y_breaks) {
+                                        lower, upper, y_breaks, alpha) {
   ggplot2::ggplot() +
     ggplot2::geom_hline(yintercept = 0, linewidth = 0.7, color = "black") +
     ggplot2::geom_col(
       data = plot_df[plot_df$layer == "Before", ],
       ggplot2::aes(x = x, y = y, fill = fill_key),
       width = binwidth * HVTI_SCORE_FILL_RATIO,
-      color = "black"
+      color = "black",
+      alpha = alpha
     ) +
     ggplot2::geom_col(
       data = plot_df[plot_df$layer != "Before", ],
       ggplot2::aes(x = x, y = y, fill = fill_key),
       width = binwidth * HVTI_SCORE_FILL_RATIO,
-      color = "black"
+      color = "black",
+      alpha = alpha
     ) +
     ggplot2::scale_x_continuous(
       limits = c(HVTI_SCORE_MIN, HVTI_SCORE_MAX),
@@ -369,6 +371,7 @@ mirror_histogram_diagnostics <- function(working, matched_idx, group_levels,
 #'   the function operates in weighted mode: "Before" bars show raw counts,
 #'   "Weighted" bars show per-bin weight sums, and \code{match_col} is not
 #'   required. The column must be numeric and non-negative.
+#' @param alpha Transparency of the histogram bars, in \[0, 1\]. Default `0.8`.
 #' @param output_file Optional file path; when provided the plot is saved via
 #'   \code{ggsave()}.
 #' @param width,height Dimensions (inches) when saving \code{output_file}.
@@ -383,7 +386,7 @@ mirror_histogram_diagnostics <- function(working, matched_idx, group_levels,
 #' # --- Binary-match mode ---------------------------------------------------
 #' # separation = 1.5 leaves many high/low-score patients unmatched at tails
 #' mirror_dta <- sample_mirror_histogram_data(n = 500, separation = 1.5)
-#' mhist <- mirror_histogram(mirror_dta)
+#' mhist <- mirror_histogram(mirror_dta, alpha = 0.8)
 #' mhist$plot
 #' mhist$diagnostics$smd_before
 #' mhist$diagnostics$smd_matched
@@ -398,7 +401,7 @@ mirror_histogram_diagnostics <- function(working, matched_idx, group_levels,
 #'
 #' # --- Weighted IPTW mode --------------------------------------------------
 #' wt_dta <- sample_mirror_histogram_data(n = 500, add_weights = TRUE)
-#' mhist_wt <- mirror_histogram(wt_dta, weight_col = "mt_wt")
+#' mhist_wt <- mirror_histogram(wt_dta, weight_col = "mt_wt", alpha = 0.8)
 #' mhist_wt$plot
 #' mhist_wt$diagnostics$smd_weighted
 #' mhist_wt$diagnostics$effective_n_by_group
@@ -423,12 +426,17 @@ mirror_histogram <- function(data,
                              score_multiplier = HVTI_SCORE_DEFAULT_MULTIPLIER,
                              binwidth        = 5,
                              weight_col      = NULL,
+                             alpha           = 0.8,
                              output_file     = NULL,
                              width           = 8,
                              height          = 6) {
   validate_mirror_histogram_input(data, score_col, group_col, match_col,
                                   group_levels, group_labels, binwidth,
                                   weight_col = weight_col)
+  assertthat::assert_that(
+    assertthat::is.number(alpha) && alpha > 0 && alpha <= 1,
+    msg = "`alpha` must be a number in (0, 1]."
+  )
   prep    <- prepare_mirror_histogram_data(data, score_col, group_col, match_col,
                                            group_levels, score_multiplier,
                                            weight_col = weight_col)
@@ -448,7 +456,7 @@ mirror_histogram <- function(data,
   lower <- ymin - max(1, ceiling(HVTI_SCORE_MARGIN_RATIO * abs(ymin)))
   y_breaks <- pretty(c(lower, upper), n = 8)
   p <- build_mirror_histogram_plot(plot_df, group_labels, binwidth,
-                                   lower, upper, y_breaks)
+                                   lower, upper, y_breaks, alpha)
   diagnostics <- mirror_histogram_diagnostics(working, matched_idx, group_levels,
                                               n_input, n_dropped)
   if (!is.null(output_file)) {

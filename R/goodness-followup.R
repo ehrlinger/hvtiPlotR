@@ -231,7 +231,7 @@ sample_goodness_followup_data <- function(
 #' dta <- sample_goodness_followup_data()
 #'
 #' # Death panel only
-#' result <- goodness_followup(dta)
+#' result <- goodness_followup(dta, alpha = 0.8)
 #' result$death_plot +
 #'   ggplot2::scale_color_manual(
 #'     values = c("Alive" = "blue", "Dead" = "red"), name = NULL
@@ -245,7 +245,8 @@ sample_goodness_followup_data <- function(
 #'   event_col           = "ev_event",
 #'   event_time_col      = "iv_event",
 #'   death_for_event_col = "deads",
-#'   event_levels        = c("No event", "Relapse", "Death")
+#'   event_levels        = c("No event", "Relapse", "Death"),
+#'   alpha               = 0.8
 #' )
 #' result2$event_plot +
 #'   ggplot2::scale_color_manual(

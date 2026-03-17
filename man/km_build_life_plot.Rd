@@ -4,7 +4,7 @@
 \alias{km_build_life_plot}
 \title{Build bare integrated survivorship ggplot (PLOTL)}
 \usage{
-km_build_life_plot(km_df)
+km_build_life_plot(km_df, alpha)
 }
 \arguments{
 \item{km_df}{Tidy KM data frame from \code{km_extract_tidy}.}
