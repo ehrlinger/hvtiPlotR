@@ -1,5 +1,6 @@
 ## The hvtiPlotR package
 <!-- badges: start -->
+[![CRAN status](https://img.shields.io/github/r-package/v/ehrlinger/hvtiPlotR?label=hvtiPlotR)](https://github.com/ehrlinger/hvtiPlotR)
 [![DOI](https://zenodo.org/badge/5745/ehrlinger/hvtiPlotR.png)](http://dx.doi.org/10.5281/zenodo.11780)
 ![active](http://www.repostatus.org/badges/latest/active.svg)
 [![R-CMD-check](https://github.com/ehrlinger/hvtiPlotR/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/ehrlinger/hvtiPlotR/actions/workflows/R-CMD-check.yaml)
