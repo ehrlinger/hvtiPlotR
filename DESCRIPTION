@@ -36,6 +36,7 @@ Suggests:
     haven,
     scales,
     quarto,
-    pkgload
+    pkgload,
+    rlang
 VignetteBuilder: quarto
 RoxygenNote: 7.3.3

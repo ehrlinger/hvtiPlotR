@@ -173,7 +173,7 @@ stacked_histogram <- function(data,
 #' head(dta)
 #' table(dta$year, dta$category)
 #'
-#' @importFrom stats rpois sample
+#' @importFrom stats rpois
 #' @export
 sample_stacked_histogram_data <- function(n_years      = 20,
                                           start_year   = 2000,
