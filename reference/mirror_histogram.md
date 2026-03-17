@@ -17,6 +17,7 @@ mirror_histogram(
   score_multiplier = HVTI_SCORE_DEFAULT_MULTIPLIER,
   binwidth = 5,
   weight_col = NULL,
+  alpha = 0.8,
   output_file = NULL,
   width = 8,
   height = 6
@@ -40,8 +41,8 @@ mirror_histogram(
 
 - match_col:
 
-  Column name of the binary match indicator. Required in binary-match
-  mode; ignored when `weight_col` is supplied.
+  Column name of the binary match indicator. Default `"match"`. Required
+  in binary-match mode; ignored when `weight_col` is supplied.
 
 - group_levels:
 
@@ -72,6 +73,10 @@ mirror_histogram(
   operates in weighted mode: "Before" bars show raw counts, "Weighted"
   bars show per-bin weight sums, and `match_col` is not required. The
   column must be numeric and non-negative.
+
+- alpha:
+
+  Transparency of the histogram bars, in \[0, 1\]. Default `0.8`.
 
 - output_file:
 
@@ -107,14 +112,15 @@ diagnostics include `smd_weighted` and `effective_n_by_group`.
 
 ``` r
 # --- Binary-match mode ---------------------------------------------------
-mirror_dta <- sample_mirror_histogram_data(n = 4000)
-mhist <- mirror_histogram(mirror_dta)
+# separation = 1.5 leaves many high/low-score patients unmatched at tails
+mirror_dta <- sample_mirror_histogram_data(n = 500, separation = 1.5)
+mhist <- mirror_histogram(mirror_dta, alpha = 0.8)
 mhist$plot
 
 mhist$diagnostics$smd_before
-#> [1] 2.648481
+#> [1] 1.524308
 mhist$diagnostics$smd_matched
-#> [1] 2.605724
+#> [1] 0.02732008
 
 # Customise fill colours
 mhist$plot +
@@ -127,14 +133,14 @@ mhist$plot +
 
 # --- Weighted IPTW mode --------------------------------------------------
 wt_dta <- sample_mirror_histogram_data(n = 500, add_weights = TRUE)
-mhist_wt <- mirror_histogram(wt_dta, weight_col = "mt_wt")
+mhist_wt <- mirror_histogram(wt_dta, weight_col = "mt_wt", alpha = 0.8)
 mhist_wt$plot
 
 mhist_wt$diagnostics$smd_weighted
-#> [1] 2.67934
+#> [1] 0.5483862
 mhist_wt$diagnostics$effective_n_by_group
-#>        0        1 
-#> 460.7773 493.7646 
+#>   0   1 
+#> 500 500 
 
 # Customise fill colours for weighted mode
 mhist_wt$plot +

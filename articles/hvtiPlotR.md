@@ -850,7 +850,8 @@ mhist <- mirror_histogram(
   group_labels = c("SAVR", "TF-TAVR"),
   matched_value = 1,
   score_multiplier = 100,
-  binwidth = 5
+  binwidth = 5,
+  alpha = 0.8
 )
 
 # Display the plot
@@ -872,14 +873,14 @@ standardized mean differences (SMD) before and after matching:
 mhist$diagnostics$smd_before
 ```
 
-    [1] 2.677426
+    [1] 1.52139
 
 ``` r
 # Standardized mean difference after matching
 mhist$diagnostics$smd_matched
 ```
 
-    [1] 2.679721
+    [1] 0.02597089
 
 ``` r
 # Group counts before matching
@@ -894,8 +895,8 @@ mhist$diagnostics$group_counts_before
 mhist$diagnostics$group_counts_matched
 ```
 
-       0    1
-    1209 1197 
+      0   1
+    927 927 
 
 ## Stacked Histogram
 
@@ -1002,6 +1003,586 @@ ggsave(
 )
 ```
 
+## Goodness-of-Follow-Up Plot
+
+The goodness-of-follow-up plot is a standard quality-control figure in
+longitudinal outcome analyses. It displays each patient as a point at
+their operation date (x-axis) and follow-up duration (y-axis), with a
+short vertical tick below each point. A dashed diagonal line marks the
+maximum potential follow-up given the study start, study end, and
+follow-up closing date. The **hvtiPlotR** package provides
+[`goodness_followup()`](https://ehrlinger.github.io/hvtiPlotR/reference/goodness_followup.md)
+to build this figure.
+
+The function returns a bare `ggplot` object with no colour, shape, axis,
+or label scales applied — those are added by the caller with standard
+`ggplot2` modifiers.
+
+### Sample data
+
+``` r
+gfup_dta <- sample_goodness_followup_data(n = 300, seed = 42)
+head(gfup_dta)
+```
+
+      iv_opyrs iv_dead  dead iv_event ev_event deads
+    1  29.5694  2.0261 FALSE   2.0261    FALSE FALSE
+    2   6.4834  6.9027  TRUE   4.0813     TRUE  TRUE
+    3  14.4342  5.4468  TRUE   5.4468    FALSE  TRUE
+    4  25.4324  6.1630 FALSE   0.6137     TRUE FALSE
+    5   3.4251 13.1369  TRUE   6.9232     TRUE  TRUE
+    6  24.1620  7.4334 FALSE   7.4334    FALSE FALSE
+
+### Death follow-up plot
+
+``` r
+gfup <- goodness_followup(
+  data        = gfup_dta,
+  origin_year = 1990,
+  study_start = as.Date("1990-01-01"),
+  study_end   = as.Date("2019-12-31"),
+  close_date  = as.Date("2021-08-06"),
+  alpha       = 0.8
+)
+
+# Bare plot — no scales or labels yet
+gfup$death_plot
+```
+
+![](hvtiPlotR_files/figure-html/gfup_basic-1.png)
+
+### Adding scales, labels, and annotations
+
+Scale, label, and annotation layers are composed with the usual `+`
+operator.
+[`scale_color_manual()`](https://ggplot2.tidyverse.org/reference/scale_manual.html)
+and
+[`scale_shape_manual()`](https://ggplot2.tidyverse.org/reference/scale_manual.html)
+map the binary alive/dead state to colours and point shapes.
+[`annotate()`](https://ggplot2.tidyverse.org/reference/annotate.html)
+places group-identifying text directly on the panel.
+
+``` r
+library(RColorBrewer)
+
+gfup$death_plot +
+  # Colour alive = blue, dead = red (Set1 palette positions 2 and 1)
+  scale_color_manual(
+    values   = brewer.pal(3, "Set1")[c(2, 1)],
+    labels   = c("Alive", "Dead"),
+    na.value = "black",
+    drop     = FALSE
+  ) +
+  scale_shape_manual(
+    values = c(1, 4),
+    labels = c("Alive", "Dead")
+  ) +
+  # Axis tick placement
+  scale_x_continuous(breaks = seq(1990, 2020, 3)) +
+  scale_y_continuous(breaks = seq(0, 33,   3)) +
+  # Clip the panel to the study window
+  coord_cartesian(ylim = c(0, 33), xlim = c(1990, 2020)) +
+  # Axis and legend labels
+  labs(
+    x     = "Operation Date",
+    y     = "Follow-up (years)",
+    color = "Status",
+    shape = "Status"
+  ) +
+  # Annotate directly on the panel
+  annotate("text", x = 1993, y = 31, label = "Alive at close",
+           hjust = 0, size = 3.5) +
+  annotate("text", x = 1993, y = 28, label = "Deceased",
+           hjust = 0, size = 3.5, color = brewer.pal(3, "Set1")[1]) +
+  theme(legend.position = "none")
+```
+
+![](hvtiPlotR_files/figure-html/gfup_styled-1.png)
+
+The diagonal dashed line represents the maximum potential follow-up.
+Points sitting above the line indicate patients with longer follow-up
+than expected from the study window, typically due to passive
+surveillance supplementing active cross-sectional follow-up.
+
+### Saving the plot
+
+Assign the fully composed plot to a variable, then pass it to
+[`ggsave()`](https://ggplot2.tidyverse.org/reference/ggsave.html).
+
+``` r
+gfup_final <- gfup$death_plot +
+  scale_color_manual(
+    values   = brewer.pal(3, "Set1")[c(2, 1)],
+    labels   = c("Alive", "Dead"),
+    na.value = "black",
+    drop     = FALSE
+  ) +
+  scale_shape_manual(values = c(1, 4), labels = c("Alive", "Dead")) +
+  scale_x_continuous(breaks = seq(1990, 2020, 3)) +
+  scale_y_continuous(breaks = seq(0, 33, 3)) +
+  coord_cartesian(ylim = c(0, 33), xlim = c(1990, 2020)) +
+  labs(x = "Operation Date", y = "Follow-up (years)",
+       color = "Status", shape = "Status") +
+  annotate("text", x = 1993, y = 31, label = "Alive at close",
+           hjust = 0, size = 3.5) +
+  annotate("text", x = 1993, y = 28, label = "Deceased",
+           hjust = 0, size = 3.5, color = brewer.pal(3, "Set1")[1]) +
+  theme(legend.position = "none")
+
+ggsave(
+  filename = "../graphs/dp_goodness-of-followup.pdf",
+  plot     = gfup_final,
+  height   = 6,
+  width    = 6
+)
+```
+
+### Non-fatal event panel
+
+When the dataset includes a non-fatal competing event (e.g. relapse,
+reoperation), pass `event_col`, `event_time_col`, and optionally
+`death_for_event_col` to generate a second panel alongside the death
+panel. The follow-up time for the event panel is typically restricted to
+the **active/systematic** follow-up window, using a separate death
+indicator (`deads`) rather than the all-source death indicator (`dead`).
+
+The `state` factor in the event panel has three levels:
+
+1.  No event — alive and event-free at censoring
+2.  Non-fatal event — the event occurred first
+3.  Death — patient died before the event
+
+``` r
+gfup_event_dta <- sample_goodness_followup_data(n = 300, seed = 42)
+```
+
+``` r
+gfup2 <- goodness_followup(
+  gfup_event_dta,
+  origin_year         = 1990,
+  study_start         = as.Date("1990-01-01"),
+  study_end           = as.Date("2019-12-31"),
+  close_date          = as.Date("2021-08-06"),
+  event_col           = "ev_event",
+  event_time_col      = "iv_event",
+  death_for_event_col = "deads",
+  event_levels        = c("No event", "Relapse", "Death"),
+  alpha               = 0.8
+)
+
+gfup2$event_plot +
+  scale_color_manual(
+    values = c("No event" = "blue", "Relapse" = "green3", "Death" = "red"),
+    name   = NULL
+  ) +
+  scale_shape_manual(
+    values = c("No event" = 1L, "Relapse" = 2L, "Death" = 4L),
+    name   = NULL
+  ) +
+  scale_x_continuous(breaks = seq(1990, 2020, 3)) +
+  scale_y_continuous(breaks = seq(0, 33, 3)) +
+  coord_cartesian(ylim = c(0, 33), xlim = c(1990, 2020)) +
+  labs(
+    x = "Operation Date",
+    y = "Follow-up (years)",
+    color = "Event", shape = "Event"
+  ) +
+  annotate("text", x = 1993, y = 31,
+           label = "Systematic follow-up", hjust = 0, size = 3.5) +
+  theme(legend.position = c(0.85, 0.15))
+```
+
+![](hvtiPlotR_files/figure-html/gfup_event_panel-1.png)
+
+The death panel (`gfup2$death_plot`) and event panel
+(`gfup2$event_plot`) share the same diagonal reference line and can be
+saved individually with
+[`ggsave()`](https://ggplot2.tidyverse.org/reference/ggsave.html).
+
+## Covariate Balance Plot
+
+The covariate balance plot is the standard quality-control figure for
+propensity score matching and IPTW analyses. Each covariate occupies a
+labelled row; points show the standardized mean difference (SMD) for
+each comparison group (e.g. before and after matching). A solid vertical
+line marks zero balance; dotted vertical lines mark an imbalance
+threshold (default ±10%).
+
+The **hvtiPlotR** package provides
+[`covariate_balance()`](https://ehrlinger.github.io/hvtiPlotR/reference/covariate_balance.md)
+to build this figure. It returns a bare `ggplot` object — no colour,
+shape, axis labels, or theme applied — so all styling is added with the
+usual `+` operator.
+
+Input data must be in **long format**: one row per covariate × group
+combination with columns for the covariate name, the group label, and
+the numeric SMD value.
+
+### Sample data
+
+``` r
+dta_cb <- sample_covariate_balance_data(n_vars = 12)
+head(dta_cb)
+```
+
+               variable        group std_diff
+    1               Age Before match      9.8
+    2        Female sex Before match     25.4
+    3      Hypertension Before match    -14.7
+    4 Diabetes mellitus Before match     -8.9
+    5              COPD Before match     -3.9
+    6        Creatinine Before match     26.5
+
+### Bare plot
+
+``` r
+covariate_balance(dta_cb, alpha = 0.8)
+```
+
+![](hvtiPlotR_files/figure-html/cov_balance_bare-1.png)
+
+### Adding colour, shape, and axis scales
+
+[`scale_color_manual()`](https://ggplot2.tidyverse.org/reference/scale_manual.html)
+and
+[`scale_shape_manual()`](https://ggplot2.tidyverse.org/reference/scale_manual.html)
+assign visual encodings to the two comparison groups.
+[`scale_x_continuous()`](https://ggplot2.tidyverse.org/reference/scale_continuous.html)
+sets the axis range and tick positions.
+
+``` r
+library(RColorBrewer)
+
+covariate_balance(dta_cb, alpha = 0.8) +
+  scale_color_manual(
+    values = c("Before match" = "red4", "After match" = "blue3"),
+    name   = NULL
+  ) +
+  scale_shape_manual(
+    values = c("Before match" = 17L, "After match" = 15L),
+    name   = NULL
+  ) +
+  scale_x_continuous(
+    limits = c(-45, 35),
+    breaks = seq(-40, 30, 10)
+  ) +
+  labs(
+    x = "Standardized difference (%)",
+    y = ""
+  ) +
+  theme(legend.position = c(0.20, 0.95))
+```
+
+    Warning: Removed 1 row containing missing values or values outside the scale range
+    (`geom_point()`).
+
+![](hvtiPlotR_files/figure-html/cov_balance_scales-1.png)
+
+### Adding directional annotations and theme
+
+[`annotate()`](https://ggplot2.tidyverse.org/reference/annotate.html)
+places explanatory text directly on the panel to indicate which
+direction of imbalance favours each group.
+
+``` r
+n_vars <- length(unique(dta_cb$variable))
+
+covariate_balance(dta_cb, alpha = 0.8) +
+  scale_color_manual(
+    values = c("Before match" = "red4", "After match" = "blue3"),
+    name   = NULL
+  ) +
+  scale_shape_manual(
+    values = c("Before match" = 17L, "After match" = 15L),
+    name   = NULL
+  ) +
+  scale_x_continuous(
+    limits = c(-45, 35),
+    breaks = seq(-40, 30, 10)
+  ) +
+  labs(
+    x = "Standardized difference: Group A \u2013 Group B (%)",
+    y = ""
+  ) +
+  # Directional labels at fixed panel positions
+  annotate("text", x = -32, y = 0.4,        label = "More likely Group B", size = 4) +
+  annotate("text", x =  22, y = n_vars + 1, label = "More likely Group A", size = 4) +
+  theme(legend.position = c(0.20, 0.95)) +
+  hvti_theme("manuscript")
+```
+
+    Warning: Removed 1 row containing missing values or values outside the scale range
+    (`geom_point()`).
+
+![](hvtiPlotR_files/figure-html/cov_balance_annotated-1.png)
+
+Points sitting beyond the dotted ±10% threshold lines indicate
+covariates that remain imbalanced after matching and may warrant further
+investigation or sensitivity analyses.
+
+### Controlling covariate order
+
+Pass `var_levels` to control the bottom-to-top display order of
+covariates.
+
+``` r
+# Reverse the default order so the first covariate appears at the top
+covariate_balance(
+  dta_cb,
+  var_levels = rev(unique(dta_cb$variable)),
+  alpha      = 0.8
+) +
+  scale_color_manual(
+    values = c("Before match" = "red4", "After match" = "blue3"),
+    name   = NULL
+  ) +
+  scale_shape_manual(
+    values = c("Before match" = 17L, "After match" = 15L),
+    name   = NULL
+  ) +
+  labs(x = "Standardized difference (%)", y = "") +
+  hvti_theme("manuscript")
+```
+
+![](hvtiPlotR_files/figure-html/cov_balance_order-1.png)
+
+### Saving the plot
+
+``` r
+cb_final <- covariate_balance(dta_cb, alpha = 0.8) +
+  scale_color_manual(
+    values = c("Before match" = "red4", "After match" = "blue3"),
+    name   = NULL
+  ) +
+  scale_shape_manual(
+    values = c("Before match" = 17L, "After match" = 15L),
+    name   = NULL
+  ) +
+  scale_x_continuous(limits = c(-45, 35), breaks = seq(-40, 30, 10)) +
+  labs(x = "Standardized difference (%)", y = "") +
+  annotate("text", x = -32, y = 0.4,        label = "More likely Group B", size = 4) +
+  annotate("text", x =  22, y = n_vars + 1, label = "More likely Group A", size = 4) +
+  theme(legend.position = c(0.20, 0.95)) +
+  hvti_theme("manuscript")
+
+ggsave(
+  filename = "../graphs/lp_cov-balance.pdf",
+  plot     = cb_final,
+  height   = 7,
+  width    = 8
+)
+```
+
+## Kaplan-Meier Survival Curve
+
+[`survival_curve()`](https://ehrlinger.github.io/hvtiPlotR/reference/survival_curve.md)
+estimates the Kaplan-Meier product-limit survival function and returns
+five companion bare plots matching the SAS `%kaplan` macro output
+(`PLOTS`, `PLOTC`, `PLOTH`, `PLOTL`), plus tidy data frames for tables
+and further computation. Confidence intervals use the logit transform
+with a default confidence level of 0.6827 (one standard deviation),
+reproducing the SAS macro default.
+
+### Sample data
+
+``` r
+dta_km <- sample_survival_data(n = 500, seed = 42)
+head(dta_km)
+```
+
+        iv_dead  dead iv_opyrs age_at_op
+    1  3.966736  TRUE 2003.503  58.08251
+    2 13.217905  TRUE 2008.716  65.37466
+    3  5.669821  TRUE 1990.072  58.80676
+    4  0.763838  TRUE 2005.739  66.45205
+    5  9.463533  TRUE 2006.139  75.84440
+    6 20.000000 FALSE 1991.461  60.21944
+
+### Survival curve (PLOTS=1)
+
+``` r
+km <- survival_curve(dta_km, alpha = 0.8)
+
+# Bare plot — no scales or labels yet
+km$survival_plot
+```
+
+![](hvtiPlotR_files/figure-html/km_result-1.png)
+
+### Adding scales, labels, and annotations
+
+``` r
+km$survival_plot +
+  scale_color_manual(values = c(All = "steelblue"), guide = "none") +
+  scale_fill_manual(values  = c(All = "steelblue"), guide = "none") +
+  scale_y_continuous(
+    breaks = seq(0, 100, 20),
+    labels = function(x) paste0(x, "%")
+  ) +
+  scale_x_continuous(breaks = seq(0, 20, 5)) +
+  coord_cartesian(xlim = c(0, 20), ylim = c(0, 100)) +
+  labs(
+    x     = "Years after Operation",
+    y     = "Freedom from Death (%)",
+    title = "Overall Survival"
+  ) +
+  annotate("text", x = 1, y = 5,
+           label = paste0("n = ", nrow(dta_km)),
+           hjust = 0, size = 3.5) +
+  hvtiPlotR::hvti_theme("manuscript")
+```
+
+    Scale for y is already present.
+    Adding another scale for y, which will replace the existing scale.
+
+![](hvtiPlotR_files/figure-html/km_styled-1.png)
+
+### Numbers at risk and report table
+
+``` r
+km$risk_table
+```
+
+      strata report_time n.risk
+    1    All           1    478
+    2    All           5    412
+    3    All          10    322
+    4    All          15    260
+    5    All          20    207
+    6    All          25    207
+
+``` r
+km$report_table
+```
+
+      strata report_time  surv     lower     upper n.risk n.event
+    1    All           1 0.954 0.9436693 0.9625114    478       1
+    2    All           5 0.822 0.8042449 0.8384681    412       1
+    3    All          10 0.642 0.6202877 0.6631450    322       1
+    4    All          15 0.518 0.4956322 0.5402959    260       1
+    5    All          20 0.414 0.3921576 0.4361859    207       0
+    6    All          25 0.414 0.3921576 0.4361859    207       0
+
+### Saving the plot
+
+``` r
+km_final <- km$survival_plot +
+  scale_color_manual(values = c(All = "steelblue"), guide = "none") +
+  scale_fill_manual(values  = c(All = "steelblue"), guide = "none") +
+  scale_y_continuous(breaks = seq(0, 100, 20),
+                     labels = function(x) paste0(x, "%")) +
+  scale_x_continuous(breaks = seq(0, 20, 5)) +
+  coord_cartesian(xlim = c(0, 20), ylim = c(0, 100)) +
+  labs(x = "Years after Operation", y = "Freedom from Death (%)") +
+  hvtiPlotR::hvti_theme("manuscript")
+
+ggsave("../graphs/km_survival.pdf", km_final, width = 8, height = 6)
+```
+
+### Stratified analysis
+
+``` r
+dta_km_s <- sample_survival_data(
+  n             = 500,
+  strata_levels = c("Type A", "Type B"),
+  hazard_ratios = c(1, 1.4),
+  seed          = 42
+)
+
+km_s <- survival_curve(dta_km_s, strata_col = "valve_type", alpha = 0.8)
+
+km_s$survival_plot +
+  scale_color_manual(
+    values = c("Type A" = "steelblue", "Type B" = "firebrick"),
+    name   = "Valve Type"
+  ) +
+  scale_fill_manual(
+    values = c("Type A" = "steelblue", "Type B" = "firebrick"),
+    name   = "Valve Type"
+  ) +
+  scale_y_continuous(breaks = seq(0, 100, 20),
+                     labels = function(x) paste0(x, "%")) +
+  scale_x_continuous(breaks = seq(0, 20, 5)) +
+  coord_cartesian(xlim = c(0, 20), ylim = c(0, 100)) +
+  labs(x = "Years after Operation", y = "Freedom from Death (%)",
+       title = "Survival by Valve Type") +
+  theme(legend.position = c(0.15, 0.20)) +
+  hvtiPlotR::hvti_theme("manuscript")
+```
+
+    Scale for y is already present.
+    Adding another scale for y, which will replace the existing scale.
+
+![](hvtiPlotR_files/figure-html/km_strata_data-1.png)
+
+### Cumulative hazard (PLOTC=1)
+
+``` r
+km$cumhaz_plot +
+  scale_x_continuous(breaks = seq(0, 20, 5)) +
+  labs(x = "Years after Operation", y = "Cumulative Hazard H(t)",
+       title = "Nelson-Aalen Cumulative Hazard") +
+  scale_color_manual(values = c(All = "steelblue"), guide = "none") +
+  hvtiPlotR::hvti_theme("manuscript")
+```
+
+![](hvtiPlotR_files/figure-html/km_cumhaz-1.png)
+
+### Log-log survival plot (PLOTC, Weibull/PH check)
+
+Parallel lines across strata indicate proportional hazards.
+
+``` r
+km_s$loglog_plot +
+  scale_color_manual(
+    values = c("Type A" = "steelblue", "Type B" = "firebrick"),
+    name   = "Valve Type"
+  ) +
+  labs(x = "log(Years after Operation)", y = "log(-log S(t))",
+       title = "Log-Log Survival — Proportional-Hazards Check") +
+  hvtiPlotR::hvti_theme("manuscript")
+```
+
+![](hvtiPlotR_files/figure-html/km_loglog-1.png)
+
+### Hazard rate (PLOTH=1)
+
+The raw point estimates are noisy; add
+[`geom_smooth()`](https://ggplot2.tidyverse.org/reference/geom_smooth.html)
+for a publication-ready smoothed hazard curve.
+
+``` r
+# Raw points from the SAS %kaplan HAZARD formula
+km$hazard_plot +
+  geom_smooth(
+    aes(x = mid_time, y = hazard, color = strata),
+    method = "loess", se = FALSE, span = 0.6
+  ) +
+  scale_color_manual(values = c(All = "steelblue"), guide = "none") +
+  scale_x_continuous(breaks = seq(0, 20, 5)) +
+  labs(x = "Years after Operation", y = "Instantaneous Hazard",
+       title = "Hazard Rate") +
+  hvtiPlotR::hvti_theme("manuscript")
+```
+
+    `geom_smooth()` using formula = 'y ~ x'
+
+![](hvtiPlotR_files/figure-html/km_hazard-1.png)
+
+### Integrated survivorship / restricted mean survival (PLOTL=1)
+
+``` r
+km$life_plot +
+  scale_color_manual(values = c(All = "steelblue"), guide = "none") +
+  scale_x_continuous(breaks = seq(0, 20, 5)) +
+  labs(x = "Years after Operation",
+       y = "Restricted Mean Survival (years)",
+       title = "Integral of Survivorship") +
+  hvtiPlotR::hvti_theme("manuscript")
+```
+
+![](hvtiPlotR_files/figure-html/km_life-1.png)
+
 ## Saving publication graphics
 
 Once we have created the figure, and formatted it as desired (using a
@@ -1040,9 +1621,9 @@ ccf_savePlot
 ```
 
     TableGrob (2 x 1) "arrange": 2 grobs
-        z     cells    name                grob
-        1 (1-1,1-1) arrange      gtable[layout]
-    sub 2 (2-2,1-1) arrange text[GRID.text.448]
+        z     cells    name                 grob
+        1 (1-1,1-1) arrange       gtable[layout]
+    sub 2 (2-2,1-1) arrange text[GRID.text.1019]
 
 Figure ?? uses the same plot in Figure 12 with the code
 `ccf_plot+hvti_theme("manuscript")`. The current working directory is

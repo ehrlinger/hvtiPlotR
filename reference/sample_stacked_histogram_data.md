@@ -19,20 +19,20 @@ sample_stacked_histogram_data(
 - n_years:
 
   Integer. Number of consecutive years to simulate starting from
-  `start_year`. Defaults to \`20\`.
+  `start_year`. Defaults to `20`.
 
 - start_year:
 
-  Integer. First calendar year in the sequence. Defaults to \`2000\`.
+  Integer. First calendar year in the sequence. Defaults to `2000`.
 
 - n_categories:
 
-  Integer. Number of distinct groups. Defaults to \`3\`.
+  Integer. Number of distinct groups. Defaults to `3`.
 
 - seed:
 
   Integer passed to [`set.seed`](https://rdrr.io/r/base/Random.html) for
-  reproducibility. Defaults to \`42\`.
+  reproducibility. Defaults to `42`.
 
 ## Value
 

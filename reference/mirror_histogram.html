@@ -61,6 +61,7 @@ Supports two display modes selected by the arguments supplied:</p>
 <span>  score_multiplier <span class="op">=</span> <span class="va">HVTI_SCORE_DEFAULT_MULTIPLIER</span>,</span>
 <span>  binwidth <span class="op">=</span> <span class="fl">5</span>,</span>
 <span>  weight_col <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  alpha <span class="op">=</span> <span class="fl">0.8</span>,</span>
 <span>  output_file <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  width <span class="op">=</span> <span class="fl">8</span>,</span>
 <span>  height <span class="op">=</span> <span class="fl">6</span></span>
@@ -85,8 +86,9 @@ plus either <code>match_col</code> or <code>weight_col</code>.</p></dd>
 
 
 <dt id="arg-match-col">match_col<a class="anchor" aria-label="anchor" href="#arg-match-col"></a></dt>
-<dd><p>Column name of the binary match indicator. Required in
-binary-match mode; ignored when <code>weight_col</code> is supplied.</p></dd>
+<dd><p>Column name of the binary match indicator. Default
+<code>"match"</code>. Required in binary-match mode; ignored when
+<code>weight_col</code> is supplied.</p></dd>
 
 
 <dt id="arg-group-levels">group_levels<a class="anchor" aria-label="anchor" href="#arg-group-levels"></a></dt>
@@ -119,6 +121,10 @@ the function operates in weighted mode: "Before" bars show raw counts,
 required. The column must be numeric and non-negative.</p></dd>
 
 
+<dt id="arg-alpha">alpha<a class="anchor" aria-label="anchor" href="#arg-alpha"></a></dt>
+<dd><p>Transparency of the histogram bars, in [0, 1]. Default <code>0.8</code>.</p></dd>
+
+
 <dt id="arg-output-file">output_file<a class="anchor" aria-label="anchor" href="#arg-output-file"></a></dt>
 <dd><p>Optional file path; when provided the plot is saved via
 <code><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave()</a></code>.</p></dd>
@@ -131,25 +137,25 @@ required. The column must be numeric and non-negative.</p></dd>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>A list with elements <code>plot</code> (ggplot object), <code>diagnostics</code>
-  (mode-dependent summary statistics), and <code>data</code> (filtered working
-  data frame). Binary-match diagnostics include <code>smd_matched</code>;
-  weighted diagnostics include <code>smd_weighted</code> and
-  <code>effective_n_by_group</code>.</p>
+(mode-dependent summary statistics), and <code>data</code> (filtered working
+data frame). Binary-match diagnostics include <code>smd_matched</code>;
+weighted diagnostics include <code>smd_weighted</code> and
+<code>effective_n_by_group</code>.</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
 
 <dl><dt>Binary-match mode</dt>
 <dd><p>Supply <code>match_col</code>. Upper bars show all
-    observations (before matching); overlaid bars show the matched subset.
-    Fill keys: <code>before_g0</code>, <code>matched_g0</code>, <code>before_g1</code>,
-    <code>matched_g1</code>.</p></dd>
+observations (before matching); overlaid bars show the matched subset.
+Fill keys: <code>before_g0</code>, <code>matched_g0</code>, <code>before_g1</code>,
+<code>matched_g1</code>.</p></dd>
 
-  <dt>Weighted IPTW mode</dt>
+<dt>Weighted IPTW mode</dt>
 <dd><p>Supply <code>weight_col</code>. Upper bars show raw
-    counts (before weighting); overlaid bars show per-bin weight sums.
-    <code>match_col</code> is ignored. Fill keys: <code>before_g0</code>,
-    <code>weighted_g0</code>, <code>before_g1</code>, <code>weighted_g1</code>.</p></dd>
+counts (before weighting); overlaid bars show per-bin weight sums.
+<code>match_col</code> is ignored. Fill keys: <code>before_g0</code>,
+<code>weighted_g0</code>, <code>before_g1</code>, <code>weighted_g1</code>.</p></dd>
 
 
 </dl></div>
@@ -157,14 +163,15 @@ required. The column must be numeric and non-negative.</p></dd>
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># --- Binary-match mode ---------------------------------------------------</span></span></span>
-<span class="r-in"><span><span class="va">mirror_dta</span> <span class="op">&lt;-</span> <span class="fu"><a href="sample_mirror_histogram_data.html">sample_mirror_histogram_data</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">4000</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">mhist</span> <span class="op">&lt;-</span> <span class="fu">mirror_histogram</span><span class="op">(</span><span class="va">mirror_dta</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co"># separation = 1.5 leaves many high/low-score patients unmatched at tails</span></span></span>
+<span class="r-in"><span><span class="va">mirror_dta</span> <span class="op">&lt;-</span> <span class="fu"><a href="sample_mirror_histogram_data.html">sample_mirror_histogram_data</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">500</span>, separation <span class="op">=</span> <span class="fl">1.5</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">mhist</span> <span class="op">&lt;-</span> <span class="fu">mirror_histogram</span><span class="op">(</span><span class="va">mirror_dta</span>, alpha <span class="op">=</span> <span class="fl">0.8</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">mhist</span><span class="op">$</span><span class="va">plot</span></span></span>
 <span class="r-plt img"><img src="mirror_histogram-1.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span><span class="va">mhist</span><span class="op">$</span><span class="va">diagnostics</span><span class="op">$</span><span class="va">smd_before</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 2.648481</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 1.524308</span>
 <span class="r-in"><span><span class="va">mhist</span><span class="op">$</span><span class="va">diagnostics</span><span class="op">$</span><span class="va">smd_matched</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 2.605724</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.02732008</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Customise fill colours</span></span></span>
 <span class="r-in"><span><span class="va">mhist</span><span class="op">$</span><span class="va">plot</span> <span class="op">+</span></span></span>
@@ -177,14 +184,14 @@ required. The column must be numeric and non-negative.</p></dd>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># --- Weighted IPTW mode --------------------------------------------------</span></span></span>
 <span class="r-in"><span><span class="va">wt_dta</span> <span class="op">&lt;-</span> <span class="fu"><a href="sample_mirror_histogram_data.html">sample_mirror_histogram_data</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">500</span>, add_weights <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">mhist_wt</span> <span class="op">&lt;-</span> <span class="fu">mirror_histogram</span><span class="op">(</span><span class="va">wt_dta</span>, weight_col <span class="op">=</span> <span class="st">"mt_wt"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">mhist_wt</span> <span class="op">&lt;-</span> <span class="fu">mirror_histogram</span><span class="op">(</span><span class="va">wt_dta</span>, weight_col <span class="op">=</span> <span class="st">"mt_wt"</span>, alpha <span class="op">=</span> <span class="fl">0.8</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">mhist_wt</span><span class="op">$</span><span class="va">plot</span></span></span>
 <span class="r-plt img"><img src="mirror_histogram-3.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span><span class="va">mhist_wt</span><span class="op">$</span><span class="va">diagnostics</span><span class="op">$</span><span class="va">smd_weighted</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 2.67934</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.5483862</span>
 <span class="r-in"><span><span class="va">mhist_wt</span><span class="op">$</span><span class="va">diagnostics</span><span class="op">$</span><span class="va">effective_n_by_group</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        0        1 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 460.7773 493.7646 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   0   1 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 500 500 </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Customise fill colours for weighted mode</span></span></span>
 <span class="r-in"><span><span class="va">mhist_wt</span><span class="op">$</span><span class="va">plot</span> <span class="op">+</span></span></span>

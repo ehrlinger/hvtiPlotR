@@ -21,5 +21,5 @@ build_hist_counts(x, breaks)
 
 ## Value
 
-Data frame with columns \`x\` (bin midpoints) and \`count\` (counts per
+Data frame with columns `x` (bin midpoints) and `count` (counts per
 bin).

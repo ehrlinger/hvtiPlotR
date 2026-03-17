@@ -41,12 +41,28 @@
     </div>
 
     <div class="section level2">
+<h2 class="pkg-version" data-toc-text="1.1.0" id="hvtiplotr-110">hvtiPlotR 1.1.0<a class="anchor" aria-label="anchor" href="#hvtiplotr-110"></a></h2>
+<ul><li>Added <code><a href="../reference/survival_curve.html">survival_curve()</a></code> — Kaplan-Meier and Nelson-Aalen survival analysis returning five plot types (survival, cumulative hazard, hazard, log-log, life/RMST) plus risk and report tables. Ports the SAS <code>%kaplan</code> and <code>%nelsont</code> macros from <code>tp.ac.dead.sas</code>.</li>
+<li>Added <code><a href="../reference/sample_survival_data.html">sample_survival_data()</a></code> — realistic exponential survival simulation with administrative censoring and optional treatment strata.</li>
+<li>Added <code><a href="../reference/goodness_followup.html">goodness_followup()</a></code> — goodness-of-follow-up scatter plot showing actual vs. potential follow-up per operation year, with optional non-fatal event panel.</li>
+<li>Added <code><a href="../reference/sample_goodness_followup_data.html">sample_goodness_followup_data()</a></code> — simulates an operative cohort with operation dates, follow-up times, competing events, and death.</li>
+<li>Added <code><a href="../reference/covariate_balance.html">covariate_balance()</a></code> — standardised mean difference dot-plot for propensity-score matching or weighting diagnostics.</li>
+<li>Added <code><a href="../reference/sample_covariate_balance_data.html">sample_covariate_balance_data()</a></code> — patient-level logistic simulation with greedy 1:1 caliper matching; SMDs computed before and after matching.</li>
+<li>Added <code><a href="../reference/stacked_histogram.html">stacked_histogram()</a></code> and <code><a href="../reference/sample_stacked_histogram_data.html">sample_stacked_histogram_data()</a></code> — stacked or filled histogram of a numeric variable by group.</li>
+<li>Improved <code><a href="../reference/mirror_histogram.html">mirror_histogram()</a></code> sample data (<code><a href="../reference/sample_mirror_histogram_data.html">sample_mirror_histogram_data()</a></code>) to use a realistic logistic propensity-score model with greedy 1:1 caliper matching and optional ATE IPTW weights; extreme-PS patients naturally go unmatched.</li>
+<li>Added <code><a href="../reference/hvti_plot.html">hvti_plot()</a></code> dispatcher supporting <code>"mirror_histogram"</code>, <code>"stacked_histogram"</code>, and <code>"covariate_balance"</code> plot types.</li>
+<li>Added <code><a href="../reference/hvti_theme.html">hvti_theme()</a></code> dispatcher for <code>"manuscript"</code>, <code>"ppt"</code>, <code>"dark_ppt"</code>, and <code>"poster"</code> themes.</li>
+<li>Enabled roxygen Markdown (<code>Roxygen: list(markdown = TRUE)</code>) so <code>**bold**</code>, backtick code spans, and <code>[pkg::fn()]</code> cross-references render correctly in Rd help pages.</li>
+<li>Added <code>survival</code> to package <code>Imports</code>.</li>
+<li>Updated package-level documentation (<code>help.R</code>) to reflect all current exported functions and sample-data generators.</li>
+</ul></div>
+    <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.2.2" id="hvtiplotr-022">hvtiPlotR 0.2.2<a class="anchor" aria-label="anchor" href="#hvtiplotr-022"></a></h2>
-<ul><li>Fixed deprecated ggplot2 syntax (size -&gt; linewidth in element_line and element_rect)</li>
-<li>Removed empty save.hvtiplotr function</li>
-<li>Fixed theme_dark_ppt to pass all parameters to theme_grey</li>
-<li>Updated documentation for data objects</li>
-<li>Updated README to reference officer package instead of deprecated ReporteRs</li>
+<ul><li>Fixed deprecated ggplot2 syntax (<code>size</code> -&gt; <code>linewidth</code> in <code>element_line</code> and <code>element_rect</code>).</li>
+<li>Removed empty <code>save.hvtiplotr</code> function.</li>
+<li>Fixed <code>theme_dark_ppt</code> to pass all parameters to <code>theme_grey</code>.</li>
+<li>Updated documentation for data objects.</li>
+<li>Updated README to reference <code>officer</code> package instead of deprecated <code>ReporteRs</code>.</li>
 </ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.2.0" id="hvtiplotr-020">hvtiPlotR 0.2.0<a class="anchor" aria-label="anchor" href="#hvtiplotr-020"></a></h2>

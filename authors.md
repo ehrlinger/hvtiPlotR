@@ -9,12 +9,12 @@
 Source:
 [`DESCRIPTION`](https://github.com/ehrlinger/hvtiPlotR/blob/main/DESCRIPTION)
 
-Ehrlinger J (2026). *hvtiPlotR: Porting the "plot.sas" macro to R Using
-ggplot2 and officer Packages*. R package version 1.1.0,
-<https://github.com/ehrlinger/hvtiPlotR>.
+Ehrlinger J (2026). *hvtiPlotR: Porting HVTI plot templates and
+methodology documentation to ggplot2 package in R*. R package version
+1.1.0, <https://github.com/ehrlinger/hvtiPlotR>.
 
     @Manual{,
-      title = {hvtiPlotR: Porting the "plot.sas" macro to R Using ggplot2 and officer Packages},
+      title = {hvtiPlotR: Porting HVTI plot templates and methodology documentation to ggplot2 package in R},
       author = {John Ehrlinger},
       year = {2026},
       note = {R package version 1.1.0},

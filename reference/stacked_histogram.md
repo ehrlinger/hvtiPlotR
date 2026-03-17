@@ -34,18 +34,18 @@ stacked_histogram(
 
 - binwidth:
 
-  Width of each histogram bin, in the same units as \`x_col\`. Defaults
-  to \`1\`.
+  Width of each histogram bin, in the same units as `x_col`. Defaults to
+  `1`.
 
 - position:
 
-  Either \`"stack"\` (raw counts, the default) or \`"fill"\`
-  (proportions that sum to 1 within each bin).
+  Either `"stack"` (raw counts, the default) or `"fill"` (proportions
+  that sum to 1 within each bin).
 
 ## Value
 
 A [`ggplot`](https://ggplot2.tidyverse.org/reference/ggplot.html)
-object. Add scales, labels, and themes with the usual \`+\` operator.
+object. Add scales, labels, and themes with the usual `+` operator.
 
 ## Examples
 

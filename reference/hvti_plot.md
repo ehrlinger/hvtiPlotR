@@ -5,7 +5,11 @@ Provides a single entry point for generating hvtiPlotR plots.
 ## Usage
 
 ``` r
-hvti_plot(type = c("mirror_histogram", "stacked_histogram"), ...)
+hvti_plot(
+  type = c("mirror_histogram", "stacked_histogram", "covariate_balance",
+    "goodness_followup", "survival_curve"),
+  ...
+)
 ```
 
 ## Arguments
@@ -13,7 +17,8 @@ hvti_plot(type = c("mirror_histogram", "stacked_histogram"), ...)
 - type:
 
   Character keyword identifying the plot type. Supported values are
-  \`"mirror_histogram"\` and \`"stacked_histogram"\`.
+  `"mirror_histogram"`, `"stacked_histogram"`, `"covariate_balance"`,
+  `"goodness_followup"`, and `"survival_curve"`.
 
 - ...:
 

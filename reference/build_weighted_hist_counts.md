@@ -24,5 +24,5 @@ build_weighted_hist_counts(x, weights, breaks)
 
 ## Value
 
-Data frame with columns \`x\` (bin midpoints) and \`count\` (weight sums
-per bin).
+Data frame with columns `x` (bin midpoints) and `count` (weight sums per
+bin).
