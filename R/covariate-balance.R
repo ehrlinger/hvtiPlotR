@@ -314,6 +314,15 @@ sample_covariate_balance_data <- function(
   # residual imbalance on the covariates most responsible for their extremity.
   idx0      <- which(treat == 0)
   idx1      <- which(treat == 1)
+
+  if (!length(idx0) || !length(idx1)) {
+    stop(
+      "`treat` must contain at least one control (0) and one treated (1) ",
+      "observation for matching.",
+      call. = FALSE
+    )
+  }
+
   ps0       <- ps[idx0]
   ps1       <- ps[idx1]
   used_ctrl <- rep(FALSE, length(idx0))
