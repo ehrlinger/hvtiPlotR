@@ -11,7 +11,8 @@ survival_curve(
   strata_col = NULL,
   conf_int = TRUE,
   conf_level = 0.6827,
-  report_times = c(1, 5, 10, 15, 20, 25)
+  report_times = c(1, 5, 10, 15, 20, 25),
+  method = c("kaplan-meier", "nelson-aalen")
 )
 }
 \arguments{
@@ -37,6 +38,13 @@ macro default.}
 \item{report_times}{Numeric vector of time points at which survival
 estimates and numbers at risk are reported. Defaults to
 \code{c(1, 5, 10, 15, 20, 25)}.}
+
+\item{method}{Estimator to use.  \code{"kaplan-meier"} (default) computes
+the product-limit estimate with a logit CI — corresponding to the SAS
+\code{\%kaplan} macro.  \code{"nelson-aalen"} uses the Fleming-Harrington
+cumulative hazard \eqn{H(t) = \sum d_i / n_i} with \eqn{S(t) = \exp(-H)}
+and a log CI on \eqn{H(t)} — corresponding to the SAS \code{\%nelsont}
+macro, which is preferred when \eqn{S(t)} falls to or near zero.}
 }
 \value{
 A named list with elements mirroring the SAS \code{\%kaplan} macro
@@ -152,6 +160,19 @@ result$report_table
 #   ggplot2::scale_x_continuous(breaks = seq(0, 20, 5)) +
 #   ggplot2::labs(x = "Years after Operation",
 #                 y = "Restricted Mean Survival (years)") +
+#   hvti_theme("manuscript")
+#
+# --- Nelson-Aalen (use when S(t) falls to zero; mirrors SAS \%nelsont) ---
+# result_na <- survival_curve(dta, method = "nelson-aalen")
+# result_na$survival_plot +
+#   ggplot2::scale_color_manual(values = c(All = "steelblue"), guide = "none") +
+#   ggplot2::scale_fill_manual(values  = c(All = "steelblue"), guide = "none") +
+#   ggplot2::scale_y_continuous(breaks = seq(0, 100, 20),
+#                               labels = function(x) paste0(x, "\%")) +
+#   ggplot2::scale_x_continuous(breaks = seq(0, 20, 5)) +
+#   ggplot2::coord_cartesian(xlim = c(0, 20), ylim = c(0, 100)) +
+#   ggplot2::labs(x = "Years after Operation", y = "Survival (\%)",
+#                 title = "Freedom from Death (Nelson-Aalen)") +
 #   hvti_theme("manuscript")
 #
 # --- Save ---

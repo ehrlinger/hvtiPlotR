@@ -389,6 +389,59 @@ test_that("survival_curve errors when report_times is non-numeric", {
                "report_times")
 })
 
+test_that("survival_curve errors on invalid method", {
+  dta <- sample_survival_data(n = 50, seed = 1)
+  expect_error(survival_curve(dta, method = "breslow"),
+               "kaplan-meier|nelson-aalen")
+})
+
+# ===========================================================================
+# survival_curve — method = "nelson-aalen"
+# ===========================================================================
+
+test_that("nelson-aalen method returns a ggplot survival_plot", {
+  dta    <- sample_survival_data(n = 200, seed = 10)
+  result <- survival_curve(dta, method = "nelson-aalen")
+  expect_s3_class(result$survival_plot, "ggplot")
+})
+
+test_that("nelson-aalen method returns expected list names", {
+  dta    <- sample_survival_data(n = 200, seed = 11)
+  result <- survival_curve(dta, method = "nelson-aalen")
+  expect_named(result,
+               c("survival_plot", "cumhaz_plot", "hazard_plot",
+                 "loglog_plot", "life_plot",
+                 "km_data", "risk_table", "report_table"),
+               ignore.order = FALSE)
+})
+
+test_that("nelson-aalen surv differs from kaplan-meier", {
+  dta  <- sample_survival_data(n = 500, seed = 12)
+  km   <- survival_curve(dta, method = "kaplan-meier")
+  na   <- survival_curve(dta, method = "nelson-aalen")
+  # Both methods should produce surv in (0, 1]; they need not be identical
+  expect_true(all(na$km_data$surv >= 0 & na$km_data$surv <= 1))
+  expect_false(identical(km$km_data$surv, na$km_data$surv))
+})
+
+test_that("nelson-aalen cumhaz is non-decreasing", {
+  result <- survival_curve(sample_survival_data(n = 300, seed = 13),
+                           method = "nelson-aalen")
+  ch <- result$km_data$cumhaz
+  expect_true(all(diff(ch) >= -1e-9))
+})
+
+test_that("nelson-aalen works with stratification", {
+  dta <- sample_survival_data(
+    n = 200, strata_levels = c("A", "B"),
+    hazard_ratios = c(1, 1.5), seed = 14
+  )
+  result <- survival_curve(dta, strata_col = "valve_type",
+                           method = "nelson-aalen")
+  expect_s3_class(result$survival_plot, "ggplot")
+  expect_true(all(c("A", "B") %in% result$km_data$strata))
+})
+
 # ===========================================================================
 # survival_curve — non-default column names
 # ===========================================================================

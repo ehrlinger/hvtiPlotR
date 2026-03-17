@@ -1,10 +1,18 @@
 ###############################################################################
-## Kaplan-Meier survival analysis — porting the SAS %kaplan macro to R.
+## kaplan-meier.R
 ##
-## Produces four companion plots (survival curve, cumulative hazard, hazard
-## rate, and integrated survivorship / life expectancy) plus associated data
-## frames (tidy KM data, numbers-at-risk table, and a report table at user-
-## supplied time points).
+## R port of the SAS macros:
+##   %kaplan  (!MACROS/kaplan)  — product-limit survival analysis
+##   %nelsont (!MACROS/nelsont) — Nelson-Aalen cumulative event analysis
+## as called from:
+##   /distributions/templates/tp.ac.dead.sas
+##
+## Produces five companion plots matching the SAS macro output flags
+## (PLOTS, PLOTC, PLOTH, PLOTL) plus associated data frames (tidy KM data,
+## numbers-at-risk table, and a report table at user-supplied time points).
+##
+## method = "kaplan-meier"  →  %kaplan  (product-limit, logit CI)
+## method = "nelson-aalen"  →  %nelsont (Fleming-Harrington, log CI on H)
 ##
 ## Quick start
 ## -----------
@@ -39,27 +47,34 @@
 ##' @return A \code{survfit} object.
 ##' @importFrom survival Surv survfit
 ##' @keywords internal
-km_fit <- function(data, time_col, event_col, strata_col, conf_level) {
+km_fit <- function(data, time_col, event_col, strata_col, conf_level, method) {
   t_ <- data[[time_col]]
   e_ <- data[[event_col]]
 
+  # method → survfit type and CI transform
+  # "kaplan-meier": product-limit S(t), logit CI  — matches SAS %kaplan
+  # "nelson-aalen": Fleming-Harrington H(t), log CI — matches SAS %nelsont
+  surv_type <- if (method == "kaplan-meier") "kaplan-meier" else "fh"
+  conf_type <- if (method == "kaplan-meier") "logit"        else "log"
+
   if (is.null(strata_col)) {
-    fit <- survival::survfit(
+    survival::survfit(
       survival::Surv(t_, e_) ~ 1,
       data      = data.frame(t_ = t_, e_ = e_),
+      type      = surv_type,
       conf.int  = conf_level,
-      conf.type = "logit"        # matches SAS %kaplan logistic CI transform
+      conf.type = conf_type
     )
   } else {
     s_ <- data[[strata_col]]
-    fit <- survival::survfit(
+    survival::survfit(
       survival::Surv(t_, e_) ~ s_,
       data      = data.frame(t_ = t_, e_ = e_, s_ = s_),
+      type      = surv_type,
       conf.int  = conf_level,
-      conf.type = "logit"
+      conf.type = conf_type
     )
   }
-  fit
 }
 
 ##' Extract tidy data frame from a survfit object
@@ -414,6 +429,12 @@ km_build_life_plot <- function(km_df) {
 #' @param report_times Numeric vector of time points at which survival
 #'   estimates and numbers at risk are reported. Defaults to
 #'   \code{c(1, 5, 10, 15, 20, 25)}.
+#' @param method Estimator to use.  \code{"kaplan-meier"} (default) computes
+#'   the product-limit estimate with a logit CI — corresponding to the SAS
+#'   \code{\%kaplan} macro.  \code{"nelson-aalen"} uses the Fleming-Harrington
+#'   cumulative hazard \eqn{H(t) = \sum d_i / n_i} with \eqn{S(t) = \exp(-H)}
+#'   and a log CI on \eqn{H(t)} — corresponding to the SAS \code{\%nelsont}
+#'   macro, which is preferred when \eqn{S(t)} falls to or near zero.
 #'
 #' @return A named list with elements mirroring the SAS \code{\%kaplan} macro
 #'   output plots (\code{PLOTS}, \code{PLOTC}, \code{PLOTH}, \code{PLOTL}):
@@ -520,6 +541,19 @@ km_build_life_plot <- function(km_df) {
 #' #                 y = "Restricted Mean Survival (years)") +
 #' #   hvti_theme("manuscript")
 #' #
+#' # --- Nelson-Aalen (use when S(t) falls to zero; mirrors SAS %nelsont) ---
+#' # result_na <- survival_curve(dta, method = "nelson-aalen")
+#' # result_na$survival_plot +
+#' #   ggplot2::scale_color_manual(values = c(All = "steelblue"), guide = "none") +
+#' #   ggplot2::scale_fill_manual(values  = c(All = "steelblue"), guide = "none") +
+#' #   ggplot2::scale_y_continuous(breaks = seq(0, 100, 20),
+#' #                               labels = function(x) paste0(x, "%")) +
+#' #   ggplot2::scale_x_continuous(breaks = seq(0, 20, 5)) +
+#' #   ggplot2::coord_cartesian(xlim = c(0, 20), ylim = c(0, 100)) +
+#' #   ggplot2::labs(x = "Years after Operation", y = "Survival (%)",
+#' #                 title = "Freedom from Death (Nelson-Aalen)") +
+#' #   hvti_theme("manuscript")
+#' #
 #' # --- Save ---
 #' # ggplot2::ggsave("survival_curve.pdf", result$survival_plot,
 #' #                 width = 8, height = 6)
@@ -534,7 +568,11 @@ survival_curve <- function(data,
                            strata_col   = NULL,
                            conf_int     = TRUE,
                            conf_level   = 0.6827,
-                           report_times = c(1, 5, 10, 15, 20, 25)) {
+                           report_times = c(1, 5, 10, 15, 20, 25),
+                           method       = c("kaplan-meier",
+                                            "nelson-aalen")) {
+
+  method <- match.arg(method)
 
   # --- Validation -----------------------------------------------------------
   assertthat::assert_that(
@@ -561,7 +599,7 @@ survival_curve <- function(data,
   )
 
   # --- Estimation -----------------------------------------------------------
-  fit    <- km_fit(data, time_col, event_col, strata_col, conf_level)
+  fit    <- km_fit(data, time_col, event_col, strata_col, conf_level, method)
   km_df  <- km_extract_tidy(fit, strata_col)
 
   # --- Tables ---------------------------------------------------------------

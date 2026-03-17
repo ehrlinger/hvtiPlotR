@@ -4,7 +4,7 @@
 \alias{km_fit}
 \title{Fit a Kaplan-Meier (survfit) model}
 \usage{
-km_fit(data, time_col, event_col, strata_col, conf_level)
+km_fit(data, time_col, event_col, strata_col, conf_level, method)
 }
 \arguments{
 \item{data}{A data frame.}
