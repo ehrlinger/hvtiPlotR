@@ -100,6 +100,13 @@ sample_goodness_followup_data <- function(
   study_end   <- as.Date(study_end)
   close_date  <- as.Date(close_date)
 
+  if (anyNA(study_start))
+    stop("`study_start` must be a valid date (or coercible to Date).", call. = FALSE)
+  if (anyNA(study_end))
+    stop("`study_end` must be a valid date (or coercible to Date).", call. = FALSE)
+  if (anyNA(close_date))
+    stop("`close_date` must be a valid date (or coercible to Date).", call. = FALSE)
+
   if (study_start >= study_end)
     stop("`study_start` must be before `study_end`.", call. = FALSE)
   if (close_date < study_end)
