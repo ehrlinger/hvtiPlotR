@@ -5,14 +5,15 @@
 \title{hvtiPlotR Plot Generic}
 \usage{
 hvti_plot(
-  type = c("mirror_histogram", "stacked_histogram", "covariate_balance"),
+  type = c("mirror_histogram", "stacked_histogram", "covariate_balance",
+    "goodness_followup", "survival_curve"),
   ...
 )
 }
 \arguments{
 \item{type}{Character keyword identifying the plot type. Supported values
-are \code{"mirror_histogram"}, \code{"stacked_histogram"}, and
-\code{"covariate_balance"}.}
+are \code{"mirror_histogram"}, \code{"stacked_histogram"}, \code{"covariate_balance"},
+\code{"goodness_followup"}, and \code{"survival_curve"}.}
 
 \item{...}{Additional arguments passed to the underlying plotting function.}
 }

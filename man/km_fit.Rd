@@ -16,6 +16,11 @@ km_fit(data, time_col, event_col, strata_col, conf_level, method)
 \item{strata_col}{Name of an optional stratification column, or \code{NULL}.}
 
 \item{conf_level}{Confidence level for the CI band (default 0.6827 = 1 SD).}
+
+\item{method}{Method for survival curve estimation: \code{"kaplan-meier"} uses
+product-limit S(t) with logit CI (matches SAS \\%kaplan), or
+\code{"nelson-aalen"} uses Fleming-Harrington H(t) with log CI (matches
+SAS \\%nelsont).}
 }
 \value{
 A \code{survfit} object.

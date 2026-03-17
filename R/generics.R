@@ -44,15 +44,16 @@ hvti_theme.hvti_theme_poster <- function(style, ...) {
 #' Provides a single entry point for generating hvtiPlotR plots.
 #'
 #' @param type Character keyword identifying the plot type. Supported values
-#'   are `"mirror_histogram"`, `"stacked_histogram"`, and
-#'   `"covariate_balance"`.
+#'   are `"mirror_histogram"`, `"stacked_histogram"`, `"covariate_balance"`,
+#'   `"goodness_followup"`, and `"survival_curve"`.
 #' @param ... Additional arguments passed to the underlying plotting function.
 #'
 #' @return The object produced by the requested plotting function (e.g., a list
 #'   containing plot elements and diagnostics, or a ggplot object).
 #' @export
 hvti_plot <- function(type = c("mirror_histogram", "stacked_histogram",
-                               "covariate_balance"), ...) {
+                               "covariate_balance", "goodness_followup",
+                               "survival_curve"), ...) {
   type <- match.arg(type)
   class(type) <- c(paste0("hvti_plot_", type), class(type))
   UseMethod("hvti_plot", type)
@@ -76,4 +77,14 @@ hvti_plot.hvti_plot_stacked_histogram <- function(type, ...) {
 #' @export
 hvti_plot.hvti_plot_covariate_balance <- function(type, ...) {
   covariate_balance(...)
+}
+
+#' @export
+hvti_plot.hvti_plot_goodness_followup <- function(type, ...) {
+  goodness_followup(...)
+}
+
+#' @export
+hvti_plot.hvti_plot_survival_curve <- function(type, ...) {
+  survival_curve(...)
 }

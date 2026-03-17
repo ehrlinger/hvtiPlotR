@@ -2,33 +2,83 @@
 % Please edit documentation in R/help.R
 \name{hvtiPlotR-package}
 \alias{hvtiPlotR-package}
-\title{hvtiPlotR package for plotting standard graphics for manuscripts
-and presentations using \code{R} and the \code{ggplot2} package.}
+\alias{hvtiPlotR}
+\title{hvtiPlotR: Publication-Quality Graphics for Clinical Manuscripts}
 \description{
-hvtiPlotR is a replacement package for the \code{plot.sas}
-macro for creating publication quality graphics.
+\code{hvtiPlotR} is an R port of the \code{plot.sas} macro suite used by the
+Clinical Investigations Statistics group within the Heart & Vascular
+Institute at the Cleveland Clinic. It produces publication-quality
+graphics that conform to HVI manuscript and presentation standards using
+\link[ggplot2:ggplot2-package]{ggplot2::ggplot2} and the \link[officer:officer]{officer::officer} package.
+
+All plot functions return bare \code{\link[ggplot2:ggplot]{ggplot2::ggplot()}} objects (or lists of
+them) so callers can apply additional \code{ggplot2} layers, scales, and themes
+without restriction.
+\subsection{Themes}{
 
 \itemize{
-\item \code{ggplot2} figures: We chose to use the \code{ggplot2} package for our figures.
-The plot functions all return either a single \code{ggplot2} object, or a list of
-\code{ggplot2} objects.
-The user can then use additional \code{ggplot2} functions to modify and customise the
-figures to their liking.
+\item \code{\link[=hvti_theme]{hvti_theme()}}: Unified theme dispatcher (\code{"manuscript"},
+\code{"ppt"}, \code{"dark_ppt"}, \code{"poster"}).
+\item \code{\link[=theme_man]{theme_man()}} / \code{theme_manuscript}: Theme for manuscript figures.
+\item \code{\link[=theme_ppt]{theme_ppt()}}: Theme for PowerPoint presentation figures.
+\item \code{\link[=theme_dark_ppt]{theme_dark_ppt()}}: Dark theme for PowerPoint presentations.
+\item \code{\link[=theme_poster]{theme_poster()}}: Theme for poster figures.
+}
 }
 
-The hvtiPlotR package contains the following functions:
+\subsection{Output helpers}{
+
 \itemize{
-\item \code{\link{theme_man}}: Theme for manuscript figures
-\item \code{\link{theme_ppt}}: Theme for PowerPoint presentation figures
-\item \code{\link{theme_dark_ppt}}: Dark theme for PowerPoint presentations
-\item \code{\link{theme_poster}}: Theme for poster figures
-\item \code{\link{save_ppt}}: Save ggplot objects to PowerPoint presentations
-\item \code{\link{makeFootnote}}: Add footnotes to graphics
+\item \code{\link[=save_ppt]{save_ppt()}}: Save ggplot objects to a PowerPoint presentation
+via the \link[officer:officer]{officer::officer} package.
+\item \code{\link[=makeFootnote]{makeFootnote()}}: Add footnotes to graphics.
+}
 }
 
-All functions have an associated plotting function that returns ggplot2 graphics, either
-individually or as a list, that can be further customised using standard ggplot2 commands.
+\subsection{Plot functions}{
+
+\itemize{
+\item \code{\link[=hvti_plot]{hvti_plot()}}: Single entry-point dispatcher for all hvtiPlotR
+plot types (\code{"mirror_histogram"}, \code{"stacked_histogram"},
+\code{"covariate_balance"}).
+\item \code{\link[=mirror_histogram]{mirror_histogram()}}: Side-by-side propensity-score histograms
+(binary-match or IPTW-weighted mode). Ports \code{plot.sas} mirror
+histogram output.
+\item \code{\link[=stacked_histogram]{stacked_histogram()}}: Stacked (or filled) histogram of a numeric
+variable faceted by a grouping factor.
+\item \code{\link[=covariate_balance]{covariate_balance()}}: Dot-plot of standardised mean differences
+before and after propensity-score matching or weighting.
+\item \code{\link[=goodness_followup]{goodness_followup()}}: Goodness-of-follow-up scatter plot showing
+actual vs. potential follow-up per operation year. Optionally includes
+a non-fatal-event panel.
+\item \code{\link[=survival_curve]{survival_curve()}}: Kaplan-Meier or Nelson-Aalen survival analysis
+returning up to five plot types (survival, cumulative hazard, hazard,
+log-log, life/RMST) plus risk and report tables. Ports the SAS
+\verb{\%kaplan} and \verb{\%nelsont} macros from \code{tp.ac.dead.sas}.
+}
+}
+
+\subsection{Sample-data generators}{
+
+Each plot function ships with a companion generator for use in examples
+and tests:
+
+\itemize{
+\item \code{\link[=sample_mirror_histogram_data]{sample_mirror_histogram_data()}}: Simulates propensity scores via
+a logistic model with greedy 1:1 caliper matching and optional IPTW
+weights.
+\item \code{\link[=sample_stacked_histogram_data]{sample_stacked_histogram_data()}}: Simulates year-by-category
+count data.
+\item \code{\link[=sample_covariate_balance_data]{sample_covariate_balance_data()}}: Simulates patient-level
+covariates with a logistic propensity model and caliper matching,
+returning standardised mean differences before and after matching.
+\item \code{\link[=sample_goodness_followup_data]{sample_goodness_followup_data()}}: Simulates an operative cohort
+with operation dates, follow-up times, death, and non-fatal events.
+\item \code{\link[=sample_survival_data]{sample_survival_data()}}: Simulates exponential survival times
+with administrative censoring and optional treatment strata.
+}
+}
 }
 \references{
-Wickham, H. ggplot2: elegant graphics for data analysis. Springer New York, 2009.
+Wickham, H. \emph{ggplot2: Elegant Graphics for Data Analysis}. Springer, 2009.
 }

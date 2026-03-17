@@ -2,8 +2,10 @@
 
 S3method(hvti_plot,default)
 S3method(hvti_plot,hvti_plot_covariate_balance)
+S3method(hvti_plot,hvti_plot_goodness_followup)
 S3method(hvti_plot,hvti_plot_mirror_histogram)
 S3method(hvti_plot,hvti_plot_stacked_histogram)
+S3method(hvti_plot,hvti_plot_survival_curve)
 S3method(hvti_theme,default)
 S3method(hvti_theme,hvti_theme_dark_ppt)
 S3method(hvti_theme,hvti_theme_manuscript)
