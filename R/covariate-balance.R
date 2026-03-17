@@ -23,6 +23,41 @@ cb_validate_input <- function(data, variable_col, group_col, std_diff_col) {
     stop(sprintf("`%s` must be numeric.", std_diff_col), call. = FALSE)
 }
 
+cb_validate_params <- function(threshold, point_size, hline_linewidth,
+                               vline_linewidth) {
+  # Validate threshold: finite, non-negative numeric scalar
+  if (!is.numeric(threshold) || length(threshold) != 1L ||
+      !is.finite(threshold) || threshold < 0)
+    stop(
+      "`threshold` must be a finite, non-negative numeric scalar.",
+      call. = FALSE
+    )
+
+  # Validate point_size: finite, positive numeric scalar
+  if (!is.numeric(point_size) || length(point_size) != 1L ||
+      !is.finite(point_size) || point_size <= 0)
+    stop(
+      "`point_size` must be a finite, positive numeric scalar.",
+      call. = FALSE
+    )
+
+  # Validate hline_linewidth: finite, positive numeric scalar
+  if (!is.numeric(hline_linewidth) || length(hline_linewidth) != 1L ||
+      !is.finite(hline_linewidth) || hline_linewidth <= 0)
+    stop(
+      "`hline_linewidth` must be a finite, positive numeric scalar.",
+      call. = FALSE
+    )
+
+  # Validate vline_linewidth: finite, positive numeric scalar
+  if (!is.numeric(vline_linewidth) || length(vline_linewidth) != 1L ||
+      !is.finite(vline_linewidth) || vline_linewidth <= 0)
+    stop(
+      "`vline_linewidth` must be a finite, positive numeric scalar.",
+      call. = FALSE
+    )
+}
+
 #' @importFrom rlang .data
 #' @importFrom ggplot2 ggplot aes geom_vline geom_hline geom_point
 #'   scale_y_continuous
@@ -180,6 +215,7 @@ covariate_balance <- function(
   threshold_linetype = "dotted"
 ) {
   cb_validate_input(data, variable_col, group_col, std_diff_col)
+  cb_validate_params(threshold, point_size, hline_linewidth, vline_linewidth)
 
   # Work on a local copy to avoid mutating inputs (e.g., data.table) by reference
   working <- as.data.frame(data)

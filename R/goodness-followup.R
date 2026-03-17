@@ -116,7 +116,7 @@ sample_goodness_followup_data <- function(
 
   # Operation dates: uniform over the study period
   study_span <- as.integer(study_end - study_start)
-  op_dates   <- study_start + sample.int(study_span + 1L, n, replace = TRUE) - 1L
+  op_dates   <- study_start + sample.int(study_span + 1, n, replace = TRUE) - 1
 
   # iv_opyrs: years from origin_year Jan-1 to each operation date
   origin_date <- as.Date(paste0(origin_year, "-01-01"))
@@ -136,7 +136,7 @@ sample_goodness_followup_data <- function(
   # recorded if it occurs before death and before censoring.
   event_time    <- stats::rexp(n, rate = event_rate)
   iv_event_time <- pmin(event_time, death_time, pfup)
-  ev_event      <- (event_time <= death_time) & (event_time <= pfup)
+  ev_event      <- (event_time < death_time) & (event_time <= pfup)
   iv_event      <- round(iv_event_time, 4)
 
   # Active/systematic death: restrict to 90% of potential follow-up.
