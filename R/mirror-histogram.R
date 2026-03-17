@@ -354,8 +354,9 @@ mirror_histogram_diagnostics <- function(working, matched_idx, group_levels,
 #'   plus either \code{match_col} or \code{weight_col}.
 #' @param score_col Column name holding the numeric propensity score.
 #' @param group_col Column name identifying the grouping/treatment indicator.
-#' @param match_col Column name of the binary match indicator. Required in
-#'   binary-match mode; ignored when \code{weight_col} is supplied.
+#' @param match_col Column name of the binary match indicator. Default
+#'   \code{"match"}. Required in binary-match mode; ignored when
+#'   \code{weight_col} is supplied.
 #' @param group_levels Length-2 vector giving the values in \code{group_col}
 #'   to plot (order determines panel orientation).
 #' @param group_labels Length-2 character vector of human-readable group labels.

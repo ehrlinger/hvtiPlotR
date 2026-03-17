@@ -44,7 +44,8 @@ hvti_theme.hvti_theme_poster <- function(style, ...) {
 #' Provides a single entry point for generating hvtiPlotR plots.
 #'
 #' @param type Character keyword identifying the plot type. Supported values
-#'   are `"mirror_histogram"` and `"stacked_histogram"`.
+#'   are `"mirror_histogram"`, `"stacked_histogram"`, and
+#'   `"covariate_balance"`.
 #' @param ... Additional arguments passed to the underlying plotting function.
 #'
 #' @return The object produced by the requested plotting function (e.g., a list

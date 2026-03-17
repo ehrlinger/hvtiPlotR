@@ -199,8 +199,11 @@ sample_goodness_followup_data <- function(
 #' @param alpha Transparency passed to the point and segment layers.
 #' @param segment_drop Amount (in years) subtracted from each follow-up value
 #'   to draw the short vertical tick beneath each point.
-#' @param diagonal_color,diagonal_linetype,diagonal_linewidth Styling controls
-#'   for the potential follow-up reference line.
+#' @param diagonal_color Color of the potential follow-up reference line.
+#'   Default `"orange"`.
+#' @param diagonal_linetype Line type of the reference line. Default
+#'   `"dashed"`.
+#' @param diagonal_linewidth Line width of the reference line. Default `0.6`.
 #'
 #' @return A list containing:
 #'   * `death_plot`: ggplot object — death follow-up panel.

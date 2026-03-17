@@ -140,6 +140,7 @@ build_stacked_histogram_plot <- function(data, x_col, group_col, binwidth, posit
 #' }
 #'
 #' @importFrom ggplot2 ggplot aes geom_histogram
+#' @importFrom rlang .data
 #' @export
 stacked_histogram <- function(data,
                               x_col     = "year",

@@ -72,8 +72,13 @@ event. Default \code{c("No event", "Non-fatal event", "Death")}.}
 \item{segment_drop}{Amount (in years) subtracted from each follow-up value
 to draw the short vertical tick beneath each point.}
 
-\item{diagonal_color, diagonal_linetype, diagonal_linewidth}{Styling controls
-for the potential follow-up reference line.}
+\item{diagonal_color}{Color of the potential follow-up reference line.
+Default \code{"orange"}.}
+
+\item{diagonal_linetype}{Line type of the reference line. Default
+\code{"dashed"}.}
+
+\item{diagonal_linewidth}{Line width of the reference line. Default \code{0.6}.}
 }
 \value{
 A list containing:

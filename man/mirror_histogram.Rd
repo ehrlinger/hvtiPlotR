@@ -28,8 +28,9 @@ plus either \code{match_col} or \code{weight_col}.}
 
 \item{group_col}{Column name identifying the grouping/treatment indicator.}
 
-\item{match_col}{Column name of the binary match indicator. Required in
-binary-match mode; ignored when \code{weight_col} is supplied.}
+\item{match_col}{Column name of the binary match indicator. Default
+\code{"match"}. Required in binary-match mode; ignored when
+\code{weight_col} is supplied.}
 
 \item{group_levels}{Length-2 vector giving the values in \code{group_col}
 to plot (order determines panel orientation).}
