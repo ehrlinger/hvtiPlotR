@@ -26,6 +26,7 @@ Imports:
     ggplot2,
     grid,
     rlang,
+    survival,
     tidyverse,
     officer
 Suggests:

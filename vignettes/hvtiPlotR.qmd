@@ -977,6 +977,176 @@ ggsave(
 )
 ```
 
+# Kaplan-Meier Survival Curve
+
+`survival_curve()` estimates the Kaplan-Meier product-limit survival function
+and returns five companion bare plots matching the SAS `%kaplan` macro output
+(`PLOTS`, `PLOTC`, `PLOTH`, `PLOTL`), plus tidy data frames for tables and
+further computation. Confidence intervals use the logit transform with a
+default confidence level of 0.6827 (one standard deviation), reproducing the
+SAS macro default.
+
+## Sample data
+
+```{r}
+#| label: km_data
+dta_km <- sample_survival_data(n = 500, seed = 42)
+head(dta_km)
+```
+
+## Survival curve (PLOTS=1)
+
+```{r}
+#| label: km_result
+km <- survival_curve(dta_km)
+
+# Bare plot — no scales or labels yet
+km$survival_plot
+```
+
+## Adding scales, labels, and annotations
+
+```{r}
+#| label: km_styled
+km$survival_plot +
+  scale_color_manual(values = c(All = "steelblue"), guide = "none") +
+  scale_fill_manual(values  = c(All = "steelblue"), guide = "none") +
+  scale_y_continuous(
+    breaks = seq(0, 100, 20),
+    labels = function(x) paste0(x, "%")
+  ) +
+  scale_x_continuous(breaks = seq(0, 20, 5)) +
+  coord_cartesian(xlim = c(0, 20), ylim = c(0, 100)) +
+  labs(
+    x     = "Years after Operation",
+    y     = "Freedom from Death (%)",
+    title = "Overall Survival"
+  ) +
+  annotate("text", x = 1, y = 5,
+           label = paste0("n = ", nrow(dta_km)),
+           hjust = 0, size = 3.5) +
+  hvtiPlotR::hvti_theme("manuscript")
+```
+
+## Numbers at risk and report table
+
+```{r}
+#| label: km_tables
+km$risk_table
+km$report_table
+```
+
+## Saving the plot
+
+```{r}
+#| label: km_save
+#| eval: false
+km_final <- km$survival_plot +
+  scale_color_manual(values = c(All = "steelblue"), guide = "none") +
+  scale_fill_manual(values  = c(All = "steelblue"), guide = "none") +
+  scale_y_continuous(breaks = seq(0, 100, 20),
+                     labels = function(x) paste0(x, "%")) +
+  scale_x_continuous(breaks = seq(0, 20, 5)) +
+  coord_cartesian(xlim = c(0, 20), ylim = c(0, 100)) +
+  labs(x = "Years after Operation", y = "Freedom from Death (%)") +
+  hvtiPlotR::hvti_theme("manuscript")
+
+ggsave("../graphs/km_survival.pdf", km_final, width = 8, height = 6)
+```
+
+## Stratified analysis
+
+```{r}
+#| label: km_strata_data
+dta_km_s <- sample_survival_data(
+  n             = 500,
+  strata_levels = c("Type A", "Type B"),
+  hazard_ratios = c(1, 1.4),
+  seed          = 42
+)
+
+km_s <- survival_curve(dta_km_s, strata_col = "valve_type")
+
+km_s$survival_plot +
+  scale_color_manual(
+    values = c("Type A" = "steelblue", "Type B" = "firebrick"),
+    name   = "Valve Type"
+  ) +
+  scale_fill_manual(
+    values = c("Type A" = "steelblue", "Type B" = "firebrick"),
+    name   = "Valve Type"
+  ) +
+  scale_y_continuous(breaks = seq(0, 100, 20),
+                     labels = function(x) paste0(x, "%")) +
+  scale_x_continuous(breaks = seq(0, 20, 5)) +
+  coord_cartesian(xlim = c(0, 20), ylim = c(0, 100)) +
+  labs(x = "Years after Operation", y = "Freedom from Death (%)",
+       title = "Survival by Valve Type") +
+  theme(legend.position = c(0.15, 0.20)) +
+  hvtiPlotR::hvti_theme("manuscript")
+```
+
+## Cumulative hazard (PLOTC=1)
+
+```{r}
+#| label: km_cumhaz
+km$cumhaz_plot +
+  scale_x_continuous(breaks = seq(0, 20, 5)) +
+  labs(x = "Years after Operation", y = "Cumulative Hazard H(t)",
+       title = "Nelson-Aalen Cumulative Hazard") +
+  scale_color_manual(values = c(All = "steelblue"), guide = "none") +
+  hvtiPlotR::hvti_theme("manuscript")
+```
+
+## Log-log survival plot (PLOTC, Weibull/PH check)
+
+Parallel lines across strata indicate proportional hazards.
+
+```{r}
+#| label: km_loglog
+km_s$loglog_plot +
+  scale_color_manual(
+    values = c("Type A" = "steelblue", "Type B" = "firebrick"),
+    name   = "Valve Type"
+  ) +
+  labs(x = "log(Years after Operation)", y = "log(-log S(t))",
+       title = "Log-Log Survival — Proportional-Hazards Check") +
+  hvtiPlotR::hvti_theme("manuscript")
+```
+
+## Hazard rate (PLOTH=1)
+
+The raw point estimates are noisy; add `geom_smooth()` for a publication-ready
+smoothed hazard curve.
+
+```{r}
+#| label: km_hazard
+# Raw points from the SAS %kaplan HAZARD formula
+km$hazard_plot +
+  geom_smooth(
+    aes(x = mid_time, y = hazard, color = strata),
+    method = "loess", se = FALSE, span = 0.6
+  ) +
+  scale_color_manual(values = c(All = "steelblue"), guide = "none") +
+  scale_x_continuous(breaks = seq(0, 20, 5)) +
+  labs(x = "Years after Operation", y = "Instantaneous Hazard",
+       title = "Hazard Rate") +
+  hvtiPlotR::hvti_theme("manuscript")
+```
+
+## Integrated survivorship / restricted mean survival (PLOTL=1)
+
+```{r}
+#| label: km_life
+km$life_plot +
+  scale_color_manual(values = c(All = "steelblue"), guide = "none") +
+  scale_x_continuous(breaks = seq(0, 20, 5)) +
+  labs(x = "Years after Operation",
+       y = "Restricted Mean Survival (years)",
+       title = "Integral of Survivorship") +
+  hvtiPlotR::hvti_theme("manuscript")
+```
+
 # Saving publication graphics
 Once we have created the figure, and formatted it as desired (using a **hvtiPlotR** theme), we need to save the figure in a format that can easily be imported into our publications. 
 
