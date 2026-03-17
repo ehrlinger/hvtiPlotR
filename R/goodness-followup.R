@@ -123,10 +123,14 @@ sample_goodness_followup_data <- function(
   dead       <- death_time <= pfup
   iv_dead    <- round(pmin(death_time, pfup), 4)
 
-  # Non-fatal event: exponential, censored at potential follow-up
-  event_time <- stats::rexp(n, rate = event_rate)
-  ev_event   <- event_time <= pfup
-  iv_event   <- round(pmin(event_time, pfup), 4)
+  # Non-fatal event: exponential, competing with death and censored at
+  # potential follow-up. For the event panel, follow-up time is the minimum
+  # of event time, death time, and potential follow-up. An event is only
+  # recorded if it occurs before death and before censoring.
+  event_time    <- stats::rexp(n, rate = event_rate)
+  iv_event_time <- pmin(event_time, death_time, pfup)
+  ev_event      <- (event_time <= death_time) & (event_time <= pfup)
+  iv_event      <- round(iv_event_time, 4)
 
   # Active/systematic death: restrict to 90% of potential follow-up.
   # This approximates the shorter active ascertainment window vs. passive
