@@ -77,6 +77,7 @@ if (getRversion() >= "2.15.1") {
 #'   ggplot2::labs(x = "Operation Date", y = "Follow-up (years)")
 #'
 #' @importFrom stats rexp
+#' @importFrom assertthat is.count
 #' @export
 sample_goodness_followup_data <- function(
   n           = 300,
@@ -88,7 +89,7 @@ sample_goodness_followup_data <- function(
   event_rate  = 0.08,
   seed        = 42
 ) {
-  if (!is.numeric(n) || length(n) != 1L || n < 1L)
+  if (!assertthat::is.count(n))
     stop("`n` must be a positive integer scalar.", call. = FALSE)
   if (!is.numeric(death_rate) || death_rate <= 0)
     stop("`death_rate` must be a positive number.", call. = FALSE)
@@ -108,7 +109,7 @@ sample_goodness_followup_data <- function(
 
   # Operation dates: uniform over the study period
   study_span <- as.integer(study_end - study_start)
-  op_dates   <- study_start + sample.int(study_span, n, replace = TRUE)
+  op_dates   <- study_start + sample.int(study_span + 1L, n, replace = TRUE) - 1L
 
   # iv_opyrs: years from origin_year Jan-1 to each operation date
   origin_date <- as.Date(paste0(origin_year, "-01-01"))
@@ -122,10 +123,14 @@ sample_goodness_followup_data <- function(
   dead       <- death_time <= pfup
   iv_dead    <- round(pmin(death_time, pfup), 4)
 
-  # Non-fatal event: exponential, censored at potential follow-up
-  event_time <- stats::rexp(n, rate = event_rate)
-  ev_event   <- event_time <= pfup
-  iv_event   <- round(pmin(event_time, pfup), 4)
+  # Non-fatal event: exponential, competing with death and censored at
+  # potential follow-up. For the event panel, follow-up time is the minimum
+  # of event time, death time, and potential follow-up. An event is only
+  # recorded if it occurs before death and before censoring.
+  event_time    <- stats::rexp(n, rate = event_rate)
+  iv_event_time <- pmin(event_time, death_time, pfup)
+  ev_event      <- (event_time <= death_time) & (event_time <= pfup)
+  iv_event      <- round(iv_event_time, 4)
 
   # Active/systematic death: restrict to 90% of potential follow-up.
   # This approximates the shorter active ascertainment window vs. passive
