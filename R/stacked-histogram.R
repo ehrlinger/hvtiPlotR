@@ -48,7 +48,6 @@ build_stacked_histogram_plot <- function(data, x_col, group_col, binwidth, posit
     colour = factor(.data[[group_col]])
   )) +
     ggplot2::geom_histogram(binwidth = binwidth,
-                            color    = "black",
                             position = position)
 }
 

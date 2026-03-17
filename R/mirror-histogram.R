@@ -75,7 +75,7 @@ build_hist_counts <- function(x, breaks) {
     x,
     breaks = breaks,
     plot = FALSE,
-    right = FALSE,
+    right = TRUE,
     include.lowest = TRUE
   )
   data.frame(x = h$mids, count = h$counts)
@@ -91,7 +91,7 @@ build_hist_counts <- function(x, breaks) {
 ##' @return Data frame with columns `x` (bin midpoints) and `count` (weight sums per bin).
 ##' @keywords internal
 build_weighted_hist_counts <- function(x, weights, breaks) {
-  bins <- cut(x, breaks = breaks, right = FALSE, include.lowest = TRUE)
+  bins <- cut(x, breaks = breaks, right = TRUE, include.lowest = TRUE)
   sums <- tapply(weights, bins, FUN = sum, simplify = TRUE)
   sums[is.na(sums)] <- 0
   mids <- (breaks[-length(breaks)] + breaks[-1]) / 2
@@ -269,7 +269,8 @@ build_mirror_histogram_plot <- function(plot_df, group_labels, binwidth,
       breaks = y_breaks,
       labels = abs(y_breaks)
     ) +
-    ggplot2::labs(x = "Propensity Score (%)", y = "Number of Patients") +
+    ggplot2::labs(x = "Propensity Score (%)",
+                  y = "Number of patients / sum of weights") +
     ggplot2::coord_cartesian(clip = "off") +
     ggplot2::theme_minimal(base_size = 12)
 }
