@@ -897,6 +897,111 @@ mhist$diagnostics$group_counts_matched
        0    1
     1209 1197 
 
+## Stacked Histogram
+
+A common exploratory figure is the stacked histogram, which shows how
+the composition of a numeric variable changes over time or across
+another grouping dimension. The **hvtiPlotR** package provides the
+[`stacked_histogram()`](https://ehrlinger.github.io/hvtiPlotR/reference/stacked_histogram.md)
+function to generate this figure.
+
+The function returns a bare `ggplot` object — no colour scales, axis
+labels, or theme are applied — so the caller can add those freely with
+the usual `+` operator.
+
+The
+[`sample_stacked_histogram_data()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_stacked_histogram_data.md)
+function generates a reproducible example dataset with `year` and
+`category` columns.
+
+``` r
+# Generate sample data
+hist_dta <- sample_stacked_histogram_data(n_years = 20, start_year = 2000,
+                                           n_categories = 3)
+head(hist_dta)
+```
+
+      year category
+    1 2000        1
+    2 2000        1
+    3 2000        2
+    4 2000        2
+    5 2000        2
+    6 2000        1
+
+### Count histogram
+
+The default `position = "stack"` shows raw counts within each bin,
+equivalent to the `plot.sas` frequency histogram.
+
+``` r
+# Build the bare plot
+p_count <- stacked_histogram(hist_dta, x_col = "year", group_col = "category")
+
+# Layer on colour scales, labels, and a theme
+p_count +
+  scale_fill_brewer(palette = "Set1", name = "Category") +
+  scale_color_brewer(palette = "Set1", name = "Category") +
+  labs(x = "Year", y = "Count") +
+  hvti_theme("manuscript")
+```
+
+![](hvtiPlotR_files/figure-html/stacked_histogram_count-1.png)
+
+### Proportion (fill) histogram
+
+Setting `position = "fill"` rescales each bin so the bars sum to 1,
+making it easy to compare the relative composition across years.
+
+``` r
+# Build the proportional variant
+p_fill <- stacked_histogram(hist_dta, x_col = "year", group_col = "category",
+                             position = "fill")
+
+# Use manual colours and custom legend labels
+p_fill +
+  scale_fill_manual(
+    values = c("1" = "pink", "2" = "cyan", "3" = "orangered"),
+    labels = c("1" = "Group A", "2" = "Group B", "3" = "Group C"),
+    name   = "Category"
+  ) +
+  scale_color_manual(
+    values = c("1" = "pink", "2" = "cyan", "3" = "orangered"),
+    guide  = "none"
+  ) +
+  labs(x = "Year", y = "Proportion") +
+  hvti_theme("manuscript")
+```
+
+![](hvtiPlotR_files/figure-html/stacked_histogram_fill-1.png)
+
+### Saving stacked histograms
+
+Use [`ggsave()`](https://ggplot2.tidyverse.org/reference/ggsave.html) to
+write the composed figure to disk. Assign the final plot to a variable
+first so the same object is saved and displayed.
+
+``` r
+p_final <- p_fill +
+  scale_fill_manual(
+    values = c("1" = "pink", "2" = "cyan", "3" = "orangered"),
+    name   = "Category"
+  ) +
+  scale_color_manual(
+    values = c("1" = "pink", "2" = "cyan", "3" = "orangered"),
+    guide  = "none"
+  ) +
+  labs(x = "Year", y = "Proportion") +
+  hvti_theme("manuscript")
+
+ggsave(
+  filename = "../graphs/stacked_histogram.pdf",
+  plot     = p_final,
+  width    = 11,
+  height   = 8
+)
+```
+
 ## Saving publication graphics
 
 Once we have created the figure, and formatted it as desired (using a
@@ -937,7 +1042,7 @@ ccf_savePlot
     TableGrob (2 x 1) "arrange": 2 grobs
         z     cells    name                grob
         1 (1-1,1-1) arrange      gtable[layout]
-    sub 2 (2-2,1-1) arrange text[GRID.text.382]
+    sub 2 (2-2,1-1) arrange text[GRID.text.448]
 
 Figure ?? uses the same plot in Figure 12 with the code
 `ccf_plot+hvti_theme("manuscript")`. The current working directory is

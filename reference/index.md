@@ -49,6 +49,12 @@
 - [`sample_mirror_histogram_data()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_mirror_histogram_data.md)
   : Generate Sample Data for Mirrored Histogram
 
+- [`sample_stacked_histogram_data()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_stacked_histogram_data.md)
+  : Generate Sample Data for Stacked Histogram
+
 - [`save_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/save_ppt.md)
   : Function for saving a ggplot object, or list of ggplot objects to a
   powerpoint document for presentations.
+
+- [`stacked_histogram()`](https://ehrlinger.github.io/hvtiPlotR/reference/stacked_histogram.md)
+  : Stacked Histogram

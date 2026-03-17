@@ -24,7 +24,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">hvtiPlotR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.7</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.1.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -65,7 +65,7 @@
       <p class="author">John Ehrlinger <a href="mailto:ehrlinj@ccf.org" class="email">ehrlinj@ccf.org</a></p>
       <p class="date">2026-03-17</p>
 
-      <small class="dont-index">Source: <a href="https://github.com/ehrlinger/hvtiPlotR/blob/v1.0.7/vignettes/hvtiPlotR.qmd" class="external-link"><code>vignettes/hvtiPlotR.qmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/ehrlinger/hvtiPlotR/blob/main/vignettes/hvtiPlotR.qmd" class="external-link"><code>vignettes/hvtiPlotR.qmd</code></a></small>
       <div class="d-none name"><code></code></div>
     </div>
 
@@ -625,14 +625,109 @@ run;</code></pre>
 1209 1197 </code></pre>
 </div>
 </div>
-</section><section class="section level2"><h2 id="saving-publication-graphics">Saving publication graphics<a class="anchor" aria-label="anchor" href="#saving-publication-graphics"></a>
+</section><section class="section level2"><h2 id="stacked-histogram">Stacked Histogram<a class="anchor" aria-label="anchor" href="#stacked-histogram"></a>
+</h2>
+<p>A common exploratory figure is the stacked histogram, which shows how the composition of a numeric variable changes over time or across another grouping dimension. The <strong>hvtiPlotR</strong> package provides the <code><a href="../reference/stacked_histogram.html">stacked_histogram()</a></code> function to generate this figure.</p>
+<p>The function returns a bare <code>ggplot</code> object — no colour scales, axis labels, or theme are applied — so the caller can add those freely with the usual <code>+</code> operator.</p>
+<p>The <code><a href="../reference/sample_stacked_histogram_data.html">sample_stacked_histogram_data()</a></code> function generates a reproducible example dataset with <code>year</code> and <code>category</code> columns.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb38"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Generate sample data</span></span>
+<span><span class="va">hist_dta</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sample_stacked_histogram_data.html">sample_stacked_histogram_data</a></span><span class="op">(</span>n_years <span class="op">=</span> <span class="fl">20</span>, start_year <span class="op">=</span> <span class="fl">2000</span>,</span>
+<span>                                           n_categories <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">hist_dta</span><span class="op">)</span></span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  year category
+1 2000        1
+2 2000        1
+3 2000        2
+4 2000        2
+5 2000        2
+6 2000        1</code></pre>
+</div>
+</div>
+<section class="level2"><h3 id="count-histogram">Count histogram<a class="anchor" aria-label="anchor" href="#count-histogram"></a>
+</h3>
+<p>The default <code>position = "stack"</code> shows raw counts within each bin, equivalent to the <code>plot.sas</code> frequency histogram.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb40"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Build the bare plot</span></span>
+<span><span class="va">p_count</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/stacked_histogram.html">stacked_histogram</a></span><span class="op">(</span><span class="va">hist_dta</span>, x_col <span class="op">=</span> <span class="st">"year"</span>, group_col <span class="op">=</span> <span class="st">"category"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Layer on colour scales, labels, and a theme</span></span>
+<span><span class="va">p_count</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_fill_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Set1"</span>, name <span class="op">=</span> <span class="st">"Category"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_color_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Set1"</span>, name <span class="op">=</span> <span class="st">"Category"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Year"</span>, y <span class="op">=</span> <span class="st">"Count"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/hvti_theme.html">hvti_theme</a></span><span class="op">(</span><span class="st">"manuscript"</span><span class="op">)</span></span></code></pre></div>
+<div class="cell-output-display">
+<div>
+<figure><p><img src="hvtiPlotR_files/figure-html/stacked_histogram_count-1.png" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section><section class="level2"><h3 id="proportion-fill-histogram">Proportion (fill) histogram<a class="anchor" aria-label="anchor" href="#proportion-fill-histogram"></a>
+</h3>
+<p>Setting <code>position = "fill"</code> rescales each bin so the bars sum to 1, making it easy to compare the relative composition across years.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb41"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Build the proportional variant</span></span>
+<span><span class="va">p_fill</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/stacked_histogram.html">stacked_histogram</a></span><span class="op">(</span><span class="va">hist_dta</span>, x_col <span class="op">=</span> <span class="st">"year"</span>, group_col <span class="op">=</span> <span class="st">"category"</span>,</span>
+<span>                             position <span class="op">=</span> <span class="st">"fill"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Use manual colours and custom legend labels</span></span>
+<span><span class="va">p_fill</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_fill_manual</a></span><span class="op">(</span></span>
+<span>    values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"1"</span> <span class="op">=</span> <span class="st">"pink"</span>, <span class="st">"2"</span> <span class="op">=</span> <span class="st">"cyan"</span>, <span class="st">"3"</span> <span class="op">=</span> <span class="st">"orangered"</span><span class="op">)</span>,</span>
+<span>    labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"1"</span> <span class="op">=</span> <span class="st">"Group A"</span>, <span class="st">"2"</span> <span class="op">=</span> <span class="st">"Group B"</span>, <span class="st">"3"</span> <span class="op">=</span> <span class="st">"Group C"</span><span class="op">)</span>,</span>
+<span>    name   <span class="op">=</span> <span class="st">"Category"</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_color_manual</a></span><span class="op">(</span></span>
+<span>    values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"1"</span> <span class="op">=</span> <span class="st">"pink"</span>, <span class="st">"2"</span> <span class="op">=</span> <span class="st">"cyan"</span>, <span class="st">"3"</span> <span class="op">=</span> <span class="st">"orangered"</span><span class="op">)</span>,</span>
+<span>    guide  <span class="op">=</span> <span class="st">"none"</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Year"</span>, y <span class="op">=</span> <span class="st">"Proportion"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/hvti_theme.html">hvti_theme</a></span><span class="op">(</span><span class="st">"manuscript"</span><span class="op">)</span></span></code></pre></div>
+<div class="cell-output-display">
+<div>
+<figure><p><img src="hvtiPlotR_files/figure-html/stacked_histogram_fill-1.png" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section><section class="level2"><h3 id="saving-stacked-histograms">Saving stacked histograms<a class="anchor" aria-label="anchor" href="#saving-stacked-histograms"></a>
+</h3>
+<p>Use <code><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave()</a></code> to write the composed figure to disk. Assign the final plot to a variable first so the same object is saved and displayed.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb42"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">p_final</span> <span class="op">&lt;-</span> <span class="va">p_fill</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_fill_manual</a></span><span class="op">(</span></span>
+<span>    values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"1"</span> <span class="op">=</span> <span class="st">"pink"</span>, <span class="st">"2"</span> <span class="op">=</span> <span class="st">"cyan"</span>, <span class="st">"3"</span> <span class="op">=</span> <span class="st">"orangered"</span><span class="op">)</span>,</span>
+<span>    name   <span class="op">=</span> <span class="st">"Category"</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_color_manual</a></span><span class="op">(</span></span>
+<span>    values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"1"</span> <span class="op">=</span> <span class="st">"pink"</span>, <span class="st">"2"</span> <span class="op">=</span> <span class="st">"cyan"</span>, <span class="st">"3"</span> <span class="op">=</span> <span class="st">"orangered"</span><span class="op">)</span>,</span>
+<span>    guide  <span class="op">=</span> <span class="st">"none"</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Year"</span>, y <span class="op">=</span> <span class="st">"Proportion"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/hvti_theme.html">hvti_theme</a></span><span class="op">(</span><span class="st">"manuscript"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave</a></span><span class="op">(</span></span>
+<span>  filename <span class="op">=</span> <span class="st">"../graphs/stacked_histogram.pdf"</span>,</span>
+<span>  plot     <span class="op">=</span> <span class="va">p_final</span>,</span>
+<span>  width    <span class="op">=</span> <span class="fl">11</span>,</span>
+<span>  height   <span class="op">=</span> <span class="fl">8</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+</div>
+</section></section><section class="section level2"><h2 id="saving-publication-graphics">Saving publication graphics<a class="anchor" aria-label="anchor" href="#saving-publication-graphics"></a>
 </h2>
 <p>Once we have created the figure, and formatted it as desired (using a <strong>hvtiPlotR</strong> theme), we need to save the figure in a format that can easily be imported into our publications.</p>
 <section class="level2"><h3 id="manuscript-graphics">Manuscript graphics<a class="anchor" aria-label="anchor" href="#manuscript-graphics"></a>
 </h3>
 <p>It is a best practice that we include a footnote containing the figure path in each figure we save. This way, when a user sends the file to a collaborator, we can reverse engineer where the file and generating code resides in case changes are required. We use the gridExtra package (Auguie 2012) to add this footnote with the following recipe.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb38"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb43"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st">"grid"</span><span class="op">)</span> </span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st">"gridExtra"</span><span class="op">)</span></span>
 <span><span class="va">ccf_savePlot</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/gridExtra/man/arrangeGrob.html" class="external-link">arrangeGrob</a></span><span class="op">(</span><span class="va">ccf_plot</span> <span class="op">+</span> <span class="fu"><a href="../reference/hvti_theme.html">hvti_theme</a></span><span class="op">(</span><span class="st">"manuscript"</span><span class="op">)</span>,</span>
@@ -651,13 +746,13 @@ run;</code></pre>
 <pre><code>Warning: Removed 117 rows containing missing values or values outside the scale range
 (`geom_point()`).</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb41"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb46"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ccf_savePlot</span></span></code></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>TableGrob (2 x 1) "arrange": 2 grobs
     z     cells    name                grob
     1 (1-1,1-1) arrange      gtable[layout]
-sub 2 (2-2,1-1) arrange text[GRID.text.382]</code></pre>
+sub 2 (2-2,1-1) arrange text[GRID.text.448]</code></pre>
 </div>
 </div>
 <p>Figure ?? uses the same plot in Figure 12 with the code <code>ccf_plot+hvti_theme("manuscript")</code>. The current working directory is obtained using the <code><a href="https://rdrr.io/r/base/getwd.html" class="external-link">getwd()</a></code> function. The <code><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.Date()</a></code> function returns the system date for timestamping the figure. The footnote is placed with the <code>x = 0, hjust = -.1, vjust=.01</code>, and formatted with the <code>gp = gpar(fontface = "italic", fontsize = 6)</code>. For Word documents (Oﬃce ≥ 2007) we can import PDF graphics as a vector based format. Saving the figure is accomplished using either the <code><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave()</a></code> function, or <code><a href="https://rdrr.io/r/grDevices/pdf.html" class="external-link">pdf(); show(); dev.off()</a></code> combination. We have a specific set of width and height dimensions required for saving the figure with footnote included to get the font sizes to import correctly in Word. <code>ggsave(filename="manuscript.pdf", height=4, width=5, ccf_savePlot)</code></p>
@@ -665,7 +760,7 @@ sub 2 (2-2,1-1) arrange text[GRID.text.382]</code></pre>
 </h3>
 <p>We use the ReporteRs package (Gohel 2014) to insert vector based figures from R into PowerPoint documents. The latest version of the ReporteRs package is available from http://davidgohel.github.io/ReporteRs/. We install this package as we installed the <strong>hvtiPlotR</strong> package.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb43"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb48"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Install the latest ReporteRs package. </span></span>
 <span><span class="co"># </span></span>
 <span><span class="co"># The devtools package is installed on all our </span></span>
@@ -674,13 +769,13 @@ sub 2 (2-2,1-1) arrange text[GRID.text.382]</code></pre>
 <div class="cell-output cell-output-stderr">
 <pre><code>Loading required package: usethis</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb45"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb50"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># To get the latest version. </span></span>
 <span><span class="co">#install_github("davidgohel/ReporteRs") </span></span></code></pre></div>
 </div>
 <p>Basically, the package works by opening a saved PowerPoint Presentation, and inserting new slides containing graphs or tables into the document. The resulting document is then saved to a new presentation. We then pass this presentation to our collaborators, who then copy and paste the <code>ggplot2</code> slides into their own presentations. The <code>ggplot2</code> graphics that are inserted into the presentation are converted into an editable vector based format. When the document is edited in PowerPoint, graphical components like points, lines, text can be easily modified to match the presenters style. The following code block is an R recipe for saving the <code>ccf_pptPlot</code> created in Section 4.2.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb46"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb51"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span>  <span class="co"># library("ReporteRs")</span></span>
 <span>  <span class="co"># </span></span>
 <span>  <span class="co"># # Create a powerPoint document using ../inst/RDPresentation.pptx</span></span>
