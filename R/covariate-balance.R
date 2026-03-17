@@ -31,6 +31,9 @@ cb_build_plot <- function(data, std_diff_col, group_col, var_levels,
                           hline_linetype, hline_linewidth,
                           vline_linewidth, threshold_linetype) {
   n_vars <- length(var_levels)
+  # Extra vertical space (in "covariate rows") above the top row to ensure
+  # room for point glyphs and potential multi-line labels/annotations.
+  y_padding <- 1.75
 
   ggplot2::ggplot(data) +
     # Solid centre reference at zero
@@ -66,7 +69,7 @@ cb_build_plot <- function(data, std_diff_col, group_col, var_levels,
     ) +
     # Y-axis: integer positions labelled with covariate names
     ggplot2::scale_y_continuous(
-      limits = c(0, n_vars + 1.75),
+      limits = c(0, n_vars + y_padding),
       breaks = seq_len(n_vars),
       labels = var_levels
     )
