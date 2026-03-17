@@ -77,6 +77,7 @@ if (getRversion() >= "2.15.1") {
 #'   ggplot2::labs(x = "Operation Date", y = "Follow-up (years)")
 #'
 #' @importFrom stats rexp
+#' @importFrom assertthat is.count
 #' @export
 sample_goodness_followup_data <- function(
   n           = 300,
@@ -88,7 +89,7 @@ sample_goodness_followup_data <- function(
   event_rate  = 0.08,
   seed        = 42
 ) {
-  if (!is.numeric(n) || length(n) != 1L || n < 1L)
+  if (!assertthat::is.count(n))
     stop("`n` must be a positive integer scalar.", call. = FALSE)
   if (!is.numeric(death_rate) || death_rate <= 0)
     stop("`death_rate` must be a positive number.", call. = FALSE)
