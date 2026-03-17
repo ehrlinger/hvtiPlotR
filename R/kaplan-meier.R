@@ -54,7 +54,7 @@ km_fit <- function(data, time_col, event_col, strata_col, conf_level, method) {
   # method → survfit type and CI transform
   # "kaplan-meier": product-limit S(t), logit CI  — matches SAS %kaplan
   # "nelson-aalen": Fleming-Harrington H(t), log CI — matches SAS %nelsont
-  surv_type <- if (method == "kaplan-meier") "kaplan-meier" else "fh"
+  surv_type <- if (method == "kaplan-meier") "kaplan-meier" else "fleming-harrington"
   conf_type <- if (method == "kaplan-meier") "logit"        else "log"
 
   if (is.null(strata_col)) {
