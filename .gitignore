@@ -20,7 +20,7 @@ jsslogo.jpg
 
 inst/doc
 docs
-hviPlotR.Rproj
+hvtiPlotR.Rproj
 
 .Rcheck*
 .Rbuildignore
