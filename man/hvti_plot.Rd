@@ -4,7 +4,10 @@
 \alias{hvti_plot}
 \title{hvtiPlotR Plot Generic}
 \usage{
-hvti_plot(type = c("mirror_histogram", "stacked_histogram"), ...)
+hvti_plot(
+  type = c("mirror_histogram", "stacked_histogram", "covariate_balance"),
+  ...
+)
 }
 \arguments{
 \item{type}{Character keyword identifying the plot type. Supported values

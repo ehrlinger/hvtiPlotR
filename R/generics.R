@@ -50,7 +50,8 @@ hvti_theme.hvti_theme_poster <- function(style, ...) {
 #' @return The object produced by the requested plotting function (e.g., a list
 #'   containing plot elements and diagnostics, or a ggplot object).
 #' @export
-hvti_plot <- function(type = c("mirror_histogram", "stacked_histogram"), ...) {
+hvti_plot <- function(type = c("mirror_histogram", "stacked_histogram",
+                               "covariate_balance"), ...) {
   type <- match.arg(type)
   class(type) <- c(paste0("hvti_plot_", type), class(type))
   UseMethod("hvti_plot", type)
@@ -69,4 +70,9 @@ hvti_plot.hvti_plot_mirror_histogram <- function(type, ...) {
 #' @export
 hvti_plot.hvti_plot_stacked_histogram <- function(type, ...) {
   stacked_histogram(...)
+}
+
+#' @export
+hvti_plot.hvti_plot_covariate_balance <- function(type, ...) {
+  covariate_balance(...)
 }

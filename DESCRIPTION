@@ -25,6 +25,7 @@ Imports:
     assertthat,
     ggplot2,
     grid,
+    rlang,
     tidyverse,
     officer
 Suggests:
@@ -36,7 +37,6 @@ Suggests:
     haven,
     scales,
     quarto,
-    pkgload,
-    rlang
+    pkgload
 VignetteBuilder: quarto
 RoxygenNote: 7.3.3
