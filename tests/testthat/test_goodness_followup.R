@@ -1,6 +1,7 @@
 # Test suite for goodness-followup.R
 
 library(testthat)
+library(ggplot2)
 
 # ---------------------------------------------------------------------------
 # sample_goodness_followup_data
@@ -226,7 +227,32 @@ test_that("event panel uses same diagonal as death panel", {
     event_col      = "ev_event",
     event_time_col = "iv_event"
   )
-  expect_identical(result$diagonal, result$diagonal)  # same object in list
+
+  # Both death and event plots should contain a geom_line layer that uses
+  # the same diagonal data stored in result$diagonal.
+  death_layers <- result$death_plot$layers
+  event_layers <- result$event_plot$layers
+
+  death_has_diag <- vapply(
+    death_layers,
+    function(layer) {
+      inherits(layer$geom, "GeomLine") &&
+        isTRUE(all.equal(layer$data, result$diagonal))
+    },
+    logical(1)
+  )
+
+  event_has_diag <- vapply(
+    event_layers,
+    function(layer) {
+      inherits(layer$geom, "GeomLine") &&
+        isTRUE(all.equal(layer$data, result$diagonal))
+    },
+    logical(1)
+  )
+
+  expect_true(any(death_has_diag))
+  expect_true(any(event_has_diag))
 })
 
 # ---------------------------------------------------------------------------
