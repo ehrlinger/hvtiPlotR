@@ -14,105 +14,98 @@ mirror_histogram(
   matched_value = 1,
   score_multiplier = HVTI_SCORE_DEFAULT_MULTIPLIER,
   binwidth = 5,
+  weight_col = NULL,
   output_file = NULL,
   width = 8,
   height = 6
 )
 }
 \arguments{
-\item{data}{A data frame containing at least the score, group, and match
-indicators.}
+\item{data}{A data frame containing at least the score and group columns,
+plus either \code{match_col} or \code{weight_col}.}
 
 \item{score_col}{Column name holding the numeric propensity score.}
 
 \item{group_col}{Column name identifying the grouping/treatment indicator.}
 
-\item{match_col}{Column name indicating whether an observation is matched.}
+\item{match_col}{Column name of the binary match indicator. Required in
+binary-match mode; ignored when \code{weight_col} is supplied.}
 
-\item{group_levels}{Length-2 vector giving the values in `group_col` that
-should be plotted (order determines the panel orientation).}
+\item{group_levels}{Length-2 vector giving the values in \code{group_col}
+to plot (order determines panel orientation).}
 
-\item{group_labels}{Length-2 character vector supplying human readable labels
-for each group.}
+\item{group_labels}{Length-2 character vector of human-readable group labels.}
 
-\item{matched_value}{Value in `match_col` that denotes a matched observation.}
+\item{matched_value}{Value in \code{match_col} that denotes a matched
+observation (binary-match mode only).}
 
-\item{score_multiplier}{Multiplier applied to `score_col` prior to plotting
-(defaults to percentages).}
+\item{score_multiplier}{Multiplier applied to \code{score_col} before
+plotting (default scales raw probabilities to percentages).}
 
-\item{binwidth}{Bin width, on the scaled score scale, used when computing the
-histograms.}
+\item{binwidth}{Bin width on the scaled score scale.}
 
-\item{output_file}{Optional file path for saving the figure via `ggsave()`.}
+\item{weight_col}{Optional column name holding IPTW weights. When supplied
+the function operates in weighted mode: "Before" bars show raw counts,
+"Weighted" bars show per-bin weight sums, and \code{match_col} is not
+required. The column must be numeric and non-negative.}
 
-\item{width, height}{Dimensions (inches) used when saving `output_file`.}
+\item{output_file}{Optional file path; when provided the plot is saved via
+\code{ggsave()}.}
+
+\item{width, height}{Dimensions (inches) when saving \code{output_file}.}
 }
 \value{
-A list with elements `plot` (ggplot object), `diagnostics` (list of
-  summary statistics), and `data` (the filtered data frame that was plotted).
+A list with elements \code{plot} (ggplot object), \code{diagnostics}
+  (mode-dependent summary statistics), and \code{data} (filtered working
+  data frame). Binary-match diagnostics include \code{smd_matched};
+  weighted diagnostics include \code{smd_weighted} and
+  \code{effective_n_by_group}.
 }
 \description{
-Generates mirrored propensity score histograms for two treatment groups,
-highlighting the distribution before and after matching. The returned list
-contains the rendered plot, the filtered data used to draw it, and a set of
-diagnostics (group counts, SMD values, summary statistics) that can be logged
-or displayed in reports.
+Generates mirrored propensity score histograms for two treatment groups.
+Supports two display modes selected by the arguments supplied:
+}
+\details{
+\describe{
+  \item{Binary-match mode}{Supply \code{match_col}. Upper bars show all
+    observations (before matching); overlaid bars show the matched subset.
+    Fill keys: \code{before_g0}, \code{matched_g0}, \code{before_g1},
+    \code{matched_g1}.}
+  \item{Weighted IPTW mode}{Supply \code{weight_col}. Upper bars show raw
+    counts (before weighting); overlaid bars show per-bin weight sums.
+    \code{match_col} is ignored. Fill keys: \code{before_g0},
+    \code{weighted_g0}, \code{before_g1}, \code{weighted_g1}.}
+}
 }
 \examples{
-# Create a sample data set
+# --- Binary-match mode ---------------------------------------------------
 mirror_dta <- sample_mirror_histogram_data(n = 4000)
+mhist <- mirror_histogram(mirror_dta)
+mhist$plot
+mhist$diagnostics$smd_before
+mhist$diagnostics$smd_matched
 
-# Generate the figure
-mhist <- mirror_histogram(mirror_dta )
-
-# The plot is returned in a list.
-mhist$p
-
-# Diagnostics are also returned, which can be logged or displayed in reports.
-mhist$diagnostics
-
-# The data used to draw the figure is also returned, which can be useful for
-# debugging or further analysis.
-head(mhist$data)
-
-# By default, the figure uses the manuscript theme, but you can set it to
-# any hvtiPlotR theme you like. For example:
-ggplot2::set_theme(hvti_theme("manuscript"))
-mhist$p
-
-# You can modify the figure using scales:
-mhist$p +
+# Customise fill colours
+mhist$plot +
   ggplot2::scale_fill_manual(
-    values = c(
-      before_g0 = "white",
-      matched_g0 = "green1",
-      before_g1 = "white",
-      matched_g1 = "green4"),
-    guide = "none")
- 
- # and annotations:
-group_labels = c("SAVR", "TF-TAVR")
-mhist$p +
+    values = c(before_g0 = "white",  matched_g0 = "steelblue",
+               before_g1 = "white",  matched_g1 = "firebrick"),
+    guide = "none"
+  )
+
+# --- Weighted IPTW mode --------------------------------------------------
+wt_dta <- sample_mirror_histogram_data(n = 500, add_weights = TRUE)
+mhist_wt <- mirror_histogram(wt_dta, weight_col = "mt_wt")
+mhist_wt$plot
+mhist_wt$diagnostics$smd_weighted
+mhist_wt$diagnostics$effective_n_by_group
+
+# Customise fill colours for weighted mode
+mhist_wt$plot +
   ggplot2::scale_fill_manual(
-    values = c(
-      before_g0 = "white",
-      matched_g0 = "green1",
-      before_g1 = "white",
-      matched_g1 = "green4"),
-    guide = "none")+
-  ggplot2::annotate(
-    "text",
-    x = 10,
-    y = 500,
-    label = group_labels[1],
-    size = 6
-  ) +
-  ggplot2::annotate(
-    "text",
-    x = 10,
-    y = -500,
-    label = group_labels[2],
-    size = 6
+    values = c(before_g0 = "white", weighted_g0 = "blue",
+               before_g1 = "white", weighted_g1 = "red"),
+    guide = "none"
   )
 
 }

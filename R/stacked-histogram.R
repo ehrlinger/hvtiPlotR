@@ -28,40 +28,28 @@
 validate_stacked_histogram_input <- function(data, x_col, group_col, binwidth, position) {
   assertthat::assert_that(is.data.frame(data), msg = "`data` must be a data.frame.")
   missing_cols <- setdiff(c(x_col, group_col), names(data))
-  assertthat::assert_that(
-    length(missing_cols) == 0,
-    msg = sprintf("Missing required columns: %s", paste(missing_cols, collapse = ", "))
-  )
-  assertthat::assert_that(
-    is.numeric(data[[x_col]]),
-    msg = sprintf("`%s` must be numeric.", x_col)
-  )
-  assertthat::assert_that(
-    assertthat::is.number(binwidth) && binwidth > 0,
-    msg = "`binwidth` must be a positive numeric scalar."
-  )
-  assertthat::assert_that(
-    position %in% c("stack", "fill"),
-    msg = '`position` must be "stack" or "fill".'
-  )
+  assertthat::assert_that(length(missing_cols) == 0,
+                          msg = sprintf(
+                            "Missing required columns: %s",
+                            paste(missing_cols, collapse = ", ")
+                          ))
+  assertthat::assert_that(is.numeric(data[[x_col]]), msg = sprintf("`%s` must be numeric.", x_col))
+  assertthat::assert_that(assertthat::is.number(binwidth) &&
+                            binwidth > 0, msg = "`binwidth` must be a positive numeric scalar.")
+  assertthat::assert_that(position %in% c("stack", "fill"), msg = '`position` must be "stack" or "fill".')
 }
 
 # Build the bare ggplot object without scale or label modifications
 #' @importFrom ggplot2 ggplot aes geom_histogram
 build_stacked_histogram_plot <- function(data, x_col, group_col, binwidth, position) {
-  ggplot2::ggplot(
-    data,
-    ggplot2::aes(
-      x      = .data[[x_col]],
-      fill   = factor(.data[[group_col]]),
-      colour = factor(.data[[group_col]])
-    )
-  ) +
-    ggplot2::geom_histogram(
-      binwidth = binwidth,
-      color    = "black",
-      position = position
-    )
+  ggplot2::ggplot(data, ggplot2::aes(
+    x      = .data[[x_col]],
+    fill   = factor(.data[[group_col]]),
+    colour = factor(.data[[group_col]])
+  )) +
+    ggplot2::geom_histogram(binwidth = binwidth,
+                            color    = "black",
+                            position = position)
 }
 
 # ---------------------------------------------------------------------------
@@ -155,10 +143,10 @@ build_stacked_histogram_plot <- function(data, x_col, group_col, binwidth, posit
 #' @importFrom ggplot2 ggplot aes geom_histogram
 #' @export
 stacked_histogram <- function(data,
-                               x_col     = "year",
-                               group_col = "category",
-                               binwidth  = 1,
-                               position  = c("stack", "fill")) {
+                              x_col     = "year",
+                              group_col = "category",
+                              binwidth  = 1,
+                              position  = c("stack", "fill")) {
   position <- match.arg(position)
   validate_stacked_histogram_input(data, x_col, group_col, binwidth, position)
   build_stacked_histogram_plot(data, x_col, group_col, binwidth, position)
@@ -188,24 +176,25 @@ stacked_histogram <- function(data,
 #' @importFrom stats rpois sample
 #' @export
 sample_stacked_histogram_data <- function(n_years      = 20,
-                                           start_year   = 2000,
-                                           n_categories = 3,
-                                           seed         = 42) {
-  assertthat::assert_that(assertthat::is.count(n_years),      msg = "`n_years` must be a positive integer.")
-  assertthat::assert_that(assertthat::is.count(n_categories), msg = "`n_categories` must be a positive integer.")
-
+                                          start_year   = 2000,
+                                          n_categories = 3,
+                                          seed         = 42) {
+  assertthat::assert_that(assertthat::is.count(n_years), 
+                          msg = "`n_years` must be a positive integer.")
+  assertthat::assert_that(assertthat::is.count(n_categories), 
+                          msg = "`n_categories` must be a positive integer.")
+  
   set.seed(seed)
   years <- start_year + seq_len(n_years) - 1L
-
+  
   rows <- lapply(years, function(yr) {
     n <- stats::rpois(1, lambda = 20)
-    if (n == 0L) n <- 1L
-    data.frame(
-      year     = rep(yr, n),
-      category = sample(seq_len(n_categories), n, replace = TRUE)
-    )
+    if (n == 0L)
+      n <- 1L
+    data.frame(year     = rep(yr, n),
+               category = sample(seq_len(n_categories), n, replace = TRUE))
   })
-
+  
   do.call(rbind, rows)
 }
 
