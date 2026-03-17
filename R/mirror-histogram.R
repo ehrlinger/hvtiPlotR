@@ -91,7 +91,7 @@ build_hist_counts <- function(x, breaks) {
 ##' @return Data frame with columns `x` (bin midpoints) and `count` (weight sums per bin).
 ##' @keywords internal
 build_weighted_hist_counts <- function(x, weights, breaks) {
-  bins <- cut(x, breaks = breaks, right = FALSE, include.lowest = TRUE)
+  bins <- cut(x, breaks = breaks, right = TRUE, include.lowest = TRUE)
   sums <- tapply(weights, bins, FUN = sum, simplify = TRUE)
   sums[is.na(sums)] <- 0
   mids <- (breaks[-length(breaks)] + breaks[-1]) / 2
