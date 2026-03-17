@@ -259,9 +259,9 @@ sample_covariate_balance_data <- function(
   group_levels = c("Before match", "After match"),
   seed         = 42
 ) {
-  if (!is.numeric(n_vars) || length(n_vars) != 1L || n_vars < 1L)
+  if (!assertthat::is.count(n_vars) || n_vars < 1L)
     stop("`n_vars` must be a positive integer scalar.", call. = FALSE)
-  if (!is.numeric(n) || length(n) != 1L || n < 2L)
+  if (!assertthat::is.count(n) || n < 2L)
     stop("`n` must be a positive integer >= 2.", call. = FALSE)
   if (!is.numeric(separation) || length(separation) != 1L || separation <= 0)
     stop("`separation` must be a positive number.", call. = FALSE)
