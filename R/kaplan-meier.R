@@ -406,10 +406,10 @@ km_build_life_plot <- function(km_df) {
 #' Kaplan-Meier Survival Curve
 #'
 #' Estimates a Kaplan-Meier survival function and returns a list containing
-#' three bare \code{ggplot} objects (survival curve, cumulative hazard, and
-#' hazard rate), plus associated data frames (tidy KM data, numbers-at-risk
-#' table, and a report table at specified time points).
-#'
+#' five bare \code{ggplot} objects (survival curve, cumulative hazard,
+#' hazard rate, log-minus-log survival, and mean residual life), plus
+#' associated data frames (tidy KM data, numbers-at-risk table, and a report
+#' table at specified time points).
 #' The returned plots intentionally omit scale, label, and theme modifications
 #' so the caller can layer on their own choices with \code{+}.
 #'
