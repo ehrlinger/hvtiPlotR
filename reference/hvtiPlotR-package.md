@@ -11,22 +11,22 @@ publication quality graphics.
 
 The hvtiPlotR package contains the following functions:
 
-- [`theme_man`](http://ehrlinger.github.io/hviPlotR/reference/hvti_theme_manuscript.md):
+- [`theme_man`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_theme_manuscript.md):
   Theme for manuscript figures
 
-- [`theme_ppt`](http://ehrlinger.github.io/hviPlotR/reference/hvti_theme_ppt.md):
+- [`theme_ppt`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_theme_ppt.md):
   Theme for PowerPoint presentation figures
 
-- [`theme_dark_ppt`](http://ehrlinger.github.io/hviPlotR/reference/hvti_theme_dark_ppt.md):
+- [`theme_dark_ppt`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_theme_dark_ppt.md):
   Dark theme for PowerPoint presentations
 
-- [`theme_poster`](http://ehrlinger.github.io/hviPlotR/reference/hvti_theme_poster.md):
+- [`theme_poster`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_theme_poster.md):
   Theme for poster figures
 
-- [`save_ppt`](http://ehrlinger.github.io/hviPlotR/reference/save_ppt.md):
+- [`save_ppt`](https://ehrlinger.github.io/hvtiPlotR/reference/save_ppt.md):
   Save ggplot objects to PowerPoint presentations
 
-- [`makeFootnote`](http://ehrlinger.github.io/hviPlotR/reference/makeFootnote.md):
+- [`makeFootnote`](https://ehrlinger.github.io/hvtiPlotR/reference/makeFootnote.md):
   Add footnotes to graphics
 
 All functions have an associated plotting function that returns ggplot2

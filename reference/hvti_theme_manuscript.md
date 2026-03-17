@@ -76,4 +76,4 @@ theme_man(
 ## See also
 
 `theme_set` `theme_grey`
-[`theme_ppt`](http://ehrlinger.github.io/hviPlotR/reference/hvti_theme_ppt.md)
+[`theme_ppt`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_theme_ppt.md)

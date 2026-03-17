@@ -65,4 +65,4 @@ theme_dark_ppt(
 ## See also
 
 `theme_set` `theme_grey`
-[`theme_man`](http://ehrlinger.github.io/hviPlotR/reference/hvti_theme_manuscript.md)
+[`theme_man`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_theme_manuscript.md)

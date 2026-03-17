@@ -19,7 +19,7 @@ manuscript and PowerPoint targets.
 This document is included with the **hvtiPlotR** package as a package
 vignette. The vignette is installed into R when the **hvtiPlotR**
 package is installed, and viewable using the command:
-[`vignette("hvtiPlotR", package="hvtiPlotR")`](http://ehrlinger.github.io/hviPlotR/articles/hvtiPlotR.md).
+[`vignette("hvtiPlotR", package="hvtiPlotR")`](https://ehrlinger.github.io/hvtiPlotR/articles/hvtiPlotR.md).
 
 The goal of the vignette is as a tutorial to document the best practices
 of creating our publication quality graphics for both manuscripts and
@@ -42,7 +42,7 @@ The document is a package vignette for the **hvtiPlotR** package, and is
 the primary documentation for the package. The latest version of the
 document can be obtained with the following command:
 
-[`vignette("hvtiPlotR", package = "hvtiPlotR")`](http://ehrlinger.github.io/hviPlotR/articles/hvtiPlotR.md)
+[`vignette("hvtiPlotR", package = "hvtiPlotR")`](https://ehrlinger.github.io/hvtiPlotR/articles/hvtiPlotR.md)
 
 The goal is to update this vignette as the package, and our graphing
 standards, are updated. A development version of the **hvtiPlotR**
@@ -828,12 +828,12 @@ A common figure in propensity-matched analyses is the mirrored
 histogram, which displays the propensity score distributions for two
 treatment groups before and after matching. The **hvtiPlotR** package
 provides the
-[`mirror_histogram()`](http://ehrlinger.github.io/hviPlotR/reference/mirror_histogram.md)
+[`mirror_histogram()`](https://ehrlinger.github.io/hvtiPlotR/reference/mirror_histogram.md)
 function to generate this figure.
 
 The function accepts a data frame with columns for the propensity score,
 group indicator, and match indicator. The
-[`sample_mirror_histogram_data()`](http://ehrlinger.github.io/hviPlotR/reference/sample_mirror_histogram_data.md)
+[`sample_mirror_histogram_data()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_mirror_histogram_data.md)
 function generates example data suitable for testing.
 
 ``` r
