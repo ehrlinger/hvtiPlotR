@@ -178,15 +178,18 @@ covariate_balance <- function(
 ) {
   cb_validate_input(data, variable_col, group_col, std_diff_col)
 
-  if (is.null(var_levels))
-    var_levels <- unique(as.character(data[[variable_col]]))
+  # Work on a local copy to avoid mutating inputs (e.g., data.table) by reference
+  working <- as.data.frame(data)
 
-  data[["cb_index"]] <- as.integer(
-    factor(data[[variable_col]], levels = var_levels)
+  if (is.null(var_levels))
+    var_levels <- unique(as.character(working[[variable_col]]))
+
+  working[["cb_index"]] <- as.integer(
+    factor(working[[variable_col]], levels = var_levels)
   )
 
   cb_build_plot(
-    data               = data,
+    data               = working,
     std_diff_col       = std_diff_col,
     group_col          = group_col,
     var_levels         = var_levels,
