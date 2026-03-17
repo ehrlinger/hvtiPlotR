@@ -11,7 +11,7 @@ hvti_plot(
 }
 \arguments{
 \item{type}{Character keyword identifying the plot type. Supported values
-are \code{"mirror_histogram"} and \code{"stacked_histogram"}.}
+are \code{"mirror_histogram"}, \code{"stacked_histogram"}, and \code{"covariate_balance"}.}
 
 \item{...}{Additional arguments passed to the underlying plotting function.}
 }
