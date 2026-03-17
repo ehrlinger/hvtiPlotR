@@ -4,17 +4,17 @@
 \alias{hvti_plot}
 \title{hvtiPlotR Plot Generic}
 \usage{
-hvti_plot(type = c("mirror_histogram"), ...)
+hvti_plot(type = c("mirror_histogram", "stacked_histogram"), ...)
 }
 \arguments{
-\item{type}{Character keyword identifying the plot type. Currently only
-"mirror_histogram" is supported.}
+\item{type}{Character keyword identifying the plot type. Supported values
+are `"mirror_histogram"` and `"stacked_histogram"`.}
 
 \item{...}{Additional arguments passed to the underlying plotting function.}
 }
 \value{
 The object produced by the requested plotting function (e.g., a list
-  containing plot elements and diagnostics).
+  containing plot elements and diagnostics, or a ggplot object).
 }
 \description{
 Provides a single entry point for generating hvtiPlotR plots.

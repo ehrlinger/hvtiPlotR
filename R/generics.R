@@ -43,14 +43,14 @@ hvti_theme.hvti_theme_poster <- function(style, ...) {
 #'
 #' Provides a single entry point for generating hvtiPlotR plots.
 #'
-#' @param type Character keyword identifying the plot type. Currently only
-#'   "mirror_histogram" is supported.
+#' @param type Character keyword identifying the plot type. Supported values
+#'   are `"mirror_histogram"` and `"stacked_histogram"`.
 #' @param ... Additional arguments passed to the underlying plotting function.
 #'
 #' @return The object produced by the requested plotting function (e.g., a list
-#'   containing plot elements and diagnostics).
+#'   containing plot elements and diagnostics, or a ggplot object).
 #' @export
-hvti_plot <- function(type = c("mirror_histogram"), ...) {
+hvti_plot <- function(type = c("mirror_histogram", "stacked_histogram"), ...) {
   type <- match.arg(type)
   class(type) <- c(paste0("hvti_plot_", type), class(type))
   UseMethod("hvti_plot", type)
@@ -64,4 +64,9 @@ hvti_plot.default <- function(type, ...) {
 #' @export
 hvti_plot.hvti_plot_mirror_histogram <- function(type, ...) {
   mirror_histogram(...)
+}
+
+#' @export
+hvti_plot.hvti_plot_stacked_histogram <- function(type, ...) {
+  stacked_histogram(...)
 }

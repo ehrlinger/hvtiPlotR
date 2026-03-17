@@ -4,14 +4,19 @@
 \alias{sample_mirror_histogram_data}
 \title{Generate Sample Data for Mirrored Histogram}
 \usage{
-sample_mirror_histogram_data(n = 100)
+sample_mirror_histogram_data(n = 100, add_weights = FALSE)
 }
 \arguments{
 \item{n}{Number of samples per group (default 100).}
+
+\item{add_weights}{Logical. When \code{TRUE} an \code{mt_wt} column of
+positive IPTW-style weights is appended (default \code{FALSE}).}
 }
 \value{
-Data frame with columns: prob_t (numeric score), tavr (group), match (matched status)
+Data frame with columns \code{prob_t}, \code{tavr}, \code{match},
+  and optionally \code{mt_wt}.
 }
 \description{
-Creates a sample data frame suitable for testing mirror_histogram.
+Creates a reproducible data frame suitable for testing
+\code{\link{mirror_histogram}} in either binary-match or weighted IPTW mode.
 }
