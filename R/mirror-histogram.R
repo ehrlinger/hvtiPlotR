@@ -75,7 +75,7 @@ build_hist_counts <- function(x, breaks) {
     x,
     breaks = breaks,
     plot = FALSE,
-    right = FALSE,
+    right = TRUE,
     include.lowest = TRUE
   )
   data.frame(x = h$mids, count = h$counts)
