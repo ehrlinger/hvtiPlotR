@@ -4,19 +4,50 @@
 \alias{sample_mirror_histogram_data}
 \title{Generate Sample Data for Mirrored Histogram}
 \usage{
-sample_mirror_histogram_data(n = 100, add_weights = FALSE)
+sample_mirror_histogram_data(
+  n = 500,
+  separation = 1.5,
+  caliper = 0.05,
+  seed = 123,
+  add_weights = FALSE
+)
 }
 \arguments{
-\item{n}{Number of samples per group (default 100).}
+\item{n}{Number of observations **per group** (default 500).}
+
+\item{separation}{Numeric. Distance between the two group means on the
+log-odds scale.  Larger values push the score distributions further apart
+and increase the proportion of unmatched patients at the extremes
+(default 1.5).}
+
+\item{caliper}{Matching caliper width expressed in propensity-score units
+(0–1 scale, default 0.05).  Treated patients without a control partner
+within this distance are left unmatched.}
+
+\item{seed}{Integer random seed for reproducibility (default 123).}
 
 \item{add_weights}{Logical. When \code{TRUE} an \code{mt_wt} column of
-positive IPTW-style weights is appended (default \code{FALSE}).}
+ATE-style IPTW weights derived from the simulated propensity scores is
+appended and normalised to mean 1 within each group (default \code{FALSE}).}
 }
 \value{
-Data frame with columns \code{prob_t}, \code{tavr}, \code{match},
-  and optionally \code{mt_wt}.
+Data frame with columns:
+  \describe{
+    \item{\code{prob_t}}{Propensity score on the 0–1 scale.}
+    \item{\code{tavr}}{Group indicator (0 = control, 1 = treated).}
+    \item{\code{match}}{Binary match indicator produced by greedy
+      nearest-neighbour matching within \code{caliper} (1 = matched).}
+    \item{\code{mt_wt}}{(Only when \code{add_weights = TRUE}) ATE IPTW
+      weights normalised to mean 1 within each group.}
+  }
 }
 \description{
-Creates a reproducible data frame suitable for testing
-\code{\link{mirror_histogram}} in either binary-match or weighted IPTW mode.
+Creates a reproducible data frame for testing \code{\link{mirror_histogram}}
+in either binary-match or weighted IPTW mode.  Propensity scores are
+simulated via a logistic model: control subjects draw their linear predictor
+from \eqn{N(-\text{sep}/2, 1)} and treated subjects from
+\eqn{N(+\text{sep}/2, 1)}, so the two score distributions overlap in the
+centre while accumulating mass at opposite extremes.  Patients at those
+extremes cannot find a matching partner within the caliper, which naturally
+reproduces the "many unmatched at the tails" pattern seen in real studies.
 }

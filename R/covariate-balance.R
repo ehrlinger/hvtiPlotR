@@ -206,35 +206,65 @@ covariate_balance <- function(
 #' Generate Sample Covariate Balance Data
 #'
 #' Produces a reproducible long-format data frame suitable for testing and
-#' demonstrating [covariate_balance()]. Each covariate gets two rows, one per
-#' group level, with plausible standardized mean difference values: larger
-#' (more imbalanced) before matching, near-zero after matching.
+#' demonstrating [covariate_balance()].  Rather than drawing SMDs from
+#' independent normals, this generator simulates patient-level covariates
+#' through a logistic propensity score model, computes group standardized mean
+#' differences before matching, then performs greedy 1:1 nearest-neighbour
+#' caliper matching and computes residual differences in the matched cohort.
+#'
+#' The result captures the pattern seen in real studies: covariates that drive
+#' treatment selection show large imbalance before matching; matching
+#' substantially reduces imbalance, but patients at the propensity score
+#' extremes cannot be matched, leaving small residual differences for the
+#' strongest confounders.
 #'
 #' @param n_vars Integer. Number of covariates to generate. Default `12`.
+#' @param n Integer. Total number of simulated patients before matching.
+#'   Default `600` (roughly 300 per group at `separation = 1.5`).
+#' @param separation Numeric. Distance between the two group means on the
+#'   log-odds scale.  Larger values push propensity score distributions
+#'   further apart, increasing the proportion of unmatched extreme-score
+#'   patients and residual imbalance after matching.  Default `1.5`.
+#' @param caliper Matching caliper expressed in propensity-score units (0–1
+#'   scale).  Patients without a partner within this distance are left
+#'   unmatched.  Default `0.05`.
 #' @param group_levels Length-2 character vector of group labels. Default
 #'   `c("Before match", "After match")`.
 #' @param seed Integer random seed for reproducibility. Default `42`.
 #'
-#' @return A data frame with columns `variable`, `group`, and `std_diff`.
+#' @return A data frame with `2 * n_vars` rows and columns `variable`, `group`,
+#'   and `std_diff` (standardized mean difference as a percentage).
 #'
 #' @examples
 #' dta <- sample_covariate_balance_data()
 #' head(dta)
 #'
+#' # Higher separation -> more unmatched extremes -> more residual imbalance
 #' dta2 <- sample_covariate_balance_data(
 #'   n_vars       = 8,
+#'   separation   = 2.0,
 #'   group_levels = c("Unweighted", "IPTW weighted")
 #' )
 #'
-#' @importFrom stats rnorm
+#' @importFrom stats rnorm plogis rbinom var median
 #' @export
 sample_covariate_balance_data <- function(
   n_vars       = 12,
+  n            = 600,
+  separation   = 1.5,
+  caliper      = 0.05,
   group_levels = c("Before match", "After match"),
   seed         = 42
 ) {
   if (!is.numeric(n_vars) || length(n_vars) != 1L || n_vars < 1L)
     stop("`n_vars` must be a positive integer scalar.", call. = FALSE)
+  if (!is.numeric(n) || length(n) != 1L || n < 2L)
+    stop("`n` must be a positive integer >= 2.", call. = FALSE)
+  if (!is.numeric(separation) || length(separation) != 1L || separation <= 0)
+    stop("`separation` must be a positive number.", call. = FALSE)
+  if (!is.numeric(caliper) || length(caliper) != 1L ||
+      caliper <= 0 || caliper > 1)
+    stop("`caliper` must be a number in (0, 1].", call. = FALSE)
   if (length(group_levels) != 2L)
     stop("`group_levels` must be a length-2 character vector.", call. = FALSE)
 
@@ -252,13 +282,69 @@ sample_covariate_balance_data <- function(
   }
 
   set.seed(seed)
-  before <- round(stats::rnorm(n_vars, mean = 0, sd = 14), 1)
-  after  <- round(stats::rnorm(n_vars, mean = 0, sd =  3), 1)
+
+  # --- Patient-level simulation ----------------------------------------------
+  # Covariate matrix: each column ~ N(0,1).
+  # Beta coefficients ~ N(0, separation/sqrt(n_vars)) so total PS variance ~ 1.
+  X     <- matrix(stats::rnorm(n * n_vars), nrow = n, ncol = n_vars)
+  betas <- stats::rnorm(n_vars, mean = 0, sd = separation / sqrt(n_vars))
+
+  # Centre the linear predictor so ~50% of patients are treated.
+  lp    <- drop(X %*% betas)
+  lp    <- lp - stats::median(lp)
+  ps    <- stats::plogis(lp)
+  treat <- stats::rbinom(n, 1L, ps)
+
+  # --- SMDs before matching --------------------------------------------------
+  smds_before <- vapply(seq_len(n_vars), function(j) {
+    x0 <- X[treat == 0, j]
+    x1 <- X[treat == 1, j]
+    if (length(x0) < 2 || length(x1) < 2) return(NA_real_)
+    pooled_sd <- sqrt((stats::var(x0) + stats::var(x1)) / 2)
+    if (is.na(pooled_sd) || pooled_sd == 0) return(0)
+    (mean(x1) - mean(x0)) / pooled_sd * 100
+  }, numeric(1))
+
+  # --- Greedy 1:1 nearest-neighbour caliper matching -------------------------
+  # Patients with extreme PSs (far from 0.5) cannot find a partner within the
+  # caliper, so they are excluded from the matched cohort.  This leaves
+  # residual imbalance on the covariates most responsible for their extremity.
+  idx0      <- which(treat == 0)
+  idx1      <- which(treat == 1)
+  ps0       <- ps[idx0]
+  ps1       <- ps[idx1]
+  used_ctrl <- rep(FALSE, length(idx0))
+  m_trt     <- rep(FALSE, length(idx1))
+  m_ctrl    <- rep(FALSE, length(idx0))
+
+  for (i in sample.int(length(idx1))) {
+    diffs            <- abs(ps0 - ps1[i])
+    diffs[used_ctrl] <- Inf
+    best             <- which.min(diffs)
+    if (diffs[best] <= caliper) {
+      m_trt[i]        <- TRUE
+      m_ctrl[best]    <- TRUE
+      used_ctrl[best] <- TRUE
+    }
+  }
+
+  # --- SMDs after matching ---------------------------------------------------
+  X_mc <- X[idx0[m_ctrl], , drop = FALSE]
+  X_mt <- X[idx1[m_trt],  , drop = FALSE]
+
+  smds_after <- vapply(seq_len(n_vars), function(j) {
+    x0 <- X_mc[, j]
+    x1 <- X_mt[, j]
+    if (length(x0) < 2 || length(x1) < 2) return(NA_real_)
+    pooled_sd <- sqrt((stats::var(x0) + stats::var(x1)) / 2)
+    if (is.na(pooled_sd) || pooled_sd == 0) return(0)
+    (mean(x1) - mean(x0)) / pooled_sd * 100
+  }, numeric(1))
 
   rbind(
     data.frame(variable = var_names, group = group_levels[1],
-               std_diff = before, stringsAsFactors = FALSE),
+               std_diff = round(smds_before, 1), stringsAsFactors = FALSE),
     data.frame(variable = var_names, group = group_levels[2],
-               std_diff = after,  stringsAsFactors = FALSE)
+               std_diff = round(smds_after,  1), stringsAsFactors = FALSE)
   )
 }

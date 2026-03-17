@@ -50,9 +50,40 @@ test_that("sample_covariate_balance_data errors when group_levels != 2", {
   )
 })
 
+test_that("sample_covariate_balance_data errors on non-positive n", {
+  expect_error(sample_covariate_balance_data(n = 0),  "positive integer")
+  expect_error(sample_covariate_balance_data(n = -1), "positive integer")
+})
+
+test_that("sample_covariate_balance_data errors on non-positive separation", {
+  expect_error(sample_covariate_balance_data(separation = 0),  "positive number")
+  expect_error(sample_covariate_balance_data(separation = -1), "positive number")
+})
+
+test_that("sample_covariate_balance_data errors on out-of-range caliper", {
+  expect_error(sample_covariate_balance_data(caliper = 0),   "\\(0, 1\\]")
+  expect_error(sample_covariate_balance_data(caliper = 1.1), "\\(0, 1\\]")
+})
+
 test_that("sample_covariate_balance_data extends past default names", {
   dta <- sample_covariate_balance_data(n_vars = 15)
   expect_equal(length(unique(dta$variable)), 15L)
+})
+
+test_that("sample_covariate_balance_data before-match SMDs are larger than after-match", {
+  dta <- sample_covariate_balance_data(seed = 1)
+  before <- dta$std_diff[dta$group == "Before match"]
+  after  <- dta$std_diff[dta$group == "After match"]
+  # Matching should reduce |SMD| on average
+  expect_gt(mean(abs(before)), mean(abs(after)))
+})
+
+test_that("sample_covariate_balance_data higher separation increases before-match imbalance", {
+  d_low  <- sample_covariate_balance_data(separation = 0.5, seed = 1)
+  d_high <- sample_covariate_balance_data(separation = 3.0, seed = 1)
+  before_low  <- mean(abs(d_low$std_diff[d_low$group  == "Before match"]))
+  before_high <- mean(abs(d_high$std_diff[d_high$group == "Before match"]))
+  expect_gt(before_high, before_low)
 })
 
 # ---------------------------------------------------------------------------

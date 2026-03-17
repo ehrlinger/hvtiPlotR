@@ -79,7 +79,8 @@ Supports two display modes selected by the arguments supplied:
 }
 \examples{
 # --- Binary-match mode ---------------------------------------------------
-mirror_dta <- sample_mirror_histogram_data(n = 4000)
+# separation = 1.5 leaves many high/low-score patients unmatched at tails
+mirror_dta <- sample_mirror_histogram_data(n = 500, separation = 1.5)
 mhist <- mirror_histogram(mirror_dta)
 mhist$plot
 mhist$diagnostics$smd_before
