@@ -14,7 +14,7 @@ build_weighted_hist_counts(x, weights, breaks)
 \item{breaks}{Numeric vector of break points for bins.}
 }
 \value{
-Data frame with columns `x` (bin midpoints) and `count` (weight sums per bin).
+Data frame with columns \code{x} (bin midpoints) and \code{count} (weight sums per bin).
 }
 \description{
 Computes per-bin sums of \code{weights} for use in IPTW mirrored histograms.

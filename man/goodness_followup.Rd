@@ -27,11 +27,11 @@ goodness_followup(
 )
 }
 \arguments{
-\item{data}{Data frame or path to a SAS transport (`.xpt`) file containing
+\item{data}{Data frame or path to a SAS transport (\code{.xpt}) file containing
 the follow-up data.}
 
 \item{iv_opyrs_col}{Column name holding the numeric interval (in years) from
-`origin_year` to the operation date.}
+\code{origin_year} to the operation date.}
 
 \item{death_col}{Logical (or coercible) indicator for death. Used for the
 death panel and, by default, for the death component of the event panel.}
@@ -40,32 +40,32 @@ death panel and, by default, for the death component of the event panel.}
 censoring) expressed in years.}
 
 \item{origin_year}{Reference calendar year that matches zero in
-`iv_opyrs_col`.}
+\code{iv_opyrs_col}.}
 
 \item{study_start, study_end, close_date}{Dates that define the diagonal
 potential follow-up line.}
 
-\item{tolower_names}{When `TRUE`, column names are converted to lower case
+\item{tolower_names}{When \code{TRUE}, column names are converted to lower case
 prior to processing.}
 
 \item{death_levels}{Length-2 character vector naming the "alive" and "dead"
-states for the death panel. Default `c("Alive", "Dead")`.}
+states for the death panel. Default \code{c("Alive", "Dead")}.}
 
 \item{event_col}{Column name for the non-fatal event indicator (logical or
-0/1). When `NULL` (default) the event panel is skipped.}
+0/1). When \code{NULL} (default) the event panel is skipped.}
 
 \item{event_time_col}{Column containing follow-up time to the non-fatal
-event or censoring, expressed in years. Required when `event_col` is
+event or censoring, expressed in years. Required when \code{event_col} is
 supplied.}
 
 \item{death_for_event_col}{Death indicator column used to classify deaths
-within the event panel. Defaults to `death_col` when `NULL`. Supplying a
-separate column (e.g. `"deads"` for systematic/active follow-up) allows
+within the event panel. Defaults to \code{death_col} when \code{NULL}. Supplying a
+separate column (e.g. \code{"deads"} for systematic/active follow-up) allows
 the two panels to use different death ascertainment strategies.}
 
 \item{event_levels}{Length-3 character vector naming the three outcome
 states in the event panel: no event / non-fatal event / death before
-event. Default `c("No event", "Non-fatal event", "Death")`.}
+event. Default \code{c("No event", "Non-fatal event", "Death")}.}
 
 \item{alpha}{Transparency passed to the point and segment layers.}
 
@@ -77,40 +77,41 @@ for the potential follow-up reference line.}
 }
 \value{
 A list containing:
-  * `death_plot`: ggplot object — death follow-up panel.
-  * `death_data`: transformed data frame used in `death_plot`.
-  * `event_plot`: ggplot object — non-fatal event panel, or `NULL` when
-    `event_col` is not supplied.
-  * `event_data`: transformed data frame used in `event_plot`, or `NULL`.
-  * `diagonal`: reference line data frame shared by both panels.
+\itemize{
+\item \code{death_plot}: ggplot object — death follow-up panel.
+\item \code{death_data}: transformed data frame used in \code{death_plot}.
+\item \code{event_plot}: ggplot object — non-fatal event panel, or \code{NULL} when
+\code{event_col} is not supplied.
+\item \code{event_data}: transformed data frame used in \code{event_plot}, or \code{NULL}.
+\item \code{diagonal}: reference line data frame shared by both panels.
+}
 }
 \description{
 Converts raw follow-up extracts (either in-memory data frames or SAS
 transport files) into tidy frames, then draws the classic HVI goodness of
 follow-up visualizations. The function always produces a death panel
-(`death_plot`). When `event_col` is supplied it additionally produces a
-non-fatal event panel (`event_plot`) that encodes a three-level outcome
+(\code{death_plot}). When \code{event_col} is supplied it additionally produces a
+non-fatal event panel (\code{event_plot}) that encodes a three-level outcome
 state: no event / non-fatal event / death before event.
 }
 \details{
 The function focuses on preparing the data, mapping states to aesthetics,
 and drawing the scaffolding geoms; callers are expected to finish the styling
-via standard `ggplot2` modifiers (`scale_*()`, `labs()`, `theme_*()`),
+via standard \code{ggplot2} modifiers (\verb{scale_*()}, \code{labs()}, \verb{theme_*()}),
 keeping the plotting workflow flexible.
 
-
-**Death panel** — each patient is plotted at their operation date (x) and
-follow-up time (y). A binary `state` factor (alive / dead) drives colour
+\strong{Death panel} — each patient is plotted at their operation date (x) and
+follow-up time (y). A binary \code{state} factor (alive / dead) drives colour
 and shape.
 
-**Event panel** — same scaffold, but `state` is a three-level factor:
+\strong{Event panel} — same scaffold, but \code{state} is a three-level factor:
 \enumerate{
-  \item `event_levels[1]` — alive and event-free at censoring.
-  \item `event_levels[2]` — non-fatal event occurred first.
-  \item `event_levels[3]` — died before the non-fatal event.
+\item \code{event_levels[1]} — alive and event-free at censoring.
+\item \code{event_levels[2]} — non-fatal event occurred first.
+\item \code{event_levels[3]} — died before the non-fatal event.
 }
-The coding mirrors the `ev_evnt` variable constructed in the legacy
-`tp.dp.gfup.R` template.
+The coding mirrors the \code{ev_evnt} variable constructed in the legacy
+\code{tp.dp.gfup.R} template.
 }
 \examples{
 dta <- sample_goodness_followup_data()

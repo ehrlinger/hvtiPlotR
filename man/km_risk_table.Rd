@@ -13,7 +13,7 @@ km_risk_table(km_df, report_times)
 }
 \value{
 A data frame with columns \code{strata}, \code{report_time},
-  \code{n.risk}.
+\code{n.risk}.
 }
 \description{
 For each stratum, finds the last observed \code{n.risk} at or before each

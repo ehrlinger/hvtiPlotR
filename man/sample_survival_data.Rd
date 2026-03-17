@@ -38,22 +38,22 @@ Defaults to \code{42}.}
 \value{
 A data frame with columns:
 \describe{
-  \item{\code{iv_dead}}{Follow-up time in years (numeric), truncated at
-    \code{study_years}.}
-  \item{\code{dead}}{Logical event indicator; \code{TRUE} if the subject
-    experienced the event before administrative censoring.}
-  \item{\code{iv_opyrs}}{Operation year offset — uniform over
-    \code{[1990, 1990 + study_years]}.}
-  \item{\code{age_at_op}}{Age at operation (years); drawn from
-    \eqn{N(65, 10)}, capped to \code{[30, 90]}.}
-  \item{\code{valve_type}}{(Only when \code{strata_levels} is not
-    \code{NULL}) Character stratum label.}
+\item{\code{iv_dead}}{Follow-up time in years (numeric), truncated at
+\code{study_years}.}
+\item{\code{dead}}{Logical event indicator; \code{TRUE} if the subject
+experienced the event before administrative censoring.}
+\item{\code{iv_opyrs}}{Operation year offset — uniform over
+\code{[1990, 1990 + study_years]}.}
+\item{\code{age_at_op}}{Age at operation (years); drawn from
+\eqn{N(65, 10)}, capped to \code{[30, 90]}.}
+\item{\code{valve_type}}{(Only when \code{strata_levels} is not
+\code{NULL}) Character stratum label.}
 }
 }
 \description{
 Simulates exponential survival times with administrative censoring at
 \code{study_years}.  The default \code{hazard_rate = 0.05} yields roughly
-63\% 20-year mortality — a realistic range for cardiac surgery cohorts.
+63\\% 20-year mortality — a realistic range for cardiac surgery cohorts.
 }
 \examples{
 # Unstratified

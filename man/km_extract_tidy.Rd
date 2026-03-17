@@ -21,20 +21,20 @@ computes derived columns that match the SAS \code{\%kaplan} macro outputs:
 }
 \details{
 \describe{
-  \item{\code{cumhaz}}{Cumulative hazard H(t) = -log S(t).}
-  \item{\code{log_cumhaz}}{log H(t) — y-axis of the log-log survival
-    plot used to assess the proportional-hazards assumption.}
-  \item{\code{log_time}}{log(t) — x-axis of log-scale PLOTC plots.}
-  \item{\code{hazard}}{Instantaneous hazard estimate:
-    log(S(t_prev) / S(t)) / (t - t_prev).  Only defined at event times
-    with \code{delta_t > 0}; \code{NA} at censoring times.}
-  \item{\code{density}}{Probability density: (S(t_prev) - S(t)) / delta_t.}
-  \item{\code{mid_time}}{Midpoint of the interval (t_prev, t], used as
-    the x-axis of hazard-rate plots.}
-  \item{\code{life}}{Cumulative integral of the survival function
-    (restricted mean survival time) using the SAS trapezoidal rule:
-    LIFE += delta_t * (3*S(t) - S(t_prev)) / 2.}
-  \item{\code{proplife}}{LIFE / t — proportionate life length.}
+\item{\code{cumhaz}}{Cumulative hazard H(t) = -log S(t).}
+\item{\code{log_cumhaz}}{log H(t) — y-axis of the log-log survival
+plot used to assess the proportional-hazards assumption.}
+\item{\code{log_time}}{log(t) — x-axis of log-scale PLOTC plots.}
+\item{\code{hazard}}{Instantaneous hazard estimate:
+log(S(t_prev) / S(t)) / (t - t_prev).  Only defined at event times
+with \code{delta_t > 0}; \code{NA} at censoring times.}
+\item{\code{density}}{Probability density: (S(t_prev) - S(t)) / delta_t.}
+\item{\code{mid_time}}{Midpoint of the interval (t_prev, t], used as
+the x-axis of hazard-rate plots.}
+\item{\code{life}}{Cumulative integral of the survival function
+(restricted mean survival time) using the SAS trapezoidal rule:
+LIFE += delta_t * (3*S(t) - S(t_prev)) / 2.}
+\item{\code{proplife}}{LIFE / t — proportionate life length.}
 }
 }
 \keyword{internal}

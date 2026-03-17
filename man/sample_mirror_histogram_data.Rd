@@ -13,7 +13,7 @@ sample_mirror_histogram_data(
 )
 }
 \arguments{
-\item{n}{Number of observations **per group** (default 500).}
+\item{n}{Number of observations \strong{per group} (default 500).}
 
 \item{separation}{Numeric. Distance between the two group means on the
 log-odds scale.  Larger values push the score distributions further apart
@@ -32,14 +32,14 @@ appended and normalised to mean 1 within each group (default \code{FALSE}).}
 }
 \value{
 Data frame with columns:
-  \describe{
-    \item{\code{prob_t}}{Propensity score on the 0–1 scale.}
-    \item{\code{tavr}}{Group indicator (0 = control, 1 = treated).}
-    \item{\code{match}}{Binary match indicator produced by greedy
-      nearest-neighbour matching within \code{caliper} (1 = matched).}
-    \item{\code{mt_wt}}{(Only when \code{add_weights = TRUE}) ATE IPTW
-      weights normalised to mean 1 within each group.}
-  }
+\describe{
+\item{\code{prob_t}}{Propensity score on the 0–1 scale.}
+\item{\code{tavr}}{Group indicator (0 = control, 1 = treated).}
+\item{\code{match}}{Binary match indicator produced by greedy
+nearest-neighbour matching within \code{caliper} (1 = matched).}
+\item{\code{mt_wt}}{(Only when \code{add_weights = TRUE}) ATE IPTW
+weights normalised to mean 1 within each group.}
+}
 }
 \description{
 Creates a reproducible data frame for testing \code{\link{mirror_histogram}}

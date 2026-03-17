@@ -19,57 +19,57 @@ covariate_balance(
 )
 }
 \arguments{
-\item{data}{A data frame in **long format** with one row per
+\item{data}{A data frame in \strong{long format} with one row per
 covariate x group combination. Wide-format data (one column per group)
-must be reshaped before passing, e.g. with [tidyr::pivot_longer()] or
-[stats::reshape()].}
+must be reshaped before passing, e.g. with \code{\link[tidyr:pivot_longer]{tidyr::pivot_longer()}} or
+\code{\link[stats:reshape]{stats::reshape()}}.}
 
 \item{variable_col}{Name of the column containing covariate labels.
-Default `"variable"`.}
+Default \code{"variable"}.}
 
 \item{group_col}{Name of the column identifying the comparison group
-(e.g. `"Before match"` / `"After match"`). Default `"group"`.}
+(e.g. \code{"Before match"} / \code{"After match"}). Default \code{"group"}.}
 
 \item{std_diff_col}{Name of the numeric column holding the standardized
-mean difference values. Default `"std_diff"`.}
+mean difference values. Default \code{"std_diff"}.}
 
-\item{var_levels}{Character vector controlling the **display order** of
+\item{var_levels}{Character vector controlling the \strong{display order} of
 covariates on the y-axis. The first element appears at the bottom.
-Defaults to the order of first appearance in `data[[variable_col]]`.}
+Defaults to the order of first appearance in \code{data[[variable_col]]}.}
 
 \item{threshold}{Numeric value (absolute) for the dotted imbalance
-reference lines drawn at `+/-threshold`. Default `10`.}
+reference lines drawn at \verb{+/-threshold}. Default \code{10}.}
 
-\item{point_size}{Passed to [ggplot2::geom_point()]. Default `3`.}
+\item{point_size}{Passed to \code{\link[ggplot2:geom_point]{ggplot2::geom_point()}}. Default \code{3}.}
 
 \item{hline_linetype}{Linetype for the horizontal covariate guide lines.
-Default `"dashed"`.}
+Default \code{"dashed"}.}
 
 \item{hline_linewidth}{Linewidth for the horizontal guide lines.
-Default `0.25`.}
+Default \code{0.25}.}
 
 \item{vline_linewidth}{Linewidth for the solid zero reference line.
-Default `0.2`.}
+Default \code{0.2}.}
 
 \item{threshold_linetype}{Linetype for the +/-threshold reference lines.
-Default `"dotted"`.}
+Default \code{"dotted"}.}
 }
 \value{
-A bare [ggplot2::ggplot()] object. Layer on
-  [ggplot2::scale_color_manual()], [ggplot2::scale_shape_manual()],
-  [ggplot2::scale_x_continuous()], [ggplot2::labs()],
-  [ggplot2::annotate()], and a theme to complete the figure.
+A bare \code{\link[ggplot2:ggplot]{ggplot2::ggplot()}} object. Layer on
+\code{\link[ggplot2:scale_manual]{ggplot2::scale_color_manual()}}, \code{\link[ggplot2:scale_manual]{ggplot2::scale_shape_manual()}},
+\code{\link[ggplot2:scale_continuous]{ggplot2::scale_x_continuous()}}, \code{\link[ggplot2:labs]{ggplot2::labs()}},
+\code{\link[ggplot2:annotate]{ggplot2::annotate()}}, and a theme to complete the figure.
 }
 \description{
 Draws the classic HVI covariate balance figure used to assess propensity
 score matching or IPTW quality. Each covariate appears as a labelled row;
 points display the standardized mean difference for each group (e.g. before
 and after matching). A solid reference line marks zero; dotted reference
-lines mark a user-supplied imbalance threshold (default +/-10\%).
+lines mark a user-supplied imbalance threshold (default +/-10\\%).
 }
 \details{
-The function returns a bare `ggplot` object with no colour, shape, axis, or
-theme applied. Callers are expected to add those with the usual `+`
+The function returns a bare \code{ggplot} object with no colour, shape, axis, or
+theme applied. Callers are expected to add those with the usual \code{+}
 operator, keeping the workflow flexible and consistent with the rest of
 the package.
 }

@@ -40,4 +40,5 @@ Suggests:
     quarto,
     pkgload
 VignetteBuilder: quarto
+Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.3

@@ -20,15 +20,15 @@ stacked_histogram(
 \item{group_col}{Name of the column whose distinct values define the stacked
 groups. Will be coerced to a factor inside the aesthetic mapping.}
 
-\item{binwidth}{Width of each histogram bin, in the same units as `x_col`.
-Defaults to `1`.}
+\item{binwidth}{Width of each histogram bin, in the same units as \code{x_col}.
+Defaults to \code{1}.}
 
-\item{position}{Either `"stack"` (raw counts, the default) or `"fill"`
+\item{position}{Either \code{"stack"} (raw counts, the default) or \code{"fill"}
 (proportions that sum to 1 within each bin).}
 }
 \value{
 A \code{\link[ggplot2]{ggplot}} object.  Add scales, labels, and
-  themes with the usual `+` operator.
+themes with the usual \code{+} operator.
 }
 \description{
 Builds a stacked (or proportional fill) histogram for a grouped numeric

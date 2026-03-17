@@ -14,32 +14,32 @@ sample_covariate_balance_data(
 )
 }
 \arguments{
-\item{n_vars}{Integer. Number of covariates to generate. Default `12`.}
+\item{n_vars}{Integer. Number of covariates to generate. Default \code{12}.}
 
 \item{n}{Integer. Total number of simulated patients before matching.
-Default `600` (roughly 300 per group at `separation = 1.5`).}
+Default \code{600} (roughly 300 per group at \code{separation = 1.5}).}
 
 \item{separation}{Numeric. Distance between the two group means on the
 log-odds scale.  Larger values push propensity score distributions
 further apart, increasing the proportion of unmatched extreme-score
-patients and residual imbalance after matching.  Default `1.5`.}
+patients and residual imbalance after matching.  Default \code{1.5}.}
 
 \item{caliper}{Matching caliper expressed in propensity-score units (0–1
 scale).  Patients without a partner within this distance are left
-unmatched.  Default `0.05`.}
+unmatched.  Default \code{0.05}.}
 
 \item{group_levels}{Length-2 character vector of group labels. Default
-`c("Before match", "After match")`.}
+\code{c("Before match", "After match")}.}
 
-\item{seed}{Integer random seed for reproducibility. Default `42`.}
+\item{seed}{Integer random seed for reproducibility. Default \code{42}.}
 }
 \value{
-A data frame with `2 * n_vars` rows and columns `variable`, `group`,
-  and `std_diff` (standardized mean difference as a percentage).
+A data frame with \code{2 * n_vars} rows and columns \code{variable}, \code{group},
+and \code{std_diff} (standardized mean difference as a percentage).
 }
 \description{
 Produces a reproducible long-format data frame suitable for testing and
-demonstrating [covariate_balance()].  Rather than drawing SMDs from
+demonstrating \code{\link[=covariate_balance]{covariate_balance()}}.  Rather than drawing SMDs from
 independent normals, this generator simulates patient-level covariates
 through a logistic propensity score model, computes group standardized mean
 differences before matching, then performs greedy 1:1 nearest-neighbour

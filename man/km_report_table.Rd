@@ -13,7 +13,7 @@ km_report_table(km_df, report_times)
 }
 \value{
 A data frame with columns \code{strata}, \code{report_time},
-  \code{surv}, \code{lower}, \code{upper}, \code{n.risk}, \code{n.event}.
+\code{surv}, \code{lower}, \code{upper}, \code{n.risk}, \code{n.event}.
 }
 \description{
 For each stratum and report time, extracts the survival estimate (and CI

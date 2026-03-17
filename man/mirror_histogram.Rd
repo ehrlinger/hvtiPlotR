@@ -56,10 +56,10 @@ required. The column must be numeric and non-negative.}
 }
 \value{
 A list with elements \code{plot} (ggplot object), \code{diagnostics}
-  (mode-dependent summary statistics), and \code{data} (filtered working
-  data frame). Binary-match diagnostics include \code{smd_matched};
-  weighted diagnostics include \code{smd_weighted} and
-  \code{effective_n_by_group}.
+(mode-dependent summary statistics), and \code{data} (filtered working
+data frame). Binary-match diagnostics include \code{smd_matched};
+weighted diagnostics include \code{smd_weighted} and
+\code{effective_n_by_group}.
 }
 \description{
 Generates mirrored propensity score histograms for two treatment groups.
@@ -67,14 +67,14 @@ Supports two display modes selected by the arguments supplied:
 }
 \details{
 \describe{
-  \item{Binary-match mode}{Supply \code{match_col}. Upper bars show all
-    observations (before matching); overlaid bars show the matched subset.
-    Fill keys: \code{before_g0}, \code{matched_g0}, \code{before_g1},
-    \code{matched_g1}.}
-  \item{Weighted IPTW mode}{Supply \code{weight_col}. Upper bars show raw
-    counts (before weighting); overlaid bars show per-bin weight sums.
-    \code{match_col} is ignored. Fill keys: \code{before_g0},
-    \code{weighted_g0}, \code{before_g1}, \code{weighted_g1}.}
+\item{Binary-match mode}{Supply \code{match_col}. Upper bars show all
+observations (before matching); overlaid bars show the matched subset.
+Fill keys: \code{before_g0}, \code{matched_g0}, \code{before_g1},
+\code{matched_g1}.}
+\item{Weighted IPTW mode}{Supply \code{weight_col}. Upper bars show raw
+counts (before weighting); overlaid bars show per-bin weight sums.
+\code{match_col} is ignored. Fill keys: \code{before_g0},
+\code{weighted_g0}, \code{before_g1}, \code{weighted_g1}.}
 }
 }
 \examples{

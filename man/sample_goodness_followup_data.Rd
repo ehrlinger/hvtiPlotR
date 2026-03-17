@@ -16,52 +16,52 @@ sample_goodness_followup_data(
 )
 }
 \arguments{
-\item{n}{Integer number of patients to simulate. Default `300`.}
+\item{n}{Integer number of patients to simulate. Default \code{300}.}
 
 \item{origin_year}{Integer calendar year corresponding to zero in
-`iv_opyrs`. Default `1990`.}
+\code{iv_opyrs}. Default \code{1990}.}
 
 \item{study_start, study_end}{Date (or coercible string) defining the
 operation date window.}
 
 \item{close_date}{Date (or coercible string) for the follow-up closing
-date. Must be >= `study_end`.}
+date. Must be >= \code{study_end}.}
 
 \item{death_rate}{Annual hazard for death (exponential model). Default
-`0.05` (median survival ~14 years).}
+\code{0.05} (median survival ~14 years).}
 
 \item{event_rate}{Annual hazard for the non-fatal event (exponential
-model). Default `0.08` (median time-to-event ~9 years).}
+model). Default \code{0.08} (median time-to-event ~9 years).}
 
-\item{seed}{Integer random seed for reproducibility. Default `42`.}
+\item{seed}{Integer random seed for reproducibility. Default \code{42}.}
 }
 \value{
 A data frame with columns:
-  \describe{
-    \item{`iv_opyrs`}{Years from `origin_year` to operation date.}
-    \item{`iv_dead`}{Follow-up years to death or censoring.}
-    \item{`dead`}{Logical — all-source death indicator.}
-    \item{`iv_event`}{Follow-up years to non-fatal event or censoring.}
-    \item{`ev_event`}{Logical — non-fatal event indicator.}
-    \item{`deads`}{Logical — active/systematic death indicator (subset of
-      `dead`).}
-  }
+\describe{
+\item{\code{iv_opyrs}}{Years from \code{origin_year} to operation date.}
+\item{\code{iv_dead}}{Follow-up years to death or censoring.}
+\item{\code{dead}}{Logical — all-source death indicator.}
+\item{\code{iv_event}}{Follow-up years to non-fatal event or censoring.}
+\item{\code{ev_event}}{Logical — non-fatal event indicator.}
+\item{\code{deads}}{Logical — active/systematic death indicator (subset of
+\code{dead}).}
+}
 }
 \description{
 Produces a reproducible data frame suitable for testing and demonstrating
-[goodness_followup()]. Operation dates are drawn uniformly over the study
+\code{\link[=goodness_followup]{goodness_followup()}}. Operation dates are drawn uniformly over the study
 period; death and non-fatal event times are simulated from exponential
 distributions and censored at each patient's potential follow-up. The
-`deads` column approximates active/systematic death ascertainment by
-restricting to deaths within 90% of the potential follow-up window,
-mirroring the distinction between `dead` and `deads` in the legacy
-`tp.dp.gfup.R` template.
+\code{deads} column approximates active/systematic death ascertainment by
+restricting to deaths within 90\% of the potential follow-up window,
+mirroring the distinction between \code{dead} and \code{deads} in the legacy
+\code{tp.dp.gfup.R} template.
 }
 \details{
-The column names match the defaults of [goodness_followup()]:
-`iv_opyrs`, `iv_dead`, `dead`. The event-panel columns (`iv_event`,
-`ev_event`, `deads`) are included so callers can pass `event_col`,
-`event_time_col`, and `death_for_event_col` directly.
+The column names match the defaults of \code{\link[=goodness_followup]{goodness_followup()}}:
+\code{iv_opyrs}, \code{iv_dead}, \code{dead}. The event-panel columns (\code{iv_event},
+\code{ev_event}, \code{deads}) are included so callers can pass \code{event_col},
+\code{event_time_col}, and \code{death_for_event_col} directly.
 }
 \examples{
 dta <- sample_goodness_followup_data()

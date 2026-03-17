@@ -48,30 +48,30 @@ macro, which is preferred when \eqn{S(t)} falls to or near zero.}
 }
 \value{
 A named list with elements mirroring the SAS \code{\%kaplan} macro
-  output plots (\code{PLOTS}, \code{PLOTC}, \code{PLOTH}, \code{PLOTL}):
+output plots (\code{PLOTS}, \code{PLOTC}, \code{PLOTH}, \code{PLOTL}):
 \describe{
-  \item{\code{survival_plot}}{(\code{PLOTS=1}) Bare \code{ggplot}: KM step
-    function with optional CI ribbon, y-axis on 0–100 scale.}
-  \item{\code{cumhaz_plot}}{(\code{PLOTC=1}) Bare \code{ggplot}:
-    Nelson-Aalen cumulative hazard H(t) = -log S(t).}
-  \item{\code{hazard_plot}}{(\code{PLOTH=1}) Bare \code{ggplot}:
-    instantaneous hazard h(t) = log(S(t_prev)/S(t)) / delta_t, plotted at
-    interval midpoints.  Add \code{geom_smooth(method="loess")} for
-    a smoothed hazard curve.}
-  \item{\code{loglog_plot}}{(\code{PLOTC=1}, log-log variant) Bare
-    \code{ggplot}: log H(t) vs log t.  Parallel lines across strata
-    indicate proportional hazards.}
-  \item{\code{life_plot}}{(\code{PLOTL=1}) Bare \code{ggplot}: restricted
-    mean survival time (integral of S(t)) vs time.}
-  \item{\code{km_data}}{Tidy data frame with columns \code{time},
-    \code{surv}, \code{lower}, \code{upper}, \code{n.risk}, \code{n.event},
-    \code{n.censor}, \code{cumhaz}, \code{strata}, \code{hazard},
-    \code{density}, \code{mid_time}, \code{life}, \code{proplife},
-    \code{log_cumhaz}, \code{log_time}.}
-  \item{\code{risk_table}}{Data frame: \code{strata}, \code{report_time},
-    \code{n.risk}.}
-  \item{\code{report_table}}{Data frame: \code{strata}, \code{report_time},
-    \code{surv}, \code{lower}, \code{upper}, \code{n.risk}, \code{n.event}.}
+\item{\code{survival_plot}}{(\code{PLOTS=1}) Bare \code{ggplot}: KM step
+function with optional CI ribbon, y-axis on 0–100 scale.}
+\item{\code{cumhaz_plot}}{(\code{PLOTC=1}) Bare \code{ggplot}:
+Nelson-Aalen cumulative hazard H(t) = -log S(t).}
+\item{\code{hazard_plot}}{(\code{PLOTH=1}) Bare \code{ggplot}:
+instantaneous hazard h(t) = log(S(t_prev)/S(t)) / delta_t, plotted at
+interval midpoints.  Add \code{geom_smooth(method="loess")} for
+a smoothed hazard curve.}
+\item{\code{loglog_plot}}{(\code{PLOTC=1}, log-log variant) Bare
+\code{ggplot}: log H(t) vs log t.  Parallel lines across strata
+indicate proportional hazards.}
+\item{\code{life_plot}}{(\code{PLOTL=1}) Bare \code{ggplot}: restricted
+mean survival time (integral of S(t)) vs time.}
+\item{\code{km_data}}{Tidy data frame with columns \code{time},
+\code{surv}, \code{lower}, \code{upper}, \code{n.risk}, \code{n.event},
+\code{n.censor}, \code{cumhaz}, \code{strata}, \code{hazard},
+\code{density}, \code{mid_time}, \code{life}, \code{proplife},
+\code{log_cumhaz}, \code{log_time}.}
+\item{\code{risk_table}}{Data frame: \code{strata}, \code{report_time},
+\code{n.risk}.}
+\item{\code{report_table}}{Data frame: \code{strata}, \code{report_time},
+\code{surv}, \code{lower}, \code{upper}, \code{n.risk}, \code{n.event}.}
 }
 }
 \description{

@@ -8,12 +8,12 @@ and presentations using \code{R} and the \code{ggplot2} package.}
 hvtiPlotR is a replacement package for the \code{plot.sas}
 macro for creating publication quality graphics.
 
-\itemize{ 
-\item \code{ggplot2} figures: We chose to use the \code{ggplot2} package for our figures. 
- The plot functions all return either a single \code{ggplot2} object, or a list of 
- \code{ggplot2} objects. 
- The user can then use additional \code{ggplot2} functions to modify and customise the 
- figures to their liking. 
+\itemize{
+\item \code{ggplot2} figures: We chose to use the \code{ggplot2} package for our figures.
+The plot functions all return either a single \code{ggplot2} object, or a list of
+\code{ggplot2} objects.
+The user can then use additional \code{ggplot2} functions to modify and customise the
+figures to their liking.
 }
 
 The hvtiPlotR package contains the following functions:
@@ -26,7 +26,7 @@ The hvtiPlotR package contains the following functions:
 \item \code{\link{makeFootnote}}: Add footnotes to graphics
 }
 
-All functions have an associated plotting function that returns ggplot2 graphics, either 
+All functions have an associated plotting function that returns ggplot2 graphics, either
 individually or as a list, that can be further customised using standard ggplot2 commands.
 }
 \references{

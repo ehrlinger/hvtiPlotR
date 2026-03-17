@@ -11,13 +11,13 @@ hvti_plot(
 }
 \arguments{
 \item{type}{Character keyword identifying the plot type. Supported values
-are `"mirror_histogram"` and `"stacked_histogram"`.}
+are \code{"mirror_histogram"} and \code{"stacked_histogram"}.}
 
 \item{...}{Additional arguments passed to the underlying plotting function.}
 }
 \value{
 The object produced by the requested plotting function (e.g., a list
-  containing plot elements and diagnostics, or a ggplot object).
+containing plot elements and diagnostics, or a ggplot object).
 }
 \description{
 Provides a single entry point for generating hvtiPlotR plots.

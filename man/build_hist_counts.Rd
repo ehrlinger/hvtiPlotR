@@ -12,7 +12,7 @@ build_hist_counts(x, breaks)
 \item{breaks}{Numeric vector of break points for bins.}
 }
 \value{
-Data frame with columns `x` (bin midpoints) and `count` (counts per bin).
+Data frame with columns \code{x} (bin midpoints) and \code{count} (counts per bin).
 }
 \description{
 Helper function to compute histogram bin midpoints and counts for a numeric vector.
