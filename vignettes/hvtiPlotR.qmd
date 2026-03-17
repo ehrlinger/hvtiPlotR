@@ -564,6 +564,91 @@ mhist$diagnostics$group_counts_before
 mhist$diagnostics$group_counts_matched
 ```
 
+# Stacked Histogram
+
+A common exploratory figure is the stacked histogram, which shows how the composition of a numeric variable changes over time or across another grouping dimension. The **hvtiPlotR** package provides the `stacked_histogram()` function to generate this figure.
+
+The function returns a bare `ggplot` object — no colour scales, axis labels, or theme are applied — so the caller can add those freely with the usual `+` operator.
+
+The `sample_stacked_histogram_data()` function generates a reproducible example dataset with `year` and `category` columns.
+
+```{r}
+#| label: stacked_histogram_data
+# Generate sample data
+hist_dta <- sample_stacked_histogram_data(n_years = 20, start_year = 2000,
+                                           n_categories = 3)
+head(hist_dta)
+```
+
+## Count histogram
+
+The default `position = "stack"` shows raw counts within each bin, equivalent to the `plot.sas` frequency histogram.
+
+```{r}
+#| label: stacked_histogram_count
+# Build the bare plot
+p_count <- stacked_histogram(hist_dta, x_col = "year", group_col = "category")
+
+# Layer on colour scales, labels, and a theme
+p_count +
+  scale_fill_brewer(palette = "Set1", name = "Category") +
+  scale_color_brewer(palette = "Set1", name = "Category") +
+  labs(x = "Year", y = "Count") +
+  hvti_theme("manuscript")
+```
+
+## Proportion (fill) histogram
+
+Setting `position = "fill"` rescales each bin so the bars sum to 1, making it easy to compare the relative composition across years.
+
+```{r}
+#| label: stacked_histogram_fill
+# Build the proportional variant
+p_fill <- stacked_histogram(hist_dta, x_col = "year", group_col = "category",
+                             position = "fill")
+
+# Use manual colours and custom legend labels
+p_fill +
+  scale_fill_manual(
+    values = c("1" = "pink", "2" = "cyan", "3" = "orangered"),
+    labels = c("1" = "Group A", "2" = "Group B", "3" = "Group C"),
+    name   = "Category"
+  ) +
+  scale_color_manual(
+    values = c("1" = "pink", "2" = "cyan", "3" = "orangered"),
+    guide  = "none"
+  ) +
+  labs(x = "Year", y = "Proportion") +
+  hvti_theme("manuscript")
+```
+
+## Saving stacked histograms
+
+Use `ggsave()` to write the composed figure to disk. Assign the final plot to a variable first so the same object is saved and displayed.
+
+```{r}
+#| label: stacked_histogram_save
+#| eval: false
+p_final <- p_fill +
+  scale_fill_manual(
+    values = c("1" = "pink", "2" = "cyan", "3" = "orangered"),
+    name   = "Category"
+  ) +
+  scale_color_manual(
+    values = c("1" = "pink", "2" = "cyan", "3" = "orangered"),
+    guide  = "none"
+  ) +
+  labs(x = "Year", y = "Proportion") +
+  hvti_theme("manuscript")
+
+ggsave(
+  filename = "../graphs/stacked_histogram.pdf",
+  plot     = p_final,
+  width    = 11,
+  height   = 8
+)
+```
+
 # Saving publication graphics
 Once we have created the figure, and formatted it as desired (using a **hvtiPlotR** theme), we need to save the figure in a format that can easily be imported into our publications. 
 
