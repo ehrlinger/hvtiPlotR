@@ -269,7 +269,8 @@ build_mirror_histogram_plot <- function(plot_df, group_labels, binwidth,
       breaks = y_breaks,
       labels = abs(y_breaks)
     ) +
-    ggplot2::labs(x = "Propensity Score (%)", y = "Number of Patients") +
+    ggplot2::labs(x = "Propensity Score (%)",
+                  y = "Number of patients / sum of weights") +
     ggplot2::coord_cartesian(clip = "off") +
     ggplot2::theme_minimal(base_size = 12)
 }
