@@ -245,20 +245,22 @@ assemble_mirror_histogram_plot_df <- function(working, group_levels, group_label
 # Internal: Build ggplot object for mirrored histogram
 #' @importFrom ggplot2 ggplot geom_hline geom_col scale_fill_manual scale_x_continuous scale_y_continuous labs annotate coord_cartesian aes theme_minimal
 build_mirror_histogram_plot <- function(plot_df, group_labels, binwidth,
-                                        lower, upper, y_breaks) {
+                                        lower, upper, y_breaks, alpha) {
   ggplot2::ggplot() +
     ggplot2::geom_hline(yintercept = 0, linewidth = 0.7, color = "black") +
     ggplot2::geom_col(
       data = plot_df[plot_df$layer == "Before", ],
       ggplot2::aes(x = x, y = y, fill = fill_key),
       width = binwidth * HVTI_SCORE_FILL_RATIO,
-      color = "black"
+      color = "black",
+      alpha = alpha
     ) +
     ggplot2::geom_col(
       data = plot_df[plot_df$layer != "Before", ],
       ggplot2::aes(x = x, y = y, fill = fill_key),
       width = binwidth * HVTI_SCORE_FILL_RATIO,
-      color = "black"
+      color = "black",
+      alpha = alpha
     ) +
     ggplot2::scale_x_continuous(
       limits = c(HVTI_SCORE_MIN, HVTI_SCORE_MAX),
@@ -354,8 +356,9 @@ mirror_histogram_diagnostics <- function(working, matched_idx, group_levels,
 #'   plus either \code{match_col} or \code{weight_col}.
 #' @param score_col Column name holding the numeric propensity score.
 #' @param group_col Column name identifying the grouping/treatment indicator.
-#' @param match_col Column name of the binary match indicator. Required in
-#'   binary-match mode; ignored when \code{weight_col} is supplied.
+#' @param match_col Column name of the binary match indicator. Default
+#'   \code{"match"}. Required in binary-match mode; ignored when
+#'   \code{weight_col} is supplied.
 #' @param group_levels Length-2 vector giving the values in \code{group_col}
 #'   to plot (order determines panel orientation).
 #' @param group_labels Length-2 character vector of human-readable group labels.
@@ -368,6 +371,7 @@ mirror_histogram_diagnostics <- function(working, matched_idx, group_levels,
 #'   the function operates in weighted mode: "Before" bars show raw counts,
 #'   "Weighted" bars show per-bin weight sums, and \code{match_col} is not
 #'   required. The column must be numeric and non-negative.
+#' @param alpha Transparency of the histogram bars, in \[0, 1\]. Default `0.8`.
 #' @param output_file Optional file path; when provided the plot is saved via
 #'   \code{ggsave()}.
 #' @param width,height Dimensions (inches) when saving \code{output_file}.
@@ -380,8 +384,9 @@ mirror_histogram_diagnostics <- function(working, matched_idx, group_levels,
 #'
 #' @examples
 #' # --- Binary-match mode ---------------------------------------------------
-#' mirror_dta <- sample_mirror_histogram_data(n = 4000)
-#' mhist <- mirror_histogram(mirror_dta)
+#' # separation = 1.5 leaves many high/low-score patients unmatched at tails
+#' mirror_dta <- sample_mirror_histogram_data(n = 500, separation = 1.5)
+#' mhist <- mirror_histogram(mirror_dta, alpha = 0.8)
 #' mhist$plot
 #' mhist$diagnostics$smd_before
 #' mhist$diagnostics$smd_matched
@@ -396,7 +401,7 @@ mirror_histogram_diagnostics <- function(working, matched_idx, group_levels,
 #'
 #' # --- Weighted IPTW mode --------------------------------------------------
 #' wt_dta <- sample_mirror_histogram_data(n = 500, add_weights = TRUE)
-#' mhist_wt <- mirror_histogram(wt_dta, weight_col = "mt_wt")
+#' mhist_wt <- mirror_histogram(wt_dta, weight_col = "mt_wt", alpha = 0.8)
 #' mhist_wt$plot
 #' mhist_wt$diagnostics$smd_weighted
 #' mhist_wt$diagnostics$effective_n_by_group
@@ -421,12 +426,17 @@ mirror_histogram <- function(data,
                              score_multiplier = HVTI_SCORE_DEFAULT_MULTIPLIER,
                              binwidth        = 5,
                              weight_col      = NULL,
+                             alpha           = 0.8,
                              output_file     = NULL,
                              width           = 8,
                              height          = 6) {
   validate_mirror_histogram_input(data, score_col, group_col, match_col,
                                   group_levels, group_labels, binwidth,
                                   weight_col = weight_col)
+  assertthat::assert_that(
+    assertthat::is.number(alpha) && alpha > 0 && alpha <= 1,
+    msg = "`alpha` must be a number in (0, 1]."
+  )
   prep    <- prepare_mirror_histogram_data(data, score_col, group_col, match_col,
                                            group_levels, score_multiplier,
                                            weight_col = weight_col)
@@ -446,7 +456,7 @@ mirror_histogram <- function(data,
   lower <- ymin - max(1, ceiling(HVTI_SCORE_MARGIN_RATIO * abs(ymin)))
   y_breaks <- pretty(c(lower, upper), n = 8)
   p <- build_mirror_histogram_plot(plot_df, group_labels, binwidth,
-                                   lower, upper, y_breaks)
+                                   lower, upper, y_breaks, alpha)
   diagnostics <- mirror_histogram_diagnostics(working, matched_idx, group_levels,
                                               n_input, n_dropped)
   if (!is.null(output_file)) {
@@ -461,32 +471,93 @@ mirror_histogram <- function(data,
 
 ##' Generate Sample Data for Mirrored Histogram
 ##'
-##' Creates a reproducible data frame suitable for testing
-##' \code{\link{mirror_histogram}} in either binary-match or weighted IPTW mode.
+##' Creates a reproducible data frame for testing \code{\link{mirror_histogram}}
+##' in either binary-match or weighted IPTW mode.  Propensity scores are
+##' simulated via a logistic model: control subjects draw their linear predictor
+##' from \eqn{N(-\text{sep}/2, 1)} and treated subjects from
+##' \eqn{N(+\text{sep}/2, 1)}, so the two score distributions overlap in the
+##' centre while accumulating mass at opposite extremes.  Patients at those
+##' extremes cannot find a matching partner within the caliper, which naturally
+##' reproduces the "many unmatched at the tails" pattern seen in real studies.
 ##'
-##' @param n Number of samples per group (default 100).
+##' @param n Number of observations **per group** (default 500).
+##' @param separation Numeric. Distance between the two group means on the
+##'   log-odds scale.  Larger values push the score distributions further apart
+##'   and increase the proportion of unmatched patients at the extremes
+##'   (default 1.5).
+##' @param caliper Matching caliper width expressed in propensity-score units
+##'   (0–1 scale, default 0.05).  Treated patients without a control partner
+##'   within this distance are left unmatched.
+##' @param seed Integer random seed for reproducibility (default 123).
 ##' @param add_weights Logical. When \code{TRUE} an \code{mt_wt} column of
-##'   positive IPTW-style weights is appended (default \code{FALSE}).
-##' @return Data frame with columns \code{prob_t}, \code{tavr}, \code{match},
-##'   and optionally \code{mt_wt}.
-##' @importFrom stats rbeta rbinom rexp
+##'   ATE-style IPTW weights derived from the simulated propensity scores is
+##'   appended and normalised to mean 1 within each group (default \code{FALSE}).
+##' @return Data frame with columns:
+##'   \describe{
+##'     \item{\code{prob_t}}{Propensity score on the 0–1 scale.}
+##'     \item{\code{tavr}}{Group indicator (0 = control, 1 = treated).}
+##'     \item{\code{match}}{Binary match indicator produced by greedy
+##'       nearest-neighbour matching within \code{caliper} (1 = matched).}
+##'     \item{\code{mt_wt}}{(Only when \code{add_weights = TRUE}) ATE IPTW
+##'       weights normalised to mean 1 within each group.}
+##'   }
+##' @importFrom stats rnorm plogis
 ##' @export
-sample_mirror_histogram_data <- function(n = 100, add_weights = FALSE) {
+sample_mirror_histogram_data <- function(n          = 500,
+                                         separation = 1.5,
+                                         caliper    = 0.05,
+                                         seed       = 123,
+                                         add_weights = FALSE) {
   assertthat::assert_that(assertthat::is.count(n),
                           msg = "`n` must be a positive integer.")
+  assertthat::assert_that(assertthat::is.number(separation) && separation > 0,
+                          msg = "`separation` must be a positive number.")
+  assertthat::assert_that(assertthat::is.number(caliper) &&
+                            caliper > 0 && caliper <= 1,
+                          msg = "`caliper` must be a number in (0, 1].")
   assertthat::assert_that(assertthat::is.flag(add_weights),
                           msg = "`add_weights` must be TRUE or FALSE.")
-  set.seed(123)
-  group0_scores <- stats::rbeta(n, 2, 5)
-  group1_scores <- stats::rbeta(n, 5, 2)
-  group  <- c(rep(0, n), rep(1, n))
-  prob_t <- c(group0_scores, group1_scores)
-  match  <- stats::rbinom(2 * n, 1, prob = HVTI_MATCH_PROBABILITY)
-  df <- data.frame(prob_t = prob_t, tavr = group, match = match)
-  if (add_weights) {
-    set.seed(456)
-    df$mt_wt <- stats::rexp(2 * n, rate = 1)
+
+  set.seed(seed)
+
+  # Logistic propensity score model.
+  # Control LP ~ N(-sep/2, 1) → scores cluster below 0.5.
+  # Treated LP ~ N(+sep/2, 1) → scores cluster above 0.5.
+  # The further a patient sits from 0.5, the fewer matching partners exist.
+  ps_ctrl <- stats::plogis(stats::rnorm(n, mean = -separation / 2, sd = 1))
+  ps_trt  <- stats::plogis(stats::rnorm(n, mean =  separation / 2, sd = 1))
+
+  prob_t <- c(ps_ctrl, ps_trt)
+  group  <- c(rep(0L, n), rep(1L, n))
+
+  # Greedy 1:1 nearest-neighbour matching within caliper.
+  # Treated patients are visited in random order; each control can match once.
+  match_flag <- rep(0L, 2L * n)
+  used_ctrl  <- rep(FALSE, n)
+
+  for (i in sample.int(n)) {
+    diffs            <- abs(ps_ctrl - ps_trt[i])
+    diffs[used_ctrl] <- Inf
+    best             <- which.min(diffs)
+    if (diffs[best] <= caliper) {
+      match_flag[n + i] <- 1L
+      match_flag[best]  <- 1L
+      used_ctrl[best]   <- TRUE
+    }
   }
+
+  df <- data.frame(prob_t = prob_t, tavr = group, match = match_flag)
+
+  if (add_weights) {
+    # ATE IPTW: w = 1/PS (treated) or 1/(1-PS) (control).
+    # Trim extreme scores to avoid runaway weights, then normalise within group.
+    ps_trim <- pmax(pmin(prob_t, 0.99), 0.01)
+    wts     <- ifelse(group == 1L, 1 / ps_trim, 1 / (1 - ps_trim))
+    wts[group == 0L] <- wts[group == 0L] / mean(wts[group == 0L])
+    wts[group == 1L] <- wts[group == 1L] / mean(wts[group == 1L])
+    df$mt_wt <- wts
+  }
+
   df
 }
 

@@ -1,52 +1,59 @@
-#' Theme for generating manuscript figures
+#' Theme for Manuscript Figures
 #'
-#' @param base_size the base font size
-#' @param base_family base font family
-#' @param header_family = NULL,
-#' @param base_line_size = base_size / 22,
-#' @param base_rect_size = base_size / 22,
-#' @param ink = "white",
-#' @param paper = "transparent",
-#' @param accent = "#3366FF"
+#' A clean, white-background theme suited to journal submissions.
+#' Removes grid lines, panel borders, and legends; draws solid axis lines.
 #'
-#' @seealso \code{theme_set} \code{theme_grey} \code{\link{theme_ppt}}
+#' @param base_size      Base font size in points. Default `12`.
+#' @param base_family    Base font family. Default `""` (device default).
+#' @param header_family  Font family for headers, or `NULL` to inherit
+#'   `base_family`. Default `NULL`.
+#' @param base_line_size Line size used for axis lines and borders.
+#'   Default `base_size / 22`.
+#' @param base_rect_size Rectangle border size. Default `base_size / 22`.
+#' @param ink            Foreground (text and line) colour. Default `"black"`.
+#' @param paper          Background colour. Default `"white"`.
+#' @param accent         Accent colour used by some `theme_grey()` elements.
+#'   Default `"#3366FF"`.
+#'
+#' @return A [ggplot2::theme()] object.
+#'
+#' @seealso [hvti_theme()], [theme_ppt()], [theme_dark_ppt()], [theme_poster()]
 #'
 #' @import ggplot2
-#' @export hvti_theme_manuscript
+#' @export
 #' @aliases theme_manuscript theme_man
-
-hvti_theme_manuscript <- function(base_size = 12,
-                                  base_family = "",
-                                  header_family = NULL,
+hvti_theme_manuscript <- function(base_size      = 12,
+                                  base_family    = "",
+                                  header_family  = NULL,
                                   base_line_size = base_size / 22,
                                   base_rect_size = base_size / 22,
-                                  ink = "black",
-                                  paper = "white",
-                                  accent = "#3366FF") {
-  theme_grey(
-    base_size = base_size,
-    base_family = base_family,
-    header_family = header_family,
+                                  ink            = "black",
+                                  paper          = "white",
+                                  accent         = "#3366FF") {
+  hvti_theme_base(
+    base_size      = base_size,
+    base_family    = base_family,
+    header_family  = header_family,
     base_line_size = base_line_size,
     base_rect_size = base_rect_size,
-    ink = ink,
-    paper = paper,
-    accent = accent
+    ink            = ink,
+    paper          = paper,
+    accent         = accent
   ) %+replace%
     theme(
-      strip.text = element_text(size = 10),
-      legend.position = "none",
-      legend.key = element_blank(),
-      panel.grid.major = element_blank(),
-      panel.grid.minor = element_blank(),
-      legend.title = element_blank(),
-      panel.background = element_blank(),
-      panel.border = element_blank(),
-      axis.line.x = element_line(color = "black", linewidth = 0.8),
-      axis.line.y = element_line(color = "black", linewidth = 0.8),
-      axis.text = element_text(size = base_size, color = "black"),
-      plot.margin = unit(HVTI_THEME_MANUSCRIPT_MARGIN, "cm"),
-      axis.title = element_text(size = base_size)
+      strip.text        = element_text(size = 10),
+      legend.position   = "none",
+      legend.key        = element_blank(),
+      panel.grid.major  = element_blank(),
+      panel.grid.minor  = element_blank(),
+      legend.title      = element_blank(),
+      panel.background  = element_blank(),
+      panel.border      = element_blank(),
+      axis.line.x       = element_line(color = "black", linewidth = 0.8),
+      axis.line.y       = element_line(color = "black", linewidth = 0.8),
+      axis.text         = element_text(size = base_size, color = "black"),
+      plot.margin       = unit(HVTI_THEME_MANUSCRIPT_MARGIN, "cm"),
+      axis.title        = element_text(size = base_size)
     )
 }
 

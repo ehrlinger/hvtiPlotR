@@ -4,7 +4,7 @@
 \alias{hvti_theme_manuscript}
 \alias{theme_manuscript}
 \alias{theme_man}
-\title{Theme for generating manuscript figures}
+\title{Theme for Manuscript Figures}
 \usage{
 hvti_theme_manuscript(
   base_size = 12,
@@ -40,25 +40,32 @@ theme_man(
 )
 }
 \arguments{
-\item{base_size}{the base font size}
+\item{base_size}{Base font size in points. Default \code{12}.}
 
-\item{base_family}{base font family}
+\item{base_family}{Base font family. Default \code{""} (device default).}
 
-\item{header_family}{= NULL,}
+\item{header_family}{Font family for headers, or \code{NULL} to inherit
+\code{base_family}. Default \code{NULL}.}
 
-\item{base_line_size}{= base_size / 22,}
+\item{base_line_size}{Line size used for axis lines and borders.
+Default \code{base_size / 22}.}
 
-\item{base_rect_size}{= base_size / 22,}
+\item{base_rect_size}{Rectangle border size. Default \code{base_size / 22}.}
 
-\item{ink}{= "white",}
+\item{ink}{Foreground (text and line) colour. Default \code{"black"}.}
 
-\item{paper}{= "transparent",}
+\item{paper}{Background colour. Default \code{"white"}.}
 
-\item{accent}{= "#3366FF"}
+\item{accent}{Accent colour used by some \code{theme_grey()} elements.
+Default \code{"#3366FF"}.}
+}
+\value{
+A \code{\link[ggplot2:theme]{ggplot2::theme()}} object.
 }
 \description{
-Theme for generating manuscript figures
+A clean, white-background theme suited to journal submissions.
+Removes grid lines, panel borders, and legends; draws solid axis lines.
 }
 \seealso{
-\code{theme_set} \code{theme_grey} \code{\link{theme_ppt}}
+\code{\link[=hvti_theme]{hvti_theme()}}, \code{\link[=theme_ppt]{theme_ppt()}}, \code{\link[=theme_dark_ppt]{theme_dark_ppt()}}, \code{\link[=theme_poster]{theme_poster()}}
 }

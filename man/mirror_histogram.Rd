@@ -15,6 +15,7 @@ mirror_histogram(
   score_multiplier = HVTI_SCORE_DEFAULT_MULTIPLIER,
   binwidth = 5,
   weight_col = NULL,
+  alpha = 0.8,
   output_file = NULL,
   width = 8,
   height = 6
@@ -28,8 +29,9 @@ plus either \code{match_col} or \code{weight_col}.}
 
 \item{group_col}{Column name identifying the grouping/treatment indicator.}
 
-\item{match_col}{Column name of the binary match indicator. Required in
-binary-match mode; ignored when \code{weight_col} is supplied.}
+\item{match_col}{Column name of the binary match indicator. Default
+\code{"match"}. Required in binary-match mode; ignored when
+\code{weight_col} is supplied.}
 
 \item{group_levels}{Length-2 vector giving the values in \code{group_col}
 to plot (order determines panel orientation).}
@@ -49,6 +51,8 @@ the function operates in weighted mode: "Before" bars show raw counts,
 "Weighted" bars show per-bin weight sums, and \code{match_col} is not
 required. The column must be numeric and non-negative.}
 
+\item{alpha}{Transparency of the histogram bars, in [0, 1]. Default \code{0.8}.}
+
 \item{output_file}{Optional file path; when provided the plot is saved via
 \code{ggsave()}.}
 
@@ -56,10 +60,10 @@ required. The column must be numeric and non-negative.}
 }
 \value{
 A list with elements \code{plot} (ggplot object), \code{diagnostics}
-  (mode-dependent summary statistics), and \code{data} (filtered working
-  data frame). Binary-match diagnostics include \code{smd_matched};
-  weighted diagnostics include \code{smd_weighted} and
-  \code{effective_n_by_group}.
+(mode-dependent summary statistics), and \code{data} (filtered working
+data frame). Binary-match diagnostics include \code{smd_matched};
+weighted diagnostics include \code{smd_weighted} and
+\code{effective_n_by_group}.
 }
 \description{
 Generates mirrored propensity score histograms for two treatment groups.
@@ -67,20 +71,21 @@ Supports two display modes selected by the arguments supplied:
 }
 \details{
 \describe{
-  \item{Binary-match mode}{Supply \code{match_col}. Upper bars show all
-    observations (before matching); overlaid bars show the matched subset.
-    Fill keys: \code{before_g0}, \code{matched_g0}, \code{before_g1},
-    \code{matched_g1}.}
-  \item{Weighted IPTW mode}{Supply \code{weight_col}. Upper bars show raw
-    counts (before weighting); overlaid bars show per-bin weight sums.
-    \code{match_col} is ignored. Fill keys: \code{before_g0},
-    \code{weighted_g0}, \code{before_g1}, \code{weighted_g1}.}
+\item{Binary-match mode}{Supply \code{match_col}. Upper bars show all
+observations (before matching); overlaid bars show the matched subset.
+Fill keys: \code{before_g0}, \code{matched_g0}, \code{before_g1},
+\code{matched_g1}.}
+\item{Weighted IPTW mode}{Supply \code{weight_col}. Upper bars show raw
+counts (before weighting); overlaid bars show per-bin weight sums.
+\code{match_col} is ignored. Fill keys: \code{before_g0},
+\code{weighted_g0}, \code{before_g1}, \code{weighted_g1}.}
 }
 }
 \examples{
 # --- Binary-match mode ---------------------------------------------------
-mirror_dta <- sample_mirror_histogram_data(n = 4000)
-mhist <- mirror_histogram(mirror_dta)
+# separation = 1.5 leaves many high/low-score patients unmatched at tails
+mirror_dta <- sample_mirror_histogram_data(n = 500, separation = 1.5)
+mhist <- mirror_histogram(mirror_dta, alpha = 0.8)
 mhist$plot
 mhist$diagnostics$smd_before
 mhist$diagnostics$smd_matched
@@ -95,7 +100,7 @@ mhist$plot +
 
 # --- Weighted IPTW mode --------------------------------------------------
 wt_dta <- sample_mirror_histogram_data(n = 500, add_weights = TRUE)
-mhist_wt <- mirror_histogram(wt_dta, weight_col = "mt_wt")
+mhist_wt <- mirror_histogram(wt_dta, weight_col = "mt_wt", alpha = 0.8)
 mhist_wt$plot
 mhist_wt$diagnostics$smd_weighted
 mhist_wt$diagnostics$effective_n_by_group

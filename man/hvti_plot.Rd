@@ -4,17 +4,22 @@
 \alias{hvti_plot}
 \title{hvtiPlotR Plot Generic}
 \usage{
-hvti_plot(type = c("mirror_histogram", "stacked_histogram"), ...)
+hvti_plot(
+  type = c("mirror_histogram", "stacked_histogram", "covariate_balance",
+    "goodness_followup", "survival_curve"),
+  ...
+)
 }
 \arguments{
 \item{type}{Character keyword identifying the plot type. Supported values
-are `"mirror_histogram"` and `"stacked_histogram"`.}
+are \code{"mirror_histogram"}, \code{"stacked_histogram"}, \code{"covariate_balance"},
+\code{"goodness_followup"}, and \code{"survival_curve"}.}
 
 \item{...}{Additional arguments passed to the underlying plotting function.}
 }
 \value{
 The object produced by the requested plotting function (e.g., a list
-  containing plot elements and diagnostics, or a ggplot object).
+containing plot elements and diagnostics, or a ggplot object).
 }
 \description{
 Provides a single entry point for generating hvtiPlotR plots.

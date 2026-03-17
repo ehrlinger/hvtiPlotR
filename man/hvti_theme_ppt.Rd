@@ -3,7 +3,7 @@
 \name{hvti_theme_ppt}
 \alias{hvti_theme_ppt}
 \alias{theme_ppt}
-\title{Theme for generating powerpoint figures}
+\title{Theme for PowerPoint Figures}
 \usage{
 hvti_theme_ppt(
   base_size = HVTI_THEME_PPT_BASE_SIZE,
@@ -28,25 +28,33 @@ theme_ppt(
 )
 }
 \arguments{
-\item{base_size}{the base font size}
+\item{base_size}{Base font size in points.
+Default 32 (32).}
 
-\item{base_family}{base font family}
+\item{base_family}{Base font family. Default \code{""} (device default).}
 
-\item{header_family}{= NULL,}
+\item{header_family}{Font family for headers, or \code{NULL} to inherit
+\code{base_family}. Default \code{NULL}.}
 
-\item{base_line_size}{= base_size / 22,}
+\item{base_line_size}{Line size used for axis lines and borders.
+Default \code{base_size / 22}.}
 
-\item{base_rect_size}{= base_size / 22,}
+\item{base_rect_size}{Rectangle border size. Default \code{base_size / 22}.}
 
-\item{ink}{= "white",}
+\item{ink}{Foreground (text and line) colour. Default \code{"black"}.}
 
-\item{paper}{= "transparent",}
+\item{paper}{Background colour. Default \code{"transparent"}.}
 
-\item{accent}{= "#3366FF"}
+\item{accent}{Accent colour used by some \code{theme_grey()} elements.
+Default \code{"#3366FF"}.}
+}
+\value{
+A \code{\link[ggplot2:theme]{ggplot2::theme()}} object.
 }
 \description{
-Theme for generating powerpoint figures
+A large-font theme with a transparent background suited to PowerPoint
+slides. Removes grid lines and panel borders.
 }
 \seealso{
-\code{theme_set} \code{theme_grey} \code{\link{theme_man}}
+\code{\link[=hvti_theme]{hvti_theme()}}, \code{\link[=theme_man]{theme_man()}}, \code{\link[=theme_dark_ppt]{theme_dark_ppt()}}, \code{\link[=theme_poster]{theme_poster()}}
 }
