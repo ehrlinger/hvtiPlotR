@@ -21,6 +21,14 @@ knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
 ```
 
 ```{r libraries}
+local({
+  r_libs <- trimws(Sys.getenv("R_LIBS"))
+  if (nzchar(r_libs)) {
+    sep   <- if (.Platform$OS.type == "windows") ";" else ":"
+    paths <- strsplit(r_libs, sep, fixed = TRUE)[[1]]
+    .libPaths(unique(c(paths, .libPaths())))
+  }
+})
 library(ggplot2)
 library(hvtiPlotR)
 ```

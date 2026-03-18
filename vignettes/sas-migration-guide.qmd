@@ -24,6 +24,16 @@ knitr::opts_chunk$set(
   fig.width  = 7,
   fig.height = 5
 )
+# On Windows, R CMD check sets R_LIBS but Quarto subprocesses may not inherit
+# the full library path. Explicitly add it before loading the package.
+local({
+  r_libs <- trimws(Sys.getenv("R_LIBS"))
+  if (nzchar(r_libs)) {
+    sep   <- if (.Platform$OS.type == "windows") ";" else ":"
+    paths <- strsplit(r_libs, sep, fixed = TRUE)[[1]]
+    .libPaths(unique(c(paths, .libPaths())))
+  }
+})
 library(hvtiPlotR)
 library(ggplot2)
 ```
