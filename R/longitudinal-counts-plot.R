@@ -166,7 +166,7 @@ longitudinal_counts_table <- function(data,
                                       x_col        = "time_label",
                                       count_col    = "count",
                                       group_col    = "series",
-                                      label_format = scales::comma) {
+                                      label_format = NULL) {
   if (!is.data.frame(data))
     stop("`data` must be a data frame.")
   for (col in c(x_col, count_col, group_col)) {
@@ -174,7 +174,15 @@ longitudinal_counts_table <- function(data,
       stop(paste0("Column '", col, "' not found in `data`."))
   }
 
-  fmt_fn <- if (is.null(label_format)) as.character else label_format
+  if (is.null(label_format)) {
+    if (requireNamespace("scales", quietly = TRUE)) {
+      label_format <- getFromNamespace("comma", "scales")
+    } else {
+      label_format <- as.character
+    }
+  }
+
+  fmt_fn <- label_format
 
   table_data        <- data
   table_data$.label <- fmt_fn(data[[count_col]])
