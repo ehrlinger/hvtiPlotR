@@ -195,7 +195,11 @@ trends_plot <- function(data,
   }
 
   # --- Annual summary -------------------------------------------------------
-  sfn <- if (summary_fn == "mean") base::mean else stats::median
+  if (summary_fn == "mean") {
+    sfn <- function(x) base::mean(x, na.rm = TRUE)
+  } else {
+    sfn <- function(x) stats::median(x, na.rm = TRUE)
+  }
 
   if (!is.null(group_col)) {
     ann_data <- do.call(
