@@ -49,7 +49,7 @@ hvti_theme_poster <- function(base_size      = 16,
         linewidth = 2
       ),
       axis.text        = element_text(
-        size  = 16,
+        size  = base_size,
         color = "black"
       ),
       axis.line        = element_line(color = "black", linewidth = 1),
