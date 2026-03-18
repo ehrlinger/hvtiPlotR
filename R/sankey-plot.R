@@ -41,7 +41,7 @@
 #' # Axes in order: pre-op grade → procedure → post-op grade
 #' with(dta, tapply(freq, list(pre_ar, post_ar), sum, default = 0))
 #' @export
-sample_sankey_data <- function(n = 300, seed = 42) {
+sample_sankey_data <- function(n = 300, seed = 42L) {
   set.seed(seed)
 
   grade_levels <- c("None", "Mild", "Moderate", "Severe")
@@ -120,7 +120,6 @@ sample_sankey_data <- function(n = 300, seed = 42) {
 #'
 #' @seealso [ggalluvial::geom_alluvium()], [ggalluvial::geom_stratum()],
 #'   [sample_sankey_data()], [hvti_theme()]
-#' @aliases alluvial
 #'
 #' @examples
 #' dta  <- sample_sankey_data(n = 300, seed = 42)
@@ -209,40 +208,29 @@ sankey_plot <- function(data,
                         show_labels   = TRUE) {
 
   # --- Validation -----------------------------------------------------------
-  assertthat::assert_that(
-    is.data.frame(data),
-    msg = "`data` must be a data frame."
-  )
-  assertthat::assert_that(
-    is.character(axes) && length(axes) >= 2L,
-    msg = "`axes` must be a character vector of at least 2 column names."
-  )
-  assertthat::assert_that(
-    all(axes %in% names(data)),
-    msg = paste(
-      "These `axes` names are not columns in `data`:",
-      paste(setdiff(axes, names(data)), collapse = ", ")
-    )
-  )
-  assertthat::assert_that(
-    assertthat::is.string(y_col), y_col %in% names(data),
-    msg = paste0("`y_col` '", y_col, "' is not a column in `data`.")
-  )
+  if (!is.data.frame(data))
+    stop("`data` must be a data frame.")
+  if (!(is.character(axes) && length(axes) >= 2L))
+    stop("`axes` must be a character vector of at least 2 column names.")
+  if (!(all(axes %in% names(data))))
+    stop(paste("These `axes` names are not columns in `data`:",
+               paste(setdiff(axes, names(data)), collapse = ", ")))
+  if (!(is.character(y_col) && length(y_col) == 1L &&
+        y_col %in% names(data)))
+    stop(paste0("`y_col` '", y_col, "' is not a column in `data`."))
   if (!is.null(fill_col)) {
-    assertthat::assert_that(
-      assertthat::is.string(fill_col), fill_col %in% names(data),
-      msg = paste0("`fill_col` '", fill_col, "' is not a column in `data`.")
-    )
+    if (!(is.character(fill_col) && length(fill_col) == 1L &&
+          fill_col %in% names(data)))
+      stop(paste0("`fill_col` '", fill_col, "' is not a column in `data`."))
   }
-  assertthat::assert_that(
-    is.null(axis_labels) ||
-      (is.character(axis_labels) && length(axis_labels) == length(axes)),
-    msg = "`axis_labels` must be NULL or a character vector the same length as `axes`."
-  )
-  assertthat::assert_that(
-    assertthat::is.number(alpha), alpha >= 0, alpha <= 1,
-    msg = "`alpha` must be a number in [0, 1]."
-  )
+  if (!(is.null(axis_labels) ||
+          (is.character(axis_labels) &&
+           length(axis_labels) == length(axes))))
+    stop(paste("`axis_labels` must be NULL or a character vector the same",
+               "length as `axes`."))
+  if (!is.numeric(alpha) || length(alpha) != 1L ||
+      !(alpha >= 0 && alpha <= 1))
+    stop("`alpha` must be a number in [0, 1].")
 
   if (is.null(axis_labels)) axis_labels <- axes
 

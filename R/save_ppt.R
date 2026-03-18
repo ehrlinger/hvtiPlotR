@@ -98,7 +98,6 @@ add_plot_slide <- function(doc, plot, title, layout, master, width, height,
 #'
 #' @seealso [rvg::dml()], [officer::ph_with()], [officer::ph_location()],
 #'   [hvti_theme()]
-#' @aliases ppt pptx
 #'
 #' @examples
 #' \dontrun{

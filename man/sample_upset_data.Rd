@@ -4,7 +4,7 @@
 \alias{sample_upset_data}
 \title{Sample Procedure Co-occurrence Data}
 \usage{
-sample_upset_data(n = 500, seed = 42)
+sample_upset_data(n = 500, seed = 42L)
 }
 \arguments{
 \item{n}{Number of patients. Default \code{500}.}

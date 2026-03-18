@@ -128,7 +128,6 @@ sample_spaghetti_data <- function(n_patients = 150,
 #' @return A [ggplot2::ggplot()] object.
 #'
 #' @seealso [sample_spaghetti_data()], [hvti_theme()]
-#' @aliases profile_plot spaghetti
 #'
 #' @examples
 #' dta <- sample_spaghetti_data(n_patients = 150, seed = 42)
@@ -200,7 +199,7 @@ sample_spaghetti_data <- function(n_patients = 150,
 #'
 #' @importFrom ggplot2 ggplot aes geom_line geom_smooth scale_colour_identity
 #'   scale_y_continuous
-#' @importFrom rlang sym
+#' @importFrom rlang .data
 #' @export
 spaghetti_plot <- function(data,
                            x_col         = "time",
@@ -217,51 +216,37 @@ spaghetti_plot <- function(data,
                            y_labels      = NULL) {
 
   # --- Validation -----------------------------------------------------------
-  assertthat::assert_that(
-    is.data.frame(data),
-    msg = "`data` must be a data frame."
-  )
+  if (!is.data.frame(data))
+    stop("`data` must be a data frame.")
   for (col in c(x_col, y_col, id_col)) {
-    assertthat::assert_that(
-      col %in% names(data),
-      msg = paste0("Column '", col, "' not found in `data`.")
-    )
+    if (!(col %in% names(data)))
+      stop(paste0("Column '", col, "' not found in `data`."))
   }
   if (!is.null(colour_col)) {
-    assertthat::assert_that(
-      colour_col %in% names(data),
-      msg = paste0("`colour_col` '", colour_col, "' not found in `data`.")
-    )
+    if (!(colour_col %in% names(data)))
+      stop(paste0("`colour_col` '", colour_col, "' not found in `data`."))
   }
-  assertthat::assert_that(
-    assertthat::is.number(alpha), alpha >= 0, alpha <= 1,
-    msg = "`alpha` must be a number in [0, 1]."
-  )
-  assertthat::assert_that(
-    is.null(y_labels) ||
-      (is.numeric(y_labels) && !is.null(names(y_labels))),
-    msg = paste0("`y_labels` must be NULL or a named numeric vector, ",
-                 "e.g. c(None = 0, Mild = 1, Moderate = 2, Severe = 3).")
-  )
-
-  x_sym  <- rlang::sym(x_col)
-  y_sym  <- rlang::sym(y_col)
-  id_sym <- rlang::sym(id_col)
+  if (!is.numeric(alpha) || length(alpha) != 1L ||
+      !(alpha >= 0 && alpha <= 1))
+    stop("`alpha` must be a number in [0, 1].")
+  if (!(is.null(y_labels) ||
+          (is.numeric(y_labels) && !is.null(names(y_labels)))))
+    stop(paste0("`y_labels` must be NULL or a named numeric vector, ",
+                "e.g. c(None = 0, Mild = 1, Moderate = 2, Severe = 3)."))
 
   # --- Line layer -----------------------------------------------------------
   if (!is.null(colour_col)) {
-    col_sym  <- rlang::sym(colour_col)
     line_aes <- ggplot2::aes(
-      x      = !!x_sym,
-      y      = !!y_sym,
-      group  = !!id_sym,
-      colour = !!col_sym
+      x      = .data[[x_col]],
+      y      = .data[[y_col]],
+      group  = .data[[id_col]],
+      colour = .data[[colour_col]]
     )
   } else {
     line_aes <- ggplot2::aes(
-      x     = !!x_sym,
-      y     = !!y_sym,
-      group = !!id_sym
+      x     = .data[[x_col]],
+      y     = .data[[y_col]],
+      group = .data[[id_col]]
     )
   }
 
@@ -277,14 +262,14 @@ spaghetti_plot <- function(data,
   if (add_smooth) {
     if (!is.null(colour_col)) {
       smooth_aes <- ggplot2::aes(
-        x      = !!x_sym,
-        y      = !!y_sym,
-        colour = !!col_sym,
-        fill   = !!col_sym,
-        group  = !!col_sym
+        x      = .data[[x_col]],
+        y      = .data[[y_col]],
+        colour = .data[[colour_col]],
+        fill   = .data[[colour_col]],
+        group  = .data[[colour_col]]
       )
     } else {
-      smooth_aes <- ggplot2::aes(x = !!x_sym, y = !!y_sym)
+      smooth_aes <- ggplot2::aes(x = .data[[x_col]], y = .data[[y_col]])
     }
 
     p <- p + ggplot2::geom_smooth(

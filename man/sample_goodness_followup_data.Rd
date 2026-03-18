@@ -12,7 +12,7 @@ sample_goodness_followup_data(
   close_date = as.Date("2021-08-06"),
   death_rate = 0.05,
   event_rate = 0.08,
-  seed = 42
+  seed = 42L
 )
 }
 \arguments{
@@ -68,8 +68,7 @@ dta <- sample_goodness_followup_data()
 head(dta)
 
 # Death panel
-result <- goodness_followup(dta)
-result$death_plot +
+goodness_followup(dta) +
   ggplot2::scale_color_manual(
     values = c("Alive" = "blue", "Dead" = "red"), name = NULL
   ) +
@@ -77,14 +76,13 @@ result$death_plot +
   ggplot2::labs(x = "Operation Date", y = "Follow-up (years)")
 
 # Event panel
-result2 <- goodness_followup(
+goodness_event_plot(
   dta,
   event_col           = "ev_event",
   event_time_col      = "iv_event",
   death_for_event_col = "deads",
   event_levels        = c("No event", "Relapse", "Death")
-)
-result2$event_plot +
+) +
   ggplot2::scale_color_manual(
     values = c("No event" = "blue", "Relapse" = "green3", "Death" = "red"),
     name   = NULL

@@ -2,8 +2,6 @@
 % Please edit documentation in R/spaghetti-plot.R
 \name{spaghetti_plot}
 \alias{spaghetti_plot}
-\alias{profile_plot}
-\alias{spaghetti}
 \title{Spaghetti / Profile Plot of Repeated Measurements}
 \usage{
 spaghetti_plot(

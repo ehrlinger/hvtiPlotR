@@ -6,7 +6,7 @@
 \title{Light PowerPoint Theme}
 \usage{
 hvti_theme_light_ppt(
-  base_size = HVTI_THEME_PPT_BASE_SIZE,
+  base_size = 32,
   base_family = "",
   header_family = NULL,
   base_line_size = base_size/22,
@@ -17,7 +17,7 @@ hvti_theme_light_ppt(
 )
 
 theme_light_ppt(
-  base_size = HVTI_THEME_PPT_BASE_SIZE,
+  base_size = 32,
   base_family = "",
   header_family = NULL,
   base_line_size = base_size/22,
@@ -29,7 +29,7 @@ theme_light_ppt(
 }
 \arguments{
 \item{base_size}{Base font size in points.
-Default 32 (32).}
+Default \code{32}.}
 
 \item{base_family}{Base font family. Default \code{""} (device default).}
 

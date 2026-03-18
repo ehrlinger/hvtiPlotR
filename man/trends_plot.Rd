@@ -2,7 +2,6 @@
 % Please edit documentation in R/trends-plot.R
 \name{trends_plot}
 \alias{trends_plot}
-\alias{trend}
 \title{Temporal Trend Plot}
 \usage{
 trends_plot(

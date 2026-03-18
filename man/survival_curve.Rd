@@ -2,7 +2,6 @@
 % Please edit documentation in R/kaplan-meier.R
 \name{survival_curve}
 \alias{survival_curve}
-\alias{ac.dead}
 \title{Kaplan-Meier Survival Curve}
 \usage{
 survival_curve(
@@ -185,4 +184,9 @@ result$report_table
 # ggplot2::ggsave("survival_curve.pdf", result$survival_plot,
 #                 width = 8, height = 6)
 
+}
+\references{
+SAS template: \code{tp.ac.dead.sas} (calls \code{\%kaplan} for
+product-limit survival estimates and \code{\%nelsont} for Nelson-Aalen
+cumulative event estimates).
 }

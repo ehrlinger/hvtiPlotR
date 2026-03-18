@@ -2,8 +2,6 @@
 % Please edit documentation in R/save_ppt.R
 \name{save_ppt}
 \alias{save_ppt}
-\alias{ppt}
-\alias{pptx}
 \title{Save ggplot Objects to an Editable PowerPoint Presentation}
 \usage{
 save_ppt(

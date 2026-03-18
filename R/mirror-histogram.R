@@ -5,6 +5,14 @@
 ##   Weighted IPTW mode (weight_col): weighted bars = per-bin weight sums.
 ###############################################################################
 
+# File-local constants (mirror-histogram score axis)
+HVTI_SCORE_MIN              <- 0
+HVTI_SCORE_MAX              <- 100
+HVTI_SCORE_BREAK_STEP       <- 10
+HVTI_SCORE_MARGIN_RATIO     <- 0.10
+HVTI_SCORE_FILL_RATIO       <- 0.95
+HVTI_SCORE_DEFAULT_MULTIPLIER <- 100
+
 # ---------------------------------------------------------------------------
 # Internal helpers
 # ---------------------------------------------------------------------------
@@ -102,7 +110,8 @@ build_weighted_hist_counts <- function(x, weights, breaks) {
 validate_mirror_histogram_input <- function(data, score_col, group_col, match_col,
                                             group_levels, group_labels, binwidth,
                                             weight_col = NULL) {
-  assertthat::assert_that(is.data.frame(data), msg = "`data` must be a data.frame.")
+  if (!(is.data.frame(data)))
+    stop("`data` must be a data.frame.")
   # When weight_col is provided, match_col presence is not required
   required_cols <- if (is.null(weight_col)) {
     c(score_col, group_col, match_col)
@@ -110,36 +119,22 @@ validate_mirror_histogram_input <- function(data, score_col, group_col, match_co
     c(score_col, group_col, weight_col)
   }
   missing_cols <- setdiff(required_cols, names(data))
-  assertthat::assert_that(
-    length(missing_cols) == 0,
-    msg = sprintf("Missing required columns: %s", paste(missing_cols, collapse = ", "))
-  )
-  assertthat::assert_that(
-    length(group_levels) == 2,
-    msg = "`group_levels` must contain exactly 2 values."
-  )
-  assertthat::assert_that(
-    length(group_labels) == 2,
-    msg = "`group_labels` must contain exactly 2 values."
-  )
-  assertthat::assert_that(
-    is.numeric(data[[score_col]]),
-    msg = sprintf("`%s` must be numeric.", score_col)
-  )
-  assertthat::assert_that(
-    assertthat::is.number(binwidth),
-    binwidth > 0,
-    msg = "`binwidth` must be a positive numeric scalar."
-  )
+  if (!(length(missing_cols) == 0))
+    stop(sprintf("Missing required columns: %s",
+                 paste(missing_cols, collapse = ", ")))
+  if (!(length(group_levels) == 2))
+    stop("`group_levels` must contain exactly 2 values.")
+  if (!(length(group_labels) == 2))
+    stop("`group_labels` must contain exactly 2 values.")
+  if (!(is.numeric(data[[score_col]])))
+    stop(sprintf("`%s` must be numeric.", score_col))
+  if (!is.numeric(binwidth) || length(binwidth) != 1L || !(binwidth > 0))
+    stop("`binwidth` must be a positive numeric scalar.")
   if (!is.null(weight_col)) {
-    assertthat::assert_that(
-      is.numeric(data[[weight_col]]),
-      msg = sprintf("`%s` must be numeric.", weight_col)
-    )
-    assertthat::assert_that(
-      all(data[[weight_col]] >= 0, na.rm = TRUE),
-      msg = sprintf("`%s` must contain non-negative values.", weight_col)
-    )
+    if (!(is.numeric(data[[weight_col]])))
+      stop(sprintf("`%s` must be numeric.", weight_col))
+    if (!(all(data[[weight_col]] >= 0, na.rm = TRUE)))
+      stop(sprintf("`%s` must contain non-negative values.", weight_col))
   }
 }
 
@@ -164,14 +159,10 @@ prepare_mirror_histogram_data <- function(data, score_col, group_col, match_col,
   working <- working[stats::complete.cases(working), ]
   n_dropped <- n_input - nrow(working)
   working <- working[working$group %in% group_levels, ]
-  assertthat::assert_that(
-    nrow(working) > 0,
-    msg = "No rows remain after filtering to `group_levels` and complete cases."
-  )
-  assertthat::assert_that(
-    all(group_levels %in% unique(working$group)),
-    msg = "Not all `group_levels` are present in the filtered data."
-  )
+  if (!(nrow(working) > 0))
+    stop("No rows remain after filtering to `group_levels` and complete cases.")
+  if (!(all(group_levels %in% unique(working$group))))
+    stop("Not all `group_levels` are present in the filtered data.")
   working$score <- working$score_raw * score_multiplier
   if (any(working$score < HVTI_SCORE_MIN | working$score > HVTI_SCORE_MAX)) {
     stop(
@@ -250,14 +241,16 @@ build_mirror_histogram_plot <- function(plot_df, group_labels, binwidth,
     ggplot2::geom_hline(yintercept = 0, linewidth = 0.7, color = "black") +
     ggplot2::geom_col(
       data = plot_df[plot_df$layer == "Before", ],
-      ggplot2::aes(x = x, y = y, fill = fill_key),
+      ggplot2::aes(x = .data[["x"]], y = .data[["y"]],
+                   fill = .data[["fill_key"]]),
       width = binwidth * HVTI_SCORE_FILL_RATIO,
       color = "black",
       alpha = alpha
     ) +
     ggplot2::geom_col(
       data = plot_df[plot_df$layer != "Before", ],
-      ggplot2::aes(x = x, y = y, fill = fill_key),
+      ggplot2::aes(x = .data[["x"]], y = .data[["y"]],
+                   fill = .data[["fill_key"]]),
       width = binwidth * HVTI_SCORE_FILL_RATIO,
       color = "black",
       alpha = alpha
@@ -279,16 +272,14 @@ build_mirror_histogram_plot <- function(plot_df, group_labels, binwidth,
 
 # Internal: Safely persist mirrored histogram to disk
 save_mirror_histogram_plot <- function(plot_obj, output_file, width, height) {
-  assertthat::assert_that(
-    assertthat::is.string(output_file), nzchar(output_file),
-    msg = "`output_file` must be a non-empty string."
-  )
+  if (!(is.character(output_file) && length(output_file) == 1L &&
+        nzchar(output_file)))
+    stop("`output_file` must be a non-empty string.")
   target_dir <- dirname(output_file)
   if (target_dir %in% c("", ".")) target_dir <- "."
-  assertthat::assert_that(
-    dir.exists(target_dir),
-    msg = sprintf("Directory for `output_file` (%s) does not exist.", target_dir)
-  )
+  if (!(dir.exists(target_dir)))
+    stop(sprintf("Directory for `output_file` (%s) does not exist.",
+                 target_dir))
   tryCatch(
     ggplot2::ggsave(filename = output_file, plot = plot_obj,
                     width = width, height = height),
@@ -435,10 +426,9 @@ mirror_histogram <- function(data,
   validate_mirror_histogram_input(data, score_col, group_col, match_col,
                                   group_levels, group_labels, binwidth,
                                   weight_col = weight_col)
-  assertthat::assert_that(
-    assertthat::is.number(alpha) && alpha > 0 && alpha <= 1,
-    msg = "`alpha` must be a number in (0, 1]."
-  )
+  if (!is.numeric(alpha) || length(alpha) != 1L ||
+      !(alpha > 0 && alpha <= 1))
+    stop("`alpha` must be a number in (0, 1].")
   prep    <- prepare_mirror_histogram_data(data, score_col, group_col, match_col,
                                            group_levels, score_multiplier,
                                            weight_col = weight_col)
@@ -490,7 +480,7 @@ mirror_histogram <- function(data,
 ##' @param caliper Matching caliper width expressed in propensity-score units
 ##'   (0–1 scale, default 0.05).  Treated patients without a control partner
 ##'   within this distance are left unmatched.
-##' @param seed Integer random seed for reproducibility (default 123).
+##' @param seed Integer random seed for reproducibility (default 42L).
 ##' @param add_weights Logical. When \code{TRUE} an \code{mt_wt} column of
 ##'   ATE-style IPTW weights derived from the simulated propensity scores is
 ##'   appended and normalised to mean 1 within each group (default \code{FALSE}).
@@ -508,17 +498,18 @@ mirror_histogram <- function(data,
 sample_mirror_histogram_data <- function(n          = 500,
                                          separation = 1.5,
                                          caliper    = 0.05,
-                                         seed       = 123,
+                                         seed       = 42L,
                                          add_weights = FALSE) {
-  assertthat::assert_that(assertthat::is.count(n),
-                          msg = "`n` must be a positive integer.")
-  assertthat::assert_that(assertthat::is.number(separation) && separation > 0,
-                          msg = "`separation` must be a positive number.")
-  assertthat::assert_that(assertthat::is.number(caliper) &&
-                            caliper > 0 && caliper <= 1,
-                          msg = "`caliper` must be a number in (0, 1].")
-  assertthat::assert_that(assertthat::is.flag(add_weights),
-                          msg = "`add_weights` must be TRUE or FALSE.")
+  if (!is.numeric(n) || length(n) != 1L || n < 1L || n %% 1 != 0)
+    stop("`n` must be a positive integer.")
+  if (!is.numeric(separation) || length(separation) != 1L ||
+      !(separation > 0))
+    stop("`separation` must be a positive number.")
+  if (!is.numeric(caliper) || length(caliper) != 1L ||
+      !(caliper > 0 && caliper <= 1))
+    stop("`caliper` must be a number in (0, 1].")
+  if (!is.logical(add_weights) || length(add_weights) != 1L)
+    stop("`add_weights` must be TRUE or FALSE.")
 
   set.seed(seed)
 
@@ -563,4 +554,3 @@ sample_mirror_histogram_data <- function(n          = 500,
   df
 }
 
-utils::globalVariables(c("x", "y", "fill_key"))

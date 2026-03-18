@@ -4,7 +4,7 @@
 \alias{sample_sankey_data}
 \title{Sample Sankey / Alluvial Data}
 \usage{
-sample_sankey_data(n = 300, seed = 42)
+sample_sankey_data(n = 300, seed = 42L)
 }
 \arguments{
 \item{n}{Total number of simulated patients before aggregation.

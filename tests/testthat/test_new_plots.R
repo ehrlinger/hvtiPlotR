@@ -527,43 +527,34 @@ test_that("sample_longitudinal_counts_data differs across seeds", {
 # longitudinal_counts_plot
 # ============================================================================
 
-test_that("longitudinal_counts_plot returns a named list", {
-  dta    <- sample_longitudinal_counts_data(n_patients = 60, seed = 1)
-  result <- longitudinal_counts_plot(dta)
-  expect_type(result, "list")
-  expect_named(result, c("bar_plot", "table_plot"))
+test_that("longitudinal_counts_plot returns a ggplot", {
+  dta <- sample_longitudinal_counts_data(n_patients = 60, seed = 1)
+  expect_s3_class(longitudinal_counts_plot(dta), "ggplot")
 })
 
-test_that("longitudinal_counts_plot$bar_plot is a ggplot", {
-  dta    <- sample_longitudinal_counts_data(n_patients = 60, seed = 1)
-  result <- longitudinal_counts_plot(dta)
-  expect_s3_class(result$bar_plot, "ggplot")
+test_that("longitudinal_counts_plot is composable with + operator", {
+  dta <- sample_longitudinal_counts_data(n_patients = 60, seed = 1)
+  p   <- longitudinal_counts_plot(dta) + ggplot2::labs(y = "Count")
+  expect_s3_class(p, "ggplot")
 })
 
-test_that("longitudinal_counts_plot$table_plot is a ggplot", {
-  dta    <- sample_longitudinal_counts_data(n_patients = 60, seed = 1)
-  result <- longitudinal_counts_plot(dta)
-  expect_s3_class(result$table_plot, "ggplot")
-})
-
-test_that("longitudinal_counts_plot bar_plot has a GeomBar layer", {
-  dta    <- sample_longitudinal_counts_data(n_patients = 60, seed = 1)
-  result <- longitudinal_counts_plot(dta)
-  geoms  <- sapply(result$bar_plot$layers, function(l) class(l$geom)[1])
+test_that("longitudinal_counts_plot has a GeomBar layer", {
+  dta   <- sample_longitudinal_counts_data(n_patients = 60, seed = 1)
+  geoms <- sapply(longitudinal_counts_plot(dta)$layers, function(l) class(l$geom)[1])
   expect_true("GeomBar" %in% geoms)
 })
 
-test_that("longitudinal_counts_plot table_plot has a GeomText layer", {
-  dta    <- sample_longitudinal_counts_data(n_patients = 60, seed = 1)
-  result <- longitudinal_counts_plot(dta)
-  geoms  <- sapply(result$table_plot$layers, function(l) class(l$geom)[1])
-  expect_true("GeomText" %in% geoms)
+test_that("longitudinal_counts_plot position='stack' returns a ggplot", {
+  dta <- sample_longitudinal_counts_data(n_patients = 60, seed = 1)
+  expect_s3_class(longitudinal_counts_plot(dta, position = "stack"), "ggplot")
 })
 
-test_that("longitudinal_counts_plot position='stack' returns a ggplot", {
+test_that("longitudinal_counts_plot position='dodge' differs from 'stack'", {
   dta    <- sample_longitudinal_counts_data(n_patients = 60, seed = 1)
-  result <- longitudinal_counts_plot(dta, position = "stack")
-  expect_s3_class(result$bar_plot, "ggplot")
+  p_d    <- longitudinal_counts_plot(dta, position = "dodge")
+  p_s    <- longitudinal_counts_plot(dta, position = "stack")
+  # The position argument changes how bars are drawn — the layer params differ
+  expect_false(identical(p_d$layers[[1]]$position, p_s$layers[[1]]$position))
 })
 
 test_that("longitudinal_counts_plot errors when required column is absent", {
@@ -577,9 +568,43 @@ test_that("longitudinal_counts_plot errors on invalid position value", {
 })
 
 test_that("hvti_plot('longitudinal_counts') dispatches to longitudinal_counts_plot", {
-  dta    <- sample_longitudinal_counts_data(n_patients = 60, seed = 1)
-  result <- hvti_plot("longitudinal_counts", data = dta)
-  expect_named(result, c("bar_plot", "table_plot"))
+  dta <- sample_longitudinal_counts_data(n_patients = 60, seed = 1)
+  expect_s3_class(hvti_plot("longitudinal_counts", data = dta), "ggplot")
+})
+
+# ============================================================================
+# longitudinal_counts_table
+# ============================================================================
+
+test_that("longitudinal_counts_table returns a ggplot", {
+  dta <- sample_longitudinal_counts_data(n_patients = 60, seed = 1)
+  expect_s3_class(longitudinal_counts_table(dta), "ggplot")
+})
+
+test_that("longitudinal_counts_table has a GeomText layer", {
+  dta   <- sample_longitudinal_counts_data(n_patients = 60, seed = 1)
+  geoms <- sapply(longitudinal_counts_table(dta)$layers, function(l) class(l$geom)[1])
+  expect_true("GeomText" %in% geoms)
+})
+
+test_that("longitudinal_counts_table is composable with + operator", {
+  dta <- sample_longitudinal_counts_data(n_patients = 60, seed = 1)
+  p   <- longitudinal_counts_table(dta) + hvti_theme("manuscript")
+  expect_s3_class(p, "ggplot")
+})
+
+test_that("longitudinal_counts_table errors when required column is absent", {
+  dta <- sample_longitudinal_counts_data(n_patients = 60, seed = 1)
+  expect_error(longitudinal_counts_table(dta, x_col = "nonexistent"), "not found")
+})
+
+test_that("longitudinal_counts_plot and longitudinal_counts_table produce distinct plots", {
+  dta <- sample_longitudinal_counts_data(n_patients = 60, seed = 1)
+  p_bar   <- longitudinal_counts_plot(dta)
+  p_table <- longitudinal_counts_table(dta)
+  bar_geoms   <- sapply(p_bar$layers,   function(l) class(l$geom)[1])
+  table_geoms <- sapply(p_table$layers, function(l) class(l$geom)[1])
+  expect_false(identical(bar_geoms, table_geoms))
 })
 
 # ============================================================================

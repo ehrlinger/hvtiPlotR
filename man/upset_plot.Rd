@@ -2,8 +2,6 @@
 % Please edit documentation in R/upset-plot.R
 \name{upset_plot}
 \alias{upset_plot}
-\alias{upset}
-\alias{complexupset}
 \title{UpSet Plot for Set Co-occurrence Analysis}
 \usage{
 upset_plot(

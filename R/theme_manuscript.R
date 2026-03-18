@@ -52,7 +52,7 @@ hvti_theme_manuscript <- function(base_size      = 12,
       axis.line.x       = element_line(color = "black", linewidth = 0.8),
       axis.line.y       = element_line(color = "black", linewidth = 0.8),
       axis.text         = element_text(size = base_size, color = "black"),
-      plot.margin       = unit(HVTI_THEME_MANUSCRIPT_MARGIN, "cm"),
+      plot.margin       = unit(c(0.65, 0.65, 0.25, 0.25), "cm"),
       axis.title        = element_text(size = base_size)
     )
 }

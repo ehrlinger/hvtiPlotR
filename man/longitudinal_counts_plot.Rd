@@ -2,68 +2,40 @@
 % Please edit documentation in R/longitudinal-counts-plot.R
 \name{longitudinal_counts_plot}
 \alias{longitudinal_counts_plot}
-\alias{participation_plot}
-\alias{counts_plot}
-\title{Longitudinal Participation Counts Plot}
+\title{Longitudinal Participation Counts Bar Chart}
 \usage{
 longitudinal_counts_plot(
   data,
   x_col = "time_label",
   count_col = "count",
   group_col = "series",
-  position = "dodge",
-  label_format = scales::comma
+  position = "dodge"
 )
 }
 \arguments{
-\item{data}{Long-format data frame with one row per
-(time point × series) combination. See \code{\link[=sample_longitudinal_counts_data]{sample_longitudinal_counts_data()}}
-for the expected structure.}
+\item{data}{Long-format data frame. See \code{\link[=sample_longitudinal_counts_data]{sample_longitudinal_counts_data()}}.}
 
-\item{x_col}{Name of the discrete time-label column. Must be a
-factor or character. Default \code{"time_label"}.}
+\item{x_col}{Name of the discrete time-label column. Default \code{"time_label"}.}
 
 \item{count_col}{Name of the numeric count column. Default \code{"count"}.}
 
-\item{group_col}{Name of the series grouping column (e.g. \code{"Patients"} vs
-\code{"Measurements"}). Default \code{"series"}.}
+\item{group_col}{Name of the series grouping column. Default \code{"series"}.}
 
-\item{position}{Bar position: \code{"dodge"} (default, side-by-side) or
-\code{"stack"}.}
-
-\item{label_format}{Function used to format count values in the data table.
-Default \link[scales:comma]{scales::comma}. Pass \code{NULL} for no formatting.}
+\item{position}{Bar position: \code{"dodge"} (default) or \code{"stack"}.}
 }
 \value{
-A named list with two elements:
-\itemize{
-\item \verb{$bar_plot}   — grouped bar chart (\code{\link[ggplot2:ggplot]{ggplot2::ggplot()}})
-\item \verb{$table_plot} — numeric data table as a ggplot text panel
-}
+A bare \code{\link[ggplot2:ggplot]{ggplot2::ggplot()}} object.
 }
 \description{
 Produces a grouped bar chart showing how many patients and measurements are
-available at each discrete follow-up time point — a data-completeness /
-study-design summary. Optionally pairs the bars with a numeric data table
-rendered below, matching the two-panel layout from the SAS template.
-}
-\details{
-Returns a named list so the caller can compose the panels independently or
-together via \code{patchwork}:
-
-\if{html}{\out{<div class="sourceCode r">}}\preformatted{result <- longitudinal_counts_plot(dta)
-result$bar_plot / result$table_plot +
-  patchwork::plot_layout(heights = c(3, 1))
-}\if{html}{\out{</div>}}
+available at each discrete follow-up time point. Pair with
+\code{\link[=longitudinal_counts_table]{longitudinal_counts_table()}} via \code{patchwork} for the full two-panel layout.
 }
 \examples{
 library(ggplot2)
+dta <- sample_longitudinal_counts_data(n_patients = 300, seed = 42L)
 
-dta <- sample_longitudinal_counts_data(n_patients = 300, seed = 42)
-result <- longitudinal_counts_plot(dta)
-
-# --- Bar chart with manuscript theme ------------------------------------
-result$bar_plot +
+longitudinal_counts_plot(dta) +
   scale_fill_manual(
     values = c(Patients = "steelblue", Measurements = "firebrick"),
     name   = NULL
@@ -76,73 +48,7 @@ result$bar_plot +
   hvti_theme("manuscript") +
   theme(legend.position = c(0.85, 0.85))
 
-# --- Table panel alone --------------------------------------------------
-result$table_plot +
-  scale_colour_manual(
-    values = c(Patients = "steelblue", Measurements = "firebrick"),
-    guide  = "none"
-  ) +
-  hvti_theme("manuscript")
-
-# --- Combined bar + table via patchwork ---------------------------------
-\dontrun{
-library(patchwork)
-
-(result$bar_plot +
-   scale_fill_manual(
-     values = c(Patients = "steelblue", Measurements = "firebrick"),
-     name   = NULL
-   ) +
-   scale_y_continuous(labels = scales::comma, expand = c(0, 0)) +
-   labs(x = NULL, y = "Count (n)") +
-   hvti_theme("manuscript") +
-   theme(legend.position = c(0.85, 0.85),
-         axis.text.x = element_blank(),
-         axis.ticks.x = element_blank())) /
-(result$table_plot +
-   scale_colour_manual(
-     values = c(Patients = "steelblue", Measurements = "firebrick"),
-     guide  = "none"
-   ) +
-   hvti_theme("manuscript")) +
-plot_layout(heights = c(3, 1))
-}
-
-# --- Deriving counts from patient-level data ----------------------------
-\dontrun{
-# sample_spaghetti_data() has continuous time; bin it yourself:
-raw <- sample_spaghetti_data(n_patients = 300, seed = 42)
-breaks <- c(-Inf, 0, 1/12, 3/12, 6/12, 1, 2, Inf)
-labels <- c(">=0d", ">=1m", ">=3m", ">=6m", ">=1y", ">=2y", ">=2.5y")
-raw$window <- cut(raw$time, breaks, labels = labels,
-                  right = FALSE, include.lowest = TRUE)
-n_pat  <- tapply(raw$id, raw$window, function(x) length(unique(x)))
-n_meas <- tabulate(raw$window, nbins = length(labels))
-dta_custom <- data.frame(
-  time_label = rep(factor(labels, levels = labels), 2),
-  series     = rep(c("Patients", "Measurements"), each = length(labels)),
-  count      = c(as.integer(n_pat), as.integer(n_meas))
-)
-longitudinal_counts_plot(dta_custom)$bar_plot +
-  scale_fill_brewer(palette = "Set1", name = NULL) +
-  labs(x = "Follow-up Window", y = "n") +
-  hvti_theme("manuscript")
-}
-
-# --- Save ---------------------------------------------------------------
-\dontrun{
-p <- result$bar_plot +
-  scale_fill_manual(
-    values = c(Patients = "steelblue", Measurements = "firebrick"),
-    name = NULL
-  ) +
-  labs(x = "Follow-up Window", y = "Count (n)") +
-  hvti_theme("manuscript")
-ggsave("longitudinal_counts.pdf", p, width = 11, height = 8.5)
-}
-
 }
 \seealso{
-\code{\link[=sample_longitudinal_counts_data]{sample_longitudinal_counts_data()}}, \code{\link[=sample_spaghetti_data]{sample_spaghetti_data()}},
-\code{\link[=hvti_theme]{hvti_theme()}}
+\code{\link[=longitudinal_counts_table]{longitudinal_counts_table()}}, \code{\link[=sample_longitudinal_counts_data]{sample_longitudinal_counts_data()}}
 }

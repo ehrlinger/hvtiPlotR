@@ -45,7 +45,7 @@ New ports are added to this document as they become available.
 `color=`, `xaxis=`, and `footnote=` options, you chain `+` operations:
 
 ```r
-nonparametric_curve_plot(dat$curve, ...) +
+nonparametric_curve_plot(dat, ...) +
   scale_colour_manual(values = c("black", "gray40")) +
   scale_x_continuous(breaks = 0:12) +
   labs(x = "Years after Operation", y = "Prevalence (%)") +
@@ -139,14 +139,15 @@ data_pts   <- read.csv("means.csv")       # optional binned data points
 `tp.np.tr.icdpr.avg_curv.sas`
 
 ```{r np-binary-avg-example}
-dat <- sample_nonparametric_curve_data(
+dat     <- sample_nonparametric_curve_data(
   n            = 500,
   time_max     = 12,
   outcome_type = "probability"
 )
+dat_pts <- sample_nonparametric_curve_points(n = 500, time_max = 12)
 
 # Minimal plot
-nonparametric_curve_plot(dat$curve) +
+nonparametric_curve_plot(dat) +
   scale_x_continuous(breaks = seq(0, 12, 2)) +
   scale_y_continuous(
     limits = c(0, 1),
@@ -166,7 +167,7 @@ Add 68% CI bands (one standard error; matches SAS `boots_ci` with `cll_p68`
 
 ```{r np-binary-avg-ci}
 nonparametric_curve_plot(
-  dat$curve,
+  dat,
   lower_col = "lower",
   upper_col = "upper"
 ) +
@@ -188,10 +189,10 @@ Add binned data summary points (matches the SAS `means` dataset):
 
 ```{r np-binary-avg-points}
 nonparametric_curve_plot(
-  dat$curve,
+  dat,
   lower_col   = "lower",
   upper_col   = "upper",
-  data_points = dat$data_points
+  data_points = dat_pts
 ) +
   scale_x_continuous(breaks = seq(0, 12, 2)) +
   scale_y_continuous(
@@ -217,17 +218,22 @@ For continuous outcomes (FEV1, AV peak gradient) set `outcome_type =
 else is identical.
 
 ```{r np-continuous-example}
-dat_cont <- sample_nonparametric_curve_data(
+dat_cont     <- sample_nonparametric_curve_data(
+  n            = 400,
+  time_max     = 10,
+  outcome_type = "continuous"
+)
+dat_cont_pts <- sample_nonparametric_curve_points(
   n            = 400,
   time_max     = 10,
   outcome_type = "continuous"
 )
 
 nonparametric_curve_plot(
-  dat_cont$curve,
+  dat_cont,
   lower_col   = "lower",
   upper_col   = "upper",
-  data_points = dat_cont$data_points
+  data_points = dat_cont_pts
 ) +
   scale_x_continuous(breaks = seq(0, 10, 2)) +
   scale_y_continuous(limits = c(0, 4)) +
@@ -255,19 +261,24 @@ Provide a named vector to `groups` when generating sample data, or set
 `group_col` when supplying your own curve data.
 
 ```{r np-multigroup-example}
-dat_grp <- sample_nonparametric_curve_data(
+grp_def <- c("Ozaki" = 0.7, "CE-Pericardial" = 1.1, "Homograft" = 1.4)
+dat_grp     <- sample_nonparametric_curve_data(
   n        = 600,
   time_max = 12,
-  groups   = c("Ozaki" = 0.7, "CE-Pericardial" = 1.1, "Homograft" = 1.4)
+  groups   = grp_def
+)
+dat_grp_pts <- sample_nonparametric_curve_points(
+  n        = 600,
+  time_max = 12,
+  groups   = grp_def
 )
 
 nonparametric_curve_plot(
-  dat_grp$curve,
+  dat_grp,
   group_col   = "group",
   lower_col   = "lower",
   upper_col   = "upper",
-  data_points = dat_grp$data_points,
-  dp_group_col = "group"
+  data_points = dat_grp_pts
 ) +
   scale_colour_manual(
     values = c("Ozaki" = "#003087", "CE-Pericardial" = "#CC0000", "Homograft" = "#666666")
@@ -307,7 +318,7 @@ dat_phase <- sample_nonparametric_curve_data(
 )
 
 nonparametric_curve_plot(
-  dat_phase$curve,
+  dat_phase,
   group_col = "group"
 ) +
   scale_colour_manual(
@@ -411,16 +422,22 @@ long <- pivot_longer(
 ```
 
 ```{r np-ordinal-example}
-dat_ord <- sample_nonparametric_ordinal_data(
-  n           = 1000,
-  time_max    = 5,
-  grade_labels = c("None", "Mild", "Moderate", "Severe")
+ord_labels <- c("None", "Mild", "Moderate", "Severe")
+dat_ord     <- sample_nonparametric_ordinal_data(
+  n            = 1000,
+  time_max     = 5,
+  grade_labels = ord_labels
+)
+dat_ord_pts <- sample_nonparametric_ordinal_points(
+  n            = 1000,
+  time_max     = 5,
+  grade_labels = ord_labels
 )
 
 nonparametric_ordinal_plot(
-  dat_ord$curve,
+  dat_ord,
   grade_col   = "grade",
-  data_points = dat_ord$data_points
+  data_points = dat_ord_pts
 ) +
   scale_colour_manual(
     values = c(
@@ -453,9 +470,9 @@ nonparametric_ordinal_plot(
 dat_ar1 <- sample_nonparametric_ordinal_data(seed = 1)
 dat_ar2 <- sample_nonparametric_ordinal_data(seed = 99)
 
-dat_ar1$curve$scenario <- "Before repair"
-dat_ar2$curve$scenario <- "After repair"
-combined <- rbind(dat_ar1$curve, dat_ar2$curve)
+dat_ar1$scenario <- "Before repair"
+dat_ar2$scenario <- "After repair"
+combined <- rbind(dat_ar1, dat_ar2)
 
 nonparametric_ordinal_plot(combined, grade_col = "grade") +
   facet_wrap(~scenario) +
@@ -481,9 +498,10 @@ To examine a single grade in isolation, filter the long-format curve
 before passing it to the function:
 
 ```{r np-ordinal-independence-example}
-dat_ind  <- sample_nonparametric_ordinal_data(n = 800)
-grade_2  <- dat_ind$curve[dat_ind$curve$grade == "Grade 2", ]
-dp_grade_2 <- dat_ind$data_points[dat_ind$data_points$grade == "Grade 2", ]
+dat_ind    <- sample_nonparametric_ordinal_data(n = 800)
+pts_ind    <- sample_nonparametric_ordinal_points(n = 800)
+grade_2    <- dat_ind[dat_ind$grade == "Grade 2", ]
+dp_grade_2 <- pts_ind[pts_ind$grade == "Grade 2", ]
 
 nonparametric_ordinal_plot(
   grade_2,
@@ -515,7 +533,7 @@ vs. late phase regions:
 ```{r np-ordinal-phases-example}
 dat_ph <- sample_nonparametric_ordinal_data(n = 800, seed = 7)
 
-nonparametric_ordinal_plot(dat_ph$curve, grade_col = "grade") +
+nonparametric_ordinal_plot(dat_ph, grade_col = "grade") +
   annotate("rect",
     xmin = 0, xmax = 2,  ymin = -Inf, ymax = Inf,
     fill = "steelblue", alpha = 0.07

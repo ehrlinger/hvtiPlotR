@@ -566,7 +566,10 @@ km_build_life_plot <- function(km_df, alpha) {
 #' # ggplot2::ggsave("survival_curve.pdf", result$survival_plot,
 #' #                 width = 8, height = 6)
 #'
-#' @aliases ac.dead
+#' @references SAS template: \code{tp.ac.dead.sas} (calls \code{\%kaplan} for
+#'   product-limit survival estimates and \code{\%nelsont} for Nelson-Aalen
+#'   cumulative event estimates).
+#'
 #' @importFrom survival Surv survfit
 #' @importFrom rlang .data
 #' @importFrom ggplot2 ggplot aes geom_step geom_ribbon geom_hline scale_y_continuous geom_point
@@ -585,32 +588,25 @@ survival_curve <- function(data,
   method <- match.arg(method)
 
   # --- Validation -----------------------------------------------------------
-  assertthat::assert_that(
-    is.data.frame(data),
-    msg = "`data` must be a data.frame."
-  )
+  if (!is.data.frame(data))
+    stop("`data` must be a data.frame.")
 
   required_cols <- c(time_col, event_col)
   if (!is.null(strata_col)) required_cols <- c(required_cols, strata_col)
   missing_cols <- setdiff(required_cols, names(data))
-  assertthat::assert_that(
-    length(missing_cols) == 0L,
-    msg = sprintf("Missing required columns: %s", paste(missing_cols, collapse = ", "))
-  )
+  if (!(length(missing_cols) == 0L))
+    stop(sprintf("Missing required columns: %s",
+                 paste(missing_cols, collapse = ", ")))
 
-  assertthat::assert_that(
-    assertthat::is.number(conf_level) && conf_level > 0 && conf_level < 1,
-    msg = "`conf_level` must be a number in (0, 1)."
-  )
-  assertthat::assert_that(
-    assertthat::is.number(alpha) && alpha > 0 && alpha <= 1,
-    msg = "`alpha` must be a number in (0, 1]."
-  )
+  if (!is.numeric(conf_level) || length(conf_level) != 1L ||
+      !(conf_level > 0 && conf_level < 1))
+    stop("`conf_level` must be a number in (0, 1).")
+  if (!is.numeric(alpha) || length(alpha) != 1L ||
+      !(alpha > 0 && alpha <= 1))
+    stop("`alpha` must be a number in (0, 1].")
 
-  assertthat::assert_that(
-    is.numeric(report_times) && length(report_times) > 0,
-    msg = "`report_times` must be a non-empty numeric vector."
-  )
+  if (!(is.numeric(report_times) && length(report_times) > 0))
+    stop("`report_times` must be a non-empty numeric vector.")
 
   # --- Estimation -----------------------------------------------------------
   fit    <- km_fit(data, time_col, event_col, strata_col, conf_level, method)
@@ -699,37 +695,25 @@ sample_survival_data <- function(n             = 500,
                                  seed          = 42) {
 
   # --- Validation -----------------------------------------------------------
-  assertthat::assert_that(
-    assertthat::is.count(n),
-    msg = "`n` must be a positive integer."
-  )
-  assertthat::assert_that(
-    assertthat::is.number(hazard_rate) && hazard_rate > 0,
-    msg = "`hazard_rate` must be a positive number."
-  )
-  assertthat::assert_that(
-    assertthat::is.number(study_years) && study_years > 0,
-    msg = "`study_years` must be a positive number."
-  )
+  if (!is.numeric(n) || length(n) != 1L || n < 1L || n %% 1 != 0)
+    stop("`n` must be a positive integer.")
+  if (!is.numeric(hazard_rate) || length(hazard_rate) != 1L ||
+      !(hazard_rate > 0))
+    stop("`hazard_rate` must be a positive number.")
+  if (!is.numeric(study_years) || length(study_years) != 1L ||
+      !(study_years > 0))
+    stop("`study_years` must be a positive number.")
 
   if (!is.null(strata_levels)) {
-    assertthat::assert_that(
-      is.character(strata_levels) && length(strata_levels) >= 1L,
-      msg = "`strata_levels` must be a non-empty character vector."
-    )
+    if (!(is.character(strata_levels) && length(strata_levels) >= 1L))
+      stop("`strata_levels` must be a non-empty character vector.")
     if (!is.null(hazard_ratios)) {
-      assertthat::assert_that(
-        is.numeric(hazard_ratios) &&
-          length(hazard_ratios) == length(strata_levels),
-        msg = paste(
-          "`hazard_ratios` must be a numeric vector of the same length as",
-          "`strata_levels`."
-        )
-      )
-      assertthat::assert_that(
-        all(hazard_ratios > 0),
-        msg = "All elements of `hazard_ratios` must be positive."
-      )
+      if (!(is.numeric(hazard_ratios) &&
+              length(hazard_ratios) == length(strata_levels)))
+        stop(paste("`hazard_ratios` must be a numeric vector of the same",
+                   "length as `strata_levels`."))
+      if (!(all(hazard_ratios > 0)))
+        stop("All elements of `hazard_ratios` must be positive.")
     } else {
       hazard_ratios <- rep(1, length(strata_levels))
     }
@@ -775,77 +759,3 @@ sample_survival_data <- function(n             = 500,
   }
 }
 
-utils::globalVariables(c("hazard"))
-
-# ---------------------------------------------------------------------------
-# Convenience aliases
-# ---------------------------------------------------------------------------
-
-#' Kaplan-Meier Survival Curve (alias)
-#'
-#' Calls [survival_curve()] with `method = "kaplan-meier"`. See that function
-#' for the full parameter list and return value.
-#'
-#' @inheritParams survival_curve
-#' @return See [survival_curve()].
-#' @seealso [survival_curve()], [hvtiPlotR::nelsont()]
-#' @export
-kaplan_meier <- function(data,
-                         time_col     = "iv_dead",
-                         event_col    = "dead",
-                         strata_col   = NULL,
-                         conf_int     = TRUE,
-                         conf_level   = 0.6827,
-                         report_times = c(1, 5, 10, 15, 20, 25),
-                         alpha        = 0.8) {
-  survival_curve(
-    data         = data,
-    time_col     = time_col,
-    event_col    = event_col,
-    strata_col   = strata_col,
-    conf_int     = conf_int,
-    conf_level   = conf_level,
-    report_times = report_times,
-    alpha        = alpha,
-    method       = "kaplan-meier"
-  )
-}
-
-#' @export
-#' @rdname kaplan_meier
-km <- kaplan_meier
-
-#' @export
-#' @rdname kaplan_meier
-kaplan <- kaplan_meier
-
-#' Nelson-Aalen Survival Curve (alias)
-#'
-#' Calls [survival_curve()] with `method = "nelson-aalen"`. Equivalent to the
-#' SAS `%nelsont` macro. See [survival_curve()] for the full parameter list
-#' and return value.
-#'
-#' @inheritParams survival_curve
-#' @return See [survival_curve()].
-#' @seealso [survival_curve()], [hvtiPlotR::kaplan_meier()]
-#' @export
-nelsont <- function(data,
-                    time_col     = "iv_dead",
-                    event_col    = "dead",
-                    strata_col   = NULL,
-                    conf_int     = TRUE,
-                    conf_level   = 0.6827,
-                    report_times = c(1, 5, 10, 15, 20, 25),
-                    alpha        = 0.8) {
-  survival_curve(
-    data         = data,
-    time_col     = time_col,
-    event_col    = event_col,
-    strata_col   = strata_col,
-    conf_int     = conf_int,
-    conf_level   = conf_level,
-    report_times = report_times,
-    alpha        = alpha,
-    method       = "nelson-aalen"
-  )
-}

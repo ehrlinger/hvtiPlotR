@@ -1,7 +1,7 @@
 Package: hvtiPlotR
 Type: Package
 Title: Porting HVTI plot templates and methodology documentation to ggplot2 package in R
-Version: 1.2.0
+Version: 2.0.0
 Date: 2026-03-18
 Authors@R: c(
     person(
@@ -16,13 +16,12 @@ Encoding: UTF-8
 URL: https://github.com/ehrlinger/hvtiPlotR, https://ehrlinger.github.io/hvtiPlotR/
 BugReports: https://github.com/ehrlinger/hvtiPlotR/issues
 Description: ggplot2 themes and methodology documentation for creating
-    publication quality graphics in R conforming to the standards of the clinical
-    investigations statistics group within The Heart \& Vascular Institute at the
+    publication quality graphics in R conforming to the standards of Cardiovascular Outcomes 
+    Registries and Research (CORR) within The Heart \& Vascular Institute at the
     Cleveland Clinic.
 Depends:
     R (>= 4.1.0)
 Imports:
-    assertthat,
     ComplexUpset,
     ggalluvial,
     ggplot2,

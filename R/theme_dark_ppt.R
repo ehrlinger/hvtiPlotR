@@ -7,7 +7,7 @@
 #' Removes grid lines and panel borders.
 #'
 #' @param base_size      Base font size in points.
-#'   Default `r HVTI_THEME_DARK_PPT_BASE_SIZE` (32).
+#'   Default `32`.
 #' @param base_family    Base font family. Default `""` (device default).
 #' @param header_family  Font family for headers, or `NULL` to inherit
 #'   `base_family`. Default `NULL`.
@@ -27,7 +27,7 @@
 #' @import ggplot2
 #' @export
 #' @aliases theme_dark_ppt theme_ppt hvti_theme_ppt
-hvti_theme_dark_ppt <- function(base_size      = HVTI_THEME_DARK_PPT_BASE_SIZE,
+hvti_theme_dark_ppt <- function(base_size      = 32,
                                 base_family    = "",
                                 header_family  = NULL,
                                 base_line_size = base_size / 22,

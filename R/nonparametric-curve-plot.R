@@ -66,19 +66,15 @@
 #'   `10`.
 #' @param seed        Random seed. Default `42`.
 #'
-#' @return A named list with two data frames:
-#'   - `$curve` — fine-grid predicted curve: columns `time`, `estimate`,
-#'     `lower`, `upper`, and (if `groups` is not `NULL`) `group`.
-#'   - `$data_points` — binned patient-level summaries: columns `time`,
-#'     `value`, and (if `groups` is not `NULL`) `group`.
+#' @return A data frame with columns `time`, `estimate`, `lower`, `upper`,
+#'   and (if `groups` is not `NULL`) `group`.
 #'
-#' @seealso [nonparametric_curve_plot()]
+#' @seealso [nonparametric_curve_plot()], [sample_nonparametric_curve_points()]
 #'
 #' @examples
 #' # Single average curve (like tp.np.afib.ivwristm.avrg_curv.binary.sas)
 #' dat <- sample_nonparametric_curve_data(n = 500, time_max = 12)
-#' head(dat$curve)
-#' head(dat$data_points)
+#' head(dat)
 #'
 #' # Two-group comparison (like tp.np.avpkgrad_ozak_ind_mtwt.sas)
 #' dat2 <- sample_nonparametric_curve_data(
@@ -86,7 +82,7 @@
 #'   groups = c("Ozaki" = 0.7, "CE-Pericardial" = 1.3),
 #'   outcome_type = "continuous"
 #' )
-#' head(dat2$curve)
+#' head(dat2)
 #' @export
 sample_nonparametric_curve_data <- function(n            = 500,
                                             time_max     = 12,
@@ -132,9 +128,6 @@ sample_nonparametric_curve_data <- function(n            = 500,
                            lower    = pmax(lo, 0),
                            upper    = hi)
 
-    # Binned data points
-    dp_df <- .np_sample_bins(n, time_max, thalf1, thalf2, outcome_type, n_bins)
-
   } else {
     # Multi-group curves --------------------------------------------------
     grp_names <- names(groups)
@@ -162,7 +155,47 @@ sample_nonparametric_curve_data <- function(n            = 500,
     })
     curve_df <- do.call(rbind, curve_list)
     curve_df$group <- factor(curve_df$group, levels = grp_names)
+  }
 
+  curve_df
+}
+
+#' Sample Nonparametric Curve Data Points
+#'
+#' Returns only the binned patient-level data summary points from
+#' [sample_nonparametric_curve_data()]. Accepts the same parameters
+#' and returns a plain `data.frame`.
+#'
+#' @inheritParams sample_nonparametric_curve_data
+#'
+#' @return A data frame with columns `time`, `value`, and (if `groups` is not
+#'   `NULL`) `group`.
+#'
+#' @seealso [sample_nonparametric_curve_data()], [nonparametric_curve_plot()]
+#'
+#' @examples
+#' pts <- sample_nonparametric_curve_points(n = 500, time_max = 12)
+#' head(pts)
+#' @export
+sample_nonparametric_curve_points <- function(n            = 500,
+                                              time_max     = 12,
+                                              n_points     = 500,
+                                              groups       = NULL,
+                                              outcome_type = c("probability",
+                                                               "continuous"),
+                                              ci_level     = 0.68,
+                                              n_bins       = 10,
+                                              seed         = 42L) {
+  outcome_type <- match.arg(outcome_type)
+  set.seed(seed)
+
+  thalf1 <- time_max * 0.15
+  thalf2 <- time_max * 0.55
+
+  if (is.null(groups)) {
+    dp_df <- .np_sample_bins(n, time_max, thalf1, thalf2, outcome_type, n_bins)
+  } else {
+    grp_names <- names(groups)
     dp_list <- lapply(seq_along(groups), function(i) {
       df         <- .np_sample_bins(n, time_max, thalf1 * groups[[i]],
                                     thalf2 * groups[[i]], outcome_type, n_bins)
@@ -173,7 +206,7 @@ sample_nonparametric_curve_data <- function(n            = 500,
     dp_df$group <- factor(dp_df$group, levels = grp_names)
   }
 
-  list(curve = curve_df, data_points = dp_df)
+  dp_df
 }
 
 # Internal: generate binned patient-level data summary
@@ -221,8 +254,6 @@ sample_nonparametric_curve_data <- function(n            = 500,
 #' - `upper_col` ← `clu_p68` or `clu_p95`
 #' - `group_col` ← a grouping indicator you add after reshaping from wide to long
 #'   (use [tidyr::pivot_longer()] on the SAS `predict` dataset)
-#' - In `data_points`: `dp_x_col` ← `mmtime` or `mtime`; `dp_y_col` ← `safc`,
-#'   `smntr0`, etc.
 #'
 #' **Reshaping from wide to long (SAS → R):**
 #' SAS templates keep multiple curves as separate variables (`p0`, `p1`, `p2`)
@@ -239,7 +270,7 @@ sample_nonparametric_curve_data <- function(n            = 500,
 #' Returns a **bare ggplot object**. Compose with `scale_colour_*`,
 #' `scale_x_continuous()`, `labs()`, [hvti_theme()]:
 #' ```r
-#' nonparametric_curve_plot(dat$curve, ...) +
+#' nonparametric_curve_plot(dat, ...) +
 #'   scale_colour_manual(values = c(...)) +
 #'   scale_x_continuous(breaks = 0:12) +
 #'   labs(x = "Months", y = "Prevalence of AF (%)") +
@@ -264,14 +295,9 @@ sample_nonparametric_curve_data <- function(n            = 500,
 #'   (e.g. Ozaki vs CE-Pericardial) or phase decomposition (Early vs Late).
 #'   Default `NULL`.
 #' @param data_points Optional data frame of binned data summary points to
-#'   overlay as filled circles. Corresponds to the `means` dataset
-#'   (variables `mmtime`/`mtime` and `safc`/`smntr*`) in SAS. Default `NULL`.
-#' @param dp_x_col    Column name for x in `data_points`. Corresponds to
-#'   `mmtime` or `mtime` in SAS. Default `"time"`.
-#' @param dp_y_col    Column name for y in `data_points`. Corresponds to
-#'   `safc`, `smntr0`, etc. in SAS. Default `"value"`.
-#' @param dp_group_col Column name for grouping in `data_points`, or `NULL`.
-#'   Default `NULL`.
+#'   overlay as filled circles. Must have a column matching `x_col` for x,
+#'   a column named `"value"` for y, and (when `group_col` is not `NULL`) a
+#'   column matching `group_col`. Default `NULL`.
 #' @param ci_alpha    Transparency of the confidence ribbon (`[0,1]`).
 #'   Default `0.2`.
 #' @param line_width  Width of the predicted curve line. SAS `width=3`
@@ -286,7 +312,11 @@ sample_nonparametric_curve_data <- function(n            = 500,
 #'
 #' @seealso [sample_nonparametric_curve_data()], [nonparametric_ordinal_plot()],
 #'   [hvti_theme()]
-#' @aliases np_curve nonparametric_trend
+#'
+#' @references SAS templates: \code{tp.np.*.avrg_curv.*},
+#'   \code{tp.np.*.u.trend.*}, \code{tp.np.*.double.*},
+#'   \code{tp.np.*.mult.*}, \code{tp.np.*.phases.*},
+#'   \code{tp.np.z0axdpo.*}.
 #'
 #' @examples
 #' # Sample data for examples below
@@ -301,7 +331,17 @@ sample_nonparametric_curve_data <- function(n            = 500,
 #'   groups = c("Ozaki" = 0.7, "CE-Pericardial" = 1.3),
 #'   outcome_type = "continuous"
 #' )
+#' dat_two_pts <- sample_nonparametric_curve_points(
+#'   n = 400, time_max = 7,
+#'   groups = c("Ozaki" = 0.7, "CE-Pericardial" = 1.3),
+#'   outcome_type = "continuous"
+#' )
 #' dat_multi <- sample_nonparametric_curve_data(
+#'   n = 600, time_max = 14,
+#'   groups = c("CABG-" = 0.6, "CABG+" = 1.4),
+#'   outcome_type = "probability"
+#' )
+#' dat_multi_pts <- sample_nonparametric_curve_points(
 #'   n = 600, time_max = 14,
 #'   groups = c("CABG-" = 0.6, "CABG+" = 1.4),
 #'   outcome_type = "probability"
@@ -310,7 +350,7 @@ sample_nonparametric_curve_data <- function(n            = 500,
 #' # --- (1) Single average curve, no CI ------------------------------------
 #' # Matches tp.np.afib.ivwristm.avrg_curv.binary.sas (mean_curv dataset,
 #' # no confidence interval plotted).
-#' nonparametric_curve_plot(dat_bin$curve) +
+#' nonparametric_curve_plot(dat_bin) +
 #'   ggplot2::scale_colour_manual(values = c("steelblue"), guide = "none") +
 #'   ggplot2::scale_x_continuous(limits = c(0, 12), breaks = 0:12,
 #'                               minor_breaks = NULL) +
@@ -323,8 +363,10 @@ sample_nonparametric_curve_data <- function(n            = 500,
 #' # --- (2) Single curve + 68% CI ribbon ------------------------------------
 #' # Matches the .ci.ps / .ci.cgm variants in tp.np.afib.ivwristm.avrg_curv.
 #' # cll_p68 / clu_p68 from the SAS boots_ci dataset → lower / upper cols.
+#' # The SAS boots_ci dataset also contains cll_p95 / clu_p95 (95% CI); swap
+#' # lower_col / upper_col to those columns for a 95% interval.
 #' nonparametric_curve_plot(
-#'   dat_bin$curve,
+#'   dat_bin,
 #'   lower_col = "lower",
 #'   upper_col = "upper"
 #' ) +
@@ -341,11 +383,14 @@ sample_nonparametric_curve_data <- function(n            = 500,
 #' # --- (3) Single curve + CI + binned data points --------------------------
 #' # Matches the .ci.pts.ps variant. Data points come from the SAS `means`
 #' # dataset (mmtime, safc). Point colour matches the curve colour.
+#' dat_bin_pts <- sample_nonparametric_curve_points(
+#'   n = 500, time_max = 12, outcome_type = "probability"
+#' )
 #' nonparametric_curve_plot(
-#'   dat_bin$curve,
+#'   dat_bin,
 #'   lower_col   = "lower",
 #'   upper_col   = "upper",
-#'   data_points = dat_bin$data_points
+#'   data_points = dat_bin_pts
 #' ) +
 #'   ggplot2::scale_colour_manual(values = c("steelblue"), guide = "none") +
 #'   ggplot2::scale_fill_manual(values = c("steelblue"), guide = "none") +
@@ -361,13 +406,14 @@ sample_nonparametric_curve_data <- function(n            = 500,
 #' # tp.np.fev.double.univariate.continuous.sas.
 #' # CI ribbon fill matches group colour; use scale_fill_manual to suppress
 #' # the legend for the ribbon.
+#' # Note: the Ozaki SAS template uses different point shapes per group
+#' # (dot vs trianglefilled); add scale_shape_manual() after to replicate this.
 #' nonparametric_curve_plot(
-#'   dat_two$curve,
-#'   group_col    = "group",
-#'   lower_col    = "lower",
-#'   upper_col    = "upper",
-#'   data_points  = dat_two$data_points,
-#'   dp_group_col = "group"
+#'   dat_two,
+#'   group_col   = "group",
+#'   lower_col   = "lower",
+#'   upper_col   = "upper",
+#'   data_points = dat_two_pts
 #' ) +
 #'   ggplot2::scale_colour_manual(
 #'     values = c("Ozaki" = "steelblue", "CE-Pericardial" = "firebrick"),
@@ -390,12 +436,11 @@ sample_nonparametric_curve_data <- function(n            = 500,
 #' # --- (5) Two-group comparison, binary outcome ----------------------------
 #' # Matches tp.np.afib.mult.avrg_curv.binary.sas (CABG vs no-CABG).
 #' nonparametric_curve_plot(
-#'   dat_multi$curve,
-#'   group_col    = "group",
-#'   lower_col    = "lower",
-#'   upper_col    = "upper",
-#'   data_points  = dat_multi$data_points,
-#'   dp_group_col = "group"
+#'   dat_multi,
+#'   group_col   = "group",
+#'   lower_col   = "lower",
+#'   upper_col   = "upper",
+#'   data_points = dat_multi_pts
 #' ) +
 #'   ggplot2::scale_colour_brewer(palette = "Set1", name = "CABG") +
 #'   ggplot2::scale_fill_brewer(palette = "Set1", guide = "none") +
@@ -413,7 +458,7 @@ sample_nonparametric_curve_data <- function(n            = 500,
 #' # tp.np.tr.ivecho.independence.sas / u.phases.sas.
 #' # In SAS: odd_e and odd_l are separate columns in the predict dataset.
 #' # In R: reshape to long format with a "phase" column before plotting.
-#' dat_ph <- dat_bin$curve
+#' dat_ph <- dat_bin
 #' dat_long <- rbind(
 #'   data.frame(time     = dat_ph$time,
 #'              estimate = dat_ph$estimate * 0.45,
@@ -451,7 +496,7 @@ sample_nonparametric_curve_data <- function(n            = 500,
 #'   outcome_type = "probability",
 #'   seed = 10
 #' )
-#' nonparametric_curve_plot(dat_scen$curve, group_col = "group") +
+#' nonparametric_curve_plot(dat_scen, group_col = "group") +
 #'   ggplot2::scale_colour_manual(
 #'     values = c("Low risk" = "forestgreen",
 #'                "Medium risk" = "goldenrod3",
@@ -503,7 +548,7 @@ sample_nonparametric_curve_data <- function(n            = 500,
 #'
 #' # --- (9) PowerPoint dark theme (CGM output equivalent) -------------------
 #' \dontrun{
-#' nonparametric_curve_plot(dat_bin$curve,
+#' nonparametric_curve_plot(dat_bin,
 #'                          lower_col = "lower", upper_col = "upper") +
 #'   ggplot2::scale_colour_manual(values = c("yellow"), guide = "none") +
 #'   ggplot2::scale_fill_manual(values = c("yellow"), guide = "none") +
@@ -511,13 +556,50 @@ sample_nonparametric_curve_data <- function(n            = 500,
 #'   hvti_theme("dark_ppt")
 #' }
 #'
+#' # --- (10) Dual-Y-axis overlay (tp.np_two_Yaxis_plots.R pattern) ----------
+#' # Overlays two continuous outcomes on left and right y-axes using
+#' # scale_y_continuous(sec.axis = ...). The R templates build this directly
+#' # with ggplot2 rather than nonparametric_curve_plot(), as two independent
+#' # geom_line layers on separate scales are needed.
+#' \dontrun{
+#' dat_y1 <- sample_nonparametric_curve_data(
+#'   n = 400, time_max = 10, outcome_type = "continuous", seed = 20
+#' )
+#' dat_y2 <- sample_nonparametric_curve_data(
+#'   n = 400, time_max = 10, outcome_type = "continuous", seed = 21
+#' )
+#' # Rescale dat_y2 onto the dat_y1 axis range for dual-axis rendering
+#' scale_factor <- mean(dat_y1$estimate) / mean(dat_y2$estimate)
+#' ggplot2::ggplot() +
+#'   ggplot2::geom_line(
+#'     data    = dat_y1,
+#'     mapping = ggplot2::aes(x = time, y = estimate),
+#'     colour  = "steelblue", linewidth = 1
+#'   ) +
+#'   ggplot2::geom_line(
+#'     data    = dat_y2,
+#'     mapping = ggplot2::aes(x = time, y = estimate * scale_factor),
+#'     colour  = "firebrick", linewidth = 1
+#'   ) +
+#'   ggplot2::scale_y_continuous(
+#'     name     = "Svensson's Index (mm)",
+#'     sec.axis = ggplot2::sec_axis(
+#'       transform = ~ . / scale_factor,
+#'       name      = "Aortic Root Diameter (mm)"
+#'     )
+#'   ) +
+#'   ggplot2::scale_x_continuous(breaks = seq(0, 10, 2)) +
+#'   ggplot2::labs(x = "Years after Presentation") +
+#'   hvti_theme("manuscript")
+#' }
+#'
 #' # --- Save ----------------------------------------------------------------
 #' \dontrun{
 #' p <- nonparametric_curve_plot(
-#'   dat_bin$curve,
+#'   dat_bin,
 #'   lower_col   = "lower",
 #'   upper_col   = "upper",
-#'   data_points = dat_bin$data_points
+#'   data_points = dat_bin_pts
 #' ) +
 #'   ggplot2::scale_colour_manual(values = c("steelblue"), guide = "none") +
 #'   ggplot2::scale_fill_manual(values = c("steelblue"), guide = "none") +
@@ -527,7 +609,7 @@ sample_nonparametric_curve_data <- function(n            = 500,
 #' }
 #'
 #' @importFrom ggplot2 ggplot aes geom_line geom_ribbon geom_point
-#' @importFrom rlang sym .data
+#' @importFrom rlang .data
 #' @export
 nonparametric_curve_plot <- function(curve_data,
                                      x_col        = "time",
@@ -536,78 +618,64 @@ nonparametric_curve_plot <- function(curve_data,
                                      upper_col    = NULL,
                                      group_col    = NULL,
                                      data_points  = NULL,
-                                     dp_x_col     = "time",
-                                     dp_y_col     = "value",
-                                     dp_group_col = NULL,
                                      ci_alpha     = 0.2,
                                      line_width   = 1.0,
                                      point_size   = 2.5,
                                      point_shape  = 20L) {
 
   # --- Validation -----------------------------------------------------------
-  assertthat::assert_that(is.data.frame(curve_data),
-                          msg = "`curve_data` must be a data frame.")
+  if (!is.data.frame(curve_data))
+    stop("`curve_data` must be a data frame.")
   for (col in c(x_col, estimate_col)) {
-    assertthat::assert_that(col %in% names(curve_data),
-                            msg = paste0("Column '", col,
-                                         "' not found in `curve_data`."))
+    if (!(col %in% names(curve_data)))
+      stop(paste0("Column '", col, "' not found in `curve_data`."))
   }
   if (!is.null(lower_col))
-    assertthat::assert_that(lower_col %in% names(curve_data),
-                            msg = paste0("`lower_col` '", lower_col,
-                                         "' not found in `curve_data`."))
+    if (!(lower_col %in% names(curve_data)))
+      stop(paste0("`lower_col` '", lower_col, "' not found in `curve_data`."))
   if (!is.null(upper_col))
-    assertthat::assert_that(upper_col %in% names(curve_data),
-                            msg = paste0("`upper_col` '", upper_col,
-                                         "' not found in `curve_data`."))
+    if (!(upper_col %in% names(curve_data)))
+      stop(paste0("`upper_col` '", upper_col, "' not found in `curve_data`."))
   if (!is.null(group_col))
-    assertthat::assert_that(group_col %in% names(curve_data),
-                            msg = paste0("`group_col` '", group_col,
-                                         "' not found in `curve_data`."))
+    if (!(group_col %in% names(curve_data)))
+      stop(paste0("`group_col` '", group_col, "' not found in `curve_data`."))
   if (!is.null(data_points)) {
-    assertthat::assert_that(is.data.frame(data_points),
-                            msg = "`data_points` must be a data frame.")
-    for (col in c(dp_x_col, dp_y_col)) {
-      assertthat::assert_that(col %in% names(data_points),
-                              msg = paste0("Column '", col,
-                                           "' not found in `data_points`."))
-    }
-    if (!is.null(dp_group_col))
-      assertthat::assert_that(dp_group_col %in% names(data_points),
-                              msg = paste0("`dp_group_col` '", dp_group_col,
-                                           "' not found in `data_points`."))
+    if (!is.data.frame(data_points))
+      stop("`data_points` must be a data frame.")
+    if (!(x_col %in% names(data_points)))
+      stop(paste0("`data_points` must have a column '", x_col,
+                  "' (matching x_col)."))
+    if (!("value" %in% names(data_points)))
+      stop("`data_points` must have a column named 'value'.")
+    if (!is.null(group_col) && !(group_col %in% names(data_points)))
+      stop(paste0("`data_points` must have a column '", group_col,
+                  "' (matching group_col)."))
   }
-
-  x_sym   <- rlang::sym(x_col)
-  est_sym <- rlang::sym(estimate_col)
 
   # --- Base aesthetics ------------------------------------------------------
   if (!is.null(group_col)) {
-    grp_sym  <- rlang::sym(group_col)
-    base_aes <- ggplot2::aes(x      = !!x_sym,
-                             y      = !!est_sym,
-                             colour = !!grp_sym,
-                             group  = !!grp_sym)
+    base_aes <- ggplot2::aes(x      = .data[[x_col]],
+                             y      = .data[[estimate_col]],
+                             colour = .data[[group_col]],
+                             group  = .data[[group_col]])
   } else {
-    base_aes <- ggplot2::aes(x = !!x_sym, y = !!est_sym)
+    base_aes <- ggplot2::aes(x = .data[[x_col]], y = .data[[estimate_col]])
   }
 
   p <- ggplot2::ggplot(curve_data, base_aes)
 
   # --- CI ribbon ------------------------------------------------------------
   if (!is.null(lower_col) && !is.null(upper_col)) {
-    lo_sym  <- rlang::sym(lower_col)
-    hi_sym  <- rlang::sym(upper_col)
     if (!is.null(group_col)) {
-      ribbon_aes <- ggplot2::aes(x      = !!x_sym,
-                                 ymin   = !!lo_sym,
-                                 ymax   = !!hi_sym,
-                                 fill   = !!grp_sym,
-                                 group  = !!grp_sym)
+      ribbon_aes <- ggplot2::aes(x      = .data[[x_col]],
+                                 ymin   = .data[[lower_col]],
+                                 ymax   = .data[[upper_col]],
+                                 fill   = .data[[group_col]],
+                                 group  = .data[[group_col]])
     } else {
-      ribbon_aes <- ggplot2::aes(x    = !!x_sym,
-                                 ymin = !!lo_sym,
-                                 ymax = !!hi_sym)
+      ribbon_aes <- ggplot2::aes(x    = .data[[x_col]],
+                                 ymin = .data[[lower_col]],
+                                 ymax = .data[[upper_col]])
     }
     p <- p + ggplot2::geom_ribbon(mapping     = ribbon_aes,
                                   alpha       = ci_alpha,
@@ -621,18 +689,12 @@ nonparametric_curve_plot <- function(curve_data,
 
   # --- Binned data summary points -------------------------------------------
   if (!is.null(data_points)) {
-    dp_x_sym <- rlang::sym(dp_x_col)
-    dp_y_sym <- rlang::sym(dp_y_col)
-    if (!is.null(dp_group_col)) {
-      dp_grp_sym <- rlang::sym(dp_group_col)
-      dp_aes <- ggplot2::aes(x      = !!dp_x_sym,
-                             y      = !!dp_y_sym,
-                             colour = !!dp_grp_sym)
-    } else if (!is.null(group_col)) {
-      # No group in data_points but curve has group: drop colour mapping
-      dp_aes <- ggplot2::aes(x = !!dp_x_sym, y = !!dp_y_sym)
+    if (!is.null(group_col)) {
+      dp_aes <- ggplot2::aes(x      = .data[[x_col]],
+                             y      = .data[["value"]],
+                             colour = .data[[group_col]])
     } else {
-      dp_aes <- ggplot2::aes(x = !!dp_x_sym, y = !!dp_y_sym)
+      dp_aes <- ggplot2::aes(x = .data[[x_col]], y = .data[["value"]])
     }
     p <- p + ggplot2::geom_point(mapping     = dp_aes,
                                  data        = data_points,
@@ -643,5 +705,3 @@ nonparametric_curve_plot <- function(curve_data,
 
   p
 }
-
-utils::globalVariables(c("lower", "upper"))

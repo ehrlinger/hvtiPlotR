@@ -65,19 +65,18 @@
 #'   (analogous to SAS `decile = _nobs_/10`). Default `10`.
 #' @param seed         Random seed. Default `42`.
 #'
-#' @return A named list:
-#'   - `$curve` — long-format data frame: `time`, `estimate`, `grade` (factor).
-#'     Individual grade probabilities sum to 1 at each time point.
-#'   - `$data_points` — binned data summary: `time`, `value`, `grade`.
+#' @return A long-format data frame: `time`, `estimate`, `grade` (factor).
+#'   Individual grade probabilities sum to 1 at each time point.
 #'
-#' @seealso [nonparametric_ordinal_plot()], [sample_nonparametric_curve_data()]
+#' @seealso [nonparametric_ordinal_plot()], [sample_nonparametric_curve_data()],
+#'   [sample_nonparametric_ordinal_points()]
 #'
 #' @examples
 #' dat <- sample_nonparametric_ordinal_data(n = 800, time_max = 5)
-#' head(dat$curve)
+#' head(dat)
 #' # verify probabilities sum to 1 at each time point
-#' tapply(dat$curve$estimate[dat$curve$time == dat$curve$time[1]],
-#'        dat$curve$grade[dat$curve$time == dat$curve$time[1]], sum)
+#' tapply(dat$estimate[dat$time == dat$time[1]],
+#'        dat$grade[dat$time == dat$time[1]], sum)
 #' @export
 sample_nonparametric_ordinal_data <- function(n            = 1000,
                                               time_max     = 5,
@@ -145,6 +144,57 @@ sample_nonparametric_ordinal_data <- function(n            = 1000,
   bin  <- cut(seq_along(t_s), breaks = n_bins, labels = FALSE)
   bin_time <- tapply(t_s, bin, mean)
 
+  curve_df
+}
+
+#' Sample Nonparametric Ordinal Data Points
+#'
+#' Returns only the binned patient-level data summary points from
+#' [sample_nonparametric_ordinal_data()]. Accepts the same parameters
+#' and returns a plain `data.frame`.
+#'
+#' @inheritParams sample_nonparametric_ordinal_data
+#'
+#' @return A data frame with columns `time`, `value`, `grade`.
+#'
+#' @seealso [sample_nonparametric_ordinal_data()],
+#'   [nonparametric_ordinal_plot()]
+#'
+#' @examples
+#' pts <- sample_nonparametric_ordinal_points(n = 800, time_max = 5)
+#' head(pts)
+#' @export
+sample_nonparametric_ordinal_points <- function(
+  n            = 1000,
+  time_max     = 5,
+  n_points     = 500,
+  grade_labels = c("Grade 0", "Grade 1", "Grade 2", "Grade 3"),
+  n_bins       = 10,
+  seed         = 42L
+) {
+  set.seed(seed)
+  n_grades <- length(grade_labels)
+
+  a_raw <- cumsum(c(0.5, rep(1.2, n_grades - 2)))
+
+  thalf1 <- time_max * 0.20
+  thalf2 <- time_max * 0.60
+
+  t_pat   <- stats::runif(n, 0.01, time_max)
+  eta_pat <- .np_two_phase(t_pat, e0 = -0.2, thalf1 = thalf1, thalf2 = thalf2)
+  cp_pat  <- matrix(NA_real_, nrow = n, ncol = n_grades - 1L)
+  for (k in seq_len(n_grades - 1L)) {
+    cp_pat[, k] <- stats::plogis(a_raw[k] + eta_pat)
+  }
+  u_pat <- stats::runif(n)
+  grade_obs <- rowSums(u_pat > cbind(cp_pat, 1)) + 1L
+
+  ord  <- order(t_pat)
+  t_s  <- t_pat[ord]
+  g_s  <- grade_obs[ord]
+  bin  <- cut(seq_along(t_s), breaks = n_bins, labels = FALSE)
+  bin_time <- tapply(t_s, bin, mean)
+
   dp_list <- lapply(seq_len(n_grades), function(k) {
     prop <- tapply(g_s == k, bin, mean)
     data.frame(time  = as.numeric(bin_time),
@@ -153,8 +203,7 @@ sample_nonparametric_ordinal_data <- function(n            = 1000,
   })
   dp_df       <- do.call(rbind, dp_list)
   dp_df$grade <- factor(dp_df$grade, levels = grade_labels)
-
-  list(curve = curve_df, data_points = dp_df)
+  dp_df
 }
 
 # ============================================================================
@@ -170,11 +219,6 @@ sample_nonparametric_ordinal_data <- function(n            = 1000,
 #' - `time` ← `iv_echo` (or `iv_wristm`)
 #' - `estimate` ← one of `p0`, `p1`, `p2`, `p3` (individual grade probs)
 #' - `grade` ← a new column created during the wide-to-long reshape
-#'
-#' **SAS `means` dataset mapping (data summary points):**
-#' - `dp_x_col` ← `mtime` (or `mmtime` if converted to months)
-#' - `dp_y_col` ← one of `smntr0`, `smntr1`, `smntr2`, `smntr3`
-#' - `dp_grade_col` ← new column from wide-to-long reshape
 #'
 #' **Reshape step required (SAS wide → R long):**
 #' ```r
@@ -201,13 +245,8 @@ sample_nonparametric_ordinal_data <- function(n            = 1000,
 #' @param grade_col   Name of the grade/category column created during the
 #'   wide-to-long reshape. Default `"grade"`.
 #' @param data_points Optional long-format data frame of binned data summary
-#'   points. Columns: `dp_x_col`, `dp_y_col`, `dp_grade_col`. Corresponds
-#'   to the SAS `means` dataset after reshaping. Default `NULL`.
-#' @param dp_x_col    Column name for x in `data_points`. Corresponds to
-#'   `mtime` / `mmtime` in SAS. Default `"time"`.
-#' @param dp_y_col    Column name for y in `data_points`. Corresponds to
-#'   `smntr0`–`smntr3` (after reshape). Default `"value"`.
-#' @param dp_grade_col Column name for grade in `data_points`. Default `"grade"`.
+#'   points. Must have columns matching `x_col`, `"value"`, and `grade_col`.
+#'   Corresponds to the SAS `means` dataset after reshaping. Default `NULL`.
 #' @param line_width  Width of grade-specific curve lines. Default `1.0`.
 #' @param point_size  Size of binned data summary points. Default `2.5`.
 #' @param point_shape Integer shape for summary points (SAS `symbol=dot`).
@@ -218,16 +257,24 @@ sample_nonparametric_ordinal_data <- function(n            = 1000,
 #'
 #' @seealso [sample_nonparametric_ordinal_data()],
 #'   [nonparametric_curve_plot()], [hvti_theme()]
-#' @aliases np_ordinal ordinal_curve
+#'
+#' @references SAS templates: \code{tp.np.tr.ivecho.average_curv.ordinal.sas},
+#'   \code{tp.np.po_ar.u_multi.ordinal.sas},
+#'   \code{tp.np.tr.ivecho.independence.sas},
+#'   \code{tp.np.tr.ivecho.u.phases.sas}.
 #'
 #' @examples
 #' dat <- sample_nonparametric_ordinal_data(
 #'   n = 800, time_max = 5,
 #'   grade_labels = c("None", "Mild", "Moderate", "Severe")
 #' )
+#' dat_pts <- sample_nonparametric_ordinal_points(
+#'   n = 800, time_max = 5,
+#'   grade_labels = c("None", "Mild", "Moderate", "Severe")
+#' )
 #'
 #' # --- All grades, manuscript theme (tp.np.tr.ivecho.avg_curv.ps) ----------
-#' nonparametric_ordinal_plot(dat$curve) +
+#' nonparametric_ordinal_plot(dat) +
 #'   ggplot2::scale_colour_manual(
 #'     values = c(None     = "steelblue",
 #'                Mild     = "firebrick",
@@ -243,7 +290,7 @@ sample_nonparametric_ordinal_data <- function(n            = 1000,
 #'   hvti_theme("manuscript")
 #'
 #' # --- With RColorBrewer palette -------------------------------------------
-#' nonparametric_ordinal_plot(dat$curve) +
+#' nonparametric_ordinal_plot(dat) +
 #'   ggplot2::scale_colour_brewer(palette = "RdYlGn", direction = -1,
 #'                                name = "AR Grade") +
 #'   ggplot2::scale_x_continuous(breaks = 0:5) +
@@ -254,9 +301,8 @@ sample_nonparametric_ordinal_data <- function(n            = 1000,
 #'
 #' # --- Curves + binned data points (tp.np.tr.ivecho.avg_curv.pts.ps) -------
 #' nonparametric_ordinal_plot(
-#'   dat$curve,
-#'   data_points  = dat$data_points,
-#'   dp_grade_col = "grade"
+#'   dat,
+#'   data_points = dat_pts
 #' ) +
 #'   ggplot2::scale_colour_manual(
 #'     values = c(None     = "steelblue",
@@ -276,7 +322,7 @@ sample_nonparametric_ordinal_data <- function(n            = 1000,
 #'   hvti_theme("manuscript")
 #'
 #' # --- Subset: show only severe grade for nomogram comparison --------------
-#' dat_sev <- dat$curve[dat$curve$grade == "Severe", ]
+#' dat_sev <- dat[dat$grade == "Severe", ]
 #' nonparametric_ordinal_plot(dat_sev) +
 #'   ggplot2::scale_colour_manual(values = c(Severe = "firebrick"),
 #'                                guide  = "none") +
@@ -295,9 +341,9 @@ sample_nonparametric_ordinal_data <- function(n            = 1000,
 #'   n = 800, time_max = 13,
 #'   grade_labels = c("0", "1+", "2+", "3+"), seed = 2
 #' )
-#' dat_tric$curve$morphology <- "Tricuspid"
-#' dat_bic$curve$morphology  <- "Bicuspid"
-#' dat_comb <- rbind(dat_tric$curve, dat_bic$curve)
+#' dat_tric$morphology <- "Tricuspid"
+#' dat_bic$morphology  <- "Bicuspid"
+#' dat_comb <- rbind(dat_tric, dat_bic)
 #' dat_comb$morphology <- factor(dat_comb$morphology,
 #'                               levels = c("Tricuspid", "Bicuspid"))
 #' # Plot one grade at a time, coloured by morphology:
@@ -317,11 +363,45 @@ sample_nonparametric_ordinal_data <- function(n            = 1000,
 #'   ggplot2::labs(x = "Years", y = "P(AR grade \u2265 3)") +
 #'   hvti_theme("manuscript")
 #'
+#' # --- Pre-op severity comparison (tp.np.po_ar.u_multi preop_ar pattern) ---
+#' # Three covariate levels (mild / moderate / severe preop AR severity),
+#' # plotted for one grade at a time via nonparametric_curve_plot().
+#' # Matches avrgsev = 2 / 3 / 4 subgroups in tp.np.po_ar.u_multi.ordinal.sas.
+#' dat_mild <- sample_nonparametric_ordinal_data(
+#'   n = 800, time_max = 13,
+#'   grade_labels = c("0", "1+", "2+", "3+"), seed = 3
+#' )
+#' dat_mod <- sample_nonparametric_ordinal_data(
+#'   n = 800, time_max = 13,
+#'   grade_labels = c("0", "1+", "2+", "3+"), seed = 4
+#' )
+#' dat_sev3 <- sample_nonparametric_ordinal_data(
+#'   n = 800, time_max = 13,
+#'   grade_labels = c("0", "1+", "2+", "3+"), seed = 5
+#' )
+#' dat_mild$preop_ar  <- "Mild"
+#' dat_mod$preop_ar   <- "Moderate"
+#' dat_sev3$preop_ar  <- "Severe"
+#' dat_preop <- rbind(dat_mild, dat_mod, dat_sev3)
+#' dat_preop$preop_ar <- factor(dat_preop$preop_ar,
+#'                              levels = c("Mild", "Moderate", "Severe"))
+#' dat_34 <- dat_preop[dat_preop$grade == "3+", ]
+#' nonparametric_curve_plot(dat_34, estimate_col = "estimate",
+#'                          group_col = "preop_ar") +
+#'   ggplot2::scale_colour_manual(
+#'     values = c(Mild = "steelblue", Moderate = "goldenrod3",
+#'                Severe = "firebrick"),
+#'     name = "Pre-op AR"
+#'   ) +
+#'   ggplot2::scale_x_continuous(breaks = seq(0, 13, 2)) +
+#'   ggplot2::scale_y_continuous(limits = c(0, 0.60),
+#'                               labels = scales::percent) +
+#'   ggplot2::labs(x = "Years", y = "P(AR grade \u2265 3+)") +
+#'   hvti_theme("manuscript")
+#'
 #' # --- Save ----------------------------------------------------------------
 #' \dontrun{
-#' p <- nonparametric_ordinal_plot(dat$curve,
-#'                                 data_points = dat$data_points,
-#'                                 dp_grade_col = "grade") +
+#' p <- nonparametric_ordinal_plot(dat, data_points = dat_pts) +
 #'   ggplot2::scale_colour_brewer(palette = "Set1", name = "Grade") +
 #'   ggplot2::labs(x = "Years", y = "Prevalence") +
 #'   hvti_theme("manuscript")
@@ -329,60 +409,52 @@ sample_nonparametric_ordinal_data <- function(n            = 1000,
 #' }
 #'
 #' @importFrom ggplot2 ggplot aes geom_line geom_point
-#' @importFrom rlang sym
+#' @importFrom rlang .data
 #' @export
 nonparametric_ordinal_plot <- function(curve_data,
                                        x_col        = "time",
                                        estimate_col = "estimate",
                                        grade_col    = "grade",
                                        data_points  = NULL,
-                                       dp_x_col     = "time",
-                                       dp_y_col     = "value",
-                                       dp_grade_col = "grade",
                                        line_width   = 1.0,
                                        point_size   = 2.5,
                                        point_shape  = 20L) {
 
   # --- Validation -----------------------------------------------------------
-  assertthat::assert_that(is.data.frame(curve_data),
-                          msg = "`curve_data` must be a data frame.")
+  if (!is.data.frame(curve_data))
+    stop("`curve_data` must be a data frame.")
   for (col in c(x_col, estimate_col, grade_col)) {
-    assertthat::assert_that(col %in% names(curve_data),
-                            msg = paste0("Column '", col,
-                                         "' not found in `curve_data`."))
+    if (!(col %in% names(curve_data)))
+      stop(paste0("Column '", col, "' not found in `curve_data`."))
   }
   if (!is.null(data_points)) {
-    assertthat::assert_that(is.data.frame(data_points),
-                            msg = "`data_points` must be a data frame.")
-    for (col in c(dp_x_col, dp_y_col, dp_grade_col)) {
-      assertthat::assert_that(col %in% names(data_points),
-                              msg = paste0("Column '", col,
-                                           "' not found in `data_points`."))
-    }
+    if (!is.data.frame(data_points))
+      stop("`data_points` must be a data frame.")
+    if (!(x_col %in% names(data_points)))
+      stop(paste0("`data_points` must have a column '", x_col,
+                  "' (matching x_col)."))
+    if (!("value" %in% names(data_points)))
+      stop("`data_points` must have a column named 'value'.")
+    if (!(grade_col %in% names(data_points)))
+      stop(paste0("`data_points` must have a column '", grade_col,
+                  "' (matching grade_col)."))
   }
-
-  x_sym     <- rlang::sym(x_col)
-  est_sym   <- rlang::sym(estimate_col)
-  grade_sym <- rlang::sym(grade_col)
 
   p <- ggplot2::ggplot(
     curve_data,
-    ggplot2::aes(x      = !!x_sym,
-                 y      = !!est_sym,
-                 colour = !!grade_sym,
-                 group  = !!grade_sym)
+    ggplot2::aes(x      = .data[[x_col]],
+                 y      = .data[[estimate_col]],
+                 colour = .data[[grade_col]],
+                 group  = .data[[grade_col]])
   ) +
     ggplot2::geom_line(linewidth = line_width)
 
   if (!is.null(data_points)) {
-    dp_x_sym     <- rlang::sym(dp_x_col)
-    dp_y_sym     <- rlang::sym(dp_y_col)
-    dp_grade_sym <- rlang::sym(dp_grade_col)
     p <- p + ggplot2::geom_point(
       data        = data_points,
-      mapping     = ggplot2::aes(x      = !!dp_x_sym,
-                                 y      = !!dp_y_sym,
-                                 colour = !!dp_grade_sym),
+      mapping     = ggplot2::aes(x      = .data[[x_col]],
+                                 y      = .data[["value"]],
+                                 colour = .data[[grade_col]]),
       size        = point_size,
       shape       = point_shape,
       inherit.aes = FALSE

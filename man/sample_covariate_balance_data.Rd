@@ -10,7 +10,7 @@ sample_covariate_balance_data(
   separation = 1.5,
   caliper = 0.05,
   group_levels = c("Before match", "After match"),
-  seed = 42
+  seed = 42L
 )
 }
 \arguments{

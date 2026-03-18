@@ -2,8 +2,6 @@
 % Please edit documentation in R/nonparametric-curve-plot.R
 \name{nonparametric_curve_plot}
 \alias{nonparametric_curve_plot}
-\alias{np_curve}
-\alias{nonparametric_trend}
 \title{Nonparametric Temporal Trend Curve Plot}
 \usage{
 nonparametric_curve_plot(
@@ -14,9 +12,6 @@ nonparametric_curve_plot(
   upper_col = NULL,
   group_col = NULL,
   data_points = NULL,
-  dp_x_col = "time",
-  dp_y_col = "value",
-  dp_group_col = NULL,
   ci_alpha = 0.2,
   line_width = 1,
   point_size = 2.5,
@@ -48,17 +43,9 @@ and linetype, or \code{NULL} for a single curve. Use for group comparisons
 Default \code{NULL}.}
 
 \item{data_points}{Optional data frame of binned data summary points to
-overlay as filled circles. Corresponds to the \code{means} dataset
-(variables \code{mmtime}/\code{mtime} and \code{safc}/\verb{smntr*}) in SAS. Default \code{NULL}.}
-
-\item{dp_x_col}{Column name for x in \code{data_points}. Corresponds to
-\code{mmtime} or \code{mtime} in SAS. Default \code{"time"}.}
-
-\item{dp_y_col}{Column name for y in \code{data_points}. Corresponds to
-\code{safc}, \code{smntr0}, etc. in SAS. Default \code{"value"}.}
-
-\item{dp_group_col}{Column name for grouping in \code{data_points}, or \code{NULL}.
-Default \code{NULL}.}
+overlay as filled circles. Must have a column matching \code{x_col} for x,
+a column named \code{"value"} for y, and (when \code{group_col} is not \code{NULL}) a
+column matching \code{group_col}. Default \code{NULL}.}
 
 \item{ci_alpha}{Transparency of the confidence ribbon (\verb{[0,1]}).
 Default \code{0.2}.}
@@ -100,8 +87,6 @@ Covers the full range of \verb{tp.np.*} SAS templates:
 \item \code{upper_col} ← \code{clu_p68} or \code{clu_p95}
 \item \code{group_col} ← a grouping indicator you add after reshaping from wide to long
 (use \code{\link[tidyr:pivot_longer]{tidyr::pivot_longer()}} on the SAS \code{predict} dataset)
-\item In \code{data_points}: \code{dp_x_col} ← \code{mmtime} or \code{mtime}; \code{dp_y_col} ← \code{safc},
-\code{smntr0}, etc.
 }
 
 \strong{Reshaping from wide to long (SAS → R):}
@@ -119,7 +104,7 @@ nonparametric_curve_plot(long, group_col = "phase")
 Returns a \strong{bare ggplot object}. Compose with \verb{scale_colour_*},
 \code{scale_x_continuous()}, \code{labs()}, \code{\link[=hvti_theme]{hvti_theme()}}:
 
-\if{html}{\out{<div class="sourceCode r">}}\preformatted{nonparametric_curve_plot(dat$curve, ...) +
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{nonparametric_curve_plot(dat, ...) +
   scale_colour_manual(values = c(...)) +
   scale_x_continuous(breaks = 0:12) +
   labs(x = "Months", y = "Prevalence of AF (\%)") +
@@ -139,7 +124,17 @@ dat_two <- sample_nonparametric_curve_data(
   groups = c("Ozaki" = 0.7, "CE-Pericardial" = 1.3),
   outcome_type = "continuous"
 )
+dat_two_pts <- sample_nonparametric_curve_points(
+  n = 400, time_max = 7,
+  groups = c("Ozaki" = 0.7, "CE-Pericardial" = 1.3),
+  outcome_type = "continuous"
+)
 dat_multi <- sample_nonparametric_curve_data(
+  n = 600, time_max = 14,
+  groups = c("CABG-" = 0.6, "CABG+" = 1.4),
+  outcome_type = "probability"
+)
+dat_multi_pts <- sample_nonparametric_curve_points(
   n = 600, time_max = 14,
   groups = c("CABG-" = 0.6, "CABG+" = 1.4),
   outcome_type = "probability"
@@ -148,7 +143,7 @@ dat_multi <- sample_nonparametric_curve_data(
 # --- (1) Single average curve, no CI ------------------------------------
 # Matches tp.np.afib.ivwristm.avrg_curv.binary.sas (mean_curv dataset,
 # no confidence interval plotted).
-nonparametric_curve_plot(dat_bin$curve) +
+nonparametric_curve_plot(dat_bin) +
   ggplot2::scale_colour_manual(values = c("steelblue"), guide = "none") +
   ggplot2::scale_x_continuous(limits = c(0, 12), breaks = 0:12,
                               minor_breaks = NULL) +
@@ -161,8 +156,10 @@ nonparametric_curve_plot(dat_bin$curve) +
 # --- (2) Single curve + 68\% CI ribbon ------------------------------------
 # Matches the .ci.ps / .ci.cgm variants in tp.np.afib.ivwristm.avrg_curv.
 # cll_p68 / clu_p68 from the SAS boots_ci dataset → lower / upper cols.
+# The SAS boots_ci dataset also contains cll_p95 / clu_p95 (95\% CI); swap
+# lower_col / upper_col to those columns for a 95\% interval.
 nonparametric_curve_plot(
-  dat_bin$curve,
+  dat_bin,
   lower_col = "lower",
   upper_col = "upper"
 ) +
@@ -179,11 +176,14 @@ nonparametric_curve_plot(
 # --- (3) Single curve + CI + binned data points --------------------------
 # Matches the .ci.pts.ps variant. Data points come from the SAS `means`
 # dataset (mmtime, safc). Point colour matches the curve colour.
+dat_bin_pts <- sample_nonparametric_curve_points(
+  n = 500, time_max = 12, outcome_type = "probability"
+)
 nonparametric_curve_plot(
-  dat_bin$curve,
+  dat_bin,
   lower_col   = "lower",
   upper_col   = "upper",
-  data_points = dat_bin$data_points
+  data_points = dat_bin_pts
 ) +
   ggplot2::scale_colour_manual(values = c("steelblue"), guide = "none") +
   ggplot2::scale_fill_manual(values = c("steelblue"), guide = "none") +
@@ -199,13 +199,14 @@ nonparametric_curve_plot(
 # tp.np.fev.double.univariate.continuous.sas.
 # CI ribbon fill matches group colour; use scale_fill_manual to suppress
 # the legend for the ribbon.
+# Note: the Ozaki SAS template uses different point shapes per group
+# (dot vs trianglefilled); add scale_shape_manual() after to replicate this.
 nonparametric_curve_plot(
-  dat_two$curve,
-  group_col    = "group",
-  lower_col    = "lower",
-  upper_col    = "upper",
-  data_points  = dat_two$data_points,
-  dp_group_col = "group"
+  dat_two,
+  group_col   = "group",
+  lower_col   = "lower",
+  upper_col   = "upper",
+  data_points = dat_two_pts
 ) +
   ggplot2::scale_colour_manual(
     values = c("Ozaki" = "steelblue", "CE-Pericardial" = "firebrick"),
@@ -228,12 +229,11 @@ nonparametric_curve_plot(
 # --- (5) Two-group comparison, binary outcome ----------------------------
 # Matches tp.np.afib.mult.avrg_curv.binary.sas (CABG vs no-CABG).
 nonparametric_curve_plot(
-  dat_multi$curve,
-  group_col    = "group",
-  lower_col    = "lower",
-  upper_col    = "upper",
-  data_points  = dat_multi$data_points,
-  dp_group_col = "group"
+  dat_multi,
+  group_col   = "group",
+  lower_col   = "lower",
+  upper_col   = "upper",
+  data_points = dat_multi_pts
 ) +
   ggplot2::scale_colour_brewer(palette = "Set1", name = "CABG") +
   ggplot2::scale_fill_brewer(palette = "Set1", guide = "none") +
@@ -251,7 +251,7 @@ nonparametric_curve_plot(
 # tp.np.tr.ivecho.independence.sas / u.phases.sas.
 # In SAS: odd_e and odd_l are separate columns in the predict dataset.
 # In R: reshape to long format with a "phase" column before plotting.
-dat_ph <- dat_bin$curve
+dat_ph <- dat_bin
 dat_long <- rbind(
   data.frame(time     = dat_ph$time,
              estimate = dat_ph$estimate * 0.45,
@@ -289,7 +289,7 @@ dat_scen <- sample_nonparametric_curve_data(
   outcome_type = "probability",
   seed = 10
 )
-nonparametric_curve_plot(dat_scen$curve, group_col = "group") +
+nonparametric_curve_plot(dat_scen, group_col = "group") +
   ggplot2::scale_colour_manual(
     values = c("Low risk" = "forestgreen",
                "Medium risk" = "goldenrod3",
@@ -341,7 +341,7 @@ nonparametric_curve_plot(
 
 # --- (9) PowerPoint dark theme (CGM output equivalent) -------------------
 \dontrun{
-nonparametric_curve_plot(dat_bin$curve,
+nonparametric_curve_plot(dat_bin,
                          lower_col = "lower", upper_col = "upper") +
   ggplot2::scale_colour_manual(values = c("yellow"), guide = "none") +
   ggplot2::scale_fill_manual(values = c("yellow"), guide = "none") +
@@ -349,13 +349,50 @@ nonparametric_curve_plot(dat_bin$curve,
   hvti_theme("dark_ppt")
 }
 
+# --- (10) Dual-Y-axis overlay (tp.np_two_Yaxis_plots.R pattern) ----------
+# Overlays two continuous outcomes on left and right y-axes using
+# scale_y_continuous(sec.axis = ...). The R templates build this directly
+# with ggplot2 rather than nonparametric_curve_plot(), as two independent
+# geom_line layers on separate scales are needed.
+\dontrun{
+dat_y1 <- sample_nonparametric_curve_data(
+  n = 400, time_max = 10, outcome_type = "continuous", seed = 20
+)
+dat_y2 <- sample_nonparametric_curve_data(
+  n = 400, time_max = 10, outcome_type = "continuous", seed = 21
+)
+# Rescale dat_y2 onto the dat_y1 axis range for dual-axis rendering
+scale_factor <- mean(dat_y1$estimate) / mean(dat_y2$estimate)
+ggplot2::ggplot() +
+  ggplot2::geom_line(
+    data    = dat_y1,
+    mapping = ggplot2::aes(x = time, y = estimate),
+    colour  = "steelblue", linewidth = 1
+  ) +
+  ggplot2::geom_line(
+    data    = dat_y2,
+    mapping = ggplot2::aes(x = time, y = estimate * scale_factor),
+    colour  = "firebrick", linewidth = 1
+  ) +
+  ggplot2::scale_y_continuous(
+    name     = "Svensson's Index (mm)",
+    sec.axis = ggplot2::sec_axis(
+      transform = ~ . / scale_factor,
+      name      = "Aortic Root Diameter (mm)"
+    )
+  ) +
+  ggplot2::scale_x_continuous(breaks = seq(0, 10, 2)) +
+  ggplot2::labs(x = "Years after Presentation") +
+  hvti_theme("manuscript")
+}
+
 # --- Save ----------------------------------------------------------------
 \dontrun{
 p <- nonparametric_curve_plot(
-  dat_bin$curve,
+  dat_bin,
   lower_col   = "lower",
   upper_col   = "upper",
-  data_points = dat_bin$data_points
+  data_points = dat_bin_pts
 ) +
   ggplot2::scale_colour_manual(values = c("steelblue"), guide = "none") +
   ggplot2::scale_fill_manual(values = c("steelblue"), guide = "none") +
@@ -364,6 +401,12 @@ p <- nonparametric_curve_plot(
 ggplot2::ggsave("np_curve.pdf", p, width = 11.5, height = 8)
 }
 
+}
+\references{
+SAS templates: \code{tp.np.*.avrg_curv.*},
+\code{tp.np.*.u.trend.*}, \code{tp.np.*.double.*},
+\code{tp.np.*.mult.*}, \code{tp.np.*.phases.*},
+\code{tp.np.z0axdpo.*}.
 }
 \seealso{
 \code{\link[=sample_nonparametric_curve_data]{sample_nonparametric_curve_data()}}, \code{\link[=nonparametric_ordinal_plot]{nonparametric_ordinal_plot()}},

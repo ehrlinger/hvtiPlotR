@@ -1,8 +1,3 @@
-# Bind ggplot columns up-front to silence R CMD check notes about global vars.
-if (getRversion() >= "2.15.1") {
-  utils::globalVariables(c("operation_year", "follow_up", "segment_end", "state"))
-}
-
 # ---------------------------------------------------------------------------
 # Sample data generator
 # ---------------------------------------------------------------------------
@@ -52,8 +47,7 @@ if (getRversion() >= "2.15.1") {
 #' head(dta)
 #'
 #' # Death panel
-#' result <- goodness_followup(dta)
-#' result$death_plot +
+#' goodness_followup(dta) +
 #'   ggplot2::scale_color_manual(
 #'     values = c("Alive" = "blue", "Dead" = "red"), name = NULL
 #'   ) +
@@ -61,14 +55,13 @@ if (getRversion() >= "2.15.1") {
 #'   ggplot2::labs(x = "Operation Date", y = "Follow-up (years)")
 #'
 #' # Event panel
-#' result2 <- goodness_followup(
+#' goodness_event_plot(
 #'   dta,
 #'   event_col           = "ev_event",
 #'   event_time_col      = "iv_event",
 #'   death_for_event_col = "deads",
 #'   event_levels        = c("No event", "Relapse", "Death")
-#' )
-#' result2$event_plot +
+#' ) +
 #'   ggplot2::scale_color_manual(
 #'     values = c("No event" = "blue", "Relapse" = "green3", "Death" = "red"),
 #'     name   = NULL
@@ -77,7 +70,6 @@ if (getRversion() >= "2.15.1") {
 #'   ggplot2::labs(x = "Operation Date", y = "Follow-up (years)")
 #'
 #' @importFrom stats rexp
-#' @importFrom assertthat is.count
 #' @export
 sample_goodness_followup_data <- function(
   n           = 300,
@@ -87,9 +79,9 @@ sample_goodness_followup_data <- function(
   close_date  = as.Date("2021-08-06"),
   death_rate  = 0.05,
   event_rate  = 0.08,
-  seed        = 42
+  seed        = 42L
 ) {
-  if (!assertthat::is.count(n))
+  if (!(is.numeric(n) && length(n) == 1L && n >= 1L && n %% 1 == 0))
     stop("`n` must be a positive integer scalar.", call. = FALSE)
   if (!is.numeric(death_rate) || death_rate <= 0)
     stop("`death_rate` must be a positive number.", call. = FALSE)
@@ -158,10 +150,8 @@ sample_goodness_followup_data <- function(
 #'
 #' Converts raw follow-up extracts (either in-memory data frames or SAS
 #' transport files) into tidy frames, then draws the classic HVI goodness of
-#' follow-up visualizations. The function always produces a death panel
-#' (`death_plot`). When `event_col` is supplied it additionally produces a
-#' non-fatal event panel (`event_plot`) that encodes a three-level outcome
-#' state: no event / non-fatal event / death before event.
+#' follow-up death panel. For the non-fatal event panel use
+#' [goodness_event_plot()].
 #'
 #' The function focuses on preparing the data, mapping states to aesthetics,
 #' and drawing the scaffolding geoms; callers are expected to finish the styling
@@ -184,18 +174,6 @@ sample_goodness_followup_data <- function(
 #'   prior to processing.
 #' @param death_levels Length-2 character vector naming the "alive" and "dead"
 #'   states for the death panel. Default `c("Alive", "Dead")`.
-#' @param event_col Column name for the non-fatal event indicator (logical or
-#'   0/1). When `NULL` (default) the event panel is skipped.
-#' @param event_time_col Column containing follow-up time to the non-fatal
-#'   event or censoring, expressed in years. Required when `event_col` is
-#'   supplied.
-#' @param death_for_event_col Death indicator column used to classify deaths
-#'   within the event panel. Defaults to `death_col` when `NULL`. Supplying a
-#'   separate column (e.g. `"deads"` for systematic/active follow-up) allows
-#'   the two panels to use different death ascertainment strategies.
-#' @param event_levels Length-3 character vector naming the three outcome
-#'   states in the event panel: no event / non-fatal event / death before
-#'   event. Default `c("No event", "Non-fatal event", "Death")`.
 #' @param alpha Transparency passed to the point and segment layers.
 #' @param segment_drop Amount (in years) subtracted from each follow-up value
 #'   to draw the short vertical tick beneath each point.
@@ -205,34 +183,14 @@ sample_goodness_followup_data <- function(
 #'   `"dashed"`.
 #' @param diagonal_linewidth Line width of the reference line. Default `0.6`.
 #'
-#' @return A list containing:
-#'   * `death_plot`: ggplot object — death follow-up panel.
-#'   * `death_data`: transformed data frame used in `death_plot`.
-#'   * `event_plot`: ggplot object — non-fatal event panel, or `NULL` when
-#'     `event_col` is not supplied.
-#'   * `event_data`: transformed data frame used in `event_plot`, or `NULL`.
-#'   * `diagonal`: reference line data frame shared by both panels.
-#'
-#' @details
-#' **Death panel** — each patient is plotted at their operation date (x) and
-#' follow-up time (y). A binary `state` factor (alive / dead) drives colour
-#' and shape.
-#'
-#' **Event panel** — same scaffold, but `state` is a three-level factor:
-#' \enumerate{
-#'   \item `event_levels[1]` — alive and event-free at censoring.
-#'   \item `event_levels[2]` — non-fatal event occurred first.
-#'   \item `event_levels[3]` — died before the non-fatal event.
-#' }
-#' The coding mirrors the `ev_evnt` variable constructed in the legacy
-#' `tp.dp.gfup.R` template.
+#' @return A [ggplot2::ggplot()] object (death panel). Compose with
+#'   `scale_color_manual()`, `scale_shape_manual()`, `labs()`, and
+#'   [hvti_theme()]. For the event panel use [goodness_event_plot()].
 #'
 #' @examples
 #' dta <- sample_goodness_followup_data()
 #'
-#' # Death panel only
-#' result <- goodness_followup(dta, alpha = 0.8)
-#' result$death_plot +
+#' goodness_followup(dta) +
 #'   ggplot2::scale_color_manual(
 #'     values = c("Alive" = "blue", "Dead" = "red"), name = NULL
 #'   ) +
@@ -240,46 +198,23 @@ sample_goodness_followup_data <- function(
 #'   ggplot2::labs(x = "Operation Date", y = "Follow-up (years)") +
 #'   hvti_theme("manuscript")
 #'
-#' # Death panel + non-fatal event panel
-#' result2 <- goodness_followup(
-#'   dta,
-#'   event_col           = "ev_event",
-#'   event_time_col      = "iv_event",
-#'   death_for_event_col = "deads",
-#'   event_levels        = c("No event", "Relapse", "Death"),
-#'   alpha               = 0.8
-#' )
-#' result2$event_plot +
-#'   ggplot2::scale_color_manual(
-#'     values = c("No event" = "blue", "Relapse" = "green3", "Death" = "red"),
-#'     name   = NULL
-#'   ) +
-#'   ggplot2::scale_shape_manual(values = c(1, 2, 4), name = NULL) +
-#'   ggplot2::labs(x = "Operation Date", y = "Follow-up (years)") +
-#'   hvti_theme("manuscript")
-#'
-#' @aliases gfup goodness_of_followup
 #' @export
 goodness_followup <- function(
   data,
-  iv_opyrs_col        = "iv_opyrs",
-  death_col           = "dead",
-  death_time_col      = "iv_dead",
-  origin_year         = 1990,
-  study_start         = as.Date("1990-01-01"),
-  study_end           = as.Date("2019-12-31"),
-  close_date          = as.Date("2021-08-06"),
-  tolower_names       = TRUE,
-  death_levels        = c("Alive", "Dead"),
-  event_col           = NULL,
-  event_time_col      = NULL,
-  death_for_event_col = NULL,
-  event_levels        = c("No event", "Non-fatal event", "Death"),
-  alpha               = 0.8,
-  segment_drop        = 0.2,
-  diagonal_color      = "orange",
-  diagonal_linetype   = "dashed",
-  diagonal_linewidth  = 0.6
+  iv_opyrs_col       = "iv_opyrs",
+  death_col          = "dead",
+  death_time_col     = "iv_dead",
+  origin_year        = 1990,
+  study_start        = as.Date("1990-01-01"),
+  study_end          = as.Date("2019-12-31"),
+  close_date         = as.Date("2021-08-06"),
+  tolower_names      = TRUE,
+  death_levels       = c("Alive", "Dead"),
+  alpha              = 0.8,
+  segment_drop       = 0.2,
+  diagonal_color     = "orange",
+  diagonal_linetype  = "dashed",
+  diagonal_linewidth = 0.6
 ) {
   if (length(death_levels) != 2)
     stop("`death_levels` must contain exactly two labels.", call. = FALSE)
@@ -288,17 +223,7 @@ goodness_followup <- function(
   if (!is.numeric(segment_drop) || segment_drop < 0)
     stop("`segment_drop` must be a non-negative numeric value.", call. = FALSE)
 
-  if (!is.null(event_col)) {
-    if (is.null(event_time_col))
-      stop(
-        "When `event_col` is supplied, `event_time_col` must also be provided.",
-        call. = FALSE
-      )
-    if (length(event_levels) != 3)
-      stop("`event_levels` must contain exactly three labels.", call. = FALSE)
-  }
-
-  payload    <- gf_materialize_followup_data(data, tolower_names)
+  payload     <- gf_materialize_followup_data(data, tolower_names)
   study_start <- gf_coerce_date(study_start, "study_start")
   study_end   <- gf_coerce_date(study_end,   "study_end")
   close_date  <- gf_coerce_date(close_date,  "close_date")
@@ -311,9 +236,7 @@ goodness_followup <- function(
          call. = FALSE)
 
   gf_require_columns(payload, c(iv_opyrs_col, death_time_col, death_col))
-  diag_df <- gf_build_diagonal(study_start, study_end, close_date, origin_year)
-
-  # --- Death panel -----------------------------------------------------------
+  diag_df  <- gf_build_diagonal(study_start, study_end, close_date, origin_year)
   death_df <- gf_prepare_frame(payload, c(iv_opyrs_col, death_time_col, death_col))
   if (!nrow(death_df))
     stop("No rows available to build the death follow-up plot.", call. = FALSE)
@@ -322,44 +245,99 @@ goodness_followup <- function(
     death_df, iv_opyrs_col, death_time_col, death_col,
     death_levels, origin_year, segment_drop
   )
-  death_plot <- gf_build_followup_plot(
-    death_data, diag_df, alpha,
-    diagonal_color, diagonal_linetype, diagonal_linewidth
+  gf_build_followup_plot(death_data, diag_df, alpha,
+                         diagonal_color, diagonal_linetype, diagonal_linewidth)
+}
+
+#' Goodness of Follow-Up — Event Panel
+#'
+#' Produces the event follow-up panel: each patient is plotted at their
+#' operation date (x) and follow-up time (y), with a three-level `state`
+#' factor driving colour and shape: event-free, non-fatal event, or death.
+#' Compose with `scale_color_manual()`, `scale_shape_manual()`, `labs()`,
+#' and [hvti_theme()].
+#'
+#' @param data               Data frame. See [sample_goodness_followup_data()].
+#' @param event_col          Name of the non-fatal event indicator column
+#'   (required, no default).
+#' @param event_time_col     Name of the time-to-event column (required, no
+#'   default).
+#' @param death_for_event_col Name of the death column to use for the event
+#'   panel, or `NULL` to use the default `death_col`. Default `NULL`.
+#' @param event_levels       Character vector of exactly three labels:
+#'   event-free, non-fatal event, death. Default
+#'   `c("No event", "Non-fatal event", "Death")`.
+#' @inheritParams goodness_followup
+#'
+#' @return A [ggplot2::ggplot()] object (event panel).
+#'
+#' @seealso [goodness_followup()], [sample_goodness_followup_data()]
+#'
+#' @examples
+#' dta <- sample_goodness_followup_data()
+#'
+#' goodness_event_plot(
+#'   dta,
+#'   event_col      = "ev_event",
+#'   event_time_col = "iv_event"
+#' ) +
+#'   ggplot2::scale_color_manual(
+#'     values = c("No event" = "blue", "Non-fatal event" = "green3",
+#'                "Death" = "red"),
+#'     name = NULL
+#'   ) +
+#'   ggplot2::scale_shape_manual(values = c(1, 2, 4), name = NULL) +
+#'   ggplot2::labs(x = "Operation Date", y = "Follow-up (years)") +
+#'   hvti_theme("manuscript")
+#'
+#' @export
+goodness_event_plot <- function(
+  data,
+  event_col,
+  event_time_col,
+  death_for_event_col = NULL,
+  event_levels        = c("No event", "Non-fatal event", "Death"),
+  iv_opyrs_col        = "iv_opyrs",
+  death_col           = "dead",
+  origin_year         = 1990,
+  study_start         = as.Date("1990-01-01"),
+  study_end           = as.Date("2019-12-31"),
+  close_date          = as.Date("2021-08-06"),
+  tolower_names       = TRUE,
+  alpha               = 0.8,
+  segment_drop        = 0.2,
+  diagonal_color      = "orange",
+  diagonal_linetype   = "dashed",
+  diagonal_linewidth  = 0.6
+) {
+  if (length(event_levels) != 3)
+    stop("`event_levels` must contain exactly three labels.", call. = FALSE)
+  if (!is.numeric(alpha) || alpha <= 0 || alpha > 1)
+    stop("`alpha` must be a numeric value in (0, 1].", call. = FALSE)
+  if (!is.numeric(segment_drop) || segment_drop < 0)
+    stop("`segment_drop` must be a non-negative numeric value.", call. = FALSE)
+
+  payload     <- gf_materialize_followup_data(data, tolower_names)
+  study_start <- gf_coerce_date(study_start, "study_start")
+  study_end   <- gf_coerce_date(study_end,   "study_end")
+  close_date  <- gf_coerce_date(close_date,  "close_date")
+
+  eff_death_col <- if (is.null(death_for_event_col)) death_col else death_for_event_col
+  gf_require_columns(payload,
+                     c(iv_opyrs_col, event_time_col, event_col, eff_death_col))
+  diag_df  <- gf_build_diagonal(study_start, study_end, close_date, origin_year)
+  event_df <- gf_prepare_frame(
+    payload, c(iv_opyrs_col, event_time_col, event_col, eff_death_col)
   )
+  if (!nrow(event_df))
+    stop("No rows available to build the event follow-up plot.", call. = FALSE)
 
-  # --- Event panel (optional) -----------------------------------------------
-  event_plot <- NULL
-  event_data <- NULL
-
-  if (!is.null(event_col)) {
-    eff_death_col <-
-      if (is.null(death_for_event_col)) death_col else death_for_event_col
-    gf_require_columns(
-      payload, c(iv_opyrs_col, event_time_col, event_col, eff_death_col)
-    )
-    event_df <- gf_prepare_frame(
-      payload, c(iv_opyrs_col, event_time_col, event_col, eff_death_col)
-    )
-    if (!nrow(event_df))
-      stop("No rows available to build the event follow-up plot.", call. = FALSE)
-
-    event_data <- gf_build_event_frame(
-      event_df, iv_opyrs_col, event_time_col, event_col,
-      eff_death_col, event_levels, origin_year, segment_drop
-    )
-    event_plot <- gf_build_followup_plot(
-      event_data, diag_df, alpha,
-      diagonal_color, diagonal_linetype, diagonal_linewidth
-    )
-  }
-
-  list(
-    death_plot = death_plot,
-    death_data = death_data,
-    event_plot = event_plot,
-    event_data = event_data,
-    diagonal   = diag_df
+  event_data <- gf_build_event_frame(
+    event_df, iv_opyrs_col, event_time_col, event_col,
+    eff_death_col, event_levels, origin_year, segment_drop
   )
+  gf_build_followup_plot(event_data, diag_df, alpha,
+                         diagonal_color, diagonal_linetype, diagonal_linewidth)
 }
 
 # Internal helpers ---------------------------------------------------------
@@ -466,21 +444,28 @@ gf_build_event_frame <- function(df, iv_col, follow_col, event_col,
 gf_build_followup_plot <- function(data, diagonal, alpha,
                                    diagonal_color, diagonal_linetype,
                                    diagonal_linewidth) {
-  ggplot2::ggplot(data, ggplot2::aes(operation_year, follow_up)) +
+  ggplot2::ggplot(
+    data,
+    ggplot2::aes(.data[["operation_year"]], .data[["follow_up"]])
+  ) +
     ggplot2::geom_point(
-      ggplot2::aes(color = state, shape = state), alpha = alpha
+      ggplot2::aes(
+        color = .data[["state"]],
+        shape = .data[["state"]]
+      ),
+      alpha = alpha
     ) +
     ggplot2::geom_segment(
       ggplot2::aes(
-        xend  = operation_year,
-        yend  = segment_end,
-        color = state
+        xend  = .data[["operation_year"]],
+        yend  = .data[["segment_end"]],
+        color = .data[["state"]]
       ),
       alpha = alpha
     ) +
     ggplot2::geom_line(
       data         = diagonal,
-      ggplot2::aes(operation_year, follow_up),
+      ggplot2::aes(.data[["operation_year"]], .data[["follow_up"]]),
       inherit.aes  = FALSE,
       linewidth    = diagonal_linewidth,
       linetype     = diagonal_linetype,

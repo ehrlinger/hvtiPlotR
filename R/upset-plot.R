@@ -34,7 +34,7 @@
 #' head(dta)
 #' colSums(dta)
 #' @export
-sample_upset_data <- function(n = 500, seed = 42) {
+sample_upset_data <- function(n = 500, seed = 42L) {
   set.seed(seed)
 
   # Latent primary procedure drives realistic co-occurrence
@@ -107,7 +107,6 @@ sample_upset_data <- function(n = 500, seed = 42) {
 #'   customisation.
 #'
 #' @seealso [ComplexUpset::upset()], [sample_upset_data()], [hvti_theme()]
-#' @aliases upset complexupset
 #'
 #' @examples
 #' sets <- c("AV_Replacement", "AV_Repair", "MV_Replacement", "MV_Repair",
@@ -207,21 +206,13 @@ upset_plot <- function(data,
                        set_size_position    = "right",
                        ...) {
 
-  assertthat::assert_that(
-    is.data.frame(data),
-    msg = "`data` must be a data frame."
-  )
-  assertthat::assert_that(
-    is.character(intersect) && length(intersect) >= 2L,
-    msg = "`intersect` must be a character vector of at least 2 column names."
-  )
-  assertthat::assert_that(
-    all(intersect %in% names(data)),
-    msg = paste(
-      "These `intersect` names are not columns in `data`:",
-      paste(setdiff(intersect, names(data)), collapse = ", ")
-    )
-  )
+  if (!is.data.frame(data))
+    stop("`data` must be a data frame.")
+  if (!(is.character(intersect) && length(intersect) >= 2L))
+    stop("`intersect` must be a character vector of at least 2 column names.")
+  if (!(all(intersect %in% names(data))))
+    stop(paste("These `intersect` names are not columns in `data`:",
+               paste(setdiff(intersect, names(data)), collapse = ", ")))
 
   ComplexUpset::upset(
     data                 = data,

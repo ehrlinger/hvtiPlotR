@@ -34,12 +34,8 @@ in ascending order. Corresponds to the SAS grade levels (e.g.
 \item{seed}{Random seed. Default \code{42}.}
 }
 \value{
-A named list:
-\itemize{
-\item \verb{$curve} — long-format data frame: \code{time}, \code{estimate}, \code{grade} (factor).
+A long-format data frame: \code{time}, \code{estimate}, \code{grade} (factor).
 Individual grade probabilities sum to 1 at each time point.
-\item \verb{$data_points} — binned data summary: \code{time}, \code{value}, \code{grade}.
-}
 }
 \description{
 Simulates pre-computed grade-specific probability curves matching what SAS
@@ -58,11 +54,12 @@ and reshape to long format to use your own model output.
 }
 \examples{
 dat <- sample_nonparametric_ordinal_data(n = 800, time_max = 5)
-head(dat$curve)
+head(dat)
 # verify probabilities sum to 1 at each time point
-tapply(dat$curve$estimate[dat$curve$time == dat$curve$time[1]],
-       dat$curve$grade[dat$curve$time == dat$curve$time[1]], sum)
+tapply(dat$estimate[dat$time == dat$time[1]],
+       dat$grade[dat$time == dat$time[1]], sum)
 }
 \seealso{
-\code{\link[=nonparametric_ordinal_plot]{nonparametric_ordinal_plot()}}, \code{\link[=sample_nonparametric_curve_data]{sample_nonparametric_curve_data()}}
+\code{\link[=nonparametric_ordinal_plot]{nonparametric_ordinal_plot()}}, \code{\link[=sample_nonparametric_curve_data]{sample_nonparametric_curve_data()}},
+\code{\link[=sample_nonparametric_ordinal_points]{sample_nonparametric_ordinal_points()}}
 }

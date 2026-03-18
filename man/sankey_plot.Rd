@@ -2,7 +2,6 @@
 % Please edit documentation in R/sankey-plot.R
 \name{sankey_plot}
 \alias{sankey_plot}
-\alias{alluvial}
 \title{Sankey / Alluvial Plot}
 \usage{
 sankey_plot(

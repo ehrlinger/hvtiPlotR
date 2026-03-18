@@ -106,7 +106,6 @@ sample_trends_data <- function(n          = 600,
 #' @return A [ggplot2::ggplot()] object.
 #'
 #' @seealso [sample_trends_data()], [hvti_theme()]
-#' @aliases trend
 #'
 #' @examples
 #' dta <- sample_trends_data(n = 600, seed = 42)
@@ -166,7 +165,7 @@ sample_trends_data <- function(n          = 600,
 #' }
 #'
 #' @importFrom ggplot2 ggplot aes geom_smooth geom_point
-#' @importFrom rlang sym .data
+#' @importFrom rlang .data
 #' @importFrom stats median
 #' @export
 trends_plot <- function(data,
@@ -184,31 +183,21 @@ trends_plot <- function(data,
   summary_fn <- match.arg(summary_fn)
 
   # --- Validation -----------------------------------------------------------
-  assertthat::assert_that(
-    is.data.frame(data),
-    msg = "`data` must be a data frame."
-  )
+  if (!is.data.frame(data))
+    stop("`data` must be a data frame.")
   for (col in c(x_col, y_col)) {
-    assertthat::assert_that(
-      col %in% names(data),
-      msg = paste0("Column '", col, "' not found in `data`.")
-    )
+    if (!(col %in% names(data)))
+      stop(paste0("Column '", col, "' not found in `data`."))
   }
   if (!is.null(group_col)) {
-    assertthat::assert_that(
-      group_col %in% names(data),
-      msg = paste0("`group_col` '", group_col, "' not found in `data`.")
-    )
+    if (!(group_col %in% names(data)))
+      stop(paste0("`group_col` '", group_col, "' not found in `data`."))
   }
-
-  x_sym <- rlang::sym(x_col)
-  y_sym <- rlang::sym(y_col)
 
   # --- Annual summary -------------------------------------------------------
   sfn <- if (summary_fn == "mean") base::mean else stats::median
 
   if (!is.null(group_col)) {
-    grp_sym  <- rlang::sym(group_col)
     ann_data <- do.call(
       rbind,
       lapply(split(data, data[[group_col]]), function(sub) {
@@ -236,33 +225,11 @@ trends_plot <- function(data,
 
   # --- Build plot -----------------------------------------------------------
   if (!is.null(group_col)) {
-    grp_sym <- rlang::sym(group_col)
-
     p <- ggplot2::ggplot(data,
-           ggplot2::aes(x = !!x_sym, y = !!y_sym,
-                        colour = !!grp_sym, group = !!grp_sym)) +
-      ggplot2::geom_smooth(
-        method  = smoother,
-        formula = y ~ x,
-        span    = span,
-        se      = se,
-        alpha   = alpha,
-        linewidth = 1
-      ) +
-      ggplot2::geom_point(
-        data    = ann_data,
-        mapping = ggplot2::aes(
-          x     = !!x_sym,
-          y     = !!y_sym,
-          colour = !!grp_sym,
-          shape  = !!grp_sym
-        ),
-        size    = point_size,
-        inherit.aes = FALSE
-      )
-  } else {
-    p <- ggplot2::ggplot(data,
-           ggplot2::aes(x = !!x_sym, y = !!y_sym)) +
+           ggplot2::aes(x      = .data[[x_col]],
+                        y      = .data[[y_col]],
+                        colour = .data[[group_col]],
+                        group  = .data[[group_col]])) +
       ggplot2::geom_smooth(
         method    = smoother,
         formula   = y ~ x,
@@ -273,9 +240,31 @@ trends_plot <- function(data,
       ) +
       ggplot2::geom_point(
         data    = ann_data,
-        mapping = ggplot2::aes(x = !!x_sym, y = !!y_sym),
-        size    = point_size,
-        shape   = point_shape,
+        mapping = ggplot2::aes(
+          x      = .data[[x_col]],
+          y      = .data[[y_col]],
+          colour = .data[[group_col]],
+          shape  = .data[[group_col]]
+        ),
+        size        = point_size,
+        inherit.aes = FALSE
+      )
+  } else {
+    p <- ggplot2::ggplot(data,
+           ggplot2::aes(x = .data[[x_col]], y = .data[[y_col]])) +
+      ggplot2::geom_smooth(
+        method    = smoother,
+        formula   = y ~ x,
+        span      = span,
+        se        = se,
+        alpha     = alpha,
+        linewidth = 1
+      ) +
+      ggplot2::geom_point(
+        data        = ann_data,
+        mapping     = ggplot2::aes(x = .data[[x_col]], y = .data[[y_col]]),
+        size        = point_size,
+        shape       = point_shape,
         inherit.aes = FALSE
       )
   }
