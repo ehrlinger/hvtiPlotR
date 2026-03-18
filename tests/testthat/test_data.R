@@ -50,9 +50,8 @@ test_that("nonparametric has expected columns based on documentation", {
                      "stlstrk1", "stustrk1")
 
   # At least some of these columns should exist
-  # (using any() in case the actual data differs from docs)
   col_exists <- any(expected_cols %in% names(nonparametric))
-  expect_true(ncol(nonparametric) > 0)  # At minimum, has columns
+  expect_true(col_exists)
 })
 
 test_that("nonparametric contains reasonable survival data", {
@@ -104,10 +103,12 @@ test_that("parametric has no completely missing columns", {
   expect_false(any(all_na))
 })
 
-test_that("nonparametric has no completely missing columns", {
+test_that("nonparametric has some completely missing columns (sparse data)", {
   data(nonparametric, package = "hvtiPlotR", envir = environment())
 
-  # No column should be entirely NA
+  # The nonparametric dataset is sparse: competing-event columns that are
+  # mutually exclusive will be all-NA in most strata. Verify at least one
+  # such column exists so the data structure is as expected.
   all_na <- sapply(nonparametric, function(x) all(is.na(x)))
   expect_true(any(all_na))
 })

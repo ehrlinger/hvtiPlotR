@@ -2,6 +2,7 @@
 % Please edit documentation in R/kaplan-meier.R
 \name{survival_curve}
 \alias{survival_curve}
+\alias{ac.dead}
 \title{Kaplan-Meier Survival Curve}
 \usage{
 survival_curve(

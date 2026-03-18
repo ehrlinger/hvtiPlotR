@@ -6,20 +6,21 @@
 \usage{
 hvti_plot(
   type = c("mirror_histogram", "stacked_histogram", "covariate_balance",
-    "goodness_followup", "survival_curve"),
+    "goodness_followup", "survival_curve", "upset", "sankey", "trends", "spaghetti",
+    "longitudinal_counts", "nonparametric_curve", "nonparametric_ordinal"),
   ...
 )
 }
 \arguments{
-\item{type}{Character keyword identifying the plot type. Supported values
-are \code{"mirror_histogram"}, \code{"stacked_histogram"}, \code{"covariate_balance"},
-\code{"goodness_followup"}, and \code{"survival_curve"}.}
+\item{type}{Character keyword identifying the plot type. Supported values:
+\code{"mirror_histogram"}, \code{"stacked_histogram"}, \code{"covariate_balance"},
+\code{"goodness_followup"}, \code{"survival_curve"}, \code{"upset"},
+\code{"nonparametric_curve"}, \code{"nonparametric_ordinal"}.}
 
 \item{...}{Additional arguments passed to the underlying plotting function.}
 }
 \value{
-The object produced by the requested plotting function (e.g., a list
-containing plot elements and diagnostics, or a ggplot object).
+The object produced by the requested plotting function.
 }
 \description{
 Provides a single entry point for generating hvtiPlotR plots.

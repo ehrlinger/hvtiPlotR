@@ -566,6 +566,7 @@ km_build_life_plot <- function(km_df, alpha) {
 #' # ggplot2::ggsave("survival_curve.pdf", result$survival_plot,
 #' #                 width = 8, height = 6)
 #'
+#' @aliases ac.dead
 #' @importFrom survival Surv survfit
 #' @importFrom rlang .data
 #' @importFrom ggplot2 ggplot aes geom_step geom_ribbon geom_hline scale_y_continuous geom_point

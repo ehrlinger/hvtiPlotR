@@ -164,10 +164,11 @@ cb_build_plot <- function(data, std_diff_col, group_col, var_levels,
 #'
 #' dta <- sample_covariate_balance_data()
 #'
-#' # Bare plot
-#' covariate_balance(dta, alpha = 0.8)
+#' # Bare plot with manuscript theme
+#' covariate_balance(dta, alpha = 0.8) +
+#'   hvtiPlotR::hvti_theme("manuscript")
 #'
-#' # Add colour, shape, and axis scales
+#' # Add colour, shape, axis scales, and manuscript theme
 #' covariate_balance(dta, alpha = 0.8) +
 #'   scale_color_manual(
 #'     values = c("Before match" = "red4", "After match" = "blue3"),
@@ -182,6 +183,7 @@ cb_build_plot <- function(data, std_diff_col, group_col, var_levels,
 #'     x = "Standardized difference: Group A vs Group B (%)",
 #'     y = ""
 #'   ) +
+#'   hvtiPlotR::hvti_theme("manuscript") +
 #'   theme(legend.position = c(0.20, 0.95))
 #'
 #' # Add directional annotations and theme

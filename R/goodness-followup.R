@@ -237,7 +237,8 @@ sample_goodness_followup_data <- function(
 #'     values = c("Alive" = "blue", "Dead" = "red"), name = NULL
 #'   ) +
 #'   ggplot2::scale_shape_manual(values = c(1, 4), name = NULL) +
-#'   ggplot2::labs(x = "Operation Date", y = "Follow-up (years)")
+#'   ggplot2::labs(x = "Operation Date", y = "Follow-up (years)") +
+#'   hvti_theme("manuscript")
 #'
 #' # Death panel + non-fatal event panel
 #' result2 <- goodness_followup(
@@ -254,8 +255,10 @@ sample_goodness_followup_data <- function(
 #'     name   = NULL
 #'   ) +
 #'   ggplot2::scale_shape_manual(values = c(1, 2, 4), name = NULL) +
-#'   ggplot2::labs(x = "Operation Date", y = "Follow-up (years)")
+#'   ggplot2::labs(x = "Operation Date", y = "Follow-up (years)") +
+#'   hvti_theme("manuscript")
 #'
+#' @aliases gfup goodness_of_followup
 #' @export
 goodness_followup <- function(
   data,

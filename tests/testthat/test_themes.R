@@ -17,10 +17,11 @@ create_test_plot <- function() {
 # ==========================================================================
 
 test_that("hvti_theme returns themes for all supported styles", {
-  expect_s3_class(hvti_theme("ppt"), "theme")
-  expect_s3_class(hvti_theme("dark_ppt"), "theme")
+  expect_s3_class(hvti_theme("ppt"),       "theme")
+  expect_s3_class(hvti_theme("dark_ppt"),  "theme")
+  expect_s3_class(hvti_theme("light_ppt"), "theme")
   expect_s3_class(hvti_theme("manuscript"), "theme")
-  expect_s3_class(hvti_theme("poster"), "theme")
+  expect_s3_class(hvti_theme("poster"),    "theme")
 })
 
 test_that("hvti_theme forwards arguments to style-specific functions", {

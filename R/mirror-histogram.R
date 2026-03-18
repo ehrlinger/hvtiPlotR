@@ -387,32 +387,34 @@ mirror_histogram_diagnostics <- function(working, matched_idx, group_levels,
 #' # separation = 1.5 leaves many high/low-score patients unmatched at tails
 #' mirror_dta <- sample_mirror_histogram_data(n = 500, separation = 1.5)
 #' mhist <- mirror_histogram(mirror_dta, alpha = 0.8)
-#' mhist$plot
 #' mhist$diagnostics$smd_before
 #' mhist$diagnostics$smd_matched
 #'
-#' # Customise fill colours
+#' # Customise fill colours and apply manuscript theme
 #' mhist$plot +
 #'   ggplot2::scale_fill_manual(
 #'     values = c(before_g0 = "white",  matched_g0 = "steelblue",
 #'                before_g1 = "white",  matched_g1 = "firebrick"),
 #'     guide = "none"
-#'   )
+#'   ) +
+#'   ggplot2::labs(x = "Propensity Score", y = "Count") +
+#'   hvti_theme("manuscript")
 #'
 #' # --- Weighted IPTW mode --------------------------------------------------
 #' wt_dta <- sample_mirror_histogram_data(n = 500, add_weights = TRUE)
 #' mhist_wt <- mirror_histogram(wt_dta, weight_col = "mt_wt", alpha = 0.8)
-#' mhist_wt$plot
 #' mhist_wt$diagnostics$smd_weighted
 #' mhist_wt$diagnostics$effective_n_by_group
 #'
-#' # Customise fill colours for weighted mode
+#' # Customise fill colours for weighted mode and apply manuscript theme
 #' mhist_wt$plot +
 #'   ggplot2::scale_fill_manual(
 #'     values = c(before_g0 = "white", weighted_g0 = "blue",
 #'                before_g1 = "white", weighted_g1 = "red"),
 #'     guide = "none"
-#'   )
+#'   ) +
+#'   ggplot2::labs(x = "Propensity Score", y = "Weighted Count") +
+#'   hvti_theme("manuscript")
 #'
 #' @importFrom ggplot2 ggplot geom_hline geom_col scale_fill_manual scale_x_continuous scale_y_continuous labs annotate coord_cartesian aes theme_minimal set_theme
 #' @export

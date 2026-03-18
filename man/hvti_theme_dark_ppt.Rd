@@ -3,7 +3,9 @@
 \name{hvti_theme_dark_ppt}
 \alias{hvti_theme_dark_ppt}
 \alias{theme_dark_ppt}
-\title{Dark Theme for PowerPoint Figures}
+\alias{theme_ppt}
+\alias{hvti_theme_ppt}
+\title{Dark PowerPoint Theme (default PPT theme)}
 \usage{
 hvti_theme_dark_ppt(
   base_size = HVTI_THEME_DARK_PPT_BASE_SIZE,
@@ -17,6 +19,28 @@ hvti_theme_dark_ppt(
 )
 
 theme_dark_ppt(
+  base_size = HVTI_THEME_DARK_PPT_BASE_SIZE,
+  base_family = "",
+  header_family = NULL,
+  base_line_size = base_size/22,
+  base_rect_size = base_size/22,
+  ink = "white",
+  paper = "transparent",
+  accent = "#3366FF"
+)
+
+theme_ppt(
+  base_size = HVTI_THEME_DARK_PPT_BASE_SIZE,
+  base_family = "",
+  header_family = NULL,
+  base_line_size = base_size/22,
+  base_rect_size = base_size/22,
+  ink = "white",
+  paper = "transparent",
+  accent = "#3366FF"
+)
+
+hvti_theme_ppt(
   base_size = HVTI_THEME_DARK_PPT_BASE_SIZE,
   base_family = "",
   header_family = NULL,
@@ -52,9 +76,13 @@ Default \code{"#3366FF"}.}
 A \code{\link[ggplot2:theme]{ggplot2::theme()}} object.
 }
 \description{
-A large-font theme with a black panel background and white text, suited to
-dark-mode PowerPoint slides. Removes grid lines and panel borders.
+A large-font theme with a \strong{black panel background and white text}, suited
+to dark-mode PowerPoint slides. This is the default hvtiPlotR PPT theme —
+\code{hvti_theme_ppt()} and \code{theme_ppt()} are aliases for this function.
+For a light-background variant use \code{\link[=hvti_theme_light_ppt]{hvti_theme_light_ppt()}}.
+Removes grid lines and panel borders.
 }
 \seealso{
-\code{\link[=hvti_theme]{hvti_theme()}}, \code{\link[=theme_man]{theme_man()}}, \code{\link[=theme_ppt]{theme_ppt()}}, \code{\link[=theme_poster]{theme_poster()}}
+\code{\link[=hvti_theme]{hvti_theme()}}, \code{\link[=hvti_theme_light_ppt]{hvti_theme_light_ppt()}}, \code{\link[=theme_man]{theme_man()}},
+\code{\link[=theme_poster]{theme_poster()}}
 }

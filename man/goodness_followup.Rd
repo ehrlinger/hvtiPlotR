@@ -2,6 +2,8 @@
 % Please edit documentation in R/goodness-followup.R
 \name{goodness_followup}
 \alias{goodness_followup}
+\alias{gfup}
+\alias{goodness_of_followup}
 \title{Build goodness-of-follow-up plots}
 \usage{
 goodness_followup(
@@ -128,7 +130,8 @@ result$death_plot +
     values = c("Alive" = "blue", "Dead" = "red"), name = NULL
   ) +
   ggplot2::scale_shape_manual(values = c(1, 4), name = NULL) +
-  ggplot2::labs(x = "Operation Date", y = "Follow-up (years)")
+  ggplot2::labs(x = "Operation Date", y = "Follow-up (years)") +
+  hvti_theme("manuscript")
 
 # Death panel + non-fatal event panel
 result2 <- goodness_followup(
@@ -145,6 +148,7 @@ result2$event_plot +
     name   = NULL
   ) +
   ggplot2::scale_shape_manual(values = c(1, 2, 4), name = NULL) +
-  ggplot2::labs(x = "Operation Date", y = "Follow-up (years)")
+  ggplot2::labs(x = "Operation Date", y = "Follow-up (years)") +
+  hvti_theme("manuscript")
 
 }
