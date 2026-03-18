@@ -50,7 +50,9 @@ sample_longitudinal_counts_data <- function(n_patients = 300,
   )
 
   # Discrete follow-up windows matching the template time points
-  breaks <- c(-Inf, 0, 1/12, 3/12, 6/12, 1, 2, Inf)
+  # Start at time 0 so the first bin ("≥0 Days") is populated, and add a
+  # break at 2.5 years so the "≥2.5 Years" label corresponds to a real window.
+  breaks <- c(0, 1/12, 3/12, 6/12, 1, 2, 2.5, Inf)
   labels <- c("\u22650 Days", "\u22651 Month", "\u22653 Months",
                "\u22656 Months", "\u22651 Year", "\u22652 Years",
                "\u22652.5 Years")
