@@ -775,3 +775,76 @@ sample_survival_data <- function(n             = 500,
 }
 
 utils::globalVariables(c("hazard"))
+
+# ---------------------------------------------------------------------------
+# Convenience aliases
+# ---------------------------------------------------------------------------
+
+#' Kaplan-Meier Survival Curve (alias)
+#'
+#' Calls [survival_curve()] with `method = "kaplan-meier"`. See that function
+#' for the full parameter list and return value.
+#'
+#' @inheritParams survival_curve
+#' @return See [survival_curve()].
+#' @seealso [survival_curve()], [hvtiPlotR::nelsont()]
+#' @export
+kaplan_meier <- function(data,
+                         time_col     = "iv_dead",
+                         event_col    = "dead",
+                         strata_col   = NULL,
+                         conf_int     = TRUE,
+                         conf_level   = 0.6827,
+                         report_times = c(1, 5, 10, 15, 20, 25),
+                         alpha        = 0.8) {
+  survival_curve(
+    data         = data,
+    time_col     = time_col,
+    event_col    = event_col,
+    strata_col   = strata_col,
+    conf_int     = conf_int,
+    conf_level   = conf_level,
+    report_times = report_times,
+    alpha        = alpha,
+    method       = "kaplan-meier"
+  )
+}
+
+#' @export
+#' @rdname kaplan_meier
+km <- kaplan_meier
+
+#' @export
+#' @rdname kaplan_meier
+kaplan <- kaplan_meier
+
+#' Nelson-Aalen Survival Curve (alias)
+#'
+#' Calls [survival_curve()] with `method = "nelson-aalen"`. Equivalent to the
+#' SAS `%nelsont` macro. See [survival_curve()] for the full parameter list
+#' and return value.
+#'
+#' @inheritParams survival_curve
+#' @return See [survival_curve()].
+#' @seealso [survival_curve()], [hvtiPlotR::kaplan_meier()]
+#' @export
+nelsont <- function(data,
+                    time_col     = "iv_dead",
+                    event_col    = "dead",
+                    strata_col   = NULL,
+                    conf_int     = TRUE,
+                    conf_level   = 0.6827,
+                    report_times = c(1, 5, 10, 15, 20, 25),
+                    alpha        = 0.8) {
+  survival_curve(
+    data         = data,
+    time_col     = time_col,
+    event_col    = event_col,
+    strata_col   = strata_col,
+    conf_int     = conf_int,
+    conf_level   = conf_level,
+    report_times = report_times,
+    alpha        = alpha,
+    method       = "nelson-aalen"
+  )
+}
