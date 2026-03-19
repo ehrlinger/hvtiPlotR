@@ -29,6 +29,12 @@ navbar:
       aria-label: LinkedIn
 
 reference:
+- title: "Package Overview"
+  desc: >
+    Package-level documentation and overview.
+  contents:
+  - hvtiPlotR-package
+
 - title: "Themes"
   desc: >
     Apply publication-quality themes to any ggplot2 object. Use
@@ -65,6 +71,8 @@ reference:
   - sample_life_table
   - sample_survival_difference_data
   - sample_nnt_data
+  - nonparametric
+  - parametric
 
 - title: "Nonparametric Temporal Curves"
   desc: >
