@@ -38,6 +38,35 @@ scales, axis labels, or theme applied. The caller composes those with the usual
 + operator. See the companion vignette "Decorating and Saving hvtiPlotR Plots"
 for full coverage of scale_, labs(), annotate(), themes, and ggsave() patterns.
 
+# Template Reference Map
+
+The table below maps each hvtiPlotR function to the original SAS and R
+templates it ports. Functions marked with — have no direct predecessor and were
+designed specifically for this package.
+
+| hvtiPlotR Function | SAS Template(s) | R Template(s) |
+|---|---|---|
+| `mirror_histogram()` | — | — |
+| `stacked_histogram()` | — | — |
+| `covariate_balance()` | — | — |
+| `goodness_followup()` | `tp.dp.goodness_followup.*` | — |
+| `goodness_event_plot()` | `tp.dp.goodness_event.*` | — |
+| `survival_curve()` | `tp.hp.dead.sas` (basic) | `tp.hp.dead.number_risk.R` |
+| `hazard_plot()` | `tp.hp.dead.*`, `tp.hp.event.weighted.sas`, `tp.hp.repeated*.sas`, `tp.hp.numtreat.survdiff.matched.sas` | `tp.hp.dead.number_risk.R` |
+| `survival_difference_plot()` | `tp.hp.dead.life-gained.sas`, `tp.hp.numtreat.survdiff.matched.sas` | — |
+| `nnt_plot()` | `tp.hp.numtreat.survdiff.matched.sas` | — |
+| `nonparametric_curve_plot()` | `tp.np.*.avrg_curv.*`, `tp.np.*.u.trend.*`, `tp.np.*.double.*`, `tp.np.*.mult.*`, `tp.np.*.phases.*`, `tp.np.z0axdpo.*` | — |
+| `nonparametric_ordinal_plot()` | `tp.np.*.ordinal.*` | — |
+| `eda_plot()` | — | — |
+| `spaghetti_plot()` | — | — |
+| `trends_plot()` | — | — |
+| `longitudinal_counts_plot()` | `tp.dp.longitudinal_patients_measures.*` | — |
+| `longitudinal_counts_table()` | `tp.dp.longitudinal_patients_measures.*` | — |
+| `alluvial_plot()` | — | — |
+| `upset_plot()` | — | — |
+
+: {tbl-colwidths="[28,44,28]"}
+
 # Mirrored Propensity Score Histogram
 
 A common figure in propensity-matched analyses is the mirrored histogram, which displays the propensity score distributions for two treatment groups before and after matching. The **hvtiPlotR** package provides the `mirror_histogram()` function to generate this figure.

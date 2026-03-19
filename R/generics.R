@@ -68,8 +68,8 @@ hvti_plot <- function(type = c("mirror_histogram", "stacked_histogram",
                                "covariate_balance", "goodness_followup",
                                "survival_curve", "upset", "alluvial",
                                "trends", "spaghetti", "longitudinal_counts",
-                               "nonparametric_curve",
-                               "nonparametric_ordinal"), ...) {
+                               "nonparametric_curve", "nonparametric_ordinal",
+                               "hazard", "survival_difference", "nnt"), ...) {
   type <- match.arg(type)
   class(type) <- c(paste0("hvti_plot_", type), class(type))
   UseMethod("hvti_plot", type)
@@ -138,4 +138,19 @@ hvti_plot.hvti_plot_nonparametric_curve <- function(type, ...) {
 #' @export
 hvti_plot.hvti_plot_nonparametric_ordinal <- function(type, ...) {
   nonparametric_ordinal_plot(...)
+}
+
+#' @export
+hvti_plot.hvti_plot_hazard <- function(type, ...) {
+  hazard_plot(...)
+}
+
+#' @export
+hvti_plot.hvti_plot_survival_difference <- function(type, ...) {
+  survival_difference_plot(...)
+}
+
+#' @export
+hvti_plot.hvti_plot_nnt <- function(type, ...) {
+  nnt_plot(...)
 }
