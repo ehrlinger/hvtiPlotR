@@ -4,16 +4,28 @@
 \alias{hvti_theme}
 \title{hvtiPlotR Theme Generic}
 \usage{
-hvti_theme(style = c("ppt", "dark_ppt", "manuscript", "poster"), ...)
+hvti_theme(
+  style = c("ppt", "dark_ppt", "light_ppt", "manuscript", "poster"),
+  ...
+)
 }
 \arguments{
-\item{style}{Character keyword identifying the theme style. Supported values are
-"ppt", "dark_ppt", "manuscript", and "poster".}
+\item{style}{Character keyword identifying the theme style. Supported values:
+\itemize{
+\item \code{"ppt"} / \code{"dark_ppt"} — dark background, white text
+(\code{\link[=hvti_theme_dark_ppt]{hvti_theme_dark_ppt()}}); default PPT theme
+\item \code{"light_ppt"} — light/transparent background, black text
+(\code{\link[=hvti_theme_light_ppt]{hvti_theme_light_ppt()}})
+\item \code{"manuscript"} — clean white background for journal figures
+(\code{\link[=hvti_theme_manuscript]{hvti_theme_manuscript()}})
+\item \code{"poster"} — medium font for conference posters (\code{\link[=hvti_theme_poster]{hvti_theme_poster()}})
+}}
 
-\item{...}{Additional parameters forwarded to the underlying theme constructor.}
+\item{...}{Additional parameters forwarded to the underlying theme
+constructor.}
 }
 \value{
-A ggplot2 theme object.
+A \code{\link[ggplot2:theme]{ggplot2::theme()}} object.
 }
 \description{
 Provides a single entry point for obtaining any supported hvtiPlotR theme.

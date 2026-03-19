@@ -8,7 +8,7 @@ sample_stacked_histogram_data(
   n_years = 20,
   start_year = 2000,
   n_categories = 3,
-  seed = 42
+  seed = 42L
 )
 }
 \arguments{

@@ -15,10 +15,6 @@ goodness_followup(
   close_date = as.Date("2021-08-06"),
   tolower_names = TRUE,
   death_levels = c("Alive", "Dead"),
-  event_col = NULL,
-  event_time_col = NULL,
-  death_for_event_col = NULL,
-  event_levels = c("No event", "Non-fatal event", "Death"),
   alpha = 0.8,
   segment_drop = 0.2,
   diagonal_color = "orange",
@@ -51,22 +47,6 @@ prior to processing.}
 \item{death_levels}{Length-2 character vector naming the "alive" and "dead"
 states for the death panel. Default \code{c("Alive", "Dead")}.}
 
-\item{event_col}{Column name for the non-fatal event indicator (logical or
-0/1). When \code{NULL} (default) the event panel is skipped.}
-
-\item{event_time_col}{Column containing follow-up time to the non-fatal
-event or censoring, expressed in years. Required when \code{event_col} is
-supplied.}
-
-\item{death_for_event_col}{Death indicator column used to classify deaths
-within the event panel. Defaults to \code{death_col} when \code{NULL}. Supplying a
-separate column (e.g. \code{"deads"} for systematic/active follow-up) allows
-the two panels to use different death ascertainment strategies.}
-
-\item{event_levels}{Length-3 character vector naming the three outcome
-states in the event panel: no event / non-fatal event / death before
-event. Default \code{c("No event", "Non-fatal event", "Death")}.}
-
 \item{alpha}{Transparency passed to the point and segment layers.}
 
 \item{segment_drop}{Amount (in years) subtracted from each follow-up value
@@ -81,70 +61,31 @@ Default \code{"orange"}.}
 \item{diagonal_linewidth}{Line width of the reference line. Default \code{0.6}.}
 }
 \value{
-A list containing:
-\itemize{
-\item \code{death_plot}: ggplot object — death follow-up panel.
-\item \code{death_data}: transformed data frame used in \code{death_plot}.
-\item \code{event_plot}: ggplot object — non-fatal event panel, or \code{NULL} when
-\code{event_col} is not supplied.
-\item \code{event_data}: transformed data frame used in \code{event_plot}, or \code{NULL}.
-\item \code{diagonal}: reference line data frame shared by both panels.
-}
+A \code{\link[ggplot2:ggplot]{ggplot2::ggplot()}} object (death panel). Compose with
+\code{scale_color_manual()}, \code{scale_shape_manual()}, \code{labs()}, and
+\code{\link[=hvti_theme]{hvti_theme()}}. For the event panel use \code{\link[=goodness_event_plot]{goodness_event_plot()}}.
 }
 \description{
 Converts raw follow-up extracts (either in-memory data frames or SAS
 transport files) into tidy frames, then draws the classic HVI goodness of
-follow-up visualizations. The function always produces a death panel
-(\code{death_plot}). When \code{event_col} is supplied it additionally produces a
-non-fatal event panel (\code{event_plot}) that encodes a three-level outcome
-state: no event / non-fatal event / death before event.
+follow-up death panel. For the non-fatal event panel use
+\code{\link[=goodness_event_plot]{goodness_event_plot()}}.
 }
 \details{
 The function focuses on preparing the data, mapping states to aesthetics,
 and drawing the scaffolding geoms; callers are expected to finish the styling
 via standard \code{ggplot2} modifiers (\verb{scale_*()}, \code{labs()}, \verb{theme_*()}),
 keeping the plotting workflow flexible.
-
-\strong{Death panel} — each patient is plotted at their operation date (x) and
-follow-up time (y). A binary \code{state} factor (alive / dead) drives colour
-and shape.
-
-\strong{Event panel} — same scaffold, but \code{state} is a three-level factor:
-\enumerate{
-\item \code{event_levels[1]} — alive and event-free at censoring.
-\item \code{event_levels[2]} — non-fatal event occurred first.
-\item \code{event_levels[3]} — died before the non-fatal event.
-}
-The coding mirrors the \code{ev_evnt} variable constructed in the legacy
-\code{tp.dp.gfup.R} template.
 }
 \examples{
 dta <- sample_goodness_followup_data()
 
-# Death panel only
-result <- goodness_followup(dta, alpha = 0.8)
-result$death_plot +
+goodness_followup(dta) +
   ggplot2::scale_color_manual(
     values = c("Alive" = "blue", "Dead" = "red"), name = NULL
   ) +
   ggplot2::scale_shape_manual(values = c(1, 4), name = NULL) +
-  ggplot2::labs(x = "Operation Date", y = "Follow-up (years)")
-
-# Death panel + non-fatal event panel
-result2 <- goodness_followup(
-  dta,
-  event_col           = "ev_event",
-  event_time_col      = "iv_event",
-  death_for_event_col = "deads",
-  event_levels        = c("No event", "Relapse", "Death"),
-  alpha               = 0.8
-)
-result2$event_plot +
-  ggplot2::scale_color_manual(
-    values = c("No event" = "blue", "Relapse" = "green3", "Death" = "red"),
-    name   = NULL
-  ) +
-  ggplot2::scale_shape_manual(values = c(1, 2, 4), name = NULL) +
-  ggplot2::labs(x = "Operation Date", y = "Follow-up (years)")
+  ggplot2::labs(x = "Operation Date", y = "Follow-up (years)") +
+  hvti_theme("manuscript")
 
 }

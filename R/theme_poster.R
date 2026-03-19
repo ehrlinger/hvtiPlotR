@@ -5,7 +5,7 @@
 #' Removes grid lines.
 #'
 #' @param base_size      Base font size in points.
-#'   Default `r HVTI_THEME_POSTER_BASE_SIZE` (16).
+#'   Default `16`.
 #' @param base_family    Base font family. Default `""` (device default).
 #' @param header_family  Font family for headers, or `NULL` to inherit
 #'   `base_family`. Default `NULL`.
@@ -24,7 +24,7 @@
 #' @import ggplot2
 #' @export
 #' @aliases theme_poster
-hvti_theme_poster <- function(base_size      = HVTI_THEME_POSTER_BASE_SIZE,
+hvti_theme_poster <- function(base_size      = 16,
                                base_family    = "",
                                header_family  = NULL,
                                base_line_size = base_size / 22,
@@ -49,7 +49,7 @@ hvti_theme_poster <- function(base_size      = HVTI_THEME_POSTER_BASE_SIZE,
         linewidth = 2
       ),
       axis.text        = element_text(
-        size  = HVTI_THEME_POSTER_AXIS_TEXT_SIZE,
+        size  = base_size,
         color = "black"
       ),
       axis.line        = element_line(color = "black", linewidth = 1),

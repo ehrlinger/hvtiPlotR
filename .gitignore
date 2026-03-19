@@ -22,6 +22,7 @@ inst/doc
 docs
 hvtiPlotR.Rproj
 
+.claude
 .Rcheck*
 .Rbuildignore
 .Rproj.user

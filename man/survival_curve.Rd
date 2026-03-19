@@ -185,3 +185,8 @@ result$report_table
 #                 width = 8, height = 6)
 
 }
+\references{
+SAS template: \code{tp.ac.dead.sas} (calls \code{\%kaplan} for
+product-limit survival estimates and \code{\%nelsont} for Nelson-Aalen
+cumulative event estimates).
+}

@@ -164,10 +164,11 @@ cb_build_plot <- function(data, std_diff_col, group_col, var_levels,
 #'
 #' dta <- sample_covariate_balance_data()
 #'
-#' # Bare plot
-#' covariate_balance(dta, alpha = 0.8)
+#' # Bare plot with manuscript theme
+#' covariate_balance(dta, alpha = 0.8) +
+#'   hvtiPlotR::hvti_theme("manuscript")
 #'
-#' # Add colour, shape, and axis scales
+#' # Add colour, shape, axis scales, and manuscript theme
 #' covariate_balance(dta, alpha = 0.8) +
 #'   scale_color_manual(
 #'     values = c("Before match" = "red4", "After match" = "blue3"),
@@ -182,6 +183,7 @@ cb_build_plot <- function(data, std_diff_col, group_col, var_levels,
 #'     x = "Standardized difference: Group A vs Group B (%)",
 #'     y = ""
 #'   ) +
+#'   hvtiPlotR::hvti_theme("manuscript") +
 #'   theme(legend.position = c(0.20, 0.95))
 #'
 #' # Add directional annotations and theme
@@ -219,10 +221,9 @@ covariate_balance <- function(
 ) {
   cb_validate_input(data, variable_col, group_col, std_diff_col)
   cb_validate_params(threshold, point_size, hline_linewidth, vline_linewidth)
-  assertthat::assert_that(
-    assertthat::is.number(alpha) && alpha > 0 && alpha <= 1,
-    msg = "`alpha` must be a number in (0, 1]."
-  )
+  if (!is.numeric(alpha) || length(alpha) != 1L ||
+      !(alpha > 0 && alpha <= 1))
+    stop("`alpha` must be a number in (0, 1].")
 
   # Work on a local copy to avoid mutating inputs (e.g., data.table) by reference
   working <- as.data.frame(data)
@@ -304,11 +305,12 @@ sample_covariate_balance_data <- function(
   separation   = 1.5,
   caliper      = 0.05,
   group_levels = c("Before match", "After match"),
-  seed         = 42
+  seed         = 42L
 ) {
-  if (!assertthat::is.count(n_vars) || n_vars < 1L)
+  if (!is.numeric(n_vars) || length(n_vars) != 1L || n_vars < 1L ||
+      n_vars %% 1 != 0)
     stop("`n_vars` must be a positive integer scalar.", call. = FALSE)
-  if (!assertthat::is.count(n) || n < 2L)
+  if (!is.numeric(n) || length(n) != 1L || n < 2L || n %% 1 != 0)
     stop("`n` must be a positive integer >= 2.", call. = FALSE)
   if (!is.numeric(separation) || length(separation) != 1L || separation <= 0)
     stop("`separation` must be a positive number.", call. = FALSE)
