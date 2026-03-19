@@ -34,7 +34,7 @@ colours. If \code{NULL} (default), colours are drawn from
 Truncated or extended automatically to the number of unique nodes.}
 
 \item{alpha}{Transparency applied to flow bands and node labels.
-Default \code{0.5}.}
+Default \code{0.8}.}
 
 \item{label_size}{Font size for node labels in points. Default \code{8}.}
 

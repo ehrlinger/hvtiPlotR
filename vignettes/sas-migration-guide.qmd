@@ -1421,8 +1421,8 @@ As additional SAS templates are ported to R, update this guide:
    the SAS workflow, show the R equivalent with a runnable example, and
    document any column name mapping differences.
 
-3. **Register the new R function** in `R/generics.R` under `hvti_plot()` if
-   it is a new plot type.
+3. **Export the new R function** by adding `@export` to its roxygen block and
+   running `devtools::document()` to regenerate `NAMESPACE`.
 
 4. **Update `DESCRIPTION`** if a new package dependency is required.
 

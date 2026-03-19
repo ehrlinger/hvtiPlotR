@@ -99,7 +99,7 @@ mhist <- mirror_histogram(
   alpha         = 0.8
 )
 
-mhist$plot +
+mhist +
   ggplot2::scale_fill_manual(
     values = c(
       before_g0  = "white",  matched_g0 = "green1",
@@ -124,10 +124,10 @@ The function returns diagnostics with group counts and standardized mean differe
 ```{r}
 #| label: mirror_histogram_diagnostics
 #| caption: Mirrored Histogram Diagnostics
-mhist$diagnostics$smd_before
-mhist$diagnostics$smd_matched
-mhist$diagnostics$group_counts_before
-mhist$diagnostics$group_counts_matched
+attr(mhist, "diagnostics")$smd_before
+attr(mhist, "diagnostics")$smd_matched
+attr(mhist, "diagnostics")$group_counts_before
+attr(mhist, "diagnostics")$group_counts_matched
 ```
 
 ## Weighted IPTW mode (Limited vs. Extended)
@@ -151,7 +151,7 @@ mhist_wt <- mirror_histogram(
   alpha        = 0.8
 )
 
-mhist_wt$plot +
+mhist_wt +
   ggplot2::scale_fill_manual(
     values = c(
       before_g0   = "white", weighted_g0 = "blue",
@@ -173,8 +173,8 @@ Weighted diagnostics include the effective N and weighted SMD:
 
 ```{r}
 #| label: mirror_histogram_weighted_diagnostics
-mhist_wt$diagnostics$smd_weighted
-mhist_wt$diagnostics$effective_n_by_group
+attr(mhist_wt, "diagnostics")$smd_weighted
+attr(mhist_wt, "diagnostics")$effective_n_by_group
 ```
 
 # Stacked Histogram
@@ -448,9 +448,18 @@ combination with columns for the covariate name, the group label, and the
 numeric SMD value. When the source dataset arrives in wide format (one column
 per time-point, as the SAS export does), reshape it first:
 
-```r
+```{r}
+#| label: cov_balance_wide_reshape
+# Simulate a wide-format export (e.g. from SAS or a summary table)
+dta_wide <- data.frame(
+  variable      = c("Age", "Female sex", "Hypertension", "Diabetes", "COPD"),
+  `Before match` = c(22.1, -15.3,  18.7, -9.4,  11.2),
+  `After match`  = c( 3.5,   2.1,  -1.8,  4.0,  -2.3),
+  check.names = FALSE
+)
+
 dta_long <- reshape(
-  dta,
+  dta_wide,
   direction = "long",
   varying   = c("Before match", "After match"),
   v.names   = "std_diff",
@@ -458,6 +467,7 @@ dta_long <- reshape(
   times     = c("Before match", "After match"),
   idvar     = "variable"
 )
+head(dta_long)
 ```
 
 ## Sample data

@@ -163,7 +163,7 @@ sample_cluster_sankey_data <- function(
 #'   `c(2, 6, 8, 4, 3, 5, 7, 1, 9)` matching the original analysis.
 #'   Truncated or extended automatically to the number of unique nodes.
 #' @param alpha         Transparency applied to flow bands and node labels.
-#'   Default `0.5`.
+#'   Default `0.8`.
 #' @param label_size    Font size for node labels in points. Default `8`.
 #' @param label_hjust   Horizontal justification offset for node labels.
 #'   Negative values shift labels to the right of the node centre. Default
@@ -288,7 +288,7 @@ cluster_sankey_plot <- function(data,
       ),
       alpha  = alpha,
       hjust  = label_hjust,
-      size   = label_size / .pt,
+      size   = label_size / ggplot2::.pt,
       colour = "black"
     ) +
     ggsankey::theme_sankey(base_size = 12) +
