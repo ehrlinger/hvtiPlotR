@@ -144,7 +144,7 @@ km$survival_plot +
   hvti_theme("manuscript")
 ```
 
-![](plot-decorators_files/figure-html/scale_colour_manual-1.png)
+    NULL
 
 ### ColorBrewer palettes
 
@@ -212,7 +212,7 @@ km$survival_plot +
   hvti_theme("manuscript")
 ```
 
-![](plot-decorators_files/figure-html/labs_example-1.png)
+    NULL
 
 ### annotate()
 
@@ -239,7 +239,7 @@ km$survival_plot +
   hvti_theme("manuscript")
 ```
 
-![](plot-decorators_files/figure-html/annotate_example-1.png)
+    NULL
 
 ### coord_cartesian()
 

@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">hvtiPlotR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.0.9001</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -41,9 +41,9 @@
     </div>
 
     <div class="section level2">
-      <h2 id="all-functions">All functions<a class="anchor" aria-label="anchor" href="#all-functions"></a></h2>
+      <h2 id="package-overview">Package Overview<a class="anchor" aria-label="anchor" href="#package-overview"></a></h2>
 
-
+      <div class="section-desc"><p>Package-level documentation and overview.</p></div>
 
       <dl></dl></div><div class="section level2">
 
@@ -52,80 +52,33 @@
 
       <dl><dt>
 
-          <code><a href="alluvial_plot.html">alluvial_plot()</a></code>
-
-        </dt>
-        <dd>Sankey / Alluvial Plot</dd>
-
-        <dt>
-
-          <code><a href="covariate_balance.html">covariate_balance()</a></code>
-
-        </dt>
-        <dd>Covariate Balance Plot</dd>
-
-        <dt>
-
-          <code><a href="eda_classify_var.html">eda_classify_var()</a></code>
-
-        </dt>
-        <dd>Classify a Variable as Continuous or Categorical</dd>
-
-        <dt>
-
-          <code><a href="eda_plot.html">eda_plot()</a></code>
-
-        </dt>
-        <dd>EDA Barplot / Scatterplot for One Variable</dd>
-
-        <dt>
-
-          <code><a href="eda_select_vars.html">eda_select_vars()</a></code>
-
-        </dt>
-        <dd>Select and Reorder Variables from a Data Frame</dd>
-
-        <dt>
-
-          <code><a href="goodness_event_plot.html">goodness_event_plot()</a></code>
-
-        </dt>
-        <dd>Goodness of Follow-Up — Event Panel</dd>
-
-        <dt>
-
-          <code><a href="goodness_followup.html">goodness_followup()</a></code>
-
-        </dt>
-        <dd>Build goodness-of-follow-up plots</dd>
-
-        <dt>
-
-          <code><a href="hazard_plot.html">hazard_plot()</a></code>
-
-        </dt>
-        <dd>Parametric Hazard / Survival Plot</dd>
-
-        <dt>
-
           <code><a href="hvtiPlotR-package.html">hvtiPlotR-package</a></code> <code><a href="hvtiPlotR-package.html">hvtiPlotR</a></code>
 
         </dt>
         <dd>hvtiPlotR: Publication-Quality Graphics for Clinical Manuscripts</dd>
+      </dl></div><div class="section level2">
+      <h2 id="themes">Themes<a class="anchor" aria-label="anchor" href="#themes"></a></h2>
 
-        <dt>
+      <div class="section-desc"><p>Apply publication-quality themes to any ggplot2 object. Use <code><a href="../reference/hvti_theme.html">hvti_theme()</a></code> as the single entry point; the lower-level <code>hvti_theme_*()</code> functions are also exported for direct use.</p></div>
 
-          <code><a href="hvti_plot.html">hvti_plot()</a></code>
+      <dl></dl></div><div class="section level2">
 
-        </dt>
-        <dd>hvtiPlotR Plot Generic</dd>
 
-        <dt>
+
+
+      <dl><dt>
 
           <code><a href="hvti_theme.html">hvti_theme()</a></code>
 
         </dt>
         <dd>hvtiPlotR Theme Generic</dd>
+
+        <dt>
+
+          <code><a href="hvti_theme_manuscript.html">hvti_theme_manuscript()</a></code> <code><a href="hvti_theme_manuscript.html">theme_manuscript()</a></code> <code><a href="hvti_theme_manuscript.html">theme_man()</a></code>
+
+        </dt>
+        <dd>Theme for Manuscript Figures</dd>
 
         <dt>
 
@@ -143,45 +96,40 @@
 
         <dt>
 
-          <code><a href="hvti_theme_manuscript.html">hvti_theme_manuscript()</a></code> <code><a href="hvti_theme_manuscript.html">theme_manuscript()</a></code> <code><a href="hvti_theme_manuscript.html">theme_man()</a></code>
-
-        </dt>
-        <dd>Theme for Manuscript Figures</dd>
-
-        <dt>
-
           <code><a href="hvti_theme_poster.html">hvti_theme_poster()</a></code> <code><a href="hvti_theme_poster.html">theme_poster()</a></code>
 
         </dt>
         <dd>Theme for Poster Figures</dd>
+      </dl></div><div class="section level2">
+      <h2 id="survival-hazard">Survival &amp; Hazard<a class="anchor" aria-label="anchor" href="#survival-hazard"></a></h2>
+
+      <div class="section-desc"><p>Kaplan-Meier survival curves, parametric hazard plots, survival differences, and number-needed-to-treat. Use <code><a href="../reference/survival_curve.html">survival_curve()</a></code> for non-parametric estimates; <code><a href="../reference/hazard_plot.html">hazard_plot()</a></code> for pre-fitted parametric model output.</p></div>
+
+      <dl></dl></div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="survival_curve.html">survival_curve()</a></code>
+
+        </dt>
+        <dd>Kaplan-Meier Survival Curve</dd>
 
         <dt>
 
-          <code><a href="longitudinal_counts_plot.html">longitudinal_counts_plot()</a></code>
+          <code><a href="hazard_plot.html">hazard_plot()</a></code>
 
         </dt>
-        <dd>Longitudinal Participation Counts Bar Chart</dd>
+        <dd>Parametric Hazard / Survival Plot</dd>
 
         <dt>
 
-          <code><a href="longitudinal_counts_table.html">longitudinal_counts_table()</a></code>
+          <code><a href="survival_difference_plot.html">survival_difference_plot()</a></code>
 
         </dt>
-        <dd>Longitudinal Participation Counts Table Panel</dd>
-
-        <dt>
-
-          <code><a href="makeFootnote.html">makeFootnote()</a></code>
-
-        </dt>
-        <dd>Create a footnote for figures.</dd>
-
-        <dt>
-
-          <code><a href="mirror_histogram.html">mirror_histogram()</a></code>
-
-        </dt>
-        <dd>Plot Mirrored Propensity Score Histogram</dd>
+        <dd>Survival Difference (Life-Gained) Plot</dd>
 
         <dt>
 
@@ -192,59 +140,10 @@
 
         <dt>
 
-          <code><a href="nonparametric.html">nonparametric</a></code>
+          <code><a href="sample_survival_data.html">sample_survival_data()</a></code>
 
         </dt>
-        <dd>Nonparametric survival estimates</dd>
-
-        <dt>
-
-          <code><a href="nonparametric_curve_plot.html">nonparametric_curve_plot()</a></code>
-
-        </dt>
-        <dd>Nonparametric Temporal Trend Curve Plot</dd>
-
-        <dt>
-
-          <code><a href="nonparametric_ordinal_plot.html">nonparametric_ordinal_plot()</a></code>
-
-        </dt>
-        <dd>Nonparametric Ordinal Outcome Curve Plot</dd>
-
-        <dt>
-
-          <code><a href="parametric.html">parametric</a></code>
-
-        </dt>
-        <dd>Parametric survival estimates</dd>
-
-        <dt>
-
-          <code><a href="sample_alluvial_data.html">sample_alluvial_data()</a></code>
-
-        </dt>
-        <dd>Sample Sankey / Alluvial Data</dd>
-
-        <dt>
-
-          <code><a href="sample_covariate_balance_data.html">sample_covariate_balance_data()</a></code>
-
-        </dt>
-        <dd>Generate Sample Covariate Balance Data</dd>
-
-        <dt>
-
-          <code><a href="sample_eda_data.html">sample_eda_data()</a></code>
-
-        </dt>
-        <dd>Sample EDA Data</dd>
-
-        <dt>
-
-          <code><a href="sample_goodness_followup_data.html">sample_goodness_followup_data()</a></code>
-
-        </dt>
-        <dd>Generate Sample Goodness-of-Follow-Up Data</dd>
+        <dd>Generate Sample Survival Data</dd>
 
         <dt>
 
@@ -269,17 +168,10 @@
 
         <dt>
 
-          <code><a href="sample_longitudinal_counts_data.html">sample_longitudinal_counts_data()</a></code>
+          <code><a href="sample_survival_difference_data.html">sample_survival_difference_data()</a></code>
 
         </dt>
-        <dd>Sample Longitudinal Counts Data</dd>
-
-        <dt>
-
-          <code><a href="sample_mirror_histogram_data.html">sample_mirror_histogram_data()</a></code>
-
-        </dt>
-        <dd>Generate Sample Data for Mirrored Histogram</dd>
+        <dd>Sample Survival Difference (Life-Gained) Data</dd>
 
         <dt>
 
@@ -287,6 +179,43 @@
 
         </dt>
         <dd>Sample Number Needed to Treat Data</dd>
+
+        <dt>
+
+          <code><a href="nonparametric.html">nonparametric</a></code>
+
+        </dt>
+        <dd>Nonparametric survival estimates</dd>
+
+        <dt>
+
+          <code><a href="parametric.html">parametric</a></code>
+
+        </dt>
+        <dd>Parametric survival estimates</dd>
+      </dl></div><div class="section level2">
+      <h2 id="nonparametric-temporal-curves">Nonparametric Temporal Curves<a class="anchor" aria-label="anchor" href="#nonparametric-temporal-curves"></a></h2>
+
+      <div class="section-desc"><p>Average temporal curves and ordinal outcome trajectories from decomposition models (<code>tp.np.*</code> template family).</p></div>
+
+      <dl></dl></div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="nonparametric_curve_plot.html">nonparametric_curve_plot()</a></code>
+
+        </dt>
+        <dd>Nonparametric Temporal Trend Curve Plot</dd>
+
+        <dt>
+
+          <code><a href="nonparametric_ordinal_plot.html">nonparametric_ordinal_plot()</a></code>
+
+        </dt>
+        <dd>Nonparametric Ordinal Outcome Curve Plot</dd>
 
         <dt>
 
@@ -315,55 +244,59 @@
 
         </dt>
         <dd>Sample Nonparametric Ordinal Data Points</dd>
+      </dl></div><div class="section level2">
+      <h2 id="propensity-score-matching">Propensity Score &amp; Matching<a class="anchor" aria-label="anchor" href="#propensity-score-matching"></a></h2>
+
+      <div class="section-desc"><p>Visualise propensity score distributions and covariate balance before and after propensity matching or IPTW weighting.</p></div>
+
+      <dl></dl></div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="mirror_histogram.html">mirror_histogram()</a></code>
+
+        </dt>
+        <dd>Plot Mirrored Propensity Score Histogram</dd>
 
         <dt>
 
-          <code><a href="sample_spaghetti_data.html">sample_spaghetti_data()</a></code>
+          <code><a href="covariate_balance.html">covariate_balance()</a></code>
 
         </dt>
-        <dd>Sample Spaghetti / Profile Plot Data</dd>
+        <dd>Covariate Balance Plot</dd>
 
         <dt>
 
-          <code><a href="sample_stacked_histogram_data.html">sample_stacked_histogram_data()</a></code>
+          <code><a href="sample_mirror_histogram_data.html">sample_mirror_histogram_data()</a></code>
 
         </dt>
-        <dd>Generate Sample Data for Stacked Histogram</dd>
+        <dd>Generate Sample Data for Mirrored Histogram</dd>
 
         <dt>
 
-          <code><a href="sample_survival_data.html">sample_survival_data()</a></code>
+          <code><a href="sample_covariate_balance_data.html">sample_covariate_balance_data()</a></code>
 
         </dt>
-        <dd>Generate Sample Survival Data</dd>
+        <dd>Generate Sample Covariate Balance Data</dd>
+      </dl></div><div class="section level2">
+      <h2 id="temporal-trends">Temporal Trends<a class="anchor" aria-label="anchor" href="#temporal-trends"></a></h2>
 
-        <dt>
+      <div class="section-desc"><p>Annual trend lines with optional confidence ribbons. Ports the <code>tp.lp.trends.*</code>, <code>tp.rp.trends.*</code>, and <code>tp.dp.trends.R</code> templates.</p></div>
 
-          <code><a href="sample_survival_difference_data.html">sample_survival_difference_data()</a></code>
+      <dl></dl></div><div class="section level2">
 
-        </dt>
-        <dd>Sample Survival Difference (Life-Gained) Data</dd>
 
-        <dt>
 
-          <code><a href="sample_trends_data.html">sample_trends_data()</a></code>
 
-        </dt>
-        <dd>Sample Temporal Trend Data</dd>
+      <dl><dt>
 
-        <dt>
-
-          <code><a href="sample_upset_data.html">sample_upset_data()</a></code>
+          <code><a href="trends_plot.html">trends_plot()</a></code>
 
         </dt>
-        <dd>Sample Procedure Co-occurrence Data</dd>
-
-        <dt>
-
-          <code><a href="save_ppt.html">save_ppt()</a></code>
-
-        </dt>
-        <dd>Save ggplot Objects to an Editable PowerPoint Presentation</dd>
+        <dd>Temporal Trend Plot</dd>
 
         <dt>
 
@@ -374,6 +307,138 @@
 
         <dt>
 
+          <code><a href="longitudinal_counts_plot.html">longitudinal_counts_plot()</a></code>
+
+        </dt>
+        <dd>Longitudinal Participation Counts Bar Chart</dd>
+
+        <dt>
+
+          <code><a href="longitudinal_counts_table.html">longitudinal_counts_table()</a></code>
+
+        </dt>
+        <dd>Longitudinal Participation Counts Table Panel</dd>
+
+        <dt>
+
+          <code><a href="sample_trends_data.html">sample_trends_data()</a></code>
+
+        </dt>
+        <dd>Sample Temporal Trend Data</dd>
+
+        <dt>
+
+          <code><a href="sample_spaghetti_data.html">sample_spaghetti_data()</a></code>
+
+        </dt>
+        <dd>Sample Spaghetti / Profile Plot Data</dd>
+
+        <dt>
+
+          <code><a href="sample_longitudinal_counts_data.html">sample_longitudinal_counts_data()</a></code>
+
+        </dt>
+        <dd>Sample Longitudinal Counts Data</dd>
+      </dl></div><div class="section level2">
+      <h2 id="study-design-goodness-of-follow-up">Study Design &amp; Goodness of Follow-Up<a class="anchor" aria-label="anchor" href="#study-design-goodness-of-follow-up"></a></h2>
+
+      <div class="section-desc"><p>Visualise follow-up completeness and goodness-of-fit for event models. Ports <code>tp.dp.gfup.R</code>.</p></div>
+
+      <dl></dl></div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="goodness_followup.html">goodness_followup()</a></code>
+
+        </dt>
+        <dd>Build goodness-of-follow-up plots</dd>
+
+        <dt>
+
+          <code><a href="goodness_event_plot.html">goodness_event_plot()</a></code>
+
+        </dt>
+        <dd>Goodness of Follow-Up — Event Panel</dd>
+
+        <dt>
+
+          <code><a href="sample_goodness_followup_data.html">sample_goodness_followup_data()</a></code>
+
+        </dt>
+        <dd>Generate Sample Goodness-of-Follow-Up Data</dd>
+      </dl></div><div class="section level2">
+      <h2 id="flow-diagrams">Flow Diagrams<a class="anchor" aria-label="anchor" href="#flow-diagrams"></a></h2>
+
+      <div class="section-desc"><p>Alluvial (Sankey) plots showing patient flow between states or cluster assignments across K values.</p></div>
+
+      <dl></dl></div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="alluvial_plot.html">alluvial_plot()</a></code>
+
+        </dt>
+        <dd>Sankey / Alluvial Plot</dd>
+
+        <dt>
+
+          <code><a href="cluster_sankey_plot.html">cluster_sankey_plot()</a></code>
+
+        </dt>
+        <dd>Cluster Stability Sankey Plot</dd>
+
+        <dt>
+
+          <code><a href="sample_alluvial_data.html">sample_alluvial_data()</a></code>
+
+        </dt>
+        <dd>Sample Sankey / Alluvial Data</dd>
+
+        <dt>
+
+          <code><a href="sample_cluster_sankey_data.html">sample_cluster_sankey_data()</a></code>
+
+        </dt>
+        <dd>Sample Cluster Stability Sankey Data</dd>
+      </dl></div><div class="section level2">
+      <h2 id="exploratory-data-analysis">Exploratory Data Analysis<a class="anchor" aria-label="anchor" href="#exploratory-data-analysis"></a></h2>
+
+      <div class="section-desc"><p>Rapid bar charts and scatter plots for variable screening and univariate summaries.</p></div>
+
+      <dl></dl></div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="eda_plot.html">eda_plot()</a></code>
+
+        </dt>
+        <dd>EDA Barplot / Scatterplot for One Variable</dd>
+
+        <dt>
+
+          <code><a href="eda_classify_var.html">eda_classify_var()</a></code>
+
+        </dt>
+        <dd>Classify a Variable as Continuous or Categorical</dd>
+
+        <dt>
+
+          <code><a href="eda_select_vars.html">eda_select_vars()</a></code>
+
+        </dt>
+        <dd>Select and Reorder Variables from a Data Frame</dd>
+
+        <dt>
+
           <code><a href="stacked_histogram.html">stacked_histogram()</a></code>
 
         </dt>
@@ -381,33 +446,57 @@
 
         <dt>
 
-          <code><a href="survival_curve.html">survival_curve()</a></code>
-
-        </dt>
-        <dd>Kaplan-Meier Survival Curve</dd>
-
-        <dt>
-
-          <code><a href="survival_difference_plot.html">survival_difference_plot()</a></code>
-
-        </dt>
-        <dd>Survival Difference (Life-Gained) Plot</dd>
-
-        <dt>
-
-          <code><a href="trends_plot.html">trends_plot()</a></code>
-
-        </dt>
-        <dd>Temporal Trend Plot</dd>
-
-        <dt>
-
           <code><a href="upset_plot.html">upset_plot()</a></code>
 
         </dt>
         <dd>UpSet Plot for Set Co-occurrence Analysis</dd>
+
+        <dt>
+
+          <code><a href="sample_eda_data.html">sample_eda_data()</a></code>
+
+        </dt>
+        <dd>Sample EDA Data</dd>
+
+        <dt>
+
+          <code><a href="sample_stacked_histogram_data.html">sample_stacked_histogram_data()</a></code>
+
+        </dt>
+        <dd>Generate Sample Data for Stacked Histogram</dd>
+
+        <dt>
+
+          <code><a href="sample_upset_data.html">sample_upset_data()</a></code>
+
+        </dt>
+        <dd>Sample Procedure Co-occurrence Data</dd>
+      </dl></div><div class="section level2">
+      <h2 id="saving-utilities">Saving &amp; Utilities<a class="anchor" aria-label="anchor" href="#saving-utilities"></a></h2>
+
+      <div class="section-desc"><p>Save figures to PowerPoint or PDF. Add draft footnotes during analysis; omit them for publication-ready output.</p></div>
+
+      <dl></dl></div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="save_ppt.html">save_ppt()</a></code>
+
+        </dt>
+        <dd>Save ggplot Objects to an Editable PowerPoint Presentation</dd>
+
+        <dt>
+
+          <code><a href="make_footnote.html">make_footnote()</a></code> <code><a href="make_footnote.html">makeFootnote()</a></code>
+
+        </dt>
+        <dd>Add a Draft Footnote to a Figure</dd>
       </dl></div>
-  </main></div>
+  </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
+    </nav></aside></div>
 
 
     <footer><div class="pkgdown-footer-left">

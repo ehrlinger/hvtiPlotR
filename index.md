@@ -76,9 +76,8 @@ mhist$diagnostics # SMD + group count tables
 mhist$data        # filtered data frame used for plotting
 ```
 
-The
-[`hvti_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_plot.md)
-generic is also available as an alternative entry point:
+The `hvti_plot()` generic is also available as an alternative entry
+point:
 
 ``` r
 mhist <- hvti_plot("mirror_histogram", data = dta, group_labels = c("SAVR", "TF-TAVR"))
@@ -116,13 +115,11 @@ devtools::check()
 ### Test Coverage Highlights
 
 - `tests/testthat/test_mirror_histogram.R`: validates helper
-  calculations, diagnostics, error handling, and
-  [`hvti_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_plot.md)
-  dispatch.
+  calculations, diagnostics, error handling, and `hvti_plot()` dispatch.
 - `tests/testthat/test_save_ppt.R`: covers happy paths plus all
   validation and failure scenarios for PowerPoint exports.
 - `tests/testthat/test_footnote.R`: ensures
-  [`makeFootnote()`](https://ehrlinger.github.io/hvtiPlotR/reference/makeFootnote.md)
+  [`makeFootnote()`](https://ehrlinger.github.io/hvtiPlotR/reference/make_footnote.md)
   works across plotting contexts and rejects invalid inputs.
 
 ## Vignettes and Extended Docs

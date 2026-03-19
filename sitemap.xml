@@ -14,6 +14,7 @@
 <url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/build_weighted_hist_counts.html</loc></url>
 <url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/calc_smd.html</loc></url>
 <url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/calc_weighted_smd.html</loc></url>
+<url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/cluster_sankey_plot.html</loc></url>
 <url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/covariate_balance.html</loc></url>
 <url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/eda_classify_var.html</loc></url>
 <url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/eda_plot.html</loc></url>
@@ -22,7 +23,6 @@
 <url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/goodness_followup.html</loc></url>
 <url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/hazard_plot.html</loc></url>
 <url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-package.html</loc></url>
-<url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/hvti_plot.html</loc></url>
 <url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/hvti_theme.html</loc></url>
 <url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/hvti_theme_dark_ppt.html</loc></url>
 <url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/hvti_theme_light_ppt.html</loc></url>
@@ -40,7 +40,7 @@
 <url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/km_risk_table.html</loc></url>
 <url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/longitudinal_counts_plot.html</loc></url>
 <url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/longitudinal_counts_table.html</loc></url>
-<url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/makeFootnote.html</loc></url>
+<url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/make_footnote.html</loc></url>
 <url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/mirror_histogram.html</loc></url>
 <url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/nnt_plot.html</loc></url>
 <url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/nonparametric.html</loc></url>
@@ -48,6 +48,7 @@
 <url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/nonparametric_ordinal_plot.html</loc></url>
 <url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/parametric.html</loc></url>
 <url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/sample_alluvial_data.html</loc></url>
+<url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/sample_cluster_sankey_data.html</loc></url>
 <url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/sample_covariate_balance_data.html</loc></url>
 <url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/sample_eda_data.html</loc></url>
 <url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/sample_goodness_followup_data.html</loc></url>

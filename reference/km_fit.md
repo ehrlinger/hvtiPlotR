@@ -8,7 +8,7 @@ formula interface.
 ## Usage
 
 ``` r
-km_fit(data, time_col, event_col, strata_col, conf_level, method)
+km_fit(data, time_col, event_col, group_col, conf_level, method)
 ```
 
 ## Arguments
@@ -25,13 +25,13 @@ km_fit(data, time_col, event_col, strata_col, conf_level, method)
 
   Name of the event indicator column.
 
-- strata_col:
+- group_col:
 
   Name of an optional stratification column, or `NULL`.
 
 - conf_level:
 
-  Confidence level for the CI band (default 0.6827 = 1 SD).
+  Confidence level for the CI band (default 0.95).
 
 - method:
 

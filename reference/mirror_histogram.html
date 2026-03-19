@@ -9,7 +9,7 @@ Supports two display modes selected by the arguments supplied:"></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">hvtiPlotR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.0.9001</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -137,9 +137,9 @@ required. The column must be numeric and non-negative.</p></dd>
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>A list with elements <code>plot</code> (ggplot object), <code>diagnostics</code>
-(mode-dependent summary statistics), and <code>data</code> (filtered working
-data frame). Binary-match diagnostics include <code>smd_matched</code>;
+    <p>A <code><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot2::ggplot()</a></code> object. Diagnostics are printed as a message
+and attached as <code>attr(p, "diagnostics")</code>. Working data attached as
+<code>attr(p, "data")</code>. Binary-match diagnostics include <code>smd_matched</code>;
 weighted diagnostics include <code>smd_weighted</code> and
 <code>effective_n_by_group</code>.</p>
     </div>
@@ -167,13 +167,60 @@ counts (before weighting); overlaid bars show per-bin weight sums.
 <span class="r-in"><span><span class="co"># separation = 1.5 leaves many high/low-score patients unmatched at tails</span></span></span>
 <span class="r-in"><span><span class="va">mirror_dta</span> <span class="op">&lt;-</span> <span class="fu"><a href="sample_mirror_histogram_data.html">sample_mirror_histogram_data</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">500</span>, separation <span class="op">=</span> <span class="fl">1.5</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">mhist</span> <span class="op">&lt;-</span> <span class="fu">mirror_histogram</span><span class="op">(</span><span class="va">mirror_dta</span>, alpha <span class="op">=</span> <span class="fl">0.8</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">mhist</span><span class="op">$</span><span class="va">diagnostics</span><span class="op">$</span><span class="va">smd_before</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> mirror_histogram diagnostics:</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> $n_input</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> [1] 1000</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> $n_analyzed</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> [1] 1000</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> $n_dropped_missing_or_other_group</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> [1] 0</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> $group_counts_before</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>   0   1 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 500 500 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> $score_summary_before</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> working$group: 0</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>   2.313  19.614  31.260  34.205  47.144  90.167 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> ------------------------------------------------------------ </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> working$group: 1</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>   6.775  51.385  67.926  64.596  81.283  98.587 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> $smd_before</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> [1] 1.565275</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> $group_counts_matched</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>   0   1 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 230 230 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> $matched_rate_by_group</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>    0    1 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 0.46 0.46 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> $score_summary_matched</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> working$group[matched_idx]: 0</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>   6.904  38.323  48.337  48.565  61.152  90.167 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> ------------------------------------------------------------ </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> working$group[matched_idx]: 1</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>   6.775  38.321  48.425  48.872  61.136  89.236 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> $smd_matched</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> [1] 0.01837958</span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">mhist</span>, <span class="st">"diagnostics"</span><span class="op">)</span><span class="op">$</span><span class="va">smd_before</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 1.565275</span>
-<span class="r-in"><span><span class="va">mhist</span><span class="op">$</span><span class="va">diagnostics</span><span class="op">$</span><span class="va">smd_matched</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">mhist</span>, <span class="st">"diagnostics"</span><span class="op">)</span><span class="op">$</span><span class="va">smd_matched</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.01837958</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Customise fill colours and apply manuscript theme</span></span></span>
-<span class="r-in"><span><span class="va">mhist</span><span class="op">$</span><span class="va">plot</span> <span class="op">+</span></span></span>
+<span class="r-in"><span><span class="va">mhist</span> <span class="op">+</span></span></span>
 <span class="r-in"><span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_fill_manual</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>    values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>before_g0 <span class="op">=</span> <span class="st">"white"</span>,  matched_g0 <span class="op">=</span> <span class="st">"steelblue"</span>,</span></span>
 <span class="r-in"><span>               before_g1 <span class="op">=</span> <span class="st">"white"</span>,  matched_g1 <span class="op">=</span> <span class="st">"firebrick"</span><span class="op">)</span>,</span></span>
@@ -186,14 +233,47 @@ counts (before weighting); overlaid bars show per-bin weight sums.
 <span class="r-in"><span><span class="co"># --- Weighted IPTW mode --------------------------------------------------</span></span></span>
 <span class="r-in"><span><span class="va">wt_dta</span> <span class="op">&lt;-</span> <span class="fu"><a href="sample_mirror_histogram_data.html">sample_mirror_histogram_data</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">500</span>, add_weights <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">mhist_wt</span> <span class="op">&lt;-</span> <span class="fu">mirror_histogram</span><span class="op">(</span><span class="va">wt_dta</span>, weight_col <span class="op">=</span> <span class="st">"mt_wt"</span>, alpha <span class="op">=</span> <span class="fl">0.8</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">mhist_wt</span><span class="op">$</span><span class="va">diagnostics</span><span class="op">$</span><span class="va">smd_weighted</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> mirror_histogram diagnostics:</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> $n_input</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> [1] 1000</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> $n_analyzed</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> [1] 1000</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> $n_dropped_missing_or_other_group</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> [1] 0</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> $group_counts_before</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>   0   1 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 500 500 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> $score_summary_before</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> working$group: 0</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>   2.313  19.614  31.260  34.205  47.144  90.167 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> ------------------------------------------------------------ </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> working$group: 1</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>   6.775  51.385  67.926  64.596  81.283  98.587 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> $smd_before</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> [1] 1.565275</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> $effective_n_by_group</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>   0   1 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 500 500 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> $smd_weighted</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> [1] 0.5445719</span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">mhist_wt</span>, <span class="st">"diagnostics"</span><span class="op">)</span><span class="op">$</span><span class="va">smd_weighted</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.5445719</span>
-<span class="r-in"><span><span class="va">mhist_wt</span><span class="op">$</span><span class="va">diagnostics</span><span class="op">$</span><span class="va">effective_n_by_group</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">mhist_wt</span>, <span class="st">"diagnostics"</span><span class="op">)</span><span class="op">$</span><span class="va">effective_n_by_group</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   0   1 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 500 500 </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Customise fill colours for weighted mode and apply manuscript theme</span></span></span>
-<span class="r-in"><span><span class="va">mhist_wt</span><span class="op">$</span><span class="va">plot</span> <span class="op">+</span></span></span>
+<span class="r-in"><span><span class="va">mhist_wt</span> <span class="op">+</span></span></span>
 <span class="r-in"><span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_fill_manual</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>    values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>before_g0 <span class="op">=</span> <span class="st">"white"</span>, weighted_g0 <span class="op">=</span> <span class="st">"blue"</span>,</span></span>
 <span class="r-in"><span>               before_g1 <span class="op">=</span> <span class="st">"white"</span>, weighted_g1 <span class="op">=</span> <span class="st">"red"</span><span class="op">)</span>,</span></span>

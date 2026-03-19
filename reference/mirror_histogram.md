@@ -89,10 +89,12 @@ mirror_histogram(
 
 ## Value
 
-A list with elements `plot` (ggplot object), `diagnostics`
-(mode-dependent summary statistics), and `data` (filtered working data
-frame). Binary-match diagnostics include `smd_matched`; weighted
-diagnostics include `smd_weighted` and `effective_n_by_group`.
+A
+[`ggplot2::ggplot()`](https://ggplot2.tidyverse.org/reference/ggplot.html)
+object. Diagnostics are printed as a message and attached as
+`attr(p, "diagnostics")`. Working data attached as `attr(p, "data")`.
+Binary-match diagnostics include `smd_matched`; weighted diagnostics
+include `smd_weighted` and `effective_n_by_group`.
 
 ## Details
 
@@ -115,13 +117,60 @@ diagnostics include `smd_weighted` and `effective_n_by_group`.
 # separation = 1.5 leaves many high/low-score patients unmatched at tails
 mirror_dta <- sample_mirror_histogram_data(n = 500, separation = 1.5)
 mhist <- mirror_histogram(mirror_dta, alpha = 0.8)
-mhist$diagnostics$smd_before
+#> mirror_histogram diagnostics:
+#> $n_input
+#> [1] 1000
+#> 
+#> $n_analyzed
+#> [1] 1000
+#> 
+#> $n_dropped_missing_or_other_group
+#> [1] 0
+#> 
+#> $group_counts_before
+#> 
+#>   0   1 
+#> 500 500 
+#> 
+#> $score_summary_before
+#> working$group: 0
+#>    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+#>   2.313  19.614  31.260  34.205  47.144  90.167 
+#> ------------------------------------------------------------ 
+#> working$group: 1
+#>    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+#>   6.775  51.385  67.926  64.596  81.283  98.587 
+#> 
+#> $smd_before
 #> [1] 1.565275
-mhist$diagnostics$smd_matched
+#> 
+#> $group_counts_matched
+#> 
+#>   0   1 
+#> 230 230 
+#> 
+#> $matched_rate_by_group
+#>    0    1 
+#> 0.46 0.46 
+#> 
+#> $score_summary_matched
+#> working$group[matched_idx]: 0
+#>    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+#>   6.904  38.323  48.337  48.565  61.152  90.167 
+#> ------------------------------------------------------------ 
+#> working$group[matched_idx]: 1
+#>    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+#>   6.775  38.321  48.425  48.872  61.136  89.236 
+#> 
+#> $smd_matched
+#> [1] 0.01837958
+attr(mhist, "diagnostics")$smd_before
+#> [1] 1.565275
+attr(mhist, "diagnostics")$smd_matched
 #> [1] 0.01837958
 
 # Customise fill colours and apply manuscript theme
-mhist$plot +
+mhist +
   ggplot2::scale_fill_manual(
     values = c(before_g0 = "white",  matched_g0 = "steelblue",
                before_g1 = "white",  matched_g1 = "firebrick"),
@@ -134,14 +183,47 @@ mhist$plot +
 # --- Weighted IPTW mode --------------------------------------------------
 wt_dta <- sample_mirror_histogram_data(n = 500, add_weights = TRUE)
 mhist_wt <- mirror_histogram(wt_dta, weight_col = "mt_wt", alpha = 0.8)
-mhist_wt$diagnostics$smd_weighted
+#> mirror_histogram diagnostics:
+#> $n_input
+#> [1] 1000
+#> 
+#> $n_analyzed
+#> [1] 1000
+#> 
+#> $n_dropped_missing_or_other_group
+#> [1] 0
+#> 
+#> $group_counts_before
+#> 
+#>   0   1 
+#> 500 500 
+#> 
+#> $score_summary_before
+#> working$group: 0
+#>    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+#>   2.313  19.614  31.260  34.205  47.144  90.167 
+#> ------------------------------------------------------------ 
+#> working$group: 1
+#>    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+#>   6.775  51.385  67.926  64.596  81.283  98.587 
+#> 
+#> $smd_before
+#> [1] 1.565275
+#> 
+#> $effective_n_by_group
+#>   0   1 
+#> 500 500 
+#> 
+#> $smd_weighted
 #> [1] 0.5445719
-mhist_wt$diagnostics$effective_n_by_group
+attr(mhist_wt, "diagnostics")$smd_weighted
+#> [1] 0.5445719
+attr(mhist_wt, "diagnostics")$effective_n_by_group
 #>   0   1 
 #> 500 500 
 
 # Customise fill colours for weighted mode and apply manuscript theme
-mhist_wt$plot +
+mhist_wt +
   ggplot2::scale_fill_manual(
     values = c(before_g0 = "white", weighted_g0 = "blue",
                before_g1 = "white", weighted_g1 = "red"),

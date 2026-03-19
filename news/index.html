@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">hvtiPlotR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.0.9001</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -62,7 +62,7 @@
 <li>Added <code><a href="../reference/sample_covariate_balance_data.html">sample_covariate_balance_data()</a></code> — patient-level logistic simulation with greedy 1:1 caliper matching; SMDs computed before and after matching.</li>
 <li>Added <code><a href="../reference/stacked_histogram.html">stacked_histogram()</a></code> and <code><a href="../reference/sample_stacked_histogram_data.html">sample_stacked_histogram_data()</a></code> — stacked or filled histogram of a numeric variable by group.</li>
 <li>Improved <code><a href="../reference/mirror_histogram.html">mirror_histogram()</a></code> sample data (<code><a href="../reference/sample_mirror_histogram_data.html">sample_mirror_histogram_data()</a></code>) to use a realistic logistic propensity-score model with greedy 1:1 caliper matching and optional ATE IPTW weights; extreme-PS patients naturally go unmatched.</li>
-<li>Added <code><a href="../reference/hvti_plot.html">hvti_plot()</a></code> dispatcher supporting <code>"mirror_histogram"</code>, <code>"stacked_histogram"</code>, and <code>"covariate_balance"</code> plot types.</li>
+<li>Added <code>hvti_plot()</code> dispatcher supporting <code>"mirror_histogram"</code>, <code>"stacked_histogram"</code>, and <code>"covariate_balance"</code> plot types.</li>
 <li>Added <code><a href="../reference/hvti_theme.html">hvti_theme()</a></code> dispatcher for <code>"manuscript"</code>, <code>"ppt"</code>, <code>"dark_ppt"</code>, and <code>"poster"</code> themes.</li>
 <li>Enabled roxygen Markdown (<code>Roxygen: list(markdown = TRUE)</code>) so <code>**bold**</code>, backtick code spans, and <code>[pkg::fn()]</code> cross-references render correctly in Rd help pages.</li>
 <li>Added <code>survival</code> to package <code>Imports</code>.</li>

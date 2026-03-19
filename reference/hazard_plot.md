@@ -196,6 +196,7 @@ SAS templates: `tp.hp.dead.sas`, `tp.hp.dead.tkdn.stratified.sas`,
 [`sample_life_table()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_life_table.md),
 [`survival_difference_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/survival_difference_plot.md),
 [`nnt_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/nnt_plot.md),
+[`survival_curve()`](https://ehrlinger.github.io/hvtiPlotR/reference/survival_curve.md),
 [`hvti_theme()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_theme.md)
 
 ## Examples

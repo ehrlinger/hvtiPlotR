@@ -108,6 +108,11 @@ finish the styling via standard `ggplot2` modifiers (`scale_*()`,
 [`labs()`](https://ggplot2.tidyverse.org/reference/labs.html),
 `theme_*()`), keeping the plotting workflow flexible.
 
+## See also
+
+[`goodness_event_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/goodness_event_plot.md),
+[`sample_goodness_followup_data()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_goodness_followup_data.md)
+
 ## Examples
 
 ``` r

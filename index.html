@@ -24,7 +24,7 @@
 
     <a class="navbar-brand me-2" href="index.html">hvtiPlotR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.0.9001</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -119,9 +119,9 @@
 <span><span class="va">mhist</span><span class="op">$</span><span class="va">plot</span>        <span class="co"># ggplot object</span></span>
 <span><span class="va">mhist</span><span class="op">$</span><span class="va">diagnostics</span> <span class="co"># SMD + group count tables</span></span>
 <span><span class="va">mhist</span><span class="op">$</span><span class="va">data</span>        <span class="co"># filtered data frame used for plotting</span></span></code></pre></div>
-<p>The <code><a href="reference/hvti_plot.html">hvti_plot()</a></code> generic is also available as an alternative entry point:</p>
+<p>The <code>hvti_plot()</code> generic is also available as an alternative entry point:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">mhist</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/hvti_plot.html">hvti_plot</a></span><span class="op">(</span><span class="st">"mirror_histogram"</span>, data <span class="op">=</span> <span class="va">dta</span>, group_labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"SAVR"</span>, <span class="st">"TF-TAVR"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">mhist</span> <span class="op">&lt;-</span> <span class="fu">hvti_plot</span><span class="op">(</span><span class="st">"mirror_histogram"</span>, data <span class="op">=</span> <span class="va">dta</span>, group_labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"SAVR"</span>, <span class="st">"TF-TAVR"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="powerpoint-export">PowerPoint Export<a class="anchor" aria-label="anchor" href="#powerpoint-export"></a>
@@ -156,11 +156,11 @@
 </h3>
 <ul>
 <li>
-<code>tests/testthat/test_mirror_histogram.R</code>: validates helper calculations, diagnostics, error handling, and <code><a href="reference/hvti_plot.html">hvti_plot()</a></code> dispatch.</li>
+<code>tests/testthat/test_mirror_histogram.R</code>: validates helper calculations, diagnostics, error handling, and <code>hvti_plot()</code> dispatch.</li>
 <li>
 <code>tests/testthat/test_save_ppt.R</code>: covers happy paths plus all validation and failure scenarios for PowerPoint exports.</li>
 <li>
-<code>tests/testthat/test_footnote.R</code>: ensures <code><a href="reference/makeFootnote.html">makeFootnote()</a></code> works across plotting contexts and rejects invalid inputs.</li>
+<code>tests/testthat/test_footnote.R</code>: ensures <code><a href="reference/make_footnote.html">makeFootnote()</a></code> works across plotting contexts and rejects invalid inputs.</li>
 </ul>
 </div>
 </div>

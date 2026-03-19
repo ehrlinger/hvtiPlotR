@@ -24,7 +24,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">hvtiPlotR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.0.9001</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -234,18 +234,15 @@
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_cartesian.html" class="external-link">coord_cartesian</a></span><span class="op">(</span>xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">20</span><span class="op">)</span>, ylim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">100</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Years after Operation"</span>, y <span class="op">=</span> <span class="st">"Freedom from Death (%)"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/hvti_theme.html">hvti_theme</a></span><span class="op">(</span><span class="st">"manuscript"</span><span class="op">)</span></span></code></pre></div>
-<div class="cell-output-display">
-<div>
-<figure><p><img src="plot-decorators_files/figure-html/scale_colour_manual-1.png" width="672"></p>
-</figure>
-</div>
+<div class="cell-output cell-output-stdout">
+<pre><code><span><span class="cn">NULL</span></span></code></pre>
 </div>
 </div>
 </section><section class="level2"><h3 id="colorbrewer-palettes">ColorBrewer palettes<a class="anchor" aria-label="anchor" href="#colorbrewer-palettes"></a>
 </h3>
 <p><code><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_colour_brewer()</a></code> applies a ColorBrewer palette — safe, perceptually uniform, and print-friendly. Use <code>palette = "Set1"</code> for categorical data, <code>"RdYlGn"</code> for diverging, <code>"Blues"</code> for sequential.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p_base</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_colour_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Set1"</span>, name <span class="op">=</span> <span class="st">"Group"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_shape_manual</a></span><span class="op">(</span></span>
@@ -266,7 +263,7 @@
 </h3>
 <p>Pass <code>guide = "none"</code> to any scale to remove its legend entry. Use this when colour is self-evident from axis labels or annotations.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p_base</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_colour_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Dark2"</span>, guide <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_shape_manual</a></span><span class="op">(</span></span>
@@ -289,7 +286,7 @@
 </h3>
 <p><code><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs()</a></code> sets the axis, legend, title, subtitle, and caption text. Set axis labels here rather than inside the plot function so they can be overridden per project.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">km</span><span class="op">$</span><span class="va">survival_plot</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_color_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>All <span class="op">=</span> <span class="st">"steelblue"</span><span class="op">)</span>, guide <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_fill_manual</a></span><span class="op">(</span>values  <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>All <span class="op">=</span> <span class="st">"steelblue"</span><span class="op">)</span>, guide <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span> <span class="op">+</span></span>
@@ -304,18 +301,15 @@
 <span>    caption <span class="op">=</span> <span class="st">"Logit CI, \u03b1 = 0.6827 (1 SD)"</span></span>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/hvti_theme.html">hvti_theme</a></span><span class="op">(</span><span class="st">"manuscript"</span><span class="op">)</span></span></code></pre></div>
-<div class="cell-output-display">
-<div>
-<figure><p><img src="plot-decorators_files/figure-html/labs_example-1.png" width="672"></p>
-</figure>
-</div>
+<div class="cell-output cell-output-stdout">
+<pre><code><span><span class="cn">NULL</span></span></code></pre>
 </div>
 </div>
 </section><section class="level2"><h3 id="annotate">annotate()<a class="anchor" aria-label="anchor" href="#annotate"></a>
 </h3>
 <p><code><a href="https://ggplot2.tidyverse.org/reference/annotate.html" class="external-link">annotate()</a></code> places text, segments, or rectangles at fixed data coordinates. Use it for sample size callouts, phase labels, or directional arrows.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">km</span><span class="op">$</span><span class="va">survival_plot</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_color_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>All <span class="op">=</span> <span class="st">"steelblue"</span><span class="op">)</span>, guide <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_fill_manual</a></span><span class="op">(</span>values  <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>All <span class="op">=</span> <span class="st">"steelblue"</span><span class="op">)</span>, guide <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span> <span class="op">+</span></span>
@@ -332,18 +326,15 @@
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/annotate.html" class="external-link">annotate</a></span><span class="op">(</span><span class="st">"text"</span>,    x <span class="op">=</span> <span class="fl">10.3</span>, y <span class="op">=</span> <span class="fl">40</span>,</span>
 <span>           label <span class="op">=</span> <span class="st">"Median survival"</span>, hjust <span class="op">=</span> <span class="fl">0</span>, size <span class="op">=</span> <span class="fl">3</span>, colour <span class="op">=</span> <span class="st">"grey40"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/hvti_theme.html">hvti_theme</a></span><span class="op">(</span><span class="st">"manuscript"</span><span class="op">)</span></span></code></pre></div>
-<div class="cell-output-display">
-<div>
-<figure><p><img src="plot-decorators_files/figure-html/annotate_example-1.png" width="672"></p>
-</figure>
-</div>
+<div class="cell-output cell-output-stdout">
+<pre><code><span><span class="cn">NULL</span></span></code></pre>
 </div>
 </div>
 </section><section class="level2"><h3 id="coord_cartesian">coord_cartesian()<a class="anchor" aria-label="anchor" href="#coord_cartesian"></a>
 </h3>
 <p><code><a href="https://ggplot2.tidyverse.org/reference/coord_cartesian.html" class="external-link">coord_cartesian()</a></code> crops the viewport without dropping data, preserving LOESS fits computed on the full range.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p_base</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_colour_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Set1"</span>, name <span class="op">=</span> <span class="st">"Group"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_shape_manual</a></span><span class="op">(</span></span>
@@ -367,7 +358,7 @@
 </h3>
 <p>Use <code><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave()</a></code> with <code>width = 11, height = 8.5</code> (US Letter landscape) for manuscript figures. Assign the fully composed plot to a variable first so the same object is both displayed in the session and written to disk.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p_ms</span> <span class="op">&lt;-</span> <span class="va">p_base</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_colour_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Set1"</span>, name <span class="op">=</span> <span class="st">"Group"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_shape_manual</a></span><span class="op">(</span></span>
@@ -389,7 +380,7 @@
 </h3>
 <p>Poster figures are typically larger and use <code>hvti_theme("poster")</code>. Adjust dimensions to match the poster panel size.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p_poster</span> <span class="op">&lt;-</span> <span class="va">p_base</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_colour_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Set1"</span>, name <span class="op">=</span> <span class="st">"Group"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_shape_manual</a></span><span class="op">(</span></span>
@@ -411,7 +402,7 @@
 </h3>
 <p><code><a href="../reference/save_ppt.html">save_ppt()</a></code> from the <strong>hvtiPlotR</strong> package inserts a ggplot object into a PowerPoint file as an editable vector graphic (via the <code>officer</code> and <code>rvg</code> packages). Apply <code>hvti_theme("dark_ppt")</code> or <code>hvti_theme("light_ppt")</code> before saving.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p_ppt</span> <span class="op">&lt;-</span> <span class="va">p_base</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_colour_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Set1"</span>, name <span class="op">=</span> <span class="st">"Group"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_shape_manual</a></span><span class="op">(</span></span>
@@ -433,7 +424,7 @@
 </h3>
 <p>When generating multiple plots in a loop, <code><a href="https://rdrr.io/pkg/gridExtra/man/arrangeGrob.html" class="external-link">gridExtra::marrangeGrob()</a></code> arranges them into a grid and <code><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave()</a></code> writes each page.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb17"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Build a list of plots (e.g. from an eda_plot() lapply loop)</span></span>
 <span><span class="va">plot_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ef"</span>, <span class="st">"lv_mass"</span>, <span class="st">"peak_grad"</span><span class="op">)</span>,</span>

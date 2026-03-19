@@ -15,7 +15,7 @@ NYHA / LV-mass / LOS pattern in the SAS template."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">hvtiPlotR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.0.9001</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -77,12 +77,15 @@ NYHA / LV-mass / LOS pattern in the SAS template.</p>
 
 
 <dt id="arg-year-range">year_range<a class="anchor" aria-label="anchor" href="#arg-year-range"></a></dt>
-<dd><p>Integer vector <code>c(start, end)</code> for surgery years.
-Default <code>c(1990, 2020)</code>.</p></dd>
+<dd><p>Integer vector <code>c(start, end)</code> for the x-axis range
+(surgery year, or patient age when used with <code>tp.lp.trends.age.sas</code>
+patterns). Default <code>c(1990, 2020)</code>.</p></dd>
 
 
 <dt id="arg-groups">groups<a class="anchor" aria-label="anchor" href="#arg-groups"></a></dt>
-<dd><p>Character vector of group labels. Default
+<dd><p>Character vector of group labels, or <code>NULL</code> for a
+single-group figure (no <code>group</code> column returned; use with
+<code>trends_plot(..., group_col = NULL)</code>). Default
 <code>c("Group I", "Group II", "Group III", "Group IV")</code>.</p></dd>
 
 
@@ -92,9 +95,10 @@ Default <code>c(1990, 2020)</code>.</p></dd>
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>A data frame with columns:</p><ul><li><p><code>year</code>  — surgery year (integer)</p></li>
+    <p>A data frame with columns:</p><ul><li><p><code>year</code>  — x-axis value (integer; surgery year or patient age)</p></li>
 <li><p><code>value</code> — continuous outcome (numeric)</p></li>
-<li><p><code>group</code> — group label (factor, ordered by <code>groups</code>)</p></li>
+<li><p><code>group</code> — group label (factor, ordered by <code>groups</code>); absent when
+<code>groups = NULL</code></p></li>
 </ul></div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>

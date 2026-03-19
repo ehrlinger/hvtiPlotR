@@ -39,14 +39,10 @@ layers, scales, and themes without restriction.
   [officer::officer](https://davidgohel.github.io/officer/reference/officer.html)
   package.
 
-- [`makeFootnote()`](https://ehrlinger.github.io/hvtiPlotR/reference/makeFootnote.md):
+- [`makeFootnote()`](https://ehrlinger.github.io/hvtiPlotR/reference/make_footnote.md):
   Add footnotes to graphics.
 
 ### Plot functions
-
-- [`hvti_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_plot.md):
-  Single entry-point dispatcher for all hvtiPlotR plot types
-  (`"mirror_histogram"`, `"stacked_histogram"`, `"covariate_balance"`).
 
 - [`mirror_histogram()`](https://ehrlinger.github.io/hvtiPlotR/reference/mirror_histogram.md):
   Side-by-side propensity-score histograms (binary-match or

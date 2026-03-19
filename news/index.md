@@ -95,10 +95,8 @@
   to use a realistic logistic propensity-score model with greedy 1:1
   caliper matching and optional ATE IPTW weights; extreme-PS patients
   naturally go unmatched.
-- Added
-  [`hvti_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_plot.md)
-  dispatcher supporting `"mirror_histogram"`, `"stacked_histogram"`, and
-  `"covariate_balance"` plot types.
+- Added `hvti_plot()` dispatcher supporting `"mirror_histogram"`,
+  `"stacked_histogram"`, and `"covariate_balance"` plot types.
 - Added
   [`hvti_theme()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_theme.md)
   dispatcher for `"manuscript"`, `"ppt"`, `"dark_ppt"`, and `"poster"`

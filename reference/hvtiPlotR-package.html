@@ -38,9 +38,6 @@ Plot functions
 
 
 
-hvti_plot(): Single entry-point dispatcher for all hvtiPlotR
-plot types ("mirror_histogram", "stacked_histogram",
-"covariate_balance").
 mirror_histogram(): Side-by-side propensity-score histograms
 (binary-match or IPTW-weighted mode). Ports plot.sas mirror
 histogram output.
@@ -120,9 +117,6 @@ Plot functions
 
 
 
-hvti_plot(): Single entry-point dispatcher for all hvtiPlotR
-plot types ("mirror_histogram", "stacked_histogram",
-"covariate_balance").
 mirror_histogram(): Side-by-side propensity-score histograms
 (binary-match or IPTW-weighted mode). Ports plot.sas mirror
 histogram output.
@@ -171,7 +165,7 @@ with administrative censoring and optional treatment strata.
 
     <a class="navbar-brand me-2" href="../index.html">hvtiPlotR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.0.9001</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -232,17 +226,14 @@ without restriction.</p><div class="section">
 
 <ul><li><p><code><a href="save_ppt.html">save_ppt()</a></code>: Save ggplot objects to a PowerPoint presentation
 via the <a href="https://davidgohel.github.io/officer/reference/officer.html" class="external-link">officer::officer</a> package.</p></li>
-<li><p><code><a href="makeFootnote.html">makeFootnote()</a></code>: Add footnotes to graphics.</p></li>
+<li><p><code><a href="make_footnote.html">makeFootnote()</a></code>: Add footnotes to graphics.</p></li>
 </ul></div>
 
 <div class="section">
 <h3 id="plot-functions">Plot functions<a class="anchor" aria-label="anchor" href="#plot-functions"></a></h3>
 
 
-<ul><li><p><code><a href="hvti_plot.html">hvti_plot()</a></code>: Single entry-point dispatcher for all hvtiPlotR
-plot types (<code>"mirror_histogram"</code>, <code>"stacked_histogram"</code>,
-<code>"covariate_balance"</code>).</p></li>
-<li><p><code><a href="mirror_histogram.html">mirror_histogram()</a></code>: Side-by-side propensity-score histograms
+<ul><li><p><code><a href="mirror_histogram.html">mirror_histogram()</a></code>: Side-by-side propensity-score histograms
 (binary-match or IPTW-weighted mode). Ports <code>plot.sas</code> mirror
 histogram output.</p></li>
 <li><p><code><a href="stacked_histogram.html">stacked_histogram()</a></code>: Stacked (or filled) histogram of a numeric

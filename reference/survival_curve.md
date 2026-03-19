@@ -1,12 +1,11 @@
 # Kaplan-Meier Survival Curve
 
-Estimates a Kaplan-Meier survival function and returns a list containing
-five bare `ggplot` objects (survival curve, cumulative hazard, hazard
-rate, log-minus-log survival, and mean residual life), plus associated
-data frames (tidy KM data, numbers-at-risk table, and a report table at
-specified time points). The returned plots intentionally omit scale,
-label, and theme modifications so the caller can layer on their own
-choices with `+`.
+Estimates a Kaplan-Meier survival function and returns a single bare
+`ggplot` object corresponding to the selected `plot_type`. All five plot
+variants and the KM data, risk table, and report table are attached as
+attributes (see `attr(result, "km_data")`). The returned plot
+intentionally omits scale, label, and theme modifications so the caller
+can layer on their own choices with `+`.
 
 ## Usage
 
@@ -15,9 +14,11 @@ survival_curve(
   data,
   time_col = "iv_dead",
   event_col = "dead",
+  group_col = NULL,
   strata_col = NULL,
+  plot_type = c("survival", "cumhaz", "hazard", "loglog", "life"),
   conf_int = TRUE,
-  conf_level = 0.6827,
+  conf_level = 0.95,
   report_times = c(1, 5, 10, 15, 20, 25),
   alpha = 0.8,
   method = c("kaplan-meier", "nelson-aalen")
@@ -40,10 +41,21 @@ survival_curve(
   Name of the logical or 0/1 column indicating whether the event
   occurred. Defaults to `"dead"`.
 
-- strata_col:
+- group_col:
 
   Optional name of a character or factor column used to stratify the
   analysis. Pass `NULL` (the default) for an unstratified estimate.
+
+- strata_col:
+
+  Deprecated. Use `group_col` instead. If supplied and `group_col` is
+  `NULL`, `strata_col` is used with a deprecation warning.
+
+- plot_type:
+
+  Character; which plot variant to return as the primary ggplot object.
+  One of `"survival"` (default), `"cumhaz"`, `"hazard"`, `"loglog"`, or
+  `"life"`.
 
 - conf_int:
 
@@ -52,8 +64,7 @@ survival_curve(
 
 - conf_level:
 
-  Confidence level for the CI band. Defaults to `0.6827` (one standard
-  deviation), matching the SAS `%kaplan` macro default.
+  Confidence level for the CI band. Defaults to `0.95`.
 
 - report_times:
 
@@ -76,46 +87,49 @@ survival_curve(
 
 ## Value
 
-A named list with elements mirroring the SAS `%kaplan` macro output
-plots (`PLOTS`, `PLOTC`, `PLOTH`, `PLOTL`):
+A
+[`ggplot2::ggplot()`](https://ggplot2.tidyverse.org/reference/ggplot.html)
+object for the selected `plot_type`. All five plot variants and the KM
+data, risk table, and report table are attached as attributes (see
+`attr(result, "km_data")`):
 
-- `survival_plot`:
+- `attr(p, "survival_plot")`:
 
   (`PLOTS=1`) Bare `ggplot`: KM step function with optional CI ribbon,
   y-axis on 0–100 scale.
 
-- `cumhaz_plot`:
+- `attr(p, "cumhaz_plot")`:
 
   (`PLOTC=1`) Bare `ggplot`: Nelson-Aalen cumulative hazard H(t) = -log
   S(t).
 
-- `hazard_plot`:
+- `attr(p, "hazard_plot")`:
 
   (`PLOTH=1`) Bare `ggplot`: instantaneous hazard h(t) =
   log(S(t_prev)/S(t)) / delta_t, plotted at interval midpoints. Add
   `geom_smooth(method="loess")` for a smoothed hazard curve.
 
-- `loglog_plot`:
+- `attr(p, "loglog_plot")`:
 
   (`PLOTC=1`, log-log variant) Bare `ggplot`: log H(t) vs log t.
   Parallel lines across strata indicate proportional hazards.
 
-- `life_plot`:
+- `attr(p, "life_plot")`:
 
   (`PLOTL=1`) Bare `ggplot`: restricted mean survival time (integral of
   S(t)) vs time.
 
-- `km_data`:
+- `attr(p, "km_data")`:
 
   Tidy data frame with columns `time`, `surv`, `lower`, `upper`,
   `n.risk`, `n.event`, `n.censor`, `cumhaz`, `strata`, `hazard`,
   `density`, `mid_time`, `life`, `proplife`, `log_cumhaz`, `log_time`.
 
-- `risk_table`:
+- `attr(p, "risk_table")`:
 
   Data frame: `strata`, `report_time`, `n.risk`.
 
-- `report_table`:
+- `attr(p, "report_table")`:
 
   Data frame: `strata`, `report_time`, `surv`, `lower`, `upper`,
   `n.risk`, `n.event`.
@@ -126,19 +140,23 @@ SAS template: `tp.ac.dead.sas` (calls `%kaplan` for product-limit
 survival estimates and `%nelsont` for Nelson-Aalen cumulative event
 estimates).
 
+## See also
+
+[`hazard_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/hazard_plot.md)
+
 ## Examples
 
 ``` r
 # --- Unstratified ---
 dta <- sample_survival_data(n = 500, seed = 42)
-result <- survival_curve(dta, alpha = 0.8)
+p <- survival_curve(dta, alpha = 0.8)
 
-# Bare survival plot
-result$survival_plot
+# Bare survival plot — compose directly with +
+p + hvti_theme("manuscript")
 
 
 # Add scales, labels, theme
-result$survival_plot +
+p +
   ggplot2::scale_y_continuous(breaks = seq(0, 100, 20),
                               labels = function(x) paste0(x, "%")) +
   ggplot2::scale_x_continuous(breaks = seq(0, 20, 5)) +
@@ -150,16 +168,18 @@ result$survival_plot +
 #> Adding another scale for y, which will replace the existing scale.
 
 
-# Cumulative hazard
-result$cumhaz_plot +
-  ggplot2::scale_x_continuous(breaks = seq(0, 20, 5)) +
-  ggplot2::labs(x = "Years after Operation", y = "Cumulative Hazard",
-                title = "Nelson-Aalen Cumulative Hazard") +
-  hvti_theme("manuscript")
-
+# Access the report table via attr()
+attr(p, "report_table")
+#>   strata report_time  surv     lower     upper n.risk n.event
+#> 1    All           1 0.954 0.9317320 0.9692443    478       1
+#> 2    All           5 0.822 0.7859710 0.8530976    412       1
+#> 3    All          10 0.642 0.5989814 0.6828473    322       1
+#> 4    All          15 0.518 0.4741762 0.5615486    260       1
+#> 5    All          20 0.414 0.3715880 0.4577269    207       0
+#> 6    All          25 0.414 0.3715880 0.4577269    207       0
 
 # Numbers at risk
-result$risk_table
+attr(p, "risk_table")
 #>   strata report_time n.risk
 #> 1    All           1    478
 #> 2    All           5    412
@@ -168,28 +188,26 @@ result$risk_table
 #> 5    All          20    207
 #> 6    All          25    207
 
-# Report table at 1, 5, 10, 15, 20 years
-result$report_table
-#>   strata report_time  surv     lower     upper n.risk n.event
-#> 1    All           1 0.954 0.9436693 0.9625114    478       1
-#> 2    All           5 0.822 0.8042449 0.8384681    412       1
-#> 3    All          10 0.642 0.6202877 0.6631450    322       1
-#> 4    All          15 0.518 0.4956322 0.5402959    260       1
-#> 5    All          20 0.414 0.3921576 0.4361859    207       0
-#> 6    All          25 0.414 0.3921576 0.4361859    207       0
+# Cumulative hazard (select a different plot_type)
+survival_curve(dta, plot_type = "cumhaz") +
+  ggplot2::scale_x_continuous(breaks = seq(0, 20, 5)) +
+  ggplot2::labs(x = "Years after Operation", y = "Cumulative Hazard",
+                title = "Nelson-Aalen Cumulative Hazard") +
+  hvti_theme("manuscript")
+
 
 # --- Stratified ---
 # supply strata_levels to sample_survival_data() to generate the
-# "valve_type" column used by strata_col below.
+# "valve_type" column used by group_col below.
 # dta_s <- sample_survival_data(
 #   n = 500,
 #   strata_levels  = c("Type A", "Type B"),  # adds valve_type column
 #   hazard_ratios  = c(1, 1.4),
 #   seed = 42
 # )
-# result_s <- survival_curve(dta_s, strata_col = "valve_type", alpha = 0.8)
+# p_s <- survival_curve(dta_s, group_col = "valve_type", alpha = 0.8)
 #
-# result_s$survival_plot +
+# p_s +
 #   ggplot2::scale_color_manual(
 #     values = c("Type A" = "blue", "Type B" = "red"),
 #     name   = "Valve Type"
@@ -205,7 +223,7 @@ result$report_table
 #   hvti_theme("manuscript")
 #
 # --- Hazard rate plot (PLOTH=1; add smoother for publication) ---
-# result$hazard_plot +
+# survival_curve(dta, plot_type = "hazard") +
 #   ggplot2::geom_smooth(ggplot2::aes(x = mid_time, y = hazard,
 #                                     color = strata),
 #                        method = "loess", se = FALSE, span = 0.5) +
@@ -215,21 +233,21 @@ result$report_table
 #   hvti_theme("manuscript")
 #
 # --- Log-log plot (PLOTC log-log; proportional-hazards check) ---
-# result$loglog_plot +
+# survival_curve(dta, plot_type = "loglog") +
 #   ggplot2::labs(x = "log(Years)", y = "log(-log S(t))",
 #                 title = "Log-Log Survival (PH Assumption Check)") +
 #   hvti_theme("manuscript")
 #
 # --- Integrated survivorship / restricted mean survival (PLOTL=1) ---
-# result$life_plot +
+# survival_curve(dta, plot_type = "life") +
 #   ggplot2::scale_x_continuous(breaks = seq(0, 20, 5)) +
 #   ggplot2::labs(x = "Years after Operation",
 #                 y = "Restricted Mean Survival (years)") +
 #   hvti_theme("manuscript")
 #
 # --- Nelson-Aalen (use when S(t) falls to zero; mirrors SAS %nelsont) ---
-# result_na <- survival_curve(dta, alpha = 0.8, method = "nelson-aalen")
-# result_na$survival_plot +
+# p_na <- survival_curve(dta, alpha = 0.8, method = "nelson-aalen")
+# p_na +
 #   ggplot2::scale_color_manual(values = c(All = "steelblue"), guide = "none") +
 #   ggplot2::scale_fill_manual(values  = c(All = "steelblue"), guide = "none") +
 #   ggplot2::scale_y_continuous(breaks = seq(0, 100, 20),
@@ -241,6 +259,5 @@ result$report_table
 #   hvti_theme("manuscript")
 #
 # --- Save ---
-# ggplot2::ggsave("survival_curve.pdf", result$survival_plot,
-#                 width = 8, height = 6)
+# ggplot2::ggsave("survival_curve.pdf", p, width = 8, height = 6)
 ```

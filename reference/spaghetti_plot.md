@@ -20,7 +20,7 @@ spaghetti_plot(
   colour_col = NULL,
   line_colour = "grey50",
   line_width = 0.2,
-  alpha = 0.6,
+  alpha = 0.8,
   add_smooth = FALSE,
   smooth_method = "loess",
   smooth_se = FALSE,
@@ -63,7 +63,7 @@ spaghetti_plot(
 
 - alpha:
 
-  Transparency of individual lines. Default `0.6`.
+  Transparency of plot elements (0–1). Default `0.8`.
 
 - add_smooth:
 

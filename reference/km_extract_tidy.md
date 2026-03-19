@@ -7,7 +7,7 @@ derived columns that match the SAS `%kaplan` macro outputs:
 ## Usage
 
 ``` r
-km_extract_tidy(fit, strata_col)
+km_extract_tidy(fit, group_col)
 ```
 
 ## Arguments
@@ -16,7 +16,7 @@ km_extract_tidy(fit, strata_col)
 
   A `survfit` object.
 
-- strata_col:
+- group_col:
 
   Name of the original stratification column, or `NULL`.
 

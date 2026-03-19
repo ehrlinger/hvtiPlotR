@@ -83,6 +83,12 @@ A
 [`ggplot2::theme()`](https://ggplot2.tidyverse.org/reference/theme.html)
 object.
 
+## Note
+
+Deprecated. Use
+[`hvti_theme()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_theme.md)
+with `style = "manuscript"` instead.
+
 ## See also
 
 [`hvti_theme()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_theme.md),

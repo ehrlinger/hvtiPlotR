@@ -27,12 +27,15 @@ sample_trends_data(
 
 - year_range:
 
-  Integer vector `c(start, end)` for surgery years. Default
+  Integer vector `c(start, end)` for the x-axis range (surgery year, or
+  patient age when used with `tp.lp.trends.age.sas` patterns). Default
   `c(1990, 2020)`.
 
 - groups:
 
-  Character vector of group labels. Default
+  Character vector of group labels, or `NULL` for a single-group figure
+  (no `group` column returned; use with
+  `trends_plot(..., group_col = NULL)`). Default
   `c("Group I", "Group II", "Group III", "Group IV")`.
 
 - seed:
@@ -43,11 +46,12 @@ sample_trends_data(
 
 A data frame with columns:
 
-- `year` — surgery year (integer)
+- `year` — x-axis value (integer; surgery year or patient age)
 
 - `value` — continuous outcome (numeric)
 
-- `group` — group label (factor, ordered by `groups`)
+- `group` — group label (factor, ordered by `groups`); absent when
+  `groups = NULL`
 
 ## See also
 
