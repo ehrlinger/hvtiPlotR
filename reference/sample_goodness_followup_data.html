@@ -21,7 +21,7 @@ tp.dp.gfup.R template."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">hvtiPlotR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.0.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -31,6 +31,12 @@ tp.dp.gfup.R template."></head><body>
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto"><li class="nav-item"><a class="nav-link" href="../articles/hvtiPlotR.html">Get started</a></li>
 <li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
+<li class="nav-item dropdown">
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/plot-decorators.html">Decorating and Saving hvtiPlotR Plots</a></li>
+    <li><a class="dropdown-item" href="../articles/plot-functions.html">hvtiPlotR Plot Functions</a></li>
+    <li><a class="dropdown-item" href="../articles/sas-migration-guide.html">SAS Template Migration Guide: Finding Your Plot in R</a></li>
+  </ul></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
@@ -51,7 +57,7 @@ tp.dp.gfup.R template."></head><body>
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Generate Sample Goodness-of-Follow-Up Data</h1>
-      <small class="dont-index">Source: <a href="https://github.com/ehrlinger/hvtiPlotR/blob/v1.1.0/R/goodness-followup.R" class="external-link"><code>R/goodness-followup.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/ehrlinger/hvtiPlotR/blob/main/R/goodness-followup.R" class="external-link"><code>R/goodness-followup.R</code></a></small>
       <div class="d-none name"><code>sample_goodness_followup_data.Rd</code></div>
     </div>
 
@@ -76,7 +82,7 @@ mirroring the distinction between <code>dead</code> and <code>deads</code> in th
 <span>  close_date <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/as.Date.html" class="external-link">as.Date</a></span><span class="op">(</span><span class="st">"2021-08-06"</span><span class="op">)</span>,</span>
 <span>  death_rate <span class="op">=</span> <span class="fl">0.05</span>,</span>
 <span>  event_rate <span class="op">=</span> <span class="fl">0.08</span>,</span>
-<span>  seed <span class="op">=</span> <span class="fl">42</span></span>
+<span>  seed <span class="op">=</span> <span class="fl">42L</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -161,8 +167,7 @@ model). Default <code>0.08</code> (median time-to-event ~9 years).</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6  24.1620  7.4334 FALSE   7.4334    FALSE FALSE</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Death panel</span></span></span>
-<span class="r-in"><span><span class="va">result</span> <span class="op">&lt;-</span> <span class="fu"><a href="goodness_followup.html">goodness_followup</a></span><span class="op">(</span><span class="va">dta</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">result</span><span class="op">$</span><span class="va">death_plot</span> <span class="op">+</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="goodness_followup.html">goodness_followup</a></span><span class="op">(</span><span class="va">dta</span><span class="op">)</span> <span class="op">+</span></span></span>
 <span class="r-in"><span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_color_manual</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>    values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Alive"</span> <span class="op">=</span> <span class="st">"blue"</span>, <span class="st">"Dead"</span> <span class="op">=</span> <span class="st">"red"</span><span class="op">)</span>, name <span class="op">=</span> <span class="cn">NULL</span></span></span>
 <span class="r-in"><span>  <span class="op">)</span> <span class="op">+</span></span></span>
@@ -171,14 +176,13 @@ model). Default <code>0.08</code> (median time-to-event ~9 years).</p></dd>
 <span class="r-plt img"><img src="sample_goodness_followup_data-1.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Event panel</span></span></span>
-<span class="r-in"><span><span class="va">result2</span> <span class="op">&lt;-</span> <span class="fu"><a href="goodness_followup.html">goodness_followup</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="goodness_event_plot.html">goodness_event_plot</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>  <span class="va">dta</span>,</span></span>
 <span class="r-in"><span>  event_col           <span class="op">=</span> <span class="st">"ev_event"</span>,</span></span>
 <span class="r-in"><span>  event_time_col      <span class="op">=</span> <span class="st">"iv_event"</span>,</span></span>
 <span class="r-in"><span>  death_for_event_col <span class="op">=</span> <span class="st">"deads"</span>,</span></span>
 <span class="r-in"><span>  event_levels        <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"No event"</span>, <span class="st">"Relapse"</span>, <span class="st">"Death"</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">result2</span><span class="op">$</span><span class="va">event_plot</span> <span class="op">+</span></span></span>
+<span class="r-in"><span><span class="op">)</span> <span class="op">+</span></span></span>
 <span class="r-in"><span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_color_manual</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>    values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"No event"</span> <span class="op">=</span> <span class="st">"blue"</span>, <span class="st">"Relapse"</span> <span class="op">=</span> <span class="st">"green3"</span>, <span class="st">"Death"</span> <span class="op">=</span> <span class="st">"red"</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>    name   <span class="op">=</span> <span class="cn">NULL</span></span></span>

@@ -18,7 +18,7 @@ sample_mirror_histogram_data(
   n = 500,
   separation = 1.5,
   caliper = 0.05,
-  seed = 123,
+  seed = 42L,
   add_weights = FALSE
 )
 ```
@@ -43,7 +43,7 @@ sample_mirror_histogram_data(
 
 - seed:
 
-  Integer random seed for reproducibility (default 123).
+  Integer random seed for reproducibility (default 42L).
 
 - add_weights:
 

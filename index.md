@@ -15,7 +15,7 @@ historical *plot.sas* macro. It provides:
   [`theme_manuscript()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_theme_manuscript.md)
   /
   [`theme_man()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_theme_manuscript.md),
-  [`theme_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_theme_ppt.md),
+  [`theme_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_theme_dark_ppt.md),
   [`theme_poster()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_theme_poster.md),
   [`theme_dark_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_theme_dark_ppt.md).
 - Mirrored propensity score histograms via

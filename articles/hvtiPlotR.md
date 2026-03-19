@@ -28,6 +28,11 @@ our standards and the **hvtiPlotR** package are modified.
 
 Keywords: *publication graphics, powerpoint, ggplot2, plot.sas*.
 
+Companion vignettes cover individual plot functions ([hvtiPlotR Plot
+Functions](https://ehrlinger.github.io/hvtiPlotR/articles/plot-functions.md))
+and plot decoration and saving ([Decorating and Saving hvtiPlotR
+Plots](https://ehrlinger.github.io/hvtiPlotR/articles/plot-decorators.md)).
+
 ## About this document
 
 This package vignette is an introduction to the R package **hvtiPlotR**,
@@ -286,7 +291,7 @@ names.
 ``` r
 library("foreign")
 # The xport file name
-dtFilename = "../datasets/par_cst.xpt"
+dtFilename = system.file("extdata", "par_cst.xpt", package = "hvtiPlotR")
 # Read the xport file into a data.frame
 dta<- read.xport(dtFilename)
 # Reading in the labels takes 2 more commands.
@@ -745,36 +750,14 @@ show(ccf_pptPlot)
 
 ![](hvtiPlotR_files/figure-html/powerpoint_fig1-1.png)
 
-## ggplot2 themes for publication
+## Themes and Decoration
 
-The themes system in `ggplot` enables a user to control non-data
-elements of a `ggplot` object. Where we use `color` palettes (Section
-3.10), `shapes` (Section 3.9) and `linetypes` (Section 3.8) to control
-the data elements, we use themes to control the visual details of most
-of the remaining aspects of our figures.
-
-The **hvtiPlotR** package contains two custom themes. The
-{hvti_theme(“manuscript”)} theme is used for manuscripts, and the
-{hvti_theme(“ppt”)} and {theme_ppt()} themes are used for powerpoint
-documents. These themes can be applied to any figure that was created
-using the ggplot2 package.
-
-### Theme for Manuscripts
-
-As before, there are multiple ways to assign a theme to use. Using the
-theme_set() function will apply the theme for all subsequent figures.
-Even if the figure was created before the theme_set call, displaying a
-figure after the call will apply the new theme. It is then best to
-revert to the default theme when at the end of a section. The following
-code chunk demonstrates this process using the manuscript theme
-(hvti_theme(“manuscript”)). The resulting manuscript graphic is show in
-Figure 12.
+The **hvtiPlotR** package provides four themes via `hvti_theme(style)`:
+`"manuscript"`, `"poster"`, `"light_ppt"`, and `"dark_ppt"`. Apply the
+theme as the last `+` layer on any composed ggplot object.
 
 ``` r
-# Set the theme for manuscripts,
-theme_set(hvti_theme("manuscript"))
-# show the figure.
-ccf_plot
+ccf_plot + hvti_theme("manuscript")
 ```
 
     Warning: Removed 7 rows containing missing values or values outside the scale range
@@ -783,805 +766,20 @@ ccf_plot
     Warning: Removed 117 rows containing missing values or values outside the scale range
     (`geom_point()`).
 
-![](hvtiPlotR_files/figure-html/man_theme-1.png)
-
-Note that we are plotting the same figure show in Figure ??. However, we
-have modified the box around the plot window as well as made some other
-minor modifications targeted at creating publication quality graphics.
-
-### Theme for Presentations
-
-In this example, we apply the powerpoint theme to only eﬀect the figure
-constructed in Figure 11. This code chunk removes the `x` and `y` axis
-label, since we prefer to add those within PowerPoint directly. The
-results are shown in Figure 13.
-
-``` r
-# Update the PowerPoint Figure to include the PPT Theme, and remove axis labels. 
-# Axis labels will be added manually in powerpoint. 
-ccf_pptPlot <- ccf_pptPlot + 
-  hvti_theme("ppt")
-ccf_pptPlot
-```
-
-![](hvtiPlotR_files/figure-html/powerpoint_fig2-1.png)
-
-The theme for presentations is significantly diﬀerent from what we
-showed in Figure 11. Since our presentations are displayed on a blue
-background, we have changed the axis tick labels to white. The axis
-labels, frame and tick mark are there, on an invisible background so
-that changes to the slide background are visible through the figure. To
-see the full eﬀect, we modify the theme of the plot background from
-“transparent” to “blue” in Figure 13.
-
-``` r
-# Show the figure... the theme statement is used so the axis tick marks and values 
-# are visible in this document. 
-ccf_pptPlot + theme(plot.background = element_rect(fill='blue', colour='blue')) 
-```
-
-![](hvtiPlotR_files/figure-html/powerpoint_fig3-1.png)
-
-## Mirrored Propensity Score Histogram
-
-A common figure in propensity-matched analyses is the mirrored
-histogram, which displays the propensity score distributions for two
-treatment groups before and after matching. The **hvtiPlotR** package
-provides the
-[`mirror_histogram()`](https://ehrlinger.github.io/hvtiPlotR/reference/mirror_histogram.md)
-function to generate this figure.
-
-The function accepts a data frame with columns for the propensity score,
-group indicator, and match indicator. The
-[`sample_mirror_histogram_data()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_mirror_histogram_data.md)
-function generates example data suitable for testing.
-
-``` r
-# Generate sample data for the mirrored histogram
-mirror_dta <- sample_mirror_histogram_data(n = 2000)
-
-# Generate the mirrored histogram
-mhist <- mirror_histogram(
-  data = mirror_dta,
-  score_col = "prob_t",
-  group_col = "tavr",
-  match_col = "match",
-  group_levels = c(0, 1),
-  group_labels = c("SAVR", "TF-TAVR"),
-  matched_value = 1,
-  score_multiplier = 100,
-  binwidth = 5,
-  alpha = 0.8
-)
-
-# Display the plot
-mhist$plot
-```
-
-![](hvtiPlotR_files/figure-html/mirror_histogram-1.png)
-
-The lighter bars show the full (pre-match) propensity score distribution
-for each group, while the darker overlaid bars show the matched subset.
-The upper panel corresponds to the first group label and the lower panel
-to the second.
-
-The function also returns diagnostics summarising group counts and
-standardized mean differences (SMD) before and after matching:
-
-``` r
-# Standardized mean difference before matching
-mhist$diagnostics$smd_before
-```
-
-    [1] 1.52139
-
-``` r
-# Standardized mean difference after matching
-mhist$diagnostics$smd_matched
-```
-
-    [1] 0.02597089
-
-``` r
-# Group counts before matching
-mhist$diagnostics$group_counts_before
-```
-
-       0    1
-    2000 2000 
-
-``` r
-# Group counts after matching
-mhist$diagnostics$group_counts_matched
-```
-
-      0   1
-    927 927 
-
-## Stacked Histogram
-
-A common exploratory figure is the stacked histogram, which shows how
-the composition of a numeric variable changes over time or across
-another grouping dimension. The **hvtiPlotR** package provides the
-[`stacked_histogram()`](https://ehrlinger.github.io/hvtiPlotR/reference/stacked_histogram.md)
-function to generate this figure.
-
-The function returns a bare `ggplot` object — no colour scales, axis
-labels, or theme are applied — so the caller can add those freely with
-the usual `+` operator.
-
-The
-[`sample_stacked_histogram_data()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_stacked_histogram_data.md)
-function generates a reproducible example dataset with `year` and
-`category` columns.
-
-``` r
-# Generate sample data
-hist_dta <- sample_stacked_histogram_data(n_years = 20, start_year = 2000,
-                                           n_categories = 3)
-head(hist_dta)
-```
-
-      year category
-    1 2000        1
-    2 2000        1
-    3 2000        2
-    4 2000        2
-    5 2000        2
-    6 2000        1
-
-### Count histogram
-
-The default `position = "stack"` shows raw counts within each bin,
-equivalent to the `plot.sas` frequency histogram.
-
-``` r
-# Build the bare plot
-p_count <- stacked_histogram(hist_dta, x_col = "year", group_col = "category")
-
-# Layer on colour scales, labels, and a theme
-p_count +
-  scale_fill_brewer(palette = "Set1", name = "Category") +
-  scale_color_brewer(palette = "Set1", name = "Category") +
-  labs(x = "Year", y = "Count") +
-  hvti_theme("manuscript")
-```
-
-![](hvtiPlotR_files/figure-html/stacked_histogram_count-1.png)
-
-### Proportion (fill) histogram
-
-Setting `position = "fill"` rescales each bin so the bars sum to 1,
-making it easy to compare the relative composition across years.
-
-``` r
-# Build the proportional variant
-p_fill <- stacked_histogram(hist_dta, x_col = "year", group_col = "category",
-                             position = "fill")
-
-# Use manual colours and custom legend labels
-p_fill +
-  scale_fill_manual(
-    values = c("1" = "pink", "2" = "cyan", "3" = "orangered"),
-    labels = c("1" = "Group A", "2" = "Group B", "3" = "Group C"),
-    name   = "Category"
-  ) +
-  scale_color_manual(
-    values = c("1" = "pink", "2" = "cyan", "3" = "orangered"),
-    guide  = "none"
-  ) +
-  labs(x = "Year", y = "Proportion") +
-  hvti_theme("manuscript")
-```
-
-![](hvtiPlotR_files/figure-html/stacked_histogram_fill-1.png)
-
-### Saving stacked histograms
-
-Use [`ggsave()`](https://ggplot2.tidyverse.org/reference/ggsave.html) to
-write the composed figure to disk. Assign the final plot to a variable
-first so the same object is saved and displayed.
-
-``` r
-p_final <- p_fill +
-  scale_fill_manual(
-    values = c("1" = "pink", "2" = "cyan", "3" = "orangered"),
-    name   = "Category"
-  ) +
-  scale_color_manual(
-    values = c("1" = "pink", "2" = "cyan", "3" = "orangered"),
-    guide  = "none"
-  ) +
-  labs(x = "Year", y = "Proportion") +
-  hvti_theme("manuscript")
-
-ggsave(
-  filename = "../graphs/stacked_histogram.pdf",
-  plot     = p_final,
-  width    = 11,
-  height   = 8
-)
-```
-
-## Goodness-of-Follow-Up Plot
-
-The goodness-of-follow-up plot is a standard quality-control figure in
-longitudinal outcome analyses. It displays each patient as a point at
-their operation date (x-axis) and follow-up duration (y-axis), with a
-short vertical tick below each point. A dashed diagonal line marks the
-maximum potential follow-up given the study start, study end, and
-follow-up closing date. The **hvtiPlotR** package provides
-[`goodness_followup()`](https://ehrlinger.github.io/hvtiPlotR/reference/goodness_followup.md)
-to build this figure.
-
-The function returns a bare `ggplot` object with no colour, shape, axis,
-or label scales applied — those are added by the caller with standard
-`ggplot2` modifiers.
-
-### Sample data
-
-``` r
-gfup_dta <- sample_goodness_followup_data(n = 300, seed = 42)
-head(gfup_dta)
-```
-
-      iv_opyrs iv_dead  dead iv_event ev_event deads
-    1  29.5694  2.0261 FALSE   2.0261    FALSE FALSE
-    2   6.4834  6.9027  TRUE   4.0813     TRUE  TRUE
-    3  14.4342  5.4468  TRUE   5.4468    FALSE  TRUE
-    4  25.4324  6.1630 FALSE   0.6137     TRUE FALSE
-    5   3.4251 13.1369  TRUE   6.9232     TRUE  TRUE
-    6  24.1620  7.4334 FALSE   7.4334    FALSE FALSE
-
-### Death follow-up plot
-
-``` r
-gfup <- goodness_followup(
-  data        = gfup_dta,
-  origin_year = 1990,
-  study_start = as.Date("1990-01-01"),
-  study_end   = as.Date("2019-12-31"),
-  close_date  = as.Date("2021-08-06"),
-  alpha       = 0.8
-)
-
-# Bare plot — no scales or labels yet
-gfup$death_plot
-```
-
-![](hvtiPlotR_files/figure-html/gfup_basic-1.png)
-
-### Adding scales, labels, and annotations
-
-Scale, label, and annotation layers are composed with the usual `+`
-operator.
-[`scale_color_manual()`](https://ggplot2.tidyverse.org/reference/scale_manual.html)
-and
-[`scale_shape_manual()`](https://ggplot2.tidyverse.org/reference/scale_manual.html)
-map the binary alive/dead state to colours and point shapes.
-[`annotate()`](https://ggplot2.tidyverse.org/reference/annotate.html)
-places group-identifying text directly on the panel.
-
-``` r
-library(RColorBrewer)
-
-gfup$death_plot +
-  # Colour alive = blue, dead = red (Set1 palette positions 2 and 1)
-  scale_color_manual(
-    values   = brewer.pal(3, "Set1")[c(2, 1)],
-    labels   = c("Alive", "Dead"),
-    na.value = "black",
-    drop     = FALSE
-  ) +
-  scale_shape_manual(
-    values = c(1, 4),
-    labels = c("Alive", "Dead")
-  ) +
-  # Axis tick placement
-  scale_x_continuous(breaks = seq(1990, 2020, 3)) +
-  scale_y_continuous(breaks = seq(0, 33,   3)) +
-  # Clip the panel to the study window
-  coord_cartesian(ylim = c(0, 33), xlim = c(1990, 2020)) +
-  # Axis and legend labels
-  labs(
-    x     = "Operation Date",
-    y     = "Follow-up (years)",
-    color = "Status",
-    shape = "Status"
-  ) +
-  # Annotate directly on the panel
-  annotate("text", x = 1993, y = 31, label = "Alive at close",
-           hjust = 0, size = 3.5) +
-  annotate("text", x = 1993, y = 28, label = "Deceased",
-           hjust = 0, size = 3.5, color = brewer.pal(3, "Set1")[1]) +
-  theme(legend.position = "none")
-```
-
-![](hvtiPlotR_files/figure-html/gfup_styled-1.png)
-
-The diagonal dashed line represents the maximum potential follow-up.
-Points sitting above the line indicate patients with longer follow-up
-than expected from the study window, typically due to passive
-surveillance supplementing active cross-sectional follow-up.
-
-### Saving the plot
-
-Assign the fully composed plot to a variable, then pass it to
-[`ggsave()`](https://ggplot2.tidyverse.org/reference/ggsave.html).
-
-``` r
-gfup_final <- gfup$death_plot +
-  scale_color_manual(
-    values   = brewer.pal(3, "Set1")[c(2, 1)],
-    labels   = c("Alive", "Dead"),
-    na.value = "black",
-    drop     = FALSE
-  ) +
-  scale_shape_manual(values = c(1, 4), labels = c("Alive", "Dead")) +
-  scale_x_continuous(breaks = seq(1990, 2020, 3)) +
-  scale_y_continuous(breaks = seq(0, 33, 3)) +
-  coord_cartesian(ylim = c(0, 33), xlim = c(1990, 2020)) +
-  labs(x = "Operation Date", y = "Follow-up (years)",
-       color = "Status", shape = "Status") +
-  annotate("text", x = 1993, y = 31, label = "Alive at close",
-           hjust = 0, size = 3.5) +
-  annotate("text", x = 1993, y = 28, label = "Deceased",
-           hjust = 0, size = 3.5, color = brewer.pal(3, "Set1")[1]) +
-  theme(legend.position = "none")
-
-ggsave(
-  filename = "../graphs/dp_goodness-of-followup.pdf",
-  plot     = gfup_final,
-  height   = 6,
-  width    = 6
-)
-```
-
-### Non-fatal event panel
-
-When the dataset includes a non-fatal competing event (e.g. relapse,
-reoperation), pass `event_col`, `event_time_col`, and optionally
-`death_for_event_col` to generate a second panel alongside the death
-panel. The follow-up time for the event panel is typically restricted to
-the **active/systematic** follow-up window, using a separate death
-indicator (`deads`) rather than the all-source death indicator (`dead`).
-
-The `state` factor in the event panel has three levels:
-
-1.  No event — alive and event-free at censoring
-2.  Non-fatal event — the event occurred first
-3.  Death — patient died before the event
-
-``` r
-gfup_event_dta <- sample_goodness_followup_data(n = 300, seed = 42)
-```
-
-``` r
-gfup2 <- goodness_followup(
-  gfup_event_dta,
-  origin_year         = 1990,
-  study_start         = as.Date("1990-01-01"),
-  study_end           = as.Date("2019-12-31"),
-  close_date          = as.Date("2021-08-06"),
-  event_col           = "ev_event",
-  event_time_col      = "iv_event",
-  death_for_event_col = "deads",
-  event_levels        = c("No event", "Relapse", "Death"),
-  alpha               = 0.8
-)
-
-gfup2$event_plot +
-  scale_color_manual(
-    values = c("No event" = "blue", "Relapse" = "green3", "Death" = "red"),
-    name   = NULL
-  ) +
-  scale_shape_manual(
-    values = c("No event" = 1L, "Relapse" = 2L, "Death" = 4L),
-    name   = NULL
-  ) +
-  scale_x_continuous(breaks = seq(1990, 2020, 3)) +
-  scale_y_continuous(breaks = seq(0, 33, 3)) +
-  coord_cartesian(ylim = c(0, 33), xlim = c(1990, 2020)) +
-  labs(
-    x = "Operation Date",
-    y = "Follow-up (years)",
-    color = "Event", shape = "Event"
-  ) +
-  annotate("text", x = 1993, y = 31,
-           label = "Systematic follow-up", hjust = 0, size = 3.5) +
-  theme(legend.position = c(0.85, 0.15))
-```
-
-![](hvtiPlotR_files/figure-html/gfup_event_panel-1.png)
-
-The death panel (`gfup2$death_plot`) and event panel
-(`gfup2$event_plot`) share the same diagonal reference line and can be
-saved individually with
-[`ggsave()`](https://ggplot2.tidyverse.org/reference/ggsave.html).
-
-## Covariate Balance Plot
-
-The covariate balance plot is the standard quality-control figure for
-propensity score matching and IPTW analyses. Each covariate occupies a
-labelled row; points show the standardized mean difference (SMD) for
-each comparison group (e.g. before and after matching). A solid vertical
-line marks zero balance; dotted vertical lines mark an imbalance
-threshold (default ±10%).
-
-The **hvtiPlotR** package provides
-[`covariate_balance()`](https://ehrlinger.github.io/hvtiPlotR/reference/covariate_balance.md)
-to build this figure. It returns a bare `ggplot` object — no colour,
-shape, axis labels, or theme applied — so all styling is added with the
-usual `+` operator.
-
-Input data must be in **long format**: one row per covariate × group
-combination with columns for the covariate name, the group label, and
-the numeric SMD value.
-
-### Sample data
-
-``` r
-dta_cb <- sample_covariate_balance_data(n_vars = 12)
-head(dta_cb)
-```
-
-               variable        group std_diff
-    1               Age Before match      9.8
-    2        Female sex Before match     25.4
-    3      Hypertension Before match    -14.7
-    4 Diabetes mellitus Before match     -8.9
-    5              COPD Before match     -3.9
-    6        Creatinine Before match     26.5
-
-### Bare plot
-
-``` r
-covariate_balance(dta_cb, alpha = 0.8)
-```
-
-![](hvtiPlotR_files/figure-html/cov_balance_bare-1.png)
-
-### Adding colour, shape, and axis scales
-
-[`scale_color_manual()`](https://ggplot2.tidyverse.org/reference/scale_manual.html)
-and
-[`scale_shape_manual()`](https://ggplot2.tidyverse.org/reference/scale_manual.html)
-assign visual encodings to the two comparison groups.
-[`scale_x_continuous()`](https://ggplot2.tidyverse.org/reference/scale_continuous.html)
-sets the axis range and tick positions.
-
-``` r
-library(RColorBrewer)
-
-covariate_balance(dta_cb, alpha = 0.8) +
-  scale_color_manual(
-    values = c("Before match" = "red4", "After match" = "blue3"),
-    name   = NULL
-  ) +
-  scale_shape_manual(
-    values = c("Before match" = 17L, "After match" = 15L),
-    name   = NULL
-  ) +
-  scale_x_continuous(
-    limits = c(-45, 35),
-    breaks = seq(-40, 30, 10)
-  ) +
-  labs(
-    x = "Standardized difference (%)",
-    y = ""
-  ) +
-  theme(legend.position = c(0.20, 0.95))
-```
-
-    Warning: Removed 1 row containing missing values or values outside the scale range
-    (`geom_point()`).
-
-![](hvtiPlotR_files/figure-html/cov_balance_scales-1.png)
-
-### Adding directional annotations and theme
-
-[`annotate()`](https://ggplot2.tidyverse.org/reference/annotate.html)
-places explanatory text directly on the panel to indicate which
-direction of imbalance favours each group.
-
-``` r
-n_vars <- length(unique(dta_cb$variable))
-
-covariate_balance(dta_cb, alpha = 0.8) +
-  scale_color_manual(
-    values = c("Before match" = "red4", "After match" = "blue3"),
-    name   = NULL
-  ) +
-  scale_shape_manual(
-    values = c("Before match" = 17L, "After match" = 15L),
-    name   = NULL
-  ) +
-  scale_x_continuous(
-    limits = c(-45, 35),
-    breaks = seq(-40, 30, 10)
-  ) +
-  labs(
-    x = "Standardized difference: Group A \u2013 Group B (%)",
-    y = ""
-  ) +
-  # Directional labels at fixed panel positions
-  annotate("text", x = -32, y = 0.4,        label = "More likely Group B", size = 4) +
-  annotate("text", x =  22, y = n_vars + 1, label = "More likely Group A", size = 4) +
-  theme(legend.position = c(0.20, 0.95)) +
-  hvti_theme("manuscript")
-```
-
-    Warning: Removed 1 row containing missing values or values outside the scale range
-    (`geom_point()`).
-
-![](hvtiPlotR_files/figure-html/cov_balance_annotated-1.png)
-
-Points sitting beyond the dotted ±10% threshold lines indicate
-covariates that remain imbalanced after matching and may warrant further
-investigation or sensitivity analyses.
-
-### Controlling covariate order
-
-Pass `var_levels` to control the bottom-to-top display order of
-covariates.
-
-``` r
-# Reverse the default order so the first covariate appears at the top
-covariate_balance(
-  dta_cb,
-  var_levels = rev(unique(dta_cb$variable)),
-  alpha      = 0.8
-) +
-  scale_color_manual(
-    values = c("Before match" = "red4", "After match" = "blue3"),
-    name   = NULL
-  ) +
-  scale_shape_manual(
-    values = c("Before match" = 17L, "After match" = 15L),
-    name   = NULL
-  ) +
-  labs(x = "Standardized difference (%)", y = "") +
-  hvti_theme("manuscript")
-```
-
-![](hvtiPlotR_files/figure-html/cov_balance_order-1.png)
-
-### Saving the plot
-
-``` r
-cb_final <- covariate_balance(dta_cb, alpha = 0.8) +
-  scale_color_manual(
-    values = c("Before match" = "red4", "After match" = "blue3"),
-    name   = NULL
-  ) +
-  scale_shape_manual(
-    values = c("Before match" = 17L, "After match" = 15L),
-    name   = NULL
-  ) +
-  scale_x_continuous(limits = c(-45, 35), breaks = seq(-40, 30, 10)) +
-  labs(x = "Standardized difference (%)", y = "") +
-  annotate("text", x = -32, y = 0.4,        label = "More likely Group B", size = 4) +
-  annotate("text", x =  22, y = n_vars + 1, label = "More likely Group A", size = 4) +
-  theme(legend.position = c(0.20, 0.95)) +
-  hvti_theme("manuscript")
-
-ggsave(
-  filename = "../graphs/lp_cov-balance.pdf",
-  plot     = cb_final,
-  height   = 7,
-  width    = 8
-)
-```
-
-## Kaplan-Meier Survival Curve
-
-[`survival_curve()`](https://ehrlinger.github.io/hvtiPlotR/reference/survival_curve.md)
-estimates the Kaplan-Meier product-limit survival function and returns
-five companion bare plots matching the SAS `%kaplan` macro output
-(`PLOTS`, `PLOTC`, `PLOTH`, `PLOTL`), plus tidy data frames for tables
-and further computation. Confidence intervals use the logit transform
-with a default confidence level of 0.6827 (one standard deviation),
-reproducing the SAS macro default.
-
-### Sample data
-
-``` r
-dta_km <- sample_survival_data(n = 500, seed = 42)
-head(dta_km)
-```
-
-        iv_dead  dead iv_opyrs age_at_op
-    1  3.966736  TRUE 2003.503  58.08251
-    2 13.217905  TRUE 2008.716  65.37466
-    3  5.669821  TRUE 1990.072  58.80676
-    4  0.763838  TRUE 2005.739  66.45205
-    5  9.463533  TRUE 2006.139  75.84440
-    6 20.000000 FALSE 1991.461  60.21944
-
-### Survival curve (PLOTS=1)
-
-``` r
-km <- survival_curve(dta_km, alpha = 0.8)
-
-# Bare plot — no scales or labels yet
-km$survival_plot
-```
-
-![](hvtiPlotR_files/figure-html/km_result-1.png)
-
-### Adding scales, labels, and annotations
-
-``` r
-km$survival_plot +
-  scale_color_manual(values = c(All = "steelblue"), guide = "none") +
-  scale_fill_manual(values  = c(All = "steelblue"), guide = "none") +
-  scale_y_continuous(
-    breaks = seq(0, 100, 20),
-    labels = function(x) paste0(x, "%")
-  ) +
-  scale_x_continuous(breaks = seq(0, 20, 5)) +
-  coord_cartesian(xlim = c(0, 20), ylim = c(0, 100)) +
-  labs(
-    x     = "Years after Operation",
-    y     = "Freedom from Death (%)",
-    title = "Overall Survival"
-  ) +
-  annotate("text", x = 1, y = 5,
-           label = paste0("n = ", nrow(dta_km)),
-           hjust = 0, size = 3.5) +
-  hvtiPlotR::hvti_theme("manuscript")
-```
-
-    Scale for y is already present.
-    Adding another scale for y, which will replace the existing scale.
-
-![](hvtiPlotR_files/figure-html/km_styled-1.png)
-
-### Numbers at risk and report table
-
-``` r
-km$risk_table
-```
-
-      strata report_time n.risk
-    1    All           1    478
-    2    All           5    412
-    3    All          10    322
-    4    All          15    260
-    5    All          20    207
-    6    All          25    207
-
-``` r
-km$report_table
-```
-
-      strata report_time  surv     lower     upper n.risk n.event
-    1    All           1 0.954 0.9436693 0.9625114    478       1
-    2    All           5 0.822 0.8042449 0.8384681    412       1
-    3    All          10 0.642 0.6202877 0.6631450    322       1
-    4    All          15 0.518 0.4956322 0.5402959    260       1
-    5    All          20 0.414 0.3921576 0.4361859    207       0
-    6    All          25 0.414 0.3921576 0.4361859    207       0
-
-### Saving the plot
-
-``` r
-km_final <- km$survival_plot +
-  scale_color_manual(values = c(All = "steelblue"), guide = "none") +
-  scale_fill_manual(values  = c(All = "steelblue"), guide = "none") +
-  scale_y_continuous(breaks = seq(0, 100, 20),
-                     labels = function(x) paste0(x, "%")) +
-  scale_x_continuous(breaks = seq(0, 20, 5)) +
-  coord_cartesian(xlim = c(0, 20), ylim = c(0, 100)) +
-  labs(x = "Years after Operation", y = "Freedom from Death (%)") +
-  hvtiPlotR::hvti_theme("manuscript")
-
-ggsave("../graphs/km_survival.pdf", km_final, width = 8, height = 6)
-```
-
-### Stratified analysis
-
-``` r
-dta_km_s <- sample_survival_data(
-  n             = 500,
-  strata_levels = c("Type A", "Type B"),
-  hazard_ratios = c(1, 1.4),
-  seed          = 42
-)
-
-km_s <- survival_curve(dta_km_s, strata_col = "valve_type", alpha = 0.8)
-
-km_s$survival_plot +
-  scale_color_manual(
-    values = c("Type A" = "steelblue", "Type B" = "firebrick"),
-    name   = "Valve Type"
-  ) +
-  scale_fill_manual(
-    values = c("Type A" = "steelblue", "Type B" = "firebrick"),
-    name   = "Valve Type"
-  ) +
-  scale_y_continuous(breaks = seq(0, 100, 20),
-                     labels = function(x) paste0(x, "%")) +
-  scale_x_continuous(breaks = seq(0, 20, 5)) +
-  coord_cartesian(xlim = c(0, 20), ylim = c(0, 100)) +
-  labs(x = "Years after Operation", y = "Freedom from Death (%)",
-       title = "Survival by Valve Type") +
-  theme(legend.position = c(0.15, 0.20)) +
-  hvtiPlotR::hvti_theme("manuscript")
-```
-
-    Scale for y is already present.
-    Adding another scale for y, which will replace the existing scale.
-
-![](hvtiPlotR_files/figure-html/km_strata_data-1.png)
-
-### Cumulative hazard (PLOTC=1)
-
-``` r
-km$cumhaz_plot +
-  scale_x_continuous(breaks = seq(0, 20, 5)) +
-  labs(x = "Years after Operation", y = "Cumulative Hazard H(t)",
-       title = "Nelson-Aalen Cumulative Hazard") +
-  scale_color_manual(values = c(All = "steelblue"), guide = "none") +
-  hvtiPlotR::hvti_theme("manuscript")
-```
-
-![](hvtiPlotR_files/figure-html/km_cumhaz-1.png)
-
-### Log-log survival plot (PLOTC, Weibull/PH check)
-
-Parallel lines across strata indicate proportional hazards.
-
-``` r
-km_s$loglog_plot +
-  scale_color_manual(
-    values = c("Type A" = "steelblue", "Type B" = "firebrick"),
-    name   = "Valve Type"
-  ) +
-  labs(x = "log(Years after Operation)", y = "log(-log S(t))",
-       title = "Log-Log Survival — Proportional-Hazards Check") +
-  hvtiPlotR::hvti_theme("manuscript")
-```
-
-![](hvtiPlotR_files/figure-html/km_loglog-1.png)
-
-### Hazard rate (PLOTH=1)
-
-The raw point estimates are noisy; add
-[`geom_smooth()`](https://ggplot2.tidyverse.org/reference/geom_smooth.html)
-for a publication-ready smoothed hazard curve.
-
-``` r
-# Raw points from the SAS %kaplan HAZARD formula
-km$hazard_plot +
-  geom_smooth(
-    aes(x = mid_time, y = hazard, color = strata),
-    method = "loess", se = FALSE, span = 0.6
-  ) +
-  scale_color_manual(values = c(All = "steelblue"), guide = "none") +
-  scale_x_continuous(breaks = seq(0, 20, 5)) +
-  labs(x = "Years after Operation", y = "Instantaneous Hazard",
-       title = "Hazard Rate") +
-  hvtiPlotR::hvti_theme("manuscript")
-```
-
-    `geom_smooth()` using formula = 'y ~ x'
-
-![](hvtiPlotR_files/figure-html/km_hazard-1.png)
-
-### Integrated survivorship / restricted mean survival (PLOTL=1)
-
-``` r
-km$life_plot +
-  scale_color_manual(values = c(All = "steelblue"), guide = "none") +
-  scale_x_continuous(breaks = seq(0, 20, 5)) +
-  labs(x = "Years after Operation",
-       y = "Restricted Mean Survival (years)",
-       title = "Integral of Survivorship") +
-  hvtiPlotR::hvti_theme("manuscript")
-```
-
-![](hvtiPlotR_files/figure-html/km_life-1.png)
+![](hvtiPlotR_files/figure-html/man_theme_demo-1.png)
+
+For full coverage of `scale_*`,
+[`labs()`](https://ggplot2.tidyverse.org/reference/labs.html),
+[`annotate()`](https://ggplot2.tidyverse.org/reference/annotate.html),
+[`coord_cartesian()`](https://ggplot2.tidyverse.org/reference/coord_cartesian.html),
+and saving figures for manuscripts, posters, and slides, see the
+companion vignette [Decorating and Saving hvtiPlotR
+Plots](https://ehrlinger.github.io/hvtiPlotR/articles/plot-decorators.md).
+
+For documentation of all hvtiPlotR plot functions (stacked histogram,
+goodness-of-follow-up, covariate balance, Kaplan-Meier, EDA), see
+[hvtiPlotR Plot
+Functions](https://ehrlinger.github.io/hvtiPlotR/articles/plot-functions.md).
 
 ## Saving publication graphics
 
@@ -1591,127 +789,50 @@ easily be imported into our publications.
 
 ### Manuscript graphics
 
-It is a best practice that we include a footnote containing the figure
-path in each figure we save. This way, when a user sends the file to a
-collaborator, we can reverse engineer where the file and generating code
-resides in case changes are required. We use the gridExtra package
-(Auguie 2012) to add this footnote with the following recipe.
+Use [`ggsave()`](https://ggplot2.tidyverse.org/reference/ggsave.html) to
+write a composed figure to disk. Dimensions of
+`width = 11, height = 8.5` (US Letter landscape) suit most manuscript
+figures.
 
 ``` r
-library("grid") 
-library("gridExtra")
-ccf_savePlot <- arrangeGrob(ccf_plot + hvti_theme("manuscript"),
-                            sub = textGrob(
-                              paste(getwd(), Sys.Date(), sep = " "),
-                              x = 0,
-                              hjust = -.1,
-                              vjust = .01,
-                              gp = gpar(fontface = "italic", fontsize = 6)
-                            )) 
+p_final <- ccf_plot +
+  labs(
+    x       = "Years After Randomization",
+    y       = "Percent in Each Category (ST)",
+    caption = getwd()
+  ) +
+  hvti_theme("manuscript")
+
+ggsave(
+  filename = "../graphs/manuscript.pdf",
+  plot     = p_final,
+  width    = 11,
+  height   = 8.5
+)
 ```
 
-    Warning: Removed 7 rows containing missing values or values outside the scale range
-    (`geom_point()`).
-
-    Warning: Removed 117 rows containing missing values or values outside the scale range
-    (`geom_point()`).
-
-``` r
-ccf_savePlot
-```
-
-    TableGrob (2 x 1) "arrange": 2 grobs
-        z     cells    name                 grob
-        1 (1-1,1-1) arrange       gtable[layout]
-    sub 2 (2-2,1-1) arrange text[GRID.text.1019]
-
-Figure ?? uses the same plot in Figure 12 with the code
-`ccf_plot+hvti_theme("manuscript")`. The current working directory is
-obtained using the [`getwd()`](https://rdrr.io/r/base/getwd.html)
-function. The [`Sys.Date()`](https://rdrr.io/r/base/Sys.time.html)
-function returns the system date for timestamping the figure. The
-footnote is placed with the `x = 0, hjust = -.1, vjust=.01`, and
-formatted with the `gp = gpar(fontface = "italic", fontsize = 6)`. For
-Word documents (Oﬃce ≥ 2007) we can import PDF graphics as a vector
-based format. Saving the figure is accomplished using either the
-[`ggsave()`](https://ggplot2.tidyverse.org/reference/ggsave.html)
-function, or
-[`pdf(); show(); dev.off()`](https://rdrr.io/r/grDevices/pdf.html)
-combination. We have a specific set of width and height dimensions
-required for saving the figure with footnote included to get the font
-sizes to import correctly in Word.
-`ggsave(filename="manuscript.pdf", height=4, width=5, ccf_savePlot)`
+For a full treatment of saving to PDF, poster, and PowerPoint formats
+see [Decorating and Saving hvtiPlotR
+Plots](https://ehrlinger.github.io/hvtiPlotR/articles/plot-decorators.md).
 
 ### PowerPoint graphics
 
-We use the ReporteRs package (Gohel 2014) to insert vector based figures
-from R into PowerPoint documents. The latest version of the ReporteRs
-package is available from http://davidgohel.github.io/ReporteRs/. We
-install this package as we installed the **hvtiPlotR** package.
+Use
+[`save_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/save_ppt.md)
+to insert a ggplot as an editable vector graphic into a PowerPoint file.
+Apply `hvti_theme(“dark_ppt”)` or `hvti_theme(“light_ppt”)` before
+saving.
 
 ``` r
-# Install the latest ReporteRs package. 
-# 
-# The devtools package is installed on all our 
-# jjnb-gen servers as well as other R instances. 
-library("devtools") 
+p_ppt <- ccf_pptPlot + hvti_theme(“dark_ppt”)
+
+save_ppt(
+  plot     = p_ppt,
+  filename = “../graphs/presentation.pptx”,
+  width    = 10,
+  height   = 7.5
+)
 ```
-
-    Loading required package: usethis
-
-``` r
-# To get the latest version. 
-#install_github("davidgohel/ReporteRs") 
-```
-
-Basically, the package works by opening a saved PowerPoint Presentation,
-and inserting new slides containing graphs or tables into the document.
-The resulting document is then saved to a new presentation. We then pass
-this presentation to our collaborators, who then copy and paste the
-`ggplot2` slides into their own presentations. The `ggplot2` graphics
-that are inserted into the presentation are converted into an editable
-vector based format. When the document is edited in PowerPoint,
-graphical components like points, lines, text can be easily modified to
-match the presenters style. The following code block is an R recipe for
-saving the `ccf_pptPlot` created in Section 4.2.
-
-``` r
-  # library("ReporteRs")
-  # 
-  # # Create a powerPoint document using ../inst/RDPresentation.pptx
-  # # as a template document.
-  # doc = pptx(template = paste("../inst/RDPresentation.pptx", sep = ""))
-  # # Here we define powerpoint document filename to write
-  # # the presentation. This will be overwritten
-  # pptx.file = paste("RDExample.pptx", sep = "")
-  # ##--------
-  # # For each graph, addSlide. The graphs require the
-  # # “Title and Content” template.
-  # doc = addSlide(doc, "Title and Content")
-  # # Place a title
-  # doc = addTitle(doc, "Treatment Difference")
-  # # Now add the graph into the powerPoint doc
-  # doc = addPlot(
-  #   doc = doc,
-  #   fun = print,
-  #   x = ccf_pptPlot + theme_ppt() ,
-  #   editable = TRUE,
-  #   offx = .75,
-  #   offy = 1.1,
-  #   width = 8,
-  #   height = 6
-  # )
-  # ##--------
-  # ##--------
-  # ## IF you want to add more, just` repeat between the
-  # ##-------- comments \# write the output powerpoint doc.
-  # # This will not overwrite an open document, since open PPT files are locked.
-  # writeDoc(doc, pptx.file)
-```
-
-The only modification possibly require for this recipe may be moving the
-insertion point (`offx` and `offy` arguments) and/or size (`width` and
-`height`) of the figure in the `addPlot()` function call.
 
 ## Graphics rules to live by
 

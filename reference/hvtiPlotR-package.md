@@ -23,7 +23,7 @@ layers, scales, and themes without restriction.
 - [`theme_man()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_theme_manuscript.md)
   / `theme_manuscript`: Theme for manuscript figures.
 
-- [`theme_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_theme_ppt.md):
+- [`theme_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_theme_dark_ppt.md):
   Theme for PowerPoint presentation figures.
 
 - [`theme_dark_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_theme_dark_ppt.md):

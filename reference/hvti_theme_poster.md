@@ -8,7 +8,7 @@ grid lines.
 
 ``` r
 hvti_theme_poster(
-  base_size = HVTI_THEME_POSTER_BASE_SIZE,
+  base_size = 16,
   base_family = "",
   header_family = NULL,
   base_line_size = base_size/22,
@@ -19,7 +19,7 @@ hvti_theme_poster(
 )
 
 theme_poster(
-  base_size = HVTI_THEME_POSTER_BASE_SIZE,
+  base_size = 16,
   base_family = "",
   header_family = NULL,
   base_line_size = base_size/22,
@@ -34,7 +34,7 @@ theme_poster(
 
 - base_size:
 
-  Base font size in points. Default 16 (16).
+  Base font size in points. Default `16`.
 
 - base_family:
 
@@ -77,5 +77,5 @@ object.
 
 [`hvti_theme()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_theme.md),
 [`theme_man()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_theme_manuscript.md),
-[`theme_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_theme_ppt.md),
+[`theme_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_theme_dark_ppt.md),
 [`theme_dark_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_theme_dark_ppt.md)

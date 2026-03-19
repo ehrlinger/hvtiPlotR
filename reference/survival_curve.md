@@ -120,6 +120,12 @@ plots (`PLOTS`, `PLOTC`, `PLOTH`, `PLOTL`):
   Data frame: `strata`, `report_time`, `surv`, `lower`, `upper`,
   `n.risk`, `n.event`.
 
+## References
+
+SAS template: `tp.ac.dead.sas` (calls `%kaplan` for product-limit
+survival estimates and `%nelsont` for Nelson-Aalen cumulative event
+estimates).
+
 ## Examples
 
 ``` r

@@ -7,7 +7,9 @@ Provides a single entry point for generating hvtiPlotR plots.
 ``` r
 hvti_plot(
   type = c("mirror_histogram", "stacked_histogram", "covariate_balance",
-    "goodness_followup", "survival_curve"),
+    "goodness_followup", "survival_curve", "upset", "alluvial", "trends", "spaghetti",
+    "longitudinal_counts", "nonparametric_curve", "nonparametric_ordinal", "hazard",
+    "survival_difference", "nnt"),
   ...
 )
 ```
@@ -16,9 +18,10 @@ hvti_plot(
 
 - type:
 
-  Character keyword identifying the plot type. Supported values are
+  Character keyword identifying the plot type. Supported values:
   `"mirror_histogram"`, `"stacked_histogram"`, `"covariate_balance"`,
-  `"goodness_followup"`, and `"survival_curve"`.
+  `"goodness_followup"`, `"survival_curve"`, `"upset"`,
+  `"nonparametric_curve"`, `"nonparametric_ordinal"`.
 
 - ...:
 
@@ -26,5 +29,4 @@ hvti_plot(
 
 ## Value
 
-The object produced by the requested plotting function (e.g., a list
-containing plot elements and diagnostics, or a ggplot object).
+The object produced by the requested plotting function.

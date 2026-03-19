@@ -9,7 +9,7 @@ Supports two display modes selected by the arguments supplied:"></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">hvtiPlotR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.0.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -19,6 +19,12 @@ Supports two display modes selected by the arguments supplied:"></head><body>
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto"><li class="nav-item"><a class="nav-link" href="../articles/hvtiPlotR.html">Get started</a></li>
 <li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
+<li class="nav-item dropdown">
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/plot-decorators.html">Decorating and Saving hvtiPlotR Plots</a></li>
+    <li><a class="dropdown-item" href="../articles/plot-functions.html">hvtiPlotR Plot Functions</a></li>
+    <li><a class="dropdown-item" href="../articles/sas-migration-guide.html">SAS Template Migration Guide: Finding Your Plot in R</a></li>
+  </ul></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
@@ -39,7 +45,7 @@ Supports two display modes selected by the arguments supplied:"></head><body>
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Plot Mirrored Propensity Score Histogram</h1>
-      <small class="dont-index">Source: <a href="https://github.com/ehrlinger/hvtiPlotR/blob/v1.1.0/R/mirror-histogram.R" class="external-link"><code>R/mirror-histogram.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/ehrlinger/hvtiPlotR/blob/main/R/mirror-histogram.R" class="external-link"><code>R/mirror-histogram.R</code></a></small>
       <div class="d-none name"><code>mirror_histogram.Rd</code></div>
     </div>
 
@@ -166,41 +172,41 @@ counts (before weighting); overlaid bars show per-bin weight sums.
 <span class="r-in"><span><span class="co"># separation = 1.5 leaves many high/low-score patients unmatched at tails</span></span></span>
 <span class="r-in"><span><span class="va">mirror_dta</span> <span class="op">&lt;-</span> <span class="fu"><a href="sample_mirror_histogram_data.html">sample_mirror_histogram_data</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">500</span>, separation <span class="op">=</span> <span class="fl">1.5</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">mhist</span> <span class="op">&lt;-</span> <span class="fu">mirror_histogram</span><span class="op">(</span><span class="va">mirror_dta</span>, alpha <span class="op">=</span> <span class="fl">0.8</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">mhist</span><span class="op">$</span><span class="va">plot</span></span></span>
-<span class="r-plt img"><img src="mirror_histogram-1.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span><span class="va">mhist</span><span class="op">$</span><span class="va">diagnostics</span><span class="op">$</span><span class="va">smd_before</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 1.524308</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 1.565275</span>
 <span class="r-in"><span><span class="va">mhist</span><span class="op">$</span><span class="va">diagnostics</span><span class="op">$</span><span class="va">smd_matched</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.02732008</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.01837958</span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># Customise fill colours</span></span></span>
+<span class="r-in"><span><span class="co"># Customise fill colours and apply manuscript theme</span></span></span>
 <span class="r-in"><span><span class="va">mhist</span><span class="op">$</span><span class="va">plot</span> <span class="op">+</span></span></span>
 <span class="r-in"><span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_fill_manual</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>    values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>before_g0 <span class="op">=</span> <span class="st">"white"</span>,  matched_g0 <span class="op">=</span> <span class="st">"steelblue"</span>,</span></span>
 <span class="r-in"><span>               before_g1 <span class="op">=</span> <span class="st">"white"</span>,  matched_g1 <span class="op">=</span> <span class="st">"firebrick"</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>    guide <span class="op">=</span> <span class="st">"none"</span></span></span>
-<span class="r-in"><span>  <span class="op">)</span></span></span>
-<span class="r-plt img"><img src="mirror_histogram-2.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span>  <span class="op">)</span> <span class="op">+</span></span></span>
+<span class="r-in"><span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Propensity Score"</span>, y <span class="op">=</span> <span class="st">"Count"</span><span class="op">)</span> <span class="op">+</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="hvti_theme.html">hvti_theme</a></span><span class="op">(</span><span class="st">"manuscript"</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="mirror_histogram-1.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># --- Weighted IPTW mode --------------------------------------------------</span></span></span>
 <span class="r-in"><span><span class="va">wt_dta</span> <span class="op">&lt;-</span> <span class="fu"><a href="sample_mirror_histogram_data.html">sample_mirror_histogram_data</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">500</span>, add_weights <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">mhist_wt</span> <span class="op">&lt;-</span> <span class="fu">mirror_histogram</span><span class="op">(</span><span class="va">wt_dta</span>, weight_col <span class="op">=</span> <span class="st">"mt_wt"</span>, alpha <span class="op">=</span> <span class="fl">0.8</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">mhist_wt</span><span class="op">$</span><span class="va">plot</span></span></span>
-<span class="r-plt img"><img src="mirror_histogram-3.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span><span class="va">mhist_wt</span><span class="op">$</span><span class="va">diagnostics</span><span class="op">$</span><span class="va">smd_weighted</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.5483862</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.5445719</span>
 <span class="r-in"><span><span class="va">mhist_wt</span><span class="op">$</span><span class="va">diagnostics</span><span class="op">$</span><span class="va">effective_n_by_group</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   0   1 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 500 500 </span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># Customise fill colours for weighted mode</span></span></span>
+<span class="r-in"><span><span class="co"># Customise fill colours for weighted mode and apply manuscript theme</span></span></span>
 <span class="r-in"><span><span class="va">mhist_wt</span><span class="op">$</span><span class="va">plot</span> <span class="op">+</span></span></span>
 <span class="r-in"><span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_fill_manual</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>    values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>before_g0 <span class="op">=</span> <span class="st">"white"</span>, weighted_g0 <span class="op">=</span> <span class="st">"blue"</span>,</span></span>
 <span class="r-in"><span>               before_g1 <span class="op">=</span> <span class="st">"white"</span>, weighted_g1 <span class="op">=</span> <span class="st">"red"</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>    guide <span class="op">=</span> <span class="st">"none"</span></span></span>
-<span class="r-in"><span>  <span class="op">)</span></span></span>
-<span class="r-plt img"><img src="mirror_histogram-4.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span>  <span class="op">)</span> <span class="op">+</span></span></span>
+<span class="r-in"><span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Propensity Score"</span>, y <span class="op">=</span> <span class="st">"Weighted Count"</span><span class="op">)</span> <span class="op">+</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="hvti_theme.html">hvti_theme</a></span><span class="op">(</span><span class="st">"manuscript"</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="mirror_histogram-2.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

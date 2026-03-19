@@ -1,5 +1,60 @@
 # Changelog
 
+## hvtiPlotR 2.0.0.9000
+
+- Added
+  [`eda_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/eda_plot.md)
+  — exploratory barplot/scatterplot for a single variable. Auto-detects
+  variable type (`"Cont"`, `"Cat_Num"`, `"Cat_Char"`) and dispatches to
+  scatter + LOESS + rug (continuous) or stacked/filled bar
+  (categorical). `NA` values are shown as an explicit `"(Missing)"` fill
+  level. Returns a bare ggplot object for composition with
+  `scale_fill_*`, `scale_colour_*`,
+  [`labs()`](https://ggplot2.tidyverse.org/reference/labs.html),
+  [`annotate()`](https://ggplot2.tidyverse.org/reference/annotate.html),
+  and \[hvti_theme()\]. Ports `Function_DataPlotting()` from
+  `tp.dp.EDA_barplots_scatterplots.R`.
+- Added
+  [`eda_classify_var()`](https://ehrlinger.github.io/hvtiPlotR/reference/eda_classify_var.md)
+  — replicates the `UniqueLimit` type-detection logic from
+  `Barplot_Scatterplot_Function.R`: classifies a vector as `"Cont"`,
+  `"Cat_Num"`, or `"Cat_Char"`.
+- Added
+  [`eda_select_vars()`](https://ehrlinger.github.io/hvtiPlotR/reference/eda_select_vars.md)
+  — subsets and reorders a data frame by a character vector or
+  space-separated string of column names. Replaces `Order_Variables()`
+  and the `Mod_Data <- dta[, Order_Var]` pattern from
+  `tp.dp.EDA_barplots_scatterplots_varnames.R`.
+- Added
+  [`sample_eda_data()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_eda_data.md)
+  — mixed-type cardiac-surgery registry simulation (binary, ordinal,
+  character-categorical, and continuous variables) for demonstrating
+  [`eda_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/eda_plot.md)
+  and
+  [`eda_select_vars()`](https://ehrlinger.github.io/hvtiPlotR/reference/eda_select_vars.md).
+- Reorganised `inst/`: moved `par_cst.xpt` and `npar_cst.xpt` to
+  `inst/extdata/` (standard R package location for bundled data files);
+  removed unreferenced presentation and test artefacts (`*.pptx`,
+  `*.pdf`, `*.sas` scratch files).
+- Extended
+  [`nonparametric_curve_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/nonparametric_curve_plot.md)
+  examples: added dual-Y-axis example (Example 10, `\dontrun`) using
+  `scale_y_continuous(sec.axis = ...)`; noted `cll_p95`/`clu_p95` column
+  availability for 95 % CI (Example 2) and per-group shape mapping via
+  [`scale_shape_manual()`](https://ggplot2.tidyverse.org/reference/scale_manual.html)
+  (Example 4).
+- Extended
+  [`nonparametric_ordinal_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/nonparametric_ordinal_plot.md)
+  examples: added pre-operative severity comparison example grouping
+  combined Mild/Moderate/Severe cohorts through
+  [`nonparametric_curve_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/nonparametric_curve_plot.md).
+- Split vignette into three: `hvtiPlotR.qmd` (SAS migration guide),
+  `plot-functions.qmd` (per-function reference with worked examples),
+  `plot-decorators.qmd` (composition grammar: `scale_*`,
+  [`labs()`](https://ggplot2.tidyverse.org/reference/labs.html), themes,
+  and saving to manuscript PDF, poster PDF, and editable PowerPoint via
+  [`save_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/save_ppt.md)).
+
 ## hvtiPlotR 1.1.0
 
 - Added

@@ -113,11 +113,12 @@ library(ggplot2)
 
 dta <- sample_covariate_balance_data()
 
-# Bare plot
-covariate_balance(dta, alpha = 0.8)
+# Bare plot with manuscript theme
+covariate_balance(dta, alpha = 0.8) +
+  hvtiPlotR::hvti_theme("manuscript")
 
 
-# Add colour, shape, and axis scales
+# Add colour, shape, axis scales, and manuscript theme
 covariate_balance(dta, alpha = 0.8) +
   scale_color_manual(
     values = c("Before match" = "red4", "After match" = "blue3"),
@@ -132,6 +133,7 @@ covariate_balance(dta, alpha = 0.8) +
     x = "Standardized difference: Group A vs Group B (%)",
     y = ""
   ) +
+  hvtiPlotR::hvti_theme("manuscript") +
   theme(legend.position = c(0.20, 0.95))
 #> Warning: Removed 1 row containing missing values or values outside the scale range
 #> (`geom_point()`).

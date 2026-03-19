@@ -13,8 +13,8 @@
 <link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Porting HVTI plot templates and methodology documentation to ggplot2 package in R">
-<meta name="description" content="ggplot2 themes and methodology documentation for creating publication quality graphics in R conforming to the standards of the clinical investigations statistics group within The Heart \&amp; Vascular Institute at the Cleveland Clinic.">
-<meta property="og:description" content="ggplot2 themes and methodology documentation for creating publication quality graphics in R conforming to the standards of the clinical investigations statistics group within The Heart \&amp; Vascular Institute at the Cleveland Clinic.">
+<meta name="description" content="ggplot2 themes and methodology documentation for creating publication quality graphics in R conforming to the standards of Cardiovascular Outcomes Registries and Research (CORR) within The Heart \&amp; Vascular Institute at the Cleveland Clinic.">
+<meta property="og:description" content="ggplot2 themes and methodology documentation for creating publication quality graphics in R conforming to the standards of Cardiovascular Outcomes Registries and Research (CORR) within The Heart \&amp; Vascular Institute at the Cleveland Clinic.">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -24,7 +24,7 @@
 
     <a class="navbar-brand me-2" href="index.html">hvtiPlotR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.0.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -35,6 +35,14 @@
       <ul class="navbar-nav me-auto">
 <li class="nav-item"><a class="nav-link" href="articles/hvtiPlotR.html">Get started</a></li>
 <li class="nav-item"><a class="nav-link" href="reference/index.html">Reference</a></li>
+<li class="nav-item dropdown">
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
+<li><a class="dropdown-item" href="articles/plot-decorators.html">Decorating and Saving hvtiPlotR Plots</a></li>
+    <li><a class="dropdown-item" href="articles/plot-functions.html">hvtiPlotR Plot Functions</a></li>
+    <li><a class="dropdown-item" href="articles/sas-migration-guide.html">SAS Template Migration Guide: Finding Your Plot in R</a></li>
+  </ul>
+</li>
 <li class="nav-item"><a class="nav-link" href="news/index.html">Changelog</a></li>
       </ul>
 <ul class="navbar-nav">
@@ -67,7 +75,7 @@
 <p>The <em>hvtiPlotR</em> package is the modern <em>R</em> implementation of the historical <em>plot.sas</em> macro. It provides:</p>
 <ul>
 <li>A cohesive ggplot2 theme family accessible through the <code><a href="reference/hvti_theme.html">hvti_theme()</a></code> generic (e.g., <code>hvti_theme("ppt")</code>, <code>hvti_theme("manuscript")</code>).</li>
-<li>Convenience theme aliases: <code><a href="reference/hvti_theme_manuscript.html">theme_manuscript()</a></code> / <code><a href="reference/hvti_theme_manuscript.html">theme_man()</a></code>, <code><a href="reference/hvti_theme_ppt.html">theme_ppt()</a></code>, <code><a href="reference/hvti_theme_poster.html">theme_poster()</a></code>, <code><a href="reference/hvti_theme_dark_ppt.html">theme_dark_ppt()</a></code>.</li>
+<li>Convenience theme aliases: <code><a href="reference/hvti_theme_manuscript.html">theme_manuscript()</a></code> / <code><a href="reference/hvti_theme_manuscript.html">theme_man()</a></code>, <code><a href="reference/hvti_theme_dark_ppt.html">theme_ppt()</a></code>, <code><a href="reference/hvti_theme_poster.html">theme_poster()</a></code>, <code><a href="reference/hvti_theme_dark_ppt.html">theme_dark_ppt()</a></code>.</li>
 <li>Mirrored propensity score histograms via <code><a href="reference/mirror_histogram.html">mirror_histogram()</a></code>.</li>
 <li>Helpers for exporting plots to PowerPoint (powered by <code>officer</code>) via <code><a href="reference/save_ppt.html">save_ppt()</a></code>.</li>
 </ul>
@@ -100,7 +108,7 @@
 <span><span class="co"># Or using the exported aliases directly</span></span>
 <span><span class="va">p</span> <span class="op">+</span> <span class="fu"><a href="reference/hvti_theme_manuscript.html">theme_manuscript</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">p</span> <span class="op">+</span> <span class="fu"><a href="reference/hvti_theme_manuscript.html">theme_man</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="va">p</span> <span class="op">+</span> <span class="fu"><a href="reference/hvti_theme_ppt.html">theme_ppt</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">p</span> <span class="op">+</span> <span class="fu"><a href="reference/hvti_theme_dark_ppt.html">theme_ppt</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">p</span> <span class="op">+</span> <span class="fu"><a href="reference/hvti_theme_poster.html">theme_poster</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">p</span> <span class="op">+</span> <span class="fu"><a href="reference/hvti_theme_dark_ppt.html">theme_dark_ppt</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>

@@ -3,7 +3,10 @@ pkgdown: 2.2.0
 pkgdown_sha: ~
 articles:
   hvtiPlotR: hvtiPlotR.html
-last_built: 2026-03-17T21:20Z
+  plot-decorators: plot-decorators.html
+  plot-functions: plot-functions.html
+  sas-migration-guide: sas-migration-guide.html
+last_built: 2026-03-19T15:29Z
 urls:
   reference: https://ehrlinger.github.io/hvtiPlotR/reference
   article: https://ehrlinger.github.io/hvtiPlotR/articles

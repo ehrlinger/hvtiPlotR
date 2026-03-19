@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">hvtiPlotR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.0.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -17,6 +17,12 @@
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto"><li class="nav-item"><a class="nav-link" href="../articles/hvtiPlotR.html">Get started</a></li>
 <li class="nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
+<li class="nav-item dropdown">
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/plot-decorators.html">Decorating and Saving hvtiPlotR Plots</a></li>
+    <li><a class="dropdown-item" href="../articles/plot-functions.html">hvtiPlotR Plot Functions</a></li>
+    <li><a class="dropdown-item" href="../articles/sas-migration-guide.html">SAS Template Migration Guide: Finding Your Plot in R</a></li>
+  </ul></li>
 <li class="active nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
@@ -37,9 +43,20 @@
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Changelog</h1>
-      <small>Source: <a href="https://github.com/ehrlinger/hvtiPlotR/blob/v1.1.0/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
+      <small>Source: <a href="https://github.com/ehrlinger/hvtiPlotR/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="2.0.0.9000" id="hvtiplotr-2009000">hvtiPlotR 2.0.0.9000<a class="anchor" aria-label="anchor" href="#hvtiplotr-2009000"></a></h2>
+<ul><li>Added <code><a href="../reference/eda_plot.html">eda_plot()</a></code> — exploratory barplot/scatterplot for a single variable. Auto-detects variable type (<code>"Cont"</code>, <code>"Cat_Num"</code>, <code>"Cat_Char"</code>) and dispatches to scatter + LOESS + rug (continuous) or stacked/filled bar (categorical). <code>NA</code> values are shown as an explicit <code>"(Missing)"</code> fill level. Returns a bare ggplot object for composition with <code>scale_fill_*</code>, <code>scale_colour_*</code>, <code><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs()</a></code>, <code><a href="https://ggplot2.tidyverse.org/reference/annotate.html" class="external-link">annotate()</a></code>, and [hvti_theme()]. Ports <code>Function_DataPlotting()</code> from <code>tp.dp.EDA_barplots_scatterplots.R</code>.</li>
+<li>Added <code><a href="../reference/eda_classify_var.html">eda_classify_var()</a></code> — replicates the <code>UniqueLimit</code> type-detection logic from <code>Barplot_Scatterplot_Function.R</code>: classifies a vector as <code>"Cont"</code>, <code>"Cat_Num"</code>, or <code>"Cat_Char"</code>.</li>
+<li>Added <code><a href="../reference/eda_select_vars.html">eda_select_vars()</a></code> — subsets and reorders a data frame by a character vector or space-separated string of column names. Replaces <code>Order_Variables()</code> and the <code>Mod_Data &lt;- dta[, Order_Var]</code> pattern from <code>tp.dp.EDA_barplots_scatterplots_varnames.R</code>.</li>
+<li>Added <code><a href="../reference/sample_eda_data.html">sample_eda_data()</a></code> — mixed-type cardiac-surgery registry simulation (binary, ordinal, character-categorical, and continuous variables) for demonstrating <code><a href="../reference/eda_plot.html">eda_plot()</a></code> and <code><a href="../reference/eda_select_vars.html">eda_select_vars()</a></code>.</li>
+<li>Reorganised <code>inst/</code>: moved <code>par_cst.xpt</code> and <code>npar_cst.xpt</code> to <code>inst/extdata/</code> (standard R package location for bundled data files); removed unreferenced presentation and test artefacts (<code>*.pptx</code>, <code>*.pdf</code>, <code>*.sas</code> scratch files).</li>
+<li>Extended <code><a href="../reference/nonparametric_curve_plot.html">nonparametric_curve_plot()</a></code> examples: added dual-Y-axis example (Example 10, <code>\dontrun</code>) using <code>scale_y_continuous(sec.axis = ...)</code>; noted <code>cll_p95</code>/<code>clu_p95</code> column availability for 95 % CI (Example 2) and per-group shape mapping via <code><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_shape_manual()</a></code> (Example 4).</li>
+<li>Extended <code><a href="../reference/nonparametric_ordinal_plot.html">nonparametric_ordinal_plot()</a></code> examples: added pre-operative severity comparison example grouping combined Mild/Moderate/Severe cohorts through <code><a href="../reference/nonparametric_curve_plot.html">nonparametric_curve_plot()</a></code>.</li>
+<li>Split vignette into three: <code>hvtiPlotR.qmd</code> (SAS migration guide), <code>plot-functions.qmd</code> (per-function reference with worked examples), <code>plot-decorators.qmd</code> (composition grammar: <code>scale_*</code>, <code><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs()</a></code>, themes, and saving to manuscript PDF, poster PDF, and editable PowerPoint via <code><a href="../reference/save_ppt.html">save_ppt()</a></code>).</li>
+</ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="1.1.0" id="hvtiplotr-110">hvtiPlotR 1.1.0<a class="anchor" aria-label="anchor" href="#hvtiplotr-110"></a></h2>
 <ul><li>Added <code><a href="../reference/survival_curve.html">survival_curve()</a></code> — Kaplan-Meier and Nelson-Aalen survival analysis returning five plot types (survival, cumulative hazard, hazard, log-log, life/RMST) plus risk and report tables. Ports the SAS <code>%kaplan</code> and <code>%nelsont</code> macros from <code>tp.ac.dead.sas</code>.</li>
