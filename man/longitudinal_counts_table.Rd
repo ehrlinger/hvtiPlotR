@@ -22,7 +22,9 @@ longitudinal_counts_table(
 \item{group_col}{Name of the series grouping column. Default \code{"series"}.}
 
 \item{label_format}{Formatting function applied to count values.
-Default \link[scales:comma]{scales::comma}. Pass \code{NULL} for no formatting.}
+\code{NULL} (default) auto-selects: uses \link[scales:comma]{scales::comma} when the \code{scales}
+package is installed, otherwise falls back to \link[base:character]{base::as.character}.
+Pass \code{identity} to display counts with no formatting.}
 }
 \value{
 A bare \code{\link[ggplot2:ggplot]{ggplot2::ggplot()}} object (text table panel).

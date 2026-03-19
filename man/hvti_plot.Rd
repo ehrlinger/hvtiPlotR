@@ -7,7 +7,8 @@
 hvti_plot(
   type = c("mirror_histogram", "stacked_histogram", "covariate_balance",
     "goodness_followup", "survival_curve", "upset", "alluvial", "trends", "spaghetti",
-    "longitudinal_counts", "nonparametric_curve", "nonparametric_ordinal"),
+    "longitudinal_counts", "nonparametric_curve", "nonparametric_ordinal", "hazard",
+    "survival_difference", "nnt"),
   ...
 )
 }
