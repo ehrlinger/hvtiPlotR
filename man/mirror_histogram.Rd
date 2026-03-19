@@ -59,9 +59,9 @@ required. The column must be numeric and non-negative.}
 \item{width, height}{Dimensions (inches) when saving \code{output_file}.}
 }
 \value{
-A list with elements \code{plot} (ggplot object), \code{diagnostics}
-(mode-dependent summary statistics), and \code{data} (filtered working
-data frame). Binary-match diagnostics include \code{smd_matched};
+A \code{\link[ggplot2:ggplot]{ggplot2::ggplot()}} object. Diagnostics are printed as a message
+and attached as \code{attr(p, "diagnostics")}. Working data attached as
+\code{attr(p, "data")}. Binary-match diagnostics include \code{smd_matched};
 weighted diagnostics include \code{smd_weighted} and
 \code{effective_n_by_group}.
 }
@@ -86,11 +86,11 @@ counts (before weighting); overlaid bars show per-bin weight sums.
 # separation = 1.5 leaves many high/low-score patients unmatched at tails
 mirror_dta <- sample_mirror_histogram_data(n = 500, separation = 1.5)
 mhist <- mirror_histogram(mirror_dta, alpha = 0.8)
-mhist$diagnostics$smd_before
-mhist$diagnostics$smd_matched
+attr(mhist, "diagnostics")$smd_before
+attr(mhist, "diagnostics")$smd_matched
 
 # Customise fill colours and apply manuscript theme
-mhist$plot +
+mhist +
   ggplot2::scale_fill_manual(
     values = c(before_g0 = "white",  matched_g0 = "steelblue",
                before_g1 = "white",  matched_g1 = "firebrick"),
@@ -102,11 +102,11 @@ mhist$plot +
 # --- Weighted IPTW mode --------------------------------------------------
 wt_dta <- sample_mirror_histogram_data(n = 500, add_weights = TRUE)
 mhist_wt <- mirror_histogram(wt_dta, weight_col = "mt_wt", alpha = 0.8)
-mhist_wt$diagnostics$smd_weighted
-mhist_wt$diagnostics$effective_n_by_group
+attr(mhist_wt, "diagnostics")$smd_weighted
+attr(mhist_wt, "diagnostics")$effective_n_by_group
 
 # Customise fill colours for weighted mode and apply manuscript theme
-mhist_wt$plot +
+mhist_wt +
   ggplot2::scale_fill_manual(
     values = c(before_g0 = "white", weighted_g0 = "blue",
                before_g1 = "white", weighted_g1 = "red"),

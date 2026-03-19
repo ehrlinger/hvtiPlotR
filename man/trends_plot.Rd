@@ -64,58 +64,112 @@ Returns a bare ggplot object. Compose with \verb{scale_colour_*},
 and \code{\link[=hvti_theme]{hvti_theme()}}.
 }
 \examples{
-dta <- sample_trends_data(n = 600, seed = 42)
-
-# --- Single group (subset to one group) ----------------------------------
-one <- dta[dta$group == "Group I", ]
+# --- tp.rp.trends.sas: single continuous outcome, 1968-2000 by 4 ----------
+one <- sample_trends_data(n = 600, year_range = c(1968L, 2000L),
+                          groups = NULL)
 trends_plot(one, group_col = NULL) +
-  ggplot2::labs(x = "Surgery Year", y = "Outcome", title = "Group I Trend") +
+  ggplot2::scale_x_continuous(limits = c(1968, 2000),
+                              breaks = seq(1968, 2000, 4)) +
+  ggplot2::scale_y_continuous(limits = c(0, 10),
+                              breaks = seq(0, 10, 2)) +
+  ggplot2::labs(x = "Year", y = "Cases/year") +
   hvti_theme("manuscript")
 
-# --- Multiple groups with scale_color_brewer -----------------------------
-trends_plot(dta) +
-  ggplot2::scale_colour_brewer(palette = "Set1", name = "Group") +
-  ggplot2::scale_shape_manual(
-    values = c("Group I" = 15, "Group II" = 19,
-               "Group III" = 17, "Group IV" = 18),
-    name = "Group"
-  ) +
-  ggplot2::labs(x = "Surgery Year", y = "Outcome (\%)") +
-  hvti_theme("manuscript")
-
-# --- Median summary statistic + manual colours ---------------------------
-trends_plot(dta, summary_fn = "median") +
+# --- tp.lp.trends.sas: binary \% outcomes, 1970-2000 by 10 ---------------
+dta_lp <- sample_trends_data(
+  n = 800, year_range = c(1970L, 2000L),
+  groups = c("Shock \%", "Pre-op IABP \%", "Inotropes \%"))
+trends_plot(dta_lp) +
   ggplot2::scale_colour_manual(
-    values = c("Group I"   = "steelblue",
-               "Group II"  = "firebrick",
-               "Group III" = "forestgreen",
-               "Group IV"  = "goldenrod3"),
-    name = "NYHA Class"
-  ) +
-  ggplot2::scale_shape_manual(
-    values = c("Group I" = 15, "Group II" = 19,
-               "Group III" = 17, "Group IV" = 18),
-    name = "NYHA Class"
-  ) +
-  ggplot2::coord_cartesian(xlim = c(1990, 2020), ylim = c(0, 80)) +
-  ggplot2::scale_x_continuous(breaks = seq(1990, 2020, 5)) +
-  ggplot2::scale_y_continuous(breaks = seq(0, 80, 20)) +
-  ggplot2::labs(x = "Surgery Year", y = "\%",
-                title = "Preoperative NYHA Class Over Time") +
-  ggplot2::annotate("text", x = 2000, y = 75,
-                    label = "Trend: Preoperative NYHA", size = 4) +
+    values = c("Shock \%" = "steelblue", "Pre-op IABP \%" = "firebrick",
+               "Inotropes \%" = "forestgreen"), name = NULL) +
+  ggplot2::scale_x_continuous(limits = c(1970, 2000),
+                              breaks = seq(1970, 2000, 10)) +
+  ggplot2::scale_y_continuous(limits = c(0, 100),
+                              breaks = seq(0, 100, 10)) +
+  ggplot2::coord_cartesian(xlim = c(1970, 2000), ylim = c(0, 100)) +
+  ggplot2::labs(x = "Year", y = "Percent (\%)") +
   hvti_theme("manuscript")
 
-# --- With confidence ribbon ----------------------------------------------
-trends_plot(dta[dta$group == "Group I", ], group_col = NULL, se = TRUE) +
-  ggplot2::labs(x = "Surgery Year", y = "Outcome") +
+# --- tp.lp.trends.age.sas: age on x-axis, 25-85 by 10 -------------------
+dta_age <- sample_trends_data(
+  n = 600, year_range = c(25L, 85L),
+  groups = c("Repair \%", "Bioprosthesis \%"), seed = 7L)
+trends_plot(dta_age) +
+  ggplot2::scale_x_continuous(limits = c(25, 85),
+                              breaks = seq(25, 85, 10)) +
+  ggplot2::scale_y_continuous(limits = c(0, 100),
+                              breaks = seq(0, 100, 20)) +
+  ggplot2::coord_cartesian(xlim = c(25, 85), ylim = c(0, 100)) +
+  ggplot2::labs(x = "Age (years)", y = "Percent (\%)") +
+  hvti_theme("manuscript")
+
+# --- tp.lp.trends.polytomous.sas: repair types, 1990-1999 by 1 ----------
+dta_poly <- sample_trends_data(
+  n = 800, year_range = c(1990L, 1999L),
+  groups = c("CE", "Cosgrove", "Periguard", "DeVega"), seed = 5L)
+trends_plot(dta_poly) +
+  ggplot2::scale_colour_manual(
+    values = c(CE = "steelblue", Cosgrove = "firebrick",
+               Periguard = "forestgreen", DeVega = "goldenrod3"),
+    name = "Repair type") +
+  ggplot2::scale_x_continuous(limits = c(1990, 1999),
+                              breaks = seq(1990, 1999, 1)) +
+  ggplot2::scale_y_continuous(limits = c(0, 100),
+                              breaks = seq(0, 100, 10)) +
+  ggplot2::coord_cartesian(xlim = c(1990, 1999), ylim = c(0, 100)) +
+  ggplot2::labs(x = "Year", y = "Percent (\%)") +
+  hvti_theme("manuscript")
+
+# --- tp.dp.trends.R: NYHA classes, 1985-2015 by 5 -----------------------
+dta_nyha <- sample_trends_data(n = 800, year_range = c(1985L, 2015L),
+  groups = c("I", "II", "III", "IV"))
+trends_plot(dta_nyha, summary_fn = "median") +
+  ggplot2::scale_colour_manual(
+    values = c(I = "steelblue", II = "firebrick",
+               III = "forestgreen", IV = "goldenrod3"),
+    name = "NYHA Class") +
+  ggplot2::scale_x_continuous(limits = c(1985, 2015),
+                              breaks = seq(1985, 2015, 5)) +
+  ggplot2::scale_y_continuous(limits = c(0, 80),
+                              breaks = seq(0, 80, 20)) +
+  ggplot2::coord_cartesian(xlim = c(1985, 2015), ylim = c(0, 80)) +
+  ggplot2::labs(x = "Years", y = "\%") +
+  hvti_theme("manuscript")
+
+# --- tp.dp.trends.R: LV mass index, 1995-2015 by 5 ----------------------
+dta_lv <- sample_trends_data(n = 800, year_range = c(1995L, 2015L),
+                             groups = NULL, seed = 3L)
+trends_plot(dta_lv, group_col = NULL) +
+  ggplot2::scale_x_continuous(limits = c(1995, 2015),
+                              breaks = seq(1995, 2015, 5)) +
+  ggplot2::scale_y_continuous(limits = c(0, 200),
+                              breaks = seq(0, 200, 50)) +
+  ggplot2::coord_cartesian(xlim = c(1995, 2015), ylim = c(0, 200)) +
+  ggplot2::labs(x = "Years", y = "LV Mass Index") +
+  hvti_theme("manuscript")
+
+# --- tp.dp.trends.R: LOS with annotation, 1985-2015 by 5 ----------------
+dta_los <- sample_trends_data(n = 800, year_range = c(1985L, 2015L),
+                              groups = NULL, seed = 11L)
+trends_plot(dta_los, group_col = NULL) +
+  ggplot2::scale_x_continuous(limits = c(1985, 2015),
+                              breaks = seq(1985, 2015, 5)) +
+  ggplot2::scale_y_continuous(limits = c(0, 20),
+                              breaks = seq(0, 20, 5)) +
+  ggplot2::coord_cartesian(xlim = c(1985, 2015), ylim = c(0, 20)) +
+  ggplot2::annotate("text", x = 1995, y = 18,
+                    label = "Trend: Hospital Length of Stay", size = 4.5) +
+  ggplot2::labs(x = "Years", y = "Hospital LOS (Days)") +
   hvti_theme("manuscript")
 
 # --- Save ----------------------------------------------------------------
 \dontrun{
-p <- trends_plot(dta) +
-  ggplot2::scale_colour_brewer(palette = "Set1") +
-  ggplot2::labs(x = "Surgery Year", y = "Outcome (\%)") +
+p <- trends_plot(dta_nyha) +
+  ggplot2::scale_colour_brewer(palette = "Set1", name = "NYHA Class") +
+  ggplot2::scale_x_continuous(limits = c(1985, 2015),
+                              breaks = seq(1985, 2015, 5)) +
+  ggplot2::labs(x = "Years", y = "\%") +
   hvti_theme("manuscript")
 ggplot2::ggsave("trends.pdf", p, width = 11.5, height = 8)
 }

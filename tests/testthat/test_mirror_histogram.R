@@ -35,7 +35,7 @@ test_that("build_hist_counts returns correct output", {
 })
 
 # Test mirror_histogram function
-test_that("mirror_histogram returns expected list structure", {
+test_that("mirror_histogram returns a ggplot with expected attributes", {
   df <- sample_mirror_histogram_data(50)
   result <- mirror_histogram(
     data = df,
@@ -48,10 +48,9 @@ test_that("mirror_histogram returns expected list structure", {
     score_multiplier = 100,
     binwidth = 5
   )
-  expect_true(is.list(result))
-  expect_true("plot" %in% names(result))
-  expect_true("diagnostics" %in% names(result))
-  expect_true("data" %in% names(result))
+  expect_s3_class(result, "ggplot")
+  expect_false(is.null(attr(result, "diagnostics")))
+  expect_false(is.null(attr(result, "data")))
 })
 
 test_that("mirror_histogram errors when required columns are missing", {
@@ -81,15 +80,10 @@ test_that("mirror_histogram errors when output directory is missing", {
   )
 })
 
-test_that("hvti_plot dispatches mirror histogram plot", {
-  df <- sample_mirror_histogram_data(40)
-  result <- hvti_plot("mirror_histogram", data = df)
-  expect_true(is.list(result))
-  expect_true("plot" %in% names(result))
-})
-
-test_that("hvti_plot errors on unsupported types", {
-  expect_error(hvti_plot("unknown"))
+test_that("mirror_histogram returns a bare ggplot", {
+  df     <- sample_mirror_histogram_data(40)
+  result <- mirror_histogram(data = df)
+  expect_s3_class(result, "ggplot")
 })
 
 # ---------------------------------------------------------------------------
@@ -219,29 +213,30 @@ test_that("validate skips match_col check when weight_col is provided", {
 # mirror_histogram — weighted mode integration
 # ---------------------------------------------------------------------------
 
-test_that("mirror_histogram weighted mode returns expected list structure", {
+test_that("mirror_histogram weighted mode returns a ggplot with attributes", {
   df <- sample_mirror_histogram_data(100, add_weights = TRUE)
   result <- mirror_histogram(df, weight_col = "mt_wt")
-  expect_true(is.list(result))
-  expect_true(all(c("plot", "diagnostics", "data") %in% names(result)))
+  expect_s3_class(result, "ggplot")
+  expect_false(is.null(attr(result, "diagnostics")))
+  expect_false(is.null(attr(result, "data")))
 })
 
 test_that("mirror_histogram weighted mode returns a ggplot object", {
   df <- sample_mirror_histogram_data(100, add_weights = TRUE)
   result <- mirror_histogram(df, weight_col = "mt_wt")
-  expect_s3_class(result$plot, "ggplot")
+  expect_s3_class(result, "ggplot")
 })
 
 test_that("mirror_histogram weighted diagnostics has weighted fields", {
   df <- sample_mirror_histogram_data(100, add_weights = TRUE)
-  diag <- mirror_histogram(df, weight_col = "mt_wt")$diagnostics
+  diag <- attr(mirror_histogram(df, weight_col = "mt_wt"), "diagnostics")
   expect_true("effective_n_by_group" %in% names(diag))
   expect_true("smd_weighted" %in% names(diag))
 })
 
 test_that("mirror_histogram weighted diagnostics omits binary-match fields", {
   df <- sample_mirror_histogram_data(100, add_weights = TRUE)
-  diag <- mirror_histogram(df, weight_col = "mt_wt")$diagnostics
+  diag <- attr(mirror_histogram(df, weight_col = "mt_wt"), "diagnostics")
   expect_false("smd_matched" %in% names(diag))
   expect_false("group_counts_matched" %in% names(diag))
 })
@@ -250,7 +245,7 @@ test_that("mirror_histogram weighted effective_n_by_group sums weights", {
   df <- sample_mirror_histogram_data(50, add_weights = TRUE)
   result <- mirror_histogram(df, weight_col = "mt_wt")
   expected_total <- sum(df$mt_wt)
-  observed_total <- sum(result$diagnostics$effective_n_by_group)
+  observed_total <- sum(attr(result, "diagnostics")$effective_n_by_group)
   expect_equal(observed_total, expected_total, tolerance = 1e-6)
 })
 
@@ -264,7 +259,7 @@ test_that("mirror_histogram weighted fill_keys contain weighted layers", {
   df     <- sample_mirror_histogram_data(100, add_weights = TRUE)
   result <- mirror_histogram(df, weight_col = "mt_wt")
   # layers: [[1]] geom_hline, [[2]] Before geom_col, [[3]] overlay geom_col
-  keys <- unique(result$plot$layers[[3]]$data$fill_key)
+  keys <- unique(result$layers[[3]]$data$fill_key)
   expect_true(any(grepl("weighted", keys)))
 })
 
@@ -279,7 +274,7 @@ test_that("mirror_histogram weighted bars reflect weight sums not counts", {
   )
   result   <- mirror_histogram(df, weight_col = "mt_wt", binwidth = 5)
   # layers: [[1]] geom_hline, [[2]] Before, [[3]] Weighted
-  wt_layer <- result$plot$layers[[3]]$data
+  wt_layer <- result$layers[[3]]$data
   g0_bar   <- wt_layer[wt_layer$fill_key == "weighted_g0", ]
   # weight sum = 20 * 10 = 200; raw count would be 20
   expect_true(any(g0_bar$y > 20))
@@ -288,7 +283,7 @@ test_that("mirror_histogram weighted bars reflect weight sums not counts", {
 test_that("mirror_histogram binary mode unchanged when weight_col is NULL", {
   df     <- sample_mirror_histogram_data(50)
   result <- mirror_histogram(df, weight_col = NULL)
-  diag   <- result$diagnostics
+  diag   <- attr(result, "diagnostics")
   expect_true("smd_matched" %in% names(diag))
   expect_true("group_counts_matched" %in% names(diag))
   expect_false("smd_weighted" %in% names(diag))

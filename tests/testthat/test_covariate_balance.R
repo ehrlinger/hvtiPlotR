@@ -201,11 +201,3 @@ test_that("covariate_balance threshold vlines appear at correct x values", {
 })
 
 # ---------------------------------------------------------------------------
-# covariate_balance — hvti_plot generic dispatch
-# ---------------------------------------------------------------------------
-
-test_that("hvti_plot dispatches covariate_balance correctly", {
-  dta <- sample_covariate_balance_data()
-  p   <- hvti_plot("covariate_balance", data = dta)
-  expect_s3_class(p, "ggplot")
-})

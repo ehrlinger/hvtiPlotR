@@ -89,3 +89,6 @@ goodness_followup(dta) +
   hvti_theme("manuscript")
 
 }
+\seealso{
+\code{\link[=goodness_event_plot]{goodness_event_plot()}}, \code{\link[=sample_goodness_followup_data]{sample_goodness_followup_data()}}
+}

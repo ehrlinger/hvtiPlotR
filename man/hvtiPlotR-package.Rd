@@ -38,9 +38,6 @@ via the \link[officer:officer]{officer::officer} package.
 \subsection{Plot functions}{
 
 \itemize{
-\item \code{\link[=hvti_plot]{hvti_plot()}}: Single entry-point dispatcher for all hvtiPlotR
-plot types (\code{"mirror_histogram"}, \code{"stacked_histogram"},
-\code{"covariate_balance"}).
 \item \code{\link[=mirror_histogram]{mirror_histogram()}}: Side-by-side propensity-score histograms
 (binary-match or IPTW-weighted mode). Ports \code{plot.sas} mirror
 histogram output.

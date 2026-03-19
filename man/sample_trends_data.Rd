@@ -14,10 +14,13 @@ sample_trends_data(
 \arguments{
 \item{n}{Total number of patients. Default \code{600}.}
 
-\item{year_range}{Integer vector \code{c(start, end)} for surgery years.
-Default \code{c(1990, 2020)}.}
+\item{year_range}{Integer vector \code{c(start, end)} for the x-axis range
+(surgery year, or patient age when used with \code{tp.lp.trends.age.sas}
+patterns). Default \code{c(1990, 2020)}.}
 
-\item{groups}{Character vector of group labels. Default
+\item{groups}{Character vector of group labels, or \code{NULL} for a
+single-group figure (no \code{group} column returned; use with
+\code{trends_plot(..., group_col = NULL)}). Default
 \code{c("Group I", "Group II", "Group III", "Group IV")}.}
 
 \item{seed}{Random seed for reproducibility. Default \code{42}.}
@@ -25,9 +28,10 @@ Default \code{c(1990, 2020)}.}
 \value{
 A data frame with columns:
 \itemize{
-\item \code{year}  — surgery year (integer)
+\item \code{year}  — x-axis value (integer; surgery year or patient age)
 \item \code{value} — continuous outcome (numeric)
-\item \code{group} — group label (factor, ordered by \code{groups})
+\item \code{group} — group label (factor, ordered by \code{groups}); absent when
+\code{groups = NULL}
 }
 }
 \description{

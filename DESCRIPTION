@@ -1,8 +1,8 @@
 Package: hvtiPlotR
 Type: Package
 Title: Porting HVTI plot templates and methodology documentation to ggplot2 package in R
-Version: 2.0.0.9000
-Date: 2026-03-18
+Version: 2.0.0.9001
+Date: 2026-03-19
 Authors@R: c(
     person(
       "John", "Ehrlinger",
@@ -35,6 +35,7 @@ Suggests:
     knitr,
     testthat,
     devtools,
+    ggsankey,
     RColorBrewer,
     gridExtra,
     haven,
