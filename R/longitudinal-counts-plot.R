@@ -146,7 +146,9 @@ longitudinal_counts_plot <- function(data,
 #' @param count_col    Name of the numeric count column. Default `"count"`.
 #' @param group_col    Name of the series grouping column. Default `"series"`.
 #' @param label_format Formatting function applied to count values.
-#'   Default [scales::comma]. Pass `NULL` for no formatting.
+#'   `NULL` (default) auto-selects: uses [scales::comma] when the `scales`
+#'   package is installed, otherwise falls back to [base::as.character].
+#'   Pass `identity` to display counts with no formatting.
 #'
 #' @return A bare [ggplot2::ggplot()] object (text table panel).
 #'

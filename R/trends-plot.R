@@ -216,7 +216,8 @@ trends_plot <- function(data,
     names(ann_data) <- c(x_col, y_col, group_col)
     ann_data[[group_col]] <- factor(
       ann_data[[group_col]],
-      levels = levels(data[[group_col]])
+      levels = if (is.factor(data[[group_col]])) levels(data[[group_col]])
+               else unique(data[[group_col]])
     )
   } else {
     agg      <- tapply(data[[y_col]], data[[x_col]], sfn)
