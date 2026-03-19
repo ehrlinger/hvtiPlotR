@@ -182,7 +182,7 @@ longitudinal_counts_table <- function(data,
 
   if (is.null(label_format)) {
     if (requireNamespace("scales", quietly = TRUE)) {
-      label_format <- getFromNamespace("comma", "scales")
+      label_format <- scales::comma
     } else {
       label_format <- as.character
     }

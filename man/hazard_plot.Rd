@@ -13,7 +13,7 @@ hazard_plot(
   group_col = NULL,
   empirical = NULL,
   emp_x_col = x_col,
-  emp_estimate_col = estimate_col,
+  emp_estimate_col = "estimate",
   emp_lower_col = NULL,
   emp_upper_col = NULL,
   emp_group_col = group_col,

@@ -41,7 +41,6 @@
 # ============================================================================
 
 # Weibull parametric predictions on a time grid.
-# S(t) = exp(-(t/scale)^shape); h(t) = (shape/scale)*(t/scale)^(shape-1)
 .hp_weibull_pred <- function(t_grid, shape, scale) {
   surv   <- exp(-(t_grid / scale)^shape) * 100          # % survival
   hazard <- (shape / scale) * (t_grid / scale)^(shape - 1) * 100  # %/year
@@ -72,11 +71,12 @@
   u        <- stats::runif(n)
   t_event  <- scale * (-log(pmax(u, 1e-9)))^(1 / shape)
   t_censor <- stats::runif(n, time_max * 0.2, time_max * 1.5)
-  t_obs    <- pmin(t_event, t_censor, time_max * 1.2)
-  status   <- as.integer(t_event <= t_censor & t_event <= time_max * 1.2)
 
   km_fit <- survival::survfit(
-    survival::Surv(t_obs, status) ~ 1,
+    survival::Surv(
+      pmin(t_event, t_censor, time_max * 1.2),
+      as.integer(t_event <= t_censor & t_event <= time_max * 1.2)
+    ) ~ 1,
     conf.int  = ci_level,
     conf.type = "log-log"
   )
@@ -810,7 +810,7 @@ hazard_plot <- function(curve_data,
                          group_col        = NULL,
                          empirical        = NULL,
                          emp_x_col        = x_col,
-                         emp_estimate_col = estimate_col,
+                         emp_estimate_col = "estimate",
                          emp_lower_col    = NULL,
                          emp_upper_col    = NULL,
                          emp_group_col    = group_col,
