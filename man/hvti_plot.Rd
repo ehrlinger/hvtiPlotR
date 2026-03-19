@@ -6,7 +6,7 @@
 \usage{
 hvti_plot(
   type = c("mirror_histogram", "stacked_histogram", "covariate_balance",
-    "goodness_followup", "survival_curve", "upset", "sankey", "trends", "spaghetti",
+    "goodness_followup", "survival_curve", "upset", "alluvial", "trends", "spaghetti",
     "longitudinal_counts", "nonparametric_curve", "nonparametric_ordinal"),
   ...
 )

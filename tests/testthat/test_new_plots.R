@@ -2,7 +2,7 @@
 #
 # Smoke / property tests for plot functions added in v1.2+:
 #   sample_upset_data, upset_plot
-#   sample_sankey_data, sankey_plot
+#   sample_alluvial_data, alluvial_plot
 #   sample_spaghetti_data, spaghetti_plot
 #   sample_trends_data, trends_plot
 #   sample_longitudinal_counts_data, longitudinal_counts_plot
@@ -114,131 +114,131 @@ test_that("hvti_plot('upset') dispatches to upset_plot", {
 })
 
 # ============================================================================
-# sample_sankey_data
+# sample_alluvial_data
 # ============================================================================
 
-test_that("sample_sankey_data returns a data frame", {
-  df <- sample_sankey_data(n = 100, seed = 1)
+test_that("sample_alluvial_data returns a data frame", {
+  df <- sample_alluvial_data(n = 100, seed = 1)
   expect_true(is.data.frame(df))
 })
 
-test_that("sample_sankey_data has required columns", {
-  df <- sample_sankey_data()
+test_that("sample_alluvial_data has required columns", {
+  df <- sample_alluvial_data()
   expect_true(all(c("pre_ar", "procedure", "post_ar", "freq") %in% names(df)))
 })
 
-test_that("sample_sankey_data freq is a positive integer", {
-  df <- sample_sankey_data(n = 300, seed = 1)
+test_that("sample_alluvial_data freq is a positive integer", {
+  df <- sample_alluvial_data(n = 300, seed = 1)
   expect_true(is.integer(df$freq))
   expect_true(all(df$freq > 0L))
 })
 
-test_that("sample_sankey_data freq sums to n (no zero rows retained)", {
-  df <- sample_sankey_data(n = 300, seed = 42)
+test_that("sample_alluvial_data freq sums to n (no zero rows retained)", {
+  df <- sample_alluvial_data(n = 300, seed = 42)
   expect_equal(sum(df$freq), 300L)
 })
 
-test_that("sample_sankey_data pre_ar is a factor with correct levels", {
-  df <- sample_sankey_data()
+test_that("sample_alluvial_data pre_ar is a factor with correct levels", {
+  df <- sample_alluvial_data()
   expect_true(is.factor(df$pre_ar))
   expect_equal(levels(df$pre_ar), c("None", "Mild", "Moderate", "Severe"))
 })
 
-test_that("sample_sankey_data procedure is a factor with correct levels", {
-  df <- sample_sankey_data()
+test_that("sample_alluvial_data procedure is a factor with correct levels", {
+  df <- sample_alluvial_data()
   expect_true(is.factor(df$procedure))
   expect_equal(levels(df$procedure), c("TAVR", "Repair", "Replacement"))
 })
 
-test_that("sample_sankey_data is reproducible with same seed", {
-  df1 <- sample_sankey_data(n = 200, seed = 5)
-  df2 <- sample_sankey_data(n = 200, seed = 5)
+test_that("sample_alluvial_data is reproducible with same seed", {
+  df1 <- sample_alluvial_data(n = 200, seed = 5)
+  df2 <- sample_alluvial_data(n = 200, seed = 5)
   expect_identical(df1, df2)
 })
 
-test_that("sample_sankey_data differs across seeds", {
-  df1 <- sample_sankey_data(n = 200, seed = 1)
-  df2 <- sample_sankey_data(n = 200, seed = 2)
+test_that("sample_alluvial_data differs across seeds", {
+  df1 <- sample_alluvial_data(n = 200, seed = 1)
+  df2 <- sample_alluvial_data(n = 200, seed = 2)
   expect_false(identical(df1, df2))
 })
 
 # ============================================================================
-# sankey_plot
+# alluvial_plot
 # ============================================================================
 
-test_that("sankey_plot returns a ggplot with three axes", {
-  dta  <- sample_sankey_data(n = 150, seed = 1)
+test_that("alluvial_plot returns a ggplot with three axes", {
+  dta  <- sample_alluvial_data(n = 150, seed = 1)
   axes <- c("pre_ar", "procedure", "post_ar")
-  p    <- sankey_plot(dta, axes = axes, y_col = "freq")
+  p    <- alluvial_plot(dta, axes = axes, y_col = "freq")
   expect_s3_class(p, "ggplot")
 })
 
-test_that("sankey_plot works with only two axes", {
-  dta <- sample_sankey_data(n = 100, seed = 1)
-  p   <- sankey_plot(dta, axes = c("pre_ar", "post_ar"), y_col = "freq")
+test_that("alluvial_plot works with only two axes", {
+  dta <- sample_alluvial_data(n = 100, seed = 1)
+  p   <- alluvial_plot(dta, axes = c("pre_ar", "post_ar"), y_col = "freq")
   expect_s3_class(p, "ggplot")
 })
 
-test_that("sankey_plot has a geom_text layer when show_labels=TRUE", {
-  dta <- sample_sankey_data(n = 100, seed = 1)
-  p   <- sankey_plot(dta, axes = c("pre_ar", "post_ar"),
+test_that("alluvial_plot has a geom_text layer when show_labels=TRUE", {
+  dta <- sample_alluvial_data(n = 100, seed = 1)
+  p   <- alluvial_plot(dta, axes = c("pre_ar", "post_ar"),
                      y_col = "freq", show_labels = TRUE)
   geoms <- sapply(p$layers, function(l) class(l$geom)[1])
   expect_true("GeomText" %in% geoms)
 })
 
-test_that("sankey_plot omits geom_text when show_labels=FALSE", {
-  dta <- sample_sankey_data(n = 100, seed = 1)
-  p   <- sankey_plot(dta, axes = c("pre_ar", "post_ar"),
+test_that("alluvial_plot omits geom_text when show_labels=FALSE", {
+  dta <- sample_alluvial_data(n = 100, seed = 1)
+  p   <- alluvial_plot(dta, axes = c("pre_ar", "post_ar"),
                      y_col = "freq", show_labels = FALSE)
   geoms <- sapply(p$layers, function(l) class(l$geom)[1])
   expect_false("GeomText" %in% geoms)
 })
 
-test_that("sankey_plot with fill_col returns a ggplot", {
-  dta  <- sample_sankey_data(n = 150, seed = 1)
+test_that("alluvial_plot with fill_col returns a ggplot", {
+  dta  <- sample_alluvial_data(n = 150, seed = 1)
   axes <- c("pre_ar", "procedure", "post_ar")
-  p    <- sankey_plot(dta, axes = axes, y_col = "freq", fill_col = "pre_ar")
+  p    <- alluvial_plot(dta, axes = axes, y_col = "freq", fill_col = "pre_ar")
   expect_s3_class(p, "ggplot")
 })
 
-test_that("sankey_plot errors when data is not a data frame", {
-  expect_error(sankey_plot(list(), axes = c("a", "b")), "data frame")
+test_that("alluvial_plot errors when data is not a data frame", {
+  expect_error(alluvial_plot(list(), axes = c("a", "b")), "data frame")
 })
 
-test_that("sankey_plot errors when axes has fewer than two elements", {
-  dta <- sample_sankey_data(n = 100, seed = 1)
-  expect_error(sankey_plot(dta, axes = "pre_ar"), "at least 2")
+test_that("alluvial_plot errors when axes has fewer than two elements", {
+  dta <- sample_alluvial_data(n = 100, seed = 1)
+  expect_error(alluvial_plot(dta, axes = "pre_ar"), "at least 2")
 })
 
-test_that("sankey_plot errors when an axis name is absent from data", {
-  dta <- sample_sankey_data(n = 100, seed = 1)
+test_that("alluvial_plot errors when an axis name is absent from data", {
+  dta <- sample_alluvial_data(n = 100, seed = 1)
   expect_error(
-    sankey_plot(dta, axes = c("pre_ar", "nonexistent")),
+    alluvial_plot(dta, axes = c("pre_ar", "nonexistent")),
     "not columns"
   )
 })
 
-test_that("sankey_plot errors when y_col is absent from data", {
-  dta <- sample_sankey_data(n = 100, seed = 1)
+test_that("alluvial_plot errors when y_col is absent from data", {
+  dta <- sample_alluvial_data(n = 100, seed = 1)
   expect_error(
-    sankey_plot(dta, axes = c("pre_ar", "post_ar"), y_col = "missing_col"),
+    alluvial_plot(dta, axes = c("pre_ar", "post_ar"), y_col = "missing_col"),
     "not a column"
   )
 })
 
-test_that("sankey_plot errors when alpha is out of [0, 1]", {
-  dta <- sample_sankey_data(n = 100, seed = 1)
+test_that("alluvial_plot errors when alpha is out of [0, 1]", {
+  dta <- sample_alluvial_data(n = 100, seed = 1)
   expect_error(
-    sankey_plot(dta, axes = c("pre_ar", "post_ar"), y_col = "freq", alpha = 1.5),
+    alluvial_plot(dta, axes = c("pre_ar", "post_ar"), y_col = "freq", alpha = 1.5),
     "alpha"
   )
 })
 
-test_that("hvti_plot('sankey') dispatches to sankey_plot", {
-  dta  <- sample_sankey_data(n = 100, seed = 1)
+test_that("hvti_plot('sankey') dispatches to alluvial_plot", {
+  dta  <- sample_alluvial_data(n = 100, seed = 1)
   axes <- c("pre_ar", "procedure", "post_ar")
-  p    <- hvti_plot("sankey", data = dta, axes = axes, y_col = "freq")
+  p    <- hvti_plot("alluvial", data = dta, axes = axes, y_col = "freq")
   expect_s3_class(p, "ggplot")
 })
 

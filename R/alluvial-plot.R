@@ -1,6 +1,6 @@
-# sankey-plot.R
+# alluvial-plot.R
 #
-# Sankey / alluvial diagram wrapper.
+# Alluvial diagram wrapper (formerly sankey-plot.R).
 # Ports the pattern from tp.dp.female_bicus_preAR_sankey.R (template graph
 # library) to hvtiPlotR, replacing hard-coded colours with scale_ composition
 # and explicit theme calls with hvtiPlotR themes.
@@ -18,7 +18,7 @@
 #' Sample Sankey / Alluvial Data
 #'
 #' Generates a realistic cardiac-surgery data set suitable for demonstrating
-#' [sankey_plot()]. Each row represents a unique combination of pre-operative
+#' [alluvial_plot()]. Each row represents a unique combination of pre-operative
 #' AV regurgitation grade, surgical procedure type, and post-operative AV
 #' regurgitation grade, together with the patient count (`freq`) for that
 #' combination. The co-occurrence structure reflects realistic clinical
@@ -33,15 +33,15 @@
 #'   `pre_ar` (factor), `procedure` (factor), `post_ar` (factor), `freq`
 #'   (integer count). Rows with `freq == 0` are excluded.
 #'
-#' @seealso [sankey_plot()]
+#' @seealso [alluvial_plot()]
 #'
 #' @examples
-#' dta <- sample_sankey_data(n = 300, seed = 42)
+#' dta <- sample_alluvial_data(n = 300, seed = 42)
 #' head(dta)
 #' # Axes in order: pre-op grade → procedure → post-op grade
 #' with(dta, tapply(freq, list(pre_ar, post_ar), sum, default = 0))
 #' @export
-sample_sankey_data <- function(n = 300, seed = 42L) {
+sample_alluvial_data <- function(n = 300, seed = 42L) {
   set.seed(seed)
 
   grade_levels <- c("None", "Mild", "Moderate", "Severe")
@@ -119,17 +119,17 @@ sample_sankey_data <- function(n = 300, seed = 42L) {
 #'   `scale_colour_*`, `labs()`, `annotate()`, and [hvti_theme()].
 #'
 #' @seealso [ggalluvial::geom_alluvium()], [ggalluvial::geom_stratum()],
-#'   [sample_sankey_data()], [hvti_theme()]
+#'   [sample_alluvial_data()], [hvti_theme()]
 #'
 #' @examples
-#' dta  <- sample_sankey_data(n = 300, seed = 42)
+#' dta  <- sample_alluvial_data(n = 300, seed = 42)
 #' axes <- c("pre_ar", "procedure", "post_ar")
 #'
 #' # --- Bare plot -----------------------------------------------------------
-#' sankey_plot(dta, axes = axes, y_col = "freq")
+#' alluvial_plot(dta, axes = axes, y_col = "freq")
 #'
 #' # --- Fill flows by pre-operative AR grade + manuscript theme -------------
-#' sankey_plot(dta, axes = axes, y_col = "freq", fill_col = "pre_ar") +
+#' alluvial_plot(dta, axes = axes, y_col = "freq", fill_col = "pre_ar") +
 #'   ggplot2::scale_fill_manual(
 #'     values = c(None     = "steelblue",
 #'                Mild     = "goldenrod",
@@ -154,7 +154,7 @@ sample_sankey_data <- function(n = 300, seed = 42L) {
 #'   hvti_theme("manuscript")
 #'
 #' # --- Fill flows by procedure with RColorBrewer palette -------------------
-#' sankey_plot(dta, axes = axes, y_col = "freq", fill_col = "procedure") +
+#' alluvial_plot(dta, axes = axes, y_col = "freq", fill_col = "procedure") +
 #'   ggplot2::scale_fill_brewer(palette = "Set2", name = "Procedure") +
 #'   ggplot2::scale_colour_brewer(palette = "Set2", guide = "none") +
 #'   ggplot2::scale_x_continuous(
@@ -166,7 +166,7 @@ sample_sankey_data <- function(n = 300, seed = 42L) {
 #'   hvti_theme("manuscript")
 #'
 #' # --- Two-axis (before / after) with annotation ---------------------------
-#' sankey_plot(
+#' alluvial_plot(
 #'   dta, axes = c("pre_ar", "post_ar"), y_col = "freq",
 #'   fill_col = "pre_ar", axis_labels = c("Pre-operative", "Post-operative")
 #' ) +
@@ -183,7 +183,7 @@ sample_sankey_data <- function(n = 300, seed = 42L) {
 #'
 #' # --- Save ----------------------------------------------------------------
 #' \dontrun{
-#' p <- sankey_plot(dta, axes = axes, y_col = "freq", fill_col = "pre_ar") +
+#' p <- alluvial_plot(dta, axes = axes, y_col = "freq", fill_col = "pre_ar") +
 #'   ggplot2::scale_fill_brewer(palette = "RdYlGn", direction = -1) +
 #'   ggplot2::scale_colour_brewer(palette = "RdYlGn", direction = -1,
 #'                                guide = "none") +
@@ -195,7 +195,7 @@ sample_sankey_data <- function(n = 300, seed = 42L) {
 #' @importFrom ggplot2 ggplot aes geom_text scale_x_continuous after_stat
 #' @importFrom rlang sym syms inject
 #' @export
-sankey_plot <- function(data,
+alluvial_plot <- function(data,
                         axes,
                         y_col         = "freq",
                         fill_col      = NULL,

@@ -66,7 +66,7 @@ hvti_theme.hvti_theme_poster <- function(style, ...) {
 #' @export
 hvti_plot <- function(type = c("mirror_histogram", "stacked_histogram",
                                "covariate_balance", "goodness_followup",
-                               "survival_curve", "upset", "sankey",
+                               "survival_curve", "upset", "alluvial",
                                "trends", "spaghetti", "longitudinal_counts",
                                "nonparametric_curve",
                                "nonparametric_ordinal"), ...) {
@@ -111,8 +111,8 @@ hvti_plot.hvti_plot_upset <- function(type, ...) {
 }
 
 #' @export
-hvti_plot.hvti_plot_sankey <- function(type, ...) {
-  sankey_plot(...)
+hvti_plot.hvti_plot_alluvial <- function(type, ...) {
+  alluvial_plot(...)
 }
 
 #' @export

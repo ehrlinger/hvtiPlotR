@@ -9,7 +9,7 @@ longitudinal_counts_table(
   x_col = "time_label",
   count_col = "count",
   group_col = "series",
-  label_format = scales::comma
+  label_format = NULL
 )
 }
 \arguments{

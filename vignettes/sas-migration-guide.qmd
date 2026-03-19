@@ -102,7 +102,7 @@ figure.
 | `tp.cp.dead.sas` | cp | `survival_curve()` | [Kaplan–Meier survival](#ac-dead) |
 | `tp.dp.gfup.R` | dp | `goodness_followup()` | [Goodness of follow-up](#dp-gfup) |
 | `tp.lp.propen.cov_balance.R` | lp | `covariate_balance()` | [Covariate balance](#lp-covbal) |
-| `tp.dp.female_bicus_preAR_sankey.R` | dp | `sankey_plot()` | [Sankey / alluvial](#dp-sankey) |
+| `tp.dp.female_bicus_preAR_sankey.R` | dp | `alluvial_plot()` | [Alluvial](#dp-sankey) |
 | `tp.complexUpset.R` | dp | `upset_plot()` | [UpSet plot](#dp-upset) |
 | `tp.dp.spaghetti.echo.R` | dp | `spaghetti_plot()` | [Spaghetti / individual trajectories](#dp-spaghetti) |
 | `tp.dp.trends.R` | dp | `trends_plot()` | [Trends over time](#dp-trends) |
@@ -650,16 +650,16 @@ covariate_balance(dta) +
 
 ---
 
-# Sankey / alluvial flow (`tp.dp.female_bicus_preAR_sankey.R`) {#dp-sankey}
+# Alluvial flow (`tp.dp.female_bicus_preAR_sankey.R`) {#dp-sankey}
 
 **Port:** `tp.dp.female_bicus_preAR_sankey.R`
 
-**R equivalent:** `sankey_plot()`
+**R equivalent:** `alluvial_plot()`
 
 ```r
-dta <- sample_sankey_data(n = 200)
+dta <- sample_alluvial_data(n = 200)
 
-sankey_plot(dta, show_labels = TRUE) +
+alluvial_plot(dta, show_labels = TRUE) +
   scale_fill_brewer(palette = "Set2") +
   labs(title = "Patient Flow Between States") +
   hvti_theme("manuscript")

@@ -858,3 +858,94 @@ for (pg in seq(1, length(all_plots), by = per_page)) {
   )
 }
 ```
+
+# Alluvial (Sankey) Plot
+
+`alluvial_plot()` produces an alluvial (Sankey-style) diagram using
+`ggalluvial`. Each row of the input is a unique combination of axis values
+with an associated patient count; flows are drawn proportional to that count.
+Ports `tp.dp.female_bicus_preAR_sankey.R`.
+
+## Sample data
+
+```{r}
+#| label: alluvial_data
+dta_al  <- sample_alluvial_data(n = 300, seed = 42)
+axes    <- c("pre_ar", "procedure", "post_ar")
+head(dta_al)
+```
+
+## Bare plot
+
+```{r}
+#| label: alluvial_bare
+alluvial_plot(dta_al, axes = axes, y_col = "freq")
+```
+
+## Fill flows by pre-operative grade
+
+```{r}
+#| label: alluvial_filled
+alluvial_plot(dta_al, axes = axes, y_col = "freq",
+              fill_col = "pre_ar") +
+  scale_fill_manual(
+    values = c(None     = "steelblue",
+               Mild     = "goldenrod",
+               Moderate = "darkorange",
+               Severe   = "firebrick"),
+    name = "Pre-op AR"
+  ) +
+  scale_colour_manual(
+    values = c(None     = "steelblue",
+               Mild     = "goldenrod",
+               Moderate = "darkorange",
+               Severe   = "firebrick"),
+    guide = "none"
+  ) +
+  scale_x_continuous(
+    breaks = 1:3,
+    labels = c("Pre-op AR", "Procedure", "Post-op AR"),
+    expand = c(0.05, 0.05)
+  ) +
+  labs(y = "Patients (n)",
+       title = "AV Regurgitation: Pre- to Post-operative") +
+  hvti_theme("manuscript")
+```
+
+## Two-axis before / after comparison
+
+```{r}
+#| label: alluvial_two_axis
+alluvial_plot(
+  dta_al,
+  axes        = c("pre_ar", "post_ar"),
+  y_col       = "freq",
+  fill_col    = "pre_ar",
+  axis_labels = c("Pre-operative", "Post-operative")
+) +
+  scale_fill_brewer(palette = "RdYlGn", direction = -1,
+                    name = "AR Grade") +
+  scale_colour_brewer(palette = "RdYlGn", direction = -1,
+                      guide = "none") +
+  annotate("text", x = 1.5, y = 250,
+           label = "Improvement after surgery",
+           size = 3.5, fontface = "italic") +
+  labs(y = "Patients (n)",
+       title = "AV Regurgitation Before and After Surgery") +
+  hvti_theme("manuscript")
+```
+
+## Saving
+
+```{r}
+#| label: alluvial_save
+#| eval: false
+p_al <- alluvial_plot(dta_al, axes = axes, y_col = "freq",
+                      fill_col = "pre_ar") +
+  scale_fill_brewer(palette = "RdYlGn", direction = -1) +
+  scale_colour_brewer(palette = "RdYlGn", direction = -1, guide = "none") +
+  labs(y = "Patients (n)") +
+  hvti_theme("manuscript")
+
+ggsave("../graphs/alluvial.pdf", p_al, width = 8, height = 6)
+```

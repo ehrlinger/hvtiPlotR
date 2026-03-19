@@ -61,7 +61,9 @@ sample_longitudinal_counts_data <- function(n_patients = 300,
                     right = FALSE, include.lowest = TRUE)
 
   # Patients: unique subjects with at least one measurement in the window
+  # tapply() returns NA for empty factor levels; replace with 0
   n_pat  <- tapply(raw$id, raw$window, function(x) length(unique(x)))
+  n_pat[is.na(n_pat)] <- 0L
   # Measurements: total observation rows in the window
   n_meas <- tabulate(raw$window, nbins = length(labels))
 
