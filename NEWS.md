@@ -1,4 +1,4 @@
-# hvtiPlotR 2.0.0-beta1
+# hvtiPlotR 2.0.0.9000
 
 * Added `eda_plot()` — exploratory barplot/scatterplot for a single variable.
   Auto-detects variable type (`"Cont"`, `"Cat_Num"`, `"Cat_Char"`) and
