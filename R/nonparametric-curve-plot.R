@@ -628,17 +628,21 @@ nonparametric_curve_plot <- function(curve_data,
     stop("`curve_data` must be a data frame.")
   for (col in c(x_col, estimate_col)) {
     if (!(col %in% names(curve_data)))
-      stop(paste0("Column '", col, "' not found in `curve_data`."))
+      stop(sprintf("Column '%s' not found in `curve_data`. Available columns: %s",
+                   col, paste(names(curve_data), collapse = ", ")))
   }
   if (!is.null(lower_col))
     if (!(lower_col %in% names(curve_data)))
-      stop(paste0("`lower_col` '", lower_col, "' not found in `curve_data`."))
+      stop(sprintf("Column '%s' not found in `curve_data`. Available columns: %s",
+                   lower_col, paste(names(curve_data), collapse = ", ")))
   if (!is.null(upper_col))
     if (!(upper_col %in% names(curve_data)))
-      stop(paste0("`upper_col` '", upper_col, "' not found in `curve_data`."))
+      stop(sprintf("Column '%s' not found in `curve_data`. Available columns: %s",
+                   upper_col, paste(names(curve_data), collapse = ", ")))
   if (!is.null(group_col))
     if (!(group_col %in% names(curve_data)))
-      stop(paste0("`group_col` '", group_col, "' not found in `curve_data`."))
+      stop(sprintf("Column '%s' not found in `curve_data`. Available columns: %s",
+                   group_col, paste(names(curve_data), collapse = ", ")))
   if (!is.null(data_points)) {
     if (!is.data.frame(data_points))
       stop("`data_points` must be a data frame.")

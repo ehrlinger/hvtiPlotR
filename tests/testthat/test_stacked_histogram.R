@@ -172,12 +172,3 @@ test_that("stacked_histogram works with non-default column names", {
   expect_match(rlang::as_label(p$mapping$x), "surg_yr")
 })
 
-# ---------------------------------------------------------------------------
-# hvti_plot generic dispatch
-# ---------------------------------------------------------------------------
-
-test_that("hvti_plot dispatches stacked_histogram correctly", {
-  df <- sample_stacked_histogram_data()
-  p <- hvti_plot("stacked_histogram", data = df)
-  expect_s3_class(p, "ggplot")
-})

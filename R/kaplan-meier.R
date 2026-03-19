@@ -16,10 +16,10 @@
 ##
 ## Quick start
 ## -----------
-##   dta    <- sample_survival_data(n = 500, seed = 42)
-##   result <- survival_curve(dta)
+##   dta <- sample_survival_data(n = 500, seed = 42)
+##   p   <- survival_curve(dta)
 ##
-##   result$survival_plot +
+##   p +
 ##     ggplot2::scale_y_continuous(breaks = seq(0, 100, 20),
 ##                                 labels = function(x) paste0(x, "%")) +
 ##     ggplot2::scale_x_continuous(breaks = seq(0, 20, 5)) +
@@ -42,8 +42,8 @@
 ##' @param data      A data frame.
 ##' @param time_col  Name of the time column.
 ##' @param event_col Name of the event indicator column.
-##' @param strata_col Name of an optional stratification column, or \code{NULL}.
-##' @param conf_level Confidence level for the CI band (default 0.6827 = 1 SD).
+##' @param group_col Name of an optional stratification column, or \code{NULL}.
+##' @param conf_level Confidence level for the CI band (default 0.95).
 ##' @param method Method for survival curve estimation: `"kaplan-meier"` uses
 ##'   product-limit S(t) with logit CI (matches SAS `%kaplan`), or
 ##'   `"nelson-aalen"` uses Fleming-Harrington H(t) with log CI (matches
@@ -51,7 +51,7 @@
 ##' @return A \code{survfit} object.
 ##' @importFrom survival Surv survfit
 ##' @keywords internal
-km_fit <- function(data, time_col, event_col, strata_col, conf_level, method) {
+km_fit <- function(data, time_col, event_col, group_col, conf_level, method) {
   t_ <- data[[time_col]]
   e_ <- data[[event_col]]
 
@@ -61,7 +61,7 @@ km_fit <- function(data, time_col, event_col, strata_col, conf_level, method) {
   surv_type <- if (method == "kaplan-meier") "kaplan-meier" else "fleming-harrington"
   conf_type <- if (method == "kaplan-meier") "logit"        else "log"
 
-  if (is.null(strata_col)) {
+  if (is.null(group_col)) {
     survival::survfit(
       survival::Surv(t_, e_) ~ 1,
       data      = data.frame(t_ = t_, e_ = e_),
@@ -70,7 +70,7 @@ km_fit <- function(data, time_col, event_col, strata_col, conf_level, method) {
       conf.type = conf_type
     )
   } else {
-    s_ <- data[[strata_col]]
+    s_ <- data[[group_col]]
     survival::survfit(
       survival::Surv(t_, e_) ~ s_,
       data      = data.frame(t_ = t_, e_ = e_, s_ = s_),
@@ -105,13 +105,13 @@ km_fit <- function(data, time_col, event_col, strata_col, conf_level, method) {
 ##' }
 ##'
 ##' @param fit       A \code{survfit} object.
-##' @param strata_col Name of the original stratification column, or \code{NULL}.
+##' @param group_col Name of the original stratification column, or \code{NULL}.
 ##' @return A data frame.
 ##' @keywords internal
-km_extract_tidy <- function(fit, strata_col) {
+km_extract_tidy <- function(fit, group_col) {
   s <- summary(fit, censored = TRUE)
 
-  if (is.null(strata_col)) {
+  if (is.null(group_col)) {
     strata_vec <- rep("All", length(s$time))
   } else {
     raw_strata <- as.character(s$strata)
@@ -409,12 +409,11 @@ km_build_life_plot <- function(km_df, alpha) {
 
 #' Kaplan-Meier Survival Curve
 #'
-#' Estimates a Kaplan-Meier survival function and returns a list containing
-#' five bare \code{ggplot} objects (survival curve, cumulative hazard,
-#' hazard rate, log-minus-log survival, and mean residual life), plus
-#' associated data frames (tidy KM data, numbers-at-risk table, and a report
-#' table at specified time points).
-#' The returned plots intentionally omit scale, label, and theme modifications
+#' Estimates a Kaplan-Meier survival function and returns a single bare
+#' \code{ggplot} object corresponding to the selected \code{plot_type}.
+#' All five plot variants and the KM data, risk table, and report table are
+#' attached as attributes (see \code{attr(result, "km_data")}).
+#' The returned plot intentionally omits scale, label, and theme modifications
 #' so the caller can layer on their own choices with \code{+}.
 #'
 #' @param data         A data frame.
@@ -422,16 +421,21 @@ km_build_life_plot <- function(km_df, alpha) {
 #'   years. Defaults to \code{"iv_dead"}.
 #' @param event_col    Name of the logical or 0/1 column indicating whether
 #'   the event occurred. Defaults to \code{"dead"}.
-#' @param strata_col   Optional name of a character or factor column used to
+#' @param group_col    Optional name of a character or factor column used to
 #'   stratify the analysis. Pass \code{NULL} (the default) for an unstratified
 #'   estimate.
+#' @param strata_col   Deprecated. Use \code{group_col} instead. If supplied
+#'   and \code{group_col} is \code{NULL}, \code{strata_col} is used with a
+#'   deprecation warning.
+#' @param plot_type    Character; which plot variant to return as the primary
+#'   ggplot object. One of \code{"survival"} (default), \code{"cumhaz"},
+#'   \code{"hazard"}, \code{"loglog"}, or \code{"life"}.
 #' @param conf_int     Logical; draw a confidence-interval ribbon on the
 #'   survival plot. Defaults to \code{TRUE}.
 #' @param alpha        Transparency of plot lines and points, in \[0, 1\].
 #'   Default `0.8`. The CI ribbon uses a fixed transparency of `0.2`.
 #' @param conf_level   Confidence level for the CI band. Defaults to
-#'   \code{0.6827} (one standard deviation), matching the SAS \code{\%kaplan}
-#'   macro default.
+#'   \code{0.95}.
 #' @param report_times Numeric vector of time points at which survival
 #'   estimates and numbers at risk are reported. Defaults to
 #'   \code{c(1, 5, 10, 15, 20, 25)}.
@@ -442,43 +446,46 @@ km_build_life_plot <- function(km_df, alpha) {
 #'   and a log CI on \eqn{H(t)} — corresponding to the SAS \code{\%nelsont}
 #'   macro, which is preferred when \eqn{S(t)} falls to or near zero.
 #'
-#' @return A named list with elements mirroring the SAS \code{\%kaplan} macro
-#'   output plots (\code{PLOTS}, \code{PLOTC}, \code{PLOTH}, \code{PLOTL}):
+#' @return A [ggplot2::ggplot()] object for the selected \code{plot_type}.
+#'   All five plot variants and the KM data, risk table, and report table are
+#'   attached as attributes (see \code{attr(result, "km_data")}):
 #' \describe{
-#'   \item{\code{survival_plot}}{(\code{PLOTS=1}) Bare \code{ggplot}: KM step
+#'   \item{\code{attr(p, "survival_plot")}}{(\code{PLOTS=1}) Bare \code{ggplot}: KM step
 #'     function with optional CI ribbon, y-axis on 0–100 scale.}
-#'   \item{\code{cumhaz_plot}}{(\code{PLOTC=1}) Bare \code{ggplot}:
+#'   \item{\code{attr(p, "cumhaz_plot")}}{(\code{PLOTC=1}) Bare \code{ggplot}:
 #'     Nelson-Aalen cumulative hazard H(t) = -log S(t).}
-#'   \item{\code{hazard_plot}}{(\code{PLOTH=1}) Bare \code{ggplot}:
+#'   \item{\code{attr(p, "hazard_plot")}}{(\code{PLOTH=1}) Bare \code{ggplot}:
 #'     instantaneous hazard h(t) = log(S(t_prev)/S(t)) / delta_t, plotted at
 #'     interval midpoints.  Add \code{geom_smooth(method="loess")} for
 #'     a smoothed hazard curve.}
-#'   \item{\code{loglog_plot}}{(\code{PLOTC=1}, log-log variant) Bare
+#'   \item{\code{attr(p, "loglog_plot")}}{(\code{PLOTC=1}, log-log variant) Bare
 #'     \code{ggplot}: log H(t) vs log t.  Parallel lines across strata
 #'     indicate proportional hazards.}
-#'   \item{\code{life_plot}}{(\code{PLOTL=1}) Bare \code{ggplot}: restricted
+#'   \item{\code{attr(p, "life_plot")}}{(\code{PLOTL=1}) Bare \code{ggplot}: restricted
 #'     mean survival time (integral of S(t)) vs time.}
-#'   \item{\code{km_data}}{Tidy data frame with columns \code{time},
+#'   \item{\code{attr(p, "km_data")}}{Tidy data frame with columns \code{time},
 #'     \code{surv}, \code{lower}, \code{upper}, \code{n.risk}, \code{n.event},
 #'     \code{n.censor}, \code{cumhaz}, \code{strata}, \code{hazard},
 #'     \code{density}, \code{mid_time}, \code{life}, \code{proplife},
 #'     \code{log_cumhaz}, \code{log_time}.}
-#'   \item{\code{risk_table}}{Data frame: \code{strata}, \code{report_time},
+#'   \item{\code{attr(p, "risk_table")}}{Data frame: \code{strata}, \code{report_time},
 #'     \code{n.risk}.}
-#'   \item{\code{report_table}}{Data frame: \code{strata}, \code{report_time},
+#'   \item{\code{attr(p, "report_table")}}{Data frame: \code{strata}, \code{report_time},
 #'     \code{surv}, \code{lower}, \code{upper}, \code{n.risk}, \code{n.event}.}
 #' }
+#'
+#' @seealso [hazard_plot()]
 #'
 #' @examples
 #' # --- Unstratified ---
 #' dta <- sample_survival_data(n = 500, seed = 42)
-#' result <- survival_curve(dta, alpha = 0.8)
+#' p <- survival_curve(dta, alpha = 0.8)
 #'
-#' # Bare survival plot
-#' result$survival_plot
+#' # Bare survival plot — compose directly with +
+#' p + hvti_theme("manuscript")
 #'
 #' # Add scales, labels, theme
-#' result$survival_plot +
+#' p +
 #'   ggplot2::scale_y_continuous(breaks = seq(0, 100, 20),
 #'                               labels = function(x) paste0(x, "%")) +
 #'   ggplot2::scale_x_continuous(breaks = seq(0, 20, 5)) +
@@ -487,31 +494,31 @@ km_build_life_plot <- function(km_df, alpha) {
 #'                 title = "Freedom from Death") +
 #'   hvti_theme("manuscript")
 #'
-#' # Cumulative hazard
-#' result$cumhaz_plot +
+#' # Access the report table via attr()
+#' attr(p, "report_table")
+#'
+#' # Numbers at risk
+#' attr(p, "risk_table")
+#'
+#' # Cumulative hazard (select a different plot_type)
+#' survival_curve(dta, plot_type = "cumhaz") +
 #'   ggplot2::scale_x_continuous(breaks = seq(0, 20, 5)) +
 #'   ggplot2::labs(x = "Years after Operation", y = "Cumulative Hazard",
 #'                 title = "Nelson-Aalen Cumulative Hazard") +
 #'   hvti_theme("manuscript")
 #'
-#' # Numbers at risk
-#' result$risk_table
-#'
-#' # Report table at 1, 5, 10, 15, 20 years
-#' result$report_table
-#'
 #' # --- Stratified ---
 #' # supply strata_levels to sample_survival_data() to generate the
-#' # "valve_type" column used by strata_col below.
+#' # "valve_type" column used by group_col below.
 #' # dta_s <- sample_survival_data(
 #' #   n = 500,
 #' #   strata_levels  = c("Type A", "Type B"),  # adds valve_type column
 #' #   hazard_ratios  = c(1, 1.4),
 #' #   seed = 42
 #' # )
-#' # result_s <- survival_curve(dta_s, strata_col = "valve_type", alpha = 0.8)
+#' # p_s <- survival_curve(dta_s, group_col = "valve_type", alpha = 0.8)
 #' #
-#' # result_s$survival_plot +
+#' # p_s +
 #' #   ggplot2::scale_color_manual(
 #' #     values = c("Type A" = "blue", "Type B" = "red"),
 #' #     name   = "Valve Type"
@@ -527,7 +534,7 @@ km_build_life_plot <- function(km_df, alpha) {
 #' #   hvti_theme("manuscript")
 #' #
 #' # --- Hazard rate plot (PLOTH=1; add smoother for publication) ---
-#' # result$hazard_plot +
+#' # survival_curve(dta, plot_type = "hazard") +
 #' #   ggplot2::geom_smooth(ggplot2::aes(x = mid_time, y = hazard,
 #' #                                     color = strata),
 #' #                        method = "loess", se = FALSE, span = 0.5) +
@@ -537,21 +544,21 @@ km_build_life_plot <- function(km_df, alpha) {
 #' #   hvti_theme("manuscript")
 #' #
 #' # --- Log-log plot (PLOTC log-log; proportional-hazards check) ---
-#' # result$loglog_plot +
+#' # survival_curve(dta, plot_type = "loglog") +
 #' #   ggplot2::labs(x = "log(Years)", y = "log(-log S(t))",
 #' #                 title = "Log-Log Survival (PH Assumption Check)") +
 #' #   hvti_theme("manuscript")
 #' #
 #' # --- Integrated survivorship / restricted mean survival (PLOTL=1) ---
-#' # result$life_plot +
+#' # survival_curve(dta, plot_type = "life") +
 #' #   ggplot2::scale_x_continuous(breaks = seq(0, 20, 5)) +
 #' #   ggplot2::labs(x = "Years after Operation",
 #' #                 y = "Restricted Mean Survival (years)") +
 #' #   hvti_theme("manuscript")
 #' #
 #' # --- Nelson-Aalen (use when S(t) falls to zero; mirrors SAS %nelsont) ---
-#' # result_na <- survival_curve(dta, alpha = 0.8, method = "nelson-aalen")
-#' # result_na$survival_plot +
+#' # p_na <- survival_curve(dta, alpha = 0.8, method = "nelson-aalen")
+#' # p_na +
 #' #   ggplot2::scale_color_manual(values = c(All = "steelblue"), guide = "none") +
 #' #   ggplot2::scale_fill_manual(values  = c(All = "steelblue"), guide = "none") +
 #' #   ggplot2::scale_y_continuous(breaks = seq(0, 100, 20),
@@ -563,8 +570,7 @@ km_build_life_plot <- function(km_df, alpha) {
 #' #   hvti_theme("manuscript")
 #' #
 #' # --- Save ---
-#' # ggplot2::ggsave("survival_curve.pdf", result$survival_plot,
-#' #                 width = 8, height = 6)
+#' # ggplot2::ggsave("survival_curve.pdf", p, width = 8, height = 6)
 #'
 #' @references SAS template: \code{tp.ac.dead.sas} (calls \code{\%kaplan} for
 #'   product-limit survival estimates and \code{\%nelsont} for Nelson-Aalen
@@ -577,26 +583,47 @@ km_build_life_plot <- function(km_df, alpha) {
 survival_curve <- function(data,
                            time_col     = "iv_dead",
                            event_col    = "dead",
+                           group_col    = NULL,
                            strata_col   = NULL,
+                           plot_type    = c("survival", "cumhaz", "hazard",
+                                            "loglog", "life"),
                            conf_int     = TRUE,
-                           conf_level   = 0.6827,
+                           conf_level   = 0.95,
                            report_times = c(1, 5, 10, 15, 20, 25),
                            alpha        = 0.8,
                            method       = c("kaplan-meier",
                                             "nelson-aalen")) {
 
-  method <- match.arg(method)
+  method    <- match.arg(method)
+  plot_type <- match.arg(plot_type)
+
+  # --- Deprecation shim for strata_col --------------------------------------
+  if (!is.null(strata_col) && is.null(group_col)) {
+    warning("'strata_col' is deprecated; use 'group_col' instead.",
+            call. = FALSE)
+    group_col <- strata_col
+  }
 
   # --- Validation -----------------------------------------------------------
   if (!is.data.frame(data))
     stop("`data` must be a data.frame.")
 
   required_cols <- c(time_col, event_col)
-  if (!is.null(strata_col)) required_cols <- c(required_cols, strata_col)
-  missing_cols <- setdiff(required_cols, names(data))
-  if (!(length(missing_cols) == 0L))
-    stop(sprintf("Missing required columns: %s",
-                 paste(missing_cols, collapse = ", ")))
+  if (!is.null(group_col)) required_cols <- c(required_cols, group_col)
+  for (col in required_cols) {
+    if (!(col %in% names(data)))
+      stop(sprintf("Column '%s' not found in `data`. Available columns: %s",
+                   col, paste(names(data), collapse = ", ")),
+           call. = FALSE)
+  }
+
+  if (!is.numeric(data[[time_col]]))
+    stop(sprintf("`%s` must be numeric. Got: %s",
+                 time_col, class(data[[time_col]])[1]), call. = FALSE)
+  if (!all(data[[event_col]] %in% c(0, 1, NA), na.rm = FALSE))
+    stop(sprintf("`%s` must be 0/1 or logical. Got values: %s",
+                 event_col, paste(unique(data[[event_col]]), collapse = ", ")),
+         call. = FALSE)
 
   if (!is.numeric(conf_level) || length(conf_level) != 1L ||
       !(conf_level > 0 && conf_level < 1))
@@ -609,8 +636,8 @@ survival_curve <- function(data,
     stop("`report_times` must be a non-empty numeric vector.")
 
   # --- Estimation -----------------------------------------------------------
-  fit    <- km_fit(data, time_col, event_col, strata_col, conf_level, method)
-  km_df  <- km_extract_tidy(fit, strata_col)
+  fit    <- km_fit(data, time_col, event_col, group_col, conf_level, method)
+  km_df  <- km_extract_tidy(fit, group_col)
 
   # --- Tables ---------------------------------------------------------------
   risk_tbl   <- km_risk_table(km_df, report_times)
@@ -623,16 +650,26 @@ survival_curve <- function(data,
   ll_plot <- km_build_loglog_plot(km_df, alpha)
   lf_plot <- km_build_life_plot(km_df, alpha)
 
-  list(
-    survival_plot = s_plot,
-    cumhaz_plot   = c_plot,
-    hazard_plot   = h_plot,
-    loglog_plot   = ll_plot,
-    life_plot     = lf_plot,
-    km_data       = km_df,
-    risk_table    = risk_tbl,
-    report_table  = report_tbl
+  # --- Select primary return plot -------------------------------------------
+  p <- switch(plot_type,
+    survival = s_plot,
+    cumhaz   = c_plot,
+    hazard   = h_plot,
+    loglog   = ll_plot,
+    life     = lf_plot
   )
+
+  # --- Attach all results as attributes -------------------------------------
+  attr(p, "survival_plot") <- s_plot
+  attr(p, "cumhaz_plot")   <- c_plot
+  attr(p, "hazard_plot")   <- h_plot
+  attr(p, "loglog_plot")   <- ll_plot
+  attr(p, "life_plot")     <- lf_plot
+  attr(p, "km_data")       <- km_df
+  attr(p, "risk_table")    <- risk_tbl
+  attr(p, "report_table")  <- report_tbl
+
+  p
 }
 
 #' Generate Sample Survival Data

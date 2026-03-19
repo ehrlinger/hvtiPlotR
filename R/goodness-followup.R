@@ -187,6 +187,8 @@ sample_goodness_followup_data <- function(
 #'   `scale_color_manual()`, `scale_shape_manual()`, `labs()`, and
 #'   [hvti_theme()]. For the event panel use [goodness_event_plot()].
 #'
+#' @seealso [goodness_event_plot()], [sample_goodness_followup_data()]
+#'
 #' @examples
 #' dta <- sample_goodness_followup_data()
 #'

@@ -1,16 +1,26 @@
 # trends-plot.R
 #
 # Temporal trend plot with LOESS smoother and annual summary points.
-# Ports the pattern from tp.dp.trends.R (template graph library) to
-# hvtiPlotR, replacing hard-coded colours with scale_ composition and
-# explicit theme calls with hvtiPlotR themes.
+# Ports the pattern from five SAS/R templates to hvtiPlotR:
 #
-# Key differences from the template:
+#   tp.rp.trends.sas          — single continuous outcome vs operation year
+#                               (Tricuspid valve replacement, 1968-2000)
+#   tp.lp.trends.sas          — binary % outcomes, x 1970-2000 by 10,
+#                               y 0-100 by 10 (Post-infarct VSD, 1969-2000)
+#   tp.lp.trends.age.sas      — binary % vs patient age (not year),
+#                               x 25-85 by 10 (Mitral valve, 1990-1999)
+#   tp.lp.trends.polytomous.sas — polytomous groups, x 1990-1999 by 1
+#                               (Tricuspid repair types, 1990-1999)
+#   tp.dp.trends.R            — NYHA %, LV mass, %CHF, case volume, LOS
+#                               (Mitral degeneration, 1985-2015)
+#
+# Key differences from the templates:
 #  - Long format with a group column replaces one geom_smooth() call per group
 #  - Annual summary statistic (mean or median) computed inside the function
-#    from patient-level data, replacing the manual dplyr pipeline
-#  - No hard-coded colours; examples demonstrate scale_color_manual() and
-#    scale_color_brewer()
+#    from patient-level data, replacing the manual dplyr pipelines
+#  - groups = NULL supported in sample_trends_data() for single-group figures
+#  - No hard-coded colours; examples demonstrate scale_colour_manual() and
+#    scale_colour_brewer()
 #  - Theme applied via + hvti_theme("manuscript") in examples
 # ---------------------------------------------------------------------------
 
@@ -23,16 +33,20 @@
 #' NYHA / LV-mass / LOS pattern in the SAS template.
 #'
 #' @param n          Total number of patients. Default `600`.
-#' @param year_range Integer vector `c(start, end)` for surgery years.
-#'   Default `c(1990, 2020)`.
-#' @param groups     Character vector of group labels. Default
+#' @param year_range Integer vector `c(start, end)` for the x-axis range
+#'   (surgery year, or patient age when used with `tp.lp.trends.age.sas`
+#'   patterns). Default `c(1990, 2020)`.
+#' @param groups     Character vector of group labels, or `NULL` for a
+#'   single-group figure (no `group` column returned; use with
+#'   `trends_plot(..., group_col = NULL)`). Default
 #'   `c("Group I", "Group II", "Group III", "Group IV")`.
 #' @param seed       Random seed for reproducibility. Default `42`.
 #'
 #' @return A data frame with columns:
-#'   - `year`  — surgery year (integer)
+#'   - `year`  — x-axis value (integer; surgery year or patient age)
 #'   - `value` — continuous outcome (numeric)
-#'   - `group` — group label (factor, ordered by `groups`)
+#'   - `group` — group label (factor, ordered by `groups`); absent when
+#'     `groups = NULL`
 #'
 #' @seealso [trends_plot()]
 #'
@@ -47,6 +61,9 @@ sample_trends_data <- function(n          = 600,
                                               "Group III", "Group IV"),
                                seed       = 42L) {
   set.seed(seed)
+
+  single_group <- is.null(groups)
+  if (single_group) groups <- "Group I"
 
   n_groups <- length(groups)
   years    <- seq(year_range[1], year_range[2])
@@ -63,11 +80,14 @@ sample_trends_data <- function(n          = 600,
   mu       <- baselines[group_id] + drifts[group_id] * t_scaled * n_years
   value    <- mu + stats::rnorm(n, sd = 8)
 
-  data.frame(
+  df <- data.frame(
     year  = as.integer(year_obs),
-    value = round(value, 2),
-    group = factor(groups[group_id], levels = groups)
+    value = round(value, 2)
   )
+  if (!single_group) {
+    df$group <- factor(groups[group_id], levels = groups)
+  }
+  df
 }
 
 # ---------------------------------------------------------------------------
@@ -108,58 +128,112 @@ sample_trends_data <- function(n          = 600,
 #' @seealso [sample_trends_data()], [hvti_theme()]
 #'
 #' @examples
-#' dta <- sample_trends_data(n = 600, seed = 42)
-#'
-#' # --- Single group (subset to one group) ----------------------------------
-#' one <- dta[dta$group == "Group I", ]
+#' # --- tp.rp.trends.sas: single continuous outcome, 1968-2000 by 4 ----------
+#' one <- sample_trends_data(n = 600, year_range = c(1968L, 2000L),
+#'                           groups = NULL)
 #' trends_plot(one, group_col = NULL) +
-#'   ggplot2::labs(x = "Surgery Year", y = "Outcome", title = "Group I Trend") +
+#'   ggplot2::scale_x_continuous(limits = c(1968, 2000),
+#'                               breaks = seq(1968, 2000, 4)) +
+#'   ggplot2::scale_y_continuous(limits = c(0, 10),
+#'                               breaks = seq(0, 10, 2)) +
+#'   ggplot2::labs(x = "Year", y = "Cases/year") +
 #'   hvti_theme("manuscript")
 #'
-#' # --- Multiple groups with scale_color_brewer -----------------------------
-#' trends_plot(dta) +
-#'   ggplot2::scale_colour_brewer(palette = "Set1", name = "Group") +
-#'   ggplot2::scale_shape_manual(
-#'     values = c("Group I" = 15, "Group II" = 19,
-#'                "Group III" = 17, "Group IV" = 18),
-#'     name = "Group"
-#'   ) +
-#'   ggplot2::labs(x = "Surgery Year", y = "Outcome (%)") +
-#'   hvti_theme("manuscript")
-#'
-#' # --- Median summary statistic + manual colours ---------------------------
-#' trends_plot(dta, summary_fn = "median") +
+#' # --- tp.lp.trends.sas: binary % outcomes, 1970-2000 by 10 ---------------
+#' dta_lp <- sample_trends_data(
+#'   n = 800, year_range = c(1970L, 2000L),
+#'   groups = c("Shock %", "Pre-op IABP %", "Inotropes %"))
+#' trends_plot(dta_lp) +
 #'   ggplot2::scale_colour_manual(
-#'     values = c("Group I"   = "steelblue",
-#'                "Group II"  = "firebrick",
-#'                "Group III" = "forestgreen",
-#'                "Group IV"  = "goldenrod3"),
-#'     name = "NYHA Class"
-#'   ) +
-#'   ggplot2::scale_shape_manual(
-#'     values = c("Group I" = 15, "Group II" = 19,
-#'                "Group III" = 17, "Group IV" = 18),
-#'     name = "NYHA Class"
-#'   ) +
-#'   ggplot2::coord_cartesian(xlim = c(1990, 2020), ylim = c(0, 80)) +
-#'   ggplot2::scale_x_continuous(breaks = seq(1990, 2020, 5)) +
-#'   ggplot2::scale_y_continuous(breaks = seq(0, 80, 20)) +
-#'   ggplot2::labs(x = "Surgery Year", y = "%",
-#'                 title = "Preoperative NYHA Class Over Time") +
-#'   ggplot2::annotate("text", x = 2000, y = 75,
-#'                     label = "Trend: Preoperative NYHA", size = 4) +
+#'     values = c("Shock %" = "steelblue", "Pre-op IABP %" = "firebrick",
+#'                "Inotropes %" = "forestgreen"), name = NULL) +
+#'   ggplot2::scale_x_continuous(limits = c(1970, 2000),
+#'                               breaks = seq(1970, 2000, 10)) +
+#'   ggplot2::scale_y_continuous(limits = c(0, 100),
+#'                               breaks = seq(0, 100, 10)) +
+#'   ggplot2::coord_cartesian(xlim = c(1970, 2000), ylim = c(0, 100)) +
+#'   ggplot2::labs(x = "Year", y = "Percent (%)") +
 #'   hvti_theme("manuscript")
 #'
-#' # --- With confidence ribbon ----------------------------------------------
-#' trends_plot(dta[dta$group == "Group I", ], group_col = NULL, se = TRUE) +
-#'   ggplot2::labs(x = "Surgery Year", y = "Outcome") +
+#' # --- tp.lp.trends.age.sas: age on x-axis, 25-85 by 10 -------------------
+#' dta_age <- sample_trends_data(
+#'   n = 600, year_range = c(25L, 85L),
+#'   groups = c("Repair %", "Bioprosthesis %"), seed = 7L)
+#' trends_plot(dta_age) +
+#'   ggplot2::scale_x_continuous(limits = c(25, 85),
+#'                               breaks = seq(25, 85, 10)) +
+#'   ggplot2::scale_y_continuous(limits = c(0, 100),
+#'                               breaks = seq(0, 100, 20)) +
+#'   ggplot2::coord_cartesian(xlim = c(25, 85), ylim = c(0, 100)) +
+#'   ggplot2::labs(x = "Age (years)", y = "Percent (%)") +
+#'   hvti_theme("manuscript")
+#'
+#' # --- tp.lp.trends.polytomous.sas: repair types, 1990-1999 by 1 ----------
+#' dta_poly <- sample_trends_data(
+#'   n = 800, year_range = c(1990L, 1999L),
+#'   groups = c("CE", "Cosgrove", "Periguard", "DeVega"), seed = 5L)
+#' trends_plot(dta_poly) +
+#'   ggplot2::scale_colour_manual(
+#'     values = c(CE = "steelblue", Cosgrove = "firebrick",
+#'                Periguard = "forestgreen", DeVega = "goldenrod3"),
+#'     name = "Repair type") +
+#'   ggplot2::scale_x_continuous(limits = c(1990, 1999),
+#'                               breaks = seq(1990, 1999, 1)) +
+#'   ggplot2::scale_y_continuous(limits = c(0, 100),
+#'                               breaks = seq(0, 100, 10)) +
+#'   ggplot2::coord_cartesian(xlim = c(1990, 1999), ylim = c(0, 100)) +
+#'   ggplot2::labs(x = "Year", y = "Percent (%)") +
+#'   hvti_theme("manuscript")
+#'
+#' # --- tp.dp.trends.R: NYHA classes, 1985-2015 by 5 -----------------------
+#' dta_nyha <- sample_trends_data(n = 800, year_range = c(1985L, 2015L),
+#'   groups = c("I", "II", "III", "IV"))
+#' trends_plot(dta_nyha, summary_fn = "median") +
+#'   ggplot2::scale_colour_manual(
+#'     values = c(I = "steelblue", II = "firebrick",
+#'                III = "forestgreen", IV = "goldenrod3"),
+#'     name = "NYHA Class") +
+#'   ggplot2::scale_x_continuous(limits = c(1985, 2015),
+#'                               breaks = seq(1985, 2015, 5)) +
+#'   ggplot2::scale_y_continuous(limits = c(0, 80),
+#'                               breaks = seq(0, 80, 20)) +
+#'   ggplot2::coord_cartesian(xlim = c(1985, 2015), ylim = c(0, 80)) +
+#'   ggplot2::labs(x = "Years", y = "%") +
+#'   hvti_theme("manuscript")
+#'
+#' # --- tp.dp.trends.R: LV mass index, 1995-2015 by 5 ----------------------
+#' dta_lv <- sample_trends_data(n = 800, year_range = c(1995L, 2015L),
+#'                              groups = NULL, seed = 3L)
+#' trends_plot(dta_lv, group_col = NULL) +
+#'   ggplot2::scale_x_continuous(limits = c(1995, 2015),
+#'                               breaks = seq(1995, 2015, 5)) +
+#'   ggplot2::scale_y_continuous(limits = c(0, 200),
+#'                               breaks = seq(0, 200, 50)) +
+#'   ggplot2::coord_cartesian(xlim = c(1995, 2015), ylim = c(0, 200)) +
+#'   ggplot2::labs(x = "Years", y = "LV Mass Index") +
+#'   hvti_theme("manuscript")
+#'
+#' # --- tp.dp.trends.R: LOS with annotation, 1985-2015 by 5 ----------------
+#' dta_los <- sample_trends_data(n = 800, year_range = c(1985L, 2015L),
+#'                               groups = NULL, seed = 11L)
+#' trends_plot(dta_los, group_col = NULL) +
+#'   ggplot2::scale_x_continuous(limits = c(1985, 2015),
+#'                               breaks = seq(1985, 2015, 5)) +
+#'   ggplot2::scale_y_continuous(limits = c(0, 20),
+#'                               breaks = seq(0, 20, 5)) +
+#'   ggplot2::coord_cartesian(xlim = c(1985, 2015), ylim = c(0, 20)) +
+#'   ggplot2::annotate("text", x = 1995, y = 18,
+#'                     label = "Trend: Hospital Length of Stay", size = 4.5) +
+#'   ggplot2::labs(x = "Years", y = "Hospital LOS (Days)") +
 #'   hvti_theme("manuscript")
 #'
 #' # --- Save ----------------------------------------------------------------
 #' \dontrun{
-#' p <- trends_plot(dta) +
-#'   ggplot2::scale_colour_brewer(palette = "Set1") +
-#'   ggplot2::labs(x = "Surgery Year", y = "Outcome (%)") +
+#' p <- trends_plot(dta_nyha) +
+#'   ggplot2::scale_colour_brewer(palette = "Set1", name = "NYHA Class") +
+#'   ggplot2::scale_x_continuous(limits = c(1985, 2015),
+#'                               breaks = seq(1985, 2015, 5)) +
+#'   ggplot2::labs(x = "Years", y = "%") +
 #'   hvti_theme("manuscript")
 #' ggplot2::ggsave("trends.pdf", p, width = 11.5, height = 8)
 #' }
@@ -187,11 +261,13 @@ trends_plot <- function(data,
     stop("`data` must be a data frame.")
   for (col in c(x_col, y_col)) {
     if (!(col %in% names(data)))
-      stop(paste0("Column '", col, "' not found in `data`."))
+      stop(sprintf("Column '%s' not found in `data`. Available columns: %s",
+                   col, paste(names(data), collapse = ", ")))
   }
   if (!is.null(group_col)) {
     if (!(group_col %in% names(data)))
-      stop(paste0("`group_col` '", group_col, "' not found in `data`."))
+      stop(sprintf("Column '%s' not found in `data`. Available columns: %s",
+                   group_col, paste(names(data), collapse = ", ")))
   }
 
   # --- Annual summary -------------------------------------------------------

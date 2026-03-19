@@ -36,9 +36,6 @@
 #' ## Plot functions
 #'
 #' \itemize{
-#'   \item [hvti_plot()]: Single entry-point dispatcher for all hvtiPlotR
-#'     plot types (`"mirror_histogram"`, `"stacked_histogram"`,
-#'     `"covariate_balance"`).
 #'   \item [mirror_histogram()]: Side-by-side propensity-score histograms
 #'     (binary-match or IPTW-weighted mode). Ports `plot.sas` mirror
 #'     histogram output.

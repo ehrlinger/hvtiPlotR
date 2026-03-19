@@ -66,6 +66,9 @@ A \code{\link[ggplot2:theme]{ggplot2::theme()}} object.
 A clean, white-background theme suited to journal submissions.
 Removes grid lines, panel borders, and legends; draws solid axis lines.
 }
+\note{
+Deprecated. Use \code{\link[=hvti_theme]{hvti_theme()}} with \code{style = "manuscript"} instead.
+}
 \seealso{
 \code{\link[=hvti_theme]{hvti_theme()}}, \code{\link[=theme_ppt]{theme_ppt()}}, \code{\link[=theme_dark_ppt]{theme_dark_ppt()}}, \code{\link[=theme_poster]{theme_poster()}}
 }

@@ -28,6 +28,129 @@ navbar:
       href: https://www.linkedin.com/in/ehrlinger/
       aria-label: LinkedIn
 
+reference:
+- title: "Package Overview"
+  desc: >
+    Package-level documentation and overview.
+  contents:
+  - hvtiPlotR-package
+
+- title: "Themes"
+  desc: >
+    Apply publication-quality themes to any ggplot2 object. Use
+    `hvti_theme()` as the single entry point; the lower-level
+    `hvti_theme_*()` functions are also exported for direct use.
+  contents:
+  - hvti_theme
+  - hvti_theme_manuscript
+  - hvti_theme_dark_ppt
+  - hvti_theme_light_ppt
+  - hvti_theme_poster
+  - hvti_theme_ppt
+  - theme_manuscript
+  - theme_man
+  - theme_dark_ppt
+  - theme_light_ppt
+  - theme_poster
+  - theme_ppt
+
+- title: "Survival & Hazard"
+  desc: >
+    Kaplan-Meier survival curves, parametric hazard plots, survival
+    differences, and number-needed-to-treat. Use `survival_curve()` for
+    non-parametric estimates; `hazard_plot()` for pre-fitted parametric
+    model output.
+  contents:
+  - survival_curve
+  - hazard_plot
+  - survival_difference_plot
+  - nnt_plot
+  - sample_survival_data
+  - sample_hazard_data
+  - sample_hazard_empirical
+  - sample_life_table
+  - sample_survival_difference_data
+  - sample_nnt_data
+  - nonparametric
+  - parametric
+
+- title: "Nonparametric Temporal Curves"
+  desc: >
+    Average temporal curves and ordinal outcome trajectories from
+    decomposition models (`tp.np.*` template family).
+  contents:
+  - nonparametric_curve_plot
+  - nonparametric_ordinal_plot
+  - sample_nonparametric_curve_data
+  - sample_nonparametric_curve_points
+  - sample_nonparametric_ordinal_data
+  - sample_nonparametric_ordinal_points
+
+- title: "Propensity Score & Matching"
+  desc: >
+    Visualise propensity score distributions and covariate balance
+    before and after propensity matching or IPTW weighting.
+  contents:
+  - mirror_histogram
+  - covariate_balance
+  - sample_mirror_histogram_data
+  - sample_covariate_balance_data
+
+- title: "Temporal Trends"
+  desc: >
+    Annual trend lines with optional confidence ribbons. Ports the
+    `tp.lp.trends.*`, `tp.rp.trends.*`, and `tp.dp.trends.R` templates.
+  contents:
+  - trends_plot
+  - spaghetti_plot
+  - longitudinal_counts_plot
+  - longitudinal_counts_table
+  - sample_trends_data
+  - sample_spaghetti_data
+  - sample_longitudinal_counts_data
+
+- title: "Study Design & Goodness of Follow-Up"
+  desc: >
+    Visualise follow-up completeness and goodness-of-fit for event
+    models. Ports `tp.dp.gfup.R`.
+  contents:
+  - goodness_followup
+  - goodness_event_plot
+  - sample_goodness_followup_data
+
+- title: "Flow Diagrams"
+  desc: >
+    Alluvial (Sankey) plots showing patient flow between states or
+    cluster assignments across K values.
+  contents:
+  - alluvial_plot
+  - cluster_sankey_plot
+  - sample_alluvial_data
+  - sample_cluster_sankey_data
+
+- title: "Exploratory Data Analysis"
+  desc: >
+    Rapid bar charts and scatter plots for variable screening and
+    univariate summaries.
+  contents:
+  - eda_plot
+  - eda_classify_var
+  - eda_select_vars
+  - stacked_histogram
+  - upset_plot
+  - sample_eda_data
+  - sample_stacked_histogram_data
+  - sample_upset_data
+
+- title: "Saving & Utilities"
+  desc: >
+    Save figures to PowerPoint or PDF. Add draft footnotes during analysis;
+    omit them for publication-ready output.
+  contents:
+  - save_ppt
+  - make_footnote
+  - makeFootnote
+
 articles:
 - title: "Getting Started"
   contents:

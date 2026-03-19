@@ -12,7 +12,7 @@ spaghetti_plot(
   colour_col = NULL,
   line_colour = "grey50",
   line_width = 0.2,
-  alpha = 0.6,
+  alpha = 0.8,
   add_smooth = FALSE,
   smooth_method = "loess",
   smooth_se = FALSE,
@@ -38,7 +38,7 @@ Default \code{"grey50"}.}
 
 \item{line_width}{Line width for individual trajectories. Default \code{0.2}.}
 
-\item{alpha}{Transparency of individual lines. Default \code{0.6}.}
+\item{alpha}{Transparency of plot elements (0–1). Default \code{0.8}.}
 
 \item{add_smooth}{Logical; overlay a smoother per group (or overall when
 \code{colour_col = NULL})? Default \code{FALSE}.}

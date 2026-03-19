@@ -4,12 +4,12 @@
 \alias{km_extract_tidy}
 \title{Extract tidy data frame from a survfit object}
 \usage{
-km_extract_tidy(fit, strata_col)
+km_extract_tidy(fit, group_col)
 }
 \arguments{
 \item{fit}{A \code{survfit} object.}
 
-\item{strata_col}{Name of the original stratification column, or \code{NULL}.}
+\item{group_col}{Name of the original stratification column, or \code{NULL}.}
 }
 \value{
 A data frame.

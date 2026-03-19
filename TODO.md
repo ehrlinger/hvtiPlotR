@@ -21,4 +21,8 @@ issues resolved.
 | [ ] | `trends_plot()` | |
 | [ ] | `longitudinal_counts_plot()` | |
 | [ ] | `alluvial_plot()` | formerly `sankey_plot()` |
+| [ ] | `cluster_sankey_plot()` | requires `ggsankey` (GitHub) |
 | [ ] | `upset_plot()` | |
+| [ ] | `hazard_plot()` | parametric survival; tp.hs.* family |
+| [ ] | `survival_difference_plot()` | treatment benefit vs. reference |
+| [ ] | `nnt_plot()` | number needed to treat |

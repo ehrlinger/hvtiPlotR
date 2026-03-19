@@ -540,7 +540,7 @@ sample_nnt_data <- function(n        = 500,
 #'
 #' @seealso [sample_hazard_data()], [sample_hazard_empirical()],
 #'   [sample_life_table()], [survival_difference_plot()], [nnt_plot()],
-#'   [hvti_theme()]
+#'   [survival_curve()], [hvti_theme()]
 #'
 #' @references SAS templates: \code{tp.hp.dead.sas},
 #'   \code{tp.hp.dead.tkdn.stratified.sas},
@@ -829,11 +829,13 @@ hazard_plot <- function(curve_data,
     stop("`curve_data` must be a data frame.")
   for (col in c(x_col, estimate_col)) {
     if (!(col %in% names(curve_data)))
-      stop(sprintf("Column '%s' not found in `curve_data`.", col))
+      stop(sprintf("Column '%s' not found in `curve_data`. Available columns: %s",
+                   col, paste(names(curve_data), collapse = ", ")))
   }
   for (col in c(lower_col, upper_col, group_col)) {
     if (!is.null(col) && !(col %in% names(curve_data)))
-      stop(sprintf("Column '%s' not found in `curve_data`.", col))
+      stop(sprintf("Column '%s' not found in `curve_data`. Available columns: %s",
+                   col, paste(names(curve_data), collapse = ", ")))
   }
 
   # --- Validate empirical ---------------------------------------------------
@@ -843,7 +845,8 @@ hazard_plot <- function(curve_data,
     for (col in c(emp_x_col, emp_estimate_col, emp_lower_col,
                   emp_upper_col, emp_group_col)) {
       if (!is.null(col) && !(col %in% names(empirical)))
-        stop(sprintf("Column '%s' not found in `empirical`.", col))
+        stop(sprintf("Column '%s' not found in `empirical`. Available columns: %s",
+                     col, paste(names(empirical), collapse = ", ")))
     }
   }
 
@@ -853,7 +856,8 @@ hazard_plot <- function(curve_data,
       stop("`reference` must be a data frame.")
     for (col in c(ref_x_col, ref_estimate_col, ref_group_col)) {
       if (!is.null(col) && !(col %in% names(reference)))
-        stop(sprintf("Column '%s' not found in `reference`.", col))
+        stop(sprintf("Column '%s' not found in `reference`. Available columns: %s",
+                     col, paste(names(reference), collapse = ", ")))
     }
   }
 

@@ -112,7 +112,7 @@ sample_spaghetti_data <- function(n_patients = 150,
 #' @param line_colour  Fixed line colour used when `colour_col = NULL`.
 #'   Default `"grey50"`.
 #' @param line_width   Line width for individual trajectories. Default `0.2`.
-#' @param alpha        Transparency of individual lines. Default `0.6`.
+#' @param alpha        Transparency of plot elements (0–1). Default `0.8`.
 #' @param add_smooth   Logical; overlay a smoother per group (or overall when
 #'   `colour_col = NULL`)? Default `FALSE`.
 #' @param smooth_method Smoothing method, e.g. `"loess"` (default) or `"lm"`.
@@ -208,7 +208,7 @@ spaghetti_plot <- function(data,
                            colour_col    = NULL,
                            line_colour   = "grey50",
                            line_width    = 0.2,
-                           alpha         = 0.6,
+                           alpha         = 0.8,
                            add_smooth    = FALSE,
                            smooth_method = "loess",
                            smooth_se     = FALSE,
@@ -220,11 +220,13 @@ spaghetti_plot <- function(data,
     stop("`data` must be a data frame.")
   for (col in c(x_col, y_col, id_col)) {
     if (!(col %in% names(data)))
-      stop(paste0("Column '", col, "' not found in `data`."))
+      stop(sprintf("Column '%s' not found in `data`. Available columns: %s",
+                   col, paste(names(data), collapse = ", ")))
   }
   if (!is.null(colour_col)) {
     if (!(colour_col %in% names(data)))
-      stop(paste0("`colour_col` '", colour_col, "' not found in `data`."))
+      stop(sprintf("Column '%s' not found in `data`. Available columns: %s",
+                   colour_col, paste(names(data), collapse = ", ")))
   }
   if (!is.numeric(alpha) || length(alpha) != 1L ||
       !(alpha >= 0 && alpha <= 1))

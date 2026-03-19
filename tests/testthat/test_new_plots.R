@@ -6,7 +6,6 @@
 #   sample_spaghetti_data, spaghetti_plot
 #   sample_trends_data, trends_plot
 #   sample_longitudinal_counts_data, longitudinal_counts_plot
-# hvti_plot() dispatches for each type.
 # hvti_theme("light_ppt") dispatch + theme_light_ppt alias.
 #
 # Every assertion tests a distinct property of a distinct object.
@@ -93,25 +92,6 @@ test_that("upset_plot errors when intersect names are absent from data", {
   )
 })
 
-test_that("hvti_plot('upset') dispatches to upset_plot", {
-  dta <- sample_upset_data(n = 100, seed = 1)
-  # ComplexUpset may produce rendering errors with certain ggplot2 versions;
-  # capture any such error so we can distinguish ComplexUpset failures from
-  # dispatch failures in our code.
-  result <- tryCatch(
-    hvti_plot("upset", data = dta, intersect = sets),
-    error = function(e) {
-      msg <- conditionMessage(e)
-      # If the error is from ComplexUpset internals (theme or S7 dispatch),
-      # skip rather than fail — this is a known version incompatibility.
-      if (grepl("valid theme|S7|patchwork", msg, ignore.case = TRUE)) {
-        skip(paste("ComplexUpset version incompatibility:", msg))
-      }
-      stop(e)   # re-throw unexpected errors
-    }
-  )
-  expect_true(!is.null(result))
-})
 
 # ============================================================================
 # sample_alluvial_data
@@ -235,12 +215,6 @@ test_that("alluvial_plot errors when alpha is out of [0, 1]", {
   )
 })
 
-test_that("hvti_plot('sankey') dispatches to alluvial_plot", {
-  dta  <- sample_alluvial_data(n = 100, seed = 1)
-  axes <- c("pre_ar", "procedure", "post_ar")
-  p    <- hvti_plot("alluvial", data = dta, axes = axes, y_col = "freq")
-  expect_s3_class(p, "ggplot")
-})
 
 # ============================================================================
 # sample_spaghetti_data
@@ -364,11 +338,6 @@ test_that("spaghetti_plot errors when alpha is out of [0, 1]", {
   expect_error(spaghetti_plot(dta, alpha = 2.0), "alpha")
 })
 
-test_that("hvti_plot('spaghetti') dispatches to spaghetti_plot", {
-  dta <- sample_spaghetti_data(n_patients = 40, seed = 1)
-  p   <- hvti_plot("spaghetti", data = dta)
-  expect_s3_class(p, "ggplot")
-})
 
 # ============================================================================
 # sample_trends_data
@@ -464,11 +433,6 @@ test_that("trends_plot errors when group_col is absent from data", {
   expect_error(trends_plot(dta, group_col = "nonexistent"), "not found")
 })
 
-test_that("hvti_plot('trends') dispatches to trends_plot", {
-  dta <- sample_trends_data(n = 200, seed = 1)
-  p   <- hvti_plot("trends", data = dta)
-  expect_s3_class(p, "ggplot")
-})
 
 # ============================================================================
 # sample_longitudinal_counts_data
@@ -567,10 +531,6 @@ test_that("longitudinal_counts_plot errors on invalid position value", {
   expect_error(longitudinal_counts_plot(dta, position = "fill"), "dodge")
 })
 
-test_that("hvti_plot('longitudinal_counts') dispatches to longitudinal_counts_plot", {
-  dta <- sample_longitudinal_counts_data(n_patients = 60, seed = 1)
-  expect_s3_class(hvti_plot("longitudinal_counts", data = dta), "ggplot")
-})
 
 # ============================================================================
 # longitudinal_counts_table

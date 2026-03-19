@@ -63,4 +63,5 @@ theme_manuscript <- hvti_theme_manuscript
 
 #' @export
 #' @rdname hvti_theme_manuscript
+#' @note Deprecated. Use [hvti_theme()] with `style = "manuscript"` instead.
 theme_man <- hvti_theme_manuscript
