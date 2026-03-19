@@ -28,6 +28,17 @@ navbar:
       href: https://www.linkedin.com/in/ehrlinger/
       aria-label: LinkedIn
 
+articles:
+- title: "Getting Started"
+  contents:
+  - hvtiPlotR
+  - sas-migration-guide
+
+- title: "Plot Functions"
+  contents:
+  - plot-functions
+  - plot-decorators
+
 footer:
   structure:
     left: developed_by
