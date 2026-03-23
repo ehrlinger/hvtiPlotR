@@ -163,43 +163,27 @@ save_ppt <- function(object,
   is_plot_list <- is.list(object) && !inherits(object, "ggplot")
 
   # --- Validate inputs -------------------------------------------------------
-  assertthat::assert_that(
-    inherits(object, "ggplot") || is_plot_list,
-    msg = "`object` must be a ggplot or a list of ggplot objects."
-  )
+  if (!inherits(object, "ggplot") && !is_plot_list)
+    stop("`object` must be a ggplot or a list of ggplot objects.")
   if (is_plot_list) {
-    assertthat::assert_that(
-      length(object) > 0L,
-      msg = "`object` list cannot be empty."
-    )
-    assertthat::assert_that(
-      all(vapply(object, inherits, logical(1L), what = "ggplot")),
-      msg = "All elements of `object` must be ggplot objects."
-    )
+    if (length(object) == 0L)
+      stop("`object` list cannot be empty.")
+    if (!all(vapply(object, inherits, logical(1L), what = "ggplot")))
+      stop("All elements of `object` must be ggplot objects.")
   }
-  assertthat::assert_that(
-    assertthat::is.string(template), file.exists(template),
-    msg = "`template` must be the path to an existing PowerPoint file."
-  )
-  assertthat::assert_that(
-    assertthat::is.string(powerpoint),
-    dir.exists(dirname(powerpoint)),
-    msg = "`powerpoint` must be a writable file path."
-  )
-  assertthat::assert_that(
-    is.character(slide_titles), length(slide_titles) >= 1L,
-    msg = "`slide_titles` must be a non-empty character vector."
-  )
-  assertthat::assert_that(
-    assertthat::is.number(width),  width  > 0,
-    assertthat::is.number(height), height > 0,
-    msg = "`width` and `height` must be positive numbers."
-  )
-  assertthat::assert_that(
-    assertthat::is.number(left), left >= 0,
-    assertthat::is.number(top),  top  >= 0,
-    msg = "`left` and `top` must be non-negative numbers."
-  )
+  if (!is.character(template) || length(template) != 1L || !file.exists(template))
+    stop("`template` must be the path to an existing PowerPoint file.")
+  if (!is.character(powerpoint) || length(powerpoint) != 1L ||
+      !dir.exists(dirname(powerpoint)))
+    stop("`powerpoint` must be a writable file path.")
+  if (!is.character(slide_titles) || length(slide_titles) < 1L)
+    stop("`slide_titles` must be a non-empty character vector.")
+  if (!is.numeric(width)  || length(width)  != 1L || width  <= 0 ||
+      !is.numeric(height) || length(height) != 1L || height <= 0)
+    stop("`width` and `height` must be positive numbers.")
+  if (!is.numeric(left) || length(left) != 1L || left < 0 ||
+      !is.numeric(top)  || length(top)  != 1L || top  < 0)
+    stop("`left` and `top` must be non-negative numbers.")
 
   # --- Open template ---------------------------------------------------------
   doc <- officer_safe_call(

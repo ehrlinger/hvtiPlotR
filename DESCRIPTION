@@ -22,7 +22,6 @@ Description: ggplot2 themes and methodology documentation for creating
 Depends:
     R (>= 4.1.0)
 Imports:
-    assertthat,
     ComplexUpset,
     ggalluvial,
     ggplot2,
@@ -36,9 +35,8 @@ Suggests:
     testthat,
     devtools,
     ggsankey,
-    RColorBrewer,
-    gridExtra,
     haven,
+    patchwork,
     scales,
     tidyr,
     quarto,

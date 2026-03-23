@@ -334,7 +334,7 @@ save_ppt(
 
 ## Multi-panel PDF (EDA batch output)
 
-When generating multiple plots in a loop, `gridExtra::marrangeGrob()` arranges
+When generating multiple plots in a loop, `patchwork::wrap_plots()` arranges
 them into a grid and `ggsave()` writes each page.
 
 ```{r save_multipanel}
@@ -354,11 +354,11 @@ plot_list <- lapply(
 
 per_page <- 9L
 for (pg in seq(1, length(plot_list), by = per_page)) {
-  idx  <- seq(pg, min(pg + per_page - 1L, length(plot_list)))
-  grob <- gridExtra::marrangeGrob(plot_list[idx], nrow = 3, ncol = 3)
+  idx     <- seq(pg, min(pg + per_page - 1L, length(plot_list)))
+  pg_plot <- patchwork::wrap_plots(plot_list[idx], nrow = 3, ncol = 3)
   ggsave(
     filename = sprintf("../graphs/eda_page%02d.pdf", ceiling(pg / per_page)),
-    plot     = grob,
+    plot     = pg_plot,
     width    = 14,
     height   = 14
   )
