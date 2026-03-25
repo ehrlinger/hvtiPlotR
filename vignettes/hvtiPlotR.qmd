@@ -721,7 +721,7 @@ them; the rest are conventions to keep in mind when composing figures.
 
 
 # Conclusions 
-In this article, we present the **hvtiPlotR** package for R. The package is made up of ggplot2 themes for publication quality graphics, as well as this tutorial document included as a package vignette. The package is available from https://github.com/ehrlinger/hvtiPlotR and can be installed using the `devtools::install_github("ehrlinger/hvtiPlotR")` command. 
+In this article, we present the **hvtiPlotR** package for R. The package is made up of ggplot2 themes for publication quality graphics, as well as this tutorial document included as a package vignette. The package is available from https://github.com/ehrlinger/hvtiPlotR and can be installed using the `remotes::install_github("ehrlinger/hvtiPlotR")` command. 
 
 # References 
 Auguie B (2012). gridExtra: functions in Grid graphics. R package version 0.9.1, URL http://CRAN.R-project.org/package=gridExtra. 

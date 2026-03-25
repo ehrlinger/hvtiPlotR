@@ -346,12 +346,12 @@ test_that("hazard_plot errors when curve_data is not a data frame", {
 
 test_that("hazard_plot errors when x_col is absent from curve_data", {
   dat <- sample_hazard_data(n = 50, seed = 1)
-  expect_error(hazard_plot(dat, x_col = "nonexistent"), "not found")
+  expect_error(hazard_plot(dat, x_col = "nonexistent"), "column")
 })
 
 test_that("hazard_plot errors when estimate_col is absent from curve_data", {
   dat <- sample_hazard_data(n = 50, seed = 1)
-  expect_error(hazard_plot(dat, estimate_col = "nonexistent"), "not found")
+  expect_error(hazard_plot(dat, estimate_col = "nonexistent"), "column")
 })
 
 test_that("hazard_plot errors when lower_col is absent from curve_data", {
@@ -362,4 +362,12 @@ test_that("hazard_plot errors when lower_col is absent from curve_data", {
 test_that("hazard_plot errors when group_col is absent from curve_data", {
   dat <- sample_hazard_data(n = 50, seed = 1)
   expect_error(hazard_plot(dat, group_col = "nonexistent"), "not found")
+})
+
+test_that("hazard_plot handles empty data frame gracefully", {
+  # An empty data frame with the required columns (time, survival) satisfies
+  # all column-presence checks; ggplot renders an empty plot without error.
+  empty_df <- data.frame(time = numeric(0), survival = numeric(0))
+  result <- hazard_plot(curve_data = empty_df)
+  expect_s3_class(result, "ggplot")
 })

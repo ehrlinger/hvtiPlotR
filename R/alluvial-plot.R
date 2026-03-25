@@ -208,29 +208,20 @@ alluvial_plot <- function(data,
                         show_labels   = TRUE) {
 
   # --- Validation -----------------------------------------------------------
-  if (!is.data.frame(data))
-    stop("`data` must be a data frame.")
+  .check_df(data)
   if (!(is.character(axes) && length(axes) >= 2L))
-    stop("`axes` must be a character vector of at least 2 column names.")
-  if (!(all(axes %in% names(data))))
-    stop(paste("These `axes` names are not columns in `data`:",
-               paste(setdiff(axes, names(data)), collapse = ", ")))
-  if (!(is.character(y_col) && length(y_col) == 1L &&
-        y_col %in% names(data)))
-    stop(paste0("`y_col` '", y_col, "' is not a column in `data`."))
-  if (!is.null(fill_col)) {
-    if (!(is.character(fill_col) && length(fill_col) == 1L &&
-          fill_col %in% names(data)))
-      stop(paste0("`fill_col` '", fill_col, "' is not a column in `data`."))
-  }
+    stop("`axes` must be a character vector of at least 2 column names.",
+         call. = FALSE)
+  .check_cols(data, axes)
+  .check_col(data, y_col)
+  if (!is.null(fill_col))
+    .check_col(data, fill_col)
   if (!(is.null(axis_labels) ||
           (is.character(axis_labels) &&
            length(axis_labels) == length(axes))))
     stop(paste("`axis_labels` must be NULL or a character vector the same",
-               "length as `axes`."))
-  if (!is.numeric(alpha) || length(alpha) != 1L ||
-      !(alpha >= 0 && alpha <= 1))
-    stop("`alpha` must be a number in [0, 1].")
+               "length as `axes`."), call. = FALSE)
+  .check_alpha(alpha)
 
   if (is.null(axis_labels)) axis_labels <- axes
 

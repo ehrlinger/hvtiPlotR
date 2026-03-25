@@ -126,14 +126,10 @@ longitudinal_counts_plot <- function(data,
                                      count_col = "count",
                                      group_col = "series",
                                      position  = "dodge") {
-  if (!is.data.frame(data))
-    stop("`data` must be a data frame.")
-  for (col in c(x_col, count_col, group_col)) {
-    if (!(col %in% names(data)))
-      stop(paste0("Column '", col, "' not found in `data`."))
-  }
+  .check_df(data)
+  .check_cols(data, c(x_col, count_col, group_col))
   if (!(position %in% c("dodge", "stack")))
-    stop('`position` must be "dodge" or "stack".')
+    stop('`position` must be "dodge" or "stack".', call. = FALSE)
 
   ggplot2::ggplot(
     data,
@@ -181,12 +177,8 @@ longitudinal_counts_table <- function(data,
                                       count_col    = "count",
                                       group_col    = "series",
                                       label_format = NULL) {
-  if (!is.data.frame(data))
-    stop("`data` must be a data frame.")
-  for (col in c(x_col, count_col, group_col)) {
-    if (!(col %in% names(data)))
-      stop(paste0("Column '", col, "' not found in `data`."))
-  }
+  .check_df(data)
+  .check_cols(data, c(x_col, count_col, group_col))
 
   if (is.null(label_format)) {
     if (requireNamespace("scales", quietly = TRUE)) {

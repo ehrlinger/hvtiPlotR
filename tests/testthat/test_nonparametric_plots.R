@@ -206,7 +206,7 @@ test_that("nonparametric_curve_plot errors when x_col is absent", {
   dat <- sample_nonparametric_curve_data(n = 50, seed = 1)
   expect_error(
     nonparametric_curve_plot(dat, x_col = "nonexistent"),
-    "not found|not a column"
+    "column"
   )
 })
 
@@ -214,7 +214,7 @@ test_that("nonparametric_curve_plot errors when estimate_col is absent", {
   dat <- sample_nonparametric_curve_data(n = 50, seed = 1)
   expect_error(
     nonparametric_curve_plot(dat, estimate_col = "nonexistent"),
-    "not found|not a column"
+    "column"
   )
 })
 
@@ -222,7 +222,7 @@ test_that("nonparametric_curve_plot errors when group_col is absent", {
   dat <- sample_nonparametric_curve_data(n = 50, seed = 1)
   expect_error(
     nonparametric_curve_plot(dat, group_col = "nonexistent"),
-    "not found|not a column"
+    "not found"
   )
 })
 
@@ -382,7 +382,7 @@ test_that("nonparametric_ordinal_plot errors when x_col is absent", {
   dat <- sample_nonparametric_ordinal_data(n = 100, seed = 1)
   expect_error(
     nonparametric_ordinal_plot(dat, x_col = "nonexistent"),
-    "not found|not a column"
+    "column"
   )
 })
 
@@ -390,7 +390,7 @@ test_that("nonparametric_ordinal_plot errors when estimate_col is absent", {
   dat <- sample_nonparametric_ordinal_data(n = 100, seed = 1)
   expect_error(
     nonparametric_ordinal_plot(dat, estimate_col = "nonexistent"),
-    "not found|not a column"
+    "column"
   )
 })
 
@@ -398,6 +398,6 @@ test_that("nonparametric_ordinal_plot errors when grade_col is absent", {
   dat <- sample_nonparametric_ordinal_data(n = 100, seed = 1)
   expect_error(
     nonparametric_ordinal_plot(dat, grade_col = "nonexistent"),
-    "not found|not a column"
+    "column"
   )
 })

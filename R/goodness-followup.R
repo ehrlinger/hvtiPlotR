@@ -220,8 +220,7 @@ goodness_followup <- function(
 ) {
   if (length(death_levels) != 2)
     stop("`death_levels` must contain exactly two labels.", call. = FALSE)
-  if (!is.numeric(alpha) || alpha <= 0 || alpha > 1)
-    stop("`alpha` must be a numeric value in (0, 1].", call. = FALSE)
+  .check_alpha(alpha)
   if (!is.numeric(segment_drop) || segment_drop < 0)
     stop("`segment_drop` must be a non-negative numeric value.", call. = FALSE)
 
@@ -314,8 +313,7 @@ goodness_event_plot <- function(
 ) {
   if (length(event_levels) != 3)
     stop("`event_levels` must contain exactly three labels.", call. = FALSE)
-  if (!is.numeric(alpha) || alpha <= 0 || alpha > 1)
-    stop("`alpha` must be a numeric value in (0, 1].", call. = FALSE)
+  .check_alpha(alpha)
   if (!is.numeric(segment_drop) || segment_drop < 0)
     stop("`segment_drop` must be a non-negative numeric value.", call. = FALSE)
 

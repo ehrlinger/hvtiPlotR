@@ -88,7 +88,7 @@ test_that("upset_plot errors when intersect names are absent from data", {
   dta <- sample_upset_data(n = 100, seed = 1)
   expect_error(
     upset_plot(dta, intersect = c("AV_Replacement", "DoesNotExist")),
-    "not columns"
+    "column"
   )
 })
 
@@ -195,7 +195,7 @@ test_that("alluvial_plot errors when an axis name is absent from data", {
   dta <- sample_alluvial_data(n = 100, seed = 1)
   expect_error(
     alluvial_plot(dta, axes = c("pre_ar", "nonexistent")),
-    "not columns"
+    "column"
   )
 })
 
@@ -203,7 +203,7 @@ test_that("alluvial_plot errors when y_col is absent from data", {
   dta <- sample_alluvial_data(n = 100, seed = 1)
   expect_error(
     alluvial_plot(dta, axes = c("pre_ar", "post_ar"), y_col = "missing_col"),
-    "not a column"
+    "not found"
   )
 })
 
@@ -325,7 +325,7 @@ test_that("spaghetti_plot y_labels adds a y scale vs default", {
 
 test_that("spaghetti_plot errors when x_col is absent from data", {
   dta <- sample_spaghetti_data(n_patients = 30, seed = 1)
-  expect_error(spaghetti_plot(dta, x_col = "nonexistent"), "not found")
+  expect_error(spaghetti_plot(dta, x_col = "nonexistent"), "column")
 })
 
 test_that("spaghetti_plot errors when colour_col is absent from data", {
@@ -420,12 +420,12 @@ test_that("trends_plot summary_fn='median' returns a ggplot", {
 
 test_that("trends_plot errors when x_col is absent from data", {
   dta <- sample_trends_data(n = 100, seed = 1)
-  expect_error(trends_plot(dta, x_col = "nonexistent"), "not found")
+  expect_error(trends_plot(dta, x_col = "nonexistent"), "column")
 })
 
 test_that("trends_plot errors when y_col is absent from data", {
   dta <- sample_trends_data(n = 100, seed = 1)
-  expect_error(trends_plot(dta, y_col = "nonexistent"), "not found")
+  expect_error(trends_plot(dta, y_col = "nonexistent"), "column")
 })
 
 test_that("trends_plot errors when group_col is absent from data", {
@@ -523,7 +523,7 @@ test_that("longitudinal_counts_plot position='dodge' differs from 'stack'", {
 
 test_that("longitudinal_counts_plot errors when required column is absent", {
   dta <- sample_longitudinal_counts_data(n_patients = 60, seed = 1)
-  expect_error(longitudinal_counts_plot(dta, x_col = "nonexistent"), "not found")
+  expect_error(longitudinal_counts_plot(dta, x_col = "nonexistent"), "column")
 })
 
 test_that("longitudinal_counts_plot errors on invalid position value", {
@@ -555,7 +555,7 @@ test_that("longitudinal_counts_table is composable with + operator", {
 
 test_that("longitudinal_counts_table errors when required column is absent", {
   dta <- sample_longitudinal_counts_data(n_patients = 60, seed = 1)
-  expect_error(longitudinal_counts_table(dta, x_col = "nonexistent"), "not found")
+  expect_error(longitudinal_counts_table(dta, x_col = "nonexistent"), "column")
 })
 
 test_that("longitudinal_counts_plot and longitudinal_counts_table produce distinct plots", {

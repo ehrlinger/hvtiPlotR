@@ -90,17 +90,22 @@ sample_nonparametric_ordinal_data <- function(n            = 1000,
   set.seed(seed)
   n_grades <- length(grade_labels)
 
+  # ----------- Simulation tuning constants -----------------------------------
+  a_first       <- 0.5   # first ordinal intercept (cumulative cut-point 1)
+  a_step        <- 1.2   # spacing between successive intercepts
+  eta_intercept <- -0.2  # two-phase trend at baseline (centred near 0)
+
   # Log-spaced time grid (matches SAS min=-5;max=log(t);inc=... loop)
   t_grid <- exp(seq(log(0.01), log(max(time_max, 0.1)), length.out = n_points))
 
   # Ordinal intercepts (a0, a1, a2 in SAS) — define cumulative cut-points
   # Increasing: a[1] < a[1]+a[2] < a[1]+a[2]+a[3] etc.
-  a_raw <- cumsum(c(0.5, rep(1.2, n_grades - 2)))   # n_cuts = n_grades - 1
+  a_raw <- cumsum(c(a_first, rep(a_step, n_grades - 2)))   # n_cuts = n_grades - 1
 
   # Common temporal trend (two-phase, centred near 0 at baseline)
   thalf1 <- time_max * 0.20
   thalf2 <- time_max * 0.60
-  eta    <- .np_two_phase(t_grid, e0 = -0.2, thalf1 = thalf1, thalf2 = thalf2)
+  eta    <- .np_two_phase(t_grid, e0 = eta_intercept, thalf1 = thalf1, thalf2 = thalf2)
 
   # Cumulative probabilities (proportional odds):
   # P(grade >= k | t) = plogis(a[k] + eta(t))
@@ -129,7 +134,7 @@ sample_nonparametric_ordinal_data <- function(n            = 1000,
   # ----------- Binned data summary -----------------------------------------
   # Simulate individual ordinal observations and bin by time decile
   t_pat   <- stats::runif(n, 0.01, time_max)
-  eta_pat <- .np_two_phase(t_pat, e0 = -0.2, thalf1 = thalf1, thalf2 = thalf2)
+  eta_pat <- .np_two_phase(t_pat, e0 = eta_intercept, thalf1 = thalf1, thalf2 = thalf2)
   cp_pat  <- matrix(NA_real_, nrow = n, ncol = n_grades - 1L)
   for (k in seq_len(n_grades - 1L)) {
     cp_pat[, k] <- stats::plogis(a_raw[k] + eta_pat)
@@ -185,13 +190,18 @@ sample_nonparametric_ordinal_points <- function(
   set.seed(seed)
   n_grades <- length(grade_labels)
 
-  a_raw <- cumsum(c(0.5, rep(1.2, n_grades - 2)))
+  # ----------- Simulation tuning constants -----------------------------------
+  a_first       <- 0.5   # first ordinal intercept (cumulative cut-point 1)
+  a_step        <- 1.2   # spacing between successive intercepts
+  eta_intercept <- -0.2  # two-phase trend at baseline (centred near 0)
+
+  a_raw <- cumsum(c(a_first, rep(a_step, n_grades - 2)))
 
   thalf1 <- time_max * 0.20
   thalf2 <- time_max * 0.60
 
   t_pat   <- stats::runif(n, 0.01, time_max)
-  eta_pat <- .np_two_phase(t_pat, e0 = -0.2, thalf1 = thalf1, thalf2 = thalf2)
+  eta_pat <- .np_two_phase(t_pat, e0 = eta_intercept, thalf1 = thalf1, thalf2 = thalf2)
   cp_pat  <- matrix(NA_real_, nrow = n, ncol = n_grades - 1L)
   for (k in seq_len(n_grades - 1L)) {
     cp_pat[, k] <- stats::plogis(a_raw[k] + eta_pat)
@@ -431,23 +441,11 @@ nonparametric_ordinal_plot <- function(curve_data,
                                        point_shape  = 20L) {
 
   # --- Validation -----------------------------------------------------------
-  if (!is.data.frame(curve_data))
-    stop("`curve_data` must be a data frame.")
-  for (col in c(x_col, estimate_col, grade_col)) {
-    if (!(col %in% names(curve_data)))
-      stop(paste0("Column '", col, "' not found in `curve_data`."))
-  }
+  .check_df(curve_data, "curve_data")
+  .check_cols(curve_data, c(x_col, estimate_col, grade_col), "curve_data")
   if (!is.null(data_points)) {
-    if (!is.data.frame(data_points))
-      stop("`data_points` must be a data frame.")
-    if (!(x_col %in% names(data_points)))
-      stop(paste0("`data_points` must have a column '", x_col,
-                  "' (matching x_col)."))
-    if (!("value" %in% names(data_points)))
-      stop("`data_points` must have a column named 'value'.")
-    if (!(grade_col %in% names(data_points)))
-      stop(paste0("`data_points` must have a column '", grade_col,
-                  "' (matching grade_col)."))
+    .check_df(data_points, "data_points")
+    .check_cols(data_points, c(x_col, "value", grade_col), "data_points")
   }
 
   p <- ggplot2::ggplot(

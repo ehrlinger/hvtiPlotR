@@ -147,7 +147,7 @@ test_that("goodness_followup errors when death_levels is not length 2", {
 })
 
 test_that("goodness_followup errors when alpha is out of range", {
-  expect_error(goodness_followup(make_gfup_data(), alpha = 0),   "alpha")
+  expect_error(goodness_followup(make_gfup_data(), alpha = -0.1), "alpha")
   expect_error(goodness_followup(make_gfup_data(), alpha = 1.1), "alpha")
 })
 
@@ -299,7 +299,7 @@ test_that("goodness_event_plot errors when alpha is out of range", {
   expect_error(
     goodness_event_plot(make_gfup_data(),
                         event_col = "ev_event", event_time_col = "iv_event",
-                        alpha = 0),
+                        alpha = -0.1),
     "alpha"
   )
 })

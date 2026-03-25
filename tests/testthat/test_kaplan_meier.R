@@ -369,20 +369,20 @@ test_that("survival_curve errors when data is not a data frame", {
 test_that("survival_curve errors when time_col is missing from data", {
   dta      <- sample_survival_data(n = 50, seed = 1)
   dta$iv_dead <- NULL
-  expect_error(survival_curve(dta), "not found")
+  expect_error(survival_curve(dta), "column")
 })
 
 test_that("survival_curve errors when event_col is missing from data", {
   dta      <- sample_survival_data(n = 50, seed = 1)
   dta$dead <- NULL
-  expect_error(survival_curve(dta), "not found")
+  expect_error(survival_curve(dta), "column")
 })
 
 test_that("survival_curve errors when strata_col is missing from data", {
   dta <- sample_survival_data(n = 50, seed = 1)
   expect_error(
     survival_curve(dta, group_col = "nonexistent_col"),
-    "not found"
+    "column"
   )
 })
 
@@ -410,6 +410,28 @@ test_that("survival_curve errors on invalid method", {
   dta <- sample_survival_data(n = 50, seed = 1)
   expect_error(survival_curve(dta, method = "breslow"),
                "kaplan-meier|nelson-aalen")
+})
+
+test_that("survival_curve errors when time_col is non-numeric", {
+  dta           <- sample_survival_data(n = 50, seed = 1)
+  dta$iv_dead   <- as.character(dta$iv_dead)   # convert to character
+  expect_error(survival_curve(dta), "must be numeric")
+})
+
+test_that("survival_curve errors when event_col has invalid values", {
+  dta       <- sample_survival_data(n = 50, seed = 1)
+  dta$dead  <- sample(c("yes", "no"), 50, replace = TRUE)
+  expect_error(survival_curve(dta), "0/1 or logical")
+})
+
+test_that("survival_curve errors when alpha exceeds 1", {
+  dta <- sample_survival_data(n = 50, seed = 1)
+  expect_error(survival_curve(dta, alpha = 1.5), "alpha")
+})
+
+test_that("survival_curve errors when alpha is negative", {
+  dta <- sample_survival_data(n = 50, seed = 1)
+  expect_error(survival_curve(dta, alpha = -0.1), "alpha")
 })
 
 # ===========================================================================

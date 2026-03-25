@@ -216,25 +216,16 @@ spaghetti_plot <- function(data,
                            y_labels      = NULL) {
 
   # --- Validation -----------------------------------------------------------
-  if (!is.data.frame(data))
-    stop("`data` must be a data frame.")
-  for (col in c(x_col, y_col, id_col)) {
-    if (!(col %in% names(data)))
-      stop(sprintf("Column '%s' not found in `data`. Available columns: %s",
-                   col, paste(names(data), collapse = ", ")))
-  }
-  if (!is.null(colour_col)) {
-    if (!(colour_col %in% names(data)))
-      stop(sprintf("Column '%s' not found in `data`. Available columns: %s",
-                   colour_col, paste(names(data), collapse = ", ")))
-  }
-  if (!is.numeric(alpha) || length(alpha) != 1L ||
-      !(alpha >= 0 && alpha <= 1))
-    stop("`alpha` must be a number in [0, 1].")
+  .check_df(data)
+  .check_cols(data, c(x_col, y_col, id_col))
+  if (!is.null(colour_col))
+    .check_col(data, colour_col)
+  .check_alpha(alpha)
   if (!(is.null(y_labels) ||
           (is.numeric(y_labels) && !is.null(names(y_labels)))))
     stop(paste0("`y_labels` must be NULL or a named numeric vector, ",
-                "e.g. c(None = 0, Mild = 1, Moderate = 2, Severe = 3)."))
+                "e.g. c(None = 0, Mild = 1, Moderate = 2, Severe = 3)."),
+         call. = FALSE)
 
   # --- Line layer -----------------------------------------------------------
   if (!is.null(colour_col)) {

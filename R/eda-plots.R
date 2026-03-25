@@ -148,15 +148,11 @@ sample_eda_data <- function(n          = 300L,
 #' names(sub2)
 #' @export
 eda_select_vars <- function(data, vars) {
-  if (!is.data.frame(data))
-    stop("`data` must be a data frame.")
+  .check_df(data)
   if (is.character(vars) && length(vars) == 1L) {
     vars <- unlist(strsplit(trimws(vars), "\\s+"))
   }
-  missing_vars <- setdiff(vars, names(data))
-  if (length(missing_vars) > 0L)
-    stop("Variables not found in `data`: ",
-         paste(missing_vars, collapse = ", "))
+  .check_cols(data, vars)
   data[, vars, drop = FALSE]
 }
 
@@ -374,12 +370,8 @@ eda_plot <- function(data,
                      smooth_se     = FALSE) {
 
   # --- Validation -----------------------------------------------------------
-  if (!is.data.frame(data))
-    stop("`data` must be a data frame.")
-  if (!(x_col %in% names(data)))
-    stop(paste0("Column '", x_col, "' not found in `data`."))
-  if (!(y_col %in% names(data)))
-    stop(paste0("Column '", y_col, "' not found in `data`."))
+  .check_df(data)
+  .check_cols(data, c(x_col, y_col))
 
   label    <- if (!is.null(y_label)) y_label else y_col
   var_type <- eda_classify_var(data[[y_col]], unique_limit)

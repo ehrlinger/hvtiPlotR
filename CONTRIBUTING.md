@@ -88,6 +88,7 @@ package-level architecture:
 | Themes | Never applied inside the function — leave to the caller |
 | Tidy eval | Use `.data[[col]]` from `rlang`; import with `@importFrom rlang .data` |
 | Tests | `expect_s3_class(result, "ggplot")` + column / row checks on sample data |
+| Snapshots | After adding a new `expect_snapshot()` test, run `devtools::test()` once locally to generate the `.snap` baseline, then commit the file under `tests/testthat/_snaps/`. If CI is the first to run it, the snapshot will be uploaded automatically via `upload-snapshots: true` in the workflow. To accept updated snapshots after intentional output changes, run `testthat::snapshot_accept()` locally and commit the result. |
 
 ---
 

@@ -8,54 +8,17 @@
 # ---------------------------------------------------------------------------
 
 cb_validate_input <- function(data, variable_col, group_col, std_diff_col) {
-  if (!is.data.frame(data))
-    stop("`data` must be a data.frame.", call. = FALSE)
-  missing_cols <- setdiff(
-    c(variable_col, group_col, std_diff_col), names(data)
-  )
-  if (length(missing_cols))
-    stop(
-      sprintf("Missing required column(s): %s",
-              paste(missing_cols, collapse = ", ")),
-      call. = FALSE
-    )
-  if (!is.numeric(data[[std_diff_col]]))
-    stop(sprintf("`%s` must be numeric.", std_diff_col), call. = FALSE)
+  .check_df(data)
+  .check_cols(data, c(variable_col, group_col, std_diff_col))
+  .check_numeric_col(data, std_diff_col)
 }
 
 cb_validate_params <- function(threshold, point_size, hline_linewidth,
                                vline_linewidth) {
-  # Validate threshold: finite, non-negative numeric scalar
-  if (!is.numeric(threshold) || length(threshold) != 1L ||
-      !is.finite(threshold) || threshold < 0)
-    stop(
-      "`threshold` must be a finite, non-negative numeric scalar.",
-      call. = FALSE
-    )
-
-  # Validate point_size: finite, positive numeric scalar
-  if (!is.numeric(point_size) || length(point_size) != 1L ||
-      !is.finite(point_size) || point_size <= 0)
-    stop(
-      "`point_size` must be a finite, positive numeric scalar.",
-      call. = FALSE
-    )
-
-  # Validate hline_linewidth: finite, positive numeric scalar
-  if (!is.numeric(hline_linewidth) || length(hline_linewidth) != 1L ||
-      !is.finite(hline_linewidth) || hline_linewidth <= 0)
-    stop(
-      "`hline_linewidth` must be a finite, positive numeric scalar.",
-      call. = FALSE
-    )
-
-  # Validate vline_linewidth: finite, positive numeric scalar
-  if (!is.numeric(vline_linewidth) || length(vline_linewidth) != 1L ||
-      !is.finite(vline_linewidth) || vline_linewidth <= 0)
-    stop(
-      "`vline_linewidth` must be a finite, positive numeric scalar.",
-      call. = FALSE
-    )
+  .check_scalar_nonneg(threshold,       "threshold")
+  .check_scalar_positive(point_size,    "point_size")
+  .check_scalar_positive(hline_linewidth, "hline_linewidth")
+  .check_scalar_positive(vline_linewidth, "vline_linewidth")
 }
 
 #' @importFrom rlang .data
@@ -221,9 +184,7 @@ covariate_balance <- function(
 ) {
   cb_validate_input(data, variable_col, group_col, std_diff_col)
   cb_validate_params(threshold, point_size, hline_linewidth, vline_linewidth)
-  if (!is.numeric(alpha) || length(alpha) != 1L ||
-      !(alpha > 0 && alpha <= 1))
-    stop("`alpha` must be a number in (0, 1].")
+  .check_alpha(alpha)
 
   # Work on a local copy to avoid mutating inputs (e.g., data.table) by reference
   working <- as.data.frame(data)

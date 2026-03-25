@@ -605,17 +605,11 @@ survival_curve <- function(data,
   }
 
   # --- Validation -----------------------------------------------------------
-  if (!is.data.frame(data))
-    stop("`data` must be a data.frame.")
+  .check_df(data)
 
   required_cols <- c(time_col, event_col)
   if (!is.null(group_col)) required_cols <- c(required_cols, group_col)
-  for (col in required_cols) {
-    if (!(col %in% names(data)))
-      stop(sprintf("Column '%s' not found in `data`. Available columns: %s",
-                   col, paste(names(data), collapse = ", ")),
-           call. = FALSE)
-  }
+  .check_cols(data, required_cols)
 
   if (!is.numeric(data[[time_col]]))
     stop(sprintf("`%s` must be numeric. Got: %s",
@@ -627,13 +621,11 @@ survival_curve <- function(data,
 
   if (!is.numeric(conf_level) || length(conf_level) != 1L ||
       !(conf_level > 0 && conf_level < 1))
-    stop("`conf_level` must be a number in (0, 1).")
-  if (!is.numeric(alpha) || length(alpha) != 1L ||
-      !(alpha > 0 && alpha <= 1))
-    stop("`alpha` must be a number in (0, 1].")
+    stop("`conf_level` must be a number in (0, 1).", call. = FALSE)
+  .check_alpha(alpha)
 
   if (!(is.numeric(report_times) && length(report_times) > 0))
-    stop("`report_times` must be a non-empty numeric vector.")
+    stop("`report_times` must be a non-empty numeric vector.", call. = FALSE)
 
   # --- Estimation -----------------------------------------------------------
   fit    <- km_fit(data, time_col, event_col, group_col, conf_level, method)
@@ -733,24 +725,24 @@ sample_survival_data <- function(n             = 500,
 
   # --- Validation -----------------------------------------------------------
   if (!is.numeric(n) || length(n) != 1L || n < 1L || n %% 1 != 0)
-    stop("`n` must be a positive integer.")
+    stop("`n` must be a positive integer.", call. = FALSE)
   if (!is.numeric(hazard_rate) || length(hazard_rate) != 1L ||
       !(hazard_rate > 0))
-    stop("`hazard_rate` must be a positive number.")
+    stop("`hazard_rate` must be a positive number.", call. = FALSE)
   if (!is.numeric(study_years) || length(study_years) != 1L ||
       !(study_years > 0))
-    stop("`study_years` must be a positive number.")
+    stop("`study_years` must be a positive number.", call. = FALSE)
 
   if (!is.null(strata_levels)) {
     if (!(is.character(strata_levels) && length(strata_levels) >= 1L))
-      stop("`strata_levels` must be a non-empty character vector.")
+      stop("`strata_levels` must be a non-empty character vector.", call. = FALSE)
     if (!is.null(hazard_ratios)) {
       if (!(is.numeric(hazard_ratios) &&
               length(hazard_ratios) == length(strata_levels)))
         stop(paste("`hazard_ratios` must be a numeric vector of the same",
-                   "length as `strata_levels`."))
+                   "length as `strata_levels`."), call. = FALSE)
       if (!(all(hazard_ratios > 0)))
-        stop("All elements of `hazard_ratios` must be positive.")
+        stop("All elements of `hazard_ratios` must be positive.", call. = FALSE)
     } else {
       hazard_ratios <- rep(1, length(strata_levels))
     }

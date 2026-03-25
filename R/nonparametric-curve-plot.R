@@ -31,6 +31,18 @@
   exp(e0) * g1 + g2
 }
 
+# Simulation tuning constants — single source of truth for all np-curve
+# simulation functions.  Change here to update every code path.
+.NP_SIM <- list(
+  eta_intercept = -0.5,   # log-odds shift; centres baseline P(event) ≈ 18 %
+  logit_shift   = -1.2,   # additional logit shift; P(event) ≈ 12 % at t = 0
+  cont_baseline =  40,    # continuous outcome baseline (e.g. AV gradient, mmHg)
+  cont_scale    =   8,    # eta → mmHg scaling factor
+  cont_sigma    =   6,    # residual SD (mmHg measurement noise)
+  eff_frac_prob =   0.1,  # effective-patient fraction per time point (probability)
+  eff_frac_cont =   0.05  # effective-patient fraction per time point (continuous)
+)
+
 # ============================================================================
 
 #' Sample Nonparametric Curve Data
@@ -98,29 +110,39 @@ sample_nonparametric_curve_data <- function(n            = 500,
 
   z_score <- stats::qnorm(1 - (1 - ci_level) / 2)
 
+  # ----------- Simulation tuning constants -----------------------------------
+  eta_intercept <- .NP_SIM$eta_intercept
+  logit_shift   <- .NP_SIM$logit_shift
+  cont_baseline <- .NP_SIM$cont_baseline
+  cont_scale    <- .NP_SIM$cont_scale
+  cont_sigma    <- .NP_SIM$cont_sigma
+  eff_frac_prob <- .NP_SIM$eff_frac_prob
+  eff_frac_cont <- .NP_SIM$eff_frac_cont
+
   # Fine time grid (log-spaced like SAS min=-5;max=log(t);inc=...)
   t_grid <- exp(seq(log(0.05), log(max(time_max, 0.1)), length.out = n_points))
 
-  # ----------- Simulation parameters (analogous to model estimates) ----------
+  # ----------- Simulation parameters ----------------------------------------
   thalf1 <- time_max * 0.15    # early half-life
   thalf2 <- time_max * 0.55    # late half-life
 
   if (is.null(groups)) {
     # Single curve --------------------------------------------------------
-    eta  <- .np_two_phase(t_grid, e0 = -0.5, thalf1 = thalf1, thalf2 = thalf2)
+    eta  <- .np_two_phase(t_grid, e0 = eta_intercept,
+                          thalf1 = thalf1, thalf2 = thalf2)
 
     if (outcome_type == "probability") {
-      est  <- stats::plogis(eta - 1.2)
-      se   <- sqrt(pmax(est * (1 - est), 1e-4) / (n * 0.1))
+      est  <- stats::plogis(eta + logit_shift)
+      se   <- sqrt(pmax(est * (1 - est), 1e-4) / (n * eff_frac_prob))
       lo   <- stats::plogis(stats::qlogis(pmax(est, 1e-4)) - z_score * se /
                               sqrt(est * (1 - est) + 1e-4))
       hi   <- stats::plogis(stats::qlogis(pmax(est, 1e-4)) + z_score * se /
                               sqrt(est * (1 - est) + 1e-4))
     } else {
-      est  <- 40 + 8 * eta         # e.g. AV peak gradient in mmHg
-      sigma <- 6
-      lo   <- est - z_score * sigma / sqrt(n * 0.05)
-      hi   <- est + z_score * sigma / sqrt(n * 0.05)
+      est   <- cont_baseline + cont_scale * eta   # e.g. AV peak gradient in mmHg
+      sigma <- cont_sigma
+      lo    <- est - z_score * sigma / sqrt(n * eff_frac_cont)
+      hi    <- est + z_score * sigma / sqrt(n * eff_frac_cont)
     }
 
     curve_df <- data.frame(time     = t_grid,
@@ -132,20 +154,20 @@ sample_nonparametric_curve_data <- function(n            = 500,
     # Multi-group curves --------------------------------------------------
     grp_names <- names(groups)
     curve_list <- lapply(seq_along(groups), function(i) {
-      eta <- .np_two_phase(t_grid, e0 = log(groups[[i]]) - 0.5,
+      eta <- .np_two_phase(t_grid, e0 = log(groups[[i]]) + eta_intercept,
                            thalf1 = thalf1, thalf2 = thalf2)
       if (outcome_type == "probability") {
-        est <- stats::plogis(eta - 1.2)
-        se  <- sqrt(pmax(est * (1 - est), 1e-4) / (n * 0.1))
+        est <- stats::plogis(eta + logit_shift)
+        se  <- sqrt(pmax(est * (1 - est), 1e-4) / (n * eff_frac_prob))
         lo  <- stats::plogis(stats::qlogis(pmax(est, 1e-4)) - z_score * se /
                                sqrt(est * (1 - est) + 1e-4))
         hi  <- stats::plogis(stats::qlogis(pmax(est, 1e-4)) + z_score * se /
                                sqrt(est * (1 - est) + 1e-4))
       } else {
-        est <- 40 + 8 * eta
-        se  <- 6
-        lo  <- est - z_score * se / sqrt(n * 0.05)
-        hi  <- est + z_score * se / sqrt(n * 0.05)
+        est <- cont_baseline + cont_scale * eta
+        se  <- cont_sigma
+        lo  <- est - z_score * se / sqrt(n * eff_frac_cont)
+        hi  <- est + z_score * se / sqrt(n * eff_frac_cont)
       }
       data.frame(time     = t_grid,
                  estimate = est,
@@ -222,15 +244,20 @@ sample_nonparametric_curve_points <- function(n            = 500,
 }
 
 # Internal: generate binned patient-level data summary
-.np_sample_bins <- function(n, time_max, thalf1, thalf2, outcome_type, n_bins) {
+.np_sample_bins <- function(n, time_max, thalf1, thalf2, outcome_type, n_bins,
+                            eta_intercept  = .NP_SIM$eta_intercept,
+                            logit_shift    = .NP_SIM$logit_shift,
+                            cont_baseline  = .NP_SIM$cont_baseline,
+                            cont_scale     = .NP_SIM$cont_scale,
+                            cont_sigma     = .NP_SIM$cont_sigma) {
   t_pat <- stats::runif(n, 0.05, time_max)
-  eta   <- .np_two_phase(t_pat, e0 = -0.5, thalf1 = thalf1, thalf2 = thalf2)
+  eta   <- .np_two_phase(t_pat, e0 = eta_intercept, thalf1 = thalf1, thalf2 = thalf2)
   if (outcome_type == "probability") {
-    mu  <- stats::plogis(eta - 1.2)
+    mu  <- stats::plogis(eta + logit_shift)
     obs <- stats::rbinom(n, 1, mu)
   } else {
-    mu  <- 40 + 8 * eta
-    obs <- stats::rnorm(n, mu, 6)
+    mu  <- cont_baseline + cont_scale * eta
+    obs <- stats::rnorm(n, mu, cont_sigma)
   }
   # Bin into n_bins equal-sized groups (like SAS quint / decile logic)
   ord  <- order(t_pat)
@@ -636,36 +663,16 @@ nonparametric_curve_plot <- function(curve_data,
                                      point_shape  = 20L) {
 
   # --- Validation -----------------------------------------------------------
-  if (!is.data.frame(curve_data))
-    stop("`curve_data` must be a data frame.")
-  for (col in c(x_col, estimate_col)) {
-    if (!(col %in% names(curve_data)))
-      stop(sprintf("Column '%s' not found in `curve_data`. Available columns: %s",
-                   col, paste(names(curve_data), collapse = ", ")))
-  }
-  if (!is.null(lower_col))
-    if (!(lower_col %in% names(curve_data)))
-      stop(sprintf("Column '%s' not found in `curve_data`. Available columns: %s",
-                   lower_col, paste(names(curve_data), collapse = ", ")))
-  if (!is.null(upper_col))
-    if (!(upper_col %in% names(curve_data)))
-      stop(sprintf("Column '%s' not found in `curve_data`. Available columns: %s",
-                   upper_col, paste(names(curve_data), collapse = ", ")))
-  if (!is.null(group_col))
-    if (!(group_col %in% names(curve_data)))
-      stop(sprintf("Column '%s' not found in `curve_data`. Available columns: %s",
-                   group_col, paste(names(curve_data), collapse = ", ")))
+  .check_df(curve_data, "curve_data")
+  .check_cols(curve_data, c(x_col, estimate_col), "curve_data")
+  .check_col(curve_data, lower_col,  "curve_data")
+  .check_col(curve_data, upper_col,  "curve_data")
+  .check_col(curve_data, group_col,  "curve_data")
   if (!is.null(data_points)) {
-    if (!is.data.frame(data_points))
-      stop("`data_points` must be a data frame.")
-    if (!(x_col %in% names(data_points)))
-      stop(paste0("`data_points` must have a column '", x_col,
-                  "' (matching x_col)."))
-    if (!("value" %in% names(data_points)))
-      stop("`data_points` must have a column named 'value'.")
-    if (!is.null(group_col) && !(group_col %in% names(data_points)))
-      stop(paste0("`data_points` must have a column '", group_col,
-                  "' (matching group_col)."))
+    .check_df(data_points, "data_points")
+    .check_cols(data_points, c(x_col, "value"), "data_points")
+    if (!is.null(group_col))
+      .check_cols(data_points, group_col, "data_points")
   }
 
   # --- Base aesthetics ------------------------------------------------------

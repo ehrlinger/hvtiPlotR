@@ -163,7 +163,7 @@ test_that("eda_select_vars errors when data is not a data frame", {
 
 test_that("eda_select_vars errors when a column is absent", {
   df <- sample_eda_data(n = 50, seed = 1)
-  expect_error(eda_select_vars(df, c("year", "nonexistent")), "not found")
+  expect_error(eda_select_vars(df, c("year", "nonexistent")), "column")
 })
 
 # ============================================================================
@@ -299,12 +299,12 @@ test_that("eda_plot errors when data is not a data frame", {
 
 test_that("eda_plot errors when x_col is absent from data", {
   df <- sample_eda_data(n = 50, seed = 1)
-  expect_error(eda_plot(df, x_col = "nonexistent"), "not found")
+  expect_error(eda_plot(df, x_col = "nonexistent"), "column")
 })
 
 test_that("eda_plot errors when y_col is absent from data", {
   df <- sample_eda_data(n = 50, seed = 1)
-  expect_error(eda_plot(df, y_col = "nonexistent"), "not found")
+  expect_error(eda_plot(df, y_col = "nonexistent"), "column")
 })
 
 # ============================================================================

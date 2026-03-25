@@ -110,31 +110,26 @@ build_weighted_hist_counts <- function(x, weights, breaks) {
 validate_mirror_histogram_input <- function(data, score_col, group_col, match_col,
                                             group_levels, group_labels, binwidth,
                                             weight_col = NULL) {
-  if (!(is.data.frame(data)))
-    stop("`data` must be a data.frame.")
+  .check_df(data)
   # When weight_col is provided, match_col presence is not required
   required_cols <- if (is.null(weight_col)) {
     c(score_col, group_col, match_col)
   } else {
     c(score_col, group_col, weight_col)
   }
-  missing_cols <- setdiff(required_cols, names(data))
-  if (!(length(missing_cols) == 0))
-    stop(sprintf("Missing required columns: %s",
-                 paste(missing_cols, collapse = ", ")))
-  if (!(length(group_levels) == 2))
-    stop("`group_levels` must contain exactly 2 values.")
-  if (!(length(group_labels) == 2))
-    stop("`group_labels` must contain exactly 2 values.")
-  if (!(is.numeric(data[[score_col]])))
-    stop(sprintf("`%s` must be numeric.", score_col))
+  .check_cols(data, required_cols)
+  if (length(group_levels) != 2L)
+    stop("`group_levels` must contain exactly 2 values.", call. = FALSE)
+  if (length(group_labels) != 2L)
+    stop("`group_labels` must contain exactly 2 values.", call. = FALSE)
+  .check_numeric_col(data, score_col)
   if (!is.numeric(binwidth) || length(binwidth) != 1L || !(binwidth > 0))
-    stop("`binwidth` must be a positive numeric scalar.")
+    stop("`binwidth` must be a positive numeric scalar.", call. = FALSE)
   if (!is.null(weight_col)) {
-    if (!(is.numeric(data[[weight_col]])))
-      stop(sprintf("`%s` must be numeric.", weight_col))
-    if (!(all(data[[weight_col]] >= 0, na.rm = TRUE)))
-      stop(sprintf("`%s` must contain non-negative values.", weight_col))
+    .check_numeric_col(data, weight_col)
+    if (!all(data[[weight_col]] >= 0, na.rm = TRUE))
+      stop(sprintf("`%s` must contain non-negative values.", weight_col),
+           call. = FALSE)
   }
 }
 
@@ -160,9 +155,11 @@ prepare_mirror_histogram_data <- function(data, score_col, group_col, match_col,
   n_dropped <- n_input - nrow(working)
   working <- working[working$group %in% group_levels, ]
   if (!(nrow(working) > 0))
-    stop("No rows remain after filtering to `group_levels` and complete cases.")
+    stop("No rows remain after filtering to `group_levels` and complete cases.",
+         call. = FALSE)
   if (!(all(group_levels %in% unique(working$group))))
-    stop("Not all `group_levels` are present in the filtered data.")
+    stop("Not all `group_levels` are present in the filtered data.",
+         call. = FALSE)
   working$score <- working$score_raw * score_multiplier
   if (any(working$score < HVTI_SCORE_MIN | working$score > HVTI_SCORE_MAX)) {
     stop(
@@ -274,12 +271,12 @@ build_mirror_histogram_plot <- function(plot_df, group_labels, binwidth,
 save_mirror_histogram_plot <- function(plot_obj, output_file, width, height) {
   if (!(is.character(output_file) && length(output_file) == 1L &&
         nzchar(output_file)))
-    stop("`output_file` must be a non-empty string.")
+    stop("`output_file` must be a non-empty string.", call. = FALSE)
   target_dir <- dirname(output_file)
   if (target_dir %in% c("", ".")) target_dir <- "."
   if (!(dir.exists(target_dir)))
     stop(sprintf("Directory for `output_file` (%s) does not exist.",
-                 target_dir))
+                 target_dir), call. = FALSE)
   tryCatch(
     ggplot2::ggsave(filename = output_file, plot = plot_obj,
                     width = width, height = height),
@@ -427,9 +424,7 @@ mirror_histogram <- function(data,
   validate_mirror_histogram_input(data, score_col, group_col, match_col,
                                   group_levels, group_labels, binwidth,
                                   weight_col = weight_col)
-  if (!is.numeric(alpha) || length(alpha) != 1L ||
-      !(alpha > 0 && alpha <= 1))
-    stop("`alpha` must be a number in (0, 1].")
+  .check_alpha(alpha)
   prep    <- prepare_mirror_histogram_data(data, score_col, group_col, match_col,
                                            group_levels, score_multiplier,
                                            weight_col = weight_col)
@@ -521,15 +516,15 @@ sample_mirror_histogram_data <- function(n          = 500,
                                          seed       = 42L,
                                          add_weights = FALSE) {
   if (!is.numeric(n) || length(n) != 1L || n < 1L || n %% 1 != 0)
-    stop("`n` must be a positive integer.")
+    stop("`n` must be a positive integer.", call. = FALSE)
   if (!is.numeric(separation) || length(separation) != 1L ||
       !(separation > 0))
-    stop("`separation` must be a positive number.")
+    stop("`separation` must be a positive number.", call. = FALSE)
   if (!is.numeric(caliper) || length(caliper) != 1L ||
       !(caliper > 0 && caliper <= 1))
-    stop("`caliper` must be a number in (0, 1].")
+    stop("`caliper` must be a number in (0, 1].", call. = FALSE)
   if (!is.logical(add_weights) || length(add_weights) != 1L)
-    stop("`add_weights` must be TRUE or FALSE.")
+    stop("`add_weights` must be TRUE or FALSE.", call. = FALSE)
 
   set.seed(seed)
 
