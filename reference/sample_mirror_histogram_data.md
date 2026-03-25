@@ -1,7 +1,7 @@
 # Generate Sample Data for Mirrored Histogram
 
 Creates a reproducible data frame for testing
-[`mirror_histogram`](https://ehrlinger.github.io/hvtiPlotR/reference/mirror_histogram.md)
+[`mirror_histogram()`](https://ehrlinger.github.io/hvtiPlotR/reference/mirror_histogram.md)
 in either binary-match or weighted IPTW mode. Propensity scores are
 simulated via a logistic model: control subjects draw their linear
 predictor from \\N(-\text{sep}/2, 1)\\ and treated subjects from
@@ -72,3 +72,41 @@ Data frame with columns:
 
   (Only when `add_weights = TRUE`) ATE IPTW weights normalised to mean 1
   within each group.
+
+## See also
+
+[`mirror_histogram()`](https://ehrlinger.github.io/hvtiPlotR/reference/mirror_histogram.md)
+
+## Examples
+
+``` r
+# Binary-match mode sample data (default)
+dta <- sample_mirror_histogram_data(n = 500, separation = 1.5)
+head(dta)
+#>      prob_t tavr match
+#> 1 0.6504365    0     1
+#> 2 0.2117017    0     0
+#> 3 0.4044706    0     1
+#> 4 0.4707491    0     1
+#> 5 0.4144179    0     1
+#> 6 0.2981497    0     1
+table(dta$tavr, dta$match)   # matched vs unmatched counts per group
+#>    
+#>       0   1
+#>   0 270 230
+#>   1 270 230
+
+# IPTW weighted mode — adds mt_wt column
+dta_wt <- sample_mirror_histogram_data(n = 500, add_weights = TRUE)
+head(dta_wt)
+#>      prob_t tavr match     mt_wt
+#> 1 0.6504365    0     1 1.6479076
+#> 2 0.2117017    0     0 0.7307492
+#> 3 0.4044706    0     1 0.9672879
+#> 4 0.4707491    0     1 1.0884221
+#> 5 0.4144179    0     1 0.9837191
+#> 6 0.2981497    0     1 0.8207567
+tapply(dta_wt$mt_wt, dta_wt$tavr, mean)  # should be ~1 in each group
+#> 0 1 
+#> 1 1 
+```

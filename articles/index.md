@@ -13,3 +13,8 @@
   Functions](https://ehrlinger.github.io/hvtiPlotR/articles/plot-functions.md):
 - [Decorating and Saving hvtiPlotR
   Plots](https://ehrlinger.github.io/hvtiPlotR/articles/plot-decorators.md):
+
+### Contributing
+
+- [Contributing to
+  hvtiPlotR](https://ehrlinger.github.io/hvtiPlotR/articles/contributing.md):

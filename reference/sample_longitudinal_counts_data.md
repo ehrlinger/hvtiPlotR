@@ -49,20 +49,28 @@ A data frame in long format with columns:
 
 ``` r
 dta <- sample_longitudinal_counts_data(n_patients = 300, seed = 42)
-dta
-#>    time_label       series count
-#> 1     ≥0 Days     Patients    19
-#> 2    ≥1 Month     Patients    47
-#> 3   ≥3 Months     Patients    49
-#> 4   ≥6 Months     Patients   100
-#> 5     ≥1 Year     Patients   159
-#> 6    ≥2 Years     Patients   101
-#> 7  ≥2.5 Years     Patients   276
-#> 8     ≥0 Days Measurements    19
-#> 9    ≥1 Month Measurements    50
-#> 10  ≥3 Months Measurements    56
-#> 11  ≥6 Months Measurements   118
-#> 12    ≥1 Year Measurements   217
-#> 13   ≥2 Years Measurements   113
-#> 14 ≥2.5 Years Measurements   620
+str(dta)                # time_label (factor), series, count
+#> 'data.frame':    14 obs. of  3 variables:
+#>  $ time_label: Factor w/ 7 levels "≥0 Days","≥1 Month",..: 1 2 3 4 5 6 7 1 2 3 ...
+#>  $ series    : chr  "Patients" "Patients" "Patients" "Patients" ...
+#>  $ count     : int  19 47 49 100 159 101 276 19 50 56 ...
+levels(dta$time_label)  # 7 discrete follow-up windows
+#> [1] "≥0 Days"    "≥1 Month"   "≥3 Months"  "≥6 Months"  "≥1 Year"   
+#> [6] "≥2 Years"   "≥2.5 Years"
+
+# Inspect patient counts at each window
+subset(dta, series == "Patients")
+#>   time_label   series count
+#> 1    ≥0 Days Patients    19
+#> 2   ≥1 Month Patients    47
+#> 3  ≥3 Months Patients    49
+#> 4  ≥6 Months Patients   100
+#> 5    ≥1 Year Patients   159
+#> 6   ≥2 Years Patients   101
+#> 7 ≥2.5 Years Patients   276
+
+# Larger cohort
+dta2 <- sample_longitudinal_counts_data(n_patients = 1000, seed = 7)
+max(dta2$count)         # peak observation count
+#> [1] 2006
 ```

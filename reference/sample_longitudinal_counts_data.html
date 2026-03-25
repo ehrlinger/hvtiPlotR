@@ -13,7 +13,7 @@ functions share the same underlying simulation."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">hvtiPlotR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.0.9001</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.0.9002</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -92,22 +92,30 @@ functions share the same underlying simulation.</p>
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">dta</span> <span class="op">&lt;-</span> <span class="fu">sample_longitudinal_counts_data</span><span class="op">(</span>n_patients <span class="op">=</span> <span class="fl">300</span>, seed <span class="op">=</span> <span class="fl">42</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">dta</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    time_label       series count</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1     ≥0 Days     Patients    19</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2    ≥1 Month     Patients    47</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3   ≥3 Months     Patients    49</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4   ≥6 Months     Patients   100</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5     ≥1 Year     Patients   159</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6    ≥2 Years     Patients   101</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7  ≥2.5 Years     Patients   276</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8     ≥0 Days Measurements    19</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9    ≥1 Month Measurements    50</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10  ≥3 Months Measurements    56</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 11  ≥6 Months Measurements   118</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 12    ≥1 Year Measurements   217</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 13   ≥2 Years Measurements   113</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 14 ≥2.5 Years Measurements   620</span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">dta</span><span class="op">)</span>                <span class="co"># time_label (factor), series, count</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 'data.frame':	14 obs. of  3 variables:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ time_label: Factor w/ 7 levels "≥0 Days","≥1 Month",..: 1 2 3 4 5 6 7 1 2 3 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ series    : chr  "Patients" "Patients" "Patients" "Patients" ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ count     : int  19 47 49 100 159 101 276 19 50 56 ...</span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/levels.html" class="external-link">levels</a></span><span class="op">(</span><span class="va">dta</span><span class="op">$</span><span class="va">time_label</span><span class="op">)</span>  <span class="co"># 7 discrete follow-up windows</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "≥0 Days"    "≥1 Month"   "≥3 Months"  "≥6 Months"  "≥1 Year"   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [6] "≥2 Years"   "≥2.5 Years"</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Inspect patient counts at each window</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">dta</span>, <span class="va">series</span> <span class="op">==</span> <span class="st">"Patients"</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   time_label   series count</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1    ≥0 Days Patients    19</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2   ≥1 Month Patients    47</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3  ≥3 Months Patients    49</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4  ≥6 Months Patients   100</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5    ≥1 Year Patients   159</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6   ≥2 Years Patients   101</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7 ≥2.5 Years Patients   276</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Larger cohort</span></span></span>
+<span class="r-in"><span><span class="va">dta2</span> <span class="op">&lt;-</span> <span class="fu">sample_longitudinal_counts_data</span><span class="op">(</span>n_patients <span class="op">=</span> <span class="fl">1000</span>, seed <span class="op">=</span> <span class="fl">7</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">dta2</span><span class="op">$</span><span class="va">count</span><span class="op">)</span>         <span class="co"># peak observation count</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 2006</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

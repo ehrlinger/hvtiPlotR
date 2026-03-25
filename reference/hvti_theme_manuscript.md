@@ -95,3 +95,22 @@ with `style = "manuscript"` instead.
 [`theme_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_theme_dark_ppt.md),
 [`theme_dark_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_theme_dark_ppt.md),
 [`theme_poster()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_theme_poster.md)
+
+## Examples
+
+``` r
+library(ggplot2)
+p <- ggplot(mtcars, aes(wt, mpg, colour = factor(cyl))) + geom_point()
+
+# Default manuscript theme
+p + hvti_theme_manuscript()
+
+
+# Smaller base font for two-column journal layout
+p + hvti_theme_manuscript(base_size = 9)
+
+
+# Via the generic dispatcher
+p + hvti_theme("manuscript")
+
+```

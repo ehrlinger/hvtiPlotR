@@ -24,7 +24,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">hvtiPlotR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.0.9001</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.0.9002</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -64,7 +64,7 @@
       <h1>Decorating and Saving hvtiPlotR Plots</h1>
 
       <p class="author">John Ehrlinger <a href="mailto:ehrlinj@ccf.org" class="email">ehrlinj@ccf.org</a></p>
-      <p class="date">2026-03-19</p>
+      <p class="date">2026-03-25</p>
 
       <small class="dont-index">Source: <a href="https://github.com/ehrlinger/hvtiPlotR/blob/main/vignettes/plot-decorators.qmd" class="external-link"><code>vignettes/plot-decorators.qmd</code></a></small>
       <div class="d-none name"><code></code></div>
@@ -225,7 +225,7 @@
 <p>Use <code><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_colour_manual()</a></code> when assigning specific brand or convention colours to known levels.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">km</span><span class="op">$</span><span class="va">survival_plot</span> <span class="op">+</span></span>
+<code class="sourceCode R"><span><span class="va">km</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_color_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>All <span class="op">=</span> <span class="st">"steelblue"</span><span class="op">)</span>, guide <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_fill_manual</a></span><span class="op">(</span>values  <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>All <span class="op">=</span> <span class="st">"steelblue"</span><span class="op">)</span>, guide <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">100</span>, <span class="fl">20</span><span class="op">)</span>,</span>
@@ -234,15 +234,18 @@
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_cartesian.html" class="external-link">coord_cartesian</a></span><span class="op">(</span>xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">20</span><span class="op">)</span>, ylim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">100</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Years after Operation"</span>, y <span class="op">=</span> <span class="st">"Freedom from Death (%)"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/hvti_theme.html">hvti_theme</a></span><span class="op">(</span><span class="st">"manuscript"</span><span class="op">)</span></span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code><span><span class="cn">NULL</span></span></code></pre>
+<div class="cell-output-display">
+<div>
+<figure><p><img src="plot-decorators_files/figure-html/scale_colour_manual-1.png" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 </section><section class="level2"><h3 id="colorbrewer-palettes">ColorBrewer palettes<a class="anchor" aria-label="anchor" href="#colorbrewer-palettes"></a>
 </h3>
 <p><code><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_colour_brewer()</a></code> applies a ColorBrewer palette — safe, perceptually uniform, and print-friendly. Use <code>palette = "Set1"</code> for categorical data, <code>"RdYlGn"</code> for diverging, <code>"Blues"</code> for sequential.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p_base</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_colour_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Set1"</span>, name <span class="op">=</span> <span class="st">"Group"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_shape_manual</a></span><span class="op">(</span></span>
@@ -263,7 +266,7 @@
 </h3>
 <p>Pass <code>guide = "none"</code> to any scale to remove its legend entry. Use this when colour is self-evident from axis labels or annotations.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p_base</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_colour_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Dark2"</span>, guide <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_shape_manual</a></span><span class="op">(</span></span>
@@ -286,8 +289,8 @@
 </h3>
 <p><code><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs()</a></code> sets the axis, legend, title, subtitle, and caption text. Set axis labels here rather than inside the plot function so they can be overridden per project.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">km</span><span class="op">$</span><span class="va">survival_plot</span> <span class="op">+</span></span>
+<div class="sourceCode cell-code" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">km</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_color_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>All <span class="op">=</span> <span class="st">"steelblue"</span><span class="op">)</span>, guide <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_fill_manual</a></span><span class="op">(</span>values  <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>All <span class="op">=</span> <span class="st">"steelblue"</span><span class="op">)</span>, guide <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">100</span>, <span class="fl">20</span><span class="op">)</span>,</span>
@@ -301,16 +304,19 @@
 <span>    caption <span class="op">=</span> <span class="st">"Logit CI, \u03b1 = 0.6827 (1 SD)"</span></span>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/hvti_theme.html">hvti_theme</a></span><span class="op">(</span><span class="st">"manuscript"</span><span class="op">)</span></span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code><span><span class="cn">NULL</span></span></code></pre>
+<div class="cell-output-display">
+<div>
+<figure><p><img src="plot-decorators_files/figure-html/labs_example-1.png" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 </section><section class="level2"><h3 id="annotate">annotate()<a class="anchor" aria-label="anchor" href="#annotate"></a>
 </h3>
 <p><code><a href="https://ggplot2.tidyverse.org/reference/annotate.html" class="external-link">annotate()</a></code> places text, segments, or rectangles at fixed data coordinates. Use it for sample size callouts, phase labels, or directional arrows.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">km</span><span class="op">$</span><span class="va">survival_plot</span> <span class="op">+</span></span>
+<div class="sourceCode cell-code" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">km</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_color_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>All <span class="op">=</span> <span class="st">"steelblue"</span><span class="op">)</span>, guide <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_fill_manual</a></span><span class="op">(</span>values  <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>All <span class="op">=</span> <span class="st">"steelblue"</span><span class="op">)</span>, guide <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">100</span>, <span class="fl">20</span><span class="op">)</span>,</span>
@@ -326,15 +332,18 @@
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/annotate.html" class="external-link">annotate</a></span><span class="op">(</span><span class="st">"text"</span>,    x <span class="op">=</span> <span class="fl">10.3</span>, y <span class="op">=</span> <span class="fl">40</span>,</span>
 <span>           label <span class="op">=</span> <span class="st">"Median survival"</span>, hjust <span class="op">=</span> <span class="fl">0</span>, size <span class="op">=</span> <span class="fl">3</span>, colour <span class="op">=</span> <span class="st">"grey40"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/hvti_theme.html">hvti_theme</a></span><span class="op">(</span><span class="st">"manuscript"</span><span class="op">)</span></span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code><span><span class="cn">NULL</span></span></code></pre>
+<div class="cell-output-display">
+<div>
+<figure><p><img src="plot-decorators_files/figure-html/annotate_example-1.png" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 </section><section class="level2"><h3 id="coord_cartesian">coord_cartesian()<a class="anchor" aria-label="anchor" href="#coord_cartesian"></a>
 </h3>
 <p><code><a href="https://ggplot2.tidyverse.org/reference/coord_cartesian.html" class="external-link">coord_cartesian()</a></code> crops the viewport without dropping data, preserving LOESS fits computed on the full range.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p_base</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_colour_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Set1"</span>, name <span class="op">=</span> <span class="st">"Group"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_shape_manual</a></span><span class="op">(</span></span>
@@ -358,7 +367,7 @@
 </h3>
 <p>Use <code><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave()</a></code> with <code>width = 11, height = 8.5</code> (US Letter landscape) for manuscript figures. Assign the fully composed plot to a variable first so the same object is both displayed in the session and written to disk.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb17"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p_ms</span> <span class="op">&lt;-</span> <span class="va">p_base</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_colour_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Set1"</span>, name <span class="op">=</span> <span class="st">"Group"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_shape_manual</a></span><span class="op">(</span></span>
@@ -380,7 +389,7 @@
 </h3>
 <p>Poster figures are typically larger and use <code>hvti_theme("poster")</code>. Adjust dimensions to match the poster panel size.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb18"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p_poster</span> <span class="op">&lt;-</span> <span class="va">p_base</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_colour_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Set1"</span>, name <span class="op">=</span> <span class="st">"Group"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_shape_manual</a></span><span class="op">(</span></span>
@@ -400,10 +409,73 @@
 </div>
 </section><section class="level2"><h3 id="powerpoint-slides">PowerPoint slides<a class="anchor" aria-label="anchor" href="#powerpoint-slides"></a>
 </h3>
-<p><code><a href="../reference/save_ppt.html">save_ppt()</a></code> from the <strong>hvtiPlotR</strong> package inserts a ggplot object into a PowerPoint file as an editable vector graphic (via the <code>officer</code> and <code>rvg</code> packages). Apply <code>hvti_theme("dark_ppt")</code> or <code>hvti_theme("light_ppt")</code> before saving.</p>
+<p><code><a href="../reference/save_ppt.html">save_ppt()</a></code> inserts ggplot objects into a PowerPoint file as <strong>editable DrawingML vector graphics</strong> via the <code>officer</code> and <code>rvg</code> packages — shapes, lines, and text remain selectable in PowerPoint after export.</p>
+<p>Key arguments:</p>
+<table class="table caption-top">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead><tr class="header">
+<th>Argument</th>
+<th>Default</th>
+<th>Notes</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td><code>object</code></td>
+<td>—</td>
+<td>A single ggplot <strong>or</strong> a named/unnamed list of ggplots</td>
+</tr>
+<tr class="even">
+<td><code>template</code></td>
+<td><code>"../graphs/RD.pptx"</code></td>
+<td>Existing <code>.pptx</code> used as the slide template</td>
+</tr>
+<tr class="odd">
+<td><code>powerpoint</code></td>
+<td><code>"../graphs/pptExample.pptx"</code></td>
+<td>Output file path</td>
+</tr>
+<tr class="even">
+<td><code>slide_titles</code></td>
+<td><code>"Plot"</code></td>
+<td>Character vector recycled to the number of plots</td>
+</tr>
+<tr class="odd">
+<td><code>layout</code></td>
+<td><code>"Title and Content"</code></td>
+<td>Slide layout from the template</td>
+</tr>
+<tr class="even">
+<td>
+<code>width</code> / <code>height</code>
+</td>
+<td>
+<code>10.1</code> / <code>5.8</code>
+</td>
+<td>Plot area in inches</td>
+</tr>
+<tr class="odd">
+<td>
+<code>left</code> / <code>top</code>
+</td>
+<td>
+<code>0.0</code> / <code>1.2</code>
+</td>
+<td>Position from slide edges, in inches</td>
+</tr>
+</tbody>
+</table>
+<p>Apply <code>hvti_theme("dark_ppt")</code> or <code>hvti_theme("light_ppt")</code> before saving to match the slide background.</p>
+<section class="level3"><h4 id="single-slide">Single slide<a class="anchor" aria-label="anchor" href="#single-slide"></a>
+</h4>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb19"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">p_ppt</span> <span class="op">&lt;-</span> <span class="va">p_base</span> <span class="op">+</span></span>
+<div class="sourceCode cell-code" id="cb16"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">template</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"ClevelandClinic.pptx"</span>, package <span class="op">=</span> <span class="st">"hvtiPlotR"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">p_ppt</span> <span class="op">&lt;-</span> <span class="va">p_base</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_colour_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Set1"</span>, name <span class="op">=</span> <span class="st">"Group"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_shape_manual</a></span><span class="op">(</span></span>
 <span>    values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Group I"</span> <span class="op">=</span> <span class="fl">15</span>, <span class="st">"Group II"</span> <span class="op">=</span> <span class="fl">19</span>,</span>
@@ -414,17 +486,42 @@
 <span>  <span class="fu"><a href="../reference/hvti_theme.html">hvti_theme</a></span><span class="op">(</span><span class="st">"dark_ppt"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/save_ppt.html">save_ppt</a></span><span class="op">(</span></span>
-<span>  plot     <span class="op">=</span> <span class="va">p_ppt</span>,</span>
-<span>  filename <span class="op">=</span> <span class="st">"../graphs/trends_slides.pptx"</span>,</span>
-<span>  width    <span class="op">=</span> <span class="fl">10</span>,</span>
-<span>  height   <span class="op">=</span> <span class="fl">7.5</span></span>
+<span>  object       <span class="op">=</span> <span class="va">p_ppt</span>,</span>
+<span>  template     <span class="op">=</span> <span class="va">template</span>,</span>
+<span>  powerpoint   <span class="op">=</span> <span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org/reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="st">"graphs"</span>, <span class="st">"trends_slides.pptx"</span><span class="op">)</span>,</span>
+<span>  slide_titles <span class="op">=</span> <span class="st">"Temporal Trends by Group"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 </div>
-</section><section class="level2"><h3 id="multi-panel-pdf-eda-batch-output">Multi-panel PDF (EDA batch output)<a class="anchor" aria-label="anchor" href="#multi-panel-pdf-eda-batch-output"></a>
+</section><section class="level3"><h4 id="multiple-slides-from-a-list">Multiple slides from a list<a class="anchor" aria-label="anchor" href="#multiple-slides-from-a-list"></a>
+</h4>
+<p>Pass a named list of plots and a matching vector of titles to produce one slide per plot in a single call.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">dta_km2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sample_survival_data.html">sample_survival_data</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">400</span>, seed <span class="op">=</span> <span class="fl">99</span><span class="op">)</span></span>
+<span><span class="va">km2</span>     <span class="op">&lt;-</span> <span class="fu"><a href="../reference/survival_curve.html">survival_curve</a></span><span class="op">(</span><span class="va">dta_km2</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">p_km_ppt</span> <span class="op">&lt;-</span> <span class="va">km2</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_color_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>All <span class="op">=</span> <span class="st">"white"</span><span class="op">)</span>, guide <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_fill_manual</a></span><span class="op">(</span>values  <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>All <span class="op">=</span> <span class="st">"white"</span><span class="op">)</span>, guide <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">100</span>, <span class="fl">20</span><span class="op">)</span>,</span>
+<span>                     labels <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">x</span>, <span class="st">"%"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_x_continuous</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">20</span>, <span class="fl">5</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_cartesian.html" class="external-link">coord_cartesian</a></span><span class="op">(</span>xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">20</span><span class="op">)</span>, ylim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">100</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Years after Operation"</span>, y <span class="op">=</span> <span class="st">"Freedom from Death (%)"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/hvti_theme.html">hvti_theme</a></span><span class="op">(</span><span class="st">"dark_ppt"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="../reference/save_ppt.html">save_ppt</a></span><span class="op">(</span></span>
+<span>  object       <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>trends <span class="op">=</span> <span class="va">p_ppt</span>, survival <span class="op">=</span> <span class="va">p_km_ppt</span><span class="op">)</span>,</span>
+<span>  template     <span class="op">=</span> <span class="va">template</span>,</span>
+<span>  powerpoint   <span class="op">=</span> <span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org/reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="st">"graphs"</span>, <span class="st">"multi_slide_deck.pptx"</span><span class="op">)</span>,</span>
+<span>  slide_titles <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Temporal Trends by Group"</span>, <span class="st">"Overall Survival"</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+</div>
+</section></section><section class="level2"><h3 id="multi-panel-pdf-eda-batch-output">Multi-panel PDF (EDA batch output)<a class="anchor" aria-label="anchor" href="#multi-panel-pdf-eda-batch-output"></a>
 </h3>
 <p>When generating multiple plots in a loop, <code><a href="https://rdrr.io/pkg/gridExtra/man/arrangeGrob.html" class="external-link">gridExtra::marrangeGrob()</a></code> arranges them into a grid and <code><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave()</a></code> writes each page.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb20"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Build a list of plots (e.g. from an eda_plot() lapply loop)</span></span>
 <span><span class="va">plot_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ef"</span>, <span class="st">"lv_mass"</span>, <span class="st">"peak_grad"</span><span class="op">)</span>,</span>
@@ -443,12 +540,352 @@
 <span>  <span class="va">idx</span>  <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="va">pg</span>, <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></span><span class="op">(</span><span class="va">pg</span> <span class="op">+</span> <span class="va">per_page</span> <span class="op">-</span> <span class="fl">1L</span>, <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">plot_list</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span>  <span class="va">grob</span> <span class="op">&lt;-</span> <span class="fu">gridExtra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/gridExtra/man/arrangeGrob.html" class="external-link">marrangeGrob</a></span><span class="op">(</span><span class="va">plot_list</span><span class="op">[</span><span class="va">idx</span><span class="op">]</span>, nrow <span class="op">=</span> <span class="fl">3</span>, ncol <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave</a></span><span class="op">(</span></span>
-<span>    filename <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sprintf.html" class="external-link">sprintf</a></span><span class="op">(</span><span class="st">"../graphs/eda_page%02d.pdf"</span>, <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">ceiling</a></span><span class="op">(</span><span class="va">pg</span> <span class="op">/</span> <span class="va">per_page</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>    filename <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sprintf.html" class="external-link">sprintf</a></span><span class="op">(</span><span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org/reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="st">"graphs"</span>, <span class="st">"eda_page%02d.pdf"</span><span class="op">)</span>,</span>
+<span>                       <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">ceiling</a></span><span class="op">(</span><span class="va">pg</span> <span class="op">/</span> <span class="va">per_page</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>    plot     <span class="op">=</span> <span class="va">grob</span>,</span>
 <span>    width    <span class="op">=</span> <span class="fl">14</span>,</span>
 <span>    height   <span class="op">=</span> <span class="fl">14</span></span>
 <span>  <span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre></div>
+</div>
+</section></section><section class="section level2"><h2 id="legend-positioning">Legend Positioning<a class="anchor" aria-label="anchor" href="#legend-positioning"></a>
+</h2>
+<p>ggplot2 places the legend outside the panel by default. For publication figures it is often cleaner to place it inside the panel or suppress it entirely.</p>
+<section class="level2"><h3 id="inside-the-panel">Inside the panel<a class="anchor" aria-label="anchor" href="#inside-the-panel"></a>
+</h3>
+<p>Pass fractional coordinates <code>c(x, y)</code> to <code>legend.position</code> inside <code><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme()</a></code>. <code>c(0, 0)</code> is the bottom-left corner; <code>c(1, 1)</code> is the top-right.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">p_base</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_colour_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Set1"</span>, name <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_shape_manual</a></span><span class="op">(</span></span>
+<span>    values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Group I"</span> <span class="op">=</span> <span class="fl">15</span>, <span class="st">"Group II"</span> <span class="op">=</span> <span class="fl">19</span>,</span>
+<span>               <span class="st">"Group III"</span> <span class="op">=</span> <span class="fl">17</span>, <span class="st">"Group IV"</span> <span class="op">=</span> <span class="fl">18</span><span class="op">)</span>,</span>
+<span>    name <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Surgery Year"</span>, y <span class="op">=</span> <span class="st">"Outcome"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/hvti_theme.html">hvti_theme</a></span><span class="op">(</span><span class="st">"manuscript"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span></span>
+<span>    legend.position  <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.15</span>, <span class="fl">0.2</span><span class="op">)</span>,        <span class="co"># bottom-left of panel</span></span>
+<span>    legend.background <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_rect</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="st">"white"</span>, colour <span class="op">=</span> <span class="st">"grey80"</span>,</span>
+<span>                                     linewidth <span class="op">=</span> <span class="fl">0.3</span><span class="op">)</span></span>
+<span>  <span class="op">)</span></span></code></pre></div>
+<div class="cell-output-display">
+<div>
+<figure><p><img src="plot-decorators_files/figure-html/legend_inside-1.png" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section><section class="level2"><h3 id="outside-the-panel-explicit-sides">Outside the panel (explicit sides)<a class="anchor" aria-label="anchor" href="#outside-the-panel-explicit-sides"></a>
+</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">p_base</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_colour_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Set1"</span>, name <span class="op">=</span> <span class="st">"Group"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_shape_manual</a></span><span class="op">(</span></span>
+<span>    values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Group I"</span> <span class="op">=</span> <span class="fl">15</span>, <span class="st">"Group II"</span> <span class="op">=</span> <span class="fl">19</span>,</span>
+<span>               <span class="st">"Group III"</span> <span class="op">=</span> <span class="fl">17</span>, <span class="st">"Group IV"</span> <span class="op">=</span> <span class="fl">18</span><span class="op">)</span>,</span>
+<span>    name <span class="op">=</span> <span class="st">"Group"</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Surgery Year"</span>, y <span class="op">=</span> <span class="st">"Outcome"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/hvti_theme.html">hvti_theme</a></span><span class="op">(</span><span class="st">"manuscript"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span></span>
+<span>    legend.position <span class="op">=</span> <span class="st">"bottom"</span>,             <span class="co"># "right" | "left" | "top" | "bottom"</span></span>
+<span>    legend.direction <span class="op">=</span> <span class="st">"horizontal"</span></span>
+<span>  <span class="op">)</span></span></code></pre></div>
+<div class="cell-output-display">
+<div>
+<figure><p><img src="plot-decorators_files/figure-html/legend_outside-1.png" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section><section class="level2"><h3 id="suppress-all-legends">Suppress all legends<a class="anchor" aria-label="anchor" href="#suppress-all-legends"></a>
+</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">km</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_color_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>All <span class="op">=</span> <span class="st">"steelblue"</span><span class="op">)</span>, guide <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_fill_manual</a></span><span class="op">(</span>values  <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>All <span class="op">=</span> <span class="st">"steelblue"</span><span class="op">)</span>, guide <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">100</span>, <span class="fl">20</span><span class="op">)</span>,</span>
+<span>                     labels <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">x</span>, <span class="st">"%"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_x_continuous</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">20</span>, <span class="fl">5</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_cartesian.html" class="external-link">coord_cartesian</a></span><span class="op">(</span>xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">20</span><span class="op">)</span>, ylim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">100</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Years after Operation"</span>, y <span class="op">=</span> <span class="st">"Freedom from Death (%)"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/hvti_theme.html">hvti_theme</a></span><span class="op">(</span><span class="st">"manuscript"</span><span class="op">)</span></span></code></pre></div>
+<div class="cell-output-display">
+<div>
+<figure><p><img src="plot-decorators_files/figure-html/legend_none-1.png" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><code>guide = "none"</code> on every <code>scale_*()</code> call removes all legend entries. This is preferred over <code>theme(legend.position = "none")</code> when only some aesthetics have legends and others do not.</p>
+</section><section class="level2"><h3 id="legend-text-and-key-size">Legend text and key size<a class="anchor" aria-label="anchor" href="#legend-text-and-key-size"></a>
+</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">p_base</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_colour_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Set1"</span>, name <span class="op">=</span> <span class="st">"Group"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_shape_manual</a></span><span class="op">(</span></span>
+<span>    values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Group I"</span> <span class="op">=</span> <span class="fl">15</span>, <span class="st">"Group II"</span> <span class="op">=</span> <span class="fl">19</span>,</span>
+<span>               <span class="st">"Group III"</span> <span class="op">=</span> <span class="fl">17</span>, <span class="st">"Group IV"</span> <span class="op">=</span> <span class="fl">18</span><span class="op">)</span>,</span>
+<span>    name <span class="op">=</span> <span class="st">"Group"</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Surgery Year"</span>, y <span class="op">=</span> <span class="st">"Outcome"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/hvti_theme.html">hvti_theme</a></span><span class="op">(</span><span class="st">"manuscript"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span></span>
+<span>    legend.text  <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">9</span><span class="op">)</span>,</span>
+<span>    legend.key.size <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fl">0.4</span>, <span class="st">"cm"</span><span class="op">)</span></span>
+<span>  <span class="op">)</span></span></code></pre></div>
+<div class="cell-output-display">
+<div>
+<figure><p><img src="plot-decorators_files/figure-html/legend_text-1.png" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section></section><section class="section level2"><h2 id="theme-overrides">Theme Overrides<a class="anchor" aria-label="anchor" href="#theme-overrides"></a>
+</h2>
+<p><code><a href="../reference/hvti_theme.html">hvti_theme()</a></code> sets a complete non-data formatting baseline. Layer additional <code><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme()</a></code> calls after it to adjust individual elements without touching the rest.</p>
+<section class="level2"><h3 id="axis-text-size">Axis text size<a class="anchor" aria-label="anchor" href="#axis-text-size"></a>
+</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">p_base</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_colour_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Set1"</span>, name <span class="op">=</span> <span class="st">"Group"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_shape_manual</a></span><span class="op">(</span></span>
+<span>    values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Group I"</span> <span class="op">=</span> <span class="fl">15</span>, <span class="st">"Group II"</span> <span class="op">=</span> <span class="fl">19</span>,</span>
+<span>               <span class="st">"Group III"</span> <span class="op">=</span> <span class="fl">17</span>, <span class="st">"Group IV"</span> <span class="op">=</span> <span class="fl">18</span><span class="op">)</span>,</span>
+<span>    name <span class="op">=</span> <span class="st">"Group"</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Surgery Year"</span>, y <span class="op">=</span> <span class="st">"Outcome"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/hvti_theme.html">hvti_theme</a></span><span class="op">(</span><span class="st">"manuscript"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span></span>
+<span>    axis.text  <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>,   <span class="co"># tick labels</span></span>
+<span>    axis.title <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">12</span><span class="op">)</span>    <span class="co"># axis titles</span></span>
+<span>  <span class="op">)</span></span></code></pre></div>
+<div class="cell-output-display">
+<div>
+<figure><p><img src="plot-decorators_files/figure-html/theme_axis_text-1.png" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section><section class="level2"><h3 id="removing-minor-grid-lines">Removing minor grid lines<a class="anchor" aria-label="anchor" href="#removing-minor-grid-lines"></a>
+</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">p_base</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_colour_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Set1"</span>, name <span class="op">=</span> <span class="st">"Group"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_shape_manual</a></span><span class="op">(</span></span>
+<span>    values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Group I"</span> <span class="op">=</span> <span class="fl">15</span>, <span class="st">"Group II"</span> <span class="op">=</span> <span class="fl">19</span>,</span>
+<span>               <span class="st">"Group III"</span> <span class="op">=</span> <span class="fl">17</span>, <span class="st">"Group IV"</span> <span class="op">=</span> <span class="fl">18</span><span class="op">)</span>,</span>
+<span>    name <span class="op">=</span> <span class="st">"Group"</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Surgery Year"</span>, y <span class="op">=</span> <span class="st">"Outcome"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/hvti_theme.html">hvti_theme</a></span><span class="op">(</span><span class="st">"manuscript"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span></span>
+<span>    panel.grid.minor <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span></span>
+<span>  <span class="op">)</span></span></code></pre></div>
+<div class="cell-output-display">
+<div>
+<figure><p><img src="plot-decorators_files/figure-html/theme_grid-1.png" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section><section class="level2"><h3 id="rotating-x-axis-labels">Rotating x-axis labels<a class="anchor" aria-label="anchor" href="#rotating-x-axis-labels"></a>
+</h3>
+<p>Useful for time-point labels or long category names.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">p_base</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_colour_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Set1"</span>, name <span class="op">=</span> <span class="st">"Group"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_shape_manual</a></span><span class="op">(</span></span>
+<span>    values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Group I"</span> <span class="op">=</span> <span class="fl">15</span>, <span class="st">"Group II"</span> <span class="op">=</span> <span class="fl">19</span>,</span>
+<span>               <span class="st">"Group III"</span> <span class="op">=</span> <span class="fl">17</span>, <span class="st">"Group IV"</span> <span class="op">=</span> <span class="fl">18</span><span class="op">)</span>,</span>
+<span>    name <span class="op">=</span> <span class="st">"Group"</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Surgery Year"</span>, y <span class="op">=</span> <span class="st">"Outcome"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/hvti_theme.html">hvti_theme</a></span><span class="op">(</span><span class="st">"manuscript"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span></span>
+<span>    axis.text.x <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>angle <span class="op">=</span> <span class="fl">45</span>, hjust <span class="op">=</span> <span class="fl">1</span>, vjust <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
+<span>  <span class="op">)</span></span></code></pre></div>
+<div class="cell-output-display">
+<div>
+<figure><p><img src="plot-decorators_files/figure-html/theme_axis_rotate-1.png" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section><section class="level2"><h3 id="adding-a-plot-title-and-subtitle">Adding a plot title and subtitle<a class="anchor" aria-label="anchor" href="#adding-a-plot-title-and-subtitle"></a>
+</h3>
+<p>Titles are stripped from the base themes (they are rarely used in journal figures), but can be added back:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">km</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_color_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>All <span class="op">=</span> <span class="st">"steelblue"</span><span class="op">)</span>, guide <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_fill_manual</a></span><span class="op">(</span>values  <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>All <span class="op">=</span> <span class="st">"steelblue"</span><span class="op">)</span>, guide <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">100</span>, <span class="fl">20</span><span class="op">)</span>,</span>
+<span>                     labels <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">x</span>, <span class="st">"%"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_x_continuous</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">20</span>, <span class="fl">5</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_cartesian.html" class="external-link">coord_cartesian</a></span><span class="op">(</span>xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">20</span><span class="op">)</span>, ylim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">100</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span></span>
+<span>    title    <span class="op">=</span> <span class="st">"Overall Survival"</span>,</span>
+<span>    subtitle <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"n = "</span>, <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">dta_km</span><span class="op">)</span>, <span class="st">" patients"</span><span class="op">)</span>,</span>
+<span>    x        <span class="op">=</span> <span class="st">"Years after Operation"</span>,</span>
+<span>    y        <span class="op">=</span> <span class="st">"Freedom from Death (%)"</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/hvti_theme.html">hvti_theme</a></span><span class="op">(</span><span class="st">"manuscript"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span></span>
+<span>    plot.title    <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">14</span>, face <span class="op">=</span> <span class="st">"bold"</span>, hjust <span class="op">=</span> <span class="fl">0</span><span class="op">)</span>,</span>
+<span>    plot.subtitle <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">11</span>, colour <span class="op">=</span> <span class="st">"grey40"</span>, hjust <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span>
+<span>  <span class="op">)</span></span></code></pre></div>
+<div class="cell-output-display">
+<div>
+<figure><p><img src="plot-decorators_files/figure-html/theme_title-1.png" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section><section class="level2"><h3 id="expanding-plot-margins">Expanding plot margins<a class="anchor" aria-label="anchor" href="#expanding-plot-margins"></a>
+</h3>
+<p>Add breathing room around the panel, for example when a figure is placed directly on a poster without a surrounding text frame.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">p_base</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_colour_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Set1"</span>, name <span class="op">=</span> <span class="st">"Group"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_shape_manual</a></span><span class="op">(</span></span>
+<span>    values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Group I"</span> <span class="op">=</span> <span class="fl">15</span>, <span class="st">"Group II"</span> <span class="op">=</span> <span class="fl">19</span>,</span>
+<span>               <span class="st">"Group III"</span> <span class="op">=</span> <span class="fl">17</span>, <span class="st">"Group IV"</span> <span class="op">=</span> <span class="fl">18</span><span class="op">)</span>,</span>
+<span>    name <span class="op">=</span> <span class="st">"Group"</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Surgery Year"</span>, y <span class="op">=</span> <span class="st">"Outcome"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/hvti_theme.html">hvti_theme</a></span><span class="op">(</span><span class="st">"poster"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span></span>
+<span>    plot.margin <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">margin</a></span><span class="op">(</span>t <span class="op">=</span> <span class="fl">10</span>, r <span class="op">=</span> <span class="fl">20</span>, b <span class="op">=</span> <span class="fl">10</span>, l <span class="op">=</span> <span class="fl">20</span>, unit <span class="op">=</span> <span class="st">"pt"</span><span class="op">)</span></span>
+<span>  <span class="op">)</span></span></code></pre></div>
+<div class="cell-output-display">
+<div>
+<figure><p><img src="plot-decorators_files/figure-html/theme_margin-1.png" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section></section><section class="section level2"><h2 id="multi-panel-figures-with-patchwork">Multi-panel Figures with patchwork<a class="anchor" aria-label="anchor" href="#multi-panel-figures-with-patchwork"></a>
+</h2>
+<p>The <code>patchwork</code> package composes multiple ggplot objects into a single figure. Use it to place two related plots side by side, or to stack a main plot above a companion table or risk panel.</p>
+<section class="level2"><h3 id="side-by-side-plots">Side-by-side plots<a class="anchor" aria-label="anchor" href="#side-by-side-plots"></a>
+</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://patchwork.data-imaginist.com" class="external-link">patchwork</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">p_ms</span> <span class="op">&lt;-</span> <span class="va">p_base</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_colour_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Set1"</span>, name <span class="op">=</span> <span class="st">"Group"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_shape_manual</a></span><span class="op">(</span></span>
+<span>    values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Group I"</span> <span class="op">=</span> <span class="fl">15</span>, <span class="st">"Group II"</span> <span class="op">=</span> <span class="fl">19</span>,</span>
+<span>               <span class="st">"Group III"</span> <span class="op">=</span> <span class="fl">17</span>, <span class="st">"Group IV"</span> <span class="op">=</span> <span class="fl">18</span><span class="op">)</span>,</span>
+<span>    name <span class="op">=</span> <span class="st">"Group"</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Surgery Year"</span>, y <span class="op">=</span> <span class="st">"Outcome"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/hvti_theme.html">hvti_theme</a></span><span class="op">(</span><span class="st">"manuscript"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">p_km_ms</span> <span class="op">&lt;-</span> <span class="va">km</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_color_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>All <span class="op">=</span> <span class="st">"steelblue"</span><span class="op">)</span>, guide <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_fill_manual</a></span><span class="op">(</span>values  <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>All <span class="op">=</span> <span class="st">"steelblue"</span><span class="op">)</span>, guide <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">100</span>, <span class="fl">20</span><span class="op">)</span>,</span>
+<span>                     labels <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">x</span>, <span class="st">"%"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_x_continuous</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">20</span>, <span class="fl">5</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_cartesian.html" class="external-link">coord_cartesian</a></span><span class="op">(</span>xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">20</span><span class="op">)</span>, ylim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">100</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Years after Operation"</span>, y <span class="op">=</span> <span class="st">"Freedom from Death (%)"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/hvti_theme.html">hvti_theme</a></span><span class="op">(</span><span class="st">"manuscript"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">p_ms</span> <span class="op">|</span> <span class="va">p_km_ms</span></span></code></pre></div>
+<div class="cell-output-display">
+<div>
+<figure><p><img src="plot-decorators_files/figure-html/patchwork_side_by_side-1.png" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><code>|</code> places plots side by side; <code>/</code> stacks them vertically.</p>
+</section><section class="level2"><h3 id="controlling-relative-widths-and-heights">Controlling relative widths and heights<a class="anchor" aria-label="anchor" href="#controlling-relative-widths-and-heights"></a>
+</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="op">(</span><span class="va">p_ms</span> <span class="op">|</span> <span class="va">p_km_ms</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://patchwork.data-imaginist.com/reference/plot_layout.html" class="external-link">plot_layout</a></span><span class="op">(</span>widths <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span>   <span class="co"># left panel twice as wide as right</span></span></code></pre></div>
+<div class="cell-output-display">
+<div>
+<figure><p><img src="plot-decorators_files/figure-html/patchwork_layout-1.png" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section><section class="level2"><h3 id="stacking-a-plot-above-a-risk-table">Stacking a plot above a risk table<a class="anchor" aria-label="anchor" href="#stacking-a-plot-above-a-risk-table"></a>
+</h3>
+<p>A common pattern with survival curves is to pair the plot with a numbers-at-risk panel. <code><a href="../reference/survival_curve.html">survival_curve()</a></code> returns the risk table as a data frame via <code>attr(result, "risk_table")</code> — columns <code>strata</code>, <code>report_time</code>, <code>n.risk</code>. Build a ggplot text panel from it, then stack with <code>/</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">risk_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">km</span>, <span class="st">"risk_table"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">rt_panel</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">risk_df</span>,</span>
+<span>                   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">report_time</span>, y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">strata</span><span class="op">)</span>,</span>
+<span>                       label <span class="op">=</span> <span class="va">n.risk</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_text.html" class="external-link">geom_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">3</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_x_continuous</a></span><span class="op">(</span>limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">20</span><span class="op">)</span>, breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">20</span>, <span class="fl">5</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Years after Operation"</span>, y <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/hvti_theme.html">hvti_theme</a></span><span class="op">(</span><span class="st">"manuscript"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span></span>
+<span>    axis.line  <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>    axis.ticks <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span></span>
+<span>  <span class="op">)</span></span>
+<span></span>
+<span><span class="va">p_km_ms</span> <span class="op">/</span> <span class="va">rt_panel</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://patchwork.data-imaginist.com/reference/plot_layout.html" class="external-link">plot_layout</a></span><span class="op">(</span>heights <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">4</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<div class="cell-output-display">
+<div>
+<figure><p><img src="plot-decorators_files/figure-html/patchwork_risk_table-1.png" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section><section class="level2"><h3 id="shared-axis-labels-and-panel-tags">Shared axis labels and panel tags<a class="anchor" aria-label="anchor" href="#shared-axis-labels-and-panel-tags"></a>
+</h3>
+<p><code><a href="https://patchwork.data-imaginist.com/reference/plot_annotation.html" class="external-link">plot_annotation()</a></code> adds a shared title or tags (A, B, C…) across all panels.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="op">(</span><span class="va">p_ms</span> <span class="op">|</span> <span class="va">p_km_ms</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://patchwork.data-imaginist.com/reference/plot_annotation.html" class="external-link">plot_annotation</a></span><span class="op">(</span></span>
+<span>    title <span class="op">=</span> <span class="st">"Figure 1. Outcomes after cardiac surgery"</span>,</span>
+<span>    tag_levels <span class="op">=</span> <span class="st">"A"</span></span>
+<span>  <span class="op">)</span> <span class="op">&amp;</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>plot.tag <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">12</span>, face <span class="op">=</span> <span class="st">"bold"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<div class="cell-output-display">
+<div>
+<figure><p><img src="plot-decorators_files/figure-html/patchwork_annotation-1.png" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section><section class="level2"><h3 id="saving-a-patchwork-composite">Saving a patchwork composite<a class="anchor" aria-label="anchor" href="#saving-a-patchwork-composite"></a>
+</h3>
+<p>Assign the composed object to a variable and pass it to <code><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave()</a></code>. For PowerPoint, save each panel individually with <code><a href="../reference/save_ppt.html">save_ppt()</a></code> (patchwork composites are not editable DrawingML objects).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb32"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">combined</span> <span class="op">&lt;-</span> <span class="op">(</span><span class="va">p_ms</span> <span class="op">|</span> <span class="va">p_km_ms</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://patchwork.data-imaginist.com/reference/plot_annotation.html" class="external-link">plot_annotation</a></span><span class="op">(</span>tag_levels <span class="op">=</span> <span class="st">"A"</span><span class="op">)</span> <span class="op">&amp;</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>plot.tag <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">12</span>, face <span class="op">=</span> <span class="st">"bold"</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave</a></span><span class="op">(</span></span>
+<span>  filename <span class="op">=</span> <span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org/reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="st">"graphs"</span>, <span class="st">"fig1_combined.pdf"</span><span class="op">)</span>,</span>
+<span>  plot     <span class="op">=</span> <span class="va">combined</span>,</span>
+<span>  width    <span class="op">=</span> <span class="fl">14</span>,</span>
+<span>  height   <span class="op">=</span> <span class="fl">7</span></span>
+<span><span class="op">)</span></span></code></pre></div>
 </div>
 </section></section><script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {

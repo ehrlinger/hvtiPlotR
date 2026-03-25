@@ -77,6 +77,7 @@ A data frame with columns `time`, `value`, and (if `groups` is not
 ## Examples
 
 ``` r
+# Single-group data summary points (probability outcome)
 pts <- sample_nonparametric_curve_points(n = 500, time_max = 12)
 head(pts)
 #>        time value
@@ -86,4 +87,18 @@ head(pts)
 #> 4 4.1162936  0.34
 #> 5 5.2520883  0.40
 #> 6 6.2975341  0.42
+names(pts)           # "time", "value"
+#> [1] "time"  "value"
+
+# Two-group points — continuous outcome (e.g. AV peak gradient)
+pts2 <- sample_nonparametric_curve_points(
+  n            = 400,
+  time_max     = 7,
+  groups       = c("Ozaki" = 0.7, "CE-Pericardial" = 1.3),
+  outcome_type = "continuous"
+)
+levels(pts2$group)   # "Ozaki", "CE-Pericardial"
+#> [1] "Ozaki"          "CE-Pericardial"
+nrow(pts2)           # 2 groups x n_bins rows
+#> [1] 20
 ```

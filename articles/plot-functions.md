@@ -23,7 +23,8 @@ themes, and ggsave() patterns.
 
 The table below maps each hvtiPlotR function to the original SAS and R
 templates it ports. Functions marked with — have no direct predecessor
-and were designed specifically for this package.
+and were designed specifically for this package. All functions have
+worked examples in the sections below.
 
 | hvtiPlotR Function                                                                                              | SAS Template(s)                                                                                                                            | R Template(s)                                                                   |
 |-----------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------|
@@ -2215,6 +2216,473 @@ p_sp <- spaghetti_plot(dta_sp, colour_col = "group") +
 
 ggsave(here::here("graphs", "mp.amngrd_profile.pdf"),
        p_sp, width = 11, height = 8.5)
+```
+
+## Nonparametric Temporal Trend Curve
+
+[`nonparametric_curve_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/nonparametric_curve_plot.md)
+visualises pre-computed average curves from a two-phase nonparametric
+temporal trend model — the R equivalent of the SAS `tp.np.*.avrg_curv.*`
+and `tp.np.*.u.trend.*` template family.
+
+The function accepts the SAS `mean_curv` / `boots_ci` datasets exported
+to CSV and read in with
+[`read.csv()`](https://rdrr.io/r/utils/read.table.html). It returns a
+bare ggplot object for composition with `scale_colour_*`,
+[`labs()`](https://ggplot2.tidyverse.org/reference/labs.html), and
+[`hvti_theme()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_theme.md).
+
+### Sample data
+
+``` r
+curve_dat <- sample_nonparametric_curve_data(
+  n            = 500,
+  time_max     = 12,
+  outcome_type = "probability",
+  ci_level     = 0.68       # 68 % CI — one SE, matching SAS cll_p68/clu_p68
+)
+pts_dat <- sample_nonparametric_curve_points(n = 500, time_max = 12)
+head(curve_dat)
+```
+
+            time  estimate     lower     upper
+    1 0.05000000 0.2395042 0.2148392 0.2660414
+    2 0.05055219 0.2395916 0.2149201 0.2661351
+    3 0.05111048 0.2396798 0.2150019 0.2662297
+    4 0.05167493 0.2397690 0.2150845 0.2663253
+    5 0.05224562 0.2398592 0.2151680 0.2664220
+    6 0.05282261 0.2399503 0.2152524 0.2665196
+
+### Single average curve with 68 % CI ribbon
+
+``` r
+nonparametric_curve_plot(
+  curve_data  = curve_dat,
+  lower_col   = "lower",
+  upper_col   = "upper",
+  data_points = pts_dat
+) +
+  ggplot2::scale_colour_manual(values = c("steelblue"), guide = "none") +
+  ggplot2::scale_fill_manual(values   = c("steelblue"), guide = "none") +
+  ggplot2::scale_x_continuous(
+    limits = c(0, 12),
+    breaks = seq(0, 12, 2),
+    labels = function(x) paste(x, "yr")
+  ) +
+  ggplot2::scale_y_continuous(
+    limits = c(0, 1),
+    breaks = seq(0, 1, 0.2),
+    labels = scales::percent
+  ) +
+  ggplot2::labs(x = "Follow-up (years)", y = "Prevalence (%)") +
+  hvti_theme("manuscript")
+```
+
+![](plot-functions_files/figure-html/np_curve_single-1.png)
+
+The shaded ribbon shows the 68 % bootstrap CI (one standard error),
+matching `cll_p68`/`clu_p68` in the SAS template. Switch to
+`ci_level = 0.95` in
+[`sample_nonparametric_curve_data()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_nonparametric_curve_data.md)
+for 95 % CI bands.
+
+### Two-group comparison (analogous to tp.np.avpkgrad_ozak_ind_mtwt.sas)
+
+``` r
+curve_grp <- sample_nonparametric_curve_data(
+  n      = 400,
+  time_max = 7,
+  groups   = c("Ozaki" = 0.7, "CE-Pericardial" = 1.3),
+  outcome_type = "continuous",
+  ci_level = 0.68
+)
+pts_grp <- sample_nonparametric_curve_points(
+  n = 400, time_max = 7,
+  groups = c("Ozaki" = 0.7, "CE-Pericardial" = 1.3),
+  outcome_type = "continuous"
+)
+
+nonparametric_curve_plot(
+  curve_data  = curve_grp,
+  group_col   = "group",
+  lower_col   = "lower",
+  upper_col   = "upper",
+  data_points = pts_grp
+) +
+  ggplot2::scale_colour_manual(
+    values = c("Ozaki" = "steelblue", "CE-Pericardial" = "firebrick"),
+    name   = NULL
+  ) +
+  ggplot2::scale_fill_manual(
+    values = c("Ozaki" = "steelblue", "CE-Pericardial" = "firebrick"),
+    guide  = "none"
+  ) +
+  ggplot2::scale_x_continuous(limits = c(0, 7), breaks = 0:7) +
+  ggplot2::labs(
+    x = "Follow-up (years)",
+    y = "AV Peak Gradient (mmHg)"
+  ) +
+  hvti_theme("manuscript") +
+  ggplot2::theme(legend.position = c(0.15, 0.85))
+```
+
+![](plot-functions_files/figure-html/np_curve_groups-1.png)
+
+### Saving
+
+``` r
+p_np <- nonparametric_curve_plot(curve_dat, lower_col = "lower", upper_col = "upper") +
+  ggplot2::labs(x = "Follow-up (years)", y = "Prevalence (%)") +
+  hvti_theme("manuscript")
+
+# Manuscript PDF
+ggsave(here::here("graphs", "np_afib_prevalence.pdf"),
+       p_np, width = 11, height = 8.5)
+
+# Editable PowerPoint
+save_ppt(p_np,
+         template   = system.file("ClevelandClinic.pptx", package = "hvtiPlotR"),
+         powerpoint = here::here("graphs", "np_afib_prevalence.pptx"))
+```
+
+## Nonparametric Ordinal Outcome Curve
+
+[`nonparametric_ordinal_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/nonparametric_ordinal_plot.md)
+plots pre-computed grade-specific probability curves from a cumulative
+proportional-odds model — the R equivalent of `tp.np.*.ordinal.*` SAS
+templates (e.g. TR grade prevalence, AR severity).
+
+The SAS `predict` dataset stores one column per grade (`p0`, `p1`, `p2`,
+`p3`). Before calling this function, reshape it from wide to long
+format:
+
+``` r
+library(tidyr)
+long <- pivot_longer(
+  predict_wide,
+  cols      = c(p0, p1, p2, p3),
+  names_to  = "grade",
+  values_to = "estimate"
+)
+```
+
+### Sample data
+
+``` r
+ord_dat <- sample_nonparametric_ordinal_data(
+  n            = 800,
+  time_max     = 5,
+  grade_labels = c("None", "Mild", "Moderate", "Severe")
+)
+ord_pts <- sample_nonparametric_ordinal_points(
+  n            = 800,
+  time_max     = 5,
+  grade_labels = c("None", "Mild", "Moderate", "Severe")
+)
+head(ord_dat)
+```
+
+            time  estimate grade
+    1 0.01000000 0.6276258  None
+    2 0.01012532 0.6276898  None
+    3 0.01025221 0.6277545  None
+    4 0.01038069 0.6278200  None
+    5 0.01051078 0.6278864  None
+    6 0.01064250 0.6279535  None
+
+### Grade probability curves with data summary points
+
+``` r
+nonparametric_ordinal_plot(
+  curve_data  = ord_dat,
+  data_points = ord_pts
+) +
+  ggplot2::scale_colour_manual(
+    values = c(
+      "None"     = "grey40",
+      "Mild"     = "steelblue",
+      "Moderate" = "darkorange",
+      "Severe"   = "firebrick"
+    ),
+    name = "AR Grade"
+  ) +
+  ggplot2::scale_x_continuous(limits = c(0, 5), breaks = 0:5) +
+  ggplot2::scale_y_continuous(
+    limits = c(0, 1),
+    breaks = seq(0, 1, 0.2),
+    labels = scales::percent
+  ) +
+  ggplot2::labs(
+    x = "Follow-up (years)",
+    y = "Grade prevalence (%)"
+  ) +
+  hvti_theme("manuscript") +
+  ggplot2::theme(legend.position = c(0.75, 0.6))
+```
+
+![](plot-functions_files/figure-html/np_ordinal_basic-1.png)
+
+Each line is one grade level. Points show binned data summary values
+(analogous to the SAS `means` dataset with `smntr0`–`smntr3` columns).
+
+### Combined mild + moderate (p34 = p3 + p4 pattern)
+
+For analyses that collapse higher grades (e.g. Moderate + Severe
+combined), subset and re-label before plotting:
+
+``` r
+ord_collapsed <- ord_dat
+# Merge Moderate and Severe into one level
+ord_collapsed <- subset(ord_collapsed, grade %in% c("None", "Mild", "Moderate/Severe"))
+
+# If your data has Moderate and Severe as separate rows, combine with:
+# library(dplyr)
+# ord_collapsed <- ord_dat |>
+#   dplyr::filter(grade %in% c("Moderate", "Severe")) |>
+#   dplyr::summarise(estimate = sum(estimate), .by = time) |>
+#   dplyr::mutate(grade = "Moderate/Severe") |>
+#   dplyr::bind_rows(dplyr::filter(ord_dat, grade %in% c("None", "Mild")))
+
+# Show three-level version using only two grades from sample data
+ord_two <- subset(ord_dat, grade %in% c("None", "Severe"))
+
+nonparametric_ordinal_plot(curve_data = ord_two) +
+  ggplot2::scale_colour_manual(
+    values = c("None" = "steelblue", "Severe" = "firebrick"),
+    name   = NULL
+  ) +
+  ggplot2::scale_x_continuous(limits = c(0, 5), breaks = 0:5) +
+  ggplot2::scale_y_continuous(limits = c(0, 1), breaks = seq(0, 1, 0.2),
+                               labels = scales::percent) +
+  ggplot2::labs(x = "Follow-up (years)", y = "Grade prevalence (%)") +
+  hvti_theme("manuscript")
+```
+
+![](plot-functions_files/figure-html/np_ordinal_collapsed-1.png)
+
+### Saving
+
+``` r
+p_ord <- nonparametric_ordinal_plot(ord_dat, data_points = ord_pts) +
+  ggplot2::scale_colour_brewer(palette = "Set1", name = "TR Grade") +
+  ggplot2::labs(x = "Follow-up (years)", y = "Grade prevalence (%)") +
+  hvti_theme("manuscript")
+
+ggsave(here::here("graphs", "np_tr_ordinal.pdf"),
+       p_ord, width = 11, height = 8.5)
+```
+
+## Longitudinal Participation Counts
+
+[`longitudinal_counts_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/longitudinal_counts_plot.md)
+and
+[`longitudinal_counts_table()`](https://ehrlinger.github.io/hvtiPlotR/reference/longitudinal_counts_table.md)
+reproduce the two-panel layout from
+`tp.dp.longitudinal_patients_measures.*`: a grouped bar chart of
+patients and measurements at each follow-up window, paired with a
+numeric summary table below. Compose the two panels with `patchwork`.
+
+Input is **pre-aggregated long-format data** — one row per (time window,
+series) combination. Use
+[`sample_longitudinal_counts_data()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_longitudinal_counts_data.md)
+to derive this from patient-level data, or build it yourself from your
+registry data.
+
+### Sample data
+
+``` r
+lc_dat <- sample_longitudinal_counts_data(n_patients = 300, seed = 42L)
+lc_dat
+```
+
+       time_label       series count
+    1     ≥0 Days     Patients    19
+    2    ≥1 Month     Patients    47
+    3   ≥3 Months     Patients    49
+    4   ≥6 Months     Patients   100
+    5     ≥1 Year     Patients   159
+    6    ≥2 Years     Patients   101
+    7  ≥2.5 Years     Patients   276
+    8     ≥0 Days Measurements    19
+    9    ≥1 Month Measurements    50
+    10  ≥3 Months Measurements    56
+    11  ≥6 Months Measurements   118
+    12    ≥1 Year Measurements   217
+    13   ≥2 Years Measurements   113
+    14 ≥2.5 Years Measurements   620
+
+### Bar chart
+
+``` r
+p_lc_bar <- longitudinal_counts_plot(lc_dat) +
+  ggplot2::scale_fill_manual(
+    values = c(Patients = "steelblue", Measurements = "firebrick"),
+    name   = NULL
+  ) +
+  ggplot2::scale_y_continuous(
+    breaks = seq(0, 2000, 500),
+    expand = c(0, 0)
+  ) +
+  ggplot2::coord_cartesian(ylim = c(0, 2200)) +
+  ggplot2::labs(x = NULL, y = "Count (n)") +
+  hvti_theme("manuscript") +
+  ggplot2::theme(legend.position = c(0.85, 0.85))
+
+p_lc_bar
+```
+
+![](plot-functions_files/figure-html/lc_bar-1.png)
+
+### Numeric table panel
+
+``` r
+p_lc_tbl <- longitudinal_counts_table(lc_dat) +
+  ggplot2::scale_colour_manual(
+    values = c(Patients = "steelblue", Measurements = "firebrick"),
+    guide  = "none"
+  ) +
+  hvti_theme("manuscript")
+
+p_lc_tbl
+```
+
+![](plot-functions_files/figure-html/lc_table-1.png)
+
+### Two-panel layout with patchwork
+
+``` r
+library(patchwork)
+
+p_lc_bar / p_lc_tbl +
+  patchwork::plot_layout(heights = c(3, 1))
+```
+
+![](plot-functions_files/figure-html/lc_combined-1.png)
+
+### Saving the combined figure
+
+``` r
+combined <- p_lc_bar / p_lc_tbl +
+  patchwork::plot_layout(heights = c(3, 1))
+
+ggsave(here::here("graphs", "longitudinal_participation.pdf"),
+       combined, width = 11, height = 6)
+
+# PowerPoint (bar chart only — patchwork composites may need ggsave first)
+save_ppt(p_lc_bar,
+         template   = system.file("ClevelandClinic.pptx", package = "hvtiPlotR"),
+         powerpoint = here::here("graphs", "longitudinal_participation.pptx"))
+```
+
+## UpSet Plot
+
+[`upset_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/upset_plot.md)
+wraps
+[`ComplexUpset::upset()`](https://krassowski.github.io/complex-upset/reference/upset.html)
+to visualise surgical procedure co-occurrences or any set membership
+data. It ports the pattern from `tp.complexUpset.R`, replacing
+hard-coded colours with `scale_fill_*` composition and hard-coded themes
+with
+[`hvti_theme()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_theme.md).
+
+Apply a theme to **all panels** using the patchwork `&` operator (not
+`+`):
+
+``` r
+upset_plot(dta, intersect = sets) & hvti_theme("manuscript")
+```
+
+### Sample data
+
+``` r
+sets <- c("AV_Replacement", "AV_Repair", "MV_Replacement", "MV_Repair",
+          "TV_Repair", "Aorta", "CABG")
+
+upset_dta <- sample_upset_data(n = 400, seed = 42)
+head(upset_dta)
+```
+
+      AV_Replacement AV_Repair MV_Replacement MV_Repair TV_Repair Aorta  CABG
+    1          FALSE     FALSE          FALSE      TRUE     FALSE FALSE FALSE
+    2          FALSE     FALSE          FALSE      TRUE     FALSE FALSE FALSE
+    3          FALSE     FALSE          FALSE     FALSE     FALSE FALSE  TRUE
+    4          FALSE      TRUE          FALSE     FALSE     FALSE FALSE FALSE
+    5          FALSE     FALSE           TRUE     FALSE      TRUE FALSE FALSE
+    6           TRUE     FALSE          FALSE     FALSE     FALSE FALSE  TRUE
+
+``` r
+colSums(upset_dta)
+```
+
+    AV_Replacement      AV_Repair MV_Replacement      MV_Repair      TV_Repair
+               127             50             56             49             42
+             Aorta           CABG
+                56            147 
+
+### Default plot
+
+``` r
+upset_plot(upset_dta, intersect = sets) &
+  hvti_theme("manuscript")
+```
+
+![](plot-functions_files/figure-html/upset_basic-1.png)
+
+### Custom intersection bar colour (scale_fill_manual)
+
+``` r
+upset_plot(
+  upset_dta,
+  intersect = sets,
+  base_annotations = list(
+    "Intersection size" = ComplexUpset::intersection_size(
+      mapping = ggplot2::aes(fill = "n")
+    ) +
+      ggplot2::scale_fill_manual(
+        values = c("n" = "steelblue"),
+        guide  = "none"
+      ) +
+      ggplot2::labs(y = "Patients (n)")
+  )
+) &
+  hvti_theme("manuscript")
+```
+
+![](plot-functions_files/figure-html/upset_fill-1.png)
+
+### Colour bars by era
+
+``` r
+upset_dta$era <- ifelse(seq_len(nrow(upset_dta)) <= 200, "Early", "Recent")
+
+upset_plot(
+  upset_dta,
+  intersect = sets,
+  base_annotations = list(
+    "Intersection size" = ComplexUpset::intersection_size(
+      counts  = FALSE,
+      mapping = ggplot2::aes(fill = era)
+    ) +
+      ggplot2::scale_fill_manual(
+        values = c("Early" = "grey60", "Recent" = "steelblue"),
+        name   = "Era"
+      ) +
+      ggplot2::labs(y = "Patients (n)")
+  )
+) &
+  hvti_theme("manuscript")
+```
+
+![](plot-functions_files/figure-html/upset_era-1.png)
+
+### Saving
+
+``` r
+p_upset <- upset_plot(upset_dta, intersect = sets) & hvti_theme("manuscript")
+
+# UpSet plots are patchwork composites — use ggsave() via ggplot2
+ggplot2::ggsave(here::here("graphs", "procedure_cooccurrence.pdf"),
+                p_upset, width = 11, height = 6)
 ```
 
 ## Draft Footnotes

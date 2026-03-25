@@ -79,3 +79,22 @@ object.
 [`theme_man()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_theme_manuscript.md),
 [`theme_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_theme_dark_ppt.md),
 [`theme_dark_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_theme_dark_ppt.md)
+
+## Examples
+
+``` r
+library(ggplot2)
+p <- ggplot(mtcars, aes(wt, mpg, colour = factor(cyl))) + geom_point()
+
+# Default poster theme (16 pt base font)
+p + hvti_theme_poster()
+
+
+# Larger font for a wide-format poster
+p + hvti_theme_poster(base_size = 20)
+
+
+# Via alias
+p + theme_poster()
+
+```

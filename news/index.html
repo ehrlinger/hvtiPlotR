@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">hvtiPlotR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.0.9001</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.0.9002</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -41,6 +41,74 @@
       <small>Source: <a href="https://github.com/ehrlinger/hvtiPlotR/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="2.0.0.9001" id="hvtiplotr-2009001">hvtiPlotR 2.0.0.9001<a class="anchor" aria-label="anchor" href="#hvtiplotr-2009001"></a></h2>
+<div class="section level3">
+<h3 id="tests-2-0-0-9001">Tests<a class="anchor" aria-label="anchor" href="#tests-2-0-0-9001"></a></h3>
+<ul><li>Added <code>tests/testthat/test_hazard_plot.R</code> — full validation suite for <code>sample_hazard_data</code>, <code>sample_hazard_empirical</code>, <code>sample_life_table</code>, and <code>hazard_plot</code> (column checks, CI bounds, layer structure, multi-group, non-default column names, input validation).</li>
+<li>Added <code>tests/testthat/test_nonparametric_plots.R</code> — full suite for <code>sample_nonparametric_curve_data</code>, <code>sample_nonparametric_curve_points</code>, <code>nonparametric_curve_plot</code>, <code>sample_nonparametric_ordinal_data</code>, <code>sample_nonparametric_ordinal_points</code>, and <code>nonparametric_ordinal_plot</code>. Includes probability-sum-to-1 invariant test for ordinal grades.</li>
+<li>Added <code>tests/testthat/test_survival_derived.R</code> — full suite for <code>sample_survival_difference_data</code>, <code>survival_difference_plot</code>, <code>sample_nnt_data</code>, and <code>nnt_plot</code>. Covers NA-NNT at t≈0 edge case and cross-function time-grid consistency.</li>
+<li>Added <code>tests/testthat/test_cluster_sankey.R</code> — full suite for <code>sample_cluster_sankey_data</code> and <code>cluster_sankey_plot</code>. Validates the hierarchical merge tree (C9=A → C2=A) and that each Ck has exactly k levels.</li>
+<li>Added <code>tests/testthat/test_pipeline.R</code> — end-to-end pipeline tests covering <code>survival_curve → hvti_theme → save_ppt</code>, multi-slide list pipelines, built-in dataset usability, <code>eda_classify_var</code> edge cases (logical vector, all-NA, length-1), and composed multi-layer plots.</li>
+<li>Added snapshot test to <code>test_kaplan_meier.R</code> for <code>survival_curve</code> <code>report_table</code> at fixed seed; added all-censored and single-observation edge-case tests.</li>
+<li>Added snapshot test to <code>test_mirror_histogram.R</code> for diagnostics at fixed seed.</li>
+<li>Added <code>slide_titles</code> length-mismatch test to <code>test_save_ppt.R</code>.</li>
+<li>Added <code>make_footnote</code> prefix-parameter tests to <code>test_footnote.R</code>.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="documentation-2-0-0-9001">Documentation<a class="anchor" aria-label="anchor" href="#documentation-2-0-0-9001"></a></h3>
+<ul><li>Fixed <code><a href="../reference/save_ppt.html">save_ppt()</a></code> argument names throughout all vignettes: <code>plot =</code> → <code>object =</code>, <code>filename =</code> → <code>powerpoint =</code>. Also added correct <code>template =</code> and <code>slide_titles =</code> arguments where missing.</li>
+<li>Fixed critical roxygen bug in <code><a href="../reference/sample_mirror_histogram_data.html">sample_mirror_histogram_data()</a></code>: doc block used <code>##'</code> (silently ignored by roxygen2) instead of <code>#'</code>, so the function had no generated <code>.Rd</code> file. Converted all <code>##'</code> → <code>#'</code>, modernised <code>\code{}</code> → backtick syntax, and added <code>@examples</code>.</li>
+<li>Added <code>@examples</code> to all five theme functions: <code><a href="../reference/hvti_theme.html">hvti_theme()</a></code>, <code><a href="../reference/hvti_theme_manuscript.html">hvti_theme_manuscript()</a></code>, <code><a href="../reference/hvti_theme_dark_ppt.html">hvti_theme_dark_ppt()</a></code>, <code><a href="../reference/hvti_theme_light_ppt.html">hvti_theme_light_ppt()</a></code>, and <code><a href="../reference/hvti_theme_poster.html">hvti_theme_poster()</a></code>.</li>
+<li>Expanded thin (2-line) <code>@examples</code> blocks for four sample-data helpers: <code><a href="../reference/sample_life_table.html">sample_life_table()</a></code>, <code><a href="../reference/sample_nonparametric_curve_points.html">sample_nonparametric_curve_points()</a></code>, <code><a href="../reference/sample_nonparametric_ordinal_points.html">sample_nonparametric_ordinal_points()</a></code>, and <code><a href="../reference/sample_longitudinal_counts_data.html">sample_longitudinal_counts_data()</a></code>.</li>
+<li>Fixed <code>km$survival_plot</code> and <code>km$risk_table</code> accessor patterns in <code>vignettes/plot-decorators.qmd</code>: <code><a href="../reference/survival_curve.html">survival_curve()</a></code> returns a ggplot with <em>attributes</em>, not a named list. Replaced with <code>km</code> (the returned object IS the survival plot) and <code>attr(km, "risk_table")</code>.</li>
+<li>Fixed patchwork operator-precedence bug in <code>vignettes/plot-decorators.qmd</code>: <code>p_ms | p_km_ms + plot_layout(...)</code> → <code>(p_ms | p_km_ms) + plot_layout(...)</code>.</li>
+<li>Added <code>patchwork</code> to <code>Suggests</code> in <code>DESCRIPTION</code> (required by <code>vignettes/plot-decorators.qmd</code>).</li>
+<li>Rewrote package-level help page (<code>help.R</code> / <code><a href="../reference/hvtiPlotR-package.html">?hvtiPlotR</a></code>) to document all 57 exported functions, organised by category.</li>
+<li>Expanded “Saving figures” section in <code>vignettes/sas-migration-guide.qmd</code> with correct <code><a href="../reference/save_ppt.html">save_ppt()</a></code> single- and multi-slide examples.</li>
+<li>Added <code>ggplot2::geom_line(..., linewidth = 1.5)</code> (replacing deprecated <code>size =</code>) and updated <code><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">remotes::install_github()</a></code> (replacing <code><a href="https://devtools.r-lib.org/reference/install-deprecated.html" class="external-link">devtools::install_github()</a></code>) in <code>vignettes/hvtiPlotR.qmd</code>.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="input-validation-improvements-2-0-0-9001">Input validation improvements<a class="anchor" aria-label="anchor" href="#input-validation-improvements-2-0-0-9001"></a></h3>
+<ul><li>
+<strong><code><a href="../reference/upset_plot.html">upset_plot()</a></code></strong> — added binary-column type check. ComplexUpset silently produces broken plots when <code>intersect</code> columns contain non-binary values; the function now errors with a clear message listing the offending columns before handing off to ComplexUpset.</li>
+<li>
+<strong><code><a href="../reference/sample_stacked_histogram_data.html">sample_stacked_histogram_data()</a></code></strong> — added <code>start_year</code> validation (previously <code>n_years</code> and <code>n_categories</code> were checked but <code>start_year</code> was not; a non-integer or non-finite value produced silently nonsensical output).</li>
+<li>
+<strong><code><a href="../reference/trends_plot.html">trends_plot()</a></code></strong> — moved <code>match.arg(summary_fn)</code> to after the data-frame and column checks, so users see a clear <code>data</code> / column error rather than an opaque <code>'arg' should be one of...</code> message when both <code>data</code> and <code>summary_fn</code> are wrong.</li>
+<li>
+<strong><code>validators.R</code></strong> — added two scalar-parameter helpers: <code>.check_scalar_positive()</code> (finite, positive) and <code>.check_scalar_nonneg()</code> (finite, non-negative). <code>cb_validate_params()</code> in <code>covariate-balance.R</code> now delegates all four parameter checks to these helpers, eliminating 28 lines of bespoke validation code.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="architecture-2-0-0-9001">Architecture<a class="anchor" aria-label="anchor" href="#architecture-2-0-0-9001"></a></h3>
+<ul><li>
+<strong><code>.NP_SIM</code> constant list</strong> (<code>nonparametric-curve-plot.R</code>) — lifted the seven simulation tuning constants (<code>eta_intercept</code>, <code>logit_shift</code>, <code>cont_baseline</code>, <code>cont_scale</code>, <code>cont_sigma</code>, <code>eff_frac_prob</code>, <code>eff_frac_cont</code>) from local variables in <code><a href="../reference/sample_nonparametric_curve_data.html">sample_nonparametric_curve_data()</a></code> and from hard-coded defaults in <code>.np_sample_bins()</code> into a single file-level private list. Both functions now reference <code>.NP_SIM$*</code> — change once, updates all simulation paths.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="bug-fixes--api-consistency-2-0-0-9001">Bug fixes / API consistency<a class="anchor" aria-label="anchor" href="#bug-fixes--api-consistency-2-0-0-9001"></a></h3>
+<ul><li>
+<strong>Standardised <code>alpha</code> range to <code>[0, 1]</code></strong> across all plot functions. Previously <code><a href="../reference/survival_curve.html">survival_curve()</a></code>, <code><a href="../reference/covariate_balance.html">covariate_balance()</a></code>, <code><a href="../reference/mirror_histogram.html">mirror_histogram()</a></code>, <code><a href="../reference/spaghetti_plot.html">spaghetti_plot()</a></code>, and <code>goodness_followup_death_plot()</code> / <code>goodness_followup_event_plot()</code> used <code>(0, 1]</code> (rejecting <code>alpha = 0</code>), while <code><a href="../reference/alluvial_plot.html">alluvial_plot()</a></code> used <code>[0, 1]</code>. All functions now accept <code>[0, 1]</code> — <code>alpha = 0</code> (fully transparent) is a valid ggplot2 value and should not be an error.</li>
+<li>
+<strong>Added <code>.check_alpha()</code> shared validator</strong> in <code>R/validators.R</code>. Enforces <code>alpha ∈ [0, 1]</code> with <code>call. = FALSE</code> and is called from every plot function that accepts an <code>alpha</code> argument.</li>
+<li>
+<strong><code>call. = FALSE</code> sweep</strong> — every <code><a href="https://rdrr.io/r/base/stop.html" class="external-link">stop()</a></code> call in the package now includes <code>call. = FALSE</code> so error messages never expose internal function names to callers.</li>
+<li>
+<strong>Expanded shared validators</strong> (<code>R/validators.R</code>) to 11 files (up from 3). All of <code>alluvial-plot.R</code>, <code>covariate-balance.R</code>, <code>eda-plots.R</code>, <code>goodness-followup.R</code>, <code>hazard-plot.R</code>, <code>kaplan-meier.R</code>, <code>longitudinal-counts-plot.R</code>, <code>mirror-histogram.R</code>, <code>nonparametric-curve-plot.R</code>, <code>nonparametric-ordinal-plot.R</code>, <code>spaghetti-plot.R</code>, <code>stacked-histogram.R</code>, <code>trends-plot.R</code>, and <code>upset-plot.R</code> now delegate <code>data.frame</code>, column-presence, numeric-column, and alpha checks to <code>.check_df()</code>, <code>.check_cols()</code>, <code>.check_col()</code>, <code>.check_numeric_col()</code>, and <code>.check_alpha()</code>. Error wording is now consistent across all entry points.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="code-quality-2-0-0-9001">Code quality<a class="anchor" aria-label="anchor" href="#code-quality-2-0-0-9001"></a></h3>
+<ul><li>Named all simulation tuning constants in <code><a href="../reference/sample_nonparametric_curve_data.html">sample_nonparametric_curve_data()</a></code> and the internal helper <code>.np_sample_bins()</code>: <code>eta_intercept</code>, <code>logit_shift</code>, <code>cont_baseline</code>, <code>cont_scale</code>, <code>cont_sigma</code>, <code>eff_frac_prob</code>, <code>eff_frac_cont</code>. Magic numbers replaced throughout single-curve, multi-group, and binned-data-summary code paths.</li>
+<li>Named all simulation tuning constants in <code><a href="../reference/sample_nonparametric_ordinal_data.html">sample_nonparametric_ordinal_data()</a></code> and <code><a href="../reference/sample_nonparametric_ordinal_points.html">sample_nonparametric_ordinal_points()</a></code>: <code>a_first</code>, <code>a_step</code>, <code>eta_intercept</code>. Every occurrence of <code>-0.2</code>, <code>0.5</code>, and <code>1.2</code> replaced by the named constant.</li>
+<li>Extended edge-case test coverage:
+<ul><li>
+<code>test_kaplan_meier.R</code>: added five <code>survival_curve</code> error tests for non-numeric <code>time_col</code>, invalid <code>event_col</code> values (character instead of 0/1/logical), and <code>alpha</code> at 0, &gt; 1, and &lt; 0.</li>
+<li>
+<code>test_hazard_plot.R</code>: added graceful-handling test for an empty data frame (correct columns, zero rows) — confirms ggplot renders without error.</li>
+<li>
+<code>test_mirror_histogram.R</code>: added error test for non-numeric <code>score_col</code>.</li>
+</ul></li>
+</ul></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="2.0.0.9000" id="hvtiplotr-2009000">hvtiPlotR 2.0.0.9000<a class="anchor" aria-label="anchor" href="#hvtiplotr-2009000"></a></h2>
 <ul><li>Added <code><a href="../reference/eda_plot.html">eda_plot()</a></code> — exploratory barplot/scatterplot for a single variable. Auto-detects variable type (<code>"Cont"</code>, <code>"Cat_Num"</code>, <code>"Cat_Char"</code>) and dispatches to scatter + LOESS + rug (continuous) or stacked/filled bar (categorical). <code>NA</code> values are shown as an explicit <code>"(Missing)"</code> fill level. Returns a bare ggplot object for composition with <code>scale_fill_*</code>, <code>scale_colour_*</code>, <code><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs()</a></code>, <code><a href="https://ggplot2.tidyverse.org/reference/annotate.html" class="external-link">annotate()</a></code>, and [hvti_theme()]. Ports <code>Function_DataPlotting()</code> from <code>tp.dp.EDA_barplots_scatterplots.R</code>.</li>

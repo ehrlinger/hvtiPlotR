@@ -104,3 +104,24 @@ object.
 [`hvti_theme_light_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_theme_light_ppt.md),
 [`theme_man()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_theme_manuscript.md),
 [`theme_poster()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_theme_poster.md)
+
+## Examples
+
+``` r
+library(ggplot2)
+p <- ggplot(mtcars, aes(wt, mpg, colour = factor(cyl))) + geom_point()
+
+# Dark PPT theme — large font, white text, black panel
+p + hvti_theme_dark_ppt()
+
+
+# Via alias
+p + theme_ppt()
+
+
+if (FALSE) { # \dontrun{
+# Best viewed against a dark slide background
+p + hvti_theme_dark_ppt() +
+  ggplot2::theme(plot.background = ggplot2::element_rect(fill = "navy"))
+} # }
+```

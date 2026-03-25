@@ -1,0 +1,593 @@
+# Contributing to hvtiPlotR
+
+This guide is for two audiences:
+
+- **Biostatisticians and analysts** who want to port a SAS template to R
+  and add it to this package. Start at [Track A](#track-a).
+- **R package developers** who want to work on testing, CI, or package
+  infrastructure. Start at [Track B](#track-b).
+
+------------------------------------------------------------------------
+
+## Development environment setup
+
+### Prerequisites
+
+- R ≥ 4.1
+- RStudio (recommended) or any R-capable editor
+- Git
+
+### Installing development dependencies
+
+Clone the repository and install all dependencies declared in
+`DESCRIPTION`:
+
+``` r
+# Clone (first time only)
+# git clone https://github.com/ehrlinger/hvtiPlotR.git
+
+# Install devtools if needed
+install.packages("devtools")
+
+# Install all Imports + Suggests from DESCRIPTION
+devtools::install_deps(dependencies = TRUE)
+```
+
+### The development workflow loop
+
+``` r
+# Load the package into the current session without installing
+devtools::load_all()
+
+# Regenerate NAMESPACE and .Rd files from roxygen comments
+devtools::document()
+
+# Run all tests
+devtools::test()
+
+# Full R CMD CHECK (must pass before merging)
+devtools::check()
+
+# Build vignettes only
+devtools::build_vignettes()
+```
+
+[`devtools::load_all()`](https://devtools.r-lib.org/reference/load_all.html)
+re-sources all `R/*.R` files and makes every exported function available
+immediately — much faster than
+[`install.packages()`](https://rdrr.io/r/utils/install.packages.html)
+during development.
+
+------------------------------------------------------------------------
+
+## Track A — Porting a SAS template
+
+This track walks through adding a brand-new plot function by porting an
+existing SAS template. We use a fictional template
+`tp.np.bmi.avrg_curv.binary.sas` as the running example.
+
+### Step 1: Understand the SAS template output
+
+Before writing any R code, identify:
+
+1.  **What datasets does the template produce?** Most `tp.np.*`
+    templates export a `predict` dataset (the fitted curve) and a
+    `means` dataset (binned patient-level summaries). Export these to
+    CSV from SAS to use as your development data.
+
+2.  **What are the SAS column names?** Document the mapping in the
+    roxygen `@description` block. For example:
+
+    | SAS column  | R column   | Meaning               |
+    |-------------|------------|-----------------------|
+    | `iv_bmi`    | `time`     | x-axis variable (BMI) |
+    | `mean_curv` | `estimate` | predicted probability |
+    | `cll_p68`   | `lower`    | 68 % CI lower bound   |
+    | `clu_p68`   | `upper`    | 68 % CI upper bound   |
+
+3.  **Which existing R function is closest?** Check `_pkgdown.yml` and
+    the plot-functions vignette. You may only need to extend an existing
+    function rather than create a new one.
+
+### Step 2: Create the R source file
+
+Create `R/my-curve-plot.R` (use kebab-case for the filename). Every plot
+family lives in its own file — plot functions and their sample-data
+companions together.
+
+``` r
+# File: R/bmi-curve-plot.R
+
+#' Average BMI Curve Plot
+#'
+#' Plots a nonparametric average curve of a binary outcome against BMI
+#' (or any continuous covariate), with an optional confidence ribbon and
+#' binned data summary points. Ports
+#' \code{tp.np.bmi.avrg_curv.binary.sas}.
+#'
+#' **SAS column mapping:**
+#' - `time`     ← `iv_bmi` (BMI on the x-axis)
+#' - `estimate` ← `mean_curv` (predicted probability)
+#' - `lower`    ← `cll_p68`  (68 % CI lower)
+#' - `upper`    ← `clu_p68`  (68 % CI upper)
+#'
+#' @param curve_data  Data frame of fitted curve output (one row per x value).
+#' @param x_col       Name of the x-axis column. Default `"time"`.
+#' @param estimate_col Name of the predicted value column. Default `"estimate"`.
+#' @param lower_col   Name of the lower CI column, or `NULL` for no ribbon.
+#'   Default `NULL`.
+#' @param upper_col   Name of the upper CI column, or `NULL`. Default `NULL`.
+#' @param data_points Optional data frame of binned summary points.
+#'   Must have columns `x_col` and `"value"`. Default `NULL`.
+#' @param line_width  Width of the curve line. Default `1.0`.
+#' @param point_size  Size of data summary points. Default `2.5`.
+#'
+#' @return A bare [ggplot2::ggplot()] object.
+#'
+#' @seealso [nonparametric_curve_plot()], [sample_bmi_curve_data()]
+#'
+#' @references SAS template: \code{tp.np.bmi.avrg_curv.binary.sas}.
+#'
+#' @examples
+#' library(ggplot2)
+#' dat <- sample_bmi_curve_data(n = 500)
+#' bmi_curve_plot(dat, lower_col = "lower", upper_col = "upper") +
+#'   scale_colour_manual(values = c("steelblue"), guide = "none") +
+#'   scale_fill_manual(values   = c("steelblue"), guide = "none") +
+#'   scale_x_continuous(limits = c(18, 45), breaks = seq(20, 45, 5)) +
+#'   scale_y_continuous(limits = c(0, 0.5),
+#'                      labels = scales::percent) +
+#'   labs(x = "BMI (kg/m²)", y = "Prevalence of AF") +
+#'   hvti_theme("manuscript")
+#'
+#' @importFrom ggplot2 ggplot aes geom_line geom_ribbon geom_point
+#' @importFrom rlang .data
+#' @export
+bmi_curve_plot <- function(curve_data,
+                           x_col        = "time",
+                           estimate_col = "estimate",
+                           lower_col    = NULL,
+                           upper_col    = NULL,
+                           data_points  = NULL,
+                           line_width   = 1.0,
+                           point_size   = 2.5) {
+
+  # ----- Input checks -------------------------------------------------------
+  if (!is.data.frame(curve_data))
+    stop("`curve_data` must be a data frame.")
+  for (col in c(x_col, estimate_col)) {
+    if (!(col %in% names(curve_data)))
+      stop(sprintf("Column '%s' not found in `curve_data`.", col))
+  }
+
+  # ----- Build base plot ----------------------------------------------------
+  p <- ggplot2::ggplot(
+    curve_data,
+    ggplot2::aes(x = .data[[x_col]], y = .data[[estimate_col]])
+  )
+
+  # Optional CI ribbon
+  if (!is.null(lower_col) && !is.null(upper_col)) {
+    p <- p + ggplot2::geom_ribbon(
+      ggplot2::aes(ymin = .data[[lower_col]], ymax = .data[[upper_col]],
+                   fill = "1"),
+      alpha = 0.2
+    )
+  }
+
+  # Main curve
+  p <- p + ggplot2::geom_line(
+    ggplot2::aes(colour = "1"),
+    linewidth = line_width
+  )
+
+  # Optional data summary points
+  if (!is.null(data_points)) {
+    p <- p + ggplot2::geom_point(
+      data = data_points,
+      ggplot2::aes(x = .data[[x_col]], y = .data[["value"]],
+                   colour = "1", shape = "1"),
+      size = point_size
+    )
+  }
+
+  p
+}
+```
+
+Key rules enforced here:
+
+- **Column names are strings**, passed via `x_col =`, `estimate_col =`,
+  etc. Never use
+  [`enquo()`](https://rlang.r-lib.org/reference/enquo.html) or
+  [`{ }`](https://rdrr.io/r/base/Paren.html) — it makes column names
+  opaque to the caller.
+- **No colours or themes** are applied inside the function. The caller
+  adds `scale_colour_*()` and
+  [`hvti_theme()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_theme.md)
+  outside.
+- **`.data[[col]]`** is used for tidy evaluation instead of bare
+  variable names. This requires `@importFrom rlang .data`.
+- The function returns **`p`**, not `print(p)` or `p + theme(...)`.
+
+### Step 3: Add a sample-data generator
+
+Add `sample_bmi_curve_data()` to the same file. The generator should:
+
+- Accept `n` (patient count), `time_max` / range, and `seed`.
+- Return a data frame whose column names **match the R defaults**
+  (`time`, `estimate`, `lower`, `upper`) — not the SAS column names.
+- Produce realistic-looking data at a plausible scale.
+
+``` r
+#' Sample BMI Curve Data
+#'
+#' Simulates the fitted curve output from a nonparametric BMI analysis,
+#' matching the column layout expected by [bmi_curve_plot()].
+#'
+#' @param n       Number of simulated patients (controls CI width).
+#'   Default `500`.
+#' @param bmi_min Lower end of the BMI range. Default `18`.
+#' @param bmi_max Upper end of the BMI range. Default `50`.
+#' @param n_points Number of points on the prediction grid. Default `200`.
+#' @param seed    Random seed. Default `42`.
+#'
+#' @return A data frame with columns `time` (BMI grid), `estimate`,
+#'   `lower`, `upper`.
+#'
+#' @seealso [bmi_curve_plot()]
+#'
+#' @examples
+#' dat <- sample_bmi_curve_data(n = 300)
+#' head(dat)
+#' range(dat$time)     # BMI range
+#' range(dat$estimate) # probability range, 0-1
+#'
+#' @importFrom stats plogis runif qnorm
+#' @export
+sample_bmi_curve_data <- function(n       = 500,
+                                  bmi_min = 18,
+                                  bmi_max = 50,
+                                  n_points = 200,
+                                  seed    = 42L) {
+  set.seed(seed)
+  z    <- stats::qnorm(0.84)   # 68 % CI ≈ 1 SD
+  bmi  <- seq(bmi_min, bmi_max, length.out = n_points)
+  eta  <- -2 + 0.05 * (bmi - 30)   # logistic link
+  est  <- stats::plogis(eta)
+  se   <- sqrt(est * (1 - est) / (n * 0.02))
+
+  data.frame(
+    time     = bmi,
+    estimate = est,
+    lower    = pmax(est - z * se, 0),
+    upper    = pmin(est + z * se, 1)
+  )
+}
+```
+
+### Step 4: Write roxygen documentation
+
+The documentation block must include all of the following:
+
+| Tag            | Required | Notes                                                    |
+|----------------|----------|----------------------------------------------------------|
+| `@description` | Yes      | One paragraph; mention the SAS template name             |
+| `@param`       | Yes      | One per argument; include default in description         |
+| `@return`      | Yes      | Describe the ggplot or data frame structure              |
+| `@seealso`     | Yes      | Link to the companion `sample_*()` and related functions |
+| `@references`  | Yes      | The exact SAS template filename(s)                       |
+| `@examples`    | Yes      | Must be runnable (use `\dontrun{}` only for file I/O)    |
+| `@importFrom`  | Yes      | Declare every function used from other packages          |
+| `@export`      | Yes      | Must be present for the function to be accessible        |
+
+Run
+[`devtools::document()`](https://devtools.r-lib.org/reference/document.html)
+after editing to check for parse errors.
+
+### Step 5: Register in `_pkgdown.yml`
+
+Add the new functions to the appropriate section in `_pkgdown.yml`. If
+no existing section fits, add a new one:
+
+``` yaml
+- title: "Nonparametric Covariate Curves"
+  desc: >
+    Average curves plotted against a continuous covariate (BMI, age, etc.)
+    rather than against time.
+  contents:
+  - bmi_curve_plot
+  - sample_bmi_curve_data
+```
+
+### Step 6: Add a worked example to the plot-functions vignette
+
+Open `vignettes/plot-functions.qmd` and add a new top-level section
+before the “Draft Footnotes” section:
+
+```` markdown
+# BMI Curve Plot
+
+`bmi_curve_plot()` plots a fitted nonparametric average curve of a binary
+outcome against BMI ...
+
+
+::: {.cell}
+
+```{.r .cell-code}
+library(ggplot2)
+dat <- sample_bmi_curve_data(n = 500)
+bmi_curve_plot(dat, lower_col = "lower", upper_col = "upper") + ...
+```
+:::
+````
+
+### Step 7: Add a row to the SAS migration guide
+
+In `vignettes/sas-migration-guide.qmd`, add a row to the lookup table at
+the top:
+
+``` markdown
+| `tp.np.bmi.avrg_curv.binary.sas` | np | `bmi_curve_plot()` | [BMI curve](#np-bmi) |
+```
+
+Then add the corresponding section with a runnable example further down
+in the `# Nonparametric temporal trends` family.
+
+### Step 8: Write tests
+
+Create `tests/testthat/test_bmi_curve_plot.R`:
+
+``` r
+library(testthat)
+library(ggplot2)
+
+test_that("sample_bmi_curve_data returns a data frame with required columns", {
+  dat <- sample_bmi_curve_data(n = 100, seed = 1)
+  expect_true(is.data.frame(dat))
+  expect_true(all(c("time", "estimate", "lower", "upper") %in% names(dat)))
+})
+
+test_that("sample_bmi_curve_data respects n_points", {
+  dat <- sample_bmi_curve_data(n_points = 50, seed = 1)
+  expect_equal(nrow(dat), 50)
+})
+
+test_that("bmi_curve_plot returns a ggplot", {
+  dat <- sample_bmi_curve_data(n = 100, seed = 1)
+  p   <- bmi_curve_plot(dat)
+  expect_s3_class(p, "ggplot")
+})
+
+test_that("bmi_curve_plot adds ribbon when CI columns are supplied", {
+  dat    <- sample_bmi_curve_data(n = 100, seed = 1)
+  p_ci   <- bmi_curve_plot(dat, lower_col = "lower", upper_col = "upper")
+  layers <- sapply(p_ci$layers, function(l) class(l$geom)[1])
+  expect_true("GeomRibbon" %in% layers)
+})
+
+test_that("bmi_curve_plot errors on missing column", {
+  dat <- sample_bmi_curve_data(n = 100)
+  expect_error(bmi_curve_plot(dat, x_col = "no_such_col"))
+})
+```
+
+Run with `devtools::test(filter = "bmi")`.
+
+### Step 9: Update NEWS.md
+
+Add a bullet to the current dev version at the top of `NEWS.md`:
+
+``` markdown
+* Added `bmi_curve_plot()` and `sample_bmi_curve_data()` — nonparametric
+  average curve of a binary outcome against a continuous covariate (BMI).
+  Ports `tp.np.bmi.avrg_curv.binary.sas`.
+```
+
+### Step 10: Final checklist before opening a PR
+
+``` r
+devtools::document()   # regenerate NAMESPACE + .Rd — must complete without errors
+devtools::test()       # all tests pass
+devtools::check()      # 0 errors, 0 warnings, 0 notes (ideally)
+```
+
+Then open a pull request against `main` on GitHub.
+
+------------------------------------------------------------------------
+
+## Track B — Package infrastructure
+
+### Package structure overview
+
+    hvtiPlotR/
+    ├── R/                    # Source: one file per plot family
+    ├── man/                  # Auto-generated .Rd files — do not edit manually
+    ├── tests/
+    │   └── testthat/         # One test_*.R per source file
+    ├── vignettes/            # Quarto (.qmd) vignettes
+    ├── inst/                 # Bundled files (ClevelandClinic.pptx, extdata/)
+    ├── DESCRIPTION           # Package metadata and dependency declarations
+    ├── NAMESPACE             # Auto-generated — do not edit manually
+    ├── _pkgdown.yml          # Website reference and articles layout
+    └── NEWS.md               # User-visible changelog
+
+`NAMESPACE` and `man/*.Rd` are both auto-generated by
+[`devtools::document()`](https://devtools.r-lib.org/reference/document.html)
+from the roxygen comments in `R/*.R`. **Never edit these files by
+hand.**
+
+### Adding a dependency
+
+- **Runtime dependency** (used inside a plot function): add to `Imports`
+  in `DESCRIPTION` and declare with `@importFrom pkg fn` in the roxygen
+  block.
+- **Vignette/test only**: add to `Suggests`. Wrap any code that uses it
+  in `if (requireNamespace("pkg", quietly = TRUE)) { ... }` or use
+  `#| eval: false` in the vignette chunk.
+
+``` r
+# Check before adding — is it already available in base R or an existing Import?
+# Keep Imports lean; every new dependency adds installation weight.
+```
+
+### Code style and conventions
+
+#### File and function naming
+
+| Item              | Convention       | Example                   |
+|-------------------|------------------|---------------------------|
+| Source files      | `kebab-case.R`   | `bmi-curve-plot.R`        |
+| Plot functions    | `snake_case()`   | `bmi_curve_plot()`        |
+| Sample generators | `sample_` prefix | `sample_bmi_curve_data()` |
+| Internal helpers  | `.` prefix       | `.bmi_compute_ci()`       |
+
+Internal helpers (prefixed with `.`) should have `@keywords internal`
+and **no** `@export` — they will not appear in `NAMESPACE` or generate
+`.Rd` files.
+
+#### The bare-ggplot pattern
+
+Every plot function must:
+
+1.  Accept model-output data frames (not raw patient data).
+2.  Map all column references through string arguments (`x_col =`,
+    etc.).
+3.  Use `.data[[col]]` for tidy evaluation inside
+    [`aes()`](https://ggplot2.tidyverse.org/reference/aes.html).
+4.  Return an unstyled ggplot — no `scale_*()`, no
+    [`labs()`](https://ggplot2.tidyverse.org/reference/labs.html), no
+    theme.
+5.  Not call [`print()`](https://rdrr.io/r/base/print.html) or
+    [`invisible()`](https://rdrr.io/r/base/invisible.html).
+
+This pattern lets callers layer on their own choices and enables the `+`
+composition grammar documented in `vignettes/plot-decorators.qmd`.
+
+#### Tidy evaluation
+
+``` r
+# Correct — column name is a string; .data masks the data frame
+ggplot2::aes(x = .data[[x_col]], y = .data[[estimate_col]])
+
+# Wrong — bare symbol; fails when x_col is a variable
+ggplot2::aes(x = x_col, y = estimate_col)
+
+# Wrong — enquo; column name is opaque to the caller
+ggplot2::aes(x = !!rlang::enquo(x_col))
+```
+
+Always declare `.data` in the roxygen block:
+
+``` r
+#' @importFrom rlang .data
+```
+
+### Testing
+
+#### Test file layout
+
+Each source file `R/my-plot.R` should have a corresponding
+`tests/testthat/test_my_plot.R`. The minimum set of tests for a new plot
+function:
+
+| Test               | What to check                                         |
+|--------------------|-------------------------------------------------------|
+| Sample data shape  | Correct class, column names, and number of rows       |
+| Sample data types  | Numeric / logical / factor columns are the right type |
+| Plot return class  | `expect_s3_class(p, "ggplot")`                        |
+| Layer presence     | CI ribbon added when `lower_col` is provided          |
+| Error on bad input | `expect_error(fn(dat, x_col = "no_such_col"))`        |
+
+#### Snapshot tests
+
+The `tests/testthat/_snaps/` directory stores snapshot outputs for
+[`expect_snapshot()`](https://testthat.r-lib.org/reference/expect_snapshot.html)
+tests. To update snapshots after an intentional change:
+
+``` r
+testthat::snapshot_review()   # review diffs interactively
+testthat::snapshot_accept()   # accept all pending diffs
+```
+
+#### Running checks
+
+``` r
+devtools::test()               # run all tests
+devtools::test(filter = "bmi") # run tests matching "bmi"
+devtools::check()              # full R CMD CHECK
+rcmdcheck::rcmdcheck(          # more detailed output
+  args = "--no-manual",
+  error_on = "warning"
+)
+```
+
+#### What R CMD CHECK validates
+
+- All examples in `@examples` blocks run without error.
+- All exported functions have documentation.
+- `NAMESPACE` matches the actual exports.
+- No undefined global variables (lintr / `R CMD CHECK` NOTE).
+- Vignette chunks marked `eval: true` run successfully.
+
+### Vignette conventions
+
+Vignettes live in `vignettes/` as `.qmd` files and are built with Quarto
+(`VignetteBuilder: quarto`). Rules:
+
+- All code chunks that read files, write files, or access a network must
+  have `#| eval: false`.
+- Use [`here::here()`](https://here.r-lib.org/reference/here.html) for
+  file paths in eval-false chunks (not hard-coded absolute paths).
+- Use `system.file("ClevelandClinic.pptx", package = "hvtiPlotR")` for
+  the bundled PPT template — never a hard-coded path.
+- After adding a new vignette, register it in `_pkgdown.yml` under
+  `articles`.
+
+### Releasing a new version
+
+1.  Update the version in `DESCRIPTION` (follow [semantic
+    versioning](https://semver.org/): `MAJOR.MINOR.PATCH`).
+2.  Move the dev entries in `NEWS.md` to a new `# hvtiPlotR X.Y.Z`
+    heading.
+3.  Run
+    [`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+    — zero errors and zero warnings required.
+4.  Tag the release commit: `git tag -a vX.Y.Z -m "Release X.Y.Z"`.
+5.  Push the tag: `git push origin vX.Y.Z`.
+6.  The pkgdown GitHub Action rebuilds the documentation site
+    automatically.
+
+------------------------------------------------------------------------
+
+## Session info
+
+``` r
+sessionInfo()
+```
+
+    R version 4.5.3 (2026-03-11)
+    Platform: x86_64-pc-linux-gnu
+    Running under: Ubuntu 24.04.3 LTS
+
+    Matrix products: default
+    BLAS:   /usr/lib/x86_64-linux-gnu/openblas-pthread/libblas.so.3
+    LAPACK: /usr/lib/x86_64-linux-gnu/openblas-pthread/libopenblasp-r0.3.26.so;  LAPACK version 3.12.0
+
+    locale:
+     [1] LC_CTYPE=C.UTF-8       LC_NUMERIC=C           LC_TIME=C.UTF-8
+     [4] LC_COLLATE=C.UTF-8     LC_MONETARY=C.UTF-8    LC_MESSAGES=C.UTF-8
+     [7] LC_PAPER=C.UTF-8       LC_NAME=C              LC_ADDRESS=C
+    [10] LC_TELEPHONE=C         LC_MEASUREMENT=C.UTF-8 LC_IDENTIFICATION=C
+
+    time zone: UTC
+    tzcode source: system (glibc)
+
+    attached base packages:
+    [1] stats     graphics  grDevices utils     datasets  methods   base
+
+    loaded via a namespace (and not attached):
+     [1] compiler_4.5.3  fastmap_1.2.0   cli_3.6.5       tools_4.5.3
+     [5] htmltools_0.5.9 otel_0.2.0      yaml_2.3.12     rmarkdown_2.30
+     [9] knitr_1.51      jsonlite_2.0.0  xfun_0.57       digest_0.6.39
+    [13] rlang_1.1.7     evaluate_1.0.5 

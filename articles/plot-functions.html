@@ -24,7 +24,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">hvtiPlotR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.0.9001</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.0.9002</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -64,7 +64,7 @@
       <h1>hvtiPlotR Plot Functions</h1>
 
       <p class="author">John Ehrlinger <a href="mailto:ehrlinj@ccf.org" class="email">ehrlinj@ccf.org</a></p>
-      <p class="date">2026-03-19</p>
+      <p class="date">2026-03-25</p>
 
       <small class="dont-index">Source: <a href="https://github.com/ehrlinger/hvtiPlotR/blob/main/vignettes/plot-functions.qmd" class="external-link"><code>vignettes/plot-functions.qmd</code></a></small>
       <div class="d-none name"><code></code></div>
@@ -91,7 +91,7 @@
 <p>Each hvtiPlotR plot function returns a bare ggplot object with no colour scales, axis labels, or theme applied. The caller composes those with the usual + operator. See the companion vignette “Decorating and Saving hvtiPlotR Plots” for full coverage of scale_, labs(), annotate(), themes, and ggsave() patterns.</p>
 <section class="section level2"><h2 id="template-reference-map">Template Reference Map<a class="anchor" aria-label="anchor" href="#template-reference-map"></a>
 </h2>
-<p>The table below maps each hvtiPlotR function to the original SAS and R templates it ports. Functions marked with — have no direct predecessor and were designed specifically for this package.</p>
+<p>The table below maps each hvtiPlotR function to the original SAS and R templates it ports. Functions marked with — have no direct predecessor and were designed specifically for this package. All functions have worked examples in the sections below.</p>
 <table class="table caption-top">
 <colgroup>
 <col style="width: 28%">
@@ -777,7 +777,7 @@ Age.After match                    Age  After match      3.5</code></pre>
 <span>  <span class="fu"><a href="../reference/hvti_theme.html">hvti_theme</a></span><span class="op">(</span><span class="st">"manuscript"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave</a></span><span class="op">(</span></span>
-<span>  filename <span class="op">=</span> <span class="fu">here</span><span class="fu">::</span><span class="fu">here</span><span class="op">(</span><span class="st">"graphs"</span>, <span class="st">"lp_cov-balance-SAVR_TF-TAVR.pdf"</span><span class="op">)</span>,</span>
+<span>  filename <span class="op">=</span> <span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org/reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="st">"graphs"</span>, <span class="st">"lp_cov-balance-SAVR_TF-TAVR.pdf"</span><span class="op">)</span>,</span>
 <span>  plot     <span class="op">=</span> <span class="va">cb_final</span>,</span>
 <span>  height   <span class="op">=</span> <span class="fl">7</span>,</span>
 <span>  width    <span class="op">=</span> <span class="fl">8</span></span>
@@ -2240,7 +2240,7 @@ Age.After match                    Age  After match      3.5</code></pre>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Year"</span>, y <span class="op">=</span> <span class="st">"Outcome (%)"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/hvti_theme.html">hvti_theme</a></span><span class="op">(</span><span class="st">"manuscript"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave</a></span><span class="op">(</span><span class="fu">here</span><span class="fu">::</span><span class="fu">here</span><span class="op">(</span><span class="st">"graphs"</span>, <span class="st">"rp.trends.pdf"</span><span class="op">)</span>, <span class="va">p_tr</span>, width <span class="op">=</span> <span class="fl">11.5</span>, height <span class="op">=</span> <span class="fl">8</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave</a></span><span class="op">(</span><span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org/reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="st">"graphs"</span>, <span class="st">"rp.trends.pdf"</span><span class="op">)</span>, <span class="va">p_tr</span>, width <span class="op">=</span> <span class="fl">11.5</span>, height <span class="op">=</span> <span class="fl">8</span><span class="op">)</span></span></code></pre></div>
 </div>
 </section></section><section class="section level2"><h2 id="spaghetti-profile-plot">Spaghetti / Profile Plot<a class="anchor" aria-label="anchor" href="#spaghetti-profile-plot"></a>
 </h2>
@@ -2436,8 +2436,466 @@ Age.After match                    Age  After match      3.5</code></pre>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Years"</span>, y <span class="op">=</span> <span class="st">"AV Mean Gradient (mmHg)"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/hvti_theme.html">hvti_theme</a></span><span class="op">(</span><span class="st">"manuscript"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave</a></span><span class="op">(</span><span class="fu">here</span><span class="fu">::</span><span class="fu">here</span><span class="op">(</span><span class="st">"graphs"</span>, <span class="st">"mp.amngrd_profile.pdf"</span><span class="op">)</span>,</span>
+<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave</a></span><span class="op">(</span><span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org/reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="st">"graphs"</span>, <span class="st">"mp.amngrd_profile.pdf"</span><span class="op">)</span>,</span>
 <span>       <span class="va">p_sp</span>, width <span class="op">=</span> <span class="fl">11</span>, height <span class="op">=</span> <span class="fl">8.5</span><span class="op">)</span></span></code></pre></div>
+</div>
+</section></section><section class="section level2"><h2 id="nonparametric-temporal-trend-curve">Nonparametric Temporal Trend Curve<a class="anchor" aria-label="anchor" href="#nonparametric-temporal-trend-curve"></a>
+</h2>
+<p><code><a href="../reference/nonparametric_curve_plot.html">nonparametric_curve_plot()</a></code> visualises pre-computed average curves from a two-phase nonparametric temporal trend model — the R equivalent of the SAS <code>tp.np.*.avrg_curv.*</code> and <code>tp.np.*.u.trend.*</code> template family.</p>
+<p>The function accepts the SAS <code>mean_curv</code> / <code>boots_ci</code> datasets exported to CSV and read in with <code><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv()</a></code>. It returns a bare ggplot object for composition with <code>scale_colour_*</code>, <code><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs()</a></code>, and <code><a href="../reference/hvti_theme.html">hvti_theme()</a></code>.</p>
+<section class="level2"><h3 id="sample-data-11">Sample data<a class="anchor" aria-label="anchor" href="#sample-data-11"></a>
+</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb125"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">curve_dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sample_nonparametric_curve_data.html">sample_nonparametric_curve_data</a></span><span class="op">(</span></span>
+<span>  n            <span class="op">=</span> <span class="fl">500</span>,</span>
+<span>  time_max     <span class="op">=</span> <span class="fl">12</span>,</span>
+<span>  outcome_type <span class="op">=</span> <span class="st">"probability"</span>,</span>
+<span>  ci_level     <span class="op">=</span> <span class="fl">0.68</span>       <span class="co"># 68 % CI — one SE, matching SAS cll_p68/clu_p68</span></span>
+<span><span class="op">)</span></span>
+<span><span class="va">pts_dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sample_nonparametric_curve_points.html">sample_nonparametric_curve_points</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">500</span>, time_max <span class="op">=</span> <span class="fl">12</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">curve_dat</span><span class="op">)</span></span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>        time  estimate     lower     upper
+1 0.05000000 0.2395042 0.2148392 0.2660414
+2 0.05055219 0.2395916 0.2149201 0.2661351
+3 0.05111048 0.2396798 0.2150019 0.2662297
+4 0.05167493 0.2397690 0.2150845 0.2663253
+5 0.05224562 0.2398592 0.2151680 0.2664220
+6 0.05282261 0.2399503 0.2152524 0.2665196</code></pre>
+</div>
+</div>
+</section><section class="level2"><h3 id="single-average-curve-with-68-ci-ribbon">Single average curve with 68 % CI ribbon<a class="anchor" aria-label="anchor" href="#single-average-curve-with-68-ci-ribbon"></a>
+</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb127"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/nonparametric_curve_plot.html">nonparametric_curve_plot</a></span><span class="op">(</span></span>
+<span>  curve_data  <span class="op">=</span> <span class="va">curve_dat</span>,</span>
+<span>  lower_col   <span class="op">=</span> <span class="st">"lower"</span>,</span>
+<span>  upper_col   <span class="op">=</span> <span class="st">"upper"</span>,</span>
+<span>  data_points <span class="op">=</span> <span class="va">pts_dat</span></span>
+<span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_colour_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"steelblue"</span><span class="op">)</span>, guide <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_fill_manual</a></span><span class="op">(</span>values   <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"steelblue"</span><span class="op">)</span>, guide <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_x_continuous</a></span><span class="op">(</span></span>
+<span>    limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">12</span><span class="op">)</span>,</span>
+<span>    breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">12</span>, <span class="fl">2</span><span class="op">)</span>,</span>
+<span>    labels <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="va">x</span>, <span class="st">"yr"</span><span class="op">)</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous</a></span><span class="op">(</span></span>
+<span>    limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span>,</span>
+<span>    breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">0.2</span><span class="op">)</span>,</span>
+<span>    labels <span class="op">=</span> <span class="fu">scales</span><span class="fu">::</span><span class="va"><a href="https://scales.r-lib.org/reference/percent_format.html" class="external-link">percent</a></span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Follow-up (years)"</span>, y <span class="op">=</span> <span class="st">"Prevalence (%)"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/hvti_theme.html">hvti_theme</a></span><span class="op">(</span><span class="st">"manuscript"</span><span class="op">)</span></span></code></pre></div>
+<div class="cell-output-display">
+<div>
+<figure><p><img src="plot-functions_files/figure-html/np_curve_single-1.png" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The shaded ribbon shows the 68 % bootstrap CI (one standard error), matching <code>cll_p68</code>/<code>clu_p68</code> in the SAS template. Switch to <code>ci_level = 0.95</code> in <code><a href="../reference/sample_nonparametric_curve_data.html">sample_nonparametric_curve_data()</a></code> for 95 % CI bands.</p>
+</section><section class="level2"><h3 id="two-group-comparison-analogous-to-tp-np-avpkgrad_ozak_ind_mtwt-sas">Two-group comparison (analogous to tp.np.avpkgrad_ozak_ind_mtwt.sas)<a class="anchor" aria-label="anchor" href="#two-group-comparison-analogous-to-tp-np-avpkgrad_ozak_ind_mtwt-sas"></a>
+</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb128"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">curve_grp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sample_nonparametric_curve_data.html">sample_nonparametric_curve_data</a></span><span class="op">(</span></span>
+<span>  n      <span class="op">=</span> <span class="fl">400</span>,</span>
+<span>  time_max <span class="op">=</span> <span class="fl">7</span>,</span>
+<span>  groups   <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Ozaki"</span> <span class="op">=</span> <span class="fl">0.7</span>, <span class="st">"CE-Pericardial"</span> <span class="op">=</span> <span class="fl">1.3</span><span class="op">)</span>,</span>
+<span>  outcome_type <span class="op">=</span> <span class="st">"continuous"</span>,</span>
+<span>  ci_level <span class="op">=</span> <span class="fl">0.68</span></span>
+<span><span class="op">)</span></span>
+<span><span class="va">pts_grp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sample_nonparametric_curve_points.html">sample_nonparametric_curve_points</a></span><span class="op">(</span></span>
+<span>  n <span class="op">=</span> <span class="fl">400</span>, time_max <span class="op">=</span> <span class="fl">7</span>,</span>
+<span>  groups <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Ozaki"</span> <span class="op">=</span> <span class="fl">0.7</span>, <span class="st">"CE-Pericardial"</span> <span class="op">=</span> <span class="fl">1.3</span><span class="op">)</span>,</span>
+<span>  outcome_type <span class="op">=</span> <span class="st">"continuous"</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="../reference/nonparametric_curve_plot.html">nonparametric_curve_plot</a></span><span class="op">(</span></span>
+<span>  curve_data  <span class="op">=</span> <span class="va">curve_grp</span>,</span>
+<span>  group_col   <span class="op">=</span> <span class="st">"group"</span>,</span>
+<span>  lower_col   <span class="op">=</span> <span class="st">"lower"</span>,</span>
+<span>  upper_col   <span class="op">=</span> <span class="st">"upper"</span>,</span>
+<span>  data_points <span class="op">=</span> <span class="va">pts_grp</span></span>
+<span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_colour_manual</a></span><span class="op">(</span></span>
+<span>    values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Ozaki"</span> <span class="op">=</span> <span class="st">"steelblue"</span>, <span class="st">"CE-Pericardial"</span> <span class="op">=</span> <span class="st">"firebrick"</span><span class="op">)</span>,</span>
+<span>    name   <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_fill_manual</a></span><span class="op">(</span></span>
+<span>    values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Ozaki"</span> <span class="op">=</span> <span class="st">"steelblue"</span>, <span class="st">"CE-Pericardial"</span> <span class="op">=</span> <span class="st">"firebrick"</span><span class="op">)</span>,</span>
+<span>    guide  <span class="op">=</span> <span class="st">"none"</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_x_continuous</a></span><span class="op">(</span>limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">7</span><span class="op">)</span>, breaks <span class="op">=</span> <span class="fl">0</span><span class="op">:</span><span class="fl">7</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span></span>
+<span>    x <span class="op">=</span> <span class="st">"Follow-up (years)"</span>,</span>
+<span>    y <span class="op">=</span> <span class="st">"AV Peak Gradient (mmHg)"</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/hvti_theme.html">hvti_theme</a></span><span class="op">(</span><span class="st">"manuscript"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>legend.position <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.15</span>, <span class="fl">0.85</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<div class="cell-output-display">
+<div>
+<figure><p><img src="plot-functions_files/figure-html/np_curve_groups-1.png" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section><section class="level2"><h3 id="saving-9">Saving<a class="anchor" aria-label="anchor" href="#saving-9"></a>
+</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb129"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">p_np</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nonparametric_curve_plot.html">nonparametric_curve_plot</a></span><span class="op">(</span><span class="va">curve_dat</span>, lower_col <span class="op">=</span> <span class="st">"lower"</span>, upper_col <span class="op">=</span> <span class="st">"upper"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Follow-up (years)"</span>, y <span class="op">=</span> <span class="st">"Prevalence (%)"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/hvti_theme.html">hvti_theme</a></span><span class="op">(</span><span class="st">"manuscript"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Manuscript PDF</span></span>
+<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave</a></span><span class="op">(</span><span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org/reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="st">"graphs"</span>, <span class="st">"np_afib_prevalence.pdf"</span><span class="op">)</span>,</span>
+<span>       <span class="va">p_np</span>, width <span class="op">=</span> <span class="fl">11</span>, height <span class="op">=</span> <span class="fl">8.5</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Editable PowerPoint</span></span>
+<span><span class="fu"><a href="../reference/save_ppt.html">save_ppt</a></span><span class="op">(</span><span class="va">p_np</span>,</span>
+<span>         template   <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"ClevelandClinic.pptx"</span>, package <span class="op">=</span> <span class="st">"hvtiPlotR"</span><span class="op">)</span>,</span>
+<span>         powerpoint <span class="op">=</span> <span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org/reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="st">"graphs"</span>, <span class="st">"np_afib_prevalence.pptx"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+</div>
+</section></section><section class="section level2"><h2 id="nonparametric-ordinal-outcome-curve">Nonparametric Ordinal Outcome Curve<a class="anchor" aria-label="anchor" href="#nonparametric-ordinal-outcome-curve"></a>
+</h2>
+<p><code><a href="../reference/nonparametric_ordinal_plot.html">nonparametric_ordinal_plot()</a></code> plots pre-computed grade-specific probability curves from a cumulative proportional-odds model — the R equivalent of <code>tp.np.*.ordinal.*</code> SAS templates (e.g. TR grade prevalence, AR severity).</p>
+<p>The SAS <code>predict</code> dataset stores one column per grade (<code>p0</code>, <code>p1</code>, <code>p2</code>, <code>p3</code>). Before calling this function, reshape it from wide to long format:</p>
+<div class="sourceCode" id="cb130"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyr.tidyverse.org" class="external-link">tidyr</a></span><span class="op">)</span></span>
+<span><span class="va">long</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html" class="external-link">pivot_longer</a></span><span class="op">(</span></span>
+<span>  <span class="va">predict_wide</span>,</span>
+<span>  cols      <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">p0</span>, <span class="va">p1</span>, <span class="va">p2</span>, <span class="va">p3</span><span class="op">)</span>,</span>
+<span>  names_to  <span class="op">=</span> <span class="st">"grade"</span>,</span>
+<span>  values_to <span class="op">=</span> <span class="st">"estimate"</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<section class="level2"><h3 id="sample-data-12">Sample data<a class="anchor" aria-label="anchor" href="#sample-data-12"></a>
+</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb131"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">ord_dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sample_nonparametric_ordinal_data.html">sample_nonparametric_ordinal_data</a></span><span class="op">(</span></span>
+<span>  n            <span class="op">=</span> <span class="fl">800</span>,</span>
+<span>  time_max     <span class="op">=</span> <span class="fl">5</span>,</span>
+<span>  grade_labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"None"</span>, <span class="st">"Mild"</span>, <span class="st">"Moderate"</span>, <span class="st">"Severe"</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span><span class="va">ord_pts</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sample_nonparametric_ordinal_points.html">sample_nonparametric_ordinal_points</a></span><span class="op">(</span></span>
+<span>  n            <span class="op">=</span> <span class="fl">800</span>,</span>
+<span>  time_max     <span class="op">=</span> <span class="fl">5</span>,</span>
+<span>  grade_labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"None"</span>, <span class="st">"Mild"</span>, <span class="st">"Moderate"</span>, <span class="st">"Severe"</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">ord_dat</span><span class="op">)</span></span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>        time  estimate grade
+1 0.01000000 0.6276258  None
+2 0.01012532 0.6276898  None
+3 0.01025221 0.6277545  None
+4 0.01038069 0.6278200  None
+5 0.01051078 0.6278864  None
+6 0.01064250 0.6279535  None</code></pre>
+</div>
+</div>
+</section><section class="level2"><h3 id="grade-probability-curves-with-data-summary-points">Grade probability curves with data summary points<a class="anchor" aria-label="anchor" href="#grade-probability-curves-with-data-summary-points"></a>
+</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb133"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/nonparametric_ordinal_plot.html">nonparametric_ordinal_plot</a></span><span class="op">(</span></span>
+<span>  curve_data  <span class="op">=</span> <span class="va">ord_dat</span>,</span>
+<span>  data_points <span class="op">=</span> <span class="va">ord_pts</span></span>
+<span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_colour_manual</a></span><span class="op">(</span></span>
+<span>    values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<span>      <span class="st">"None"</span>     <span class="op">=</span> <span class="st">"grey40"</span>,</span>
+<span>      <span class="st">"Mild"</span>     <span class="op">=</span> <span class="st">"steelblue"</span>,</span>
+<span>      <span class="st">"Moderate"</span> <span class="op">=</span> <span class="st">"darkorange"</span>,</span>
+<span>      <span class="st">"Severe"</span>   <span class="op">=</span> <span class="st">"firebrick"</span></span>
+<span>    <span class="op">)</span>,</span>
+<span>    name <span class="op">=</span> <span class="st">"AR Grade"</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_x_continuous</a></span><span class="op">(</span>limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">5</span><span class="op">)</span>, breaks <span class="op">=</span> <span class="fl">0</span><span class="op">:</span><span class="fl">5</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous</a></span><span class="op">(</span></span>
+<span>    limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span>,</span>
+<span>    breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">0.2</span><span class="op">)</span>,</span>
+<span>    labels <span class="op">=</span> <span class="fu">scales</span><span class="fu">::</span><span class="va"><a href="https://scales.r-lib.org/reference/percent_format.html" class="external-link">percent</a></span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span></span>
+<span>    x <span class="op">=</span> <span class="st">"Follow-up (years)"</span>,</span>
+<span>    y <span class="op">=</span> <span class="st">"Grade prevalence (%)"</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/hvti_theme.html">hvti_theme</a></span><span class="op">(</span><span class="st">"manuscript"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>legend.position <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.75</span>, <span class="fl">0.6</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<div class="cell-output-display">
+<div>
+<figure><p><img src="plot-functions_files/figure-html/np_ordinal_basic-1.png" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Each line is one grade level. Points show binned data summary values (analogous to the SAS <code>means</code> dataset with <code>smntr0</code>–<code>smntr3</code> columns).</p>
+</section><section class="level2"><h3 id="combined-mild-moderate-p34-p3-p4-pattern">Combined mild + moderate (p34 = p3 + p4 pattern)<a class="anchor" aria-label="anchor" href="#combined-mild-moderate-p34-p3-p4-pattern"></a>
+</h3>
+<p>For analyses that collapse higher grades (e.g. Moderate + Severe combined), subset and re-label before plotting:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb134"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">ord_collapsed</span> <span class="op">&lt;-</span> <span class="va">ord_dat</span></span>
+<span><span class="co"># Merge Moderate and Severe into one level</span></span>
+<span><span class="va">ord_collapsed</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">ord_collapsed</span>, <span class="va">grade</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"None"</span>, <span class="st">"Mild"</span>, <span class="st">"Moderate/Severe"</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># If your data has Moderate and Severe as separate rows, combine with:</span></span>
+<span><span class="co"># library(dplyr)</span></span>
+<span><span class="co"># ord_collapsed &lt;- ord_dat |&gt;</span></span>
+<span><span class="co">#   dplyr::filter(grade %in% c("Moderate", "Severe")) |&gt;</span></span>
+<span><span class="co">#   dplyr::summarise(estimate = sum(estimate), .by = time) |&gt;</span></span>
+<span><span class="co">#   dplyr::mutate(grade = "Moderate/Severe") |&gt;</span></span>
+<span><span class="co">#   dplyr::bind_rows(dplyr::filter(ord_dat, grade %in% c("None", "Mild")))</span></span>
+<span></span>
+<span><span class="co"># Show three-level version using only two grades from sample data</span></span>
+<span><span class="va">ord_two</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">ord_dat</span>, <span class="va">grade</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"None"</span>, <span class="st">"Severe"</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="../reference/nonparametric_ordinal_plot.html">nonparametric_ordinal_plot</a></span><span class="op">(</span>curve_data <span class="op">=</span> <span class="va">ord_two</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_colour_manual</a></span><span class="op">(</span></span>
+<span>    values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"None"</span> <span class="op">=</span> <span class="st">"steelblue"</span>, <span class="st">"Severe"</span> <span class="op">=</span> <span class="st">"firebrick"</span><span class="op">)</span>,</span>
+<span>    name   <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_x_continuous</a></span><span class="op">(</span>limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">5</span><span class="op">)</span>, breaks <span class="op">=</span> <span class="fl">0</span><span class="op">:</span><span class="fl">5</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous</a></span><span class="op">(</span>limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span>, breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">0.2</span><span class="op">)</span>,</span>
+<span>                               labels <span class="op">=</span> <span class="fu">scales</span><span class="fu">::</span><span class="va"><a href="https://scales.r-lib.org/reference/percent_format.html" class="external-link">percent</a></span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Follow-up (years)"</span>, y <span class="op">=</span> <span class="st">"Grade prevalence (%)"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/hvti_theme.html">hvti_theme</a></span><span class="op">(</span><span class="st">"manuscript"</span><span class="op">)</span></span></code></pre></div>
+<div class="cell-output-display">
+<div>
+<figure><p><img src="plot-functions_files/figure-html/np_ordinal_collapsed-1.png" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section><section class="level2"><h3 id="saving-10">Saving<a class="anchor" aria-label="anchor" href="#saving-10"></a>
+</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb135"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">p_ord</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nonparametric_ordinal_plot.html">nonparametric_ordinal_plot</a></span><span class="op">(</span><span class="va">ord_dat</span>, data_points <span class="op">=</span> <span class="va">ord_pts</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_colour_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Set1"</span>, name <span class="op">=</span> <span class="st">"TR Grade"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Follow-up (years)"</span>, y <span class="op">=</span> <span class="st">"Grade prevalence (%)"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/hvti_theme.html">hvti_theme</a></span><span class="op">(</span><span class="st">"manuscript"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave</a></span><span class="op">(</span><span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org/reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="st">"graphs"</span>, <span class="st">"np_tr_ordinal.pdf"</span><span class="op">)</span>,</span>
+<span>       <span class="va">p_ord</span>, width <span class="op">=</span> <span class="fl">11</span>, height <span class="op">=</span> <span class="fl">8.5</span><span class="op">)</span></span></code></pre></div>
+</div>
+</section></section><section class="section level2"><h2 id="longitudinal-participation-counts">Longitudinal Participation Counts<a class="anchor" aria-label="anchor" href="#longitudinal-participation-counts"></a>
+</h2>
+<p><code><a href="../reference/longitudinal_counts_plot.html">longitudinal_counts_plot()</a></code> and <code><a href="../reference/longitudinal_counts_table.html">longitudinal_counts_table()</a></code> reproduce the two-panel layout from <code>tp.dp.longitudinal_patients_measures.*</code>: a grouped bar chart of patients and measurements at each follow-up window, paired with a numeric summary table below. Compose the two panels with <code>patchwork</code>.</p>
+<p>Input is <strong>pre-aggregated long-format data</strong> — one row per (time window, series) combination. Use <code><a href="../reference/sample_longitudinal_counts_data.html">sample_longitudinal_counts_data()</a></code> to derive this from patient-level data, or build it yourself from your registry data.</p>
+<section class="level2"><h3 id="sample-data-13">Sample data<a class="anchor" aria-label="anchor" href="#sample-data-13"></a>
+</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb136"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">lc_dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sample_longitudinal_counts_data.html">sample_longitudinal_counts_data</a></span><span class="op">(</span>n_patients <span class="op">=</span> <span class="fl">300</span>, seed <span class="op">=</span> <span class="fl">42L</span><span class="op">)</span></span>
+<span><span class="va">lc_dat</span></span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   time_label       series count
+1     ≥0 Days     Patients    19
+2    ≥1 Month     Patients    47
+3   ≥3 Months     Patients    49
+4   ≥6 Months     Patients   100
+5     ≥1 Year     Patients   159
+6    ≥2 Years     Patients   101
+7  ≥2.5 Years     Patients   276
+8     ≥0 Days Measurements    19
+9    ≥1 Month Measurements    50
+10  ≥3 Months Measurements    56
+11  ≥6 Months Measurements   118
+12    ≥1 Year Measurements   217
+13   ≥2 Years Measurements   113
+14 ≥2.5 Years Measurements   620</code></pre>
+</div>
+</div>
+</section><section class="level2"><h3 id="bar-chart">Bar chart<a class="anchor" aria-label="anchor" href="#bar-chart"></a>
+</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb138"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">p_lc_bar</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/longitudinal_counts_plot.html">longitudinal_counts_plot</a></span><span class="op">(</span><span class="va">lc_dat</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_fill_manual</a></span><span class="op">(</span></span>
+<span>    values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>Patients <span class="op">=</span> <span class="st">"steelblue"</span>, Measurements <span class="op">=</span> <span class="st">"firebrick"</span><span class="op">)</span>,</span>
+<span>    name   <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous</a></span><span class="op">(</span></span>
+<span>    breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">2000</span>, <span class="fl">500</span><span class="op">)</span>,</span>
+<span>    expand <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_cartesian.html" class="external-link">coord_cartesian</a></span><span class="op">(</span>ylim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">2200</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="cn">NULL</span>, y <span class="op">=</span> <span class="st">"Count (n)"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/hvti_theme.html">hvti_theme</a></span><span class="op">(</span><span class="st">"manuscript"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>legend.position <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.85</span>, <span class="fl">0.85</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">p_lc_bar</span></span></code></pre></div>
+<div class="cell-output-display">
+<div>
+<figure><p><img src="plot-functions_files/figure-html/lc_bar-1.png" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section><section class="level2"><h3 id="numeric-table-panel">Numeric table panel<a class="anchor" aria-label="anchor" href="#numeric-table-panel"></a>
+</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb139"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">p_lc_tbl</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/longitudinal_counts_table.html">longitudinal_counts_table</a></span><span class="op">(</span><span class="va">lc_dat</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_colour_manual</a></span><span class="op">(</span></span>
+<span>    values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>Patients <span class="op">=</span> <span class="st">"steelblue"</span>, Measurements <span class="op">=</span> <span class="st">"firebrick"</span><span class="op">)</span>,</span>
+<span>    guide  <span class="op">=</span> <span class="st">"none"</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/hvti_theme.html">hvti_theme</a></span><span class="op">(</span><span class="st">"manuscript"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">p_lc_tbl</span></span></code></pre></div>
+<div class="cell-output-display">
+<div>
+<figure><p><img src="plot-functions_files/figure-html/lc_table-1.png" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section><section class="level2"><h3 id="two-panel-layout-with-patchwork">Two-panel layout with patchwork<a class="anchor" aria-label="anchor" href="#two-panel-layout-with-patchwork"></a>
+</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb140"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://patchwork.data-imaginist.com" class="external-link">patchwork</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">p_lc_bar</span> <span class="op">/</span> <span class="va">p_lc_tbl</span> <span class="op">+</span></span>
+<span>  <span class="fu">patchwork</span><span class="fu">::</span><span class="fu"><a href="https://patchwork.data-imaginist.com/reference/plot_layout.html" class="external-link">plot_layout</a></span><span class="op">(</span>heights <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<div class="cell-output-display">
+<div>
+<figure><p><img src="plot-functions_files/figure-html/lc_combined-1.png" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section><section class="level2"><h3 id="saving-the-combined-figure">Saving the combined figure<a class="anchor" aria-label="anchor" href="#saving-the-combined-figure"></a>
+</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb141"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">combined</span> <span class="op">&lt;-</span> <span class="va">p_lc_bar</span> <span class="op">/</span> <span class="va">p_lc_tbl</span> <span class="op">+</span></span>
+<span>  <span class="fu">patchwork</span><span class="fu">::</span><span class="fu"><a href="https://patchwork.data-imaginist.com/reference/plot_layout.html" class="external-link">plot_layout</a></span><span class="op">(</span>heights <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave</a></span><span class="op">(</span><span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org/reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="st">"graphs"</span>, <span class="st">"longitudinal_participation.pdf"</span><span class="op">)</span>,</span>
+<span>       <span class="va">combined</span>, width <span class="op">=</span> <span class="fl">11</span>, height <span class="op">=</span> <span class="fl">6</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># PowerPoint (bar chart only — patchwork composites may need ggsave first)</span></span>
+<span><span class="fu"><a href="../reference/save_ppt.html">save_ppt</a></span><span class="op">(</span><span class="va">p_lc_bar</span>,</span>
+<span>         template   <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"ClevelandClinic.pptx"</span>, package <span class="op">=</span> <span class="st">"hvtiPlotR"</span><span class="op">)</span>,</span>
+<span>         powerpoint <span class="op">=</span> <span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org/reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="st">"graphs"</span>, <span class="st">"longitudinal_participation.pptx"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+</div>
+</section></section><section class="section level2"><h2 id="upset-plot">UpSet Plot<a class="anchor" aria-label="anchor" href="#upset-plot"></a>
+</h2>
+<p><code><a href="../reference/upset_plot.html">upset_plot()</a></code> wraps <code><a href="https://krassowski.github.io/complex-upset/reference/upset.html" class="external-link">ComplexUpset::upset()</a></code> to visualise surgical procedure co-occurrences or any set membership data. It ports the pattern from <code>tp.complexUpset.R</code>, replacing hard-coded colours with <code>scale_fill_*</code> composition and hard-coded themes with <code><a href="../reference/hvti_theme.html">hvti_theme()</a></code>.</p>
+<p>Apply a theme to <strong>all panels</strong> using the patchwork <code>&amp;</code> operator (not <code>+</code>):</p>
+<div class="sourceCode" id="cb142"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/upset_plot.html">upset_plot</a></span><span class="op">(</span><span class="va">dta</span>, intersect <span class="op">=</span> <span class="va">sets</span><span class="op">)</span> <span class="op">&amp;</span> <span class="fu"><a href="../reference/hvti_theme.html">hvti_theme</a></span><span class="op">(</span><span class="st">"manuscript"</span><span class="op">)</span></span></code></pre></div>
+<section class="level2"><h3 id="sample-data-14">Sample data<a class="anchor" aria-label="anchor" href="#sample-data-14"></a>
+</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb143"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">sets</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"AV_Replacement"</span>, <span class="st">"AV_Repair"</span>, <span class="st">"MV_Replacement"</span>, <span class="st">"MV_Repair"</span>,</span>
+<span>          <span class="st">"TV_Repair"</span>, <span class="st">"Aorta"</span>, <span class="st">"CABG"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">upset_dta</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sample_upset_data.html">sample_upset_data</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">400</span>, seed <span class="op">=</span> <span class="fl">42</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">upset_dta</span><span class="op">)</span></span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  AV_Replacement AV_Repair MV_Replacement MV_Repair TV_Repair Aorta  CABG
+1          FALSE     FALSE          FALSE      TRUE     FALSE FALSE FALSE
+2          FALSE     FALSE          FALSE      TRUE     FALSE FALSE FALSE
+3          FALSE     FALSE          FALSE     FALSE     FALSE FALSE  TRUE
+4          FALSE      TRUE          FALSE     FALSE     FALSE FALSE FALSE
+5          FALSE     FALSE           TRUE     FALSE      TRUE FALSE FALSE
+6           TRUE     FALSE          FALSE     FALSE     FALSE FALSE  TRUE</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb145"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/colSums.html" class="external-link">colSums</a></span><span class="op">(</span><span class="va">upset_dta</span><span class="op">)</span></span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>AV_Replacement      AV_Repair MV_Replacement      MV_Repair      TV_Repair
+           127             50             56             49             42
+         Aorta           CABG
+            56            147 </code></pre>
+</div>
+</div>
+</section><section class="level2"><h3 id="default-plot">Default plot<a class="anchor" aria-label="anchor" href="#default-plot"></a>
+</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb147"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/upset_plot.html">upset_plot</a></span><span class="op">(</span><span class="va">upset_dta</span>, intersect <span class="op">=</span> <span class="va">sets</span><span class="op">)</span> <span class="op">&amp;</span></span>
+<span>  <span class="fu"><a href="../reference/hvti_theme.html">hvti_theme</a></span><span class="op">(</span><span class="st">"manuscript"</span><span class="op">)</span></span></code></pre></div>
+<div class="cell-output-display">
+<div>
+<figure><p><img src="plot-functions_files/figure-html/upset_basic-1.png" width="864"></p>
+</figure>
+</div>
+</div>
+</div>
+</section><section class="level2"><h3 id="custom-intersection-bar-colour-scale_fill_manual">Custom intersection bar colour (scale_fill_manual)<a class="anchor" aria-label="anchor" href="#custom-intersection-bar-colour-scale_fill_manual"></a>
+</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb148"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/upset_plot.html">upset_plot</a></span><span class="op">(</span></span>
+<span>  <span class="va">upset_dta</span>,</span>
+<span>  intersect <span class="op">=</span> <span class="va">sets</span>,</span>
+<span>  base_annotations <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>    <span class="st">"Intersection size"</span> <span class="op">=</span> <span class="fu">ComplexUpset</span><span class="fu">::</span><span class="fu"><a href="https://krassowski.github.io/complex-upset/reference/intersection_size.html" class="external-link">intersection_size</a></span><span class="op">(</span></span>
+<span>      mapping <span class="op">=</span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="st">"n"</span><span class="op">)</span></span>
+<span>    <span class="op">)</span> <span class="op">+</span></span>
+<span>      <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_fill_manual</a></span><span class="op">(</span></span>
+<span>        values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"n"</span> <span class="op">=</span> <span class="st">"steelblue"</span><span class="op">)</span>,</span>
+<span>        guide  <span class="op">=</span> <span class="st">"none"</span></span>
+<span>      <span class="op">)</span> <span class="op">+</span></span>
+<span>      <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>y <span class="op">=</span> <span class="st">"Patients (n)"</span><span class="op">)</span></span>
+<span>  <span class="op">)</span></span>
+<span><span class="op">)</span> <span class="op">&amp;</span></span>
+<span>  <span class="fu"><a href="../reference/hvti_theme.html">hvti_theme</a></span><span class="op">(</span><span class="st">"manuscript"</span><span class="op">)</span></span></code></pre></div>
+<div class="cell-output-display">
+<div>
+<figure><p><img src="plot-functions_files/figure-html/upset_fill-1.png" width="864"></p>
+</figure>
+</div>
+</div>
+</div>
+</section><section class="level2"><h3 id="colour-bars-by-era">Colour bars by era<a class="anchor" aria-label="anchor" href="#colour-bars-by-era"></a>
+</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb149"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">upset_dta</span><span class="op">$</span><span class="va">era</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_len</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">upset_dta</span><span class="op">)</span><span class="op">)</span> <span class="op">&lt;=</span> <span class="fl">200</span>, <span class="st">"Early"</span>, <span class="st">"Recent"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="../reference/upset_plot.html">upset_plot</a></span><span class="op">(</span></span>
+<span>  <span class="va">upset_dta</span>,</span>
+<span>  intersect <span class="op">=</span> <span class="va">sets</span>,</span>
+<span>  base_annotations <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>    <span class="st">"Intersection size"</span> <span class="op">=</span> <span class="fu">ComplexUpset</span><span class="fu">::</span><span class="fu"><a href="https://krassowski.github.io/complex-upset/reference/intersection_size.html" class="external-link">intersection_size</a></span><span class="op">(</span></span>
+<span>      counts  <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>      mapping <span class="op">=</span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="va">era</span><span class="op">)</span></span>
+<span>    <span class="op">)</span> <span class="op">+</span></span>
+<span>      <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_fill_manual</a></span><span class="op">(</span></span>
+<span>        values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Early"</span> <span class="op">=</span> <span class="st">"grey60"</span>, <span class="st">"Recent"</span> <span class="op">=</span> <span class="st">"steelblue"</span><span class="op">)</span>,</span>
+<span>        name   <span class="op">=</span> <span class="st">"Era"</span></span>
+<span>      <span class="op">)</span> <span class="op">+</span></span>
+<span>      <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>y <span class="op">=</span> <span class="st">"Patients (n)"</span><span class="op">)</span></span>
+<span>  <span class="op">)</span></span>
+<span><span class="op">)</span> <span class="op">&amp;</span></span>
+<span>  <span class="fu"><a href="../reference/hvti_theme.html">hvti_theme</a></span><span class="op">(</span><span class="st">"manuscript"</span><span class="op">)</span></span></code></pre></div>
+<div class="cell-output-display">
+<div>
+<figure><p><img src="plot-functions_files/figure-html/upset_era-1.png" width="864"></p>
+</figure>
+</div>
+</div>
+</div>
+</section><section class="level2"><h3 id="saving-11">Saving<a class="anchor" aria-label="anchor" href="#saving-11"></a>
+</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb150"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">p_upset</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/upset_plot.html">upset_plot</a></span><span class="op">(</span><span class="va">upset_dta</span>, intersect <span class="op">=</span> <span class="va">sets</span><span class="op">)</span> <span class="op">&amp;</span> <span class="fu"><a href="../reference/hvti_theme.html">hvti_theme</a></span><span class="op">(</span><span class="st">"manuscript"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># UpSet plots are patchwork composites — use ggsave() via ggplot2</span></span>
+<span><span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave</a></span><span class="op">(</span><span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org/reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="st">"graphs"</span>, <span class="st">"procedure_cooccurrence.pdf"</span><span class="op">)</span>,</span>
+<span>                <span class="va">p_upset</span>, width <span class="op">=</span> <span class="fl">11</span>, height <span class="op">=</span> <span class="fl">6</span><span class="op">)</span></span></code></pre></div>
 </div>
 </section></section><section class="section level2"><h2 id="draft-footnotes">Draft Footnotes<a class="anchor" aria-label="anchor" href="#draft-footnotes"></a>
 </h2>
@@ -2448,7 +2906,7 @@ make_footnote("R/analysis.R")        # &lt;- no footnote call</code></pre>
 <section class="level2"><h3 id="draft-annotation-pattern">Draft annotation pattern<a class="anchor" aria-label="anchor" href="#draft-annotation-pattern"></a>
 </h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb126"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb152"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">dta_fn</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sample_hazard_data.html">sample_hazard_data</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">300</span>, time_max <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
 <span><span class="va">emp_fn</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sample_hazard_empirical.html">sample_hazard_empirical</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">300</span>, time_max <span class="op">=</span> <span class="fl">10</span>, n_bins <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span>
 <span></span>
@@ -2482,7 +2940,7 @@ make_footnote("R/analysis.R")        # &lt;- no footnote call</code></pre>
 </h3>
 <p>Pass any string as <code>text</code> and set <code>timestamp = FALSE</code> for a stable label.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb127"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb153"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">p_draft</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/make_footnote.html">make_footnote</a></span><span class="op">(</span></span>
 <span>  text      <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="st">"J. Ehrlinger |"</span>, <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.Date</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>,</span>
@@ -2500,7 +2958,7 @@ make_footnote("R/analysis.R")        # &lt;- no footnote call</code></pre>
 </h3>
 <p>The <code><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave()</a></code> call writes the ggplot object directly — <code><a href="../reference/make_footnote.html">make_footnote()</a></code> is never called, so the saved file is clean.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb128"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb154"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave</a></span><span class="op">(</span><span class="st">"../graphs/fig1_survival.pdf"</span>, <span class="va">p_draft</span>, width <span class="op">=</span> <span class="fl">11</span>, height <span class="op">=</span> <span class="fl">8.5</span><span class="op">)</span></span></code></pre></div>
 </div>
 </section></section><script id="quarto-html-after-body" type="application/javascript">

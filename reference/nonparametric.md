@@ -1,30 +1,57 @@
 # Nonparametric survival estimates
 
-A dataset containing nonparametric survival estimates used for examples
-in the package vignettes.
+A dataset containing nonparametric empirical survival estimates used for
+examples in the package vignettes. The data represent follow-up outcomes
+for patients stratified by initial valve state (`iv_state`) from an
+aortic-valve surgery registry, originally exported from SAS via
+`tp.hp.dead.sas` / `tp.np.*.sas`.
 
 ## Format
 
-A data.frame object containing nonparametric survival estimates
+A data frame with one row per patient and 10 columns:
 
-## Details
+- iv_state:
 
-- iv_state: Initial valve state
+  Initial valve state (character/factor); used as the x-axis grouping
+  variable in nonparametric plots.
 
-- sginit: Initial SG
+- sginit:
 
-- stlinit: Initial STL
+  Initial SG (St. Jude Medical Silzone) indicator (numeric).
 
-- stuinit: Initial STU
+- stlinit:
 
-- sgdead1: SG death indicator
+  Initial STL indicator (numeric).
 
-- sgstrk1: SG stroke indicator
+- stuinit:
 
-- stldead1: STL death indicator
+  Initial STU indicator (numeric).
 
-- studead1: STU death indicator
+- sgdead1:
 
-- stlstrk1: STL stroke indicator
+  Death indicator for SG group (logical/integer; 1 = event).
 
-- stustrk1: STU stroke indicator
+- sgstrk1:
+
+  Stroke indicator for SG group (logical/integer; 1 = event).
+
+- stldead1:
+
+  Death indicator for STL group (logical/integer; 1 = event).
+
+- studead1:
+
+  Death indicator for STU group (logical/integer; 1 = event).
+
+- stlstrk1:
+
+  Stroke indicator for STL group (logical/integer; 1 = event).
+
+- stustrk1:
+
+  Stroke indicator for STU group (logical/integer; 1 = event).
+
+## See also
+
+[parametric](https://ehrlinger.github.io/hvtiPlotR/reference/parametric.md),
+[`nonparametric_curve_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/nonparametric_curve_plot.md)

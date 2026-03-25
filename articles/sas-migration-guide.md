@@ -1189,8 +1189,38 @@ p + hvti_theme("poster",     base_size = 24)   # larger text for A0 poster
 
 ### PowerPoint
 
+[`save_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/save_ppt.md)
+inserts ggplot objects into a PowerPoint file as **editable DrawingML
+vector graphics** via the `officer` and `rvg` packages — shapes, lines,
+and text remain individually selectable in PowerPoint after export. The
+first argument is `object` (not `plot`); the output path is `powerpoint`
+(not `file` or `filename`).
+
 ``` r
-save_ppt(p, file = "figures/afib_prevalence.pptx")
+# Locate the bundled Cleveland Clinic slide template
+template <- system.file("ClevelandClinic.pptx", package = "hvtiPlotR")
+
+# Single slide — apply a PPT theme before saving
+p_ppt <- p +
+  scale_colour_manual(values = c("steelblue"), guide = "none") +
+  scale_fill_manual(values   = c("steelblue"), guide = "none") +
+  labs(x = "Years", y = "Prevalence (%)") +
+  hvti_theme("dark_ppt")
+
+save_ppt(
+  object       = p_ppt,
+  template     = template,
+  powerpoint   = "figures/afib_prevalence.pptx",
+  slide_titles = "AF Prevalence over Time"
+)
+
+# Multiple plots — one slide per figure in a single call
+save_ppt(
+  object       = list(fig1 = p_binary, fig2 = p_multi),
+  template     = template,
+  powerpoint   = "figures/np_curves.pptx",
+  slide_titles = c("Binary Outcome", "Multi-group Comparison")
+)
 ```
 
 ### PDF / TIFF for journals
@@ -1483,7 +1513,7 @@ sessionInfo()
     [1] stats     graphics  grDevices utils     datasets  methods   base
 
     other attached packages:
-    [1] ggplot2_4.0.2        hvtiPlotR_2.0.0.9001
+    [1] ggplot2_4.0.2        hvtiPlotR_2.0.0.9002
 
     loaded via a namespace (and not attached):
      [1] generics_0.1.4          tidyr_1.3.2             fontLiberation_0.1.0
@@ -1497,10 +1527,10 @@ sessionInfo()
     [25] yaml_2.3.12             otel_0.2.0              gdtools_0.5.0
     [28] tools_4.5.3             officer_0.7.3           uuid_1.2-2
     [31] dplyr_1.2.0             colorspace_2.1-2        ComplexUpset_1.3.3
-    [34] vctrs_0.7.1             R6_2.6.1                lifecycle_1.0.5
-    [37] ragg_1.5.1              pkgconfig_2.0.3         pillar_1.11.1
+    [34] vctrs_0.7.2             R6_2.6.1                lifecycle_1.0.5
+    [37] ragg_1.5.2              pkgconfig_2.0.3         pillar_1.11.1
     [40] gtable_0.3.6            glue_1.8.0              Rcpp_1.1.1
-    [43] systemfonts_1.3.2       xfun_0.56               rvg_0.4.1
+    [43] systemfonts_1.3.2       xfun_0.57               rvg_0.4.1
     [46] tibble_3.3.1            tidyselect_1.2.1        knitr_1.51
     [49] farver_2.1.2            htmltools_0.5.9         patchwork_1.3.2
     [52] labeling_0.4.3          rmarkdown_2.30          ggalluvial_0.12.6

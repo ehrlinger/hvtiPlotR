@@ -40,3 +40,23 @@ hvti_theme(
 A
 [`ggplot2::theme()`](https://ggplot2.tidyverse.org/reference/theme.html)
 object.
+
+## Examples
+
+``` r
+library(ggplot2)
+p <- ggplot(mtcars, aes(wt, mpg, colour = factor(cyl))) + geom_point()
+
+p + hvti_theme("manuscript")   # journal figure
+
+p + hvti_theme("poster")       # conference poster
+
+p + hvti_theme("light_ppt")    # light-background slide
+
+
+if (FALSE) { # \dontrun{
+# Dark PPT — best viewed against a dark slide background
+p + hvti_theme("dark_ppt") +
+  ggplot2::theme(plot.background = ggplot2::element_rect(fill = "navy"))
+} # }
+```

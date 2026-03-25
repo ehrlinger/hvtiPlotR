@@ -61,6 +61,7 @@ A data frame with columns `time`, `value`, `grade`.
 ## Examples
 
 ``` r
+# Default: four grade levels
 pts <- sample_nonparametric_ordinal_points(n = 800, time_max = 5)
 head(pts)
 #>        time  value   grade
@@ -70,4 +71,17 @@ head(pts)
 #> 4 1.7148634 0.9125 Grade 0
 #> 5 2.1953343 0.8000 Grade 0
 #> 6 2.6358690 0.8000 Grade 0
+levels(pts$grade)    # "Grade 0", "Grade 1", "Grade 2", "Grade 3"
+#> [1] "Grade 0" "Grade 1" "Grade 2" "Grade 3"
+
+# Clinical AR grade labels
+pts2 <- sample_nonparametric_ordinal_points(
+  n            = 600,
+  time_max     = 7,
+  grade_labels = c("None", "Mild", "Moderate", "Severe")
+)
+table(pts2$grade)    # n_bins rows per grade
+#> 
+#>     None     Mild Moderate   Severe 
+#>       10       10       10       10 
 ```

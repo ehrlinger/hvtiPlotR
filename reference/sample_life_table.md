@@ -58,6 +58,7 @@ A data frame with columns `time`, `survival`, and `group`.
 ## Examples
 
 ``` r
+# Default: three age groups (<65, 65-80, ≥80) using Gompertz mortality
 lt <- sample_life_table(time_max = 10)
 head(lt)
 #>        time  survival group
@@ -67,4 +68,17 @@ head(lt)
 #> 4 0.3030303  99.83555   <65
 #> 5 0.4040404  99.77985   <65
 #> 6 0.5050505  99.72370   <65
+nlevels(lt$group)    # 3 age groups
+#> [1] 3
+range(lt$survival)   # 0-100 % survivorship scale
+#> [1]  33.88395 100.00000
+
+# Custom strata — two age groups, 15-year follow-up
+lt2 <- sample_life_table(
+  age_groups = c("Under 70", "70 and over"),
+  age_mids   = c(60, 78),
+  time_max   = 15
+)
+levels(lt2$group)
+#> [1] "Under 70"    "70 and over"
 ```

@@ -1,6 +1,8 @@
 <urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
 <url><loc>https://ehrlinger.github.io/hvtiPlotR/404.html</loc></url>
+<url><loc>https://ehrlinger.github.io/hvtiPlotR/CONTRIBUTING.html</loc></url>
 <url><loc>https://ehrlinger.github.io/hvtiPlotR/TODO.html</loc></url>
+<url><loc>https://ehrlinger.github.io/hvtiPlotR/articles/contributing.html</loc></url>
 <url><loc>https://ehrlinger.github.io/hvtiPlotR/articles/hvtiPlotR.html</loc></url>
 <url><loc>https://ehrlinger.github.io/hvtiPlotR/articles/index.html</loc></url>
 <url><loc>https://ehrlinger.github.io/hvtiPlotR/articles/plot-decorators.html</loc></url>
@@ -75,5 +77,6 @@
 <url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/survival_difference_plot.html</loc></url>
 <url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/trends_plot.html</loc></url>
 <url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/upset_plot.html</loc></url>
+<url><loc>https://ehrlinger.github.io/hvtiPlotR/testing-strategy.html</loc></url>
 </urlset>
 
