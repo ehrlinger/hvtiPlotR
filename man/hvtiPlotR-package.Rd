@@ -9,73 +9,187 @@
 Clinical Investigations Statistics group within the Heart & Vascular
 Institute at the Cleveland Clinic. It produces publication-quality
 graphics that conform to HVI manuscript and presentation standards using
-\link[ggplot2:ggplot2-package]{ggplot2::ggplot2} and the \link[officer:officer]{officer::officer} package.
+\code{ggplot2} and the \code{officer} package.
 
-All plot functions return bare \code{\link[ggplot2:ggplot]{ggplot2::ggplot()}} objects (or lists of
-them) so callers can apply additional \code{ggplot2} layers, scales, and themes
-without restriction.
+All plot functions return bare \code{\link[ggplot2:ggplot]{ggplot2::ggplot()}} objects so callers
+can apply additional \code{ggplot2} layers, scales, and themes without
+restriction. Each function ships with a \verb{sample_*()} companion that
+generates realistic synthetic data for examples and tests.
 \subsection{Themes}{
 
+Use \code{hvti_theme()} as the single entry point. Lower-level functions are
+also exported for direct use.
 \itemize{
-\item \code{\link[=hvti_theme]{hvti_theme()}}: Unified theme dispatcher (\code{"manuscript"},
-\code{"ppt"}, \code{"dark_ppt"}, \code{"poster"}).
-\item \code{\link[=theme_man]{theme_man()}} / \code{theme_manuscript}: Theme for manuscript figures.
-\item \code{\link[=theme_ppt]{theme_ppt()}}: Theme for PowerPoint presentation figures.
-\item \code{\link[=theme_dark_ppt]{theme_dark_ppt()}}: Dark theme for PowerPoint presentations.
-\item \code{\link[=theme_poster]{theme_poster()}}: Theme for poster figures.
+\item \code{\link[=hvti_theme]{hvti_theme()}}: Unified dispatcher — accepts \code{"manuscript"},
+\code{"poster"}, \code{"light_ppt"}, or \code{"dark_ppt"}.
+\item \code{\link[=hvti_theme_manuscript]{hvti_theme_manuscript()}} / \code{\link[=theme_manuscript]{theme_manuscript()}} / \code{\link[=theme_man]{theme_man()}}:
+Clean white-background theme for journal figures.
+\item \code{\link[=hvti_theme_dark_ppt]{hvti_theme_dark_ppt()}} / \code{\link[=theme_dark_ppt]{theme_dark_ppt()}} / \code{\link[=theme_ppt]{theme_ppt()}} /
+\code{\link[=hvti_theme_ppt]{hvti_theme_ppt()}}: Large-font theme with a dark panel for
+PowerPoint slides.
+\item \code{\link[=hvti_theme_light_ppt]{hvti_theme_light_ppt()}} / \code{\link[=theme_light_ppt]{theme_light_ppt()}}: Large-font theme with
+a light panel background for PowerPoint slides.
+\item \code{\link[=hvti_theme_poster]{hvti_theme_poster()}} / \code{\link[=theme_poster]{theme_poster()}}: Medium-font theme for
+conference posters.
 }
 }
 
-\subsection{Output helpers}{
-
+\subsection{Saving figures}{
 \itemize{
-\item \code{\link[=save_ppt]{save_ppt()}}: Save ggplot objects to a PowerPoint presentation
-via the \link[officer:officer]{officer::officer} package.
-\item \code{\link[=makeFootnote]{makeFootnote()}}: Add footnotes to graphics.
+\item \code{\link[=save_ppt]{save_ppt()}}: Insert one or more ggplot objects into a PowerPoint file
+as editable DrawingML vector graphics via \code{officer} and \code{rvg}.
+\item \code{\link[=make_footnote]{make_footnote()}} / \code{\link[=makeFootnote]{makeFootnote()}}: Add a draft footnote to a figure
+during analysis; omit for publication-ready output.
 }
 }
 
 \subsection{Plot functions}{
-
+\subsection{Propensity Score & Matching}{
 \itemize{
-\item \code{\link[=mirror_histogram]{mirror_histogram()}}: Side-by-side propensity-score histograms
-(binary-match or IPTW-weighted mode). Ports \code{plot.sas} mirror
-histogram output.
-\item \code{\link[=stacked_histogram]{stacked_histogram()}}: Stacked (or filled) histogram of a numeric
-variable faceted by a grouping factor.
-\item \code{\link[=covariate_balance]{covariate_balance()}}: Dot-plot of standardised mean differences
-before and after propensity-score matching or weighting.
-\item \code{\link[=goodness_followup]{goodness_followup()}}: Goodness-of-follow-up scatter plot showing
-actual vs. potential follow-up per operation year. Optionally includes
-a non-fatal-event panel.
+\item \code{\link[=mirror_histogram]{mirror_histogram()}}: Side-by-side propensity-score histograms for
+binary-matched or IPTW-weighted cohorts. Ports the
+\verb{tp.lp.mirror-histogram_*} and \code{tp.lp.mirror_histo_before_after_wt}
+SAS scripts.
+\item \code{\link[=covariate_balance]{covariate_balance()}}: Standardised mean difference dot-plot before
+and after propensity-score matching or weighting. Ports
+\code{tp.lp.propen.cov_balance.R}.
+\item \code{\link[=stacked_histogram]{stacked_histogram()}}: Stacked or filled histogram of a numeric
+variable by group.
+}
+}
+
+\subsection{Survival & Hazard}{
+\itemize{
 \item \code{\link[=survival_curve]{survival_curve()}}: Kaplan-Meier or Nelson-Aalen survival analysis
 returning up to five plot types (survival, cumulative hazard, hazard,
 log-log, life/RMST) plus risk and report tables. Ports the SAS
 \verb{\%kaplan} and \verb{\%nelsont} macros from \code{tp.ac.dead.sas}.
+\item \code{\link[=hazard_plot]{hazard_plot()}}: Parametric hazard/survival curves from pre-fitted
+model output, with optional KM empirical overlay and population
+life-table reference. Ports the \verb{tp.hp.*} template family.
+\item \code{\link[=survival_difference_plot]{survival_difference_plot()}}: Mean survival difference (life gained)
+over time between two treatment arms, with confidence ribbons. Ports
+\code{tp.hp.dead.life-gained.sas}.
+\item \code{\link[=nnt_plot]{nnt_plot()}}: Number-needed-to-treat over time derived from the
+survival difference. Ports \code{tp.hp.numtreat.survdiff.matched.sas}.
 }
+}
+
+\subsection{Nonparametric Temporal Curves}{
+\itemize{
+\item \code{\link[=nonparametric_curve_plot]{nonparametric_curve_plot()}}: Two-phase nonparametric temporal trend
+curves for binary or continuous outcomes with optional 68\%/95\% CI
+ribbon and binned data summary points. Ports the \verb{tp.np.*} template
+family.
+\item \code{\link[=nonparametric_ordinal_plot]{nonparametric_ordinal_plot()}}: Grade-specific probability curves
+from cumulative proportional-odds models (e.g. TR/AR grade). Ports
+\verb{tp.np.tr.ivecho.*} and \code{tp.np.po_ar.u_multi.ordinal.sas}.
+}
+}
+
+\subsection{Study Design & Goodness of Follow-Up}{
+\itemize{
+\item \code{\link[=goodness_followup]{goodness_followup()}}: Goodness-of-follow-up scatter plot showing
+actual vs. potential follow-up per operation year. Ports \code{tp.dp.gfup.R}.
+\item \code{\link[=goodness_event_plot]{goodness_event_plot()}}: Companion panel showing non-fatal event counts
+alongside the goodness-of-follow-up plot.
+}
+}
+
+\subsection{Longitudinal & Repeated Measures}{
+\itemize{
+\item \code{\link[=trends_plot]{trends_plot()}}: Annual trend lines with optional confidence ribbons
+for multiple groups. Ports the \verb{tp.lp.trends.*}, \verb{tp.rp.trends.*},
+and \code{tp.dp.trends.R} template families.
+\item \code{\link[=spaghetti_plot]{spaghetti_plot()}}: Individual patient trajectories over time,
+optionally stratified by group. Ports \code{tp.dp.spaghetti.echo.R}.
+\item \code{\link[=longitudinal_counts_plot]{longitudinal_counts_plot()}}: Grouped bar chart of patient and
+measurement counts at discrete follow-up windows.
+\item \code{\link[=longitudinal_counts_table]{longitudinal_counts_table()}}: Numeric table panel of the same counts,
+intended for patchwork composition below \code{\link[=longitudinal_counts_plot]{longitudinal_counts_plot()}}.
+}
+}
+
+\subsection{Flow Diagrams}{
+\itemize{
+\item \code{\link[=alluvial_plot]{alluvial_plot()}}: Alluvial (Sankey) diagram of patient flow between
+states across time points. Ports
+\code{tp.dp.female_bicus_preAR_sankey.R}.
+\item \code{\link[=cluster_sankey_plot]{cluster_sankey_plot()}}: Cluster-stability Sankey showing how patients
+redistribute across K values in a PAM analysis.
+}
+}
+
+\subsection{Exploratory Data Analysis}{
+\itemize{
+\item \code{\link[=eda_plot]{eda_plot()}}: Single-variable EDA: bar chart (categorical) or
+scatter + LOESS (continuous). Ports
+\code{tp.dp.EDA_barplots_scatterplots.R}.
+\item \code{\link[=eda_classify_var]{eda_classify_var()}}: Classify a vector as \code{"Cont"}, \code{"Cat_Num"}, or
+\code{"Cat_Char"} using the \code{UniqueLimit} heuristic from
+\code{Barplot_Scatterplot_Function.R}.
+\item \code{\link[=eda_select_vars]{eda_select_vars()}}: Subset and reorder a data frame by a character
+vector or space-separated column-name string. Replaces
+\code{Order_Variables()}.
+\item \code{\link[=upset_plot]{upset_plot()}}: UpSet intersection plot for set membership across
+binary indicator columns. Ports \code{tp.complexUpset.R}.
+}
+}
+
 }
 
 \subsection{Sample-data generators}{
 
-Each plot function ships with a companion generator for use in examples
-and tests:
-
+Each generator produces realistic synthetic data sized and structured to
+match the corresponding SAS dataset exports.
 \itemize{
-\item \code{\link[=sample_mirror_histogram_data]{sample_mirror_histogram_data()}}: Simulates propensity scores via
-a logistic model with greedy 1:1 caliper matching and optional IPTW
-weights.
-\item \code{\link[=sample_stacked_histogram_data]{sample_stacked_histogram_data()}}: Simulates year-by-category
-count data.
-\item \code{\link[=sample_covariate_balance_data]{sample_covariate_balance_data()}}: Simulates patient-level
-covariates with a logistic propensity model and caliper matching,
-returning standardised mean differences before and after matching.
-\item \code{\link[=sample_goodness_followup_data]{sample_goodness_followup_data()}}: Simulates an operative cohort
-with operation dates, follow-up times, death, and non-fatal events.
-\item \code{\link[=sample_survival_data]{sample_survival_data()}}: Simulates exponential survival times
-with administrative censoring and optional treatment strata.
+\item \code{\link[=sample_mirror_histogram_data]{sample_mirror_histogram_data()}}: Propensity scores via a logistic
+model with greedy 1:1 caliper matching and optional IPTW weights.
+\item \code{\link[=sample_covariate_balance_data]{sample_covariate_balance_data()}}: Standardised mean differences
+before and after propensity matching.
+\item \code{\link[=sample_stacked_histogram_data]{sample_stacked_histogram_data()}}: Year-by-category count data.
+\item \code{\link[=sample_survival_data]{sample_survival_data()}}: Exponential survival times with
+administrative censoring and optional treatment strata.
+\item \code{\link[=sample_hazard_data]{sample_hazard_data()}}: Weibull parametric survival predictions on a
+fine time grid, matching the \code{predict} dataset from \verb{\%hazpred}.
+\item \code{\link[=sample_hazard_empirical]{sample_hazard_empirical()}}: Binned Kaplan-Meier empirical points
+matching the \code{plout} / \code{acpdms} dataset.
+\item \code{\link[=sample_life_table]{sample_life_table()}}: Age-group-specific Gompertz survivorship curves
+matching US population life-table SAS overlays.
+\item \code{\link[=sample_survival_difference_data]{sample_survival_difference_data()}}: Mean survival difference between
+two parametric arms with confidence bands.
+\item \code{\link[=sample_nnt_data]{sample_nnt_data()}}: Number-needed-to-treat derived from survival
+difference data.
+\item \code{\link[=sample_nonparametric_curve_data]{sample_nonparametric_curve_data()}}: Two-phase nonparametric curve
+predictions (binary or continuous outcome) on a fine time grid.
+\item \code{\link[=sample_nonparametric_curve_points]{sample_nonparametric_curve_points()}}: Binned patient-level data
+summary points matching the SAS \code{means} dataset.
+\item \code{\link[=sample_nonparametric_ordinal_data]{sample_nonparametric_ordinal_data()}}: Grade-specific cumulative
+proportional-odds probability curves.
+\item \code{\link[=sample_nonparametric_ordinal_points]{sample_nonparametric_ordinal_points()}}: Binned ordinal data summary
+points per grade level.
+\item \code{\link[=sample_goodness_followup_data]{sample_goodness_followup_data()}}: Operative cohort with operation
+dates, follow-up times, death, and non-fatal events.
+\item \code{\link[=sample_trends_data]{sample_trends_data()}}: Multi-group annual trend data with confidence
+ribbons.
+\item \code{\link[=sample_spaghetti_data]{sample_spaghetti_data()}}: Patient-level longitudinal measurements
+over time.
+\item \code{\link[=sample_longitudinal_counts_data]{sample_longitudinal_counts_data()}}: Pre-aggregated patient and
+measurement counts at discrete follow-up windows.
+\item \code{\link[=sample_alluvial_data]{sample_alluvial_data()}}: Patient flow between states across multiple
+time points in wide format.
+\item \code{\link[=sample_cluster_sankey_data]{sample_cluster_sankey_data()}}: Cluster assignments across K values
+for a PAM stability analysis.
+\item \code{\link[=sample_eda_data]{sample_eda_data()}}: Mixed-type cardiac-surgery registry simulation
+(binary, ordinal, character-categorical, and continuous variables).
+\item \code{\link[=sample_upset_data]{sample_upset_data()}}: Binary indicator columns for UpSet intersection
+analysis.
 }
 }
 }
 \references{
 Wickham, H. \emph{ggplot2: Elegant Graphics for Data Analysis}. Springer, 2009.
+
+Gohel, D. \emph{officer: Manipulation of Microsoft Word and PowerPoint
+Documents}. R package. \url{https://davidgohel.github.io/officer/}
 }

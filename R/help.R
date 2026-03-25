@@ -8,7 +8,7 @@
 #' Clinical Investigations Statistics group within the Heart & Vascular
 #' Institute at the Cleveland Clinic. It produces publication-quality
 #' graphics that conform to HVI manuscript and presentation standards using
-#' [ggplot2] and the [officer] package.
+#' `ggplot2` and the `officer` package.
 #'
 #' All plot functions return bare [ggplot2::ggplot()] objects so callers
 #' can apply additional `ggplot2` layers, scales, and themes without
@@ -35,7 +35,7 @@
 #' ## Saving figures
 #'
 #' * [save_ppt()]: Insert one or more ggplot objects into a PowerPoint file
-#'   as editable DrawingML vector graphics via [officer] and [rvg].
+#'   as editable DrawingML vector graphics via `officer` and `rvg`.
 #' * [make_footnote()] / [makeFootnote()]: Add a draft footnote to a figure
 #'   during analysis; omit for publication-ready output.
 #'
