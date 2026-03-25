@@ -43,7 +43,8 @@ Suggests:
     scales,
     tidyr,
     quarto,
-    pkgload
+    pkgload,
+    here
 Remotes:
     davidsjoberg/ggsankey
 VignetteBuilder: quarto

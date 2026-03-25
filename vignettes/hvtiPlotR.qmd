@@ -92,7 +92,7 @@ We first look at some example code using the plot.sas macro. This code is intend
 
 Note the first line of the code block in Listing 1 indicates the path to the specific example file location. The filename statements bring in the plot.sas macro, indicate how to print, and where to save the graphics file. The plot.sas macro call starts with the %plot command.
 
-The goptions statement in the first line sets global graphic values, including the filename (`gaccess=`) where the figure will be saved (see Section 5). Each plot.sas command is terminated with the end; statement. We’ll look at each of the remaining command type individually.
+The goptions statement in the first line sets global graphic values, including the filename (`gaccess=`) where the figure will be saved (see Section 5). Each plot.sas command is terminated with the end; statement. We'll look at each of the remaining command type individually.
 
 ``` sas
 ******NON - PARAMETRIC : SYMBOLS AND CONFIDENCE BARS *******
@@ -631,18 +631,18 @@ For a full treatment of saving to PDF, poster, and PowerPoint formats see
 ## PowerPoint graphics
 
 Use `save_ppt()` to insert a ggplot as an editable vector graphic into a
-PowerPoint file. Apply `hvti_theme(“dark_ppt”)` or `hvti_theme(“light_ppt”)`
+PowerPoint file. Apply `hvti_theme("dark_ppt")` or `hvti_theme("light_ppt")`
 before saving.
 
 ```{r save_ppt_demo}
 #| eval: false
-p_ppt <- ccf_pptPlot + hvti_theme(“dark_ppt”)
+p_ppt <- ccf_pptPlot + hvti_theme("dark_ppt")
 
 save_ppt(
   object       = p_ppt,
-  template     = system.file(“ClevelandClinic.pptx”, package = “hvtiPlotR”),
-  powerpoint   = here::here(“graphs”, “presentation.pptx”),
-  slide_titles = “Competing Risks”
+  template     = system.file("ClevelandClinic.pptx", package = "hvtiPlotR"),
+  powerpoint   = here::here("graphs", "presentation.pptx"),
+  slide_titles = "Competing Risks"
 )
 ```
 
@@ -726,11 +726,11 @@ In this article, we present the **hvtiPlotR** package for R. The package is made
 # References 
 Auguie B (2012). gridExtra: functions in Grid graphics. R package version 0.9.1, URL http://CRAN.R-project.org/package=gridExtra. 
 
-Glynn EF (2005). “R Color Chart.” http://research.stowers-institute.org/efg/R/ Color/Chart/index.htm. Accessed: 2014-09-16. 
+Glynn EF (2005). "R Color Chart." http://research.stowers-institute.org/efg/R/ Color/Chart/index.htm. Accessed: 2014-09-16. 
 
 Gohel D (2014). ReporteRs: Microsoft Word, Microsoft Powerpoint and HTML docu- ments generation from R. R package version 0.6.1, URL http://davidgohel.github. io/ReporteRs/index.html,http://groups.google.com/group/reporters-package. 
 
-Harrower M, Brewer CA (2003). “ColorBrewer.org: An Online Tool for Selecting Colour Schemes for Maps.” The Cartographic Journal, pp. 27–37. doi:10.1179/ 000870403235002042. URL http://colorbrewer2.org/. 
+Harrower M, Brewer CA (2003). "ColorBrewer.org: An Online Tool for Selecting Colour Schemes for Maps." The Cartographic Journal, pp. 27–37. doi:10.1179/ 000870403235002042. URL http://colorbrewer2.org/. 
 
 Neuwirth E (2011). RColorBrewer: ColorBrewer palettes. R package version 1.0-5, URL http://CRAN.R-project.org/package=RColorBrewer. 
 

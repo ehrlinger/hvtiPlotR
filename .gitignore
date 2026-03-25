@@ -30,3 +30,4 @@ hvtiPlotR.Rproj
 .RData
 /doc/
 /Meta/
+.fuse_hidden*
