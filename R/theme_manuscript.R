@@ -19,6 +19,19 @@
 #'
 #' @seealso [hvti_theme()], [theme_ppt()], [theme_dark_ppt()], [theme_poster()]
 #'
+#' @examples
+#' library(ggplot2)
+#' p <- ggplot(mtcars, aes(wt, mpg, colour = factor(cyl))) + geom_point()
+#'
+#' # Default manuscript theme
+#' p + hvti_theme_manuscript()
+#'
+#' # Smaller base font for two-column journal layout
+#' p + hvti_theme_manuscript(base_size = 9)
+#'
+#' # Via the generic dispatcher
+#' p + hvti_theme("manuscript")
+#'
 #' @import ggplot2
 #' @export
 #' @aliases theme_manuscript theme_man

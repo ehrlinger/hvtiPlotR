@@ -466,40 +466,55 @@ mirror_histogram <- function(data,
 # Sample data
 # ---------------------------------------------------------------------------
 
-##' Generate Sample Data for Mirrored Histogram
-##'
-##' Creates a reproducible data frame for testing \code{\link{mirror_histogram}}
-##' in either binary-match or weighted IPTW mode.  Propensity scores are
-##' simulated via a logistic model: control subjects draw their linear predictor
-##' from \eqn{N(-\text{sep}/2, 1)} and treated subjects from
-##' \eqn{N(+\text{sep}/2, 1)}, so the two score distributions overlap in the
-##' centre while accumulating mass at opposite extremes.  Patients at those
-##' extremes cannot find a matching partner within the caliper, which naturally
-##' reproduces the "many unmatched at the tails" pattern seen in real studies.
-##'
-##' @param n Number of observations **per group** (default 500).
-##' @param separation Numeric. Distance between the two group means on the
-##'   log-odds scale.  Larger values push the score distributions further apart
-##'   and increase the proportion of unmatched patients at the extremes
-##'   (default 1.5).
-##' @param caliper Matching caliper width expressed in propensity-score units
-##'   (0–1 scale, default 0.05).  Treated patients without a control partner
-##'   within this distance are left unmatched.
-##' @param seed Integer random seed for reproducibility (default 42L).
-##' @param add_weights Logical. When \code{TRUE} an \code{mt_wt} column of
-##'   ATE-style IPTW weights derived from the simulated propensity scores is
-##'   appended and normalised to mean 1 within each group (default \code{FALSE}).
-##' @return Data frame with columns:
-##'   \describe{
-##'     \item{\code{prob_t}}{Propensity score on the 0–1 scale.}
-##'     \item{\code{tavr}}{Group indicator (0 = control, 1 = treated).}
-##'     \item{\code{match}}{Binary match indicator produced by greedy
-##'       nearest-neighbour matching within \code{caliper} (1 = matched).}
-##'     \item{\code{mt_wt}}{(Only when \code{add_weights = TRUE}) ATE IPTW
-##'       weights normalised to mean 1 within each group.}
-##'   }
-##' @importFrom stats rnorm plogis
-##' @export
+#' Generate Sample Data for Mirrored Histogram
+#'
+#' Creates a reproducible data frame for testing [mirror_histogram()]
+#' in either binary-match or weighted IPTW mode.  Propensity scores are
+#' simulated via a logistic model: control subjects draw their linear predictor
+#' from \eqn{N(-\text{sep}/2, 1)} and treated subjects from
+#' \eqn{N(+\text{sep}/2, 1)}, so the two score distributions overlap in the
+#' centre while accumulating mass at opposite extremes.  Patients at those
+#' extremes cannot find a matching partner within the caliper, which naturally
+#' reproduces the "many unmatched at the tails" pattern seen in real studies.
+#'
+#' @param n Number of observations **per group** (default 500).
+#' @param separation Numeric. Distance between the two group means on the
+#'   log-odds scale.  Larger values push the score distributions further apart
+#'   and increase the proportion of unmatched patients at the extremes
+#'   (default 1.5).
+#' @param caliper Matching caliper width expressed in propensity-score units
+#'   (0–1 scale, default 0.05).  Treated patients without a control partner
+#'   within this distance are left unmatched.
+#' @param seed Integer random seed for reproducibility (default 42L).
+#' @param add_weights Logical. When `TRUE` an `mt_wt` column of
+#'   ATE-style IPTW weights derived from the simulated propensity scores is
+#'   appended and normalised to mean 1 within each group (default `FALSE`).
+#'
+#' @return Data frame with columns:
+#'   \describe{
+#'     \item{`prob_t`}{Propensity score on the 0–1 scale.}
+#'     \item{`tavr`}{Group indicator (0 = control, 1 = treated).}
+#'     \item{`match`}{Binary match indicator produced by greedy
+#'       nearest-neighbour matching within `caliper` (1 = matched).}
+#'     \item{`mt_wt`}{(Only when `add_weights = TRUE`) ATE IPTW
+#'       weights normalised to mean 1 within each group.}
+#'   }
+#'
+#' @seealso [mirror_histogram()]
+#'
+#' @examples
+#' # Binary-match mode sample data (default)
+#' dta <- sample_mirror_histogram_data(n = 500, separation = 1.5)
+#' head(dta)
+#' table(dta$tavr, dta$match)   # matched vs unmatched counts per group
+#'
+#' # IPTW weighted mode — adds mt_wt column
+#' dta_wt <- sample_mirror_histogram_data(n = 500, add_weights = TRUE)
+#' head(dta_wt)
+#' tapply(dta_wt$mt_wt, dta_wt$tavr, mean)  # should be ~1 in each group
+#'
+#' @importFrom stats rnorm plogis
+#' @export
 sample_mirror_histogram_data <- function(n          = 500,
                                          separation = 1.5,
                                          caliper    = 0.05,

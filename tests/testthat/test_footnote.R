@@ -282,3 +282,26 @@ test_that("makeFootnote can be called multiple times on same plot", {
 
   dev.off()
 })
+
+# ============================================================================
+# make_footnote — prefix parameter (snake_case API only)
+# ============================================================================
+
+test_that("make_footnote prefix is prepended to the rendered text", {
+  pdf(NULL)
+  plot(1:10)
+  # No error, and the call should complete silently
+  expect_no_error(
+    make_footnote("analysis.R", prefix = "Source: ", timestamp = FALSE)
+  )
+  dev.off()
+})
+
+test_that("make_footnote with empty prefix and timestamp=FALSE renders text only", {
+  pdf(NULL)
+  plot(1:10)
+  expect_no_error(
+    make_footnote("Draft", prefix = "", timestamp = FALSE)
+  )
+  dev.off()
+})

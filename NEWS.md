@@ -1,3 +1,67 @@
+# hvtiPlotR 2.0.0.9001
+
+## Tests
+
+* Added `tests/testthat/test_hazard_plot.R` — full validation suite for
+  `sample_hazard_data`, `sample_hazard_empirical`, `sample_life_table`, and
+  `hazard_plot` (column checks, CI bounds, layer structure, multi-group,
+  non-default column names, input validation).
+* Added `tests/testthat/test_nonparametric_plots.R` — full suite for
+  `sample_nonparametric_curve_data`, `sample_nonparametric_curve_points`,
+  `nonparametric_curve_plot`, `sample_nonparametric_ordinal_data`,
+  `sample_nonparametric_ordinal_points`, and `nonparametric_ordinal_plot`.
+  Includes probability-sum-to-1 invariant test for ordinal grades.
+* Added `tests/testthat/test_survival_derived.R` — full suite for
+  `sample_survival_difference_data`, `survival_difference_plot`,
+  `sample_nnt_data`, and `nnt_plot`. Covers NA-NNT at t≈0 edge case and
+  cross-function time-grid consistency.
+* Added `tests/testthat/test_cluster_sankey.R` — full suite for
+  `sample_cluster_sankey_data` and `cluster_sankey_plot`. Validates the
+  hierarchical merge tree (C9=A → C2=A) and that each Ck has exactly k levels.
+* Added `tests/testthat/test_pipeline.R` — end-to-end pipeline tests covering
+  `survival_curve → hvti_theme → save_ppt`, multi-slide list pipelines,
+  built-in dataset usability, `eda_classify_var` edge cases (logical vector,
+  all-NA, length-1), and composed multi-layer plots.
+* Added snapshot test to `test_kaplan_meier.R` for `survival_curve`
+  `report_table` at fixed seed; added all-censored and single-observation
+  edge-case tests.
+* Added snapshot test to `test_mirror_histogram.R` for diagnostics at fixed
+  seed.
+* Added `slide_titles` length-mismatch test to `test_save_ppt.R`.
+* Added `make_footnote` prefix-parameter tests to `test_footnote.R`.
+
+## Documentation
+
+* Fixed `save_ppt()` argument names throughout all vignettes: `plot =` →
+  `object =`, `filename =` → `powerpoint =`. Also added correct `template =`
+  and `slide_titles =` arguments where missing.
+* Fixed critical roxygen bug in `sample_mirror_histogram_data()`: doc block
+  used `##'` (silently ignored by roxygen2) instead of `#'`, so the function
+  had no generated `.Rd` file. Converted all `##'` → `#'`, modernised
+  `\code{}` → backtick syntax, and added `@examples`.
+* Added `@examples` to all five theme functions: `hvti_theme()`,
+  `hvti_theme_manuscript()`, `hvti_theme_dark_ppt()`, `hvti_theme_light_ppt()`,
+  and `hvti_theme_poster()`.
+* Expanded thin (2-line) `@examples` blocks for four sample-data helpers:
+  `sample_life_table()`, `sample_nonparametric_curve_points()`,
+  `sample_nonparametric_ordinal_points()`, and
+  `sample_longitudinal_counts_data()`.
+* Fixed `km$survival_plot` and `km$risk_table` accessor patterns in
+  `vignettes/plot-decorators.qmd`: `survival_curve()` returns a ggplot with
+  *attributes*, not a named list. Replaced with `km` (the returned object IS
+  the survival plot) and `attr(km, "risk_table")`.
+* Fixed patchwork operator-precedence bug in `vignettes/plot-decorators.qmd`:
+  `p_ms | p_km_ms + plot_layout(...)` → `(p_ms | p_km_ms) + plot_layout(...)`.
+* Added `patchwork` to `Suggests` in `DESCRIPTION` (required by
+  `vignettes/plot-decorators.qmd`).
+* Rewrote package-level help page (`help.R` / `?hvtiPlotR`) to document all
+  57 exported functions, organised by category.
+* Expanded "Saving figures" section in `vignettes/sas-migration-guide.qmd`
+  with correct `save_ppt()` single- and multi-slide examples.
+* Added `ggplot2::geom_line(..., linewidth = 1.5)` (replacing deprecated
+  `size =`) and updated `remotes::install_github()` (replacing
+  `devtools::install_github()`) in `vignettes/hvtiPlotR.qmd`.
+
 # hvtiPlotR 2.0.0.9000
 
 * Added `eda_plot()` — exploratory barplot/scatterplot for a single variable.

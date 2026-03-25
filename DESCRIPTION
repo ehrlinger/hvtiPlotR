@@ -31,14 +31,16 @@ Imports:
     survival,
     officer,
     rvg
+Config/testthat/edition: 3
 Suggests:
     knitr,
-    testthat,
+    testthat (>= 3.0.0),
     devtools,
     ggsankey,
     RColorBrewer,
     gridExtra,
     haven,
+    patchwork,
     scales,
     tidyr,
     quarto,

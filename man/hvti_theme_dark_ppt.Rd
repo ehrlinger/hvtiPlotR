@@ -82,6 +82,23 @@ to dark-mode PowerPoint slides. This is the default hvtiPlotR PPT theme —
 For a light-background variant use \code{\link[=hvti_theme_light_ppt]{hvti_theme_light_ppt()}}.
 Removes grid lines and panel borders.
 }
+\examples{
+library(ggplot2)
+p <- ggplot(mtcars, aes(wt, mpg, colour = factor(cyl))) + geom_point()
+
+# Dark PPT theme — large font, white text, black panel
+p + hvti_theme_dark_ppt()
+
+# Via alias
+p + theme_ppt()
+
+\dontrun{
+# Best viewed against a dark slide background
+p + hvti_theme_dark_ppt() +
+  ggplot2::theme(plot.background = ggplot2::element_rect(fill = "navy"))
+}
+
+}
 \seealso{
 \code{\link[=hvti_theme]{hvti_theme()}}, \code{\link[=hvti_theme_light_ppt]{hvti_theme_light_ppt()}}, \code{\link[=theme_man]{theme_man()}},
 \code{\link[=theme_poster]{theme_poster()}}

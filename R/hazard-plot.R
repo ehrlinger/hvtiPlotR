@@ -284,8 +284,19 @@ sample_hazard_empirical <- function(n        = 500,
 #' @seealso [hazard_plot()], [sample_hazard_data()]
 #'
 #' @examples
+#' # Default: three age groups (<65, 65-80, ≥80) using Gompertz mortality
 #' lt <- sample_life_table(time_max = 10)
 #' head(lt)
+#' nlevels(lt$group)    # 3 age groups
+#' range(lt$survival)   # 0-100 % survivorship scale
+#'
+#' # Custom strata — two age groups, 15-year follow-up
+#' lt2 <- sample_life_table(
+#'   age_groups = c("Under 70", "70 and over"),
+#'   age_mids   = c(60, 78),
+#'   time_max   = 15
+#' )
+#' levels(lt2$group)
 #' @export
 sample_life_table <- function(age_groups = c("<65", "65-80", "\u226580"),
                                age_mids   = c(55, 72, 85),

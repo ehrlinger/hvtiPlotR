@@ -10,70 +10,167 @@
 #' graphics that conform to HVI manuscript and presentation standards using
 #' [ggplot2] and the [officer] package.
 #'
-#' All plot functions return bare [ggplot2::ggplot()] objects (or lists of
-#' them) so callers can apply additional `ggplot2` layers, scales, and themes
-#' without restriction.
+#' All plot functions return bare [ggplot2::ggplot()] objects so callers
+#' can apply additional `ggplot2` layers, scales, and themes without
+#' restriction. Each function ships with a `sample_*()` companion that
+#' generates realistic synthetic data for examples and tests.
 #'
 #' ## Themes
 #'
-#' \itemize{
-#'   \item [hvti_theme()]: Unified theme dispatcher (`"manuscript"`,
-#'     `"ppt"`, `"dark_ppt"`, `"poster"`).
-#'   \item [theme_man()] / `theme_manuscript`: Theme for manuscript figures.
-#'   \item [theme_ppt()]: Theme for PowerPoint presentation figures.
-#'   \item [theme_dark_ppt()]: Dark theme for PowerPoint presentations.
-#'   \item [theme_poster()]: Theme for poster figures.
-#' }
+#' Use `hvti_theme()` as the single entry point. Lower-level functions are
+#' also exported for direct use.
 #'
-#' ## Output helpers
+#' * [hvti_theme()]: Unified dispatcher — accepts `"manuscript"`,
+#'   `"poster"`, `"light_ppt"`, or `"dark_ppt"`.
+#' * [hvti_theme_manuscript()] / [theme_manuscript()] / [theme_man()]:
+#'   Clean white-background theme for journal figures.
+#' * [hvti_theme_dark_ppt()] / [theme_dark_ppt()] / [theme_ppt()] /
+#'   [hvti_theme_ppt()]: Large-font theme with a dark panel for
+#'   PowerPoint slides.
+#' * [hvti_theme_light_ppt()] / [theme_light_ppt()]: Large-font theme with
+#'   a light panel background for PowerPoint slides.
+#' * [hvti_theme_poster()] / [theme_poster()]: Medium-font theme for
+#'   conference posters.
 #'
-#' \itemize{
-#'   \item [save_ppt()]: Save ggplot objects to a PowerPoint presentation
-#'     via the [officer] package.
-#'   \item [makeFootnote()]: Add footnotes to graphics.
-#' }
+#' ## Saving figures
+#'
+#' * [save_ppt()]: Insert one or more ggplot objects into a PowerPoint file
+#'   as editable DrawingML vector graphics via [officer] and [rvg].
+#' * [make_footnote()] / [makeFootnote()]: Add a draft footnote to a figure
+#'   during analysis; omit for publication-ready output.
 #'
 #' ## Plot functions
 #'
-#' \itemize{
-#'   \item [mirror_histogram()]: Side-by-side propensity-score histograms
-#'     (binary-match or IPTW-weighted mode). Ports `plot.sas` mirror
-#'     histogram output.
-#'   \item [stacked_histogram()]: Stacked (or filled) histogram of a numeric
-#'     variable faceted by a grouping factor.
-#'   \item [covariate_balance()]: Dot-plot of standardised mean differences
-#'     before and after propensity-score matching or weighting.
-#'   \item [goodness_followup()]: Goodness-of-follow-up scatter plot showing
-#'     actual vs. potential follow-up per operation year. Optionally includes
-#'     a non-fatal-event panel.
-#'   \item [survival_curve()]: Kaplan-Meier or Nelson-Aalen survival analysis
-#'     returning up to five plot types (survival, cumulative hazard, hazard,
-#'     log-log, life/RMST) plus risk and report tables. Ports the SAS
-#'     `%kaplan` and `%nelsont` macros from `tp.ac.dead.sas`.
-#' }
+#' ### Propensity Score & Matching
+#'
+#' * [mirror_histogram()]: Side-by-side propensity-score histograms for
+#'   binary-matched or IPTW-weighted cohorts. Ports the
+#'   `tp.lp.mirror-histogram_*` and `tp.lp.mirror_histo_before_after_wt`
+#'   SAS scripts.
+#' * [covariate_balance()]: Standardised mean difference dot-plot before
+#'   and after propensity-score matching or weighting. Ports
+#'   `tp.lp.propen.cov_balance.R`.
+#' * [stacked_histogram()]: Stacked or filled histogram of a numeric
+#'   variable by group.
+#'
+#' ### Survival & Hazard
+#'
+#' * [survival_curve()]: Kaplan-Meier or Nelson-Aalen survival analysis
+#'   returning up to five plot types (survival, cumulative hazard, hazard,
+#'   log-log, life/RMST) plus risk and report tables. Ports the SAS
+#'   `%kaplan` and `%nelsont` macros from `tp.ac.dead.sas`.
+#' * [hazard_plot()]: Parametric hazard/survival curves from pre-fitted
+#'   model output, with optional KM empirical overlay and population
+#'   life-table reference. Ports the `tp.hp.*` template family.
+#' * [survival_difference_plot()]: Mean survival difference (life gained)
+#'   over time between two treatment arms, with confidence ribbons. Ports
+#'   `tp.hp.dead.life-gained.sas`.
+#' * [nnt_plot()]: Number-needed-to-treat over time derived from the
+#'   survival difference. Ports `tp.hp.numtreat.survdiff.matched.sas`.
+#'
+#' ### Nonparametric Temporal Curves
+#'
+#' * [nonparametric_curve_plot()]: Two-phase nonparametric temporal trend
+#'   curves for binary or continuous outcomes with optional 68%/95% CI
+#'   ribbon and binned data summary points. Ports the `tp.np.*` template
+#'   family.
+#' * [nonparametric_ordinal_plot()]: Grade-specific probability curves
+#'   from cumulative proportional-odds models (e.g. TR/AR grade). Ports
+#'   `tp.np.tr.ivecho.*` and `tp.np.po_ar.u_multi.ordinal.sas`.
+#'
+#' ### Study Design & Goodness of Follow-Up
+#'
+#' * [goodness_followup()]: Goodness-of-follow-up scatter plot showing
+#'   actual vs. potential follow-up per operation year. Ports `tp.dp.gfup.R`.
+#' * [goodness_event_plot()]: Companion panel showing non-fatal event counts
+#'   alongside the goodness-of-follow-up plot.
+#'
+#' ### Longitudinal & Repeated Measures
+#'
+#' * [trends_plot()]: Annual trend lines with optional confidence ribbons
+#'   for multiple groups. Ports the `tp.lp.trends.*`, `tp.rp.trends.*`,
+#'   and `tp.dp.trends.R` template families.
+#' * [spaghetti_plot()]: Individual patient trajectories over time,
+#'   optionally stratified by group. Ports `tp.dp.spaghetti.echo.R`.
+#' * [longitudinal_counts_plot()]: Grouped bar chart of patient and
+#'   measurement counts at discrete follow-up windows.
+#' * [longitudinal_counts_table()]: Numeric table panel of the same counts,
+#'   intended for patchwork composition below [longitudinal_counts_plot()].
+#'
+#' ### Flow Diagrams
+#'
+#' * [alluvial_plot()]: Alluvial (Sankey) diagram of patient flow between
+#'   states across time points. Ports
+#'   `tp.dp.female_bicus_preAR_sankey.R`.
+#' * [cluster_sankey_plot()]: Cluster-stability Sankey showing how patients
+#'   redistribute across K values in a PAM analysis.
+#'
+#' ### Exploratory Data Analysis
+#'
+#' * [eda_plot()]: Single-variable EDA: bar chart (categorical) or
+#'   scatter + LOESS (continuous). Ports
+#'   `tp.dp.EDA_barplots_scatterplots.R`.
+#' * [eda_classify_var()]: Classify a vector as `"Cont"`, `"Cat_Num"`, or
+#'   `"Cat_Char"` using the `UniqueLimit` heuristic from
+#'   `Barplot_Scatterplot_Function.R`.
+#' * [eda_select_vars()]: Subset and reorder a data frame by a character
+#'   vector or space-separated column-name string. Replaces
+#'   `Order_Variables()`.
+#' * [upset_plot()]: UpSet intersection plot for set membership across
+#'   binary indicator columns. Ports `tp.complexUpset.R`.
 #'
 #' ## Sample-data generators
 #'
-#' Each plot function ships with a companion generator for use in examples
-#' and tests:
+#' Each generator produces realistic synthetic data sized and structured to
+#' match the corresponding SAS dataset exports.
 #'
-#' \itemize{
-#'   \item [sample_mirror_histogram_data()]: Simulates propensity scores via
-#'     a logistic model with greedy 1:1 caliper matching and optional IPTW
-#'     weights.
-#'   \item [sample_stacked_histogram_data()]: Simulates year-by-category
-#'     count data.
-#'   \item [sample_covariate_balance_data()]: Simulates patient-level
-#'     covariates with a logistic propensity model and caliper matching,
-#'     returning standardised mean differences before and after matching.
-#'   \item [sample_goodness_followup_data()]: Simulates an operative cohort
-#'     with operation dates, follow-up times, death, and non-fatal events.
-#'   \item [sample_survival_data()]: Simulates exponential survival times
-#'     with administrative censoring and optional treatment strata.
-#' }
+#' * [sample_mirror_histogram_data()]: Propensity scores via a logistic
+#'   model with greedy 1:1 caliper matching and optional IPTW weights.
+#' * [sample_covariate_balance_data()]: Standardised mean differences
+#'   before and after propensity matching.
+#' * [sample_stacked_histogram_data()]: Year-by-category count data.
+#' * [sample_survival_data()]: Exponential survival times with
+#'   administrative censoring and optional treatment strata.
+#' * [sample_hazard_data()]: Weibull parametric survival predictions on a
+#'   fine time grid, matching the `predict` dataset from `%hazpred`.
+#' * [sample_hazard_empirical()]: Binned Kaplan-Meier empirical points
+#'   matching the `plout` / `acpdms` dataset.
+#' * [sample_life_table()]: Age-group-specific Gompertz survivorship curves
+#'   matching US population life-table SAS overlays.
+#' * [sample_survival_difference_data()]: Mean survival difference between
+#'   two parametric arms with confidence bands.
+#' * [sample_nnt_data()]: Number-needed-to-treat derived from survival
+#'   difference data.
+#' * [sample_nonparametric_curve_data()]: Two-phase nonparametric curve
+#'   predictions (binary or continuous outcome) on a fine time grid.
+#' * [sample_nonparametric_curve_points()]: Binned patient-level data
+#'   summary points matching the SAS `means` dataset.
+#' * [sample_nonparametric_ordinal_data()]: Grade-specific cumulative
+#'   proportional-odds probability curves.
+#' * [sample_nonparametric_ordinal_points()]: Binned ordinal data summary
+#'   points per grade level.
+#' * [sample_goodness_followup_data()]: Operative cohort with operation
+#'   dates, follow-up times, death, and non-fatal events.
+#' * [sample_trends_data()]: Multi-group annual trend data with confidence
+#'   ribbons.
+#' * [sample_spaghetti_data()]: Patient-level longitudinal measurements
+#'   over time.
+#' * [sample_longitudinal_counts_data()]: Pre-aggregated patient and
+#'   measurement counts at discrete follow-up windows.
+#' * [sample_alluvial_data()]: Patient flow between states across multiple
+#'   time points in wide format.
+#' * [sample_cluster_sankey_data()]: Cluster assignments across K values
+#'   for a PAM stability analysis.
+#' * [sample_eda_data()]: Mixed-type cardiac-surgery registry simulation
+#'   (binary, ordinal, character-categorical, and continuous variables).
+#' * [sample_upset_data()]: Binary indicator columns for UpSet intersection
+#'   analysis.
 #'
 #' @references
 #' Wickham, H. *ggplot2: Elegant Graphics for Data Analysis*. Springer, 2009.
+#'
+#' Gohel, D. *officer: Manipulation of Microsoft Word and PowerPoint
+#' Documents*. R package. <https://davidgohel.github.io/officer/>
 #'
 #' @name hvtiPlotR-package
 #' @aliases hvtiPlotR

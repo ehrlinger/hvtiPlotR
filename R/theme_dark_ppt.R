@@ -24,6 +24,22 @@
 #' @seealso [hvti_theme()], [hvti_theme_light_ppt()], [theme_man()],
 #'   [theme_poster()]
 #'
+#' @examples
+#' library(ggplot2)
+#' p <- ggplot(mtcars, aes(wt, mpg, colour = factor(cyl))) + geom_point()
+#'
+#' # Dark PPT theme — large font, white text, black panel
+#' p + hvti_theme_dark_ppt()
+#'
+#' # Via alias
+#' p + theme_ppt()
+#'
+#' \dontrun{
+#' # Best viewed against a dark slide background
+#' p + hvti_theme_dark_ppt() +
+#'   ggplot2::theme(plot.background = ggplot2::element_rect(fill = "navy"))
+#' }
+#'
 #' @import ggplot2
 #' @export
 #' @aliases theme_dark_ppt theme_ppt hvti_theme_ppt

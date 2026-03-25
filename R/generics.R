@@ -14,6 +14,21 @@
 #'   constructor.
 #'
 #' @return A [ggplot2::theme()] object.
+#'
+#' @examples
+#' library(ggplot2)
+#' p <- ggplot(mtcars, aes(wt, mpg, colour = factor(cyl))) + geom_point()
+#'
+#' p + hvti_theme("manuscript")   # journal figure
+#' p + hvti_theme("poster")       # conference poster
+#' p + hvti_theme("light_ppt")    # light-background slide
+#'
+#' \dontrun{
+#' # Dark PPT — best viewed against a dark slide background
+#' p + hvti_theme("dark_ppt") +
+#'   ggplot2::theme(plot.background = ggplot2::element_rect(fill = "navy"))
+#' }
+#'
 #' @export
 hvti_theme <- function(style = c("ppt", "dark_ppt", "light_ppt",
                                   "manuscript", "poster"), ...) {

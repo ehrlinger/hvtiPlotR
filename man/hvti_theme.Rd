@@ -30,3 +30,18 @@ A \code{\link[ggplot2:theme]{ggplot2::theme()}} object.
 \description{
 Provides a single entry point for obtaining any supported hvtiPlotR theme.
 }
+\examples{
+library(ggplot2)
+p <- ggplot(mtcars, aes(wt, mpg, colour = factor(cyl))) + geom_point()
+
+p + hvti_theme("manuscript")   # journal figure
+p + hvti_theme("poster")       # conference poster
+p + hvti_theme("light_ppt")    # light-background slide
+
+\dontrun{
+# Dark PPT — best viewed against a dark slide background
+p + hvti_theme("dark_ppt") +
+  ggplot2::theme(plot.background = ggplot2::element_rect(fill = "navy"))
+}
+
+}

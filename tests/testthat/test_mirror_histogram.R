@@ -296,3 +296,13 @@ test_that("mirror_histogram errors when weight_col column is absent", {
     "Missing required columns"
   )
 })
+
+# ============================================================================
+# Snapshot — diagnostics list (fixed seed)
+# ============================================================================
+
+test_that("mirror_histogram diagnostics match snapshot (fixed seed)", {
+  df     <- sample_mirror_histogram_data(200, seed = 42)
+  result <- suppressMessages(mirror_histogram(df))
+  expect_snapshot(attr(result, "diagnostics"))
+})

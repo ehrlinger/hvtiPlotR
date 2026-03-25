@@ -38,7 +38,15 @@
 #'
 #' @examples
 #' dta <- sample_longitudinal_counts_data(n_patients = 300, seed = 42)
-#' dta
+#' str(dta)                # time_label (factor), series, count
+#' levels(dta$time_label)  # 7 discrete follow-up windows
+#'
+#' # Inspect patient counts at each window
+#' subset(dta, series == "Patients")
+#'
+#' # Larger cohort
+#' dta2 <- sample_longitudinal_counts_data(n_patients = 1000, seed = 7)
+#' max(dta2$count)         # peak observation count
 #' @export
 sample_longitudinal_counts_data <- function(n_patients = 300,
                                             max_obs    = 6,

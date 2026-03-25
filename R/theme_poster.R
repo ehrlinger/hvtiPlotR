@@ -21,6 +21,19 @@
 #'
 #' @seealso [hvti_theme()], [theme_man()], [theme_ppt()], [theme_dark_ppt()]
 #'
+#' @examples
+#' library(ggplot2)
+#' p <- ggplot(mtcars, aes(wt, mpg, colour = factor(cyl))) + geom_point()
+#'
+#' # Default poster theme (16 pt base font)
+#' p + hvti_theme_poster()
+#'
+#' # Larger font for a wide-format poster
+#' p + hvti_theme_poster(base_size = 20)
+#'
+#' # Via alias
+#' p + theme_poster()
+#'
 #' @import ggplot2
 #' @export
 #' @aliases theme_poster

@@ -174,8 +174,20 @@ sample_nonparametric_curve_data <- function(n            = 500,
 #' @seealso [sample_nonparametric_curve_data()], [nonparametric_curve_plot()]
 #'
 #' @examples
+#' # Single-group data summary points (probability outcome)
 #' pts <- sample_nonparametric_curve_points(n = 500, time_max = 12)
 #' head(pts)
+#' names(pts)           # "time", "value"
+#'
+#' # Two-group points — continuous outcome (e.g. AV peak gradient)
+#' pts2 <- sample_nonparametric_curve_points(
+#'   n            = 400,
+#'   time_max     = 7,
+#'   groups       = c("Ozaki" = 0.7, "CE-Pericardial" = 1.3),
+#'   outcome_type = "continuous"
+#' )
+#' levels(pts2$group)   # "Ozaki", "CE-Pericardial"
+#' nrow(pts2)           # 2 groups x n_bins rows
 #' @export
 sample_nonparametric_curve_points <- function(n            = 500,
                                               time_max     = 12,

@@ -40,8 +40,19 @@ mortality, matching the US population life table overlays used in
 }
 }
 \examples{
+# Default: three age groups (<65, 65-80, ≥80) using Gompertz mortality
 lt <- sample_life_table(time_max = 10)
 head(lt)
+nlevels(lt$group)    # 3 age groups
+range(lt$survival)   # 0-100 \% survivorship scale
+
+# Custom strata — two age groups, 15-year follow-up
+lt2 <- sample_life_table(
+  age_groups = c("Under 70", "70 and over"),
+  age_mids   = c(60, 78),
+  time_max   = 15
+)
+levels(lt2$group)
 }
 \seealso{
 \code{\link[=hazard_plot]{hazard_plot()}}, \code{\link[=sample_hazard_data]{sample_hazard_data()}}
