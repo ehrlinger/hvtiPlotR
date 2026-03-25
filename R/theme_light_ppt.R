@@ -25,6 +25,19 @@
 #' @seealso [hvti_theme()], [hvti_theme_dark_ppt()], [theme_man()],
 #'   [theme_poster()]
 #'
+#' @examples
+#' library(ggplot2)
+#' p <- ggplot(mtcars, aes(wt, mpg, colour = factor(cyl))) + geom_point()
+#'
+#' # Light PPT theme — large font, black text, transparent background
+#' p + hvti_theme_light_ppt()
+#'
+#' # Via alias
+#' p + theme_light_ppt()
+#'
+#' # Via the generic dispatcher
+#' p + hvti_theme("light_ppt")
+#'
 #' @import ggplot2
 #' @export
 #' @aliases theme_light_ppt

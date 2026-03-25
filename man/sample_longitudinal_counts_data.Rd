@@ -31,7 +31,15 @@ functions share the same underlying simulation.
 }
 \examples{
 dta <- sample_longitudinal_counts_data(n_patients = 300, seed = 42)
-dta
+str(dta)                # time_label (factor), series, count
+levels(dta$time_label)  # 7 discrete follow-up windows
+
+# Inspect patient counts at each window
+subset(dta, series == "Patients")
+
+# Larger cohort
+dta2 <- sample_longitudinal_counts_data(n_patients = 1000, seed = 7)
+max(dta2$count)         # peak observation count
 }
 \seealso{
 \code{\link[=longitudinal_counts_plot]{longitudinal_counts_plot()}}, \code{\link[=sample_spaghetti_data]{sample_spaghetti_data()}}

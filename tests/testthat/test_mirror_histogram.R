@@ -58,7 +58,16 @@ test_that("mirror_histogram errors when required columns are missing", {
   df$match <- NULL
   expect_error(
     mirror_histogram(data = df),
-    "Missing required columns"
+    "Missing required column"
+  )
+})
+
+test_that("mirror_histogram errors when score_col is non-numeric", {
+  df          <- sample_mirror_histogram_data(25)
+  df$prob_t   <- as.character(df$prob_t)   # coerce to character
+  expect_error(
+    mirror_histogram(data = df, score_col = "prob_t"),
+    "must be numeric"
   )
 })
 
@@ -173,7 +182,7 @@ test_that("validate errors when weight_col is absent from data", {
     validate_mirror_histogram_input(df, "prob_t", "tavr", "match",
                                     c(0, 1), c("A", "B"), 5,
                                     weight_col = "mt_wt"),
-    "Missing required columns"
+    "Missing required column"
   )
 })
 
@@ -293,6 +302,16 @@ test_that("mirror_histogram errors when weight_col column is absent", {
   df <- sample_mirror_histogram_data(25)
   expect_error(
     mirror_histogram(df, weight_col = "nonexistent"),
-    "Missing required columns"
+    "Missing required column"
   )
+})
+
+# ============================================================================
+# Snapshot — diagnostics list (fixed seed)
+# ============================================================================
+
+test_that("mirror_histogram diagnostics match snapshot (fixed seed)", {
+  df     <- sample_mirror_histogram_data(200, seed = 42)
+  result <- suppressMessages(mirror_histogram(df))
+  expect_snapshot(attr(result, "diagnostics"))
 })

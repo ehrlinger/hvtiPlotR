@@ -256,9 +256,14 @@ test_that("survival_curve report_table rows == length(report_times) * n_strata",
     seed = 6
   )
   report_times <- c(1, 5, 10)
-  result <- expect_warning(
+  # In testthat 3, expect_warning() returns the condition, not the expression
+  # value.  Verify the deprecation fires separately, then capture the result.
+  expect_warning(
     survival_curve(dta, strata_col = "valve_type", report_times = report_times),
     "deprecated"
+  )
+  result <- suppressWarnings(
+    survival_curve(dta, strata_col = "valve_type", report_times = report_times)
   )
   expect_equal(nrow(attr(result, "report_table")), length(report_times) * 2L)
 })
@@ -287,11 +292,12 @@ test_that("survival_curve stratified mode has correct strata in km_data", {
     strata_levels = c("Type A", "Type B"),
     seed = 9
   )
-  result <- expect_warning(
+  expect_warning(
     survival_curve(dta, strata_col = "valve_type"),
     "deprecated"
   )
-  strata_found <- unique(attr(result, "km_data")$strata)
+  result        <- suppressWarnings(survival_curve(dta, strata_col = "valve_type"))
+  strata_found  <- unique(attr(result, "km_data")$strata)
   expect_true(all(c("Type A", "Type B") %in% strata_found))
 })
 
@@ -308,9 +314,12 @@ test_that("survival_curve stratified risk_table has rows == report_times * n_str
     seed = 11
   )
   report_times <- c(5, 10, 15, 20)
-  result <- expect_warning(
+  expect_warning(
     survival_curve(dta, strata_col = "valve_type", report_times = report_times),
     "deprecated"
+  )
+  result <- suppressWarnings(
+    survival_curve(dta, strata_col = "valve_type", report_times = report_times)
   )
   expect_equal(nrow(attr(result, "risk_table")), length(report_times) * 3L)
 })
@@ -360,20 +369,20 @@ test_that("survival_curve errors when data is not a data frame", {
 test_that("survival_curve errors when time_col is missing from data", {
   dta      <- sample_survival_data(n = 50, seed = 1)
   dta$iv_dead <- NULL
-  expect_error(survival_curve(dta), "not found")
+  expect_error(survival_curve(dta), "column")
 })
 
 test_that("survival_curve errors when event_col is missing from data", {
   dta      <- sample_survival_data(n = 50, seed = 1)
   dta$dead <- NULL
-  expect_error(survival_curve(dta), "not found")
+  expect_error(survival_curve(dta), "column")
 })
 
 test_that("survival_curve errors when strata_col is missing from data", {
   dta <- sample_survival_data(n = 50, seed = 1)
   expect_error(
     survival_curve(dta, group_col = "nonexistent_col"),
-    "not found"
+    "column"
   )
 })
 
@@ -401,6 +410,28 @@ test_that("survival_curve errors on invalid method", {
   dta <- sample_survival_data(n = 50, seed = 1)
   expect_error(survival_curve(dta, method = "breslow"),
                "kaplan-meier|nelson-aalen")
+})
+
+test_that("survival_curve errors when time_col is non-numeric", {
+  dta           <- sample_survival_data(n = 50, seed = 1)
+  dta$iv_dead   <- as.character(dta$iv_dead)   # convert to character
+  expect_error(survival_curve(dta), "must be numeric")
+})
+
+test_that("survival_curve errors when event_col has invalid values", {
+  dta       <- sample_survival_data(n = 50, seed = 1)
+  dta$dead  <- sample(c("yes", "no"), 50, replace = TRUE)
+  expect_error(survival_curve(dta), "0/1 or logical")
+})
+
+test_that("survival_curve errors when alpha exceeds 1", {
+  dta <- sample_survival_data(n = 50, seed = 1)
+  expect_error(survival_curve(dta, alpha = 1.5), "alpha")
+})
+
+test_that("survival_curve errors when alpha is negative", {
+  dta <- sample_survival_data(n = 50, seed = 1)
+  expect_error(survival_curve(dta, alpha = -0.1), "alpha")
 })
 
 # ===========================================================================
@@ -491,4 +522,32 @@ test_that("km_data lower <= surv and upper >= surv", {
   km     <- attr(result, "km_data")
   expect_true(all(km$lower <= km$surv + 1e-10, na.rm = TRUE))
   expect_true(all(km$upper >= km$surv - 1e-10, na.rm = TRUE))
+})
+
+# ===========================================================================
+# survival_curve — edge cases
+# ===========================================================================
+
+test_that("survival_curve handles all-censored data (no events)", {
+  dta      <- sample_survival_data(n = 100, seed = 1)
+  dta$dead <- FALSE    # override: zero events
+  expect_s3_class(survival_curve(dta), "ggplot")
+})
+
+test_that("survival_curve handles single-observation data frame", {
+  dta <- sample_survival_data(n = 1, seed = 1)
+  # May produce a degenerate KM but must not hard-error
+  expect_error(survival_curve(dta), NA)
+})
+
+# ===========================================================================
+# survival_curve — snapshot (report_table values at fixed seed)
+# ===========================================================================
+
+test_that("survival_curve report_table matches snapshot (fixed seed)", {
+  result <- survival_curve(
+    sample_survival_data(n = 500, seed = 42),
+    report_times = c(1, 5, 10, 15, 20)
+  )
+  expect_snapshot(attr(result, "report_table"))
 })

@@ -28,3 +28,6 @@ hvtiPlotR.Rproj
 .Rproj.user
 .Rhistory
 .RData
+/doc/
+/Meta/
+.fuse_hidden*

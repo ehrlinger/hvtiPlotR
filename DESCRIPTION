@@ -1,7 +1,7 @@
 Package: hvtiPlotR
 Type: Package
 Title: Porting HVTI plot templates and methodology documentation to ggplot2 package in R
-Version: 2.0.0.9001
+Version: 2.0.0.9002
 Date: 2026-03-19
 Authors@R: c(
     person(
@@ -22,27 +22,29 @@ Description: ggplot2 themes and methodology documentation for creating
 Depends:
     R (>= 4.1.0)
 Imports:
-    assertthat,
-    ComplexUpset,
-    ggalluvial,
-    ggplot2,
+    ComplexUpset (>= 1.3.3),
+    ggalluvial (>= 0.12.3),
+    ggplot2 (>= 3.4.0),
     grid,
-    rlang,
-    survival,
-    officer,
-    rvg
+    rlang (>= 1.0.0),
+    survival (>= 3.1-0),
+    officer (>= 0.6.0),
+    rvg (>= 0.2.5)
+Config/testthat/edition: 3
 Suggests:
     knitr,
-    testthat,
+    testthat (>= 3.0.0),
     devtools,
     ggsankey,
     RColorBrewer,
     gridExtra,
     haven,
+    patchwork,
     scales,
     tidyr,
     quarto,
-    pkgload
+    pkgload,
+    here
 Remotes:
     davidsjoberg/ggsankey
 VignetteBuilder: quarto

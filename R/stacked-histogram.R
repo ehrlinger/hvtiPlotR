@@ -26,18 +26,13 @@
 
 # Validate stacked_histogram inputs
 validate_stacked_histogram_input <- function(data, x_col, group_col, binwidth, position) {
-  if (!(is.data.frame(data)))
-    stop("`data` must be a data.frame.")
-  missing_cols <- setdiff(c(x_col, group_col), names(data))
-  if (!(length(missing_cols) == 0))
-    stop(sprintf("Missing required columns: %s",
-                 paste(missing_cols, collapse = ", ")))
-  if (!(is.numeric(data[[x_col]])))
-    stop(sprintf("`%s` must be numeric.", x_col))
+  .check_df(data)
+  .check_cols(data, c(x_col, group_col))
+  .check_numeric_col(data, x_col)
   if (!is.numeric(binwidth) || length(binwidth) != 1L || !(binwidth > 0))
-    stop("`binwidth` must be a positive numeric scalar.")
+    stop("`binwidth` must be a positive numeric scalar.", call. = FALSE)
   if (!(position %in% c("stack", "fill")))
-    stop('`position` must be "stack" or "fill".')
+    stop('`position` must be "stack" or "fill".', call. = FALSE)
 }
 
 # Build the bare ggplot object without scale or label modifications
@@ -182,10 +177,13 @@ sample_stacked_histogram_data <- function(n_years      = 20,
                                           seed         = 42L) {
   if (!is.numeric(n_years) || length(n_years) != 1L || n_years < 1L ||
       n_years %% 1 != 0)
-    stop("`n_years` must be a positive integer.")
+    stop("`n_years` must be a positive integer.", call. = FALSE)
   if (!is.numeric(n_categories) || length(n_categories) != 1L ||
       n_categories < 1L || n_categories %% 1 != 0)
-    stop("`n_categories` must be a positive integer.")
+    stop("`n_categories` must be a positive integer.", call. = FALSE)
+  if (!is.numeric(start_year) || length(start_year) != 1L ||
+      !is.finite(start_year) || start_year %% 1 != 0)
+    stop("`start_year` must be a finite integer-valued number.", call. = FALSE)
   
   set.seed(seed)
   years <- start_year + seq_len(n_years) - 1L

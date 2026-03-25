@@ -92,7 +92,7 @@ We first look at some example code using the plot.sas macro. This code is intend
 
 Note the first line of the code block in Listing 1 indicates the path to the specific example file location. The filename statements bring in the plot.sas macro, indicate how to print, and where to save the graphics file. The plot.sas macro call starts with the %plot command.
 
-The goptions statement in the first line sets global graphic values, including the filename (`gaccess=`) where the figure will be saved (see Section 5). Each plot.sas command is terminated with the end; statement. We’ll look at each of the remaining command type individually.
+The goptions statement in the first line sets global graphic values, including the filename (`gaccess=`) where the figure will be saved (see Section 5). Each plot.sas command is terminated with the end; statement. We'll look at each of the remaining command type individually.
 
 ``` sas
 ******NON - PARAMETRIC : SYMBOLS AND CONFIDENCE BARS *******
@@ -138,6 +138,79 @@ A similar set of `plot.sas` commands (Listing 4) is used to create presentation 
 
 In addition to the plot.sas commands, we also have a set of graphics standards (graphics rules) for what to and not to include in presentation graphics, we will describe these rules in (Section 6). Many of these are incorporated into the plot.sas macro to protect the user from violating these standards.
 
+# SAS → R Quick Reference
+
+The table below maps every `plot.sas` command type to its ggplot2 / hvtiPlotR
+equivalent. Use it as a look-up when converting an existing SAS script.
+
+## Structure and output
+
+| `plot.sas` command | R / ggplot2 equivalent | Notes |
+|---|---|---|
+| `%plot(goptions device=pscolor, ...)` | `ggsave(filename = "fig.pdf", width = 11, height = 8.5)` | Manuscript PDF |
+| `%plot(goptions device=cgmmppa, ...)` | `save_ppt(object = p, template = ..., powerpoint = ...)` | Editable PPT vector |
+| `gaccess=gsasfile "path/file.ps"` | `ggsave(filename = here::here("graphs", "fig.pdf"), ...)` | Output file path |
+| `id l="path/file"` | `labs(caption = getwd())` or `make_footnote()` | Figure footnote / path label |
+
+## Axis labels and scales
+
+| `plot.sas` command | R / ggplot2 equivalent | Notes |
+|---|---|---|
+| `labelx l="Years After Operation"` | `labs(x = "Years After Operation")` | x-axis title |
+| `labely l="Freedom from Event (%)"` | `labs(y = "Freedom from Event (%)")` | y-axis title |
+| `axisx order=(0 to 10 by 2), minor=none` | `scale_x_continuous(limits = c(0,10), breaks = seq(0,10,2))` | x scale + tick positions |
+| `axisy order=(0 to 100 by 20), minor=none` | `scale_y_continuous(limits = c(0,100), breaks = seq(0,100,20))` | y scale + tick positions |
+| `coord_cartesian(xlim=c(0,5.1), ylim=c(0,101))` | `coord_cartesian(xlim = c(0, 5.1), ylim = c(0, 101))` | Viewport crop without data loss |
+
+## Tuple statements — points and error bars
+
+| `plot.sas` option | R / ggplot2 equivalent | Notes |
+|---|---|---|
+| `tuple set=..., x=t, y=est, cll=lo, clu=hi` | `nonparametric_curve_plot(curve_data, lower_col="lo", upper_col="hi")` | Preferred hvtiPlotR function |
+| `symbol=dot` | `geom_point(shape = 20)` | Filled circle |
+| `symbol=circle` | `geom_point(shape = 1)` | Open circle |
+| `symbol=square` | `geom_point(shape = 15)` | Filled square |
+| `symbol=diamond` | `geom_point(shape = 18)` | Filled diamond |
+| `symbsize=1/2` | `size = 2.0` in `geom_point()` | Point diameter (different scale) |
+| `ebar=1, ebarsize=3/4` | `geom_errorbar(aes(ymin=lo, ymax=hi), width=0.3)` | Confidence error bars |
+| `linepe=0` (no connecting line) | omit `geom_line()` | Points only |
+
+## Tuple statements — lines and ribbons
+
+| `plot.sas` option | R / ggplot2 equivalent | Notes |
+|---|---|---|
+| `tuple set=..., x=t, y=est, cll=lo, clu=hi` | `geom_line() + geom_ribbon(aes(ymin=lo, ymax=hi), alpha=0.2)` | Line + CI ribbon |
+| `width=3` (thick line) | `linewidth = 1.2` in `geom_line()` | ggplot2 uses a different scale |
+| `width=0.5` (thin line) | `linewidth = 0.5` | |
+| `color=black` | `colour = "black"` or `scale_colour_manual(values = ...)` | Explicit colour |
+| `color=blue` | `colour = "steelblue"` | Use ColorBrewer for multi-group |
+| `linecl=2` (dashed) | `linetype = "dashed"` or `scale_linetype_manual(values = ...)` | Line type |
+| `linecl=0` (solid) | `linetype = "solid"` (default) | |
+
+## Symbols and colours reference
+
+| `plot.sas` `symbol=` value | ggplot2 `shape =` integer |
+|---|---|
+| `dot` | `20` (filled circle, no border) |
+| `circle` | `1` (open circle) |
+| `square` | `15` (filled square) |
+| `triangle` | `17` (filled triangle up) |
+| `diamond` | `18` (filled diamond) |
+| `plus` | `3` |
+| `x` | `4` |
+
+For multi-group figures use `scale_shape_manual(values = c(...))` to assign
+shapes to named factor levels rather than setting `shape =` directly.
+
+## Device and theme mapping
+
+| `plot.sas` device | hvtiPlotR theme | Use for |
+|---|---|---|
+| `device=pscolor` | `hvti_theme("manuscript")` | Journal PDF, black on white |
+| `device=cgmmppa` + dark slide | `hvti_theme("dark_ppt")` | Dark-background PowerPoint |
+| `device=cgmmppa` + white slide | `hvti_theme("light_ppt")` | Light/transparent PowerPoint |
+| — | `hvti_theme("poster")` | Conference poster (larger text) |
+
 # Generating ggplot2 graphics
 
 In order to create figures similar to using plot.sas macro, using R, we will make extensive use of the ggplot2 package. This will require translating from the graphics language of plot.sas to the graphics language of ggplot2.
@@ -167,43 +240,76 @@ run;
 You can install the package with the following commands:
 
 ```r
-# Install the latest **hvtiPlotR** package.
-#
-#
-# The devtools package is installed on all our
-# jjnb-gen servers as well as other R instances.
-# For working on your own install, first use the install command
-# install.packages("devtools")
-# Load the package
-library("devtools")
-# To get the latest version of hvtiPlotR.
-install_github("ehrlinger/hvtiPlotR")
+# Install from GitHub using the remotes package
+install.packages("remotes")   # if not already installed
+remotes::install_github("ehrlinger/hvtiPlotR")
 ```
 
 ## Importing the data
 
-For most of this document, we assume that the data analysis has been completed in SAS. In this case, the first step in creating figures in R is to get the data out of SAS. There are many ways to do this, but we have had success using the tp.bd.SAStoR.sas program (under the datasets folder) to export a data set into a SAS xport file.
+For most of this document, we assume that the data analysis has been completed
+in SAS. The first step in creating figures in R is to get the data out of SAS.
+There are two common approaches.
 
-Once an xport file has been created, we read it into R with the foreign package. This recipe reads an xport into a data.frame and then re-reads the xport file to pull out the SAS labels to describe the variables. The labels will be stored in a vector, which we can index by the variable names.
+### Option 1 — SAS xport file (recommended when you have SAS access)
+
+Use the **haven** package (included in **hvtiPlotR**'s `Suggests`) to read
+SAS xport (`.xpt`) files. It preserves variable labels as a `label` attribute
+on each column, which is accessible with `attr(dta$varname, "label")`.
 
 ```r
-library("foreign")
-# The xport file name
-dtFilename = system.file("extdata", "par_cst.xpt", package = "hvtiPlotR")
-# Read the xport file into a data.frame
-dta<- read.xport(dtFilename)
-# Reading in the labels takes 2 more commands.
-dta.info <- lookup.xport(dtFilename)
-dta.labels <- dta.info[[1]]$label
-## Fill in empty labels with the variable name
-dta.labels<-sapply(1:length(dta.labels), function(ind){
-if(dta.labels[ind] == "")
-  colnames(dta)[ind]
-else
-  dta.labels[ind]
+library(haven)
+
+# Read the xport file — variable labels are stored as column attributes
+dtFilename <- system.file("extdata", "par_cst.xpt", package = "hvtiPlotR")
+dta <- haven::read_xpt(dtFilename)
+
+# Extract labels into a named character vector for use in labs() calls
+dta_labels <- sapply(dta, function(col) {
+  lbl <- attr(col, "label")
+  if (is.null(lbl) || nchar(trimws(lbl)) == 0) NA_character_ else lbl
 })
-## For indexing the labels,
-names(dta.labels) = colnames(dta)
+# dta_labels["years"]  →  "Years after operation"
+```
+
+`haven` also reads SAS7BDAT files directly with `haven::read_sas()`, which is
+the most convenient route when the SAS server is accessible:
+
+```r
+dta <- haven::read_sas("path/to/analysis.sas7bdat")
+```
+
+### Option 2 — CSV export (when SAS is not available)
+
+Export the summary dataset from SAS using `PROC EXPORT`:
+
+```sas
+proc export data=mean_curv
+  outfile="&STUDY/graphs/mean_curv.csv"
+  dbms=csv replace;
+run;
+```
+
+Then read it in R:
+
+```r
+dta <- read.csv(here::here("graphs", "mean_curv.csv"))
+```
+
+This is the simplest approach and works well for the pre-computed summary
+datasets expected by **hvtiPlotR** plot functions (e.g., `nonparametric_curve_plot()`,
+`hazard_plot()`).
+
+### Using the bundled example data
+
+**hvtiPlotR** ships two example xport files for testing:
+
+```r
+par_file  <- system.file("extdata", "par_cst.xpt",  package = "hvtiPlotR")
+npar_file <- system.file("extdata", "npar_cst.xpt", package = "hvtiPlotR")
+
+parametric    <- haven::read_xpt(par_file)
+nonparametric <- haven::read_xpt(npar_file)
 ```
 
 ## Initialize the figure
@@ -456,19 +562,19 @@ ccf_pptPlot <- ggplot() +
     data = parametric,
     aes(x = years, y = noinit),
     color = "grey",
-    size = 1.5
+    linewidth = 1.5
   ) +
   geom_line(
     data = parametric,
     aes(x = years, y = nostrk),
     color = "red",
-    size = 1.5
+    linewidth = 1.5
   ) +
   geom_line(
     data = parametric,
     aes(x = years, y = nodeath),
     color = "blue",
-    size = 1.5
+    linewidth = 1.5
   )
 show(ccf_pptPlot)
 ```
@@ -525,35 +631,106 @@ For a full treatment of saving to PDF, poster, and PowerPoint formats see
 ## PowerPoint graphics
 
 Use `save_ppt()` to insert a ggplot as an editable vector graphic into a
-PowerPoint file. Apply `hvti_theme(“dark_ppt”)` or `hvti_theme(“light_ppt”)`
+PowerPoint file. Apply `hvti_theme("dark_ppt")` or `hvti_theme("light_ppt")`
 before saving.
 
 ```{r save_ppt_demo}
 #| eval: false
-p_ppt <- ccf_pptPlot + hvti_theme(“dark_ppt”)
+p_ppt <- ccf_pptPlot + hvti_theme("dark_ppt")
 
 save_ppt(
-  plot     = p_ppt,
-  filename = “../graphs/presentation.pptx”,
-  width    = 10,
-  height   = 7.5
+  object       = p_ppt,
+  template     = system.file("ClevelandClinic.pptx", package = "hvtiPlotR"),
+  powerpoint   = here::here("graphs", "presentation.pptx"),
+  slide_titles = "Competing Risks"
 )
 ```
 
-# Graphics rules to live by 
-This section is in progress. . . 
+# Graphics rules to live by
+
+These standards are followed by the CORR (Cardiovascular Outcomes Registries
+and Research) statistics group within the Heart & Vascular Institute. Many are
+encoded directly into the `hvtiPlotR` themes so you cannot accidentally violate
+them; the rest are conventions to keep in mind when composing figures.
+
+## Manuscript figures
+
+- **Use `hvti_theme("manuscript")`** — black text, white background, no
+  decorative fill. Never use coloured backgrounds in figures destined for
+  journals.
+- **No chart titles** — the figure caption in the manuscript text carries the
+  title. Do not add a `labs(title = ...)` layer.
+- **Axis labels are mandatory** — always supply `labs(x = ..., y = ...)`.
+  Units belong in the axis label, not in the tick labels (e.g. `"Years after
+  operation"`, not `"0 yr, 5 yr, 10 yr"`).
+- **Percent axes** — format y-axis tick labels as `"0%"`, `"20%"`, …, `"100%"`
+  using `scale_y_continuous(labels = function(x) paste0(x, "%"))`. Do not
+  write the `%` symbol inside the axis title.
+- **No minor grid lines** — major grid lines are optional and should be
+  light grey if used. Minor grid lines are never used.
+- **Confidence intervals as ribbons or error bars** — always show CIs where
+  they are available. Use `alpha = 0.2` for ribbons so they do not obscure
+  the curve.
+- **Save at US Letter landscape** — `ggsave(width = 11, height = 8.5)`.
+  Most journals accept this dimension; adjust only when the journal specifies
+  otherwise.
+- **Identify the file** — include a `labs(caption = getwd())` or call
+  `make_footnote()` during analysis to track which script produced the figure.
+  Remove this before final submission.
+
+## PowerPoint figures
+
+- **Use `hvti_theme("dark_ppt")` or `hvti_theme("light_ppt")`** — the dark
+  theme is the default for Cleveland Clinic presentation templates. Match the
+  theme to the slide background colour.
+- **No points on parametric curves** — presentation figures show lines only.
+  Points are reserved for nonparametric data summaries.
+- **Larger line widths** — use `linewidth = 1.5` or higher so lines are
+  clearly visible on a projected screen. The SAS equivalent was `width=3`.
+- **Fewer axis ticks** — five or six ticks per axis is the maximum for slides.
+  Use `scale_x_continuous(breaks = seq(0, 10, 2))` to control spacing.
+- **No captions** — slide titles carry the figure description. Do not add
+  `labs(caption = ...)` to presentation figures.
+- **Export as editable vector** — use `save_ppt()` rather than `ggsave()` so
+  that lines, shapes, and text remain selectable in PowerPoint for last-minute
+  edits.
+
+## Colour
+
+- **Multi-group figures** — use `scale_colour_brewer(palette = "Set1")` for
+  up to five groups. For more groups, select a palette manually or use
+  `RColorBrewer::brewer.pal()` to inspect options.
+- **Single-group survival/hazard figures** — `"steelblue"` for manuscript,
+  `"white"` for dark PPT.
+- **Avoid red/green combinations** — approximately 8% of men have red–green
+  colour blindness. Use shape (`scale_shape_manual()`) and linetype
+  (`scale_linetype_manual()`) in addition to colour so figures remain readable
+  in greyscale print.
+- **Fills vs colours** — `scale_colour_*()` controls lines and points;
+  `scale_fill_*()` controls ribbons and bars. Both must be set consistently
+  when a legend is shown.
+
+## What not to include
+
+- No decorative 3-D effects, drop shadows, or gradients.
+- No background images or watermarks.
+- No more than six groups per panel — split into separate figures if needed.
+- No axis tick marks on the top or right-hand sides.
+- No connecting lines between non-adjacent data points unless the relationship
+  is continuous (e.g., a survival curve).
+
 
 # Conclusions 
-In this article, we present the **hvtiPlotR** package for R. The package is made up of ggplot2 themes for publication quality graphics, as well as this tutorial document included as a package vignette. The package is available from https://github.com/ehrlinger/hvtiPlotR and can be installed using the `devtools::install_github("ehrlinger/hvtiPlotR")` command. 
+In this article, we present the **hvtiPlotR** package for R. The package is made up of ggplot2 themes for publication quality graphics, as well as this tutorial document included as a package vignette. The package is available from https://github.com/ehrlinger/hvtiPlotR and can be installed using the `remotes::install_github("ehrlinger/hvtiPlotR")` command. 
 
 # References 
 Auguie B (2012). gridExtra: functions in Grid graphics. R package version 0.9.1, URL http://CRAN.R-project.org/package=gridExtra. 
 
-Glynn EF (2005). “R Color Chart.” http://research.stowers-institute.org/efg/R/ Color/Chart/index.htm. Accessed: 2014-09-16. 
+Glynn EF (2005). "R Color Chart." http://research.stowers-institute.org/efg/R/ Color/Chart/index.htm. Accessed: 2014-09-16. 
 
 Gohel D (2014). ReporteRs: Microsoft Word, Microsoft Powerpoint and HTML docu- ments generation from R. R package version 0.6.1, URL http://davidgohel.github. io/ReporteRs/index.html,http://groups.google.com/group/reporters-package. 
 
-Harrower M, Brewer CA (2003). “ColorBrewer.org: An Online Tool for Selecting Colour Schemes for Maps.” The Cartographic Journal, pp. 27–37. doi:10.1179/ 000870403235002042. URL http://colorbrewer2.org/. 
+Harrower M, Brewer CA (2003). "ColorBrewer.org: An Online Tool for Selecting Colour Schemes for Maps." The Cartographic Journal, pp. 27–37. doi:10.1179/ 000870403235002042. URL http://colorbrewer2.org/. 
 
 Neuwirth E (2011). RColorBrewer: ColorBrewer palettes. R package version 1.0-5, URL http://CRAN.R-project.org/package=RColorBrewer. 
 

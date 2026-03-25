@@ -1,8 +1,6 @@
 # Tests for package data objects
 library(testthat)
 
-context("Data object tests")
-
 # ============================================================================
 # parametric data tests
 # ============================================================================

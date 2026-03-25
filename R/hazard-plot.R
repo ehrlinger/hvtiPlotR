@@ -284,15 +284,26 @@ sample_hazard_empirical <- function(n        = 500,
 #' @seealso [hazard_plot()], [sample_hazard_data()]
 #'
 #' @examples
+#' # Default: three age groups (<65, 65-80, ≥80) using Gompertz mortality
 #' lt <- sample_life_table(time_max = 10)
 #' head(lt)
+#' nlevels(lt$group)    # 3 age groups
+#' range(lt$survival)   # 0-100 % survivorship scale
+#'
+#' # Custom strata — two age groups, 15-year follow-up
+#' lt2 <- sample_life_table(
+#'   age_groups = c("Under 70", "70 and over"),
+#'   age_mids   = c(60, 78),
+#'   time_max   = 15
+#' )
+#' levels(lt2$group)
 #' @export
 sample_life_table <- function(age_groups = c("<65", "65-80", "\u226580"),
                                age_mids   = c(55, 72, 85),
                                time_max   = 10,
                                n_points   = 100) {
   if (length(age_groups) != length(age_mids))
-    stop("`age_groups` and `age_mids` must have the same length.")
+    stop("`age_groups` and `age_mids` must have the same length.", call. = FALSE)
 
   # Gompertz: h(age) = alpha * exp(beta * age)
   # Conditional S(t | baseline age) = exp(-alpha/beta*(exp(beta*(age+t))-exp(beta*age)))
@@ -364,7 +375,7 @@ sample_survival_difference_data <- function(n        = 500,
                                              ci_level = 0.95,
                                              seed     = 42L) {
   if (length(groups) != 2L)
-    stop("`groups` must be a named numeric vector of length 2.")
+    stop("`groups` must be a named numeric vector of length 2.", call. = FALSE)
 
   curves    <- sample_hazard_data(n = n, time_max = time_max,
                                   n_points = n_points, groups = groups,
@@ -825,40 +836,25 @@ hazard_plot <- function(curve_data,
                          errorbar_width   = 0.25) {
 
   # --- Validate curve_data --------------------------------------------------
-  if (!is.data.frame(curve_data))
-    stop("`curve_data` must be a data frame.")
-  for (col in c(x_col, estimate_col)) {
-    if (!(col %in% names(curve_data)))
-      stop(sprintf("Column '%s' not found in `curve_data`. Available columns: %s",
-                   col, paste(names(curve_data), collapse = ", ")))
-  }
-  for (col in c(lower_col, upper_col, group_col)) {
-    if (!is.null(col) && !(col %in% names(curve_data)))
-      stop(sprintf("Column '%s' not found in `curve_data`. Available columns: %s",
-                   col, paste(names(curve_data), collapse = ", ")))
-  }
+  .check_df(curve_data, "curve_data")
+  .check_cols(curve_data, c(x_col, estimate_col), "curve_data")
+  .check_col(curve_data, lower_col,  "curve_data")
+  .check_col(curve_data, upper_col,  "curve_data")
+  .check_col(curve_data, group_col,  "curve_data")
 
   # --- Validate empirical ---------------------------------------------------
   if (!is.null(empirical)) {
-    if (!is.data.frame(empirical))
-      stop("`empirical` must be a data frame.")
+    .check_df(empirical, "empirical")
     for (col in c(emp_x_col, emp_estimate_col, emp_lower_col,
-                  emp_upper_col, emp_group_col)) {
-      if (!is.null(col) && !(col %in% names(empirical)))
-        stop(sprintf("Column '%s' not found in `empirical`. Available columns: %s",
-                     col, paste(names(empirical), collapse = ", ")))
-    }
+                  emp_upper_col, emp_group_col))
+      .check_col(empirical, col, "empirical")
   }
 
   # --- Validate reference ---------------------------------------------------
   if (!is.null(reference)) {
-    if (!is.data.frame(reference))
-      stop("`reference` must be a data frame.")
-    for (col in c(ref_x_col, ref_estimate_col, ref_group_col)) {
-      if (!is.null(col) && !(col %in% names(reference)))
-        stop(sprintf("Column '%s' not found in `reference`. Available columns: %s",
-                     col, paste(names(reference), collapse = ", ")))
-    }
+    .check_df(reference, "reference")
+    for (col in c(ref_x_col, ref_estimate_col, ref_group_col))
+      .check_col(reference, col, "reference")
   }
 
   # --- Base aesthetics for parametric curves --------------------------------
@@ -1051,12 +1047,9 @@ survival_difference_plot <- function(diff_data,
                                      group_col    = NULL,
                                      ci_alpha     = 0.20,
                                      line_width   = 1.0) {
-  if (!is.data.frame(diff_data))
-    stop("`diff_data` must be a data frame.")
-  for (col in c(x_col, estimate_col, lower_col, upper_col, group_col)) {
-    if (!is.null(col) && !(col %in% names(diff_data)))
-      stop(sprintf("Column '%s' not found in `diff_data`.", col))
-  }
+  .check_df(diff_data, "diff_data")
+  for (col in c(x_col, estimate_col, lower_col, upper_col, group_col))
+    .check_col(diff_data, col, "diff_data")
 
   if (!is.null(group_col)) {
     base_aes <- ggplot2::aes(x      = .data[[x_col]],
@@ -1172,12 +1165,9 @@ nnt_plot <- function(nnt_data,
                      na_rm        = TRUE,
                      ci_alpha     = 0.20,
                      line_width   = 1.0) {
-  if (!is.data.frame(nnt_data))
-    stop("`nnt_data` must be a data frame.")
-  for (col in c(x_col, estimate_col, lower_col, upper_col)) {
-    if (!is.null(col) && !(col %in% names(nnt_data)))
-      stop(sprintf("Column '%s' not found in `nnt_data`.", col))
-  }
+  .check_df(nnt_data, "nnt_data")
+  for (col in c(x_col, estimate_col, lower_col, upper_col))
+    .check_col(nnt_data, col, "nnt_data")
 
   if (na_rm) {
     nnt_data <- nnt_data[!is.na(nnt_data[[estimate_col]]), , drop = FALSE]

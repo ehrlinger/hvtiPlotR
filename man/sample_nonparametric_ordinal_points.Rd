@@ -42,8 +42,18 @@ Returns only the binned patient-level data summary points from
 and returns a plain \code{data.frame}.
 }
 \examples{
+# Default: four grade levels
 pts <- sample_nonparametric_ordinal_points(n = 800, time_max = 5)
 head(pts)
+levels(pts$grade)    # "Grade 0", "Grade 1", "Grade 2", "Grade 3"
+
+# Clinical AR grade labels
+pts2 <- sample_nonparametric_ordinal_points(
+  n            = 600,
+  time_max     = 7,
+  grade_labels = c("None", "Mild", "Moderate", "Severe")
+)
+table(pts2$grade)    # n_bins rows per grade
 }
 \seealso{
 \code{\link[=sample_nonparametric_ordinal_data]{sample_nonparametric_ordinal_data()}},

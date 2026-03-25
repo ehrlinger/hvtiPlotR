@@ -110,31 +110,26 @@ build_weighted_hist_counts <- function(x, weights, breaks) {
 validate_mirror_histogram_input <- function(data, score_col, group_col, match_col,
                                             group_levels, group_labels, binwidth,
                                             weight_col = NULL) {
-  if (!(is.data.frame(data)))
-    stop("`data` must be a data.frame.")
+  .check_df(data)
   # When weight_col is provided, match_col presence is not required
   required_cols <- if (is.null(weight_col)) {
     c(score_col, group_col, match_col)
   } else {
     c(score_col, group_col, weight_col)
   }
-  missing_cols <- setdiff(required_cols, names(data))
-  if (!(length(missing_cols) == 0))
-    stop(sprintf("Missing required columns: %s",
-                 paste(missing_cols, collapse = ", ")))
-  if (!(length(group_levels) == 2))
-    stop("`group_levels` must contain exactly 2 values.")
-  if (!(length(group_labels) == 2))
-    stop("`group_labels` must contain exactly 2 values.")
-  if (!(is.numeric(data[[score_col]])))
-    stop(sprintf("`%s` must be numeric.", score_col))
+  .check_cols(data, required_cols)
+  if (length(group_levels) != 2L)
+    stop("`group_levels` must contain exactly 2 values.", call. = FALSE)
+  if (length(group_labels) != 2L)
+    stop("`group_labels` must contain exactly 2 values.", call. = FALSE)
+  .check_numeric_col(data, score_col)
   if (!is.numeric(binwidth) || length(binwidth) != 1L || !(binwidth > 0))
-    stop("`binwidth` must be a positive numeric scalar.")
+    stop("`binwidth` must be a positive numeric scalar.", call. = FALSE)
   if (!is.null(weight_col)) {
-    if (!(is.numeric(data[[weight_col]])))
-      stop(sprintf("`%s` must be numeric.", weight_col))
-    if (!(all(data[[weight_col]] >= 0, na.rm = TRUE)))
-      stop(sprintf("`%s` must contain non-negative values.", weight_col))
+    .check_numeric_col(data, weight_col)
+    if (!all(data[[weight_col]] >= 0, na.rm = TRUE))
+      stop(sprintf("`%s` must contain non-negative values.", weight_col),
+           call. = FALSE)
   }
 }
 
@@ -160,9 +155,11 @@ prepare_mirror_histogram_data <- function(data, score_col, group_col, match_col,
   n_dropped <- n_input - nrow(working)
   working <- working[working$group %in% group_levels, ]
   if (!(nrow(working) > 0))
-    stop("No rows remain after filtering to `group_levels` and complete cases.")
+    stop("No rows remain after filtering to `group_levels` and complete cases.",
+         call. = FALSE)
   if (!(all(group_levels %in% unique(working$group))))
-    stop("Not all `group_levels` are present in the filtered data.")
+    stop("Not all `group_levels` are present in the filtered data.",
+         call. = FALSE)
   working$score <- working$score_raw * score_multiplier
   if (any(working$score < HVTI_SCORE_MIN | working$score > HVTI_SCORE_MAX)) {
     stop(
@@ -274,12 +271,12 @@ build_mirror_histogram_plot <- function(plot_df, group_labels, binwidth,
 save_mirror_histogram_plot <- function(plot_obj, output_file, width, height) {
   if (!(is.character(output_file) && length(output_file) == 1L &&
         nzchar(output_file)))
-    stop("`output_file` must be a non-empty string.")
+    stop("`output_file` must be a non-empty string.", call. = FALSE)
   target_dir <- dirname(output_file)
   if (target_dir %in% c("", ".")) target_dir <- "."
   if (!(dir.exists(target_dir)))
     stop(sprintf("Directory for `output_file` (%s) does not exist.",
-                 target_dir))
+                 target_dir), call. = FALSE)
   tryCatch(
     ggplot2::ggsave(filename = output_file, plot = plot_obj,
                     width = width, height = height),
@@ -427,9 +424,7 @@ mirror_histogram <- function(data,
   validate_mirror_histogram_input(data, score_col, group_col, match_col,
                                   group_levels, group_labels, binwidth,
                                   weight_col = weight_col)
-  if (!is.numeric(alpha) || length(alpha) != 1L ||
-      !(alpha > 0 && alpha <= 1))
-    stop("`alpha` must be a number in (0, 1].")
+  .check_alpha(alpha)
   prep    <- prepare_mirror_histogram_data(data, score_col, group_col, match_col,
                                            group_levels, score_multiplier,
                                            weight_col = weight_col)
@@ -466,55 +461,70 @@ mirror_histogram <- function(data,
 # Sample data
 # ---------------------------------------------------------------------------
 
-##' Generate Sample Data for Mirrored Histogram
-##'
-##' Creates a reproducible data frame for testing \code{\link{mirror_histogram}}
-##' in either binary-match or weighted IPTW mode.  Propensity scores are
-##' simulated via a logistic model: control subjects draw their linear predictor
-##' from \eqn{N(-\text{sep}/2, 1)} and treated subjects from
-##' \eqn{N(+\text{sep}/2, 1)}, so the two score distributions overlap in the
-##' centre while accumulating mass at opposite extremes.  Patients at those
-##' extremes cannot find a matching partner within the caliper, which naturally
-##' reproduces the "many unmatched at the tails" pattern seen in real studies.
-##'
-##' @param n Number of observations **per group** (default 500).
-##' @param separation Numeric. Distance between the two group means on the
-##'   log-odds scale.  Larger values push the score distributions further apart
-##'   and increase the proportion of unmatched patients at the extremes
-##'   (default 1.5).
-##' @param caliper Matching caliper width expressed in propensity-score units
-##'   (0–1 scale, default 0.05).  Treated patients without a control partner
-##'   within this distance are left unmatched.
-##' @param seed Integer random seed for reproducibility (default 42L).
-##' @param add_weights Logical. When \code{TRUE} an \code{mt_wt} column of
-##'   ATE-style IPTW weights derived from the simulated propensity scores is
-##'   appended and normalised to mean 1 within each group (default \code{FALSE}).
-##' @return Data frame with columns:
-##'   \describe{
-##'     \item{\code{prob_t}}{Propensity score on the 0–1 scale.}
-##'     \item{\code{tavr}}{Group indicator (0 = control, 1 = treated).}
-##'     \item{\code{match}}{Binary match indicator produced by greedy
-##'       nearest-neighbour matching within \code{caliper} (1 = matched).}
-##'     \item{\code{mt_wt}}{(Only when \code{add_weights = TRUE}) ATE IPTW
-##'       weights normalised to mean 1 within each group.}
-##'   }
-##' @importFrom stats rnorm plogis
-##' @export
+#' Generate Sample Data for Mirrored Histogram
+#'
+#' Creates a reproducible data frame for testing [mirror_histogram()]
+#' in either binary-match or weighted IPTW mode.  Propensity scores are
+#' simulated via a logistic model: control subjects draw their linear predictor
+#' from \eqn{N(-\text{sep}/2, 1)} and treated subjects from
+#' \eqn{N(+\text{sep}/2, 1)}, so the two score distributions overlap in the
+#' centre while accumulating mass at opposite extremes.  Patients at those
+#' extremes cannot find a matching partner within the caliper, which naturally
+#' reproduces the "many unmatched at the tails" pattern seen in real studies.
+#'
+#' @param n Number of observations **per group** (default 500).
+#' @param separation Numeric. Distance between the two group means on the
+#'   log-odds scale.  Larger values push the score distributions further apart
+#'   and increase the proportion of unmatched patients at the extremes
+#'   (default 1.5).
+#' @param caliper Matching caliper width expressed in propensity-score units
+#'   (0–1 scale, default 0.05).  Treated patients without a control partner
+#'   within this distance are left unmatched.
+#' @param seed Integer random seed for reproducibility (default 42L).
+#' @param add_weights Logical. When `TRUE` an `mt_wt` column of
+#'   ATE-style IPTW weights derived from the simulated propensity scores is
+#'   appended and normalised to mean 1 within each group (default `FALSE`).
+#'
+#' @return Data frame with columns:
+#'   \describe{
+#'     \item{`prob_t`}{Propensity score on the 0–1 scale.}
+#'     \item{`tavr`}{Group indicator (0 = control, 1 = treated).}
+#'     \item{`match`}{Binary match indicator produced by greedy
+#'       nearest-neighbour matching within `caliper` (1 = matched).}
+#'     \item{`mt_wt`}{(Only when `add_weights = TRUE`) ATE IPTW
+#'       weights normalised to mean 1 within each group.}
+#'   }
+#'
+#' @seealso [mirror_histogram()]
+#'
+#' @examples
+#' # Binary-match mode sample data (default)
+#' dta <- sample_mirror_histogram_data(n = 500, separation = 1.5)
+#' head(dta)
+#' table(dta$tavr, dta$match)   # matched vs unmatched counts per group
+#'
+#' # IPTW weighted mode — adds mt_wt column
+#' dta_wt <- sample_mirror_histogram_data(n = 500, add_weights = TRUE)
+#' head(dta_wt)
+#' tapply(dta_wt$mt_wt, dta_wt$tavr, mean)  # should be ~1 in each group
+#'
+#' @importFrom stats rnorm plogis
+#' @export
 sample_mirror_histogram_data <- function(n          = 500,
                                          separation = 1.5,
                                          caliper    = 0.05,
                                          seed       = 42L,
                                          add_weights = FALSE) {
   if (!is.numeric(n) || length(n) != 1L || n < 1L || n %% 1 != 0)
-    stop("`n` must be a positive integer.")
+    stop("`n` must be a positive integer.", call. = FALSE)
   if (!is.numeric(separation) || length(separation) != 1L ||
       !(separation > 0))
-    stop("`separation` must be a positive number.")
+    stop("`separation` must be a positive number.", call. = FALSE)
   if (!is.numeric(caliper) || length(caliper) != 1L ||
       !(caliper > 0 && caliper <= 1))
-    stop("`caliper` must be a number in (0, 1].")
+    stop("`caliper` must be a number in (0, 1].", call. = FALSE)
   if (!is.logical(add_weights) || length(add_weights) != 1L)
-    stop("`add_weights` must be TRUE or FALSE.")
+    stop("`add_weights` must be TRUE or FALSE.", call. = FALSE)
 
   set.seed(seed)
 

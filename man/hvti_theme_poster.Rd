@@ -56,6 +56,20 @@ A medium-font theme with a white panel background and visible axis lines,
 suited to conference posters produced via PowerPoint.
 Removes grid lines.
 }
+\examples{
+library(ggplot2)
+p <- ggplot(mtcars, aes(wt, mpg, colour = factor(cyl))) + geom_point()
+
+# Default poster theme (16 pt base font)
+p + hvti_theme_poster()
+
+# Larger font for a wide-format poster
+p + hvti_theme_poster(base_size = 20)
+
+# Via alias
+p + theme_poster()
+
+}
 \seealso{
 \code{\link[=hvti_theme]{hvti_theme()}}, \code{\link[=theme_man]{theme_man()}}, \code{\link[=theme_ppt]{theme_ppt()}}, \code{\link[=theme_dark_ppt]{theme_dark_ppt()}}
 }

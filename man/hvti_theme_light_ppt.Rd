@@ -60,6 +60,20 @@ and panel borders.
 For the default dark-background PowerPoint theme use
 \code{\link[=hvti_theme_dark_ppt]{hvti_theme_dark_ppt()}} or its alias \code{hvti_theme_ppt()}.
 }
+\examples{
+library(ggplot2)
+p <- ggplot(mtcars, aes(wt, mpg, colour = factor(cyl))) + geom_point()
+
+# Light PPT theme — large font, black text, transparent background
+p + hvti_theme_light_ppt()
+
+# Via alias
+p + theme_light_ppt()
+
+# Via the generic dispatcher
+p + hvti_theme("light_ppt")
+
+}
 \seealso{
 \code{\link[=hvti_theme]{hvti_theme()}}, \code{\link[=hvti_theme_dark_ppt]{hvti_theme_dark_ppt()}}, \code{\link[=theme_man]{theme_man()}},
 \code{\link[=theme_poster]{theme_poster()}}

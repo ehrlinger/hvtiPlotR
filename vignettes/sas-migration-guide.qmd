@@ -1180,8 +1180,37 @@ p + hvti_theme("poster",     base_size = 24)   # larger text for A0 poster
 
 ## PowerPoint
 
+`save_ppt()` inserts ggplot objects into a PowerPoint file as **editable
+DrawingML vector graphics** via the `officer` and `rvg` packages — shapes,
+lines, and text remain individually selectable in PowerPoint after export.
+The first argument is `object` (not `plot`); the output path is `powerpoint`
+(not `file` or `filename`).
+
 ```r
-save_ppt(p, file = "figures/afib_prevalence.pptx")
+# Locate the bundled Cleveland Clinic slide template
+template <- system.file("ClevelandClinic.pptx", package = "hvtiPlotR")
+
+# Single slide — apply a PPT theme before saving
+p_ppt <- p +
+  scale_colour_manual(values = c("steelblue"), guide = "none") +
+  scale_fill_manual(values   = c("steelblue"), guide = "none") +
+  labs(x = "Years", y = "Prevalence (%)") +
+  hvti_theme("dark_ppt")
+
+save_ppt(
+  object       = p_ppt,
+  template     = template,
+  powerpoint   = "figures/afib_prevalence.pptx",
+  slide_titles = "AF Prevalence over Time"
+)
+
+# Multiple plots — one slide per figure in a single call
+save_ppt(
+  object       = list(fig1 = p_binary, fig2 = p_multi),
+  template     = template,
+  powerpoint   = "figures/np_curves.pptx",
+  slide_titles = c("Binary Outcome", "Multi-group Comparison")
+)
 ```
 
 ## PDF / TIFF for journals

@@ -206,13 +206,18 @@ upset_plot <- function(data,
                        set_size_position    = "right",
                        ...) {
 
-  if (!is.data.frame(data))
-    stop("`data` must be a data frame.")
+  .check_df(data)
   if (!(is.character(intersect) && length(intersect) >= 2L))
-    stop("`intersect` must be a character vector of at least 2 column names.")
-  if (!(all(intersect %in% names(data))))
-    stop(paste("These `intersect` names are not columns in `data`:",
-               paste(setdiff(intersect, names(data)), collapse = ", ")))
+    stop("`intersect` must be a character vector of at least 2 column names.",
+         call. = FALSE)
+  .check_cols(data, intersect)
+  non_binary <- intersect[!vapply(data[intersect], function(x)
+    is.logical(x) || (is.numeric(x) && all(x %in% c(0, 1, NA))),
+    logical(1))]
+  if (length(non_binary) > 0L)
+    stop("ComplexUpset requires binary (0/1 or logical) columns. ",
+         "Non-binary column(s): ", paste(non_binary, collapse = ", "), ".",
+         call. = FALSE)
 
   ComplexUpset::upset(
     data                 = data,

@@ -42,7 +42,7 @@ weights normalised to mean 1 within each group.}
 }
 }
 \description{
-Creates a reproducible data frame for testing \code{\link{mirror_histogram}}
+Creates a reproducible data frame for testing \code{\link[=mirror_histogram]{mirror_histogram()}}
 in either binary-match or weighted IPTW mode.  Propensity scores are
 simulated via a logistic model: control subjects draw their linear predictor
 from \eqn{N(-\text{sep}/2, 1)} and treated subjects from
@@ -50,4 +50,19 @@ from \eqn{N(-\text{sep}/2, 1)} and treated subjects from
 centre while accumulating mass at opposite extremes.  Patients at those
 extremes cannot find a matching partner within the caliper, which naturally
 reproduces the "many unmatched at the tails" pattern seen in real studies.
+}
+\examples{
+# Binary-match mode sample data (default)
+dta <- sample_mirror_histogram_data(n = 500, separation = 1.5)
+head(dta)
+table(dta$tavr, dta$match)   # matched vs unmatched counts per group
+
+# IPTW weighted mode — adds mt_wt column
+dta_wt <- sample_mirror_histogram_data(n = 500, add_weights = TRUE)
+head(dta_wt)
+tapply(dta_wt$mt_wt, dta_wt$tavr, mean)  # should be ~1 in each group
+
+}
+\seealso{
+\code{\link[=mirror_histogram]{mirror_histogram()}}
 }

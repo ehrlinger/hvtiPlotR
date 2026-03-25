@@ -4,8 +4,6 @@ library(ggplot2)
 
 utils::globalVariables(c("x", "y"))
 
-context("Theme tests")
-
 # Helper function to create a basic plot
 create_test_plot <- function() {
   ggplot(data.frame(x = 1:10, y = 1:10), aes(x, y)) +

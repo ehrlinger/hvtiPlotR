@@ -69,6 +69,20 @@ Removes grid lines, panel borders, and legends; draws solid axis lines.
 \note{
 Deprecated. Use \code{\link[=hvti_theme]{hvti_theme()}} with \code{style = "manuscript"} instead.
 }
+\examples{
+library(ggplot2)
+p <- ggplot(mtcars, aes(wt, mpg, colour = factor(cyl))) + geom_point()
+
+# Default manuscript theme
+p + hvti_theme_manuscript()
+
+# Smaller base font for two-column journal layout
+p + hvti_theme_manuscript(base_size = 9)
+
+# Via the generic dispatcher
+p + hvti_theme("manuscript")
+
+}
 \seealso{
 \code{\link[=hvti_theme]{hvti_theme()}}, \code{\link[=theme_ppt]{theme_ppt()}}, \code{\link[=theme_dark_ppt]{theme_dark_ppt()}}, \code{\link[=theme_poster]{theme_poster()}}
 }

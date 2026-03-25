@@ -162,6 +162,10 @@ articles:
   - plot-functions
   - plot-decorators
 
+- title: "Contributing"
+  contents:
+  - contributing
+
 footer:
   structure:
     left: developed_by

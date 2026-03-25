@@ -254,21 +254,13 @@ trends_plot <- function(data,
                         point_shape = 19L,
                         alpha      = 0.2) {
 
-  summary_fn <- match.arg(summary_fn)
-
   # --- Validation -----------------------------------------------------------
-  if (!is.data.frame(data))
-    stop("`data` must be a data frame.")
-  for (col in c(x_col, y_col)) {
-    if (!(col %in% names(data)))
-      stop(sprintf("Column '%s' not found in `data`. Available columns: %s",
-                   col, paste(names(data), collapse = ", ")))
-  }
-  if (!is.null(group_col)) {
-    if (!(group_col %in% names(data)))
-      stop(sprintf("Column '%s' not found in `data`. Available columns: %s",
-                   group_col, paste(names(data), collapse = ", ")))
-  }
+  .check_df(data)
+  .check_cols(data, c(x_col, y_col))
+  if (!is.null(group_col))
+    .check_col(data, group_col)
+
+  summary_fn <- match.arg(summary_fn)
 
   # --- Annual summary -------------------------------------------------------
   if (summary_fn == "mean") {

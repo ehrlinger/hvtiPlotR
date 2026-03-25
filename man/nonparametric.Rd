@@ -5,24 +5,29 @@
 \alias{nonparametric}
 \title{Nonparametric survival estimates}
 \format{
-A data.frame object containing nonparametric survival estimates
+A data frame with one row per patient and 10 columns:
+\describe{
+\item{iv_state}{Initial valve state (character/factor); used as the
+x-axis grouping variable in nonparametric plots.}
+\item{sginit}{Initial SG (St. Jude Medical Silzone) indicator (numeric).}
+\item{stlinit}{Initial STL indicator (numeric).}
+\item{stuinit}{Initial STU indicator (numeric).}
+\item{sgdead1}{Death indicator for SG group (logical/integer; 1 = event).}
+\item{sgstrk1}{Stroke indicator for SG group (logical/integer; 1 = event).}
+\item{stldead1}{Death indicator for STL group (logical/integer; 1 = event).}
+\item{studead1}{Death indicator for STU group (logical/integer; 1 = event).}
+\item{stlstrk1}{Stroke indicator for STL group (logical/integer; 1 = event).}
+\item{stustrk1}{Stroke indicator for STU group (logical/integer; 1 = event).}
+}
 }
 \description{
-A dataset containing nonparametric survival estimates used for examples
-in the package vignettes.
+A dataset containing nonparametric empirical survival estimates used for
+examples in the package vignettes.  The data represent follow-up outcomes
+for patients stratified by initial valve state (\code{iv_state}) from an
+aortic-valve surgery registry, originally exported from SAS via
+\code{tp.hp.dead.sas} / \code{tp.np.*.sas}.
 }
-\details{
-\itemize{
-\item iv_state: Initial valve state
-\item sginit: Initial SG
-\item stlinit: Initial STL
-\item stuinit: Initial STU
-\item sgdead1: SG death indicator
-\item sgstrk1: SG stroke indicator
-\item stldead1: STL death indicator
-\item studead1: STU death indicator
-\item stlstrk1: STL stroke indicator
-\item stustrk1: STU stroke indicator
-}
+\seealso{
+\link{parametric}, \code{\link[=nonparametric_curve_plot]{nonparametric_curve_plot()}}
 }
 \keyword{datasets}

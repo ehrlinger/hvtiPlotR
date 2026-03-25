@@ -79,7 +79,7 @@ test_that("stacked_histogram errors when x_col is missing", {
   df$year <- NULL
   expect_error(
     stacked_histogram(df, x_col = "year"),
-    "Missing required columns"
+    "Missing required column"
   )
 })
 
@@ -88,7 +88,7 @@ test_that("stacked_histogram errors when group_col is missing", {
   df$category <- NULL
   expect_error(
     stacked_histogram(df, group_col = "category"),
-    "Missing required columns"
+    "Missing required column"
   )
 })
 

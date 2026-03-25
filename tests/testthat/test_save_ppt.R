@@ -222,3 +222,30 @@ test_that("save_ppt errors on negative left offset", {
     "left"
   )
 })
+
+# ============================================================================
+# Edge case: slide_titles length mismatch
+# ============================================================================
+
+test_that("save_ppt recycles a single slide_title across a multi-plot list", {
+  # save_ppt uses rep_len() — a single title is recycled, not an error.
+  skip_if_not_installed("officer")
+  skip_if_not_installed("rvg")
+
+  temp_template <- make_temp_template()
+  on.exit(unlink(temp_template))
+
+  pptx_out <- tempfile(fileext = ".pptx")
+  on.exit(unlink(pptx_out), add = TRUE)
+
+  plots <- list(create_test_plot(), create_test_plot())
+  expect_no_error(
+    save_ppt(
+      object       = plots,
+      template     = temp_template,
+      powerpoint   = pptx_out,
+      slide_titles = "Shared Title"   # single title recycled to both slides
+    )
+  )
+  expect_true(file.exists(pptx_out))
+})

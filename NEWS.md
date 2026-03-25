@@ -1,3 +1,139 @@
+# hvtiPlotR 2.0.0.9001
+
+## Tests
+
+* Added `tests/testthat/test_hazard_plot.R` — full validation suite for
+  `sample_hazard_data`, `sample_hazard_empirical`, `sample_life_table`, and
+  `hazard_plot` (column checks, CI bounds, layer structure, multi-group,
+  non-default column names, input validation).
+* Added `tests/testthat/test_nonparametric_plots.R` — full suite for
+  `sample_nonparametric_curve_data`, `sample_nonparametric_curve_points`,
+  `nonparametric_curve_plot`, `sample_nonparametric_ordinal_data`,
+  `sample_nonparametric_ordinal_points`, and `nonparametric_ordinal_plot`.
+  Includes probability-sum-to-1 invariant test for ordinal grades.
+* Added `tests/testthat/test_survival_derived.R` — full suite for
+  `sample_survival_difference_data`, `survival_difference_plot`,
+  `sample_nnt_data`, and `nnt_plot`. Covers NA-NNT at t≈0 edge case and
+  cross-function time-grid consistency.
+* Added `tests/testthat/test_cluster_sankey.R` — full suite for
+  `sample_cluster_sankey_data` and `cluster_sankey_plot`. Validates the
+  hierarchical merge tree (C9=A → C2=A) and that each Ck has exactly k levels.
+* Added `tests/testthat/test_pipeline.R` — end-to-end pipeline tests covering
+  `survival_curve → hvti_theme → save_ppt`, multi-slide list pipelines,
+  built-in dataset usability, `eda_classify_var` edge cases (logical vector,
+  all-NA, length-1), and composed multi-layer plots.
+* Added snapshot test to `test_kaplan_meier.R` for `survival_curve`
+  `report_table` at fixed seed; added all-censored and single-observation
+  edge-case tests.
+* Added snapshot test to `test_mirror_histogram.R` for diagnostics at fixed
+  seed.
+* Added `slide_titles` length-mismatch test to `test_save_ppt.R`.
+* Added `make_footnote` prefix-parameter tests to `test_footnote.R`.
+
+## Documentation
+
+* Fixed `save_ppt()` argument names throughout all vignettes: `plot =` →
+  `object =`, `filename =` → `powerpoint =`. Also added correct `template =`
+  and `slide_titles =` arguments where missing.
+* Fixed critical roxygen bug in `sample_mirror_histogram_data()`: doc block
+  used `##'` (silently ignored by roxygen2) instead of `#'`, so the function
+  had no generated `.Rd` file. Converted all `##'` → `#'`, modernised
+  `\code{}` → backtick syntax, and added `@examples`.
+* Added `@examples` to all five theme functions: `hvti_theme()`,
+  `hvti_theme_manuscript()`, `hvti_theme_dark_ppt()`, `hvti_theme_light_ppt()`,
+  and `hvti_theme_poster()`.
+* Expanded thin (2-line) `@examples` blocks for four sample-data helpers:
+  `sample_life_table()`, `sample_nonparametric_curve_points()`,
+  `sample_nonparametric_ordinal_points()`, and
+  `sample_longitudinal_counts_data()`.
+* Fixed `km$survival_plot` and `km$risk_table` accessor patterns in
+  `vignettes/plot-decorators.qmd`: `survival_curve()` returns a ggplot with
+  *attributes*, not a named list. Replaced with `km` (the returned object IS
+  the survival plot) and `attr(km, "risk_table")`.
+* Fixed patchwork operator-precedence bug in `vignettes/plot-decorators.qmd`:
+  `p_ms | p_km_ms + plot_layout(...)` → `(p_ms | p_km_ms) + plot_layout(...)`.
+* Added `patchwork` to `Suggests` in `DESCRIPTION` (required by
+  `vignettes/plot-decorators.qmd`).
+* Rewrote package-level help page (`help.R` / `?hvtiPlotR`) to document all
+  57 exported functions, organised by category.
+* Expanded "Saving figures" section in `vignettes/sas-migration-guide.qmd`
+  with correct `save_ppt()` single- and multi-slide examples.
+* Added `ggplot2::geom_line(..., linewidth = 1.5)` (replacing deprecated
+  `size =`) and updated `remotes::install_github()` (replacing
+  `devtools::install_github()`) in `vignettes/hvtiPlotR.qmd`.
+
+## Input validation improvements
+
+* **`upset_plot()`** — added binary-column type check. ComplexUpset silently
+  produces broken plots when `intersect` columns contain non-binary values; the
+  function now errors with a clear message listing the offending columns before
+  handing off to ComplexUpset.
+* **`sample_stacked_histogram_data()`** — added `start_year` validation
+  (previously `n_years` and `n_categories` were checked but `start_year` was
+  not; a non-integer or non-finite value produced silently nonsensical output).
+* **`trends_plot()`** — moved `match.arg(summary_fn)` to after the data-frame
+  and column checks, so users see a clear `data` / column error rather than an
+  opaque `'arg' should be one of...` message when both `data` and `summary_fn`
+  are wrong.
+* **`validators.R`** — added two scalar-parameter helpers: `.check_scalar_positive()`
+  (finite, positive) and `.check_scalar_nonneg()` (finite, non-negative).
+  `cb_validate_params()` in `covariate-balance.R` now delegates all four
+  parameter checks to these helpers, eliminating 28 lines of bespoke validation
+  code.
+
+## Architecture
+
+* **`.NP_SIM` constant list** (`nonparametric-curve-plot.R`) — lifted the seven
+  simulation tuning constants (`eta_intercept`, `logit_shift`, `cont_baseline`,
+  `cont_scale`, `cont_sigma`, `eff_frac_prob`, `eff_frac_cont`) from local
+  variables in `sample_nonparametric_curve_data()` and from hard-coded defaults
+  in `.np_sample_bins()` into a single file-level private list. Both functions
+  now reference `.NP_SIM$*` — change once, updates all simulation paths.
+
+## Bug fixes / API consistency
+
+* **Standardised `alpha` range to `[0, 1]`** across all plot functions.
+  Previously `survival_curve()`, `covariate_balance()`, `mirror_histogram()`,
+  `spaghetti_plot()`, and `goodness_followup_death_plot()` /
+  `goodness_followup_event_plot()` used `(0, 1]` (rejecting `alpha = 0`), while
+  `alluvial_plot()` used `[0, 1]`. All functions now accept `[0, 1]` — `alpha = 0`
+  (fully transparent) is a valid ggplot2 value and should not be an error.
+* **Added `.check_alpha()` shared validator** in `R/validators.R`. Enforces
+  `alpha ∈ [0, 1]` with `call. = FALSE` and is called from every plot function
+  that accepts an `alpha` argument.
+* **`call. = FALSE` sweep** — every `stop()` call in the package now includes
+  `call. = FALSE` so error messages never expose internal function names to
+  callers.
+* **Expanded shared validators** (`R/validators.R`) to 11 files (up from 3).
+  All of `alluvial-plot.R`, `covariate-balance.R`, `eda-plots.R`,
+  `goodness-followup.R`, `hazard-plot.R`, `kaplan-meier.R`,
+  `longitudinal-counts-plot.R`, `mirror-histogram.R`,
+  `nonparametric-curve-plot.R`, `nonparametric-ordinal-plot.R`,
+  `spaghetti-plot.R`, `stacked-histogram.R`, `trends-plot.R`, and
+  `upset-plot.R` now delegate `data.frame`, column-presence, numeric-column,
+  and alpha checks to `.check_df()`, `.check_cols()`, `.check_col()`,
+  `.check_numeric_col()`, and `.check_alpha()`. Error wording is now
+  consistent across all entry points.
+
+## Code quality
+
+* Named all simulation tuning constants in `sample_nonparametric_curve_data()`
+  and the internal helper `.np_sample_bins()`: `eta_intercept`, `logit_shift`,
+  `cont_baseline`, `cont_scale`, `cont_sigma`, `eff_frac_prob`,
+  `eff_frac_cont`. Magic numbers replaced throughout single-curve,
+  multi-group, and binned-data-summary code paths.
+* Named all simulation tuning constants in `sample_nonparametric_ordinal_data()`
+  and `sample_nonparametric_ordinal_points()`: `a_first`, `a_step`,
+  `eta_intercept`. Every occurrence of `-0.2`, `0.5`, and `1.2` replaced by
+  the named constant.
+* Extended edge-case test coverage:
+  - `test_kaplan_meier.R`: added five `survival_curve` error tests for
+    non-numeric `time_col`, invalid `event_col` values (character instead of
+    0/1/logical), and `alpha` at 0, > 1, and < 0.
+  - `test_hazard_plot.R`: added graceful-handling test for an empty data frame
+    (correct columns, zero rows) — confirms ggplot renders without error.
+  - `test_mirror_histogram.R`: added error test for non-numeric `score_col`.
+
 # hvtiPlotR 2.0.0.9000
 
 * Added `eda_plot()` — exploratory barplot/scatterplot for a single variable.
