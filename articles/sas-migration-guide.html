@@ -64,7 +64,7 @@
       <h1>SAS Template Migration Guide: Finding Your Plot in R</h1>
 
       <p class="author">John Ehrlinger <a href="mailto:ehrlinj@ccf.org" class="email">ehrlinj@ccf.org</a></p>
-      <p class="date">2026-03-25</p>
+      <p class="date">2026-03-26</p>
 
       <small class="dont-index">Source: <a href="https://github.com/ehrlinger/hvtiPlotR/blob/main/vignettes/sas-migration-guide.qmd" class="external-link"><code>vignettes/sas-migration-guide.qmd</code></a></small>
       <div class="d-none name"><code></code></div>
@@ -1047,7 +1047,7 @@ run;</code></pre>
 <p>The original code used <code><a href="https://rdrr.io/pkg/ggsankey/man/make_long.html" class="external-link">ggsankey::make_long()</a></code> with hard-coded column names and ordering vectors. The R port accepts any cluster columns and ordering via <code>cluster_cols</code> and <code>node_levels</code> arguments.</p>
 <p><strong>Requires <code>ggsankey</code></strong> (install from GitHub):</p>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"davidsjoberg/ggsankey"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"davidsjoberg/ggsankey"</span><span class="op">)</span></span></code></pre></div>
 <section class="level3"><h4 id="sasr-workflow-r-equivalent">SAS/R workflow → R equivalent<a class="anchor" aria-label="anchor" href="#sasr-workflow-r-equivalent"></a>
 </h4>
 <table class="table caption-top">
@@ -1683,7 +1683,7 @@ run;</code></pre>
 <div class="cell-output cell-output-stdout">
 <pre><code>R version 4.5.3 (2026-03-11)
 Platform: x86_64-pc-linux-gnu
-Running under: Ubuntu 24.04.3 LTS
+Running under: Ubuntu 24.04.4 LTS
 
 Matrix products: default
 BLAS:   /usr/lib/x86_64-linux-gnu/openblas-pthread/libblas.so.3

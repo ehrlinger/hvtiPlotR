@@ -80,9 +80,7 @@
   [`save_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/save_ppt.md)
   single- and multi-slide examples.
 - Added `ggplot2::geom_line(..., linewidth = 1.5)` (replacing deprecated
-  `size =`) and updated
-  [`remotes::install_github()`](https://remotes.r-lib.org/reference/install_github.html)
-  (replacing
+  `size =`) and updated `remotes::install_github()` (replacing
   [`devtools::install_github()`](https://devtools.r-lib.org/reference/install-deprecated.html))
   in `vignettes/hvtiPlotR.qmd`.
 
