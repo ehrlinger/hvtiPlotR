@@ -19,3 +19,4 @@ Called when \code{plot()} is dispatched to an \code{hvti_data} subclass that has
 registered \verb{plot.<subclass>()} method.  Issues a clear error rather than
 silently falling through to \code{\link[graphics:plot.default]{graphics::plot.default()}}.
 }
+\keyword{internal}

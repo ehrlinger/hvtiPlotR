@@ -20,3 +20,4 @@ override this with a more informative implementation (see
 \code{print.hvti_survival()} for an example), but all fall back to this when
 no specific method is registered.
 }
+\keyword{internal}
