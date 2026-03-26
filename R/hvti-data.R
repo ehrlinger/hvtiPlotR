@@ -75,6 +75,7 @@ new_hvti_data <- function(data, meta, tables = list(), subclass) {
 #' @param ... Ignored; present for S3 consistency.
 #'
 #' @return `x`, invisibly.
+#' @keywords internal
 #' @export
 print.hvti_data <- function(x, ...) {
   cat(sprintf("<%s>\n", class(x)[1L]))
@@ -100,6 +101,7 @@ print.hvti_data <- function(x, ...) {
 #' @param ... Ignored.
 #'
 #' @return Does not return; always signals an error.
+#' @keywords internal
 #' @export
 plot.hvti_data <- function(x, ...) {
   stop(
