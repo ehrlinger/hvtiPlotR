@@ -395,5 +395,5 @@ SAS templates: \code{tp.hp.dead.sas},
 \seealso{
 \code{\link[=sample_hazard_data]{sample_hazard_data()}}, \code{\link[=sample_hazard_empirical]{sample_hazard_empirical()}},
 \code{\link[=sample_life_table]{sample_life_table()}}, \code{\link[=survival_difference_plot]{survival_difference_plot()}}, \code{\link[=nnt_plot]{nnt_plot()}},
-\code{\link[=survival_curve]{survival_curve()}}, \code{\link[=hvti_theme]{hvti_theme()}}
+\code{\link[=hvti_survival]{hvti_survival()}}, \code{\link[=hvti_theme]{hvti_theme()}}
 }

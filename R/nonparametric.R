@@ -24,5 +24,5 @@
 #' @docType data
 #' @keywords datasets
 #' @name nonparametric
-#' @seealso [parametric], [nonparametric_curve_plot()]
+#' @seealso [parametric], [hvti_nonparametric()]
 NULL

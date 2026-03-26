@@ -61,62 +61,58 @@ p + hvti_theme("poster")       # poster
 
 ## Plot Function Gallery
 
-Every function returns a bare `ggplot` object. Add `scale_*`, `labs()`, `annotate()`, and a theme with the usual `+` operator.
+**hvtiPlotR 2.0 uses a two-step API.** A constructor (`hvti_*()`) shapes the
+data and returns an S3 object; `plot()` renders a bare `ggplot`. Add
+`scale_*`, `labs()`, `annotate()`, and a theme with the usual `+` operator.
+
+```r
+km <- hvti_survival(sample_survival_data())
+plot(km) + hvti_theme("manuscript")
+km$tables$risk                         # risk-table data frame
+```
 
 ### Propensity Score & Balance
 
-| Function | Description |
+| Constructor | Description |
 |---|---|
-| `mirror_histogram()` | Mirrored histograms showing propensity score distributions for two groups, before and after matching or IPTW weighting |
-| `stacked_histogram()` | Stacked or proportional-fill histogram of a numeric variable by group |
-| `covariate_balance()` | Standardised mean difference dot-plot for assessing propensity matching or weighting quality |
+| `hvti_mirror()` | Mirrored histograms showing propensity score distributions for two groups, before and after matching or IPTW weighting |
+| `hvti_stacked()` | Stacked or proportional-fill histogram of a numeric variable by group |
+| `hvti_balance()` | Standardised mean difference dot-plot for assessing propensity matching or weighting quality |
 
 ```r
-dta <- sample_mirror_histogram_data(n = 2000)
-mirror_histogram(dta, group_labels = c("SAVR", "TF-TAVR"))$plot +
-  hvti_theme("manuscript")
+mh <- hvti_mirror(sample_mirror_histogram_data(n = 2000),
+                  group_labels = c("SAVR", "TF-TAVR"))
+plot(mh) + hvti_theme("manuscript")
 ```
 
 ### Survival & Time-to-Event
 
-| Function | Description |
+| Constructor | Description |
 |---|---|
-| `survival_curve()` | Kaplan-Meier and Nelson-Aalen analysis. Returns five plot types (survival, cumulative hazard, hazard, log-log, life/RMST) plus risk and report tables |
-| `nonparametric_curve_plot()` | Nonparametric survival or event-rate curve with optional confidence intervals |
-| `nonparametric_ordinal_plot()` | Nonparametric curves for ordinal outcomes (e.g. severity grades) |
+| `hvti_survival()` | Kaplan-Meier and Nelson-Aalen analysis. `plot(km, type = ...)` renders survival, cumulative hazard, hazard, log-log, or life/RMST; tables via `km$tables` |
+| `hvti_nonparametric()` | Nonparametric survival or event-rate curve with optional confidence intervals |
+| `hvti_ordinal()` | Nonparametric curves for ordinal outcomes (e.g. severity grades) |
 | `hazard_plot()` | Parametric hazard/survival curves from Weibull or other models, with optional KM overlay |
 | `survival_difference_plot()` | Absolute treatment benefit vs. a reference group over time |
 | `nnt_plot()` | Number needed to treat derived from survival difference estimates |
-| `goodness_followup()` | Goodness-of-follow-up scatter: actual vs. potential follow-up by operation year |
-| `goodness_event_plot()` | Companion panel for non-fatal competing events in a follow-up assessment |
-
-```r
-km <- survival_curve(
-  data      = sample_survival_data(),
-  time_col  = "time",
-  event_col = "status",
-  group_col = "group"
-)
-km + hvti_theme("manuscript")          # km IS the survival ggplot
-attr(km, "risk_table")                 # risk-table data frame
-```
+| `hvti_followup()` | Goodness-of-follow-up scatter: actual vs. potential follow-up by operation year; `plot(gf, type = "event")` for non-fatal competing events |
 
 ### Longitudinal & Repeated Measures
 
-| Function | Description |
+| Constructor | Description |
 |---|---|
-| `trends_plot()` | Temporal trend: annual means/medians with LOESS smooth, by group |
-| `spaghetti_plot()` | Individual subject trajectories over time with optional per-group LOESS overlay |
-| `longitudinal_counts_plot()` | Pre-aggregated patient and measurement counts at discrete follow-up windows |
+| `hvti_trends()` | Temporal trend: annual means/medians with LOESS smooth, by group |
+| `hvti_spaghetti()` | Individual subject trajectories over time with optional per-group LOESS overlay |
+| `hvti_longitudinal()` | Pre-aggregated patient and measurement counts; `plot(lc, type = "table")` for text table |
 
 ### Exploratory & Multivariate
 
-| Function | Description |
+| Constructor | Description |
 |---|---|
-| `eda_plot()` | Exploratory plot for a single variable. Auto-detects type: scatter + LOESS for continuous, stacked bar for categorical. Missing values shown as `"(Missing)"` |
-| `upset_plot()` | UpSet diagram for visualising procedure co-occurrences or set memberships |
-| `alluvial_plot()` | Sankey/alluvial diagram for patient flow across categorical stages |
-| `cluster_sankey_plot()` | Cluster stability Sankey showing patient transitions across cluster solutions |
+| `hvti_eda()` | Exploratory plot for a single variable. Auto-detects type: scatter + LOESS for continuous, stacked bar for categorical. Missing values shown as `"(Missing)"` |
+| `hvti_upset()` | UpSet diagram for visualising procedure co-occurrences or set memberships |
+| `hvti_alluvial()` | Sankey/alluvial diagram for patient flow across categorical stages |
+| `hvti_sankey()` | Cluster stability Sankey showing patient transitions across cluster solutions |
 
 ### Utilities
 

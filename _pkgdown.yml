@@ -8,7 +8,7 @@ template:
   light-switch: true
   theme: atom-one-light
   theme-dark: atom-one-dark
-  
+
 home:
   sidebar:
     structure: [badges, links, authors]
@@ -18,7 +18,7 @@ home:
         text: |
           ![](https://img.shields.io/github/r-package/v/ehrlinger/hvtiplotr)<br>
           ![](https://img.shields.io/github/actions/workflow/status/ehrlinger/hvtiplotr/pkgdown.yaml)<br>
-          
+
 navbar:
   structure:
     right: [search, github, my_linkedin, lightswitch]
@@ -31,9 +31,11 @@ navbar:
 reference:
 - title: "Package Overview"
   desc: >
-    Package-level documentation and overview.
+    Package-level documentation and the base S3 class shared by all
+    hvtiPlotR data objects.
   contents:
   - hvtiPlotR-package
+  - is_hvti_data
 
 - title: "Themes"
   desc: >
@@ -57,11 +59,14 @@ reference:
 - title: "Survival & Hazard"
   desc: >
     Kaplan-Meier survival curves, parametric hazard plots, survival
-    differences, and number-needed-to-treat. Use `survival_curve()` for
-    non-parametric estimates; `hazard_plot()` for pre-fitted parametric
-    model output.
+    differences, and number-needed-to-treat. Use `hvti_survival()` for
+    non-parametric estimates; `hazard_plot()`, `survival_difference_plot()`,
+    and `nnt_plot()` for pre-fitted parametric model output (deferred API,
+    not yet migrated to S3 constructor pattern).
   contents:
-  - survival_curve
+  - hvti_survival
+  - plot.hvti_survival
+  - print.hvti_survival
   - hazard_plot
   - survival_difference_plot
   - nnt_plot
@@ -79,8 +84,12 @@ reference:
     Average temporal curves and ordinal outcome trajectories from
     decomposition models (`tp.np.*` template family).
   contents:
-  - nonparametric_curve_plot
-  - nonparametric_ordinal_plot
+  - hvti_nonparametric
+  - plot.hvti_nonparametric
+  - print.hvti_nonparametric
+  - hvti_ordinal
+  - plot.hvti_ordinal
+  - print.hvti_ordinal
   - sample_nonparametric_curve_data
   - sample_nonparametric_curve_points
   - sample_nonparametric_ordinal_data
@@ -91,55 +100,80 @@ reference:
     Visualise propensity score distributions and covariate balance
     before and after propensity matching or IPTW weighting.
   contents:
-  - mirror_histogram
-  - covariate_balance
+  - hvti_mirror
+  - plot.hvti_mirror
+  - print.hvti_mirror
+  - hvti_balance
+  - plot.hvti_balance
+  - print.hvti_balance
   - sample_mirror_histogram_data
   - sample_covariate_balance_data
 
-- title: "Temporal Trends"
+- title: "Temporal Trends & Longitudinal"
   desc: >
-    Annual trend lines with optional confidence ribbons. Ports the
-    `tp.lp.trends.*`, `tp.rp.trends.*`, and `tp.dp.trends.R` templates.
+    Annual trend lines, individual patient trajectories, and longitudinal
+    count summaries. Ports `tp.lp.trends.*`, `tp.rp.trends.*`,
+    `tp.dp.trends.R`, and `tp.dp.spaghetti.echo.R`.
   contents:
-  - trends_plot
-  - spaghetti_plot
-  - longitudinal_counts_plot
-  - longitudinal_counts_table
+  - hvti_trends
+  - plot.hvti_trends
+  - print.hvti_trends
+  - hvti_spaghetti
+  - plot.hvti_spaghetti
+  - print.hvti_spaghetti
+  - hvti_longitudinal
+  - plot.hvti_longitudinal
+  - print.hvti_longitudinal
   - sample_trends_data
   - sample_spaghetti_data
   - sample_longitudinal_counts_data
 
 - title: "Study Design & Goodness of Follow-Up"
   desc: >
-    Visualise follow-up completeness and goodness-of-fit for event
-    models. Ports `tp.dp.gfup.R`.
+    Visualise follow-up completeness. Ports `tp.dp.gfup.R`.
   contents:
-  - goodness_followup
-  - goodness_event_plot
+  - hvti_followup
+  - plot.hvti_followup
+  - print.hvti_followup
   - sample_goodness_followup_data
+
+- title: "Stacked Histogram"
+  desc: >
+    Stacked or filled histogram of a numeric variable by group.
+  contents:
+  - hvti_stacked
+  - plot.hvti_stacked
+  - print.hvti_stacked
+  - sample_stacked_histogram_data
 
 - title: "Flow Diagrams"
   desc: >
     Alluvial (Sankey) plots showing patient flow between states or
     cluster assignments across K values.
   contents:
-  - alluvial_plot
-  - cluster_sankey_plot
+  - hvti_alluvial
+  - plot.hvti_alluvial
+  - print.hvti_alluvial
+  - hvti_sankey
+  - plot.hvti_sankey
+  - print.hvti_sankey
   - sample_alluvial_data
   - sample_cluster_sankey_data
 
 - title: "Exploratory Data Analysis"
   desc: >
-    Rapid bar charts and scatter plots for variable screening and
-    univariate summaries.
+    Rapid bar charts and scatter plots for variable screening, univariate
+    summaries, and set-membership visualisation.
   contents:
-  - eda_plot
+  - hvti_eda
+  - plot.hvti_eda
+  - print.hvti_eda
+  - hvti_upset
+  - plot.hvti_upset
+  - print.hvti_upset
   - eda_classify_var
   - eda_select_vars
-  - stacked_histogram
-  - upset_plot
   - sample_eda_data
-  - sample_stacked_histogram_data
   - sample_upset_data
 
 - title: "Saving & Utilities"

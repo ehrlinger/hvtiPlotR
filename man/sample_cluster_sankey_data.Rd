@@ -50,5 +50,5 @@ head(dta)
 table(dta$C9)
 }
 \seealso{
-\code{\link[=cluster_sankey_plot]{cluster_sankey_plot()}}
+\code{\link[=hvti_sankey]{hvti_sankey()}}
 }

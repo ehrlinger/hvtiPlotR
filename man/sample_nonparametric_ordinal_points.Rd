@@ -23,13 +23,11 @@ data-point variability). Default \code{1000}.}
 \code{500}.}
 
 \item{grade_labels}{Character vector of grade labels, one per grade level
-in ascending order. Corresponds to the SAS grade levels (e.g.
-\code{c("None", "Mild", "Moderate", "Severe")} for AR grade, or
-\code{c("0", "1", "2", "3+")} for TR grade). Default
+in ascending order. Default
 \code{c("Grade 0", "Grade 1", "Grade 2", "Grade 3")}.}
 
-\item{n_bins}{Number of equal-sized bins for the data summary points
-(analogous to SAS \verb{decile = _nobs_/10}). Default \code{10}.}
+\item{n_bins}{Number of equal-sized bins for the data summary points.
+Default \code{10}.}
 
 \item{seed}{Random seed. Default \code{42}.}
 }
@@ -45,7 +43,7 @@ and returns a plain \code{data.frame}.
 # Default: four grade levels
 pts <- sample_nonparametric_ordinal_points(n = 800, time_max = 5)
 head(pts)
-levels(pts$grade)    # "Grade 0", "Grade 1", "Grade 2", "Grade 3"
+levels(pts$grade)
 
 # Clinical AR grade labels
 pts2 <- sample_nonparametric_ordinal_points(
@@ -53,9 +51,8 @@ pts2 <- sample_nonparametric_ordinal_points(
   time_max     = 7,
   grade_labels = c("None", "Mild", "Moderate", "Severe")
 )
-table(pts2$grade)    # n_bins rows per grade
+table(pts2$grade)
 }
 \seealso{
-\code{\link[=sample_nonparametric_ordinal_data]{sample_nonparametric_ordinal_data()}},
-\code{\link[=nonparametric_ordinal_plot]{nonparametric_ordinal_plot()}}
+\code{\link[=sample_nonparametric_ordinal_data]{sample_nonparametric_ordinal_data()}}, \code{\link[=hvti_ordinal]{hvti_ordinal()}}
 }

@@ -10,8 +10,8 @@
 #  - Hard-coded colours ("blue", "red", "black") replaced by scale_fill_*
 #    and scale_colour_* on the returned ggplot objects
 #  - Hard-coded theme() calls replaced by hvti_theme("manuscript")
-#  - Bar chart and table returned as a named list; patchwork composes them
-#    (replaces the manual grid.layout / mmplot() pattern)
+#  - Bar chart and table returned via plot(x, type=) dispatch; patchwork
+#    composes them (replaces the manual grid.layout / mmplot() pattern)
 #  - sample_spaghetti_data() is reused in the examples to show how to
 #    derive participation counts from patient-level data
 # ---------------------------------------------------------------------------
@@ -34,7 +34,7 @@
 #'   - `series`     — `"Patients"` or `"Measurements"`
 #'   - `count`      — integer count
 #'
-#' @seealso [longitudinal_counts_plot()], [sample_spaghetti_data()]
+#' @seealso [hvti_longitudinal()], [sample_spaghetti_data()]
 #'
 #' @examples
 #' dta <- sample_longitudinal_counts_data(n_patients = 300, seed = 42)
@@ -58,8 +58,8 @@ sample_longitudinal_counts_data <- function(n_patients = 300,
   )
 
   # Discrete follow-up windows matching the template time points
-  # Start at time 0 so the first bin ("≥0 Days") is populated, and add a
-  # break at 2.5 years so the "≥2.5 Years" label corresponds to a real window.
+  # Start at time 0 so the first bin ("\u22650 Days") is populated, and add a
+  # break at 2.5 years so the "\u22652.5 Years" label corresponds to a real window.
   breaks <- c(0, 1/12, 3/12, 6/12, 1, 2, 2.5, Inf)
   labels <- c("\u22650 Days", "\u22651 Month", "\u22653 Months",
                "\u22656 Months", "\u22651 Year", "\u22652 Years",
@@ -84,28 +84,41 @@ sample_longitudinal_counts_data <- function(n_patients = 300,
 }
 
 # ---------------------------------------------------------------------------
+# Public API
+# ---------------------------------------------------------------------------
 
-#' Longitudinal Participation Counts Bar Chart
+#' Prepare longitudinal participation counts data for plotting
 #'
-#' Produces a grouped bar chart showing how many patients and measurements are
-#' available at each discrete follow-up time point. Pair with
-#' [longitudinal_counts_table()] via `patchwork` for the full two-panel layout.
+#' Validates a pre-aggregated long-format counts data frame and returns an
+#' \code{hvti_longitudinal} object.  Call \code{\link{plot.hvti_longitudinal}}
+#' on the result with \code{type = "plot"} for the grouped bar chart or
+#' \code{type = "table"} for the numeric text-table panel.  Compose both
+#' panels with \pkg{patchwork}.
 #'
-#' @param data      Long-format data frame. See [sample_longitudinal_counts_data()].
-#' @param x_col     Name of the discrete time-label column. Default `"time_label"`.
-#' @param count_col Name of the numeric count column. Default `"count"`.
-#' @param group_col Name of the series grouping column. Default `"series"`.
-#' @param position  Bar position: `"dodge"` (default) or `"stack"`.
+#' @param data      Long-format data frame; one row per series per time point.
+#'   See \code{\link{sample_longitudinal_counts_data}}.
+#' @param x_col     Name of the discrete time-label column. Default \code{"time_label"}.
+#' @param count_col Name of the numeric count column. Default \code{"count"}.
+#' @param group_col Name of the series grouping column. Default \code{"series"}.
 #'
-#' @return A bare [ggplot2::ggplot()] object.
+#' @return An object of class \code{c("hvti_longitudinal", "hvti_data")}:
+#' \describe{
+#'   \item{\code{$data}}{The validated input data frame.}
+#'   \item{\code{$meta}}{Named list: \code{x_col}, \code{count_col},
+#'     \code{group_col}, \code{n_timepoints}, \code{n_groups}, \code{n_obs}.}
+#'   \item{\code{$tables}}{Empty list.}
+#' }
 #'
-#' @seealso [longitudinal_counts_table()], [sample_longitudinal_counts_data()]
+#' @seealso \code{\link{plot.hvti_longitudinal}},
+#'   \code{\link{sample_longitudinal_counts_data}}
 #'
 #' @examples
-#' library(ggplot2)
 #' dta <- sample_longitudinal_counts_data(n_patients = 300, seed = 42L)
+#' lc  <- hvti_longitudinal(dta)
+#' lc   # prints group/time-point counts
 #'
-#' longitudinal_counts_plot(dta) +
+#' library(ggplot2)
+#' plot(lc, type = "plot") +
 #'   scale_fill_manual(
 #'     values = c(Patients = "steelblue", Measurements = "firebrick"),
 #'     name   = NULL
@@ -118,95 +131,158 @@ sample_longitudinal_counts_data <- function(n_patients = 300,
 #'   hvti_theme("manuscript") +
 #'   theme(legend.position = c(0.85, 0.85))
 #'
-#' @importFrom ggplot2 ggplot aes geom_bar
 #' @importFrom rlang .data
 #' @export
-longitudinal_counts_plot <- function(data,
-                                     x_col     = "time_label",
-                                     count_col = "count",
-                                     group_col = "series",
-                                     position  = "dodge") {
+hvti_longitudinal <- function(data,
+                               x_col     = "time_label",
+                               count_col = "count",
+                               group_col = "series") {
   .check_df(data)
   .check_cols(data, c(x_col, count_col, group_col))
-  if (!(position %in% c("dodge", "stack")))
-    stop('`position` must be "dodge" or "stack".', call. = FALSE)
 
-  ggplot2::ggplot(
-    data,
-    ggplot2::aes(x = .data[[x_col]], y = .data[[count_col]], fill = .data[[group_col]])
-  ) +
-    ggplot2::geom_bar(stat = "identity", position = position)
+  n_timepoints <- length(unique(data[[x_col]]))
+  n_groups     <- length(unique(data[[group_col]]))
+
+  new_hvti_data(
+    data = as.data.frame(data),
+    meta = list(
+      x_col        = x_col,
+      count_col    = count_col,
+      group_col    = group_col,
+      n_timepoints = n_timepoints,
+      n_groups     = n_groups,
+      n_obs        = nrow(data)
+    ),
+    tables   = list(),
+    subclass = "hvti_longitudinal"
+  )
 }
 
-# ---------------------------------------------------------------------------
 
-#' Longitudinal Participation Counts Table Panel
+#' Print an hvti_longitudinal object
 #'
-#' Produces a numeric data table rendered as a ggplot text panel, intended to
-#' be composed below [longitudinal_counts_plot()] via `patchwork`.
+#' @param x   An \code{hvti_longitudinal} object from \code{\link{hvti_longitudinal}}.
+#' @param ... Ignored.
+#' @return \code{x}, invisibly.
+#' @export
+print.hvti_longitudinal <- function(x, ...) {
+  m <- x$meta
+  cat("<hvti_longitudinal>\n")
+  cat(sprintf("  Time points : %d\n", m$n_timepoints))
+  cat(sprintf("  Groups      : %d  (%d rows)\n", m$n_groups, m$n_obs))
+  cat(sprintf("  x / count / group : %s / %s / %s\n",
+              m$x_col, m$count_col, m$group_col))
+  invisible(x)
+}
+
+
+#' Plot an hvti_longitudinal object
 #'
-#' @param data         Long-format data frame. See [sample_longitudinal_counts_data()].
-#' @param x_col        Name of the discrete time-label column. Default `"time_label"`.
-#' @param count_col    Name of the numeric count column. Default `"count"`.
-#' @param group_col    Name of the series grouping column. Default `"series"`.
-#' @param label_format Formatting function applied to count values.
-#'   `NULL` (default) auto-selects: uses [scales::comma] when the `scales`
-#'   package is installed, otherwise falls back to [base::as.character].
-#'   Pass `identity` to display counts with no formatting.
+#' Draws either a grouped bar chart of counts by time point (\code{type = "plot"})
+#' or a numeric text-table panel suitable for composing below the bar chart via
+#' \pkg{patchwork} (\code{type = "table"}).
 #'
-#' @return A bare [ggplot2::ggplot()] object (text table panel).
+#' @param x            An \code{hvti_longitudinal} object.
+#' @param type         Which panel to produce: \code{"plot"} (default) or
+#'   \code{"table"}.
+#' @param position     Bar position for \code{type = "plot"}: \code{"dodge"}
+#'   (default) or \code{"stack"}.
+#' @param label_format Formatting function applied to count values for
+#'   \code{type = "table"}.  \code{NULL} (default) auto-selects
+#'   \code{scales::comma} when the \pkg{scales} package is installed, otherwise
+#'   falls back to \code{base::as.character}.  Pass \code{identity} to display
+#'   counts without formatting.
+#' @param ...          Ignored; present for S3 consistency.
 #'
-#' @seealso [longitudinal_counts_plot()], [sample_longitudinal_counts_data()]
+#' @return A bare \code{\link[ggplot2]{ggplot}} object.
+#'
+#' @seealso \code{\link{hvti_longitudinal}}
 #'
 #' @examples
 #' library(ggplot2)
 #' dta <- sample_longitudinal_counts_data(n_patients = 300, seed = 42L)
+#' lc  <- hvti_longitudinal(dta)
 #'
-#' longitudinal_counts_table(dta) +
+#' # Bar chart
+#' plot(lc, type = "plot") +
+#'   scale_fill_manual(
+#'     values = c(Patients = "steelblue", Measurements = "firebrick"),
+#'     name   = NULL
+#'   ) +
+#'   labs(x = "Follow-up Window", y = "Count (n)") +
+#'   hvti_theme("manuscript")
+#'
+#' # Text table panel
+#' plot(lc, type = "table") +
 #'   scale_colour_manual(
 #'     values = c(Patients = "steelblue", Measurements = "firebrick"),
 #'     guide  = "none"
 #'   ) +
 #'   hvti_theme("manuscript")
 #'
-#' @importFrom ggplot2 ggplot aes geom_text scale_y_discrete theme element_blank
+#' # Compose with patchwork
+#' # p_bar   <- plot(lc, type = "plot")   + <decorators>
+#' # p_table <- plot(lc, type = "table")  + <decorators>
+#' # p_bar / p_table + patchwork::plot_layout(heights = c(3, 1))
+#'
+#' @importFrom ggplot2 ggplot aes geom_bar geom_text scale_y_discrete theme
+#'   element_blank
 #' @importFrom rlang .data
 #' @export
-longitudinal_counts_table <- function(data,
-                                      x_col        = "time_label",
-                                      count_col    = "count",
-                                      group_col    = "series",
-                                      label_format = NULL) {
-  .check_df(data)
-  .check_cols(data, c(x_col, count_col, group_col))
+plot.hvti_longitudinal <- function(x,
+                                    type         = c("plot", "table"),
+                                    position     = "dodge",
+                                    label_format = NULL,
+                                    ...) {
+  type <- match.arg(type)
 
-  if (is.null(label_format)) {
-    if (requireNamespace("scales", quietly = TRUE)) {
-      label_format <- scales::comma
-    } else {
-      label_format <- as.character
+  data      <- x$data
+  x_col     <- x$meta$x_col
+  count_col <- x$meta$count_col
+  group_col <- x$meta$group_col
+
+  if (type == "plot") {
+    if (!(position %in% c("dodge", "stack")))
+      stop('`position` must be "dodge" or "stack".', call. = FALSE)
+
+    ggplot2::ggplot(
+      data,
+      ggplot2::aes(
+        x    = .data[[x_col]],
+        y    = .data[[count_col]],
+        fill = .data[[group_col]]
+      )
+    ) +
+      ggplot2::geom_bar(stat = "identity", position = position)
+
+  } else {
+    # type == "table"
+    if (is.null(label_format)) {
+      if (requireNamespace("scales", quietly = TRUE)) {
+        label_format <- scales::comma
+      } else {
+        label_format <- as.character
+      }
     }
+
+    table_data        <- data
+    table_data$.label <- label_format(data[[count_col]])
+
+    ggplot2::ggplot(
+      table_data,
+      ggplot2::aes(
+        x      = .data[[x_col]],
+        y      = .data[[group_col]],
+        label  = .data$.label,
+        colour = .data[[group_col]]
+      )
+    ) +
+      ggplot2::geom_text(size = 4) +
+      ggplot2::scale_y_discrete(limits = rev) +
+      ggplot2::theme(
+        axis.text.x  = ggplot2::element_blank(),
+        axis.ticks   = ggplot2::element_blank(),
+        axis.title   = ggplot2::element_blank()
+      )
   }
-
-  fmt_fn <- label_format
-
-  table_data        <- data
-  table_data$.label <- fmt_fn(data[[count_col]])
-
-  ggplot2::ggplot(
-    table_data,
-    ggplot2::aes(
-      x      = .data[[x_col]],
-      y      = .data[[group_col]],
-      label  = .data$.label,
-      colour = .data[[group_col]]
-    )
-  ) +
-    ggplot2::geom_text(size = 4) +
-    ggplot2::scale_y_discrete(limits = rev) +
-    ggplot2::theme(
-      axis.text.x  = ggplot2::element_blank(),
-      axis.ticks   = ggplot2::element_blank(),
-      axis.title   = ggplot2::element_blank()
-    )
 }

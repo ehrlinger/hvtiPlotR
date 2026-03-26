@@ -551,7 +551,7 @@ sample_nnt_data <- function(n        = 500,
 #'
 #' @seealso [sample_hazard_data()], [sample_hazard_empirical()],
 #'   [sample_life_table()], [survival_difference_plot()], [nnt_plot()],
-#'   [survival_curve()], [hvti_theme()]
+#'   [hvti_survival()], [hvti_theme()]
 #'
 #' @references SAS templates: \code{tp.hp.dead.sas},
 #'   \code{tp.hp.dead.tkdn.stratified.sas},

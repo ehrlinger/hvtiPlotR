@@ -30,5 +30,5 @@ head(dta)
 colSums(dta)
 }
 \seealso{
-\code{\link[=upset_plot]{upset_plot()}}
+\code{\link[=hvti_upset]{hvti_upset()}}
 }

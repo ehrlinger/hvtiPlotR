@@ -1,7 +1,7 @@
-# mirror_histogram diagnostics match snapshot (fixed seed)
+# hvti_mirror diagnostics match snapshot (fixed seed)
 
     Code
-      attr(result, "diagnostics")
+      mh$tables$diagnostics
     Output
       $n_input
       [1] 400

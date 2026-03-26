@@ -78,79 +78,51 @@ cb_build_plot <- function(data, std_diff_col, group_col, var_levels,
 # Public API
 # ---------------------------------------------------------------------------
 
-#' Covariate Balance Plot
+#' Prepare covariate balance data for plotting
 #'
-#' Draws the classic HVI covariate balance figure used to assess propensity
-#' score matching or IPTW quality. Each covariate appears as a labelled row;
-#' points display the standardized mean difference for each group (e.g. before
-#' and after matching). A solid reference line marks zero; dotted reference
-#' lines mark a user-supplied imbalance threshold (default +/-10\%).
+#' Validates and orders a long-format standardized-mean-difference data frame
+#' for a covariate balance plot, and returns an \code{hvti_balance} object.
+#' Call \code{\link{plot.hvti_balance}} on the result to obtain a bare
+#' \code{ggplot2} object that you can decorate with colour, shape, axis scales,
+#' and \code{\link{hvti_theme}}.
 #'
-#' The function returns a bare `ggplot` object with no colour, shape, axis, or
-#' theme applied. Callers are expected to add those with the usual `+`
-#' operator, keeping the workflow flexible and consistent with the rest of
-#' the package.
-#'
-#' @param data A data frame in **long format** with one row per
-#'   covariate x group combination. Wide-format data (one column per group)
-#'   must be reshaped before passing, e.g. with [tidyr::pivot_longer()] or
-#'   [stats::reshape()].
+#' @param data         A data frame in \strong{long format} with one row per
+#'   covariate \eqn{\times} group combination.  Wide-format data must be
+#'   reshaped first (e.g. with \code{tidyr::pivot_longer()}).
 #' @param variable_col Name of the column containing covariate labels.
-#'   Default `"variable"`.
-#' @param group_col Name of the column identifying the comparison group
-#'   (e.g. `"Before match"` / `"After match"`). Default `"group"`.
-#' @param std_diff_col Name of the numeric column holding the standardized
-#'   mean difference values. Default `"std_diff"`.
-#' @param var_levels Character vector controlling the **display order** of
-#'   covariates on the y-axis. The first element appears at the bottom.
-#'   Defaults to the order of first appearance in `data[[variable_col]]`.
-#' @param threshold Numeric value (absolute) for the dotted imbalance
-#'   reference lines drawn at `+/-threshold`. Default `10`.
-#' @param point_size Passed to [ggplot2::geom_point()]. Default `3`.
-#' @param hline_linetype Linetype for the horizontal covariate guide lines.
-#'   Default `"dashed"`.
-#' @param hline_linewidth Linewidth for the horizontal guide lines.
-#'   Default `0.25`.
-#' @param vline_linewidth Linewidth for the solid zero reference line.
-#'   Default `0.2`.
-#' @param alpha Transparency of the point glyphs, in \[0, 1\]. Default `0.8`.
-#' @param threshold_linetype Linetype for the +/-threshold reference lines.
-#'   Default `"dotted"`.
+#'   Default \code{"variable"}.
+#' @param group_col    Name of the column identifying the comparison group
+#'   (e.g. \code{"Before match"} / \code{"After match"}).
+#'   Default \code{"group"}.
+#' @param std_diff_col Name of the numeric column holding standardized mean
+#'   difference values.  Default \code{"std_diff"}.
+#' @param var_levels   Character vector controlling the display order of
+#'   covariates on the y-axis.  The first element appears at the bottom.
+#'   Defaults to the order of first appearance in \code{data[[variable_col]]}.
+#' @param threshold    Numeric; absolute SMD value at which dotted reference
+#'   lines are drawn (\eqn{\pm}\code{threshold}).  Default \code{10}.
 #'
-#' @return A bare [ggplot2::ggplot()] object. Layer on
-#'   [ggplot2::scale_color_manual()], [ggplot2::scale_shape_manual()],
-#'   [ggplot2::scale_x_continuous()], [ggplot2::labs()],
-#'   [ggplot2::annotate()], and a theme to complete the figure.
+#' @return An object of class \code{c("hvti_balance", "hvti_data")} — a list
+#'   with three elements:
+#' \describe{
+#'   \item{\code{$data}}{The input data frame with a \code{cb_index} column
+#'     added for y-axis positioning.}
+#'   \item{\code{$meta}}{Named list: \code{variable_col}, \code{group_col},
+#'     \code{std_diff_col}, \code{var_levels}, \code{threshold},
+#'     \code{n_vars}, \code{n_groups}.}
+#'   \item{\code{$tables}}{Empty list (no accessory tables).}
+#' }
+#'
+#' @seealso \code{\link{plot.hvti_balance}},
+#'   \code{\link{sample_covariate_balance_data}}
 #'
 #' @examples
 #' library(ggplot2)
-#'
 #' dta <- sample_covariate_balance_data()
+#' cb  <- hvti_balance(dta)
+#' cb                   # prints variable count, group count, threshold
 #'
-#' # Bare plot with manuscript theme
-#' covariate_balance(dta, alpha = 0.8) +
-#'   hvtiPlotR::hvti_theme("manuscript")
-#'
-#' # Add colour, shape, axis scales, and manuscript theme
-#' covariate_balance(dta, alpha = 0.8) +
-#'   scale_color_manual(
-#'     values = c("Before match" = "red4", "After match" = "blue3"),
-#'     name   = NULL
-#'   ) +
-#'   scale_shape_manual(
-#'     values = c("Before match" = 17L, "After match" = 15L),
-#'     name   = NULL
-#'   ) +
-#'   scale_x_continuous(limits = c(-45, 35), breaks = seq(-40, 30, 10)) +
-#'   labs(
-#'     x = "Standardized difference: Group A vs Group B (%)",
-#'     y = ""
-#'   ) +
-#'   hvtiPlotR::hvti_theme("manuscript") +
-#'   theme(legend.position = c(0.20, 0.95))
-#'
-#' # Add directional annotations and theme
-#' covariate_balance(dta, alpha = 0.8) +
+#' plot(cb) +
 #'   scale_color_manual(
 #'     values = c("Before match" = "red4", "After match" = "blue3"),
 #'     name   = NULL
@@ -161,32 +133,21 @@ cb_build_plot <- function(data, std_diff_col, group_col, var_levels,
 #'   ) +
 #'   scale_x_continuous(limits = c(-45, 35), breaks = seq(-40, 30, 10)) +
 #'   labs(x = "Standardized difference (%)", y = "") +
-#'   annotate("text", x = -32, y =  0.5,
-#'            label = "More likely Group B", size = 4) +
-#'   annotate("text", x =  22, y = 13.5,
-#'            label = "More likely Group A", size = 4) +
-#'   hvtiPlotR::hvti_theme("manuscript")
+#'   hvti_theme("manuscript")
 #'
 #' @export
-covariate_balance <- function(
+hvti_balance <- function(
   data,
-  variable_col       = "variable",
-  group_col          = "group",
-  std_diff_col       = "std_diff",
-  var_levels         = NULL,
-  threshold          = 10,
-  point_size         = 3,
-  alpha              = 0.8,
-  hline_linetype     = "dashed",
-  hline_linewidth    = 0.25,
-  vline_linewidth    = 0.2,
-  threshold_linetype = "dotted"
+  variable_col = "variable",
+  group_col    = "group",
+  std_diff_col = "std_diff",
+  var_levels   = NULL,
+  threshold    = 10
 ) {
   cb_validate_input(data, variable_col, group_col, std_diff_col)
-  cb_validate_params(threshold, point_size, hline_linewidth, vline_linewidth)
-  .check_alpha(alpha)
+  cb_validate_params(threshold, point_size = 3, hline_linewidth = 0.25,
+                     vline_linewidth = 0.2)
 
-  # Work on a local copy to avoid mutating inputs (e.g., data.table) by reference
   working <- as.data.frame(data)
 
   if (is.null(var_levels))
@@ -196,12 +157,97 @@ covariate_balance <- function(
     factor(working[[variable_col]], levels = var_levels)
   )
 
+  new_hvti_data(
+    data = working,
+    meta = list(
+      variable_col = variable_col,
+      group_col    = group_col,
+      std_diff_col = std_diff_col,
+      var_levels   = var_levels,
+      threshold    = threshold,
+      n_vars       = length(var_levels),
+      n_groups     = length(unique(working[[group_col]]))
+    ),
+    tables   = list(),
+    subclass = "hvti_balance"
+  )
+}
+
+
+#' Print an hvti_balance object
+#'
+#' @param x   An \code{hvti_balance} object from \code{\link{hvti_balance}}.
+#' @param ... Ignored.
+#' @return \code{x}, invisibly.
+#' @export
+print.hvti_balance <- function(x, ...) {
+  m <- x$meta
+  cat("<hvti_balance>\n")
+  cat(sprintf("  Variables   : %d\n", m$n_vars))
+  cat(sprintf("  Groups      : %d (%s)\n", m$n_groups,
+              paste(unique(x$data[[m$group_col]]), collapse = ", ")))
+  cat(sprintf("  SMD col     : %s\n", m$std_diff_col))
+  cat(sprintf("  Threshold   : \u00b1%g\n", m$threshold))
+  invisible(x)
+}
+
+
+#' Plot an hvti_balance object
+#'
+#' Builds a bare covariate balance \code{ggplot2} object from an
+#' \code{\link{hvti_balance}} data object.  Each covariate appears as a
+#' labelled row; points show the standardized mean difference per group.
+#' A solid line marks zero; dotted lines mark \eqn{\pm}\code{threshold}.
+#' Add colour, shape, axis scales, and a theme with \code{+}.
+#'
+#' @param x                  An \code{hvti_balance} object.
+#' @param point_size         Passed to \code{geom_point()}. Default \code{3}.
+#' @param alpha              Point transparency in \eqn{[0,1]}. Default \code{0.8}.
+#' @param hline_linetype     Linetype for horizontal covariate guides.
+#'   Default \code{"dashed"}.
+#' @param hline_linewidth    Linewidth for horizontal guides. Default \code{0.25}.
+#' @param vline_linewidth    Linewidth for the zero reference line.
+#'   Default \code{0.2}.
+#' @param threshold_linetype Linetype for the \eqn{\pm}threshold lines.
+#'   Default \code{"dotted"}.
+#' @param ...                Ignored; present for S3 consistency.
+#'
+#' @return A bare \code{\link[ggplot2]{ggplot}} object.
+#'
+#' @seealso \code{\link{hvti_balance}}, \code{\link{hvti_theme}}
+#'
+#' @examples
+#' dta <- sample_covariate_balance_data()
+#' cb  <- hvti_balance(dta)
+#'
+#' plot(cb) +
+#'   ggplot2::scale_color_manual(
+#'     values = c("Before match" = "red4", "After match" = "blue3"),
+#'     name   = NULL
+#'   ) +
+#'   ggplot2::labs(x = "Standardized difference (%)", y = "") +
+#'   hvti_theme("manuscript")
+#'
+#' @importFrom ggplot2 ggplot aes geom_vline geom_hline geom_point
+#'   scale_y_continuous
+#' @export
+plot.hvti_balance <- function(x,
+                              point_size         = 3,
+                              alpha              = 0.8,
+                              hline_linetype     = "dashed",
+                              hline_linewidth    = 0.25,
+                              vline_linewidth    = 0.2,
+                              threshold_linetype = "dotted",
+                              ...) {
+  .check_alpha(alpha)
+  cb_validate_params(x$meta$threshold, point_size, hline_linewidth,
+                     vline_linewidth)
   cb_build_plot(
-    data               = working,
-    std_diff_col       = std_diff_col,
-    group_col          = group_col,
-    var_levels         = var_levels,
-    threshold          = threshold,
+    data               = x$data,
+    std_diff_col       = x$meta$std_diff_col,
+    group_col          = x$meta$group_col,
+    var_levels         = x$meta$var_levels,
+    threshold          = x$meta$threshold,
     point_size         = point_size,
     alpha              = alpha,
     hline_linetype     = hline_linetype,
@@ -218,7 +264,7 @@ covariate_balance <- function(
 #' Generate Sample Covariate Balance Data
 #'
 #' Produces a reproducible long-format data frame suitable for testing and
-#' demonstrating [covariate_balance()].  Rather than drawing SMDs from
+#' demonstrating [hvti_balance()].  Rather than drawing SMDs from
 #' independent normals, this generator simulates patient-level covariates
 #' through a logistic propensity score model, computes group standardized mean
 #' differences before matching, then performs greedy 1:1 nearest-neighbour

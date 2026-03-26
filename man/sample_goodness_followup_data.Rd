@@ -49,7 +49,7 @@ A data frame with columns:
 }
 \description{
 Produces a reproducible data frame suitable for testing and demonstrating
-\code{\link[=goodness_followup]{goodness_followup()}}. Operation dates are drawn uniformly over the study
+\code{\link[=hvti_followup]{hvti_followup()}}. Operation dates are drawn uniformly over the study
 period; death and non-fatal event times are simulated from exponential
 distributions and censored at each patient's potential follow-up. The
 \code{deads} column approximates active/systematic death ascertainment by
@@ -58,7 +58,7 @@ mirroring the distinction between \code{dead} and \code{deads} in the legacy
 \code{tp.dp.gfup.R} template.
 }
 \details{
-The column names match the defaults of \code{\link[=goodness_followup]{goodness_followup()}}:
+The column names match the defaults of \code{\link[=hvti_followup]{hvti_followup()}}:
 \code{iv_opyrs}, \code{iv_dead}, \code{dead}. The event-panel columns (\code{iv_event},
 \code{ev_event}, \code{deads}) are included so callers can pass \code{event_col},
 \code{event_time_col}, and \code{death_for_event_col} directly.
@@ -68,7 +68,8 @@ dta <- sample_goodness_followup_data()
 head(dta)
 
 # Death panel
-goodness_followup(dta) +
+gf <- hvti_followup(dta)
+plot(gf) +
   ggplot2::scale_color_manual(
     values = c("Alive" = "blue", "Dead" = "red"), name = NULL
   ) +
@@ -76,15 +77,13 @@ goodness_followup(dta) +
   ggplot2::labs(x = "Operation Date", y = "Follow-up (years)")
 
 # Event panel
-goodness_event_plot(
-  dta,
-  event_col           = "ev_event",
-  event_time_col      = "iv_event",
-  death_for_event_col = "deads",
-  event_levels        = c("No event", "Relapse", "Death")
-) +
+gf2 <- hvti_followup(dta, event_col = "ev_event",
+                      event_time_col = "iv_event",
+                      death_for_event_col = "deads")
+plot(gf2, type = "event") +
   ggplot2::scale_color_manual(
-    values = c("No event" = "blue", "Relapse" = "green3", "Death" = "red"),
+    values = c("No event" = "blue", "Non-fatal event" = "green3",
+               "Death" = "red"),
     name   = NULL
   ) +
   ggplot2::scale_shape_manual(values = c(1, 2, 4), name = NULL) +

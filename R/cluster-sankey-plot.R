@@ -45,7 +45,7 @@ utils::globalVariables(c("node", "freq"))
 #' @return A data frame with `n` rows and columns `C2`–`C9`, each a factor
 #'   ordered by the hierarchical cluster labels.
 #'
-#' @seealso [cluster_sankey_plot()]
+#' @seealso [hvti_sankey()]
 #'
 #' @examples
 #' dta <- sample_cluster_sankey_data(n = 200, seed = 42)
@@ -132,99 +132,59 @@ sample_cluster_sankey_data <- function(
 }
 
 # ---------------------------------------------------------------------------
-#' Cluster Stability Sankey Plot
+# Public API
+# ---------------------------------------------------------------------------
+
+#' Prepare cluster stability Sankey data for plotting
 #'
-#' Draws a Sankey diagram showing how patients flow between labelled clusters
-#' as the number of clusters K increases. Each column represents one value of
-#' K; each band shows the fraction of patients whose cluster assignment changes
-#' between K and K+1. Node labels show the cluster letter and patient count.
-#'
-#' This ports the PAM cluster stability figure produced by the HVTI clustering
-#' analysis pipeline (source code using `ggsankey::make_long()`,
-#' `geom_sankey()`, and `geom_sankey_label()`).
-#'
-#' **Requires the `ggsankey` package.** Install with:
-#' ```r
-#' remotes::install_github("davidsjoberg/ggsankey")
-#' ```
+#' Validates a wide cluster-assignment data frame, resolves node level
+#' ordering, computes default node colours if not supplied, and pre-computes
+#' the long-format Sankey data.  Call \code{\link{plot.hvti_sankey}} on the
+#' result to obtain a bare \code{ggplot2} Sankey diagram using
+#' \pkg{ggsankey} geoms.
 #'
 #' @param data          Data frame; one row per patient. Must contain all
-#'   columns named in `cluster_cols`.
+#'   columns named in \code{cluster_cols}.
 #' @param cluster_cols  Character vector of column names giving the cluster
 #'   assignments at each value of K, in ascending K order. Default
-#'   `paste0("C", 2:9)` (columns `C2`, `C3`, …, `C9`).
+#'   \code{paste0("C", 2:9)}.
 #' @param node_levels   Character vector giving the display order of node
-#'   labels (bottom to top within each column). If `NULL` (default), the
-#'   existing factor levels of the first cluster column are used; if that
-#'   column is not a factor, levels are taken in order of first appearance.
+#'   labels (bottom to top within each column). If \code{NULL} (default),
+#'   the existing factor levels of the first cluster column are used.
 #' @param node_colours  Named character vector mapping node labels to fill
-#'   colours. If `NULL` (default), colours are drawn from
-#'   `RColorBrewer::brewer.pal(9, "Set1")` in the order
-#'   `c(2, 6, 8, 4, 3, 5, 7, 1, 9)` matching the original analysis.
-#'   Truncated or extended automatically to the number of unique nodes.
-#' @param alpha         Transparency applied to flow bands and node labels.
-#'   Default `0.8`.
-#' @param label_size    Font size for node labels in points. Default `8`.
-#' @param label_hjust   Horizontal justification offset for node labels.
-#'   Negative values shift labels to the right of the node centre. Default
-#'   `-0.05`.
+#'   colours. If \code{NULL} (default), colours are drawn from
+#'   \code{RColorBrewer::brewer.pal(9, "Set1")} in the order
+#'   \code{c(2, 6, 8, 4, 3, 5, 7, 1, 9)}.
 #'
-#' @return A [ggplot2::ggplot()] object using `ggsankey` geoms. Compose with
-#'   `scale_fill_manual()`, `labs()`, `theme()`, and [hvti_theme()].
+#' @return An object of class \code{c("hvti_sankey", "hvti_data")}:
+#' \describe{
+#'   \item{\code{$data}}{The long-format Sankey data frame (four columns:
+#'     \code{x}, \code{node}, \code{next_x}, \code{next_node}).}
+#'   \item{\code{$meta}}{Named list: \code{cluster_cols}, \code{node_levels},
+#'     \code{node_colours}, \code{n_patients}, \code{n_k}.}
+#'   \item{\code{$tables}}{Empty list.}
+#' }
 #'
-#' @seealso [sample_cluster_sankey_data()], [hvti_theme()]
+#' @seealso \code{\link{plot.hvti_sankey}},
+#'   \code{\link{sample_cluster_sankey_data}}
 #'
 #' @examples
 #' dta <- sample_cluster_sankey_data(n = 300, seed = 42)
-#' head(dta)
-#' table(dta$C9)
 #'
-#' # cluster_sankey_plot() requires ggsankey (GitHub-only package).
-#' # Install with: remotes::install_github("davidsjoberg/ggsankey")
 #' if (requireNamespace("ggsankey", quietly = TRUE)) {
-#'
-#'   # --- Default colours (Set1 palette) -----------------------------------
-#'   cluster_sankey_plot(dta) +
+#'   sn <- hvti_sankey(dta)
+#'   sn  # prints cluster cols and node count
+#'   plot(sn) +
 #'     ggplot2::labs(x = NULL, title = "Cluster Stability: K = 2 to 9") +
-#'     hvti_theme("manuscript")
-#'
-#'   # --- Custom colour palette --------------------------------------------
-#'   my_cols <- c(
-#'     A = "#1f77b4", B = "#ff7f0e", C = "#2ca02c", D = "#d62728",
-#'     E = "#9467bd", F = "#8c564b", G = "#e377c2", H = "#7f7f7f",
-#'     I = "#bcbd22"
-#'   )
-#'   cluster_sankey_plot(dta, node_colours = my_cols) +
-#'     ggplot2::labs(x = NULL) +
-#'     hvti_theme("manuscript")
-#'
-#'   # --- Subset to K = 2 to 6 only ----------------------------------------
-#'   cluster_sankey_plot(dta, cluster_cols = paste0("C", 2:6)) +
-#'     ggplot2::labs(x = NULL) +
 #'     hvti_theme("manuscript")
 #' }
 #'
-#' @importFrom ggplot2 ggplot aes geom_vline labs scale_fill_manual theme
-#'   element_blank
 #' @importFrom rlang .data
 #' @export
-cluster_sankey_plot <- function(data,
-                                cluster_cols  = paste0("C", 2:9),
-                                node_levels   = NULL,
-                                node_colours  = NULL,
-                                alpha         = 0.8,
-                                label_size    = 8,
-                                label_hjust   = -0.05) {
-
-  if (!requireNamespace("ggsankey", quietly = TRUE)) {
-    stop(
-      "Package 'ggsankey' is required for cluster_sankey_plot().\n",
-      "Install it with: remotes::install_github(\"davidsjoberg/ggsankey\")",
-      call. = FALSE
-    )
-  }
-
-  # --- Validation -----------------------------------------------------------
+hvti_sankey <- function(data,
+                         cluster_cols = paste0("C", 2:9),
+                         node_levels  = NULL,
+                         node_colours = NULL) {
   if (!is.data.frame(data))
     stop("`data` must be a data frame.", call. = FALSE)
   missing_cols <- setdiff(cluster_cols, names(data))
@@ -234,14 +194,14 @@ cluster_sankey_plot <- function(data,
   if (length(cluster_cols) < 2L)
     stop("`cluster_cols` must name at least two columns.", call. = FALSE)
 
-  # --- Node ordering --------------------------------------------------------
+  # Node ordering
   if (is.null(node_levels)) {
-    first_col <- data[[cluster_cols[1L]]]
+    first_col   <- data[[cluster_cols[1L]]]
     node_levels <- if (is.factor(first_col)) levels(first_col) else
       unique(as.character(first_col))
   }
 
-  # --- Default colours ------------------------------------------------------
+  # Default colours
   if (is.null(node_colours)) {
     n_nodes <- length(node_levels)
     if (!requireNamespace("RColorBrewer", quietly = TRUE)) {
@@ -250,19 +210,103 @@ cluster_sankey_plot <- function(data,
       set1_idx <- c(2L, 6L, 8L, 4L, 3L, 5L, 7L, 1L, 9L)
       set1_idx <- set1_idx[seq_len(min(n_nodes, length(set1_idx)))]
       pal      <- RColorBrewer::brewer.pal(9, "Set1")[set1_idx]
-      if (n_nodes > length(pal)) {
-        pal <- rep_len(pal, n_nodes)
-      }
+      if (n_nodes > length(pal)) pal <- rep_len(pal, n_nodes)
     }
     node_colours <- stats::setNames(pal, node_levels[seq_along(pal)])
   }
 
-  # --- Reshape to long format -----------------------------------------------
+  # Reshape to long format
   san_dta           <- .make_sankey_long(data, cluster_cols)
   san_dta$node      <- factor(san_dta$node,      levels = node_levels)
   san_dta$next_node <- factor(san_dta$next_node, levels = node_levels)
 
-  # --- Build plot -----------------------------------------------------------
+  new_hvti_data(
+    data = san_dta,
+    meta = list(
+      cluster_cols = cluster_cols,
+      node_levels  = node_levels,
+      node_colours = node_colours,
+      n_patients   = nrow(data),
+      n_k          = length(cluster_cols)
+    ),
+    tables   = list(),
+    subclass = "hvti_sankey"
+  )
+}
+
+
+#' Print an hvti_sankey object
+#'
+#' @param x   An \code{hvti_sankey} object from \code{\link{hvti_sankey}}.
+#' @param ... Ignored.
+#' @return \code{x}, invisibly.
+#' @export
+print.hvti_sankey <- function(x, ...) {
+  m <- x$meta
+  cat("<hvti_sankey>\n")
+  cat(sprintf("  Patients    : %d\n", m$n_patients))
+  cat(sprintf("  K values    : %d  (%s)\n",
+              m$n_k, paste(m$cluster_cols, collapse = ", ")))
+  cat(sprintf("  Nodes       : %d  (%s)\n",
+              length(m$node_levels), paste(m$node_levels, collapse = " ")))
+  invisible(x)
+}
+
+
+#' Plot an hvti_sankey object
+#'
+#' Draws a cluster stability Sankey diagram using \pkg{ggsankey} geoms.
+#' \strong{Requires the \pkg{ggsankey} package.}  Install with:
+#' \preformatted{remotes::install_github("davidsjoberg/ggsankey")}
+#'
+#' @param x           An \code{hvti_sankey} object.
+#' @param alpha       Transparency applied to flow bands and node labels.
+#'   Default \code{0.8}.
+#' @param label_size  Font size for node labels in points. Default \code{8}.
+#' @param label_hjust Horizontal justification offset for node labels.
+#'   Default \code{-0.05}.
+#' @param ...         Ignored; present for S3 consistency.
+#'
+#' @return A \code{\link[ggplot2]{ggplot}} object using \pkg{ggsankey} geoms.
+#'   Compose with \code{scale_fill_manual()}, \code{labs()}, \code{theme()},
+#'   and \code{\link{hvti_theme}}.
+#'
+#' @seealso \code{\link{hvti_sankey}}, \code{\link{hvti_theme}}
+#'
+#' @examples
+#' dta <- sample_cluster_sankey_data(n = 300, seed = 42)
+#'
+#' if (requireNamespace("ggsankey", quietly = TRUE)) {
+#'   plot(hvti_sankey(dta)) +
+#'     ggplot2::labs(x = NULL, title = "Cluster Stability: K = 2 to 9") +
+#'     hvti_theme("manuscript")
+#'
+#'   # Subset to K = 2 to 6
+#'   plot(hvti_sankey(dta, cluster_cols = paste0("C", 2:6))) +
+#'     ggplot2::labs(x = NULL) +
+#'     hvti_theme("manuscript")
+#' }
+#'
+#' @importFrom ggplot2 ggplot aes geom_vline labs scale_fill_manual theme
+#'   element_blank
+#' @importFrom rlang .data
+#' @export
+plot.hvti_sankey <- function(x,
+                              alpha       = 0.8,
+                              label_size  = 8,
+                              label_hjust = -0.05,
+                              ...) {
+  if (!requireNamespace("ggsankey", quietly = TRUE)) {
+    stop(
+      "Package 'ggsankey' is required for plot.hvti_sankey().\n",
+      "Install it with: remotes::install_github(\"davidsjoberg/ggsankey\")",
+      call. = FALSE
+    )
+  }
+
+  san_dta      <- x$data
+  node_colours <- x$meta$node_colours
+
   p <- ggplot2::ggplot(
     san_dta,
     ggplot2::aes(

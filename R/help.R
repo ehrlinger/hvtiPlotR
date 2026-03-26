@@ -10,10 +10,12 @@
 #' graphics that conform to HVI manuscript and presentation standards using
 #' `ggplot2` and the `officer` package.
 #'
-#' All plot functions return bare [ggplot2::ggplot()] objects so callers
-#' can apply additional `ggplot2` layers, scales, and themes without
-#' restriction. Each function ships with a `sample_*()` companion that
-#' generates realistic synthetic data for examples and tests.
+#' All plot functions follow a two-step workflow: call the constructor
+#' (`hvti_*()`) to validate and prepare data, then call [plot()] on the result
+#' to obtain a bare [ggplot2::ggplot()] object that you can decorate with
+#' additional `ggplot2` layers, scales, and themes without restriction. Each
+#' constructor ships with a `sample_*()` companion that generates realistic
+#' synthetic data for examples and tests.
 #'
 #' ## Themes
 #'
@@ -39,26 +41,28 @@
 #' * [make_footnote()] / [makeFootnote()]: Add a draft footnote to a figure
 #'   during analysis; omit for publication-ready output.
 #'
-#' ## Plot functions
+#' ## Plot constructors
+#'
+#' Each constructor returns an `hvti_data` S3 object; call [plot()] on it
+#' to produce a ggplot.
 #'
 #' ### Propensity Score & Matching
 #'
-#' * [mirror_histogram()]: Side-by-side propensity-score histograms for
-#'   binary-matched or IPTW-weighted cohorts. Ports the
+#' * [hvti_mirror()]: Prepare propensity-score distributions for a mirrored
+#'   histogram comparing binary-matched or IPTW-weighted cohorts. Ports the
 #'   `tp.lp.mirror-histogram_*` and `tp.lp.mirror_histo_before_after_wt`
 #'   SAS scripts.
-#' * [covariate_balance()]: Standardised mean difference dot-plot before
-#'   and after propensity-score matching or weighting. Ports
-#'   `tp.lp.propen.cov_balance.R`.
-#' * [stacked_histogram()]: Stacked or filled histogram of a numeric
-#'   variable by group.
+#' * [hvti_balance()]: Prepare standardised mean difference data for a
+#'   covariate balance dot-plot before and after propensity-score matching or
+#'   weighting. Ports `tp.lp.propen.cov_balance.R`.
+#' * [hvti_stacked()]: Prepare grouped count or proportion data for a stacked
+#'   or filled histogram.
 #'
 #' ### Survival & Hazard
 #'
-#' * [survival_curve()]: Kaplan-Meier or Nelson-Aalen survival analysis
-#'   returning up to five plot types (survival, cumulative hazard, hazard,
-#'   log-log, life/RMST) plus risk and report tables. Ports the SAS
-#'   `%kaplan` and `%nelsont` macros from `tp.ac.dead.sas`.
+#' * [hvti_survival()]: Fit and prepare Kaplan-Meier or Nelson-Aalen survival
+#'   curves, risk tables, and report tables. Ports the SAS `%kaplan` and
+#'   `%nelsont` macros from `tp.ac.dead.sas`.
 #' * [hazard_plot()]: Parametric hazard/survival curves from pre-fitted
 #'   model output, with optional KM empirical overlay and population
 #'   life-table reference. Ports the `tp.hp.*` template family.
@@ -70,45 +74,47 @@
 #'
 #' ### Nonparametric Temporal Curves
 #'
-#' * [nonparametric_curve_plot()]: Two-phase nonparametric temporal trend
-#'   curves for binary or continuous outcomes with optional 68%/95% CI
-#'   ribbon and binned data summary points. Ports the `tp.np.*` template
-#'   family.
-#' * [nonparametric_ordinal_plot()]: Grade-specific probability curves
-#'   from cumulative proportional-odds models (e.g. TR/AR grade). Ports
+#' * [hvti_nonparametric()]: Prepare pre-computed two-phase nonparametric
+#'   temporal trend curves for binary or continuous outcomes with optional
+#'   68%/95% CI ribbon and binned data summary points. Ports the `tp.np.*`
+#'   template family.
+#' * [hvti_ordinal()]: Prepare grade-specific probability curves from
+#'   cumulative proportional-odds models (e.g. TR/AR grade). Ports
 #'   `tp.np.tr.ivecho.*` and `tp.np.po_ar.u_multi.ordinal.sas`.
 #'
 #' ### Study Design & Goodness of Follow-Up
 #'
-#' * [goodness_followup()]: Goodness-of-follow-up scatter plot showing
-#'   actual vs. potential follow-up per operation year. Ports `tp.dp.gfup.R`.
-#' * [goodness_event_plot()]: Companion panel showing non-fatal event counts
-#'   alongside the goodness-of-follow-up plot.
+#' * [hvti_followup()]: Prepare per-patient follow-up data for a
+#'   goodness-of-follow-up scatter plot (actual vs. potential follow-up per
+#'   operation year). Use `plot(x, type = "followup")` for the death panel
+#'   and `plot(x, type = "event")` for the non-fatal event panel. Ports
+#'   `tp.dp.gfup.R`.
 #'
 #' ### Longitudinal & Repeated Measures
 #'
-#' * [trends_plot()]: Annual trend lines with optional confidence ribbons
-#'   for multiple groups. Ports the `tp.lp.trends.*`, `tp.rp.trends.*`,
-#'   and `tp.dp.trends.R` template families.
-#' * [spaghetti_plot()]: Individual patient trajectories over time,
-#'   optionally stratified by group. Ports `tp.dp.spaghetti.echo.R`.
-#' * [longitudinal_counts_plot()]: Grouped bar chart of patient and
-#'   measurement counts at discrete follow-up windows.
-#' * [longitudinal_counts_table()]: Numeric table panel of the same counts,
-#'   intended for patchwork composition below [longitudinal_counts_plot()].
+#' * [hvti_trends()]: Prepare patient-level data for annual trend lines with
+#'   optional confidence ribbons for multiple groups. Ports the
+#'   `tp.lp.trends.*`, `tp.rp.trends.*`, and `tp.dp.trends.R` families.
+#' * [hvti_spaghetti()]: Prepare repeated-measures data for individual
+#'   patient trajectory plots, optionally stratified by group. Ports
+#'   `tp.dp.spaghetti.echo.R`.
+#' * [hvti_longitudinal()]: Prepare pre-aggregated counts for a grouped bar
+#'   chart or text table of patient and measurement counts at discrete
+#'   follow-up windows. Use `plot(x, type = "plot")` for the bar chart and
+#'   `plot(x, type = "table")` for the numeric table panel.
 #'
 #' ### Flow Diagrams
 #'
-#' * [alluvial_plot()]: Alluvial (Sankey) diagram of patient flow between
-#'   states across time points. Ports
+#' * [hvti_alluvial()]: Prepare patient-flow data for an alluvial (Sankey)
+#'   diagram showing transitions between states across time points. Ports
 #'   `tp.dp.female_bicus_preAR_sankey.R`.
-#' * [cluster_sankey_plot()]: Cluster-stability Sankey showing how patients
-#'   redistribute across K values in a PAM analysis.
+#' * [hvti_sankey()]: Prepare cluster-assignment data for a stability Sankey
+#'   showing how patients redistribute across K values in a PAM analysis.
 #'
 #' ### Exploratory Data Analysis
 #'
-#' * [eda_plot()]: Single-variable EDA: bar chart (categorical) or
-#'   scatter + LOESS (continuous). Ports
+#' * [hvti_eda()]: Prepare a single variable for EDA plotting: bar chart
+#'   (categorical) or scatter + LOESS (continuous). Ports
 #'   `tp.dp.EDA_barplots_scatterplots.R`.
 #' * [eda_classify_var()]: Classify a vector as `"Cont"`, `"Cat_Num"`, or
 #'   `"Cat_Char"` using the `UniqueLimit` heuristic from
@@ -116,8 +122,8 @@
 #' * [eda_select_vars()]: Subset and reorder a data frame by a character
 #'   vector or space-separated column-name string. Replaces
 #'   `Order_Variables()`.
-#' * [upset_plot()]: UpSet intersection plot for set membership across
-#'   binary indicator columns. Ports `tp.complexUpset.R`.
+#' * [hvti_upset()]: Prepare binary indicator data for an UpSet intersection
+#'   plot. Ports `tp.complexUpset.R`.
 #'
 #' ## Sample-data generators
 #'

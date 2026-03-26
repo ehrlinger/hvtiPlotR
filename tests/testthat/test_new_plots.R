@@ -1,11 +1,11 @@
 # tests/testthat/test_new_plots.R
 #
 # Smoke / property tests for plot functions added in v1.2+:
-#   sample_upset_data, upset_plot
-#   sample_alluvial_data, alluvial_plot
-#   sample_spaghetti_data, spaghetti_plot
-#   sample_trends_data, trends_plot
-#   sample_longitudinal_counts_data, longitudinal_counts_plot
+#   sample_upset_data, hvti_upset
+#   sample_alluvial_data, hvti_alluvial
+#   sample_spaghetti_data, hvti_spaghetti
+#   sample_trends_data, hvti_trends
+#   sample_longitudinal_counts_data, hvti_longitudinal
 # hvti_theme("light_ppt") dispatch + theme_light_ppt alias.
 #
 # Every assertion tests a distinct property of a distinct object.
@@ -64,30 +64,30 @@ test_that("sample_upset_data differs across seeds", {
 })
 
 # ============================================================================
-# upset_plot
+# hvti_upset
 # ============================================================================
 
 sets <- c("AV_Replacement", "AV_Repair", "MV_Replacement",
           "MV_Repair", "TV_Repair", "Aorta", "CABG")
 
-test_that("upset_plot returns without error", {
+test_that("hvti_upset returns an hvti_data object", {
   dta <- sample_upset_data(n = 200, seed = 1)
-  expect_no_error(upset_plot(dta, intersect = sets))
+  expect_s3_class(hvti_upset(dta, intersect = sets), "hvti_data")
 })
 
-test_that("upset_plot errors when data is not a data frame", {
-  expect_error(upset_plot(list(), intersect = sets), "data frame")
+test_that("hvti_upset errors when data is not a data frame", {
+  expect_error(hvti_upset(list(), intersect = sets), "data frame")
 })
 
-test_that("upset_plot errors when intersect has only one element", {
+test_that("hvti_upset errors when intersect has only one element", {
   dta <- sample_upset_data(n = 100, seed = 1)
-  expect_error(upset_plot(dta, intersect = "AV_Replacement"), "at least 2")
+  expect_error(hvti_upset(dta, intersect = "AV_Replacement"), "at least 2")
 })
 
-test_that("upset_plot errors when intersect names are absent from data", {
+test_that("hvti_upset errors when intersect names are absent from data", {
   dta <- sample_upset_data(n = 100, seed = 1)
   expect_error(
-    upset_plot(dta, intersect = c("AV_Replacement", "DoesNotExist")),
+    hvti_upset(dta, intersect = c("AV_Replacement", "DoesNotExist")),
     "column"
   )
 })
@@ -143,74 +143,81 @@ test_that("sample_alluvial_data differs across seeds", {
 })
 
 # ============================================================================
-# alluvial_plot
+# hvti_alluvial
 # ============================================================================
 
-test_that("alluvial_plot returns a ggplot with three axes", {
+test_that("hvti_alluvial returns an hvti_data object", {
   dta  <- sample_alluvial_data(n = 150, seed = 1)
   axes <- c("pre_ar", "procedure", "post_ar")
-  p    <- alluvial_plot(dta, axes = axes, y_col = "freq")
+  expect_s3_class(hvti_alluvial(dta, axes = axes, y_col = "freq"), "hvti_data")
+})
+
+test_that("plot(hvti_alluvial) returns a ggplot with three axes", {
+  dta  <- sample_alluvial_data(n = 150, seed = 1)
+  axes <- c("pre_ar", "procedure", "post_ar")
+  p    <- plot(hvti_alluvial(dta, axes = axes, y_col = "freq"))
   expect_s3_class(p, "ggplot")
 })
 
-test_that("alluvial_plot works with only two axes", {
+test_that("plot(hvti_alluvial) works with only two axes", {
   dta <- sample_alluvial_data(n = 100, seed = 1)
-  p   <- alluvial_plot(dta, axes = c("pre_ar", "post_ar"), y_col = "freq")
+  p   <- plot(hvti_alluvial(dta, axes = c("pre_ar", "post_ar"), y_col = "freq"))
   expect_s3_class(p, "ggplot")
 })
 
-test_that("alluvial_plot has a geom_text layer when show_labels=TRUE", {
+test_that("plot(hvti_alluvial) has a geom_text layer when show_labels=TRUE", {
   dta <- sample_alluvial_data(n = 100, seed = 1)
-  p   <- alluvial_plot(dta, axes = c("pre_ar", "post_ar"),
-                     y_col = "freq", show_labels = TRUE)
+  p   <- plot(hvti_alluvial(dta, axes = c("pre_ar", "post_ar"), y_col = "freq"),
+              show_labels = TRUE)
   geoms <- sapply(p$layers, function(l) class(l$geom)[1])
   expect_true("GeomText" %in% geoms)
 })
 
-test_that("alluvial_plot omits geom_text when show_labels=FALSE", {
+test_that("plot(hvti_alluvial) omits geom_text when show_labels=FALSE", {
   dta <- sample_alluvial_data(n = 100, seed = 1)
-  p   <- alluvial_plot(dta, axes = c("pre_ar", "post_ar"),
-                     y_col = "freq", show_labels = FALSE)
+  p   <- plot(hvti_alluvial(dta, axes = c("pre_ar", "post_ar"), y_col = "freq"),
+              show_labels = FALSE)
   geoms <- sapply(p$layers, function(l) class(l$geom)[1])
   expect_false("GeomText" %in% geoms)
 })
 
-test_that("alluvial_plot with fill_col returns a ggplot", {
+test_that("plot(hvti_alluvial) with fill_col returns a ggplot", {
   dta  <- sample_alluvial_data(n = 150, seed = 1)
   axes <- c("pre_ar", "procedure", "post_ar")
-  p    <- alluvial_plot(dta, axes = axes, y_col = "freq", fill_col = "pre_ar")
+  p    <- plot(hvti_alluvial(dta, axes = axes, y_col = "freq", fill_col = "pre_ar"))
   expect_s3_class(p, "ggplot")
 })
 
-test_that("alluvial_plot errors when data is not a data frame", {
-  expect_error(alluvial_plot(list(), axes = c("a", "b")), "data frame")
+test_that("hvti_alluvial errors when data is not a data frame", {
+  expect_error(hvti_alluvial(list(), axes = c("a", "b")), "data frame")
 })
 
-test_that("alluvial_plot errors when axes has fewer than two elements", {
+test_that("hvti_alluvial errors when axes has fewer than two elements", {
   dta <- sample_alluvial_data(n = 100, seed = 1)
-  expect_error(alluvial_plot(dta, axes = "pre_ar"), "at least 2")
+  expect_error(hvti_alluvial(dta, axes = "pre_ar"), "at least 2")
 })
 
-test_that("alluvial_plot errors when an axis name is absent from data", {
+test_that("hvti_alluvial errors when an axis name is absent from data", {
   dta <- sample_alluvial_data(n = 100, seed = 1)
   expect_error(
-    alluvial_plot(dta, axes = c("pre_ar", "nonexistent")),
+    hvti_alluvial(dta, axes = c("pre_ar", "nonexistent")),
     "column"
   )
 })
 
-test_that("alluvial_plot errors when y_col is absent from data", {
+test_that("hvti_alluvial errors when y_col is absent from data", {
   dta <- sample_alluvial_data(n = 100, seed = 1)
   expect_error(
-    alluvial_plot(dta, axes = c("pre_ar", "post_ar"), y_col = "missing_col"),
+    hvti_alluvial(dta, axes = c("pre_ar", "post_ar"), y_col = "missing_col"),
     "not found"
   )
 })
 
-test_that("alluvial_plot errors when alpha is out of [0, 1]", {
+test_that("plot(hvti_alluvial) errors when alpha is out of [0, 1]", {
   dta <- sample_alluvial_data(n = 100, seed = 1)
   expect_error(
-    alluvial_plot(dta, axes = c("pre_ar", "post_ar"), y_col = "freq", alpha = 1.5),
+    plot(hvti_alluvial(dta, axes = c("pre_ar", "post_ar"), y_col = "freq"),
+         alpha = 1.5),
     "alpha"
   )
 })
@@ -274,48 +281,53 @@ test_that("sample_spaghetti_data differs across seeds", {
 })
 
 # ============================================================================
-# spaghetti_plot
+# hvti_spaghetti
 # ============================================================================
 
-test_that("spaghetti_plot returns a ggplot (unstratified)", {
+test_that("hvti_spaghetti returns an hvti_data object", {
   dta <- sample_spaghetti_data(n_patients = 40, seed = 1)
-  p   <- spaghetti_plot(dta)
-  expect_s3_class(p, "ggplot")
+  expect_s3_class(hvti_spaghetti(dta), "hvti_data")
 })
 
-test_that("spaghetti_plot has a geom_line layer", {
+test_that("plot(hvti_spaghetti) returns a ggplot (unstratified)", {
+  dta <- sample_spaghetti_data(n_patients = 40, seed = 1)
+  expect_s3_class(plot(hvti_spaghetti(dta)), "ggplot")
+})
+
+test_that("plot(hvti_spaghetti) has a geom_line layer", {
   dta   <- sample_spaghetti_data(n_patients = 40, seed = 1)
-  p     <- spaghetti_plot(dta)
-  geoms <- sapply(p$layers, function(l) class(l$geom)[1])
+  geoms <- sapply(plot(hvti_spaghetti(dta))$layers, function(l) class(l$geom)[1])
   expect_true("GeomLine" %in% geoms)
 })
 
-test_that("spaghetti_plot with colour_col returns a ggplot", {
+test_that("plot(hvti_spaghetti) with colour_col returns a ggplot", {
   dta <- sample_spaghetti_data(n_patients = 40, seed = 1)
-  p   <- spaghetti_plot(dta, colour_col = "group")
+  p   <- plot(hvti_spaghetti(dta, colour_col = "group"))
   expect_s3_class(p, "ggplot")
 })
 
-test_that("spaghetti_plot add_smooth=TRUE adds an extra layer vs add_smooth=FALSE", {
+test_that("plot(hvti_spaghetti) add_smooth=TRUE adds an extra layer vs add_smooth=FALSE", {
   dta      <- sample_spaghetti_data(n_patients = 40, seed = 1)
-  p_plain  <- spaghetti_plot(dta)
-  p_smooth <- spaghetti_plot(dta, add_smooth = TRUE)
+  sp       <- hvti_spaghetti(dta)
+  p_plain  <- plot(sp)
+  p_smooth <- plot(sp, add_smooth = TRUE)
   expect_gt(length(p_smooth$layers), length(p_plain$layers))
 })
 
-test_that("spaghetti_plot add_smooth=TRUE has a GeomSmooth layer", {
+test_that("plot(hvti_spaghetti) add_smooth=TRUE has a GeomSmooth layer", {
   dta   <- sample_spaghetti_data(n_patients = 40, seed = 1)
-  p     <- spaghetti_plot(dta, add_smooth = TRUE)
-  geoms <- sapply(p$layers, function(l) class(l$geom)[1])
+  geoms <- sapply(plot(hvti_spaghetti(dta), add_smooth = TRUE)$layers,
+                  function(l) class(l$geom)[1])
   expect_true("GeomSmooth" %in% geoms)
 })
 
-test_that("spaghetti_plot y_labels adds a y scale vs default", {
+test_that("plot(hvti_spaghetti) y_labels adds a y scale vs default", {
   dta <- sample_spaghetti_data(n_patients = 40, seed = 1)
   dta$value <- round(pmin(3, pmax(0, dta$value / 12)))
   labels    <- c(None = 0, Mild = 1, Moderate = 2, Severe = 3)
-  p_default <- spaghetti_plot(dta)
-  p_labeled <- spaghetti_plot(dta, y_labels = labels)
+  sp        <- hvti_spaghetti(dta)
+  p_default <- plot(sp)
+  p_labeled <- plot(sp, y_labels = labels)
   # y_labels adds scale_y_continuous: labeled plot must have more scales
   expect_gt(
     length(p_labeled$scales$scales),
@@ -323,19 +335,19 @@ test_that("spaghetti_plot y_labels adds a y scale vs default", {
   )
 })
 
-test_that("spaghetti_plot errors when x_col is absent from data", {
+test_that("hvti_spaghetti errors when x_col is absent from data", {
   dta <- sample_spaghetti_data(n_patients = 30, seed = 1)
-  expect_error(spaghetti_plot(dta, x_col = "nonexistent"), "column")
+  expect_error(hvti_spaghetti(dta, x_col = "nonexistent"), "column")
 })
 
-test_that("spaghetti_plot errors when colour_col is absent from data", {
+test_that("hvti_spaghetti errors when colour_col is absent from data", {
   dta <- sample_spaghetti_data(n_patients = 30, seed = 1)
-  expect_error(spaghetti_plot(dta, colour_col = "nonexistent"), "not found")
+  expect_error(hvti_spaghetti(dta, colour_col = "nonexistent"), "not found")
 })
 
-test_that("spaghetti_plot errors when alpha is out of [0, 1]", {
+test_that("plot(hvti_spaghetti) errors when alpha is out of [0, 1]", {
   dta <- sample_spaghetti_data(n_patients = 30, seed = 1)
-  expect_error(spaghetti_plot(dta, alpha = 2.0), "alpha")
+  expect_error(plot(hvti_spaghetti(dta), alpha = 2.0), "alpha")
 })
 
 
@@ -388,49 +400,52 @@ test_that("sample_trends_data differs across seeds", {
 })
 
 # ============================================================================
-# trends_plot
+# hvti_trends
 # ============================================================================
 
-test_that("trends_plot returns a ggplot (multi-group)", {
+test_that("hvti_trends returns an hvti_data object", {
   dta <- sample_trends_data(n = 200, seed = 1)
-  p   <- trends_plot(dta)
-  expect_s3_class(p, "ggplot")
+  expect_s3_class(hvti_trends(dta), "hvti_data")
 })
 
-test_that("trends_plot has both geom_smooth and geom_point layers", {
+test_that("plot(hvti_trends) returns a ggplot (multi-group)", {
+  dta <- sample_trends_data(n = 200, seed = 1)
+  expect_s3_class(plot(hvti_trends(dta)), "ggplot")
+})
+
+test_that("plot(hvti_trends) has both geom_smooth and geom_point layers", {
   dta   <- sample_trends_data(n = 200, seed = 1)
-  p     <- trends_plot(dta)
-  geoms <- sapply(p$layers, function(l) class(l$geom)[1])
+  geoms <- sapply(plot(hvti_trends(dta))$layers, function(l) class(l$geom)[1])
   expect_true("GeomSmooth" %in% geoms)
   expect_true("GeomPoint"  %in% geoms)
 })
 
-test_that("trends_plot works with group_col=NULL (single group)", {
+test_that("plot(hvti_trends) works with group_col=NULL (single group)", {
   dta <- sample_trends_data(n = 200, seed = 1)
   one <- dta[dta$group == "Group I", ]
-  p   <- trends_plot(one, group_col = NULL)
+  p   <- plot(hvti_trends(one, group_col = NULL))
   expect_s3_class(p, "ggplot")
 })
 
-test_that("trends_plot summary_fn='median' returns a ggplot", {
+test_that("plot(hvti_trends) summary_fn='median' returns a ggplot", {
   dta <- sample_trends_data(n = 200, seed = 1)
-  p   <- trends_plot(dta, summary_fn = "median")
+  p   <- plot(hvti_trends(dta, summary_fn = "median"))
   expect_s3_class(p, "ggplot")
 })
 
-test_that("trends_plot errors when x_col is absent from data", {
+test_that("hvti_trends errors when x_col is absent from data", {
   dta <- sample_trends_data(n = 100, seed = 1)
-  expect_error(trends_plot(dta, x_col = "nonexistent"), "column")
+  expect_error(hvti_trends(dta, x_col = "nonexistent"), "column")
 })
 
-test_that("trends_plot errors when y_col is absent from data", {
+test_that("hvti_trends errors when y_col is absent from data", {
   dta <- sample_trends_data(n = 100, seed = 1)
-  expect_error(trends_plot(dta, y_col = "nonexistent"), "column")
+  expect_error(hvti_trends(dta, y_col = "nonexistent"), "column")
 })
 
-test_that("trends_plot errors when group_col is absent from data", {
+test_that("hvti_trends errors when group_col is absent from data", {
   dta <- sample_trends_data(n = 100, seed = 1)
-  expect_error(trends_plot(dta, group_col = "nonexistent"), "not found")
+  expect_error(hvti_trends(dta, group_col = "nonexistent"), "not found")
 })
 
 
@@ -488,80 +503,84 @@ test_that("sample_longitudinal_counts_data differs across seeds", {
 })
 
 # ============================================================================
-# longitudinal_counts_plot
+# hvti_longitudinal
 # ============================================================================
 
-test_that("longitudinal_counts_plot returns a ggplot", {
+test_that("hvti_longitudinal returns an hvti_data object", {
   dta <- sample_longitudinal_counts_data(n_patients = 60, seed = 1)
-  expect_s3_class(longitudinal_counts_plot(dta), "ggplot")
+  expect_s3_class(hvti_longitudinal(dta), "hvti_data")
 })
 
-test_that("longitudinal_counts_plot is composable with + operator", {
+test_that("plot(hvti_longitudinal) returns a ggplot", {
   dta <- sample_longitudinal_counts_data(n_patients = 60, seed = 1)
-  p   <- longitudinal_counts_plot(dta) + ggplot2::labs(y = "Count")
+  expect_s3_class(plot(hvti_longitudinal(dta)), "ggplot")
+})
+
+test_that("plot(hvti_longitudinal) is composable with + operator", {
+  dta <- sample_longitudinal_counts_data(n_patients = 60, seed = 1)
+  p   <- plot(hvti_longitudinal(dta)) + ggplot2::labs(y = "Count")
   expect_s3_class(p, "ggplot")
 })
 
-test_that("longitudinal_counts_plot has a GeomBar layer", {
+test_that("plot(hvti_longitudinal) has a GeomBar layer", {
   dta   <- sample_longitudinal_counts_data(n_patients = 60, seed = 1)
-  geoms <- sapply(longitudinal_counts_plot(dta)$layers, function(l) class(l$geom)[1])
+  geoms <- sapply(plot(hvti_longitudinal(dta))$layers, function(l) class(l$geom)[1])
   expect_true("GeomBar" %in% geoms)
 })
 
-test_that("longitudinal_counts_plot position='stack' returns a ggplot", {
+test_that("plot(hvti_longitudinal) position='stack' returns a ggplot", {
   dta <- sample_longitudinal_counts_data(n_patients = 60, seed = 1)
-  expect_s3_class(longitudinal_counts_plot(dta, position = "stack"), "ggplot")
+  expect_s3_class(plot(hvti_longitudinal(dta), position = "stack"), "ggplot")
 })
 
-test_that("longitudinal_counts_plot position='dodge' differs from 'stack'", {
-  dta    <- sample_longitudinal_counts_data(n_patients = 60, seed = 1)
-  p_d    <- longitudinal_counts_plot(dta, position = "dodge")
-  p_s    <- longitudinal_counts_plot(dta, position = "stack")
+test_that("plot(hvti_longitudinal) position='dodge' differs from 'stack'", {
+  dta <- sample_longitudinal_counts_data(n_patients = 60, seed = 1)
+  lc  <- hvti_longitudinal(dta)
+  p_d <- plot(lc, position = "dodge")
+  p_s <- plot(lc, position = "stack")
   # The position argument changes how bars are drawn — the layer params differ
   expect_false(identical(p_d$layers[[1]]$position, p_s$layers[[1]]$position))
 })
 
-test_that("longitudinal_counts_plot errors when required column is absent", {
+test_that("hvti_longitudinal errors when required column is absent", {
   dta <- sample_longitudinal_counts_data(n_patients = 60, seed = 1)
-  expect_error(longitudinal_counts_plot(dta, x_col = "nonexistent"), "column")
+  expect_error(hvti_longitudinal(dta, x_col = "nonexistent"), "column")
 })
 
-test_that("longitudinal_counts_plot errors on invalid position value", {
+test_that("plot(hvti_longitudinal) errors on invalid position value", {
   dta <- sample_longitudinal_counts_data(n_patients = 60, seed = 1)
-  expect_error(longitudinal_counts_plot(dta, position = "fill"), "dodge")
+  expect_error(plot(hvti_longitudinal(dta), position = "fill"), "dodge")
 })
-
 
 # ============================================================================
-# longitudinal_counts_table
+# hvti_longitudinal — table panel (type = "table")
 # ============================================================================
 
-test_that("longitudinal_counts_table returns a ggplot", {
+test_that("plot(hvti_longitudinal, type='table') returns a ggplot", {
   dta <- sample_longitudinal_counts_data(n_patients = 60, seed = 1)
-  expect_s3_class(longitudinal_counts_table(dta), "ggplot")
+  expect_s3_class(plot(hvti_longitudinal(dta), type = "table"), "ggplot")
 })
 
-test_that("longitudinal_counts_table has a GeomText layer", {
+test_that("plot(hvti_longitudinal, type='table') has a GeomText layer", {
   dta   <- sample_longitudinal_counts_data(n_patients = 60, seed = 1)
-  geoms <- sapply(longitudinal_counts_table(dta)$layers, function(l) class(l$geom)[1])
+  geoms <- sapply(
+    plot(hvti_longitudinal(dta), type = "table")$layers,
+    function(l) class(l$geom)[1]
+  )
   expect_true("GeomText" %in% geoms)
 })
 
-test_that("longitudinal_counts_table is composable with + operator", {
+test_that("plot(hvti_longitudinal, type='table') is composable with + operator", {
   dta <- sample_longitudinal_counts_data(n_patients = 60, seed = 1)
-  p   <- longitudinal_counts_table(dta) + hvti_theme("manuscript")
+  p   <- plot(hvti_longitudinal(dta), type = "table") + hvti_theme("manuscript")
   expect_s3_class(p, "ggplot")
 })
 
-test_that("longitudinal_counts_table errors when required column is absent", {
-  dta <- sample_longitudinal_counts_data(n_patients = 60, seed = 1)
-  expect_error(longitudinal_counts_table(dta, x_col = "nonexistent"), "column")
-})
-
-test_that("longitudinal_counts_plot and longitudinal_counts_table produce distinct plots", {
-  dta <- sample_longitudinal_counts_data(n_patients = 60, seed = 1)
-  p_bar   <- longitudinal_counts_plot(dta)
-  p_table <- longitudinal_counts_table(dta)
+test_that("plot(hvti_longitudinal) and plot(hvti_longitudinal, type='table') produce distinct plots", {
+  dta     <- sample_longitudinal_counts_data(n_patients = 60, seed = 1)
+  lc      <- hvti_longitudinal(dta)
+  p_bar   <- plot(lc)
+  p_table <- plot(lc, type = "table")
   bar_geoms   <- sapply(p_bar$layers,   function(l) class(l$geom)[1])
   table_geoms <- sapply(p_table$layers, function(l) class(l$geom)[1])
   expect_false(identical(bar_geoms, table_geoms))

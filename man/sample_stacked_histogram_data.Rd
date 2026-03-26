@@ -29,7 +29,7 @@ A data frame with columns \code{year} (integer) and
 }
 \description{
 Creates a minimal data frame suitable for demonstrating or testing
-\code{\link{stacked_histogram}}.
+\code{\link{hvti_stacked}}.
 }
 \examples{
 dta <- sample_stacked_histogram_data()

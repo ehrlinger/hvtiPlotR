@@ -42,7 +42,7 @@ weights normalised to mean 1 within each group.}
 }
 }
 \description{
-Creates a reproducible data frame for testing \code{\link[=mirror_histogram]{mirror_histogram()}}
+Creates a reproducible data frame for testing \code{\link[=hvti_mirror]{hvti_mirror()}}
 in either binary-match or weighted IPTW mode.  Propensity scores are
 simulated via a logistic model: control subjects draw their linear predictor
 from \eqn{N(-\text{sep}/2, 1)} and treated subjects from
@@ -64,5 +64,5 @@ tapply(dta_wt$mt_wt, dta_wt$tavr, mean)  # should be ~1 in each group
 
 }
 \seealso{
-\code{\link[=mirror_histogram]{mirror_histogram()}}
+\code{\link[=hvti_mirror]{hvti_mirror()}}
 }

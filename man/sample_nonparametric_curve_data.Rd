@@ -27,20 +27,15 @@ Default \code{500} (matches the SAS \code{inc=(max-min)/499.9} loop).}
 
 \item{groups}{\code{NULL} for a single average curve, or a named numeric
 vector of group-specific hazard multipliers,
-e.g. \code{c("Ozaki" = 0.8, "CE-Pericardial" = 1.2)} — analogous to the
-indicator variable effect in \code{tp.np.avpkgrad_ozak_ind_mtwt.sas}.}
+e.g. \code{c("Ozaki" = 0.8, "CE-Pericardial" = 1.2)}.}
 
-\item{outcome_type}{\code{"probability"} (binary outcome, 0-1 scale; e.g.
-AF prevalence, TR grade prevalence) or \code{"continuous"} (e.g. FEV1, AV
-peak gradient). Default \code{"probability"}.}
+\item{outcome_type}{\code{"probability"} (binary outcome, 0-1 scale) or
+\code{"continuous"}. Default \code{"probability"}.}
 
 \item{ci_level}{Confidence level for bootstrap-style CI bands.
-Use \code{0.68} for the 68\% CI shown in the SAS templates (one standard
-error), or \code{0.95} for the 95\% CI. Default \code{0.68}.}
+Default \code{0.68}.}
 
-\item{n_bins}{Number of equal-sized data-summary bins (analogous to
-the SAS \verb{quint = _nobs_/12} / \verb{decile = _nobs_/10} grouping). Default
-\code{10}.}
+\item{n_bins}{Number of equal-sized data-summary bins. Default \code{10}.}
 
 \item{seed}{Random seed. Default \code{42}.}
 }
@@ -52,7 +47,7 @@ and (if \code{groups} is not \code{NULL}) \code{group}.
 Simulates pre-computed curve output matching what SAS produces after fitting
 a two-phase nonparametric temporal trend model and averaging patient-specific
 profiles with \verb{PROC SUMMARY}. The output is suitable for direct use with
-\code{\link[=nonparametric_curve_plot]{nonparametric_curve_plot()}}.
+\code{\link[=hvti_nonparametric]{hvti_nonparametric()}}.
 }
 \details{
 \strong{SAS context:} In the SAS templates this dataset corresponds to
@@ -61,11 +56,11 @@ Export those datasets to CSV and read them with \code{\link[=read.csv]{read.csv(
 own model output instead of this sample function.
 }
 \examples{
-# Single average curve (like tp.np.afib.ivwristm.avrg_curv.binary.sas)
+# Single average curve
 dat <- sample_nonparametric_curve_data(n = 500, time_max = 12)
 head(dat)
 
-# Two-group comparison (like tp.np.avpkgrad_ozak_ind_mtwt.sas)
+# Two-group comparison
 dat2 <- sample_nonparametric_curve_data(
   n = 400, time_max = 7,
   groups = c("Ozaki" = 0.7, "CE-Pericardial" = 1.3),
@@ -74,5 +69,5 @@ dat2 <- sample_nonparametric_curve_data(
 head(dat2)
 }
 \seealso{
-\code{\link[=nonparametric_curve_plot]{nonparametric_curve_plot()}}, \code{\link[=sample_nonparametric_curve_points]{sample_nonparametric_curve_points()}}
+\code{\link[=hvti_nonparametric]{hvti_nonparametric()}}, \code{\link[=sample_nonparametric_curve_points]{sample_nonparametric_curve_points()}}
 }
