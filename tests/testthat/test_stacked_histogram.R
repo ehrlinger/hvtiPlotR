@@ -64,7 +64,7 @@ test_that("plot(hvti_stacked) returns a ggplot object", {
 
 test_that("plot(hvti_stacked, position='fill') returns a ggplot object", {
   df <- sample_stacked_histogram_data()
-  expect_s3_class(plot(hvti_stacked(df), position = "fill"), "ggplot")
+  expect_s3_class(plot(hvti_stacked(df, position = "fill")), "ggplot")
 })
 
 # ---------------------------------------------------------------------------

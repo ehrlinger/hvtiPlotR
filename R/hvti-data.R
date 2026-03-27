@@ -19,8 +19,8 @@
 ##   $meta    <list>        Column names used, method parameters, computed
 ##                          statistics -- anything needed to reconstruct or
 ##                          describe the object without re-running the model.
-##   $tables  <list>        Accessory tables (risk table, report table, ...).
-##                          May be an empty list when there are no tables.
+##   $tables  <list>        Auxiliary objects (risk tables, report tables,
+##                          named vectors, etc.).  May be an empty list.
 ##
 ## Individual subclasses may add further named elements beyond these three,
 ## but $data, $meta, and $tables are always present.
@@ -41,7 +41,9 @@
 #' @param data     A data frame -- the primary tidy data ready for ggplot2.
 #' @param meta     A named list of metadata (column names, method choices,
 #'   computed statistics, etc.).
-#' @param tables   A named list of accessory data frames (may be `list()`).
+#' @param tables   A named list of auxiliary objects — typically data frames
+#'   (risk tables, report tables, etc.) but may also contain vectors or other
+#'   R objects (e.g. named integer vectors for set counts).  May be `list()`.
 #' @param subclass A single string naming the specific subclass
 #'   (e.g. `"hvti_survival"`).
 #'

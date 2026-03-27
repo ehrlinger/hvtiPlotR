@@ -39,8 +39,13 @@ etc.) are **removed**. This is a clean break; no deprecated wrappers.
 | `hvti_eda()` | `eda_plot()` |
 | `hvti_upset()` | `upset_plot()` |
 
-The hazard family (`hazard_plot()`, `survival_difference_plot()`,
-`nnt_plot()`) is **deferred** and retains its old single-call API.
+| `hvti_hazard()` | `hazard_plot()` |
+| `hvti_survival_difference()` | `survival_difference_plot()` |
+| `hvti_nnt()` | `nnt_plot()` |
+
+The legacy hazard helpers (`hazard_plot()`, `survival_difference_plot()`,
+`nnt_plot()`) remain exported but are marked **Superseded** — use the S3
+constructors above instead.
 
 ### Multi-type constructors
 
@@ -85,18 +90,19 @@ on `plot()`:
 ## Tests
 
 * Added `tests/testthat/test_hazard_plot.R` — full validation suite for
-  `sample_hazard_data`, `sample_hazard_empirical`, `sample_life_table`, and
-  `hazard_plot` (column checks, CI bounds, layer structure, multi-group,
-  non-default column names, input validation).
+  `sample_hazard_data`, `sample_hazard_empirical`, `sample_life_table`,
+  `hvti_hazard`, `hvti_survival_difference`, and `hvti_nnt` (column checks,
+  CI bounds, layer structure, multi-group, non-default column names, input
+  validation, print output, empirical/reference validation).
 * Added `tests/testthat/test_nonparametric_plots.R` — full suite for
   `sample_nonparametric_curve_data`, `sample_nonparametric_curve_points`,
   `nonparametric_curve_plot`, `sample_nonparametric_ordinal_data`,
   `sample_nonparametric_ordinal_points`, and `nonparametric_ordinal_plot`.
   Includes probability-sum-to-1 invariant test for ordinal grades.
 * Added `tests/testthat/test_survival_derived.R` — full suite for
-  `sample_survival_difference_data`, `survival_difference_plot`,
-  `sample_nnt_data`, and `nnt_plot`. Covers NA-NNT at t≈0 edge case and
-  cross-function time-grid consistency.
+  `sample_survival_difference_data`, `sample_nnt_data`, and legacy
+  `survival_difference_plot` / `nnt_plot`. Covers NA-NNT at t≈0 edge case
+  and cross-function time-grid consistency.
 * Added `tests/testthat/test_cluster_sankey.R` — full suite for
   `sample_cluster_sankey_data` and `cluster_sankey_plot`. Validates the
   hierarchical merge tree (C9=A → C2=A) and that each Ck has exactly k levels.

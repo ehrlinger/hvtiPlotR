@@ -92,9 +92,9 @@ plot(mh) + hvti_theme("manuscript")
 | `hvti_survival()` | Kaplan-Meier and Nelson-Aalen analysis. `plot(km, type = ...)` renders survival, cumulative hazard, hazard, log-log, or life/RMST; tables via `km$tables` |
 | `hvti_nonparametric()` | Nonparametric survival or event-rate curve with optional confidence intervals |
 | `hvti_ordinal()` | Nonparametric curves for ordinal outcomes (e.g. severity grades) |
-| `hazard_plot()` | Parametric hazard/survival curves from Weibull or other models, with optional KM overlay |
-| `survival_difference_plot()` | Absolute treatment benefit vs. a reference group over time |
-| `nnt_plot()` | Number needed to treat derived from survival difference estimates |
+| `hvti_hazard()` | Parametric hazard/survival curves from Weibull or other models, with optional KM overlay |
+| `hvti_survival_difference()` | Absolute treatment benefit vs. a reference group over time |
+| `hvti_nnt()` | Number needed to treat derived from survival difference estimates |
 | `hvti_followup()` | Goodness-of-follow-up scatter: actual vs. potential follow-up by operation year; `plot(gf, type = "event")` for non-fatal competing events |
 
 ### Longitudinal & Repeated Measures

@@ -22,6 +22,6 @@ issues resolved.
 | [ ] | `hvti_alluvial()` | formerly `alluvial_plot()` |
 | [ ] | `hvti_sankey()` | formerly `cluster_sankey_plot()`; requires `ggsankey` (GitHub) |
 | [ ] | `hvti_upset()` | formerly `upset_plot()` |
-| [ ] | `hazard_plot()` | parametric survival; tp.hs.* family |
-| [ ] | `survival_difference_plot()` | treatment benefit vs. reference |
-| [ ] | `nnt_plot()` | number needed to treat |
+| [x] | `hvti_hazard()` | parametric survival; replaces `hazard_plot()`; tp.hp.dead.* family |
+| [x] | `hvti_survival_difference()` | treatment benefit vs. reference; replaces `survival_difference_plot()` |
+| [x] | `hvti_nnt()` | number needed to treat; replaces `nnt_plot()` |
