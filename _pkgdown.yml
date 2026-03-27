@@ -60,16 +60,21 @@ reference:
   desc: >
     Kaplan-Meier survival curves, parametric hazard plots, survival
     differences, and number-needed-to-treat. Use `hvti_survival()` for
-    non-parametric estimates; `hazard_plot()`, `survival_difference_plot()`,
-    and `nnt_plot()` for pre-fitted parametric model output (deferred API,
-    not yet migrated to S3 constructor pattern).
+    non-parametric KM estimates; `hvti_hazard()`, `hvti_survival_difference()`,
+    and `hvti_nnt()` for pre-fitted parametric model output.
   contents:
   - hvti_survival
   - plot.hvti_survival
   - print.hvti_survival
-  - hazard_plot
-  - survival_difference_plot
-  - nnt_plot
+  - hvti_hazard
+  - plot.hvti_hazard
+  - print.hvti_hazard
+  - hvti_survival_difference
+  - plot.hvti_survival_difference
+  - print.hvti_survival_difference
+  - hvti_nnt
+  - plot.hvti_nnt
+  - print.hvti_nnt
   - sample_survival_data
   - sample_hazard_data
   - sample_hazard_empirical

@@ -67,5 +67,5 @@
 #' @docType data
 #' @keywords datasets
 #' @name parametric
-#' @seealso [nonparametric], [hazard_plot()]
+#' @seealso [nonparametric], [hvti_hazard()]
 NULL

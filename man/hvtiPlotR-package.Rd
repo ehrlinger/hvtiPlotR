@@ -68,14 +68,14 @@ or filled histogram.
 \item \code{\link[=hvti_survival]{hvti_survival()}}: Fit and prepare Kaplan-Meier or Nelson-Aalen survival
 curves, risk tables, and report tables. Ports the SAS \verb{\%kaplan} and
 \verb{\%nelsont} macros from \code{tp.ac.dead.sas}.
-\item \code{\link[=hazard_plot]{hazard_plot()}}: Parametric hazard/survival curves from pre-fitted
-model output, with optional KM empirical overlay and population
-life-table reference. Ports the \verb{tp.hp.*} template family.
-\item \code{\link[=survival_difference_plot]{survival_difference_plot()}}: Mean survival difference (life gained)
-over time between two treatment arms, with confidence ribbons. Ports
-\code{tp.hp.dead.life-gained.sas}.
-\item \code{\link[=nnt_plot]{nnt_plot()}}: Number-needed-to-treat over time derived from the
-survival difference. Ports \code{tp.hp.numtreat.survdiff.matched.sas}.
+\item \code{\link[=hvti_hazard]{hvti_hazard()}}: Prepare parametric hazard/survival curves from
+pre-fitted model output, with optional KM empirical overlay and
+population life-table reference. Ports the \verb{tp.hp.*} template family.
+\item \code{\link[=hvti_survival_difference]{hvti_survival_difference()}}: Prepare mean survival difference (life
+gained) over time between two treatment arms, with confidence ribbons.
+Ports \code{tp.hp.dead.life-gained.sas}.
+\item \code{\link[=hvti_nnt]{hvti_nnt()}}: Prepare number-needed-to-treat over time derived from
+the survival difference. Ports \code{tp.hp.numtreat.survdiff.matched.sas}.
 }
 }
 

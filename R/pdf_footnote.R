@@ -18,7 +18,7 @@
 #' **Typical workflow:**
 #' ```r
 #' # During analysis (draft)
-#' p <- hazard_plot(...) + hvti_theme("manuscript")
+#' p <- plot(hvti_hazard(...)) + hvti_theme("manuscript")
 #' print(p)
 #' make_footnote("analysis/mortality.R")   # adds draft annotation
 #'

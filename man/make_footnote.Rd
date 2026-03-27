@@ -76,7 +76,7 @@ unchanged.
 \strong{Typical workflow:}
 
 \if{html}{\out{<div class="sourceCode r">}}\preformatted{# During analysis (draft)
-p <- hazard_plot(...) + hvti_theme("manuscript")
+p <- plot(hvti_hazard(...)) + hvti_theme("manuscript")
 print(p)
 make_footnote("analysis/mortality.R")   # adds draft annotation
 

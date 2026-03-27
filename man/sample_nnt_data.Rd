@@ -60,5 +60,5 @@ nnt_dat <- sample_nnt_data(
 head(nnt_dat)
 }
 \seealso{
-\code{\link[=nnt_plot]{nnt_plot()}}, \code{\link[=survival_difference_plot]{survival_difference_plot()}}
+\code{\link[=hvti_nnt]{hvti_nnt()}}, \code{\link[=hvti_survival_difference]{hvti_survival_difference()}}
 }

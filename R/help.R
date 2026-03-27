@@ -63,14 +63,14 @@
 #' * [hvti_survival()]: Fit and prepare Kaplan-Meier or Nelson-Aalen survival
 #'   curves, risk tables, and report tables. Ports the SAS `%kaplan` and
 #'   `%nelsont` macros from `tp.ac.dead.sas`.
-#' * [hazard_plot()]: Parametric hazard/survival curves from pre-fitted
-#'   model output, with optional KM empirical overlay and population
-#'   life-table reference. Ports the `tp.hp.*` template family.
-#' * [survival_difference_plot()]: Mean survival difference (life gained)
-#'   over time between two treatment arms, with confidence ribbons. Ports
-#'   `tp.hp.dead.life-gained.sas`.
-#' * [nnt_plot()]: Number-needed-to-treat over time derived from the
-#'   survival difference. Ports `tp.hp.numtreat.survdiff.matched.sas`.
+#' * [hvti_hazard()]: Prepare parametric hazard/survival curves from
+#'   pre-fitted model output, with optional KM empirical overlay and
+#'   population life-table reference. Ports the `tp.hp.*` template family.
+#' * [hvti_survival_difference()]: Prepare mean survival difference (life
+#'   gained) over time between two treatment arms, with confidence ribbons.
+#'   Ports `tp.hp.dead.life-gained.sas`.
+#' * [hvti_nnt()]: Prepare number-needed-to-treat over time derived from
+#'   the survival difference. Ports `tp.hp.numtreat.survdiff.matched.sas`.
 #'
 #' ### Nonparametric Temporal Curves
 #'

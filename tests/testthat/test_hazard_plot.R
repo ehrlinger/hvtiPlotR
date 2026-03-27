@@ -2,7 +2,7 @@
 #
 # Full test suite for hazard-plot.R:
 #   sample_hazard_data, sample_hazard_empirical, sample_life_table,
-#   hazard_plot
+#   hvti_hazard, hvti_survival_difference, hvti_nnt
 #
 library(testthat)
 library(ggplot2)
@@ -211,163 +211,623 @@ test_that("sample_life_table older age_mids produce lower survival", {
 })
 
 # ============================================================================
-# hazard_plot — return type
+# hvti_hazard — constructor return type and slots
 # ============================================================================
 
-test_that("hazard_plot returns a ggplot for default estimate_col='survival'", {
+test_that("hvti_hazard returns an hvti_data object with correct class", {
   dat <- sample_hazard_data(n = 50, seed = 1)
-  expect_s3_class(hazard_plot(dat), "ggplot")
+  obj <- hvti_hazard(dat)
+  expect_true(is_hvti_data(obj))
+  expect_s3_class(obj, "hvti_hazard")
+  expect_s3_class(obj, "hvti_data")
 })
 
-test_that("hazard_plot returns a ggplot for estimate_col='hazard'", {
+test_that("hvti_hazard has $data, $meta, and $tables slots", {
   dat <- sample_hazard_data(n = 50, seed = 1)
-  expect_s3_class(hazard_plot(dat, estimate_col = "hazard"), "ggplot")
+  obj <- hvti_hazard(dat)
+  expect_true(!is.null(obj$data))
+  expect_true(!is.null(obj$meta))
+  expect_true(!is.null(obj$tables))
 })
 
-test_that("hazard_plot returns a ggplot for estimate_col='cumhaz'", {
+test_that("hvti_hazard stores curve data in $data", {
   dat <- sample_hazard_data(n = 50, seed = 1)
-  expect_s3_class(hazard_plot(dat, estimate_col = "cumhaz"), "ggplot")
+  obj <- hvti_hazard(dat)
+  expect_identical(obj$data, dat)
 })
 
-test_that("hazard_plot is composable with + operator", {
+test_that("hvti_hazard stores column mappings in $meta", {
+  dat <- sample_hazard_data(
+    n = 50, groups = c("A" = 1.0, "B" = 0.8), seed = 1
+  )
+  obj <- hvti_hazard(dat, x_col = "time", estimate_col = "survival",
+                     lower_col = "surv_lower", upper_col = "surv_upper",
+                     group_col = "group")
+  expect_equal(obj$meta$x_col,        "time")
+  expect_equal(obj$meta$estimate_col, "survival")
+  expect_equal(obj$meta$lower_col,    "surv_lower")
+  expect_equal(obj$meta$upper_col,    "surv_upper")
+  expect_equal(obj$meta$group_col,    "group")
+})
+
+test_that("hvti_hazard stores empirical data in $tables$empirical", {
   dat <- sample_hazard_data(n = 50, seed = 1)
-  p   <- hazard_plot(dat) + ggplot2::labs(x = "Years", y = "Survival (%)")
+  emp <- sample_hazard_empirical(n = 50, seed = 1)
+  obj <- hvti_hazard(dat, empirical = emp)
+  expect_identical(obj$tables$empirical, emp)
+})
+
+test_that("hvti_hazard stores reference data in $tables$reference", {
+  dat <- sample_hazard_data(n = 50, seed = 1)
+  lt  <- sample_life_table(time_max = 10)
+  obj <- hvti_hazard(dat, reference = lt)
+  expect_identical(obj$tables$reference, lt)
+})
+
+test_that("hvti_hazard $tables$empirical is NULL when not supplied", {
+  dat <- sample_hazard_data(n = 50, seed = 1)
+  obj <- hvti_hazard(dat)
+  expect_null(obj$tables$empirical)
+  expect_null(obj$tables$reference)
+})
+
+# ============================================================================
+# hvti_hazard — plot() return type
+# ============================================================================
+
+test_that("plot.hvti_hazard returns a ggplot", {
+  dat <- sample_hazard_data(n = 50, seed = 1)
+  p   <- plot(hvti_hazard(dat))
+  expect_s3_class(p, "ggplot")
+})
+
+test_that("plot.hvti_hazard with estimate_col='hazard' returns a ggplot", {
+  dat <- sample_hazard_data(n = 50, seed = 1)
+  p   <- plot(hvti_hazard(dat, estimate_col = "hazard"))
+  expect_s3_class(p, "ggplot")
+})
+
+test_that("plot.hvti_hazard with estimate_col='cumhaz' returns a ggplot", {
+  dat <- sample_hazard_data(n = 50, seed = 1)
+  p   <- plot(hvti_hazard(dat, estimate_col = "cumhaz"))
+  expect_s3_class(p, "ggplot")
+})
+
+test_that("plot.hvti_hazard is composable with + operator", {
+  dat <- sample_hazard_data(n = 50, seed = 1)
+  p   <- plot(hvti_hazard(dat)) + ggplot2::labs(x = "Years", y = "Survival (%)")
   expect_s3_class(p, "ggplot")
   expect_equal(p$labels$x, "Years")
 })
 
 # ============================================================================
-# hazard_plot — layer structure
+# hvti_hazard — layer structure
 # ============================================================================
 
-test_that("hazard_plot has a GeomLine layer", {
+test_that("plot.hvti_hazard has a GeomLine layer", {
   dat   <- sample_hazard_data(n = 50, seed = 1)
-  geoms <- sapply(hazard_plot(dat)$layers, function(l) class(l$geom)[1])
+  geoms <- sapply(plot(hvti_hazard(dat))$layers, function(l) class(l$geom)[1])
   expect_true("GeomLine" %in% geoms)
 })
 
-test_that("hazard_plot with lower_col + upper_col has a GeomRibbon layer", {
+test_that("plot.hvti_hazard with CI cols has a GeomRibbon layer", {
   dat   <- sample_hazard_data(n = 50, seed = 1)
   geoms <- sapply(
-    hazard_plot(dat, lower_col = "surv_lower", upper_col = "surv_upper")$layers,
+    plot(hvti_hazard(dat, lower_col = "surv_lower",
+                    upper_col = "surv_upper"))$layers,
     function(l) class(l$geom)[1]
   )
   expect_true("GeomRibbon" %in% geoms)
 })
 
-test_that("hazard_plot without CI has no GeomRibbon", {
+test_that("plot.hvti_hazard without CI has no GeomRibbon", {
   dat   <- sample_hazard_data(n = 50, seed = 1)
-  geoms <- sapply(hazard_plot(dat)$layers, function(l) class(l$geom)[1])
+  geoms <- sapply(plot(hvti_hazard(dat))$layers, function(l) class(l$geom)[1])
   expect_false("GeomRibbon" %in% geoms)
 })
 
-test_that("hazard_plot with empirical overlay adds a GeomPoint layer", {
+test_that("plot.hvti_hazard with empirical overlay adds a GeomPoint layer", {
   dat <- sample_hazard_data(n = 50, seed = 1)
   emp <- sample_hazard_empirical(n = 50, seed = 1)
-  p_no_emp   <- hazard_plot(dat)
-  p_with_emp <- hazard_plot(dat, empirical = emp)
+  p_no_emp   <- plot(hvti_hazard(dat))
+  p_with_emp <- plot(hvti_hazard(dat, empirical = emp))
   expect_gt(length(p_with_emp$layers), length(p_no_emp$layers))
 })
 
-test_that("hazard_plot empirical with error bars has a GeomErrorbar layer", {
+test_that("plot.hvti_hazard with empirical error bars has a GeomErrorbar layer", {
   dat   <- sample_hazard_data(n = 50, seed = 1)
   emp   <- sample_hazard_empirical(n = 50, seed = 1)
   geoms <- sapply(
-    hazard_plot(dat, empirical = emp,
-                emp_lower_col = "lower",
-                emp_upper_col = "upper")$layers,
+    plot(hvti_hazard(dat,
+                     empirical     = emp,
+                     emp_lower_col = "lower",
+                     emp_upper_col = "upper"))$layers,
     function(l) class(l$geom)[1]
   )
+  expect_true("GeomPoint"    %in% geoms)
   expect_true("GeomErrorbar" %in% geoms)
 })
 
-test_that("hazard_plot with reference life table adds extra GeomLine layer", {
+test_that("plot.hvti_hazard with reference life table adds extra GeomLine layer", {
   dat <- sample_hazard_data(n = 50, seed = 1)
   lt  <- sample_life_table(time_max = 10)
-  p_no_ref   <- hazard_plot(dat)
-  p_with_ref <- hazard_plot(dat, reference = lt,
-                             ref_estimate_col = "survival",
-                             ref_group_col    = "group")
+  p_no_ref   <- plot(hvti_hazard(dat))
+  p_with_ref <- plot(hvti_hazard(dat, reference = lt,
+                                  ref_estimate_col = "survival",
+                                  ref_group_col    = "group"))
   expect_gt(length(p_with_ref$layers), length(p_no_ref$layers))
 })
 
 # ============================================================================
-# hazard_plot — multi-group
+# hvti_hazard — multi-group
 # ============================================================================
 
-test_that("hazard_plot works with group_col", {
+test_that("hvti_hazard accepts group_col and plot() returns a ggplot", {
   dat <- sample_hazard_data(
     n = 100, groups = c("Control" = 1.0, "Treated" = 0.7), seed = 1
   )
-  p <- hazard_plot(dat, group_col = "group")
-  expect_s3_class(p, "ggplot")
+  obj <- hvti_hazard(dat, group_col = "group")
+  expect_equal(obj$meta$group_col, "group")
+  expect_s3_class(plot(obj), "ggplot")
 })
 
-test_that("hazard_plot multi-group has more layers than single-group (due to colour aesthetic)", {
+test_that("plot.hvti_hazard multi-group mapping differs from single-group", {
   dat_single <- sample_hazard_data(n = 50, seed = 1)
   dat_multi  <- sample_hazard_data(
     n = 50, groups = c("A" = 1.0, "B" = 0.8), seed = 1
   )
-  p_single <- hazard_plot(dat_single)
-  p_multi  <- hazard_plot(dat_multi, group_col = "group")
-  # Multi-group plot has the same layer types but uses colour aesthetic
-  expect_s3_class(p_multi, "ggplot")
+  p_single <- plot(hvti_hazard(dat_single))
+  p_multi  <- plot(hvti_hazard(dat_multi, group_col = "group"))
   expect_false(identical(p_single$mapping, p_multi$mapping))
 })
 
 # ============================================================================
-# hazard_plot — non-default column names
+# hvti_hazard — non-default column names
 # ============================================================================
 
-test_that("hazard_plot works with non-default x_col", {
+test_that("hvti_hazard works with non-default x_col", {
   dat      <- sample_hazard_data(n = 50, seed = 1)
   dat$year <- dat$time
-  p <- hazard_plot(dat, x_col = "year")
-  expect_s3_class(p, "ggplot")
+  expect_s3_class(plot(hvti_hazard(dat, x_col = "year")), "ggplot")
 })
 
-test_that("hazard_plot works with non-default estimate_col", {
+test_that("hvti_hazard works with non-default estimate_col", {
   dat     <- sample_hazard_data(n = 50, seed = 1)
   dat$est <- dat$survival
-  p <- hazard_plot(dat, estimate_col = "est")
-  expect_s3_class(p, "ggplot")
+  expect_s3_class(plot(hvti_hazard(dat, estimate_col = "est")), "ggplot")
 })
 
 # ============================================================================
-# hazard_plot — input validation
+# hvti_hazard — input validation (errors thrown in constructor)
 # ============================================================================
 
-test_that("hazard_plot errors when curve_data is not a data frame", {
+test_that("hvti_hazard errors when curve_data is not a data frame", {
   expect_error(
-    hazard_plot(list(time = 1:5, survival = 1:5)),
+    hvti_hazard(list(time = 1:5, survival = 1:5)),
     "data frame"
   )
 })
 
-test_that("hazard_plot errors when x_col is absent from curve_data", {
+test_that("hvti_hazard errors when x_col is absent from curve_data", {
   dat <- sample_hazard_data(n = 50, seed = 1)
-  expect_error(hazard_plot(dat, x_col = "nonexistent"), "column")
+  expect_error(hvti_hazard(dat, x_col = "nonexistent"), "column")
 })
 
-test_that("hazard_plot errors when estimate_col is absent from curve_data", {
+test_that("hvti_hazard errors when estimate_col is absent from curve_data", {
   dat <- sample_hazard_data(n = 50, seed = 1)
-  expect_error(hazard_plot(dat, estimate_col = "nonexistent"), "column")
+  expect_error(hvti_hazard(dat, estimate_col = "nonexistent"), "column")
 })
 
-test_that("hazard_plot errors when lower_col is absent from curve_data", {
+test_that("hvti_hazard errors when lower_col is absent from curve_data", {
   dat <- sample_hazard_data(n = 50, seed = 1)
-  expect_error(hazard_plot(dat, lower_col = "nonexistent"), "not found")
+  expect_error(hvti_hazard(dat, lower_col = "nonexistent"), "not found")
 })
 
-test_that("hazard_plot errors when group_col is absent from curve_data", {
+test_that("hvti_hazard errors when group_col is absent from curve_data", {
   dat <- sample_hazard_data(n = 50, seed = 1)
-  expect_error(hazard_plot(dat, group_col = "nonexistent"), "not found")
+  expect_error(hvti_hazard(dat, group_col = "nonexistent"), "not found")
 })
 
-test_that("hazard_plot handles empty data frame gracefully", {
-  # An empty data frame with the required columns (time, survival) satisfies
-  # all column-presence checks; ggplot renders an empty plot without error.
+test_that("hvti_hazard handles empty data frame gracefully", {
+  # Column-presence checks pass; ggplot renders an empty plot without error.
   empty_df <- data.frame(time = numeric(0), survival = numeric(0))
-  result <- hazard_plot(curve_data = empty_df)
-  expect_s3_class(result, "ggplot")
+  obj <- hvti_hazard(empty_df)
+  expect_s3_class(plot(obj), "ggplot")
+})
+
+# ============================================================================
+# hvti_survival_difference — constructor return type and slots
+# ============================================================================
+
+test_that("hvti_survival_difference returns an hvti_data object", {
+  diff_dat <- sample_survival_difference_data(
+    groups = c("Control" = 1.0, "Treatment" = 0.70), seed = 1
+  )
+  obj <- hvti_survival_difference(diff_dat)
+  expect_true(is_hvti_data(obj))
+  expect_s3_class(obj, "hvti_survival_difference")
+  expect_s3_class(obj, "hvti_data")
+})
+
+test_that("hvti_survival_difference stores data in $data and col names in $meta", {
+  diff_dat <- sample_survival_difference_data(
+    groups = c("Control" = 1.0, "Treatment" = 0.70), seed = 1
+  )
+  obj <- hvti_survival_difference(diff_dat,
+    lower_col = "diff_lower", upper_col = "diff_upper"
+  )
+  expect_identical(obj$data, diff_dat)
+  expect_equal(obj$meta$estimate_col, "difference")
+  expect_equal(obj$meta$lower_col,    "diff_lower")
+  expect_equal(obj$meta$upper_col,    "diff_upper")
+})
+
+test_that("hvti_survival_difference $tables is empty list", {
+  diff_dat <- sample_survival_difference_data(seed = 1)
+  obj <- hvti_survival_difference(diff_dat)
+  expect_identical(obj$tables, list())
+})
+
+# ============================================================================
+# hvti_survival_difference — plot() return type and layers
+# ============================================================================
+
+test_that("plot.hvti_survival_difference returns a ggplot", {
+  diff_dat <- sample_survival_difference_data(seed = 1)
+  expect_s3_class(plot(hvti_survival_difference(diff_dat)), "ggplot")
+})
+
+test_that("plot.hvti_survival_difference has a GeomLine layer", {
+  diff_dat <- sample_survival_difference_data(seed = 1)
+  geoms <- sapply(
+    plot(hvti_survival_difference(diff_dat))$layers,
+    function(l) class(l$geom)[1]
+  )
+  expect_true("GeomLine" %in% geoms)
+})
+
+test_that("plot.hvti_survival_difference with CI cols has a GeomRibbon layer", {
+  diff_dat <- sample_survival_difference_data(seed = 1)
+  geoms <- sapply(
+    plot(hvti_survival_difference(diff_dat,
+                                   lower_col = "diff_lower",
+                                   upper_col = "diff_upper"))$layers,
+    function(l) class(l$geom)[1]
+  )
+  expect_true("GeomRibbon" %in% geoms)
+})
+
+test_that("plot.hvti_survival_difference without CI has no GeomRibbon", {
+  diff_dat <- sample_survival_difference_data(seed = 1)
+  geoms <- sapply(
+    plot(hvti_survival_difference(diff_dat))$layers,
+    function(l) class(l$geom)[1]
+  )
+  expect_false("GeomRibbon" %in% geoms)
+})
+
+test_that("plot.hvti_survival_difference is composable with + operator", {
+  diff_dat <- sample_survival_difference_data(seed = 1)
+  p <- plot(hvti_survival_difference(diff_dat)) +
+    ggplot2::labs(x = "Years", y = "Difference (%)")
+  expect_equal(p$labels$x, "Years")
+})
+
+# ============================================================================
+# hvti_survival_difference — multi-group
+# ============================================================================
+
+test_that("hvti_survival_difference accepts group_col", {
+  d1 <- sample_survival_difference_data(
+    groups = c("Medical Mgmt" = 1.0, "TF-TAVR" = 0.70), seed = 1
+  )
+  d1$comparison <- "TF-TAVR vs Medical"
+  d2 <- sample_survival_difference_data(
+    groups = c("TA-TAVR" = 0.90, "TF-TAVR" = 0.70), seed = 2
+  )
+  d2$comparison <- "TF-TAVR vs TA-TAVR"
+  dall <- rbind(d1, d2)
+
+  obj <- hvti_survival_difference(dall, group_col = "comparison")
+  expect_equal(obj$meta$group_col, "comparison")
+  expect_s3_class(plot(obj), "ggplot")
+})
+
+# ============================================================================
+# hvti_survival_difference — input validation
+# ============================================================================
+
+test_that("hvti_survival_difference errors when diff_data is not a data frame", {
+  expect_error(
+    hvti_survival_difference(list(time = 1:5, difference = 1:5)),
+    "data frame"
+  )
+})
+
+test_that("hvti_survival_difference errors when x_col is absent", {
+  diff_dat <- sample_survival_difference_data(seed = 1)
+  expect_error(
+    hvti_survival_difference(diff_dat, x_col = "nonexistent"),
+    "not found"
+  )
+})
+
+test_that("hvti_survival_difference errors when estimate_col is absent", {
+  diff_dat <- sample_survival_difference_data(seed = 1)
+  expect_error(
+    hvti_survival_difference(diff_dat, estimate_col = "nonexistent"),
+    "not found"
+  )
+})
+
+test_that("hvti_survival_difference errors when lower_col is absent", {
+  diff_dat <- sample_survival_difference_data(seed = 1)
+  expect_error(
+    hvti_survival_difference(diff_dat, lower_col = "nonexistent"),
+    "not found"
+  )
+})
+
+# ============================================================================
+# hvti_nnt — constructor return type and slots
+# ============================================================================
+
+test_that("hvti_nnt returns an hvti_data object", {
+  nnt_dat <- sample_nnt_data(
+    groups = c("SVG" = 1.0, "ITA" = 0.75), seed = 1
+  )
+  obj <- hvti_nnt(nnt_dat)
+  expect_true(is_hvti_data(obj))
+  expect_s3_class(obj, "hvti_nnt")
+  expect_s3_class(obj, "hvti_data")
+})
+
+test_that("hvti_nnt stores column mappings in $meta", {
+  nnt_dat <- sample_nnt_data(seed = 1)
+  obj <- hvti_nnt(nnt_dat,
+                  lower_col = "nnt_lower", upper_col = "nnt_upper")
+  expect_equal(obj$meta$x_col,        "time")
+  expect_equal(obj$meta$estimate_col, "nnt")
+  expect_equal(obj$meta$lower_col,    "nnt_lower")
+  expect_equal(obj$meta$upper_col,    "nnt_upper")
+})
+
+test_that("hvti_nnt stores na_rm in $meta", {
+  nnt_dat <- sample_nnt_data(seed = 1)
+  obj_rm  <- hvti_nnt(nnt_dat, na_rm = TRUE)
+  obj_no  <- hvti_nnt(nnt_dat, na_rm = FALSE)
+  expect_true(obj_rm$meta$na_rm)
+  expect_false(obj_no$meta$na_rm)
+})
+
+test_that("hvti_nnt with na_rm=TRUE removes NA rows at construction time", {
+  nnt_dat <- sample_nnt_data(seed = 1)
+  nnt_dat$nnt[1:5] <- NA   # inject 5 NAs (some may already be NA)
+  n_na <- sum(is.na(nnt_dat$nnt))
+  obj_rm <- hvti_nnt(nnt_dat, na_rm = TRUE)
+  obj_no <- hvti_nnt(nnt_dat, na_rm = FALSE)
+  expect_equal(nrow(obj_rm$data), nrow(nnt_dat) - n_na)
+  expect_equal(nrow(obj_no$data), nrow(nnt_dat))
+})
+
+test_that("hvti_nnt $tables is empty list", {
+  nnt_dat <- sample_nnt_data(seed = 1)
+  obj <- hvti_nnt(nnt_dat)
+  expect_identical(obj$tables, list())
+})
+
+# ============================================================================
+# hvti_nnt — plot() return type and layers
+# ============================================================================
+
+test_that("plot.hvti_nnt returns a ggplot", {
+  nnt_dat <- sample_nnt_data(seed = 1)
+  expect_s3_class(plot(hvti_nnt(nnt_dat)), "ggplot")
+})
+
+test_that("plot.hvti_nnt has a GeomLine layer", {
+  nnt_dat <- sample_nnt_data(seed = 1)
+  geoms <- sapply(
+    plot(hvti_nnt(nnt_dat))$layers,
+    function(l) class(l$geom)[1]
+  )
+  expect_true("GeomLine" %in% geoms)
+})
+
+test_that("plot.hvti_nnt with CI cols has a GeomRibbon layer", {
+  nnt_dat <- sample_nnt_data(seed = 1)
+  geoms <- sapply(
+    plot(hvti_nnt(nnt_dat,
+                  lower_col = "nnt_lower",
+                  upper_col = "nnt_upper"))$layers,
+    function(l) class(l$geom)[1]
+  )
+  expect_true("GeomRibbon" %in% geoms)
+})
+
+test_that("plot.hvti_nnt without CI has no GeomRibbon", {
+  nnt_dat <- sample_nnt_data(seed = 1)
+  geoms <- sapply(
+    plot(hvti_nnt(nnt_dat))$layers,
+    function(l) class(l$geom)[1]
+  )
+  expect_false("GeomRibbon" %in% geoms)
+})
+
+test_that("plot.hvti_nnt with arr estimate_col returns a ggplot", {
+  nnt_dat <- sample_nnt_data(seed = 1)
+  p <- plot(hvti_nnt(nnt_dat, estimate_col = "arr", na_rm = FALSE))
+  expect_s3_class(p, "ggplot")
+})
+
+# ============================================================================
+# hvti_nnt — group_col support
+# ============================================================================
+
+test_that("hvti_nnt accepts group_col and plot() renders correctly", {
+  d1 <- sample_nnt_data(groups = c("SVG" = 1.0, "ITA" = 0.75), seed = 1)
+  d1$comparison <- "ITA vs SVG"
+  d2 <- sample_nnt_data(groups = c("SVG" = 1.0, "ITA2" = 0.80), seed = 2)
+  d2$comparison <- "ITA2 vs SVG"
+  dall <- rbind(d1, d2)
+
+  obj <- hvti_nnt(dall, group_col = "comparison")
+  expect_equal(obj$meta$group_col, "comparison")
+  expect_s3_class(plot(obj), "ggplot")
+})
+
+test_that("plot.hvti_nnt multi-group mapping differs from single-group", {
+  nnt_single <- sample_nnt_data(seed = 1)
+  d1 <- sample_nnt_data(groups = c("SVG" = 1.0, "ITA" = 0.75), seed = 1)
+  d1$comparison <- "A"
+  d2 <- sample_nnt_data(groups = c("SVG" = 1.0, "ITA" = 0.80), seed = 2)
+  d2$comparison <- "B"
+  dall <- rbind(d1, d2)
+
+  p_single <- plot(hvti_nnt(nnt_single))
+  p_multi  <- plot(hvti_nnt(dall, group_col = "comparison"))
+  expect_false(identical(p_single$mapping, p_multi$mapping))
+})
+
+# ============================================================================
+# hvti_nnt — input validation
+# ============================================================================
+
+test_that("hvti_nnt errors when nnt_data is not a data frame", {
+  expect_error(
+    hvti_nnt(list(time = 1:5, nnt = 1:5)),
+    "data frame"
+  )
+})
+
+test_that("hvti_nnt errors when x_col is absent", {
+  nnt_dat <- sample_nnt_data(seed = 1)
+  expect_error(hvti_nnt(nnt_dat, x_col = "nonexistent"), "not found")
+})
+
+test_that("hvti_nnt errors when estimate_col is absent", {
+  nnt_dat <- sample_nnt_data(seed = 1)
+  expect_error(hvti_nnt(nnt_dat, estimate_col = "nonexistent"), "not found")
+})
+
+test_that("hvti_nnt errors when lower_col is absent", {
+  nnt_dat <- sample_nnt_data(seed = 1)
+  expect_error(hvti_nnt(nnt_dat, lower_col = "nonexistent"), "not found")
+})
+
+test_that("hvti_nnt errors when group_col is absent", {
+  nnt_dat <- sample_nnt_data(seed = 1)
+  expect_error(hvti_nnt(nnt_dat, group_col = "nonexistent"), "not found")
+})
+
+# ============================================================================
+# hvti_hazard — empirical / reference validation (fix #13)
+# ============================================================================
+
+test_that("hvti_hazard errors when empirical is not a data frame", {
+  dat <- sample_hazard_data(n = 50, seed = 1)
+  expect_error(hvti_hazard(dat, empirical = "not_a_df"), "data frame")
+})
+
+test_that("hvti_hazard errors when empirical is missing emp_x_col", {
+  dat <- sample_hazard_data(n = 50, seed = 1)
+  bad_emp <- data.frame(wrong = 1:3, estimate = runif(3))
+  expect_error(hvti_hazard(dat, empirical = bad_emp), "not found|Missing")
+})
+
+test_that("hvti_hazard errors when empirical is missing emp_estimate_col", {
+  dat <- sample_hazard_data(n = 50, seed = 1)
+  bad_emp <- data.frame(time = 1:3, wrong = runif(3))
+  expect_error(hvti_hazard(dat, empirical = bad_emp), "not found|Missing")
+})
+
+test_that("hvti_hazard errors when reference is not a data frame", {
+  dat <- sample_hazard_data(n = 50, seed = 1)
+  expect_error(hvti_hazard(dat, reference = "not_a_df"), "data frame")
+})
+
+test_that("hvti_hazard errors when reference is missing ref_x_col", {
+  dat <- sample_hazard_data(n = 50, seed = 1)
+  bad_ref <- data.frame(wrong = 1:3, survival = runif(3))
+  expect_error(hvti_hazard(dat, reference = bad_ref), "not found|Missing")
+})
+
+test_that("hvti_hazard errors when reference is missing ref_estimate_col", {
+  dat <- sample_hazard_data(n = 50, seed = 1)
+  bad_ref <- data.frame(time = 1:3, wrong = runif(3))
+  expect_error(
+    hvti_hazard(dat, reference = bad_ref, ref_estimate_col = "nonexistent"),
+    "not found|Missing"
+  )
+})
+
+# ============================================================================
+# print() output tests (fix #14)
+# ============================================================================
+
+test_that("print.hvti_hazard produces expected output", {
+  dat <- sample_hazard_data(n = 50, seed = 1)
+  obj <- hvti_hazard(dat)
+  expect_output(print(obj), "hvti_hazard")
+})
+
+test_that("print.hvti_survival_difference produces expected output", {
+  diff_dat <- sample_survival_difference_data(seed = 1)
+  obj <- hvti_survival_difference(diff_dat)
+  expect_output(print(obj), "hvti_survival_difference")
+})
+
+test_that("print.hvti_nnt produces expected output", {
+  nnt_dat <- sample_nnt_data(seed = 1)
+  obj <- hvti_nnt(nnt_dat)
+  expect_output(print(obj), "hvti_nnt")
+})
+
+test_that("print.hvti_hazard shows CI info when present", {
+  dat <- sample_hazard_data(n = 50, seed = 1)
+  obj <- hvti_hazard(dat, lower_col = "surv_lower", upper_col = "surv_upper")
+  expect_output(print(obj), "CI")
+})
+
+test_that("print.hvti_nnt shows na_rm in output", {
+  nnt_dat <- sample_nnt_data(seed = 1)
+  obj <- hvti_nnt(nnt_dat, na_rm = TRUE)
+  expect_output(print(obj), "na_rm")
+})
+
+# ============================================================================
+# as.data.frame and meta consistency (fix #11 / #15 verification)
+# ============================================================================
+
+test_that("hvti_hazard stores $data as plain data.frame", {
+  dat <- sample_hazard_data(n = 50, seed = 1)
+  obj <- hvti_hazard(dat)
+  expect_true(is.data.frame(obj$data))
+  expect_true(inherits(obj$data, "data.frame"))
+})
+
+test_that("hvti_hazard $meta includes has_ci and n_obs", {
+  dat <- sample_hazard_data(n = 50, seed = 1)
+  obj <- hvti_hazard(dat, lower_col = "surv_lower", upper_col = "surv_upper")
+  expect_true(obj$meta$has_ci)
+  expect_equal(obj$meta$n_obs, nrow(dat))
+})
+
+test_that("hvti_survival_difference $meta includes has_ci and n_obs", {
+  diff_dat <- sample_survival_difference_data(seed = 1)
+  obj <- hvti_survival_difference(diff_dat,
+    lower_col = "diff_lower", upper_col = "diff_upper"
+  )
+  expect_true(obj$meta$has_ci)
+  expect_equal(obj$meta$n_obs, nrow(diff_dat))
+})
+
+test_that("hvti_nnt $meta includes has_ci and n_obs", {
+  nnt_dat <- sample_nnt_data(seed = 1)
+  obj <- hvti_nnt(nnt_dat,
+    lower_col = "nnt_lower", upper_col = "nnt_upper"
+  )
+  expect_true(obj$meta$has_ci)
+  # n_obs reflects pre-na_rm count
+  expect_true(obj$meta$n_obs > 0)
 })

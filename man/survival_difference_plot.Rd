@@ -38,11 +38,15 @@ survival_difference_plot(
 A \code{\link[ggplot2:ggplot]{ggplot2::ggplot()}} object.
 }
 \description{
+\strong{Superseded.}
+
+\code{survival_difference_plot()} has been superseded by the S3 constructor
+\code{\link[=hvti_survival_difference]{hvti_survival_difference()}} plus \code{\link[=plot.hvti_survival_difference]{plot.hvti_survival_difference()}}.
+
 Plots the difference in survival between two groups over time, with an
 optional confidence band. Covers \code{tp.hp.dead.life-gained.sas} and the
 survival-difference component of \code{tp.hp.numtreat.survdiff.matched.sas}.
-}
-\details{
+
 \strong{SAS context:} The \code{HAZDIFL} macro in \code{tp.hp.dead.life-gained.sas}
 bootstraps the difference \code{S_2(t) - S_1(t)} (or \code{S_1(t) - S_2(t)}) and
 stores the result in a \code{diffout} dataset. Export that dataset and pass it
@@ -106,3 +110,4 @@ SAS templates: \code{tp.hp.dead.life-gained.sas},
 \seealso{
 \code{\link[=sample_survival_difference_data]{sample_survival_difference_data()}}, \code{\link[=nnt_plot]{nnt_plot()}}, \code{\link[=hazard_plot]{hazard_plot()}}
 }
+\keyword{internal}
