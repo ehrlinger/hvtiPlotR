@@ -12,7 +12,9 @@ new_hvti_data(data, meta, tables = list(), subclass)
 \item{meta}{A named list of metadata (column names, method choices,
 computed statistics, etc.).}
 
-\item{tables}{A named list of accessory data frames (may be \code{list()}).}
+\item{tables}{A named list of auxiliary objects — typically data frames
+(risk tables, report tables, etc.) but may also contain vectors or other
+R objects (e.g. named integer vectors for set counts).  May be \code{list()}.}
 
 \item{subclass}{A single string naming the specific subclass
 (e.g. \code{"hvti_survival"}).}
