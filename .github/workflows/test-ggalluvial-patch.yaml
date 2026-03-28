@@ -2,9 +2,17 @@
 # Once confirmed working this file can be deleted.
 #
 # Trigger: manual (workflow_dispatch) or any push to the test branch.
-# Removes the continue-on-error guard that was papering over the R-devel /
-# lazyeval PREXPR failure, and installs ggalluvial from the proposed commit
-# before running R CMD check.
+#
+# WHY THE ORDER MATTERS:
+# lazyeval 0.2.2 uses the C symbol PREXPR which was deliberately removed from
+# R-devel's public API. It cannot be compiled on R-devel at all. As long as
+# ggalluvial's DESCRIPTION still lists lazyeval as a dependency, pak will try
+# to build it from source and abort before our patch step runs.
+#
+# Solution: install the patched ggalluvial FIRST (bypassing the lockfile),
+# then install remaining dependencies via pak. pak will see ggalluvial is
+# already present and skip it — and if the patch correctly removes lazyeval
+# from DESCRIPTION, pak will no longer attempt to install lazyeval either.
 
 on:
   workflow_dispatch:
@@ -37,14 +45,14 @@ jobs:
           use-public-rspm: true
           rtools-version: '44'
 
-      # Install all dependencies — no continue-on-error; lazyeval failure
-      # should not occur if the ggalluvial patch has removed the dependency.
-      - uses: r-lib/actions/setup-r-dependencies@v2
-        with:
-          extra-packages: any::rcmdcheck, any::remotes
-          needs: check
+      # Bootstrap remotes before anything else so we can fetch the patch.
+      - name: Bootstrap remotes
+        run: install.packages("remotes")
+        shell: Rscript {0}
 
-      # Install ggalluvial from the proposed patch commit.
+      # Install the patched ggalluvial BEFORE pak resolves the lockfile.
+      # If the patch removes lazyeval from DESCRIPTION, pak will not attempt
+      # to build lazyeval when it installs remaining dependencies below.
       - name: Install ggalluvial patch (7c2507f)
         run: |
           remotes::install_github(
@@ -54,10 +62,17 @@ jobs:
           )
         shell: Rscript {0}
 
+      # Now install remaining dependencies. pak sees ggalluvial is already
+      # installed and skips it (along with its old lazyeval dep).
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          extra-packages: any::rcmdcheck
+          needs: check
+
       - name: Install package for vignette rendering
         run: Rscript -e "install.packages('.', repos = NULL, type = 'source')"
 
-      # Full check with no continue-on-error — warnings are errors.
+      # Full check — no continue-on-error, warnings are errors.
       - uses: r-lib/actions/check-r-package@v2
         with:
           upload-snapshots: true
