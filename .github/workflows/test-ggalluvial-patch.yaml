@@ -1,0 +1,65 @@
+# One-shot workflow to validate ggalluvial patch 7c2507f against R-devel.
+# Once confirmed working this file can be deleted.
+#
+# Trigger: manual (workflow_dispatch) or any push to the test branch.
+# Removes the continue-on-error guard that was papering over the R-devel /
+# lazyeval PREXPR failure, and installs ggalluvial from the proposed commit
+# before running R CMD check.
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [test-ggalluvial-patch]
+
+name: test-ggalluvial-patch
+
+permissions: read-all
+
+jobs:
+  test-patch:
+    runs-on: ubuntu-latest
+
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+      R_KEEP_PKG_SOURCE: yes
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: r-lib/actions/setup-pandoc@v2
+
+      - uses: quarto-dev/quarto-actions/setup@v2
+
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: 'devel'
+          http-user-agent: 'release'
+          use-public-rspm: true
+          rtools-version: '44'
+
+      # Install all dependencies — no continue-on-error; lazyeval failure
+      # should not occur if the ggalluvial patch has removed the dependency.
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          extra-packages: any::rcmdcheck, any::remotes
+          needs: check
+
+      # Install ggalluvial from the proposed patch commit.
+      - name: Install ggalluvial patch (7c2507f)
+        run: |
+          remotes::install_github(
+            "corybrunson/ggalluvial",
+            ref = "7c2507f992e54649900b47c6e9980232d5d60b4c",
+            upgrade = "never"
+          )
+        shell: Rscript {0}
+
+      - name: Install package for vignette rendering
+        run: Rscript -e "install.packages('.', repos = NULL, type = 'source')"
+
+      # Full check with no continue-on-error — warnings are errors.
+      - uses: r-lib/actions/check-r-package@v2
+        with:
+          upload-snapshots: true
+          build_args: 'c("--no-manual","--compact-vignettes=gs+qpdf")'
+          error_on: '"warning"'
