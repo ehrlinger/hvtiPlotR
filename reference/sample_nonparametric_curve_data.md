@@ -4,7 +4,7 @@ Simulates pre-computed curve output matching what SAS produces after
 fitting a two-phase nonparametric temporal trend model and averaging
 patient-specific profiles with `PROC SUMMARY`. The output is suitable
 for direct use with
-[`nonparametric_curve_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/nonparametric_curve_plot.md).
+[`hvti_nonparametric()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_nonparametric.md).
 
 ## Usage
 
@@ -42,25 +42,20 @@ sample_nonparametric_curve_data(
 
   `NULL` for a single average curve, or a named numeric vector of
   group-specific hazard multipliers, e.g.
-  `c("Ozaki" = 0.8, "CE-Pericardial" = 1.2)` — analogous to the
-  indicator variable effect in `tp.np.avpkgrad_ozak_ind_mtwt.sas`.
+  `c("Ozaki" = 0.8, "CE-Pericardial" = 1.2)`.
 
 - outcome_type:
 
-  `"probability"` (binary outcome, 0-1 scale; e.g. AF prevalence, TR
-  grade prevalence) or `"continuous"` (e.g. FEV1, AV peak gradient).
-  Default `"probability"`.
+  `"probability"` (binary outcome, 0-1 scale) or `"continuous"`. Default
+  `"probability"`.
 
 - ci_level:
 
-  Confidence level for bootstrap-style CI bands. Use `0.68` for the 68%
-  CI shown in the SAS templates (one standard error), or `0.95` for the
-  95% CI. Default `0.68`.
+  Confidence level for bootstrap-style CI bands. Default `0.68`.
 
 - n_bins:
 
-  Number of equal-sized data-summary bins (analogous to the SAS
-  `quint = _nobs_/12` / `decile = _nobs_/10` grouping). Default `10`.
+  Number of equal-sized data-summary bins. Default `10`.
 
 - seed:
 
@@ -81,13 +76,13 @@ model output instead of this sample function.
 
 ## See also
 
-[`nonparametric_curve_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/nonparametric_curve_plot.md),
+[`hvti_nonparametric()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_nonparametric.md),
 [`sample_nonparametric_curve_points()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_nonparametric_curve_points.md)
 
 ## Examples
 
 ``` r
-# Single average curve (like tp.np.afib.ivwristm.avrg_curv.binary.sas)
+# Single average curve
 dat <- sample_nonparametric_curve_data(n = 500, time_max = 12)
 head(dat)
 #>         time  estimate     lower     upper
@@ -98,7 +93,7 @@ head(dat)
 #> 5 0.05224562 0.2398592 0.2151680 0.2664220
 #> 6 0.05282261 0.2399503 0.2152524 0.2665196
 
-# Two-group comparison (like tp.np.avpkgrad_ozak_ind_mtwt.sas)
+# Two-group comparison
 dat2 <- sample_nonparametric_curve_data(
   n = 400, time_max = 7,
   groups = c("Ozaki" = 0.7, "CE-Pericardial" = 1.3),

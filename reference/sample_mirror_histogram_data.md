@@ -1,7 +1,7 @@
 # Generate Sample Data for Mirrored Histogram
 
 Creates a reproducible data frame for testing
-[`mirror_histogram()`](https://ehrlinger.github.io/hvtiPlotR/reference/mirror_histogram.md)
+[`hvti_mirror()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_mirror.md)
 in either binary-match or weighted IPTW mode. Propensity scores are
 simulated via a logistic model: control subjects draw their linear
 predictor from \\N(-\text{sep}/2, 1)\\ and treated subjects from
@@ -75,7 +75,7 @@ Data frame with columns:
 
 ## See also
 
-[`mirror_histogram()`](https://ehrlinger.github.io/hvtiPlotR/reference/mirror_histogram.md)
+[`hvti_mirror()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_mirror.md)
 
 ## Examples
 

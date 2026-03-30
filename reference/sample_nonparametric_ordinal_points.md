@@ -35,15 +35,11 @@ sample_nonparametric_ordinal_points(
 - grade_labels:
 
   Character vector of grade labels, one per grade level in ascending
-  order. Corresponds to the SAS grade levels (e.g.
-  `c("None", "Mild", "Moderate", "Severe")` for AR grade, or
-  `c("0", "1", "2", "3+")` for TR grade). Default
-  `c("Grade 0", "Grade 1", "Grade 2", "Grade 3")`.
+  order. Default `c("Grade 0", "Grade 1", "Grade 2", "Grade 3")`.
 
 - n_bins:
 
-  Number of equal-sized bins for the data summary points (analogous to
-  SAS `decile = _nobs_/10`). Default `10`.
+  Number of equal-sized bins for the data summary points. Default `10`.
 
 - seed:
 
@@ -56,7 +52,7 @@ A data frame with columns `time`, `value`, `grade`.
 ## See also
 
 [`sample_nonparametric_ordinal_data()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_nonparametric_ordinal_data.md),
-[`nonparametric_ordinal_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/nonparametric_ordinal_plot.md)
+[`hvti_ordinal()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_ordinal.md)
 
 ## Examples
 
@@ -71,7 +67,7 @@ head(pts)
 #> 4 1.7148634 0.9125 Grade 0
 #> 5 2.1953343 0.8000 Grade 0
 #> 6 2.6358690 0.8000 Grade 0
-levels(pts$grade)    # "Grade 0", "Grade 1", "Grade 2", "Grade 3"
+levels(pts$grade)
 #> [1] "Grade 0" "Grade 1" "Grade 2" "Grade 3"
 
 # Clinical AR grade labels
@@ -80,7 +76,7 @@ pts2 <- sample_nonparametric_ordinal_points(
   time_max     = 7,
   grade_labels = c("None", "Mild", "Moderate", "Severe")
 )
-table(pts2$grade)    # n_bins rows per grade
+table(pts2$grade)
 #> 
 #>     None     Mild Moderate   Severe 
 #>       10       10       10       10 

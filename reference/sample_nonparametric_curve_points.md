@@ -40,25 +40,20 @@ sample_nonparametric_curve_points(
 
   `NULL` for a single average curve, or a named numeric vector of
   group-specific hazard multipliers, e.g.
-  `c("Ozaki" = 0.8, "CE-Pericardial" = 1.2)` — analogous to the
-  indicator variable effect in `tp.np.avpkgrad_ozak_ind_mtwt.sas`.
+  `c("Ozaki" = 0.8, "CE-Pericardial" = 1.2)`.
 
 - outcome_type:
 
-  `"probability"` (binary outcome, 0-1 scale; e.g. AF prevalence, TR
-  grade prevalence) or `"continuous"` (e.g. FEV1, AV peak gradient).
-  Default `"probability"`.
+  `"probability"` (binary outcome, 0-1 scale) or `"continuous"`. Default
+  `"probability"`.
 
 - ci_level:
 
-  Confidence level for bootstrap-style CI bands. Use `0.68` for the 68%
-  CI shown in the SAS templates (one standard error), or `0.95` for the
-  95% CI. Default `0.68`.
+  Confidence level for bootstrap-style CI bands. Default `0.68`.
 
 - n_bins:
 
-  Number of equal-sized data-summary bins (analogous to the SAS
-  `quint = _nobs_/12` / `decile = _nobs_/10` grouping). Default `10`.
+  Number of equal-sized data-summary bins. Default `10`.
 
 - seed:
 
@@ -72,12 +67,12 @@ A data frame with columns `time`, `value`, and (if `groups` is not
 ## See also
 
 [`sample_nonparametric_curve_data()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_nonparametric_curve_data.md),
-[`nonparametric_curve_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/nonparametric_curve_plot.md)
+[`hvti_nonparametric()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_nonparametric.md)
 
 ## Examples
 
 ``` r
-# Single-group data summary points (probability outcome)
+# Single-group data summary points
 pts <- sample_nonparametric_curve_points(n = 500, time_max = 12)
 head(pts)
 #>        time value
@@ -90,15 +85,13 @@ head(pts)
 names(pts)           # "time", "value"
 #> [1] "time"  "value"
 
-# Two-group points — continuous outcome (e.g. AV peak gradient)
+# Two-group points
 pts2 <- sample_nonparametric_curve_points(
   n            = 400,
   time_max     = 7,
   groups       = c("Ozaki" = 0.7, "CE-Pericardial" = 1.3),
   outcome_type = "continuous"
 )
-levels(pts2$group)   # "Ozaki", "CE-Pericardial"
+levels(pts2$group)
 #> [1] "Ozaki"          "CE-Pericardial"
-nrow(pts2)           # 2 groups x n_bins rows
-#> [1] 20
 ```

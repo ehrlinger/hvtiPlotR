@@ -61,65 +61,62 @@ p + hvti_theme("poster")       # poster
 
 ## Plot Function Gallery
 
-Every function returns a bare `ggplot` object. Add `scale_*`,
+**hvtiPlotR 2.0 uses a two-step API.** A constructor (`hvti_*()`) shapes
+the data and returns an S3 object;
+[`plot()`](https://rdrr.io/r/graphics/plot.default.html) renders a bare
+`ggplot`. Add `scale_*`,
 [`labs()`](https://ggplot2.tidyverse.org/reference/labs.html),
 [`annotate()`](https://ggplot2.tidyverse.org/reference/annotate.html),
 and a theme with the usual `+` operator.
 
+``` r
+km <- hvti_survival(sample_survival_data())
+plot(km) + hvti_theme("manuscript")
+km$tables$risk                         # risk-table data frame
+```
+
 ### Propensity Score & Balance
 
-| Function                                                                                      | Description                                                                                                            |
-|-----------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------|
-| [`mirror_histogram()`](https://ehrlinger.github.io/hvtiPlotR/reference/mirror_histogram.md)   | Mirrored histograms showing propensity score distributions for two groups, before and after matching or IPTW weighting |
-| [`stacked_histogram()`](https://ehrlinger.github.io/hvtiPlotR/reference/stacked_histogram.md) | Stacked or proportional-fill histogram of a numeric variable by group                                                  |
-| [`covariate_balance()`](https://ehrlinger.github.io/hvtiPlotR/reference/covariate_balance.md) | Standardised mean difference dot-plot for assessing propensity matching or weighting quality                           |
+| Constructor                                                                         | Description                                                                                                            |
+|-------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------|
+| [`hvti_mirror()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_mirror.md)   | Mirrored histograms showing propensity score distributions for two groups, before and after matching or IPTW weighting |
+| [`hvti_stacked()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_stacked.md) | Stacked or proportional-fill histogram of a numeric variable by group                                                  |
+| [`hvti_balance()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_balance.md) | Standardised mean difference dot-plot for assessing propensity matching or weighting quality                           |
 
 ``` r
-dta <- sample_mirror_histogram_data(n = 2000)
-mirror_histogram(dta, group_labels = c("SAVR", "TF-TAVR"))$plot +
-  hvti_theme("manuscript")
+mh <- hvti_mirror(sample_mirror_histogram_data(n = 2000),
+                  group_labels = c("SAVR", "TF-TAVR"))
+plot(mh) + hvti_theme("manuscript")
 ```
 
 ### Survival & Time-to-Event
 
-| Function                                                                                                        | Description                                                                                                                                           |
-|-----------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------|
-| [`survival_curve()`](https://ehrlinger.github.io/hvtiPlotR/reference/survival_curve.md)                         | Kaplan-Meier and Nelson-Aalen analysis. Returns five plot types (survival, cumulative hazard, hazard, log-log, life/RMST) plus risk and report tables |
-| [`nonparametric_curve_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/nonparametric_curve_plot.md)     | Nonparametric survival or event-rate curve with optional confidence intervals                                                                         |
-| [`nonparametric_ordinal_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/nonparametric_ordinal_plot.md) | Nonparametric curves for ordinal outcomes (e.g. severity grades)                                                                                      |
-| [`hazard_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/hazard_plot.md)                               | Parametric hazard/survival curves from Weibull or other models, with optional KM overlay                                                              |
-| [`survival_difference_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/survival_difference_plot.md)     | Absolute treatment benefit vs. a reference group over time                                                                                            |
-| [`nnt_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/nnt_plot.md)                                     | Number needed to treat derived from survival difference estimates                                                                                     |
-| [`goodness_followup()`](https://ehrlinger.github.io/hvtiPlotR/reference/goodness_followup.md)                   | Goodness-of-follow-up scatter: actual vs. potential follow-up by operation year                                                                       |
-| [`goodness_event_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/goodness_event_plot.md)               | Companion panel for non-fatal competing events in a follow-up assessment                                                                              |
-
-``` r
-km <- survival_curve(
-  data      = sample_survival_data(),
-  time_col  = "time",
-  event_col = "status",
-  group_col = "group"
-)
-km + hvti_theme("manuscript")          # km IS the survival ggplot
-attr(km, "risk_table")                 # risk-table data frame
-```
+| Constructor                                                                                                 | Description                                                                                                                                               |
+|-------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------|
+| [`hvti_survival()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_survival.md)                       | Kaplan-Meier and Nelson-Aalen analysis. `plot(km, type = ...)` renders survival, cumulative hazard, hazard, log-log, or life/RMST; tables via `km$tables` |
+| [`hvti_nonparametric()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_nonparametric.md)             | Nonparametric survival or event-rate curve with optional confidence intervals                                                                             |
+| [`hvti_ordinal()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_ordinal.md)                         | Nonparametric curves for ordinal outcomes (e.g. severity grades)                                                                                          |
+| [`hvti_hazard()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_hazard.md)                           | Parametric hazard/survival curves from Weibull or other models, with optional KM overlay                                                                  |
+| [`hvti_survival_difference()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_survival_difference.md) | Absolute treatment benefit vs. a reference group over time                                                                                                |
+| [`hvti_nnt()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_nnt.md)                                 | Number needed to treat derived from survival difference estimates                                                                                         |
+| [`hvti_followup()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_followup.md)                       | Goodness-of-follow-up scatter: actual vs. potential follow-up by operation year; `plot(gf, type = "event")` for non-fatal competing events                |
 
 ### Longitudinal & Repeated Measures
 
-| Function                                                                                                    | Description                                                                     |
-|-------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------|
-| [`trends_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/trends_plot.md)                           | Temporal trend: annual means/medians with LOESS smooth, by group                |
-| [`spaghetti_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/spaghetti_plot.md)                     | Individual subject trajectories over time with optional per-group LOESS overlay |
-| [`longitudinal_counts_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/longitudinal_counts_plot.md) | Pre-aggregated patient and measurement counts at discrete follow-up windows     |
+| Constructor                                                                                   | Description                                                                              |
+|-----------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------|
+| [`hvti_trends()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_trends.md)             | Temporal trend: annual means/medians with LOESS smooth, by group                         |
+| [`hvti_spaghetti()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_spaghetti.md)       | Individual subject trajectories over time with optional per-group LOESS overlay          |
+| [`hvti_longitudinal()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_longitudinal.md) | Pre-aggregated patient and measurement counts; `plot(lc, type = "table")` for text table |
 
 ### Exploratory & Multivariate
 
-| Function                                                                                          | Description                                                                                                                                                   |
-|---------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| [`eda_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/eda_plot.md)                       | Exploratory plot for a single variable. Auto-detects type: scatter + LOESS for continuous, stacked bar for categorical. Missing values shown as `"(Missing)"` |
-| [`upset_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/upset_plot.md)                   | UpSet diagram for visualising procedure co-occurrences or set memberships                                                                                     |
-| [`alluvial_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/alluvial_plot.md)             | Sankey/alluvial diagram for patient flow across categorical stages                                                                                            |
-| [`cluster_sankey_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/cluster_sankey_plot.md) | Cluster stability Sankey showing patient transitions across cluster solutions                                                                                 |
+| Constructor                                                                           | Description                                                                                                                                                   |
+|---------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| [`hvti_eda()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_eda.md)           | Exploratory plot for a single variable. Auto-detects type: scatter + LOESS for continuous, stacked bar for categorical. Missing values shown as `"(Missing)"` |
+| [`hvti_upset()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_upset.md)       | UpSet diagram for visualising procedure co-occurrences or set memberships                                                                                     |
+| [`hvti_alluvial()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_alluvial.md) | Sankey/alluvial diagram for patient flow across categorical stages                                                                                            |
+| [`hvti_sankey()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_sankey.md)     | Cluster stability Sankey showing patient transitions across cluster solutions                                                                                 |
 
 ### Utilities
 

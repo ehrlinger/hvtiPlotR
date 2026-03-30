@@ -2,11 +2,14 @@
 
 ## Package Overview
 
-Package-level documentation and overview.
+Package-level documentation and the base S3 class shared by all
+hvtiPlotR data objects.
 
 - [`hvtiPlotR-package`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-package.md)
   [`hvtiPlotR`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-package.md)
   : hvtiPlotR: Publication-Quality Graphics for Clinical Manuscripts
+- [`is_hvti_data()`](https://ehrlinger.github.io/hvtiPlotR/reference/is_hvti_data.md)
+  : Test whether an object is an hvtiPlotR data object
 
 ## Themes
 
@@ -37,19 +40,38 @@ are also exported for direct use.
 
 Kaplan-Meier survival curves, parametric hazard plots, survival
 differences, and number-needed-to-treat. Use
-[`survival_curve()`](https://ehrlinger.github.io/hvtiPlotR/reference/survival_curve.md)
-for non-parametric estimates;
-[`hazard_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/hazard_plot.md)
+[`hvti_survival()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_survival.md)
+for non-parametric KM estimates;
+[`hvti_hazard()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_hazard.md),
+[`hvti_survival_difference()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_survival_difference.md),
+and
+[`hvti_nnt()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_nnt.md)
 for pre-fitted parametric model output.
 
-- [`survival_curve()`](https://ehrlinger.github.io/hvtiPlotR/reference/survival_curve.md)
-  : Kaplan-Meier Survival Curve
-- [`hazard_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/hazard_plot.md)
-  : Parametric Hazard / Survival Plot
-- [`survival_difference_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/survival_difference_plot.md)
-  : Survival Difference (Life-Gained) Plot
-- [`nnt_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/nnt_plot.md)
-  : Number Needed to Treat (NNT) Plot
+- [`hvti_survival()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_survival.md)
+  : Prepare survival data for plotting
+- [`plot(`*`<hvti_survival>`*`)`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hvti_survival.md)
+  : Plot an hvti_survival object
+- [`print(`*`<hvti_survival>`*`)`](https://ehrlinger.github.io/hvtiPlotR/reference/print.hvti_survival.md)
+  : Print an hvti_survival object
+- [`hvti_hazard()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_hazard.md)
+  : Prepare parametric hazard / survival data for plotting
+- [`plot(`*`<hvti_hazard>`*`)`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hvti_hazard.md)
+  : Plot an hvti_hazard object
+- [`print(`*`<hvti_hazard>`*`)`](https://ehrlinger.github.io/hvtiPlotR/reference/print.hvti_hazard.md)
+  : Print an hvti_hazard object
+- [`hvti_survival_difference()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_survival_difference.md)
+  : Prepare survival difference (life-gained) data for plotting
+- [`plot(`*`<hvti_survival_difference>`*`)`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hvti_survival_difference.md)
+  : Plot an hvti_survival_difference object
+- [`print(`*`<hvti_survival_difference>`*`)`](https://ehrlinger.github.io/hvtiPlotR/reference/print.hvti_survival_difference.md)
+  : Print an hvti_survival_difference object
+- [`hvti_nnt()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_nnt.md)
+  : Prepare number-needed-to-treat data for plotting
+- [`plot(`*`<hvti_nnt>`*`)`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hvti_nnt.md)
+  : Plot an hvti_nnt object
+- [`print(`*`<hvti_nnt>`*`)`](https://ehrlinger.github.io/hvtiPlotR/reference/print.hvti_nnt.md)
+  : Print an hvti_nnt object
 - [`sample_survival_data()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_survival_data.md)
   : Generate Sample Survival Data
 - [`sample_hazard_data()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_hazard_data.md)
@@ -72,10 +94,18 @@ for pre-fitted parametric model output.
 Average temporal curves and ordinal outcome trajectories from
 decomposition models (`tp.np.*` template family).
 
-- [`nonparametric_curve_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/nonparametric_curve_plot.md)
-  : Nonparametric Temporal Trend Curve Plot
-- [`nonparametric_ordinal_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/nonparametric_ordinal_plot.md)
-  : Nonparametric Ordinal Outcome Curve Plot
+- [`hvti_nonparametric()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_nonparametric.md)
+  : Prepare nonparametric temporal trend curve data for plotting
+- [`plot(`*`<hvti_nonparametric>`*`)`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hvti_nonparametric.md)
+  : Plot an hvti_nonparametric object
+- [`print(`*`<hvti_nonparametric>`*`)`](https://ehrlinger.github.io/hvtiPlotR/reference/print.hvti_nonparametric.md)
+  : Print an hvti_nonparametric object
+- [`hvti_ordinal()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_ordinal.md)
+  : Prepare nonparametric ordinal outcome curve data for plotting
+- [`plot(`*`<hvti_ordinal>`*`)`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hvti_ordinal.md)
+  : Plot an hvti_ordinal object
+- [`print(`*`<hvti_ordinal>`*`)`](https://ehrlinger.github.io/hvtiPlotR/reference/print.hvti_ordinal.md)
+  : Print an hvti_ordinal object
 - [`sample_nonparametric_curve_data()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_nonparametric_curve_data.md)
   : Sample Nonparametric Curve Data
 - [`sample_nonparametric_curve_points()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_nonparametric_curve_points.md)
@@ -90,28 +120,47 @@ decomposition models (`tp.np.*` template family).
 Visualise propensity score distributions and covariate balance before
 and after propensity matching or IPTW weighting.
 
-- [`mirror_histogram()`](https://ehrlinger.github.io/hvtiPlotR/reference/mirror_histogram.md)
-  : Plot Mirrored Propensity Score Histogram
-- [`covariate_balance()`](https://ehrlinger.github.io/hvtiPlotR/reference/covariate_balance.md)
-  : Covariate Balance Plot
+- [`hvti_mirror()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_mirror.md)
+  : Prepare mirror-histogram data for plotting
+- [`plot(`*`<hvti_mirror>`*`)`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hvti_mirror.md)
+  : Plot an hvti_mirror object
+- [`print(`*`<hvti_mirror>`*`)`](https://ehrlinger.github.io/hvtiPlotR/reference/print.hvti_mirror.md)
+  : Print an hvti_mirror object
+- [`hvti_balance()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_balance.md)
+  : Prepare covariate balance data for plotting
+- [`plot(`*`<hvti_balance>`*`)`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hvti_balance.md)
+  : Plot an hvti_balance object
+- [`print(`*`<hvti_balance>`*`)`](https://ehrlinger.github.io/hvtiPlotR/reference/print.hvti_balance.md)
+  : Print an hvti_balance object
 - [`sample_mirror_histogram_data()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_mirror_histogram_data.md)
   : Generate Sample Data for Mirrored Histogram
 - [`sample_covariate_balance_data()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_covariate_balance_data.md)
   : Generate Sample Covariate Balance Data
 
-## Temporal Trends
+## Temporal Trends & Longitudinal
 
-Annual trend lines with optional confidence ribbons. Ports the
-`tp.lp.trends.*`, `tp.rp.trends.*`, and `tp.dp.trends.R` templates.
+Annual trend lines, individual patient trajectories, and longitudinal
+count summaries. Ports `tp.lp.trends.*`, `tp.rp.trends.*`,
+`tp.dp.trends.R`, and `tp.dp.spaghetti.echo.R`.
 
-- [`trends_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/trends_plot.md)
-  : Temporal Trend Plot
-- [`spaghetti_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/spaghetti_plot.md)
-  : Spaghetti / Profile Plot of Repeated Measurements
-- [`longitudinal_counts_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/longitudinal_counts_plot.md)
-  : Longitudinal Participation Counts Bar Chart
-- [`longitudinal_counts_table()`](https://ehrlinger.github.io/hvtiPlotR/reference/longitudinal_counts_table.md)
-  : Longitudinal Participation Counts Table Panel
+- [`hvti_trends()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_trends.md)
+  : Prepare temporal trend data for plotting
+- [`plot(`*`<hvti_trends>`*`)`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hvti_trends.md)
+  : Plot an hvti_trends object
+- [`print(`*`<hvti_trends>`*`)`](https://ehrlinger.github.io/hvtiPlotR/reference/print.hvti_trends.md)
+  : Print an hvti_trends object
+- [`hvti_spaghetti()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_spaghetti.md)
+  : Prepare spaghetti / profile data for plotting
+- [`plot(`*`<hvti_spaghetti>`*`)`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hvti_spaghetti.md)
+  : Plot an hvti_spaghetti object
+- [`print(`*`<hvti_spaghetti>`*`)`](https://ehrlinger.github.io/hvtiPlotR/reference/print.hvti_spaghetti.md)
+  : Print an hvti_spaghetti object
+- [`hvti_longitudinal()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_longitudinal.md)
+  : Prepare longitudinal participation counts data for plotting
+- [`plot(`*`<hvti_longitudinal>`*`)`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hvti_longitudinal.md)
+  : Plot an hvti_longitudinal object
+- [`print(`*`<hvti_longitudinal>`*`)`](https://ehrlinger.github.io/hvtiPlotR/reference/print.hvti_longitudinal.md)
+  : Print an hvti_longitudinal object
 - [`sample_trends_data()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_trends_data.md)
   : Sample Temporal Trend Data
 - [`sample_spaghetti_data()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_spaghetti_data.md)
@@ -121,25 +170,47 @@ Annual trend lines with optional confidence ribbons. Ports the
 
 ## Study Design & Goodness of Follow-Up
 
-Visualise follow-up completeness and goodness-of-fit for event models.
-Ports `tp.dp.gfup.R`.
+Visualise follow-up completeness. Ports `tp.dp.gfup.R`.
 
-- [`goodness_followup()`](https://ehrlinger.github.io/hvtiPlotR/reference/goodness_followup.md)
-  : Build goodness-of-follow-up plots
-- [`goodness_event_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/goodness_event_plot.md)
-  : Goodness of Follow-Up — Event Panel
+- [`hvti_followup()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_followup.md)
+  : Prepare goodness-of-follow-up data for plotting
+- [`plot(`*`<hvti_followup>`*`)`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hvti_followup.md)
+  : Plot an hvti_followup object
+- [`print(`*`<hvti_followup>`*`)`](https://ehrlinger.github.io/hvtiPlotR/reference/print.hvti_followup.md)
+  : Print an hvti_followup object
 - [`sample_goodness_followup_data()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_goodness_followup_data.md)
   : Generate Sample Goodness-of-Follow-Up Data
+
+## Stacked Histogram
+
+Stacked or filled histogram of a numeric variable by group.
+
+- [`hvti_stacked()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_stacked.md)
+  : Prepare stacked histogram data for plotting
+- [`plot(`*`<hvti_stacked>`*`)`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hvti_stacked.md)
+  : Plot an hvti_stacked object
+- [`print(`*`<hvti_stacked>`*`)`](https://ehrlinger.github.io/hvtiPlotR/reference/print.hvti_stacked.md)
+  : Print an hvti_stacked object
+- [`sample_stacked_histogram_data()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_stacked_histogram_data.md)
+  : Generate Sample Data for Stacked Histogram
 
 ## Flow Diagrams
 
 Alluvial (Sankey) plots showing patient flow between states or cluster
 assignments across K values.
 
-- [`alluvial_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/alluvial_plot.md)
-  : Sankey / Alluvial Plot
-- [`cluster_sankey_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/cluster_sankey_plot.md)
-  : Cluster Stability Sankey Plot
+- [`hvti_alluvial()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_alluvial.md)
+  : Prepare alluvial / Sankey diagram data for plotting
+- [`plot(`*`<hvti_alluvial>`*`)`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hvti_alluvial.md)
+  : Plot an hvti_alluvial object
+- [`print(`*`<hvti_alluvial>`*`)`](https://ehrlinger.github.io/hvtiPlotR/reference/print.hvti_alluvial.md)
+  : Print an hvti_alluvial object
+- [`hvti_sankey()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_sankey.md)
+  : Prepare cluster stability Sankey data for plotting
+- [`plot(`*`<hvti_sankey>`*`)`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hvti_sankey.md)
+  : Plot an hvti_sankey object
+- [`print(`*`<hvti_sankey>`*`)`](https://ehrlinger.github.io/hvtiPlotR/reference/print.hvti_sankey.md)
+  : Print an hvti_sankey object
 - [`sample_alluvial_data()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_alluvial_data.md)
   : Sample Sankey / Alluvial Data
 - [`sample_cluster_sankey_data()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_cluster_sankey_data.md)
@@ -147,23 +218,27 @@ assignments across K values.
 
 ## Exploratory Data Analysis
 
-Rapid bar charts and scatter plots for variable screening and univariate
-summaries.
+Rapid bar charts and scatter plots for variable screening, univariate
+summaries, and set-membership visualisation.
 
-- [`eda_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/eda_plot.md)
-  : EDA Barplot / Scatterplot for One Variable
+- [`hvti_eda()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_eda.md)
+  : Prepare EDA data for a single variable
+- [`plot(`*`<hvti_eda>`*`)`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hvti_eda.md)
+  : Plot an hvti_eda object
+- [`print(`*`<hvti_eda>`*`)`](https://ehrlinger.github.io/hvtiPlotR/reference/print.hvti_eda.md)
+  : Print an hvti_eda object
+- [`hvti_upset()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_upset.md)
+  : Prepare UpSet co-occurrence data for plotting
+- [`plot(`*`<hvti_upset>`*`)`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hvti_upset.md)
+  : Plot an hvti_upset object
+- [`print(`*`<hvti_upset>`*`)`](https://ehrlinger.github.io/hvtiPlotR/reference/print.hvti_upset.md)
+  : Print an hvti_upset object
 - [`eda_classify_var()`](https://ehrlinger.github.io/hvtiPlotR/reference/eda_classify_var.md)
   : Classify a Variable as Continuous or Categorical
 - [`eda_select_vars()`](https://ehrlinger.github.io/hvtiPlotR/reference/eda_select_vars.md)
   : Select and Reorder Variables from a Data Frame
-- [`stacked_histogram()`](https://ehrlinger.github.io/hvtiPlotR/reference/stacked_histogram.md)
-  : Stacked Histogram
-- [`upset_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/upset_plot.md)
-  : UpSet Plot for Set Co-occurrence Analysis
 - [`sample_eda_data()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_eda_data.md)
   : Sample EDA Data
-- [`sample_stacked_histogram_data()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_stacked_histogram_data.md)
-  : Generate Sample Data for Stacked Histogram
 - [`sample_upset_data()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_upset_data.md)
   : Sample Procedure Co-occurrence Data
 

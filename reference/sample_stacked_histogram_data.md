@@ -1,7 +1,7 @@
 # Generate Sample Data for Stacked Histogram
 
 Creates a minimal data frame suitable for demonstrating or testing
-[`stacked_histogram`](https://ehrlinger.github.io/hvtiPlotR/reference/stacked_histogram.md).
+[`hvti_stacked`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_stacked.md).
 
 ## Usage
 

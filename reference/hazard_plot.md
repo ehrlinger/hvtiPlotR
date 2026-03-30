@@ -1,9 +1,48 @@
 # Parametric Hazard / Survival Plot
 
+**Superseded.**
+
+`hazard_plot()` has been superseded by the S3 constructor
+[`hvti_hazard()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_hazard.md)
+plus
+[`plot.hvti_hazard()`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hvti_hazard.md).
+
 Plots a pre-computed parametric survival, hazard, or cumulative-hazard
 curve from a Weibull (or other parametric) model, optionally overlaid
 with Kaplan-Meier empirical estimates and a population life-table
 reference. Covers the complete family of `tp.hp.dead.*` SAS templates.
+
+|                                                       |                                             |
+|-------------------------------------------------------|---------------------------------------------|
+| SAS template                                          | R usage                                     |
+| Basic survival (tp.hp.dead.sas)                       | `hazard_plot(dat, estimate_col="survival")` |
+| Basic hazard (tp.hp.dead.sas)                         | `hazard_plot(dat, estimate_col="hazard")`   |
+| Cumulative hazard (tp.hp.event.weighted.sas)          | `hazard_plot(dat, estimate_col="cumhaz")`   |
+| Stratified by group (tp.hp.dead.tkdn.stratified.sas)  | `+ group_col="group"`                       |
+| KM empirical overlay                                  | `+ empirical=emp_data`                      |
+| Life table overlay (tp.hp.dead.uslife.stratifed.sas)  | `+ reference=lt_data`                       |
+| Age as x-axis (tp.hp.dead.age_on_horizontal_axis.sas) | `x_col="age"`                               |
+
+**SAS column mapping:**
+
+- `x_col` ← `YEARS` / `iv_dead`
+
+- `estimate_col` ← `SSURVIV` (survival), `hazard` (%/yr), or `cumhaz`
+
+- `lower_col` ← `SCLLSURV` / `cll_p95`
+
+- `upper_col` ← `SCLUSURV` / `clu_p95`
+
+- `group_col` ← treatment/group indicator variable
+
+- `empirical` ← the `plout` / `acpdms` KM output dataset
+
+- `reference` ← the `smatched` life-table dataset
+
+Returns a **bare ggplot object**; compose with `scale_colour_*`,
+[`scale_y_continuous()`](https://ggplot2.tidyverse.org/reference/scale_continuous.html),
+[`labs()`](https://ggplot2.tidyverse.org/reference/labs.html),
+[`hvti_theme()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_theme.md).
 
 ## Usage
 
@@ -146,40 +185,6 @@ A
 [`ggplot2::ggplot()`](https://ggplot2.tidyverse.org/reference/ggplot.html)
 object.
 
-## Details
-
-|                                                       |                                             |
-|-------------------------------------------------------|---------------------------------------------|
-| SAS template                                          | R usage                                     |
-| Basic survival (tp.hp.dead.sas)                       | `hazard_plot(dat, estimate_col="survival")` |
-| Basic hazard (tp.hp.dead.sas)                         | `hazard_plot(dat, estimate_col="hazard")`   |
-| Cumulative hazard (tp.hp.event.weighted.sas)          | `hazard_plot(dat, estimate_col="cumhaz")`   |
-| Stratified by group (tp.hp.dead.tkdn.stratified.sas)  | `+ group_col="group"`                       |
-| KM empirical overlay                                  | `+ empirical=emp_data`                      |
-| Life table overlay (tp.hp.dead.uslife.stratifed.sas)  | `+ reference=lt_data`                       |
-| Age as x-axis (tp.hp.dead.age_on_horizontal_axis.sas) | `x_col="age"`                               |
-
-**SAS column mapping:**
-
-- `x_col` ← `YEARS` / `iv_dead`
-
-- `estimate_col` ← `SSURVIV` (survival), `hazard` (%/yr), or `cumhaz`
-
-- `lower_col` ← `SCLLSURV` / `cll_p95`
-
-- `upper_col` ← `SCLUSURV` / `clu_p95`
-
-- `group_col` ← treatment/group indicator variable
-
-- `empirical` ← the `plout` / `acpdms` KM output dataset
-
-- `reference` ← the `smatched` life-table dataset
-
-Returns a **bare ggplot object**; compose with `scale_colour_*`,
-[`scale_y_continuous()`](https://ggplot2.tidyverse.org/reference/scale_continuous.html),
-[`labs()`](https://ggplot2.tidyverse.org/reference/labs.html),
-[`hvti_theme()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_theme.md).
-
 ## References
 
 SAS templates: `tp.hp.dead.sas`, `tp.hp.dead.tkdn.stratified.sas`,
@@ -196,7 +201,7 @@ SAS templates: `tp.hp.dead.sas`, `tp.hp.dead.tkdn.stratified.sas`,
 [`sample_life_table()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_life_table.md),
 [`survival_difference_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/survival_difference_plot.md),
 [`nnt_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/nnt_plot.md),
-[`survival_curve()`](https://ehrlinger.github.io/hvtiPlotR/reference/survival_curve.md),
+[`hvti_survival()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_survival.md),
 [`hvti_theme()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_theme.md)
 
 ## Examples

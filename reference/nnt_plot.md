@@ -1,8 +1,21 @@
 # Number Needed to Treat (NNT) Plot
 
+**Superseded.**
+
+`nnt_plot()` has been superseded by the S3 constructor
+[`hvti_nnt()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_nnt.md)
+plus
+[`plot.hvti_nnt()`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hvti_nnt.md).
+
 Plots the number needed to treat (NNT) and/or absolute risk reduction
 (ARR) over time, with optional confidence bands. Covers the NNT
 component of `tp.hp.numtreat.survdiff.matched.sas`.
+
+**SAS context:** The SAS template computes NNT at discrete time points
+(1, 5, 10, 15, 20 years) from the HAZDIFL macro output, then connects
+them as a curve. Export the NNT dataset and pass it directly, or use
+[`sample_nnt_data()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_nnt_data.md)
+for examples.
 
 ## Usage
 
@@ -60,14 +73,6 @@ nnt_plot(
 A
 [`ggplot2::ggplot()`](https://ggplot2.tidyverse.org/reference/ggplot.html)
 object.
-
-## Details
-
-**SAS context:** The SAS template computes NNT at discrete time points
-(1, 5, 10, 15, 20 years) from the HAZDIFL macro output, then connects
-them as a curve. Export the NNT dataset and pass it directly, or use
-[`sample_nnt_data()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_nnt_data.md)
-for examples.
 
 ## References
 

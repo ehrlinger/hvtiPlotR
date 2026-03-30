@@ -54,4 +54,4 @@ A data frame with one row per patient and 10 columns:
 ## See also
 
 [parametric](https://ehrlinger.github.io/hvtiPlotR/reference/parametric.md),
-[`nonparametric_curve_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/nonparametric_curve_plot.md)
+[`hvti_nonparametric()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_nonparametric.md)

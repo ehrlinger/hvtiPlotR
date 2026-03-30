@@ -31,7 +31,7 @@ A data frame with `n` rows and the following logical columns:
 
 ## See also
 
-[`upset_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/upset_plot.md)
+[`hvti_upset()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_upset.md)
 
 ## Examples
 

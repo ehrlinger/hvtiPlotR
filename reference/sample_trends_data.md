@@ -2,7 +2,7 @@
 
 Generates a realistic patient-level longitudinal data set for
 demonstrating
-[`trends_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/trends_plot.md).
+[`hvti_trends()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_trends.md).
 Each row is one patient with a surgery year, continuous outcome
 (`value`), and a grouping variable (`group`). Trend patterns are
 modelled so that group means diverge over time — matching the
@@ -35,7 +35,7 @@ sample_trends_data(
 
   Character vector of group labels, or `NULL` for a single-group figure
   (no `group` column returned; use with
-  `trends_plot(..., group_col = NULL)`). Default
+  `hvti_trends(..., group_col = NULL)`). Default
   `c("Group I", "Group II", "Group III", "Group IV")`.
 
 - seed:
@@ -55,7 +55,7 @@ A data frame with columns:
 
 ## See also
 
-[`trends_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/trends_plot.md)
+[`hvti_trends()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_trends.md)
 
 ## Examples
 

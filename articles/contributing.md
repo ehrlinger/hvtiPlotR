@@ -124,7 +124,7 @@ companions together.
 #'
 #' @return A bare [ggplot2::ggplot()] object.
 #'
-#' @seealso [nonparametric_curve_plot()], [sample_bmi_curve_data()]
+#' @seealso [hvti_nonparametric()], [sample_bmi_curve_data()]
 #'
 #' @references SAS template: \code{tp.np.bmi.avrg_curv.binary.sas}.
 #'
@@ -588,6 +588,6 @@ sessionInfo()
 
     loaded via a namespace (and not attached):
      [1] compiler_4.5.3  fastmap_1.2.0   cli_3.6.5       tools_4.5.3
-     [5] htmltools_0.5.9 otel_0.2.0      yaml_2.3.12     rmarkdown_2.30
+     [5] htmltools_0.5.9 otel_0.2.0      yaml_2.3.12     rmarkdown_2.31
      [9] knitr_1.51      jsonlite_2.0.0  xfun_0.57       digest_0.6.39
     [13] rlang_1.1.7     evaluate_1.0.5 

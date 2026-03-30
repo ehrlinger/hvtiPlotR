@@ -41,15 +41,11 @@ sample_nonparametric_ordinal_data(
 - grade_labels:
 
   Character vector of grade labels, one per grade level in ascending
-  order. Corresponds to the SAS grade levels (e.g.
-  `c("None", "Mild", "Moderate", "Severe")` for AR grade, or
-  `c("0", "1", "2", "3+")` for TR grade). Default
-  `c("Grade 0", "Grade 1", "Grade 2", "Grade 3")`.
+  order. Default `c("Grade 0", "Grade 1", "Grade 2", "Grade 3")`.
 
 - n_bins:
 
-  Number of equal-sized bins for the data summary points (analogous to
-  SAS `decile = _nobs_/10`). Default `10`.
+  Number of equal-sized bins for the data summary points. Default `10`.
 
 - seed:
 
@@ -69,7 +65,7 @@ and reshape to long format to use your own model output.
 
 ## See also
 
-[`nonparametric_ordinal_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/nonparametric_ordinal_plot.md),
+[`hvti_ordinal()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_ordinal.md),
 [`sample_nonparametric_curve_data()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_nonparametric_curve_data.md),
 [`sample_nonparametric_ordinal_points()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_nonparametric_ordinal_points.md)
 

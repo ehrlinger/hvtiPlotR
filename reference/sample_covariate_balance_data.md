@@ -2,7 +2,7 @@
 
 Produces a reproducible long-format data frame suitable for testing and
 demonstrating
-[`covariate_balance()`](https://ehrlinger.github.io/hvtiPlotR/reference/covariate_balance.md).
+[`hvti_balance()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_balance.md).
 Rather than drawing SMDs from independent normals, this generator
 simulates patient-level covariates through a logistic propensity score
 model, computes group standardized mean differences before matching,

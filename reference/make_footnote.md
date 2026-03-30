@@ -100,7 +100,7 @@ Called for its side effect (draws text on the current device). Returns
 **Typical workflow:**
 
     # During analysis (draft)
-    p <- hazard_plot(...) + hvti_theme("manuscript")
+    p <- plot(hvti_hazard(...)) + hvti_theme("manuscript")
     print(p)
     make_footnote("analysis/mortality.R")   # adds draft annotation
 

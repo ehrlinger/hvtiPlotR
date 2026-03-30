@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="index.html">hvtiPlotR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.0.9002</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.0.9003</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -185,7 +185,7 @@
 </tr><tr class="odd"><td><code>stacked_histogram</code></td>
 <td>Zero-row data frame after filtering</td>
 </tr><tr class="even"><td>Built-in datasets</td>
-<td>Using <code>parametric</code> with <code><a href="reference/hazard_plot.html">hazard_plot()</a></code> and <code>nonparametric</code> with <code><a href="reference/nonparametric_curve_plot.html">nonparametric_curve_plot()</a></code> — these represent the primary production use case but are only checked for structure, not usability</td>
+<td>Using <code>parametric</code> with <code><a href="reference/hazard_plot.html">hazard_plot()</a></code> and <code>nonparametric</code> with <code>nonparametric_curve_plot()</code> — these represent the primary production use case but are only checked for structure, not usability</td>
 </tr></tbody></table></div>
 <div class="section level3">
 <h3 id="id_5-no-cross-function-integration-tests">5. No cross-function integration tests<a class="anchor" aria-label="anchor" href="#id_5-no-cross-function-integration-tests"></a></h3>
@@ -294,7 +294,7 @@
 <code class="sourceCode R"><span><span class="co"># In test_kaplan_meier.R — add near the bottom:</span></span>
 <span></span>
 <span><span class="fu"><a href="https://testthat.r-lib.org/reference/test_that.html" class="external-link">test_that</a></span><span class="op">(</span><span class="st">"survival_curve report_table matches snapshot (fixed seed)"</span>, <span class="op">{</span></span>
-<span>  <span class="va">result</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/survival_curve.html">survival_curve</a></span><span class="op">(</span></span>
+<span>  <span class="va">result</span> <span class="op">&lt;-</span> <span class="fu">survival_curve</span><span class="op">(</span></span>
 <span>    <span class="fu"><a href="reference/sample_survival_data.html">sample_survival_data</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">500</span>, seed <span class="op">=</span> <span class="fl">42</span><span class="op">)</span>,</span>
 <span>    report_times <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">5</span>, <span class="fl">10</span>, <span class="fl">15</span>, <span class="fl">20</span><span class="op">)</span></span>
 <span>  <span class="op">)</span></span>
@@ -305,7 +305,7 @@
 <span></span>
 <span><span class="fu"><a href="https://testthat.r-lib.org/reference/test_that.html" class="external-link">test_that</a></span><span class="op">(</span><span class="st">"mirror_histogram diagnostics match snapshot (fixed seed)"</span>, <span class="op">{</span></span>
 <span>  <span class="va">df</span>     <span class="op">&lt;-</span> <span class="fu"><a href="reference/sample_mirror_histogram_data.html">sample_mirror_histogram_data</a></span><span class="op">(</span><span class="fl">200</span>, seed <span class="op">=</span> <span class="fl">42</span><span class="op">)</span></span>
-<span>  <span class="va">result</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/message.html" class="external-link">suppressMessages</a></span><span class="op">(</span><span class="fu"><a href="reference/mirror_histogram.html">mirror_histogram</a></span><span class="op">(</span><span class="va">df</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="va">result</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/message.html" class="external-link">suppressMessages</a></span><span class="op">(</span><span class="fu">mirror_histogram</span><span class="op">(</span><span class="va">df</span><span class="op">)</span><span class="op">)</span></span>
 <span>  <span class="fu"><a href="https://testthat.r-lib.org/reference/expect_snapshot.html" class="external-link">expect_snapshot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">result</span>, <span class="st">"diagnostics"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span></code></pre></div>
 </div>
@@ -317,7 +317,7 @@
 <span><span class="fu"><a href="https://testthat.r-lib.org/reference/test_that.html" class="external-link">test_that</a></span><span class="op">(</span><span class="st">"survival_curve handles all-censored data gracefully"</span>, <span class="op">{</span></span>
 <span>  <span class="va">dta</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/sample_survival_data.html">sample_survival_data</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">100</span>, seed <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
 <span>  <span class="va">dta</span><span class="op">$</span><span class="va">dead</span> <span class="op">&lt;-</span> <span class="cn">FALSE</span>          <span class="co"># override: no events</span></span>
-<span>  <span class="fu"><a href="https://testthat.r-lib.org/reference/inheritance-expectations.html" class="external-link">expect_s3_class</a></span><span class="op">(</span><span class="fu"><a href="reference/survival_curve.html">survival_curve</a></span><span class="op">(</span><span class="va">dta</span><span class="op">)</span>, <span class="st">"ggplot"</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://testthat.r-lib.org/reference/inheritance-expectations.html" class="external-link">expect_s3_class</a></span><span class="op">(</span><span class="fu">survival_curve</span><span class="op">(</span><span class="va">dta</span><span class="op">)</span>, <span class="st">"ggplot"</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># In test_footnote.R — make_footnote prefix:</span></span>
@@ -366,7 +366,7 @@
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span>target <span class="op">=</span> <span class="va">template</span><span class="op">)</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/on.exit.html" class="external-link">on.exit</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unlink.html" class="external-link">unlink</a></span><span class="op">(</span><span class="va">template</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span>  <span class="va">km</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/survival_curve.html">survival_curve</a></span><span class="op">(</span></span>
+<span>  <span class="va">km</span> <span class="op">&lt;-</span> <span class="fu">survival_curve</span><span class="op">(</span></span>
 <span>    <span class="fu"><a href="reference/sample_survival_data.html">sample_survival_data</a></span><span class="op">(</span></span>
 <span>      n <span class="op">=</span> <span class="fl">100</span>,</span>
 <span>      strata_levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"SAVR"</span>, <span class="st">"TAVR"</span><span class="op">)</span>,</span>
@@ -406,7 +406,7 @@
 <span><span class="fu"><a href="https://testthat.r-lib.org/reference/test_that.html" class="external-link">test_that</a></span><span class="op">(</span><span class="st">"nonparametric dataset works with nonparametric_curve_plot()"</span>, <span class="op">{</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">nonparametric</span>, package <span class="op">=</span> <span class="st">"hvtiPlotR"</span>, envir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/environment.html" class="external-link">environment</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span>  <span class="fu"><a href="https://testthat.r-lib.org/reference/inheritance-expectations.html" class="external-link">expect_s3_class</a></span><span class="op">(</span></span>
-<span>    <span class="fu"><a href="reference/nonparametric_curve_plot.html">nonparametric_curve_plot</a></span><span class="op">(</span><span class="va">nonparametric</span><span class="op">)</span>,</span>
+<span>    <span class="fu">nonparametric_curve_plot</span><span class="op">(</span><span class="va">nonparametric</span><span class="op">)</span>,</span>
 <span>    <span class="st">"ggplot"</span></span>
 <span>  <span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span></code></pre></div>

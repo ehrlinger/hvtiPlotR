@@ -2,12 +2,117 @@
 
 ## hvtiPlotR 2.0.0.9001
 
+## hvtiPlotR 2.0.0
+
+### Breaking changes — new S3 constructor API
+
+All plot functions have been replaced by a two-step S3 workflow:
+
+``` r
+# Step 1: construct & validate
+obj <- hvti_*(data, ...)          # returns c("hvti_<concept>", "hvti_data")
+
+# Step 2: render
+plot(obj, ...) +                  # bare ggplot — no scales, labels, or theme
+  scale_colour_manual(...) +
+  labs(...) +
+  hvti_theme("manuscript")
+```
+
+The old single-call functions (`mirror_histogram()`, `survival_curve()`,
+etc.) are **removed**. This is a clean break; no deprecated wrappers.
+
+#### Constructor → old function mapping
+
+| New constructor                                                                                 | Removed function(s)                                          |
+|-------------------------------------------------------------------------------------------------|--------------------------------------------------------------|
+| [`hvti_mirror()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_mirror.md)               | `mirror_histogram()`                                         |
+| [`hvti_balance()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_balance.md)             | `covariate_balance()`                                        |
+| [`hvti_stacked()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_stacked.md)             | `stacked_histogram()`                                        |
+| [`hvti_survival()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_survival.md)           | `survival_curve()`                                           |
+| [`hvti_nonparametric()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_nonparametric.md) | `nonparametric_curve_plot()`                                 |
+| [`hvti_ordinal()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_ordinal.md)             | `nonparametric_ordinal_plot()`                               |
+| [`hvti_followup()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_followup.md)           | `goodness_followup()` + `goodness_event_plot()`              |
+| [`hvti_trends()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_trends.md)               | `trends_plot()`                                              |
+| [`hvti_spaghetti()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_spaghetti.md)         | `spaghetti_plot()`                                           |
+| [`hvti_longitudinal()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_longitudinal.md)   | `longitudinal_counts_plot()` + `longitudinal_counts_table()` |
+| [`hvti_alluvial()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_alluvial.md)           | `alluvial_plot()`                                            |
+| [`hvti_sankey()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_sankey.md)               | `cluster_sankey_plot()`                                      |
+| [`hvti_eda()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_eda.md)                     | `eda_plot()`                                                 |
+| [`hvti_upset()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_upset.md)                 | `upset_plot()`                                               |
+
+[`hvti_hazard()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_hazard.md)
+\|
+[`hazard_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/hazard_plot.md)
+\|  
+[`hvti_survival_difference()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_survival_difference.md)
+\|
+[`survival_difference_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/survival_difference_plot.md)
+\|  
+[`hvti_nnt()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_nnt.md)
+\|
+[`nnt_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/nnt_plot.md)
+\|
+
+The legacy hazard helpers
+([`hazard_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/hazard_plot.md),
+[`survival_difference_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/survival_difference_plot.md),
+[`nnt_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/nnt_plot.md))
+remain exported but are marked **Superseded** — use the S3 constructors
+above instead.
+
+#### Multi-type constructors
+
+Two constructors replace *pairs* of old functions via a `type =`
+argument on [`plot()`](https://rdrr.io/r/graphics/plot.default.html):
+
+- `hvti_longitudinal` — `plot(x, type = "plot")` (bar chart, was
+  `longitudinal_counts_plot()`) or `plot(x, type = "table")` (text
+  panel, was `longitudinal_counts_table()`).
+- `hvti_followup` — `plot(x, type = "followup")` (death panel, was
+  `goodness_followup()`) or `plot(x, type = "event")` (non-fatal event
+  panel, was `goodness_event_plot()`).
+
+### New base class
+
+- Added `hvti_data` S3 base class (`R/hvti-data.R`). Every `hvti_*`
+  constructor returns `list(data=, meta=, tables=)` with class
+  `c("hvti_<concept>", "hvti_data")`.
+- [`new_hvti_data()`](https://ehrlinger.github.io/hvtiPlotR/reference/new_hvti_data.md)
+  — internal constructor; validates `data` (data.frame), `meta` (named
+  list), `tables` (list), `subclass` (character).
+- [`print.hvti_data()`](https://ehrlinger.github.io/hvtiPlotR/reference/print.hvti_data.md)
+  — fallback print method; shows class, dimensions, and slot names.
+- [`plot.hvti_data()`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hvti_data.md)
+  — fallback plot method; stops with a helpful message if no concrete
+  `plot.hvti_*()` is registered.
+- [`is_hvti_data()`](https://ehrlinger.github.io/hvtiPlotR/reference/is_hvti_data.md)
+  — exported predicate.
+
+### Documentation
+
+- Rewrote `help.R` package-level documentation to describe the new
+  two-step constructor +
+  [`plot()`](https://rdrr.io/r/graphics/plot.default.html) workflow and
+  list all `hvti_*()` constructors.
+- Updated `_pkgdown.yml` reference index: grouped by constructor family,
+  with `plot.*` and `print.*` S3 methods explicitly listed.
+- Updated all vignettes (`plot-functions.qmd`,
+  `sas-migration-guide.qmd`, `plot-decorators.qmd`) to use the new API
+  throughout.
+- Updated `sas-migration-guide.qmd` key-concepts section and template
+  reference table.
+- Fixed all stale `@seealso` cross-references and orphaned old-API
+  docblocks in every migrated R source file.
+
 ### Tests
 
 - Added `tests/testthat/test_hazard_plot.R` — full validation suite for
   `sample_hazard_data`, `sample_hazard_empirical`, `sample_life_table`,
-  and `hazard_plot` (column checks, CI bounds, layer structure,
-  multi-group, non-default column names, input validation).
+  `hvti_hazard`, `hvti_survival_difference`, and `hvti_nnt` (column
+  checks, CI bounds, layer structure, multi-group, non-default column
+  names, input validation, print output, empirical/reference
+  validation).
 - Added `tests/testthat/test_nonparametric_plots.R` — full suite for
   `sample_nonparametric_curve_data`,
   `sample_nonparametric_curve_points`, `nonparametric_curve_plot`,
@@ -16,9 +121,9 @@
   `nonparametric_ordinal_plot`. Includes probability-sum-to-1 invariant
   test for ordinal grades.
 - Added `tests/testthat/test_survival_derived.R` — full suite for
-  `sample_survival_difference_data`, `survival_difference_plot`,
-  `sample_nnt_data`, and `nnt_plot`. Covers NA-NNT at t≈0 edge case and
-  cross-function time-grid consistency.
+  `sample_survival_difference_data`, `sample_nnt_data`, and legacy
+  `survival_difference_plot` / `nnt_plot`. Covers NA-NNT at t≈0 edge
+  case and cross-function time-grid consistency.
 - Added `tests/testthat/test_cluster_sankey.R` — full suite for
   `sample_cluster_sankey_data` and `cluster_sankey_plot`. Validates the
   hierarchical merge tree (C9=A → C2=A) and that each Ck has exactly k
@@ -62,11 +167,9 @@
   and
   [`sample_longitudinal_counts_data()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_longitudinal_counts_data.md).
 - Fixed `km$survival_plot` and `km$risk_table` accessor patterns in
-  `vignettes/plot-decorators.qmd`:
-  [`survival_curve()`](https://ehrlinger.github.io/hvtiPlotR/reference/survival_curve.md)
-  returns a ggplot with *attributes*, not a named list. Replaced with
-  `km` (the returned object IS the survival plot) and
-  `attr(km, "risk_table")`.
+  `vignettes/plot-decorators.qmd`: `survival_curve()` returns a ggplot
+  with *attributes*, not a named list. Replaced with `km` (the returned
+  object IS the survival plot) and `attr(km, "risk_table")`.
 - Fixed patchwork operator-precedence bug in
   `vignettes/plot-decorators.qmd`: `p_ms | p_km_ms + plot_layout(...)` →
   `(p_ms | p_km_ms) + plot_layout(...)`.
@@ -86,20 +189,18 @@
 
 ### Input validation improvements
 
-- **[`upset_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/upset_plot.md)**
-  — added binary-column type check. ComplexUpset silently produces
-  broken plots when `intersect` columns contain non-binary values; the
-  function now errors with a clear message listing the offending columns
-  before handing off to ComplexUpset.
+- **`upset_plot()`** — added binary-column type check. ComplexUpset
+  silently produces broken plots when `intersect` columns contain
+  non-binary values; the function now errors with a clear message
+  listing the offending columns before handing off to ComplexUpset.
 - **[`sample_stacked_histogram_data()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_stacked_histogram_data.md)**
   — added `start_year` validation (previously `n_years` and
   `n_categories` were checked but `start_year` was not; a non-integer or
   non-finite value produced silently nonsensical output).
-- **[`trends_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/trends_plot.md)**
-  — moved `match.arg(summary_fn)` to after the data-frame and column
-  checks, so users see a clear `data` / column error rather than an
-  opaque `'arg' should be one of...` message when both `data` and
-  `summary_fn` are wrong.
+- **`trends_plot()`** — moved `match.arg(summary_fn)` to after the
+  data-frame and column checks, so users see a clear `data` / column
+  error rather than an opaque `'arg' should be one of...` message when
+  both `data` and `summary_fn` are wrong.
 - **`validators.R`** — added two scalar-parameter helpers:
   `.check_scalar_positive()` (finite, positive) and
   `.check_scalar_nonneg()` (finite, non-negative).
@@ -121,16 +222,11 @@
 ### Bug fixes / API consistency
 
 - **Standardised `alpha` range to `[0, 1]`** across all plot functions.
-  Previously
-  [`survival_curve()`](https://ehrlinger.github.io/hvtiPlotR/reference/survival_curve.md),
-  [`covariate_balance()`](https://ehrlinger.github.io/hvtiPlotR/reference/covariate_balance.md),
-  [`mirror_histogram()`](https://ehrlinger.github.io/hvtiPlotR/reference/mirror_histogram.md),
-  [`spaghetti_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/spaghetti_plot.md),
-  and `goodness_followup_death_plot()` /
-  `goodness_followup_event_plot()` used `(0, 1]` (rejecting
-  `alpha = 0`), while
-  [`alluvial_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/alluvial_plot.md)
-  used `[0, 1]`. All functions now accept `[0, 1]` — `alpha = 0` (fully
+  Previously `survival_curve()`, `covariate_balance()`,
+  `mirror_histogram()`, `spaghetti_plot()`, and
+  `goodness_followup_death_plot()` / `goodness_followup_event_plot()`
+  used `(0, 1]` (rejecting `alpha = 0`), while `alluvial_plot()` used
+  `[0, 1]`. All functions now accept `[0, 1]` — `alpha = 0` (fully
   transparent) is a valid ggplot2 value and should not be an error.
 - **Added `.check_alpha()` shared validator** in `R/validators.R`.
   Enforces `alpha ∈ [0, 1]` with `call. = FALSE` and is called from
@@ -176,14 +272,12 @@
 
 ## hvtiPlotR 2.0.0.9000
 
-- Added
-  [`eda_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/eda_plot.md)
-  — exploratory barplot/scatterplot for a single variable. Auto-detects
-  variable type (`"Cont"`, `"Cat_Num"`, `"Cat_Char"`) and dispatches to
-  scatter + LOESS + rug (continuous) or stacked/filled bar
-  (categorical). `NA` values are shown as an explicit `"(Missing)"` fill
-  level. Returns a bare ggplot object for composition with
-  `scale_fill_*`, `scale_colour_*`,
+- Added `eda_plot()` — exploratory barplot/scatterplot for a single
+  variable. Auto-detects variable type (`"Cont"`, `"Cat_Num"`,
+  `"Cat_Char"`) and dispatches to scatter + LOESS + rug (continuous) or
+  stacked/filled bar (categorical). `NA` values are shown as an explicit
+  `"(Missing)"` fill level. Returns a bare ggplot object for composition
+  with `scale_fill_*`, `scale_colour_*`,
   [`labs()`](https://ggplot2.tidyverse.org/reference/labs.html),
   [`annotate()`](https://ggplot2.tidyverse.org/reference/annotate.html),
   and \[hvti_theme()\]. Ports `Function_DataPlotting()` from
@@ -203,25 +297,21 @@
   [`sample_eda_data()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_eda_data.md)
   — mixed-type cardiac-surgery registry simulation (binary, ordinal,
   character-categorical, and continuous variables) for demonstrating
-  [`eda_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/eda_plot.md)
-  and
+  `eda_plot()` and
   [`eda_select_vars()`](https://ehrlinger.github.io/hvtiPlotR/reference/eda_select_vars.md).
 - Reorganised `inst/`: moved `par_cst.xpt` and `npar_cst.xpt` to
   `inst/extdata/` (standard R package location for bundled data files);
   removed unreferenced presentation and test artefacts (`*.pptx`,
   `*.pdf`, `*.sas` scratch files).
-- Extended
-  [`nonparametric_curve_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/nonparametric_curve_plot.md)
-  examples: added dual-Y-axis example (Example 10, `\dontrun`) using
+- Extended `nonparametric_curve_plot()` examples: added dual-Y-axis
+  example (Example 10, `\dontrun`) using
   `scale_y_continuous(sec.axis = ...)`; noted `cll_p95`/`clu_p95` column
   availability for 95 % CI (Example 2) and per-group shape mapping via
   [`scale_shape_manual()`](https://ggplot2.tidyverse.org/reference/scale_manual.html)
   (Example 4).
-- Extended
-  [`nonparametric_ordinal_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/nonparametric_ordinal_plot.md)
-  examples: added pre-operative severity comparison example grouping
-  combined Mild/Moderate/Severe cohorts through
-  [`nonparametric_curve_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/nonparametric_curve_plot.md).
+- Extended `nonparametric_ordinal_plot()` examples: added pre-operative
+  severity comparison example grouping combined Mild/Moderate/Severe
+  cohorts through `nonparametric_curve_plot()`.
 - Split vignette into three: `hvtiPlotR.qmd` (SAS migration guide),
   `plot-functions.qmd` (per-function reference with worked examples),
   `plot-decorators.qmd` (composition grammar: `scale_*`,
@@ -231,40 +321,31 @@
 
 ## hvtiPlotR 1.1.0
 
-- Added
-  [`survival_curve()`](https://ehrlinger.github.io/hvtiPlotR/reference/survival_curve.md)
-  — Kaplan-Meier and Nelson-Aalen survival analysis returning five plot
-  types (survival, cumulative hazard, hazard, log-log, life/RMST) plus
-  risk and report tables. Ports the SAS `%kaplan` and `%nelsont` macros
-  from `tp.ac.dead.sas`.
+- Added `survival_curve()` — Kaplan-Meier and Nelson-Aalen survival
+  analysis returning five plot types (survival, cumulative hazard,
+  hazard, log-log, life/RMST) plus risk and report tables. Ports the SAS
+  `%kaplan` and `%nelsont` macros from `tp.ac.dead.sas`.
 - Added
   [`sample_survival_data()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_survival_data.md)
   — realistic exponential survival simulation with administrative
   censoring and optional treatment strata.
-- Added
-  [`goodness_followup()`](https://ehrlinger.github.io/hvtiPlotR/reference/goodness_followup.md)
-  — goodness-of-follow-up scatter plot showing actual vs. potential
-  follow-up per operation year, with optional non-fatal event panel.
+- Added `goodness_followup()` — goodness-of-follow-up scatter plot
+  showing actual vs. potential follow-up per operation year, with
+  optional non-fatal event panel.
 - Added
   [`sample_goodness_followup_data()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_goodness_followup_data.md)
   — simulates an operative cohort with operation dates, follow-up times,
   competing events, and death.
-- Added
-  [`covariate_balance()`](https://ehrlinger.github.io/hvtiPlotR/reference/covariate_balance.md)
-  — standardised mean difference dot-plot for propensity-score matching
-  or weighting diagnostics.
+- Added `covariate_balance()` — standardised mean difference dot-plot
+  for propensity-score matching or weighting diagnostics.
 - Added
   [`sample_covariate_balance_data()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_covariate_balance_data.md)
   — patient-level logistic simulation with greedy 1:1 caliper matching;
   SMDs computed before and after matching.
-- Added
-  [`stacked_histogram()`](https://ehrlinger.github.io/hvtiPlotR/reference/stacked_histogram.md)
-  and
+- Added `stacked_histogram()` and
   [`sample_stacked_histogram_data()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_stacked_histogram_data.md)
   — stacked or filled histogram of a numeric variable by group.
-- Improved
-  [`mirror_histogram()`](https://ehrlinger.github.io/hvtiPlotR/reference/mirror_histogram.md)
-  sample data
+- Improved `mirror_histogram()` sample data
   ([`sample_mirror_histogram_data()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_mirror_histogram_data.md))
   to use a realistic logistic propensity-score model with greedy 1:1
   caliper matching and optional ATE IPTW weights; extreme-PS patients

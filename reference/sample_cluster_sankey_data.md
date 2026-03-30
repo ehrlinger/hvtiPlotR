@@ -54,7 +54,7 @@ by the hierarchical cluster labels.
 
 ## See also
 
-[`cluster_sankey_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/cluster_sankey_plot.md)
+[`hvti_sankey()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_sankey.md)
 
 ## Examples
 

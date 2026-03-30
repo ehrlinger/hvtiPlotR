@@ -15,11 +15,13 @@ library(hvtiPlotR)
 
 ## The Composition Pattern
 
-Every hvtiPlotR plot function returns a bare `ggplot` object — no colour
-scales, axis labels, or theme are applied. Decoration is added by
-chaining layers with `+`:
+Every hvtiPlotR plot is built in two steps: a constructor (`hvti_*()`)
+that shapes the data, followed by
+[`plot()`](https://rdrr.io/r/graphics/plot.default.html) that renders a
+bare `ggplot` object. No colour scales, axis labels, or theme are
+applied by either step. Decoration is added by chaining layers with `+`:
 
-    bare_plot() +
+    plot(hvti_*(...)) +
       scale_colour_*() +   # data colours
       scale_fill_*()   +   # fill colours
       labs()           +   # axis labels, title, caption
@@ -28,19 +30,19 @@ chaining layers with `+`:
       hvti_theme()         # non-data formatting
 
 This vignette demonstrates each decorator in turn, using
-[`trends_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/trends_plot.md)
+[`hvti_trends()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_trends.md)
 and
-[`survival_curve()`](https://ehrlinger.github.io/hvtiPlotR/reference/survival_curve.md)
+[`hvti_survival()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_survival.md)
 as representative base plots.
 
 ``` r
 # Trends data — multi-group continuous outcome over time
 dta_trends <- sample_trends_data(n = 600, seed = 42)
-p_base <- trends_plot(dta_trends)
+p_base     <- plot(hvti_trends(dta_trends))
 
 # KM data — survival curve
-dta_km  <- sample_survival_data(n = 500, seed = 42)
-km      <- survival_curve(dta_km, alpha = 0.8)
+dta_km <- sample_survival_data(n = 500, seed = 42)
+km     <- hvti_survival(dta_km)
 ```
 
 ## Themes
@@ -133,7 +135,7 @@ Use
 when assigning specific brand or convention colours to known levels.
 
 ``` r
-km +
+plot(km) +
   scale_color_manual(values = c(All = "steelblue"), guide = "none") +
   scale_fill_manual(values  = c(All = "steelblue"), guide = "none") +
   scale_y_continuous(breaks = seq(0, 100, 20),
@@ -196,7 +198,7 @@ rather than inside the plot function so they can be overridden per
 project.
 
 ``` r
-km +
+plot(km) +
   scale_color_manual(values = c(All = "steelblue"), guide = "none") +
   scale_fill_manual(values  = c(All = "steelblue"), guide = "none") +
   scale_y_continuous(breaks = seq(0, 100, 20),
@@ -221,7 +223,7 @@ places text, segments, or rectangles at fixed data coordinates. Use it
 for sample size callouts, phase labels, or directional arrows.
 
 ``` r
-km +
+plot(km) +
   scale_color_manual(values = c(All = "steelblue"), guide = "none") +
   scale_fill_manual(values  = c(All = "steelblue"), guide = "none") +
   scale_y_continuous(breaks = seq(0, 100, 20),
@@ -366,9 +368,9 @@ one slide per plot in a single call.
 
 ``` r
 dta_km2 <- sample_survival_data(n = 400, seed = 99)
-km2     <- survival_curve(dta_km2)
+km2     <- hvti_survival(dta_km2)
 
-p_km_ppt <- km2 +
+p_km_ppt <- plot(km2) +
   scale_color_manual(values = c(All = "white"), guide = "none") +
   scale_fill_manual(values  = c(All = "white"), guide = "none") +
   scale_y_continuous(breaks = seq(0, 100, 20),
@@ -395,13 +397,13 @@ arranges them into a grid and
 each page.
 
 ``` r
-# Build a list of plots (e.g. from an eda_plot() lapply loop)
+# Build a list of plots (e.g. from an hvti_eda() lapply loop)
 plot_list <- lapply(
   c("ef", "lv_mass", "peak_grad"),
   function(yv) {
     dta_eda <- sample_eda_data()
-    eda_plot(dta_eda, x_col = "op_years", y_col = yv,
-             y_label = yv) +
+    plot(hvti_eda(dta_eda, x_col = "op_years", y_col = yv,
+                 y_label = yv)) +
       scale_colour_manual(values = c("steelblue"), guide = "none") +
       labs(x = "Years") +
       hvti_theme("manuscript")
@@ -476,7 +478,7 @@ p_base +
 ### Suppress all legends
 
 ``` r
-km +
+plot(km) +
   scale_color_manual(values = c(All = "steelblue"), guide = "none") +
   scale_fill_manual(values  = c(All = "steelblue"), guide = "none") +
   scale_y_continuous(breaks = seq(0, 100, 20),
@@ -586,7 +588,7 @@ Titles are stripped from the base themes (they are rarely used in
 journal figures), but can be added back:
 
 ``` r
-km +
+plot(km) +
   scale_color_manual(values = c(All = "steelblue"), guide = "none") +
   scale_fill_manual(values  = c(All = "steelblue"), guide = "none") +
   scale_y_continuous(breaks = seq(0, 100, 20),
@@ -651,7 +653,7 @@ p_ms <- p_base +
   labs(x = "Surgery Year", y = "Outcome") +
   hvti_theme("manuscript")
 
-p_km_ms <- km +
+p_km_ms <- plot(km) +
   scale_color_manual(values = c(All = "steelblue"), guide = "none") +
   scale_fill_manual(values  = c(All = "steelblue"), guide = "none") +
   scale_y_continuous(breaks = seq(0, 100, 20),
@@ -681,13 +683,13 @@ p_ms | p_km_ms
 
 A common pattern with survival curves is to pair the plot with a
 numbers-at-risk panel.
-[`survival_curve()`](https://ehrlinger.github.io/hvtiPlotR/reference/survival_curve.md)
-returns the risk table as a data frame via `attr(result, "risk_table")`
-— columns `strata`, `report_time`, `n.risk`. Build a ggplot text panel
-from it, then stack with `/`.
+[`hvti_survival()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_survival.md)
+stores the risk table as a data frame at `km$tables$risk` — columns
+`strata`, `report_time`, `n.risk`. Build a ggplot text panel from it,
+then stack with `/`.
 
 ``` r
-risk_df <- attr(km, "risk_table")
+risk_df <- km$tables$risk
 
 rt_panel <- ggplot(risk_df,
                    aes(x = report_time, y = factor(strata),

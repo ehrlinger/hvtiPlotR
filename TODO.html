@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="index.html">hvtiPlotR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.0.9002</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.0.9003</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -46,64 +46,75 @@
 <p>Test each plot function with production data before the full 2.0.0 release. Mark each item complete once the output has been visually verified and any issues resolved.</p>
 <div class="section level2">
 <h2 id="plot-functions">Plot functions<a class="anchor" aria-label="anchor" href="#plot-functions"></a></h2>
-<table class="table"><thead><tr class="header"><th>Status</th>
-<th>Function</th>
+<table class="table"><colgroup><col width="21%"><col width="59%"><col width="18%"></colgroup><thead><tr class="header"><th>Status</th>
+<th>Constructor / Function</th>
 <th>Notes</th>
 </tr></thead><tbody><tr class="odd"><td>[ ]</td>
-<td><code><a href="reference/mirror_histogram.html">mirror_histogram()</a></code></td>
-<td></td>
-</tr><tr class="even"><td>[ ]</td>
-<td><code><a href="reference/stacked_histogram.html">stacked_histogram()</a></code></td>
-<td></td>
-</tr><tr class="odd"><td>[ ]</td>
-<td><code><a href="reference/goodness_followup.html">goodness_followup()</a></code></td>
-<td></td>
-</tr><tr class="even"><td>[ ]</td>
-<td><code><a href="reference/goodness_event_plot.html">goodness_event_plot()</a></code></td>
-<td></td>
-</tr><tr class="odd"><td>[ ]</td>
-<td><code><a href="reference/covariate_balance.html">covariate_balance()</a></code></td>
-<td></td>
-</tr><tr class="even"><td>[ ]</td>
-<td><code><a href="reference/survival_curve.html">survival_curve()</a></code></td>
-<td></td>
-</tr><tr class="odd"><td>[ ]</td>
-<td><code><a href="reference/nonparametric_curve_plot.html">nonparametric_curve_plot()</a></code></td>
-<td></td>
-</tr><tr class="even"><td>[ ]</td>
-<td><code><a href="reference/nonparametric_ordinal_plot.html">nonparametric_ordinal_plot()</a></code></td>
-<td></td>
-</tr><tr class="odd"><td>[ ]</td>
-<td><code><a href="reference/eda_plot.html">eda_plot()</a></code></td>
-<td></td>
-</tr><tr class="even"><td>[ ]</td>
-<td><code><a href="reference/spaghetti_plot.html">spaghetti_plot()</a></code></td>
-<td></td>
-</tr><tr class="odd"><td>[ ]</td>
-<td><code><a href="reference/trends_plot.html">trends_plot()</a></code></td>
-<td></td>
-</tr><tr class="even"><td>[ ]</td>
-<td><code><a href="reference/longitudinal_counts_plot.html">longitudinal_counts_plot()</a></code></td>
-<td></td>
-</tr><tr class="odd"><td>[ ]</td>
-<td><code><a href="reference/alluvial_plot.html">alluvial_plot()</a></code></td>
-<td>formerly <code>sankey_plot()</code>
+<td><code><a href="reference/hvti_mirror.html">hvti_mirror()</a></code></td>
+<td>formerly <code>mirror_histogram()</code>
 </td>
 </tr><tr class="even"><td>[ ]</td>
-<td><code><a href="reference/cluster_sankey_plot.html">cluster_sankey_plot()</a></code></td>
-<td>requires <code>ggsankey</code> (GitHub)</td>
+<td><code><a href="reference/hvti_stacked.html">hvti_stacked()</a></code></td>
+<td>formerly <code>stacked_histogram()</code>
+</td>
 </tr><tr class="odd"><td>[ ]</td>
-<td><code><a href="reference/upset_plot.html">upset_plot()</a></code></td>
-<td></td>
+<td><code><a href="reference/hvti_followup.html">hvti_followup()</a></code></td>
+<td>formerly <code>goodness_followup()</code> + <code>goodness_event_plot()</code>
+</td>
 </tr><tr class="even"><td>[ ]</td>
-<td><code><a href="reference/hazard_plot.html">hazard_plot()</a></code></td>
-<td>parametric survival; tp.hs.* family</td>
+<td><code><a href="reference/hvti_balance.html">hvti_balance()</a></code></td>
+<td>formerly <code>covariate_balance()</code>
+</td>
 </tr><tr class="odd"><td>[ ]</td>
-<td><code><a href="reference/survival_difference_plot.html">survival_difference_plot()</a></code></td>
-<td>treatment benefit vs. reference</td>
+<td><code><a href="reference/hvti_survival.html">hvti_survival()</a></code></td>
+<td>formerly <code>survival_curve()</code>
+</td>
 </tr><tr class="even"><td>[ ]</td>
-<td><code><a href="reference/nnt_plot.html">nnt_plot()</a></code></td>
-<td>number needed to treat</td>
+<td><code><a href="reference/hvti_nonparametric.html">hvti_nonparametric()</a></code></td>
+<td>formerly <code>nonparametric_curve_plot()</code>
+</td>
+</tr><tr class="odd"><td>[ ]</td>
+<td><code><a href="reference/hvti_ordinal.html">hvti_ordinal()</a></code></td>
+<td>formerly <code>nonparametric_ordinal_plot()</code>
+</td>
+</tr><tr class="even"><td>[ ]</td>
+<td><code><a href="reference/hvti_eda.html">hvti_eda()</a></code></td>
+<td>formerly <code>eda_plot()</code>
+</td>
+</tr><tr class="odd"><td>[ ]</td>
+<td><code><a href="reference/hvti_spaghetti.html">hvti_spaghetti()</a></code></td>
+<td>formerly <code>spaghetti_plot()</code>
+</td>
+</tr><tr class="even"><td>[ ]</td>
+<td><code><a href="reference/hvti_trends.html">hvti_trends()</a></code></td>
+<td>formerly <code>trends_plot()</code>
+</td>
+</tr><tr class="odd"><td>[ ]</td>
+<td><code><a href="reference/hvti_longitudinal.html">hvti_longitudinal()</a></code></td>
+<td>formerly <code>longitudinal_counts_plot()</code> + <code>longitudinal_counts_table()</code>
+</td>
+</tr><tr class="even"><td>[ ]</td>
+<td><code><a href="reference/hvti_alluvial.html">hvti_alluvial()</a></code></td>
+<td>formerly <code>alluvial_plot()</code>
+</td>
+</tr><tr class="odd"><td>[ ]</td>
+<td><code><a href="reference/hvti_sankey.html">hvti_sankey()</a></code></td>
+<td>formerly <code>cluster_sankey_plot()</code>; requires <code>ggsankey</code> (GitHub)</td>
+</tr><tr class="even"><td>[ ]</td>
+<td><code><a href="reference/hvti_upset.html">hvti_upset()</a></code></td>
+<td>formerly <code>upset_plot()</code>
+</td>
+</tr><tr class="odd"><td>[x]</td>
+<td><code><a href="reference/hvti_hazard.html">hvti_hazard()</a></code></td>
+<td>parametric survival; replaces <code><a href="reference/hazard_plot.html">hazard_plot()</a></code>; tp.hp.dead.* family</td>
+</tr><tr class="even"><td>[x]</td>
+<td><code><a href="reference/hvti_survival_difference.html">hvti_survival_difference()</a></code></td>
+<td>treatment benefit vs. reference; replaces <code><a href="reference/survival_difference_plot.html">survival_difference_plot()</a></code>
+</td>
+</tr><tr class="odd"><td>[x]</td>
+<td><code><a href="reference/hvti_nnt.html">hvti_nnt()</a></code></td>
+<td>number needed to treat; replaces <code><a href="reference/nnt_plot.html">nnt_plot()</a></code>
+</td>
 </tr></tbody></table></div>
 </div>
 

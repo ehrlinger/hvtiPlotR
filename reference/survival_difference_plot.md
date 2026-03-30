@@ -1,8 +1,20 @@
 # Survival Difference (Life-Gained) Plot
 
+**Superseded.**
+
+`survival_difference_plot()` has been superseded by the S3 constructor
+[`hvti_survival_difference()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_survival_difference.md)
+plus
+[`plot.hvti_survival_difference()`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hvti_survival_difference.md).
+
 Plots the difference in survival between two groups over time, with an
 optional confidence band. Covers `tp.hp.dead.life-gained.sas` and the
 survival-difference component of `tp.hp.numtreat.survdiff.matched.sas`.
+
+**SAS context:** The `HAZDIFL` macro in `tp.hp.dead.life-gained.sas`
+bootstraps the difference `S_2(t) - S_1(t)` (or `S_1(t) - S_2(t)`) and
+stores the result in a `diffout` dataset. Export that dataset and pass
+it here with the appropriate column names.
 
 ## Usage
 
@@ -60,13 +72,6 @@ survival_difference_plot(
 A
 [`ggplot2::ggplot()`](https://ggplot2.tidyverse.org/reference/ggplot.html)
 object.
-
-## Details
-
-**SAS context:** The `HAZDIFL` macro in `tp.hp.dead.life-gained.sas`
-bootstraps the difference `S_2(t) - S_1(t)` (or `S_1(t) - S_2(t)`) and
-stores the result in a `diffout` dataset. Export that dataset and pass
-it here with the appropriate column names.
 
 ## References
 

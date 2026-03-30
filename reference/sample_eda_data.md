@@ -2,7 +2,7 @@
 
 Generates a realistic mixed-type patient-level data frame for
 demonstrating
-[`eda_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/eda_plot.md)
+[`hvti_eda()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_eda.md)
 and
 [`eda_select_vars()`](https://ehrlinger.github.io/hvtiPlotR/reference/eda_select_vars.md).
 The data mimics a cardiac surgery registry with binary, ordinal,
@@ -56,7 +56,7 @@ A data frame with columns:
 
 ## See also
 
-[`eda_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/eda_plot.md),
+[`hvti_eda()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_eda.md),
 [`eda_classify_var()`](https://ehrlinger.github.io/hvtiPlotR/reference/eda_classify_var.md),
 [`eda_select_vars()`](https://ehrlinger.github.io/hvtiPlotR/reference/eda_select_vars.md)
 
