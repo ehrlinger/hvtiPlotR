@@ -23,13 +23,11 @@ data-point variability). Default \code{1000}.}
 \code{500}.}
 
 \item{grade_labels}{Character vector of grade labels, one per grade level
-in ascending order. Corresponds to the SAS grade levels (e.g.
-\code{c("None", "Mild", "Moderate", "Severe")} for AR grade, or
-\code{c("0", "1", "2", "3+")} for TR grade). Default
+in ascending order. Default
 \code{c("Grade 0", "Grade 1", "Grade 2", "Grade 3")}.}
 
-\item{n_bins}{Number of equal-sized bins for the data summary points
-(analogous to SAS \verb{decile = _nobs_/10}). Default \code{10}.}
+\item{n_bins}{Number of equal-sized bins for the data summary points.
+Default \code{10}.}
 
 \item{seed}{Random seed. Default \code{42}.}
 }
@@ -60,6 +58,6 @@ tapply(dat$estimate[dat$time == dat$time[1]],
        dat$grade[dat$time == dat$time[1]], sum)
 }
 \seealso{
-\code{\link[=nonparametric_ordinal_plot]{nonparametric_ordinal_plot()}}, \code{\link[=sample_nonparametric_curve_data]{sample_nonparametric_curve_data()}},
+\code{\link[=hvti_ordinal]{hvti_ordinal()}}, \code{\link[=sample_nonparametric_curve_data]{sample_nonparametric_curve_data()}},
 \code{\link[=sample_nonparametric_ordinal_points]{sample_nonparametric_ordinal_points()}}
 }

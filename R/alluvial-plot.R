@@ -18,7 +18,7 @@
 #' Sample Sankey / Alluvial Data
 #'
 #' Generates a realistic cardiac-surgery data set suitable for demonstrating
-#' [alluvial_plot()]. Each row represents a unique combination of pre-operative
+#' [hvti_alluvial()]. Each row represents a unique combination of pre-operative
 #' AV regurgitation grade, surgical procedure type, and post-operative AV
 #' regurgitation grade, together with the patient count (`freq`) for that
 #' combination. The co-occurrence structure reflects realistic clinical
@@ -33,7 +33,7 @@
 #'   `pre_ar` (factor), `procedure` (factor), `post_ar` (factor), `freq`
 #'   (integer count). Rows with `freq == 0` are excluded.
 #'
-#' @seealso [alluvial_plot()]
+#' @seealso [hvti_alluvial()]
 #'
 #' @examples
 #' dta <- sample_alluvial_data(n = 300, seed = 42)
@@ -79,57 +79,45 @@ sample_alluvial_data <- function(n = 300, seed = 42L) {
 }
 
 # ---------------------------------------------------------------------------
+# Public API
+# ---------------------------------------------------------------------------
 
-#' Sankey / Alluvial Plot
+#' Prepare alluvial / Sankey diagram data for plotting
 #'
-#' Produces a Sankey (alluvial) diagram using [ggalluvial::geom_alluvium()] and
-#' [ggalluvial::geom_stratum()]. Axes are specified as a character vector so
-#' the number of stages is not hard-coded. Returns a bare ggplot object for
-#' composition with `scale_*`, `labs()`, and [hvti_theme()].
+#' Validates a wide alluvial-format data frame and returns an
+#' \code{hvti_alluvial} object.  Call \code{\link{plot.hvti_alluvial}} on the
+#' result to obtain a bare \code{ggplot2} alluvial diagram that you can
+#' decorate with colour scales, axis labels, and \code{\link{hvti_theme}}.
 #'
-#' **Data format:** one row per unique combination of axis values, with a
-#' numeric weight column (`y_col`). This matches the frequency / summary table
-#' format used in the SAS template (`ardat` with `percent` as `y`).
-#'
-#' **Colours:** flows are unfilled by default. Map a column to `fill_col` and
-#' add `scale_fill_manual()` or `scale_fill_brewer()` to the returned object.
-#' Stratum bars use `stratum_fill` (default `"grey80"`) and are independent of
-#' the flow fill scale.
-#'
-#' @param data          A data frame in wide alluvial format: one row per
+#' @param data        A data frame in wide alluvial format: one row per
 #'   axis-value combination, a numeric weight column, and one column per axis.
-#' @param axes          Character vector of column names to use as axes, in
+#' @param axes        Character vector of column names to use as axes, in
 #'   left-to-right display order. Minimum two columns.
-#' @param y_col         Name of the numeric weight column (counts or
-#'   proportions). Default `"freq"`.
-#' @param fill_col      Name of the column to map to the flow fill and colour
-#'   aesthetics, or `NULL` for a single fill. Default `NULL`.
-#' @param axis_labels   Character vector of axis labels for the x-axis, the
-#'   same length as `axes`. Defaults to `axes` (column names).
-#' @param stratum_fill  Fill colour for the stratum bars. Default `"grey80"`.
-#' @param stratum_width Width of the stratum bars as a fraction of axis
-#'   spacing. Default `1/4`.
-#' @param flow_width    Width of the alluvium flows. Default `1/6`.
-#' @param alpha         Transparency of the flows, `[0, 1]`. Default `0.8`.
-#' @param knot_pos      Curvature of the flow ribbons, `[0, 1]`. Default `0.4`.
-#' @param show_labels   Logical; whether to label each stratum with its value.
-#'   Default `TRUE`.
+#' @param y_col       Name of the numeric weight column (counts or
+#'   proportions). Default \code{"freq"}.
+#' @param fill_col    Name of the column to map to the flow fill and colour
+#'   aesthetics, or \code{NULL} for a single fill. Default \code{NULL}.
+#' @param axis_labels Character vector of axis labels for the x-axis, the
+#'   same length as \code{axes}. Defaults to \code{axes} (column names).
 #'
-#' @return A [ggplot2::ggplot()] object. Compose with `scale_fill_*`,
-#'   `scale_colour_*`, `labs()`, `annotate()`, and [hvti_theme()].
+#' @return An object of class \code{c("hvti_alluvial", "hvti_data")}:
+#' \describe{
+#'   \item{\code{$data}}{The validated input data frame.}
+#'   \item{\code{$meta}}{Named list: \code{axes}, \code{y_col},
+#'     \code{fill_col}, \code{axis_labels}, \code{n_axes}, \code{n_obs}.}
+#'   \item{\code{$tables}}{Empty list.}
+#' }
 #'
-#' @seealso [ggalluvial::geom_alluvium()], [ggalluvial::geom_stratum()],
-#'   [sample_alluvial_data()], [hvti_theme()]
+#' @seealso \code{\link{plot.hvti_alluvial}}, \code{\link{sample_alluvial_data}}
 #'
 #' @examples
 #' dta  <- sample_alluvial_data(n = 300, seed = 42)
 #' axes <- c("pre_ar", "procedure", "post_ar")
+#' al   <- hvti_alluvial(dta, axes = axes, y_col = "freq",
+#'                       fill_col = "pre_ar")
+#' al   # prints axes, obs count
 #'
-#' # --- Bare plot -----------------------------------------------------------
-#' alluvial_plot(dta, axes = axes, y_col = "freq")
-#'
-#' # --- Fill flows by pre-operative AR grade + manuscript theme -------------
-#' alluvial_plot(dta, axes = axes, y_col = "freq", fill_col = "pre_ar") +
+#' plot(al) +
 #'   ggplot2::scale_fill_manual(
 #'     values = c(None     = "steelblue",
 #'                Mild     = "goldenrod",
@@ -144,70 +132,17 @@ sample_alluvial_data <- function(n = 300, seed = 42L) {
 #'                Severe   = "firebrick"),
 #'     guide = "none"
 #'   ) +
-#'   ggplot2::scale_x_continuous(
-#'     breaks = 1:3,
-#'     labels = c("Pre-op AR", "Procedure", "Post-op AR"),
-#'     expand = c(0.05, 0.05)
-#'   ) +
 #'   ggplot2::labs(y = "Patients (n)",
 #'                 title = "AV Regurgitation: Pre- to Post-operative") +
 #'   hvti_theme("manuscript")
 #'
-#' # --- Fill flows by procedure with RColorBrewer palette -------------------
-#' alluvial_plot(dta, axes = axes, y_col = "freq", fill_col = "procedure") +
-#'   ggplot2::scale_fill_brewer(palette = "Set2", name = "Procedure") +
-#'   ggplot2::scale_colour_brewer(palette = "Set2", guide = "none") +
-#'   ggplot2::scale_x_continuous(
-#'     breaks = 1:3,
-#'     labels = c("Pre-op AR", "Procedure", "Post-op AR"),
-#'     expand = c(0.05, 0.05)
-#'   ) +
-#'   ggplot2::labs(y = "Patients (n)") +
-#'   hvti_theme("manuscript")
-#'
-#' # --- Two-axis (before / after) with annotation ---------------------------
-#' alluvial_plot(
-#'   dta, axes = c("pre_ar", "post_ar"), y_col = "freq",
-#'   fill_col = "pre_ar", axis_labels = c("Pre-operative", "Post-operative")
-#' ) +
-#'   ggplot2::scale_fill_brewer(palette = "RdYlGn", direction = -1,
-#'                              name = "AR Grade") +
-#'   ggplot2::scale_colour_brewer(palette = "RdYlGn", direction = -1,
-#'                                guide = "none") +
-#'   ggplot2::annotate("text", x = 1.5, y = 250,
-#'                     label = "Improvement after surgery",
-#'                     size = 3.5, fontface = "italic") +
-#'   ggplot2::labs(y = "Patients (n)",
-#'                 title = "AV Regurgitation Before and After Surgery") +
-#'   hvti_theme("manuscript")
-#'
-#' # --- Save ----------------------------------------------------------------
-#' \dontrun{
-#' p <- alluvial_plot(dta, axes = axes, y_col = "freq", fill_col = "pre_ar") +
-#'   ggplot2::scale_fill_brewer(palette = "RdYlGn", direction = -1) +
-#'   ggplot2::scale_colour_brewer(palette = "RdYlGn", direction = -1,
-#'                                guide = "none") +
-#'   hvti_theme("manuscript")
-#' ggplot2::ggsave("sankey.pdf", p, width = 8, height = 6)
-#' }
-#'
-#' @importFrom ggalluvial geom_alluvium geom_stratum StatStratum
-#' @importFrom ggplot2 ggplot aes geom_text scale_x_continuous after_stat
-#' @importFrom rlang sym syms inject
+#' @importFrom rlang .data
 #' @export
-alluvial_plot <- function(data,
-                        axes,
-                        y_col         = "freq",
-                        fill_col      = NULL,
-                        axis_labels   = NULL,
-                        stratum_fill  = "grey80",
-                        stratum_width = 1 / 4,
-                        flow_width    = 1 / 6,
-                        alpha         = 0.8,
-                        knot_pos      = 0.4,
-                        show_labels   = TRUE) {
-
-  # --- Validation -----------------------------------------------------------
+hvti_alluvial <- function(data,
+                           axes,
+                           y_col       = "freq",
+                           fill_col    = NULL,
+                           axis_labels = NULL) {
   .check_df(data)
   if (!(is.character(axes) && length(axes) >= 2L))
     stop("`axes` must be a character vector of at least 2 column names.",
@@ -217,16 +152,111 @@ alluvial_plot <- function(data,
   if (!is.null(fill_col))
     .check_col(data, fill_col)
   if (!(is.null(axis_labels) ||
-          (is.character(axis_labels) &&
-           length(axis_labels) == length(axes))))
+          (is.character(axis_labels) && length(axis_labels) == length(axes))))
     stop(paste("`axis_labels` must be NULL or a character vector the same",
                "length as `axes`."), call. = FALSE)
-  .check_alpha(alpha)
 
   if (is.null(axis_labels)) axis_labels <- axes
 
-  # --- Build dynamic aes() -------------------------------------------------
-  # axis1 = axes[1], axis2 = axes[2], ... constructed without hard-coding
+  new_hvti_data(
+    data = as.data.frame(data),
+    meta = list(
+      axes        = axes,
+      y_col       = y_col,
+      fill_col    = fill_col,
+      axis_labels = axis_labels,
+      n_axes      = length(axes),
+      n_obs       = nrow(data)
+    ),
+    tables   = list(),
+    subclass = "hvti_alluvial"
+  )
+}
+
+
+#' Print an hvti_alluvial object
+#'
+#' @param x   An \code{hvti_alluvial} object from \code{\link{hvti_alluvial}}.
+#' @param ... Ignored.
+#' @return \code{x}, invisibly.
+#' @export
+print.hvti_alluvial <- function(x, ...) {
+  m <- x$meta
+  cat("<hvti_alluvial>\n")
+  cat(sprintf("  Axes (%d)    : %s\n", m$n_axes, paste(m$axes, collapse = " \u2192 ")))
+  cat(sprintf("  Weight col  : %s\n", m$y_col))
+  if (!is.null(m$fill_col))
+    cat(sprintf("  Fill col    : %s\n", m$fill_col))
+  cat(sprintf("  N rows      : %d\n", m$n_obs))
+  invisible(x)
+}
+
+
+#' Plot an hvti_alluvial object
+#'
+#' Draws a Sankey (alluvial) diagram using
+#' \code{\link[ggalluvial]{geom_alluvium}} and
+#' \code{\link[ggalluvial]{geom_stratum}}.
+#'
+#' @param x             An \code{hvti_alluvial} object.
+#' @param stratum_fill  Fill colour for the stratum bars. Default \code{"grey80"}.
+#' @param stratum_width Width of the stratum bars as a fraction of axis
+#'   spacing. Default \code{1/4}.
+#' @param flow_width    Width of the alluvium flows. Default \code{1/6}.
+#' @param alpha         Transparency of the flows, \eqn{[0,1]}. Default \code{0.8}.
+#' @param knot_pos      Curvature of the flow ribbons, \eqn{[0,1]}. Default \code{0.4}.
+#' @param show_labels   Logical; whether to label each stratum. Default \code{TRUE}.
+#' @param ...           Ignored; present for S3 consistency.
+#'
+#' @return A bare \code{\link[ggplot2]{ggplot}} object.
+#'
+#' @seealso \code{\link{hvti_alluvial}}, \code{\link{hvti_theme}}
+#'
+#' @examples
+#' dta  <- sample_alluvial_data(n = 300, seed = 42)
+#' axes <- c("pre_ar", "procedure", "post_ar")
+#'
+#' # Fill flows by procedure
+#' plot(hvti_alluvial(dta, axes = axes, y_col = "freq",
+#'                    fill_col = "procedure")) +
+#'   ggplot2::scale_fill_brewer(palette = "Set2", name = "Procedure") +
+#'   ggplot2::scale_colour_brewer(palette = "Set2", guide = "none") +
+#'   ggplot2::labs(y = "Patients (n)") +
+#'   hvti_theme("manuscript")
+#'
+#' # Two-axis (before / after)
+#' plot(hvti_alluvial(
+#'   dta, axes = c("pre_ar", "post_ar"), y_col = "freq",
+#'   fill_col = "pre_ar",
+#'   axis_labels = c("Pre-operative", "Post-operative")
+#' )) +
+#'   ggplot2::scale_fill_brewer(palette = "RdYlGn", direction = -1,
+#'                              name = "AR Grade") +
+#'   ggplot2::scale_colour_brewer(palette = "RdYlGn", direction = -1,
+#'                                guide = "none") +
+#'   ggplot2::labs(y = "Patients (n)") +
+#'   hvti_theme("manuscript")
+#'
+#' @importFrom ggalluvial geom_alluvium geom_stratum StatStratum
+#' @importFrom ggplot2 ggplot aes geom_text scale_x_continuous after_stat
+#' @importFrom rlang sym syms inject
+#' @export
+plot.hvti_alluvial <- function(x,
+                                stratum_fill  = "grey80",
+                                stratum_width = 1 / 4,
+                                flow_width    = 1 / 6,
+                                alpha         = 0.8,
+                                knot_pos      = 0.4,
+                                show_labels   = TRUE,
+                                ...) {
+  .check_alpha(alpha)
+  data        <- x$data
+  axes        <- x$meta$axes
+  y_col       <- x$meta$y_col
+  fill_col    <- x$meta$fill_col
+  axis_labels <- x$meta$axis_labels
+
+  # Build dynamic aes(): axis1 = axes[1], axis2 = axes[2], ...
   axis_syms <- rlang::syms(axes)
   axis_list <- stats::setNames(axis_syms, paste0("axis", seq_along(axes)))
 
@@ -234,7 +264,6 @@ alluvial_plot <- function(data,
     ggplot2::aes(y = !!rlang::sym(y_col), !!!axis_list)
   )
 
-  # Flow mapping: fill + colour if fill_col given
   if (!is.null(fill_col)) {
     fill_sym     <- rlang::sym(fill_col)
     flow_mapping <- rlang::inject(
@@ -244,7 +273,6 @@ alluvial_plot <- function(data,
     flow_mapping <- ggplot2::aes()
   }
 
-  # --- Build plot -----------------------------------------------------------
   p <- ggplot2::ggplot(data, base_mapping) +
     ggalluvial::geom_alluvium(
       mapping  = flow_mapping,

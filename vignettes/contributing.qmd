@@ -142,7 +142,7 @@ companions together.
 #'
 #' @return A bare [ggplot2::ggplot()] object.
 #'
-#' @seealso [nonparametric_curve_plot()], [sample_bmi_curve_data()]
+#' @seealso [hvti_nonparametric()], [sample_bmi_curve_data()]
 #'
 #' @references SAS template: \code{tp.np.bmi.avrg_curv.binary.sas}.
 #'

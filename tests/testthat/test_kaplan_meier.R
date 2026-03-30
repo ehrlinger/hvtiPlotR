@@ -137,340 +137,321 @@ test_that("sample_survival_data accepts NULL hazard_ratios with strata_levels", 
 })
 
 # ===========================================================================
-# survival_curve — return structure
+# hvti_survival — return structure (S3 object)
 # ===========================================================================
 
-test_that("survival_curve returns a ggplot", {
-  dta    <- sample_survival_data(n = 100, seed = 1)
-  result <- survival_curve(dta)
-  expect_s3_class(result, "ggplot")
+test_that("hvti_survival returns an hvti_data object", {
+  dta <- sample_survival_data(n = 100, seed = 1)
+  km  <- hvti_survival(dta)
+  expect_s3_class(km, "hvti_data")
 })
 
-test_that("survival_curve result has correct attribute names", {
-  dta    <- sample_survival_data(n = 100, seed = 1)
-  result <- survival_curve(dta)
-  attr_names <- c("survival_plot", "cumhaz_plot", "hazard_plot",
-                  "loglog_plot", "life_plot",
-                  "km_data", "risk_table", "report_table")
-  for (nm in attr_names) {
-    expect_false(is.null(attr(result, nm)),
-                 label = paste0("attr(result, '", nm, "') should not be NULL"))
-  }
+test_that("hvti_survival returns an hvti_survival subclass", {
+  dta <- sample_survival_data(n = 100, seed = 1)
+  km  <- hvti_survival(dta)
+  expect_s3_class(km, "hvti_survival")
 })
 
-test_that("survival_curve returns a ggplot (survival_plot)", {
-  dta    <- sample_survival_data(n = 200, seed = 2)
-  result <- survival_curve(dta)
-  expect_s3_class(result, "ggplot")
-})
-
-test_that("survival_curve cumhaz_plot is a ggplot", {
+test_that("hvti_survival $data slot is a data frame", {
   dta <- sample_survival_data(n = 200, seed = 2)
-  expect_s3_class(survival_curve(dta, plot_type = "cumhaz"), "ggplot")
+  km  <- hvti_survival(dta)
+  expect_true(is.data.frame(km$data))
 })
 
-test_that("survival_curve hazard_plot is a ggplot", {
+test_that("hvti_survival $tables$risk is not NULL", {
   dta <- sample_survival_data(n = 200, seed = 2)
-  expect_s3_class(survival_curve(dta, plot_type = "hazard"), "ggplot")
+  km  <- hvti_survival(dta)
+  expect_false(is.null(km$tables$risk))
 })
 
-test_that("survival_curve loglog_plot is a ggplot", {
+test_that("hvti_survival $tables$report is not NULL", {
   dta <- sample_survival_data(n = 200, seed = 2)
-  expect_s3_class(survival_curve(dta, plot_type = "loglog"), "ggplot")
+  km  <- hvti_survival(dta)
+  expect_false(is.null(km$tables$report))
 })
 
-test_that("survival_curve life_plot is a ggplot", {
+test_that("plot(hvti_survival) returns a ggplot", {
+  dta <- sample_survival_data(n = 100, seed = 1)
+  km  <- hvti_survival(dta)
+  expect_s3_class(plot(km), "ggplot")
+})
+
+test_that("plot(km, type='cumhaz') returns a ggplot", {
   dta <- sample_survival_data(n = 200, seed = 2)
-  expect_s3_class(survival_curve(dta, plot_type = "life"), "ggplot")
+  km  <- hvti_survival(dta)
+  expect_s3_class(plot(km, type = "cumhaz"), "ggplot")
 })
 
-test_that("km_data contains SAS-derived columns", {
-  result <- survival_curve(sample_survival_data(n = 200, seed = 5))
+test_that("plot(km, type='hazard') returns a ggplot", {
+  dta <- sample_survival_data(n = 200, seed = 2)
+  km  <- hvti_survival(dta)
+  expect_s3_class(plot(km, type = "hazard"), "ggplot")
+})
+
+test_that("plot(km, type='loglog') returns a ggplot", {
+  dta <- sample_survival_data(n = 200, seed = 2)
+  km  <- hvti_survival(dta)
+  expect_s3_class(plot(km, type = "loglog"), "ggplot")
+})
+
+test_that("plot(km, type='life') returns a ggplot", {
+  dta <- sample_survival_data(n = 200, seed = 2)
+  km  <- hvti_survival(dta)
+  expect_s3_class(plot(km, type = "life"), "ggplot")
+})
+
+test_that("km$data contains SAS-derived columns", {
+  km <- hvti_survival(sample_survival_data(n = 200, seed = 5))
   extra_cols <- c("hazard", "density", "mid_time", "life",
                   "proplife", "log_cumhaz", "log_time")
-  expect_true(all(extra_cols %in% names(attr(result, "km_data"))))
+  expect_true(all(extra_cols %in% names(km$data)))
 })
 
-test_that("km_data life is non-decreasing within strata", {
-  result    <- survival_curve(sample_survival_data(n = 300, seed = 6))
-  km_data   <- attr(result, "km_data")
-  life_vals <- km_data$life[!is.na(km_data$life)]
+test_that("km$data life is non-decreasing within strata", {
+  km        <- hvti_survival(sample_survival_data(n = 300, seed = 6))
+  life_vals <- km$data$life[!is.na(km$data$life)]
   expect_true(all(diff(life_vals) >= -1e-9))
 })
 
-test_that("km_data hazard is positive at event times", {
-  result   <- survival_curve(sample_survival_data(n = 300, seed = 7))
-  km_data  <- attr(result, "km_data")
-  haz_vals <- km_data$hazard[!is.na(km_data$hazard)]
+test_that("km$data hazard is positive at event times", {
+  km       <- hvti_survival(sample_survival_data(n = 300, seed = 7))
+  haz_vals <- km$data$hazard[!is.na(km$data$hazard)]
   expect_true(all(haz_vals >= 0))
 })
 
-test_that("survival_curve km_data is a data frame", {
-  dta    <- sample_survival_data(n = 200, seed = 3)
-  result <- survival_curve(dta)
-  expect_true(is.data.frame(attr(result, "km_data")))
-})
-
-test_that("survival_curve km_data has expected columns", {
-  dta    <- sample_survival_data(n = 200, seed = 3)
-  result <- survival_curve(dta)
+test_that("km$data has expected columns", {
+  km <- hvti_survival(sample_survival_data(n = 200, seed = 3))
   expected_cols <- c("time", "surv", "lower", "upper",
                      "n.risk", "n.event", "n.censor", "cumhaz", "strata",
                      "hazard", "density", "mid_time", "life",
                      "proplife", "log_cumhaz", "log_time")
-  expect_true(all(expected_cols %in% names(attr(result, "km_data"))))
+  expect_true(all(expected_cols %in% names(km$data)))
 })
 
-test_that("survival_curve km_data starts at time 0", {
-  dta    <- sample_survival_data(n = 200, seed = 4)
-  result <- survival_curve(dta)
-  expect_true(0 %in% attr(result, "km_data")$time)
+test_that("km$data starts at time 0", {
+  km <- hvti_survival(sample_survival_data(n = 200, seed = 4))
+  expect_true(0 %in% km$data$time)
 })
 
-test_that("survival_curve km_data surv at time 0 is 1", {
-  dta    <- sample_survival_data(n = 200, seed = 4)
-  result <- survival_curve(dta)
-  km     <- attr(result, "km_data")
-  expect_equal(km$surv[km$time == 0][1], 1)
+test_that("km$data surv at time 0 is 1", {
+  km <- hvti_survival(sample_survival_data(n = 200, seed = 4))
+  expect_equal(km$data$surv[km$data$time == 0][1], 1)
 })
 
-test_that("survival_curve report_table has correct columns", {
-  dta    <- sample_survival_data(n = 200, seed = 5)
-  result <- survival_curve(dta)
+test_that("km$tables$report has correct columns", {
+  km <- hvti_survival(sample_survival_data(n = 200, seed = 5))
   expected_cols <- c("strata", "report_time", "surv", "lower", "upper",
                      "n.risk", "n.event")
-  expect_true(all(expected_cols %in% names(attr(result, "report_table"))))
+  expect_true(all(expected_cols %in% names(km$tables$report)))
 })
 
-test_that("survival_curve report_table rows == length(report_times) for single stratum", {
+test_that("km$tables$report rows == length(report_times) for single stratum", {
   dta          <- sample_survival_data(n = 200, seed = 5)
   report_times <- c(1, 5, 10, 20)
-  result       <- survival_curve(dta, report_times = report_times)
-  expect_equal(nrow(attr(result, "report_table")), length(report_times))
+  km           <- hvti_survival(dta, report_times = report_times)
+  expect_equal(nrow(km$tables$report), length(report_times))
 })
 
-test_that("survival_curve report_table rows == length(report_times) * n_strata", {
+test_that("km$tables$report rows == length(report_times) * n_strata", {
   dta <- sample_survival_data(
     n = 300,
     strata_levels = c("A", "B"),
     seed = 6
   )
   report_times <- c(1, 5, 10)
-  # In testthat 3, expect_warning() returns the condition, not the expression
-  # value.  Verify the deprecation fires separately, then capture the result.
-  expect_warning(
-    survival_curve(dta, strata_col = "valve_type", report_times = report_times),
-    "deprecated"
-  )
-  result <- suppressWarnings(
-    survival_curve(dta, strata_col = "valve_type", report_times = report_times)
-  )
-  expect_equal(nrow(attr(result, "report_table")), length(report_times) * 2L)
+  km <- hvti_survival(dta, group_col = "valve_type",
+                      report_times = report_times)
+  expect_equal(nrow(km$tables$report), length(report_times) * 2L)
 })
 
-test_that("survival_curve risk_table has correct columns", {
-  dta    <- sample_survival_data(n = 200, seed = 7)
-  result <- survival_curve(dta)
+test_that("km$tables$risk has correct columns", {
+  km <- hvti_survival(sample_survival_data(n = 200, seed = 7))
   expect_true(all(c("strata", "report_time", "n.risk") %in%
-                    names(attr(result, "risk_table"))))
+                    names(km$tables$risk)))
 })
 
-test_that("survival_curve risk_table rows == length(report_times) for single stratum", {
+test_that("km$tables$risk rows == length(report_times) for single stratum", {
   dta          <- sample_survival_data(n = 200, seed = 8)
   report_times <- c(1, 5, 10)
-  result       <- survival_curve(dta, report_times = report_times)
-  expect_equal(nrow(attr(result, "risk_table")), length(report_times))
+  km           <- hvti_survival(dta, report_times = report_times)
+  expect_equal(nrow(km$tables$risk), length(report_times))
 })
 
 # ===========================================================================
-# survival_curve — strata
+# hvti_survival — strata
 # ===========================================================================
 
-test_that("survival_curve stratified mode has correct strata in km_data", {
+test_that("hvti_survival stratified mode has correct strata in km$data", {
   dta <- sample_survival_data(
     n = 300,
     strata_levels = c("Type A", "Type B"),
     seed = 9
   )
-  expect_warning(
-    survival_curve(dta, strata_col = "valve_type"),
-    "deprecated"
-  )
-  result        <- suppressWarnings(survival_curve(dta, strata_col = "valve_type"))
-  strata_found  <- unique(attr(result, "km_data")$strata)
+  km           <- hvti_survival(dta, group_col = "valve_type")
+  strata_found <- unique(km$data$strata)
   expect_true(all(c("Type A", "Type B") %in% strata_found))
 })
 
-test_that("survival_curve unstratified mode has strata == 'All'", {
-  dta    <- sample_survival_data(n = 200, seed = 10)
-  result <- survival_curve(dta)
-  expect_true(all(attr(result, "km_data")$strata == "All"))
+test_that("hvti_survival unstratified mode has strata == 'All'", {
+  km <- hvti_survival(sample_survival_data(n = 200, seed = 10))
+  expect_true(all(km$data$strata == "All"))
 })
 
-test_that("survival_curve stratified risk_table has rows == report_times * n_strata", {
+test_that("hvti_survival stratified km$tables$risk has rows == report_times * n_strata", {
   dta <- sample_survival_data(
     n = 300,
     strata_levels = c("A", "B", "C"),
     seed = 11
   )
   report_times <- c(5, 10, 15, 20)
-  expect_warning(
-    survival_curve(dta, strata_col = "valve_type", report_times = report_times),
-    "deprecated"
-  )
-  result <- suppressWarnings(
-    survival_curve(dta, strata_col = "valve_type", report_times = report_times)
-  )
-  expect_equal(nrow(attr(result, "risk_table")), length(report_times) * 3L)
+  km <- hvti_survival(dta, group_col = "valve_type",
+                      report_times = report_times)
+  expect_equal(nrow(km$tables$risk), length(report_times) * 3L)
 })
 
 # ===========================================================================
-# survival_curve — confidence interval
+# plot.hvti_survival — confidence interval
 # ===========================================================================
 
-test_that("survival_curve with conf_int=FALSE still returns ggplot", {
-  dta    <- sample_survival_data(n = 200, seed = 12)
-  result <- survival_curve(dta, conf_int = FALSE)
-  expect_s3_class(result, "ggplot")
+test_that("plot(km, conf_int=FALSE) still returns ggplot", {
+  km <- hvti_survival(sample_survival_data(n = 200, seed = 12))
+  expect_s3_class(plot(km, conf_int = FALSE), "ggplot")
 })
 
-test_that("survival_curve conf_int=TRUE has more layers than conf_int=FALSE", {
-  dta   <- sample_survival_data(n = 200, seed = 13)
-  r_on  <- survival_curve(dta, conf_int = TRUE)
-  r_off <- survival_curve(dta, conf_int = FALSE)
-  surv_on  <- attr(r_on,  "survival_plot")
-  surv_off <- attr(r_off, "survival_plot")
-  expect_gt(length(surv_on$layers), length(surv_off$layers))
+test_that("plot(km, conf_int=TRUE) has more layers than conf_int=FALSE", {
+  km    <- hvti_survival(sample_survival_data(n = 200, seed = 13))
+  p_on  <- plot(km, conf_int = TRUE)
+  p_off <- plot(km, conf_int = FALSE)
+  expect_gt(length(p_on$layers), length(p_off$layers))
 })
 
 # ===========================================================================
-# survival_curve — custom report_times
+# hvti_survival — custom report_times
 # ===========================================================================
 
-test_that("survival_curve respects custom report_times", {
+test_that("hvti_survival respects custom report_times", {
   dta          <- sample_survival_data(n = 200, seed = 14)
   report_times <- c(2, 7, 12)
-  result       <- survival_curve(dta, report_times = report_times)
-  expect_equal(sort(unique(attr(result, "report_table")$report_time)),
+  km           <- hvti_survival(dta, report_times = report_times)
+  expect_equal(sort(unique(km$tables$report$report_time)),
                sort(report_times))
 })
 
 # ===========================================================================
-# survival_curve — input validation
+# hvti_survival — input validation
 # ===========================================================================
 
-test_that("survival_curve errors when data is not a data frame", {
+test_that("hvti_survival errors when data is not a data frame", {
   expect_error(
-    survival_curve(list(iv_dead = 1:10, dead = rep(TRUE, 10))),
+    hvti_survival(list(iv_dead = 1:10, dead = rep(TRUE, 10))),
     "data.frame"
   )
 })
 
-test_that("survival_curve errors when time_col is missing from data", {
-  dta      <- sample_survival_data(n = 50, seed = 1)
+test_that("hvti_survival errors when time_col is missing from data", {
+  dta         <- sample_survival_data(n = 50, seed = 1)
   dta$iv_dead <- NULL
-  expect_error(survival_curve(dta), "column")
+  expect_error(hvti_survival(dta), "column")
 })
 
-test_that("survival_curve errors when event_col is missing from data", {
+test_that("hvti_survival errors when event_col is missing from data", {
   dta      <- sample_survival_data(n = 50, seed = 1)
   dta$dead <- NULL
-  expect_error(survival_curve(dta), "column")
+  expect_error(hvti_survival(dta), "column")
 })
 
-test_that("survival_curve errors when strata_col is missing from data", {
+test_that("hvti_survival errors when group_col is missing from data", {
   dta <- sample_survival_data(n = 50, seed = 1)
   expect_error(
-    survival_curve(dta, group_col = "nonexistent_col"),
+    hvti_survival(dta, group_col = "nonexistent_col"),
     "column"
   )
 })
 
-test_that("survival_curve errors when conf_level is out of (0,1)", {
+test_that("hvti_survival errors when conf_level is out of (0,1)", {
   dta <- sample_survival_data(n = 50, seed = 1)
-  expect_error(survival_curve(dta, conf_level = 0),   "conf_level")
-  expect_error(survival_curve(dta, conf_level = 1),   "conf_level")
-  expect_error(survival_curve(dta, conf_level = -0.5), "conf_level")
-  expect_error(survival_curve(dta, conf_level = 1.1),  "conf_level")
+  expect_error(hvti_survival(dta, conf_level = 0),    "conf_level")
+  expect_error(hvti_survival(dta, conf_level = 1),    "conf_level")
+  expect_error(hvti_survival(dta, conf_level = -0.5), "conf_level")
+  expect_error(hvti_survival(dta, conf_level = 1.1),  "conf_level")
 })
 
-test_that("survival_curve errors when report_times is empty", {
+test_that("hvti_survival errors when report_times is empty", {
   dta <- sample_survival_data(n = 50, seed = 1)
-  expect_error(survival_curve(dta, report_times = numeric(0)),
+  expect_error(hvti_survival(dta, report_times = numeric(0)),
                "report_times")
 })
 
-test_that("survival_curve errors when report_times is non-numeric", {
+test_that("hvti_survival errors when report_times is non-numeric", {
   dta <- sample_survival_data(n = 50, seed = 1)
-  expect_error(survival_curve(dta, report_times = c("1", "5")),
+  expect_error(hvti_survival(dta, report_times = c("1", "5")),
                "report_times")
 })
 
-test_that("survival_curve errors on invalid method", {
+test_that("hvti_survival errors on invalid method", {
   dta <- sample_survival_data(n = 50, seed = 1)
-  expect_error(survival_curve(dta, method = "breslow"),
+  expect_error(hvti_survival(dta, method = "breslow"),
                "kaplan-meier|nelson-aalen")
 })
 
-test_that("survival_curve errors when time_col is non-numeric", {
+test_that("hvti_survival errors when time_col is non-numeric", {
   dta           <- sample_survival_data(n = 50, seed = 1)
-  dta$iv_dead   <- as.character(dta$iv_dead)   # convert to character
-  expect_error(survival_curve(dta), "must be numeric")
+  dta$iv_dead   <- as.character(dta$iv_dead)
+  expect_error(hvti_survival(dta), "must be numeric")
 })
 
-test_that("survival_curve errors when event_col has invalid values", {
+test_that("hvti_survival errors when event_col has invalid values", {
   dta       <- sample_survival_data(n = 50, seed = 1)
   dta$dead  <- sample(c("yes", "no"), 50, replace = TRUE)
-  expect_error(survival_curve(dta), "0/1 or logical")
+  expect_error(hvti_survival(dta), "0/1 or logical")
 })
 
-test_that("survival_curve errors when alpha exceeds 1", {
-  dta <- sample_survival_data(n = 50, seed = 1)
-  expect_error(survival_curve(dta, alpha = 1.5), "alpha")
+test_that("plot.hvti_survival errors when alpha exceeds 1", {
+  km <- hvti_survival(sample_survival_data(n = 50, seed = 1))
+  expect_error(plot(km, alpha = 1.5), "alpha")
 })
 
-test_that("survival_curve errors when alpha is negative", {
-  dta <- sample_survival_data(n = 50, seed = 1)
-  expect_error(survival_curve(dta, alpha = -0.1), "alpha")
+test_that("plot.hvti_survival errors when alpha is negative", {
+  km <- hvti_survival(sample_survival_data(n = 50, seed = 1))
+  expect_error(plot(km, alpha = -0.1), "alpha")
 })
 
 # ===========================================================================
-# survival_curve — method = "nelson-aalen"
+# hvti_survival — method = "nelson-aalen"
 # ===========================================================================
 
-test_that("nelson-aalen method returns a ggplot", {
-  dta    <- sample_survival_data(n = 200, seed = 10)
-  result <- survival_curve(dta, method = "nelson-aalen")
-  expect_s3_class(result, "ggplot")
+test_that("nelson-aalen method returns an hvti_data object", {
+  dta <- sample_survival_data(n = 200, seed = 10)
+  km  <- hvti_survival(dta, method = "nelson-aalen")
+  expect_s3_class(km, "hvti_data")
 })
 
-test_that("nelson-aalen method result has expected attribute names", {
-  dta    <- sample_survival_data(n = 200, seed = 11)
-  result <- survival_curve(dta, method = "nelson-aalen")
-  attr_names <- c("survival_plot", "cumhaz_plot", "hazard_plot",
-                  "loglog_plot", "life_plot",
-                  "km_data", "risk_table", "report_table")
-  for (nm in attr_names) {
-    expect_false(is.null(attr(result, nm)),
-                 label = paste0("attr(result, '", nm, "') should not be NULL"))
-  }
+test_that("plot(km) with nelson-aalen returns a ggplot", {
+  dta <- sample_survival_data(n = 200, seed = 10)
+  km  <- hvti_survival(dta, method = "nelson-aalen")
+  expect_s3_class(plot(km), "ggplot")
+})
+
+test_that("nelson-aalen $data and $tables slots are present", {
+  dta <- sample_survival_data(n = 200, seed = 11)
+  km  <- hvti_survival(dta, method = "nelson-aalen")
+  expect_false(is.null(km$data))
+  expect_false(is.null(km$tables$risk))
+  expect_false(is.null(km$tables$report))
 })
 
 test_that("nelson-aalen surv differs from kaplan-meier", {
-  dta  <- sample_survival_data(n = 500, seed = 12)
-  km   <- survival_curve(dta, method = "kaplan-meier")
-  na   <- survival_curve(dta, method = "nelson-aalen")
-  km_data_na <- attr(na, "km_data")
-  km_data_km <- attr(km, "km_data")
-  # Both methods should produce surv in (0, 1]; they need not be identical
-  expect_true(all(km_data_na$surv >= 0 & km_data_na$surv <= 1))
-  expect_false(identical(km_data_km$surv, km_data_na$surv))
+  dta   <- sample_survival_data(n = 500, seed = 12)
+  km_km <- hvti_survival(dta, method = "kaplan-meier")
+  km_na <- hvti_survival(dta, method = "nelson-aalen")
+  expect_true(all(km_na$data$surv >= 0 & km_na$data$surv <= 1))
+  expect_false(identical(km_km$data$surv, km_na$data$surv))
 })
 
 test_that("nelson-aalen cumhaz is non-decreasing", {
-  result <- survival_curve(sample_survival_data(n = 300, seed = 13),
-                           method = "nelson-aalen")
-  ch <- attr(result, "km_data")$cumhaz
+  km <- hvti_survival(sample_survival_data(n = 300, seed = 13),
+                      method = "nelson-aalen")
+  ch <- km$data$cumhaz
   expect_true(all(diff(ch) >= -1e-9))
 })
 
@@ -479,75 +460,69 @@ test_that("nelson-aalen works with stratification", {
     n = 200, strata_levels = c("A", "B"),
     hazard_ratios = c(1, 1.5), seed = 14
   )
-  result <- survival_curve(dta, group_col = "valve_type",
-                           method = "nelson-aalen")
-  expect_s3_class(result, "ggplot")
-  expect_true(all(c("A", "B") %in% attr(result, "km_data")$strata))
+  km <- hvti_survival(dta, group_col = "valve_type",
+                      method = "nelson-aalen")
+  expect_s3_class(plot(km), "ggplot")
+  expect_true(all(c("A", "B") %in% km$data$strata))
 })
 
 # ===========================================================================
-# survival_curve — non-default column names
+# hvti_survival — non-default column names
 # ===========================================================================
 
-test_that("survival_curve works with non-default column names", {
+test_that("hvti_survival works with non-default column names", {
   dta <- sample_survival_data(n = 100, seed = 20)
   names(dta)[names(dta) == "iv_dead"] <- "follow_up"
   names(dta)[names(dta) == "dead"]    <- "event"
-  result <- survival_curve(dta, time_col = "follow_up", event_col = "event")
-  expect_s3_class(result, "ggplot")
+  km <- hvti_survival(dta, time_col = "follow_up", event_col = "event")
+  expect_s3_class(plot(km), "ggplot")
 })
 
 # ===========================================================================
-# km helper internals (via survival_curve)
+# km$data internals
 # ===========================================================================
 
-test_that("km_data cumhaz is non-decreasing over time (single stratum)", {
-  dta    <- sample_survival_data(n = 300, seed = 21)
-  result <- survival_curve(dta)
-  km     <- attr(result, "km_data")
-  km_sorted <- km[order(km$time), ]
-  diffs  <- diff(km_sorted$cumhaz)
-  expect_true(all(diffs >= -1e-10))   # allow tiny floating-point noise
+test_that("km$data cumhaz is non-decreasing over time (single stratum)", {
+  km        <- hvti_survival(sample_survival_data(n = 300, seed = 21))
+  km_sorted <- km$data[order(km$data$time), ]
+  diffs     <- diff(km_sorted$cumhaz)
+  expect_true(all(diffs >= -1e-10))
 })
 
-test_that("km_data surv is between 0 and 1", {
-  dta    <- sample_survival_data(n = 300, seed = 22)
-  result <- survival_curve(dta)
-  expect_true(all(attr(result, "km_data")$surv >= 0 & attr(result, "km_data")$surv <= 1))
+test_that("km$data surv is between 0 and 1", {
+  km <- hvti_survival(sample_survival_data(n = 300, seed = 22))
+  expect_true(all(km$data$surv >= 0 & km$data$surv <= 1))
 })
 
-test_that("km_data lower <= surv and upper >= surv", {
-  dta    <- sample_survival_data(n = 300, seed = 23)
-  result <- survival_curve(dta)
-  km     <- attr(result, "km_data")
-  expect_true(all(km$lower <= km$surv + 1e-10, na.rm = TRUE))
-  expect_true(all(km$upper >= km$surv - 1e-10, na.rm = TRUE))
+test_that("km$data lower <= surv and upper >= surv", {
+  km <- hvti_survival(sample_survival_data(n = 300, seed = 23))
+  expect_true(all(km$data$lower <= km$data$surv + 1e-10, na.rm = TRUE))
+  expect_true(all(km$data$upper >= km$data$surv - 1e-10, na.rm = TRUE))
 })
 
 # ===========================================================================
-# survival_curve — edge cases
+# hvti_survival — edge cases
 # ===========================================================================
 
-test_that("survival_curve handles all-censored data (no events)", {
+test_that("hvti_survival handles all-censored data (no events)", {
   dta      <- sample_survival_data(n = 100, seed = 1)
-  dta$dead <- FALSE    # override: zero events
-  expect_s3_class(survival_curve(dta), "ggplot")
+  dta$dead <- FALSE
+  expect_s3_class(plot(hvti_survival(dta)), "ggplot")
 })
 
-test_that("survival_curve handles single-observation data frame", {
+test_that("hvti_survival handles single-observation data frame", {
   dta <- sample_survival_data(n = 1, seed = 1)
-  # May produce a degenerate KM but must not hard-error
-  expect_error(survival_curve(dta), NA)
+  expect_error(hvti_survival(dta), NA)
 })
 
 # ===========================================================================
-# survival_curve — snapshot (report_table values at fixed seed)
+# hvti_survival — snapshot (km$tables$report values at fixed seed)
 # ===========================================================================
 
-test_that("survival_curve report_table matches snapshot (fixed seed)", {
-  result <- survival_curve(
+test_that("km$tables$report matches snapshot (fixed seed)", {
+  km <- hvti_survival(
     sample_survival_data(n = 500, seed = 42),
     report_times = c(1, 5, 10, 15, 20)
   )
-  expect_snapshot(attr(result, "report_table"))
+  expect_snapshot(km$tables$report)
 })

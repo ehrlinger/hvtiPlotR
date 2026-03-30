@@ -101,13 +101,15 @@ Default \code{0.25}.}
 A \code{\link[ggplot2:ggplot]{ggplot2::ggplot()}} object.
 }
 \description{
+\strong{Superseded.}
+
+\code{hazard_plot()} has been superseded by the S3 constructor \code{\link[=hvti_hazard]{hvti_hazard()}}
+plus \code{\link[=plot.hvti_hazard]{plot.hvti_hazard()}}.
+
 Plots a pre-computed parametric survival, hazard, or cumulative-hazard curve
 from a Weibull (or other parametric) model, optionally overlaid with
 Kaplan-Meier empirical estimates and a population life-table reference.
-Covers the complete family of \verb{tp.hp.dead.*} SAS templates.
-}
-\details{
-\tabular{ll}{
+Covers the complete family of \verb{tp.hp.dead.*} SAS templates.\tabular{ll}{
    SAS template \tab R usage \cr
    Basic survival (tp.hp.dead.sas) \tab \code{hazard_plot(dat, estimate_col="survival")} \cr
    Basic hazard (tp.hp.dead.sas) \tab \code{hazard_plot(dat, estimate_col="hazard")} \cr
@@ -395,5 +397,6 @@ SAS templates: \code{tp.hp.dead.sas},
 \seealso{
 \code{\link[=sample_hazard_data]{sample_hazard_data()}}, \code{\link[=sample_hazard_empirical]{sample_hazard_empirical()}},
 \code{\link[=sample_life_table]{sample_life_table()}}, \code{\link[=survival_difference_plot]{survival_difference_plot()}}, \code{\link[=nnt_plot]{nnt_plot()}},
-\code{\link[=survival_curve]{survival_curve()}}, \code{\link[=hvti_theme]{hvti_theme()}}
+\code{\link[=hvti_survival]{hvti_survival()}}, \code{\link[=hvti_theme]{hvti_theme()}}
 }
+\keyword{internal}

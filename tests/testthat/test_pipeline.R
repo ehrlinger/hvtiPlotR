@@ -4,7 +4,7 @@
 #
 # These tests exercise the primary production workflows:
 #   1. Built-in datasets -> plot function
-#   2. survival_curve -> hvti_theme -> save_ppt (full pipeline)
+#   2. hvti_survival -> hvti_theme -> save_ppt (full pipeline)
 #   3. eda_classify_var edge cases not covered elsewhere
 #   4. Built-in parametric + nonparametric datasets with their plot functions
 #
@@ -90,17 +90,17 @@ test_that("eda_classify_var handles a length-1 vector", {
 })
 
 # ============================================================================
-# End-to-end: survival_curve → hvti_theme → save_ppt
+# End-to-end: hvti_survival → hvti_theme → save_ppt
 # ============================================================================
 
-test_that("full pipeline: survival_curve + hvti_theme + save_ppt (single plot)", {
+test_that("full pipeline: hvti_survival + hvti_theme + save_ppt (single plot)", {
   skip_if_not_installed("officer")
   skip_if_not_installed("rvg")
 
   template <- make_temp_pptx()
   on.exit(unlink(template))
 
-  km <- survival_curve(
+  km <- hvti_survival(
     sample_survival_data(
       n             = 200,
       strata_levels = c("SAVR", "TAVR"),
@@ -114,7 +114,7 @@ test_that("full pipeline: survival_curve + hvti_theme + save_ppt (single plot)",
 
   expect_no_error(
     save_ppt(
-      object       = km + hvti_theme("ppt"),
+      object       = plot(km) + hvti_theme("ppt"),
       template     = template,
       powerpoint   = pptx_out,
       slide_titles = "KM: SAVR vs TAVR"
@@ -130,16 +130,16 @@ test_that("full pipeline: list of plots → save_ppt (multi-slide)", {
   template <- make_temp_pptx()
   on.exit(unlink(template))
 
-  km <- survival_curve(sample_survival_data(n = 100, seed = 1))
-  p2 <- eda_plot(sample_eda_data(n = 100, seed = 1), y_col = "ef",
-                 x_col = "op_years")
+  km <- hvti_survival(sample_survival_data(n = 100, seed = 1))
+  p2 <- plot(hvti_eda(sample_eda_data(n = 100, seed = 1), y_col = "ef",
+                      x_col = "op_years"))
 
   pptx_out <- tempfile(fileext = ".pptx")
   on.exit(unlink(pptx_out), add = TRUE)
 
   expect_no_error(
     save_ppt(
-      object       = list(km + hvti_theme("ppt"), p2 + hvti_theme("ppt")),
+      object       = list(plot(km) + hvti_theme("ppt"), p2 + hvti_theme("ppt")),
       template     = template,
       powerpoint   = pptx_out,
       slide_titles = c("Kaplan-Meier", "EF vs Follow-up Years")
@@ -180,10 +180,10 @@ test_that("hazard_plot with life table reference + theme composes cleanly", {
 })
 
 # ============================================================================
-# End-to-end: nonparametric curve plot + data points + theme
+# End-to-end: hvti_nonparametric + data points + theme
 # ============================================================================
 
-test_that("nonparametric_curve_plot with CI + data points + theme composes cleanly", {
+test_that("hvti_nonparametric with CI + data points + theme composes cleanly", {
   dat <- sample_nonparametric_curve_data(
     n = 200, time_max = 12,
     groups = c("Ozaki" = 0.7, "CE-P" = 1.3)
@@ -192,12 +192,14 @@ test_that("nonparametric_curve_plot with CI + data points + theme composes clean
     n = 200, time_max = 12,
     groups = c("Ozaki" = 0.7, "CE-P" = 1.3)
   )
-  p <- nonparametric_curve_plot(
-    dat,
-    group_col = "group",
-    lower_col = "lower",
-    upper_col = "upper",
-    data_points = pts
+  p <- plot(
+    hvti_nonparametric(
+      dat,
+      group_col   = "group",
+      lower_col   = "lower",
+      upper_col   = "upper",
+      data_points = pts
+    )
   ) +
     hvti_theme("manuscript") +
     ggplot2::labs(x = "Months", y = "Probability")

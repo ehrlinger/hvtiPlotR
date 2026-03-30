@@ -28,7 +28,7 @@
 #'   `AV_Replacement`, `AV_Repair`, `MV_Replacement`, `MV_Repair`,
 #'   `TV_Repair`, `Aorta`, `CABG`.
 #'
-#' @seealso [upset_plot()]
+#' @seealso [hvti_upset()]
 #' @examples
 #' dta <- sample_upset_data(n = 300, seed = 42)
 #' head(dta)
@@ -68,63 +68,142 @@ sample_upset_data <- function(n = 500, seed = 42L) {
 }
 
 # ---------------------------------------------------------------------------
+# Public API
+# ---------------------------------------------------------------------------
 
-#' UpSet Plot for Set Co-occurrence Analysis
+#' Prepare UpSet co-occurrence data for plotting
 #'
-#' Wraps [ComplexUpset::upset()] to produce a structured UpSet plot for
-#' visualising overlapping set memberships — most commonly surgical procedure
-#' co-occurrences. Returns a bare patchwork / ggplot object so callers can
-#' compose colour scales and themes.
+#' Validates a set-membership data frame, checks all intersect columns are
+#' binary (logical or 0/1 integer), computes per-set counts, and returns an
+#' \code{hvti_upset} object.  Call \code{\link{plot.hvti_upset}} on the result
+#' to obtain the \pkg{ComplexUpset} UpSet diagram.  Apply a theme to all
+#' panels with \code{&}:
+#' \preformatted{plot(up) & hvti_theme("manuscript")}
 #'
-#' Apply a theme to **all panels** with `&`:
-#' ```r
-#' upset_plot(dta, intersect = sets) & hvti_theme("manuscript")
-#' ```
-#' Apply scales or annotations to the intersection panel via `base_annotations`.
+#' @param data      A data frame. Each set-membership column must be logical
+#'   or integer (0/1).
+#' @param intersect Character vector of column names to treat as sets.
+#'   Must contain at least two names that exist in \code{data}.
 #'
-#' @param data              A data frame. Each set-membership column must be
-#'   logical or integer (0/1).
-#' @param intersect         Character vector of column names to treat as sets.
-#'   Must contain at least two names that exist in `data`.
-#' @param min_size          Minimum intersection size to display. Default `1`.
-#' @param width_ratio       Fraction of horizontal space given to the set-size
-#'   bar. Default `0.3`.
-#' @param encode_sets       Logical; when `FALSE` (default) set names are used
-#'   verbatim, which is required for [ggplot2::annotate()] to reference a
-#'   specific set by name.
-#' @param sort_sets         Sort order for set-size bar: `"descending"`,
-#'   `"ascending"`, or `FALSE`. Default `"descending"`.
-#' @param sort_intersections Sort order for intersection size bars. Default
-#'   `"descending"`.
-#' @param set_size_position Position of the set-size bar: `"right"` (default)
-#'   or `"left"`.
-#' @param ...               Additional arguments forwarded to
-#'   [ComplexUpset::upset()], e.g. `base_annotations`, `annotations`,
-#'   `set_sizes`.
+#' @return An object of class \code{c("hvti_upset", "hvti_data")}:
+#' \describe{
+#'   \item{\code{$data}}{The validated input data frame.}
+#'   \item{\code{$meta}}{Named list: \code{intersect}, \code{n_patients},
+#'     \code{n_sets}.}
+#'   \item{\code{$tables}}{List with one element: \code{set_counts} — a
+#'     named integer vector of per-set patient counts.}
+#' }
 #'
-#' @return A patchwork / ggplot composite. Use `&` to apply a theme to all
-#'   panels; use `+` within `base_annotations` list entries for per-panel
-#'   customisation.
-#'
-#' @seealso [ComplexUpset::upset()], [sample_upset_data()], [hvti_theme()]
+#' @seealso \code{\link{plot.hvti_upset}}, \code{\link{sample_upset_data}}
 #'
 #' @examples
 #' sets <- c("AV_Replacement", "AV_Repair", "MV_Replacement", "MV_Repair",
 #'           "TV_Repair", "Aorta", "CABG")
 #' dta <- sample_upset_data(n = 300, seed = 42)
-#'
-#' # --- Build the plot object (render interactively with print(p)) ----------
-#' p <- upset_plot(dta, intersect = sets)
+#' up  <- hvti_upset(dta, intersect = sets)
+#' up   # prints set counts
 #'
 #' \dontrun{
-#' # --- Manuscript theme applied to all panels via & ------------------------
-#' upset_plot(dta, intersect = sets) &
-#'   hvti_theme("manuscript")
+#' plot(up) & hvti_theme("manuscript")
+#' }
 #'
-#' # --- Custom intersection bar colour via scale_fill_manual ----------------
-#' upset_plot(
-#'   dta,
-#'   intersect = sets,
+#' @importFrom rlang .data
+#' @export
+hvti_upset <- function(data, intersect) {
+  .check_df(data)
+  if (!(is.character(intersect) && length(intersect) >= 2L))
+    stop("`intersect` must be a character vector of at least 2 column names.",
+         call. = FALSE)
+  .check_cols(data, intersect)
+  non_binary <- intersect[!vapply(data[intersect], function(x)
+    is.logical(x) || (is.numeric(x) && all(x %in% c(0, 1, NA))),
+    logical(1))]
+  if (length(non_binary) > 0L)
+    stop("ComplexUpset requires binary (0/1 or logical) columns. ",
+         "Non-binary column(s): ", paste(non_binary, collapse = ", "), ".",
+         call. = FALSE)
+
+  set_counts <- colSums(data[intersect], na.rm = TRUE)
+
+  new_hvti_data(
+    data = as.data.frame(data),
+    meta = list(
+      intersect  = intersect,
+      n_patients = nrow(data),
+      n_sets     = length(intersect)
+    ),
+    tables   = list(set_counts = set_counts),
+    subclass = "hvti_upset"
+  )
+}
+
+
+#' Print an hvti_upset object
+#'
+#' @param x   An \code{hvti_upset} object from \code{\link{hvti_upset}}.
+#' @param ... Ignored.
+#' @return \code{x}, invisibly.
+#' @export
+print.hvti_upset <- function(x, ...) {
+  m  <- x$meta
+  sc <- x$tables$set_counts
+  cat("<hvti_upset>\n")
+  cat(sprintf("  N patients  : %d  (%d sets)\n", m$n_patients, m$n_sets))
+  cat("  Set counts  :\n")
+  for (s in names(sc)) {
+    cat(sprintf("    %-20s %d\n", s, sc[[s]]))
+  }
+  invisible(x)
+}
+
+
+#' Plot an hvti_upset object
+#'
+#' Draws an UpSet plot using \code{\link[ComplexUpset]{upset}}.
+#' Apply a theme to \strong{all panels} with \code{&}:
+#' \preformatted{plot(up) & hvti_theme("manuscript")}
+#' Apply scales or annotations to the intersection panel via
+#' \code{base_annotations}.
+#'
+#' @param x                   An \code{hvti_upset} object.
+#' @param min_size             Minimum intersection size to display.
+#'   Default \code{1}.
+#' @param width_ratio          Fraction of horizontal space given to the
+#'   set-size bar. Default \code{0.3}.
+#' @param encode_sets          Logical; when \code{FALSE} (default) set names
+#'   are used verbatim, required for \code{\link[ggplot2]{annotate}} to
+#'   reference a specific set by name.
+#' @param sort_sets            Sort order for set-size bar:
+#'   \code{"descending"}, \code{"ascending"}, or \code{FALSE}.
+#'   Default \code{"descending"}.
+#' @param sort_intersections   Sort order for intersection size bars.
+#'   Default \code{"descending"}.
+#' @param set_size_position    Position of the set-size bar: \code{"right"}
+#'   (default) or \code{"left"}.
+#' @param ...                  Additional arguments forwarded to
+#'   \code{\link[ComplexUpset]{upset}}, e.g. \code{base_annotations},
+#'   \code{annotations}, \code{set_sizes}.
+#'
+#' @return A patchwork / ggplot composite. Use \code{&} to apply a theme to
+#'   all panels.
+#'
+#' @seealso \code{\link{hvti_upset}}, \code{\link{hvti_theme}}
+#'
+#' @examples
+#' sets <- c("AV_Replacement", "AV_Repair", "MV_Replacement", "MV_Repair",
+#'           "TV_Repair", "Aorta", "CABG")
+#' dta <- sample_upset_data(n = 300, seed = 42)
+#' up  <- hvti_upset(dta, intersect = sets)
+#'
+#' # Build the plot object (render interactively with print(p))
+#' p <- plot(up)
+#'
+#' \dontrun{
+#' # Manuscript theme applied to all panels via &
+#' plot(up) & hvti_theme("manuscript")
+#'
+#' # Custom intersection bar colour
+#' plot(up,
 #'   base_annotations = list(
 #'     "Intersection size" = ComplexUpset::intersection_size(
 #'       mapping = ggplot2::aes(fill = "n")
@@ -139,95 +218,26 @@ sample_upset_data <- function(n = 500, seed = 42L) {
 #'   hvti_theme("manuscript")
 #' }
 #'
-#' # --- Colour bars by a stratum (e.g. era) ---------------------------------
-#' \dontrun{
-#' dta$era <- ifelse(seq_len(nrow(dta)) <= 150, "Early", "Recent")
-#'
-#' upset_plot(
-#'   dta,
-#'   intersect = sets,
-#'   base_annotations = list(
-#'     "Intersection size" = ComplexUpset::intersection_size(
-#'       counts   = FALSE,
-#'       mapping  = ggplot2::aes(fill = era)
-#'     ) +
-#'       ggplot2::scale_fill_manual(
-#'         values = c("Early" = "grey60", "Recent" = "steelblue"),
-#'         name   = "Era"
-#'       ) +
-#'       ggplot2::labs(y = "Patients (n)")
-#'   )
-#' ) &
-#'   hvti_theme("manuscript")
-#' }
-#'
-#' # --- Annotate a specific set bar and add count labels --------------------
-#' \dontrun{
-#' upset_plot(
-#'   dta,
-#'   intersect = sets,
-#'   set_sizes = (
-#'     ComplexUpset::upset_set_size(position = "right") +
-#'       ggplot2::geom_text(
-#'         ggplot2::aes(label = ggplot2::after_stat(count)),
-#'         hjust  = 1.1,
-#'         stat   = "count",
-#'         colour = "white"
-#'       ) +
-#'       ggplot2::annotate(
-#'         geom  = "text",
-#'         label = "\u2713",
-#'         x     = "CABG",
-#'         y     = 175,
-#'         size  = 3
-#'       ) +
-#'       ggplot2::expand_limits(y = 300)
-#'   )
-#' ) &
-#'   hvti_theme("manuscript")
-#' }
-#'
-#' # --- Save ----------------------------------------------------------------
-#' \dontrun{
-#' p <- upset_plot(dta, intersect = sets) & hvti_theme("manuscript")
-#' ggplot2::ggsave("upset.pdf", p, width = 12, height = 8)
-#' }
-#'
 #' @importFrom ComplexUpset upset upset_set_size intersection_size
 #' @importFrom ggplot2 aes
 #' @export
-upset_plot <- function(data,
-                       intersect,
-                       min_size             = 1,
-                       width_ratio          = 0.3,
-                       encode_sets          = FALSE,
-                       sort_sets            = "descending",
-                       sort_intersections   = "descending",
-                       set_size_position    = "right",
-                       ...) {
-
-  .check_df(data)
-  if (!(is.character(intersect) && length(intersect) >= 2L))
-    stop("`intersect` must be a character vector of at least 2 column names.",
-         call. = FALSE)
-  .check_cols(data, intersect)
-  non_binary <- intersect[!vapply(data[intersect], function(x)
-    is.logical(x) || (is.numeric(x) && all(x %in% c(0, 1, NA))),
-    logical(1))]
-  if (length(non_binary) > 0L)
-    stop("ComplexUpset requires binary (0/1 or logical) columns. ",
-         "Non-binary column(s): ", paste(non_binary, collapse = ", "), ".",
-         call. = FALSE)
-
+plot.hvti_upset <- function(x,
+                             min_size           = 1,
+                             width_ratio        = 0.3,
+                             encode_sets        = FALSE,
+                             sort_sets          = "descending",
+                             sort_intersections = "descending",
+                             set_size_position  = "right",
+                             ...) {
   ComplexUpset::upset(
-    data                 = data,
-    intersect            = intersect,
-    min_size             = min_size,
-    width_ratio          = width_ratio,
-    encode_sets          = encode_sets,
-    sort_sets            = sort_sets,
-    sort_intersections   = sort_intersections,
-    set_sizes            = ComplexUpset::upset_set_size(
+    data               = x$data,
+    intersect          = x$meta$intersect,
+    min_size           = min_size,
+    width_ratio        = width_ratio,
+    encode_sets        = encode_sets,
+    sort_sets          = sort_sets,
+    sort_intersections = sort_intersections,
+    set_sizes          = ComplexUpset::upset_set_size(
       position = set_size_position
     ),
     ...

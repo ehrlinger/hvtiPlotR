@@ -1,20 +1,108 @@
 # hvtiPlotR 2.0.0.9001
 
+# hvtiPlotR 2.0.0
+
+## Breaking changes — new S3 constructor API
+
+All plot functions have been replaced by a two-step S3 workflow:
+
+```r
+# Step 1: construct & validate
+obj <- hvti_*(data, ...)          # returns c("hvti_<concept>", "hvti_data")
+
+# Step 2: render
+plot(obj, ...) +                  # bare ggplot — no scales, labels, or theme
+  scale_colour_manual(...) +
+  labs(...) +
+  hvti_theme("manuscript")
+```
+
+The old single-call functions (`mirror_histogram()`, `survival_curve()`,
+etc.) are **removed**. This is a clean break; no deprecated wrappers.
+
+### Constructor → old function mapping
+
+| New constructor | Removed function(s) |
+|---|---|
+| `hvti_mirror()` | `mirror_histogram()` |
+| `hvti_balance()` | `covariate_balance()` |
+| `hvti_stacked()` | `stacked_histogram()` |
+| `hvti_survival()` | `survival_curve()` |
+| `hvti_nonparametric()` | `nonparametric_curve_plot()` |
+| `hvti_ordinal()` | `nonparametric_ordinal_plot()` |
+| `hvti_followup()` | `goodness_followup()` + `goodness_event_plot()` |
+| `hvti_trends()` | `trends_plot()` |
+| `hvti_spaghetti()` | `spaghetti_plot()` |
+| `hvti_longitudinal()` | `longitudinal_counts_plot()` + `longitudinal_counts_table()` |
+| `hvti_alluvial()` | `alluvial_plot()` |
+| `hvti_sankey()` | `cluster_sankey_plot()` |
+| `hvti_eda()` | `eda_plot()` |
+| `hvti_upset()` | `upset_plot()` |
+
+| `hvti_hazard()` | `hazard_plot()` |
+| `hvti_survival_difference()` | `survival_difference_plot()` |
+| `hvti_nnt()` | `nnt_plot()` |
+
+The legacy hazard helpers (`hazard_plot()`, `survival_difference_plot()`,
+`nnt_plot()`) remain exported but are marked **Superseded** — use the S3
+constructors above instead.
+
+### Multi-type constructors
+
+Two constructors replace *pairs* of old functions via a `type =` argument
+on `plot()`:
+
+* `hvti_longitudinal` — `plot(x, type = "plot")` (bar chart, was
+  `longitudinal_counts_plot()`) or `plot(x, type = "table")` (text panel,
+  was `longitudinal_counts_table()`).
+* `hvti_followup` — `plot(x, type = "followup")` (death panel, was
+  `goodness_followup()`) or `plot(x, type = "event")` (non-fatal event
+  panel, was `goodness_event_plot()`).
+
+## New base class
+
+* Added `hvti_data` S3 base class (`R/hvti-data.R`). Every `hvti_*`
+  constructor returns `list(data=, meta=, tables=)` with class
+  `c("hvti_<concept>", "hvti_data")`.
+* `new_hvti_data()` — internal constructor; validates `data` (data.frame),
+  `meta` (named list), `tables` (list), `subclass` (character).
+* `print.hvti_data()` — fallback print method; shows class, dimensions, and
+  slot names.
+* `plot.hvti_data()` — fallback plot method; stops with a helpful message
+  if no concrete `plot.hvti_*()` is registered.
+* `is_hvti_data()` — exported predicate.
+
+## Documentation
+
+* Rewrote `help.R` package-level documentation to describe the new
+  two-step constructor + `plot()` workflow and list all `hvti_*()` constructors.
+* Updated `_pkgdown.yml` reference index: grouped by constructor family,
+  with `plot.*` and `print.*` S3 methods explicitly listed.
+* Updated all vignettes (`plot-functions.qmd`, `sas-migration-guide.qmd`,
+  `plot-decorators.qmd`) to use the new API throughout.
+* Updated `sas-migration-guide.qmd` key-concepts section and template
+  reference table.
+* Fixed all stale `@seealso` cross-references and orphaned old-API docblocks
+  in every migrated R source file.
+
+
+
 ## Tests
 
 * Added `tests/testthat/test_hazard_plot.R` — full validation suite for
-  `sample_hazard_data`, `sample_hazard_empirical`, `sample_life_table`, and
-  `hazard_plot` (column checks, CI bounds, layer structure, multi-group,
-  non-default column names, input validation).
+  `sample_hazard_data`, `sample_hazard_empirical`, `sample_life_table`,
+  `hvti_hazard`, `hvti_survival_difference`, and `hvti_nnt` (column checks,
+  CI bounds, layer structure, multi-group, non-default column names, input
+  validation, print output, empirical/reference validation).
 * Added `tests/testthat/test_nonparametric_plots.R` — full suite for
   `sample_nonparametric_curve_data`, `sample_nonparametric_curve_points`,
   `nonparametric_curve_plot`, `sample_nonparametric_ordinal_data`,
   `sample_nonparametric_ordinal_points`, and `nonparametric_ordinal_plot`.
   Includes probability-sum-to-1 invariant test for ordinal grades.
 * Added `tests/testthat/test_survival_derived.R` — full suite for
-  `sample_survival_difference_data`, `survival_difference_plot`,
-  `sample_nnt_data`, and `nnt_plot`. Covers NA-NNT at t≈0 edge case and
-  cross-function time-grid consistency.
+  `sample_survival_difference_data`, `sample_nnt_data`, and legacy
+  `survival_difference_plot` / `nnt_plot`. Covers NA-NNT at t≈0 edge case
+  and cross-function time-grid consistency.
 * Added `tests/testthat/test_cluster_sankey.R` — full suite for
   `sample_cluster_sankey_data` and `cluster_sankey_plot`. Validates the
   hierarchical merge tree (C9=A → C2=A) and that each Ck has exactly k levels.

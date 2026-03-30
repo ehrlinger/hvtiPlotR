@@ -87,61 +87,67 @@ test_that("sample_cluster_sankey_data custom probs shifts cluster distribution",
 })
 
 # ============================================================================
-# cluster_sankey_plot
+# hvti_sankey + plot.hvti_sankey
 # ============================================================================
 
-test_that("cluster_sankey_plot returns a ggplot (all K = 2:9)", {
+test_that("hvti_sankey returns an hvti_data object", {
   skip_if_not_installed("ggsankey")
   dta <- sample_cluster_sankey_data(n = 100, seed = 1)
-  expect_s3_class(cluster_sankey_plot(dta), "ggplot")
+  expect_s3_class(hvti_sankey(dta), "hvti_data")
 })
 
-test_that("cluster_sankey_plot works with a subset of cluster columns", {
+test_that("plot(hvti_sankey) returns a ggplot (all K = 2:9)", {
+  skip_if_not_installed("ggsankey")
+  dta <- sample_cluster_sankey_data(n = 100, seed = 1)
+  expect_s3_class(plot(hvti_sankey(dta)), "ggplot")
+})
+
+test_that("plot(hvti_sankey) works with a subset of cluster columns", {
   skip_if_not_installed("ggsankey")
   dta <- sample_cluster_sankey_data(n = 100, seed = 1)
   expect_s3_class(
-    cluster_sankey_plot(dta, cluster_cols = c("C2", "C3", "C4")),
+    plot(hvti_sankey(dta, cluster_cols = c("C2", "C3", "C4"))),
     "ggplot"
   )
 })
 
-test_that("cluster_sankey_plot is composable with + operator", {
+test_that("plot(hvti_sankey) is composable with + operator", {
   skip_if_not_installed("ggsankey")
   dta <- sample_cluster_sankey_data(n = 100, seed = 1)
-  p   <- cluster_sankey_plot(dta) + ggplot2::labs(x = "Number of clusters (K)")
+  p   <- plot(hvti_sankey(dta)) + ggplot2::labs(x = "Number of clusters (K)")
   expect_s3_class(p, "ggplot")
   expect_equal(p$labels$x, "Number of clusters (K)")
 })
 
-test_that("cluster_sankey_plot is composable with hvti_theme()", {
+test_that("plot(hvti_sankey) is composable with hvti_theme()", {
   skip_if_not_installed("ggsankey")
   dta <- sample_cluster_sankey_data(n = 100, seed = 1)
-  p   <- cluster_sankey_plot(dta) + hvti_theme("manuscript")
+  p   <- plot(hvti_sankey(dta)) + hvti_theme("manuscript")
   expect_s3_class(p, "ggplot")
 })
 
-test_that("cluster_sankey_plot errors when data is not a data frame", {
+test_that("hvti_sankey errors when data is not a data frame", {
   skip_if_not_installed("ggsankey")
   expect_error(
-    cluster_sankey_plot(list(C2 = "A", C3 = "A")),
+    hvti_sankey(list(C2 = "A", C3 = "A")),
     "data.frame|data frame"
   )
 })
 
-test_that("cluster_sankey_plot errors when cluster_cols has fewer than 2 elements", {
+test_that("hvti_sankey errors when cluster_cols has fewer than 2 elements", {
   skip_if_not_installed("ggsankey")
   dta <- sample_cluster_sankey_data(n = 50, seed = 1)
   expect_error(
-    cluster_sankey_plot(dta, cluster_cols = "C2"),
+    hvti_sankey(dta, cluster_cols = "C2"),
     "at least 2|at least two|fewer than"
   )
 })
 
-test_that("cluster_sankey_plot errors when a cluster column is absent from data", {
+test_that("hvti_sankey errors when a cluster column is absent from data", {
   skip_if_not_installed("ggsankey")
   dta <- sample_cluster_sankey_data(n = 50, seed = 1)
   expect_error(
-    cluster_sankey_plot(dta, cluster_cols = c("C2", "nonexistent")),
+    hvti_sankey(dta, cluster_cols = c("C2", "nonexistent")),
     "not found|not a column|not in"
   )
 })

@@ -7,7 +7,7 @@
 # replacing base-R graphics with composable ggplot objects.
 #
 # Key differences from the templates:
-#  - Returns a single bare ggplot object per call (caller loops over variables)
+#  - Returns a single hvti_eda object per call (caller loops over variables)
 #  - Variable type auto-detected by eda_classify_var(); callable independently
 #  - eda_select_vars() replaces Order_Variables() + Mod_Data <- dta[, Order_Var]
 #  - y_label parameter replaces the var_labels / var.names override pattern
@@ -51,7 +51,7 @@ eda_classify_var <- function(x, unique_limit = 6L) {
 #' Sample EDA Data
 #'
 #' Generates a realistic mixed-type patient-level data frame for demonstrating
-#' [eda_plot()] and [eda_select_vars()]. The data mimics a cardiac surgery
+#' [hvti_eda()] and [eda_select_vars()]. The data mimics a cardiac surgery
 #' registry with binary, ordinal, character-categorical, and continuous
 #' variables, plus a modest proportion of missing values.
 #'
@@ -73,7 +73,7 @@ eda_classify_var <- function(x, unique_limit = 6L) {
 #'   - `lv_mass`     — continuous LV mass index (g/m²)
 #'   - `peak_grad`   — continuous peak gradient (mmHg)
 #'
-#' @seealso [eda_plot()], [eda_classify_var()], [eda_select_vars()]
+#' @seealso [hvti_eda()], [eda_classify_var()], [eda_select_vars()]
 #'
 #' @examples
 #' dta <- sample_eda_data()
@@ -134,7 +134,7 @@ sample_eda_data <- function(n          = 300L,
 #' @return A data frame containing only the requested columns in the requested
 #'   order.
 #'
-#' @seealso [eda_plot()]
+#' @seealso [hvti_eda()]
 #'
 #' @examples
 #' dta <- sample_eda_data()
@@ -157,55 +157,49 @@ eda_select_vars <- function(data, vars) {
 }
 
 # ---------------------------------------------------------------------------
+# Public API
+# ---------------------------------------------------------------------------
 
-#' EDA Barplot / Scatterplot for One Variable
+#' Prepare EDA data for a single variable
 #'
-#' Produces an exploratory data analysis plot for a single variable against a
-#' reference time axis. Variable type is detected automatically using
-#' [eda_classify_var()]:
+#' Classifies \code{y_col} using \code{\link{eda_classify_var}}, pre-processes
+#' categorical levels (adding an explicit \code{"(Missing)"} level), and
+#' returns an \code{hvti_eda} object.  Call \code{\link{plot.hvti_eda}} on the
+#' result to obtain a bare \code{ggplot2} barplot or scatter plot that you can
+#' decorate with colour scales and \code{\link{hvti_theme}}.
 #'
-#' - **Continuous** (`"Cont"`): scatter of `y_col` vs `x_col` with a LOESS
-#'   smoother overlay and a rug on the x-axis for observations where `y_col`
-#'   is missing.
-#' - **Numeric categorical** (`"Cat_Num"`): stacked bar chart of counts (or
-#'   proportions when `show_percent = TRUE`) per `x_col` level.
-#' - **Character categorical** (`"Cat_Char"`): same stacked bar, colouring
-#'   each string level separately.
-#'
-#' In all cases `NA` values are shown as an explicit fill level labelled
-#' `"(Missing)"`, so they can be coloured via `scale_fill_manual()`.
-#'
-#' Use [eda_select_vars()] to pick a named subset of variables before
-#' iterating with `lapply()`.
-#'
-#' Returns a bare [ggplot2::ggplot()] object. Compose with `scale_fill_*`,
-#' `scale_colour_*`, `labs()`, `annotate()`, and [hvti_theme()].
+#' Iterate over variables with \code{lapply()} after selecting columns with
+#' \code{\link{eda_select_vars}}.
 #'
 #' @param data         Data frame; one row per observation.
-#' @param x_col        Name of the reference (time/grouping) column. Used as
-#'   the x-axis for both scatter and bar plots. For barplots it is coerced to
-#'   a factor. Default `"year"`.
-#' @param y_col        Name of the variable to plot. Default `"ef"`.
+#' @param x_col        Name of the reference (time/grouping) column.  Used as
+#'   the x-axis for both scatter and bar plots.  Default \code{"year"}.
+#' @param y_col        Name of the variable to plot.  Default \code{"ef"}.
 #' @param y_label      Optional human-readable label for the variable, used as
 #'   the plot title, y-axis label (continuous), and fill-legend name
-#'   (categorical). When `NULL` (default), `y_col` is used. Matches the
-#'   `var_labels` / `var.names` override in
-#'   `tp.dp.EDA_barplots_scatterplots_varnames.R`.
-#' @param unique_limit Integer threshold passed to [eda_classify_var()] to
-#'   distinguish categorical from continuous numeric columns. Default `6`.
+#'   (categorical).  When \code{NULL} (default), \code{y_col} is used.
+#' @param unique_limit Integer threshold passed to \code{\link{eda_classify_var}}
+#'   to distinguish categorical from continuous numeric columns.  Default \code{6}.
 #' @param show_percent Logical; for categorical plots, use proportions
-#'   (`position = "fill"`) instead of counts (`position = "stack"`)?
-#'   Default `FALSE`.
-#' @param smooth_method Smoothing method for continuous plots, passed to
-#'   [ggplot2::geom_smooth()]. Default `"loess"`.
-#' @param smooth_span  LOESS span. Default `0.8`.
-#' @param smooth_se    Logical; show confidence ribbon around smooth?
-#'   Default `FALSE`.
+#'   (\code{position = "fill"}) instead of counts (\code{position = "stack"})?
+#'   Default \code{FALSE}.
 #'
-#' @return A [ggplot2::ggplot()] object.
+#' @return An object of class \code{c("hvti_eda", "hvti_data")}:
+#' \describe{
+#'   \item{\code{$data}}{Pre-processed data frame ready for plotting.  For
+#'     continuous variables: two columns \code{x} and \code{y}.  For
+#'     categorical variables: columns \code{x} (factor) and \code{fill}
+#'     (factor with \code{"(Missing)"} as explicit level).}
+#'   \item{\code{$meta}}{Named list: \code{x_col}, \code{y_col},
+#'     \code{y_label}, \code{var_type} (\code{"Cont"}, \code{"Cat_Num"}, or
+#'     \code{"Cat_Char"}), \code{show_percent}, \code{n_obs}.}
+#'   \item{\code{$tables}}{For continuous variables: \code{rug_data} — rows
+#'     where \code{y_col} is \code{NA}, used for the rug layer.  Empty list
+#'     for categorical variables.}
+#' }
 #'
-#' @seealso [sample_eda_data()], [eda_classify_var()], [eda_select_vars()],
-#'   [hvti_theme()]
+#' @seealso \code{\link{plot.hvti_eda}}, \code{\link{sample_eda_data}},
+#'   \code{\link{eda_classify_var}}, \code{\link{eda_select_vars}}
 #'
 #' @references R templates: \code{tp.dp.EDA_barplots_scatterplots.R},
 #'   \code{tp.dp.EDA_barplots_scatterplots_varnames.R};
@@ -215,10 +209,10 @@ eda_select_vars <- function(data, vars) {
 #' @examples
 #' dta <- sample_eda_data(n = 300, seed = 42)
 #'
-#' # --- Binary categorical: count barplot ------------------------------------
-#' # male is 0/1; y_label sets title and fill legend name.
-#' eda_plot(dta, x_col = "year", y_col = "male",
-#'          y_label = "Sex") +
+#' # Binary categorical
+#' ed <- hvti_eda(dta, x_col = "year", y_col = "male", y_label = "Sex")
+#' ed   # prints var_type and observation count
+#' plot(ed) +
 #'   ggplot2::scale_fill_manual(
 #'     values = c("0" = "steelblue", "1" = "firebrick", "(Missing)" = "grey80"),
 #'     labels = c("0" = "Female", "1" = "Male", "(Missing)" = "Missing"),
@@ -228,22 +222,136 @@ eda_select_vars <- function(data, vars) {
 #'   ggplot2::labs(x = "Surgery Year", y = "Count") +
 #'   hvti_theme("manuscript")
 #'
-#' # --- Binary categorical: percentage barplot -------------------------------
-#' eda_plot(dta, x_col = "year", y_col = "cabg",
-#'          y_label = "Concomitant CABG", show_percent = TRUE) +
-#'   ggplot2::scale_fill_manual(
-#'     values = c("0" = "grey70", "1" = "steelblue", "(Missing)" = "grey90"),
-#'     labels = c("0" = "No CABG", "1" = "CABG", "(Missing)" = "Missing"),
-#'     name   = NULL
-#'   ) +
-#'   ggplot2::scale_x_discrete(breaks = seq(2005, 2020, 5)) +
-#'   ggplot2::scale_y_continuous(labels = scales::percent) +
-#'   ggplot2::labs(x = "Surgery Year", y = "Proportion") +
+#' # Continuous
+#' ed2 <- hvti_eda(dta, x_col = "op_years", y_col = "ef",
+#'                 y_label = "Ejection Fraction (%)")
+#' plot(ed2) +
+#'   ggplot2::scale_colour_manual(values = c("firebrick"), guide = "none") +
+#'   ggplot2::scale_x_continuous(breaks = seq(0, 15, 5)) +
+#'   ggplot2::labs(x = "Years from First Surgery Year") +
 #'   hvti_theme("manuscript")
 #'
-#' # --- Ordinal categorical (4 levels) with RColorBrewer --------------------
-#' eda_plot(dta, x_col = "year", y_col = "nyha",
-#'          y_label = "Preoperative NYHA Class") +
+#' # Variable selection + lapply (varnames template pattern)
+#' cont_vars <- c(ef = "Ejection Fraction (%)",
+#'                lv_mass = "LV Mass Index (g/m\u00b2)",
+#'                peak_grad = "Peak Gradient (mmHg)")
+#' sub_cont <- eda_select_vars(dta, c("op_years", names(cont_vars)))
+#' p_cont <- lapply(names(cont_vars), function(cn) {
+#'   plot(hvti_eda(sub_cont, x_col = "op_years", y_col = cn,
+#'                y_label = cont_vars[[cn]])) +
+#'     ggplot2::scale_colour_manual(values = c("steelblue"), guide = "none") +
+#'     ggplot2::scale_x_continuous(breaks = seq(0, 15, 5)) +
+#'     ggplot2::labs(x = "Years from First Surgery Year") +
+#'     hvti_theme("manuscript")
+#' })
+#' p_cont[[1]]
+#'
+#' @importFrom rlang .data
+#' @importFrom stats na.omit
+#' @export
+hvti_eda <- function(data,
+                     x_col        = "year",
+                     y_col        = "ef",
+                     y_label      = NULL,
+                     unique_limit = 6L,
+                     show_percent = FALSE) {
+  .check_df(data)
+  .check_cols(data, c(x_col, y_col))
+
+  label    <- if (!is.null(y_label)) y_label else y_col
+  var_type <- eda_classify_var(data[[y_col]], unique_limit)
+
+  if (var_type == "Cont") {
+    # --- Continuous: rename columns for predictable plotting -----------------
+    plot_data <- data.frame(x = data[[x_col]], y = data[[y_col]])
+    rug_data  <- plot_data[is.na(plot_data$y), , drop = FALSE]
+    tables    <- list(rug_data = rug_data)
+
+  } else {
+    # --- Categorical: explicit (Missing) level --------------------------------
+    yv  <- as.character(data[[y_col]])
+    yv[is.na(yv)] <- "(Missing)"
+
+    if (var_type == "Cat_Num") {
+      base_levels <- as.character(sort(unique(na.omit(data[[y_col]]))))
+    } else {
+      base_levels <- unique(as.character(na.omit(data[[y_col]])))
+    }
+    yf <- factor(yv, levels = c(base_levels, "(Missing)"))
+
+    plot_data <- data.frame(x = factor(data[[x_col]]), fill = yf)
+    tables    <- list()
+  }
+
+  new_hvti_data(
+    data = plot_data,
+    meta = list(
+      x_col        = x_col,
+      y_col        = y_col,
+      y_label      = label,
+      var_type     = var_type,
+      show_percent = show_percent,
+      n_obs        = nrow(data)
+    ),
+    tables   = tables,
+    subclass = "hvti_eda"
+  )
+}
+
+
+#' Print an hvti_eda object
+#'
+#' @param x   An \code{hvti_eda} object from \code{\link{hvti_eda}}.
+#' @param ... Ignored.
+#' @return \code{x}, invisibly.
+#' @export
+print.hvti_eda <- function(x, ...) {
+  m <- x$meta
+  cat("<hvti_eda>\n")
+  cat(sprintf("  Variable    : %s  [%s]\n", m$y_col, m$var_type))
+  cat(sprintf("  Label       : %s\n", m$y_label))
+  cat(sprintf("  x col       : %s\n", m$x_col))
+  cat(sprintf("  N obs       : %d\n", m$n_obs))
+  if (m$var_type != "Cont" && m$show_percent)
+    cat("  Mode        : proportions\n")
+  invisible(x)
+}
+
+
+#' Plot an hvti_eda object
+#'
+#' Draws an exploratory data analysis plot for the variable stored in the
+#' \code{hvti_eda} object.  Variable type (stored in \code{x$meta$var_type})
+#' determines the chart:
+#'
+#' \describe{
+#'   \item{\strong{Continuous} (\code{"Cont"})}{Scatter plot with a LOESS
+#'     smoother overlay and a rug on the x-axis for rows where the outcome
+#'     is missing.}
+#'   \item{\strong{Numeric categorical} (\code{"Cat_Num"})}{Stacked (or filled)
+#'     bar chart with counts (or proportions) per x level.}
+#'   \item{\strong{Character categorical} (\code{"Cat_Char"})}{Same stacked bar,
+#'     colouring each string level separately.}
+#' }
+#'
+#' @param x             An \code{hvti_eda} object.
+#' @param smooth_method Smoothing method for continuous plots, passed to
+#'   \code{\link[ggplot2]{geom_smooth}}. Default \code{"loess"}.
+#' @param smooth_span   LOESS span. Default \code{0.8}.
+#' @param smooth_se     Logical; show confidence ribbon around smooth?
+#'   Default \code{FALSE}.
+#' @param ...           Ignored; present for S3 consistency.
+#'
+#' @return A bare \code{\link[ggplot2]{ggplot}} object.
+#'
+#' @seealso \code{\link{hvti_eda}}, \code{\link{hvti_theme}}
+#'
+#' @examples
+#' dta <- sample_eda_data(n = 300, seed = 42)
+#'
+#' # --- Ordinal categorical: percentage barplot ------------------------------
+#' plot(hvti_eda(dta, x_col = "year", y_col = "nyha",
+#'               y_label = "Preoperative NYHA Class")) +
 #'   ggplot2::scale_fill_brewer(
 #'     palette = "RdYlGn", direction = -1,
 #'     labels  = c("1" = "I", "2" = "II", "3" = "III", "4" = "IV",
@@ -254,34 +362,9 @@ eda_select_vars <- function(data, vars) {
 #'   ggplot2::labs(x = "Surgery Year", y = "Count") +
 #'   hvti_theme("manuscript")
 #'
-#' # --- Character categorical -----------------------------------------------
-#' eda_plot(dta, x_col = "year", y_col = "valve_morph",
-#'          y_label = "Valve Morphology") +
-#'   ggplot2::scale_fill_manual(
-#'     values = c(Bicuspid  = "steelblue",
-#'                Tricuspid = "firebrick",
-#'                Unicuspid = "goldenrod3",
-#'                "(Missing)" = "grey80"),
-#'     name = "Morphology"
-#'   ) +
-#'   ggplot2::scale_x_discrete(breaks = seq(2005, 2020, 5)) +
-#'   ggplot2::labs(x = "Surgery Year", y = "Count") +
-#'   hvti_theme("manuscript")
-#'
-#' # --- Continuous: scatter + LOESS -----------------------------------------
-#' eda_plot(dta, x_col = "op_years", y_col = "ef",
-#'          y_label = "Ejection Fraction (%)") +
-#'   ggplot2::scale_colour_manual(values = c("firebrick"), guide = "none") +
-#'   ggplot2::scale_x_continuous(breaks = seq(0, 15, 5)) +
-#'   ggplot2::scale_y_continuous(limits = c(20, 80),
-#'                               breaks = seq(20, 80, 20)) +
-#'   ggplot2::labs(x = "Years from First Surgery Year",
-#'                 caption = "Tick marks: observations with missing EF") +
-#'   hvti_theme("manuscript")
-#'
 #' # --- Continuous: annotated -----------------------------------------------
-#' eda_plot(dta, x_col = "op_years", y_col = "peak_grad",
-#'          y_label = "Peak Gradient (mmHg)") +
+#' plot(hvti_eda(dta, x_col = "op_years", y_col = "peak_grad",
+#'               y_label = "Peak Gradient (mmHg)")) +
 #'   ggplot2::scale_colour_manual(values = c("steelblue"), guide = "none") +
 #'   ggplot2::scale_x_continuous(breaks = seq(0, 15, 5)) +
 #'   ggplot2::labs(x = "Years from First Surgery Year") +
@@ -290,99 +373,28 @@ eda_select_vars <- function(data, vars) {
 #'                     size = 3, colour = "grey40", fontface = "italic") +
 #'   hvti_theme("manuscript")
 #'
-#' # --- Variable selection + labels (varnames template pattern) --------------
-#' # Matches Var_CatList / var_labels workflow in
-#' # tp.dp.EDA_barplots_scatterplots_varnames.R.
-#' # Named vector: names = column names, values = human-readable labels.
-#' bin_vars <- c(male = "Sex (Male)", cabg = "Concomitant CABG")
-#' sub_bin  <- eda_select_vars(dta, c("year", names(bin_vars)))
-#' p_bin <- lapply(names(bin_vars), function(cn) {
-#'   eda_plot(sub_bin, x_col = "year", y_col = cn,
-#'            y_label = bin_vars[[cn]]) +
-#'     ggplot2::scale_fill_brewer(palette = "Set1", direction = -1,
-#'                                name = NULL) +
-#'     ggplot2::scale_x_discrete(breaks = seq(2005, 2020, 5)) +
-#'     ggplot2::labs(x = "Surgery Year", y = "Count") +
-#'     hvti_theme("manuscript")
-#' })
-#' p_bin[[1]]
-#' p_bin[[2]]
-#'
-#' # --- Variable selection: ordinal / multi-level categorical ----------------
-#' # Matches Var_CatList with Min_Categories=3, Max_Categories=7.
-#' cat_vars <- c(nyha        = "NYHA Class",
-#'               valve_morph = "Valve Morphology")
-#' sub_cat <- eda_select_vars(dta, c("year", names(cat_vars)))
-#' p_cat <- lapply(names(cat_vars), function(cn) {
-#'   eda_plot(sub_cat, x_col = "year", y_col = cn,
-#'            y_label = cat_vars[[cn]]) +
-#'     ggplot2::scale_fill_brewer(palette = "Set2", name = NULL) +
-#'     ggplot2::scale_x_discrete(breaks = seq(2005, 2020, 5)) +
-#'     ggplot2::labs(x = "Surgery Year", y = "Count") +
-#'     hvti_theme("manuscript")
-#' })
-#' p_cat[[1]]
-#'
-#' # --- Variable selection: continuous ---------------------------------------
-#' # Matches Var_ContList / var_labels workflow.
-#' cont_vars <- c(ef        = "Ejection Fraction (%)",
-#'                lv_mass   = "LV Mass Index (g/m\u00b2)",
-#'                peak_grad = "Peak Gradient (mmHg)")
-#' sub_cont <- eda_select_vars(dta, c("op_years", names(cont_vars)))
-#' p_cont <- lapply(names(cont_vars), function(cn) {
-#'   eda_plot(sub_cont, x_col = "op_years", y_col = cn,
-#'            y_label = cont_vars[[cn]]) +
-#'     ggplot2::scale_colour_manual(values = c("steelblue"), guide = "none") +
-#'     ggplot2::scale_x_continuous(breaks = seq(0, 15, 5)) +
-#'     ggplot2::labs(x = "Years from First Surgery Year") +
-#'     hvti_theme("manuscript")
-#' })
-#' p_cont[[1]]
-#'
-#' # --- Save: multi-page PDF via ggsave + gridExtra -------------------------
-#' \dontrun{
-#' all_plots <- c(p_bin, p_cat, p_cont)
-#' per_page  <- 9L  # 3 x 3 grid
-#' for (pg in seq(1, length(all_plots), by = per_page)) {
-#'   idx  <- seq(pg, min(pg + per_page - 1L, length(all_plots)))
-#'   grob <- gridExtra::marrangeGrob(all_plots[idx], nrow = 3, ncol = 3)
-#'   ggplot2::ggsave(
-#'     filename = sprintf("eda_page%02d.pdf", ceiling(pg / per_page)),
-#'     plot     = grob,
-#'     width    = 14, height = 14
-#'   )
-#' }
-#' }
-#'
 #' @importFrom ggplot2 ggplot aes geom_point geom_smooth geom_rug geom_bar
-#'   scale_y_continuous
+#'   scale_y_continuous labs
 #' @importFrom rlang .data
-#' @importFrom stats na.omit
 #' @export
-eda_plot <- function(data,
-                     x_col         = "year",
-                     y_col         = "ef",
-                     y_label       = NULL,
-                     unique_limit  = 6L,
-                     show_percent  = FALSE,
-                     smooth_method = "loess",
-                     smooth_span   = 0.8,
-                     smooth_se     = FALSE) {
+plot.hvti_eda <- function(x,
+                           smooth_method = "loess",
+                           smooth_span   = 0.8,
+                           smooth_se     = FALSE,
+                           ...) {
+  data         <- x$data
+  meta         <- x$meta
+  var_type     <- meta$var_type
+  label        <- meta$y_label
+  show_percent <- meta$show_percent
+  x_col_name   <- meta$x_col
+  y_col_name   <- meta$y_col
 
-  # --- Validation -----------------------------------------------------------
-  .check_df(data)
-  .check_cols(data, c(x_col, y_col))
-
-  label    <- if (!is.null(y_label)) y_label else y_col
-  var_type <- eda_classify_var(data[[y_col]], unique_limit)
-
-  # --- Continuous: scatter + LOESS ------------------------------------------
   if (var_type == "Cont") {
-    df     <- data.frame(x = data[[x_col]], y = data[[y_col]])
-    df_rug <- df[is.na(df$y), , drop = FALSE]
+    rug_data <- x$tables$rug_data
 
-    p <- ggplot2::ggplot(df, ggplot2::aes(x = .data[["x"]],
-                                          y = .data[["y"]])) +
+    p <- ggplot2::ggplot(data, ggplot2::aes(x = .data[["x"]],
+                                            y = .data[["y"]])) +
       ggplot2::geom_point(na.rm = TRUE, size = 0.9, alpha = 0.4) +
       ggplot2::geom_smooth(
         method    = smooth_method,
@@ -391,11 +403,12 @@ eda_plot <- function(data,
         se        = smooth_se,
         linewidth = 1,
         na.rm     = TRUE
-      )
+      ) +
+      ggplot2::labs(x = x_col_name, y = label, title = label)
 
-    if (nrow(df_rug) > 0L) {
+    if (nrow(rug_data) > 0L) {
       p <- p + ggplot2::geom_rug(
-        data        = df_rug,
+        data        = rug_data,
         mapping     = ggplot2::aes(x = .data[["x"]]),
         sides       = "b",
         colour      = "grey50",
@@ -403,30 +416,17 @@ eda_plot <- function(data,
       )
     }
 
-    return(p + ggplot2::labs(x = x_col, y = label, title = label))
+    return(p)
   }
 
-  # --- Categorical: stacked bar ---------------------------------------------
-  # Make NA an explicit factor level so it appears in the fill legend
-  yv  <- as.character(data[[y_col]])
-  yv[is.na(yv)] <- "(Missing)"
-
-  # Natural sort for Cat_Num; original order + (Missing) last for Cat_Char
-  if (var_type == "Cat_Num") {
-    base_levels <- as.character(sort(unique(na.omit(data[[y_col]]))))
-  } else {
-    base_levels <- unique(as.character(na.omit(data[[y_col]])))
-  }
-  yf <- factor(yv, levels = c(base_levels, "(Missing)"))
-
-  df    <- data.frame(x = factor(data[[x_col]]), fill = yf)
+  # --- Categorical bar chart ------------------------------------------------
   y_lab <- if (show_percent) "Proportion" else "Count"
   pos   <- if (show_percent) "fill" else "stack"
 
-  p <- ggplot2::ggplot(df, ggplot2::aes(x    = .data[["x"]],
-                                        fill = .data[["fill"]])) +
+  p <- ggplot2::ggplot(data, ggplot2::aes(x    = .data[["x"]],
+                                          fill = .data[["fill"]])) +
     ggplot2::geom_bar(position = pos) +
-    ggplot2::labs(x = x_col, y = y_lab, fill = label, title = label)
+    ggplot2::labs(x = x_col_name, y = y_lab, fill = label, title = label)
 
   if (show_percent) {
     p <- p + ggplot2::scale_y_continuous(

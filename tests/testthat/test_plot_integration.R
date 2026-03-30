@@ -1,17 +1,18 @@
 # tests/testthat/test_plot_integration.R
 #
-# Smoke tests for every plot function / sample data pair.
+# Smoke tests for every hvti_*() constructor / sample data pair.
 # Each test:
 #   1. Calls the sample_* function with small n and a fixed seed
-#   2. Calls the corresponding plot function
-#   3. Expects the result to be a ggplot object
-#   Where relevant (mirror_histogram, survival_curve) also checks attributes.
+#   2. Calls the hvti_*() constructor to build the S3 data object
+#   3. Calls plot() on the object and expects a ggplot result
+#   Where relevant (hvti_mirror, hvti_survival) also checks $tables slots.
 
 library(testthat)
 library(ggplot2)
 
 # ============================================================================
 # hazard_plot — sample_hazard_data and sample_hazard_empirical
+# (retained single-call API — no hvti_* constructor)
 # ============================================================================
 
 test_that("hazard_plot returns a ggplot from sample_hazard_data", {
@@ -28,71 +29,60 @@ test_that("hazard_plot with empirical overlay returns a ggplot", {
 })
 
 # ============================================================================
-# survival_curve — sample_survival_data
+# hvti_survival — sample_survival_data
 # ============================================================================
 
-test_that("survival_curve returns a ggplot from sample_survival_data", {
+test_that("hvti_survival returns an hvti_data object", {
   dta <- sample_survival_data(n = 50, seed = 1)
-  p   <- survival_curve(dta)
-  expect_s3_class(p, "ggplot")
+  km  <- hvti_survival(dta)
+  expect_s3_class(km, "hvti_data")
 })
 
-test_that("survival_curve attaches km_data attribute", {
+test_that("plot(hvti_survival) returns a ggplot", {
   dta <- sample_survival_data(n = 50, seed = 1)
-  p   <- survival_curve(dta)
-  expect_false(is.null(attr(p, "km_data")))
+  km  <- hvti_survival(dta)
+  expect_s3_class(plot(km), "ggplot")
 })
 
-test_that("survival_curve attaches risk_table attribute", {
+test_that("hvti_survival $tables$risk is not NULL", {
   dta <- sample_survival_data(n = 50, seed = 1)
-  p   <- survival_curve(dta)
-  expect_false(is.null(attr(p, "risk_table")))
+  km  <- hvti_survival(dta)
+  expect_false(is.null(km$tables$risk))
 })
 
-test_that("survival_curve attaches report_table attribute", {
+test_that("hvti_survival $tables$report is not NULL", {
   dta <- sample_survival_data(n = 50, seed = 1)
-  p   <- survival_curve(dta)
-  expect_false(is.null(attr(p, "report_table")))
+  km  <- hvti_survival(dta)
+  expect_false(is.null(km$tables$report))
 })
 
-test_that("survival_curve plot_type='cumhaz' returns a ggplot", {
+test_that("plot(km, type='cumhaz') returns a ggplot", {
   dta <- sample_survival_data(n = 50, seed = 1)
-  p   <- survival_curve(dta, plot_type = "cumhaz")
-  expect_s3_class(p, "ggplot")
+  km  <- hvti_survival(dta)
+  expect_s3_class(plot(km, type = "cumhaz"), "ggplot")
 })
 
-test_that("survival_curve plot_type='hazard' returns a ggplot", {
+test_that("plot(km, type='hazard') returns a ggplot", {
   dta <- sample_survival_data(n = 50, seed = 1)
-  p   <- survival_curve(dta, plot_type = "hazard")
-  expect_s3_class(p, "ggplot")
+  km  <- hvti_survival(dta)
+  expect_s3_class(plot(km, type = "hazard"), "ggplot")
 })
 
-test_that("survival_curve plot_type='loglog' returns a ggplot", {
+test_that("plot(km, type='loglog') returns a ggplot", {
   dta <- sample_survival_data(n = 50, seed = 1)
-  p   <- survival_curve(dta, plot_type = "loglog")
-  expect_s3_class(p, "ggplot")
+  km  <- hvti_survival(dta)
+  expect_s3_class(plot(km, type = "loglog"), "ggplot")
 })
 
-test_that("survival_curve plot_type='life' returns a ggplot", {
+test_that("plot(km, type='life') returns a ggplot", {
   dta <- sample_survival_data(n = 50, seed = 1)
-  p   <- survival_curve(dta, plot_type = "life")
-  expect_s3_class(p, "ggplot")
-})
-
-test_that("survival_curve strata_col deprecation warning is emitted", {
-  dta <- sample_survival_data(
-    n             = 50,
-    strata_levels = c("A", "B"),
-    seed          = 1
-  )
-  expect_warning(
-    survival_curve(dta, strata_col = "valve_type"),
-    "deprecated"
-  )
+  km  <- hvti_survival(dta)
+  expect_s3_class(plot(km, type = "life"), "ggplot")
 })
 
 # ============================================================================
 # survival_difference_plot — sample_survival_difference_data
+# (retained single-call API)
 # ============================================================================
 
 test_that("survival_difference_plot returns a ggplot", {
@@ -104,6 +94,7 @@ test_that("survival_difference_plot returns a ggplot", {
 
 # ============================================================================
 # nnt_plot — sample_nnt_data
+# (retained single-call API)
 # ============================================================================
 
 test_that("nnt_plot returns a ggplot", {
@@ -113,160 +104,215 @@ test_that("nnt_plot returns a ggplot", {
 })
 
 # ============================================================================
-# nonparametric_curve_plot — sample_nonparametric_curve_data
+# hvti_nonparametric — sample_nonparametric_curve_data
 # ============================================================================
 
-test_that("nonparametric_curve_plot returns a ggplot", {
+test_that("hvti_nonparametric returns an hvti_data object", {
   dat <- sample_nonparametric_curve_data(n = 50, time_max = 5,
                                          n_points = 50, seed = 1)
-  p   <- nonparametric_curve_plot(dat)
-  expect_s3_class(p, "ggplot")
+  np  <- hvti_nonparametric(dat)
+  expect_s3_class(np, "hvti_data")
+})
+
+test_that("plot(hvti_nonparametric) returns a ggplot", {
+  dat <- sample_nonparametric_curve_data(n = 50, time_max = 5,
+                                         n_points = 50, seed = 1)
+  expect_s3_class(plot(hvti_nonparametric(dat)), "ggplot")
 })
 
 # ============================================================================
-# nonparametric_ordinal_plot — sample_nonparametric_ordinal_data
+# hvti_ordinal — sample_nonparametric_ordinal_data
 # ============================================================================
 
-test_that("nonparametric_ordinal_plot returns a ggplot", {
+test_that("hvti_ordinal returns an hvti_data object", {
   dat <- sample_nonparametric_ordinal_data(n = 100, time_max = 5,
                                            n_points = 50, seed = 1)
-  p   <- nonparametric_ordinal_plot(dat)
-  expect_s3_class(p, "ggplot")
+  ord <- hvti_ordinal(dat)
+  expect_s3_class(ord, "hvti_data")
+})
+
+test_that("plot(hvti_ordinal) returns a ggplot", {
+  dat <- sample_nonparametric_ordinal_data(n = 100, time_max = 5,
+                                           n_points = 50, seed = 1)
+  expect_s3_class(plot(hvti_ordinal(dat)), "ggplot")
 })
 
 # ============================================================================
-# goodness_followup — sample_goodness_followup_data
+# hvti_followup — sample_goodness_followup_data
 # ============================================================================
 
-test_that("goodness_followup returns a ggplot", {
+test_that("hvti_followup returns an hvti_data object", {
   dta <- sample_goodness_followup_data(n = 50, seed = 1)
-  p   <- goodness_followup(dta)
-  expect_s3_class(p, "ggplot")
+  gf  <- hvti_followup(dta)
+  expect_s3_class(gf, "hvti_data")
 })
 
-# ============================================================================
-# goodness_event_plot — sample_goodness_followup_data
-# ============================================================================
-
-test_that("goodness_event_plot returns a ggplot", {
+test_that("plot(hvti_followup) returns a ggplot", {
   dta <- sample_goodness_followup_data(n = 50, seed = 1)
-  p   <- goodness_event_plot(
-    dta,
-    event_col      = "ev_event",
-    event_time_col = "iv_event"
-  )
-  expect_s3_class(p, "ggplot")
+  expect_s3_class(plot(hvti_followup(dta)), "ggplot")
+})
+
+test_that("plot(hvti_followup, type='event') returns a ggplot", {
+  dta <- sample_goodness_followup_data(n = 50, seed = 1)
+  gf  <- hvti_followup(dta,
+                        event_col      = "ev_event",
+                        event_time_col = "iv_event")
+  expect_s3_class(plot(gf, type = "event"), "ggplot")
 })
 
 # ============================================================================
-# covariate_balance — sample_covariate_balance_data
+# hvti_balance — sample_covariate_balance_data
 # ============================================================================
 
-test_that("covariate_balance returns a ggplot", {
+test_that("hvti_balance returns an hvti_data object", {
   dta <- sample_covariate_balance_data(n_vars = 4, n = 100, seed = 1)
-  p   <- covariate_balance(dta)
-  expect_s3_class(p, "ggplot")
+  cb  <- hvti_balance(dta)
+  expect_s3_class(cb, "hvti_data")
+})
+
+test_that("plot(hvti_balance) returns a ggplot", {
+  dta <- sample_covariate_balance_data(n_vars = 4, n = 100, seed = 1)
+  expect_s3_class(plot(hvti_balance(dta)), "ggplot")
 })
 
 # ============================================================================
-# mirror_histogram — sample_mirror_histogram_data
+# hvti_mirror — sample_mirror_histogram_data
 # ============================================================================
 
-test_that("mirror_histogram returns a ggplot", {
+test_that("hvti_mirror returns an hvti_data object", {
   dta <- sample_mirror_histogram_data(n = 50, seed = 1)
-  p   <- suppressMessages(mirror_histogram(dta))
-  expect_s3_class(p, "ggplot")
+  mh  <- suppressMessages(hvti_mirror(dta))
+  expect_s3_class(mh, "hvti_data")
 })
 
-test_that("mirror_histogram attaches diagnostics attribute", {
+test_that("plot(hvti_mirror) returns a ggplot", {
   dta <- sample_mirror_histogram_data(n = 50, seed = 1)
-  p   <- suppressMessages(mirror_histogram(dta))
-  expect_false(is.null(attr(p, "diagnostics")))
+  mh  <- suppressMessages(hvti_mirror(dta))
+  expect_s3_class(plot(mh), "ggplot")
 })
 
-test_that("mirror_histogram attaches data attribute", {
+test_that("hvti_mirror $tables$diagnostics is not NULL", {
   dta <- sample_mirror_histogram_data(n = 50, seed = 1)
-  p   <- suppressMessages(mirror_histogram(dta))
-  expect_false(is.null(attr(p, "data")))
+  mh  <- suppressMessages(hvti_mirror(dta))
+  expect_false(is.null(mh$tables$diagnostics))
 })
 
-test_that("mirror_histogram emits a diagnostics message", {
+test_that("hvti_mirror $tables$working is not NULL", {
   dta <- sample_mirror_histogram_data(n = 50, seed = 1)
-  expect_message(mirror_histogram(dta), "mirror_histogram diagnostics")
+  mh  <- suppressMessages(hvti_mirror(dta))
+  expect_false(is.null(mh$tables$working))
+})
+
+test_that("hvti_mirror emits a diagnostics message", {
+  dta <- sample_mirror_histogram_data(n = 50, seed = 1)
+  expect_message(hvti_mirror(dta), "mirror_histogram diagnostics")
 })
 
 # ============================================================================
-# spaghetti_plot — sample_spaghetti_data
+# hvti_spaghetti — sample_spaghetti_data
 # ============================================================================
 
-test_that("spaghetti_plot returns a ggplot", {
+test_that("hvti_spaghetti returns an hvti_data object", {
   dta <- sample_spaghetti_data(n_patients = 20, seed = 1)
-  p   <- spaghetti_plot(dta)
-  expect_s3_class(p, "ggplot")
+  sp  <- hvti_spaghetti(dta)
+  expect_s3_class(sp, "hvti_data")
+})
+
+test_that("plot(hvti_spaghetti) returns a ggplot", {
+  dta <- sample_spaghetti_data(n_patients = 20, seed = 1)
+  expect_s3_class(plot(hvti_spaghetti(dta)), "ggplot")
 })
 
 # ============================================================================
-# trends_plot — sample_trends_data
+# hvti_trends — sample_trends_data
 # ============================================================================
 
-test_that("trends_plot returns a ggplot", {
+test_that("hvti_trends returns an hvti_data object", {
   dta <- sample_trends_data(n = 100, seed = 1)
-  p   <- trends_plot(dta)
-  expect_s3_class(p, "ggplot")
+  tr  <- hvti_trends(dta)
+  expect_s3_class(tr, "hvti_data")
+})
+
+test_that("plot(hvti_trends) returns a ggplot", {
+  dta <- sample_trends_data(n = 100, seed = 1)
+  expect_s3_class(plot(hvti_trends(dta)), "ggplot")
 })
 
 # ============================================================================
-# longitudinal_counts_plot — sample_longitudinal_counts_data
+# hvti_longitudinal — sample_longitudinal_counts_data
 # ============================================================================
 
-test_that("longitudinal_counts_plot returns a ggplot", {
+test_that("hvti_longitudinal returns an hvti_data object", {
   dta <- sample_longitudinal_counts_data(n_patients = 30, seed = 1)
-  p   <- longitudinal_counts_plot(dta)
-  expect_s3_class(p, "ggplot")
+  lc  <- hvti_longitudinal(dta)
+  expect_s3_class(lc, "hvti_data")
+})
+
+test_that("plot(hvti_longitudinal) returns a ggplot", {
+  dta <- sample_longitudinal_counts_data(n_patients = 30, seed = 1)
+  expect_s3_class(plot(hvti_longitudinal(dta)), "ggplot")
 })
 
 # ============================================================================
-# alluvial_plot — sample_alluvial_data
+# hvti_alluvial — sample_alluvial_data
 # ============================================================================
 
-test_that("alluvial_plot returns a ggplot", {
+test_that("hvti_alluvial returns an hvti_data object", {
   dta  <- sample_alluvial_data(n = 100, seed = 1)
   axes <- c("pre_ar", "procedure", "post_ar")
-  p    <- alluvial_plot(dta, axes = axes, y_col = "freq")
-  expect_s3_class(p, "ggplot")
+  al   <- hvti_alluvial(dta, axes = axes, y_col = "freq")
+  expect_s3_class(al, "hvti_data")
+})
+
+test_that("plot(hvti_alluvial) returns a ggplot", {
+  dta  <- sample_alluvial_data(n = 100, seed = 1)
+  axes <- c("pre_ar", "procedure", "post_ar")
+  expect_s3_class(plot(hvti_alluvial(dta, axes = axes, y_col = "freq")),
+                  "ggplot")
 })
 
 # ============================================================================
-# cluster_sankey_plot — sample_cluster_sankey_data
+# hvti_sankey — sample_cluster_sankey_data
 # ============================================================================
 
-test_that("cluster_sankey_plot returns a ggplot", {
+test_that("hvti_sankey returns an hvti_data object", {
   skip_if_not_installed("ggsankey")
   dta <- sample_cluster_sankey_data(n = 50, seed = 1)
-  p   <- cluster_sankey_plot(dta)
-  expect_s3_class(p, "ggplot")
+  sk  <- hvti_sankey(dta)
+  expect_s3_class(sk, "hvti_data")
+})
+
+test_that("plot(hvti_sankey) returns a ggplot", {
+  skip_if_not_installed("ggsankey")
+  dta <- sample_cluster_sankey_data(n = 50, seed = 1)
+  expect_s3_class(plot(hvti_sankey(dta)), "ggplot")
 })
 
 # ============================================================================
-# stacked_histogram — sample_stacked_histogram_data
+# hvti_stacked — sample_stacked_histogram_data
 # ============================================================================
 
-test_that("stacked_histogram returns a ggplot", {
+test_that("hvti_stacked returns an hvti_data object", {
   dta <- sample_stacked_histogram_data(seed = 1)
-  p   <- stacked_histogram(dta)
-  expect_s3_class(p, "ggplot")
+  sh  <- hvti_stacked(dta)
+  expect_s3_class(sh, "hvti_data")
+})
+
+test_that("plot(hvti_stacked) returns a ggplot", {
+  dta <- sample_stacked_histogram_data(seed = 1)
+  expect_s3_class(plot(hvti_stacked(dta)), "ggplot")
 })
 
 # ============================================================================
-# upset_plot — sample_upset_data
+# hvti_upset — sample_upset_data
 # ============================================================================
 
-test_that("upset_plot returns without error from sample data", {
+test_that("plot(hvti_upset) returns without error from sample data", {
   sets <- c("AV_Replacement", "AV_Repair", "MV_Replacement",
             "MV_Repair", "TV_Repair", "Aorta", "CABG")
   dta  <- sample_upset_data(n = 100, seed = 1)
   result <- tryCatch(
-    upset_plot(dta, intersect = sets),
+    plot(hvti_upset(dta, intersect = sets)),
     error = function(e) {
       msg <- conditionMessage(e)
       if (grepl("valid theme|S7|patchwork", msg, ignore.case = TRUE)) {
@@ -279,11 +325,16 @@ test_that("upset_plot returns without error from sample data", {
 })
 
 # ============================================================================
-# eda_plot — sample_eda_data
+# hvti_eda — sample_eda_data
 # ============================================================================
 
-test_that("eda_plot returns a ggplot", {
+test_that("hvti_eda returns an hvti_data object", {
   dta <- sample_eda_data(n = 50, seed = 1)
-  p   <- eda_plot(dta)
-  expect_s3_class(p, "ggplot")
+  ed  <- hvti_eda(dta)
+  expect_s3_class(ed, "hvti_data")
+})
+
+test_that("plot(hvti_eda) returns a ggplot", {
+  dta <- sample_eda_data(n = 50, seed = 1)
+  expect_s3_class(plot(hvti_eda(dta)), "ggplot")
 })

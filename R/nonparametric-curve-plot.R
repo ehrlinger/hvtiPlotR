@@ -6,13 +6,13 @@
 # SAS EQUIVALENT: After running %decompos() and averaging patient-specific
 # profiles with PROC SUMMARY, the resulting `mean_curv` dataset (columns:
 # iv_echo/iv_wristm, prev/est, [cll_p68/clu_p68]) is the direct input to
-# nonparametric_curve_plot().
+# hvti_nonparametric().
 #
 # MIGRATION GUIDE FOR SAS USERS:
 #   1. Export mean_curv  -> read.csv("mean_curv.csv")  -> curve_data
 #   2. Export boots_ci   -> read.csv("boots_ci.csv")   -> same curve_data, lower/upper cols
 #   3. Export means      -> read.csv("means.csv")      -> data_points
-#   4. Call nonparametric_curve_plot(curve_data, ..., data_points = ...)
+#   4. Call hvti_nonparametric(curve_data, ..., data_points = ...)
 #   5. Compose with scale_colour_*, labs(), hvti_theme() using + operator
 #      (replaces the `color=` and axis options inside %plot())
 #
@@ -50,7 +50,7 @@
 #' Simulates pre-computed curve output matching what SAS produces after fitting
 #' a two-phase nonparametric temporal trend model and averaging patient-specific
 #' profiles with `PROC SUMMARY`. The output is suitable for direct use with
-#' [nonparametric_curve_plot()].
+#' [hvti_nonparametric()].
 #'
 #' **SAS context:** In the SAS templates this dataset corresponds to
 #' `mean_curv` (estimate column) plus `boots_ci` (lower/upper columns).
@@ -65,30 +65,25 @@
 #'   Default `500` (matches the SAS `inc=(max-min)/499.9` loop).
 #' @param groups      `NULL` for a single average curve, or a named numeric
 #'   vector of group-specific hazard multipliers,
-#'   e.g. `c("Ozaki" = 0.8, "CE-Pericardial" = 1.2)` — analogous to the
-#'   indicator variable effect in `tp.np.avpkgrad_ozak_ind_mtwt.sas`.
-#' @param outcome_type `"probability"` (binary outcome, 0-1 scale; e.g.
-#'   AF prevalence, TR grade prevalence) or `"continuous"` (e.g. FEV1, AV
-#'   peak gradient). Default `"probability"`.
+#'   e.g. `c("Ozaki" = 0.8, "CE-Pericardial" = 1.2)`.
+#' @param outcome_type `"probability"` (binary outcome, 0-1 scale) or
+#'   `"continuous"`. Default `"probability"`.
 #' @param ci_level    Confidence level for bootstrap-style CI bands.
-#'   Use `0.68` for the 68% CI shown in the SAS templates (one standard
-#'   error), or `0.95` for the 95% CI. Default `0.68`.
-#' @param n_bins      Number of equal-sized data-summary bins (analogous to
-#'   the SAS `quint = _nobs_/12` / `decile = _nobs_/10` grouping). Default
-#'   `10`.
+#'   Default `0.68`.
+#' @param n_bins      Number of equal-sized data-summary bins. Default `10`.
 #' @param seed        Random seed. Default `42`.
 #'
 #' @return A data frame with columns `time`, `estimate`, `lower`, `upper`,
 #'   and (if `groups` is not `NULL`) `group`.
 #'
-#' @seealso [nonparametric_curve_plot()], [sample_nonparametric_curve_points()]
+#' @seealso [hvti_nonparametric()], [sample_nonparametric_curve_points()]
 #'
 #' @examples
-#' # Single average curve (like tp.np.afib.ivwristm.avrg_curv.binary.sas)
+#' # Single average curve
 #' dat <- sample_nonparametric_curve_data(n = 500, time_max = 12)
 #' head(dat)
 #'
-#' # Two-group comparison (like tp.np.avpkgrad_ozak_ind_mtwt.sas)
+#' # Two-group comparison
 #' dat2 <- sample_nonparametric_curve_data(
 #'   n = 400, time_max = 7,
 #'   groups = c("Ozaki" = 0.7, "CE-Pericardial" = 1.3),
@@ -110,7 +105,6 @@ sample_nonparametric_curve_data <- function(n            = 500,
 
   z_score <- stats::qnorm(1 - (1 - ci_level) / 2)
 
-  # ----------- Simulation tuning constants -----------------------------------
   eta_intercept <- .NP_SIM$eta_intercept
   logit_shift   <- .NP_SIM$logit_shift
   cont_baseline <- .NP_SIM$cont_baseline
@@ -119,15 +113,12 @@ sample_nonparametric_curve_data <- function(n            = 500,
   eff_frac_prob <- .NP_SIM$eff_frac_prob
   eff_frac_cont <- .NP_SIM$eff_frac_cont
 
-  # Fine time grid (log-spaced like SAS min=-5;max=log(t);inc=...)
   t_grid <- exp(seq(log(0.05), log(max(time_max, 0.1)), length.out = n_points))
 
-  # ----------- Simulation parameters ----------------------------------------
-  thalf1 <- time_max * 0.15    # early half-life
-  thalf2 <- time_max * 0.55    # late half-life
+  thalf1 <- time_max * 0.15
+  thalf2 <- time_max * 0.55
 
   if (is.null(groups)) {
-    # Single curve --------------------------------------------------------
     eta  <- .np_two_phase(t_grid, e0 = eta_intercept,
                           thalf1 = thalf1, thalf2 = thalf2)
 
@@ -139,7 +130,7 @@ sample_nonparametric_curve_data <- function(n            = 500,
       hi   <- stats::plogis(stats::qlogis(pmax(est, 1e-4)) + z_score * se /
                               sqrt(est * (1 - est) + 1e-4))
     } else {
-      est   <- cont_baseline + cont_scale * eta   # e.g. AV peak gradient in mmHg
+      est   <- cont_baseline + cont_scale * eta
       sigma <- cont_sigma
       lo    <- est - z_score * sigma / sqrt(n * eff_frac_cont)
       hi    <- est + z_score * sigma / sqrt(n * eff_frac_cont)
@@ -151,8 +142,7 @@ sample_nonparametric_curve_data <- function(n            = 500,
                            upper    = hi)
 
   } else {
-    # Multi-group curves --------------------------------------------------
-    grp_names <- names(groups)
+    grp_names  <- names(groups)
     curve_list <- lapply(seq_along(groups), function(i) {
       eta <- .np_two_phase(t_grid, e0 = log(groups[[i]]) + eta_intercept,
                            thalf1 = thalf1, thalf2 = thalf2)
@@ -175,7 +165,7 @@ sample_nonparametric_curve_data <- function(n            = 500,
                  upper    = hi,
                  group    = grp_names[[i]])
     })
-    curve_df <- do.call(rbind, curve_list)
+    curve_df       <- do.call(rbind, curve_list)
     curve_df$group <- factor(curve_df$group, levels = grp_names)
   }
 
@@ -193,23 +183,22 @@ sample_nonparametric_curve_data <- function(n            = 500,
 #' @return A data frame with columns `time`, `value`, and (if `groups` is not
 #'   `NULL`) `group`.
 #'
-#' @seealso [sample_nonparametric_curve_data()], [nonparametric_curve_plot()]
+#' @seealso [sample_nonparametric_curve_data()], [hvti_nonparametric()]
 #'
 #' @examples
-#' # Single-group data summary points (probability outcome)
+#' # Single-group data summary points
 #' pts <- sample_nonparametric_curve_points(n = 500, time_max = 12)
 #' head(pts)
 #' names(pts)           # "time", "value"
 #'
-#' # Two-group points — continuous outcome (e.g. AV peak gradient)
+#' # Two-group points
 #' pts2 <- sample_nonparametric_curve_points(
 #'   n            = 400,
 #'   time_max     = 7,
 #'   groups       = c("Ozaki" = 0.7, "CE-Pericardial" = 1.3),
 #'   outcome_type = "continuous"
 #' )
-#' levels(pts2$group)   # "Ozaki", "CE-Pericardial"
-#' nrow(pts2)           # 2 groups x n_bins rows
+#' levels(pts2$group)
 #' @export
 sample_nonparametric_curve_points <- function(n            = 500,
                                               time_max     = 12,
@@ -236,7 +225,7 @@ sample_nonparametric_curve_points <- function(n            = 500,
       df$group   <- grp_names[[i]]
       df
     })
-    dp_df <- do.call(rbind, dp_list)
+    dp_df       <- do.call(rbind, dp_list)
     dp_df$group <- factor(dp_df$group, levels = grp_names)
   }
 
@@ -259,7 +248,6 @@ sample_nonparametric_curve_points <- function(n            = 500,
     mu  <- cont_baseline + cont_scale * eta
     obs <- stats::rnorm(n, mu, cont_sigma)
   }
-  # Bin into n_bins equal-sized groups (like SAS quint / decile logic)
   ord  <- order(t_pat)
   t_s  <- t_pat[ord]
   o_s  <- obs[ord]
@@ -271,100 +259,161 @@ sample_nonparametric_curve_points <- function(n            = 500,
 }
 
 # ============================================================================
+# Public API
+# ============================================================================
 
-#' Nonparametric Temporal Trend Curve Plot
+#' Prepare nonparametric temporal trend curve data for plotting
 #'
-#' Plots a pre-computed smooth predicted curve (and optional confidence band
-#' and binned data summary points) from a nonparametric temporal trend model.
-#' Covers the full range of `tp.np.*` SAS templates:
+#' Validates pre-computed curve data (and optional CI bounds and binned data
+#' summary points) and returns an \code{hvti_nonparametric} object.  Call
+#' \code{\link{plot.hvti_nonparametric}} to obtain a bare \code{ggplot2}
+#' curve plot that you can decorate with colour/fill scales, axis limits, and
+#' \code{\link{hvti_theme}}.
+#'
+#' Covers the full range of \code{tp.np.*} SAS templates:
 #'
 #' | SAS template pattern | R usage |
 #' |---|---|
-#' | Single average curve (`avrg_curv`, `u.trend`) | `nonparametric_curve_plot(dat$curve)` |
-#' | Curve + 68% CI (`avrg_curv.ci`) | `+ lower_col + upper_col` |
-#' | Curve + CI + data points (`avrg_curv.ci.pts`) | `+ data_points = dat$data_points` |
-#' | Two-group comparison (`double`, `ozak`) | `+ group_col = "group"` |
-#' | Multi-scenario / covariate-adjusted (`mult`, `bmi_xaxis`) | `+ group_col = "group"` |
-#' | Phase decomposition (`pt_spec_phases`, `independence`, `u.phases`) | `+ group_col = "phase"` |
+#' | Single average curve (`avrg_curv`, `u.trend`) | \code{hvti_nonparametric(dat)} |
+#' | Curve + 68\% CI (`avrg_curv.ci`) | \code{+ lower_col + upper_col} |
+#' | Curve + CI + data points | \code{+ data_points = ...} |
+#' | Two-group comparison (`double`, `ozak`) | \code{+ group_col = "group"} |
+#' | Multi-scenario / covariate-adjusted (`mult`) | \code{+ group_col = "group"} |
+#' | Phase decomposition (`phases`, `independence`) | \code{+ group_col = "phase"} |
 #'
 #' **SAS column mapping:**
-#' - `estimate_col` ← `prev`, `mnprev`, `_p_`, `est_fev`, `est_z0d` (the predicted value)
-#' - `lower_col` ← `cll_p68` or `cll_p95` from the bootstrap CI dataset
-#' - `upper_col` ← `clu_p68` or `clu_p95`
-#' - `group_col` ← a grouping indicator you add after reshaping from wide to long
-#'   (use [tidyr::pivot_longer()] on the SAS `predict` dataset)
+#' - \code{estimate_col} ← \code{prev}, \code{mnprev}, \code{_p_},
+#'   \code{est_fev}, \code{est_z0d}
+#' - \code{lower_col} ← \code{cll_p68} or \code{cll_p95}
+#' - \code{upper_col} ← \code{clu_p68} or \code{clu_p95}
+#' - \code{group_col} ← indicator added after wide-to-long reshape
 #'
-#' **Reshaping from wide to long (SAS → R):**
-#' SAS templates keep multiple curves as separate variables (`p0`, `p1`, `p2`)
-#' in one dataset. In R, reshape to long format before calling this function:
-#' ```r
-#' library(tidyr)
-#' long <- pivot_longer(predict_wide,
-#'                      cols      = c(odd_e, odd_l),
-#'                      names_to  = "phase",
-#'                      values_to = "estimate")
-#' nonparametric_curve_plot(long, group_col = "phase")
-#' ```
+#' @param curve_data  Data frame; one row per (time, group) combination.
+#' @param x_col       Name of the x-axis column. Default \code{"time"}.
+#' @param estimate_col Name of the predicted value column. Default
+#'   \code{"estimate"}.
+#' @param lower_col   Name of the lower CI bound column, or \code{NULL}.
+#'   Default \code{NULL}.
+#' @param upper_col   Name of the upper CI bound column, or \code{NULL}.
+#'   Default \code{NULL}.
+#' @param group_col   Name of the stratification column, or \code{NULL}.
+#'   Default \code{NULL}.
+#' @param data_points Optional data frame of binned data summary points.
+#'   Must have columns matching \code{x_col} and \code{"value"}, plus
+#'   \code{group_col} when stratified. Default \code{NULL}.
 #'
-#' Returns a **bare ggplot object**. Compose with `scale_colour_*`,
-#' `scale_x_continuous()`, `labs()`, [hvti_theme()]:
-#' ```r
-#' nonparametric_curve_plot(dat, ...) +
-#'   scale_colour_manual(values = c(...)) +
-#'   scale_x_continuous(breaks = 0:12) +
-#'   labs(x = "Months", y = "Prevalence of AF (%)") +
-#'   hvti_theme("manuscript")
-#' ```
+#' @return An object of class \code{c("hvti_nonparametric", "hvti_data")}:
+#' \describe{
+#'   \item{\code{$data}}{The \code{curve_data} data frame.}
+#'   \item{\code{$meta}}{Named list: \code{x_col}, \code{estimate_col},
+#'     \code{lower_col}, \code{upper_col}, \code{group_col},
+#'     \code{has_ci}, \code{has_data_points}, \code{n_obs}.}
+#'   \item{\code{$tables}}{List; contains \code{data_points} when supplied.}
+#' }
 #'
-#' @param curve_data  Data frame containing the fine-grid predicted curve.
-#'   One row per time point (per group if stratified). Typical source: the
-#'   SAS `mean_curv` or `boots_ci` datasets exported to CSV.
-#' @param x_col       Name of the x-axis column (time or continuous covariate
-#'   such as BMI). Corresponds to `iv_wristm`, `iv_echo`, `iv_fevpn`, or
-#'   `bmi` in SAS. Default `"time"`.
-#' @param estimate_col Name of the predicted value column. Corresponds to
-#'   `prev`, `mnprev`, `_p_`, `est_fev`, `p0`–`p3` (one at a time) in SAS.
-#'   Default `"estimate"`.
-#' @param lower_col   Name of the lower CI bound column, or `NULL` for no
-#'   ribbon. Corresponds to `cll_p68` / `cll_p95` in SAS. Default `NULL`.
-#' @param upper_col   Name of the upper CI bound column, or `NULL` for no
-#'   ribbon. Corresponds to `clu_p68` / `clu_p95` in SAS. Default `NULL`.
-#' @param group_col   Name of the column used to stratify curves by colour
-#'   and linetype, or `NULL` for a single curve. Use for group comparisons
-#'   (e.g. Ozaki vs CE-Pericardial) or phase decomposition (Early vs Late).
-#'   Default `NULL`.
-#' @param data_points Optional data frame of binned data summary points to
-#'   overlay as filled circles. Must have a column matching `x_col` for x,
-#'   a column named `"value"` for y, and (when `group_col` is not `NULL`) a
-#'   column matching `group_col`. Default `NULL`.
-#' @param ci_alpha    Transparency of the confidence ribbon (`[0,1]`).
-#'   Default `0.2`.
-#' @param line_width  Width of the predicted curve line. SAS `width=3`
-#'   corresponds roughly to `line_width = 1.2`. Default `1.0`.
-#' @param point_size  Size of the binned data summary points. SAS `symbsize=3/4`
-#'   corresponds roughly to `point_size = 2.0`. Default `2.5`.
-#' @param point_shape Integer shape code for data summary points. Default `20`
-#'   (filled circle; corresponds to SAS `symbol=dot`).
-#'
-#' @return A [ggplot2::ggplot()] object. Compose with `scale_colour_*`,
-#'   `scale_x_continuous()`, `labs()`, `annotate()`, and [hvti_theme()].
-#'
-#' @seealso [sample_nonparametric_curve_data()], [nonparametric_ordinal_plot()],
-#'   [hvti_theme()]
-#'
-#' @references SAS templates: \code{tp.np.*.avrg_curv.*},
-#'   \code{tp.np.*.u.trend.*}, \code{tp.np.*.double.*},
-#'   \code{tp.np.*.mult.*}, \code{tp.np.*.phases.*},
-#'   \code{tp.np.z0axdpo.*}.
+#' @seealso \code{\link{plot.hvti_nonparametric}},
+#'   \code{\link{sample_nonparametric_curve_data}}
 #'
 #' @examples
-#' # Sample data for examples below
-#' dat_bin <- sample_nonparametric_curve_data(
-#'   n = 500, time_max = 12, outcome_type = "probability"
-#' )
-#' dat_con <- sample_nonparametric_curve_data(
-#'   n = 400, time_max = 7, outcome_type = "continuous"
-#' )
+#' dat     <- sample_nonparametric_curve_data(n = 500, time_max = 12)
+#' dat_pts <- sample_nonparametric_curve_points(n = 500, time_max = 12)
+#' np <- hvti_nonparametric(dat, lower_col = "lower", upper_col = "upper",
+#'                           data_points = dat_pts)
+#' np   # prints CI / data-point flags
+#'
+#' plot(np) +
+#'   ggplot2::scale_colour_manual(values = c("steelblue"), guide = "none") +
+#'   ggplot2::scale_fill_manual(values = c("steelblue"), guide = "none") +
+#'   ggplot2::scale_x_continuous(limits = c(0, 12), breaks = 0:12) +
+#'   ggplot2::scale_y_continuous(limits = c(0, 0.40),
+#'                               breaks = seq(0, 0.40, 0.10),
+#'                               labels = scales::percent) +
+#'   ggplot2::labs(x = "Months", y = "Prevalence of AF") +
+#'   hvti_theme("manuscript")
+#'
+#' @importFrom rlang .data
+#' @export
+hvti_nonparametric <- function(curve_data,
+                                x_col        = "time",
+                                estimate_col = "estimate",
+                                lower_col    = NULL,
+                                upper_col    = NULL,
+                                group_col    = NULL,
+                                data_points  = NULL) {
+  .check_df(curve_data, "curve_data")
+  .check_cols(curve_data, c(x_col, estimate_col), "curve_data")
+  .check_col(curve_data, lower_col, "curve_data")
+  .check_col(curve_data, upper_col, "curve_data")
+  .check_col(curve_data, group_col, "curve_data")
+
+  has_ci          <- !is.null(lower_col) && !is.null(upper_col)
+  has_data_points <- !is.null(data_points)
+
+  if (has_data_points) {
+    .check_df(data_points, "data_points")
+    .check_cols(data_points, c(x_col, "value"), "data_points")
+    if (!is.null(group_col))
+      .check_cols(data_points, group_col, "data_points")
+  }
+
+  tables <- if (has_data_points) list(data_points = data_points) else list()
+
+  new_hvti_data(
+    data = as.data.frame(curve_data),
+    meta = list(
+      x_col           = x_col,
+      estimate_col    = estimate_col,
+      lower_col       = lower_col,
+      upper_col       = upper_col,
+      group_col       = group_col,
+      has_ci          = has_ci,
+      has_data_points = has_data_points,
+      n_obs           = nrow(curve_data)
+    ),
+    tables   = tables,
+    subclass = "hvti_nonparametric"
+  )
+}
+
+
+#' Print an hvti_nonparametric object
+#'
+#' @param x   An \code{hvti_nonparametric} object.
+#' @param ... Ignored.
+#' @return \code{x}, invisibly.
+#' @export
+print.hvti_nonparametric <- function(x, ...) {
+  m <- x$meta
+  cat("<hvti_nonparametric>\n")
+  cat(sprintf("  N curve pts : %d\n", m$n_obs))
+  cat(sprintf("  x / estimate: %s / %s\n", m$x_col, m$estimate_col))
+  if (!is.null(m$group_col))
+    cat(sprintf("  Group col   : %s\n", m$group_col))
+  cat(sprintf("  CI ribbon   : %s\n", if (m$has_ci)
+    paste(m$lower_col, "/", m$upper_col) else "none"))
+  cat(sprintf("  Data points : %s\n", if (m$has_data_points) "yes" else "no"))
+  invisible(x)
+}
+
+
+#' Plot an hvti_nonparametric object
+#'
+#' Draws a smooth predicted curve with optional CI ribbon and binned data
+#' summary point overlay.
+#'
+#' @param x            An \code{hvti_nonparametric} object.
+#' @param ci_alpha     Transparency of the confidence ribbon. Default \code{0.2}.
+#' @param line_width   Width of the predicted curve line. Default \code{1.0}.
+#' @param point_size   Size of binned data summary points. Default \code{2.5}.
+#' @param point_shape  Integer shape code for data summary points.
+#'   Default \code{20} (filled circle).
+#' @param ...          Ignored; present for S3 consistency.
+#'
+#' @return A bare \code{\link[ggplot2]{ggplot}} object.
+#'
+#' @seealso \code{\link{hvti_nonparametric}}, \code{\link{hvti_theme}}
+#'
+#' @examples
 #' dat_two <- sample_nonparametric_curve_data(
 #'   n = 400, time_max = 7,
 #'   groups = c("Ozaki" = 0.7, "CE-Pericardial" = 1.3),
@@ -375,307 +424,38 @@ sample_nonparametric_curve_points <- function(n            = 500,
 #'   groups = c("Ozaki" = 0.7, "CE-Pericardial" = 1.3),
 #'   outcome_type = "continuous"
 #' )
-#' dat_multi <- sample_nonparametric_curve_data(
-#'   n = 600, time_max = 14,
-#'   groups = c("CABG-" = 0.6, "CABG+" = 1.4),
-#'   outcome_type = "probability"
-#' )
-#' dat_multi_pts <- sample_nonparametric_curve_points(
-#'   n = 600, time_max = 14,
-#'   groups = c("CABG-" = 0.6, "CABG+" = 1.4),
-#'   outcome_type = "probability"
-#' )
-#'
-#' # --- (1) Single average curve, no CI ------------------------------------
-#' # Matches tp.np.afib.ivwristm.avrg_curv.binary.sas (mean_curv dataset,
-#' # no confidence interval plotted).
-#' nonparametric_curve_plot(dat_bin) +
-#'   ggplot2::scale_colour_manual(values = c("steelblue"), guide = "none") +
-#'   ggplot2::scale_x_continuous(limits = c(0, 12), breaks = 0:12,
-#'                               minor_breaks = NULL) +
-#'   ggplot2::scale_y_continuous(limits = c(0, 0.40),
-#'                               breaks = seq(0, 0.40, 0.10),
-#'                               labels = scales::percent) +
-#'   ggplot2::labs(x = "Months", y = "Prevalence of AF") +
-#'   hvti_theme("manuscript")
-#'
-#' # --- (2) Single curve + 68% CI ribbon ------------------------------------
-#' # Matches the .ci.ps / .ci.cgm variants in tp.np.afib.ivwristm.avrg_curv.
-#' # cll_p68 / clu_p68 from the SAS boots_ci dataset → lower / upper cols.
-#' # The SAS boots_ci dataset also contains cll_p95 / clu_p95 (95% CI); swap
-#' # lower_col / upper_col to those columns for a 95% interval.
-#' nonparametric_curve_plot(
-#'   dat_bin,
-#'   lower_col = "lower",
-#'   upper_col = "upper"
-#' ) +
-#'   ggplot2::scale_colour_manual(values = c("steelblue"), guide = "none") +
-#'   ggplot2::scale_fill_manual(values = c("steelblue"), guide = "none") +
-#'   ggplot2::scale_x_continuous(limits = c(0, 12), breaks = 0:12) +
-#'   ggplot2::scale_y_continuous(limits = c(0, 0.40),
-#'                               breaks = seq(0, 0.40, 0.10),
-#'                               labels = scales::percent) +
-#'   ggplot2::labs(x = "Months", y = "Prevalence of AF",
-#'                 caption = "Shaded region: 68% bootstrap confidence interval") +
-#'   hvti_theme("manuscript")
-#'
-#' # --- (3) Single curve + CI + binned data points --------------------------
-#' # Matches the .ci.pts.ps variant. Data points come from the SAS `means`
-#' # dataset (mmtime, safc). Point colour matches the curve colour.
-#' dat_bin_pts <- sample_nonparametric_curve_points(
-#'   n = 500, time_max = 12, outcome_type = "probability"
-#' )
-#' nonparametric_curve_plot(
-#'   dat_bin,
-#'   lower_col   = "lower",
-#'   upper_col   = "upper",
-#'   data_points = dat_bin_pts
-#' ) +
-#'   ggplot2::scale_colour_manual(values = c("steelblue"), guide = "none") +
-#'   ggplot2::scale_fill_manual(values = c("steelblue"), guide = "none") +
-#'   ggplot2::scale_x_continuous(limits = c(0, 12), breaks = 0:12) +
-#'   ggplot2::scale_y_continuous(limits = c(0, 0.40),
-#'                               breaks = seq(0, 0.40, 0.10),
-#'                               labels = scales::percent) +
-#'   ggplot2::labs(x = "Months", y = "Prevalence of AF") +
-#'   hvti_theme("manuscript")
-#'
-#' # --- (4) Two-group comparison, continuous outcome ------------------------
-#' # Matches tp.np.avpkgrad_ozak_ind_mtwt.sas and
-#' # tp.np.fev.double.univariate.continuous.sas.
-#' # CI ribbon fill matches group colour; use scale_fill_manual to suppress
-#' # the legend for the ribbon.
-#' # Note: the Ozaki SAS template uses different point shapes per group
-#' # (dot vs trianglefilled); add scale_shape_manual() after to replicate this.
-#' nonparametric_curve_plot(
-#'   dat_two,
-#'   group_col   = "group",
-#'   lower_col   = "lower",
-#'   upper_col   = "upper",
-#'   data_points = dat_two_pts
-#' ) +
+#' np <- hvti_nonparametric(dat_two, group_col = "group",
+#'                           lower_col = "lower", upper_col = "upper",
+#'                           data_points = dat_two_pts)
+#' plot(np) +
 #'   ggplot2::scale_colour_manual(
 #'     values = c("Ozaki" = "steelblue", "CE-Pericardial" = "firebrick"),
-#'     name   = "Procedure"
+#'     name = "Procedure"
 #'   ) +
 #'   ggplot2::scale_fill_manual(
 #'     values = c("Ozaki" = "steelblue", "CE-Pericardial" = "firebrick"),
 #'     guide  = "none"
 #'   ) +
-#'   ggplot2::scale_x_continuous(limits = c(0, 7), breaks = 0:7) +
-#'   ggplot2::scale_y_continuous(limits = c(25, 55),
-#'                               breaks = seq(25, 55, 5)) +
-#'   ggplot2::labs(x = "Years after Surgery",
-#'                 y = "AV Peak Gradient (mmHg)") +
-#'   ggplot2::annotate("text", x = 5, y = 52,
-#'                     label = "68% bootstrap CI",
-#'                     size = 3, colour = "grey40", fontface = "italic") +
+#'   ggplot2::labs(x = "Years", y = "AV Peak Gradient (mmHg)") +
 #'   hvti_theme("manuscript")
-#'
-#' # --- (5) Two-group comparison, binary outcome ----------------------------
-#' # Matches tp.np.afib.mult.avrg_curv.binary.sas (CABG vs no-CABG).
-#' nonparametric_curve_plot(
-#'   dat_multi,
-#'   group_col   = "group",
-#'   lower_col   = "lower",
-#'   upper_col   = "upper",
-#'   data_points = dat_multi_pts
-#' ) +
-#'   ggplot2::scale_colour_brewer(palette = "Set1", name = "CABG") +
-#'   ggplot2::scale_fill_brewer(palette = "Set1", guide = "none") +
-#'   ggplot2::scale_x_continuous(limits = c(0, 14),
-#'                               breaks = seq(0, 14, 2)) +
-#'   ggplot2::scale_y_continuous(limits = c(0, 0.30),
-#'                               breaks = seq(0, 0.30, 0.10),
-#'                               labels = scales::percent) +
-#'   ggplot2::labs(x = "Months after Surgery",
-#'                 y = "Prevalence of AF") +
-#'   hvti_theme("manuscript")
-#'
-#' # --- (6) Phase decomposition (early vs late) -----------------------------
-#' # Matches tp.np.afib.ivwristm.pt_spec_phases.binary.sas and
-#' # tp.np.tr.ivecho.independence.sas / u.phases.sas.
-#' # In SAS: odd_e and odd_l are separate columns in the predict dataset.
-#' # In R: reshape to long format with a "phase" column before plotting.
-#' dat_ph <- dat_bin
-#' dat_long <- rbind(
-#'   data.frame(time     = dat_ph$time,
-#'              estimate = dat_ph$estimate * 0.45,
-#'              phase    = "early"),
-#'   data.frame(time     = dat_ph$time,
-#'              estimate = dat_ph$estimate * 0.55,
-#'              phase    = "late")
-#' )
-#' nonparametric_curve_plot(dat_long, group_col = "phase") +
-#'   ggplot2::scale_colour_manual(
-#'     values = c(early = "steelblue", late = "firebrick"),
-#'     labels = c(early = "Early phase", late = "Late phase"),
-#'     name   = NULL
-#'   ) +
-#'   ggplot2::scale_x_continuous(limits = c(0, 12), breaks = 0:12) +
-#'   ggplot2::scale_y_continuous(labels = scales::percent) +
-#'   ggplot2::labs(x = "Months", y = "Odds (decomposed)",
-#'                 title = "Phase decomposition of temporal trend") +
-#'   ggplot2::annotate("text", x = 3, y = 0.08,
-#'                     label = "Early", colour = "steelblue",
-#'                     size = 3.5, fontface = "bold") +
-#'   ggplot2::annotate("text", x = 9, y = 0.12,
-#'                     label = "Late", colour = "firebrick",
-#'                     size = 3.5, fontface = "bold") +
-#'   hvti_theme("manuscript")
-#'
-#' # --- (7) Multi-scenario / covariate-adjusted curves ----------------------
-#' # Matches tp.np.fev.multivariate.continuous.sas and
-#' # tp.np.afib.mult.pt_spec.binary.sas (multiple patient profiles).
-#' dat_scen <- sample_nonparametric_curve_data(
-#'   n = 600, time_max = 7,
-#'   groups = c("Low risk"    = 0.60,
-#'              "Medium risk" = 1.00,
-#'              "High risk"   = 1.60),
-#'   outcome_type = "probability",
-#'   seed = 10
-#' )
-#' nonparametric_curve_plot(dat_scen, group_col = "group") +
-#'   ggplot2::scale_colour_manual(
-#'     values = c("Low risk" = "forestgreen",
-#'                "Medium risk" = "goldenrod3",
-#'                "High risk"   = "firebrick"),
-#'     name = "Patient profile"
-#'   ) +
-#'   ggplot2::scale_x_continuous(limits = c(0, 7), breaks = 0:7) +
-#'   ggplot2::scale_y_continuous(limits = c(0, 0.50),
-#'                               breaks = seq(0, 0.50, 0.10),
-#'                               labels = scales::percent) +
-#'   ggplot2::labs(x = "Years", y = "Prevalence",
-#'                 title = "Covariate-adjusted temporal profiles") +
-#'   hvti_theme("manuscript")
-#'
-#' # --- (8) Non-time x-axis (BMI on x-axis) --------------------------------
-#' # Matches tp.np.z0axdpo.continuous.bmi_xaxis.sas.
-#' # In SAS the predict loop uses bmi as the x variable instead of time.
-#' # Generate two fixed time-point curves over a BMI range:
-#' bmi_grid <- seq(20, 45, length.out = 200)
-#' dat_bmi  <- data.frame(
-#'   bmi      = rep(bmi_grid, 2),
-#'   diameter = c(30 + 0.30 * bmi_grid,       # 0.25-year curve
-#'                30 + 0.30 * bmi_grid + 3),  # 5-year curve
-#'   followup = rep(c("0.25 years", "5 years"), each = 200)
-#' )
-#' nonparametric_curve_plot(
-#'   dat_bmi,
-#'   x_col        = "bmi",
-#'   estimate_col = "diameter",
-#'   group_col    = "followup"
-#' ) +
-#'   ggplot2::scale_colour_manual(
-#'     values = c("0.25 years" = "steelblue", "5 years" = "firebrick"),
-#'     name   = "Follow-up"
-#'   ) +
-#'   ggplot2::scale_x_continuous(limits = c(20, 45),
-#'                               breaks = seq(20, 45, 5)) +
-#'   ggplot2::scale_y_continuous(limits = c(28, 50),
-#'                               breaks = seq(28, 50, 4)) +
-#'   ggplot2::labs(x = expression("BMI (kg/m"^2*")"),
-#'                 y = "Aortic diameter (mm)") +
-#'   ggplot2::annotate("text", x = 40, y = 32,
-#'                     label = "Early", colour = "steelblue",
-#'                     size = 3.5) +
-#'   ggplot2::annotate("text", x = 40, y = 36,
-#'                     label = "Late", colour = "firebrick",
-#'                     size = 3.5) +
-#'   hvti_theme("manuscript")
-#'
-#' # --- (9) PowerPoint dark theme (CGM output equivalent) -------------------
-#' \dontrun{
-#' nonparametric_curve_plot(dat_bin,
-#'                          lower_col = "lower", upper_col = "upper") +
-#'   ggplot2::scale_colour_manual(values = c("yellow"), guide = "none") +
-#'   ggplot2::scale_fill_manual(values = c("yellow"), guide = "none") +
-#'   ggplot2::labs(x = "Months", y = "Prevalence of AF (%)") +
-#'   hvti_theme("dark_ppt")
-#' }
-#'
-#' # --- (10) Dual-Y-axis overlay (tp.np_two_Yaxis_plots.R pattern) ----------
-#' # Overlays two continuous outcomes on left and right y-axes using
-#' # scale_y_continuous(sec.axis = ...). The R templates build this directly
-#' # with ggplot2 rather than nonparametric_curve_plot(), as two independent
-#' # geom_line layers on separate scales are needed.
-#' \dontrun{
-#' dat_y1 <- sample_nonparametric_curve_data(
-#'   n = 400, time_max = 10, outcome_type = "continuous", seed = 20
-#' )
-#' dat_y2 <- sample_nonparametric_curve_data(
-#'   n = 400, time_max = 10, outcome_type = "continuous", seed = 21
-#' )
-#' # Rescale dat_y2 onto the dat_y1 axis range for dual-axis rendering
-#' scale_factor <- mean(dat_y1$estimate) / mean(dat_y2$estimate)
-#' ggplot2::ggplot() +
-#'   ggplot2::geom_line(
-#'     data    = dat_y1,
-#'     mapping = ggplot2::aes(x = time, y = estimate),
-#'     colour  = "steelblue", linewidth = 1
-#'   ) +
-#'   ggplot2::geom_line(
-#'     data    = dat_y2,
-#'     mapping = ggplot2::aes(x = time, y = estimate * scale_factor),
-#'     colour  = "firebrick", linewidth = 1
-#'   ) +
-#'   ggplot2::scale_y_continuous(
-#'     name     = "Svensson's Index (mm)",
-#'     sec.axis = ggplot2::sec_axis(
-#'       transform = ~ . / scale_factor,
-#'       name      = "Aortic Root Diameter (mm)"
-#'     )
-#'   ) +
-#'   ggplot2::scale_x_continuous(breaks = seq(0, 10, 2)) +
-#'   ggplot2::labs(x = "Years after Presentation") +
-#'   hvti_theme("manuscript")
-#' }
-#'
-#' # --- Save ----------------------------------------------------------------
-#' \dontrun{
-#' p <- nonparametric_curve_plot(
-#'   dat_bin,
-#'   lower_col   = "lower",
-#'   upper_col   = "upper",
-#'   data_points = dat_bin_pts
-#' ) +
-#'   ggplot2::scale_colour_manual(values = c("steelblue"), guide = "none") +
-#'   ggplot2::scale_fill_manual(values = c("steelblue"), guide = "none") +
-#'   ggplot2::labs(x = "Months", y = "Prevalence of AF") +
-#'   hvti_theme("manuscript")
-#' ggplot2::ggsave("np_curve.pdf", p, width = 11.5, height = 8)
-#' }
 #'
 #' @importFrom ggplot2 ggplot aes geom_line geom_ribbon geom_point
 #' @importFrom rlang .data
 #' @export
-nonparametric_curve_plot <- function(curve_data,
-                                     x_col        = "time",
-                                     estimate_col = "estimate",
-                                     lower_col    = NULL,
-                                     upper_col    = NULL,
-                                     group_col    = NULL,
-                                     data_points  = NULL,
-                                     ci_alpha     = 0.2,
-                                     line_width   = 1.0,
-                                     point_size   = 2.5,
-                                     point_shape  = 20L) {
+plot.hvti_nonparametric <- function(x,
+                                     ci_alpha    = 0.2,
+                                     line_width  = 1.0,
+                                     point_size  = 2.5,
+                                     point_shape = 20L,
+                                     ...) {
+  curve_data   <- x$data
+  m            <- x$meta
+  x_col        <- m$x_col
+  estimate_col <- m$estimate_col
+  lower_col    <- m$lower_col
+  upper_col    <- m$upper_col
+  group_col    <- m$group_col
 
-  # --- Validation -----------------------------------------------------------
-  .check_df(curve_data, "curve_data")
-  .check_cols(curve_data, c(x_col, estimate_col), "curve_data")
-  .check_col(curve_data, lower_col,  "curve_data")
-  .check_col(curve_data, upper_col,  "curve_data")
-  .check_col(curve_data, group_col,  "curve_data")
-  if (!is.null(data_points)) {
-    .check_df(data_points, "data_points")
-    .check_cols(data_points, c(x_col, "value"), "data_points")
-    if (!is.null(group_col))
-      .check_cols(data_points, group_col, "data_points")
-  }
-
-  # --- Base aesthetics ------------------------------------------------------
   if (!is.null(group_col)) {
     base_aes <- ggplot2::aes(x      = .data[[x_col]],
                              y      = .data[[estimate_col]],
@@ -687,8 +467,7 @@ nonparametric_curve_plot <- function(curve_data,
 
   p <- ggplot2::ggplot(curve_data, base_aes)
 
-  # --- CI ribbon ------------------------------------------------------------
-  if (!is.null(lower_col) && !is.null(upper_col)) {
+  if (m$has_ci) {
     if (!is.null(group_col)) {
       ribbon_aes <- ggplot2::aes(x      = .data[[x_col]],
                                  ymin   = .data[[lower_col]],
@@ -707,11 +486,10 @@ nonparametric_curve_plot <- function(curve_data,
                                   data        = curve_data)
   }
 
-  # --- Predicted curve line -------------------------------------------------
   p <- p + ggplot2::geom_line(linewidth = line_width)
 
-  # --- Binned data summary points -------------------------------------------
-  if (!is.null(data_points)) {
+  if (m$has_data_points) {
+    data_points <- x$tables$data_points
     if (!is.null(group_col)) {
       dp_aes <- ggplot2::aes(x      = .data[[x_col]],
                              y      = .data[["value"]],

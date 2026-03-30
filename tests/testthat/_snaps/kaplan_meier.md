@@ -1,7 +1,7 @@
-# survival_curve report_table matches snapshot (fixed seed)
+# km$tables$report matches snapshot (fixed seed)
 
     Code
-      attr(result, "report_table")
+      km$tables$report
     Output
         strata report_time  surv     lower     upper n.risk n.event
       1    All           1 0.954 0.9317320 0.9692443    478       1

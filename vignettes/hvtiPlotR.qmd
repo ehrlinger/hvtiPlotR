@@ -297,7 +297,7 @@ dta <- read.csv(here::here("graphs", "mean_curv.csv"))
 ```
 
 This is the simplest approach and works well for the pre-computed summary
-datasets expected by **hvtiPlotR** plot functions (e.g., `nonparametric_curve_plot()`,
+datasets expected by **hvtiPlotR** constructors (e.g., `hvti_nonparametric()`,
 `hazard_plot()`).
 
 ### Using the bundled example data

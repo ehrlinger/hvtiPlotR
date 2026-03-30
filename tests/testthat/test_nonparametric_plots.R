@@ -3,9 +3,9 @@
 # Full test suite for nonparametric-curve-plot.R and
 # nonparametric-ordinal-plot.R:
 #   sample_nonparametric_curve_data, sample_nonparametric_curve_points,
-#   nonparametric_curve_plot,
+#   hvti_nonparametric,
 #   sample_nonparametric_ordinal_data, sample_nonparametric_ordinal_points,
-#   nonparametric_ordinal_plot
+#   hvti_ordinal
 #
 library(testthat)
 library(ggplot2)
@@ -124,104 +124,109 @@ test_that("sample_nonparametric_curve_points is reproducible with same seed", {
 })
 
 # ============================================================================
-# nonparametric_curve_plot — return type and composability
+# hvti_nonparametric — return type and composability
 # ============================================================================
 
-test_that("nonparametric_curve_plot returns a ggplot (single curve)", {
+test_that("hvti_nonparametric returns an hvti_data object", {
   dat <- sample_nonparametric_curve_data(n = 100, seed = 1)
-  expect_s3_class(nonparametric_curve_plot(dat), "ggplot")
+  expect_s3_class(hvti_nonparametric(dat), "hvti_data")
 })
 
-test_that("nonparametric_curve_plot is composable with + operator", {
+test_that("plot(hvti_nonparametric) returns a ggplot (single curve)", {
   dat <- sample_nonparametric_curve_data(n = 100, seed = 1)
-  p   <- nonparametric_curve_plot(dat) + ggplot2::labs(x = "Months")
+  expect_s3_class(plot(hvti_nonparametric(dat)), "ggplot")
+})
+
+test_that("plot(hvti_nonparametric) is composable with + operator", {
+  dat <- sample_nonparametric_curve_data(n = 100, seed = 1)
+  p   <- plot(hvti_nonparametric(dat)) + ggplot2::labs(x = "Months")
   expect_s3_class(p, "ggplot")
   expect_equal(p$labels$x, "Months")
 })
 
-test_that("nonparametric_curve_plot is composable with hvti_theme()", {
+test_that("plot(hvti_nonparametric) is composable with hvti_theme()", {
   dat <- sample_nonparametric_curve_data(n = 100, seed = 1)
-  p   <- nonparametric_curve_plot(dat) + hvti_theme("manuscript")
+  p   <- plot(hvti_nonparametric(dat)) + hvti_theme("manuscript")
   expect_s3_class(p, "ggplot")
 })
 
 # ============================================================================
-# nonparametric_curve_plot — layer structure
+# hvti_nonparametric — layer structure
 # ============================================================================
 
-test_that("nonparametric_curve_plot has a GeomLine layer", {
+test_that("plot(hvti_nonparametric) has a GeomLine layer", {
   dat   <- sample_nonparametric_curve_data(n = 100, seed = 1)
-  geoms <- sapply(nonparametric_curve_plot(dat)$layers, function(l) class(l$geom)[1])
+  geoms <- sapply(plot(hvti_nonparametric(dat))$layers, function(l) class(l$geom)[1])
   expect_true("GeomLine" %in% geoms)
 })
 
-test_that("nonparametric_curve_plot with CI adds a GeomRibbon layer", {
+test_that("plot(hvti_nonparametric) with CI adds a GeomRibbon layer", {
   dat   <- sample_nonparametric_curve_data(n = 100, seed = 1)
   geoms <- sapply(
-    nonparametric_curve_plot(dat, lower_col = "lower", upper_col = "upper")$layers,
+    plot(hvti_nonparametric(dat, lower_col = "lower", upper_col = "upper"))$layers,
     function(l) class(l$geom)[1]
   )
   expect_true("GeomRibbon" %in% geoms)
 })
 
-test_that("nonparametric_curve_plot with CI has more layers than without CI", {
+test_that("plot(hvti_nonparametric) with CI has more layers than without CI", {
   dat    <- sample_nonparametric_curve_data(n = 100, seed = 1)
-  p_no   <- nonparametric_curve_plot(dat)
-  p_ci   <- nonparametric_curve_plot(dat, lower_col = "lower", upper_col = "upper")
+  p_no   <- plot(hvti_nonparametric(dat))
+  p_ci   <- plot(hvti_nonparametric(dat, lower_col = "lower", upper_col = "upper"))
   expect_gt(length(p_ci$layers), length(p_no$layers))
 })
 
-test_that("nonparametric_curve_plot with data_points adds a GeomPoint layer", {
+test_that("plot(hvti_nonparametric) with data_points adds a GeomPoint layer", {
   dat <- sample_nonparametric_curve_data(n = 200, seed = 1)
   pts <- sample_nonparametric_curve_points(n = 200, seed = 1)
   geoms_with <- sapply(
-    nonparametric_curve_plot(dat, data_points = pts)$layers,
+    plot(hvti_nonparametric(dat, data_points = pts))$layers,
     function(l) class(l$geom)[1]
   )
   expect_true("GeomPoint" %in% geoms_with)
 })
 
-test_that("nonparametric_curve_plot multi-group returns a ggplot", {
+test_that("plot(hvti_nonparametric) multi-group returns a ggplot", {
   dat <- sample_nonparametric_curve_data(
     n = 100, groups = c("Ozaki" = 0.7, "CE-P" = 1.3), seed = 1
   )
   expect_s3_class(
-    nonparametric_curve_plot(dat, group_col = "group"),
+    plot(hvti_nonparametric(dat, group_col = "group")),
     "ggplot"
   )
 })
 
 # ============================================================================
-# nonparametric_curve_plot — input validation
+# hvti_nonparametric — input validation
 # ============================================================================
 
-test_that("nonparametric_curve_plot errors when curve_data is not a data frame", {
+test_that("hvti_nonparametric errors when curve_data is not a data frame", {
   expect_error(
-    nonparametric_curve_plot(list(time = 1:5, estimate = 1:5)),
+    hvti_nonparametric(list(time = 1:5, estimate = 1:5)),
     "data.frame|data frame"
   )
 })
 
-test_that("nonparametric_curve_plot errors when x_col is absent", {
+test_that("hvti_nonparametric errors when x_col is absent", {
   dat <- sample_nonparametric_curve_data(n = 50, seed = 1)
   expect_error(
-    nonparametric_curve_plot(dat, x_col = "nonexistent"),
+    hvti_nonparametric(dat, x_col = "nonexistent"),
     "column"
   )
 })
 
-test_that("nonparametric_curve_plot errors when estimate_col is absent", {
+test_that("hvti_nonparametric errors when estimate_col is absent", {
   dat <- sample_nonparametric_curve_data(n = 50, seed = 1)
   expect_error(
-    nonparametric_curve_plot(dat, estimate_col = "nonexistent"),
+    hvti_nonparametric(dat, estimate_col = "nonexistent"),
     "column"
   )
 })
 
-test_that("nonparametric_curve_plot errors when group_col is absent", {
+test_that("hvti_nonparametric errors when group_col is absent", {
   dat <- sample_nonparametric_curve_data(n = 50, seed = 1)
   expect_error(
-    nonparametric_curve_plot(dat, group_col = "nonexistent"),
+    hvti_nonparametric(dat, group_col = "nonexistent"),
     "not found"
   )
 })
@@ -322,82 +327,87 @@ test_that("sample_nonparametric_ordinal_points is reproducible with same seed", 
 })
 
 # ============================================================================
-# nonparametric_ordinal_plot — return type
+# hvti_ordinal — return type
 # ============================================================================
 
-test_that("nonparametric_ordinal_plot returns a ggplot", {
+test_that("hvti_ordinal returns an hvti_data object", {
   dat <- sample_nonparametric_ordinal_data(n = 200, seed = 1)
-  expect_s3_class(nonparametric_ordinal_plot(dat), "ggplot")
+  expect_s3_class(hvti_ordinal(dat), "hvti_data")
 })
 
-test_that("nonparametric_ordinal_plot is composable with + operator", {
+test_that("plot(hvti_ordinal) returns a ggplot", {
   dat <- sample_nonparametric_ordinal_data(n = 200, seed = 1)
-  p   <- nonparametric_ordinal_plot(dat) + ggplot2::labs(x = "Years")
+  expect_s3_class(plot(hvti_ordinal(dat)), "ggplot")
+})
+
+test_that("plot(hvti_ordinal) is composable with + operator", {
+  dat <- sample_nonparametric_ordinal_data(n = 200, seed = 1)
+  p   <- plot(hvti_ordinal(dat)) + ggplot2::labs(x = "Years")
   expect_s3_class(p, "ggplot")
   expect_equal(p$labels$x, "Years")
 })
 
-test_that("nonparametric_ordinal_plot is composable with hvti_theme()", {
+test_that("plot(hvti_ordinal) is composable with hvti_theme()", {
   dat <- sample_nonparametric_ordinal_data(n = 200, seed = 1)
-  p   <- nonparametric_ordinal_plot(dat) + hvti_theme("manuscript")
+  p   <- plot(hvti_ordinal(dat)) + hvti_theme("manuscript")
   expect_s3_class(p, "ggplot")
 })
 
 # ============================================================================
-# nonparametric_ordinal_plot — layer structure
+# hvti_ordinal — layer structure
 # ============================================================================
 
-test_that("nonparametric_ordinal_plot has a GeomLine layer", {
-  # nonparametric_ordinal_plot renders one line per grade using geom_line.
+test_that("plot(hvti_ordinal) has a GeomLine layer", {
+  # hvti_ordinal renders one line per grade using geom_line.
   dat   <- sample_nonparametric_ordinal_data(n = 200, seed = 1)
   geoms <- sapply(
-    nonparametric_ordinal_plot(dat)$layers,
+    plot(hvti_ordinal(dat))$layers,
     function(l) class(l$geom)[1]
   )
   expect_true("GeomLine" %in% geoms)
 })
 
-test_that("nonparametric_ordinal_plot with data_points adds a GeomPoint layer", {
+test_that("plot(hvti_ordinal) with data_points adds a GeomPoint layer", {
   dat <- sample_nonparametric_ordinal_data(n = 500, seed = 1)
   pts <- sample_nonparametric_ordinal_points(n = 500, seed = 1)
   geoms <- sapply(
-    nonparametric_ordinal_plot(dat, data_points = pts)$layers,
+    plot(hvti_ordinal(dat, data_points = pts))$layers,
     function(l) class(l$geom)[1]
   )
   expect_true("GeomPoint" %in% geoms)
 })
 
 # ============================================================================
-# nonparametric_ordinal_plot — input validation
+# hvti_ordinal — input validation
 # ============================================================================
 
-test_that("nonparametric_ordinal_plot errors when curve_data is not a data frame", {
+test_that("hvti_ordinal errors when curve_data is not a data frame", {
   expect_error(
-    nonparametric_ordinal_plot(list(time = 1:5, estimate = 1:5, grade = 1:5)),
+    hvti_ordinal(list(time = 1:5, estimate = 1:5, grade = 1:5)),
     "data.frame|data frame"
   )
 })
 
-test_that("nonparametric_ordinal_plot errors when x_col is absent", {
+test_that("hvti_ordinal errors when x_col is absent", {
   dat <- sample_nonparametric_ordinal_data(n = 100, seed = 1)
   expect_error(
-    nonparametric_ordinal_plot(dat, x_col = "nonexistent"),
+    hvti_ordinal(dat, x_col = "nonexistent"),
     "column"
   )
 })
 
-test_that("nonparametric_ordinal_plot errors when estimate_col is absent", {
+test_that("hvti_ordinal errors when estimate_col is absent", {
   dat <- sample_nonparametric_ordinal_data(n = 100, seed = 1)
   expect_error(
-    nonparametric_ordinal_plot(dat, estimate_col = "nonexistent"),
+    hvti_ordinal(dat, estimate_col = "nonexistent"),
     "column"
   )
 })
 
-test_that("nonparametric_ordinal_plot errors when grade_col is absent", {
+test_that("hvti_ordinal errors when grade_col is absent", {
   dat <- sample_nonparametric_ordinal_data(n = 100, seed = 1)
   expect_error(
-    nonparametric_ordinal_plot(dat, grade_col = "nonexistent"),
+    hvti_ordinal(dat, grade_col = "nonexistent"),
     "column"
   )
 })

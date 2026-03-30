@@ -8,12 +8,10 @@
 ## Generate sample data, build the plot, then layer on scales and a theme:
 ##
 ##   dta <- sample_stacked_histogram_data()
+##   sh  <- hvti_stacked(dta, x_col = "year", group_col = "category",
+##                       position = "fill")
 ##
-##   # Proportion (fill) variant
-##   p <- stacked_histogram(dta, x_col = "year", group_col = "category",
-##                          position = "fill")
-##
-##   p +
+##   plot(sh) +
 ##     ggplot2::scale_fill_brewer(palette = "Set1", name = "Category") +
 ##     ggplot2::scale_color_brewer(palette = "Set1", name = "Category") +
 ##     hvti_theme("manuscript")
@@ -21,88 +19,125 @@
 ###############################################################################
 
 # ---------------------------------------------------------------------------
-# Internal helpers
-# ---------------------------------------------------------------------------
-
-# Validate stacked_histogram inputs
-validate_stacked_histogram_input <- function(data, x_col, group_col, binwidth, position) {
-  .check_df(data)
-  .check_cols(data, c(x_col, group_col))
-  .check_numeric_col(data, x_col)
-  if (!is.numeric(binwidth) || length(binwidth) != 1L || !(binwidth > 0))
-    stop("`binwidth` must be a positive numeric scalar.", call. = FALSE)
-  if (!(position %in% c("stack", "fill")))
-    stop('`position` must be "stack" or "fill".', call. = FALSE)
-}
-
-# Build the bare ggplot object without scale or label modifications
-#' @importFrom ggplot2 ggplot aes geom_histogram
-build_stacked_histogram_plot <- function(data, x_col, group_col, binwidth, position) {
-  ggplot2::ggplot(data, ggplot2::aes(
-    x      = .data[[x_col]],
-    fill   = factor(.data[[group_col]]),
-    colour = factor(.data[[group_col]])
-  )) +
-    ggplot2::geom_histogram(binwidth = binwidth,
-                            position = position)
-}
-
-# ---------------------------------------------------------------------------
 # Public API
 # ---------------------------------------------------------------------------
 
-#' Stacked Histogram
+#' Prepare stacked histogram data for plotting
 #'
-#' Builds a stacked (or proportional fill) histogram for a grouped numeric
-#' variable. The returned ggplot object intentionally omits scale and label
-#' modifications so the caller can layer on their own colour/fill scales,
-#' axis labels, and themes without fighting existing defaults.
+#' Validates a patient-level or observation-level data frame and returns an
+#' \code{hvti_stacked} object.  Call \code{\link{plot.hvti_stacked}} on the
+#' result to obtain a bare \code{ggplot2} stacked (or proportional) histogram
+#' that you can decorate with colour scales, axis labels, and
+#' \code{\link{hvti_theme}}.
 #'
-#' @param data A data frame.
-#' @param x_col Name of the numeric column to bin along the x-axis.
+#' @param data      A data frame.
+#' @param x_col     Name of the numeric column to bin along the x-axis.
+#'   Default \code{"year"}.
 #' @param group_col Name of the column whose distinct values define the stacked
-#'   groups. Will be coerced to a factor inside the aesthetic mapping.
-#' @param binwidth Width of each histogram bin, in the same units as `x_col`.
-#'   Defaults to `1`.
-#' @param position Either `"stack"` (raw counts, the default) or `"fill"`
-#'   (proportions that sum to 1 within each bin).
+#'   groups.  Will be coerced to a factor inside the aesthetic mapping.
+#'   Default \code{"category"}.
+#' @param binwidth  Width of each histogram bin, in the same units as
+#'   \code{x_col}. Default \code{1}.
+#' @param position  Bar position: \code{"stack"} (raw counts, the default)
+#'   or \code{"fill"} (proportions that sum to 1 within each bin).
 #'
-#' @return A \code{\link[ggplot2]{ggplot}} object.  Add scales, labels, and
-#'   themes with the usual `+` operator.
+#' @return An object of class \code{c("hvti_stacked", "hvti_data")}:
+#' \describe{
+#'   \item{\code{$data}}{The validated input data frame.}
+#'   \item{\code{$meta}}{Named list: \code{x_col}, \code{group_col},
+#'     \code{binwidth}, \code{position}, \code{n_obs}, \code{n_groups}.}
+#'   \item{\code{$tables}}{Empty list.}
+#' }
+#'
+#' @seealso \code{\link{plot.hvti_stacked}},
+#'   \code{\link{sample_stacked_histogram_data}}
 #'
 #' @examples
 #' dta <- sample_stacked_histogram_data()
+#' sh  <- hvti_stacked(dta, x_col = "year", group_col = "category")
+#' sh   # prints obs / group count
 #'
-#' # --- Count histogram (default) -------------------------------------------
-#' p_count <- stacked_histogram(dta, x_col = "year", group_col = "category")
-#'
-#' # Add colour / fill scales and a theme
-#' p_count +
+#' plot(sh) +
 #'   ggplot2::scale_fill_brewer(palette = "Set1", name = "Category") +
 #'   ggplot2::scale_color_brewer(palette = "Set1", name = "Category") +
 #'   ggplot2::labs(x = "Year", y = "Count") +
 #'   hvti_theme("manuscript")
 #'
-#' # Save to disk
-#' \dontrun{
-#' ggplot2::ggsave(
-#'   filename = "histogram_count.pdf",
-#'   plot     = p_count +
-#'     ggplot2::scale_fill_brewer(palette = "Set1", name = "Category") +
-#'     ggplot2::scale_color_brewer(palette = "Set1", name = "Category") +
-#'     ggplot2::labs(x = "Year", y = "Count") +
-#'     hvti_theme("manuscript"),
-#'   width  = 11,
-#'   height = 8
-#' )
-#' }
+#' @importFrom rlang .data
+#' @export
+hvti_stacked <- function(data,
+                          x_col     = "year",
+                          group_col = "category",
+                          binwidth  = 1,
+                          position  = c("stack", "fill")) {
+  position <- match.arg(position)
+  .check_df(data)
+  .check_cols(data, c(x_col, group_col))
+  .check_numeric_col(data, x_col)
+  if (!is.numeric(binwidth) || length(binwidth) != 1L || !(binwidth > 0))
+    stop("`binwidth` must be a positive numeric scalar.", call. = FALSE)
+
+  n_groups <- length(unique(data[[group_col]]))
+
+  new_hvti_data(
+    data = as.data.frame(data),
+    meta = list(
+      x_col     = x_col,
+      group_col = group_col,
+      binwidth  = binwidth,
+      position  = position,
+      n_obs     = nrow(data),
+      n_groups  = n_groups
+    ),
+    tables   = list(),
+    subclass = "hvti_stacked"
+  )
+}
+
+
+#' Print an hvti_stacked object
 #'
-#' # --- Proportional (fill) histogram ----------------------------------------
-#' p_fill <- stacked_histogram(dta, x_col = "year", group_col = "category",
-#'                             position = "fill")
+#' @param x   An \code{hvti_stacked} object from \code{\link{hvti_stacked}}.
+#' @param ... Ignored.
+#' @return \code{x}, invisibly.
+#' @export
+print.hvti_stacked <- function(x, ...) {
+  m <- x$meta
+  cat("<hvti_stacked>\n")
+  cat(sprintf("  N obs       : %d  (%d groups)\n", m$n_obs, m$n_groups))
+  cat(sprintf("  x / group   : %s / %s\n", m$x_col, m$group_col))
+  cat(sprintf("  binwidth    : %g\n", m$binwidth))
+  cat(sprintf("  position    : %s\n", m$position))
+  invisible(x)
+}
+
+
+#' Plot an hvti_stacked object
 #'
-#' # Manual colour palette with custom legend labels
-#' p_fill +
+#' Draws a stacked (or proportional fill) histogram for the grouped numeric
+#' variable stored in the \code{hvti_stacked} object.
+#'
+#' @param x   An \code{hvti_stacked} object.
+#' @param ... Ignored; present for S3 consistency.
+#'
+#' @return A bare \code{\link[ggplot2]{ggplot}} object.  Add scales, labels,
+#'   and themes with the usual \code{+} operator.
+#'
+#' @seealso \code{\link{hvti_stacked}}, \code{\link{hvti_theme}}
+#'
+#' @examples
+#' dta <- sample_stacked_histogram_data()
+#'
+#' # Count histogram
+#' plot(hvti_stacked(dta, x_col = "year", group_col = "category")) +
+#'   ggplot2::scale_fill_brewer(palette = "Set1", name = "Category") +
+#'   ggplot2::scale_color_brewer(palette = "Set1", name = "Category") +
+#'   ggplot2::labs(x = "Year", y = "Count") +
+#'   hvti_theme("manuscript")
+#'
+#' # Proportional (fill) histogram with manual colours
+#' plot(hvti_stacked(dta, x_col = "year", group_col = "category",
+#'                   position = "fill")) +
 #'   ggplot2::scale_fill_manual(
 #'     values = c("1" = "pink", "2" = "cyan", "3" = "orangered"),
 #'     labels = c("1" = "Group A", "2" = "Group B", "3" = "Group C"),
@@ -115,50 +150,32 @@ build_stacked_histogram_plot <- function(data, x_col, group_col, binwidth, posit
 #'   ggplot2::labs(x = "Year", y = "Proportion") +
 #'   hvti_theme("manuscript")
 #'
-#' # Save the proportion plot
-#' \dontrun{
-#' ggplot2::ggsave(
-#'   filename = "histogram_proportion.pdf",
-#'   plot     = p_fill +
-#'     ggplot2::scale_fill_manual(
-#'       values = c("1" = "pink", "2" = "cyan", "3" = "orangered"),
-#'       name   = "Category"
-#'     ) +
-#'     ggplot2::scale_color_manual(
-#'       values = c("1" = "pink", "2" = "cyan", "3" = "orangered"),
-#'       guide  = "none"
-#'     ) +
-#'     ggplot2::labs(x = "Year", y = "Proportion") +
-#'     hvti_theme("manuscript"),
-#'   width  = 11,
-#'   height = 8
-#' )
-#' }
-#'
 #' @importFrom ggplot2 ggplot aes geom_histogram
 #' @importFrom rlang .data
 #' @export
-stacked_histogram <- function(data,
-                              x_col     = "year",
-                              group_col = "category",
-                              binwidth  = 1,
-                              position  = c("stack", "fill")) {
-  position <- match.arg(position)
-  validate_stacked_histogram_input(data, x_col, group_col, binwidth, position)
-  build_stacked_histogram_plot(data, x_col, group_col, binwidth, position)
+plot.hvti_stacked <- function(x, ...) {
+  m <- x$meta
+  ggplot2::ggplot(x$data, ggplot2::aes(
+    x      = .data[[m$x_col]],
+    fill   = factor(.data[[m$group_col]]),
+    colour = factor(.data[[m$group_col]])
+  )) +
+    ggplot2::geom_histogram(binwidth = m$binwidth,
+                            position = m$position)
 }
+
 
 #' Generate Sample Data for Stacked Histogram
 #'
 #' Creates a minimal data frame suitable for demonstrating or testing
-#' \code{\link{stacked_histogram}}.
+#' \code{\link{hvti_stacked}}.
 #'
-#' @param n_years Integer. Number of consecutive years to simulate starting
+#' @param n_years      Integer. Number of consecutive years to simulate starting
 #'   from \code{start_year}. Defaults to `20`.
-#' @param start_year Integer. First calendar year in the sequence. Defaults to
+#' @param start_year   Integer. First calendar year in the sequence. Defaults to
 #'   `2000`.
 #' @param n_categories Integer. Number of distinct groups. Defaults to `3`.
-#' @param seed Integer passed to \code{\link[base]{set.seed}} for
+#' @param seed         Integer passed to \code{\link[base]{set.seed}} for
 #'   reproducibility. Defaults to `42`.
 #'
 #' @return A data frame with columns \code{year} (integer) and
@@ -184,10 +201,10 @@ sample_stacked_histogram_data <- function(n_years      = 20,
   if (!is.numeric(start_year) || length(start_year) != 1L ||
       !is.finite(start_year) || start_year %% 1 != 0)
     stop("`start_year` must be a finite integer-valued number.", call. = FALSE)
-  
+
   set.seed(seed)
   years <- start_year + seq_len(n_years) - 1L
-  
+
   rows <- lapply(years, function(yr) {
     n <- stats::rpois(1, lambda = 20)
     if (n == 0L)
@@ -195,7 +212,6 @@ sample_stacked_histogram_data <- function(n_years      = 20,
     data.frame(year     = rep(yr, n),
                category = sample(seq_len(n_categories), n, replace = TRUE))
   })
-  
+
   do.call(rbind, rows)
 }
-

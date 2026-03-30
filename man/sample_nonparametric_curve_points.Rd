@@ -27,20 +27,15 @@ Default \code{500} (matches the SAS \code{inc=(max-min)/499.9} loop).}
 
 \item{groups}{\code{NULL} for a single average curve, or a named numeric
 vector of group-specific hazard multipliers,
-e.g. \code{c("Ozaki" = 0.8, "CE-Pericardial" = 1.2)} — analogous to the
-indicator variable effect in \code{tp.np.avpkgrad_ozak_ind_mtwt.sas}.}
+e.g. \code{c("Ozaki" = 0.8, "CE-Pericardial" = 1.2)}.}
 
-\item{outcome_type}{\code{"probability"} (binary outcome, 0-1 scale; e.g.
-AF prevalence, TR grade prevalence) or \code{"continuous"} (e.g. FEV1, AV
-peak gradient). Default \code{"probability"}.}
+\item{outcome_type}{\code{"probability"} (binary outcome, 0-1 scale) or
+\code{"continuous"}. Default \code{"probability"}.}
 
 \item{ci_level}{Confidence level for bootstrap-style CI bands.
-Use \code{0.68} for the 68\% CI shown in the SAS templates (one standard
-error), or \code{0.95} for the 95\% CI. Default \code{0.68}.}
+Default \code{0.68}.}
 
-\item{n_bins}{Number of equal-sized data-summary bins (analogous to
-the SAS \verb{quint = _nobs_/12} / \verb{decile = _nobs_/10} grouping). Default
-\code{10}.}
+\item{n_bins}{Number of equal-sized data-summary bins. Default \code{10}.}
 
 \item{seed}{Random seed. Default \code{42}.}
 }
@@ -54,21 +49,20 @@ Returns only the binned patient-level data summary points from
 and returns a plain \code{data.frame}.
 }
 \examples{
-# Single-group data summary points (probability outcome)
+# Single-group data summary points
 pts <- sample_nonparametric_curve_points(n = 500, time_max = 12)
 head(pts)
 names(pts)           # "time", "value"
 
-# Two-group points — continuous outcome (e.g. AV peak gradient)
+# Two-group points
 pts2 <- sample_nonparametric_curve_points(
   n            = 400,
   time_max     = 7,
   groups       = c("Ozaki" = 0.7, "CE-Pericardial" = 1.3),
   outcome_type = "continuous"
 )
-levels(pts2$group)   # "Ozaki", "CE-Pericardial"
-nrow(pts2)           # 2 groups x n_bins rows
+levels(pts2$group)
 }
 \seealso{
-\code{\link[=sample_nonparametric_curve_data]{sample_nonparametric_curve_data()}}, \code{\link[=nonparametric_curve_plot]{nonparametric_curve_plot()}}
+\code{\link[=sample_nonparametric_curve_data]{sample_nonparametric_curve_data()}}, \code{\link[=hvti_nonparametric]{hvti_nonparametric()}}
 }
