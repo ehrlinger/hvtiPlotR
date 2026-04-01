@@ -70,12 +70,18 @@ plot(
 ## Value
 
 A bare [`ggplot`](https://ggplot2.tidyverse.org/reference/ggplot.html)
-object.
+object; compose with `+` to add scales, axis limits, labels, and
+[`hvti_theme`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_theme.md).
 
 ## See also
 
-[`hvti_spaghetti`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_spaghetti.md),
+[`hvti_spaghetti`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_spaghetti.md)
+to build the data object,
 [`hvti_theme`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_theme.md)
+for the publication theme.
+
+Other Spaghetti plot:
+[`hvti_spaghetti()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_spaghetti.md)
 
 ## Examples
 
@@ -100,4 +106,16 @@ plot(hvti_spaghetti(dta_ord, colour_col = "group"),
   hvti_theme("manuscript")
 #> Warning: Ignoring empty aesthetic: `colour`.
 
+
+# --- Global theme (set once per session) ----------------------------------
+if (FALSE) { # \dontrun{
+old <- ggplot2::theme_set(hvti_theme_manuscript())
+plot(sp, add_smooth = TRUE) +
+  ggplot2::scale_colour_brewer(palette = "Set1", name = NULL) +
+  ggplot2::labs(x = "Years", y = "AV Mean Gradient (mmHg)")
+ggplot2::theme_set(old)
+} # }
+
+# See vignette("plot-decorators", package = "hvtiPlotR") for theming,
+# colour scales, annotation labels, and saving plots.
 ```

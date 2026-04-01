@@ -15,7 +15,7 @@ hvti_theme."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">hvtiPlotR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.0.9003</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.0.9006</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -46,7 +46,7 @@ hvti_theme."></head><body>
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Prepare nonparametric temporal trend curve data for plotting</h1>
-      <small class="dont-index">Source: <a href="https://github.com/ehrlinger/hvtiPlotR/blob/v2.0.0.9003/R/nonparametric-curve-plot.R" class="external-link"><code>R/nonparametric-curve-plot.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/ehrlinger/hvtiPlotR/blob/main/R/nonparametric-curve-plot.R" class="external-link"><code>R/nonparametric-curve-plot.R</code></a></small>
       <div class="d-none name"><code>hvti_nonparametric.Rd</code></div>
     </div>
 
@@ -111,7 +111,9 @@ Must have columns matching <code>x_col</code> and <code>"value"</code>, plus
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>An object of class <code>c("hvti_nonparametric", "hvti_data")</code>:</p><dl><dt><code>$data</code></dt>
+    <p>An object of class <code>c("hvti_nonparametric", "hvti_data")</code>; call
+<code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code> on the result to render the figure — see
+<code><a href="plot.hvti_nonparametric.html">plot.hvti_nonparametric</a></code>. The list contains:</p><dl><dt><code>$data</code></dt>
 <dd><p>The <code>curve_data</code> data frame.</p></dd>
 
 <dt><code>$meta</code></dt>
@@ -135,8 +137,11 @@ Must have columns matching <code>x_col</code> and <code>"value"</code>, plus
 </ul></div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
-    <div class="dont-index"><p><code><a href="plot.hvti_nonparametric.html">plot.hvti_nonparametric</a></code>,
-<code><a href="sample_nonparametric_curve_data.html">sample_nonparametric_curve_data</a></code></p></div>
+    <div class="dont-index"><p><code><a href="plot.hvti_nonparametric.html">plot.hvti_nonparametric</a></code> to render as a ggplot2 figure,
+<code><a href="hvti_theme.html">hvti_theme</a></code> for the publication theme,
+<code><a href="sample_nonparametric_curve_data.html">sample_nonparametric_curve_data</a></code> for example data.</p>
+<p>Other Nonparametric curves:
+<code><a href="plot.hvti_nonparametric.html">plot.hvti_nonparametric()</a></code></p></div>
     </div>
 
     <div class="section level2">
@@ -168,6 +173,23 @@ Must have columns matching <code>x_col</code> and <code>"value"</code>, plus
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Removed 3 rows containing missing values or values outside the scale range</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> (`geom_point()`).</span>
 <span class="r-plt img"><img src="hvti_nonparametric-1.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># --- Global theme (set once per session) ----------------------------------</span></span></span>
+<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
+<span class="r-in"><span><span class="co"># Apply manuscript theme globally; use scale_colour_brewer for multi-group.</span></span></span>
+<span class="r-in"><span><span class="va">old</span> <span class="op">&lt;-</span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/get_theme.html" class="external-link">theme_set</a></span><span class="op">(</span><span class="fu"><a href="hvti_theme_manuscript.html">hvti_theme_manuscript</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">np</span><span class="op">)</span> <span class="op">+</span></span></span>
+<span class="r-in"><span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_colour_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"steelblue"</span><span class="op">)</span>, guide <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span> <span class="op">+</span></span></span>
+<span class="r-in"><span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_fill_manual</a></span><span class="op">(</span>values   <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"steelblue"</span><span class="op">)</span>, guide <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span> <span class="op">+</span></span></span>
+<span class="r-in"><span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Months"</span>, y <span class="op">=</span> <span class="st">"Prevalence of AF"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co"># For multi-group curves swap scale_colour_manual with:</span></span></span>
+<span class="r-in"><span><span class="co">#   ggplot2::scale_colour_brewer(palette = "Set1", name = NULL)</span></span></span>
+<span class="r-in"><span><span class="co">#   ggplot2::scale_fill_brewer(palette = "Set1", guide = "none")</span></span></span>
+<span class="r-in"><span><span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/get_theme.html" class="external-link">theme_set</a></span><span class="op">(</span><span class="va">old</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># See vignette("plot-decorators", package = "hvtiPlotR") for theming,</span></span></span>
+<span class="r-in"><span><span class="co"># colour scales, annotation labels, and saving plots.</span></span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

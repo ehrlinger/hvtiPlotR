@@ -120,12 +120,12 @@ decomposition models (`tp.np.*` template family).
 Visualise propensity score distributions and covariate balance before
 and after propensity matching or IPTW weighting.
 
-- [`hvti_mirror()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_mirror.md)
+- [`hvti_mirror_hist()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_mirror_hist.md)
   : Prepare mirror-histogram data for plotting
-- [`plot(`*`<hvti_mirror>`*`)`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hvti_mirror.md)
-  : Plot an hvti_mirror object
-- [`print(`*`<hvti_mirror>`*`)`](https://ehrlinger.github.io/hvtiPlotR/reference/print.hvti_mirror.md)
-  : Print an hvti_mirror object
+- [`plot(`*`<hvti_mirror_hist>`*`)`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hvti_mirror_hist.md)
+  : Plot an hvti_mirror_hist object
+- [`print(`*`<hvti_mirror_hist>`*`)`](https://ehrlinger.github.io/hvtiPlotR/reference/print.hvti_mirror_hist.md)
+  : Print an hvti_mirror_hist object
 - [`hvti_balance()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_balance.md)
   : Prepare covariate balance data for plotting
 - [`plot(`*`<hvti_balance>`*`)`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hvti_balance.md)

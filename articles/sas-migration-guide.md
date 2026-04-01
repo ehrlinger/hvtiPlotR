@@ -78,8 +78,8 @@ step produces the figure.
 | `tp.lp.trends.polytomous.sas`                       | lp     | [`hvti_trends()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_trends.md)                           | [Trends over time](#dp-trends)                       |
 | `tp.dp.trends.R`                                    | dp     | [`hvti_trends()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_trends.md)                           | [Trends over time](#dp-trends)                       |
 | `tp.dp.longitudinal_patients_measures.R`            | dp     | [`hvti_longitudinal()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_longitudinal.md)               | [Longitudinal counts](#dp-long-counts)               |
-| `tp.lp.mirror-histogram_SAVR-TF-TAVR.R`             | lp     | [`hvti_mirror()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_mirror.md)                           | [Mirror histogram — binary-match](#dp-mirror)        |
-| `tp.lp.mirror_histo_before_after_wt.R`              | lp     | `hvti_mirror(weight_col = ...)`                                                                             | [Mirror histogram — weighted IPTW](#dp-mirror)       |
+| `tp.lp.mirror-histogram_SAVR-TF-TAVR.R`             | lp     | [`hvti_mirror_hist()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_mirror_hist.md)                 | [Mirror histogram — binary-match](#dp-mirror)        |
+| `tp.lp.mirror_histo_before_after_wt.R`              | lp     | `hvti_mirror_hist(weight_col = ...)`                                                                        | [Mirror histogram — weighted IPTW](#dp-mirror)       |
 | Stacked histogram                                   | dp     | [`hvti_stacked()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_stacked.md)                         | [Stacked histogram](#dp-stacked)                     |
 | `tp.hs.dead.setup.sas`                              | hs     | [`hazard_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/hazard_plot.md)                           | [Parametric hazard/survival](#hs-dead)               |
 | `tp.hs.dead_uses_setup.sas`                         | hs     | [`hazard_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/hazard_plot.md)                           | [Parametric hazard/survival](#hs-dead)               |
@@ -1106,7 +1106,7 @@ plot(lc) +
 (binary-match), `tp.lp.mirror_histo_before_after_wt.R` (weighted IPTW)
 
 Both scripts are superseded by
-[`hvti_mirror()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_mirror.md).
+[`hvti_mirror_hist()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_mirror_hist.md).
 Call `plot(mh)` to render the histogram. Diagnostics are accessible via
 `mh$tables$diagnostics`; working data via `mh$tables$working`. Compose
 scales, annotations, and theme with the usual `+` operator.
@@ -1115,7 +1115,7 @@ scales, annotations, and theme with the usual `+` operator.
 
 ``` r
 dta <- sample_mirror_histogram_data(n = 400, separation = 1.5)
-mh  <- hvti_mirror(dta)   # defaults: prob_t / tavr / match
+mh  <- hvti_mirror_hist(dta)   # defaults: prob_t / tavr / match
 
 plot(mh) +
   scale_fill_manual(
@@ -1136,7 +1136,7 @@ plot(mh) +
 
 ``` r
 dta   <- sample_mirror_histogram_data(n = 400, add_weights = TRUE)
-mh_wt <- hvti_mirror(
+mh_wt <- hvti_mirror_hist(
   dta,
   group_labels = c("Limited", "Extended"),
   weight_col   = "mt_wt"
@@ -1530,7 +1530,7 @@ sessionInfo()
     [1] stats     graphics  grDevices utils     datasets  methods   base
 
     other attached packages:
-    [1] ggplot2_4.0.2        hvtiPlotR_2.0.0.9003
+    [1] ggplot2_4.0.2        hvtiPlotR_2.0.0.9006
 
     loaded via a namespace (and not attached):
      [1] generics_0.1.4          tidyr_1.3.2             fontLiberation_0.1.0

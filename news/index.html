@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">hvtiPlotR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.0.9003</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.0.9006</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -38,9 +38,56 @@
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Changelog</h1>
-      <small>Source: <a href="https://github.com/ehrlinger/hvtiPlotR/blob/v2.0.0.9003/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
+      <small>Source: <a href="https://github.com/ehrlinger/hvtiPlotR/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="2.0.0.9006" id="hvtiplotr-2009006">hvtiPlotR 2.0.0.9006<a class="anchor" aria-label="anchor" href="#hvtiplotr-2009006"></a></h2>
+<div class="section level3">
+<h3 id="documentation-2-0-0-9006">Documentation<a class="anchor" aria-label="anchor" href="#documentation-2-0-0-9006"></a></h3>
+<ul><li>
+<code><a href="../reference/hvti_mirror_hist.html">hvti_mirror_hist()</a></code> <code>$tables$diagnostics</code>: corrected return documentation from “a data frame of matched/unmatched counts per group” to accurately describe the actual type — a named list of diagnostic summaries whose contents vary by mode (binary-match vs weighted IPTW). All keys are now enumerated in the <code>@return</code> block.</li>
+<li>
+<code>$meta</code> keys in <code><a href="../reference/hvti_mirror_hist.html">hvti_mirror_hist()</a></code> return docs updated to include all keys actually stored (<code>score_col</code>, <code>group_col</code>, <code>match_col</code> were missing).</li>
+<li>Added <code>@family Propensity Score &amp; Matching</code> to <code><a href="../reference/hvti_mirror_hist.html">hvti_mirror_hist()</a></code> and <code><a href="../reference/plot.hvti_mirror_hist.html">plot.hvti_mirror_hist()</a></code>, creating automatic bi-directional “See also” cross-links consistent with all other <code>hvti_*</code> constructor/plot pairs.</li>
+<li>
+<code><a href="../reference/plot.hvti_mirror_hist.html">plot.hvti_mirror_hist()</a></code> <code>@return</code> now describes composability with <code>+</code> (scales, limits, labels, <code>hvti_theme</code>), matching the pattern used in all other updated plot methods.</li>
+<li>
+<code><a href="../reference/plot.hvti_mirror_hist.html">plot.hvti_mirror_hist()</a></code> <code>@seealso</code> expanded with descriptive text for each linked function, matching the richer pattern used elsewhere.</li>
+</ul></div>
+</div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="2.0.0.9005" id="hvtiplotr-2009005">hvtiPlotR 2.0.0.9005<a class="anchor" aria-label="anchor" href="#hvtiplotr-2009005"></a></h2>
+<div class="section level3">
+<h3 id="tests-2-0-0-9005">Tests<a class="anchor" aria-label="anchor" href="#tests-2-0-0-9005"></a></h3>
+<ul><li>Added <code>test_trends_plot.R</code> (37 tests): <code>$meta</code> slot keys and values, <code>$tables$summary</code> structure and row counts, factor level order preservation, <code>print.hvti_trends</code> output and invisible return, and full parameter coverage for <code>plot.hvti_trends</code> (<code>se</code>, <code>span</code>, <code>point_size</code>, <code>point_shape</code>, <code>alpha</code>, <code>smoother</code>, grouped vs ungrouped mapping, composability with <code>hvti_theme</code>).</li>
+<li>Added <code>test_spaghetti_plot.R</code> (25 tests): <code>$meta</code> slot keys and values, <code>id_col</code>/<code>y_col</code> absent error cases, <code>print.hvti_spaghetti</code> output with and without <code>colour_col</code> branch and invisible return, and full parameter coverage for <code>plot.hvti_spaghetti</code> (<code>add_smooth</code>, <code>smooth_se</code>, <code>line_colour</code>, <code>line_width</code>, <code>alpha</code> boundaries, <code>y_labels</code> error cases, <code>smooth_method</code>, grouped vs ungrouped mapping, composability with <code>hvti_theme</code>).</li>
+<li>Added <code>test_hvti_data.R</code> (27 tests): <code><a href="../reference/new_hvti_data.html">new_hvti_data()</a></code> structure contract, input validation errors, <code><a href="../reference/is_hvti_data.html">is_hvti_data()</a></code> TRUE/FALSE for all relevant types, <code>print.hvti_data</code> base-class output and invisible return, subclass dispatch (verifying <code>print.hvti_spaghetti</code> overrides <code>print.hvti_data</code>), and <code>plot.hvti_data</code> fallback error with subclass name in message.</li>
+</ul></div>
+</div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="2.0.0.9004" id="hvtiplotr-2009004">hvtiPlotR 2.0.0.9004<a class="anchor" aria-label="anchor" href="#hvtiplotr-2009004"></a></h2>
+<div class="section level3">
+<h3 id="breaking-changes-2-0-0-9004">Breaking changes<a class="anchor" aria-label="anchor" href="#breaking-changes-2-0-0-9004"></a></h3>
+<ul><li>
+<code><a href="../reference/hvti_mirror_hist.html">hvti_mirror()</a></code> renamed to <code><a href="../reference/hvti_mirror_hist.html">hvti_mirror_hist()</a></code> for naming consistency with the underlying plot type. The old name is registered as an <code>@aliases</code> entry so <code><a href="../reference/hvti_mirror_hist.html">?hvti_mirror</a></code> still resolves to the correct help page.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="new-features-2-0-0-9004">New features<a class="anchor" aria-label="anchor" href="#new-features-2-0-0-9004"></a></h3>
+<ul><li>
+<code><a href="../reference/hvti_mirror_hist.html">hvti_mirror_hist()</a></code> is now searchable via <code><a href="../reference/hvti_mirror_hist.html">?mirror_histogram</a></code>, <code><a href="../reference/hvti_mirror_hist.html">?hvti_mirror</a></code>, <code>??propensity</code>, <code>??IPTW</code>, and <code>??matching</code> through <code>@aliases</code> and <code>@concept</code> tags in its documentation.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="documentation-2-0-0-9004">Documentation<a class="anchor" aria-label="anchor" href="#documentation-2-0-0-9004"></a></h3>
+<ul><li>All <code>hvti_*</code> constructors and <code>plot.hvti_*</code> methods now carry <code>@family</code> tags, creating automatic bi-directional “See also” cross-links between each constructor and its plot method in the help system and pkgdown reference.</li>
+<li>
+<code>@return</code> on every constructor now explicitly says “call <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code> to render” and links to the corresponding <code>plot.hvti_*</code> method.</li>
+<li>
+<code>@seealso</code> entries across all constructors and plot methods now include descriptive text explaining the role of each linked function.</li>
+<li>
+<code>@examples</code> in all main plot methods include a <code>\dontrun{}</code> block demonstrating <code>ggplot2::theme_set(hvti_theme_manuscript())</code> for applying the publication theme globally, <code><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_colour_brewer()</a></code> / <code><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_fill_brewer()</a></code> for multi-group colour palettes, and a pointer to <code><a href="../articles/plot-decorators.html">vignette("plot-decorators", package = "hvtiPlotR")</a></code>.</li>
+</ul></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="2.0.0.9001" id="hvtiplotr-2009001">hvtiPlotR 2.0.0.9001<a class="anchor" aria-label="anchor" href="#hvtiplotr-2009001"></a></h2>
 </div>
@@ -57,13 +104,13 @@
 <span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a>  <span class="fu">scale_colour_manual</span>(...) <span class="sc">+</span></span>
 <span id="cb1-7"><a href="#cb1-7" tabindex="-1"></a>  <span class="fu">labs</span>(...) <span class="sc">+</span></span>
 <span id="cb1-8"><a href="#cb1-8" tabindex="-1"></a>  <span class="fu">hvti_theme</span>(<span class="st">"manuscript"</span>)</span></code></pre></div>
-<p>The old single-call functions (<code>mirror_histogram()</code>, <code>survival_curve()</code>, etc.) are <strong>removed</strong>. This is a clean break; no deprecated wrappers.</p>
+<p>The old single-call functions (<code><a href="../reference/hvti_mirror_hist.html">mirror_histogram()</a></code>, <code>survival_curve()</code>, etc.) are <strong>removed</strong>. This is a clean break; no deprecated wrappers.</p>
 <div class="section level4">
 <h4 id="constructor--old-function-mapping-2-0-0">Constructor → old function mapping<a class="anchor" aria-label="anchor" href="#constructor--old-function-mapping-2-0-0"></a></h4>
 <table class="table"><colgroup><col width="50%"><col width="50%"></colgroup><thead><tr class="header"><th>New constructor</th>
 <th>Removed function(s)</th>
-</tr></thead><tbody><tr class="odd"><td><code><a href="../reference/hvti_mirror.html">hvti_mirror()</a></code></td>
-<td><code>mirror_histogram()</code></td>
+</tr></thead><tbody><tr class="odd"><td><code><a href="../reference/hvti_mirror_hist.html">hvti_mirror_hist()</a></code></td>
+<td><code><a href="../reference/hvti_mirror_hist.html">mirror_histogram()</a></code></td>
 </tr><tr class="even"><td><code><a href="../reference/hvti_balance.html">hvti_balance()</a></code></td>
 <td><code>covariate_balance()</code></td>
 </tr><tr class="odd"><td><code><a href="../reference/hvti_stacked.html">hvti_stacked()</a></code></td>
@@ -171,7 +218,7 @@
 <div class="section level3">
 <h3 id="bug-fixes--api-consistency-2-0-0">Bug fixes / API consistency<a class="anchor" aria-label="anchor" href="#bug-fixes--api-consistency-2-0-0"></a></h3>
 <ul><li>
-<strong>Standardised <code>alpha</code> range to <code>[0, 1]</code></strong> across all plot functions. Previously <code>survival_curve()</code>, <code>covariate_balance()</code>, <code>mirror_histogram()</code>, <code>spaghetti_plot()</code>, and <code>goodness_followup_death_plot()</code> / <code>goodness_followup_event_plot()</code> used <code>(0, 1]</code> (rejecting <code>alpha = 0</code>), while <code>alluvial_plot()</code> used <code>[0, 1]</code>. All functions now accept <code>[0, 1]</code> — <code>alpha = 0</code> (fully transparent) is a valid ggplot2 value and should not be an error.</li>
+<strong>Standardised <code>alpha</code> range to <code>[0, 1]</code></strong> across all plot functions. Previously <code>survival_curve()</code>, <code>covariate_balance()</code>, <code><a href="../reference/hvti_mirror_hist.html">mirror_histogram()</a></code>, <code>spaghetti_plot()</code>, and <code>goodness_followup_death_plot()</code> / <code>goodness_followup_event_plot()</code> used <code>(0, 1]</code> (rejecting <code>alpha = 0</code>), while <code>alluvial_plot()</code> used <code>[0, 1]</code>. All functions now accept <code>[0, 1]</code> — <code>alpha = 0</code> (fully transparent) is a valid ggplot2 value and should not be an error.</li>
 <li>
 <strong>Added <code>.check_alpha()</code> shared validator</strong> in <code>R/validators.R</code>. Enforces <code>alpha ∈ [0, 1]</code> with <code>call. = FALSE</code> and is called from every plot function that accepts an <code>alpha</code> argument.</li>
 <li>
@@ -213,7 +260,7 @@
 <li>Added <code>covariate_balance()</code> — standardised mean difference dot-plot for propensity-score matching or weighting diagnostics.</li>
 <li>Added <code><a href="../reference/sample_covariate_balance_data.html">sample_covariate_balance_data()</a></code> — patient-level logistic simulation with greedy 1:1 caliper matching; SMDs computed before and after matching.</li>
 <li>Added <code>stacked_histogram()</code> and <code><a href="../reference/sample_stacked_histogram_data.html">sample_stacked_histogram_data()</a></code> — stacked or filled histogram of a numeric variable by group.</li>
-<li>Improved <code>mirror_histogram()</code> sample data (<code><a href="../reference/sample_mirror_histogram_data.html">sample_mirror_histogram_data()</a></code>) to use a realistic logistic propensity-score model with greedy 1:1 caliper matching and optional ATE IPTW weights; extreme-PS patients naturally go unmatched.</li>
+<li>Improved <code><a href="../reference/hvti_mirror_hist.html">mirror_histogram()</a></code> sample data (<code><a href="../reference/sample_mirror_histogram_data.html">sample_mirror_histogram_data()</a></code>) to use a realistic logistic propensity-score model with greedy 1:1 caliper matching and optional ATE IPTW weights; extreme-PS patients naturally go unmatched.</li>
 <li>Added <code>hvti_plot()</code> dispatcher supporting <code>"mirror_histogram"</code>, <code>"stacked_histogram"</code>, and <code>"covariate_balance"</code> plot types.</li>
 <li>Added <code><a href="../reference/hvti_theme.html">hvti_theme()</a></code> dispatcher for <code>"manuscript"</code>, <code>"ppt"</code>, <code>"dark_ppt"</code>, and <code>"poster"</code> themes.</li>
 <li>Enabled roxygen Markdown (<code>Roxygen: list(markdown = TRUE)</code>) so <code>**bold**</code>, backtick code spans, and <code>[pkg::fn()]</code> cross-references render correctly in Rd help pages.</li>

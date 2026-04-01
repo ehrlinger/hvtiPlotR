@@ -47,7 +47,11 @@ hvti_trends(
 
 ## Value
 
-An object of class `c("hvti_trends", "hvti_data")`:
+An object of class `c("hvti_trends", "hvti_data")`; call
+[`plot()`](https://rdrr.io/r/graphics/plot.default.html) on the result
+to render the figure — see
+[`plot.hvti_trends`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hvti_trends.md).
+The list contains:
 
 - `$data`:
 
@@ -65,8 +69,15 @@ An object of class `c("hvti_trends", "hvti_data")`:
 
 ## See also
 
-[`plot.hvti_trends`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hvti_trends.md),
+[`plot.hvti_trends`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hvti_trends.md)
+to render as a ggplot2 figure,
+[`hvti_theme`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_theme.md)
+for the publication theme,
 [`sample_trends_data`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_trends_data.md)
+for example data.
+
+Other Temporal trends:
+[`plot.hvti_trends()`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hvti_trends.md)
 
 ## Examples
 

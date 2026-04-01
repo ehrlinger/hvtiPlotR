@@ -36,7 +36,7 @@ worked examples in the sections below.
 
 | hvtiPlotR Constructor                                                                                       | SAS Template(s)                                                                                                                            | R Template(s)                                                                   |
 |-------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------|
-| [`hvti_mirror()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_mirror.md)                           | —                                                                                                                                          | `tp.lp.mirror-histogram_SAVR-TF-TAVR.R`, `tp.lp.mirror_histo_before_after_wt.R` |
+| [`hvti_mirror_hist()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_mirror_hist.md)                 | —                                                                                                                                          | `tp.lp.mirror-histogram_SAVR-TF-TAVR.R`, `tp.lp.mirror_histo_before_after_wt.R` |
 | [`hvti_stacked()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_stacked.md)                         | —                                                                                                                                          | —                                                                               |
 | [`hvti_balance()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_balance.md)                         | —                                                                                                                                          | `tp.lp.propen.cov_balance.R`                                                    |
 | [`hvti_followup()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_followup.md)                       | `tp.dp.goodness_followup.*`, `tp.dp.goodness_event.*`                                                                                      | —                                                                               |
@@ -70,7 +70,7 @@ A common figure in propensity-matched analyses is the mirrored
 histogram, which displays the propensity score distributions for two
 treatment groups before and after matching. The **hvtiPlotR** package
 provides the
-[`hvti_mirror()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_mirror.md)
+[`hvti_mirror_hist()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_mirror_hist.md)
 constructor to prepare the data, and
 [`plot()`](https://rdrr.io/r/graphics/plot.default.html) to render the
 figure.
@@ -95,7 +95,7 @@ constructor:
 ``` r
 mirror_dta <- sample_mirror_histogram_data(n = 2000, separation = 1.5)
 
-mh <- hvti_mirror(
+mh <- hvti_mirror_hist(
   data             = mirror_dta,
   score_col        = "prob_t",
   group_col        = "tavr",
@@ -168,7 +168,7 @@ wt_dta <- sample_mirror_histogram_data(
   n = 2000, separation = 1.5, add_weights = TRUE
 )
 
-mh_wt <- hvti_mirror(
+mh_wt <- hvti_mirror_hist(
   data             = wt_dta,
   score_col        = "prob_t",
   group_col        = "tavr",

@@ -73,7 +73,7 @@ produce a ggplot.
 
 #### Propensity Score & Matching
 
-- [`hvti_mirror()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_mirror.md):
+- [`hvti_mirror_hist()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_mirror_hist.md):
   Prepare propensity-score distributions for a mirrored histogram
   comparing binary-matched or IPTW-weighted cohorts. Ports the
   `tp.lp.mirror-histogram_*` and `tp.lp.mirror_histo_before_after_wt`

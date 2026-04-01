@@ -61,12 +61,18 @@ plot(
 ## Value
 
 A bare [`ggplot`](https://ggplot2.tidyverse.org/reference/ggplot.html)
-object.
+object; compose with `+` to add scales, axis limits, labels, and
+[`hvti_theme`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_theme.md).
 
 ## See also
 
-[`hvti_trends`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_trends.md),
+[`hvti_trends`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_trends.md)
+to build the data object,
 [`hvti_theme`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_theme.md)
+for the publication theme.
+
+Other Temporal trends:
+[`hvti_trends()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_trends.md)
 
 ## Examples
 
@@ -152,4 +158,15 @@ p <- plot(tr) +
   hvti_theme("manuscript")
 ggplot2::ggsave("trends.pdf", p, width = 11.5, height = 8)
 } # }
+
+# --- Global theme (set once per session) ----------------------------------
+if (FALSE) { # \dontrun{
+old <- ggplot2::theme_set(hvti_theme_manuscript())
+plot(hvti_trends(dta_poly)) +
+  ggplot2::scale_colour_brewer(palette = "Dark2", name = "Repair type")
+ggplot2::theme_set(old)
+} # }
+
+# See vignette("plot-decorators", package = "hvtiPlotR") for theming,
+# colour scales, annotation labels, and saving plots.
 ```

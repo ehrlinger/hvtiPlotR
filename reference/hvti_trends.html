@@ -15,7 +15,7 @@ can decorate with colour scales, axis limits, and hvti_theme."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">hvtiPlotR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.0.9003</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.0.9006</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -46,7 +46,7 @@ can decorate with colour scales, axis limits, and hvti_theme."></head><body>
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Prepare temporal trend data for plotting</h1>
-      <small class="dont-index">Source: <a href="https://github.com/ehrlinger/hvtiPlotR/blob/v2.0.0.9003/R/trends-plot.R" class="external-link"><code>R/trends-plot.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/ehrlinger/hvtiPlotR/blob/main/R/trends-plot.R" class="external-link"><code>R/trends-plot.R</code></a></small>
       <div class="d-none name"><code>hvti_trends.Rd</code></div>
     </div>
 
@@ -98,7 +98,9 @@ group. Default <code>"group"</code>.</p></dd>
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>An object of class <code>c("hvti_trends", "hvti_data")</code>:</p><dl><dt><code>$data</code></dt>
+    <p>An object of class <code>c("hvti_trends", "hvti_data")</code>; call
+<code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code> on the result to render the figure — see
+<code><a href="plot.hvti_trends.html">plot.hvti_trends</a></code>. The list contains:</p><dl><dt><code>$data</code></dt>
 <dd><p>The original patient-level data frame.</p></dd>
 
 <dt><code>$meta</code></dt>
@@ -115,7 +117,11 @@ overlay.</p></dd>
 </dl></div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
-    <div class="dont-index"><p><code><a href="plot.hvti_trends.html">plot.hvti_trends</a></code>, <code><a href="sample_trends_data.html">sample_trends_data</a></code></p></div>
+    <div class="dont-index"><p><code><a href="plot.hvti_trends.html">plot.hvti_trends</a></code> to render as a ggplot2 figure,
+<code><a href="hvti_theme.html">hvti_theme</a></code> for the publication theme,
+<code><a href="sample_trends_data.html">sample_trends_data</a></code> for example data.</p>
+<p>Other Temporal trends:
+<code><a href="plot.hvti_trends.html">plot.hvti_trends()</a></code></p></div>
     </div>
 
     <div class="section level2">

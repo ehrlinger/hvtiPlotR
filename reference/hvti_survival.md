@@ -62,8 +62,11 @@ hvti_survival(
 
 ## Value
 
-An object of class `c("hvti_survival", "hvti_data")` — a list with three
-elements:
+An object of class `c("hvti_survival", "hvti_data")` (a list); call
+[`plot()`](https://rdrr.io/r/graphics/plot.default.html) on the result
+to render the figure — see
+[`plot.hvti_survival`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hvti_survival.md).
+The list has three elements:
 
 - `$data`:
 
@@ -89,8 +92,15 @@ SAS templates: `tp.ac.dead.sas` (`%kaplan`, `%nelsont`).
 
 ## See also
 
-[`plot.hvti_survival`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hvti_survival.md),
+[`plot.hvti_survival`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hvti_survival.md)
+to render as a ggplot2 figure,
+[`hvti_theme`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_theme.md)
+for the publication theme,
 [`sample_survival_data`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_survival_data.md)
+for example data.
+
+Other Kaplan-Meier survival:
+[`plot.hvti_survival()`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hvti_survival.md)
 
 ## Examples
 
@@ -170,4 +180,18 @@ plot(km_s) +
 km_na <- hvti_survival(dta, method = "nelson-aalen")
 plot(km_na) + hvti_theme("manuscript")
 
+
+# --- Global theme + RColorBrewer (set once per session) ------------------
+if (FALSE) { # \dontrun{
+# Apply manuscript theme globally — subsequent plots need no
+# + hvti_theme("manuscript").  Restore the previous theme when done.
+old <- ggplot2::theme_set(hvti_theme_manuscript())
+plot(km_s) +
+  ggplot2::scale_colour_brewer(palette = "Set1", name = "Valve Type") +
+  ggplot2::labs(x = "Years after Operation", y = "Survival (%)")
+ggplot2::theme_set(old)
+} # }
+
+# See vignette("plot-decorators", package = "hvtiPlotR") for theming,
+# colour scales, annotation labels, and saving plots.
 ```

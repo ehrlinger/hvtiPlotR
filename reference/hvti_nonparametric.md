@@ -55,7 +55,11 @@ hvti_nonparametric(
 
 ## Value
 
-An object of class `c("hvti_nonparametric", "hvti_data")`:
+An object of class `c("hvti_nonparametric", "hvti_data")`; call
+[`plot()`](https://rdrr.io/r/graphics/plot.default.html) on the result
+to render the figure — see
+[`plot.hvti_nonparametric`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hvti_nonparametric.md).
+The list contains:
 
 - `$data`:
 
@@ -95,8 +99,15 @@ Covers the full range of `tp.np.*` SAS templates:
 
 ## See also
 
-[`plot.hvti_nonparametric`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hvti_nonparametric.md),
+[`plot.hvti_nonparametric`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hvti_nonparametric.md)
+to render as a ggplot2 figure,
+[`hvti_theme`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_theme.md)
+for the publication theme,
 [`sample_nonparametric_curve_data`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_nonparametric_curve_data.md)
+for example data.
+
+Other Nonparametric curves:
+[`plot.hvti_nonparametric()`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hvti_nonparametric.md)
 
 ## Examples
 
@@ -128,4 +139,21 @@ plot(np) +
 #> Warning: Removed 3 rows containing missing values or values outside the scale range
 #> (`geom_point()`).
 
+
+# --- Global theme (set once per session) ----------------------------------
+if (FALSE) { # \dontrun{
+# Apply manuscript theme globally; use scale_colour_brewer for multi-group.
+old <- ggplot2::theme_set(hvti_theme_manuscript())
+plot(np) +
+  ggplot2::scale_colour_manual(values = c("steelblue"), guide = "none") +
+  ggplot2::scale_fill_manual(values   = c("steelblue"), guide = "none") +
+  ggplot2::labs(x = "Months", y = "Prevalence of AF")
+# For multi-group curves swap scale_colour_manual with:
+#   ggplot2::scale_colour_brewer(palette = "Set1", name = NULL)
+#   ggplot2::scale_fill_brewer(palette = "Set1", guide = "none")
+ggplot2::theme_set(old)
+} # }
+
+# See vignette("plot-decorators", package = "hvtiPlotR") for theming,
+# colour scales, annotation labels, and saving plots.
 ```

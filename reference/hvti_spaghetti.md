@@ -45,7 +45,11 @@ hvti_spaghetti(
 
 ## Value
 
-An object of class `c("hvti_spaghetti", "hvti_data")`:
+An object of class `c("hvti_spaghetti", "hvti_data")`; call
+[`plot()`](https://rdrr.io/r/graphics/plot.default.html) on the result
+to render the figure — see
+[`plot.hvti_spaghetti`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hvti_spaghetti.md).
+The list contains:
 
 - `$data`:
 
@@ -62,8 +66,15 @@ An object of class `c("hvti_spaghetti", "hvti_data")`:
 
 ## See also
 
-[`plot.hvti_spaghetti`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hvti_spaghetti.md),
+[`plot.hvti_spaghetti`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hvti_spaghetti.md)
+to render as a ggplot2 figure,
+[`hvti_theme`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_theme.md)
+for the publication theme,
 [`sample_spaghetti_data`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_spaghetti_data.md)
+for example data.
+
+Other Spaghetti plot:
+[`plot.hvti_spaghetti()`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hvti_spaghetti.md)
 
 ## Examples
 

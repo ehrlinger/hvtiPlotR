@@ -1,5 +1,100 @@
 # Changelog
 
+## hvtiPlotR 2.0.0.9006
+
+### Documentation
+
+- [`hvti_mirror_hist()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_mirror_hist.md)
+  `$tables$diagnostics`: corrected return documentation from “a data
+  frame of matched/unmatched counts per group” to accurately describe
+  the actual type — a named list of diagnostic summaries whose contents
+  vary by mode (binary-match vs weighted IPTW). All keys are now
+  enumerated in the `@return` block.
+- `$meta` keys in
+  [`hvti_mirror_hist()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_mirror_hist.md)
+  return docs updated to include all keys actually stored (`score_col`,
+  `group_col`, `match_col` were missing).
+- Added `@family Propensity Score & Matching` to
+  [`hvti_mirror_hist()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_mirror_hist.md)
+  and
+  [`plot.hvti_mirror_hist()`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hvti_mirror_hist.md),
+  creating automatic bi-directional “See also” cross-links consistent
+  with all other `hvti_*` constructor/plot pairs.
+- [`plot.hvti_mirror_hist()`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hvti_mirror_hist.md)
+  `@return` now describes composability with `+` (scales, limits,
+  labels, `hvti_theme`), matching the pattern used in all other updated
+  plot methods.
+- [`plot.hvti_mirror_hist()`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hvti_mirror_hist.md)
+  `@seealso` expanded with descriptive text for each linked function,
+  matching the richer pattern used elsewhere.
+
+## hvtiPlotR 2.0.0.9005
+
+### Tests
+
+- Added `test_trends_plot.R` (37 tests): `$meta` slot keys and values,
+  `$tables$summary` structure and row counts, factor level order
+  preservation, `print.hvti_trends` output and invisible return, and
+  full parameter coverage for `plot.hvti_trends` (`se`, `span`,
+  `point_size`, `point_shape`, `alpha`, `smoother`, grouped vs ungrouped
+  mapping, composability with `hvti_theme`).
+- Added `test_spaghetti_plot.R` (25 tests): `$meta` slot keys and
+  values, `id_col`/`y_col` absent error cases, `print.hvti_spaghetti`
+  output with and without `colour_col` branch and invisible return, and
+  full parameter coverage for `plot.hvti_spaghetti` (`add_smooth`,
+  `smooth_se`, `line_colour`, `line_width`, `alpha` boundaries,
+  `y_labels` error cases, `smooth_method`, grouped vs ungrouped mapping,
+  composability with `hvti_theme`).
+- Added `test_hvti_data.R` (27 tests):
+  [`new_hvti_data()`](https://ehrlinger.github.io/hvtiPlotR/reference/new_hvti_data.md)
+  structure contract, input validation errors,
+  [`is_hvti_data()`](https://ehrlinger.github.io/hvtiPlotR/reference/is_hvti_data.md)
+  TRUE/FALSE for all relevant types, `print.hvti_data` base-class output
+  and invisible return, subclass dispatch (verifying
+  `print.hvti_spaghetti` overrides `print.hvti_data`), and
+  `plot.hvti_data` fallback error with subclass name in message.
+
+## hvtiPlotR 2.0.0.9004
+
+### Breaking changes
+
+- [`hvti_mirror()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_mirror_hist.md)
+  renamed to
+  [`hvti_mirror_hist()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_mirror_hist.md)
+  for naming consistency with the underlying plot type. The old name is
+  registered as an `@aliases` entry so
+  [`?hvti_mirror`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_mirror_hist.md)
+  still resolves to the correct help page.
+
+### New features
+
+- [`hvti_mirror_hist()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_mirror_hist.md)
+  is now searchable via
+  [`?mirror_histogram`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_mirror_hist.md),
+  [`?hvti_mirror`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_mirror_hist.md),
+  `??propensity`, `??IPTW`, and `??matching` through `@aliases` and
+  `@concept` tags in its documentation.
+
+### Documentation
+
+- All `hvti_*` constructors and `plot.hvti_*` methods now carry
+  `@family` tags, creating automatic bi-directional “See also”
+  cross-links between each constructor and its plot method in the help
+  system and pkgdown reference.
+- `@return` on every constructor now explicitly says “call
+  [`plot()`](https://rdrr.io/r/graphics/plot.default.html) to render”
+  and links to the corresponding `plot.hvti_*` method.
+- `@seealso` entries across all constructors and plot methods now
+  include descriptive text explaining the role of each linked function.
+- `@examples` in all main plot methods include a `\dontrun{}` block
+  demonstrating `ggplot2::theme_set(hvti_theme_manuscript())` for
+  applying the publication theme globally,
+  [`scale_colour_brewer()`](https://ggplot2.tidyverse.org/reference/scale_brewer.html)
+  /
+  [`scale_fill_brewer()`](https://ggplot2.tidyverse.org/reference/scale_brewer.html)
+  for multi-group colour palettes, and a pointer to
+  [`vignette("plot-decorators", package = "hvtiPlotR")`](https://ehrlinger.github.io/hvtiPlotR/articles/plot-decorators.md).
+
 ## hvtiPlotR 2.0.0.9001
 
 ## hvtiPlotR 2.0.0
@@ -19,27 +114,29 @@ plot(obj, ...) +                  # bare ggplot — no scales, labels, or theme
   hvti_theme("manuscript")
 ```
 
-The old single-call functions (`mirror_histogram()`, `survival_curve()`,
-etc.) are **removed**. This is a clean break; no deprecated wrappers.
+The old single-call functions
+([`mirror_histogram()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_mirror_hist.md),
+`survival_curve()`, etc.) are **removed**. This is a clean break; no
+deprecated wrappers.
 
 #### Constructor → old function mapping
 
-| New constructor                                                                                 | Removed function(s)                                          |
-|-------------------------------------------------------------------------------------------------|--------------------------------------------------------------|
-| [`hvti_mirror()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_mirror.md)               | `mirror_histogram()`                                         |
-| [`hvti_balance()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_balance.md)             | `covariate_balance()`                                        |
-| [`hvti_stacked()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_stacked.md)             | `stacked_histogram()`                                        |
-| [`hvti_survival()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_survival.md)           | `survival_curve()`                                           |
-| [`hvti_nonparametric()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_nonparametric.md) | `nonparametric_curve_plot()`                                 |
-| [`hvti_ordinal()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_ordinal.md)             | `nonparametric_ordinal_plot()`                               |
-| [`hvti_followup()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_followup.md)           | `goodness_followup()` + `goodness_event_plot()`              |
-| [`hvti_trends()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_trends.md)               | `trends_plot()`                                              |
-| [`hvti_spaghetti()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_spaghetti.md)         | `spaghetti_plot()`                                           |
-| [`hvti_longitudinal()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_longitudinal.md)   | `longitudinal_counts_plot()` + `longitudinal_counts_table()` |
-| [`hvti_alluvial()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_alluvial.md)           | `alluvial_plot()`                                            |
-| [`hvti_sankey()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_sankey.md)               | `cluster_sankey_plot()`                                      |
-| [`hvti_eda()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_eda.md)                     | `eda_plot()`                                                 |
-| [`hvti_upset()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_upset.md)                 | `upset_plot()`                                               |
+| New constructor                                                                                 | Removed function(s)                                                                         |
+|-------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------|
+| [`hvti_mirror_hist()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_mirror_hist.md)     | [`mirror_histogram()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_mirror_hist.md) |
+| [`hvti_balance()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_balance.md)             | `covariate_balance()`                                                                       |
+| [`hvti_stacked()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_stacked.md)             | `stacked_histogram()`                                                                       |
+| [`hvti_survival()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_survival.md)           | `survival_curve()`                                                                          |
+| [`hvti_nonparametric()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_nonparametric.md) | `nonparametric_curve_plot()`                                                                |
+| [`hvti_ordinal()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_ordinal.md)             | `nonparametric_ordinal_plot()`                                                              |
+| [`hvti_followup()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_followup.md)           | `goodness_followup()` + `goodness_event_plot()`                                             |
+| [`hvti_trends()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_trends.md)               | `trends_plot()`                                                                             |
+| [`hvti_spaghetti()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_spaghetti.md)         | `spaghetti_plot()`                                                                          |
+| [`hvti_longitudinal()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_longitudinal.md)   | `longitudinal_counts_plot()` + `longitudinal_counts_table()`                                |
+| [`hvti_alluvial()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_alluvial.md)           | `alluvial_plot()`                                                                           |
+| [`hvti_sankey()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_sankey.md)               | `cluster_sankey_plot()`                                                                     |
+| [`hvti_eda()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_eda.md)                     | `eda_plot()`                                                                                |
+| [`hvti_upset()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_upset.md)                 | `upset_plot()`                                                                              |
 
 [`hvti_hazard()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_hazard.md)
 \|
@@ -223,11 +320,12 @@ argument on [`plot()`](https://rdrr.io/r/graphics/plot.default.html):
 
 - **Standardised `alpha` range to `[0, 1]`** across all plot functions.
   Previously `survival_curve()`, `covariate_balance()`,
-  `mirror_histogram()`, `spaghetti_plot()`, and
-  `goodness_followup_death_plot()` / `goodness_followup_event_plot()`
-  used `(0, 1]` (rejecting `alpha = 0`), while `alluvial_plot()` used
-  `[0, 1]`. All functions now accept `[0, 1]` — `alpha = 0` (fully
-  transparent) is a valid ggplot2 value and should not be an error.
+  [`mirror_histogram()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_mirror_hist.md),
+  `spaghetti_plot()`, and `goodness_followup_death_plot()` /
+  `goodness_followup_event_plot()` used `(0, 1]` (rejecting
+  `alpha = 0`), while `alluvial_plot()` used `[0, 1]`. All functions now
+  accept `[0, 1]` — `alpha = 0` (fully transparent) is a valid ggplot2
+  value and should not be an error.
 - **Added `.check_alpha()` shared validator** in `R/validators.R`.
   Enforces `alpha ∈ [0, 1]` with `call. = FALSE` and is called from
   every plot function that accepts an `alpha` argument.
@@ -345,7 +443,9 @@ argument on [`plot()`](https://rdrr.io/r/graphics/plot.default.html):
 - Added `stacked_histogram()` and
   [`sample_stacked_histogram_data()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_stacked_histogram_data.md)
   — stacked or filled histogram of a numeric variable by group.
-- Improved `mirror_histogram()` sample data
+- Improved
+  [`mirror_histogram()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_mirror_hist.md)
+  sample data
   ([`sample_mirror_histogram_data()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_mirror_histogram_data.md))
   to use a realistic logistic propensity-score model with greedy 1:1
   caliper matching and optional ATE IPTW weights; extreme-PS patients

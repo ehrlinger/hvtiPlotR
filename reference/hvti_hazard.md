@@ -104,9 +104,12 @@ hvti_hazard(
 
 ## Value
 
-An S3 object of class `c("hvti_hazard", "hvti_data")` with: `$data`
-(curve data frame), `$meta` (all column-name mappings),
-`$tables$empirical`, `$tables$reference`.
+An S3 object of class `c("hvti_hazard", "hvti_data")`; call
+[`plot()`](https://rdrr.io/r/graphics/plot.default.html) on the result
+to render — see
+[`plot.hvti_hazard()`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hvti_hazard.md).
+The object contains: `$data` (curve data frame), `$meta` (all
+column-name mappings), `$tables$empirical`, `$tables$reference`.
 
 ## Details
 
@@ -117,10 +120,17 @@ are passed to [`plot()`](https://rdrr.io/r/graphics/plot.default.html).
 
 ## See also
 
-[`plot.hvti_hazard()`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hvti_hazard.md),
+[`plot.hvti_hazard()`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hvti_hazard.md)
+to render as a ggplot2 figure,
+[`hvti_theme()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_theme.md)
+for the publication theme,
 [`sample_hazard_data()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_hazard_data.md),
 [`sample_hazard_empirical()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_hazard_empirical.md),
 [`sample_life_table()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_life_table.md)
+for example data.
+
+Other Hazard plot:
+[`plot.hvti_hazard()`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hvti_hazard.md)
 
 ## Examples
 
@@ -162,4 +172,21 @@ plot(hp2) +
   labs(x = "Years", y = "Survival (%)") +
   hvti_theme("manuscript")
 
+
+# --- Global theme + RColorBrewer (set once per session) ------------------
+if (FALSE) { # \dontrun{
+# Apply manuscript theme globally; use scale_colour_brewer for groups.
+old <- ggplot2::theme_set(hvti_theme_manuscript())
+plot(hp2) +
+  scale_colour_brewer(palette = "Set1", name = NULL) +
+  scale_fill_brewer(palette   = "Set1", guide = "none") +
+  scale_x_continuous(limits = c(0, 10), breaks = 0:10) +
+  scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, 20),
+                     labels = function(x) paste0(x, "%")) +
+  labs(x = "Years", y = "Survival (%)")
+ggplot2::theme_set(old)
+} # }
+
+# See vignette("plot-decorators", package = "hvtiPlotR") for theming,
+# colour scales, annotation labels, and saving plots.
 ```

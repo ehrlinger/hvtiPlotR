@@ -24,7 +24,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">hvtiPlotR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.0.9003</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.0.9006</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -64,9 +64,9 @@
       <h1>hvtiPlotR Plot Functions</h1>
 
       <p class="author">John Ehrlinger <a href="mailto:ehrlinj@ccf.org" class="email">ehrlinj@ccf.org</a></p>
-      <p class="date">2026-03-30</p>
+      <p class="date">2026-04-01</p>
 
-      <small class="dont-index">Source: <a href="https://github.com/ehrlinger/hvtiPlotR/blob/v2.0.0.9003/vignettes/plot-functions.qmd" class="external-link"><code>vignettes/plot-functions.qmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/ehrlinger/hvtiPlotR/blob/main/vignettes/plot-functions.qmd" class="external-link"><code>vignettes/plot-functions.qmd</code></a></small>
       <div class="d-none name"><code></code></div>
     </div>
 
@@ -105,7 +105,7 @@
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td><code><a href="../reference/hvti_mirror.html">hvti_mirror()</a></code></td>
+<td><code><a href="../reference/hvti_mirror_hist.html">hvti_mirror_hist()</a></code></td>
 <td>—</td>
 <td>
 <code>tp.lp.mirror-histogram_SAVR-TF-TAVR.R</code>, <code>tp.lp.mirror_histo_before_after_wt.R</code>
@@ -208,7 +208,7 @@
 <p>: {tbl-colwidths=“[28,44,28]”}</p>
 </section><section class="section level2"><h2 id="mirrored-propensity-score-histogram">Mirrored Propensity Score Histogram<a class="anchor" aria-label="anchor" href="#mirrored-propensity-score-histogram"></a>
 </h2>
-<p>A common figure in propensity-matched analyses is the mirrored histogram, which displays the propensity score distributions for two treatment groups before and after matching. The <strong>hvtiPlotR</strong> package provides the <code><a href="../reference/hvti_mirror.html">hvti_mirror()</a></code> constructor to prepare the data, and <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code> to render the figure.</p>
+<p>A common figure in propensity-matched analyses is the mirrored histogram, which displays the propensity score distributions for two treatment groups before and after matching. The <strong>hvtiPlotR</strong> package provides the <code><a href="../reference/hvti_mirror_hist.html">hvti_mirror_hist()</a></code> constructor to prepare the data, and <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code> to render the figure.</p>
 <p>The constructor accepts a data frame with columns for the propensity score, group indicator, and match indicator. The <code><a href="../reference/sample_mirror_histogram_data.html">sample_mirror_histogram_data()</a></code> function generates example data suitable for testing.</p>
 <p>Two display modes are selected by the arguments supplied to the constructor:</p>
 <ul>
@@ -223,7 +223,7 @@
 <div class="sourceCode cell-code" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mirror_dta</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sample_mirror_histogram_data.html">sample_mirror_histogram_data</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">2000</span>, separation <span class="op">=</span> <span class="fl">1.5</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">mh</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hvti_mirror.html">hvti_mirror</a></span><span class="op">(</span></span>
+<span><span class="va">mh</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hvti_mirror_hist.html">hvti_mirror_hist</a></span><span class="op">(</span></span>
 <span>  data             <span class="op">=</span> <span class="va">mirror_dta</span>,</span>
 <span>  score_col        <span class="op">=</span> <span class="st">"prob_t"</span>,</span>
 <span>  group_col        <span class="op">=</span> <span class="st">"tavr"</span>,</span>
@@ -294,7 +294,7 @@
 <span>  n <span class="op">=</span> <span class="fl">2000</span>, separation <span class="op">=</span> <span class="fl">1.5</span>, add_weights <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">mh_wt</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hvti_mirror.html">hvti_mirror</a></span><span class="op">(</span></span>
+<span><span class="va">mh_wt</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hvti_mirror_hist.html">hvti_mirror_hist</a></span><span class="op">(</span></span>
 <span>  data             <span class="op">=</span> <span class="va">wt_dta</span>,</span>
 <span>  score_col        <span class="op">=</span> <span class="st">"prob_t"</span>,</span>
 <span>  group_col        <span class="op">=</span> <span class="st">"tavr"</span>,</span>

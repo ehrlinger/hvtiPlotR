@@ -25,7 +25,7 @@
 <url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/hvti_followup.html</loc></url>
 <url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/hvti_hazard.html</loc></url>
 <url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/hvti_longitudinal.html</loc></url>
-<url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/hvti_mirror.html</loc></url>
+<url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/hvti_mirror_hist.html</loc></url>
 <url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/hvti_nnt.html</loc></url>
 <url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/hvti_nonparametric.html</loc></url>
 <url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/hvti_ordinal.html</loc></url>
@@ -64,7 +64,7 @@
 <url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/plot.hvti_followup.html</loc></url>
 <url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/plot.hvti_hazard.html</loc></url>
 <url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/plot.hvti_longitudinal.html</loc></url>
-<url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/plot.hvti_mirror.html</loc></url>
+<url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/plot.hvti_mirror_hist.html</loc></url>
 <url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/plot.hvti_nnt.html</loc></url>
 <url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/plot.hvti_nonparametric.html</loc></url>
 <url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/plot.hvti_ordinal.html</loc></url>
@@ -82,7 +82,7 @@
 <url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/print.hvti_followup.html</loc></url>
 <url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/print.hvti_hazard.html</loc></url>
 <url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/print.hvti_longitudinal.html</loc></url>
-<url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/print.hvti_mirror.html</loc></url>
+<url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/print.hvti_mirror_hist.html</loc></url>
 <url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/print.hvti_nnt.html</loc></url>
 <url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/print.hvti_nonparametric.html</loc></url>
 <url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/print.hvti_ordinal.html</loc></url>
