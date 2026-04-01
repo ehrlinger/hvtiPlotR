@@ -313,3 +313,37 @@ test_that("hvti_mirror_hist diagnostics match snapshot (fixed seed)", {
   mh <- suppressMessages(hvti_mirror_hist(df))
   expect_snapshot(mh$tables$diagnostics)
 })
+
+# ============================================================================
+# print.hvti_mirror_hist
+# ============================================================================
+
+test_that("print.hvti_mirror_hist produces <hvti_mirror_hist> header", {
+  mh <- suppressMessages(hvti_mirror_hist(sample_mirror_histogram_data(50)))
+  expect_output(print(mh), "<hvti_mirror_hist>")
+})
+
+test_that("print.hvti_mirror_hist shows group labels", {
+  mh <- suppressMessages(hvti_mirror_hist(sample_mirror_histogram_data(50)))
+  expect_output(print(mh), "SAVR")
+  expect_output(print(mh), "TF-TAVR")
+})
+
+test_that("print.hvti_mirror_hist shows score_col and match_col", {
+  mh <- suppressMessages(hvti_mirror_hist(sample_mirror_histogram_data(50)))
+  expect_output(print(mh), "prob_t")
+  expect_output(print(mh), "match")
+})
+
+test_that("print.hvti_mirror_hist shows n_obs", {
+  df <- sample_mirror_histogram_data(60)
+  mh <- suppressMessages(hvti_mirror_hist(df))
+  expect_output(print(mh), "120")   # 60 per group
+})
+
+test_that("print.hvti_mirror_hist returns x invisibly", {
+  mh  <- suppressMessages(hvti_mirror_hist(sample_mirror_histogram_data(40)))
+  ret <- withVisible(print(mh))
+  expect_false(ret$visible)
+  expect_identical(ret$value, mh)
+})
