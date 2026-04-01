@@ -1,3 +1,32 @@
+# hvtiPlotR 2.0.0.9004
+
+## Breaking changes
+
+- `hvti_mirror()` renamed to `hvti_mirror_hist()` for naming consistency with
+  the underlying plot type. The old name is registered as an `@aliases` entry
+  so `?hvti_mirror` still resolves to the correct help page.
+
+## New features
+
+- `hvti_mirror_hist()` is now searchable via `?mirror_histogram`,
+  `?hvti_mirror`, `??propensity`, `??IPTW`, and `??matching` through
+  `@aliases` and `@concept` tags in its documentation.
+
+## Documentation
+
+- All `hvti_*` constructors and `plot.hvti_*` methods now carry `@family`
+  tags, creating automatic bi-directional "See also" cross-links between each
+  constructor and its plot method in the help system and pkgdown reference.
+- `@return` on every constructor now explicitly says "call `plot()` to render"
+  and links to the corresponding `plot.hvti_*` method.
+- `@seealso` entries across all constructors and plot methods now include
+  descriptive text explaining the role of each linked function.
+- `@examples` in all main plot methods include a `\dontrun{}` block
+  demonstrating `ggplot2::theme_set(hvti_theme_manuscript())` for applying the
+  publication theme globally, `scale_colour_brewer()` / `scale_fill_brewer()`
+  for multi-group colour palettes, and a pointer to
+  `vignette("plot-decorators", package = "hvtiPlotR")`.
+
 # hvtiPlotR 2.0.0.9001
 
 # hvtiPlotR 2.0.0
@@ -24,7 +53,7 @@ etc.) are **removed**. This is a clean break; no deprecated wrappers.
 
 | New constructor | Removed function(s) |
 |---|---|
-| `hvti_mirror()` | `mirror_histogram()` |
+| `hvti_mirror_hist()` | `mirror_histogram()` |
 | `hvti_balance()` | `covariate_balance()` |
 | `hvti_stacked()` | `stacked_histogram()` |
 | `hvti_survival()` | `survival_curve()` |

@@ -50,7 +50,7 @@ the sections below.
 
 | hvtiPlotR Constructor | SAS Template(s) | R Template(s) |
 |---|---|---|
-| `hvti_mirror()` | — | `tp.lp.mirror-histogram_SAVR-TF-TAVR.R`, `tp.lp.mirror_histo_before_after_wt.R` |
+| `hvti_mirror_hist()` | — | `tp.lp.mirror-histogram_SAVR-TF-TAVR.R`, `tp.lp.mirror_histo_before_after_wt.R` |
 | `hvti_stacked()` | — | — |
 | `hvti_balance()` | — | `tp.lp.propen.cov_balance.R` |
 | `hvti_followup()` | `tp.dp.goodness_followup.*`, `tp.dp.goodness_event.*` | — |
@@ -75,7 +75,7 @@ the legacy single-call API pending migration to the two-step constructor pattern
 
 # Mirrored Propensity Score Histogram
 
-A common figure in propensity-matched analyses is the mirrored histogram, which displays the propensity score distributions for two treatment groups before and after matching. The **hvtiPlotR** package provides the `hvti_mirror()` constructor to prepare the data, and `plot()` to render the figure.
+A common figure in propensity-matched analyses is the mirrored histogram, which displays the propensity score distributions for two treatment groups before and after matching. The **hvtiPlotR** package provides the `hvti_mirror_hist()` constructor to prepare the data, and `plot()` to render the figure.
 
 The constructor accepts a data frame with columns for the propensity score, group indicator, and match indicator. The `sample_mirror_histogram_data()` function generates example data suitable for testing.
 
@@ -91,7 +91,7 @@ Two display modes are selected by the arguments supplied to the constructor:
 #| caption: Mirrored Propensity Score Histogram — binary-match mode
 mirror_dta <- sample_mirror_histogram_data(n = 2000, separation = 1.5)
 
-mh <- hvti_mirror(
+mh <- hvti_mirror_hist(
   data             = mirror_dta,
   score_col        = "prob_t",
   group_col        = "tavr",
@@ -143,7 +143,7 @@ wt_dta <- sample_mirror_histogram_data(
   n = 2000, separation = 1.5, add_weights = TRUE
 )
 
-mh_wt <- hvti_mirror(
+mh_wt <- hvti_mirror_hist(
   data             = wt_dta,
   score_col        = "prob_t",
   group_col        = "tavr",

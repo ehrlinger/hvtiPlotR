@@ -68,8 +68,9 @@ Default \code{NULL}.}
 Default \code{NULL}.}
 }
 \value{
-An S3 object of class \code{c("hvti_hazard", "hvti_data")} with:
-\verb{$data} (curve data frame), \verb{$meta} (all column-name mappings),
+An S3 object of class \code{c("hvti_hazard", "hvti_data")}; call
+\code{plot()} on the result to render — see \code{\link[=plot.hvti_hazard]{plot.hvti_hazard()}}. The object
+contains: \verb{$data} (curve data frame), \verb{$meta} (all column-name mappings),
 \verb{$tables$empirical}, \verb{$tables$reference}.
 }
 \description{
@@ -121,8 +122,31 @@ plot(hp2) +
   labs(x = "Years", y = "Survival (\%)") +
   hvti_theme("manuscript")
 
+# --- Global theme + RColorBrewer (set once per session) ------------------
+\dontrun{
+# Apply manuscript theme globally; use scale_colour_brewer for groups.
+old <- ggplot2::theme_set(hvti_theme_manuscript())
+plot(hp2) +
+  scale_colour_brewer(palette = "Set1", name = NULL) +
+  scale_fill_brewer(palette   = "Set1", guide = "none") +
+  scale_x_continuous(limits = c(0, 10), breaks = 0:10) +
+  scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, 20),
+                     labels = function(x) paste0(x, "\%")) +
+  labs(x = "Years", y = "Survival (\%)")
+ggplot2::theme_set(old)
+}
+
+# See vignette("plot-decorators", package = "hvtiPlotR") for theming,
+# colour scales, annotation labels, and saving plots.
+
 }
 \seealso{
-\code{\link[=plot.hvti_hazard]{plot.hvti_hazard()}}, \code{\link[=sample_hazard_data]{sample_hazard_data()}},
-\code{\link[=sample_hazard_empirical]{sample_hazard_empirical()}}, \code{\link[=sample_life_table]{sample_life_table()}}
+\code{\link[=plot.hvti_hazard]{plot.hvti_hazard()}} to render as a ggplot2 figure,
+\code{\link[=hvti_theme]{hvti_theme()}} for the publication theme,
+\code{\link[=sample_hazard_data]{sample_hazard_data()}}, \code{\link[=sample_hazard_empirical]{sample_hazard_empirical()}},
+\code{\link[=sample_life_table]{sample_life_table()}} for example data.
+
+Other Hazard plot: 
+\code{\link{plot.hvti_hazard}()}
 }
+\concept{Hazard plot}

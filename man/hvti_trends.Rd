@@ -27,7 +27,9 @@ group. Default \code{"group"}.}
 \code{"mean"} or \code{"median"}. Default \code{"mean"}.}
 }
 \value{
-An object of class \code{c("hvti_trends", "hvti_data")}:
+An object of class \code{c("hvti_trends", "hvti_data")}; call
+\code{plot()} on the result to render the figure — see
+\code{\link{plot.hvti_trends}}. The list contains:
 \describe{
 \item{\code{$data}}{The original patient-level data frame.}
 \item{\code{$meta}}{Named list: \code{x_col}, \code{y_col},
@@ -67,5 +69,11 @@ plot(tr) +
 
 }
 \seealso{
-\code{\link{plot.hvti_trends}}, \code{\link{sample_trends_data}}
+\code{\link{plot.hvti_trends}} to render as a ggplot2 figure,
+\code{\link{hvti_theme}} for the publication theme,
+\code{\link{sample_trends_data}} for example data.
+
+Other Temporal trends: 
+\code{\link{plot.hvti_trends}()}
 }
+\concept{Temporal trends}

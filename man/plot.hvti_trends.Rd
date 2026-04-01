@@ -38,7 +38,8 @@ Default \code{0.2}.}
 \item{...}{Ignored; present for S3 consistency.}
 }
 \value{
-A bare \code{\link[ggplot2]{ggplot}} object.
+A bare \code{\link[ggplot2]{ggplot}} object; compose with \code{+}
+to add scales, axis limits, labels, and \code{\link{hvti_theme}}.
 }
 \description{
 Draws a LOESS smooth overlaid with per-x-value summary-statistic points
@@ -118,7 +119,23 @@ p <- plot(tr) +
 ggplot2::ggsave("trends.pdf", p, width = 11.5, height = 8)
 }
 
+# --- Global theme (set once per session) ----------------------------------
+\dontrun{
+old <- ggplot2::theme_set(hvti_theme_manuscript())
+plot(hvti_trends(dta_poly)) +
+  ggplot2::scale_colour_brewer(palette = "Dark2", name = "Repair type")
+ggplot2::theme_set(old)
+}
+
+# See vignette("plot-decorators", package = "hvtiPlotR") for theming,
+# colour scales, annotation labels, and saving plots.
+
 }
 \seealso{
-\code{\link{hvti_trends}}, \code{\link{hvti_theme}}
+\code{\link{hvti_trends}} to build the data object,
+\code{\link{hvti_theme}} for the publication theme.
+
+Other Temporal trends: 
+\code{\link{hvti_trends}()}
 }
+\concept{Temporal trends}

@@ -5,7 +5,7 @@
 #   1. Calls the sample_* function with small n and a fixed seed
 #   2. Calls the hvti_*() constructor to build the S3 data object
 #   3. Calls plot() on the object and expects a ggplot result
-#   Where relevant (hvti_mirror, hvti_survival) also checks $tables slots.
+#   Where relevant (hvti_mirror_hist, hvti_survival) also checks $tables slots.
 
 library(testthat)
 library(ggplot2)
@@ -176,36 +176,36 @@ test_that("plot(hvti_balance) returns a ggplot", {
 })
 
 # ============================================================================
-# hvti_mirror — sample_mirror_histogram_data
+# hvti_mirror_hist — sample_mirror_histogram_data
 # ============================================================================
 
-test_that("hvti_mirror returns an hvti_data object", {
+test_that("hvti_mirror_hist returns an hvti_data object", {
   dta <- sample_mirror_histogram_data(n = 50, seed = 1)
-  mh  <- suppressMessages(hvti_mirror(dta))
+  mh  <- suppressMessages(hvti_mirror_hist(dta))
   expect_s3_class(mh, "hvti_data")
 })
 
-test_that("plot(hvti_mirror) returns a ggplot", {
+test_that("plot(hvti_mirror_hist) returns a ggplot", {
   dta <- sample_mirror_histogram_data(n = 50, seed = 1)
-  mh  <- suppressMessages(hvti_mirror(dta))
+  mh  <- suppressMessages(hvti_mirror_hist(dta))
   expect_s3_class(plot(mh), "ggplot")
 })
 
-test_that("hvti_mirror $tables$diagnostics is not NULL", {
+test_that("hvti_mirror_hist $tables$diagnostics is not NULL", {
   dta <- sample_mirror_histogram_data(n = 50, seed = 1)
-  mh  <- suppressMessages(hvti_mirror(dta))
+  mh  <- suppressMessages(hvti_mirror_hist(dta))
   expect_false(is.null(mh$tables$diagnostics))
 })
 
-test_that("hvti_mirror $tables$working is not NULL", {
+test_that("hvti_mirror_hist $tables$working is not NULL", {
   dta <- sample_mirror_histogram_data(n = 50, seed = 1)
-  mh  <- suppressMessages(hvti_mirror(dta))
+  mh  <- suppressMessages(hvti_mirror_hist(dta))
   expect_false(is.null(mh$tables$working))
 })
 
-test_that("hvti_mirror emits a diagnostics message", {
+test_that("hvti_mirror_hist emits a diagnostics message", {
   dta <- sample_mirror_histogram_data(n = 50, seed = 1)
-  expect_message(hvti_mirror(dta), "mirror_histogram diagnostics")
+  expect_message(hvti_mirror_hist(dta), "mirror_histogram diagnostics")
 })
 
 # ============================================================================

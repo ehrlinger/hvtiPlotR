@@ -100,7 +100,9 @@ sample_spaghetti_data <- function(n_patients = 150,
 #' @param colour_col Name of the column to map to line colour, or \code{NULL}
 #'   for a single uniform colour. Default \code{NULL}.
 #'
-#' @return An object of class \code{c("hvti_spaghetti", "hvti_data")}:
+#' @return An object of class \code{c("hvti_spaghetti", "hvti_data")}; call
+#'   \code{plot()} on the result to render the figure — see
+#'   \code{\link{plot.hvti_spaghetti}}. The list contains:
 #' \describe{
 #'   \item{\code{$data}}{The validated input data frame.}
 #'   \item{\code{$meta}}{Named list: \code{x_col}, \code{y_col},
@@ -109,8 +111,11 @@ sample_spaghetti_data <- function(n_patients = 150,
 #'   \item{\code{$tables}}{Empty list.}
 #' }
 #'
-#' @seealso \code{\link{plot.hvti_spaghetti}},
-#'   \code{\link{sample_spaghetti_data}}
+#' @seealso \code{\link{plot.hvti_spaghetti}} to render as a ggplot2 figure,
+#'   \code{\link{hvti_theme}} for the publication theme,
+#'   \code{\link{sample_spaghetti_data}} for example data.
+#'
+#' @family Spaghetti plot
 #'
 #' @examples
 #' dta <- sample_spaghetti_data(n_patients = 150, seed = 42)
@@ -194,9 +199,13 @@ print.hvti_spaghetti <- function(x, ...) {
 #'   Default \code{NULL} (standard numeric axis).
 #' @param ...           Ignored; present for S3 consistency.
 #'
-#' @return A bare \code{\link[ggplot2]{ggplot}} object.
+#' @return A bare \code{\link[ggplot2]{ggplot}} object; compose with \code{+}
+#'   to add scales, axis limits, labels, and \code{\link{hvti_theme}}.
 #'
-#' @seealso \code{\link{hvti_spaghetti}}, \code{\link{hvti_theme}}
+#' @seealso \code{\link{hvti_spaghetti}} to build the data object,
+#'   \code{\link{hvti_theme}} for the publication theme.
+#'
+#' @family Spaghetti plot
 #'
 #' @examples
 #' dta <- sample_spaghetti_data(n_patients = 150, seed = 42)
@@ -215,6 +224,18 @@ print.hvti_spaghetti <- function(x, ...) {
 #'      y_labels = c(None = 0, Mild = 1, Moderate = 2, Severe = 3)) +
 #'   ggplot2::labs(x = "Years", y = "MR Grade") +
 #'   hvti_theme("manuscript")
+#'
+#' # --- Global theme (set once per session) ----------------------------------
+#' \dontrun{
+#' old <- ggplot2::theme_set(hvti_theme_manuscript())
+#' plot(sp, add_smooth = TRUE) +
+#'   ggplot2::scale_colour_brewer(palette = "Set1", name = NULL) +
+#'   ggplot2::labs(x = "Years", y = "AV Mean Gradient (mmHg)")
+#' ggplot2::theme_set(old)
+#' }
+#'
+#' # See vignette("plot-decorators", package = "hvtiPlotR") for theming,
+#' # colour scales, annotation labels, and saving plots.
 #'
 #' @importFrom ggplot2 ggplot aes geom_line geom_smooth scale_colour_identity
 #'   scale_y_continuous
