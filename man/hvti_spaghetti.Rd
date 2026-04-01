@@ -26,7 +26,9 @@ hvti_spaghetti(
 for a single uniform colour. Default \code{NULL}.}
 }
 \value{
-An object of class \code{c("hvti_spaghetti", "hvti_data")}:
+An object of class \code{c("hvti_spaghetti", "hvti_data")}; call
+\code{plot()} on the result to render the figure — see
+\code{\link{plot.hvti_spaghetti}}. The list contains:
 \describe{
 \item{\code{$data}}{The validated input data frame.}
 \item{\code{$meta}}{Named list: \code{x_col}, \code{y_col},
@@ -56,6 +58,11 @@ plot(sp) +
 
 }
 \seealso{
-\code{\link{plot.hvti_spaghetti}},
-\code{\link{sample_spaghetti_data}}
+\code{\link{plot.hvti_spaghetti}} to render as a ggplot2 figure,
+\code{\link{hvti_theme}} for the publication theme,
+\code{\link{sample_spaghetti_data}} for example data.
+
+Other Spaghetti plot: 
+\code{\link{plot.hvti_spaghetti}()}
 }
+\concept{Spaghetti plot}

@@ -34,10 +34,10 @@ test_that("build_hist_counts returns correct output", {
   expect_true(all(c("x", "count") %in% names(hist_df)))
 })
 
-# Test hvti_mirror constructor
-test_that("hvti_mirror returns an hvti_data object with expected $tables", {
+# Test hvti_mirror_hist constructor
+test_that("hvti_mirror_hist returns an hvti_data object with expected $tables", {
   df <- sample_mirror_histogram_data(50)
-  mh <- suppressMessages(hvti_mirror(
+  mh <- suppressMessages(hvti_mirror_hist(
     data = df,
     score_col = "prob_t",
     group_col = "tavr",
@@ -53,35 +53,35 @@ test_that("hvti_mirror returns an hvti_data object with expected $tables", {
   expect_false(is.null(mh$tables$working))
 })
 
-test_that("hvti_mirror errors when required columns are missing", {
+test_that("hvti_mirror_hist errors when required columns are missing", {
   df <- sample_mirror_histogram_data(25)
   df$match <- NULL
   expect_error(
-    hvti_mirror(data = df),
+    hvti_mirror_hist(data = df),
     "Missing required column"
   )
 })
 
-test_that("hvti_mirror errors when score_col is non-numeric", {
+test_that("hvti_mirror_hist errors when score_col is non-numeric", {
   df          <- sample_mirror_histogram_data(25)
   df$prob_t   <- as.character(df$prob_t)
   expect_error(
-    hvti_mirror(data = df, score_col = "prob_t"),
+    hvti_mirror_hist(data = df, score_col = "prob_t"),
     "must be numeric"
   )
 })
 
-test_that("hvti_mirror errors for non-positive binwidth", {
+test_that("hvti_mirror_hist errors for non-positive binwidth", {
   df <- sample_mirror_histogram_data(25)
   expect_error(
-    hvti_mirror(data = df, binwidth = 0),
+    hvti_mirror_hist(data = df, binwidth = 0),
     "binwidth"
   )
 })
 
 test_that("save_mirror_histogram_plot errors when output directory is missing", {
   df <- sample_mirror_histogram_data(40)
-  mh <- suppressMessages(hvti_mirror(df))
+  mh <- suppressMessages(hvti_mirror_hist(df))
   bad_dir  <- file.path(tempdir(), "nonexistent_dir")
   bad_file <- file.path(bad_dir, "mirror.pdf")
   expect_error(
@@ -91,9 +91,9 @@ test_that("save_mirror_histogram_plot errors when output directory is missing", 
   )
 })
 
-test_that("plot(hvti_mirror) returns a bare ggplot", {
+test_that("plot(hvti_mirror_hist) returns a bare ggplot", {
   df <- sample_mirror_histogram_data(40)
-  mh <- suppressMessages(hvti_mirror(data = df))
+  mh <- suppressMessages(hvti_mirror_hist(data = df))
   expect_s3_class(plot(mh), "ggplot")
 })
 
@@ -224,82 +224,82 @@ test_that("validate skips match_col check when weight_col is provided", {
 # mirror_histogram — weighted mode integration
 # ---------------------------------------------------------------------------
 
-test_that("hvti_mirror weighted mode returns an hvti_data object with $tables", {
+test_that("hvti_mirror_hist weighted mode returns an hvti_data object with $tables", {
   df <- sample_mirror_histogram_data(100, add_weights = TRUE)
-  mh <- hvti_mirror(df, weight_col = "mt_wt")
+  mh <- hvti_mirror_hist(df, weight_col = "mt_wt")
   expect_s3_class(mh, "hvti_data")
   expect_false(is.null(mh$tables$diagnostics))
   expect_false(is.null(mh$tables$working))
 })
 
-test_that("plot(hvti_mirror, weighted) returns a ggplot", {
+test_that("plot(hvti_mirror_hist, weighted) returns a ggplot", {
   df <- sample_mirror_histogram_data(100, add_weights = TRUE)
-  mh <- hvti_mirror(df, weight_col = "mt_wt")
+  mh <- hvti_mirror_hist(df, weight_col = "mt_wt")
   expect_s3_class(plot(mh), "ggplot")
 })
 
-test_that("hvti_mirror weighted diagnostics has weighted fields", {
+test_that("hvti_mirror_hist weighted diagnostics has weighted fields", {
   df   <- sample_mirror_histogram_data(100, add_weights = TRUE)
-  diag <- hvti_mirror(df, weight_col = "mt_wt")$tables$diagnostics
+  diag <- hvti_mirror_hist(df, weight_col = "mt_wt")$tables$diagnostics
   expect_true("effective_n_by_group" %in% names(diag))
   expect_true("smd_weighted" %in% names(diag))
 })
 
-test_that("hvti_mirror weighted diagnostics omits binary-match fields", {
+test_that("hvti_mirror_hist weighted diagnostics omits binary-match fields", {
   df   <- sample_mirror_histogram_data(100, add_weights = TRUE)
-  diag <- hvti_mirror(df, weight_col = "mt_wt")$tables$diagnostics
+  diag <- hvti_mirror_hist(df, weight_col = "mt_wt")$tables$diagnostics
   expect_false("smd_matched" %in% names(diag))
   expect_false("group_counts_matched" %in% names(diag))
 })
 
-test_that("hvti_mirror weighted effective_n_by_group sums weights", {
+test_that("hvti_mirror_hist weighted effective_n_by_group sums weights", {
   df             <- sample_mirror_histogram_data(50, add_weights = TRUE)
-  mh             <- hvti_mirror(df, weight_col = "mt_wt")
+  mh             <- hvti_mirror_hist(df, weight_col = "mt_wt")
   expected_total <- sum(df$mt_wt)
   observed_total <- sum(mh$tables$diagnostics$effective_n_by_group)
   expect_equal(observed_total, expected_total, tolerance = 1e-6)
 })
 
-test_that("hvti_mirror weighted mode does not require match_col", {
+test_that("hvti_mirror_hist weighted mode does not require match_col", {
   df       <- sample_mirror_histogram_data(50, add_weights = TRUE)
   df$match <- NULL
-  expect_no_error(hvti_mirror(df, weight_col = "mt_wt"))
+  expect_no_error(hvti_mirror_hist(df, weight_col = "mt_wt"))
 })
 
-test_that("plot(hvti_mirror, weighted) fill_keys contain weighted layers", {
+test_that("plot(hvti_mirror_hist, weighted) fill_keys contain weighted layers", {
   df     <- sample_mirror_histogram_data(100, add_weights = TRUE)
-  result <- plot(hvti_mirror(df, weight_col = "mt_wt"))
+  result <- plot(hvti_mirror_hist(df, weight_col = "mt_wt"))
   # layers: [[1]] geom_hline, [[2]] Before geom_col, [[3]] overlay geom_col
   keys <- unique(result$layers[[3]]$data$fill_key)
   expect_true(any(grepl("weighted", keys)))
 })
 
-test_that("plot(hvti_mirror, weighted) bars reflect weight sums not counts", {
+test_that("plot(hvti_mirror_hist, weighted) bars reflect weight sums not counts", {
   df <- data.frame(
     prob_t = c(rep(0.05, 20), rep(0.95, 20)),
     tavr   = c(rep(0, 20),    rep(1, 20)),
     match  = rep(1, 40),
     mt_wt  = c(rep(10, 20),   rep(1, 20))
   )
-  result   <- plot(hvti_mirror(df, weight_col = "mt_wt", binwidth = 5))
+  result   <- plot(hvti_mirror_hist(df, weight_col = "mt_wt", binwidth = 5))
   wt_layer <- result$layers[[3]]$data
   g0_bar   <- wt_layer[wt_layer$fill_key == "weighted_g0", ]
   expect_true(any(g0_bar$y > 20))
 })
 
-test_that("hvti_mirror binary mode unchanged when weight_col is NULL", {
+test_that("hvti_mirror_hist binary mode unchanged when weight_col is NULL", {
   df   <- sample_mirror_histogram_data(50)
-  mh   <- suppressMessages(hvti_mirror(df, weight_col = NULL))
+  mh   <- suppressMessages(hvti_mirror_hist(df, weight_col = NULL))
   diag <- mh$tables$diagnostics
   expect_true("smd_matched" %in% names(diag))
   expect_true("group_counts_matched" %in% names(diag))
   expect_false("smd_weighted" %in% names(diag))
 })
 
-test_that("hvti_mirror errors when weight_col column is absent", {
+test_that("hvti_mirror_hist errors when weight_col column is absent", {
   df <- sample_mirror_histogram_data(25)
   expect_error(
-    hvti_mirror(df, weight_col = "nonexistent"),
+    hvti_mirror_hist(df, weight_col = "nonexistent"),
     "Missing required column"
   )
 })
@@ -308,8 +308,42 @@ test_that("hvti_mirror errors when weight_col column is absent", {
 # Snapshot — diagnostics list (fixed seed)
 # ============================================================================
 
-test_that("hvti_mirror diagnostics match snapshot (fixed seed)", {
+test_that("hvti_mirror_hist diagnostics match snapshot (fixed seed)", {
   df <- sample_mirror_histogram_data(200, seed = 42)
-  mh <- suppressMessages(hvti_mirror(df))
+  mh <- suppressMessages(hvti_mirror_hist(df))
   expect_snapshot(mh$tables$diagnostics)
+})
+
+# ============================================================================
+# print.hvti_mirror_hist
+# ============================================================================
+
+test_that("print.hvti_mirror_hist produces <hvti_mirror_hist> header", {
+  mh <- suppressMessages(hvti_mirror_hist(sample_mirror_histogram_data(50)))
+  expect_output(print(mh), "<hvti_mirror_hist>")
+})
+
+test_that("print.hvti_mirror_hist shows group labels", {
+  mh <- suppressMessages(hvti_mirror_hist(sample_mirror_histogram_data(50)))
+  expect_output(print(mh), "SAVR")
+  expect_output(print(mh), "TF-TAVR")
+})
+
+test_that("print.hvti_mirror_hist shows score_col and match_col", {
+  mh <- suppressMessages(hvti_mirror_hist(sample_mirror_histogram_data(50)))
+  expect_output(print(mh), "prob_t")
+  expect_output(print(mh), "match")
+})
+
+test_that("print.hvti_mirror_hist shows n_obs", {
+  df <- sample_mirror_histogram_data(60)
+  mh <- suppressMessages(hvti_mirror_hist(df))
+  expect_output(print(mh), "120")   # 60 per group
+})
+
+test_that("print.hvti_mirror_hist returns x invisibly", {
+  mh  <- suppressMessages(hvti_mirror_hist(sample_mirror_histogram_data(40)))
+  ret <- withVisible(print(mh))
+  expect_false(ret$visible)
+  expect_identical(ret$value, mh)
 })

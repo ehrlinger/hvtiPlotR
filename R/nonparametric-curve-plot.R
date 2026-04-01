@@ -302,7 +302,9 @@ sample_nonparametric_curve_points <- function(n            = 500,
 #'   Must have columns matching \code{x_col} and \code{"value"}, plus
 #'   \code{group_col} when stratified. Default \code{NULL}.
 #'
-#' @return An object of class \code{c("hvti_nonparametric", "hvti_data")}:
+#' @return An object of class \code{c("hvti_nonparametric", "hvti_data")}; call
+#'   \code{plot()} on the result to render the figure — see
+#'   \code{\link{plot.hvti_nonparametric}}. The list contains:
 #' \describe{
 #'   \item{\code{$data}}{The \code{curve_data} data frame.}
 #'   \item{\code{$meta}}{Named list: \code{x_col}, \code{estimate_col},
@@ -311,8 +313,11 @@ sample_nonparametric_curve_points <- function(n            = 500,
 #'   \item{\code{$tables}}{List; contains \code{data_points} when supplied.}
 #' }
 #'
-#' @seealso \code{\link{plot.hvti_nonparametric}},
-#'   \code{\link{sample_nonparametric_curve_data}}
+#' @seealso \code{\link{plot.hvti_nonparametric}} to render as a ggplot2 figure,
+#'   \code{\link{hvti_theme}} for the publication theme,
+#'   \code{\link{sample_nonparametric_curve_data}} for example data.
+#'
+#' @family Nonparametric curves
 #'
 #' @examples
 #' dat     <- sample_nonparametric_curve_data(n = 500, time_max = 12)
@@ -330,6 +335,23 @@ sample_nonparametric_curve_points <- function(n            = 500,
 #'                               labels = scales::percent) +
 #'   ggplot2::labs(x = "Months", y = "Prevalence of AF") +
 #'   hvti_theme("manuscript")
+#'
+#' # --- Global theme (set once per session) ----------------------------------
+#' \dontrun{
+#' # Apply manuscript theme globally; use scale_colour_brewer for multi-group.
+#' old <- ggplot2::theme_set(hvti_theme_manuscript())
+#' plot(np) +
+#'   ggplot2::scale_colour_manual(values = c("steelblue"), guide = "none") +
+#'   ggplot2::scale_fill_manual(values   = c("steelblue"), guide = "none") +
+#'   ggplot2::labs(x = "Months", y = "Prevalence of AF")
+#' # For multi-group curves swap scale_colour_manual with:
+#' #   ggplot2::scale_colour_brewer(palette = "Set1", name = NULL)
+#' #   ggplot2::scale_fill_brewer(palette = "Set1", guide = "none")
+#' ggplot2::theme_set(old)
+#' }
+#'
+#' # See vignette("plot-decorators", package = "hvtiPlotR") for theming,
+#' # colour scales, annotation labels, and saving plots.
 #'
 #' @importFrom rlang .data
 #' @export
@@ -409,9 +431,13 @@ print.hvti_nonparametric <- function(x, ...) {
 #'   Default \code{20} (filled circle).
 #' @param ...          Ignored; present for S3 consistency.
 #'
-#' @return A bare \code{\link[ggplot2]{ggplot}} object.
+#' @return A bare \code{\link[ggplot2]{ggplot}} object; compose with \code{+}
+#'   to add scales, axis limits, labels, and \code{\link{hvti_theme}}.
 #'
-#' @seealso \code{\link{hvti_nonparametric}}, \code{\link{hvti_theme}}
+#' @seealso \code{\link{hvti_nonparametric}} to build the data object,
+#'   \code{\link{hvti_theme}} for the publication theme.
+#'
+#' @family Nonparametric curves
 #'
 #' @examples
 #' dat_two <- sample_nonparametric_curve_data(

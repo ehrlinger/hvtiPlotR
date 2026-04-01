@@ -816,6 +816,31 @@ sample_nnt_data <- function(n        = 500,
 #' ggplot2::ggsave("survival.pdf", p, width = 11.5, height = 8)
 #' }
 #'
+#' # --- Global theme + RColorBrewer (set once per session) ------------------
+#' \dontrun{
+#' old <- ggplot2::theme_set(hvti_theme_manuscript())
+#' hazard_plot(
+#'   dat2,
+#'   estimate_col  = "survival",
+#'   lower_col     = "surv_lower",
+#'   upper_col     = "surv_upper",
+#'   group_col     = "group",
+#'   empirical     = emp2,
+#'   emp_lower_col = "lower",
+#'   emp_upper_col = "upper"
+#' ) +
+#'   ggplot2::scale_colour_brewer(palette = "Set1", name = NULL) +
+#'   ggplot2::scale_fill_brewer(palette   = "Set1", guide = "none") +
+#'   ggplot2::scale_x_continuous(limits = c(0, 10), breaks = 0:10) +
+#'   ggplot2::scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, 20),
+#'                               labels = function(x) paste0(x, "%")) +
+#'   ggplot2::labs(x = "Years", y = "Survival (%)")
+#' ggplot2::theme_set(old)
+#' }
+#'
+#' # See vignette("plot-decorators", package = "hvtiPlotR") for theming,
+#' # colour scales, annotation labels, and saving plots.
+#'
 #' @importFrom ggplot2 ggplot aes geom_line geom_ribbon geom_point geom_errorbar
 #' @importFrom rlang .data
 #' @keywords internal
@@ -1258,12 +1283,17 @@ nnt_plot <- function(nnt_data,
 #' @param ref_group_col  Linetype-grouping column in `reference`, or `NULL`.
 #'   Default `NULL`.
 #'
-#' @return An S3 object of class `c("hvti_hazard", "hvti_data")` with:
-#'   `$data` (curve data frame), `$meta` (all column-name mappings),
+#' @return An S3 object of class `c("hvti_hazard", "hvti_data")`; call
+#'   `plot()` on the result to render — see [plot.hvti_hazard()]. The object
+#'   contains: `$data` (curve data frame), `$meta` (all column-name mappings),
 #'   `$tables$empirical`, `$tables$reference`.
 #'
-#' @seealso [plot.hvti_hazard()], [sample_hazard_data()],
-#'   [sample_hazard_empirical()], [sample_life_table()]
+#' @seealso [plot.hvti_hazard()] to render as a ggplot2 figure,
+#'   [hvti_theme()] for the publication theme,
+#'   [sample_hazard_data()], [sample_hazard_empirical()],
+#'   [sample_life_table()] for example data.
+#'
+#' @family Hazard plot
 #'
 #' @examples
 #' library(ggplot2)
@@ -1301,6 +1331,23 @@ nnt_plot <- function(nnt_data,
 #'   ) +
 #'   labs(x = "Years", y = "Survival (%)") +
 #'   hvti_theme("manuscript")
+#'
+#' # --- Global theme + RColorBrewer (set once per session) ------------------
+#' \dontrun{
+#' # Apply manuscript theme globally; use scale_colour_brewer for groups.
+#' old <- ggplot2::theme_set(hvti_theme_manuscript())
+#' plot(hp2) +
+#'   scale_colour_brewer(palette = "Set1", name = NULL) +
+#'   scale_fill_brewer(palette   = "Set1", guide = "none") +
+#'   scale_x_continuous(limits = c(0, 10), breaks = 0:10) +
+#'   scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, 20),
+#'                      labels = function(x) paste0(x, "%")) +
+#'   labs(x = "Years", y = "Survival (%)")
+#' ggplot2::theme_set(old)
+#' }
+#'
+#' # See vignette("plot-decorators", package = "hvtiPlotR") for theming,
+#' # colour scales, annotation labels, and saving plots.
 #'
 #' @importFrom rlang .data
 #' @export
@@ -1412,9 +1459,13 @@ print.hvti_hazard <- function(x, ...) {
 #'   `0.25`.
 #' @param ...           Ignored; present for S3 consistency.
 #'
-#' @return A [ggplot2::ggplot()] object.
+#' @return A [ggplot2::ggplot()] object; compose with `+` to add scales,
+#'   axis limits, labels, and [hvti_theme()].
 #'
-#' @seealso [hvti_hazard()], [hvti_theme()]
+#' @seealso [hvti_hazard()] to build the data object,
+#'   [hvti_theme()] for the publication theme.
+#'
+#' @family Hazard plot
 #'
 #' @importFrom ggplot2 ggplot aes geom_line geom_ribbon geom_point geom_errorbar
 #' @importFrom rlang .data

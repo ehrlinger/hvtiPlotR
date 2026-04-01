@@ -39,8 +39,9 @@ estimates and numbers-at-risk are tabulated.
 Default \code{c(1, 5, 10, 15, 20, 25)}.}
 }
 \value{
-An object of class \code{c("hvti_survival", "hvti_data")} — a list
-with three elements:
+An object of class \code{c("hvti_survival", "hvti_data")} (a list);
+call \code{plot()} on the result to render the figure — see
+\code{\link{plot.hvti_survival}}. The list has three elements:
 \describe{
 \item{\code{$data}}{Tidy data frame with one row per (time, strata) pair.
 Columns: \code{time}, \code{surv}, \code{lower}, \code{upper},
@@ -111,11 +112,31 @@ plot(km_s) +
 km_na <- hvti_survival(dta, method = "nelson-aalen")
 plot(km_na) + hvti_theme("manuscript")
 
+# --- Global theme + RColorBrewer (set once per session) ------------------
+\dontrun{
+# Apply manuscript theme globally — subsequent plots need no
+# + hvti_theme("manuscript").  Restore the previous theme when done.
+old <- ggplot2::theme_set(hvti_theme_manuscript())
+plot(km_s) +
+  ggplot2::scale_colour_brewer(palette = "Set1", name = "Valve Type") +
+  ggplot2::labs(x = "Years after Operation", y = "Survival (\%)")
+ggplot2::theme_set(old)
+}
+
+# See vignette("plot-decorators", package = "hvtiPlotR") for theming,
+# colour scales, annotation labels, and saving plots.
+
 }
 \references{
 SAS templates: \code{tp.ac.dead.sas} (\code{\%kaplan},
 \code{\%nelsont}).
 }
 \seealso{
-\code{\link{plot.hvti_survival}}, \code{\link{sample_survival_data}}
+\code{\link{plot.hvti_survival}} to render as a ggplot2 figure,
+\code{\link{hvti_theme}} for the publication theme,
+\code{\link{sample_survival_data}} for example data.
+
+Other Kaplan-Meier survival: 
+\code{\link{plot.hvti_survival}()}
 }
+\concept{Kaplan-Meier survival}

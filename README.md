@@ -75,12 +75,12 @@ km$tables$risk                         # risk-table data frame
 
 | Constructor | Description |
 |---|---|
-| `hvti_mirror()` | Mirrored histograms showing propensity score distributions for two groups, before and after matching or IPTW weighting |
+| `hvti_mirror_hist()` | Mirrored histograms showing propensity score distributions for two groups, before and after matching or IPTW weighting |
 | `hvti_stacked()` | Stacked or proportional-fill histogram of a numeric variable by group |
 | `hvti_balance()` | Standardised mean difference dot-plot for assessing propensity matching or weighting quality |
 
 ```r
-mh <- hvti_mirror(sample_mirror_histogram_data(n = 2000),
+mh <- hvti_mirror_hist(sample_mirror_histogram_data(n = 2000),
                   group_labels = c("SAVR", "TF-TAVR"))
 plot(mh) + hvti_theme("manuscript")
 ```

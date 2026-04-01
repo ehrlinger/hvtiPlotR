@@ -329,7 +329,7 @@ mirror_histogram_diagnostics <- function(working, matched_idx, group_levels,
 #' Validates and assembles propensity-score distributions for a mirrored
 #' histogram comparing a treated group (bars above the axis) and a control
 #' group (bars below the axis), with optional matched and unmatched shading.
-#' Returns an \code{hvti_mirror} object; call \code{\link{plot.hvti_mirror}}
+#' Returns an \code{hvti_mirror_hist} object; call \code{\link{plot.hvti_mirror_hist}}
 #' on the result to obtain a bare \code{ggplot2} object.
 #'
 #' @param data             A data frame with one row per patient.
@@ -353,24 +353,46 @@ mirror_histogram_diagnostics <- function(working, matched_idx, group_levels,
 #' @param weight_col       Optional name of an IPTW weight column.  When
 #'   supplied, bar heights reflect weighted counts instead of raw counts.
 #'
-#' @return An object of class \code{c("hvti_mirror", "hvti_data")} — a list
-#'   with three elements:
+#' @return An object of class \code{c("hvti_mirror_hist", "hvti_data")}; call
+#'   \code{plot()} on the result to render the figure — see
+#'   \code{\link{plot.hvti_mirror_hist}}.  The list contains:
 #' \describe{
 #'   \item{\code{$data}}{Tidy data frame of histogram bar coordinates for
-#'     \code{\link{plot.hvti_mirror}}.}
-#'   \item{\code{$meta}}{Named list: \code{group_labels}, \code{binwidth},
-#'     \code{lower}, \code{upper}, \code{y_breaks}, \code{n_obs},
-#'     \code{n_dropped}.}
-#'   \item{\code{$tables}}{Named list with \code{diagnostics} (a data frame
-#'     of matched/unmatched counts per group) and \code{working} (the
-#'     per-patient data frame after score rescaling).}
+#'     \code{\link{plot.hvti_mirror_hist}}.}
+#'   \item{\code{$meta}}{Named list: \code{score_col}, \code{group_col},
+#'     \code{match_col}, \code{group_labels}, \code{binwidth}, \code{lower},
+#'     \code{upper}, \code{y_breaks}, \code{n_obs}, \code{n_dropped}.}
+#'   \item{\code{$tables}}{Named list with two elements:
+#'     \describe{
+#'       \item{\code{diagnostics}}{A named list of diagnostic summaries.
+#'         Always contains \code{n_input}, \code{n_analyzed},
+#'         \code{n_dropped_missing_or_other_group},
+#'         \code{group_counts_before} (table), \code{score_summary_before}
+#'         (\code{by} object), and \code{smd_before} (numeric SMD).
+#'         In binary-match mode, additionally contains
+#'         \code{group_counts_matched}, \code{matched_rate_by_group},
+#'         \code{score_summary_matched}, and \code{smd_matched}.
+#'         In weighted IPTW mode, additionally contains
+#'         \code{effective_n_by_group} and \code{smd_weighted}.}
+#'       \item{\code{working}}{The per-patient data frame after score
+#'         rescaling and complete-case filtering, used for custom
+#'         downstream diagnostics.}
+#'     }
+#'   }
 #' }
 #'
-#' @seealso \code{\link{plot.hvti_mirror}}, \code{\link{sample_mirror_histogram_data}}
+#' @seealso \code{\link{plot.hvti_mirror_hist}} to render as a ggplot2 figure,
+#'   \code{\link{hvti_theme}} for the publication theme,
+#'   \code{\link{sample_mirror_histogram_data}} for example data.
+#'
+#' @family Propensity Score & Matching
+#'
+#' @aliases mirror_histogram hvti_mirror
+#' @concept mirrored histogram propensity score overlap matching IPTW weighting
 #'
 #' @examples
 #' dta <- sample_mirror_histogram_data(n = 500, separation = 1.5)
-#' mh  <- hvti_mirror(dta)
+#' mh  <- hvti_mirror_hist(dta)
 #' mh                            # print diagnostics summary
 #' mh$tables$diagnostics         # full diagnostics table
 #'
@@ -380,7 +402,7 @@ mirror_histogram_diagnostics <- function(working, matched_idx, group_levels,
 #'
 #' @importFrom rlang .data
 #' @export
-hvti_mirror <- function(data,
+hvti_mirror_hist <- function(data,
                         score_col        = "prob_t",
                         group_col        = "tavr",
                         match_col        = "match",
@@ -451,20 +473,20 @@ hvti_mirror <- function(data,
       diagnostics = diagnostics,
       working     = working
     ),
-    subclass = "hvti_mirror"
+    subclass = "hvti_mirror_hist"
   )
 }
 
 
-#' Print an hvti_mirror object
+#' Print an hvti_mirror_hist object
 #'
-#' @param x   An \code{hvti_mirror} object from \code{\link{hvti_mirror}}.
+#' @param x   An \code{hvti_mirror_hist} object from \code{\link{hvti_mirror_hist}}.
 #' @param ... Ignored.
 #' @return \code{x}, invisibly.
 #' @export
-print.hvti_mirror <- function(x, ...) {
+print.hvti_mirror_hist <- function(x, ...) {
   m <- x$meta
-  cat("<hvti_mirror>\n")
+  cat("<hvti_mirror_hist>\n")
   cat(sprintf("  Groups      : %s (control) vs %s (treated)\n",
               m$group_labels[1L], m$group_labels[2L]))
   cat(sprintf("  Score col   : %s\n", m$score_col))
@@ -477,25 +499,32 @@ print.hvti_mirror <- function(x, ...) {
 }
 
 
-#' Plot an hvti_mirror object
+#' Plot an hvti_mirror_hist object
 #'
 #' Builds a bare mirrored-histogram \code{ggplot2} object from an
-#' \code{\link{hvti_mirror}} data object.  Bars for the treated group appear
-#' above the x-axis; bars for the control group appear below.  Matched
-#' patients are shown in a lighter shade.  Add scales, labels, and a theme
-#' with \code{+}.
+#' \code{\link{hvti_mirror_hist}} data object.  Bars for the treated group
+#' appear above the x-axis; bars for the control group appear below.  Matched
+#' or weighted patients are shown in a contrasting shade.  Compose with
+#' \code{+} to add colour scales, axis labels, and \code{\link{hvti_theme}}.
 #'
-#' @param x     An \code{hvti_mirror} object.
+#' @param x     An \code{hvti_mirror_hist} object from
+#'   \code{\link{hvti_mirror_hist}}.
 #' @param alpha Bar transparency in \eqn{[0,1]}.  Default \code{0.8}.
 #' @param ...   Ignored; present for S3 consistency.
 #'
-#' @return A bare \code{\link[ggplot2]{ggplot}} object.
+#' @return A bare \code{\link[ggplot2]{ggplot}} object; compose with \code{+}
+#'   to add colour scales, axis limits, labels, and
+#'   \code{\link{hvti_theme}}.
 #'
-#' @seealso \code{\link{hvti_mirror}}, \code{\link{hvti_theme}}
+#' @seealso \code{\link{hvti_mirror_hist}} to build the data object,
+#'   \code{\link{hvti_theme}} for the publication theme,
+#'   \code{\link{sample_mirror_histogram_data}} for example data.
+#'
+#' @family Propensity Score & Matching
 #'
 #' @examples
 #' dta <- sample_mirror_histogram_data(n = 500)
-#' mh  <- hvti_mirror(dta)
+#' mh  <- hvti_mirror_hist(dta)
 #'
 #' plot(mh) +
 #'   ggplot2::labs(x = "Propensity Score (%)", y = "Count") +
@@ -503,7 +532,7 @@ print.hvti_mirror <- function(x, ...) {
 #'
 #' @importFrom ggplot2 ggplot aes geom_bar scale_x_continuous scale_y_continuous
 #' @export
-plot.hvti_mirror <- function(x, alpha = 0.8, ...) {
+plot.hvti_mirror_hist <- function(x, alpha = 0.8, ...) {
   .check_alpha(alpha)
   build_mirror_histogram_plot(
     x$data,
@@ -522,7 +551,7 @@ plot.hvti_mirror <- function(x, alpha = 0.8, ...) {
 
 #' Generate Sample Data for Mirrored Histogram
 #'
-#' Creates a reproducible data frame for testing [hvti_mirror()]
+#' Creates a reproducible data frame for testing [hvti_mirror_hist()]
 #' in either binary-match or weighted IPTW mode.  Propensity scores are
 #' simulated via a logistic model: control subjects draw their linear predictor
 #' from \eqn{N(-\text{sep}/2, 1)} and treated subjects from
@@ -554,7 +583,7 @@ plot.hvti_mirror <- function(x, alpha = 0.8, ...) {
 #'       weights normalised to mean 1 within each group.}
 #'   }
 #'
-#' @seealso [hvti_mirror()]
+#' @seealso [hvti_mirror_hist()]
 #'
 #' @examples
 #' # Binary-match mode sample data (default)
