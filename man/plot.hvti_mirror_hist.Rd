@@ -7,21 +7,24 @@
 \method{plot}{hvti_mirror_hist}(x, alpha = 0.8, ...)
 }
 \arguments{
-\item{x}{An \code{hvti_mirror_hist} object.}
+\item{x}{An \code{hvti_mirror_hist} object from
+\code{\link{hvti_mirror_hist}}.}
 
 \item{alpha}{Bar transparency in \eqn{[0,1]}.  Default \code{0.8}.}
 
 \item{...}{Ignored; present for S3 consistency.}
 }
 \value{
-A bare \code{\link[ggplot2]{ggplot}} object.
+A bare \code{\link[ggplot2]{ggplot}} object; compose with \code{+}
+to add colour scales, axis limits, labels, and
+\code{\link{hvti_theme}}.
 }
 \description{
 Builds a bare mirrored-histogram \code{ggplot2} object from an
-\code{\link{hvti_mirror_hist}} data object.  Bars for the treated group appear
-above the x-axis; bars for the control group appear below.  Matched
-patients are shown in a lighter shade.  Add scales, labels, and a theme
-with \code{+}.
+\code{\link{hvti_mirror_hist}} data object.  Bars for the treated group
+appear above the x-axis; bars for the control group appear below.  Matched
+or weighted patients are shown in a contrasting shade.  Compose with
+\code{+} to add colour scales, axis labels, and \code{\link{hvti_theme}}.
 }
 \examples{
 dta <- sample_mirror_histogram_data(n = 500)
@@ -33,5 +36,10 @@ plot(mh) +
 
 }
 \seealso{
-\code{\link{hvti_mirror_hist}}, \code{\link{hvti_theme}}
+\code{\link{hvti_mirror_hist}} to build the data object,
+\code{\link{hvti_theme}} for the publication theme,
+\code{\link{sample_mirror_histogram_data}} for example data.
+
+Other Propensity Score & Matching:
+\code{\link{hvti_mirror_hist}}
 }

@@ -51,17 +51,32 @@ the 0–100 display scale.  Default \code{100}.}
 supplied, bar heights reflect weighted counts instead of raw counts.}
 }
 \value{
-An object of class \code{c("hvti_mirror_hist", "hvti_data")} — a list
-with three elements:
+An object of class \code{c("hvti_mirror_hist", "hvti_data")}; call
+\code{plot()} on the result to render the figure — see
+\code{\link{plot.hvti_mirror_hist}}.  The list contains:
 \describe{
 \item{\code{$data}}{Tidy data frame of histogram bar coordinates for
 \code{\link{plot.hvti_mirror_hist}}.}
-\item{\code{$meta}}{Named list: \code{group_labels}, \code{binwidth},
-\code{lower}, \code{upper}, \code{y_breaks}, \code{n_obs},
-\code{n_dropped}.}
-\item{\code{$tables}}{Named list with \code{diagnostics} (a data frame
-of matched/unmatched counts per group) and \code{working} (the
-per-patient data frame after score rescaling).}
+\item{\code{$meta}}{Named list: \code{score_col}, \code{group_col},
+\code{match_col}, \code{group_labels}, \code{binwidth}, \code{lower},
+\code{upper}, \code{y_breaks}, \code{n_obs}, \code{n_dropped}.}
+\item{\code{$tables}}{Named list with two elements:
+\describe{
+\item{\code{diagnostics}}{A named list of diagnostic summaries.
+Always contains \code{n_input}, \code{n_analyzed},
+\code{n_dropped_missing_or_other_group},
+\code{group_counts_before} (table), \code{score_summary_before}
+(\code{by} object), and \code{smd_before} (numeric SMD).
+In binary-match mode, additionally contains
+\code{group_counts_matched}, \code{matched_rate_by_group},
+\code{score_summary_matched}, and \code{smd_matched}.
+In weighted IPTW mode, additionally contains
+\code{effective_n_by_group} and \code{smd_weighted}.}
+\item{\code{working}}{The per-patient data frame after score
+rescaling and complete-case filtering, used for custom
+downstream diagnostics.}
+}
+}
 }
 }
 \description{
@@ -83,6 +98,11 @@ plot(mh) +
 
 }
 \seealso{
-\code{\link{plot.hvti_mirror_hist}}, \code{\link{sample_mirror_histogram_data}}
+\code{\link{plot.hvti_mirror_hist}} to render as a ggplot2 figure,
+\code{\link{hvti_theme}} for the publication theme,
+\code{\link{sample_mirror_histogram_data}} for example data.
+
+Other Propensity Score & Matching:
+\code{\link{plot.hvti_mirror_hist}}
 }
 \concept{mirrored histogram propensity score overlap matching IPTW weighting}

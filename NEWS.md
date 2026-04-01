@@ -1,3 +1,23 @@
+# hvtiPlotR 2.0.0.9006
+
+## Documentation
+
+- `hvti_mirror_hist()` `$tables$diagnostics`: corrected return documentation
+  from "a data frame of matched/unmatched counts per group" to accurately
+  describe the actual type — a named list of diagnostic summaries whose
+  contents vary by mode (binary-match vs weighted IPTW). All keys are now
+  enumerated in the `@return` block.
+- `$meta` keys in `hvti_mirror_hist()` return docs updated to include all
+  keys actually stored (`score_col`, `group_col`, `match_col` were missing).
+- Added `@family Propensity Score & Matching` to `hvti_mirror_hist()` and
+  `plot.hvti_mirror_hist()`, creating automatic bi-directional "See also"
+  cross-links consistent with all other `hvti_*` constructor/plot pairs.
+- `plot.hvti_mirror_hist()` `@return` now describes composability with `+`
+  (scales, limits, labels, `hvti_theme`), matching the pattern used in all
+  other updated plot methods.
+- `plot.hvti_mirror_hist()` `@seealso` expanded with descriptive text for
+  each linked function, matching the richer pattern used elsewhere.
+
 # hvtiPlotR 2.0.0.9005
 
 ## Tests
