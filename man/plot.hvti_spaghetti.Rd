@@ -45,7 +45,8 @@ Default \code{NULL} (standard numeric axis).}
 \item{...}{Ignored; present for S3 consistency.}
 }
 \value{
-A bare \code{\link[ggplot2]{ggplot}} object.
+A bare \code{\link[ggplot2]{ggplot}} object; compose with \code{+}
+to add scales, axis limits, labels, and \code{\link{hvti_theme}}.
 }
 \description{
 Draws one trajectory line per subject over time, optionally stratified by
@@ -69,7 +70,24 @@ plot(hvti_spaghetti(dta_ord, colour_col = "group"),
   ggplot2::labs(x = "Years", y = "MR Grade") +
   hvti_theme("manuscript")
 
+# --- Global theme (set once per session) ----------------------------------
+\dontrun{
+old <- ggplot2::theme_set(hvti_theme_manuscript())
+plot(sp, add_smooth = TRUE) +
+  ggplot2::scale_colour_brewer(palette = "Set1", name = NULL) +
+  ggplot2::labs(x = "Years", y = "AV Mean Gradient (mmHg)")
+ggplot2::theme_set(old)
+}
+
+# See vignette("plot-decorators", package = "hvtiPlotR") for theming,
+# colour scales, annotation labels, and saving plots.
+
 }
 \seealso{
-\code{\link{hvti_spaghetti}}, \code{\link{hvti_theme}}
+\code{\link{hvti_spaghetti}} to build the data object,
+\code{\link{hvti_theme}} for the publication theme.
+
+Other Spaghetti plot: 
+\code{\link{hvti_spaghetti}()}
 }
+\concept{Spaghetti plot}

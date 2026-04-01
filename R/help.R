@@ -48,7 +48,7 @@
 #'
 #' ### Propensity Score & Matching
 #'
-#' * [hvti_mirror()]: Prepare propensity-score distributions for a mirrored
+#' * [hvti_mirror_hist()]: Prepare propensity-score distributions for a mirrored
 #'   histogram comparing binary-matched or IPTW-weighted cohorts. Ports the
 #'   `tp.lp.mirror-histogram_*` and `tp.lp.mirror_histo_before_after_wt`
 #'   SAS scripts.

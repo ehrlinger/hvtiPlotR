@@ -381,6 +381,31 @@ p <- hazard_plot(dat, estimate_col = "survival",
 ggplot2::ggsave("survival.pdf", p, width = 11.5, height = 8)
 }
 
+# --- Global theme + RColorBrewer (set once per session) ------------------
+\dontrun{
+old <- ggplot2::theme_set(hvti_theme_manuscript())
+hazard_plot(
+  dat2,
+  estimate_col  = "survival",
+  lower_col     = "surv_lower",
+  upper_col     = "surv_upper",
+  group_col     = "group",
+  empirical     = emp2,
+  emp_lower_col = "lower",
+  emp_upper_col = "upper"
+) +
+  ggplot2::scale_colour_brewer(palette = "Set1", name = NULL) +
+  ggplot2::scale_fill_brewer(palette   = "Set1", guide = "none") +
+  ggplot2::scale_x_continuous(limits = c(0, 10), breaks = 0:10) +
+  ggplot2::scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, 20),
+                              labels = function(x) paste0(x, "\%")) +
+  ggplot2::labs(x = "Years", y = "Survival (\%)")
+ggplot2::theme_set(old)
+}
+
+# See vignette("plot-decorators", package = "hvtiPlotR") for theming,
+# colour scales, annotation labels, and saving plots.
+
 }
 \references{
 SAS templates: \code{tp.hp.dead.sas},

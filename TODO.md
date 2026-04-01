@@ -8,7 +8,7 @@ issues resolved.
 
 | Status | Constructor / Function | Notes |
 |--------|----------------------|-------|
-| [ ] | `hvti_mirror()` | formerly `mirror_histogram()` |
+| [ ] | `hvti_mirror_hist()` | formerly `mirror_histogram()` |
 | [ ] | `hvti_stacked()` | formerly `stacked_histogram()` |
 | [ ] | `hvti_followup()` | formerly `goodness_followup()` + `goodness_event_plot()` |
 | [ ] | `hvti_balance()` | formerly `covariate_balance()` |

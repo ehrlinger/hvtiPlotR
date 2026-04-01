@@ -32,7 +32,8 @@
 \item{...}{Ignored; present for S3 consistency.}
 }
 \value{
-A \code{\link[ggplot2:ggplot]{ggplot2::ggplot()}} object.
+A \code{\link[ggplot2:ggplot]{ggplot2::ggplot()}} object; compose with \code{+} to add scales,
+axis limits, labels, and \code{\link[=hvti_theme]{hvti_theme()}}.
 }
 \description{
 Renders a bare \code{\link[ggplot2:ggplot]{ggplot2::ggplot()}} from an \code{\link[=hvti_hazard]{hvti_hazard()}} object.  Compose
@@ -40,5 +41,10 @@ with \verb{scale_colour_*}, \code{scale_y_continuous()}, \code{labs()}, and \cod
 to complete the figure.
 }
 \seealso{
-\code{\link[=hvti_hazard]{hvti_hazard()}}, \code{\link[=hvti_theme]{hvti_theme()}}
+\code{\link[=hvti_hazard]{hvti_hazard()}} to build the data object,
+\code{\link[=hvti_theme]{hvti_theme()}} for the publication theme.
+
+Other Hazard plot: 
+\code{\link{hvti_hazard}()}
 }
+\concept{Hazard plot}

@@ -105,9 +105,9 @@ reference:
     Visualise propensity score distributions and covariate balance
     before and after propensity matching or IPTW weighting.
   contents:
-  - hvti_mirror
-  - plot.hvti_mirror
-  - print.hvti_mirror
+  - hvti_mirror_hist
+  - plot.hvti_mirror_hist
+  - print.hvti_mirror_hist
   - hvti_balance
   - plot.hvti_balance
   - print.hvti_balance

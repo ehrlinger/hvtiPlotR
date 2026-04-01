@@ -111,7 +111,9 @@ sample_trends_data <- function(n          = 600,
 #' @param summary_fn  Function used to compute the per-x-point estimate:
 #'   \code{"mean"} or \code{"median"}. Default \code{"mean"}.
 #'
-#' @return An object of class \code{c("hvti_trends", "hvti_data")}:
+#' @return An object of class \code{c("hvti_trends", "hvti_data")}; call
+#'   \code{plot()} on the result to render the figure — see
+#'   \code{\link{plot.hvti_trends}}. The list contains:
 #' \describe{
 #'   \item{\code{$data}}{The original patient-level data frame.}
 #'   \item{\code{$meta}}{Named list: \code{x_col}, \code{y_col},
@@ -122,7 +124,11 @@ sample_trends_data <- function(n          = 600,
 #'     overlay.}
 #' }
 #'
-#' @seealso \code{\link{plot.hvti_trends}}, \code{\link{sample_trends_data}}
+#' @seealso \code{\link{plot.hvti_trends}} to render as a ggplot2 figure,
+#'   \code{\link{hvti_theme}} for the publication theme,
+#'   \code{\link{sample_trends_data}} for example data.
+#'
+#' @family Temporal trends
 #'
 #' @examples
 #' dta <- sample_trends_data(n = 600, year_range = c(1985L, 2015L),
@@ -247,9 +253,13 @@ print.hvti_trends <- function(x, ...) {
 #'   Default \code{0.2}.
 #' @param ...          Ignored; present for S3 consistency.
 #'
-#' @return A bare \code{\link[ggplot2]{ggplot}} object.
+#' @return A bare \code{\link[ggplot2]{ggplot}} object; compose with \code{+}
+#'   to add scales, axis limits, labels, and \code{\link{hvti_theme}}.
 #'
-#' @seealso \code{\link{hvti_trends}}, \code{\link{hvti_theme}}
+#' @seealso \code{\link{hvti_trends}} to build the data object,
+#'   \code{\link{hvti_theme}} for the publication theme.
+#'
+#' @family Temporal trends
 #'
 #' @examples
 #' # --- tp.rp.trends.sas: single continuous outcome, 1968-2000 ---------------
@@ -324,6 +334,17 @@ print.hvti_trends <- function(x, ...) {
 #'   hvti_theme("manuscript")
 #' ggplot2::ggsave("trends.pdf", p, width = 11.5, height = 8)
 #' }
+#'
+#' # --- Global theme (set once per session) ----------------------------------
+#' \dontrun{
+#' old <- ggplot2::theme_set(hvti_theme_manuscript())
+#' plot(hvti_trends(dta_poly)) +
+#'   ggplot2::scale_colour_brewer(palette = "Dark2", name = "Repair type")
+#' ggplot2::theme_set(old)
+#' }
+#'
+#' # See vignette("plot-decorators", package = "hvtiPlotR") for theming,
+#' # colour scales, annotation labels, and saving plots.
 #'
 #' @importFrom ggplot2 ggplot aes geom_smooth geom_point
 #' @importFrom rlang .data

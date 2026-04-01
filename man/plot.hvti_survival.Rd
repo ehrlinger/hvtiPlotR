@@ -39,7 +39,8 @@ Default \code{TRUE}.  Ignored for other \code{type} values.}
 \item{...}{Ignored; present for S3 consistency.}
 }
 \value{
-A bare \code{\link[ggplot2]{ggplot}} object.
+A bare \code{\link[ggplot2]{ggplot}} object; compose with \code{+}
+to add scales, axis limits, labels, and \code{\link{hvti_theme}}.
 }
 \description{
 Builds a bare \code{ggplot2} object from an \code{\link{hvti_survival}}
@@ -72,5 +73,10 @@ plot(km, type = "hazard") +
 
 }
 \seealso{
-\code{\link{hvti_survival}}, \code{\link{hvti_theme}}
+\code{\link{hvti_survival}} to build the data object,
+\code{\link{hvti_theme}} for the publication theme.
+
+Other Kaplan-Meier survival: 
+\code{\link{hvti_survival}()}
 }
+\concept{Kaplan-Meier survival}

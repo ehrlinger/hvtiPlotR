@@ -4,7 +4,7 @@
 ## Base class infrastructure for hvtiPlotR data objects.
 ##
 ## Every hvtiPlotR data-preparation function returns an object of a specific
-## subclass (e.g. "hvti_survival", "hvti_mirror") that also inherits from the
+## subclass (e.g. "hvti_survival", "hvti_mirror_hist") that also inherits from the
 ## common base class "hvti_data".  This file defines:
 ##
 ##   new_hvti_data()     -- internal constructor used by every hvti_*() function

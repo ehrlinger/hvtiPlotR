@@ -36,7 +36,9 @@ Must have columns matching \code{x_col} and \code{"value"}, plus
 \code{group_col} when stratified. Default \code{NULL}.}
 }
 \value{
-An object of class \code{c("hvti_nonparametric", "hvti_data")}:
+An object of class \code{c("hvti_nonparametric", "hvti_data")}; call
+\code{plot()} on the result to render the figure — see
+\code{\link{plot.hvti_nonparametric}}. The list contains:
 \describe{
 \item{\code{$data}}{The \code{curve_data} data frame.}
 \item{\code{$meta}}{Named list: \code{x_col}, \code{estimate_col},
@@ -90,8 +92,30 @@ plot(np) +
   ggplot2::labs(x = "Months", y = "Prevalence of AF") +
   hvti_theme("manuscript")
 
+# --- Global theme (set once per session) ----------------------------------
+\dontrun{
+# Apply manuscript theme globally; use scale_colour_brewer for multi-group.
+old <- ggplot2::theme_set(hvti_theme_manuscript())
+plot(np) +
+  ggplot2::scale_colour_manual(values = c("steelblue"), guide = "none") +
+  ggplot2::scale_fill_manual(values   = c("steelblue"), guide = "none") +
+  ggplot2::labs(x = "Months", y = "Prevalence of AF")
+# For multi-group curves swap scale_colour_manual with:
+#   ggplot2::scale_colour_brewer(palette = "Set1", name = NULL)
+#   ggplot2::scale_fill_brewer(palette = "Set1", guide = "none")
+ggplot2::theme_set(old)
+}
+
+# See vignette("plot-decorators", package = "hvtiPlotR") for theming,
+# colour scales, annotation labels, and saving plots.
+
 }
 \seealso{
-\code{\link{plot.hvti_nonparametric}},
-\code{\link{sample_nonparametric_curve_data}}
+\code{\link{plot.hvti_nonparametric}} to render as a ggplot2 figure,
+\code{\link{hvti_theme}} for the publication theme,
+\code{\link{sample_nonparametric_curve_data}} for example data.
+
+Other Nonparametric curves: 
+\code{\link{plot.hvti_nonparametric}()}
 }
+\concept{Nonparametric curves}

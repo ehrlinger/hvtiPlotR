@@ -51,7 +51,7 @@ Each constructor returns an \code{hvti_data} S3 object; call \code{\link[=plot]{
 to produce a ggplot.
 \subsection{Propensity Score & Matching}{
 \itemize{
-\item \code{\link[=hvti_mirror]{hvti_mirror()}}: Prepare propensity-score distributions for a mirrored
+\item \code{\link[=hvti_mirror_hist]{hvti_mirror_hist()}}: Prepare propensity-score distributions for a mirrored
 histogram comparing binary-matched or IPTW-weighted cohorts. Ports the
 \verb{tp.lp.mirror-histogram_*} and \code{tp.lp.mirror_histo_before_after_wt}
 SAS scripts.

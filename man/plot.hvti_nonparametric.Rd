@@ -28,7 +28,8 @@ Default \code{20} (filled circle).}
 \item{...}{Ignored; present for S3 consistency.}
 }
 \value{
-A bare \code{\link[ggplot2]{ggplot}} object.
+A bare \code{\link[ggplot2]{ggplot}} object; compose with \code{+}
+to add scales, axis limits, labels, and \code{\link{hvti_theme}}.
 }
 \description{
 Draws a smooth predicted curve with optional CI ribbon and binned data
@@ -62,5 +63,10 @@ plot(np) +
 
 }
 \seealso{
-\code{\link{hvti_nonparametric}}, \code{\link{hvti_theme}}
+\code{\link{hvti_nonparametric}} to build the data object,
+\code{\link{hvti_theme}} for the publication theme.
+
+Other Nonparametric curves: 
+\code{\link{hvti_nonparametric}()}
 }
+\concept{Nonparametric curves}
