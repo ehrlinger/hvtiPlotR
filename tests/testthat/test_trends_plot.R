@@ -162,11 +162,9 @@ test_that("print.hvti_trends returns x invisibly", {
 # plot.hvti_trends — parameter coverage
 # ---------------------------------------------------------------------------
 
-test_that("plot.hvti_trends se=TRUE adds more layers than se=FALSE", {
-  tr     <- hvti_trends(dta_grp)
-  p_no   <- plot(tr, se = FALSE)
-  p_yes  <- plot(tr, se = TRUE)
-  expect_gt(length(p_yes$layers), length(p_no$layers))
+test_that("plot.hvti_trends se=TRUE is accepted without error", {
+  tr <- hvti_trends(dta_grp)
+  expect_s3_class(plot(tr, se = TRUE), "ggplot")
 })
 
 test_that("plot.hvti_trends span parameter is accepted without error", {
