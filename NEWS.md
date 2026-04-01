@@ -1,3 +1,24 @@
+# hvtiPlotR 2.0.0.9005
+
+## Tests
+
+- Added `test_trends_plot.R` (37 tests): `$meta` slot keys and values,
+  `$tables$summary` structure and row counts, factor level order preservation,
+  `print.hvti_trends` output and invisible return, and full parameter coverage
+  for `plot.hvti_trends` (`se`, `span`, `point_size`, `point_shape`, `alpha`,
+  `smoother`, grouped vs ungrouped mapping, composability with `hvti_theme`).
+- Added `test_spaghetti_plot.R` (25 tests): `$meta` slot keys and values,
+  `id_col`/`y_col` absent error cases, `print.hvti_spaghetti` output with and
+  without `colour_col` branch and invisible return, and full parameter coverage
+  for `plot.hvti_spaghetti` (`add_smooth`, `smooth_se`, `line_colour`,
+  `line_width`, `alpha` boundaries, `y_labels` error cases, `smooth_method`,
+  grouped vs ungrouped mapping, composability with `hvti_theme`).
+- Added `test_hvti_data.R` (27 tests): `new_hvti_data()` structure contract,
+  input validation errors, `is_hvti_data()` TRUE/FALSE for all relevant types,
+  `print.hvti_data` base-class output and invisible return, subclass dispatch
+  (verifying `print.hvti_spaghetti` overrides `print.hvti_data`), and
+  `plot.hvti_data` fallback error with subclass name in message.
+
 # hvtiPlotR 2.0.0.9004
 
 ## Breaking changes
