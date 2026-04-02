@@ -2,8 +2,6 @@
 % Please edit documentation in R/mirror-histogram.R
 \name{hv_mirror_hist}
 \alias{hv_mirror_hist}
-\alias{mirror_histogram}
-\alias{hv_mirror}
 \title{Prepare mirror-histogram data for plotting}
 \usage{
 hv_mirror_hist(
@@ -106,4 +104,4 @@ Other Propensity Score & Matching:
 \code{\link{plot.hv_mirror_hist}()}
 }
 \concept{Propensity Score & Matching}
-\concept{mirrored histogram propensity score overlap matching IPTW weighting}
+\concept{mirrored histogram propensity score overlap matching IPTW weighting mirror_histogram hv_mirror}
