@@ -12,7 +12,7 @@
 #    and scale_colour_brewer()
 #  - Optional LOESS/mean smooth overlay replaces a separate geom_smooth() call
 #  - Ordinal y-axis labelling (plot_9 pattern) supported via y_labels parameter
-#  - Theme applied via + hv_theme("manuscript") in examples
+#  - Theme applied via + hv_theme("poster") in examples
 # ---------------------------------------------------------------------------
 
 #' Sample Spaghetti / Profile Plot Data
@@ -119,16 +119,22 @@ sample_spaghetti_data <- function(n_patients = 150,
 #'
 #' @examples
 #' dta <- sample_spaghetti_data(n_patients = 150, seed = 42)
-#' sp  <- hv_spaghetti(dta, colour_col = "group")
-#' sp   # prints subject count, observation count, column mapping
 #'
-#' plot(sp) +
+#' # 1. Build data object
+#' sp <- hv_spaghetti(dta, colour_col = "group")
+#' sp  # prints subject count, observation count, column mapping
+#'
+#' # 2. Bare plot -- undecorated ggplot returned by plot.hv_spaghetti
+#' p <- plot(sp)
+#'
+#' # 3. Decorate: colour palette, axis labels, theme
+#' p +
 #'   ggplot2::scale_colour_manual(
 #'     values = c(Female = "firebrick", Male = "steelblue"), name = NULL
 #'   ) +
 #'   ggplot2::labs(x = "Years after Operation",
 #'                 y = "AV Mean Gradient (mmHg)") +
-#'   hv_theme("manuscript")
+#'   hv_theme("poster")
 #'
 #' @importFrom rlang .data
 #' @export
@@ -215,7 +221,7 @@ print.hv_spaghetti <- function(x, ...) {
 #' plot(sp, add_smooth = TRUE) +
 #'   ggplot2::scale_colour_brewer(palette = "Set1", name = NULL) +
 #'   ggplot2::labs(x = "Years", y = "AV Mean Gradient (mmHg)") +
-#'   hv_theme("manuscript")
+#'   hv_theme("poster")
 #'
 #' # Ordinal y-axis
 #' dta_ord <- dta
@@ -223,7 +229,7 @@ print.hv_spaghetti <- function(x, ...) {
 #' plot(hv_spaghetti(dta_ord, colour_col = "group"),
 #'      y_labels = c(None = 0, Mild = 1, Moderate = 2, Severe = 3)) +
 #'   ggplot2::labs(x = "Years", y = "MR Grade") +
-#'   hv_theme("manuscript")
+#'   hv_theme("poster")
 #'
 #' # --- Global theme (set once per session) ----------------------------------
 #' \dontrun{

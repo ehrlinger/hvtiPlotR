@@ -26,7 +26,7 @@
 ##     ggplot2::coord_cartesian(xlim = c(0, 20), ylim = c(0, 100)) +
 ##     ggplot2::labs(x = "Years after Operation", y = "Survival (%)",
 ##                   title = "Freedom from Death") +
-##     hv_theme("manuscript")
+##     hv_theme("poster")
 ##
 ###############################################################################
 
@@ -463,33 +463,26 @@ km_build_life_plot <- function(km_df, alpha) {
 #' @examples
 #' dta <- sample_survival_data(n = 500, seed = 42)
 #'
-#' # --- Build the data object ---
+#' # 1. Build data object
 #' km <- hv_survival(dta)
-#' km                          # print method shows key metadata
-#' km$tables$report            # survival estimates at report_times
-#' km$tables$risk              # numbers at risk
+#' km               # print method shows key metadata
+#' km$tables$report # survival estimates at report_times
+#' km$tables$risk   # numbers at risk
 #'
-#' # --- Plot (bare ggplot2 — add decorators with +) ---
-#' plot(km) +
+#' # 2. Bare plot -- undecorated ggplot returned by plot.hv_survival
+#' p <- plot(km)
+#'
+#' # 3. Decorate: axis scales, labels, theme
+#' p +
 #'   ggplot2::scale_y_continuous(breaks = seq(0, 100, 20),
 #'                               labels = function(x) paste0(x, "%")) +
 #'   ggplot2::scale_x_continuous(breaks = seq(0, 20, 5)) +
 #'   ggplot2::coord_cartesian(xlim = c(0, 20), ylim = c(0, 100)) +
 #'   ggplot2::labs(x = "Years after Operation", y = "Survival (%)",
 #'                 title = "Freedom from Death") +
-#'   hv_theme("manuscript")
+#'   hv_theme("poster")
 #'
-#' # --- Other plot types ---
-#' plot(km, type = "cumhaz") +
-#'   ggplot2::labs(x = "Years", y = "Cumulative Hazard") +
-#'   hv_theme("manuscript")
-#'
-#' plot(km, type = "loglog") +
-#'   ggplot2::labs(x = "log(Years)", y = "log(-log S(t))",
-#'                 title = "PH Assumption Check") +
-#'   hv_theme("manuscript")
-#'
-#' # --- Stratified ---
+#' # Stratified: colour scale adds clinical meaning
 #' dta_s <- sample_survival_data(
 #'   n = 500, strata_levels = c("Type A", "Type B"),
 #'   hazard_ratios = c(1, 1.4), seed = 42
@@ -501,16 +494,20 @@ km_build_life_plot <- function(km_df, alpha) {
 #'     name   = "Valve Type"
 #'   ) +
 #'   ggplot2::labs(x = "Years after Operation", y = "Survival (%)") +
-#'   hv_theme("manuscript")
+#'   hv_theme("poster")
 #'
-#' # --- Nelson-Aalen (when S(t) may reach zero) ---
-#' km_na <- hv_survival(dta, method = "nelson-aalen")
-#' plot(km_na) + hv_theme("manuscript")
+#' # Other plot types
+#' plot(km, type = "cumhaz") +
+#'   ggplot2::labs(x = "Years", y = "Cumulative Hazard") +
+#'   hv_theme("ppt")
+#'
+#' plot(km, type = "loglog") +
+#'   ggplot2::labs(x = "log(Years)", y = "log(-log S(t))",
+#'                 title = "PH Assumption Check") +
+#'   hv_theme("ppt")
 #'
 #' # --- Global theme + RColorBrewer (set once per session) ------------------
 #' \dontrun{
-#' # Apply manuscript theme globally — subsequent plots need no
-#' # + hv_theme("manuscript").  Restore the previous theme when done.
 #' old <- ggplot2::theme_set(hv_theme_manuscript())
 #' plot(km_s) +
 #'   ggplot2::scale_colour_brewer(palette = "Set1", name = "Valve Type") +
@@ -654,12 +651,12 @@ print.hv_survival <- function(x, ...) {
 #' # Default survival curve
 #' plot(km) +
 #'   ggplot2::labs(x = "Years after Operation", y = "Survival (%)") +
-#'   hv_theme("manuscript")
+#'   hv_theme("poster")
 #'
 #' # Cumulative hazard
 #' plot(km, type = "cumhaz") +
 #'   ggplot2::labs(x = "Years", y = "Cumulative Hazard") +
-#'   hv_theme("manuscript")
+#'   hv_theme("poster")
 #'
 #' # Hazard rate with loess smoother
 #' plot(km, type = "hazard") +
@@ -668,7 +665,7 @@ print.hv_survival <- function(x, ...) {
 #'     method = "loess", se = FALSE, span = 0.5
 #'   ) +
 #'   ggplot2::labs(x = "Years", y = "Instantaneous Hazard") +
-#'   hv_theme("manuscript")
+#'   hv_theme("poster")
 #'
 #' @importFrom ggplot2 ggplot aes geom_step geom_ribbon geom_hline
 #'   scale_y_continuous geom_point

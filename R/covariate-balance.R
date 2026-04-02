@@ -119,10 +119,16 @@ cb_build_plot <- function(data, std_diff_col, group_col, var_levels,
 #' @examples
 #' library(ggplot2)
 #' dta <- sample_covariate_balance_data()
-#' cb  <- hv_balance(dta)
-#' cb                   # prints variable count, group count, threshold
 #'
-#' plot(cb) +
+#' # 1. Build data object
+#' cb <- hv_balance(dta)
+#' cb  # prints variable count, group count, threshold
+#'
+#' # 2. Bare plot -- undecorated ggplot returned by plot.hv_balance
+#' p <- plot(cb)
+#'
+#' # 3. Decorate: colour/shape palettes, x-axis range, labels, theme
+#' p +
 #'   scale_color_manual(
 #'     values = c("Before match" = "red4", "After match" = "blue3"),
 #'     name   = NULL
@@ -133,7 +139,7 @@ cb_build_plot <- function(data, std_diff_col, group_col, var_levels,
 #'   ) +
 #'   scale_x_continuous(limits = c(-45, 35), breaks = seq(-40, 30, 10)) +
 #'   labs(x = "Standardized difference (%)", y = "") +
-#'   hv_theme("manuscript")
+#'   hv_theme("poster")
 #'
 #' @export
 hv_balance <- function(
@@ -226,7 +232,7 @@ print.hv_balance <- function(x, ...) {
 #'     name   = NULL
 #'   ) +
 #'   ggplot2::labs(x = "Standardized difference (%)", y = "") +
-#'   hv_theme("manuscript")
+#'   hv_theme("poster")
 #'
 #' @importFrom ggplot2 ggplot aes geom_vline geom_hline geom_point
 #'   scale_y_continuous

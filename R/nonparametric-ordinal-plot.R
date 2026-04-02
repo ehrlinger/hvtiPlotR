@@ -249,10 +249,16 @@ sample_nonparametric_ordinal_points <- function(
 #'   n = 800, time_max = 5,
 #'   grade_labels = c("None", "Mild", "Moderate", "Severe")
 #' )
+#'
+#' # 1. Build data object
 #' ord <- hv_ordinal(dat, data_points = dat_pts)
 #' ord  # prints grade count and data-point flag
 #'
-#' plot(ord) +
+#' # 2. Bare plot -- undecorated ggplot returned by plot.hv_ordinal
+#' p <- plot(ord)
+#'
+#' # 3. Decorate: colour palette, axis scales, labels, theme
+#' p +
 #'   ggplot2::scale_colour_manual(
 #'     values = c(None     = "steelblue",
 #'                Mild     = "firebrick",
@@ -265,7 +271,7 @@ sample_nonparametric_ordinal_points <- function(
 #'                               breaks = seq(0, 0.50, 0.10),
 #'                               labels = scales::percent) +
 #'   ggplot2::labs(x = "Years", y = "Percent in each TR grade") +
-#'   hv_theme("manuscript")
+#'   hv_theme("poster")
 #'
 #' @importFrom rlang .data
 #' @export
@@ -347,7 +353,7 @@ print.hv_ordinal <- function(x, ...) {
 #'   ggplot2::scale_x_continuous(breaks = 0:5) +
 #'   ggplot2::scale_y_continuous(labels = scales::percent) +
 #'   ggplot2::labs(x = "Years after Surgery", y = "Prevalence") +
-#'   hv_theme("manuscript")
+#'   hv_theme("poster")
 #'
 #' # Subset: show only severe grade
 #' plot(hv_ordinal(dat[dat$grade == "Severe", ])) +
@@ -356,7 +362,7 @@ print.hv_ordinal <- function(x, ...) {
 #'   ggplot2::scale_y_continuous(limits = c(0, 0.25),
 #'                               labels = scales::percent) +
 #'   ggplot2::labs(x = "Years", y = "P(Severe TR grade)") +
-#'   hv_theme("manuscript")
+#'   hv_theme("poster")
 #'
 #' @importFrom ggplot2 ggplot aes geom_line geom_point
 #' @importFrom rlang .data

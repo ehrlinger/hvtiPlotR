@@ -9,7 +9,7 @@
 #  - Accepts pre-aggregated long-format data — no reshape2::melt() needed
 #  - Hard-coded colours ("blue", "red", "black") replaced by scale_fill_*
 #    and scale_colour_* on the returned ggplot objects
-#  - Hard-coded theme() calls replaced by hv_theme("manuscript")
+#  - Hard-coded theme() calls replaced by hv_theme("poster")
 #  - Bar chart and table returned via plot(x, type=) dispatch; patchwork
 #    composes them (replaces the manual grid.layout / mmplot() pattern)
 #  - sample_spaghetti_data() is reused in the examples to show how to
@@ -114,11 +114,17 @@ sample_longitudinal_counts_data <- function(n_patients = 300,
 #'
 #' @examples
 #' dta <- sample_longitudinal_counts_data(n_patients = 300, seed = 42L)
-#' lc  <- hv_longitudinal(dta)
-#' lc   # prints group/time-point counts
 #'
+#' # 1. Build data object
+#' lc <- hv_longitudinal(dta)
+#' lc  # prints group/time-point counts
+#'
+#' # 2. Bare plot -- undecorated ggplot returned by plot.hv_longitudinal
 #' library(ggplot2)
-#' plot(lc, type = "plot") +
+#' p <- plot(lc, type = "plot")
+#'
+#' # 3. Decorate: fill palette, y-axis scale, labels, theme
+#' p +
 #'   scale_fill_manual(
 #'     values = c(Patients = "steelblue", Measurements = "firebrick"),
 #'     name   = NULL
@@ -128,7 +134,7 @@ sample_longitudinal_counts_data <- function(n_patients = 300,
 #'                      expand = c(0, 0)) +
 #'   coord_cartesian(ylim = c(0, 2200)) +
 #'   labs(x = "Follow-up Window", y = "Count (n)") +
-#'   hv_theme("manuscript") +
+#'   hv_theme("poster") +
 #'   theme(legend.position = c(0.85, 0.85))
 #'
 #' @importFrom rlang .data
@@ -210,7 +216,7 @@ print.hv_longitudinal <- function(x, ...) {
 #'     name   = NULL
 #'   ) +
 #'   labs(x = "Follow-up Window", y = "Count (n)") +
-#'   hv_theme("manuscript")
+#'   hv_theme("poster")
 #'
 #' # Text table panel
 #' plot(lc, type = "table") +
@@ -218,7 +224,7 @@ print.hv_longitudinal <- function(x, ...) {
 #'     values = c(Patients = "steelblue", Measurements = "firebrick"),
 #'     guide  = "none"
 #'   ) +
-#'   hv_theme("manuscript")
+#'   hv_theme("poster")
 #'
 #' # Compose with patchwork
 #' # p_bar   <- plot(lc, type = "plot")   + <decorators>

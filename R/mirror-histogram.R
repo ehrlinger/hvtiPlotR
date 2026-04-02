@@ -391,13 +391,19 @@ mirror_histogram_diagnostics <- function(working, matched_idx, group_levels,
 #'
 #' @examples
 #' dta <- sample_mirror_histogram_data(n = 500, separation = 1.5)
-#' mh  <- hv_mirror_hist(dta)
-#' mh                            # print diagnostics summary
-#' mh$tables$diagnostics         # full diagnostics table
 #'
-#' plot(mh) +
+#' # 1. Build data object
+#' mh <- hv_mirror_hist(dta)
+#' mh                    # print diagnostics summary
+#' mh$tables$diagnostics # full diagnostics list
+#'
+#' # 2. Bare plot -- undecorated ggplot returned by plot.hv_mirror_hist
+#' p <- plot(mh)
+#'
+#' # 3. Decorate: axis labels and theme
+#' p +
 #'   ggplot2::labs(x = "Propensity Score (%)", y = "Count") +
-#'   hv_theme("manuscript")
+#'   hv_theme("poster")
 #'
 #' @importFrom rlang .data
 #' @export
@@ -527,7 +533,7 @@ print.hv_mirror_hist <- function(x, ...) {
 #'
 #' plot(mh) +
 #'   ggplot2::labs(x = "Propensity Score (%)", y = "Count") +
-#'   hv_theme("manuscript")
+#'   hv_theme("poster")
 #'
 #' @importFrom ggplot2 ggplot aes geom_bar scale_x_continuous scale_y_continuous
 #' @export

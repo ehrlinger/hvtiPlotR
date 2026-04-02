@@ -21,7 +21,7 @@
 #  - groups = NULL supported in sample_trends_data() for single-group figures
 #  - No hard-coded colours; examples demonstrate scale_colour_manual() and
 #    scale_colour_brewer()
-#  - Theme applied via + hv_theme("manuscript") in examples
+#  - Theme applied via + hv_theme("poster") in examples
 # ---------------------------------------------------------------------------
 
 #' Sample Temporal Trend Data
@@ -133,10 +133,16 @@ sample_trends_data <- function(n          = 600,
 #' @examples
 #' dta <- sample_trends_data(n = 600, year_range = c(1985L, 2015L),
 #'   groups = c("I", "II", "III", "IV"))
-#' tr  <- hv_trends(dta, summary_fn = "median")
-#' tr   # prints observation and group counts
 #'
-#' plot(tr) +
+#' # 1. Build data object
+#' tr <- hv_trends(dta, summary_fn = "median")
+#' tr  # prints observation and group counts
+#'
+#' # 2. Bare plot -- undecorated ggplot returned by plot.hv_trends
+#' p <- plot(tr)
+#'
+#' # 3. Decorate: colour palette, axis scales, labels, theme
+#' p +
 #'   ggplot2::scale_colour_manual(
 #'     values = c(I = "steelblue", II = "firebrick",
 #'                III = "forestgreen", IV = "goldenrod3"),
@@ -148,7 +154,7 @@ sample_trends_data <- function(n          = 600,
 #'                               breaks = seq(0, 80, 20)) +
 #'   ggplot2::coord_cartesian(xlim = c(1985, 2015), ylim = c(0, 80)) +
 #'   ggplot2::labs(x = "Years", y = "%") +
-#'   hv_theme("manuscript")
+#'   hv_theme("poster")
 #'
 #' @importFrom rlang .data
 #' @importFrom stats median
@@ -271,7 +277,7 @@ print.hv_trends <- function(x, ...) {
 #'   ggplot2::scale_y_continuous(limits = c(0, 10),
 #'                               breaks = seq(0, 10, 2)) +
 #'   ggplot2::labs(x = "Year", y = "Cases/year") +
-#'   hv_theme("manuscript")
+#'   hv_theme("poster")
 #'
 #' # --- tp.lp.trends.sas: binary % outcomes, 1970-2000 by 10 ----------------
 #' dta_lp <- sample_trends_data(
@@ -287,7 +293,7 @@ print.hv_trends <- function(x, ...) {
 #'                               breaks = seq(0, 100, 10)) +
 #'   ggplot2::coord_cartesian(xlim = c(1970, 2000), ylim = c(0, 100)) +
 #'   ggplot2::labs(x = "Year", y = "Percent (%)") +
-#'   hv_theme("manuscript")
+#'   hv_theme("poster")
 #'
 #' # --- tp.lp.trends.age.sas: age on x-axis, 25-85 by 10 -------------------
 #' dta_age <- sample_trends_data(
@@ -300,7 +306,7 @@ print.hv_trends <- function(x, ...) {
 #'                               breaks = seq(0, 100, 20)) +
 #'   ggplot2::coord_cartesian(xlim = c(25, 85), ylim = c(0, 100)) +
 #'   ggplot2::labs(x = "Age (years)", y = "Percent (%)") +
-#'   hv_theme("manuscript")
+#'   hv_theme("poster")
 #'
 #' # --- tp.lp.trends.polytomous.sas: repair types, 1990-1999 by 1 ----------
 #' dta_poly <- sample_trends_data(
@@ -317,7 +323,7 @@ print.hv_trends <- function(x, ...) {
 #'                               breaks = seq(0, 100, 10)) +
 #'   ggplot2::coord_cartesian(xlim = c(1990, 1999), ylim = c(0, 100)) +
 #'   ggplot2::labs(x = "Year", y = "Percent (%)") +
-#'   hv_theme("manuscript")
+#'   hv_theme("poster")
 #'
 #' # --- Save ----------------------------------------------------------------
 #' \dontrun{
@@ -331,7 +337,7 @@ print.hv_trends <- function(x, ...) {
 #'   ggplot2::scale_x_continuous(limits = c(1985, 2015),
 #'                               breaks = seq(1985, 2015, 5)) +
 #'   ggplot2::labs(x = "Years", y = "%") +
-#'   hv_theme("manuscript")
+#'   hv_theme("poster")
 #' ggplot2::ggsave("trends.pdf", p, width = 11.5, height = 8)
 #' }
 #'

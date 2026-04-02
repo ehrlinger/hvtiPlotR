@@ -172,11 +172,17 @@ sample_cluster_sankey_data <- function(
 #' dta <- sample_cluster_sankey_data(n = 300, seed = 42)
 #'
 #' if (requireNamespace("ggsankey", quietly = TRUE)) {
+#'   # 1. Build data object
 #'   sn <- hv_sankey(dta)
 #'   sn  # prints cluster cols and node count
-#'   plot(sn) +
+#'
+#'   # 2. Bare plot -- undecorated ggplot returned by plot.hv_sankey
+#'   p <- plot(sn)
+#'
+#'   # 3. Decorate: axis labels and theme
+#'   p +
 #'     ggplot2::labs(x = NULL, title = "Cluster Stability: K = 2 to 9") +
-#'     hv_theme("manuscript")
+#'     hv_theme("poster")
 #' }
 #'
 #' @importFrom rlang .data
@@ -279,12 +285,12 @@ print.hv_sankey <- function(x, ...) {
 #' if (requireNamespace("ggsankey", quietly = TRUE)) {
 #'   plot(hv_sankey(dta)) +
 #'     ggplot2::labs(x = NULL, title = "Cluster Stability: K = 2 to 9") +
-#'     hv_theme("manuscript")
+#'     hv_theme("poster")
 #'
 #'   # Subset to K = 2 to 6
 #'   plot(hv_sankey(dta, cluster_cols = paste0("C", 2:6))) +
 #'     ggplot2::labs(x = NULL) +
-#'     hv_theme("manuscript")
+#'     hv_theme("poster")
 #' }
 #'
 #' @importFrom ggplot2 ggplot aes geom_vline labs scale_fill_manual theme

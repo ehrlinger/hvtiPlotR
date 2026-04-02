@@ -12,7 +12,7 @@
 #    and scale_fill_brewer()
 #  - stratum_fill exposed as a parameter (default "grey80") for the vertical
 #    bars, keeping flow colours independent of stratum bars
-#  - Theme applied via + hv_theme("manuscript") in examples
+#  - Theme applied via + hv_theme("poster") in examples
 # ---------------------------------------------------------------------------
 
 #' Sample Sankey / Alluvial Data
@@ -113,11 +113,16 @@ sample_alluvial_data <- function(n = 300, seed = 42L) {
 #' @examples
 #' dta  <- sample_alluvial_data(n = 300, seed = 42)
 #' axes <- c("pre_ar", "procedure", "post_ar")
-#' al   <- hv_alluvial(dta, axes = axes, y_col = "freq",
-#'                       fill_col = "pre_ar")
-#' al   # prints axes, obs count
 #'
-#' plot(al) +
+#' # 1. Build data object
+#' al <- hv_alluvial(dta, axes = axes, y_col = "freq", fill_col = "pre_ar")
+#' al  # prints axes and observation count
+#'
+#' # 2. Bare plot -- undecorated ggplot returned by plot.hv_alluvial
+#' p <- plot(al)
+#'
+#' # 3. Decorate: fill/colour palettes, axis labels, theme
+#' p +
 #'   ggplot2::scale_fill_manual(
 #'     values = c(None     = "steelblue",
 #'                Mild     = "goldenrod",
@@ -134,7 +139,7 @@ sample_alluvial_data <- function(n = 300, seed = 42L) {
 #'   ) +
 #'   ggplot2::labs(y = "Patients (n)",
 #'                 title = "AV Regurgitation: Pre- to Post-operative") +
-#'   hv_theme("manuscript")
+#'   hv_theme("poster")
 #'
 #' @importFrom rlang .data
 #' @export
@@ -222,7 +227,7 @@ print.hv_alluvial <- function(x, ...) {
 #'   ggplot2::scale_fill_brewer(palette = "Set2", name = "Procedure") +
 #'   ggplot2::scale_colour_brewer(palette = "Set2", guide = "none") +
 #'   ggplot2::labs(y = "Patients (n)") +
-#'   hv_theme("manuscript")
+#'   hv_theme("poster")
 #'
 #' # Two-axis (before / after)
 #' plot(hv_alluvial(
@@ -235,7 +240,7 @@ print.hv_alluvial <- function(x, ...) {
 #'   ggplot2::scale_colour_brewer(palette = "RdYlGn", direction = -1,
 #'                                guide = "none") +
 #'   ggplot2::labs(y = "Patients (n)") +
-#'   hv_theme("manuscript")
+#'   hv_theme("poster")
 #'
 #' @importFrom ggalluvial geom_alluvium geom_stratum StatStratum
 #' @importFrom ggplot2 ggplot aes geom_text scale_x_continuous after_stat
