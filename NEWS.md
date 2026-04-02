@@ -1,21 +1,85 @@
+# hvtiPlotR 2.0.0.9009
+
+## Documentation
+
+- `plot-functions.qmd`: updated both mirror-histogram decorated examples to
+  follow standard ggplot2 mirror-plot conventions:
+  - Added `scale_y_continuous(labels = abs)` so the y-axis displays absolute
+    counts on both halves of the panel.
+  - Replaced hard-coded y-coordinates in `annotate()` calls with
+    `y = Inf`/`y = -Inf` plus `vjust`, anchoring each group label near the
+    top/bottom panel edge regardless of dataset size.
+  - Replaced hard-coded label strings (`"SAVR"`, `"TF-TAVR"`, etc.) with
+    `mh$meta$group_labels[1]` / `[2]`, so the annotations always track the
+    labels supplied to the constructor.
+
+# hvtiPlotR 2.0.0.9008
+
+## Documentation
+
+- Vignettes: all `hv_theme("manuscript")` calls inside R code blocks replaced
+  with `hv_theme("poster")` to demonstrate non-default theme options. Prose
+  references (e.g. migration guide comparison table) are preserved unchanged.
+  Theme-specific sections in `plot-decorators.qmd` (`## Manuscript`,
+  `## Manuscript PDF`) continue to demonstrate `hv_theme("manuscript")`.
+- `plot-functions.qmd`: added explicit **Bare plot** subsections to the six
+  sections that previously chained directly from build to decoration —
+  mirror-histogram (binary-match and IPTW), trends (cases/year), spaghetti,
+  nonparametric temporal curve, nonparametric ordinal curve, and longitudinal
+  participation counts. Each section now follows the three-step pattern:
+  (1) build with `hv_*()`, (2) render bare ggplot with `p <- plot(obj)`,
+  (3) decorate with `scale_*()` + `hv_theme("poster")`.
+- `plot-functions.qmd`: UpSet section split into `## Bare plot` (showing
+  `plot(hu)`) and `## Applying a theme` (showing `plot(hu) & hv_theme("poster")`),
+  with an explanatory note that the patchwork `&` operator is required.
+
+# hvtiPlotR 2.0.0.9007
+
+## Breaking changes
+
+- All exported functions, S3 methods, and class names have been renamed from
+  the `hvti_` prefix to the shorter `hv_` prefix. No backward-compatible
+  aliases are provided. Update all call sites:
+  - `hvti_survival()` → `hv_survival()`
+  - `hvti_trends()` → `hv_trends()`
+  - `hvti_mirror_hist()` → `hv_mirror_hist()`
+  - `hvti_spaghetti()` → `hv_spaghetti()`
+  - `hvti_balance()` → `hv_balance()`
+  - `hvti_alluvial()` → `hv_alluvial()`
+  - `hvti_sankey()` → `hv_sankey()`
+  - `hvti_nonparametric()` → `hv_nonparametric()`
+  - `hvti_ordinal()` → `hv_ordinal()`
+  - `hvti_followup()` → `hv_followup()`
+  - `hvti_longitudinal()` → `hv_longitudinal()`
+  - `hvti_stacked()` → `hv_stacked()`
+  - `hvti_eda()` → `hv_eda()`
+  - `hvti_hazard()` → `hv_hazard()`
+  - `hvti_nnt()` → `hv_nnt()`
+  - `hvti_upset()` → `hv_upset()`
+  - `hvti_theme()` → `hv_theme()`
+  - `hvti_survival_difference()` → `hv_survival_difference()`
+  - `is_hvti_data()` → `is_hv_data()`
+  - Class strings `"hvti_*"` → `"hv_*"` (affects `inherits()` checks)
+  - The package name (`hvtiPlotR`) is unchanged.
+
 # hvtiPlotR 2.0.0.9006
 
 ## Documentation
 
-- `hvti_mirror_hist()` `$tables$diagnostics`: corrected return documentation
+- `hv_mirror_hist()` `$tables$diagnostics`: corrected return documentation
   from "a data frame of matched/unmatched counts per group" to accurately
   describe the actual type — a named list of diagnostic summaries whose
   contents vary by mode (binary-match vs weighted IPTW). All keys are now
   enumerated in the `@return` block.
-- `$meta` keys in `hvti_mirror_hist()` return docs updated to include all
+- `$meta` keys in `hv_mirror_hist()` return docs updated to include all
   keys actually stored (`score_col`, `group_col`, `match_col` were missing).
-- Added `@family Propensity Score & Matching` to `hvti_mirror_hist()` and
-  `plot.hvti_mirror_hist()`, creating automatic bi-directional "See also"
-  cross-links consistent with all other `hvti_*` constructor/plot pairs.
-- `plot.hvti_mirror_hist()` `@return` now describes composability with `+`
-  (scales, limits, labels, `hvti_theme`), matching the pattern used in all
+- Added `@family Propensity Score & Matching` to `hv_mirror_hist()` and
+  `plot.hv_mirror_hist()`, creating automatic bi-directional "See also"
+  cross-links consistent with all other `hv_*` constructor/plot pairs.
+- `plot.hv_mirror_hist()` `@return` now describes composability with `+`
+  (scales, limits, labels, `hv_theme`), matching the pattern used in all
   other updated plot methods.
-- `plot.hvti_mirror_hist()` `@seealso` expanded with descriptive text for
+- `plot.hv_mirror_hist()` `@seealso` expanded with descriptive text for
   each linked function, matching the richer pattern used elsewhere.
 
 # hvtiPlotR 2.0.0.9005
@@ -24,46 +88,46 @@
 
 - Added `test_trends_plot.R` (37 tests): `$meta` slot keys and values,
   `$tables$summary` structure and row counts, factor level order preservation,
-  `print.hvti_trends` output and invisible return, and full parameter coverage
-  for `plot.hvti_trends` (`se`, `span`, `point_size`, `point_shape`, `alpha`,
-  `smoother`, grouped vs ungrouped mapping, composability with `hvti_theme`).
+  `print.hv_trends` output and invisible return, and full parameter coverage
+  for `plot.hv_trends` (`se`, `span`, `point_size`, `point_shape`, `alpha`,
+  `smoother`, grouped vs ungrouped mapping, composability with `hv_theme`).
 - Added `test_spaghetti_plot.R` (25 tests): `$meta` slot keys and values,
-  `id_col`/`y_col` absent error cases, `print.hvti_spaghetti` output with and
+  `id_col`/`y_col` absent error cases, `print.hv_spaghetti` output with and
   without `colour_col` branch and invisible return, and full parameter coverage
-  for `plot.hvti_spaghetti` (`add_smooth`, `smooth_se`, `line_colour`,
+  for `plot.hv_spaghetti` (`add_smooth`, `smooth_se`, `line_colour`,
   `line_width`, `alpha` boundaries, `y_labels` error cases, `smooth_method`,
-  grouped vs ungrouped mapping, composability with `hvti_theme`).
-- Added `test_hvti_data.R` (27 tests): `new_hvti_data()` structure contract,
-  input validation errors, `is_hvti_data()` TRUE/FALSE for all relevant types,
-  `print.hvti_data` base-class output and invisible return, subclass dispatch
-  (verifying `print.hvti_spaghetti` overrides `print.hvti_data`), and
-  `plot.hvti_data` fallback error with subclass name in message.
+  grouped vs ungrouped mapping, composability with `hv_theme`).
+- Added `test_hv_data.R` (27 tests): `new_hv_data()` structure contract,
+  input validation errors, `is_hv_data()` TRUE/FALSE for all relevant types,
+  `print.hv_data` base-class output and invisible return, subclass dispatch
+  (verifying `print.hv_spaghetti` overrides `print.hv_data`), and
+  `plot.hv_data` fallback error with subclass name in message.
 
 # hvtiPlotR 2.0.0.9004
 
 ## Breaking changes
 
-- `hvti_mirror()` renamed to `hvti_mirror_hist()` for naming consistency with
+- `hv_mirror()` renamed to `hv_mirror_hist()` for naming consistency with
   the underlying plot type. The old name is registered as an `@aliases` entry
-  so `?hvti_mirror` still resolves to the correct help page.
+  so `?hv_mirror` still resolves to the correct help page.
 
 ## New features
 
-- `hvti_mirror_hist()` is now searchable via `?mirror_histogram`,
-  `?hvti_mirror`, `??propensity`, `??IPTW`, and `??matching` through
+- `hv_mirror_hist()` is now searchable via `?mirror_histogram`,
+  `?hv_mirror`, `??propensity`, `??IPTW`, and `??matching` through
   `@aliases` and `@concept` tags in its documentation.
 
 ## Documentation
 
-- All `hvti_*` constructors and `plot.hvti_*` methods now carry `@family`
+- All `hv_*` constructors and `plot.hv_*` methods now carry `@family`
   tags, creating automatic bi-directional "See also" cross-links between each
   constructor and its plot method in the help system and pkgdown reference.
 - `@return` on every constructor now explicitly says "call `plot()` to render"
-  and links to the corresponding `plot.hvti_*` method.
+  and links to the corresponding `plot.hv_*` method.
 - `@seealso` entries across all constructors and plot methods now include
   descriptive text explaining the role of each linked function.
 - `@examples` in all main plot methods include a `\dontrun{}` block
-  demonstrating `ggplot2::theme_set(hvti_theme_manuscript())` for applying the
+  demonstrating `ggplot2::theme_set(hv_theme_manuscript())` for applying the
   publication theme globally, `scale_colour_brewer()` / `scale_fill_brewer()`
   for multi-group colour palettes, and a pointer to
   `vignette("plot-decorators", package = "hvtiPlotR")`.
@@ -78,13 +142,13 @@ All plot functions have been replaced by a two-step S3 workflow:
 
 ```r
 # Step 1: construct & validate
-obj <- hvti_*(data, ...)          # returns c("hvti_<concept>", "hvti_data")
+obj <- hv_*(data, ...)          # returns c("hv_<concept>", "hv_data")
 
 # Step 2: render
 plot(obj, ...) +                  # bare ggplot — no scales, labels, or theme
   scale_colour_manual(...) +
   labs(...) +
-  hvti_theme("manuscript")
+  hv_theme("manuscript")
 ```
 
 The old single-call functions (`mirror_histogram()`, `survival_curve()`,
@@ -94,24 +158,24 @@ etc.) are **removed**. This is a clean break; no deprecated wrappers.
 
 | New constructor | Removed function(s) |
 |---|---|
-| `hvti_mirror_hist()` | `mirror_histogram()` |
-| `hvti_balance()` | `covariate_balance()` |
-| `hvti_stacked()` | `stacked_histogram()` |
-| `hvti_survival()` | `survival_curve()` |
-| `hvti_nonparametric()` | `nonparametric_curve_plot()` |
-| `hvti_ordinal()` | `nonparametric_ordinal_plot()` |
-| `hvti_followup()` | `goodness_followup()` + `goodness_event_plot()` |
-| `hvti_trends()` | `trends_plot()` |
-| `hvti_spaghetti()` | `spaghetti_plot()` |
-| `hvti_longitudinal()` | `longitudinal_counts_plot()` + `longitudinal_counts_table()` |
-| `hvti_alluvial()` | `alluvial_plot()` |
-| `hvti_sankey()` | `cluster_sankey_plot()` |
-| `hvti_eda()` | `eda_plot()` |
-| `hvti_upset()` | `upset_plot()` |
+| `hv_mirror_hist()` | `mirror_histogram()` |
+| `hv_balance()` | `covariate_balance()` |
+| `hv_stacked()` | `stacked_histogram()` |
+| `hv_survival()` | `survival_curve()` |
+| `hv_nonparametric()` | `nonparametric_curve_plot()` |
+| `hv_ordinal()` | `nonparametric_ordinal_plot()` |
+| `hv_followup()` | `goodness_followup()` + `goodness_event_plot()` |
+| `hv_trends()` | `trends_plot()` |
+| `hv_spaghetti()` | `spaghetti_plot()` |
+| `hv_longitudinal()` | `longitudinal_counts_plot()` + `longitudinal_counts_table()` |
+| `hv_alluvial()` | `alluvial_plot()` |
+| `hv_sankey()` | `cluster_sankey_plot()` |
+| `hv_eda()` | `eda_plot()` |
+| `hv_upset()` | `upset_plot()` |
 
-| `hvti_hazard()` | `hazard_plot()` |
-| `hvti_survival_difference()` | `survival_difference_plot()` |
-| `hvti_nnt()` | `nnt_plot()` |
+| `hv_hazard()` | `hazard_plot()` |
+| `hv_survival_difference()` | `survival_difference_plot()` |
+| `hv_nnt()` | `nnt_plot()` |
 
 The legacy hazard helpers (`hazard_plot()`, `survival_difference_plot()`,
 `nnt_plot()`) remain exported but are marked **Superseded** — use the S3
@@ -122,30 +186,30 @@ constructors above instead.
 Two constructors replace *pairs* of old functions via a `type =` argument
 on `plot()`:
 
-* `hvti_longitudinal` — `plot(x, type = "plot")` (bar chart, was
+* `hv_longitudinal` — `plot(x, type = "plot")` (bar chart, was
   `longitudinal_counts_plot()`) or `plot(x, type = "table")` (text panel,
   was `longitudinal_counts_table()`).
-* `hvti_followup` — `plot(x, type = "followup")` (death panel, was
+* `hv_followup` — `plot(x, type = "followup")` (death panel, was
   `goodness_followup()`) or `plot(x, type = "event")` (non-fatal event
   panel, was `goodness_event_plot()`).
 
 ## New base class
 
-* Added `hvti_data` S3 base class (`R/hvti-data.R`). Every `hvti_*`
+* Added `hv_data` S3 base class (`R/hvti-data.R`). Every `hv_*`
   constructor returns `list(data=, meta=, tables=)` with class
-  `c("hvti_<concept>", "hvti_data")`.
-* `new_hvti_data()` — internal constructor; validates `data` (data.frame),
+  `c("hv_<concept>", "hv_data")`.
+* `new_hv_data()` — internal constructor; validates `data` (data.frame),
   `meta` (named list), `tables` (list), `subclass` (character).
-* `print.hvti_data()` — fallback print method; shows class, dimensions, and
+* `print.hv_data()` — fallback print method; shows class, dimensions, and
   slot names.
-* `plot.hvti_data()` — fallback plot method; stops with a helpful message
-  if no concrete `plot.hvti_*()` is registered.
-* `is_hvti_data()` — exported predicate.
+* `plot.hv_data()` — fallback plot method; stops with a helpful message
+  if no concrete `plot.hv_*()` is registered.
+* `is_hv_data()` — exported predicate.
 
 ## Documentation
 
 * Rewrote `help.R` package-level documentation to describe the new
-  two-step constructor + `plot()` workflow and list all `hvti_*()` constructors.
+  two-step constructor + `plot()` workflow and list all `hv_*()` constructors.
 * Updated `_pkgdown.yml` reference index: grouped by constructor family,
   with `plot.*` and `print.*` S3 methods explicitly listed.
 * Updated all vignettes (`plot-functions.qmd`, `sas-migration-guide.qmd`,
@@ -161,7 +225,7 @@ on `plot()`:
 
 * Added `tests/testthat/test_hazard_plot.R` — full validation suite for
   `sample_hazard_data`, `sample_hazard_empirical`, `sample_life_table`,
-  `hvti_hazard`, `hvti_survival_difference`, and `hvti_nnt` (column checks,
+  `hv_hazard`, `hv_survival_difference`, and `hv_nnt` (column checks,
   CI bounds, layer structure, multi-group, non-default column names, input
   validation, print output, empirical/reference validation).
 * Added `tests/testthat/test_nonparametric_plots.R` — full suite for
@@ -177,7 +241,7 @@ on `plot()`:
   `sample_cluster_sankey_data` and `cluster_sankey_plot`. Validates the
   hierarchical merge tree (C9=A → C2=A) and that each Ck has exactly k levels.
 * Added `tests/testthat/test_pipeline.R` — end-to-end pipeline tests covering
-  `survival_curve → hvti_theme → save_ppt`, multi-slide list pipelines,
+  `survival_curve → hv_theme → save_ppt`, multi-slide list pipelines,
   built-in dataset usability, `eda_classify_var` edge cases (logical vector,
   all-NA, length-1), and composed multi-layer plots.
 * Added snapshot test to `test_kaplan_meier.R` for `survival_curve`
@@ -197,9 +261,9 @@ on `plot()`:
   used `##'` (silently ignored by roxygen2) instead of `#'`, so the function
   had no generated `.Rd` file. Converted all `##'` → `#'`, modernised
   `\code{}` → backtick syntax, and added `@examples`.
-* Added `@examples` to all five theme functions: `hvti_theme()`,
-  `hvti_theme_manuscript()`, `hvti_theme_dark_ppt()`, `hvti_theme_light_ppt()`,
-  and `hvti_theme_poster()`.
+* Added `@examples` to all five theme functions: `hv_theme()`,
+  `hv_theme_manuscript()`, `hv_theme_dark_ppt()`, `hv_theme_light_ppt()`,
+  and `hv_theme_poster()`.
 * Expanded thin (2-line) `@examples` blocks for four sample-data helpers:
   `sample_life_table()`, `sample_nonparametric_curve_points()`,
   `sample_nonparametric_ordinal_points()`, and
@@ -299,7 +363,7 @@ on `plot()`:
   dispatches to scatter + LOESS + rug (continuous) or stacked/filled bar
   (categorical). `NA` values are shown as an explicit `"(Missing)"` fill level.
   Returns a bare ggplot object for composition with `scale_fill_*`,
-  `scale_colour_*`, `labs()`, `annotate()`, and [hvti_theme()].
+  `scale_colour_*`, `labs()`, `annotate()`, and [hv_theme()].
   Ports `Function_DataPlotting()` from `tp.dp.EDA_barplots_scatterplots.R`.
 * Added `eda_classify_var()` — replicates the `UniqueLimit` type-detection
   logic from `Barplot_Scatterplot_Function.R`: classifies a vector as
@@ -351,9 +415,9 @@ on `plot()`:
   to use a realistic logistic propensity-score model with greedy 1:1 caliper
   matching and optional ATE IPTW weights; extreme-PS patients naturally
   go unmatched.
-* Added `hvti_plot()` dispatcher supporting `"mirror_histogram"`,
+* Added `hv_plot()` dispatcher supporting `"mirror_histogram"`,
   `"stacked_histogram"`, and `"covariate_balance"` plot types.
-* Added `hvti_theme()` dispatcher for `"manuscript"`, `"ppt"`, `"dark_ppt"`,
+* Added `hv_theme()` dispatcher for `"manuscript"`, `"ppt"`, `"dark_ppt"`,
   and `"poster"` themes.
 * Enabled roxygen Markdown (`Roxygen: list(markdown = TRUE)`) so `**bold**`,
   backtick code spans, and `[pkg::fn()]` cross-references render correctly

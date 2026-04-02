@@ -72,6 +72,6 @@ entering the state at exactly time t; \verb{tx*/tx1*} = cumulative hazard
 integral (Weibull model output, used internally).
 }
 \seealso{
-\link{nonparametric}, \code{\link[=hvti_hazard]{hvti_hazard()}}
+\link{nonparametric}, \code{\link[=hv_hazard]{hv_hazard()}}
 }
 \keyword{datasets}

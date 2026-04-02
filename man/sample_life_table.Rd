@@ -55,5 +55,5 @@ lt2 <- sample_life_table(
 levels(lt2$group)
 }
 \seealso{
-\code{\link[=hvti_hazard]{hvti_hazard()}}, \code{\link[=sample_hazard_data]{sample_hazard_data()}}
+\code{\link[=hv_hazard]{hv_hazard()}}, \code{\link[=sample_hazard_data]{sample_hazard_data()}}
 }

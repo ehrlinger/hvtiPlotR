@@ -8,13 +8,13 @@
 ## Generate sample data, build the plot, then layer on scales and a theme:
 ##
 ##   dta <- sample_stacked_histogram_data()
-##   sh  <- hvti_stacked(dta, x_col = "year", group_col = "category",
+##   sh  <- hv_stacked(dta, x_col = "year", group_col = "category",
 ##                       position = "fill")
 ##
 ##   plot(sh) +
 ##     ggplot2::scale_fill_brewer(palette = "Set1", name = "Category") +
 ##     ggplot2::scale_color_brewer(palette = "Set1", name = "Category") +
-##     hvti_theme("manuscript")
+##     hv_theme("poster")
 ##
 ###############################################################################
 
@@ -25,10 +25,10 @@
 #' Prepare stacked histogram data for plotting
 #'
 #' Validates a patient-level or observation-level data frame and returns an
-#' \code{hvti_stacked} object.  Call \code{\link{plot.hvti_stacked}} on the
+#' \code{hv_stacked} object.  Call \code{\link{plot.hv_stacked}} on the
 #' result to obtain a bare \code{ggplot2} stacked (or proportional) histogram
 #' that you can decorate with colour scales, axis labels, and
-#' \code{\link{hvti_theme}}.
+#' \code{\link{hv_theme}}.
 #'
 #' @param data      A data frame.
 #' @param x_col     Name of the numeric column to bin along the x-axis.
@@ -41,7 +41,7 @@
 #' @param position  Bar position: \code{"stack"} (raw counts, the default)
 #'   or \code{"fill"} (proportions that sum to 1 within each bin).
 #'
-#' @return An object of class \code{c("hvti_stacked", "hvti_data")}:
+#' @return An object of class \code{c("hv_stacked", "hv_data")}:
 #' \describe{
 #'   \item{\code{$data}}{The validated input data frame.}
 #'   \item{\code{$meta}}{Named list: \code{x_col}, \code{group_col},
@@ -49,23 +49,29 @@
 #'   \item{\code{$tables}}{Empty list.}
 #' }
 #'
-#' @seealso \code{\link{plot.hvti_stacked}},
+#' @seealso \code{\link{plot.hv_stacked}},
 #'   \code{\link{sample_stacked_histogram_data}}
 #'
 #' @examples
 #' dta <- sample_stacked_histogram_data()
-#' sh  <- hvti_stacked(dta, x_col = "year", group_col = "category")
-#' sh   # prints obs / group count
 #'
-#' plot(sh) +
+#' # 1. Build data object
+#' sh <- hv_stacked(dta, x_col = "year", group_col = "category")
+#' sh  # prints obs / group count
+#'
+#' # 2. Bare plot -- undecorated ggplot returned by plot.hv_stacked
+#' p <- plot(sh)
+#'
+#' # 3. Decorate: fill/colour brewer palette, axis labels, theme
+#' p +
 #'   ggplot2::scale_fill_brewer(palette = "Set1", name = "Category") +
 #'   ggplot2::scale_color_brewer(palette = "Set1", name = "Category") +
 #'   ggplot2::labs(x = "Year", y = "Count") +
-#'   hvti_theme("manuscript")
+#'   hv_theme("poster")
 #'
 #' @importFrom rlang .data
 #' @export
-hvti_stacked <- function(data,
+hv_stacked <- function(data,
                           x_col     = "year",
                           group_col = "category",
                           binwidth  = 1,
@@ -79,7 +85,7 @@ hvti_stacked <- function(data,
 
   n_groups <- length(unique(data[[group_col]]))
 
-  new_hvti_data(
+  new_hv_data(
     data = as.data.frame(data),
     meta = list(
       x_col     = x_col,
@@ -90,20 +96,20 @@ hvti_stacked <- function(data,
       n_groups  = n_groups
     ),
     tables   = list(),
-    subclass = "hvti_stacked"
+    subclass = "hv_stacked"
   )
 }
 
 
-#' Print an hvti_stacked object
+#' Print an hv_stacked object
 #'
-#' @param x   An \code{hvti_stacked} object from \code{\link{hvti_stacked}}.
+#' @param x   An \code{hv_stacked} object from \code{\link{hv_stacked}}.
 #' @param ... Ignored.
 #' @return \code{x}, invisibly.
 #' @export
-print.hvti_stacked <- function(x, ...) {
+print.hv_stacked <- function(x, ...) {
   m <- x$meta
-  cat("<hvti_stacked>\n")
+  cat("<hv_stacked>\n")
   cat(sprintf("  N obs       : %d  (%d groups)\n", m$n_obs, m$n_groups))
   cat(sprintf("  x / group   : %s / %s\n", m$x_col, m$group_col))
   cat(sprintf("  binwidth    : %g\n", m$binwidth))
@@ -112,31 +118,31 @@ print.hvti_stacked <- function(x, ...) {
 }
 
 
-#' Plot an hvti_stacked object
+#' Plot an hv_stacked object
 #'
 #' Draws a stacked (or proportional fill) histogram for the grouped numeric
-#' variable stored in the \code{hvti_stacked} object.
+#' variable stored in the \code{hv_stacked} object.
 #'
-#' @param x   An \code{hvti_stacked} object.
+#' @param x   An \code{hv_stacked} object.
 #' @param ... Ignored; present for S3 consistency.
 #'
 #' @return A bare \code{\link[ggplot2]{ggplot}} object.  Add scales, labels,
 #'   and themes with the usual \code{+} operator.
 #'
-#' @seealso \code{\link{hvti_stacked}}, \code{\link{hvti_theme}}
+#' @seealso \code{\link{hv_stacked}}, \code{\link{hv_theme}}
 #'
 #' @examples
 #' dta <- sample_stacked_histogram_data()
 #'
 #' # Count histogram
-#' plot(hvti_stacked(dta, x_col = "year", group_col = "category")) +
+#' plot(hv_stacked(dta, x_col = "year", group_col = "category")) +
 #'   ggplot2::scale_fill_brewer(palette = "Set1", name = "Category") +
 #'   ggplot2::scale_color_brewer(palette = "Set1", name = "Category") +
 #'   ggplot2::labs(x = "Year", y = "Count") +
-#'   hvti_theme("manuscript")
+#'   hv_theme("poster")
 #'
 #' # Proportional (fill) histogram with manual colours
-#' plot(hvti_stacked(dta, x_col = "year", group_col = "category",
+#' plot(hv_stacked(dta, x_col = "year", group_col = "category",
 #'                   position = "fill")) +
 #'   ggplot2::scale_fill_manual(
 #'     values = c("1" = "pink", "2" = "cyan", "3" = "orangered"),
@@ -148,12 +154,12 @@ print.hvti_stacked <- function(x, ...) {
 #'     guide  = "none"
 #'   ) +
 #'   ggplot2::labs(x = "Year", y = "Proportion") +
-#'   hvti_theme("manuscript")
+#'   hv_theme("poster")
 #'
 #' @importFrom ggplot2 ggplot aes geom_histogram
 #' @importFrom rlang .data
 #' @export
-plot.hvti_stacked <- function(x, ...) {
+plot.hv_stacked <- function(x, ...) {
   m <- x$meta
   ggplot2::ggplot(x$data, ggplot2::aes(
     x      = .data[[m$x_col]],
@@ -168,7 +174,7 @@ plot.hvti_stacked <- function(x, ...) {
 #' Generate Sample Data for Stacked Histogram
 #'
 #' Creates a minimal data frame suitable for demonstrating or testing
-#' \code{\link{hvti_stacked}}.
+#' \code{\link{hv_stacked}}.
 #'
 #' @param n_years      Integer. Number of consecutive years to simulate starting
 #'   from \code{start_year}. Defaults to `20`.

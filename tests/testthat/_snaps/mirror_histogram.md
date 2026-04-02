@@ -1,4 +1,4 @@
-# hvti_mirror_hist diagnostics match snapshot (fixed seed)
+# hv_mirror_hist diagnostics match snapshot (fixed seed)
 
     Code
       mh$tables$diagnostics

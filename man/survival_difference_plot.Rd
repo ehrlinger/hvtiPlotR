@@ -41,7 +41,7 @@ A \code{\link[ggplot2:ggplot]{ggplot2::ggplot()}} object.
 \strong{Superseded.}
 
 \code{survival_difference_plot()} has been superseded by the S3 constructor
-\code{\link[=hvti_survival_difference]{hvti_survival_difference()}} plus \code{\link[=plot.hvti_survival_difference]{plot.hvti_survival_difference()}}.
+\code{\link[=hv_survival_difference]{hv_survival_difference()}} plus \code{\link[=plot.hv_survival_difference]{plot.hv_survival_difference()}}.
 
 Plots the difference in survival between two groups over time, with an
 optional confidence band. Covers \code{tp.hp.dead.life-gained.sas} and the
@@ -73,7 +73,7 @@ survival_difference_plot(
   scale_y_continuous(limits = c(-5, 30),
                      labels = function(x) paste0(x, "\%")) +
   labs(x = "Years", y = "Survival Difference (\%)") +
-  hvti_theme("manuscript")
+  hv_theme("poster")
 
 # --- (2) Multiple treatment comparisons ----------------------------------
 # Simulate three comparisons and combine (each row = one comparison)
@@ -100,7 +100,7 @@ survival_difference_plot(dall, group_col = "comparison") +
   geom_hline(yintercept = 0, linetype = "dashed", colour = "grey50") +
   scale_x_continuous(limits = c(0, 10), breaks = 0:10) +
   labs(x = "Years", y = "Survival Difference (\%)") +
-  hvti_theme("manuscript")
+  hv_theme("poster")
 
 }
 \references{

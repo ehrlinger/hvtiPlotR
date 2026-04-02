@@ -32,7 +32,7 @@ Unicuspid)
 }
 \description{
 Generates a realistic mixed-type patient-level data frame for demonstrating
-\code{\link[=hvti_eda]{hvti_eda()}} and \code{\link[=eda_select_vars]{eda_select_vars()}}. The data mimics a cardiac surgery
+\code{\link[=hv_eda]{hv_eda()}} and \code{\link[=eda_select_vars]{eda_select_vars()}}. The data mimics a cardiac surgery
 registry with binary, ordinal, character-categorical, and continuous
 variables, plus a modest proportion of missing values.
 }
@@ -42,5 +42,5 @@ head(dta)
 sapply(dta, eda_classify_var)
 }
 \seealso{
-\code{\link[=hvti_eda]{hvti_eda()}}, \code{\link[=eda_classify_var]{eda_classify_var()}}, \code{\link[=eda_select_vars]{eda_select_vars()}}
+\code{\link[=hv_eda]{hv_eda()}}, \code{\link[=eda_classify_var]{eda_classify_var()}}, \code{\link[=eda_select_vars]{eda_select_vars()}}
 }

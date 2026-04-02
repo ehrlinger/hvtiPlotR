@@ -54,5 +54,5 @@ pts2 <- sample_nonparametric_ordinal_points(
 table(pts2$grade)
 }
 \seealso{
-\code{\link[=sample_nonparametric_ordinal_data]{sample_nonparametric_ordinal_data()}}, \code{\link[=hvti_ordinal]{hvti_ordinal()}}
+\code{\link[=sample_nonparametric_ordinal_data]{sample_nonparametric_ordinal_data()}}, \code{\link[=hv_ordinal]{hv_ordinal()}}
 }

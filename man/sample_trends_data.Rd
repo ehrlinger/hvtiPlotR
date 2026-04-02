@@ -20,7 +20,7 @@ patterns). Default \code{c(1990, 2020)}.}
 
 \item{groups}{Character vector of group labels, or \code{NULL} for a
 single-group figure (no \code{group} column returned; use with
-\code{hvti_trends(..., group_col = NULL)}). Default
+\code{hv_trends(..., group_col = NULL)}). Default
 \code{c("Group I", "Group II", "Group III", "Group IV")}.}
 
 \item{seed}{Random seed for reproducibility. Default \code{42}.}
@@ -36,7 +36,7 @@ A data frame with columns:
 }
 \description{
 Generates a realistic patient-level longitudinal data set for demonstrating
-\code{\link[=hvti_trends]{hvti_trends()}}. Each row is one patient with a surgery year, continuous
+\code{\link[=hv_trends]{hv_trends()}}. Each row is one patient with a surgery year, continuous
 outcome (\code{value}), and a grouping variable (\code{group}). Trend patterns are
 modelled so that group means diverge over time — matching the multi-group
 NYHA / LV-mass / LOS pattern in the SAS template.
@@ -47,5 +47,5 @@ head(dta)
 table(dta$year, dta$group)
 }
 \seealso{
-\code{\link[=hvti_trends]{hvti_trends()}}
+\code{\link[=hv_trends]{hv_trends()}}
 }

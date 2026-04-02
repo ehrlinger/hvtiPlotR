@@ -42,5 +42,5 @@ dta2 <- sample_longitudinal_counts_data(n_patients = 1000, seed = 7)
 max(dta2$count)         # peak observation count
 }
 \seealso{
-\code{\link[=hvti_longitudinal]{hvti_longitudinal()}}, \code{\link[=sample_spaghetti_data]{sample_spaghetti_data()}}
+\code{\link[=hv_longitudinal]{hv_longitudinal()}}, \code{\link[=sample_spaghetti_data]{sample_spaghetti_data()}}
 }

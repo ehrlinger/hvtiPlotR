@@ -1,7 +1,7 @@
 # tests/testthat/test_eda_plots.R
 #
 # Tests for eda-plots.R:
-#   eda_classify_var(), sample_eda_data(), eda_select_vars(), hvti_eda()
+#   eda_classify_var(), sample_eda_data(), eda_select_vars(), hv_eda()
 #
 library(testthat)
 library(ggplot2)
@@ -167,177 +167,195 @@ test_that("eda_select_vars errors when a column is absent", {
 })
 
 # ============================================================================
-# hvti_eda — continuous path
+# hv_eda — continuous path
 # ============================================================================
 
-test_that("hvti_eda returns an hvti_data object", {
+test_that("hv_eda returns an hv_data object", {
   df <- sample_eda_data(n = 100, seed = 1)
-  expect_s3_class(hvti_eda(df, x_col = "op_years", y_col = "ef"), "hvti_data")
+  expect_s3_class(hv_eda(df, x_col = "op_years", y_col = "ef"), "hv_data")
 })
 
-test_that("plot(hvti_eda) returns a ggplot for a continuous variable", {
+test_that("plot(hv_eda) returns a ggplot for a continuous variable", {
   df <- sample_eda_data(n = 100, seed = 1)
-  p  <- plot(hvti_eda(df, x_col = "op_years", y_col = "ef"))
+  p  <- plot(hv_eda(df, x_col = "op_years", y_col = "ef"))
   expect_s3_class(p, "ggplot")
 })
 
-test_that("plot(hvti_eda) continuous has a geom_point layer", {
+test_that("plot(hv_eda) continuous has a geom_point layer", {
   df    <- sample_eda_data(n = 100, seed = 1)
   geoms <- sapply(
-    plot(hvti_eda(df, y_col = "ef", x_col = "op_years"))$layers,
+    plot(hv_eda(df, y_col = "ef", x_col = "op_years"))$layers,
     function(l) class(l$geom)[1]
   )
   expect_true("GeomPoint" %in% geoms)
 })
 
-test_that("plot(hvti_eda) continuous has a geom_smooth layer", {
+test_that("plot(hv_eda) continuous has a geom_smooth layer", {
   df    <- sample_eda_data(n = 100, seed = 1)
   geoms <- sapply(
-    plot(hvti_eda(df, y_col = "ef", x_col = "op_years"))$layers,
+    plot(hv_eda(df, y_col = "ef", x_col = "op_years"))$layers,
     function(l) class(l$geom)[1]
   )
   expect_true("GeomSmooth" %in% geoms)
 })
 
-test_that("plot(hvti_eda) continuous adds geom_rug when y has missing values", {
+test_that("plot(hv_eda) continuous adds geom_rug when y has missing values", {
   df    <- sample_eda_data(n = 200, seed = 42)   # ef has ~8% NA
   geoms <- sapply(
-    plot(hvti_eda(df, y_col = "ef", x_col = "op_years"))$layers,
+    plot(hv_eda(df, y_col = "ef", x_col = "op_years"))$layers,
     function(l) class(l$geom)[1]
   )
   expect_true("GeomRug" %in% geoms)
 })
 
-test_that("plot(hvti_eda) continuous omits geom_rug when y has no missing values", {
+test_that("plot(hv_eda) continuous omits geom_rug when y has no missing values", {
   df      <- sample_eda_data(n = 100, seed = 1)
   df$lv_mass <- df$lv_mass  # lv_mass has no NA by construction
   # Confirm no NA
   expect_false(anyNA(df$lv_mass))
   geoms <- sapply(
-    plot(hvti_eda(df, y_col = "lv_mass", x_col = "op_years"))$layers,
+    plot(hv_eda(df, y_col = "lv_mass", x_col = "op_years"))$layers,
     function(l) class(l$geom)[1]
   )
   expect_false("GeomRug" %in% geoms)
 })
 
-test_that("plot(hvti_eda) continuous y_label sets plot title", {
+test_that("plot(hv_eda) continuous y_label sets plot title", {
   df <- sample_eda_data(n = 100, seed = 1)
-  p  <- plot(hvti_eda(df, y_col = "ef", x_col = "op_years",
+  p  <- plot(hv_eda(df, y_col = "ef", x_col = "op_years",
                       y_label = "Ejection Fraction (%)"))
   expect_equal(p$labels$title, "Ejection Fraction (%)")
 })
 
-test_that("plot(hvti_eda) continuous falls back to y_col as title when y_label is NULL", {
+test_that("plot(hv_eda) continuous falls back to y_col as title when y_label is NULL", {
   df <- sample_eda_data(n = 100, seed = 1)
-  p  <- plot(hvti_eda(df, y_col = "ef", x_col = "op_years"))
+  p  <- plot(hv_eda(df, y_col = "ef", x_col = "op_years"))
   expect_equal(p$labels$title, "ef")
 })
 
 # ============================================================================
-# hvti_eda — Cat_Num (numeric categorical) path
+# hv_eda — Cat_Num (numeric categorical) path
 # ============================================================================
 
-test_that("plot(hvti_eda) returns a ggplot for a Cat_Num variable", {
+test_that("plot(hv_eda) returns a ggplot for a Cat_Num variable", {
   df <- sample_eda_data(n = 100, seed = 1)
-  p  <- plot(hvti_eda(df, x_col = "year", y_col = "male"))
+  p  <- plot(hv_eda(df, x_col = "year", y_col = "male"))
   expect_s3_class(p, "ggplot")
 })
 
-test_that("plot(hvti_eda) Cat_Num has a geom_bar layer", {
+test_that("plot(hv_eda) Cat_Num has a geom_bar layer", {
   df    <- sample_eda_data(n = 100, seed = 1)
   geoms <- sapply(
-    plot(hvti_eda(df, x_col = "year", y_col = "male"))$layers,
+    plot(hv_eda(df, x_col = "year", y_col = "male"))$layers,
     function(l) class(l$geom)[1]
   )
   expect_true("GeomBar" %in% geoms)
 })
 
-test_that("plot(hvti_eda) Cat_Num show_percent=TRUE adds a y scale", {
+test_that("plot(hv_eda) Cat_Num show_percent=TRUE adds a y scale", {
   df        <- sample_eda_data(n = 100, seed = 1)
-  p_count   <- plot(hvti_eda(df, y_col = "male", show_percent = FALSE))
-  p_percent <- plot(hvti_eda(df, y_col = "male", show_percent = TRUE))
+  p_count   <- plot(hv_eda(df, y_col = "male", show_percent = FALSE))
+  p_percent <- plot(hv_eda(df, y_col = "male", show_percent = TRUE))
   expect_gt(length(p_percent$scales$scales),
             length(p_count$scales$scales))
 })
 
-test_that("plot(hvti_eda) Cat_Num y_label sets fill legend name", {
+test_that("plot(hv_eda) Cat_Num y_label sets fill legend name", {
   df <- sample_eda_data(n = 100, seed = 1)
-  p  <- plot(hvti_eda(df, y_col = "male", y_label = "Sex"))
+  p  <- plot(hv_eda(df, y_col = "male", y_label = "Sex"))
   expect_equal(p$labels$fill, "Sex")
 })
 
-test_that("plot(hvti_eda) Cat_Num factor levels include (Missing) last", {
+test_that("plot(hv_eda) Cat_Num factor levels include (Missing) last", {
   df            <- sample_eda_data(n = 300, seed = 42)
   df$male[1:10] <- NA
-  p             <- plot(hvti_eda(df, x_col = "year", y_col = "male"))
+  p             <- plot(hv_eda(df, x_col = "year", y_col = "male"))
   levs          <- levels(p$data$fill)
   expect_equal(tail(levs, 1), "(Missing)")
 })
 
 # ============================================================================
-# hvti_eda — Cat_Char (character categorical) path
+# hv_eda — Cat_Char (character categorical) path
 # ============================================================================
 
-test_that("plot(hvti_eda) returns a ggplot for a Cat_Char variable", {
+test_that("plot(hv_eda) returns a ggplot for a Cat_Char variable", {
   df <- sample_eda_data(n = 100, seed = 1)
-  p  <- plot(hvti_eda(df, x_col = "year", y_col = "valve_morph"))
+  p  <- plot(hv_eda(df, x_col = "year", y_col = "valve_morph"))
   expect_s3_class(p, "ggplot")
 })
 
-test_that("plot(hvti_eda) Cat_Char has a geom_bar layer", {
+test_that("plot(hv_eda) Cat_Char has a geom_bar layer", {
   df    <- sample_eda_data(n = 100, seed = 1)
   geoms <- sapply(
-    plot(hvti_eda(df, x_col = "year", y_col = "valve_morph"))$layers,
+    plot(hv_eda(df, x_col = "year", y_col = "valve_morph"))$layers,
     function(l) class(l$geom)[1]
   )
   expect_true("GeomBar" %in% geoms)
 })
 
-test_that("plot(hvti_eda) Cat_Char factor levels preserve original level order", {
+test_that("plot(hv_eda) Cat_Char factor levels preserve original level order", {
   df   <- sample_eda_data(n = 300, seed = 42)
-  p    <- plot(hvti_eda(df, x_col = "year", y_col = "valve_morph"))
+  p    <- plot(hv_eda(df, x_col = "year", y_col = "valve_morph"))
   levs <- levels(p$data$fill)
   expect_equal(tail(levs, 1), "(Missing)")
 })
 
-test_that("plot(hvti_eda) Cat_Char y_label sets fill legend name", {
+test_that("plot(hv_eda) Cat_Char y_label sets fill legend name", {
   df <- sample_eda_data(n = 100, seed = 1)
-  p  <- plot(hvti_eda(df, y_col = "valve_morph", y_label = "Valve Morphology"))
+  p  <- plot(hv_eda(df, y_col = "valve_morph", y_label = "Valve Morphology"))
   expect_equal(p$labels$fill, "Valve Morphology")
 })
 
 # ============================================================================
-# hvti_eda — error handling
+# hv_eda — error handling
 # ============================================================================
 
-test_that("hvti_eda errors when data is not a data frame", {
-  expect_error(hvti_eda(list(a = 1)), "data frame")
+test_that("hv_eda errors when data is not a data frame", {
+  expect_error(hv_eda(list(a = 1)), "data frame")
 })
 
-test_that("hvti_eda errors when x_col is absent from data", {
+test_that("hv_eda errors when x_col is absent from data", {
   df <- sample_eda_data(n = 50, seed = 1)
-  expect_error(hvti_eda(df, x_col = "nonexistent"), "column")
+  expect_error(hv_eda(df, x_col = "nonexistent"), "column")
 })
 
-test_that("hvti_eda errors when y_col is absent from data", {
+test_that("hv_eda errors when y_col is absent from data", {
   df <- sample_eda_data(n = 50, seed = 1)
-  expect_error(hvti_eda(df, y_col = "nonexistent"), "column")
+  expect_error(hv_eda(df, y_col = "nonexistent"), "column")
 })
 
 # ============================================================================
-# hvti_eda — composability
+# hv_eda — composability
 # ============================================================================
 
-test_that("plot(hvti_eda) is composable with labs()", {
+test_that("plot(hv_eda) is composable with labs()", {
   df <- sample_eda_data(n = 100, seed = 1)
-  p  <- plot(hvti_eda(df, y_col = "ef", x_col = "op_years")) +
+  p  <- plot(hv_eda(df, y_col = "ef", x_col = "op_years")) +
     ggplot2::labs(x = "Years")
   expect_s3_class(p, "ggplot")
   expect_equal(p$labels$x, "Years")
 })
 
-test_that("plot(hvti_eda) is composable with hvti_theme()", {
+test_that("plot(hv_eda) is composable with hv_theme()", {
   df <- sample_eda_data(n = 100, seed = 1)
-  p  <- plot(hvti_eda(df, y_col = "male")) + hvti_theme("manuscript")
+  p  <- plot(hv_eda(df, y_col = "male")) + hv_theme("manuscript")
   expect_s3_class(p, "ggplot")
+})
+
+# ---------------------------------------------------------------------------
+# print.hv_eda coverage
+# ---------------------------------------------------------------------------
+
+test_that("print.hv_eda produces <hv_eda> header", {
+  df  <- sample_eda_data(n = 100, seed = 1)
+  obj <- hv_eda(df, y_col = "male")
+  expect_output(print(obj), "<hv_eda>")
+})
+
+test_that("print.hv_eda returns x invisibly", {
+  df  <- sample_eda_data(n = 100, seed = 1)
+  obj <- hv_eda(df, y_col = "male")
+  ret <- withVisible(print(obj))
+  expect_false(ret$visible)
+  expect_identical(ret$value, obj)
 })

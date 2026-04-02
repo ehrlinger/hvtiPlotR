@@ -61,5 +61,5 @@ diff_dat <- sample_survival_difference_data(
 head(diff_dat)
 }
 \seealso{
-\code{\link[=hvti_survival_difference]{hvti_survival_difference()}}, \code{\link[=sample_hazard_data]{sample_hazard_data()}}
+\code{\link[=hv_survival_difference]{hv_survival_difference()}}, \code{\link[=sample_hazard_data]{sample_hazard_data()}}
 }

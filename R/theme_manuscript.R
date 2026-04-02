@@ -17,25 +17,25 @@
 #'
 #' @return A [ggplot2::theme()] object.
 #'
-#' @seealso [hvti_theme()], [theme_ppt()], [theme_dark_ppt()], [theme_poster()]
+#' @seealso [hv_theme()], [theme_ppt()], [theme_dark_ppt()], [theme_poster()]
 #'
 #' @examples
 #' library(ggplot2)
 #' p <- ggplot(mtcars, aes(wt, mpg, colour = factor(cyl))) + geom_point()
 #'
 #' # Default manuscript theme
-#' p + hvti_theme_manuscript()
+#' p + hv_theme_manuscript()
 #'
 #' # Smaller base font for two-column journal layout
-#' p + hvti_theme_manuscript(base_size = 9)
+#' p + hv_theme_manuscript(base_size = 9)
 #'
 #' # Via the generic dispatcher
-#' p + hvti_theme("manuscript")
+#' p + hv_theme("manuscript")
 #'
 #' @import ggplot2
 #' @export
 #' @aliases theme_manuscript theme_man
-hvti_theme_manuscript <- function(base_size      = 12,
+hv_theme_manuscript <- function(base_size      = 12,
                                   base_family    = "",
                                   header_family  = NULL,
                                   base_line_size = base_size / 22,
@@ -43,7 +43,7 @@ hvti_theme_manuscript <- function(base_size      = 12,
                                   ink            = "black",
                                   paper          = "white",
                                   accent         = "#3366FF") {
-  hvti_theme_base(
+  hv_theme_base(
     base_size      = base_size,
     base_family    = base_family,
     header_family  = header_family,
@@ -71,10 +71,10 @@ hvti_theme_manuscript <- function(base_size      = 12,
 }
 
 #' @export
-#' @rdname hvti_theme_manuscript
-theme_manuscript <- hvti_theme_manuscript
+#' @rdname hv_theme_manuscript
+theme_manuscript <- hv_theme_manuscript
 
 #' @export
-#' @rdname hvti_theme_manuscript
-#' @note Deprecated. Use [hvti_theme()] with `style = "manuscript"` instead.
-theme_man <- hvti_theme_manuscript
+#' @rdname hv_theme_manuscript
+#' @note Deprecated. Use [hv_theme()] with `style = "manuscript"` instead.
+theme_man <- hv_theme_manuscript

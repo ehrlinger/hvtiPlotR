@@ -40,8 +40,8 @@ A \code{\link[ggplot2:ggplot]{ggplot2::ggplot()}} object.
 \description{
 \strong{Superseded.}
 
-\code{nnt_plot()} has been superseded by the S3 constructor \code{\link[=hvti_nnt]{hvti_nnt()}} plus
-\code{\link[=plot.hvti_nnt]{plot.hvti_nnt()}}.
+\code{nnt_plot()} has been superseded by the S3 constructor \code{\link[=hv_nnt]{hv_nnt()}} plus
+\code{\link[=plot.hv_nnt]{plot.hv_nnt()}}.
 
 Plots the number needed to treat (NNT) and/or absolute risk reduction (ARR)
 over time, with optional confidence bands. Covers the NNT component of
@@ -73,7 +73,7 @@ nnt_plot(
   scale_x_continuous(limits = c(0, 20), breaks = seq(0, 20, 5)) +
   scale_y_continuous(limits = c(0, 50), breaks = seq(0, 50, 10)) +
   labs(x = "Years", y = "Number Needed to Treat (NNT)") +
-  hvti_theme("manuscript")
+  hv_theme("poster")
 
 # --- (2) ARR curve over time (same data, different column) ---------------
 # Absolute risk reduction (\%) increases over time as survival curves diverge.
@@ -89,7 +89,7 @@ nnt_plot(
   scale_y_continuous(limits = c(0, 50),
                      labels = function(x) paste0(x, "\%")) +
   labs(x = "Years", y = "Absolute Risk Reduction (\%)") +
-  hvti_theme("manuscript")
+  hv_theme("poster")
 
 }
 \references{

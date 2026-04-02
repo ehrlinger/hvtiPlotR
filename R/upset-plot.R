@@ -28,7 +28,7 @@
 #'   `AV_Replacement`, `AV_Repair`, `MV_Replacement`, `MV_Repair`,
 #'   `TV_Repair`, `Aorta`, `CABG`.
 #'
-#' @seealso [hvti_upset()]
+#' @seealso [hv_upset()]
 #' @examples
 #' dta <- sample_upset_data(n = 300, seed = 42)
 #' head(dta)
@@ -75,17 +75,17 @@ sample_upset_data <- function(n = 500, seed = 42L) {
 #'
 #' Validates a set-membership data frame, checks all intersect columns are
 #' binary (logical or 0/1 integer), computes per-set counts, and returns an
-#' \code{hvti_upset} object.  Call \code{\link{plot.hvti_upset}} on the result
+#' \code{hv_upset} object.  Call \code{\link{plot.hv_upset}} on the result
 #' to obtain the \pkg{ComplexUpset} UpSet diagram.  Apply a theme to all
 #' panels with \code{&}:
-#' \preformatted{plot(up) & hvti_theme("manuscript")}
+#' \preformatted{plot(up) & hv_theme("poster")}
 #'
 #' @param data      A data frame. Each set-membership column must be logical
 #'   or integer (0/1).
 #' @param intersect Character vector of column names to treat as sets.
 #'   Must contain at least two names that exist in \code{data}.
 #'
-#' @return An object of class \code{c("hvti_upset", "hvti_data")}:
+#' @return An object of class \code{c("hv_upset", "hv_data")}:
 #' \describe{
 #'   \item{\code{$data}}{The validated input data frame.}
 #'   \item{\code{$meta}}{Named list: \code{intersect}, \code{n_patients},
@@ -94,22 +94,27 @@ sample_upset_data <- function(n = 500, seed = 42L) {
 #'     named integer vector of per-set patient counts.}
 #' }
 #'
-#' @seealso \code{\link{plot.hvti_upset}}, \code{\link{sample_upset_data}}
+#' @seealso \code{\link{plot.hv_upset}}, \code{\link{sample_upset_data}}
 #'
 #' @examples
 #' sets <- c("AV_Replacement", "AV_Repair", "MV_Replacement", "MV_Repair",
 #'           "TV_Repair", "Aorta", "CABG")
 #' dta <- sample_upset_data(n = 300, seed = 42)
-#' up  <- hvti_upset(dta, intersect = sets)
-#' up   # prints set counts
 #'
+#' # 1. Build data object
+#' up <- hv_upset(dta, intersect = sets)
+#' up  # prints set counts
+#'
+#' # 2 & 3. Bare plot + theme in one step
+#' # ComplexUpset uses & (not +) to apply a theme across all sub-panels.
 #' \dontrun{
-#' plot(up) & hvti_theme("manuscript")
+#' p <- plot(up)
+#' p & hv_theme("poster")
 #' }
 #'
 #' @importFrom rlang .data
 #' @export
-hvti_upset <- function(data, intersect) {
+hv_upset <- function(data, intersect) {
   .check_df(data)
   if (!(is.character(intersect) && length(intersect) >= 2L))
     stop("`intersect` must be a character vector of at least 2 column names.",
@@ -125,7 +130,7 @@ hvti_upset <- function(data, intersect) {
 
   set_counts <- colSums(data[intersect], na.rm = TRUE)
 
-  new_hvti_data(
+  new_hv_data(
     data = as.data.frame(data),
     meta = list(
       intersect  = intersect,
@@ -133,21 +138,21 @@ hvti_upset <- function(data, intersect) {
       n_sets     = length(intersect)
     ),
     tables   = list(set_counts = set_counts),
-    subclass = "hvti_upset"
+    subclass = "hv_upset"
   )
 }
 
 
-#' Print an hvti_upset object
+#' Print an hv_upset object
 #'
-#' @param x   An \code{hvti_upset} object from \code{\link{hvti_upset}}.
+#' @param x   An \code{hv_upset} object from \code{\link{hv_upset}}.
 #' @param ... Ignored.
 #' @return \code{x}, invisibly.
 #' @export
-print.hvti_upset <- function(x, ...) {
+print.hv_upset <- function(x, ...) {
   m  <- x$meta
   sc <- x$tables$set_counts
-  cat("<hvti_upset>\n")
+  cat("<hv_upset>\n")
   cat(sprintf("  N patients  : %d  (%d sets)\n", m$n_patients, m$n_sets))
   cat("  Set counts  :\n")
   for (s in names(sc)) {
@@ -157,15 +162,15 @@ print.hvti_upset <- function(x, ...) {
 }
 
 
-#' Plot an hvti_upset object
+#' Plot an hv_upset object
 #'
 #' Draws an UpSet plot using \code{\link[ComplexUpset]{upset}}.
 #' Apply a theme to \strong{all panels} with \code{&}:
-#' \preformatted{plot(up) & hvti_theme("manuscript")}
+#' \preformatted{plot(up) & hv_theme("poster")}
 #' Apply scales or annotations to the intersection panel via
 #' \code{base_annotations}.
 #'
-#' @param x                   An \code{hvti_upset} object.
+#' @param x                   An \code{hv_upset} object.
 #' @param min_size             Minimum intersection size to display.
 #'   Default \code{1}.
 #' @param width_ratio          Fraction of horizontal space given to the
@@ -187,20 +192,20 @@ print.hvti_upset <- function(x, ...) {
 #' @return A patchwork / ggplot composite. Use \code{&} to apply a theme to
 #'   all panels.
 #'
-#' @seealso \code{\link{hvti_upset}}, \code{\link{hvti_theme}}
+#' @seealso \code{\link{hv_upset}}, \code{\link{hv_theme}}
 #'
 #' @examples
 #' sets <- c("AV_Replacement", "AV_Repair", "MV_Replacement", "MV_Repair",
 #'           "TV_Repair", "Aorta", "CABG")
 #' dta <- sample_upset_data(n = 300, seed = 42)
-#' up  <- hvti_upset(dta, intersect = sets)
+#' up  <- hv_upset(dta, intersect = sets)
 #'
 #' # Build the plot object (render interactively with print(p))
 #' p <- plot(up)
 #'
 #' \dontrun{
 #' # Manuscript theme applied to all panels via &
-#' plot(up) & hvti_theme("manuscript")
+#' plot(up) & hv_theme("poster")
 #'
 #' # Custom intersection bar colour
 #' plot(up,
@@ -215,13 +220,13 @@ print.hvti_upset <- function(x, ...) {
 #'       ggplot2::labs(y = "Patients (n)")
 #'   )
 #' ) &
-#'   hvti_theme("manuscript")
+#'   hv_theme("poster")
 #' }
 #'
 #' @importFrom ComplexUpset upset upset_set_size intersection_size
 #' @importFrom ggplot2 aes
 #' @export
-plot.hvti_upset <- function(x,
+plot.hv_upset <- function(x,
                              min_size           = 1,
                              width_ratio        = 0.3,
                              encode_sets        = FALSE,

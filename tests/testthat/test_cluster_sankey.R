@@ -87,67 +87,87 @@ test_that("sample_cluster_sankey_data custom probs shifts cluster distribution",
 })
 
 # ============================================================================
-# hvti_sankey + plot.hvti_sankey
+# hv_sankey + plot.hv_sankey
 # ============================================================================
 
-test_that("hvti_sankey returns an hvti_data object", {
+test_that("hv_sankey returns an hv_data object", {
   skip_if_not_installed("ggsankey")
   dta <- sample_cluster_sankey_data(n = 100, seed = 1)
-  expect_s3_class(hvti_sankey(dta), "hvti_data")
+  expect_s3_class(hv_sankey(dta), "hv_data")
 })
 
-test_that("plot(hvti_sankey) returns a ggplot (all K = 2:9)", {
+test_that("plot(hv_sankey) returns a ggplot (all K = 2:9)", {
   skip_if_not_installed("ggsankey")
   dta <- sample_cluster_sankey_data(n = 100, seed = 1)
-  expect_s3_class(plot(hvti_sankey(dta)), "ggplot")
+  expect_s3_class(plot(hv_sankey(dta)), "ggplot")
 })
 
-test_that("plot(hvti_sankey) works with a subset of cluster columns", {
+test_that("plot(hv_sankey) works with a subset of cluster columns", {
   skip_if_not_installed("ggsankey")
   dta <- sample_cluster_sankey_data(n = 100, seed = 1)
   expect_s3_class(
-    plot(hvti_sankey(dta, cluster_cols = c("C2", "C3", "C4"))),
+    plot(hv_sankey(dta, cluster_cols = c("C2", "C3", "C4"))),
     "ggplot"
   )
 })
 
-test_that("plot(hvti_sankey) is composable with + operator", {
+test_that("plot(hv_sankey) is composable with + operator", {
   skip_if_not_installed("ggsankey")
   dta <- sample_cluster_sankey_data(n = 100, seed = 1)
-  p   <- plot(hvti_sankey(dta)) + ggplot2::labs(x = "Number of clusters (K)")
+  p   <- plot(hv_sankey(dta)) + ggplot2::labs(x = "Number of clusters (K)")
   expect_s3_class(p, "ggplot")
   expect_equal(p$labels$x, "Number of clusters (K)")
 })
 
-test_that("plot(hvti_sankey) is composable with hvti_theme()", {
+test_that("plot(hv_sankey) is composable with hv_theme()", {
   skip_if_not_installed("ggsankey")
   dta <- sample_cluster_sankey_data(n = 100, seed = 1)
-  p   <- plot(hvti_sankey(dta)) + hvti_theme("manuscript")
+  p   <- plot(hv_sankey(dta)) + hv_theme("manuscript")
   expect_s3_class(p, "ggplot")
 })
 
-test_that("hvti_sankey errors when data is not a data frame", {
+test_that("hv_sankey errors when data is not a data frame", {
   skip_if_not_installed("ggsankey")
   expect_error(
-    hvti_sankey(list(C2 = "A", C3 = "A")),
+    hv_sankey(list(C2 = "A", C3 = "A")),
     "data.frame|data frame"
   )
 })
 
-test_that("hvti_sankey errors when cluster_cols has fewer than 2 elements", {
+test_that("hv_sankey errors when cluster_cols has fewer than 2 elements", {
   skip_if_not_installed("ggsankey")
   dta <- sample_cluster_sankey_data(n = 50, seed = 1)
   expect_error(
-    hvti_sankey(dta, cluster_cols = "C2"),
+    hv_sankey(dta, cluster_cols = "C2"),
     "at least 2|at least two|fewer than"
   )
 })
 
-test_that("hvti_sankey errors when a cluster column is absent from data", {
+test_that("hv_sankey errors when a cluster column is absent from data", {
   skip_if_not_installed("ggsankey")
   dta <- sample_cluster_sankey_data(n = 50, seed = 1)
   expect_error(
-    hvti_sankey(dta, cluster_cols = c("C2", "nonexistent")),
+    hv_sankey(dta, cluster_cols = c("C2", "nonexistent")),
     "not found|not a column|not in"
   )
+})
+
+# ---------------------------------------------------------------------------
+# print.hv_sankey coverage
+# ---------------------------------------------------------------------------
+
+test_that("print.hv_sankey produces <hv_sankey> header", {
+  skip_if_not_installed("ggsankey")
+  dta <- sample_cluster_sankey_data(n = 100, seed = 1)
+  obj <- hv_sankey(dta)
+  expect_output(print(obj), "<hv_sankey>")
+})
+
+test_that("print.hv_sankey returns x invisibly", {
+  skip_if_not_installed("ggsankey")
+  dta <- sample_cluster_sankey_data(n = 100, seed = 1)
+  obj <- hv_sankey(dta)
+  ret <- withVisible(print(obj))
+  expect_false(ret$visible)
+  expect_identical(ret$value, obj)
 })

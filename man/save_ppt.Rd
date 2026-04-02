@@ -66,7 +66,7 @@ library(ggplot2)
 p1 <- ggplot(mtcars, aes(x = wt, y = mpg)) +
   geom_point() +
   labs(x = "Weight", y = "Miles per gallon", title = "Fuel economy") +
-  hvti_theme("dark_ppt")
+  hv_theme("dark_ppt")
 
 save_ppt(
   object       = p1,
@@ -79,7 +79,7 @@ save_ppt(
 p2 <- ggplot(mtcars, aes(x = factor(cyl), y = mpg)) +
   geom_boxplot() +
   labs(x = "Cylinders", y = "Miles per gallon") +
-  hvti_theme("dark_ppt")
+  hv_theme("dark_ppt")
 
 save_ppt(
   object       = list(p1, p2),
@@ -92,7 +92,7 @@ save_ppt(
 pm <- ggplot(mtcars, aes(x = wt, y = mpg)) +
   geom_point() +
   labs(x = "Weight", y = "Miles per gallon") +
-  hvti_theme("manuscript")
+  hv_theme("manuscript")
 
 save_ppt(
   object       = pm,
@@ -105,5 +105,5 @@ save_ppt(
 }
 \seealso{
 \code{\link[rvg:dml]{rvg::dml()}}, \code{\link[officer:ph_with]{officer::ph_with()}}, \code{\link[officer:ph_location]{officer::ph_location()}},
-\code{\link[=hvti_theme]{hvti_theme()}}
+\code{\link[=hv_theme]{hv_theme()}}
 }

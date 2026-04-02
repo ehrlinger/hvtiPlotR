@@ -132,7 +132,7 @@
 #'   `surv_upper`, `hazard`, `haz_lower`, `haz_upper`, `cumhaz`, and
 #'   (when `groups` is not `NULL`) `group`.
 #'
-#' @seealso [hvti_hazard()], [sample_hazard_empirical()], [sample_life_table()]
+#' @seealso [hv_hazard()], [sample_hazard_empirical()], [sample_life_table()]
 #'
 #' @examples
 #' # Single-group predictions (tp.hp.dead.sas)
@@ -221,7 +221,7 @@ sample_hazard_data <- function(n        = 500,
 #' @return A data frame with columns `time`, `estimate`, `lower`, `upper`, and
 #'   (when `groups` is not `NULL`) `group`.
 #'
-#' @seealso [hvti_hazard()], [sample_hazard_data()]
+#' @seealso [hv_hazard()], [sample_hazard_data()]
 #'
 #' @examples
 #' emp <- sample_hazard_empirical(n = 500, time_max = 10, n_bins = 6)
@@ -281,7 +281,7 @@ sample_hazard_empirical <- function(n        = 500,
 #'
 #' @return A data frame with columns `time`, `survival`, and `group`.
 #'
-#' @seealso [hvti_hazard()], [sample_hazard_data()]
+#' @seealso [hv_hazard()], [sample_hazard_data()]
 #'
 #' @examples
 #' # Default: three age groups (<65, 65-80, ≥80) using Gompertz mortality
@@ -356,7 +356,7 @@ sample_life_table <- function(age_groups = c("<65", "65-80", "\u226580"),
 #' @return A data frame with columns `time`, `difference`, `diff_lower`,
 #'   `diff_upper`, `group1_surv`, `group2_surv`.
 #'
-#' @seealso [hvti_survival_difference()], [sample_hazard_data()]
+#' @seealso [hv_survival_difference()], [sample_hazard_data()]
 #'
 #' @examples
 #' diff_dat <- sample_survival_difference_data(
@@ -425,7 +425,7 @@ sample_survival_difference_data <- function(n        = 500,
 #' @return A data frame with columns `time`, `arr`, `arr_lower`, `arr_upper`,
 #'   `nnt`, `nnt_lower`, `nnt_upper`.
 #'
-#' @seealso [hvti_nnt()], [hvti_survival_difference()]
+#' @seealso [hv_nnt()], [hv_survival_difference()]
 #'
 #' @examples
 #' nnt_dat <- sample_nnt_data(
@@ -475,8 +475,8 @@ sample_nnt_data <- function(n        = 500,
 #' @description
 #' **Superseded.**
 #'
-#' `hazard_plot()` has been superseded by the S3 constructor [hvti_hazard()]
-#' plus [plot.hvti_hazard()].
+#' `hazard_plot()` has been superseded by the S3 constructor [hv_hazard()]
+#' plus [plot.hv_hazard()].
 #'
 #' Plots a pre-computed parametric survival, hazard, or cumulative-hazard curve
 #' from a Weibull (or other parametric) model, optionally overlaid with
@@ -503,7 +503,7 @@ sample_nnt_data <- function(n        = 500,
 #' - `reference`      ← the `smatched` life-table dataset
 #'
 #' Returns a **bare ggplot object**; compose with `scale_colour_*`,
-#' `scale_y_continuous()`, `labs()`, [hvti_theme()].
+#' `scale_y_continuous()`, `labs()`, [hv_theme()].
 #'
 #' @param curve_data   Data frame of parametric predictions (fine grid).
 #'   Typical source: SAS `predict` dataset exported to CSV, or
@@ -557,7 +557,7 @@ sample_nnt_data <- function(n        = 500,
 #'
 #' @seealso [sample_hazard_data()], [sample_hazard_empirical()],
 #'   [sample_life_table()], [survival_difference_plot()], [nnt_plot()],
-#'   [hvti_survival()], [hvti_theme()]
+#'   [hv_survival()], [hv_theme()]
 #'
 #' @references SAS templates: \code{tp.hp.dead.sas},
 #'   \code{tp.hp.dead.tkdn.stratified.sas},
@@ -594,7 +594,7 @@ sample_nnt_data <- function(n        = 500,
 #'   scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, 20),
 #'                      labels = function(x) paste0(x, "%")) +
 #'   labs(x = "Years", y = "Survival (%)") +
-#'   hvti_theme("manuscript")
+#'   hv_theme("poster")
 #'
 #' # --- (2) Hazard rate curve + KM overlay ----------------------------------
 #' # Matches tp.hp.dead.sas (hazard panel).
@@ -613,7 +613,7 @@ sample_nnt_data <- function(n        = 500,
 #'   scale_y_continuous(limits = c(0, 30),
 #'                      labels = function(x) paste0(x, "%/yr")) +
 #'   labs(x = "Years", y = "Hazard (%/year)") +
-#'   hvti_theme("manuscript")
+#'   hv_theme("poster")
 #'
 #' # --- (3) Cumulative hazard (tp.hp.event.weighted.sas) --------------------
 #' # For readmission / repeated-event analyses: cumhaz = -log(S)*100.
@@ -628,7 +628,7 @@ sample_nnt_data <- function(n        = 500,
 #'   scale_fill_manual(values = c("darkorange"), guide = "none") +
 #'   scale_x_continuous(limits = c(0, 10), breaks = 0:10) +
 #'   labs(x = "Years", y = "Cumulative Hazard (%)") +
-#'   hvti_theme("manuscript")
+#'   hv_theme("poster")
 #'
 #' # --- (4) Stratified survival (tp.hp.dead.tkdn.stratified.sas) ------------
 #' # Two groups (e.g. Takedown vs No Takedown) with different colours and
@@ -663,7 +663,7 @@ sample_nnt_data <- function(n        = 500,
 #'   scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, 20),
 #'                      labels = function(x) paste0(x, "%")) +
 #'   labs(x = "Years after Esophagostomy", y = "Survival (%)") +
-#'   hvti_theme("manuscript")
+#'   hv_theme("poster")
 #'
 #' # --- (5) Life table overlay (tp.hp.dead.age_with_population_life_table) ---
 #' # Age-stratified study curves + US population life table reference (dashed).
@@ -706,7 +706,7 @@ sample_nnt_data <- function(n        = 500,
 #'                      labels = function(x) paste0(x, "%")) +
 #'   labs(x = "Years", y = "Survival (%)",
 #'        caption = "Dashed lines: US population life table") +
-#'   hvti_theme("manuscript")
+#'   hv_theme("poster")
 #'
 #' # --- (6) Multivariable risk profiles (tp.hp.dead.ideal_multivariable) -----
 #' # Patient profiles with distinct covariate combinations (good vs poor risk).
@@ -737,7 +737,7 @@ sample_nnt_data <- function(n        = 500,
 #'                      labels = function(x) paste0(x, "%")) +
 #'   labs(x = "Years after Brain Metastases",
 #'        y = "Survival (%)") +
-#'   hvti_theme("manuscript")
+#'   hv_theme("poster")
 #'
 #' # --- (7) Propensity-weighted / matched groups -----------------------------
 #' # tp.hp.dead.matching_weight.sas / tp.hp.dead.limited_FET.mtwt.sas.
@@ -773,7 +773,7 @@ sample_nnt_data <- function(n        = 500,
 #'   scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, 20),
 #'                      labels = function(x) paste0(x, "%")) +
 #'   labs(x = "Years after Repair", y = "Survival (%)") +
-#'   hvti_theme("manuscript")
+#'   hv_theme("poster")
 #'
 #' # --- (8) Device sequencing (tp.hp.mcs.mod.dead.devseq) -------------------
 #' # Survival conditioned on surviving the non-LVAD phase, then the LVAD phase.
@@ -801,7 +801,7 @@ sample_nnt_data <- function(n        = 500,
 #'   scale_y_continuous(limits = c(0, 100),
 #'                       labels = function(x) paste0(x, "%")) +
 #'   labs(x = "Time on Device", y = "Survival (%)") +
-#'   hvti_theme("manuscript")
+#'   hv_theme("poster")
 #'
 #' # --- (9) Save (dontrun) --------------------------------------------------
 #' \dontrun{
@@ -812,13 +812,13 @@ sample_nnt_data <- function(n        = 500,
 #'   scale_colour_manual(values = c("steelblue"), guide = "none") +
 #'   scale_fill_manual(values = c("steelblue"), guide = "none") +
 #'   labs(x = "Years", y = "Survival (%)") +
-#'   hvti_theme("manuscript")
+#'   hv_theme("poster")
 #' ggplot2::ggsave("survival.pdf", p, width = 11.5, height = 8)
 #' }
 #'
 #' # --- Global theme + RColorBrewer (set once per session) ------------------
 #' \dontrun{
-#' old <- ggplot2::theme_set(hvti_theme_manuscript())
+#' old <- ggplot2::theme_set(hv_theme_manuscript())
 #' hazard_plot(
 #'   dat2,
 #'   estimate_col  = "survival",
@@ -995,7 +995,7 @@ hazard_plot <- function(curve_data,
 #' **Superseded.**
 #'
 #' `survival_difference_plot()` has been superseded by the S3 constructor
-#' [hvti_survival_difference()] plus [plot.hvti_survival_difference()].
+#' [hv_survival_difference()] plus [plot.hv_survival_difference()].
 #'
 #' Plots the difference in survival between two groups over time, with an
 #' optional confidence band. Covers `tp.hp.dead.life-gained.sas` and the
@@ -1045,7 +1045,7 @@ hazard_plot <- function(curve_data,
 #'   scale_y_continuous(limits = c(-5, 30),
 #'                      labels = function(x) paste0(x, "%")) +
 #'   labs(x = "Years", y = "Survival Difference (%)") +
-#'   hvti_theme("manuscript")
+#'   hv_theme("poster")
 #'
 #' # --- (2) Multiple treatment comparisons ----------------------------------
 #' # Simulate three comparisons and combine (each row = one comparison)
@@ -1072,7 +1072,7 @@ hazard_plot <- function(curve_data,
 #'   geom_hline(yintercept = 0, linetype = "dashed", colour = "grey50") +
 #'   scale_x_continuous(limits = c(0, 10), breaks = 0:10) +
 #'   labs(x = "Years", y = "Survival Difference (%)") +
-#'   hvti_theme("manuscript")
+#'   hv_theme("poster")
 #'
 #' @importFrom ggplot2 ggplot aes geom_line geom_ribbon
 #' @importFrom rlang .data
@@ -1131,8 +1131,8 @@ survival_difference_plot <- function(diff_data,
 #' @description
 #' **Superseded.**
 #'
-#' `nnt_plot()` has been superseded by the S3 constructor [hvti_nnt()] plus
-#' [plot.hvti_nnt()].
+#' `nnt_plot()` has been superseded by the S3 constructor [hv_nnt()] plus
+#' [plot.hv_nnt()].
 #'
 #' Plots the number needed to treat (NNT) and/or absolute risk reduction (ARR)
 #' over time, with optional confidence bands. Covers the NNT component of
@@ -1181,7 +1181,7 @@ survival_difference_plot <- function(diff_data,
 #'   scale_x_continuous(limits = c(0, 20), breaks = seq(0, 20, 5)) +
 #'   scale_y_continuous(limits = c(0, 50), breaks = seq(0, 50, 10)) +
 #'   labs(x = "Years", y = "Number Needed to Treat (NNT)") +
-#'   hvti_theme("manuscript")
+#'   hv_theme("poster")
 #'
 #' # --- (2) ARR curve over time (same data, different column) ---------------
 #' # Absolute risk reduction (%) increases over time as survival curves diverge.
@@ -1197,7 +1197,7 @@ survival_difference_plot <- function(diff_data,
 #'   scale_y_continuous(limits = c(0, 50),
 #'                      labels = function(x) paste0(x, "%")) +
 #'   labs(x = "Years", y = "Absolute Risk Reduction (%)") +
-#'   hvti_theme("manuscript")
+#'   hv_theme("poster")
 #'
 #' @importFrom ggplot2 ggplot aes geom_line geom_ribbon
 #' @importFrom rlang .data
@@ -1240,14 +1240,14 @@ nnt_plot <- function(nnt_data,
 # ============================================================================
 
 # ----------------------------------------------------------------------------
-# hvti_hazard  ---------------------------------------------------------------
+# hv_hazard  ---------------------------------------------------------------
 # ----------------------------------------------------------------------------
 
 #' Prepare parametric hazard / survival data for plotting
 #'
 #' Validates and stores pre-computed parametric curve data — and optional
 #' Kaplan-Meier empirical overlay and population life-table reference — as an
-#' `hvti_hazard` object.  Pass the result to [plot.hvti_hazard()] to render
+#' `hv_hazard` object.  Pass the result to [plot.hv_hazard()] to render
 #' the figure.
 #'
 #' This constructor covers the complete `tp.hp.dead.*` SAS template family.
@@ -1283,13 +1283,13 @@ nnt_plot <- function(nnt_data,
 #' @param ref_group_col  Linetype-grouping column in `reference`, or `NULL`.
 #'   Default `NULL`.
 #'
-#' @return An S3 object of class `c("hvti_hazard", "hvti_data")`; call
-#'   `plot()` on the result to render — see [plot.hvti_hazard()]. The object
+#' @return An S3 object of class `c("hv_hazard", "hv_data")`; call
+#'   `plot()` on the result to render — see [plot.hv_hazard()]. The object
 #'   contains: `$data` (curve data frame), `$meta` (all column-name mappings),
 #'   `$tables$empirical`, `$tables$reference`.
 #'
-#' @seealso [plot.hvti_hazard()] to render as a ggplot2 figure,
-#'   [hvti_theme()] for the publication theme,
+#' @seealso [plot.hv_hazard()] to render as a ggplot2 figure,
+#'   [hv_theme()] for the publication theme,
 #'   [sample_hazard_data()], [sample_hazard_empirical()],
 #'   [sample_life_table()] for example data.
 #'
@@ -1301,26 +1301,32 @@ nnt_plot <- function(nnt_data,
 #' dat <- sample_hazard_data(n = 500, time_max = 10)
 #' emp <- sample_hazard_empirical(n = 500, time_max = 10, n_bins = 6)
 #'
-#' # Basic survival curve with KM overlay
-#' hp <- hvti_hazard(dat,
+#' # 1. Build data object
+#' hp <- hv_hazard(dat,
 #'   lower_col     = "surv_lower", upper_col = "surv_upper",
 #'   empirical     = emp,
 #'   emp_lower_col = "lower",     emp_upper_col = "upper"
 #' )
-#' plot(hp) +
+#' hp  # prints CI and empirical flags
+#'
+#' # 2. Bare plot -- undecorated ggplot returned by plot.hv_hazard
+#' p <- plot(hp)
+#'
+#' # 3. Decorate: colour/fill palettes, axis scales, labels, theme
+#' p +
 #'   scale_colour_manual(values = c("steelblue"), guide = "none") +
 #'   scale_fill_manual(values   = c("steelblue"), guide = "none") +
 #'   scale_x_continuous(limits = c(0, 10), breaks = 0:10) +
 #'   scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, 20),
 #'                      labels = function(x) paste0(x, "%")) +
 #'   labs(x = "Years", y = "Survival (%)") +
-#'   hvti_theme("manuscript")
+#'   hv_theme("poster")
 #'
-#' # Stratified groups
+#' # Stratified groups -- colour scale adds clinical meaning
 #' dat2 <- sample_hazard_data(
 #'   n = 400, groups = c("No Takedown" = 1.0, "Takedown" = 0.65)
 #' )
-#' hp2 <- hvti_hazard(dat2,
+#' hp2 <- hv_hazard(dat2,
 #'   lower_col = "surv_lower", upper_col = "surv_upper",
 #'   group_col = "group"
 #' )
@@ -1330,12 +1336,11 @@ nnt_plot <- function(nnt_data,
 #'     name   = NULL
 #'   ) +
 #'   labs(x = "Years", y = "Survival (%)") +
-#'   hvti_theme("manuscript")
+#'   hv_theme("poster")
 #'
 #' # --- Global theme + RColorBrewer (set once per session) ------------------
 #' \dontrun{
-#' # Apply manuscript theme globally; use scale_colour_brewer for groups.
-#' old <- ggplot2::theme_set(hvti_theme_manuscript())
+#' old <- ggplot2::theme_set(hv_theme_manuscript())
 #' plot(hp2) +
 #'   scale_colour_brewer(palette = "Set1", name = NULL) +
 #'   scale_fill_brewer(palette   = "Set1", guide = "none") +
@@ -1351,7 +1356,7 @@ nnt_plot <- function(nnt_data,
 #'
 #' @importFrom rlang .data
 #' @export
-hvti_hazard <- function(curve_data,
+hv_hazard <- function(curve_data,
                         x_col            = "time",
                         estimate_col     = "survival",
                         lower_col        = NULL,
@@ -1390,7 +1395,7 @@ hvti_hazard <- function(curve_data,
       .check_col(reference, col, "reference")
   }
 
-  new_hvti_data(
+  new_hv_data(
     data = as.data.frame(curve_data),
     meta = list(
       x_col            = x_col,
@@ -1413,20 +1418,20 @@ hvti_hazard <- function(curve_data,
       empirical = empirical,
       reference = reference
     ),
-    subclass = "hvti_hazard"
+    subclass = "hv_hazard"
   )
 }
 
 
-#' Print an hvti_hazard object
+#' Print an hv_hazard object
 #'
-#' @param x   An `hvti_hazard` object from [hvti_hazard()].
+#' @param x   An `hv_hazard` object from [hv_hazard()].
 #' @param ... Ignored.
 #' @return `x`, invisibly.
 #' @export
-print.hvti_hazard <- function(x, ...) {
+print.hv_hazard <- function(x, ...) {
   m <- x$meta
-  cat("<hvti_hazard>\n")
+  cat("<hv_hazard>\n")
   cat(sprintf("  x col       : %s\n",  m$x_col))
   cat(sprintf("  estimate    : %s\n",  m$estimate_col))
   if (!is.null(m$lower_col))
@@ -1443,13 +1448,13 @@ print.hvti_hazard <- function(x, ...) {
 }
 
 
-#' Plot an hvti_hazard object
+#' Plot an hv_hazard object
 #'
-#' Renders a bare [ggplot2::ggplot()] from an [hvti_hazard()] object.  Compose
-#' with `scale_colour_*`, `scale_y_continuous()`, `labs()`, and [hvti_theme()]
+#' Renders a bare [ggplot2::ggplot()] from an [hv_hazard()] object.  Compose
+#' with `scale_colour_*`, `scale_y_continuous()`, `labs()`, and [hv_theme()]
 #' to complete the figure.
 #'
-#' @param x             An `hvti_hazard` object from [hvti_hazard()].
+#' @param x             An `hv_hazard` object from [hv_hazard()].
 #' @param ci_alpha      Transparency of the CI ribbon. Default `0.20`.
 #' @param line_width    Width of the parametric curve line. Default `1.0`.
 #' @param point_size    Size of empirical overlay points. Default `2.0`.
@@ -1460,17 +1465,17 @@ print.hvti_hazard <- function(x, ...) {
 #' @param ...           Ignored; present for S3 consistency.
 #'
 #' @return A [ggplot2::ggplot()] object; compose with `+` to add scales,
-#'   axis limits, labels, and [hvti_theme()].
+#'   axis limits, labels, and [hv_theme()].
 #'
-#' @seealso [hvti_hazard()] to build the data object,
-#'   [hvti_theme()] for the publication theme.
+#' @seealso [hv_hazard()] to build the data object,
+#'   [hv_theme()] for the publication theme.
 #'
 #' @family Hazard plot
 #'
 #' @importFrom ggplot2 ggplot aes geom_line geom_ribbon geom_point geom_errorbar
 #' @importFrom rlang .data
 #' @export
-plot.hvti_hazard <- function(x,
+plot.hv_hazard <- function(x,
                              ci_alpha       = 0.20,
                              line_width     = 1.0,
                              point_size     = 2.0,
@@ -1597,14 +1602,14 @@ plot.hvti_hazard <- function(x,
 
 
 # ----------------------------------------------------------------------------
-# hvti_survival_difference  --------------------------------------------------
+# hv_survival_difference  --------------------------------------------------
 # ----------------------------------------------------------------------------
 
 #' Prepare survival difference (life-gained) data for plotting
 #'
 #' Stores pre-computed survival difference data as an
-#' `hvti_survival_difference` object.  Pass the result to
-#' [plot.hvti_survival_difference()] to render the plot.  Covers
+#' `hv_survival_difference` object.  Pass the result to
+#' [plot.hv_survival_difference()] to render the plot.  Covers
 #' `tp.hp.dead.life-gained.sas` and the survival-difference component of
 #' `tp.hp.numtreat.survdiff.matched.sas`.
 #'
@@ -1617,10 +1622,10 @@ plot.hvti_hazard <- function(x,
 #' @param group_col    Grouping column for multiple comparisons, or `NULL`.
 #'   Default `NULL`.
 #'
-#' @return An S3 object of class `c("hvti_survival_difference", "hvti_data")`.
+#' @return An S3 object of class `c("hv_survival_difference", "hv_data")`.
 #'
-#' @seealso [plot.hvti_survival_difference()],
-#'   [sample_survival_difference_data()], [hvti_nnt()]
+#' @seealso [plot.hv_survival_difference()],
+#'   [sample_survival_difference_data()], [hv_nnt()]
 #'
 #' @examples
 #' library(ggplot2)
@@ -1629,7 +1634,7 @@ plot.hvti_hazard <- function(x,
 #'   groups = c("Control" = 1.0, "Treatment" = 0.70)
 #' )
 #'
-#' sd <- hvti_survival_difference(diff_dat,
+#' sd <- hv_survival_difference(diff_dat,
 #'   lower_col = "diff_lower", upper_col = "diff_upper"
 #' )
 #' plot(sd) +
@@ -1638,10 +1643,10 @@ plot.hvti_hazard <- function(x,
 #'   scale_y_continuous(limits = c(-5, 30),
 #'                      labels = function(x) paste0(x, "%")) +
 #'   labs(x = "Years", y = "Survival Difference (%)") +
-#'   hvti_theme("manuscript")
+#'   hv_theme("poster")
 #'
 #' @export
-hvti_survival_difference <- function(diff_data,
+hv_survival_difference <- function(diff_data,
                                      x_col        = "time",
                                      estimate_col = "difference",
                                      lower_col    = NULL,
@@ -1651,7 +1656,7 @@ hvti_survival_difference <- function(diff_data,
   for (col in c(x_col, estimate_col, lower_col, upper_col, group_col))
     .check_col(diff_data, col, "diff_data")
 
-  new_hvti_data(
+  new_hv_data(
     data = as.data.frame(diff_data),
     meta = list(
       x_col        = x_col,
@@ -1663,20 +1668,20 @@ hvti_survival_difference <- function(diff_data,
       n_obs        = nrow(diff_data)
     ),
     tables   = list(),
-    subclass = "hvti_survival_difference"
+    subclass = "hv_survival_difference"
   )
 }
 
 
-#' Print an hvti_survival_difference object
+#' Print an hv_survival_difference object
 #'
-#' @param x   An `hvti_survival_difference` object.
+#' @param x   An `hv_survival_difference` object.
 #' @param ... Ignored.
 #' @return `x`, invisibly.
 #' @export
-print.hvti_survival_difference <- function(x, ...) {
+print.hv_survival_difference <- function(x, ...) {
   m <- x$meta
-  cat("<hvti_survival_difference>\n")
+  cat("<hv_survival_difference>\n")
   cat(sprintf("  x col       : %s\n", m$x_col))
   cat(sprintf("  estimate    : %s\n", m$estimate_col))
   if (!is.null(m$lower_col))
@@ -1690,7 +1695,7 @@ print.hvti_survival_difference <- function(x, ...) {
 
 
 # -- Shared internal helper for simple line+ribbon plots ---------------------
-# Used by plot.hvti_survival_difference and plot.hvti_nnt, which are
+# Used by plot.hv_survival_difference and plot.hv_nnt, which are
 # structurally identical.
 #' @keywords internal
 .plot_simple_curve <- function(x, ci_alpha = 0.20, line_width = 1.0) {
@@ -1737,25 +1742,25 @@ print.hvti_survival_difference <- function(x, ...) {
 }
 
 
-#' Plot an hvti_survival_difference object
+#' Plot an hv_survival_difference object
 #'
 #' Renders a bare [ggplot2::ggplot()] survival-difference curve.  Compose with
 #' `geom_hline(yintercept = 0)`, `scale_y_continuous()`, `labs()`, and
-#' [hvti_theme()].
+#' [hv_theme()].
 #'
-#' @param x          An `hvti_survival_difference` object.
+#' @param x          An `hv_survival_difference` object.
 #' @param ci_alpha   Transparency of the CI ribbon. Default `0.20`.
 #' @param line_width Line width. Default `1.0`.
 #' @param ...        Ignored.
 #'
 #' @return A [ggplot2::ggplot()] object.
 #'
-#' @seealso [hvti_survival_difference()], [hvti_nnt()], [hvti_theme()]
+#' @seealso [hv_survival_difference()], [hv_nnt()], [hv_theme()]
 #'
 #' @importFrom ggplot2 ggplot aes geom_line geom_ribbon
 #' @importFrom rlang .data
 #' @export
-plot.hvti_survival_difference <- function(x,
+plot.hv_survival_difference <- function(x,
                                           ci_alpha   = 0.20,
                                           line_width = 1.0,
                                           ...) {
@@ -1764,15 +1769,15 @@ plot.hvti_survival_difference <- function(x,
 
 
 # ----------------------------------------------------------------------------
-# hvti_nnt  ------------------------------------------------------------------
+# hv_nnt  ------------------------------------------------------------------
 # ----------------------------------------------------------------------------
 
 #' Prepare number-needed-to-treat data for plotting
 #'
-#' Stores pre-computed NNT (or ARR) data as an `hvti_nnt` object.  Rows where
+#' Stores pre-computed NNT (or ARR) data as an `hv_nnt` object.  Rows where
 #' `estimate_col` is `NA` (undefined when ARR is near zero) are optionally
 #' removed during construction via `na_rm`.  Pass the result to
-#' [plot.hvti_nnt()] to render the plot.  Covers the NNT component of
+#' [plot.hv_nnt()] to render the plot.  Covers the NNT component of
 #' `tp.hp.numtreat.survdiff.matched.sas`.
 #'
 #' @param nnt_data     Data frame of pre-computed NNT estimates.
@@ -1786,10 +1791,10 @@ plot.hvti_survival_difference <- function(x,
 #' @param na_rm        Remove rows where `estimate_col` is `NA` before storing
 #'   in `$data`. Applied at construction time. Default `TRUE`.
 #'
-#' @return An S3 object of class `c("hvti_nnt", "hvti_data")`.
+#' @return An S3 object of class `c("hv_nnt", "hv_data")`.
 #'
-#' @seealso [plot.hvti_nnt()], [sample_nnt_data()],
-#'   [hvti_survival_difference()]
+#' @seealso [plot.hv_nnt()], [sample_nnt_data()],
+#'   [hv_survival_difference()]
 #'
 #' @examples
 #' library(ggplot2)
@@ -1799,26 +1804,32 @@ plot.hvti_survival_difference <- function(x,
 #'   groups = c("SVG" = 1.0, "ITA" = 0.75)
 #' )
 #'
-#' # NNT curve over time
-#' nn <- hvti_nnt(nnt_dat, lower_col = "nnt_lower", upper_col = "nnt_upper")
-#' plot(nn) +
+#' # 1. Build data object
+#' nn <- hv_nnt(nnt_dat, lower_col = "nnt_lower", upper_col = "nnt_upper")
+#' nn  # prints estimate column and CI flags
+#'
+#' # 2. Bare plot -- undecorated ggplot returned by plot.hv_nnt
+#' p <- plot(nn)
+#'
+#' # 3. Decorate: axis scales, labels, theme
+#' p +
 #'   scale_x_continuous(limits = c(0, 20), breaks = seq(0, 20, 5)) +
 #'   scale_y_continuous(limits = c(0, 50), breaks = seq(0, 50, 10)) +
 #'   labs(x = "Years", y = "Number Needed to Treat (NNT)") +
-#'   hvti_theme("manuscript")
+#'   hv_theme("poster")
 #'
-#' # ARR curve (same data, different column)
-#' ar <- hvti_nnt(nnt_dat, estimate_col = "arr",
+#' # ARR curve -- same 3-step pattern with a different estimate column
+#' ar <- hv_nnt(nnt_dat, estimate_col = "arr",
 #'                lower_col = "arr_lower", upper_col = "arr_upper",
 #'                na_rm = FALSE)
 #' plot(ar) +
 #'   scale_y_continuous(limits = c(0, 50),
 #'                      labels = function(x) paste0(x, "%")) +
 #'   labs(x = "Years", y = "Absolute Risk Reduction (%)") +
-#'   hvti_theme("manuscript")
+#'   hv_theme("poster")
 #'
 #' @export
-hvti_nnt <- function(nnt_data,
+hv_nnt <- function(nnt_data,
                      x_col        = "time",
                      estimate_col = "nnt",
                      lower_col    = NULL,
@@ -1832,7 +1843,7 @@ hvti_nnt <- function(nnt_data,
   if (na_rm)
     nnt_data <- nnt_data[!is.na(nnt_data[[estimate_col]]), , drop = FALSE]
 
-  new_hvti_data(
+  new_hv_data(
     data = as.data.frame(nnt_data),
     meta = list(
       x_col        = x_col,
@@ -1845,20 +1856,20 @@ hvti_nnt <- function(nnt_data,
       na_rm        = na_rm
     ),
     tables   = list(),
-    subclass = "hvti_nnt"
+    subclass = "hv_nnt"
   )
 }
 
 
-#' Print an hvti_nnt object
+#' Print an hv_nnt object
 #'
-#' @param x   An `hvti_nnt` object from [hvti_nnt()].
+#' @param x   An `hv_nnt` object from [hv_nnt()].
 #' @param ... Ignored.
 #' @return `x`, invisibly.
 #' @export
-print.hvti_nnt <- function(x, ...) {
+print.hv_nnt <- function(x, ...) {
   m <- x$meta
-  cat("<hvti_nnt>\n")
+  cat("<hv_nnt>\n")
   cat(sprintf("  x col       : %s\n", m$x_col))
   cat(sprintf("  estimate    : %s\n", m$estimate_col))
   if (!is.null(m$lower_col))
@@ -1872,24 +1883,24 @@ print.hvti_nnt <- function(x, ...) {
 }
 
 
-#' Plot an hvti_nnt object
+#' Plot an hv_nnt object
 #'
-#' Renders a bare [ggplot2::ggplot()] NNT (or ARR) curve from an [hvti_nnt()]
+#' Renders a bare [ggplot2::ggplot()] NNT (or ARR) curve from an [hv_nnt()]
 #' object.
 #'
-#' @param x          An `hvti_nnt` object from [hvti_nnt()].
+#' @param x          An `hv_nnt` object from [hv_nnt()].
 #' @param ci_alpha   Transparency of the CI ribbon. Default `0.20`.
 #' @param line_width Line width. Default `1.0`.
 #' @param ...        Ignored.
 #'
 #' @return A [ggplot2::ggplot()] object.
 #'
-#' @seealso [hvti_nnt()], [hvti_survival_difference()], [hvti_theme()]
+#' @seealso [hv_nnt()], [hv_survival_difference()], [hv_theme()]
 #'
 #' @importFrom ggplot2 ggplot aes geom_line geom_ribbon
 #' @importFrom rlang .data
 #' @export
-plot.hvti_nnt <- function(x,
+plot.hv_nnt <- function(x,
                           ci_alpha   = 0.20,
                           line_width = 1.0,
                           ...) {

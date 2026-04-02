@@ -6,14 +6,14 @@
 # SAS EQUIVALENT: After running %decompos() and averaging patient-specific
 # profiles with PROC SUMMARY, the resulting `mean_curv` dataset (columns:
 # iv_echo/iv_wristm, prev/est, [cll_p68/clu_p68]) is the direct input to
-# hvti_nonparametric().
+# hv_nonparametric().
 #
 # MIGRATION GUIDE FOR SAS USERS:
 #   1. Export mean_curv  -> read.csv("mean_curv.csv")  -> curve_data
 #   2. Export boots_ci   -> read.csv("boots_ci.csv")   -> same curve_data, lower/upper cols
 #   3. Export means      -> read.csv("means.csv")      -> data_points
-#   4. Call hvti_nonparametric(curve_data, ..., data_points = ...)
-#   5. Compose with scale_colour_*, labs(), hvti_theme() using + operator
+#   4. Call hv_nonparametric(curve_data, ..., data_points = ...)
+#   5. Compose with scale_colour_*, labs(), hv_theme() using + operator
 #      (replaces the `color=` and axis options inside %plot())
 #
 # Internal two-phase helper (not exported):
@@ -50,7 +50,7 @@
 #' Simulates pre-computed curve output matching what SAS produces after fitting
 #' a two-phase nonparametric temporal trend model and averaging patient-specific
 #' profiles with `PROC SUMMARY`. The output is suitable for direct use with
-#' [hvti_nonparametric()].
+#' [hv_nonparametric()].
 #'
 #' **SAS context:** In the SAS templates this dataset corresponds to
 #' `mean_curv` (estimate column) plus `boots_ci` (lower/upper columns).
@@ -76,7 +76,7 @@
 #' @return A data frame with columns `time`, `estimate`, `lower`, `upper`,
 #'   and (if `groups` is not `NULL`) `group`.
 #'
-#' @seealso [hvti_nonparametric()], [sample_nonparametric_curve_points()]
+#' @seealso [hv_nonparametric()], [sample_nonparametric_curve_points()]
 #'
 #' @examples
 #' # Single average curve
@@ -183,7 +183,7 @@ sample_nonparametric_curve_data <- function(n            = 500,
 #' @return A data frame with columns `time`, `value`, and (if `groups` is not
 #'   `NULL`) `group`.
 #'
-#' @seealso [sample_nonparametric_curve_data()], [hvti_nonparametric()]
+#' @seealso [sample_nonparametric_curve_data()], [hv_nonparametric()]
 #'
 #' @examples
 #' # Single-group data summary points
@@ -265,16 +265,16 @@ sample_nonparametric_curve_points <- function(n            = 500,
 #' Prepare nonparametric temporal trend curve data for plotting
 #'
 #' Validates pre-computed curve data (and optional CI bounds and binned data
-#' summary points) and returns an \code{hvti_nonparametric} object.  Call
-#' \code{\link{plot.hvti_nonparametric}} to obtain a bare \code{ggplot2}
+#' summary points) and returns an \code{hv_nonparametric} object.  Call
+#' \code{\link{plot.hv_nonparametric}} to obtain a bare \code{ggplot2}
 #' curve plot that you can decorate with colour/fill scales, axis limits, and
-#' \code{\link{hvti_theme}}.
+#' \code{\link{hv_theme}}.
 #'
 #' Covers the full range of \code{tp.np.*} SAS templates:
 #'
 #' | SAS template pattern | R usage |
 #' |---|---|
-#' | Single average curve (`avrg_curv`, `u.trend`) | \code{hvti_nonparametric(dat)} |
+#' | Single average curve (`avrg_curv`, `u.trend`) | \code{hv_nonparametric(dat)} |
 #' | Curve + 68\% CI (`avrg_curv.ci`) | \code{+ lower_col + upper_col} |
 #' | Curve + CI + data points | \code{+ data_points = ...} |
 #' | Two-group comparison (`double`, `ozak`) | \code{+ group_col = "group"} |
@@ -302,9 +302,9 @@ sample_nonparametric_curve_points <- function(n            = 500,
 #'   Must have columns matching \code{x_col} and \code{"value"}, plus
 #'   \code{group_col} when stratified. Default \code{NULL}.
 #'
-#' @return An object of class \code{c("hvti_nonparametric", "hvti_data")}; call
+#' @return An object of class \code{c("hv_nonparametric", "hv_data")}; call
 #'   \code{plot()} on the result to render the figure — see
-#'   \code{\link{plot.hvti_nonparametric}}. The list contains:
+#'   \code{\link{plot.hv_nonparametric}}. The list contains:
 #' \describe{
 #'   \item{\code{$data}}{The \code{curve_data} data frame.}
 #'   \item{\code{$meta}}{Named list: \code{x_col}, \code{estimate_col},
@@ -313,8 +313,8 @@ sample_nonparametric_curve_points <- function(n            = 500,
 #'   \item{\code{$tables}}{List; contains \code{data_points} when supplied.}
 #' }
 #'
-#' @seealso \code{\link{plot.hvti_nonparametric}} to render as a ggplot2 figure,
-#'   \code{\link{hvti_theme}} for the publication theme,
+#' @seealso \code{\link{plot.hv_nonparametric}} to render as a ggplot2 figure,
+#'   \code{\link{hv_theme}} for the publication theme,
 #'   \code{\link{sample_nonparametric_curve_data}} for example data.
 #'
 #' @family Nonparametric curves
@@ -322,24 +322,29 @@ sample_nonparametric_curve_points <- function(n            = 500,
 #' @examples
 #' dat     <- sample_nonparametric_curve_data(n = 500, time_max = 12)
 #' dat_pts <- sample_nonparametric_curve_points(n = 500, time_max = 12)
-#' np <- hvti_nonparametric(dat, lower_col = "lower", upper_col = "upper",
-#'                           data_points = dat_pts)
-#' np   # prints CI / data-point flags
 #'
-#' plot(np) +
+#' # 1. Build data object
+#' np <- hv_nonparametric(dat, lower_col = "lower", upper_col = "upper",
+#'                           data_points = dat_pts)
+#' np  # prints CI / data-point flags
+#'
+#' # 2. Bare plot -- undecorated ggplot returned by plot.hv_nonparametric
+#' p <- plot(np)
+#'
+#' # 3. Decorate: colour/fill palettes, axis scales, labels, theme
+#' p +
 #'   ggplot2::scale_colour_manual(values = c("steelblue"), guide = "none") +
-#'   ggplot2::scale_fill_manual(values = c("steelblue"), guide = "none") +
+#'   ggplot2::scale_fill_manual(values   = c("steelblue"), guide = "none") +
 #'   ggplot2::scale_x_continuous(limits = c(0, 12), breaks = 0:12) +
 #'   ggplot2::scale_y_continuous(limits = c(0, 0.40),
 #'                               breaks = seq(0, 0.40, 0.10),
 #'                               labels = scales::percent) +
 #'   ggplot2::labs(x = "Months", y = "Prevalence of AF") +
-#'   hvti_theme("manuscript")
+#'   hv_theme("poster")
 #'
 #' # --- Global theme (set once per session) ----------------------------------
 #' \dontrun{
-#' # Apply manuscript theme globally; use scale_colour_brewer for multi-group.
-#' old <- ggplot2::theme_set(hvti_theme_manuscript())
+#' old <- ggplot2::theme_set(hv_theme_manuscript())
 #' plot(np) +
 #'   ggplot2::scale_colour_manual(values = c("steelblue"), guide = "none") +
 #'   ggplot2::scale_fill_manual(values   = c("steelblue"), guide = "none") +
@@ -355,7 +360,7 @@ sample_nonparametric_curve_points <- function(n            = 500,
 #'
 #' @importFrom rlang .data
 #' @export
-hvti_nonparametric <- function(curve_data,
+hv_nonparametric <- function(curve_data,
                                 x_col        = "time",
                                 estimate_col = "estimate",
                                 lower_col    = NULL,
@@ -380,7 +385,7 @@ hvti_nonparametric <- function(curve_data,
 
   tables <- if (has_data_points) list(data_points = data_points) else list()
 
-  new_hvti_data(
+  new_hv_data(
     data = as.data.frame(curve_data),
     meta = list(
       x_col           = x_col,
@@ -393,20 +398,20 @@ hvti_nonparametric <- function(curve_data,
       n_obs           = nrow(curve_data)
     ),
     tables   = tables,
-    subclass = "hvti_nonparametric"
+    subclass = "hv_nonparametric"
   )
 }
 
 
-#' Print an hvti_nonparametric object
+#' Print an hv_nonparametric object
 #'
-#' @param x   An \code{hvti_nonparametric} object.
+#' @param x   An \code{hv_nonparametric} object.
 #' @param ... Ignored.
 #' @return \code{x}, invisibly.
 #' @export
-print.hvti_nonparametric <- function(x, ...) {
+print.hv_nonparametric <- function(x, ...) {
   m <- x$meta
-  cat("<hvti_nonparametric>\n")
+  cat("<hv_nonparametric>\n")
   cat(sprintf("  N curve pts : %d\n", m$n_obs))
   cat(sprintf("  x / estimate: %s / %s\n", m$x_col, m$estimate_col))
   if (!is.null(m$group_col))
@@ -418,12 +423,12 @@ print.hvti_nonparametric <- function(x, ...) {
 }
 
 
-#' Plot an hvti_nonparametric object
+#' Plot an hv_nonparametric object
 #'
 #' Draws a smooth predicted curve with optional CI ribbon and binned data
 #' summary point overlay.
 #'
-#' @param x            An \code{hvti_nonparametric} object.
+#' @param x            An \code{hv_nonparametric} object.
 #' @param ci_alpha     Transparency of the confidence ribbon. Default \code{0.2}.
 #' @param line_width   Width of the predicted curve line. Default \code{1.0}.
 #' @param point_size   Size of binned data summary points. Default \code{2.5}.
@@ -432,10 +437,10 @@ print.hvti_nonparametric <- function(x, ...) {
 #' @param ...          Ignored; present for S3 consistency.
 #'
 #' @return A bare \code{\link[ggplot2]{ggplot}} object; compose with \code{+}
-#'   to add scales, axis limits, labels, and \code{\link{hvti_theme}}.
+#'   to add scales, axis limits, labels, and \code{\link{hv_theme}}.
 #'
-#' @seealso \code{\link{hvti_nonparametric}} to build the data object,
-#'   \code{\link{hvti_theme}} for the publication theme.
+#' @seealso \code{\link{hv_nonparametric}} to build the data object,
+#'   \code{\link{hv_theme}} for the publication theme.
 #'
 #' @family Nonparametric curves
 #'
@@ -450,7 +455,7 @@ print.hvti_nonparametric <- function(x, ...) {
 #'   groups = c("Ozaki" = 0.7, "CE-Pericardial" = 1.3),
 #'   outcome_type = "continuous"
 #' )
-#' np <- hvti_nonparametric(dat_two, group_col = "group",
+#' np <- hv_nonparametric(dat_two, group_col = "group",
 #'                           lower_col = "lower", upper_col = "upper",
 #'                           data_points = dat_two_pts)
 #' plot(np) +
@@ -463,12 +468,12 @@ print.hvti_nonparametric <- function(x, ...) {
 #'     guide  = "none"
 #'   ) +
 #'   ggplot2::labs(x = "Years", y = "AV Peak Gradient (mmHg)") +
-#'   hvti_theme("manuscript")
+#'   hv_theme("poster")
 #'
 #' @importFrom ggplot2 ggplot aes geom_line geom_ribbon geom_point
 #' @importFrom rlang .data
 #' @export
-plot.hvti_nonparametric <- function(x,
+plot.hv_nonparametric <- function(x,
                                      ci_alpha    = 0.2,
                                      line_width  = 1.0,
                                      point_size  = 2.5,

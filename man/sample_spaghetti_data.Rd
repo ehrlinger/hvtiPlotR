@@ -33,7 +33,7 @@ A data frame with columns:
 }
 \description{
 Generates a realistic repeated-measures longitudinal data set for
-demonstrating \code{\link[=hvti_spaghetti]{hvti_spaghetti()}}. Each row is one observation for one
+demonstrating \code{\link[=hv_spaghetti]{hv_spaghetti()}}. Each row is one observation for one
 patient at one time point, mimicking serial echocardiographic measurements
 after cardiac surgery (AV mean gradient trajectory over follow-up).
 Patients have an irregular number of follow-up measurements and a group
@@ -45,5 +45,5 @@ head(dta)
 table(dta$group)
 }
 \seealso{
-\code{\link[=hvti_spaghetti]{hvti_spaghetti()}}
+\code{\link[=hv_spaghetti]{hv_spaghetti()}}
 }

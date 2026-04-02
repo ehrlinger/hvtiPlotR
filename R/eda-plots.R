@@ -7,12 +7,12 @@
 # replacing base-R graphics with composable ggplot objects.
 #
 # Key differences from the templates:
-#  - Returns a single hvti_eda object per call (caller loops over variables)
+#  - Returns a single hv_eda object per call (caller loops over variables)
 #  - Variable type auto-detected by eda_classify_var(); callable independently
 #  - eda_select_vars() replaces Order_Variables() + Mod_Data <- dta[, Order_Var]
 #  - y_label parameter replaces the var_labels / var.names override pattern
 #  - No hard-coded colours: examples use scale_fill_manual() / scale_fill_brewer()
-#  - No explicit theme: examples apply hvti_theme("manuscript")
+#  - No explicit theme: examples apply hv_theme("poster")
 #  - NA values shown as an explicit bar segment; colour set by scale_fill_*
 #  - Continuous: geom_smooth() + geom_rug() replace base-R loess + rug()
 # ---------------------------------------------------------------------------
@@ -51,7 +51,7 @@ eda_classify_var <- function(x, unique_limit = 6L) {
 #' Sample EDA Data
 #'
 #' Generates a realistic mixed-type patient-level data frame for demonstrating
-#' [hvti_eda()] and [eda_select_vars()]. The data mimics a cardiac surgery
+#' [hv_eda()] and [eda_select_vars()]. The data mimics a cardiac surgery
 #' registry with binary, ordinal, character-categorical, and continuous
 #' variables, plus a modest proportion of missing values.
 #'
@@ -73,7 +73,7 @@ eda_classify_var <- function(x, unique_limit = 6L) {
 #'   - `lv_mass`     — continuous LV mass index (g/m²)
 #'   - `peak_grad`   — continuous peak gradient (mmHg)
 #'
-#' @seealso [hvti_eda()], [eda_classify_var()], [eda_select_vars()]
+#' @seealso [hv_eda()], [eda_classify_var()], [eda_select_vars()]
 #'
 #' @examples
 #' dta <- sample_eda_data()
@@ -134,7 +134,7 @@ sample_eda_data <- function(n          = 300L,
 #' @return A data frame containing only the requested columns in the requested
 #'   order.
 #'
-#' @seealso [hvti_eda()]
+#' @seealso [hv_eda()]
 #'
 #' @examples
 #' dta <- sample_eda_data()
@@ -164,9 +164,9 @@ eda_select_vars <- function(data, vars) {
 #'
 #' Classifies \code{y_col} using \code{\link{eda_classify_var}}, pre-processes
 #' categorical levels (adding an explicit \code{"(Missing)"} level), and
-#' returns an \code{hvti_eda} object.  Call \code{\link{plot.hvti_eda}} on the
+#' returns an \code{hv_eda} object.  Call \code{\link{plot.hv_eda}} on the
 #' result to obtain a bare \code{ggplot2} barplot or scatter plot that you can
-#' decorate with colour scales and \code{\link{hvti_theme}}.
+#' decorate with colour scales and \code{\link{hv_theme}}.
 #'
 #' Iterate over variables with \code{lapply()} after selecting columns with
 #' \code{\link{eda_select_vars}}.
@@ -184,7 +184,7 @@ eda_select_vars <- function(data, vars) {
 #'   (\code{position = "fill"}) instead of counts (\code{position = "stack"})?
 #'   Default \code{FALSE}.
 #'
-#' @return An object of class \code{c("hvti_eda", "hvti_data")}:
+#' @return An object of class \code{c("hv_eda", "hv_data")}:
 #' \describe{
 #'   \item{\code{$data}}{Pre-processed data frame ready for plotting.  For
 #'     continuous variables: two columns \code{x} and \code{y}.  For
@@ -198,7 +198,7 @@ eda_select_vars <- function(data, vars) {
 #'     for categorical variables.}
 #' }
 #'
-#' @seealso \code{\link{plot.hvti_eda}}, \code{\link{sample_eda_data}},
+#' @seealso \code{\link{plot.hv_eda}}, \code{\link{sample_eda_data}},
 #'   \code{\link{eda_classify_var}}, \code{\link{eda_select_vars}}
 #'
 #' @references R templates: \code{tp.dp.EDA_barplots_scatterplots.R},
@@ -209,10 +209,15 @@ eda_select_vars <- function(data, vars) {
 #' @examples
 #' dta <- sample_eda_data(n = 300, seed = 42)
 #'
-#' # Binary categorical
-#' ed <- hvti_eda(dta, x_col = "year", y_col = "male", y_label = "Sex")
-#' ed   # prints var_type and observation count
-#' plot(ed) +
+#' # 1. Build data object (binary categorical)
+#' ed <- hv_eda(dta, x_col = "year", y_col = "male", y_label = "Sex")
+#' ed  # prints var_type and observation count
+#'
+#' # 2. Bare plot -- undecorated ggplot returned by plot.hv_eda
+#' p <- plot(ed)
+#'
+#' # 3. Decorate: fill palette, x-axis breaks, labels, theme
+#' p +
 #'   ggplot2::scale_fill_manual(
 #'     values = c("0" = "steelblue", "1" = "firebrick", "(Missing)" = "grey80"),
 #'     labels = c("0" = "Female", "1" = "Male", "(Missing)" = "Missing"),
@@ -220,16 +225,16 @@ eda_select_vars <- function(data, vars) {
 #'   ) +
 #'   ggplot2::scale_x_discrete(breaks = seq(2005, 2020, 5)) +
 #'   ggplot2::labs(x = "Surgery Year", y = "Count") +
-#'   hvti_theme("manuscript")
+#'   hv_theme("poster")
 #'
-#' # Continuous
-#' ed2 <- hvti_eda(dta, x_col = "op_years", y_col = "ef",
+#' # Continuous variable -- same 3-step pattern
+#' ed2 <- hv_eda(dta, x_col = "op_years", y_col = "ef",
 #'                 y_label = "Ejection Fraction (%)")
 #' plot(ed2) +
 #'   ggplot2::scale_colour_manual(values = c("firebrick"), guide = "none") +
 #'   ggplot2::scale_x_continuous(breaks = seq(0, 15, 5)) +
 #'   ggplot2::labs(x = "Years from First Surgery Year") +
-#'   hvti_theme("manuscript")
+#'   hv_theme("poster")
 #'
 #' # Variable selection + lapply (varnames template pattern)
 #' cont_vars <- c(ef = "Ejection Fraction (%)",
@@ -237,19 +242,19 @@ eda_select_vars <- function(data, vars) {
 #'                peak_grad = "Peak Gradient (mmHg)")
 #' sub_cont <- eda_select_vars(dta, c("op_years", names(cont_vars)))
 #' p_cont <- lapply(names(cont_vars), function(cn) {
-#'   plot(hvti_eda(sub_cont, x_col = "op_years", y_col = cn,
+#'   plot(hv_eda(sub_cont, x_col = "op_years", y_col = cn,
 #'                y_label = cont_vars[[cn]])) +
 #'     ggplot2::scale_colour_manual(values = c("steelblue"), guide = "none") +
 #'     ggplot2::scale_x_continuous(breaks = seq(0, 15, 5)) +
 #'     ggplot2::labs(x = "Years from First Surgery Year") +
-#'     hvti_theme("manuscript")
+#'     hv_theme("poster")
 #' })
 #' p_cont[[1]]
 #'
 #' @importFrom rlang .data
 #' @importFrom stats na.omit
 #' @export
-hvti_eda <- function(data,
+hv_eda <- function(data,
                      x_col        = "year",
                      y_col        = "ef",
                      y_label      = NULL,
@@ -283,7 +288,7 @@ hvti_eda <- function(data,
     tables    <- list()
   }
 
-  new_hvti_data(
+  new_hv_data(
     data = plot_data,
     meta = list(
       x_col        = x_col,
@@ -294,20 +299,20 @@ hvti_eda <- function(data,
       n_obs        = nrow(data)
     ),
     tables   = tables,
-    subclass = "hvti_eda"
+    subclass = "hv_eda"
   )
 }
 
 
-#' Print an hvti_eda object
+#' Print an hv_eda object
 #'
-#' @param x   An \code{hvti_eda} object from \code{\link{hvti_eda}}.
+#' @param x   An \code{hv_eda} object from \code{\link{hv_eda}}.
 #' @param ... Ignored.
 #' @return \code{x}, invisibly.
 #' @export
-print.hvti_eda <- function(x, ...) {
+print.hv_eda <- function(x, ...) {
   m <- x$meta
-  cat("<hvti_eda>\n")
+  cat("<hv_eda>\n")
   cat(sprintf("  Variable    : %s  [%s]\n", m$y_col, m$var_type))
   cat(sprintf("  Label       : %s\n", m$y_label))
   cat(sprintf("  x col       : %s\n", m$x_col))
@@ -318,10 +323,10 @@ print.hvti_eda <- function(x, ...) {
 }
 
 
-#' Plot an hvti_eda object
+#' Plot an hv_eda object
 #'
 #' Draws an exploratory data analysis plot for the variable stored in the
-#' \code{hvti_eda} object.  Variable type (stored in \code{x$meta$var_type})
+#' \code{hv_eda} object.  Variable type (stored in \code{x$meta$var_type})
 #' determines the chart:
 #'
 #' \describe{
@@ -334,7 +339,7 @@ print.hvti_eda <- function(x, ...) {
 #'     colouring each string level separately.}
 #' }
 #'
-#' @param x             An \code{hvti_eda} object.
+#' @param x             An \code{hv_eda} object.
 #' @param smooth_method Smoothing method for continuous plots, passed to
 #'   \code{\link[ggplot2]{geom_smooth}}. Default \code{"loess"}.
 #' @param smooth_span   LOESS span. Default \code{0.8}.
@@ -344,13 +349,13 @@ print.hvti_eda <- function(x, ...) {
 #'
 #' @return A bare \code{\link[ggplot2]{ggplot}} object.
 #'
-#' @seealso \code{\link{hvti_eda}}, \code{\link{hvti_theme}}
+#' @seealso \code{\link{hv_eda}}, \code{\link{hv_theme}}
 #'
 #' @examples
 #' dta <- sample_eda_data(n = 300, seed = 42)
 #'
 #' # --- Ordinal categorical: percentage barplot ------------------------------
-#' plot(hvti_eda(dta, x_col = "year", y_col = "nyha",
+#' plot(hv_eda(dta, x_col = "year", y_col = "nyha",
 #'               y_label = "Preoperative NYHA Class")) +
 #'   ggplot2::scale_fill_brewer(
 #'     palette = "RdYlGn", direction = -1,
@@ -360,10 +365,10 @@ print.hvti_eda <- function(x, ...) {
 #'   ) +
 #'   ggplot2::scale_x_discrete(breaks = seq(2005, 2020, 5)) +
 #'   ggplot2::labs(x = "Surgery Year", y = "Count") +
-#'   hvti_theme("manuscript")
+#'   hv_theme("poster")
 #'
 #' # --- Continuous: annotated -----------------------------------------------
-#' plot(hvti_eda(dta, x_col = "op_years", y_col = "peak_grad",
+#' plot(hv_eda(dta, x_col = "op_years", y_col = "peak_grad",
 #'               y_label = "Peak Gradient (mmHg)")) +
 #'   ggplot2::scale_colour_manual(values = c("steelblue"), guide = "none") +
 #'   ggplot2::scale_x_continuous(breaks = seq(0, 15, 5)) +
@@ -371,13 +376,13 @@ print.hvti_eda <- function(x, ...) {
 #'   ggplot2::annotate("text", x = 12, y = 70,
 #'                     label = "LOESS span = 0.8",
 #'                     size = 3, colour = "grey40", fontface = "italic") +
-#'   hvti_theme("manuscript")
+#'   hv_theme("poster")
 #'
 #' @importFrom ggplot2 ggplot aes geom_point geom_smooth geom_rug geom_bar
 #'   scale_y_continuous labs
 #' @importFrom rlang .data
 #' @export
-plot.hvti_eda <- function(x,
+plot.hv_eda <- function(x,
                            smooth_method = "loess",
                            smooth_span   = 0.8,
                            smooth_se     = FALSE,

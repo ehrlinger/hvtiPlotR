@@ -17,7 +17,7 @@
 ## Quick start
 ## -----------
 ##   dta <- sample_survival_data(n = 500, seed = 42)
-##   km  <- hvti_survival(dta)
+##   km  <- hv_survival(dta)
 ##
 ##   p +
 ##     ggplot2::scale_y_continuous(breaks = seq(0, 100, 20),
@@ -26,7 +26,7 @@
 ##     ggplot2::coord_cartesian(xlim = c(0, 20), ylim = c(0, 100)) +
 ##     ggplot2::labs(x = "Years after Operation", y = "Survival (%)",
 ##                   title = "Freedom from Death") +
-##     hvti_theme("manuscript")
+##     hv_theme("poster")
 ##
 ###############################################################################
 
@@ -410,11 +410,11 @@ km_build_life_plot <- function(km_df, alpha) {
 #' Prepare survival data for plotting
 #'
 #' Fits a Kaplan-Meier (product-limit) or Nelson-Aalen (Fleming-Harrington)
-#' survival model to patient-level data and returns an \code{hvti_survival}
+#' survival model to patient-level data and returns an \code{hv_survival}
 #' object containing the tidy model output and accessory tables.  No plot is
-#' built at this stage; call \code{\link{plot.hvti_survival}} on the result to
+#' built at this stage; call \code{\link{plot.hv_survival}} on the result to
 #' obtain a bare \code{ggplot2} object that you can decorate with scales,
-#' labels, and \code{\link{hvti_theme}}.
+#' labels, and \code{\link{hv_theme}}.
 #'
 #' @param data         A data frame with one row per patient.
 #' @param time_col     Name of the numeric column holding follow-up time (in
@@ -433,9 +433,9 @@ km_build_life_plot <- function(km_df, alpha) {
 #'   estimates and numbers-at-risk are tabulated.
 #'   Default \code{c(1, 5, 10, 15, 20, 25)}.
 #'
-#' @return An object of class \code{c("hvti_survival", "hvti_data")} (a list);
+#' @return An object of class \code{c("hv_survival", "hv_data")} (a list);
 #'   call \code{plot()} on the result to render the figure — see
-#'   \code{\link{plot.hvti_survival}}. The list has three elements:
+#'   \code{\link{plot.hv_survival}}. The list has three elements:
 #' \describe{
 #'   \item{\code{$data}}{Tidy data frame with one row per (time, strata) pair.
 #'     Columns: \code{time}, \code{surv}, \code{lower}, \code{upper},
@@ -451,8 +451,8 @@ km_build_life_plot <- function(km_df, alpha) {
 #'     \code{lower}, \code{upper}, \code{n.risk}, \code{n.event}).}
 #' }
 #'
-#' @seealso \code{\link{plot.hvti_survival}} to render as a ggplot2 figure,
-#'   \code{\link{hvti_theme}} for the publication theme,
+#' @seealso \code{\link{plot.hv_survival}} to render as a ggplot2 figure,
+#'   \code{\link{hv_theme}} for the publication theme,
 #'   \code{\link{sample_survival_data}} for example data.
 #'
 #' @family Kaplan-Meier survival
@@ -463,55 +463,52 @@ km_build_life_plot <- function(km_df, alpha) {
 #' @examples
 #' dta <- sample_survival_data(n = 500, seed = 42)
 #'
-#' # --- Build the data object ---
-#' km <- hvti_survival(dta)
-#' km                          # print method shows key metadata
-#' km$tables$report            # survival estimates at report_times
-#' km$tables$risk              # numbers at risk
+#' # 1. Build data object
+#' km <- hv_survival(dta)
+#' km               # print method shows key metadata
+#' km$tables$report # survival estimates at report_times
+#' km$tables$risk   # numbers at risk
 #'
-#' # --- Plot (bare ggplot2 — add decorators with +) ---
-#' plot(km) +
+#' # 2. Bare plot -- undecorated ggplot returned by plot.hv_survival
+#' p <- plot(km)
+#'
+#' # 3. Decorate: axis scales, labels, theme
+#' p +
 #'   ggplot2::scale_y_continuous(breaks = seq(0, 100, 20),
 #'                               labels = function(x) paste0(x, "%")) +
 #'   ggplot2::scale_x_continuous(breaks = seq(0, 20, 5)) +
 #'   ggplot2::coord_cartesian(xlim = c(0, 20), ylim = c(0, 100)) +
 #'   ggplot2::labs(x = "Years after Operation", y = "Survival (%)",
 #'                 title = "Freedom from Death") +
-#'   hvti_theme("manuscript")
+#'   hv_theme("poster")
 #'
-#' # --- Other plot types ---
-#' plot(km, type = "cumhaz") +
-#'   ggplot2::labs(x = "Years", y = "Cumulative Hazard") +
-#'   hvti_theme("manuscript")
-#'
-#' plot(km, type = "loglog") +
-#'   ggplot2::labs(x = "log(Years)", y = "log(-log S(t))",
-#'                 title = "PH Assumption Check") +
-#'   hvti_theme("manuscript")
-#'
-#' # --- Stratified ---
+#' # Stratified: colour scale adds clinical meaning
 #' dta_s <- sample_survival_data(
 #'   n = 500, strata_levels = c("Type A", "Type B"),
 #'   hazard_ratios = c(1, 1.4), seed = 42
 #' )
-#' km_s <- hvti_survival(dta_s, group_col = "valve_type")
+#' km_s <- hv_survival(dta_s, group_col = "valve_type")
 #' plot(km_s) +
 #'   ggplot2::scale_color_manual(
 #'     values = c("Type A" = "steelblue", "Type B" = "firebrick"),
 #'     name   = "Valve Type"
 #'   ) +
 #'   ggplot2::labs(x = "Years after Operation", y = "Survival (%)") +
-#'   hvti_theme("manuscript")
+#'   hv_theme("poster")
 #'
-#' # --- Nelson-Aalen (when S(t) may reach zero) ---
-#' km_na <- hvti_survival(dta, method = "nelson-aalen")
-#' plot(km_na) + hvti_theme("manuscript")
+#' # Other plot types
+#' plot(km, type = "cumhaz") +
+#'   ggplot2::labs(x = "Years", y = "Cumulative Hazard") +
+#'   hv_theme("ppt")
+#'
+#' plot(km, type = "loglog") +
+#'   ggplot2::labs(x = "log(Years)", y = "log(-log S(t))",
+#'                 title = "PH Assumption Check") +
+#'   hv_theme("ppt")
 #'
 #' # --- Global theme + RColorBrewer (set once per session) ------------------
 #' \dontrun{
-#' # Apply manuscript theme globally — subsequent plots need no
-#' # + hvti_theme("manuscript").  Restore the previous theme when done.
-#' old <- ggplot2::theme_set(hvti_theme_manuscript())
+#' old <- ggplot2::theme_set(hv_theme_manuscript())
 #' plot(km_s) +
 #'   ggplot2::scale_colour_brewer(palette = "Set1", name = "Valve Type") +
 #'   ggplot2::labs(x = "Years after Operation", y = "Survival (%)")
@@ -524,7 +521,7 @@ km_build_life_plot <- function(km_df, alpha) {
 #' @importFrom survival Surv survfit
 #' @importFrom rlang .data
 #' @export
-hvti_survival <- function(data,
+hv_survival <- function(data,
                           time_col     = "iv_dead",
                           event_col    = "dead",
                           group_col    = NULL,
@@ -563,7 +560,7 @@ hvti_survival <- function(data,
   report_tbl <- km_report_table(km_df, report_times)
 
   # --- Assemble -------------------------------------------------------------
-  new_hvti_data(
+  new_hv_data(
     data = km_df,
     meta = list(
       time_col     = time_col,
@@ -579,20 +576,20 @@ hvti_survival <- function(data,
       risk   = risk_tbl,
       report = report_tbl
     ),
-    subclass = "hvti_survival"
+    subclass = "hv_survival"
   )
 }
 
 
-#' Print an hvti_survival object
+#' Print an hv_survival object
 #'
-#' @param x   An \code{hvti_survival} object from \code{\link{hvti_survival}}.
+#' @param x   An \code{hv_survival} object from \code{\link{hv_survival}}.
 #' @param ... Ignored.
 #' @return \code{x}, invisibly.
 #' @export
-print.hvti_survival <- function(x, ...) {
+print.hv_survival <- function(x, ...) {
   m <- x$meta
-  cat("<hvti_survival>\n")
+  cat("<hv_survival>\n")
   cat(sprintf("  Method      : %s\n", m$method))
   cat(sprintf("  Time col    : %s\n", m$time_col))
   cat(sprintf("  Event col   : %s\n", m$event_col))
@@ -611,14 +608,14 @@ print.hvti_survival <- function(x, ...) {
 }
 
 
-#' Plot an hvti_survival object
+#' Plot an hv_survival object
 #'
-#' Builds a bare \code{ggplot2} object from an \code{\link{hvti_survival}}
+#' Builds a bare \code{ggplot2} object from an \code{\link{hv_survival}}
 #' data object.  The plot contains the correct aesthetics and geometries but
 #' no scale, label, or theme modifications — add those with \code{+} as you
 #' would with any \code{ggplot2} object.
 #'
-#' @param x        An \code{hvti_survival} object.
+#' @param x        An \code{hv_survival} object.
 #' @param type     Which plot variant to produce.  One of:
 #'   \describe{
 #'     \item{\code{"survival"}}{(default, \code{PLOTS=1}) KM step function with
@@ -640,26 +637,26 @@ print.hvti_survival <- function(x, ...) {
 #' @param ...      Ignored; present for S3 consistency.
 #'
 #' @return A bare \code{\link[ggplot2]{ggplot}} object; compose with \code{+}
-#'   to add scales, axis limits, labels, and \code{\link{hvti_theme}}.
+#'   to add scales, axis limits, labels, and \code{\link{hv_theme}}.
 #'
-#' @seealso \code{\link{hvti_survival}} to build the data object,
-#'   \code{\link{hvti_theme}} for the publication theme.
+#' @seealso \code{\link{hv_survival}} to build the data object,
+#'   \code{\link{hv_theme}} for the publication theme.
 #'
 #' @family Kaplan-Meier survival
 #'
 #' @examples
 #' dta <- sample_survival_data(n = 500, seed = 42)
-#' km  <- hvti_survival(dta)
+#' km  <- hv_survival(dta)
 #'
 #' # Default survival curve
 #' plot(km) +
 #'   ggplot2::labs(x = "Years after Operation", y = "Survival (%)") +
-#'   hvti_theme("manuscript")
+#'   hv_theme("poster")
 #'
 #' # Cumulative hazard
 #' plot(km, type = "cumhaz") +
 #'   ggplot2::labs(x = "Years", y = "Cumulative Hazard") +
-#'   hvti_theme("manuscript")
+#'   hv_theme("poster")
 #'
 #' # Hazard rate with loess smoother
 #' plot(km, type = "hazard") +
@@ -668,12 +665,12 @@ print.hvti_survival <- function(x, ...) {
 #'     method = "loess", se = FALSE, span = 0.5
 #'   ) +
 #'   ggplot2::labs(x = "Years", y = "Instantaneous Hazard") +
-#'   hvti_theme("manuscript")
+#'   hv_theme("poster")
 #'
 #' @importFrom ggplot2 ggplot aes geom_step geom_ribbon geom_hline
 #'   scale_y_continuous geom_point
 #' @export
-plot.hvti_survival <- function(x,
+plot.hv_survival <- function(x,
                                type     = c("survival", "cumhaz",
                                             "hazard", "loglog", "life"),
                                conf_int = TRUE,

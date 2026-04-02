@@ -35,20 +35,20 @@ reference:
     hvtiPlotR data objects.
   contents:
   - hvtiPlotR-package
-  - is_hvti_data
+  - is_hv_data
 
 - title: "Themes"
   desc: >
     Apply publication-quality themes to any ggplot2 object. Use
-    `hvti_theme()` as the single entry point; the lower-level
-    `hvti_theme_*()` functions are also exported for direct use.
+    `hv_theme()` as the single entry point; the lower-level
+    `hv_theme_*()` functions are also exported for direct use.
   contents:
-  - hvti_theme
-  - hvti_theme_manuscript
-  - hvti_theme_dark_ppt
-  - hvti_theme_light_ppt
-  - hvti_theme_poster
-  - hvti_theme_ppt
+  - hv_theme
+  - hv_theme_manuscript
+  - hv_theme_dark_ppt
+  - hv_theme_light_ppt
+  - hv_theme_poster
+  - hv_theme_ppt
   - theme_manuscript
   - theme_man
   - theme_dark_ppt
@@ -59,22 +59,22 @@ reference:
 - title: "Survival & Hazard"
   desc: >
     Kaplan-Meier survival curves, parametric hazard plots, survival
-    differences, and number-needed-to-treat. Use `hvti_survival()` for
-    non-parametric KM estimates; `hvti_hazard()`, `hvti_survival_difference()`,
-    and `hvti_nnt()` for pre-fitted parametric model output.
+    differences, and number-needed-to-treat. Use `hv_survival()` for
+    non-parametric KM estimates; `hv_hazard()`, `hv_survival_difference()`,
+    and `hv_nnt()` for pre-fitted parametric model output.
   contents:
-  - hvti_survival
-  - plot.hvti_survival
-  - print.hvti_survival
-  - hvti_hazard
-  - plot.hvti_hazard
-  - print.hvti_hazard
-  - hvti_survival_difference
-  - plot.hvti_survival_difference
-  - print.hvti_survival_difference
-  - hvti_nnt
-  - plot.hvti_nnt
-  - print.hvti_nnt
+  - hv_survival
+  - plot.hv_survival
+  - print.hv_survival
+  - hv_hazard
+  - plot.hv_hazard
+  - print.hv_hazard
+  - hv_survival_difference
+  - plot.hv_survival_difference
+  - print.hv_survival_difference
+  - hv_nnt
+  - plot.hv_nnt
+  - print.hv_nnt
   - sample_survival_data
   - sample_hazard_data
   - sample_hazard_empirical
@@ -89,12 +89,12 @@ reference:
     Average temporal curves and ordinal outcome trajectories from
     decomposition models (`tp.np.*` template family).
   contents:
-  - hvti_nonparametric
-  - plot.hvti_nonparametric
-  - print.hvti_nonparametric
-  - hvti_ordinal
-  - plot.hvti_ordinal
-  - print.hvti_ordinal
+  - hv_nonparametric
+  - plot.hv_nonparametric
+  - print.hv_nonparametric
+  - hv_ordinal
+  - plot.hv_ordinal
+  - print.hv_ordinal
   - sample_nonparametric_curve_data
   - sample_nonparametric_curve_points
   - sample_nonparametric_ordinal_data
@@ -105,12 +105,12 @@ reference:
     Visualise propensity score distributions and covariate balance
     before and after propensity matching or IPTW weighting.
   contents:
-  - hvti_mirror_hist
-  - plot.hvti_mirror_hist
-  - print.hvti_mirror_hist
-  - hvti_balance
-  - plot.hvti_balance
-  - print.hvti_balance
+  - hv_mirror_hist
+  - plot.hv_mirror_hist
+  - print.hv_mirror_hist
+  - hv_balance
+  - plot.hv_balance
+  - print.hv_balance
   - sample_mirror_histogram_data
   - sample_covariate_balance_data
 
@@ -120,15 +120,15 @@ reference:
     count summaries. Ports `tp.lp.trends.*`, `tp.rp.trends.*`,
     `tp.dp.trends.R`, and `tp.dp.spaghetti.echo.R`.
   contents:
-  - hvti_trends
-  - plot.hvti_trends
-  - print.hvti_trends
-  - hvti_spaghetti
-  - plot.hvti_spaghetti
-  - print.hvti_spaghetti
-  - hvti_longitudinal
-  - plot.hvti_longitudinal
-  - print.hvti_longitudinal
+  - hv_trends
+  - plot.hv_trends
+  - print.hv_trends
+  - hv_spaghetti
+  - plot.hv_spaghetti
+  - print.hv_spaghetti
+  - hv_longitudinal
+  - plot.hv_longitudinal
+  - print.hv_longitudinal
   - sample_trends_data
   - sample_spaghetti_data
   - sample_longitudinal_counts_data
@@ -137,18 +137,18 @@ reference:
   desc: >
     Visualise follow-up completeness. Ports `tp.dp.gfup.R`.
   contents:
-  - hvti_followup
-  - plot.hvti_followup
-  - print.hvti_followup
+  - hv_followup
+  - plot.hv_followup
+  - print.hv_followup
   - sample_goodness_followup_data
 
 - title: "Stacked Histogram"
   desc: >
     Stacked or filled histogram of a numeric variable by group.
   contents:
-  - hvti_stacked
-  - plot.hvti_stacked
-  - print.hvti_stacked
+  - hv_stacked
+  - plot.hv_stacked
+  - print.hv_stacked
   - sample_stacked_histogram_data
 
 - title: "Flow Diagrams"
@@ -156,12 +156,12 @@ reference:
     Alluvial (Sankey) plots showing patient flow between states or
     cluster assignments across K values.
   contents:
-  - hvti_alluvial
-  - plot.hvti_alluvial
-  - print.hvti_alluvial
-  - hvti_sankey
-  - plot.hvti_sankey
-  - print.hvti_sankey
+  - hv_alluvial
+  - plot.hv_alluvial
+  - print.hv_alluvial
+  - hv_sankey
+  - plot.hv_sankey
+  - print.hv_sankey
   - sample_alluvial_data
   - sample_cluster_sankey_data
 
@@ -170,12 +170,12 @@ reference:
     Rapid bar charts and scatter plots for variable screening, univariate
     summaries, and set-membership visualisation.
   contents:
-  - hvti_eda
-  - plot.hvti_eda
-  - print.hvti_eda
-  - hvti_upset
-  - plot.hvti_upset
-  - print.hvti_upset
+  - hv_eda
+  - plot.hv_eda
+  - print.hv_eda
+  - hv_upset
+  - plot.hv_upset
+  - print.hv_upset
   - eda_classify_var
   - eda_select_vars
   - sample_eda_data

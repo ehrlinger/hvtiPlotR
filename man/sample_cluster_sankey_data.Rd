@@ -50,5 +50,5 @@ head(dta)
 table(dta$C9)
 }
 \seealso{
-\code{\link[=hvti_sankey]{hvti_sankey()}}
+\code{\link[=hv_sankey]{hv_sankey()}}
 }

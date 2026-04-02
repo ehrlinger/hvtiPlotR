@@ -96,79 +96,79 @@ make_gfup_data <- function(n = 80, seed = 42) {
 }
 
 # ---------------------------------------------------------------------------
-# hvti_followup — returns an hvti_data object; plot() returns a ggplot
+# hv_followup — returns an hv_data object; plot() returns a ggplot
 # ---------------------------------------------------------------------------
 
-test_that("hvti_followup returns an hvti_data object", {
-  expect_s3_class(hvti_followup(make_gfup_data()), "hvti_data")
+test_that("hv_followup returns an hv_data object", {
+  expect_s3_class(hv_followup(make_gfup_data()), "hv_data")
 })
 
-test_that("plot(hvti_followup) returns a ggplot", {
-  expect_s3_class(plot(hvti_followup(make_gfup_data())), "ggplot")
+test_that("plot(hv_followup) returns a ggplot", {
+  expect_s3_class(plot(hv_followup(make_gfup_data())), "ggplot")
 })
 
-test_that("plot(hvti_followup) is composable with + operator", {
-  p <- plot(hvti_followup(make_gfup_data())) +
+test_that("plot(hv_followup) is composable with + operator", {
+  p <- plot(hv_followup(make_gfup_data())) +
     ggplot2::scale_color_manual(values = c("Alive" = "blue", "Dead" = "red"),
                                 name = NULL)
   expect_s3_class(p, "ggplot")
 })
 
-test_that("hvti_followup death_levels are respected in plot", {
-  gf <- hvti_followup(make_gfup_data(), death_levels = c("Alive", "Dead"))
+test_that("hv_followup death_levels are respected in plot", {
+  gf <- hv_followup(make_gfup_data(), death_levels = c("Alive", "Dead"))
   p  <- plot(gf)
   expect_true(all(levels(p$data$state) %in% c("Alive", "Dead")))
 })
 
-test_that("plot(hvti_followup) contains geom_point, geom_segment, and geom_line", {
-  p           <- plot(hvti_followup(make_gfup_data()))
+test_that("plot(hv_followup) contains geom_point, geom_segment, and geom_line", {
+  p           <- plot(hv_followup(make_gfup_data()))
   layer_geoms <- vapply(p$layers, function(l) class(l$geom)[1], character(1))
   expect_true("GeomPoint"   %in% layer_geoms)
   expect_true("GeomSegment" %in% layer_geoms)
   expect_true("GeomLine"    %in% layer_geoms)
 })
 
-test_that("hvti_followup origin_year is reflected in plot operation_year", {
-  gf <- hvti_followup(make_gfup_data(), origin_year = 2000)
+test_that("hv_followup origin_year is reflected in plot operation_year", {
+  gf <- hv_followup(make_gfup_data(), origin_year = 2000)
   p  <- plot(gf)
   expect_true(all(p$data$operation_year >= 2000))
 })
 
-test_that("plot(hvti_followup) state has exactly two levels", {
-  p <- plot(hvti_followup(make_gfup_data()))
+test_that("plot(hv_followup) state has exactly two levels", {
+  p <- plot(hv_followup(make_gfup_data()))
   expect_equal(nlevels(p$data$state), 2L)
 })
 
 # ---------------------------------------------------------------------------
-# hvti_followup — input validation (errors fire in constructor)
+# hv_followup — input validation (errors fire in constructor)
 # ---------------------------------------------------------------------------
 
-test_that("hvti_followup errors when death_levels is not length 2", {
+test_that("hv_followup errors when death_levels is not length 2", {
   expect_error(
-    hvti_followup(make_gfup_data(), death_levels = c("A", "B", "C")),
+    hv_followup(make_gfup_data(), death_levels = c("A", "B", "C")),
     "exactly two labels"
   )
 })
 
-test_that("plot.hvti_followup errors when alpha is out of range", {
-  gf <- hvti_followup(make_gfup_data())
+test_that("plot.hv_followup errors when alpha is out of range", {
+  gf <- hv_followup(make_gfup_data())
   expect_error(plot(gf, alpha = -0.1), "alpha")
   expect_error(plot(gf, alpha = 1.1),  "alpha")
 })
 
-test_that("hvti_followup errors when segment_drop is negative", {
-  expect_error(hvti_followup(make_gfup_data(), segment_drop = -1), "non-negative")
+test_that("hv_followup errors when segment_drop is negative", {
+  expect_error(hv_followup(make_gfup_data(), segment_drop = -1), "non-negative")
 })
 
-test_that("hvti_followup errors when a required column is missing", {
+test_that("hv_followup errors when a required column is missing", {
   dta      <- make_gfup_data()
   dta$dead <- NULL
-  expect_error(hvti_followup(dta), "Missing required column")
+  expect_error(hv_followup(dta), "Missing required column")
 })
 
-test_that("hvti_followup errors when study_start is after study_end", {
+test_that("hv_followup errors when study_start is after study_end", {
   expect_error(
-    hvti_followup(make_gfup_data(),
+    hv_followup(make_gfup_data(),
                   study_start = as.Date("2020-01-01"),
                   study_end   = as.Date("1990-01-01"),
                   close_date  = as.Date("2021-01-01")),
@@ -176,9 +176,9 @@ test_that("hvti_followup errors when study_start is after study_end", {
   )
 })
 
-test_that("hvti_followup errors when close_date is before study_end", {
+test_that("hv_followup errors when close_date is before study_end", {
   expect_error(
-    hvti_followup(make_gfup_data(),
+    hv_followup(make_gfup_data(),
                   study_start = as.Date("1990-01-01"),
                   study_end   = as.Date("2020-01-01"),
                   close_date  = as.Date("2019-01-01")),
@@ -187,23 +187,23 @@ test_that("hvti_followup errors when close_date is before study_end", {
 })
 
 # ---------------------------------------------------------------------------
-# plot(hvti_followup, type = "event") — event panel
+# plot(hv_followup, type = "event") — event panel
 # ---------------------------------------------------------------------------
 
 make_gfup_event <- function(n = 80, seed = 42) {
-  hvti_followup(
+  hv_followup(
     sample_goodness_followup_data(n = n, seed = seed),
     event_col      = "ev_event",
     event_time_col = "iv_event"
   )
 }
 
-test_that("plot(hvti_followup, type='event') returns a ggplot", {
+test_that("plot(hv_followup, type='event') returns a ggplot", {
   p <- plot(make_gfup_event(), type = "event")
   expect_s3_class(p, "ggplot")
 })
 
-test_that("plot(hvti_followup, type='event') is composable with + operator", {
+test_that("plot(hv_followup, type='event') is composable with + operator", {
   p <- plot(make_gfup_event(), type = "event") +
     ggplot2::scale_color_manual(
       values = c("No event" = "blue", "Non-fatal event" = "green3", "Death" = "red"),
@@ -212,14 +212,14 @@ test_that("plot(hvti_followup, type='event') is composable with + operator", {
   expect_s3_class(p, "ggplot")
 })
 
-test_that("plot(hvti_followup, type='event') state has exactly three levels", {
+test_that("plot(hv_followup, type='event') state has exactly three levels", {
   p <- plot(make_gfup_event(), type = "event")
   expect_equal(nlevels(p$data$state), 3L)
 })
 
-test_that("hvti_followup event_levels are respected in event plot", {
+test_that("hv_followup event_levels are respected in event plot", {
   lvls <- c("No event", "Relapse", "Death")
-  gf   <- hvti_followup(make_gfup_data(),
+  gf   <- hv_followup(make_gfup_data(),
                          event_col      = "ev_event",
                          event_time_col = "iv_event",
                          event_levels   = lvls)
@@ -227,8 +227,8 @@ test_that("hvti_followup event_levels are respected in event plot", {
   expect_equal(levels(p$data$state), lvls)
 })
 
-test_that("hvti_followup death_for_event_col is respected", {
-  gf <- hvti_followup(make_gfup_data(),
+test_that("hv_followup death_for_event_col is respected", {
+  gf <- hv_followup(make_gfup_data(),
                        event_col           = "ev_event",
                        event_time_col      = "iv_event",
                        death_for_event_col = "deads")
@@ -237,7 +237,7 @@ test_that("hvti_followup death_for_event_col is respected", {
   expect_equal(nlevels(p$data$state), 3L)
 })
 
-test_that("plot(hvti_followup, type='event') contains geom_point, geom_segment, and geom_line", {
+test_that("plot(hv_followup, type='event') contains geom_point, geom_segment, and geom_line", {
   p           <- plot(make_gfup_event(), type = "event")
   layer_geoms <- vapply(p$layers, function(l) class(l$geom)[1], character(1))
   expect_true("GeomPoint"   %in% layer_geoms)
@@ -247,7 +247,7 @@ test_that("plot(hvti_followup, type='event') contains geom_point, geom_segment, 
 
 test_that("followup and event plots both have a GeomLine (diagonal)", {
   dta <- make_gfup_data()
-  gf  <- hvti_followup(dta,
+  gf  <- hv_followup(dta,
                         event_col      = "ev_event",
                         event_time_col = "iv_event")
   p_d <- plot(gf, type = "followup")
@@ -267,24 +267,24 @@ test_that("event and followup plots produce distinct state factor structures", {
 })
 
 # ---------------------------------------------------------------------------
-# hvti_followup — event panel input validation
+# hv_followup — event panel input validation
 # ---------------------------------------------------------------------------
 
-test_that("plot.hvti_followup type='event' errors when event_col not supplied", {
-  gf <- hvti_followup(make_gfup_data())   # no event_col
+test_that("plot.hv_followup type='event' errors when event_col not supplied", {
+  gf <- hv_followup(make_gfup_data())   # no event_col
   expect_error(plot(gf, type = "event"), "event_col")
 })
 
-test_that("hvti_followup errors when event_col supplied without event_time_col", {
+test_that("hv_followup errors when event_col supplied without event_time_col", {
   expect_error(
-    hvti_followup(make_gfup_data(), event_col = "ev_event"),
+    hv_followup(make_gfup_data(), event_col = "ev_event"),
     "event_time_col"
   )
 })
 
-test_that("hvti_followup errors when event_levels is not length 3", {
+test_that("hv_followup errors when event_levels is not length 3", {
   expect_error(
-    hvti_followup(make_gfup_data(),
+    hv_followup(make_gfup_data(),
                   event_col      = "ev_event",
                   event_time_col = "iv_event",
                   event_levels   = c("A", "B")),
@@ -292,16 +292,32 @@ test_that("hvti_followup errors when event_levels is not length 3", {
   )
 })
 
-test_that("hvti_followup errors when event_col is absent from data", {
+test_that("hv_followup errors when event_col is absent from data", {
   expect_error(
-    hvti_followup(make_gfup_data(),
+    hv_followup(make_gfup_data(),
                   event_col      = "nonexistent",
                   event_time_col = "iv_event"),
     "Missing required column"
   )
 })
 
-test_that("plot.hvti_followup type='event' errors when alpha is out of range", {
+test_that("plot.hv_followup type='event' errors when alpha is out of range", {
   gf <- make_gfup_event()
   expect_error(plot(gf, type = "event", alpha = -0.1), "alpha")
+})
+
+# ---------------------------------------------------------------------------
+# print.hv_followup coverage
+# ---------------------------------------------------------------------------
+
+test_that("print.hv_followup produces <hv_followup> header", {
+  obj <- hv_followup(make_gfup_data())
+  expect_output(print(obj), "<hv_followup>")
+})
+
+test_that("print.hv_followup returns x invisibly", {
+  obj <- hv_followup(make_gfup_data())
+  ret <- withVisible(print(obj))
+  expect_false(ret$visible)
+  expect_identical(ret$value, obj)
 })

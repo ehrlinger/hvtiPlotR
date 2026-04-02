@@ -64,5 +64,5 @@ pts2 <- sample_nonparametric_curve_points(
 levels(pts2$group)
 }
 \seealso{
-\code{\link[=sample_nonparametric_curve_data]{sample_nonparametric_curve_data()}}, \code{\link[=hvti_nonparametric]{hvti_nonparametric()}}
+\code{\link[=sample_nonparametric_curve_data]{sample_nonparametric_curve_data()}}, \code{\link[=hv_nonparametric]{hv_nonparametric()}}
 }

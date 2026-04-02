@@ -84,9 +84,9 @@ test_that("survival_difference_plot is composable with + operator", {
   expect_equal(p$labels$x, "Years")
 })
 
-test_that("survival_difference_plot is composable with hvti_theme()", {
+test_that("survival_difference_plot is composable with hv_theme()", {
   dif <- sample_survival_difference_data(n = 100, seed = 1)
-  p   <- survival_difference_plot(dif) + hvti_theme("manuscript")
+  p   <- survival_difference_plot(dif) + hv_theme("manuscript")
   expect_s3_class(p, "ggplot")
 })
 
@@ -211,9 +211,9 @@ test_that("nnt_plot is composable with + operator", {
   expect_equal(p$labels$x, "Years")
 })
 
-test_that("nnt_plot is composable with hvti_theme()", {
+test_that("nnt_plot is composable with hv_theme()", {
   nnt <- sample_nnt_data(n = 100, seed = 1)
-  p   <- nnt_plot(nnt) + hvti_theme("manuscript")
+  p   <- nnt_plot(nnt) + hv_theme("manuscript")
   expect_s3_class(p, "ggplot")
 })
 

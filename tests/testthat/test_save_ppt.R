@@ -88,7 +88,7 @@ test_that("save_ppt works with theme_ppt", {
   skip_if_not_installed("officer")
   skip_if_not_installed("rvg")
 
-  p            <- create_test_plot() + hvti_theme_ppt()
+  p            <- create_test_plot() + hv_theme_ppt()
   temp_template <- make_temp_template()
   temp_ppt     <- tempfile(fileext = ".pptx")
   on.exit(unlink(c(temp_ppt, temp_template)))
@@ -103,9 +103,9 @@ test_that("save_ppt works with all hvtiPlotR themes", {
   skip_if_not_installed("rvg")
 
   plots <- list(
-    create_test_plot() + hvti_theme_ppt(),
-    create_test_plot() + hvti_theme_dark_ppt(),
-    create_test_plot() + hvti_theme_poster()
+    create_test_plot() + hv_theme_ppt(),
+    create_test_plot() + hv_theme_dark_ppt(),
+    create_test_plot() + hv_theme_poster()
   )
   temp_template <- make_temp_template()
   temp_ppt     <- tempfile(fileext = ".pptx")

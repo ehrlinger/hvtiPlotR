@@ -25,13 +25,13 @@ library(hvtiPlotR)
 
 ggplot(mtcars, aes(wt, mpg, colour = factor(cyl))) +
   geom_point() +
-  hvti_theme("manuscript")
+  hv_theme("manuscript")
 ```
 
 Export the result directly to an editable PowerPoint slide:
 
 ```r
-p <- ggplot(mtcars, aes(wt, mpg)) + geom_point() + hvti_theme("ppt")
+p <- ggplot(mtcars, aes(wt, mpg)) + geom_point() + hv_theme("ppt")
 
 save_ppt(
   object     = p,
@@ -42,7 +42,7 @@ save_ppt(
 
 ## Themes
 
-Use `hvti_theme()` to apply any supported style, or call the named aliases directly:
+Use `hv_theme()` to apply any supported style, or call the named aliases directly:
 
 | Style key | Alias(es) | Best for |
 |---|---|---|
@@ -52,22 +52,22 @@ Use `hvti_theme()` to apply any supported style, or call the named aliases direc
 | `"poster"` | `theme_poster()` | Conference posters |
 
 ```r
-p + hvti_theme("manuscript")   # via generic
+p + hv_theme("manuscript")   # via generic
 p + theme_man()                # direct alias
-p + hvti_theme("ppt")          # dark PPT
-p + hvti_theme("light_ppt")    # light PPT
-p + hvti_theme("poster")       # poster
+p + hv_theme("ppt")          # dark PPT
+p + hv_theme("light_ppt")    # light PPT
+p + hv_theme("poster")       # poster
 ```
 
 ## Plot Function Gallery
 
-**hvtiPlotR 2.0 uses a two-step API.** A constructor (`hvti_*()`) shapes the
+**hvtiPlotR 2.0 uses a two-step API.** A constructor (`hv_*()`) shapes the
 data and returns an S3 object; `plot()` renders a bare `ggplot`. Add
 `scale_*`, `labs()`, `annotate()`, and a theme with the usual `+` operator.
 
 ```r
-km <- hvti_survival(sample_survival_data())
-plot(km) + hvti_theme("manuscript")
+km <- hv_survival(sample_survival_data())
+plot(km) + hv_theme("manuscript")
 km$tables$risk                         # risk-table data frame
 ```
 
@@ -75,50 +75,50 @@ km$tables$risk                         # risk-table data frame
 
 | Constructor | Description |
 |---|---|
-| `hvti_mirror_hist()` | Mirrored histograms showing propensity score distributions for two groups, before and after matching or IPTW weighting |
-| `hvti_stacked()` | Stacked or proportional-fill histogram of a numeric variable by group |
-| `hvti_balance()` | Standardised mean difference dot-plot for assessing propensity matching or weighting quality |
+| `hv_mirror_hist()` | Mirrored histograms showing propensity score distributions for two groups, before and after matching or IPTW weighting |
+| `hv_stacked()` | Stacked or proportional-fill histogram of a numeric variable by group |
+| `hv_balance()` | Standardised mean difference dot-plot for assessing propensity matching or weighting quality |
 
 ```r
-mh <- hvti_mirror_hist(sample_mirror_histogram_data(n = 2000),
+mh <- hv_mirror_hist(sample_mirror_histogram_data(n = 2000),
                   group_labels = c("SAVR", "TF-TAVR"))
-plot(mh) + hvti_theme("manuscript")
+plot(mh) + hv_theme("manuscript")
 ```
 
 ### Survival & Time-to-Event
 
 | Constructor | Description |
 |---|---|
-| `hvti_survival()` | Kaplan-Meier and Nelson-Aalen analysis. `plot(km, type = ...)` renders survival, cumulative hazard, hazard, log-log, or life/RMST; tables via `km$tables` |
-| `hvti_nonparametric()` | Nonparametric survival or event-rate curve with optional confidence intervals |
-| `hvti_ordinal()` | Nonparametric curves for ordinal outcomes (e.g. severity grades) |
-| `hvti_hazard()` | Parametric hazard/survival curves from Weibull or other models, with optional KM overlay |
-| `hvti_survival_difference()` | Absolute treatment benefit vs. a reference group over time |
-| `hvti_nnt()` | Number needed to treat derived from survival difference estimates |
-| `hvti_followup()` | Goodness-of-follow-up scatter: actual vs. potential follow-up by operation year; `plot(gf, type = "event")` for non-fatal competing events |
+| `hv_survival()` | Kaplan-Meier and Nelson-Aalen analysis. `plot(km, type = ...)` renders survival, cumulative hazard, hazard, log-log, or life/RMST; tables via `km$tables` |
+| `hv_nonparametric()` | Nonparametric survival or event-rate curve with optional confidence intervals |
+| `hv_ordinal()` | Nonparametric curves for ordinal outcomes (e.g. severity grades) |
+| `hv_hazard()` | Parametric hazard/survival curves from Weibull or other models, with optional KM overlay |
+| `hv_survival_difference()` | Absolute treatment benefit vs. a reference group over time |
+| `hv_nnt()` | Number needed to treat derived from survival difference estimates |
+| `hv_followup()` | Goodness-of-follow-up scatter: actual vs. potential follow-up by operation year; `plot(gf, type = "event")` for non-fatal competing events |
 
 ### Longitudinal & Repeated Measures
 
 | Constructor | Description |
 |---|---|
-| `hvti_trends()` | Temporal trend: annual means/medians with LOESS smooth, by group |
-| `hvti_spaghetti()` | Individual subject trajectories over time with optional per-group LOESS overlay |
-| `hvti_longitudinal()` | Pre-aggregated patient and measurement counts; `plot(lc, type = "table")` for text table |
+| `hv_trends()` | Temporal trend: annual means/medians with LOESS smooth, by group |
+| `hv_spaghetti()` | Individual subject trajectories over time with optional per-group LOESS overlay |
+| `hv_longitudinal()` | Pre-aggregated patient and measurement counts; `plot(lc, type = "table")` for text table |
 
 ### Exploratory & Multivariate
 
 | Constructor | Description |
 |---|---|
-| `hvti_eda()` | Exploratory plot for a single variable. Auto-detects type: scatter + LOESS for continuous, stacked bar for categorical. Missing values shown as `"(Missing)"` |
-| `hvti_upset()` | UpSet diagram for visualising procedure co-occurrences or set memberships |
-| `hvti_alluvial()` | Sankey/alluvial diagram for patient flow across categorical stages |
-| `hvti_sankey()` | Cluster stability Sankey showing patient transitions across cluster solutions |
+| `hv_eda()` | Exploratory plot for a single variable. Auto-detects type: scatter + LOESS for continuous, stacked bar for categorical. Missing values shown as `"(Missing)"` |
+| `hv_upset()` | UpSet diagram for visualising procedure co-occurrences or set memberships |
+| `hv_alluvial()` | Sankey/alluvial diagram for patient flow across categorical stages |
+| `hv_sankey()` | Cluster stability Sankey showing patient transitions across cluster solutions |
 
 ### Utilities
 
 | Function | Description |
 |---|---|
-| `hvti_theme(style)` | Generic dispatcher returning the named ggplot2 theme |
+| `hv_theme(style)` | Generic dispatcher returning the named ggplot2 theme |
 | `save_ppt()` | Export a ggplot to an editable PowerPoint slide using an HVI template |
 | `make_footnote()` | Add a footnote annotation to the current figure |
 

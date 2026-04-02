@@ -16,18 +16,18 @@
 #
 # Key differences from the templates:
 #  - Long format with a group column replaces one geom_smooth() call per group
-#  - Annual summary statistic (mean or median) computed in hvti_trends()
+#  - Annual summary statistic (mean or median) computed in hv_trends()
 #    constructor and stored in $tables$summary; plot() retrieves it
 #  - groups = NULL supported in sample_trends_data() for single-group figures
 #  - No hard-coded colours; examples demonstrate scale_colour_manual() and
 #    scale_colour_brewer()
-#  - Theme applied via + hvti_theme("manuscript") in examples
+#  - Theme applied via + hv_theme("poster") in examples
 # ---------------------------------------------------------------------------
 
 #' Sample Temporal Trend Data
 #'
 #' Generates a realistic patient-level longitudinal data set for demonstrating
-#' [hvti_trends()]. Each row is one patient with a surgery year, continuous
+#' [hv_trends()]. Each row is one patient with a surgery year, continuous
 #' outcome (`value`), and a grouping variable (`group`). Trend patterns are
 #' modelled so that group means diverge over time — matching the multi-group
 #' NYHA / LV-mass / LOS pattern in the SAS template.
@@ -38,7 +38,7 @@
 #'   patterns). Default `c(1990, 2020)`.
 #' @param groups     Character vector of group labels, or `NULL` for a
 #'   single-group figure (no `group` column returned; use with
-#'   `hvti_trends(..., group_col = NULL)`). Default
+#'   `hv_trends(..., group_col = NULL)`). Default
 #'   `c("Group I", "Group II", "Group III", "Group IV")`.
 #' @param seed       Random seed for reproducibility. Default `42`.
 #'
@@ -48,7 +48,7 @@
 #'   - `group` — group label (factor, ordered by `groups`); absent when
 #'     `groups = NULL`
 #'
-#' @seealso [hvti_trends()]
+#' @seealso [hv_trends()]
 #'
 #' @examples
 #' dta <- sample_trends_data(n = 400, seed = 42)
@@ -97,10 +97,10 @@ sample_trends_data <- function(n          = 600,
 #' Prepare temporal trend data for plotting
 #'
 #' Validates a patient-level data frame, computes per-x-value summary
-#' statistics (mean or median), and returns an \code{hvti_trends} object.
-#' Call \code{\link{plot.hvti_trends}} on the result to obtain a bare
+#' statistics (mean or median), and returns an \code{hv_trends} object.
+#' Call \code{\link{plot.hv_trends}} on the result to obtain a bare
 #' \code{ggplot2} trend plot (LOESS smooth + annual summary points) that you
-#' can decorate with colour scales, axis limits, and \code{\link{hvti_theme}}.
+#' can decorate with colour scales, axis limits, and \code{\link{hv_theme}}.
 #'
 #' @param data        Patient-level data frame (one row per patient).
 #' @param x_col       Name of the numeric/integer time column (e.g. surgery
@@ -111,9 +111,9 @@ sample_trends_data <- function(n          = 600,
 #' @param summary_fn  Function used to compute the per-x-point estimate:
 #'   \code{"mean"} or \code{"median"}. Default \code{"mean"}.
 #'
-#' @return An object of class \code{c("hvti_trends", "hvti_data")}; call
+#' @return An object of class \code{c("hv_trends", "hv_data")}; call
 #'   \code{plot()} on the result to render the figure — see
-#'   \code{\link{plot.hvti_trends}}. The list contains:
+#'   \code{\link{plot.hv_trends}}. The list contains:
 #' \describe{
 #'   \item{\code{$data}}{The original patient-level data frame.}
 #'   \item{\code{$meta}}{Named list: \code{x_col}, \code{y_col},
@@ -124,8 +124,8 @@ sample_trends_data <- function(n          = 600,
 #'     overlay.}
 #' }
 #'
-#' @seealso \code{\link{plot.hvti_trends}} to render as a ggplot2 figure,
-#'   \code{\link{hvti_theme}} for the publication theme,
+#' @seealso \code{\link{plot.hv_trends}} to render as a ggplot2 figure,
+#'   \code{\link{hv_theme}} for the publication theme,
 #'   \code{\link{sample_trends_data}} for example data.
 #'
 #' @family Temporal trends
@@ -133,10 +133,16 @@ sample_trends_data <- function(n          = 600,
 #' @examples
 #' dta <- sample_trends_data(n = 600, year_range = c(1985L, 2015L),
 #'   groups = c("I", "II", "III", "IV"))
-#' tr  <- hvti_trends(dta, summary_fn = "median")
-#' tr   # prints observation and group counts
 #'
-#' plot(tr) +
+#' # 1. Build data object
+#' tr <- hv_trends(dta, summary_fn = "median")
+#' tr  # prints observation and group counts
+#'
+#' # 2. Bare plot -- undecorated ggplot returned by plot.hv_trends
+#' p <- plot(tr)
+#'
+#' # 3. Decorate: colour palette, axis scales, labels, theme
+#' p +
 #'   ggplot2::scale_colour_manual(
 #'     values = c(I = "steelblue", II = "firebrick",
 #'                III = "forestgreen", IV = "goldenrod3"),
@@ -148,12 +154,12 @@ sample_trends_data <- function(n          = 600,
 #'                               breaks = seq(0, 80, 20)) +
 #'   ggplot2::coord_cartesian(xlim = c(1985, 2015), ylim = c(0, 80)) +
 #'   ggplot2::labs(x = "Years", y = "%") +
-#'   hvti_theme("manuscript")
+#'   hv_theme("poster")
 #'
 #' @importFrom rlang .data
 #' @importFrom stats median
 #' @export
-hvti_trends <- function(data,
+hv_trends <- function(data,
                         x_col      = "year",
                         y_col      = "value",
                         group_col  = "group",
@@ -200,7 +206,7 @@ hvti_trends <- function(data,
     n_groups <- 1L
   }
 
-  new_hvti_data(
+  new_hv_data(
     data = as.data.frame(data),
     meta = list(
       x_col      = x_col,
@@ -211,20 +217,20 @@ hvti_trends <- function(data,
       n_groups   = n_groups
     ),
     tables   = list(summary = ann_data),
-    subclass = "hvti_trends"
+    subclass = "hv_trends"
   )
 }
 
 
-#' Print an hvti_trends object
+#' Print an hv_trends object
 #'
-#' @param x   An \code{hvti_trends} object from \code{\link{hvti_trends}}.
+#' @param x   An \code{hv_trends} object from \code{\link{hv_trends}}.
 #' @param ... Ignored.
 #' @return \code{x}, invisibly.
 #' @export
-print.hvti_trends <- function(x, ...) {
+print.hv_trends <- function(x, ...) {
   m <- x$meta
-  cat("<hvti_trends>\n")
+  cat("<hv_trends>\n")
   cat(sprintf("  N obs       : %d  (%d groups)\n", m$n_obs, m$n_groups))
   cat(sprintf("  x / y       : %s / %s\n", m$x_col, m$y_col))
   if (!is.null(m$group_col))
@@ -234,12 +240,12 @@ print.hvti_trends <- function(x, ...) {
 }
 
 
-#' Plot an hvti_trends object
+#' Plot an hv_trends object
 #'
 #' Draws a LOESS smooth overlaid with per-x-value summary-statistic points
 #' (mean or median computed at construction time).
 #'
-#' @param x            An \code{hvti_trends} object.
+#' @param x            An \code{hv_trends} object.
 #' @param smoother     Smoothing method passed to
 #'   \code{\link[ggplot2]{geom_smooth}}. Default \code{"loess"}.
 #' @param span         Span for LOESS smoother. Default \code{0.75}.
@@ -254,10 +260,10 @@ print.hvti_trends <- function(x, ...) {
 #' @param ...          Ignored; present for S3 consistency.
 #'
 #' @return A bare \code{\link[ggplot2]{ggplot}} object; compose with \code{+}
-#'   to add scales, axis limits, labels, and \code{\link{hvti_theme}}.
+#'   to add scales, axis limits, labels, and \code{\link{hv_theme}}.
 #'
-#' @seealso \code{\link{hvti_trends}} to build the data object,
-#'   \code{\link{hvti_theme}} for the publication theme.
+#' @seealso \code{\link{hv_trends}} to build the data object,
+#'   \code{\link{hv_theme}} for the publication theme.
 #'
 #' @family Temporal trends
 #'
@@ -265,19 +271,19 @@ print.hvti_trends <- function(x, ...) {
 #' # --- tp.rp.trends.sas: single continuous outcome, 1968-2000 ---------------
 #' one <- sample_trends_data(n = 600, year_range = c(1968L, 2000L),
 #'                           groups = NULL)
-#' plot(hvti_trends(one, group_col = NULL)) +
+#' plot(hv_trends(one, group_col = NULL)) +
 #'   ggplot2::scale_x_continuous(limits = c(1968, 2000),
 #'                               breaks = seq(1968, 2000, 4)) +
 #'   ggplot2::scale_y_continuous(limits = c(0, 10),
 #'                               breaks = seq(0, 10, 2)) +
 #'   ggplot2::labs(x = "Year", y = "Cases/year") +
-#'   hvti_theme("manuscript")
+#'   hv_theme("poster")
 #'
 #' # --- tp.lp.trends.sas: binary % outcomes, 1970-2000 by 10 ----------------
 #' dta_lp <- sample_trends_data(
 #'   n = 800, year_range = c(1970L, 2000L),
 #'   groups = c("Shock %", "Pre-op IABP %", "Inotropes %"))
-#' plot(hvti_trends(dta_lp)) +
+#' plot(hv_trends(dta_lp)) +
 #'   ggplot2::scale_colour_manual(
 #'     values = c("Shock %" = "steelblue", "Pre-op IABP %" = "firebrick",
 #'                "Inotropes %" = "forestgreen"), name = NULL) +
@@ -287,26 +293,26 @@ print.hvti_trends <- function(x, ...) {
 #'                               breaks = seq(0, 100, 10)) +
 #'   ggplot2::coord_cartesian(xlim = c(1970, 2000), ylim = c(0, 100)) +
 #'   ggplot2::labs(x = "Year", y = "Percent (%)") +
-#'   hvti_theme("manuscript")
+#'   hv_theme("poster")
 #'
 #' # --- tp.lp.trends.age.sas: age on x-axis, 25-85 by 10 -------------------
 #' dta_age <- sample_trends_data(
 #'   n = 600, year_range = c(25L, 85L),
 #'   groups = c("Repair %", "Bioprosthesis %"), seed = 7L)
-#' plot(hvti_trends(dta_age)) +
+#' plot(hv_trends(dta_age)) +
 #'   ggplot2::scale_x_continuous(limits = c(25, 85),
 #'                               breaks = seq(25, 85, 10)) +
 #'   ggplot2::scale_y_continuous(limits = c(0, 100),
 #'                               breaks = seq(0, 100, 20)) +
 #'   ggplot2::coord_cartesian(xlim = c(25, 85), ylim = c(0, 100)) +
 #'   ggplot2::labs(x = "Age (years)", y = "Percent (%)") +
-#'   hvti_theme("manuscript")
+#'   hv_theme("poster")
 #'
 #' # --- tp.lp.trends.polytomous.sas: repair types, 1990-1999 by 1 ----------
 #' dta_poly <- sample_trends_data(
 #'   n = 800, year_range = c(1990L, 1999L),
 #'   groups = c("CE", "Cosgrove", "Periguard", "DeVega"), seed = 5L)
-#' plot(hvti_trends(dta_poly)) +
+#' plot(hv_trends(dta_poly)) +
 #'   ggplot2::scale_colour_manual(
 #'     values = c(CE = "steelblue", Cosgrove = "firebrick",
 #'                Periguard = "forestgreen", DeVega = "goldenrod3"),
@@ -317,11 +323,11 @@ print.hvti_trends <- function(x, ...) {
 #'                               breaks = seq(0, 100, 10)) +
 #'   ggplot2::coord_cartesian(xlim = c(1990, 1999), ylim = c(0, 100)) +
 #'   ggplot2::labs(x = "Year", y = "Percent (%)") +
-#'   hvti_theme("manuscript")
+#'   hv_theme("poster")
 #'
 #' # --- Save ----------------------------------------------------------------
 #' \dontrun{
-#' tr <- hvti_trends(
+#' tr <- hv_trends(
 #'   sample_trends_data(n = 800, year_range = c(1985L, 2015L),
 #'                      groups = c("I", "II", "III", "IV")),
 #'   summary_fn = "median"
@@ -331,14 +337,14 @@ print.hvti_trends <- function(x, ...) {
 #'   ggplot2::scale_x_continuous(limits = c(1985, 2015),
 #'                               breaks = seq(1985, 2015, 5)) +
 #'   ggplot2::labs(x = "Years", y = "%") +
-#'   hvti_theme("manuscript")
+#'   hv_theme("poster")
 #' ggplot2::ggsave("trends.pdf", p, width = 11.5, height = 8)
 #' }
 #'
 #' # --- Global theme (set once per session) ----------------------------------
 #' \dontrun{
-#' old <- ggplot2::theme_set(hvti_theme_manuscript())
-#' plot(hvti_trends(dta_poly)) +
+#' old <- ggplot2::theme_set(hv_theme_manuscript())
+#' plot(hv_trends(dta_poly)) +
 #'   ggplot2::scale_colour_brewer(palette = "Dark2", name = "Repair type")
 #' ggplot2::theme_set(old)
 #' }
@@ -349,7 +355,7 @@ print.hvti_trends <- function(x, ...) {
 #' @importFrom ggplot2 ggplot aes geom_smooth geom_point
 #' @importFrom rlang .data
 #' @export
-plot.hvti_trends <- function(x,
+plot.hv_trends <- function(x,
                               smoother    = "loess",
                               span        = 0.75,
                               se          = FALSE,

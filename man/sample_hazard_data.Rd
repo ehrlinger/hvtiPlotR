@@ -78,5 +78,5 @@ dat2 <- sample_hazard_data(
 head(dat2)
 }
 \seealso{
-\code{\link[=hvti_hazard]{hvti_hazard()}}, \code{\link[=sample_hazard_empirical]{sample_hazard_empirical()}}, \code{\link[=sample_life_table]{sample_life_table()}}
+\code{\link[=hv_hazard]{hv_hazard()}}, \code{\link[=sample_hazard_empirical]{sample_hazard_empirical()}}, \code{\link[=sample_life_table]{sample_life_table()}}
 }

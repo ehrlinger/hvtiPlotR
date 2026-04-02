@@ -39,7 +39,7 @@ and \code{std_diff} (standardized mean difference as a percentage).
 }
 \description{
 Produces a reproducible long-format data frame suitable for testing and
-demonstrating \code{\link[=hvti_balance]{hvti_balance()}}.  Rather than drawing SMDs from
+demonstrating \code{\link[=hv_balance]{hv_balance()}}.  Rather than drawing SMDs from
 independent normals, this generator simulates patient-level covariates
 through a logistic propensity score model, computes group standardized mean
 differences before matching, then performs greedy 1:1 nearest-neighbour

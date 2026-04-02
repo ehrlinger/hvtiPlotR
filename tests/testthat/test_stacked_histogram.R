@@ -48,130 +48,148 @@ test_that("sample_stacked_histogram_data errors on non-positive n_categories", {
 })
 
 # ---------------------------------------------------------------------------
-# hvti_stacked — return type
+# hv_stacked — return type
 # ---------------------------------------------------------------------------
 
-test_that("hvti_stacked returns an hvti_data object", {
+test_that("hv_stacked returns an hv_data object", {
   df <- sample_stacked_histogram_data()
-  sh <- hvti_stacked(df)
-  expect_s3_class(sh, "hvti_data")
+  sh <- hv_stacked(df)
+  expect_s3_class(sh, "hv_data")
 })
 
-test_that("plot(hvti_stacked) returns a ggplot object", {
+test_that("plot(hv_stacked) returns a ggplot object", {
   df <- sample_stacked_histogram_data()
-  expect_s3_class(plot(hvti_stacked(df)), "ggplot")
+  expect_s3_class(plot(hv_stacked(df)), "ggplot")
 })
 
-test_that("plot(hvti_stacked, position='fill') returns a ggplot object", {
+test_that("plot(hv_stacked, position='fill') returns a ggplot object", {
   df <- sample_stacked_histogram_data()
-  expect_s3_class(plot(hvti_stacked(df, position = "fill")), "ggplot")
+  expect_s3_class(plot(hv_stacked(df, position = "fill")), "ggplot")
 })
 
 # ---------------------------------------------------------------------------
-# hvti_stacked — input validation (errors in constructor)
+# hv_stacked — input validation (errors in constructor)
 # ---------------------------------------------------------------------------
 
-test_that("hvti_stacked errors when data is not a data frame", {
+test_that("hv_stacked errors when data is not a data frame", {
   expect_error(
-    hvti_stacked(list(year = 1:5, category = 1:5)),
+    hv_stacked(list(year = 1:5, category = 1:5)),
     "data.frame"
   )
 })
 
-test_that("hvti_stacked errors when x_col is missing", {
+test_that("hv_stacked errors when x_col is missing", {
   df      <- sample_stacked_histogram_data()
   df$year <- NULL
   expect_error(
-    hvti_stacked(df, x_col = "year"),
+    hv_stacked(df, x_col = "year"),
     "Missing required column"
   )
 })
 
-test_that("hvti_stacked errors when group_col is missing", {
+test_that("hv_stacked errors when group_col is missing", {
   df          <- sample_stacked_histogram_data()
   df$category <- NULL
   expect_error(
-    hvti_stacked(df, group_col = "category"),
+    hv_stacked(df, group_col = "category"),
     "Missing required column"
   )
 })
 
-test_that("hvti_stacked errors when x_col is not numeric", {
+test_that("hv_stacked errors when x_col is not numeric", {
   df      <- sample_stacked_histogram_data()
   df$year <- as.character(df$year)
-  expect_error(hvti_stacked(df, x_col = "year"), "numeric")
+  expect_error(hv_stacked(df, x_col = "year"), "numeric")
 })
 
-test_that("hvti_stacked errors on non-positive binwidth", {
+test_that("hv_stacked errors on non-positive binwidth", {
   df <- sample_stacked_histogram_data()
-  expect_error(hvti_stacked(df, binwidth = 0),  "binwidth")
-  expect_error(hvti_stacked(df, binwidth = -1), "binwidth")
+  expect_error(hv_stacked(df, binwidth = 0),  "binwidth")
+  expect_error(hv_stacked(df, binwidth = -1), "binwidth")
 })
 
-test_that("hvti_stacked errors on invalid position", {
+test_that("hv_stacked errors on invalid position", {
   df <- sample_stacked_histogram_data()
-  expect_error(hvti_stacked(df, position = "dodge"), "should be one of")
+  expect_error(hv_stacked(df, position = "dodge"), "should be one of")
 })
 
 # ---------------------------------------------------------------------------
-# plot(hvti_stacked) — plot internals
+# plot(hv_stacked) — plot internals
 # ---------------------------------------------------------------------------
 
-test_that("plot(hvti_stacked) maps x_col to the x aesthetic", {
+test_that("plot(hv_stacked) maps x_col to the x aesthetic", {
   df <- sample_stacked_histogram_data()
-  p  <- plot(hvti_stacked(df, x_col = "year", group_col = "category"))
+  p  <- plot(hv_stacked(df, x_col = "year", group_col = "category"))
   expect_match(rlang::as_label(p$mapping$x), "year")
 })
 
-test_that("plot(hvti_stacked) maps group_col to fill and colour aesthetics", {
+test_that("plot(hv_stacked) maps group_col to fill and colour aesthetics", {
   df <- sample_stacked_histogram_data()
-  p  <- plot(hvti_stacked(df, x_col = "year", group_col = "category"))
+  p  <- plot(hv_stacked(df, x_col = "year", group_col = "category"))
   expect_match(rlang::as_label(p$mapping$fill),   "category")
   expect_match(rlang::as_label(p$mapping$colour), "category")
 })
 
-test_that("plot(hvti_stacked) uses a GeomBar layer", {
+test_that("plot(hv_stacked) uses a GeomBar layer", {
   df            <- sample_stacked_histogram_data()
-  p             <- plot(hvti_stacked(df))
+  p             <- plot(hv_stacked(df))
   layer_classes <- vapply(p$layers, function(l) class(l$geom)[1], character(1))
   expect_true("GeomBar" %in% layer_classes)
 })
 
-test_that("hvti_stacked respects custom binwidth", {
+test_that("hv_stacked respects custom binwidth", {
   df  <- sample_stacked_histogram_data()
-  p2  <- plot(hvti_stacked(df, binwidth = 2))
-  p5  <- plot(hvti_stacked(df, binwidth = 5))
+  p2  <- plot(hv_stacked(df, binwidth = 2))
+  p5  <- plot(hv_stacked(df, binwidth = 5))
   bw2 <- p2$layers[[1]]$stat_params$binwidth
   bw5 <- p5$layers[[1]]$stat_params$binwidth
   expect_equal(bw2, 2)
   expect_equal(bw5, 5)
 })
 
-test_that("hvti_stacked position='fill' uses PositionFill", {
+test_that("hv_stacked position='fill' uses PositionFill", {
   df        <- sample_stacked_histogram_data()
-  p         <- plot(hvti_stacked(df, position = "fill"))
+  p         <- plot(hv_stacked(df, position = "fill"))
   pos_class <- class(p$layers[[1]]$position)[1]
   expect_equal(pos_class, "PositionFill")
 })
 
-test_that("hvti_stacked position='stack' uses PositionStack", {
+test_that("hv_stacked position='stack' uses PositionStack", {
   df        <- sample_stacked_histogram_data()
-  p         <- plot(hvti_stacked(df, position = "stack"))
+  p         <- plot(hv_stacked(df, position = "stack"))
   pos_class <- class(p$layers[[1]]$position)[1]
   expect_equal(pos_class, "PositionStack")
 })
 
 # ---------------------------------------------------------------------------
-# hvti_stacked — custom column names
+# hv_stacked — custom column names
 # ---------------------------------------------------------------------------
 
-test_that("hvti_stacked works with non-default column names", {
+test_that("hv_stacked works with non-default column names", {
   df <- data.frame(
     surg_yr  = 1987:2020,
     group_id = sample(1:3, 34, replace = TRUE)
   )
-  p <- plot(hvti_stacked(df, x_col = "surg_yr", group_col = "group_id"))
+  p <- plot(hv_stacked(df, x_col = "surg_yr", group_col = "group_id"))
   expect_s3_class(p, "ggplot")
   expect_match(rlang::as_label(p$mapping$x), "surg_yr")
 })
 
+
+# ---------------------------------------------------------------------------
+# print.hv_stacked coverage
+# ---------------------------------------------------------------------------
+
+test_that("print.hv_stacked produces <hv_stacked> header", {
+  df  <- sample_stacked_histogram_data()
+  obj <- hv_stacked(df)
+  expect_output(print(obj), "<hv_stacked>")
+})
+
+test_that("print.hv_stacked returns x invisibly", {
+  df  <- sample_stacked_histogram_data()
+  obj <- hv_stacked(df)
+  ret <- withVisible(print(obj))
+  expect_false(ret$visible)
+  expect_identical(ret$value, obj)
+})
