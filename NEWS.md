@@ -1,3 +1,18 @@
+# hvtiPlotR 2.0.0.9009
+
+## Documentation
+
+- `plot-functions.qmd`: updated both mirror-histogram decorated examples to
+  follow standard ggplot2 mirror-plot conventions:
+  - Added `scale_y_continuous(labels = abs)` so the y-axis displays absolute
+    counts on both halves of the panel.
+  - Replaced hard-coded y-coordinates in `annotate()` calls with
+    `y = Inf`/`y = -Inf` plus `vjust`, anchoring each group label near the
+    top/bottom panel edge regardless of dataset size.
+  - Replaced hard-coded label strings (`"SAVR"`, `"TF-TAVR"`, etc.) with
+    `mh$meta$group_labels[1]` / `[2]`, so the annotations always track the
+    labels supplied to the constructor.
+
 # hvtiPlotR 2.0.0.9008
 
 ## Documentation

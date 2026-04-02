@@ -128,13 +128,16 @@ p +
     limits = c(0, 100),
     breaks = seq(0, 100, 10)
   ) +
-  ggplot2::annotate("text", x = 20, y =  100, label = "SAVR",    size = 7) +
-  ggplot2::annotate("text", x = 20, y = -100, label = "TF-TAVR", size = 7) +
+  ggplot2::scale_y_continuous(labels = abs) +
+  ggplot2::annotate("text", x = 20, y =  Inf, vjust =  2,
+                    label = mh$meta$group_labels[1], size = 7) +
+  ggplot2::annotate("text", x = 20, y = -Inf, vjust = -1,
+                    label = mh$meta$group_labels[2], size = 7) +
   ggplot2::labs(x = "Propensity Score (%)", y = "Number of Patients") +
   hv_theme("poster")
 ```
 
-The lighter bars show the full (pre-match) distribution for each group; the darker overlaid bars show the matched subset. Upper panel = first group label; lower panel = second group label.
+The lighter bars show the full (pre-match) distribution for each group; the darker overlaid bars show the matched subset. Upper panel = first group label; lower panel = second group label. `scale_y_continuous(labels = abs)` converts the internal negative counts to positive labels. `y = Inf`/`-Inf` with `vjust` anchors each annotation near the panel edge regardless of data scale, so the positions adapt automatically to different dataset sizes.
 
 The constructor stores diagnostics with group counts and standardized mean differences (SMD) before and after matching in the `$tables$diagnostics` list:
 
@@ -192,8 +195,11 @@ p_wt +
     limits = c(0, 100),
     breaks = seq(0, 100, 10)
   ) +
-  ggplot2::annotate("text", x = 30, y =  150, label = "Limited",  color = "blue", size = 5) +
-  ggplot2::annotate("text", x = 30, y = -70,  label = "Extended", color = "red",  size = 5) +
+  ggplot2::scale_y_continuous(labels = abs) +
+  ggplot2::annotate("text", x = 30, y =  Inf, vjust =  2,
+                    label = mh_wt$meta$group_labels[1], color = "blue", size = 5) +
+  ggplot2::annotate("text", x = 30, y = -Inf, vjust = -1,
+                    label = mh_wt$meta$group_labels[2], color = "red",  size = 5) +
   ggplot2::labs(x = "Propensity Score (%)", y = "#") +
   hv_theme("poster")
 ```
