@@ -27,6 +27,23 @@ navbar:
       icon: fa-linkedin
       href: https://www.linkedin.com/in/ehrlinger/
       aria-label: LinkedIn
+    articles:
+      text: Articles
+      menu:
+        - text: "Getting Started"
+        - text: "The hvtiPlotR Package"
+          href: articles/hvtiPlotR.html
+        - text: "SAS Template Migration Guide"
+          href: articles/sas-migration-guide.html
+        - text: "---"
+        - text: "Plot Functions"
+        - text: "Plot Functions Reference"
+          href: articles/plot-functions.html
+        - text: "Decorating and Saving Plots"
+          href: articles/plot-decorators.html
+        - text: "---"
+        - text: "Contributing to hvtiPlotR"
+          href: articles/contributing.html
 
 reference:
 - title: "Package Overview"
