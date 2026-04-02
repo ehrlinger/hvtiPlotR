@@ -24,7 +24,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">hvtiPlotR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.0.9006</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.0.9009</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -64,9 +64,9 @@
       <h1>The <strong>hvtiPlotR</strong> package: Generating plot.sas style in R</h1>
 
       <p class="author">John Ehrlinger <a href="mailto:ehrlinj@ccf.org" class="email">ehrlinj@ccf.org</a></p>
-      <p class="date">2026-04-01</p>
+      <p class="date">2026-04-02</p>
 
-      <small class="dont-index">Source: <a href="https://github.com/ehrlinger/hvtiPlotR/blob/v2.0.0.9006/vignettes/hvtiPlotR.qmd" class="external-link"><code>vignettes/hvtiPlotR.qmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/ehrlinger/hvtiPlotR/blob/main/vignettes/hvtiPlotR.qmd" class="external-link"><code>vignettes/hvtiPlotR.qmd</code></a></small>
       <div class="d-none name"><code></code></div>
     </div>
 
@@ -421,24 +421,24 @@ tuple set=all , x=years , y=noinit , cll=clinit , clu=cuinit , width =0.5 ,
 <tbody>
 <tr class="odd">
 <td><code>device=pscolor</code></td>
-<td><code>hvti_theme("manuscript")</code></td>
+<td><code>hv_theme("manuscript")</code></td>
 <td>Journal PDF, black on white</td>
 </tr>
 <tr class="even">
 <td>
 <code>device=cgmmppa</code> + dark slide</td>
-<td><code>hvti_theme("dark_ppt")</code></td>
+<td><code>hv_theme("dark_ppt")</code></td>
 <td>Dark-background PowerPoint</td>
 </tr>
 <tr class="odd">
 <td>
 <code>device=cgmmppa</code> + white slide</td>
-<td><code>hvti_theme("light_ppt")</code></td>
+<td><code>hv_theme("light_ppt")</code></td>
 <td>Light/transparent PowerPoint</td>
 </tr>
 <tr class="even">
 <td>—</td>
-<td><code>hvti_theme("poster")</code></td>
+<td><code>hv_theme("poster")</code></td>
 <td>Conference poster (larger text)</td>
 </tr>
 </tbody>
@@ -498,7 +498,7 @@ run;</code></pre>
 <p>Then read it in R:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">dta</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span><span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org/reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="st">"graphs"</span>, <span class="st">"mean_curv.csv"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p>This is the simplest approach and works well for the pre-computed summary datasets expected by <strong>hvtiPlotR</strong> constructors (e.g., <code><a href="../reference/hvti_nonparametric.html">hvti_nonparametric()</a></code>, <code><a href="../reference/hazard_plot.html">hazard_plot()</a></code>).</p>
+<p>This is the simplest approach and works well for the pre-computed summary datasets expected by <strong>hvtiPlotR</strong> constructors (e.g., <code><a href="../reference/hv_nonparametric.html">hv_nonparametric()</a></code>, <code><a href="../reference/hazard_plot.html">hazard_plot()</a></code>).</p>
 </section><section class="level3"><h4 id="using-the-bundled-example-data">Using the bundled example data<a class="anchor" aria-label="anchor" href="#using-the-bundled-example-data"></a>
 </h4>
 <p><strong>hvtiPlotR</strong> ships two example xport files for testing:</p>
@@ -526,7 +526,7 @@ run;</code></pre>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">nonparametric</span>, package <span class="op">=</span> <span class="st">"hvtiPlotR"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Set a default hvtiPlotR plotting theme</span></span>
-<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/get_theme.html" class="external-link">theme_set</a></span><span class="op">(</span><span class="fu">hvtiPlotR</span><span class="fu">::</span><span class="fu"><a href="../reference/hvti_theme.html">hvti_theme</a></span><span class="op">(</span><span class="st">"manuscript"</span><span class="op">)</span><span class="op">)</span> </span></code></pre></div>
+<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/get_theme.html" class="external-link">theme_set</a></span><span class="op">(</span><span class="fu">hvtiPlotR</span><span class="fu">::</span><span class="fu"><a href="../reference/hv_theme.html">hv_theme</a></span><span class="op">(</span><span class="st">"poster"</span><span class="op">)</span><span class="op">)</span> </span></code></pre></div>
 </div>
 <p>One advantage of ggplot2 is that figures can be built up in successive statements. This tutorial will make extensive use of this to demonstrate the process. Starting in this code chunk, we will save the intermediate objects in the ccf_plot variable. Here we simply create an empty ggplot2 figure that we will be adding to as we work through the commands in the plot.sas macro. Note that we include the %plot() commands in the comments above the equivalent ggplot2 command for comparison.</p>
 <div class="cell">
@@ -801,10 +801,10 @@ run;</code></pre>
 </div>
 </section></section><section class="section level2"><h2 id="themes-and-decoration">Themes and Decoration<a class="anchor" aria-label="anchor" href="#themes-and-decoration"></a>
 </h2>
-<p>The <strong>hvtiPlotR</strong> package provides four themes via <code>hvti_theme(style)</code>: <code>"manuscript"</code>, <code>"poster"</code>, <code>"light_ppt"</code>, and <code>"dark_ppt"</code>. Apply the theme as the last <code>+</code> layer on any composed ggplot object.</p>
+<p>The <strong>hvtiPlotR</strong> package provides four themes via <code>hv_theme(style)</code>: <code>"manuscript"</code>, <code>"poster"</code>, <code>"light_ppt"</code>, and <code>"dark_ppt"</code>. Apply the theme as the last <code>+</code> layer on any composed ggplot object.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb26"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">ccf_plot</span> <span class="op">+</span> <span class="fu"><a href="../reference/hvti_theme.html">hvti_theme</a></span><span class="op">(</span><span class="st">"manuscript"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">ccf_plot</span> <span class="op">+</span> <span class="fu"><a href="../reference/hv_theme.html">hv_theme</a></span><span class="op">(</span><span class="st">"poster"</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning: Removed 7 rows containing missing values or values outside the scale range
 (`geom_point()`).</code></pre>
@@ -836,7 +836,7 @@ run;</code></pre>
 <span>    y       <span class="op">=</span> <span class="st">"Percent in Each Category (ST)"</span>,</span>
 <span>    caption <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/getwd.html" class="external-link">getwd</a></span><span class="op">(</span><span class="op">)</span></span>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/hvti_theme.html">hvti_theme</a></span><span class="op">(</span><span class="st">"manuscript"</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="../reference/hv_theme.html">hv_theme</a></span><span class="op">(</span><span class="st">"poster"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave</a></span><span class="op">(</span></span>
 <span>  filename <span class="op">=</span> <span class="st">"../graphs/manuscript.pdf"</span>,</span>
@@ -848,10 +848,10 @@ run;</code></pre>
 <p>For a full treatment of saving to PDF, poster, and PowerPoint formats see <a href="plot-decorators.html">Decorating and Saving hvtiPlotR Plots</a>.</p>
 </section><section class="level2"><h3 id="powerpoint-graphics">PowerPoint graphics<a class="anchor" aria-label="anchor" href="#powerpoint-graphics"></a>
 </h3>
-<p>Use <code><a href="../reference/save_ppt.html">save_ppt()</a></code> to insert a ggplot as an editable vector graphic into a PowerPoint file. Apply <code>hvti_theme("dark_ppt")</code> or <code>hvti_theme("light_ppt")</code> before saving.</p>
+<p>Use <code><a href="../reference/save_ppt.html">save_ppt()</a></code> to insert a ggplot as an editable vector graphic into a PowerPoint file. Apply <code>hv_theme("dark_ppt")</code> or <code>hv_theme("light_ppt")</code> before saving.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb30"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">p_ppt</span> <span class="op">&lt;-</span> <span class="va">ccf_pptPlot</span> <span class="op">+</span> <span class="fu"><a href="../reference/hvti_theme.html">hvti_theme</a></span><span class="op">(</span><span class="st">"dark_ppt"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">p_ppt</span> <span class="op">&lt;-</span> <span class="va">ccf_pptPlot</span> <span class="op">+</span> <span class="fu"><a href="../reference/hv_theme.html">hv_theme</a></span><span class="op">(</span><span class="st">"dark_ppt"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/save_ppt.html">save_ppt</a></span><span class="op">(</span></span>
 <span>  object       <span class="op">=</span> <span class="va">p_ppt</span>,</span>
@@ -867,7 +867,7 @@ run;</code></pre>
 </h3>
 <ul>
 <li>
-<strong>Use <code>hvti_theme("manuscript")</code></strong> — black text, white background, no decorative fill. Never use coloured backgrounds in figures destined for journals.</li>
+<strong>Use <code>hv_theme("manuscript")</code></strong> — black text, white background, no decorative fill. Never use coloured backgrounds in figures destined for journals.</li>
 <li>
 <strong>No chart titles</strong> — the figure caption in the manuscript text carries the title. Do not add a <code>labs(title = ...)</code> layer.</li>
 <li>
@@ -886,7 +886,7 @@ run;</code></pre>
 </h3>
 <ul>
 <li>
-<strong>Use <code>hvti_theme("dark_ppt")</code> or <code>hvti_theme("light_ppt")</code></strong> — the dark theme is the default for Cleveland Clinic presentation templates. Match the theme to the slide background colour.</li>
+<strong>Use <code>hv_theme("dark_ppt")</code> or <code>hv_theme("light_ppt")</code></strong> — the dark theme is the default for Cleveland Clinic presentation templates. Match the theme to the slide background colour.</li>
 <li>
 <strong>No points on parametric curves</strong> — presentation figures show lines only. Points are reserved for nonparametric data summaries.</li>
 <li>

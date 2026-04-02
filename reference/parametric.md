@@ -203,4 +203,4 @@ internally).
 ## See also
 
 [nonparametric](https://ehrlinger.github.io/hvtiPlotR/reference/nonparametric.md),
-[`hvti_hazard()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_hazard.md)
+[`hv_hazard()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_hazard.md)

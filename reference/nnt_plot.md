@@ -3,9 +3,9 @@
 **Superseded.**
 
 `nnt_plot()` has been superseded by the S3 constructor
-[`hvti_nnt()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_nnt.md)
+[`hv_nnt()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_nnt.md)
 plus
-[`plot.hvti_nnt()`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hvti_nnt.md).
+[`plot.hv_nnt()`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hv_nnt.md).
 
 Plots the number needed to treat (NNT) and/or absolute risk reduction
 (ARR) over time, with optional confidence bands. Covers the NNT
@@ -107,7 +107,7 @@ nnt_plot(
   scale_x_continuous(limits = c(0, 20), breaks = seq(0, 20, 5)) +
   scale_y_continuous(limits = c(0, 50), breaks = seq(0, 50, 10)) +
   labs(x = "Years", y = "Number Needed to Treat (NNT)") +
-  hvti_theme("manuscript")
+  hv_theme("poster")
 #> Warning: Removed 248 rows containing missing values or values outside the scale range
 #> (`geom_ribbon()`).
 #> Warning: Removed 27 rows containing missing values or values outside the scale range
@@ -128,7 +128,7 @@ nnt_plot(
   scale_y_continuous(limits = c(0, 50),
                      labels = function(x) paste0(x, "%")) +
   labs(x = "Years", y = "Absolute Risk Reduction (%)") +
-  hvti_theme("manuscript")
+  hv_theme("poster")
 #> Warning: Removed 178 rows containing missing values or values outside the scale range
 #> (`geom_ribbon()`).
 

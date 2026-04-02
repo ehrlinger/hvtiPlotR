@@ -2,7 +2,7 @@
 
 Generates a realistic cardiac-surgery data set suitable for
 demonstrating
-[`hvti_alluvial()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_alluvial.md).
+[`hv_alluvial()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_alluvial.md).
 Each row represents a unique combination of pre-operative AV
 regurgitation grade, surgical procedure type, and post-operative AV
 regurgitation grade, together with the patient count (`freq`) for that
@@ -34,7 +34,7 @@ excluded.
 
 ## See also
 
-[`hvti_alluvial()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_alluvial.md)
+[`hv_alluvial()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_alluvial.md)
 
 ## Examples
 

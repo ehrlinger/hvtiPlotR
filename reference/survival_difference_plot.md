@@ -3,9 +3,9 @@
 **Superseded.**
 
 `survival_difference_plot()` has been superseded by the S3 constructor
-[`hvti_survival_difference()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_survival_difference.md)
+[`hv_survival_difference()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_survival_difference.md)
 plus
-[`plot.hvti_survival_difference()`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hvti_survival_difference.md).
+[`plot.hv_survival_difference()`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hv_survival_difference.md).
 
 Plots the difference in survival between two groups over time, with an
 optional confidence band. Covers `tp.hp.dead.life-gained.sas` and the
@@ -107,7 +107,7 @@ survival_difference_plot(
   scale_y_continuous(limits = c(-5, 30),
                      labels = function(x) paste0(x, "%")) +
   labs(x = "Years", y = "Survival Difference (%)") +
-  hvti_theme("manuscript")
+  hv_theme("poster")
 
 
 # --- (2) Multiple treatment comparisons ----------------------------------
@@ -135,6 +135,6 @@ survival_difference_plot(dall, group_col = "comparison") +
   geom_hline(yintercept = 0, linetype = "dashed", colour = "grey50") +
   scale_x_continuous(limits = c(0, 10), breaks = 0:10) +
   labs(x = "Years", y = "Survival Difference (%)") +
-  hvti_theme("manuscript")
+  hv_theme("poster")
 
 ```

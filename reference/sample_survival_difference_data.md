@@ -79,7 +79,7 @@ A data frame with columns `time`, `difference`, `diff_lower`,
 
 ## See also
 
-[`hvti_survival_difference()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_survival_difference.md),
+[`hv_survival_difference()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_survival_difference.md),
 [`sample_hazard_data()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_hazard_data.md)
 
 ## Examples

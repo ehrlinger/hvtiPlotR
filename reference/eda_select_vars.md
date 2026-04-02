@@ -35,7 +35,7 @@ style from the template).
 
 ## See also
 
-[`hvti_eda()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_eda.md)
+[`hv_eda()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_eda.md)
 
 ## Examples
 

@@ -2,7 +2,7 @@
 
 Generates a realistic repeated-measures longitudinal data set for
 demonstrating
-[`hvti_spaghetti()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_spaghetti.md).
+[`hv_spaghetti()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_spaghetti.md).
 Each row is one observation for one patient at one time point, mimicking
 serial echocardiographic measurements after cardiac surgery (AV mean
 gradient trajectory over follow-up). Patients have an irregular number
@@ -53,7 +53,7 @@ A data frame with columns:
 
 ## See also
 
-[`hvti_spaghetti()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_spaghetti.md)
+[`hv_spaghetti()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_spaghetti.md)
 
 ## Examples
 

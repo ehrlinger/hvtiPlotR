@@ -24,7 +24,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">hvtiPlotR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.0.9006</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.0.9009</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -64,9 +64,9 @@
       <h1>Contributing to hvtiPlotR</h1>
 
       <p class="author">John Ehrlinger <a href="mailto:ehrlinj@ccf.org" class="email">ehrlinj@ccf.org</a></p>
-      <p class="date">2026-04-01</p>
+      <p class="date">2026-04-02</p>
 
-      <small class="dont-index">Source: <a href="https://github.com/ehrlinger/hvtiPlotR/blob/v2.0.0.9006/vignettes/contributing.qmd" class="external-link"><code>vignettes/contributing.qmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/ehrlinger/hvtiPlotR/blob/main/vignettes/contributing.qmd" class="external-link"><code>vignettes/contributing.qmd</code></a></small>
       <div class="d-none name"><code></code></div>
     </div>
 
@@ -194,7 +194,7 @@
 <span><span class="co">#'</span></span>
 <span><span class="co">#' @return A bare [ggplot2::ggplot()] object.</span></span>
 <span><span class="co">#'</span></span>
-<span><span class="co">#' @seealso [hvti_nonparametric()], [sample_bmi_curve_data()]</span></span>
+<span><span class="co">#' @seealso [hv_nonparametric()], [sample_bmi_curve_data()]</span></span>
 <span><span class="co">#'</span></span>
 <span><span class="co">#' @references SAS template: \code{tp.np.bmi.avrg_curv.binary.sas}.</span></span>
 <span><span class="co">#'</span></span>
@@ -208,7 +208,7 @@
 <span><span class="co">#'   scale_y_continuous(limits = c(0, 0.5),</span></span>
 <span><span class="co">#'                      labels = scales::percent) +</span></span>
 <span><span class="co">#'   labs(x = "BMI (kg/m²)", y = "Prevalence of AF") +</span></span>
-<span><span class="co">#'   hvti_theme("manuscript")</span></span>
+<span><span class="co">#'   hv_theme("manuscript")</span></span>
 <span><span class="co">#'</span></span>
 <span><span class="co">#' @importFrom ggplot2 ggplot aes geom_line geom_ribbon geom_point</span></span>
 <span><span class="co">#' @importFrom rlang .data</span></span>
@@ -268,7 +268,7 @@
 <li>
 <strong>Column names are strings</strong>, passed via <code>x_col =</code>, <code>estimate_col =</code>, etc. Never use <code><a href="https://rlang.r-lib.org/reference/enquo.html" class="external-link">enquo()</a></code> or <code><a href="https://rdrr.io/r/base/Paren.html" class="external-link">{ }</a></code> — it makes column names opaque to the caller.</li>
 <li>
-<strong>No colours or themes</strong> are applied inside the function. The caller adds <code>scale_colour_*()</code> and <code><a href="../reference/hvti_theme.html">hvti_theme()</a></code> outside.</li>
+<strong>No colours or themes</strong> are applied inside the function. The caller adds <code>scale_colour_*()</code> and <code><a href="../reference/hv_theme.html">hv_theme()</a></code> outside.</li>
 <li>
 <strong><code>.data[[col]]</code></strong> is used for tidy evaluation instead of bare variable names. This requires <code>@importFrom rlang .data</code>.</li>
 <li>The function returns <strong><code>p</code></strong>, not <code>print(p)</code> or <code>p + theme(...)</code>.</li>

@@ -67,7 +67,7 @@ A data frame with columns `time`, `value`, and (if `groups` is not
 ## See also
 
 [`sample_nonparametric_curve_data()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_nonparametric_curve_data.md),
-[`hvti_nonparametric()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_nonparametric.md)
+[`hv_nonparametric()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_nonparametric.md)
 
 ## Examples
 

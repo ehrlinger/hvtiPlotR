@@ -24,7 +24,7 @@
 
     <a class="navbar-brand me-2" href="index.html">hvtiPlotR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.0.9006</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.0.9009</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -79,10 +79,10 @@
 <span></span>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">wt</span>, <span class="va">mpg</span>, colour <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">cyl</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="reference/hvti_theme.html">hvti_theme</a></span><span class="op">(</span><span class="st">"manuscript"</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="reference/hv_theme.html">hv_theme</a></span><span class="op">(</span><span class="st">"manuscript"</span><span class="op">)</span></span></code></pre></div>
 <p>Export the result directly to an editable PowerPoint slide:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">wt</span>, <span class="va">mpg</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="reference/hvti_theme.html">hvti_theme</a></span><span class="op">(</span><span class="st">"ppt"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">wt</span>, <span class="va">mpg</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="reference/hv_theme.html">hv_theme</a></span><span class="op">(</span><span class="st">"ppt"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="reference/save_ppt.html">save_ppt</a></span><span class="op">(</span></span>
 <span>  object     <span class="op">=</span> <span class="va">p</span>,</span>
@@ -93,7 +93,7 @@
 <div class="section level2">
 <h2 id="themes">Themes<a class="anchor" aria-label="anchor" href="#themes"></a>
 </h2>
-<p>Use <code><a href="reference/hvti_theme.html">hvti_theme()</a></code> to apply any supported style, or call the named aliases directly:</p>
+<p>Use <code><a href="reference/hv_theme.html">hv_theme()</a></code> to apply any supported style, or call the named aliases directly:</p>
 <table class="table">
 <colgroup>
 <col width="33%">
@@ -109,7 +109,7 @@
 <tr class="odd">
 <td><code>"manuscript"</code></td>
 <td>
-<code><a href="reference/hvti_theme_manuscript.html">theme_manuscript()</a></code>, <code><a href="reference/hvti_theme_manuscript.html">theme_man()</a></code>
+<code><a href="reference/hv_theme_manuscript.html">theme_manuscript()</a></code>, <code><a href="reference/hv_theme_manuscript.html">theme_man()</a></code>
 </td>
 <td>Journal figures, white background</td>
 </tr>
@@ -118,36 +118,36 @@
 <code>"ppt"</code> / <code>"dark_ppt"</code>
 </td>
 <td>
-<code><a href="reference/hvti_theme_dark_ppt.html">theme_ppt()</a></code>, <code><a href="reference/hvti_theme_dark_ppt.html">theme_dark_ppt()</a></code>
+<code><a href="reference/hv_theme_dark_ppt.html">theme_ppt()</a></code>, <code><a href="reference/hv_theme_dark_ppt.html">theme_dark_ppt()</a></code>
 </td>
 <td>Dark-background PowerPoint slides</td>
 </tr>
 <tr class="odd">
 <td><code>"light_ppt"</code></td>
-<td><code><a href="reference/hvti_theme_light_ppt.html">theme_light_ppt()</a></code></td>
+<td><code><a href="reference/hv_theme_light_ppt.html">theme_light_ppt()</a></code></td>
 <td>Light/transparent PowerPoint slides</td>
 </tr>
 <tr class="even">
 <td><code>"poster"</code></td>
-<td><code><a href="reference/hvti_theme_poster.html">theme_poster()</a></code></td>
+<td><code><a href="reference/hv_theme_poster.html">theme_poster()</a></code></td>
 <td>Conference posters</td>
 </tr>
 </tbody>
 </table>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">p</span> <span class="op">+</span> <span class="fu"><a href="reference/hvti_theme.html">hvti_theme</a></span><span class="op">(</span><span class="st">"manuscript"</span><span class="op">)</span>   <span class="co"># via generic</span></span>
-<span><span class="va">p</span> <span class="op">+</span> <span class="fu"><a href="reference/hvti_theme_manuscript.html">theme_man</a></span><span class="op">(</span><span class="op">)</span>                <span class="co"># direct alias</span></span>
-<span><span class="va">p</span> <span class="op">+</span> <span class="fu"><a href="reference/hvti_theme.html">hvti_theme</a></span><span class="op">(</span><span class="st">"ppt"</span><span class="op">)</span>          <span class="co"># dark PPT</span></span>
-<span><span class="va">p</span> <span class="op">+</span> <span class="fu"><a href="reference/hvti_theme.html">hvti_theme</a></span><span class="op">(</span><span class="st">"light_ppt"</span><span class="op">)</span>    <span class="co"># light PPT</span></span>
-<span><span class="va">p</span> <span class="op">+</span> <span class="fu"><a href="reference/hvti_theme.html">hvti_theme</a></span><span class="op">(</span><span class="st">"poster"</span><span class="op">)</span>       <span class="co"># poster</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">p</span> <span class="op">+</span> <span class="fu"><a href="reference/hv_theme.html">hv_theme</a></span><span class="op">(</span><span class="st">"manuscript"</span><span class="op">)</span>   <span class="co"># via generic</span></span>
+<span><span class="va">p</span> <span class="op">+</span> <span class="fu"><a href="reference/hv_theme_manuscript.html">theme_man</a></span><span class="op">(</span><span class="op">)</span>                <span class="co"># direct alias</span></span>
+<span><span class="va">p</span> <span class="op">+</span> <span class="fu"><a href="reference/hv_theme.html">hv_theme</a></span><span class="op">(</span><span class="st">"ppt"</span><span class="op">)</span>          <span class="co"># dark PPT</span></span>
+<span><span class="va">p</span> <span class="op">+</span> <span class="fu"><a href="reference/hv_theme.html">hv_theme</a></span><span class="op">(</span><span class="st">"light_ppt"</span><span class="op">)</span>    <span class="co"># light PPT</span></span>
+<span><span class="va">p</span> <span class="op">+</span> <span class="fu"><a href="reference/hv_theme.html">hv_theme</a></span><span class="op">(</span><span class="st">"poster"</span><span class="op">)</span>       <span class="co"># poster</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="plot-function-gallery">Plot Function Gallery<a class="anchor" aria-label="anchor" href="#plot-function-gallery"></a>
 </h2>
-<p><strong>hvtiPlotR 2.0 uses a two-step API.</strong> A constructor (<code>hvti_*()</code>) shapes the data and returns an S3 object; <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code> renders a bare <code>ggplot</code>. Add <code>scale_*</code>, <code><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs()</a></code>, <code><a href="https://ggplot2.tidyverse.org/reference/annotate.html" class="external-link">annotate()</a></code>, and a theme with the usual <code>+</code> operator.</p>
+<p><strong>hvtiPlotR 2.0 uses a two-step API.</strong> A constructor (<code>hv_*()</code>) shapes the data and returns an S3 object; <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code> renders a bare <code>ggplot</code>. Add <code>scale_*</code>, <code><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs()</a></code>, <code><a href="https://ggplot2.tidyverse.org/reference/annotate.html" class="external-link">annotate()</a></code>, and a theme with the usual <code>+</code> operator.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">km</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/hvti_survival.html">hvti_survival</a></span><span class="op">(</span><span class="fu"><a href="reference/sample_survival_data.html">sample_survival_data</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">km</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="reference/hvti_theme.html">hvti_theme</a></span><span class="op">(</span><span class="st">"manuscript"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">km</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/hv_survival.html">hv_survival</a></span><span class="op">(</span><span class="fu"><a href="reference/sample_survival_data.html">sample_survival_data</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">km</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="reference/hv_theme.html">hv_theme</a></span><span class="op">(</span><span class="st">"manuscript"</span><span class="op">)</span></span>
 <span><span class="va">km</span><span class="op">$</span><span class="va">tables</span><span class="op">$</span><span class="va">risk</span>                         <span class="co"># risk-table data frame</span></span></code></pre></div>
 <div class="section level3">
 <h3 id="propensity-score--balance">Propensity Score &amp; Balance<a class="anchor" aria-label="anchor" href="#propensity-score--balance"></a>
@@ -163,23 +163,23 @@
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td><code><a href="reference/hvti_mirror_hist.html">hvti_mirror_hist()</a></code></td>
+<td><code><a href="reference/hv_mirror_hist.html">hv_mirror_hist()</a></code></td>
 <td>Mirrored histograms showing propensity score distributions for two groups, before and after matching or IPTW weighting</td>
 </tr>
 <tr class="even">
-<td><code><a href="reference/hvti_stacked.html">hvti_stacked()</a></code></td>
+<td><code><a href="reference/hv_stacked.html">hv_stacked()</a></code></td>
 <td>Stacked or proportional-fill histogram of a numeric variable by group</td>
 </tr>
 <tr class="odd">
-<td><code><a href="reference/hvti_balance.html">hvti_balance()</a></code></td>
+<td><code><a href="reference/hv_balance.html">hv_balance()</a></code></td>
 <td>Standardised mean difference dot-plot for assessing propensity matching or weighting quality</td>
 </tr>
 </tbody>
 </table>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">mh</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/hvti_mirror_hist.html">hvti_mirror_hist</a></span><span class="op">(</span><span class="fu"><a href="reference/sample_mirror_histogram_data.html">sample_mirror_histogram_data</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">2000</span><span class="op">)</span>,</span>
+<code class="sourceCode R"><span><span class="va">mh</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/hv_mirror_hist.html">hv_mirror_hist</a></span><span class="op">(</span><span class="fu"><a href="reference/sample_mirror_histogram_data.html">sample_mirror_histogram_data</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">2000</span><span class="op">)</span>,</span>
 <span>                  group_labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"SAVR"</span>, <span class="st">"TF-TAVR"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">mh</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="reference/hvti_theme.html">hvti_theme</a></span><span class="op">(</span><span class="st">"manuscript"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">mh</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="reference/hv_theme.html">hv_theme</a></span><span class="op">(</span><span class="st">"manuscript"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="survival--time-to-event">Survival &amp; Time-to-Event<a class="anchor" aria-label="anchor" href="#survival--time-to-event"></a>
@@ -195,32 +195,32 @@
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td><code><a href="reference/hvti_survival.html">hvti_survival()</a></code></td>
+<td><code><a href="reference/hv_survival.html">hv_survival()</a></code></td>
 <td>Kaplan-Meier and Nelson-Aalen analysis. <code>plot(km, type = ...)</code> renders survival, cumulative hazard, hazard, log-log, or life/RMST; tables via <code>km$tables</code>
 </td>
 </tr>
 <tr class="even">
-<td><code><a href="reference/hvti_nonparametric.html">hvti_nonparametric()</a></code></td>
+<td><code><a href="reference/hv_nonparametric.html">hv_nonparametric()</a></code></td>
 <td>Nonparametric survival or event-rate curve with optional confidence intervals</td>
 </tr>
 <tr class="odd">
-<td><code><a href="reference/hvti_ordinal.html">hvti_ordinal()</a></code></td>
+<td><code><a href="reference/hv_ordinal.html">hv_ordinal()</a></code></td>
 <td>Nonparametric curves for ordinal outcomes (e.g. severity grades)</td>
 </tr>
 <tr class="even">
-<td><code><a href="reference/hvti_hazard.html">hvti_hazard()</a></code></td>
+<td><code><a href="reference/hv_hazard.html">hv_hazard()</a></code></td>
 <td>Parametric hazard/survival curves from Weibull or other models, with optional KM overlay</td>
 </tr>
 <tr class="odd">
-<td><code><a href="reference/hvti_survival_difference.html">hvti_survival_difference()</a></code></td>
+<td><code><a href="reference/hv_survival_difference.html">hv_survival_difference()</a></code></td>
 <td>Absolute treatment benefit vs. a reference group over time</td>
 </tr>
 <tr class="even">
-<td><code><a href="reference/hvti_nnt.html">hvti_nnt()</a></code></td>
+<td><code><a href="reference/hv_nnt.html">hv_nnt()</a></code></td>
 <td>Number needed to treat derived from survival difference estimates</td>
 </tr>
 <tr class="odd">
-<td><code><a href="reference/hvti_followup.html">hvti_followup()</a></code></td>
+<td><code><a href="reference/hv_followup.html">hv_followup()</a></code></td>
 <td>Goodness-of-follow-up scatter: actual vs. potential follow-up by operation year; <code>plot(gf, type = "event")</code> for non-fatal competing events</td>
 </tr>
 </tbody>
@@ -240,15 +240,15 @@
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td><code><a href="reference/hvti_trends.html">hvti_trends()</a></code></td>
+<td><code><a href="reference/hv_trends.html">hv_trends()</a></code></td>
 <td>Temporal trend: annual means/medians with LOESS smooth, by group</td>
 </tr>
 <tr class="even">
-<td><code><a href="reference/hvti_spaghetti.html">hvti_spaghetti()</a></code></td>
+<td><code><a href="reference/hv_spaghetti.html">hv_spaghetti()</a></code></td>
 <td>Individual subject trajectories over time with optional per-group LOESS overlay</td>
 </tr>
 <tr class="odd">
-<td><code><a href="reference/hvti_longitudinal.html">hvti_longitudinal()</a></code></td>
+<td><code><a href="reference/hv_longitudinal.html">hv_longitudinal()</a></code></td>
 <td>Pre-aggregated patient and measurement counts; <code>plot(lc, type = "table")</code> for text table</td>
 </tr>
 </tbody>
@@ -268,20 +268,20 @@
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td><code><a href="reference/hvti_eda.html">hvti_eda()</a></code></td>
+<td><code><a href="reference/hv_eda.html">hv_eda()</a></code></td>
 <td>Exploratory plot for a single variable. Auto-detects type: scatter + LOESS for continuous, stacked bar for categorical. Missing values shown as <code>"(Missing)"</code>
 </td>
 </tr>
 <tr class="even">
-<td><code><a href="reference/hvti_upset.html">hvti_upset()</a></code></td>
+<td><code><a href="reference/hv_upset.html">hv_upset()</a></code></td>
 <td>UpSet diagram for visualising procedure co-occurrences or set memberships</td>
 </tr>
 <tr class="odd">
-<td><code><a href="reference/hvti_alluvial.html">hvti_alluvial()</a></code></td>
+<td><code><a href="reference/hv_alluvial.html">hv_alluvial()</a></code></td>
 <td>Sankey/alluvial diagram for patient flow across categorical stages</td>
 </tr>
 <tr class="even">
-<td><code><a href="reference/hvti_sankey.html">hvti_sankey()</a></code></td>
+<td><code><a href="reference/hv_sankey.html">hv_sankey()</a></code></td>
 <td>Cluster stability Sankey showing patient transitions across cluster solutions</td>
 </tr>
 </tbody>
@@ -301,7 +301,7 @@
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td><code>hvti_theme(style)</code></td>
+<td><code>hv_theme(style)</code></td>
 <td>Generic dispatcher returning the named ggplot2 theme</td>
 </tr>
 <tr class="even">

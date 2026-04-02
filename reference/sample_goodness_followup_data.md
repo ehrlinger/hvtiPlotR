@@ -2,7 +2,7 @@
 
 Produces a reproducible data frame suitable for testing and
 demonstrating
-[`hvti_followup()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_followup.md).
+[`hv_followup()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_followup.md).
 Operation dates are drawn uniformly over the study period; death and
 non-fatal event times are simulated from exponential distributions and
 censored at each patient's potential follow-up. The `deads` column
@@ -91,7 +91,7 @@ A data frame with columns:
 ## Details
 
 The column names match the defaults of
-[`hvti_followup()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_followup.md):
+[`hv_followup()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_followup.md):
 `iv_opyrs`, `iv_dead`, `dead`. The event-panel columns (`iv_event`,
 `ev_event`, `deads`) are included so callers can pass `event_col`,
 `event_time_col`, and `death_for_event_col` directly.
@@ -110,7 +110,7 @@ head(dta)
 #> 6  24.1620  7.4334 FALSE   7.4334    FALSE FALSE
 
 # Death panel
-gf <- hvti_followup(dta)
+gf <- hv_followup(dta)
 plot(gf) +
   ggplot2::scale_color_manual(
     values = c("Alive" = "blue", "Dead" = "red"), name = NULL
@@ -120,7 +120,7 @@ plot(gf) +
 
 
 # Event panel
-gf2 <- hvti_followup(dta, event_col = "ev_event",
+gf2 <- hv_followup(dta, event_col = "ev_event",
                       event_time_col = "iv_event",
                       death_for_event_col = "deads")
 plot(gf2, type = "event") +

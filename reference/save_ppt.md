@@ -86,7 +86,7 @@ Invisibly returns the path given by `powerpoint`.
 [`rvg::dml()`](https://davidgohel.github.io/rvg/reference/dml.html),
 [`officer::ph_with()`](https://davidgohel.github.io/officer/reference/ph_with.html),
 [`officer::ph_location()`](https://davidgohel.github.io/officer/reference/ph_location.html),
-[`hvti_theme()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_theme.md)
+[`hv_theme()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_theme.md)
 
 ## Examples
 
@@ -98,7 +98,7 @@ library(ggplot2)
 p1 <- ggplot(mtcars, aes(x = wt, y = mpg)) +
   geom_point() +
   labs(x = "Weight", y = "Miles per gallon", title = "Fuel economy") +
-  hvti_theme("dark_ppt")
+  hv_theme("dark_ppt")
 
 save_ppt(
   object       = p1,
@@ -111,7 +111,7 @@ save_ppt(
 p2 <- ggplot(mtcars, aes(x = factor(cyl), y = mpg)) +
   geom_boxplot() +
   labs(x = "Cylinders", y = "Miles per gallon") +
-  hvti_theme("dark_ppt")
+  hv_theme("dark_ppt")
 
 save_ppt(
   object       = list(p1, p2),
@@ -124,7 +124,7 @@ save_ppt(
 pm <- ggplot(mtcars, aes(x = wt, y = mpg)) +
   geom_point() +
   labs(x = "Weight", y = "Miles per gallon") +
-  hvti_theme("manuscript")
+  hv_theme("manuscript")
 
 save_ppt(
   object       = pm,

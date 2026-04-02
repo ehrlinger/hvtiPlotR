@@ -42,7 +42,7 @@ A data frame in long format with columns:
 
 ## See also
 
-[`hvti_longitudinal()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_longitudinal.md),
+[`hv_longitudinal()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_longitudinal.md),
 [`sample_spaghetti_data()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_spaghetti_data.md)
 
 ## Examples

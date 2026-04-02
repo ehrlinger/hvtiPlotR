@@ -7,7 +7,7 @@ graphics that conform to HVI manuscript and presentation standards using
 `ggplot2` and the `officer` package.
 
 All plot functions follow a two-step workflow: call the constructor
-(`hvti_*()`) to validate and prepare data, then call
+(`hv_*()`) to validate and prepare data, then call
 [`plot()`](https://rdrr.io/r/graphics/plot.default.html) on the result
 to obtain a bare
 [`ggplot2::ggplot()`](https://ggplot2.tidyverse.org/reference/ggplot.html)
@@ -19,38 +19,38 @@ examples and tests.
 ### Themes
 
 Use
-[`hvti_theme()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_theme.md)
+[`hv_theme()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_theme.md)
 as the single entry point. Lower-level functions are also exported for
 direct use.
 
-- [`hvti_theme()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_theme.md):
+- [`hv_theme()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_theme.md):
   Unified dispatcher — accepts `"manuscript"`, `"poster"`,
   `"light_ppt"`, or `"dark_ppt"`.
 
-- [`hvti_theme_manuscript()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_theme_manuscript.md)
+- [`hv_theme_manuscript()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_theme_manuscript.md)
   /
-  [`theme_manuscript()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_theme_manuscript.md)
+  [`theme_manuscript()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_theme_manuscript.md)
   /
-  [`theme_man()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_theme_manuscript.md):
+  [`theme_man()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_theme_manuscript.md):
   Clean white-background theme for journal figures.
 
-- [`hvti_theme_dark_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_theme_dark_ppt.md)
+- [`hv_theme_dark_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_theme_dark_ppt.md)
   /
-  [`theme_dark_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_theme_dark_ppt.md)
+  [`theme_dark_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_theme_dark_ppt.md)
   /
-  [`theme_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_theme_dark_ppt.md)
+  [`theme_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_theme_dark_ppt.md)
   /
-  [`hvti_theme_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_theme_dark_ppt.md):
+  [`hv_theme_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_theme_dark_ppt.md):
   Large-font theme with a dark panel for PowerPoint slides.
 
-- [`hvti_theme_light_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_theme_light_ppt.md)
+- [`hv_theme_light_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_theme_light_ppt.md)
   /
-  [`theme_light_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_theme_light_ppt.md):
+  [`theme_light_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_theme_light_ppt.md):
   Large-font theme with a light panel background for PowerPoint slides.
 
-- [`hvti_theme_poster()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_theme_poster.md)
+- [`hv_theme_poster()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_theme_poster.md)
   /
-  [`theme_poster()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_theme_poster.md):
+  [`theme_poster()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_theme_poster.md):
   Medium-font theme for conference posters.
 
 ### Saving figures
@@ -67,63 +67,63 @@ direct use.
 
 ### Plot constructors
 
-Each constructor returns an `hvti_data` S3 object; call
+Each constructor returns an `hv_data` S3 object; call
 [`plot()`](https://rdrr.io/r/graphics/plot.default.html) on it to
 produce a ggplot.
 
 #### Propensity Score & Matching
 
-- [`hvti_mirror_hist()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_mirror_hist.md):
+- [`hv_mirror_hist()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_mirror_hist.md):
   Prepare propensity-score distributions for a mirrored histogram
   comparing binary-matched or IPTW-weighted cohorts. Ports the
   `tp.lp.mirror-histogram_*` and `tp.lp.mirror_histo_before_after_wt`
   SAS scripts.
 
-- [`hvti_balance()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_balance.md):
+- [`hv_balance()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_balance.md):
   Prepare standardised mean difference data for a covariate balance
   dot-plot before and after propensity-score matching or weighting.
   Ports `tp.lp.propen.cov_balance.R`.
 
-- [`hvti_stacked()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_stacked.md):
+- [`hv_stacked()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_stacked.md):
   Prepare grouped count or proportion data for a stacked or filled
   histogram.
 
 #### Survival & Hazard
 
-- [`hvti_survival()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_survival.md):
+- [`hv_survival()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_survival.md):
   Fit and prepare Kaplan-Meier or Nelson-Aalen survival curves, risk
   tables, and report tables. Ports the SAS `%kaplan` and `%nelsont`
   macros from `tp.ac.dead.sas`.
 
-- [`hvti_hazard()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_hazard.md):
+- [`hv_hazard()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_hazard.md):
   Prepare parametric hazard/survival curves from pre-fitted model
   output, with optional KM empirical overlay and population life-table
   reference. Ports the `tp.hp.*` template family.
 
-- [`hvti_survival_difference()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_survival_difference.md):
+- [`hv_survival_difference()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_survival_difference.md):
   Prepare mean survival difference (life gained) over time between two
   treatment arms, with confidence ribbons. Ports
   `tp.hp.dead.life-gained.sas`.
 
-- [`hvti_nnt()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_nnt.md):
+- [`hv_nnt()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_nnt.md):
   Prepare number-needed-to-treat over time derived from the survival
   difference. Ports `tp.hp.numtreat.survdiff.matched.sas`.
 
 #### Nonparametric Temporal Curves
 
-- [`hvti_nonparametric()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_nonparametric.md):
+- [`hv_nonparametric()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_nonparametric.md):
   Prepare pre-computed two-phase nonparametric temporal trend curves for
   binary or continuous outcomes with optional 68%/95% CI ribbon and
   binned data summary points. Ports the `tp.np.*` template family.
 
-- [`hvti_ordinal()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_ordinal.md):
+- [`hv_ordinal()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_ordinal.md):
   Prepare grade-specific probability curves from cumulative
   proportional-odds models (e.g. TR/AR grade). Ports `tp.np.tr.ivecho.*`
   and `tp.np.po_ar.u_multi.ordinal.sas`.
 
 #### Study Design & Goodness of Follow-Up
 
-- [`hvti_followup()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_followup.md):
+- [`hv_followup()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_followup.md):
   Prepare per-patient follow-up data for a goodness-of-follow-up scatter
   plot (actual vs. potential follow-up per operation year). Use
   `plot(x, type = "followup")` for the death panel and
@@ -132,16 +132,16 @@ produce a ggplot.
 
 #### Longitudinal & Repeated Measures
 
-- [`hvti_trends()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_trends.md):
+- [`hv_trends()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_trends.md):
   Prepare patient-level data for annual trend lines with optional
   confidence ribbons for multiple groups. Ports the `tp.lp.trends.*`,
   `tp.rp.trends.*`, and `tp.dp.trends.R` families.
 
-- [`hvti_spaghetti()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_spaghetti.md):
+- [`hv_spaghetti()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_spaghetti.md):
   Prepare repeated-measures data for individual patient trajectory
   plots, optionally stratified by group. Ports `tp.dp.spaghetti.echo.R`.
 
-- [`hvti_longitudinal()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_longitudinal.md):
+- [`hv_longitudinal()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_longitudinal.md):
   Prepare pre-aggregated counts for a grouped bar chart or text table of
   patient and measurement counts at discrete follow-up windows. Use
   `plot(x, type = "plot")` for the bar chart and
@@ -149,18 +149,18 @@ produce a ggplot.
 
 #### Flow Diagrams
 
-- [`hvti_alluvial()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_alluvial.md):
+- [`hv_alluvial()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_alluvial.md):
   Prepare patient-flow data for an alluvial (Sankey) diagram showing
   transitions between states across time points. Ports
   `tp.dp.female_bicus_preAR_sankey.R`.
 
-- [`hvti_sankey()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_sankey.md):
+- [`hv_sankey()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_sankey.md):
   Prepare cluster-assignment data for a stability Sankey showing how
   patients redistribute across K values in a PAM analysis.
 
 #### Exploratory Data Analysis
 
-- [`hvti_eda()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_eda.md):
+- [`hv_eda()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_eda.md):
   Prepare a single variable for EDA plotting: bar chart (categorical) or
   scatter + LOESS (continuous). Ports
   `tp.dp.EDA_barplots_scatterplots.R`.
@@ -173,7 +173,7 @@ produce a ggplot.
   Subset and reorder a data frame by a character vector or
   space-separated column-name string. Replaces `Order_Variables()`.
 
-- [`hvti_upset()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_upset.md):
+- [`hv_upset()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_upset.md):
   Prepare binary indicator data for an UpSet intersection plot. Ports
   `tp.complexUpset.R`.
 

@@ -13,7 +13,7 @@ unchanged."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">hvtiPlotR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.0.9006</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.0.9009</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -44,7 +44,7 @@ unchanged."></head><body>
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Add a Draft Footnote to a Figure</h1>
-      <small class="dont-index">Source: <a href="https://github.com/ehrlinger/hvtiPlotR/blob/v2.0.0.9006/R/pdf_footnote.R" class="external-link"><code>R/pdf_footnote.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/ehrlinger/hvtiPlotR/blob/main/R/pdf_footnote.R" class="external-link"><code>R/pdf_footnote.R</code></a></small>
       <div class="d-none name"><code>make_footnote.Rd</code></div>
     </div>
 
@@ -151,7 +151,7 @@ Returns <code>invisible(NULL)</code>.</p>
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p><strong>Typical workflow:</strong></p>
 <p></p><div class="sourceCode r"><pre><code><span><span class="co"># During analysis (draft)</span></span>
-<span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="../reference/hvti_hazard.html">hvti_hazard</a></span><span class="op">(</span><span class="va">...</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="../reference/hvti_theme.html">hvti_theme</a></span><span class="op">(</span><span class="st">"manuscript"</span><span class="op">)</span></span>
+<span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="../reference/hv_hazard.html">hv_hazard</a></span><span class="op">(</span><span class="va">...</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="../reference/hv_theme.html">hv_theme</a></span><span class="op">(</span><span class="st">"manuscript"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">p</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/make_footnote.html">make_footnote</a></span><span class="op">(</span><span class="st">"analysis/mortality.R"</span><span class="op">)</span>   <span class="co"># adds draft annotation</span></span>
 <span></span>
@@ -160,7 +160,7 @@ Returns <code>invisible(NULL)</code>.</p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
-    <div class="dont-index"><p><code><a href="save_ppt.html">save_ppt()</a></code>, <code><a href="hvti_theme.html">hvti_theme()</a></code></p></div>
+    <div class="dont-index"><p><code><a href="save_ppt.html">save_ppt()</a></code>, <code><a href="hv_theme.html">hv_theme()</a></code></p></div>
     </div>
 
     <div class="section level2">
@@ -176,7 +176,7 @@ Returns <code>invisible(NULL)</code>.</p>
 <span class="r-in"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">wt</span>, <span class="va">mpg</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Motor Trend Cars"</span><span class="op">)</span> <span class="op">+</span></span></span>
-<span class="r-in"><span>  <span class="fu"><a href="hvti_theme.html">hvti_theme</a></span><span class="op">(</span><span class="st">"manuscript"</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="hv_theme.html">hv_theme</a></span><span class="op">(</span><span class="st">"manuscript"</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Draft: print, then annotate</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">p</span><span class="op">)</span></span></span>

@@ -3,9 +3,9 @@
 **Superseded.**
 
 `hazard_plot()` has been superseded by the S3 constructor
-[`hvti_hazard()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_hazard.md)
+[`hv_hazard()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_hazard.md)
 plus
-[`plot.hvti_hazard()`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hvti_hazard.md).
+[`plot.hv_hazard()`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hv_hazard.md).
 
 Plots a pre-computed parametric survival, hazard, or cumulative-hazard
 curve from a Weibull (or other parametric) model, optionally overlaid
@@ -42,7 +42,7 @@ reference. Covers the complete family of `tp.hp.dead.*` SAS templates.
 Returns a **bare ggplot object**; compose with `scale_colour_*`,
 [`scale_y_continuous()`](https://ggplot2.tidyverse.org/reference/scale_continuous.html),
 [`labs()`](https://ggplot2.tidyverse.org/reference/labs.html),
-[`hvti_theme()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_theme.md).
+[`hv_theme()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_theme.md).
 
 ## Usage
 
@@ -201,8 +201,8 @@ SAS templates: `tp.hp.dead.sas`, `tp.hp.dead.tkdn.stratified.sas`,
 [`sample_life_table()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_life_table.md),
 [`survival_difference_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/survival_difference_plot.md),
 [`nnt_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/nnt_plot.md),
-[`hvti_survival()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_survival.md),
-[`hvti_theme()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_theme.md)
+[`hv_survival()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_survival.md),
+[`hv_theme()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_theme.md)
 
 ## Examples
 
@@ -230,7 +230,7 @@ hazard_plot(
   scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, 20),
                      labels = function(x) paste0(x, "%")) +
   labs(x = "Years", y = "Survival (%)") +
-  hvti_theme("manuscript")
+  hv_theme("poster")
 
 
 # --- (2) Hazard rate curve + KM overlay ----------------------------------
@@ -250,7 +250,7 @@ hazard_plot(
   scale_y_continuous(limits = c(0, 30),
                      labels = function(x) paste0(x, "%/yr")) +
   labs(x = "Years", y = "Hazard (%/year)") +
-  hvti_theme("manuscript")
+  hv_theme("poster")
 #> Warning: Removed 128 rows containing missing values or values outside the scale range
 #> (`geom_ribbon()`).
 
@@ -268,7 +268,7 @@ hazard_plot(
   scale_fill_manual(values = c("darkorange"), guide = "none") +
   scale_x_continuous(limits = c(0, 10), breaks = 0:10) +
   labs(x = "Years", y = "Cumulative Hazard (%)") +
-  hvti_theme("manuscript")
+  hv_theme("poster")
 
 
 # --- (4) Stratified survival (tp.hp.dead.tkdn.stratified.sas) ------------
@@ -304,7 +304,7 @@ hazard_plot(
   scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, 20),
                      labels = function(x) paste0(x, "%")) +
   labs(x = "Years after Esophagostomy", y = "Survival (%)") +
-  hvti_theme("manuscript")
+  hv_theme("poster")
 
 
 # --- (5) Life table overlay (tp.hp.dead.age_with_population_life_table) ---
@@ -348,7 +348,7 @@ hazard_plot(
                      labels = function(x) paste0(x, "%")) +
   labs(x = "Years", y = "Survival (%)",
        caption = "Dashed lines: US population life table") +
-  hvti_theme("manuscript")
+  hv_theme("poster")
 
 
 # --- (6) Multivariable risk profiles (tp.hp.dead.ideal_multivariable) -----
@@ -380,7 +380,7 @@ hazard_plot(
                      labels = function(x) paste0(x, "%")) +
   labs(x = "Years after Brain Metastases",
        y = "Survival (%)") +
-  hvti_theme("manuscript")
+  hv_theme("poster")
 
 
 # --- (7) Propensity-weighted / matched groups -----------------------------
@@ -417,7 +417,7 @@ hazard_plot(
   scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, 20),
                      labels = function(x) paste0(x, "%")) +
   labs(x = "Years after Repair", y = "Survival (%)") +
-  hvti_theme("manuscript")
+  hv_theme("poster")
 
 
 # --- (8) Device sequencing (tp.hp.mcs.mod.dead.devseq) -------------------
@@ -446,7 +446,7 @@ hazard_plot(
   scale_y_continuous(limits = c(0, 100),
                       labels = function(x) paste0(x, "%")) +
   labs(x = "Time on Device", y = "Survival (%)") +
-  hvti_theme("manuscript")
+  hv_theme("poster")
 
 
 # --- (9) Save (dontrun) --------------------------------------------------
@@ -458,13 +458,13 @@ p <- hazard_plot(dat, estimate_col = "survival",
   scale_colour_manual(values = c("steelblue"), guide = "none") +
   scale_fill_manual(values = c("steelblue"), guide = "none") +
   labs(x = "Years", y = "Survival (%)") +
-  hvti_theme("manuscript")
+  hv_theme("poster")
 ggplot2::ggsave("survival.pdf", p, width = 11.5, height = 8)
 } # }
 
 # --- Global theme + RColorBrewer (set once per session) ------------------
 if (FALSE) { # \dontrun{
-old <- ggplot2::theme_set(hvti_theme_manuscript())
+old <- ggplot2::theme_set(hv_theme_manuscript())
 hazard_plot(
   dat2,
   estimate_col  = "survival",

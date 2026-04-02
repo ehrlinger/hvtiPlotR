@@ -65,7 +65,7 @@ and reshape to long format to use your own model output.
 
 ## See also
 
-[`hvti_ordinal()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_ordinal.md),
+[`hv_ordinal()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_ordinal.md),
 [`sample_nonparametric_curve_data()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_nonparametric_curve_data.md),
 [`sample_nonparametric_ordinal_points()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_nonparametric_ordinal_points.md)
 

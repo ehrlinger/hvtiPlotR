@@ -290,12 +290,12 @@ directly.
 
 ### Device and theme mapping
 
-| `plot.sas` device              | hvtiPlotR theme            | Use for                         |
-|--------------------------------|----------------------------|---------------------------------|
-| `device=pscolor`               | `hvti_theme("manuscript")` | Journal PDF, black on white     |
-| `device=cgmmppa` + dark slide  | `hvti_theme("dark_ppt")`   | Dark-background PowerPoint      |
-| `device=cgmmppa` + white slide | `hvti_theme("light_ppt")`  | Light/transparent PowerPoint    |
-| —                              | `hvti_theme("poster")`     | Conference poster (larger text) |
+| `plot.sas` device              | hvtiPlotR theme          | Use for                         |
+|--------------------------------|--------------------------|---------------------------------|
+| `device=pscolor`               | `hv_theme("manuscript")` | Journal PDF, black on white     |
+| `device=cgmmppa` + dark slide  | `hv_theme("dark_ppt")`   | Dark-background PowerPoint      |
+| `device=cgmmppa` + white slide | `hv_theme("light_ppt")`  | Light/transparent PowerPoint    |
+| —                              | `hv_theme("poster")`     | Conference poster (larger text) |
 
 ## Generating ggplot2 graphics
 
@@ -396,7 +396,7 @@ dta <- read.csv(here::here("graphs", "mean_curv.csv"))
 
 This is the simplest approach and works well for the pre-computed
 summary datasets expected by **hvtiPlotR** constructors (e.g.,
-[`hvti_nonparametric()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_nonparametric.md),
+[`hv_nonparametric()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_nonparametric.md),
 [`hazard_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/hazard_plot.md)).
 
 #### Using the bundled example data
@@ -435,7 +435,7 @@ data(parametric, package = "hvtiPlotR")
 data(nonparametric, package = "hvtiPlotR")
 
 # Set a default hvtiPlotR plotting theme
-theme_set(hvtiPlotR::hvti_theme("manuscript")) 
+theme_set(hvtiPlotR::hv_theme("poster")) 
 ```
 
 One advantage of ggplot2 is that figures can be built up in successive
@@ -849,12 +849,12 @@ show(ccf_pptPlot)
 
 ## Themes and Decoration
 
-The **hvtiPlotR** package provides four themes via `hvti_theme(style)`:
+The **hvtiPlotR** package provides four themes via `hv_theme(style)`:
 `"manuscript"`, `"poster"`, `"light_ppt"`, and `"dark_ppt"`. Apply the
 theme as the last `+` layer on any composed ggplot object.
 
 ``` r
-ccf_plot + hvti_theme("manuscript")
+ccf_plot + hv_theme("poster")
 ```
 
     Warning: Removed 7 rows containing missing values or values outside the scale range
@@ -898,7 +898,7 @@ p_final <- ccf_plot +
     y       = "Percent in Each Category (ST)",
     caption = getwd()
   ) +
-  hvti_theme("manuscript")
+  hv_theme("poster")
 
 ggsave(
   filename = "../graphs/manuscript.pdf",
@@ -917,11 +917,10 @@ Plots](https://ehrlinger.github.io/hvtiPlotR/articles/plot-decorators.md).
 Use
 [`save_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/save_ppt.md)
 to insert a ggplot as an editable vector graphic into a PowerPoint file.
-Apply `hvti_theme("dark_ppt")` or `hvti_theme("light_ppt")` before
-saving.
+Apply `hv_theme("dark_ppt")` or `hv_theme("light_ppt")` before saving.
 
 ``` r
-p_ppt <- ccf_pptPlot + hvti_theme("dark_ppt")
+p_ppt <- ccf_pptPlot + hv_theme("dark_ppt")
 
 save_ppt(
   object       = p_ppt,
@@ -941,7 +940,7 @@ mind when composing figures.
 
 ### Manuscript figures
 
-- **Use `hvti_theme("manuscript")`** — black text, white background, no
+- **Use `hv_theme("manuscript")`** — black text, white background, no
   decorative fill. Never use coloured backgrounds in figures destined
   for journals.
 - **No chart titles** — the figure caption in the manuscript text
@@ -969,8 +968,8 @@ mind when composing figures.
 
 ### PowerPoint figures
 
-- **Use `hvti_theme("dark_ppt")` or `hvti_theme("light_ppt")`** — the
-  dark theme is the default for Cleveland Clinic presentation templates.
+- **Use `hv_theme("dark_ppt")` or `hv_theme("light_ppt")`** — the dark
+  theme is the default for Cleveland Clinic presentation templates.
   Match the theme to the slide background colour.
 - **No points on parametric curves** — presentation figures show lines
   only. Points are reserved for nonparametric data summaries.

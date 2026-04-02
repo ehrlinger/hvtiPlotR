@@ -4,7 +4,7 @@ Simulates pre-computed curve output matching what SAS produces after
 fitting a two-phase nonparametric temporal trend model and averaging
 patient-specific profiles with `PROC SUMMARY`. The output is suitable
 for direct use with
-[`hvti_nonparametric()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_nonparametric.md).
+[`hv_nonparametric()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_nonparametric.md).
 
 ## Usage
 
@@ -76,7 +76,7 @@ model output instead of this sample function.
 
 ## See also
 
-[`hvti_nonparametric()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_nonparametric.md),
+[`hv_nonparametric()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_nonparametric.md),
 [`sample_nonparametric_curve_points()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_nonparametric_curve_points.md)
 
 ## Examples

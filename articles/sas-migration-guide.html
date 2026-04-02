@@ -24,7 +24,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">hvtiPlotR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.0.9006</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.0.9009</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -64,9 +64,9 @@
       <h1>SAS Template Migration Guide: Finding Your Plot in R</h1>
 
       <p class="author">John Ehrlinger <a href="mailto:ehrlinj@ccf.org" class="email">ehrlinj@ccf.org</a></p>
-      <p class="date">2026-04-01</p>
+      <p class="date">2026-04-02</p>
 
-      <small class="dont-index">Source: <a href="https://github.com/ehrlinger/hvtiPlotR/blob/v2.0.0.9006/vignettes/sas-migration-guide.qmd" class="external-link"><code>vignettes/sas-migration-guide.qmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/ehrlinger/hvtiPlotR/blob/main/vignettes/sas-migration-guide.qmd" class="external-link"><code>vignettes/sas-migration-guide.qmd</code></a></small>
       <div class="d-none name"><code></code></div>
     </div>
 
@@ -83,13 +83,13 @@
 </h3>
 <p><strong>ggplot2 builds plots in layers.</strong> Instead of one macro call with many <code>color=</code>, <code>xaxis=</code>, and <code>footnote=</code> options, you chain <code>+</code> operations:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">np</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hvti_nonparametric.html">hvti_nonparametric</a></span><span class="op">(</span><span class="va">dat</span>, <span class="va">...</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">np</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hv_nonparametric.html">hv_nonparametric</a></span><span class="op">(</span><span class="va">dat</span>, <span class="va">...</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">np</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_colour_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"black"</span>, <span class="st">"gray40"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_x_continuous</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="fl">0</span><span class="op">:</span><span class="fl">12</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Years after Operation"</span>, y <span class="op">=</span> <span class="st">"Prevalence (%)"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/hvti_theme.html">hvti_theme</a></span><span class="op">(</span><span class="st">"manuscript"</span><span class="op">)</span></span></code></pre></div>
-<p><strong><code><a href="../reference/hvti_theme.html">hvti_theme()</a></code> replaces SAS <code>device=</code> / style options.</strong> Use <code>"dark_ppt"</code> / <code>"ppt"</code> for PowerPoint slides, <code>"light_ppt"</code> for light-background slides, <code>"manuscript"</code> for journal figures, and <code>"poster"</code> for conference posters.</p>
+<span>  <span class="fu"><a href="../reference/hv_theme.html">hv_theme</a></span><span class="op">(</span><span class="st">"poster"</span><span class="op">)</span></span></code></pre></div>
+<p><strong><code><a href="../reference/hv_theme.html">hv_theme()</a></code> replaces SAS <code>device=</code> / style options.</strong> Use <code>"dark_ppt"</code> / <code>"ppt"</code> for PowerPoint slides, <code>"light_ppt"</code> for light-background slides, <code>"manuscript"</code> for journal figures, and <code>"poster"</code> for conference posters.</p>
 <p><strong>Functions return a ggplot object; they do not display it.</strong> Call the plot object at the top level (or use <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code>) to render it, or save with <code><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave()</a></code> / <code><a href="../reference/save_ppt.html">save_ppt()</a></code>.</p>
 <p><strong>Pre-fitted models, not raw data.</strong> Most functions accept the <em>output</em> of a statistical model (curve datasets, probability estimates) rather than individual patient records — mirroring the SAS workflow where <code>%decompos()</code> or <code>%kaplan</code> computes estimates and a separate template step produces the figure.</p>
 <hr></section></section><section class="section level2"><h2 id="template-lookup-table">Template lookup table<a class="anchor" aria-label="anchor" href="#template-lookup-table"></a>
@@ -105,194 +105,194 @@
 <tr class="odd">
 <td><code>tp.np.afib.ivwristm.avrg_curv.binary.sas</code></td>
 <td>np</td>
-<td><code><a href="../reference/hvti_nonparametric.html">hvti_nonparametric()</a></code></td>
+<td><code><a href="../reference/hv_nonparametric.html">hv_nonparametric()</a></code></td>
 <td><a href="#np-binary-avg">Average curve — binary</a></td>
 </tr>
 <tr class="even">
 <td><code>tp.np.afib.ivwristm.pt_spec_phases.binary.sas</code></td>
 <td>np</td>
-<td><code><a href="../reference/hvti_nonparametric.html">hvti_nonparametric()</a></code></td>
+<td><code><a href="../reference/hv_nonparametric.html">hv_nonparametric()</a></code></td>
 <td><a href="#np-phases">Phase decomposition</a></td>
 </tr>
 <tr class="odd">
 <td><code>tp.np.afib.ivwristm.pt_specific.binary.sas</code></td>
 <td>np</td>
-<td><code><a href="../reference/hvti_nonparametric.html">hvti_nonparametric()</a></code></td>
+<td><code><a href="../reference/hv_nonparametric.html">hv_nonparametric()</a></code></td>
 <td><a href="#np-binary-avg">Average curve — binary</a></td>
 </tr>
 <tr class="even">
 <td><code>tp.np.afib.mult.avrg_curv.binary.sas</code></td>
 <td>np</td>
-<td><code><a href="../reference/hvti_nonparametric.html">hvti_nonparametric()</a></code></td>
+<td><code><a href="../reference/hv_nonparametric.html">hv_nonparametric()</a></code></td>
 <td><a href="#np-multigroup">Multi-group comparison</a></td>
 </tr>
 <tr class="odd">
 <td><code>tp.np.afib.mult.pt_spec.binary.sas</code></td>
 <td>np</td>
-<td><code><a href="../reference/hvti_nonparametric.html">hvti_nonparametric()</a></code></td>
+<td><code><a href="../reference/hv_nonparametric.html">hv_nonparametric()</a></code></td>
 <td><a href="#np-multigroup">Multi-group comparison</a></td>
 </tr>
 <tr class="even">
 <td><code>tp.np.avpkgrad_ozak_ind_mtwt.sas</code></td>
 <td>np</td>
-<td><code><a href="../reference/hvti_nonparametric.html">hvti_nonparametric()</a></code></td>
+<td><code><a href="../reference/hv_nonparametric.html">hv_nonparametric()</a></code></td>
 <td><a href="#np-multigroup">Multi-group comparison</a></td>
 </tr>
 <tr class="odd">
 <td><code>tp.np.fev.double.univariate.continuous.sas</code></td>
 <td>np</td>
-<td><code><a href="../reference/hvti_nonparametric.html">hvti_nonparametric()</a></code></td>
+<td><code><a href="../reference/hv_nonparametric.html">hv_nonparametric()</a></code></td>
 <td><a href="#np-continuous">Continuous outcome</a></td>
 </tr>
 <tr class="even">
 <td><code>tp.np.fev.multivariate.continuous.sas</code></td>
 <td>np</td>
-<td><code><a href="../reference/hvti_nonparametric.html">hvti_nonparametric()</a></code></td>
+<td><code><a href="../reference/hv_nonparametric.html">hv_nonparametric()</a></code></td>
 <td><a href="#np-multigroup">Multi-group comparison</a></td>
 </tr>
 <tr class="odd">
 <td><code>tp.np.fev.u.trend.continuous.sas</code></td>
 <td>np</td>
-<td><code><a href="../reference/hvti_nonparametric.html">hvti_nonparametric()</a></code></td>
+<td><code><a href="../reference/hv_nonparametric.html">hv_nonparametric()</a></code></td>
 <td><a href="#np-continuous">Continuous outcome</a></td>
 </tr>
 <tr class="even">
 <td><code>tp.np.tr.icdpr.avg_curv.sas</code></td>
 <td>np</td>
-<td><code><a href="../reference/hvti_nonparametric.html">hvti_nonparametric()</a></code></td>
+<td><code><a href="../reference/hv_nonparametric.html">hv_nonparametric()</a></code></td>
 <td><a href="#np-binary-avg">Average curve — binary</a></td>
 </tr>
 <tr class="odd">
 <td><code>tp.np.tr.ivecho.average_curv.ordinal.sas</code></td>
 <td>np</td>
-<td><code><a href="../reference/hvti_ordinal.html">hvti_ordinal()</a></code></td>
+<td><code><a href="../reference/hv_ordinal.html">hv_ordinal()</a></code></td>
 <td><a href="#np-ordinal">Ordinal outcomes</a></td>
 </tr>
 <tr class="even">
 <td><code>tp.np.tr.ivecho.independence.sas</code></td>
 <td>np</td>
-<td><code><a href="../reference/hvti_ordinal.html">hvti_ordinal()</a></code></td>
+<td><code><a href="../reference/hv_ordinal.html">hv_ordinal()</a></code></td>
 <td><a href="#np-ordinal-independence">Ordinal independence</a></td>
 </tr>
 <tr class="odd">
 <td><code>tp.np.tr.ivecho.u.phases.sas</code></td>
 <td>np</td>
-<td><code><a href="../reference/hvti_ordinal.html">hvti_ordinal()</a></code></td>
+<td><code><a href="../reference/hv_ordinal.html">hv_ordinal()</a></code></td>
 <td><a href="#np-ordinal-phases">Ordinal phases</a></td>
 </tr>
 <tr class="even">
 <td><code>tp.np.po_ar.u_multi.ordinal.sas</code></td>
 <td>np</td>
-<td><code><a href="../reference/hvti_ordinal.html">hvti_ordinal()</a></code></td>
+<td><code><a href="../reference/hv_ordinal.html">hv_ordinal()</a></code></td>
 <td><a href="#np-ordinal-multi">Ordinal multi-scenario</a></td>
 </tr>
 <tr class="odd">
 <td><code>tp.np.z0axdpo.continuous.bmi_xaxis.sas</code></td>
 <td>np</td>
-<td><code><a href="../reference/hvti_nonparametric.html">hvti_nonparametric()</a></code></td>
+<td><code><a href="../reference/hv_nonparametric.html">hv_nonparametric()</a></code></td>
 <td><a href="#np-covariate-xaxis">Covariate x-axis</a></td>
 </tr>
 <tr class="even">
 <td>
 <code>tp.ac.dead.sas</code> (via <code>%kaplan</code> / <code>%nelsont</code>)</td>
 <td>ac</td>
-<td><code><a href="../reference/hvti_survival.html">hvti_survival()</a></code></td>
+<td><code><a href="../reference/hv_survival.html">hv_survival()</a></code></td>
 <td><a href="#ac-dead">Kaplan–Meier survival</a></td>
 </tr>
 <tr class="odd">
 <td><code>tp.cp.dead.sas</code></td>
 <td>cp</td>
-<td><code><a href="../reference/hvti_survival.html">hvti_survival()</a></code></td>
+<td><code><a href="../reference/hv_survival.html">hv_survival()</a></code></td>
 <td><a href="#ac-dead">Kaplan–Meier survival</a></td>
 </tr>
 <tr class="even">
 <td><code>tp.dp.gfup.R</code></td>
 <td>dp</td>
-<td><code><a href="../reference/hvti_followup.html">hvti_followup()</a></code></td>
+<td><code><a href="../reference/hv_followup.html">hv_followup()</a></code></td>
 <td><a href="#dp-gfup">Goodness of follow-up</a></td>
 </tr>
 <tr class="odd">
 <td><code>tp.lp.propen.cov_balance.R</code></td>
 <td>lp</td>
-<td><code><a href="../reference/hvti_balance.html">hvti_balance()</a></code></td>
+<td><code><a href="../reference/hv_balance.html">hv_balance()</a></code></td>
 <td><a href="#lp-covbal">Covariate balance</a></td>
 </tr>
 <tr class="even">
 <td><code>tp.dp.female_bicus_preAR_sankey.R</code></td>
 <td>dp</td>
-<td><code><a href="../reference/hvti_alluvial.html">hvti_alluvial()</a></code></td>
+<td><code><a href="../reference/hv_alluvial.html">hv_alluvial()</a></code></td>
 <td><a href="#dp-sankey">Alluvial</a></td>
 </tr>
 <tr class="odd">
 <td>PAM cluster stability analysis</td>
 <td>dp</td>
-<td><code><a href="../reference/hvti_sankey.html">hvti_sankey()</a></code></td>
+<td><code><a href="../reference/hv_sankey.html">hv_sankey()</a></code></td>
 <td><a href="#dp-cluster-sankey">Cluster stability Sankey</a></td>
 </tr>
 <tr class="even">
 <td><code>tp.complexUpset.R</code></td>
 <td>dp</td>
-<td><code><a href="../reference/hvti_upset.html">hvti_upset()</a></code></td>
+<td><code><a href="../reference/hv_upset.html">hv_upset()</a></code></td>
 <td><a href="#dp-upset">UpSet plot</a></td>
 </tr>
 <tr class="odd">
 <td><code>tp.dp.spaghetti.echo.R</code></td>
 <td>dp</td>
-<td><code><a href="../reference/hvti_spaghetti.html">hvti_spaghetti()</a></code></td>
+<td><code><a href="../reference/hv_spaghetti.html">hv_spaghetti()</a></code></td>
 <td><a href="#dp-spaghetti">Spaghetti / individual trajectories</a></td>
 </tr>
 <tr class="even">
 <td><code>tp.rp.trends.sas</code></td>
 <td>rp</td>
-<td><code><a href="../reference/hvti_trends.html">hvti_trends()</a></code></td>
+<td><code><a href="../reference/hv_trends.html">hv_trends()</a></code></td>
 <td><a href="#dp-trends">Trends over time</a></td>
 </tr>
 <tr class="odd">
 <td><code>tp.lp.trends.sas</code></td>
 <td>lp</td>
-<td><code><a href="../reference/hvti_trends.html">hvti_trends()</a></code></td>
+<td><code><a href="../reference/hv_trends.html">hv_trends()</a></code></td>
 <td><a href="#dp-trends">Trends over time</a></td>
 </tr>
 <tr class="even">
 <td><code>tp.lp.trends.age.sas</code></td>
 <td>lp</td>
-<td><code><a href="../reference/hvti_trends.html">hvti_trends()</a></code></td>
+<td><code><a href="../reference/hv_trends.html">hv_trends()</a></code></td>
 <td><a href="#dp-trends">Trends over time</a></td>
 </tr>
 <tr class="odd">
 <td><code>tp.lp.trends.polytomous.sas</code></td>
 <td>lp</td>
-<td><code><a href="../reference/hvti_trends.html">hvti_trends()</a></code></td>
+<td><code><a href="../reference/hv_trends.html">hv_trends()</a></code></td>
 <td><a href="#dp-trends">Trends over time</a></td>
 </tr>
 <tr class="even">
 <td><code>tp.dp.trends.R</code></td>
 <td>dp</td>
-<td><code><a href="../reference/hvti_trends.html">hvti_trends()</a></code></td>
+<td><code><a href="../reference/hv_trends.html">hv_trends()</a></code></td>
 <td><a href="#dp-trends">Trends over time</a></td>
 </tr>
 <tr class="odd">
 <td><code>tp.dp.longitudinal_patients_measures.R</code></td>
 <td>dp</td>
-<td><code><a href="../reference/hvti_longitudinal.html">hvti_longitudinal()</a></code></td>
+<td><code><a href="../reference/hv_longitudinal.html">hv_longitudinal()</a></code></td>
 <td><a href="#dp-long-counts">Longitudinal counts</a></td>
 </tr>
 <tr class="even">
 <td><code>tp.lp.mirror-histogram_SAVR-TF-TAVR.R</code></td>
 <td>lp</td>
-<td><code><a href="../reference/hvti_mirror_hist.html">hvti_mirror_hist()</a></code></td>
+<td><code><a href="../reference/hv_mirror_hist.html">hv_mirror_hist()</a></code></td>
 <td><a href="#dp-mirror">Mirror histogram — binary-match</a></td>
 </tr>
 <tr class="odd">
 <td><code>tp.lp.mirror_histo_before_after_wt.R</code></td>
 <td>lp</td>
-<td><code>hvti_mirror_hist(weight_col = ...)</code></td>
+<td><code>hv_mirror_hist(weight_col = ...)</code></td>
 <td><a href="#dp-mirror">Mirror histogram — weighted IPTW</a></td>
 </tr>
 <tr class="even">
 <td>Stacked histogram</td>
 <td>dp</td>
-<td><code><a href="../reference/hvti_stacked.html">hvti_stacked()</a></code></td>
+<td><code><a href="../reference/hv_stacked.html">hv_stacked()</a></code></td>
 <td><a href="#dp-stacked">Stacked histogram</a></td>
 </tr>
 <tr class="odd">
@@ -432,7 +432,7 @@
 <span><span class="va">dat_pts</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sample_nonparametric_curve_points.html">sample_nonparametric_curve_points</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">500</span>, time_max <span class="op">=</span> <span class="fl">12</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Minimal plot</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="../reference/hvti_nonparametric.html">hvti_nonparametric</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="../reference/hv_nonparametric.html">hv_nonparametric</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_x_continuous</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">12</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous</a></span><span class="op">(</span></span>
 <span>    limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span>,</span>
@@ -444,7 +444,7 @@
 <span>    y     <span class="op">=</span> <span class="st">"Prevalence (%)"</span>,</span>
 <span>    title <span class="op">=</span> <span class="st">"Atrial Fibrillation Prevalence"</span></span>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/hvti_theme.html">hvti_theme</a></span><span class="op">(</span><span class="st">"manuscript"</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/hv_theme.html">hv_theme</a></span><span class="op">(</span><span class="st">"poster"</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
 <div>
 <figure><p><img src="sas-migration-guide_files/figure-html/np-binary-avg-example-1.png" width="672"></p>
@@ -455,7 +455,7 @@
 <p>Add 68% CI bands (one standard error; matches SAS <code>boots_ci</code> with <code>cll_p68</code> / <code>clu_p68</code>):</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="../reference/hvti_nonparametric.html">hvti_nonparametric</a></span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="../reference/hv_nonparametric.html">hv_nonparametric</a></span><span class="op">(</span></span>
 <span>  <span class="va">dat</span>,</span>
 <span>  lower_col <span class="op">=</span> <span class="st">"lower"</span>,</span>
 <span>  upper_col <span class="op">=</span> <span class="st">"upper"</span></span>
@@ -471,7 +471,7 @@
 <span>    y     <span class="op">=</span> <span class="st">"Prevalence (%)"</span>,</span>
 <span>    title <span class="op">=</span> <span class="st">"Atrial Fibrillation — 68% CI"</span></span>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/hvti_theme.html">hvti_theme</a></span><span class="op">(</span><span class="st">"manuscript"</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/hv_theme.html">hv_theme</a></span><span class="op">(</span><span class="st">"poster"</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
 <div>
 <figure><p><img src="sas-migration-guide_files/figure-html/np-binary-avg-ci-1.png" width="672"></p>
@@ -482,7 +482,7 @@
 <p>Add binned data summary points (matches the SAS <code>means</code> dataset):</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="../reference/hvti_nonparametric.html">hvti_nonparametric</a></span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="../reference/hv_nonparametric.html">hv_nonparametric</a></span><span class="op">(</span></span>
 <span>  <span class="va">dat</span>,</span>
 <span>  lower_col   <span class="op">=</span> <span class="st">"lower"</span>,</span>
 <span>  upper_col   <span class="op">=</span> <span class="st">"upper"</span>,</span>
@@ -499,7 +499,7 @@
 <span>    y     <span class="op">=</span> <span class="st">"Prevalence (%)"</span>,</span>
 <span>    title <span class="op">=</span> <span class="st">"Atrial Fibrillation with Binned Observations"</span></span>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/hvti_theme.html">hvti_theme</a></span><span class="op">(</span><span class="st">"manuscript"</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/hv_theme.html">hv_theme</a></span><span class="op">(</span><span class="st">"poster"</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
 <div>
 <figure><p><img src="sas-migration-guide_files/figure-html/np-binary-avg-points-1.png" width="672"></p>
@@ -524,7 +524,7 @@
 <span>  outcome_type <span class="op">=</span> <span class="st">"continuous"</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="../reference/hvti_nonparametric.html">hvti_nonparametric</a></span><span class="op">(</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="../reference/hv_nonparametric.html">hv_nonparametric</a></span><span class="op">(</span></span>
 <span>  <span class="va">dat_cont</span>,</span>
 <span>  lower_col   <span class="op">=</span> <span class="st">"lower"</span>,</span>
 <span>  upper_col   <span class="op">=</span> <span class="st">"upper"</span>,</span>
@@ -542,7 +542,7 @@
 <span>    label <span class="op">=</span> <span class="st">"68% CI band"</span>,</span>
 <span>    hjust <span class="op">=</span> <span class="fl">1</span>, size <span class="op">=</span> <span class="fl">3</span></span>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/hvti_theme.html">hvti_theme</a></span><span class="op">(</span><span class="st">"manuscript"</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/hv_theme.html">hv_theme</a></span><span class="op">(</span><span class="st">"poster"</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
 <div>
 <figure><p><img src="sas-migration-guide_files/figure-html/np-continuous-example-1.png" width="672"></p>
@@ -568,7 +568,7 @@
 <span>  groups   <span class="op">=</span> <span class="va">grp_def</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="../reference/hvti_nonparametric.html">hvti_nonparametric</a></span><span class="op">(</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="../reference/hv_nonparametric.html">hv_nonparametric</a></span><span class="op">(</span></span>
 <span>  <span class="va">dat_grp</span>,</span>
 <span>  group_col   <span class="op">=</span> <span class="st">"group"</span>,</span>
 <span>  lower_col   <span class="op">=</span> <span class="st">"lower"</span>,</span>
@@ -594,7 +594,7 @@
 <span>    fill   <span class="op">=</span> <span class="st">"Valve type"</span>,</span>
 <span>    title  <span class="op">=</span> <span class="st">"Atrial Fibrillation by Valve Type"</span></span>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/hvti_theme.html">hvti_theme</a></span><span class="op">(</span><span class="st">"manuscript"</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/hv_theme.html">hv_theme</a></span><span class="op">(</span><span class="st">"poster"</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
 <div>
 <figure><p><img src="sas-migration-guide_files/figure-html/np-multigroup-example-1.png" width="672"></p>
@@ -613,7 +613,7 @@
 <span>  groups <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Early phase"</span> <span class="op">=</span> <span class="fl">1.5</span>, <span class="st">"Late phase"</span> <span class="op">=</span> <span class="fl">0.6</span>, <span class="st">"Overall"</span> <span class="op">=</span> <span class="fl">1.0</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="../reference/hvti_nonparametric.html">hvti_nonparametric</a></span><span class="op">(</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="../reference/hv_nonparametric.html">hv_nonparametric</a></span><span class="op">(</span></span>
 <span>  <span class="va">dat_phase</span>,</span>
 <span>  group_col <span class="op">=</span> <span class="st">"group"</span></span>
 <span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
@@ -639,7 +639,7 @@
 <span>    colour <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>    title  <span class="op">=</span> <span class="st">"AF — Early and Late Phase Decomposition"</span></span>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/hvti_theme.html">hvti_theme</a></span><span class="op">(</span><span class="st">"manuscript"</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/hv_theme.html">hv_theme</a></span><span class="op">(</span><span class="st">"poster"</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
 <div>
 <figure><p><img src="sas-migration-guide_files/figure-html/np-phases-example-1.png" width="672"></p>
@@ -666,7 +666,7 @@
 <span>  upper <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">pmin</a></span><span class="op">(</span><span class="fl">1</span>, <span class="va">est</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">qnorm</a></span><span class="op">(</span><span class="fl">0.84</span><span class="op">)</span> <span class="op">*</span> <span class="va">se</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="../reference/hvti_nonparametric.html">hvti_nonparametric</a></span><span class="op">(</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="../reference/hv_nonparametric.html">hv_nonparametric</a></span><span class="op">(</span></span>
 <span>  <span class="va">bmi_curve</span>,</span>
 <span>  x_col        <span class="op">=</span> <span class="st">"bmi"</span>,</span>
 <span>  estimate_col <span class="op">=</span> <span class="st">"est"</span>,</span>
@@ -687,7 +687,7 @@
 <span>    y     <span class="op">=</span> <span class="st">"Estimated Probability"</span>,</span>
 <span>    title <span class="op">=</span> <span class="st">"Outcome Probability vs. BMI at Operation"</span></span>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/hvti_theme.html">hvti_theme</a></span><span class="op">(</span><span class="st">"manuscript"</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/hv_theme.html">hv_theme</a></span><span class="op">(</span><span class="st">"poster"</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
 <div>
 <figure><p><img src="sas-migration-guide_files/figure-html/np-bmi-xaxis-1.png" width="672"></p>
@@ -698,7 +698,7 @@
 </section><section class="level2"><h3 id="np-ordinal">Ordinal outcomes<a class="anchor" aria-label="anchor" href="#np-ordinal"></a>
 </h3>
 <p><strong>Port:</strong> <code>tp.np.tr.ivecho.average_curv.ordinal.sas</code></p>
-<p>Ordinal templates (TR grade, AR grade) use <code><a href="../reference/hvti_ordinal.html">hvti_ordinal()</a></code>. The critical migration step is reshaping the SAS wide-format <code>predict</code> dataset (one column per grade) to long format.</p>
+<p>Ordinal templates (TR grade, AR grade) use <code><a href="../reference/hv_ordinal.html">hv_ordinal()</a></code>. The critical migration step is reshaping the SAS wide-format <code>predict</code> dataset (one column per grade) to long format.</p>
 <p><strong>SAS reshape (do this before reading into R):</strong></p>
 <pre class="sas"><code>/* SAS wide format: p0, p1, p2, p3 */
 data predict_wide;
@@ -727,7 +727,7 @@ run;</code></pre>
 <span>  grade_labels <span class="op">=</span> <span class="va">ord_labels</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="../reference/hvti_ordinal.html">hvti_ordinal</a></span><span class="op">(</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="../reference/hv_ordinal.html">hv_ordinal</a></span><span class="op">(</span></span>
 <span>  <span class="va">dat_ord</span>,</span>
 <span>  grade_col   <span class="op">=</span> <span class="st">"grade"</span>,</span>
 <span>  data_points <span class="op">=</span> <span class="va">dat_ord_pts</span></span>
@@ -752,7 +752,7 @@ run;</code></pre>
 <span>    colour <span class="op">=</span> <span class="st">"TR Grade"</span>,</span>
 <span>    title  <span class="op">=</span> <span class="st">"Tricuspid Regurgitation Grade"</span></span>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/hvti_theme.html">hvti_theme</a></span><span class="op">(</span><span class="st">"manuscript"</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/hv_theme.html">hv_theme</a></span><span class="op">(</span><span class="st">"poster"</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
 <div>
 <figure><p><img src="sas-migration-guide_files/figure-html/np-ordinal-example-1.png" width="672"></p>
@@ -772,7 +772,7 @@ run;</code></pre>
 <span><span class="va">dat_ar2</span><span class="op">$</span><span class="va">scenario</span> <span class="op">&lt;-</span> <span class="st">"After repair"</span></span>
 <span><span class="va">combined</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span><span class="va">dat_ar1</span>, <span class="va">dat_ar2</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="../reference/hvti_ordinal.html">hvti_ordinal</a></span><span class="op">(</span><span class="va">combined</span>, grade_col <span class="op">=</span> <span class="st">"grade"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="../reference/hv_ordinal.html">hv_ordinal</a></span><span class="op">(</span><span class="va">combined</span>, grade_col <span class="op">=</span> <span class="st">"grade"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html" class="external-link">facet_wrap</a></span><span class="op">(</span><span class="op">~</span><span class="va">scenario</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_x_continuous</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="fl">0</span><span class="op">:</span><span class="fl">5</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous</a></span><span class="op">(</span></span>
@@ -785,7 +785,7 @@ run;</code></pre>
 <span>    colour <span class="op">=</span> <span class="st">"AR Grade"</span>,</span>
 <span>    title  <span class="op">=</span> <span class="st">"AR Grade — Before vs. After Repair"</span></span>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/hvti_theme.html">hvti_theme</a></span><span class="op">(</span><span class="st">"manuscript"</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/hv_theme.html">hv_theme</a></span><span class="op">(</span><span class="st">"poster"</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
 <div>
 <figure><p><img src="sas-migration-guide_files/figure-html/np-ordinal-multi-example-1.png" width="672"></p>
@@ -804,7 +804,7 @@ run;</code></pre>
 <span><span class="va">grade_2</span>    <span class="op">&lt;-</span> <span class="va">dat_ind</span><span class="op">[</span><span class="va">dat_ind</span><span class="op">$</span><span class="va">grade</span> <span class="op">==</span> <span class="st">"Grade 2"</span>, <span class="op">]</span></span>
 <span><span class="va">dp_grade_2</span> <span class="op">&lt;-</span> <span class="va">pts_ind</span><span class="op">[</span><span class="va">pts_ind</span><span class="op">$</span><span class="va">grade</span> <span class="op">==</span> <span class="st">"Grade 2"</span>, <span class="op">]</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="../reference/hvti_ordinal.html">hvti_ordinal</a></span><span class="op">(</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="../reference/hv_ordinal.html">hv_ordinal</a></span><span class="op">(</span></span>
 <span>  <span class="va">grade_2</span>,</span>
 <span>  grade_col   <span class="op">=</span> <span class="st">"grade"</span>,</span>
 <span>  data_points <span class="op">=</span> <span class="va">dp_grade_2</span></span>
@@ -820,7 +820,7 @@ run;</code></pre>
 <span>    y     <span class="op">=</span> <span class="st">"Probability"</span>,</span>
 <span>    title <span class="op">=</span> <span class="st">"Probability of TR Grade 2"</span></span>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/hvti_theme.html">hvti_theme</a></span><span class="op">(</span><span class="st">"manuscript"</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/hv_theme.html">hv_theme</a></span><span class="op">(</span><span class="st">"poster"</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
 <div>
 <figure><p><img src="sas-migration-guide_files/figure-html/np-ordinal-independence-example-1.png" width="672"></p>
@@ -836,7 +836,7 @@ run;</code></pre>
 <div class="sourceCode cell-code" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">dat_ph</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sample_nonparametric_ordinal_data.html">sample_nonparametric_ordinal_data</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">800</span>, seed <span class="op">=</span> <span class="fl">7</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="../reference/hvti_ordinal.html">hvti_ordinal</a></span><span class="op">(</span><span class="va">dat_ph</span>, grade_col <span class="op">=</span> <span class="st">"grade"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="../reference/hv_ordinal.html">hv_ordinal</a></span><span class="op">(</span><span class="va">dat_ph</span>, grade_col <span class="op">=</span> <span class="st">"grade"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/annotate.html" class="external-link">annotate</a></span><span class="op">(</span><span class="st">"rect"</span>,</span>
 <span>    xmin <span class="op">=</span> <span class="fl">0</span>, xmax <span class="op">=</span> <span class="fl">2</span>,  ymin <span class="op">=</span> <span class="op">-</span><span class="cn">Inf</span>, ymax <span class="op">=</span> <span class="cn">Inf</span>,</span>
 <span>    fill <span class="op">=</span> <span class="st">"steelblue"</span>, alpha <span class="op">=</span> <span class="fl">0.07</span></span>
@@ -861,7 +861,7 @@ run;</code></pre>
 <span>    colour <span class="op">=</span> <span class="st">"TR Grade"</span>,</span>
 <span>    title  <span class="op">=</span> <span class="st">"TR Grade — Early and Late Phase"</span></span>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/hvti_theme.html">hvti_theme</a></span><span class="op">(</span><span class="st">"manuscript"</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/hv_theme.html">hv_theme</a></span><span class="op">(</span><span class="st">"poster"</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
 <div>
 <figure><p><img src="sas-migration-guide_files/figure-html/np-ordinal-phases-example-1.png" width="672"></p>
@@ -872,11 +872,11 @@ run;</code></pre>
 <hr></section></section></section><section class="section level2"><h2 id="ac-dead">Survival analysis (<code>tp.ac.dead.*</code>, <code>tp.cp.dead.*</code>)<a class="anchor" aria-label="anchor" href="#ac-dead"></a>
 </h2>
 <p><strong>Ports:</strong> <code>tp.ac.dead.sas</code>, <code>tp.cp.dead.sas</code></p>
-<p><strong>R equivalent:</strong> <code><a href="../reference/hvti_survival.html">hvti_survival()</a></code></p>
-<p><code><a href="../reference/hvti_survival.html">hvti_survival()</a></code> wraps <code>survfit()</code> from the <strong>survival</strong> package and returns an S3 object. Call <code>plot(km, type = ...)</code> to render one of the five plot types matching the SAS <code>%kaplan</code> / <code>%nelsont</code> macro output flags (<code>PLOTS</code>, <code>PLOTC</code>, <code>PLOTH</code>, <code>PLOTL</code>). Tidy data frames are accessible via <code>km$tables</code>.</p>
+<p><strong>R equivalent:</strong> <code><a href="../reference/hv_survival.html">hv_survival()</a></code></p>
+<p><code><a href="../reference/hv_survival.html">hv_survival()</a></code> wraps <code>survfit()</code> from the <strong>survival</strong> package and returns an S3 object. Call <code>plot(km, type = ...)</code> to render one of the five plot types matching the SAS <code>%kaplan</code> / <code>%nelsont</code> macro output flags (<code>PLOTS</code>, <code>PLOTC</code>, <code>PLOTH</code>, <code>PLOTL</code>). Tidy data frames are accessible via <code>km$tables</code>.</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">dta</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sample_survival_data.html">sample_survival_data</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">500</span>, seed <span class="op">=</span> <span class="fl">42</span><span class="op">)</span></span>
-<span><span class="va">km</span>  <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hvti_survival.html">hvti_survival</a></span><span class="op">(</span><span class="va">dta</span><span class="op">)</span></span>
+<span><span class="va">km</span>  <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hv_survival.html">hv_survival</a></span><span class="op">(</span><span class="va">dta</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Kaplan–Meier survival (PLOTS)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">km</span><span class="op">)</span> <span class="op">+</span></span>
@@ -891,27 +891,27 @@ run;</code></pre>
 <span>    y     <span class="op">=</span> <span class="st">"Survival (%)"</span>,</span>
 <span>    title <span class="op">=</span> <span class="st">"Freedom from Death"</span></span>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/hvti_theme.html">hvti_theme</a></span><span class="op">(</span><span class="st">"manuscript"</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="../reference/hv_theme.html">hv_theme</a></span><span class="op">(</span><span class="st">"poster"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Cumulative hazard (PLOTC)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">km</span>, type <span class="op">=</span> <span class="st">"cumhaz"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Years"</span>, y <span class="op">=</span> <span class="st">"Cumulative Hazard"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/hvti_theme.html">hvti_theme</a></span><span class="op">(</span><span class="st">"manuscript"</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="../reference/hv_theme.html">hv_theme</a></span><span class="op">(</span><span class="st">"poster"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Hazard rate (PLOTH)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">km</span>, type <span class="op">=</span> <span class="st">"hazard"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Years"</span>, y <span class="op">=</span> <span class="st">"Instantaneous Hazard"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/hvti_theme.html">hvti_theme</a></span><span class="op">(</span><span class="st">"manuscript"</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="../reference/hv_theme.html">hv_theme</a></span><span class="op">(</span><span class="st">"poster"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Log-log survival (PH check)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">km</span>, type <span class="op">=</span> <span class="st">"loglog"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"log(Years)"</span>, y <span class="op">=</span> <span class="st">"log(-log S(t))"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/hvti_theme.html">hvti_theme</a></span><span class="op">(</span><span class="st">"manuscript"</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="../reference/hv_theme.html">hv_theme</a></span><span class="op">(</span><span class="st">"poster"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Integrated survivorship (PLOTL)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">km</span>, type <span class="op">=</span> <span class="st">"life"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Years"</span>, y <span class="op">=</span> <span class="st">"Restricted Mean Survival (years)"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/hvti_theme.html">hvti_theme</a></span><span class="op">(</span><span class="st">"manuscript"</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="../reference/hv_theme.html">hv_theme</a></span><span class="op">(</span><span class="st">"poster"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Access the KM data, risk table, and report table</span></span>
 <span><span class="va">km</span><span class="op">$</span><span class="va">data</span>              <span class="co"># tidy KM data frame</span></span>
@@ -971,19 +971,19 @@ run;</code></pre>
 <hr></section></section><section class="section level2"><h2 id="dp-gfup">Goodness of follow-up (<code>tp.dp.gfup.R</code>)<a class="anchor" aria-label="anchor" href="#dp-gfup"></a>
 </h2>
 <p><strong>Port:</strong> <code>tp.dp.gfup.R</code></p>
-<p><strong>R equivalent:</strong> <code><a href="../reference/hvti_followup.html">hvti_followup()</a></code></p>
+<p><strong>R equivalent:</strong> <code><a href="../reference/hv_followup.html">hv_followup()</a></code></p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">dta</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sample_goodness_followup_data.html">sample_goodness_followup_data</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">300</span><span class="op">)</span></span>
-<span><span class="va">gf</span>  <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hvti_followup.html">hvti_followup</a></span><span class="op">(</span><span class="va">dta</span><span class="op">)</span></span>
+<span><span class="va">gf</span>  <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hv_followup.html">hv_followup</a></span><span class="op">(</span><span class="va">dta</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">gf</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Goodness of Follow-Up"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/hvti_theme.html">hvti_theme</a></span><span class="op">(</span><span class="st">"manuscript"</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/hv_theme.html">hv_theme</a></span><span class="op">(</span><span class="st">"poster"</span><span class="op">)</span></span></code></pre></div>
 <hr></section><section class="section level2"><h2 id="lp-covbal">Covariate balance (<code>tp.lp.propen.cov_balance.R</code>)<a class="anchor" aria-label="anchor" href="#lp-covbal"></a>
 </h2>
 <p><strong>Port:</strong> <code>tp.lp.propen.cov_balance.R</code></p>
-<p><strong>R equivalent:</strong> <code><a href="../reference/hvti_balance.html">hvti_balance()</a></code></p>
-<p>The SAS export arrives wide (one column per time-point). Reshape to long format before calling <code><a href="../reference/hvti_balance.html">hvti_balance()</a></code>. Pass <code>var_levels</code> to control the bottom-to-top display order of covariates (matches <code>ylabel</code> in the original script).</p>
+<p><strong>R equivalent:</strong> <code><a href="../reference/hv_balance.html">hv_balance()</a></code></p>
+<p>The SAS export arrives wide (one column per time-point). Reshape to long format before calling <code><a href="../reference/hv_balance.html">hv_balance()</a></code>. Pass <code>var_levels</code> to control the bottom-to-top display order of covariates (matches <code>ylabel</code> in the original script).</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Reshape wide → long (mirrors the original script)</span></span>
 <span><span class="va">ylabel</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
@@ -1005,7 +1005,7 @@ run;</code></pre>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">n_vars</span>    <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">ylabel</span><span class="op">)</span></span>
-<span><span class="va">cb</span>        <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hvti_balance.html">hvti_balance</a></span><span class="op">(</span></span>
+<span><span class="va">cb</span>        <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hv_balance.html">hv_balance</a></span><span class="op">(</span></span>
 <span>  data         <span class="op">=</span> <span class="va">dta_long</span>,</span>
 <span>  variable_col <span class="op">=</span> <span class="st">"variable"</span>,</span>
 <span>  group_col    <span class="op">=</span> <span class="st">"group"</span>,</span>
@@ -1027,27 +1027,27 @@ run;</code></pre>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/annotate.html" class="external-link">annotate</a></span><span class="op">(</span><span class="st">"text"</span>, x <span class="op">=</span> <span class="op">-</span><span class="fl">30</span>, y <span class="op">=</span> <span class="fl">0</span>,      label <span class="op">=</span> <span class="st">"More likely TF-TAVR"</span>, size <span class="op">=</span> <span class="fl">4.5</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/annotate.html" class="external-link">annotate</a></span><span class="op">(</span><span class="st">"text"</span>, x <span class="op">=</span>  <span class="fl">22</span>, y <span class="op">=</span> <span class="va">n_vars</span>, label <span class="op">=</span> <span class="st">"More likely SAVR"</span>,    size <span class="op">=</span> <span class="fl">4.5</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>legend.position <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.20</span>, <span class="fl">0.935</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/hvti_theme.html">hvti_theme</a></span><span class="op">(</span><span class="st">"manuscript"</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="../reference/hv_theme.html">hv_theme</a></span><span class="op">(</span><span class="st">"poster"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave</a></span><span class="op">(</span><span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org/reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="st">"graphs"</span>, <span class="st">"lp_cov-balance-SAVR_TF-TAVR.pdf"</span><span class="op">)</span>,</span>
 <span>       plot <span class="op">=</span> <span class="va">stdifPlot</span>, height <span class="op">=</span> <span class="fl">7</span>, width <span class="op">=</span> <span class="fl">8</span><span class="op">)</span></span></code></pre></div>
 <hr></section><section class="section level2"><h2 id="dp-sankey">Alluvial flow (<code>tp.dp.female_bicus_preAR_sankey.R</code>)<a class="anchor" aria-label="anchor" href="#dp-sankey"></a>
 </h2>
 <p><strong>Port:</strong> <code>tp.dp.female_bicus_preAR_sankey.R</code></p>
-<p><strong>R equivalent:</strong> <code><a href="../reference/hvti_alluvial.html">hvti_alluvial()</a></code></p>
+<p><strong>R equivalent:</strong> <code><a href="../reference/hv_alluvial.html">hv_alluvial()</a></code></p>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">dta</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sample_alluvial_data.html">sample_alluvial_data</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">200</span><span class="op">)</span></span>
-<span><span class="va">al</span>  <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hvti_alluvial.html">hvti_alluvial</a></span><span class="op">(</span><span class="va">dta</span><span class="op">)</span></span>
+<span><span class="va">al</span>  <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hv_alluvial.html">hv_alluvial</a></span><span class="op">(</span><span class="va">dta</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">al</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_fill_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Set2"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Patient Flow Between States"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/hvti_theme.html">hvti_theme</a></span><span class="op">(</span><span class="st">"manuscript"</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/hv_theme.html">hv_theme</a></span><span class="op">(</span><span class="st">"poster"</span><span class="op">)</span></span></code></pre></div>
 <hr></section><section class="section level2"><h2 id="dp-cluster-sankey">Cluster stability Sankey (PAM analysis)<a class="anchor" aria-label="anchor" href="#dp-cluster-sankey"></a>
 </h2>
 <p><strong>Source:</strong> PAM clustering analysis pipeline (R script using <code>ggsankey</code>)</p>
-<p><strong>R equivalent:</strong> <code><a href="../reference/hvti_sankey.html">hvti_sankey()</a></code></p>
-<p><code><a href="../reference/hvti_sankey.html">hvti_sankey()</a></code> draws a Sankey diagram showing how patients flow between letter-labelled clusters as the number of clusters K increases from 2 to 9. Each column is one K; flow bands show assignment changes between consecutive K values; node labels show cluster letter + patient count.</p>
+<p><strong>R equivalent:</strong> <code><a href="../reference/hv_sankey.html">hv_sankey()</a></code></p>
+<p><code><a href="../reference/hv_sankey.html">hv_sankey()</a></code> draws a Sankey diagram showing how patients flow between letter-labelled clusters as the number of clusters K increases from 2 to 9. Each column is one K; flow bands show assignment changes between consecutive K values; node labels show cluster letter + patient count.</p>
 <p>The original code used <code><a href="https://rdrr.io/pkg/ggsankey/man/make_long.html" class="external-link">ggsankey::make_long()</a></code> with hard-coded column names and ordering vectors. The R port accepts any cluster columns and ordering via <code>cluster_cols</code> and <code>node_levels</code> arguments.</p>
 <p><strong>Requires <code>ggsankey</code></strong> (install from GitHub):</p>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
@@ -1079,7 +1079,7 @@ run;</code></pre>
 <code>geom_sankey()</code> + <code>geom_sankey_label()</code>
 </td>
 <td>
-<code><a href="../reference/hvti_sankey.html">hvti_sankey()</a></code> + <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code>
+<code><a href="../reference/hv_sankey.html">hv_sankey()</a></code> + <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code>
 </td>
 </tr>
 <tr class="even">
@@ -1091,11 +1091,11 @@ run;</code></pre>
 </table>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">dta_san</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sample_cluster_sankey_data.html">sample_cluster_sankey_data</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">300</span>, seed <span class="op">=</span> <span class="fl">42</span><span class="op">)</span></span>
-<span><span class="va">sk</span>      <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hvti_sankey.html">hvti_sankey</a></span><span class="op">(</span><span class="va">dta_san</span><span class="op">)</span></span>
+<span><span class="va">sk</span>      <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hv_sankey.html">hv_sankey</a></span><span class="op">(</span><span class="va">dta_san</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sk</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Cluster Stability: K = 2 to 9"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/hvti_theme.html">hvti_theme</a></span><span class="op">(</span><span class="st">"manuscript"</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/hv_theme.html">hv_theme</a></span><span class="op">(</span><span class="st">"poster"</span><span class="op">)</span></span></code></pre></div>
 <p>To reproduce the original analysis with patient-level cluster assignments:</p>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Build a data frame with one row per patient, columns C2..C9 (factor)</span></span>
@@ -1106,7 +1106,7 @@ run;</code></pre>
 <span>  C9 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">pm9clusters_labels</span>, levels <span class="op">=</span> <span class="va">gr9_names</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">sk_grp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hvti_sankey.html">hvti_sankey</a></span><span class="op">(</span></span>
+<span><span class="va">sk_grp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hv_sankey.html">hv_sankey</a></span><span class="op">(</span></span>
 <span>  <span class="va">grp_dta</span>,</span>
 <span>  cluster_cols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"C"</span>, <span class="fl">2</span><span class="op">:</span><span class="fl">9</span><span class="op">)</span>,</span>
 <span>  node_levels  <span class="op">=</span> <span class="va">gr9_names</span></span>
@@ -1114,26 +1114,26 @@ run;</code></pre>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sk_grp</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/hvti_theme.html">hvti_theme</a></span><span class="op">(</span><span class="st">"manuscript"</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/hv_theme.html">hv_theme</a></span><span class="op">(</span><span class="st">"poster"</span><span class="op">)</span></span></code></pre></div>
 <hr></section></section><section class="section level2"><h2 id="dp-upset">UpSet plot (<code>tp.complexUpset.R</code>)<a class="anchor" aria-label="anchor" href="#dp-upset"></a>
 </h2>
 <p><strong>Port:</strong> <code>tp.complexUpset.R</code></p>
-<p><strong>R equivalent:</strong> <code><a href="../reference/hvti_upset.html">hvti_upset()</a></code></p>
+<p><strong>R equivalent:</strong> <code><a href="../reference/hv_upset.html">hv_upset()</a></code></p>
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">sets</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"CABG"</span>, <span class="st">"Valve"</span>, <span class="st">"MAZE"</span>, <span class="st">"Aorta"</span><span class="op">)</span></span>
 <span><span class="va">dta</span>  <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sample_upset_data.html">sample_upset_data</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">300</span>, sets <span class="op">=</span> <span class="va">sets</span><span class="op">)</span></span>
-<span><span class="va">hu</span>   <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hvti_upset.html">hvti_upset</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">dta</span>, intersect <span class="op">=</span> <span class="va">sets</span><span class="op">)</span></span>
+<span><span class="va">hu</span>   <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hv_upset.html">hv_upset</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">dta</span>, intersect <span class="op">=</span> <span class="va">sets</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">hu</span><span class="op">)</span></span></code></pre></div>
 <hr></section><section class="section level2"><h2 id="dp-spaghetti">Spaghetti / individual trajectories (<code>tp.dp.spaghetti.echo.R</code>)<a class="anchor" aria-label="anchor" href="#dp-spaghetti"></a>
 </h2>
 <p><strong>Port:</strong> <code>tp.dp.spaghetti.echo.R</code></p>
-<p><strong>R equivalent:</strong> <code><a href="../reference/hvti_spaghetti.html">hvti_spaghetti()</a></code></p>
+<p><strong>R equivalent:</strong> <code><a href="../reference/hv_spaghetti.html">hv_spaghetti()</a></code></p>
 <p>The template covers nine figures across three echo outcomes (AV mean gradient, AV area, DVI) in unstratified and sex-stratified variants, plus an ordinal MV regurgitation grade plot (plot_9).</p>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">dta</span>    <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sample_spaghetti_data.html">sample_spaghetti_data</a></span><span class="op">(</span>n_patients <span class="op">=</span> <span class="fl">150</span>, max_obs <span class="op">=</span> <span class="fl">6</span><span class="op">)</span></span>
-<span><span class="va">sp</span>     <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hvti_spaghetti.html">hvti_spaghetti</a></span><span class="op">(</span><span class="va">dta</span><span class="op">)</span></span>
-<span><span class="va">sp_col</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hvti_spaghetti.html">hvti_spaghetti</a></span><span class="op">(</span><span class="va">dta</span>, colour_col <span class="op">=</span> <span class="st">"group"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">sp</span>     <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hv_spaghetti.html">hv_spaghetti</a></span><span class="op">(</span><span class="va">dta</span><span class="op">)</span></span>
+<span><span class="va">sp_col</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hv_spaghetti.html">hv_spaghetti</a></span><span class="op">(</span><span class="va">dta</span>, colour_col <span class="op">=</span> <span class="st">"group"</span><span class="op">)</span></span></code></pre></div>
 <section class="level2"><h3 id="unstratified-av-mean-gradient-full-range-plot_1">Unstratified — AV mean gradient full range (plot_1)<a class="anchor" aria-label="anchor" href="#unstratified-av-mean-gradient-full-range-plot_1"></a>
 </h3>
 <div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
@@ -1142,7 +1142,7 @@ run;</code></pre>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">80</span>, <span class="fl">20</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_cartesian.html" class="external-link">coord_cartesian</a></span><span class="op">(</span>xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">5</span><span class="op">)</span>, ylim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">80</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Years"</span>, y <span class="op">=</span> <span class="st">"AV Mean Gradient (mmHg)"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/hvti_theme.html">hvti_theme</a></span><span class="op">(</span><span class="st">"manuscript"</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/hv_theme.html">hv_theme</a></span><span class="op">(</span><span class="st">"poster"</span><span class="op">)</span></span></code></pre></div>
 </section><section class="level2"><h3 id="unstratified-zoomed-y-axis-plot_3">Unstratified — zoomed y-axis (plot_3)<a class="anchor" aria-label="anchor" href="#unstratified-zoomed-y-axis-plot_3"></a>
 </h3>
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
@@ -1151,7 +1151,7 @@ run;</code></pre>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">30</span>, <span class="fl">10</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_cartesian.html" class="external-link">coord_cartesian</a></span><span class="op">(</span>xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">5</span><span class="op">)</span>, ylim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">30</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Years"</span>, y <span class="op">=</span> <span class="st">"AV Mean Gradient (mmHg)"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/hvti_theme.html">hvti_theme</a></span><span class="op">(</span><span class="st">"manuscript"</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/hv_theme.html">hv_theme</a></span><span class="op">(</span><span class="st">"poster"</span><span class="op">)</span></span></code></pre></div>
 </section><section class="level2"><h3 id="stratified-by-sex-plot_2-plot_4">Stratified by sex (plot_2 / plot_4)<a class="anchor" aria-label="anchor" href="#stratified-by-sex-plot_2-plot_4"></a>
 </h3>
 <p>Template uses <code>values=c("red", "blue")</code>; modernised equivalents below.</p>
@@ -1165,7 +1165,7 @@ run;</code></pre>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">80</span>, <span class="fl">20</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_cartesian.html" class="external-link">coord_cartesian</a></span><span class="op">(</span>xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">5</span><span class="op">)</span>, ylim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">80</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Years"</span>, y <span class="op">=</span> <span class="st">"AV Mean Gradient (mmHg)"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/hvti_theme.html">hvti_theme</a></span><span class="op">(</span><span class="st">"manuscript"</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/hv_theme.html">hv_theme</a></span><span class="op">(</span><span class="st">"poster"</span><span class="op">)</span></span></code></pre></div>
 </section><section class="level2"><h3 id="av-area-y-scale-plot_5-plot_6">AV area y-scale (plot_5 / plot_6)<a class="anchor" aria-label="anchor" href="#av-area-y-scale-plot_5-plot_6"></a>
 </h3>
 <div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
@@ -1178,7 +1178,7 @@ run;</code></pre>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">5</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_cartesian.html" class="external-link">coord_cartesian</a></span><span class="op">(</span>xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">5</span><span class="op">)</span>, ylim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">5</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Years"</span>, y <span class="op">=</span> <span class="st">"AV Area (EOA) (cm\u00b2)"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/hvti_theme.html">hvti_theme</a></span><span class="op">(</span><span class="st">"manuscript"</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/hv_theme.html">hv_theme</a></span><span class="op">(</span><span class="st">"poster"</span><span class="op">)</span></span></code></pre></div>
 </section><section class="level2"><h3 id="dvi-y-scale-plot_7-plot_8">DVI y-scale (plot_7 / plot_8)<a class="anchor" aria-label="anchor" href="#dvi-y-scale-plot_7-plot_8"></a>
 </h3>
 <div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
@@ -1191,7 +1191,7 @@ run;</code></pre>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1.25</span>, <span class="fl">0.25</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_cartesian.html" class="external-link">coord_cartesian</a></span><span class="op">(</span>xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">5</span><span class="op">)</span>, ylim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1.25</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Years"</span>, y <span class="op">=</span> <span class="st">"DVI"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/hvti_theme.html">hvti_theme</a></span><span class="op">(</span><span class="st">"manuscript"</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/hv_theme.html">hv_theme</a></span><span class="op">(</span><span class="st">"poster"</span><span class="op">)</span></span></code></pre></div>
 </section><section class="level2"><h3 id="ordinal-y-axis-mv-regurgitation-grade-plot_9">Ordinal y-axis — MV regurgitation grade (plot_9)<a class="anchor" aria-label="anchor" href="#ordinal-y-axis-mv-regurgitation-grade-plot_9"></a>
 </h3>
 <div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
@@ -1199,7 +1199,7 @@ run;</code></pre>
 <span><span class="va">dta_ord</span><span class="op">$</span><span class="va">value</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">pmin</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">pmax</a></span><span class="op">(</span><span class="fl">0</span>, <span class="va">dta</span><span class="op">$</span><span class="va">value</span> <span class="op">/</span> <span class="fl">12</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/levels.html" class="external-link">levels</a></span><span class="op">(</span><span class="va">dta_ord</span><span class="op">$</span><span class="va">group</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Early"</span>, <span class="st">"Late"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">sp_ord</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hvti_spaghetti.html">hvti_spaghetti</a></span><span class="op">(</span><span class="va">dta_ord</span>, colour_col <span class="op">=</span> <span class="st">"group"</span><span class="op">)</span></span>
+<span><span class="va">sp_ord</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hv_spaghetti.html">hv_spaghetti</a></span><span class="op">(</span><span class="va">dta_ord</span>, colour_col <span class="op">=</span> <span class="st">"group"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sp_ord</span>, y_labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>None <span class="op">=</span> <span class="fl">0</span>, Mild <span class="op">=</span> <span class="fl">1</span>, Moderate <span class="op">=</span> <span class="fl">2</span>, Severe <span class="op">=</span> <span class="fl">3</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_colour_manual</a></span><span class="op">(</span></span>
@@ -1209,30 +1209,30 @@ run;</code></pre>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_x_continuous</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">6</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_cartesian.html" class="external-link">coord_cartesian</a></span><span class="op">(</span>xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">6</span><span class="op">)</span>, ylim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">3</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Years after Procedure"</span>, y <span class="op">=</span> <span class="st">"MV Regurgitation Grade"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/hvti_theme.html">hvti_theme</a></span><span class="op">(</span><span class="st">"manuscript"</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/hv_theme.html">hv_theme</a></span><span class="op">(</span><span class="st">"poster"</span><span class="op">)</span></span></code></pre></div>
 <hr></section></section><section class="section level2"><h2 id="dp-trends">Trends over time (<code>tp.*.trends.*</code>)<a class="anchor" aria-label="anchor" href="#dp-trends"></a>
 </h2>
 <p><strong>Ports:</strong> <code>tp.rp.trends.sas</code>, <code>tp.lp.trends.sas</code>, <code>tp.lp.trends.age.sas</code>, <code>tp.lp.trends.polytomous.sas</code>, <code>tp.dp.trends.R</code></p>
-<p><strong>R equivalent:</strong> <code><a href="../reference/hvti_trends.html">hvti_trends()</a></code></p>
+<p><strong>R equivalent:</strong> <code><a href="../reference/hv_trends.html">hv_trends()</a></code></p>
 <section class="level2"><h3 id="tp-rp-trends-sas-casesyear-and-age-19682000-by-4">tp.rp.trends.sas — cases/year and age (1968–2000 by 4)<a class="anchor" aria-label="anchor" href="#tp-rp-trends-sas-casesyear-and-age-19682000-by-4"></a>
 </h3>
 <div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">one</span>    <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sample_trends_data.html">sample_trends_data</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">600</span>, year_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1968L</span>, <span class="fl">2000L</span><span class="op">)</span>, groups <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
-<span><span class="va">tr_one</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hvti_trends.html">hvti_trends</a></span><span class="op">(</span><span class="va">one</span>, group_col <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
+<span><span class="va">tr_one</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hv_trends.html">hv_trends</a></span><span class="op">(</span><span class="va">one</span>, group_col <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Cases/year: axisy order=(0 to 10 by 2)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">tr_one</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_x_continuous</a></span><span class="op">(</span>limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1968</span>, <span class="fl">2000</span><span class="op">)</span>, breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">1968</span>, <span class="fl">2000</span>, <span class="fl">4</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous</a></span><span class="op">(</span>limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">10</span><span class="op">)</span>,      breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">10</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Year"</span>, y <span class="op">=</span> <span class="st">"Cases/year"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/hvti_theme.html">hvti_theme</a></span><span class="op">(</span><span class="st">"manuscript"</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="../reference/hv_theme.html">hv_theme</a></span><span class="op">(</span><span class="st">"poster"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Age: axisy order=(30 to 70 by 10)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">tr_one</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_x_continuous</a></span><span class="op">(</span>limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1968</span>, <span class="fl">2000</span><span class="op">)</span>, breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">1968</span>, <span class="fl">2000</span>, <span class="fl">4</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous</a></span><span class="op">(</span>limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">30</span>, <span class="fl">70</span><span class="op">)</span>,     breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">30</span>, <span class="fl">70</span>, <span class="fl">10</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Year"</span>, y <span class="op">=</span> <span class="st">"Age (years)"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/hvti_theme.html">hvti_theme</a></span><span class="op">(</span><span class="st">"manuscript"</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/hv_theme.html">hv_theme</a></span><span class="op">(</span><span class="st">"poster"</span><span class="op">)</span></span></code></pre></div>
 </section><section class="level2"><h3 id="tp-lp-trends-sas-binary-outcomes-19702000-by-10-y-0100-by-10">tp.lp.trends.sas — binary % outcomes (1970–2000 by 10, y 0–100 by 10)<a class="anchor" aria-label="anchor" href="#tp-lp-trends-sas-binary-outcomes-19702000-by-10-y-0100-by-10"></a>
 </h3>
 <p>Multiple outcomes on one figure. CGM version: <code>axisx order=(1970 to 2000 by 10)</code>, <code>axisy order=(0 to 100 by 20)</code>.</p>
@@ -1240,7 +1240,7 @@ run;</code></pre>
 <code class="sourceCode R"><span><span class="va">dta_lp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sample_trends_data.html">sample_trends_data</a></span><span class="op">(</span></span>
 <span>  n <span class="op">=</span> <span class="fl">800</span>, year_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1970L</span>, <span class="fl">2000L</span><span class="op">)</span>,</span>
 <span>  groups <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Shock %"</span>, <span class="st">"Pre-op IABP %"</span>, <span class="st">"Inotropes %"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="va">tr_lp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hvti_trends.html">hvti_trends</a></span><span class="op">(</span><span class="va">dta_lp</span><span class="op">)</span></span>
+<span><span class="va">tr_lp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hv_trends.html">hv_trends</a></span><span class="op">(</span><span class="va">dta_lp</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">tr_lp</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_colour_manual</a></span><span class="op">(</span></span>
@@ -1253,14 +1253,14 @@ run;</code></pre>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous</a></span><span class="op">(</span>limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">100</span><span class="op">)</span>,     breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">100</span>, <span class="fl">10</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_cartesian.html" class="external-link">coord_cartesian</a></span><span class="op">(</span>xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1970</span>, <span class="fl">2000</span><span class="op">)</span>, ylim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">100</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Year"</span>, y <span class="op">=</span> <span class="st">"Percent (%)"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/hvti_theme.html">hvti_theme</a></span><span class="op">(</span><span class="st">"manuscript"</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/hv_theme.html">hv_theme</a></span><span class="op">(</span><span class="st">"poster"</span><span class="op">)</span></span></code></pre></div>
 </section><section class="level2"><h3 id="tp-lp-trends-age-sas-age-on-x-axis-2585-by-10-y-0100-by-20">tp.lp.trends.age.sas — age on x-axis (25–85 by 10, y 0–100 by 20)<a class="anchor" aria-label="anchor" href="#tp-lp-trends-age-sas-age-on-x-axis-2585-by-10-y-0100-by-20"></a>
 </h3>
 <div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">dta_age</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sample_trends_data.html">sample_trends_data</a></span><span class="op">(</span></span>
 <span>  n <span class="op">=</span> <span class="fl">600</span>, year_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">25L</span>, <span class="fl">85L</span><span class="op">)</span>,</span>
 <span>  groups <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Repair %"</span>, <span class="st">"Bioprosthesis %"</span><span class="op">)</span>, seed <span class="op">=</span> <span class="fl">7L</span><span class="op">)</span></span>
-<span><span class="va">tr_age</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hvti_trends.html">hvti_trends</a></span><span class="op">(</span><span class="va">dta_age</span><span class="op">)</span></span>
+<span><span class="va">tr_age</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hv_trends.html">hv_trends</a></span><span class="op">(</span><span class="va">dta_age</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">tr_age</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_colour_manual</a></span><span class="op">(</span></span>
@@ -1270,14 +1270,14 @@ run;</code></pre>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous</a></span><span class="op">(</span>limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">100</span><span class="op">)</span>, breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">100</span>, <span class="fl">20</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_cartesian.html" class="external-link">coord_cartesian</a></span><span class="op">(</span>xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">25</span>, <span class="fl">85</span><span class="op">)</span>, ylim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">100</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Age (years)"</span>, y <span class="op">=</span> <span class="st">"Percent (%)"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/hvti_theme.html">hvti_theme</a></span><span class="op">(</span><span class="st">"manuscript"</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/hv_theme.html">hv_theme</a></span><span class="op">(</span><span class="st">"poster"</span><span class="op">)</span></span></code></pre></div>
 </section><section class="level2"><h3 id="tp-lp-trends-polytomous-sas-repair-types-19901999-by-1-y-0100-by-10">tp.lp.trends.polytomous.sas — repair types (1990–1999 by 1, y 0–100 by 10)<a class="anchor" aria-label="anchor" href="#tp-lp-trends-polytomous-sas-repair-types-19901999-by-1-y-0100-by-10"></a>
 </h3>
 <div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">dta_poly</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sample_trends_data.html">sample_trends_data</a></span><span class="op">(</span></span>
 <span>  n <span class="op">=</span> <span class="fl">800</span>, year_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1990L</span>, <span class="fl">1999L</span><span class="op">)</span>,</span>
 <span>  groups <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"CE"</span>, <span class="st">"Cosgrove"</span>, <span class="st">"Periguard"</span>, <span class="st">"DeVega"</span><span class="op">)</span>, seed <span class="op">=</span> <span class="fl">5L</span><span class="op">)</span></span>
-<span><span class="va">tr_poly</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hvti_trends.html">hvti_trends</a></span><span class="op">(</span><span class="va">dta_poly</span><span class="op">)</span></span>
+<span><span class="va">tr_poly</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hv_trends.html">hv_trends</a></span><span class="op">(</span><span class="va">dta_poly</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">tr_poly</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_colour_manual</a></span><span class="op">(</span></span>
@@ -1291,26 +1291,26 @@ run;</code></pre>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous</a></span><span class="op">(</span>limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">100</span><span class="op">)</span>,     breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">100</span>, <span class="fl">10</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_cartesian.html" class="external-link">coord_cartesian</a></span><span class="op">(</span>xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1990</span>, <span class="fl">1999</span><span class="op">)</span>, ylim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">100</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Year"</span>, y <span class="op">=</span> <span class="st">"Percent (%)"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/hvti_theme.html">hvti_theme</a></span><span class="op">(</span><span class="st">"manuscript"</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/hv_theme.html">hv_theme</a></span><span class="op">(</span><span class="st">"poster"</span><span class="op">)</span></span></code></pre></div>
 </section><section class="level2"><h3 id="tp-dp-trends-r-lv-mass-index-19952015-by-5-y-0200-by-50">tp.dp.trends.R — LV mass index (1995–2015 by 5, y 0–200 by 50)<a class="anchor" aria-label="anchor" href="#tp-dp-trends-r-lv-mass-index-19952015-by-5-y-0200-by-50"></a>
 </h3>
 <div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">dta_lv</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sample_trends_data.html">sample_trends_data</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">800</span>, year_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1995L</span>, <span class="fl">2015L</span><span class="op">)</span>,</span>
 <span>                              groups <span class="op">=</span> <span class="cn">NULL</span>, seed <span class="op">=</span> <span class="fl">3L</span><span class="op">)</span></span>
-<span><span class="va">tr_lv</span>  <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hvti_trends.html">hvti_trends</a></span><span class="op">(</span><span class="va">dta_lv</span>, group_col <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
+<span><span class="va">tr_lv</span>  <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hv_trends.html">hv_trends</a></span><span class="op">(</span><span class="va">dta_lv</span>, group_col <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">tr_lv</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_x_continuous</a></span><span class="op">(</span>limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1995</span>, <span class="fl">2015</span><span class="op">)</span>, breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">1995</span>, <span class="fl">2015</span>, <span class="fl">5</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous</a></span><span class="op">(</span>limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">200</span><span class="op">)</span>,     breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">200</span>, <span class="fl">50</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_cartesian.html" class="external-link">coord_cartesian</a></span><span class="op">(</span>xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1995</span>, <span class="fl">2015</span><span class="op">)</span>, ylim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">200</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Years"</span>, y <span class="op">=</span> <span class="st">"LV Mass Index"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/hvti_theme.html">hvti_theme</a></span><span class="op">(</span><span class="st">"manuscript"</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/hv_theme.html">hv_theme</a></span><span class="op">(</span><span class="st">"poster"</span><span class="op">)</span></span></code></pre></div>
 </section><section class="level2"><h3 id="tp-dp-trends-r-hospital-los-with-annotation-19852015-by-5-y-020-by-5">tp.dp.trends.R — hospital LOS with annotation (1985–2015 by 5, y 0–20 by 5)<a class="anchor" aria-label="anchor" href="#tp-dp-trends-r-hospital-los-with-annotation-19852015-by-5-y-020-by-5"></a>
 </h3>
 <div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">dta_los</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sample_trends_data.html">sample_trends_data</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">800</span>, year_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1985L</span>, <span class="fl">2015L</span><span class="op">)</span>,</span>
 <span>                               groups <span class="op">=</span> <span class="cn">NULL</span>, seed <span class="op">=</span> <span class="fl">11L</span><span class="op">)</span></span>
-<span><span class="va">tr_los</span>  <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hvti_trends.html">hvti_trends</a></span><span class="op">(</span><span class="va">dta_los</span>, group_col <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
+<span><span class="va">tr_los</span>  <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hv_trends.html">hv_trends</a></span><span class="op">(</span><span class="va">dta_los</span>, group_col <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">tr_los</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_x_continuous</a></span><span class="op">(</span>limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1985</span>, <span class="fl">2015</span><span class="op">)</span>, breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">1985</span>, <span class="fl">2015</span>, <span class="fl">5</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
@@ -1319,14 +1319,14 @@ run;</code></pre>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/annotate.html" class="external-link">annotate</a></span><span class="op">(</span><span class="st">"text"</span>, x <span class="op">=</span> <span class="fl">1995</span>, y <span class="op">=</span> <span class="fl">18</span>,</span>
 <span>           label <span class="op">=</span> <span class="st">"Trend: Hospital Length of Stay"</span>, size <span class="op">=</span> <span class="fl">4.5</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Years"</span>, y <span class="op">=</span> <span class="st">"Hospital LOS (Days)"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/hvti_theme.html">hvti_theme</a></span><span class="op">(</span><span class="st">"manuscript"</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/hv_theme.html">hv_theme</a></span><span class="op">(</span><span class="st">"poster"</span><span class="op">)</span></span></code></pre></div>
 <hr></section></section><section class="section level2"><h2 id="dp-long-counts">Longitudinal patient counts (<code>tp.dp.longitudinal_patients_measures.R</code>)<a class="anchor" aria-label="anchor" href="#dp-long-counts"></a>
 </h2>
 <p><strong>Port:</strong> <code>tp.dp.longitudinal_patients_measures.R</code></p>
-<p><strong>R equivalent:</strong> <code><a href="../reference/hvti_longitudinal.html">hvti_longitudinal()</a></code></p>
+<p><strong>R equivalent:</strong> <code><a href="../reference/hv_longitudinal.html">hv_longitudinal()</a></code></p>
 <div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">dta</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sample_longitudinal_counts_data.html">sample_longitudinal_counts_data</a></span><span class="op">(</span>n_patients <span class="op">=</span> <span class="fl">150</span><span class="op">)</span></span>
-<span><span class="va">lc</span>  <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hvti_longitudinal.html">hvti_longitudinal</a></span><span class="op">(</span><span class="va">dta</span><span class="op">)</span></span>
+<span><span class="va">lc</span>  <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hv_longitudinal.html">hv_longitudinal</a></span><span class="op">(</span><span class="va">dta</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">lc</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_x_continuous</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="fl">0</span><span class="op">:</span><span class="fl">10</span><span class="op">)</span> <span class="op">+</span></span>
@@ -1335,16 +1335,16 @@ run;</code></pre>
 <span>    y     <span class="op">=</span> <span class="st">"Patients with measurement"</span>,</span>
 <span>    title <span class="op">=</span> <span class="st">"Follow-Up Echocardiogram Availability"</span></span>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/hvti_theme.html">hvti_theme</a></span><span class="op">(</span><span class="st">"manuscript"</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/hv_theme.html">hv_theme</a></span><span class="op">(</span><span class="st">"poster"</span><span class="op">)</span></span></code></pre></div>
 <hr></section><section class="section level2"><h2 id="dp-mirror">Mirror histogram (propensity score)<a class="anchor" aria-label="anchor" href="#dp-mirror"></a>
 </h2>
 <p><strong>R equivalents:</strong> <code>tp.lp.mirror-histogram_SAVR-TF-TAVR.R</code> (binary-match), <code>tp.lp.mirror_histo_before_after_wt.R</code> (weighted IPTW)</p>
-<p>Both scripts are superseded by <code><a href="../reference/hvti_mirror_hist.html">hvti_mirror_hist()</a></code>. Call <code>plot(mh)</code> to render the histogram. Diagnostics are accessible via <code>mh$tables$diagnostics</code>; working data via <code>mh$tables$working</code>. Compose scales, annotations, and theme with the usual <code>+</code> operator.</p>
+<p>Both scripts are superseded by <code><a href="../reference/hv_mirror_hist.html">hv_mirror_hist()</a></code>. Call <code>plot(mh)</code> to render the histogram. Diagnostics are accessible via <code>mh$tables$diagnostics</code>; working data via <code>mh$tables$working</code>. Compose scales, annotations, and theme with the usual <code>+</code> operator.</p>
 <section class="level2"><h3 id="dp-mirror-binary">Binary-match mode (<code>tp.lp.mirror-histogram_SAVR-TF-TAVR.R</code>)<a class="anchor" aria-label="anchor" href="#dp-mirror-binary"></a>
 </h3>
 <div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">dta</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sample_mirror_histogram_data.html">sample_mirror_histogram_data</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">400</span>, separation <span class="op">=</span> <span class="fl">1.5</span><span class="op">)</span></span>
-<span><span class="va">mh</span>  <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hvti_mirror_hist.html">hvti_mirror_hist</a></span><span class="op">(</span><span class="va">dta</span><span class="op">)</span>   <span class="co"># defaults: prob_t / tavr / match</span></span>
+<span><span class="va">mh</span>  <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hv_mirror_hist.html">hv_mirror_hist</a></span><span class="op">(</span><span class="va">dta</span><span class="op">)</span>   <span class="co"># defaults: prob_t / tavr / match</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">mh</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_fill_manual</a></span><span class="op">(</span></span>
@@ -1358,12 +1358,12 @@ run;</code></pre>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/annotate.html" class="external-link">annotate</a></span><span class="op">(</span><span class="st">"text"</span>, x <span class="op">=</span> <span class="fl">20</span>, y <span class="op">=</span>  <span class="fl">100</span>, label <span class="op">=</span> <span class="st">"SAVR"</span>,    size <span class="op">=</span> <span class="fl">7</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/annotate.html" class="external-link">annotate</a></span><span class="op">(</span><span class="st">"text"</span>, x <span class="op">=</span> <span class="fl">20</span>, y <span class="op">=</span> <span class="op">-</span><span class="fl">100</span>, label <span class="op">=</span> <span class="st">"TF-TAVR"</span>, size <span class="op">=</span> <span class="fl">7</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Propensity Score (%)"</span>, y <span class="op">=</span> <span class="st">"Number of Patients"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/hvti_theme.html">hvti_theme</a></span><span class="op">(</span><span class="st">"manuscript"</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/hv_theme.html">hv_theme</a></span><span class="op">(</span><span class="st">"poster"</span><span class="op">)</span></span></code></pre></div>
 </section><section class="level2"><h3 id="dp-mirror-weighted">Weighted IPTW mode (<code>tp.lp.mirror_histo_before_after_wt.R</code>)<a class="anchor" aria-label="anchor" href="#dp-mirror-weighted"></a>
 </h3>
 <div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">dta</span>   <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sample_mirror_histogram_data.html">sample_mirror_histogram_data</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">400</span>, add_weights <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="va">mh_wt</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hvti_mirror_hist.html">hvti_mirror_hist</a></span><span class="op">(</span></span>
+<span><span class="va">mh_wt</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hv_mirror_hist.html">hv_mirror_hist</a></span><span class="op">(</span></span>
 <span>  <span class="va">dta</span>,</span>
 <span>  group_labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Limited"</span>, <span class="st">"Extended"</span><span class="op">)</span>,</span>
 <span>  weight_col   <span class="op">=</span> <span class="st">"mt_wt"</span></span>
@@ -1381,13 +1381,13 @@ run;</code></pre>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/annotate.html" class="external-link">annotate</a></span><span class="op">(</span><span class="st">"text"</span>, x <span class="op">=</span> <span class="fl">30</span>, y <span class="op">=</span>  <span class="fl">150</span>, label <span class="op">=</span> <span class="st">"Limited"</span>,  color <span class="op">=</span> <span class="st">"blue"</span>, size <span class="op">=</span> <span class="fl">5</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/annotate.html" class="external-link">annotate</a></span><span class="op">(</span><span class="st">"text"</span>, x <span class="op">=</span> <span class="fl">30</span>, y <span class="op">=</span> <span class="op">-</span><span class="fl">70</span>,  label <span class="op">=</span> <span class="st">"Extended"</span>, color <span class="op">=</span> <span class="st">"red"</span>,  size <span class="op">=</span> <span class="fl">5</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Propensity Score (%)"</span>, y <span class="op">=</span> <span class="st">"#"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/hvti_theme.html">hvti_theme</a></span><span class="op">(</span><span class="st">"manuscript"</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/hv_theme.html">hv_theme</a></span><span class="op">(</span><span class="st">"poster"</span><span class="op">)</span></span></code></pre></div>
 <hr></section></section><section class="section level2"><h2 id="dp-stacked">Stacked histogram<a class="anchor" aria-label="anchor" href="#dp-stacked"></a>
 </h2>
-<p><strong>R equivalent:</strong> <code><a href="../reference/hvti_stacked.html">hvti_stacked()</a></code></p>
+<p><strong>R equivalent:</strong> <code><a href="../reference/hv_stacked.html">hv_stacked()</a></code></p>
 <div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">dta</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sample_stacked_histogram_data.html">sample_stacked_histogram_data</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="va">sh</span>  <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hvti_stacked.html">hvti_stacked</a></span><span class="op">(</span><span class="va">dta</span><span class="op">)</span></span>
+<span><span class="va">sh</span>  <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hv_stacked.html">hv_stacked</a></span><span class="op">(</span><span class="va">dta</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sh</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_fill_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Set1"</span><span class="op">)</span> <span class="op">+</span></span>
@@ -1397,7 +1397,7 @@ run;</code></pre>
 <span>    fill  <span class="op">=</span> <span class="st">"Group"</span>,</span>
 <span>    title <span class="op">=</span> <span class="st">"Annual Case Volume by Group"</span></span>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/hvti_theme.html">hvti_theme</a></span><span class="op">(</span><span class="st">"manuscript"</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/hv_theme.html">hv_theme</a></span><span class="op">(</span><span class="st">"poster"</span><span class="op">)</span></span></code></pre></div>
 <hr></section><section class="section level2"><h2 id="using-themes">Using themes<a class="anchor" aria-label="anchor" href="#using-themes"></a>
 </h2>
 <p>All <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code> calls return an unstyled ggplot object. Add a theme as the final layer:</p>
@@ -1415,32 +1415,32 @@ run;</code></pre>
 <tbody>
 <tr class="odd">
 <td>Dark PowerPoint slide</td>
-<td><code>hvti_theme("dark_ppt")</code></td>
+<td><code>hv_theme("dark_ppt")</code></td>
 <td><code>device=ppt</code></td>
 </tr>
 <tr class="even">
 <td>Light PowerPoint slide</td>
-<td><code>hvti_theme("light_ppt")</code></td>
+<td><code>hv_theme("light_ppt")</code></td>
 <td>
 <code>device=ppt</code> with white background</td>
 </tr>
 <tr class="odd">
 <td>Journal manuscript</td>
-<td><code>hvti_theme("manuscript")</code></td>
+<td><code>hv_theme("manuscript")</code></td>
 <td>
 <code>device=eps</code> / PDF</td>
 </tr>
 <tr class="even">
 <td>Conference poster</td>
-<td><code>hvti_theme("poster")</code></td>
+<td><code>hv_theme("poster")</code></td>
 <td>Large-font poster</td>
 </tr>
 </tbody>
 </table>
 <p>You can pass <code>base_size</code> to any theme to scale all text simultaneously:</p>
 <div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">p</span> <span class="op">+</span> <span class="fu"><a href="../reference/hvti_theme.html">hvti_theme</a></span><span class="op">(</span><span class="st">"manuscript"</span>, base_size <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>   <span class="co"># smaller text for double-column</span></span>
-<span><span class="va">p</span> <span class="op">+</span> <span class="fu"><a href="../reference/hvti_theme.html">hvti_theme</a></span><span class="op">(</span><span class="st">"poster"</span>,     base_size <span class="op">=</span> <span class="fl">24</span><span class="op">)</span>   <span class="co"># larger text for A0 poster</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">p</span> <span class="op">+</span> <span class="fu"><a href="../reference/hv_theme.html">hv_theme</a></span><span class="op">(</span><span class="st">"manuscript"</span>, base_size <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>   <span class="co"># smaller text for double-column</span></span>
+<span><span class="va">p</span> <span class="op">+</span> <span class="fu"><a href="../reference/hv_theme.html">hv_theme</a></span><span class="op">(</span><span class="st">"poster"</span>,     base_size <span class="op">=</span> <span class="fl">24</span><span class="op">)</span>   <span class="co"># larger text for A0 poster</span></span></code></pre></div>
 <hr></section><section class="section level2"><h2 id="saving-figures">Saving figures<a class="anchor" aria-label="anchor" href="#saving-figures"></a>
 </h2>
 <section class="level2"><h3 id="powerpoint">PowerPoint<a class="anchor" aria-label="anchor" href="#powerpoint"></a>
@@ -1455,7 +1455,7 @@ run;</code></pre>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_colour_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"steelblue"</span><span class="op">)</span>, guide <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_fill_manual</a></span><span class="op">(</span>values   <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"steelblue"</span><span class="op">)</span>, guide <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Years"</span>, y <span class="op">=</span> <span class="st">"Prevalence (%)"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/hvti_theme.html">hvti_theme</a></span><span class="op">(</span><span class="st">"dark_ppt"</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="../reference/hv_theme.html">hv_theme</a></span><span class="op">(</span><span class="st">"dark_ppt"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/save_ppt.html">save_ppt</a></span><span class="op">(</span></span>
 <span>  object       <span class="op">=</span> <span class="va">p_ppt</span>,</span>
@@ -1547,7 +1547,7 @@ run;</code></pre>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous</a></span><span class="op">(</span>limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">100</span><span class="op">)</span>, breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">100</span>, <span class="fl">10</span><span class="op">)</span>,</span>
 <span>                     labels <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">x</span>, <span class="st">"%"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Years after Operation"</span>, y <span class="op">=</span> <span class="st">"Survival (%)"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/hvti_theme.html">hvti_theme</a></span><span class="op">(</span><span class="st">"manuscript"</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/hv_theme.html">hv_theme</a></span><span class="op">(</span><span class="st">"poster"</span><span class="op">)</span></span></code></pre></div>
 </section><section class="level2"><h3 id="stratified-by-covariate">Stratified by covariate<a class="anchor" aria-label="anchor" href="#stratified-by-covariate"></a>
 </h3>
 <p><code>tp.hs.dead.procedure.tdepth.sas</code> overlays curves for depth-of-invasion groups (<code>tdepth = 1, 2, 3</code>). Pass <code>group_col</code> to <code><a href="../reference/hazard_plot.html">hazard_plot()</a></code> and supply matched <code><a href="../reference/sample_hazard_data.html">sample_hazard_data()</a></code> / <code><a href="../reference/sample_hazard_empirical.html">sample_hazard_empirical()</a></code> calls with a <code>groups</code> vector whose names become the legend labels.</p>
@@ -1583,7 +1583,7 @@ run;</code></pre>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous</a></span><span class="op">(</span>limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">100</span><span class="op">)</span>, breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">100</span>, <span class="fl">10</span><span class="op">)</span>,</span>
 <span>                     labels <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">x</span>, <span class="st">"%"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Years after Operation"</span>, y <span class="op">=</span> <span class="st">"Survival (%)"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/hvti_theme.html">hvti_theme</a></span><span class="op">(</span><span class="st">"manuscript"</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/hv_theme.html">hv_theme</a></span><span class="op">(</span><span class="st">"poster"</span><span class="op">)</span></span></code></pre></div>
 </section><section class="level2"><h3 id="hs-conditional">Conditional survival after hospital discharge<a class="anchor" aria-label="anchor" href="#hs-conditional"></a>
 </h3>
 <p><code>tp.hs.dead.conditional.setup.sas</code> computes individual survivorship curves starting from the time of hospital discharge rather than the operation date. The conditional survival <code>S(t | discharge)</code> is <code>S(t) / S(t_discharge)</code> for each patient. In R, the same <code><a href="../reference/hazard_plot.html">hazard_plot()</a></code> call is used; only the x-axis label and data preparation differ.</p>
@@ -1606,7 +1606,7 @@ run;</code></pre>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous</a></span><span class="op">(</span>limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">100</span><span class="op">)</span>, breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">100</span>, <span class="fl">10</span><span class="op">)</span>,</span>
 <span>                     labels <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">x</span>, <span class="st">"%"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Years after Discharge"</span>, y <span class="op">=</span> <span class="st">"Survival after Discharge (%)"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/hvti_theme.html">hvti_theme</a></span><span class="op">(</span><span class="st">"manuscript"</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/hv_theme.html">hv_theme</a></span><span class="op">(</span><span class="st">"poster"</span><span class="op">)</span></span></code></pre></div>
 </section><section class="level2"><h3 id="hs-uslife">US life-table overlay<a class="anchor" aria-label="anchor" href="#hs-uslife"></a>
 </h3>
 <p><code>tp.hs.uslife_*</code> templates call <code>%usmatchd</code> to generate age-, sex-, and race-matched US population life-table survival curves for each patient. <code><a href="../reference/sample_life_table.html">sample_life_table()</a></code> provides representative matched curves stratified by age group for use in R examples.</p>
@@ -1653,7 +1653,7 @@ run;</code></pre>
 <span>                     labels <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">x</span>, <span class="st">"%"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Years after Operation"</span>, y <span class="op">=</span> <span class="st">"Survival (%)"</span>,</span>
 <span>       caption <span class="op">=</span> <span class="st">"Dashed lines: US population life table"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/hvti_theme.html">hvti_theme</a></span><span class="op">(</span><span class="st">"manuscript"</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/hv_theme.html">hv_theme</a></span><span class="op">(</span><span class="st">"poster"</span><span class="op">)</span></span></code></pre></div>
 </section><section class="level2"><h3 id="hs-benefit">Treatment benefit distribution<a class="anchor" aria-label="anchor" href="#hs-benefit"></a>
 </h3>
 <p><code>tp.hs.dead.compare_benefit.setup.sas</code> computes, for each patient, the difference in predicted survival at a fixed time point (5 years) under two treatment arms (e.g. ASA vs. no ASA). The distribution of these individual differences shows who benefits and by how much. Use <code><a href="../reference/survival_difference_plot.html">survival_difference_plot()</a></code> to plot the mean curve over time.</p>
@@ -1676,7 +1676,7 @@ run;</code></pre>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous</a></span><span class="op">(</span>limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">5</span>, <span class="fl">40</span><span class="op">)</span>,</span>
 <span>                     labels <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">x</span>, <span class="st">"%"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Years"</span>, y <span class="op">=</span> <span class="st">"Survival Difference (%)"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/hvti_theme.html">hvti_theme</a></span><span class="op">(</span><span class="st">"manuscript"</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/hv_theme.html">hv_theme</a></span><span class="op">(</span><span class="st">"poster"</span><span class="op">)</span></span></code></pre></div>
 <hr></section></section><section class="section level2"><h2 id="adding-new-ports">Adding new ports<a class="anchor" aria-label="anchor" href="#adding-new-ports"></a>
 </h2>
 <p>As additional SAS templates are ported to R, update this guide:</p>
@@ -1720,7 +1720,7 @@ attached base packages:
 [1] stats     graphics  grDevices utils     datasets  methods   base
 
 other attached packages:
-[1] ggplot2_4.0.2        hvtiPlotR_2.0.0.9006
+[1] ggplot2_4.0.2        hvtiPlotR_2.0.0.9009
 
 loaded via a namespace (and not attached):
  [1] generics_0.1.4          tidyr_1.3.2             fontLiberation_0.1.0

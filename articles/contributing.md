@@ -124,7 +124,7 @@ companions together.
 #'
 #' @return A bare [ggplot2::ggplot()] object.
 #'
-#' @seealso [hvti_nonparametric()], [sample_bmi_curve_data()]
+#' @seealso [hv_nonparametric()], [sample_bmi_curve_data()]
 #'
 #' @references SAS template: \code{tp.np.bmi.avrg_curv.binary.sas}.
 #'
@@ -138,7 +138,7 @@ companions together.
 #'   scale_y_continuous(limits = c(0, 0.5),
 #'                      labels = scales::percent) +
 #'   labs(x = "BMI (kg/m²)", y = "Prevalence of AF") +
-#'   hvti_theme("manuscript")
+#'   hv_theme("manuscript")
 #'
 #' @importFrom ggplot2 ggplot aes geom_line geom_ribbon geom_point
 #' @importFrom rlang .data
@@ -204,7 +204,7 @@ Key rules enforced here:
   opaque to the caller.
 - **No colours or themes** are applied inside the function. The caller
   adds `scale_colour_*()` and
-  [`hvti_theme()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_theme.md)
+  [`hv_theme()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_theme.md)
   outside.
 - **`.data[[col]]`** is used for tidy evaluation instead of bare
   variable names. This requires `@importFrom rlang .data`.

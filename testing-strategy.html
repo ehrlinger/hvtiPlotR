@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="index.html">hvtiPlotR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.0.9006</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.0.9009</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -38,7 +38,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>hvtiPlotR Testing Strategy</h1>
-      <small class="dont-index">Source: <a href="https://github.com/ehrlinger/hvtiPlotR/blob/v2.0.0.9006/testing-strategy.md" class="external-link"><code>testing-strategy.md</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/ehrlinger/hvtiPlotR/blob/main/testing-strategy.md" class="external-link"><code>testing-strategy.md</code></a></small>
     </div>
 
 <div id="hvtiplotr-testing-strategy" class="section level1">
@@ -53,7 +53,7 @@
 <th>What it covers</th>
 <th>Depth</th>
 </tr></thead><tbody><tr class="odd"><td><code>test_themes.R</code></td>
-<td>All 5 <code>hvti_theme_*</code> functions + <code><a href="reference/hvti_theme.html">hvti_theme()</a></code> dispatcher + aliases</td>
+<td>All 5 <code>hv_theme_*</code> functions + <code><a href="reference/hv_theme.html">hv_theme()</a></code> dispatcher + aliases</td>
 <td>★★★★★</td>
 </tr><tr class="even"><td><code>test_kaplan_meier.R</code></td>
 <td>
@@ -189,7 +189,7 @@
 </tr></tbody></table></div>
 <div class="section level3">
 <h3 id="id_5-no-cross-function-integration-tests">5. No cross-function integration tests<a class="anchor" aria-label="anchor" href="#id_5-no-cross-function-integration-tests"></a></h3>
-<p>The package’s value proposition involves <em>composing</em> outputs: a <code>survival_curve</code> result styled with <code><a href="reference/hvti_theme.html">hvti_theme()</a></code> and exported via <code><a href="reference/save_ppt.html">save_ppt()</a></code>. No test exercises this full pipeline.</p>
+<p>The package’s value proposition involves <em>composing</em> outputs: a <code>survival_curve</code> result styled with <code><a href="reference/hv_theme.html">hv_theme()</a></code> and exported via <code><a href="reference/save_ppt.html">save_ppt()</a></code>. No test exercises this full pipeline.</p>
 <hr></div>
 </div>
 <div class="section level2">
@@ -305,7 +305,7 @@
 <span></span>
 <span><span class="fu"><a href="https://testthat.r-lib.org/reference/test_that.html" class="external-link">test_that</a></span><span class="op">(</span><span class="st">"mirror_histogram diagnostics match snapshot (fixed seed)"</span>, <span class="op">{</span></span>
 <span>  <span class="va">df</span>     <span class="op">&lt;-</span> <span class="fu"><a href="reference/sample_mirror_histogram_data.html">sample_mirror_histogram_data</a></span><span class="op">(</span><span class="fl">200</span>, seed <span class="op">=</span> <span class="fl">42</span><span class="op">)</span></span>
-<span>  <span class="va">result</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/message.html" class="external-link">suppressMessages</a></span><span class="op">(</span><span class="fu"><a href="reference/hvti_mirror_hist.html">mirror_histogram</a></span><span class="op">(</span><span class="va">df</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="va">result</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/message.html" class="external-link">suppressMessages</a></span><span class="op">(</span><span class="fu">mirror_histogram</span><span class="op">(</span><span class="va">df</span><span class="op">)</span><span class="op">)</span></span>
 <span>  <span class="fu"><a href="https://testthat.r-lib.org/reference/expect_snapshot.html" class="external-link">expect_snapshot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">result</span>, <span class="st">"diagnostics"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span></code></pre></div>
 </div>
@@ -380,7 +380,7 @@
 <span></span>
 <span>  <span class="fu"><a href="https://testthat.r-lib.org/reference/expect_no_error.html" class="external-link">expect_no_error</a></span><span class="op">(</span></span>
 <span>    <span class="fu"><a href="reference/save_ppt.html">save_ppt</a></span><span class="op">(</span></span>
-<span>      object       <span class="op">=</span> <span class="va">km</span> <span class="op">+</span> <span class="fu"><a href="reference/hvti_theme.html">hvti_theme</a></span><span class="op">(</span><span class="st">"ppt"</span><span class="op">)</span>,</span>
+<span>      object       <span class="op">=</span> <span class="va">km</span> <span class="op">+</span> <span class="fu"><a href="reference/hv_theme.html">hv_theme</a></span><span class="op">(</span><span class="st">"ppt"</span><span class="op">)</span>,</span>
 <span>      template     <span class="op">=</span> <span class="va">template</span>,</span>
 <span>      powerpoint   <span class="op">=</span> <span class="va">pptx_out</span>,</span>
 <span>      slide_titles <span class="op">=</span> <span class="st">"KM: SAVR vs TAVR"</span></span>
@@ -476,7 +476,7 @@
 <span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/check.html" class="external-link">check</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p>Coverage report (requires <code>covr</code>):</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">covr</span><span class="fu">::</span><span class="fu">package_coverage</span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu">covr</span><span class="fu">::</span><span class="fu">report</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu">covr</span><span class="fu">::</span><span class="fu"><a href="http://covr.r-lib.org/reference/package_coverage.html" class="external-link">package_coverage</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu">covr</span><span class="fu">::</span><span class="fu"><a href="http://covr.r-lib.org/reference/report.html" class="external-link">report</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 </div>
 

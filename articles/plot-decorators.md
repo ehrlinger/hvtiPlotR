@@ -15,39 +15,39 @@ library(hvtiPlotR)
 
 ## The Composition Pattern
 
-Every hvtiPlotR plot is built in two steps: a constructor (`hvti_*()`)
+Every hvtiPlotR plot is built in two steps: a constructor (`hv_*()`)
 that shapes the data, followed by
 [`plot()`](https://rdrr.io/r/graphics/plot.default.html) that renders a
 bare `ggplot` object. No colour scales, axis labels, or theme are
 applied by either step. Decoration is added by chaining layers with `+`:
 
-    plot(hvti_*(...)) +
+    plot(hv_*(...)) +
       scale_colour_*() +   # data colours
       scale_fill_*()   +   # fill colours
       labs()           +   # axis labels, title, caption
       annotate()       +   # text/arrows placed on the panel
       coord_cartesian() +  # viewport cropping
-      hvti_theme()         # non-data formatting
+      hv_theme()         # non-data formatting
 
 This vignette demonstrates each decorator in turn, using
-[`hvti_trends()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_trends.md)
+[`hv_trends()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_trends.md)
 and
-[`hvti_survival()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_survival.md)
+[`hv_survival()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_survival.md)
 as representative base plots.
 
 ``` r
 # Trends data — multi-group continuous outcome over time
 dta_trends <- sample_trends_data(n = 600, seed = 42)
-p_base     <- plot(hvti_trends(dta_trends))
+p_base     <- plot(hv_trends(dta_trends))
 
 # KM data — survival curve
 dta_km <- sample_survival_data(n = 500, seed = 42)
-km     <- hvti_survival(dta_km)
+km     <- hv_survival(dta_km)
 ```
 
 ## Themes
 
-The **hvtiPlotR** package provides four themes via `hvti_theme(style)`.
+The **hvtiPlotR** package provides four themes via `hv_theme(style)`.
 The `style` argument selects the output target.
 
 | Style          | Target                                  |
@@ -68,7 +68,7 @@ p_base +
     name = "Group"
   ) +
   labs(x = "Surgery Year", y = "Outcome") +
-  hvti_theme("manuscript")
+  hv_theme("manuscript")
 ```
 
 ![](plot-decorators_files/figure-html/theme_manuscript-1.png)
@@ -84,7 +84,7 @@ p_base +
     name = "Group"
   ) +
   labs(x = "Surgery Year", y = "Outcome") +
-  hvti_theme("poster")
+  hv_theme("poster")
 ```
 
 ![](plot-decorators_files/figure-html/theme_poster-1.png)
@@ -100,7 +100,7 @@ p_base +
     name = "Group"
   ) +
   labs(x = "Surgery Year", y = "Outcome") +
-  hvti_theme("light_ppt")
+  hv_theme("light_ppt")
 ```
 
 ![](plot-decorators_files/figure-html/theme_light_ppt-1.png)
@@ -116,7 +116,7 @@ p_base +
     name = "Group"
   ) +
   labs(x = "Surgery Year", y = "Outcome") +
-  hvti_theme("dark_ppt") +
+  hv_theme("dark_ppt") +
   theme(plot.background = element_rect(fill = "navy", colour = "navy"))
 ```
 
@@ -143,7 +143,7 @@ plot(km) +
   scale_x_continuous(breaks = seq(0, 20, 5)) +
   coord_cartesian(xlim = c(0, 20), ylim = c(0, 100)) +
   labs(x = "Years after Operation", y = "Freedom from Death (%)") +
-  hvti_theme("manuscript")
+  hv_theme("poster")
 ```
 
 ![](plot-decorators_files/figure-html/scale_colour_manual-1.png)
@@ -164,7 +164,7 @@ p_base +
     name = "Group"
   ) +
   labs(x = "Surgery Year", y = "Outcome") +
-  hvti_theme("manuscript")
+  hv_theme("poster")
 ```
 
 ![](plot-decorators_files/figure-html/scale_colour_brewer-1.png)
@@ -183,7 +183,7 @@ p_base +
     guide = "none"
   ) +
   labs(x = "Surgery Year", y = "Outcome") +
-  hvti_theme("manuscript")
+  hv_theme("poster")
 ```
 
 ![](plot-decorators_files/figure-html/scale_no_legend-1.png)
@@ -211,7 +211,7 @@ plot(km) +
     y       = "Freedom from Death (%)",
     caption = "Logit CI, \u03b1 = 0.6827 (1 SD)"
   ) +
-  hvti_theme("manuscript")
+  hv_theme("poster")
 ```
 
 ![](plot-decorators_files/figure-html/labs_example-1.png)
@@ -238,7 +238,7 @@ plot(km) +
            arrow = arrow(length = unit(0.2, "cm")), colour = "grey40") +
   annotate("text",    x = 10.3, y = 40,
            label = "Median survival", hjust = 0, size = 3, colour = "grey40") +
-  hvti_theme("manuscript")
+  hv_theme("poster")
 ```
 
 ![](plot-decorators_files/figure-html/annotate_example-1.png)
@@ -259,7 +259,7 @@ p_base +
   ) +
   labs(x = "Surgery Year", y = "Outcome") +
   coord_cartesian(xlim = c(1995, 2020), ylim = c(20, 70)) +
-  hvti_theme("manuscript")
+  hv_theme("poster")
 ```
 
 ![](plot-decorators_files/figure-html/coord_cartesian-1.png)
@@ -282,7 +282,7 @@ p_ms <- p_base +
     name = "Group"
   ) +
   labs(x = "Surgery Year", y = "Outcome (%)") +
-  hvti_theme("manuscript")
+  hv_theme("manuscript")
 
 ggsave(
   filename = "../graphs/trends_manuscript.pdf",
@@ -294,8 +294,8 @@ ggsave(
 
 ### Poster PDF
 
-Poster figures are typically larger and use `hvti_theme("poster")`.
-Adjust dimensions to match the poster panel size.
+Poster figures are typically larger and use `hv_theme("poster")`. Adjust
+dimensions to match the poster panel size.
 
 ``` r
 p_poster <- p_base +
@@ -306,7 +306,7 @@ p_poster <- p_base +
     name = "Group"
   ) +
   labs(x = "Surgery Year", y = "Outcome (%)") +
-  hvti_theme("poster")
+  hv_theme("poster")
 
 ggsave(
   filename = "../graphs/trends_poster.pdf",
@@ -335,8 +335,8 @@ Key arguments:
 | `width` / `height` | `10.1` / `5.8`                | Plot area in inches                                    |
 | `left` / `top`     | `0.0` / `1.2`                 | Position from slide edges, in inches                   |
 
-Apply `hvti_theme("dark_ppt")` or `hvti_theme("light_ppt")` before
-saving to match the slide background.
+Apply `hv_theme("dark_ppt")` or `hv_theme("light_ppt")` before saving to
+match the slide background.
 
 #### Single slide
 
@@ -351,7 +351,7 @@ p_ppt <- p_base +
     name = "Group"
   ) +
   labs(x = "Surgery Year", y = "Outcome (%)") +
-  hvti_theme("dark_ppt")
+  hv_theme("dark_ppt")
 
 save_ppt(
   object       = p_ppt,
@@ -368,7 +368,7 @@ one slide per plot in a single call.
 
 ``` r
 dta_km2 <- sample_survival_data(n = 400, seed = 99)
-km2     <- hvti_survival(dta_km2)
+km2     <- hv_survival(dta_km2)
 
 p_km_ppt <- plot(km2) +
   scale_color_manual(values = c(All = "white"), guide = "none") +
@@ -378,7 +378,7 @@ p_km_ppt <- plot(km2) +
   scale_x_continuous(breaks = seq(0, 20, 5)) +
   coord_cartesian(xlim = c(0, 20), ylim = c(0, 100)) +
   labs(x = "Years after Operation", y = "Freedom from Death (%)") +
-  hvti_theme("dark_ppt")
+  hv_theme("dark_ppt")
 
 save_ppt(
   object       = list(trends = p_ppt, survival = p_km_ppt),
@@ -397,16 +397,16 @@ arranges them into a grid and
 each page.
 
 ``` r
-# Build a list of plots (e.g. from an hvti_eda() lapply loop)
+# Build a list of plots (e.g. from an hv_eda() lapply loop)
 plot_list <- lapply(
   c("ef", "lv_mass", "peak_grad"),
   function(yv) {
     dta_eda <- sample_eda_data()
-    plot(hvti_eda(dta_eda, x_col = "op_years", y_col = yv,
+    plot(hv_eda(dta_eda, x_col = "op_years", y_col = yv,
                  y_label = yv)) +
       scale_colour_manual(values = c("steelblue"), guide = "none") +
       labs(x = "Years") +
-      hvti_theme("manuscript")
+      hv_theme("poster")
   }
 )
 
@@ -445,7 +445,7 @@ p_base +
     name = NULL
   ) +
   labs(x = "Surgery Year", y = "Outcome") +
-  hvti_theme("manuscript") +
+  hv_theme("poster") +
   theme(
     legend.position  = c(0.15, 0.2),        # bottom-left of panel
     legend.background = element_rect(fill = "white", colour = "grey80",
@@ -466,7 +466,7 @@ p_base +
     name = "Group"
   ) +
   labs(x = "Surgery Year", y = "Outcome") +
-  hvti_theme("manuscript") +
+  hv_theme("poster") +
   theme(
     legend.position = "bottom",             # "right" | "left" | "top" | "bottom"
     legend.direction = "horizontal"
@@ -486,7 +486,7 @@ plot(km) +
   scale_x_continuous(breaks = seq(0, 20, 5)) +
   coord_cartesian(xlim = c(0, 20), ylim = c(0, 100)) +
   labs(x = "Years after Operation", y = "Freedom from Death (%)") +
-  hvti_theme("manuscript")
+  hv_theme("poster")
 ```
 
 ![](plot-decorators_files/figure-html/legend_none-1.png)
@@ -506,7 +506,7 @@ p_base +
     name = "Group"
   ) +
   labs(x = "Surgery Year", y = "Outcome") +
-  hvti_theme("manuscript") +
+  hv_theme("poster") +
   theme(
     legend.text  = element_text(size = 9),
     legend.key.size = unit(0.4, "cm")
@@ -517,7 +517,7 @@ p_base +
 
 ## Theme Overrides
 
-[`hvti_theme()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_theme.md)
+[`hv_theme()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_theme.md)
 sets a complete non-data formatting baseline. Layer additional
 [`theme()`](https://ggplot2.tidyverse.org/reference/theme.html) calls
 after it to adjust individual elements without touching the rest.
@@ -533,7 +533,7 @@ p_base +
     name = "Group"
   ) +
   labs(x = "Surgery Year", y = "Outcome") +
-  hvti_theme("manuscript") +
+  hv_theme("poster") +
   theme(
     axis.text  = element_text(size = 10),   # tick labels
     axis.title = element_text(size = 12)    # axis titles
@@ -553,7 +553,7 @@ p_base +
     name = "Group"
   ) +
   labs(x = "Surgery Year", y = "Outcome") +
-  hvti_theme("manuscript") +
+  hv_theme("poster") +
   theme(
     panel.grid.minor = element_blank()
   )
@@ -574,7 +574,7 @@ p_base +
     name = "Group"
   ) +
   labs(x = "Surgery Year", y = "Outcome") +
-  hvti_theme("manuscript") +
+  hv_theme("poster") +
   theme(
     axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1)
   )
@@ -601,7 +601,7 @@ plot(km) +
     x        = "Years after Operation",
     y        = "Freedom from Death (%)"
   ) +
-  hvti_theme("manuscript") +
+  hv_theme("poster") +
   theme(
     plot.title    = element_text(size = 14, face = "bold", hjust = 0),
     plot.subtitle = element_text(size = 11, colour = "grey40", hjust = 0)
@@ -624,7 +624,7 @@ p_base +
     name = "Group"
   ) +
   labs(x = "Surgery Year", y = "Outcome") +
-  hvti_theme("poster") +
+  hv_theme("poster") +
   theme(
     plot.margin = margin(t = 10, r = 20, b = 10, l = 20, unit = "pt")
   )
@@ -651,7 +651,7 @@ p_ms <- p_base +
     name = "Group"
   ) +
   labs(x = "Surgery Year", y = "Outcome") +
-  hvti_theme("manuscript")
+  hv_theme("poster")
 
 p_km_ms <- plot(km) +
   scale_color_manual(values = c(All = "steelblue"), guide = "none") +
@@ -661,7 +661,7 @@ p_km_ms <- plot(km) +
   scale_x_continuous(breaks = seq(0, 20, 5)) +
   coord_cartesian(xlim = c(0, 20), ylim = c(0, 100)) +
   labs(x = "Years after Operation", y = "Freedom from Death (%)") +
-  hvti_theme("manuscript")
+  hv_theme("poster")
 
 p_ms | p_km_ms
 ```
@@ -683,7 +683,7 @@ p_ms | p_km_ms
 
 A common pattern with survival curves is to pair the plot with a
 numbers-at-risk panel.
-[`hvti_survival()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvti_survival.md)
+[`hv_survival()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_survival.md)
 stores the risk table as a data frame at `km$tables$risk` — columns
 `strata`, `report_time`, `n.risk`. Build a ggplot text panel from it,
 then stack with `/`.
@@ -697,7 +697,7 @@ rt_panel <- ggplot(risk_df,
   geom_text(size = 3) +
   scale_x_continuous(limits = c(0, 20), breaks = seq(0, 20, 5)) +
   labs(x = "Years after Operation", y = NULL) +
-  hvti_theme("manuscript") +
+  hv_theme("poster") +
   theme(
     axis.line  = element_blank(),
     axis.ticks = element_blank()
