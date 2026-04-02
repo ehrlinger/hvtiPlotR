@@ -1,3 +1,23 @@
+# hvtiPlotR 2.0.0.9008
+
+## Documentation
+
+- Vignettes: all `hv_theme("manuscript")` calls inside R code blocks replaced
+  with `hv_theme("poster")` to demonstrate non-default theme options. Prose
+  references (e.g. migration guide comparison table) are preserved unchanged.
+  Theme-specific sections in `plot-decorators.qmd` (`## Manuscript`,
+  `## Manuscript PDF`) continue to demonstrate `hv_theme("manuscript")`.
+- `plot-functions.qmd`: added explicit **Bare plot** subsections to the six
+  sections that previously chained directly from build to decoration —
+  mirror-histogram (binary-match and IPTW), trends (cases/year), spaghetti,
+  nonparametric temporal curve, nonparametric ordinal curve, and longitudinal
+  participation counts. Each section now follows the three-step pattern:
+  (1) build with `hv_*()`, (2) render bare ggplot with `p <- plot(obj)`,
+  (3) decorate with `scale_*()` + `hv_theme("poster")`.
+- `plot-functions.qmd`: UpSet section split into `## Bare plot` (showing
+  `plot(hu)`) and `## Applying a theme` (showing `plot(hu) & hv_theme("poster")`),
+  with an explanatory note that the patchwork `&` operator is required.
+
 # hvtiPlotR 2.0.0.9007
 
 ## Breaking changes

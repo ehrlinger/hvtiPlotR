@@ -150,7 +150,7 @@ plot(km) +
   scale_x_continuous(breaks = seq(0, 20, 5)) +
   coord_cartesian(xlim = c(0, 20), ylim = c(0, 100)) +
   labs(x = "Years after Operation", y = "Freedom from Death (%)") +
-  hv_theme("manuscript")
+  hv_theme("poster")
 ```
 
 ## ColorBrewer palettes
@@ -168,7 +168,7 @@ p_base +
     name = "Group"
   ) +
   labs(x = "Surgery Year", y = "Outcome") +
-  hv_theme("manuscript")
+  hv_theme("poster")
 ```
 
 ## Suppressing legends
@@ -185,7 +185,7 @@ p_base +
     guide = "none"
   ) +
   labs(x = "Surgery Year", y = "Outcome") +
-  hv_theme("manuscript")
+  hv_theme("poster")
 ```
 
 # Labels and Annotations
@@ -210,7 +210,7 @@ plot(km) +
     y       = "Freedom from Death (%)",
     caption = "Logit CI, \u03b1 = 0.6827 (1 SD)"
   ) +
-  hv_theme("manuscript")
+  hv_theme("poster")
 ```
 
 ## annotate()
@@ -234,7 +234,7 @@ plot(km) +
            arrow = arrow(length = unit(0.2, "cm")), colour = "grey40") +
   annotate("text",    x = 10.3, y = 40,
            label = "Median survival", hjust = 0, size = 3, colour = "grey40") +
-  hv_theme("manuscript")
+  hv_theme("poster")
 ```
 
 ## coord_cartesian()
@@ -252,7 +252,7 @@ p_base +
   ) +
   labs(x = "Surgery Year", y = "Outcome") +
   coord_cartesian(xlim = c(1995, 2020), ylim = c(20, 70)) +
-  hv_theme("manuscript")
+  hv_theme("poster")
 ```
 
 # Saving Figures
@@ -397,7 +397,7 @@ plot_list <- lapply(
                  y_label = yv)) +
       scale_colour_manual(values = c("steelblue"), guide = "none") +
       labs(x = "Years") +
-      hv_theme("manuscript")
+      hv_theme("poster")
   }
 )
 
@@ -434,7 +434,7 @@ p_base +
     name = NULL
   ) +
   labs(x = "Surgery Year", y = "Outcome") +
-  hv_theme("manuscript") +
+  hv_theme("poster") +
   theme(
     legend.position  = c(0.15, 0.2),        # bottom-left of panel
     legend.background = element_rect(fill = "white", colour = "grey80",
@@ -453,7 +453,7 @@ p_base +
     name = "Group"
   ) +
   labs(x = "Surgery Year", y = "Outcome") +
-  hv_theme("manuscript") +
+  hv_theme("poster") +
   theme(
     legend.position = "bottom",             # "right" | "left" | "top" | "bottom"
     legend.direction = "horizontal"
@@ -471,7 +471,7 @@ plot(km) +
   scale_x_continuous(breaks = seq(0, 20, 5)) +
   coord_cartesian(xlim = c(0, 20), ylim = c(0, 100)) +
   labs(x = "Years after Operation", y = "Freedom from Death (%)") +
-  hv_theme("manuscript")
+  hv_theme("poster")
 ```
 
 `guide = "none"` on every `scale_*()` call removes all legend entries. This is
@@ -489,7 +489,7 @@ p_base +
     name = "Group"
   ) +
   labs(x = "Surgery Year", y = "Outcome") +
-  hv_theme("manuscript") +
+  hv_theme("poster") +
   theme(
     legend.text  = element_text(size = 9),
     legend.key.size = unit(0.4, "cm")
@@ -513,7 +513,7 @@ p_base +
     name = "Group"
   ) +
   labs(x = "Surgery Year", y = "Outcome") +
-  hv_theme("manuscript") +
+  hv_theme("poster") +
   theme(
     axis.text  = element_text(size = 10),   # tick labels
     axis.title = element_text(size = 12)    # axis titles
@@ -531,7 +531,7 @@ p_base +
     name = "Group"
   ) +
   labs(x = "Surgery Year", y = "Outcome") +
-  hv_theme("manuscript") +
+  hv_theme("poster") +
   theme(
     panel.grid.minor = element_blank()
   )
@@ -550,7 +550,7 @@ p_base +
     name = "Group"
   ) +
   labs(x = "Surgery Year", y = "Outcome") +
-  hv_theme("manuscript") +
+  hv_theme("poster") +
   theme(
     axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1)
   )
@@ -575,7 +575,7 @@ plot(km) +
     x        = "Years after Operation",
     y        = "Freedom from Death (%)"
   ) +
-  hv_theme("manuscript") +
+  hv_theme("poster") +
   theme(
     plot.title    = element_text(size = 14, face = "bold", hjust = 0),
     plot.subtitle = element_text(size = 11, colour = "grey40", hjust = 0)
@@ -621,7 +621,7 @@ p_ms <- p_base +
     name = "Group"
   ) +
   labs(x = "Surgery Year", y = "Outcome") +
-  hv_theme("manuscript")
+  hv_theme("poster")
 
 p_km_ms <- plot(km) +
   scale_color_manual(values = c(All = "steelblue"), guide = "none") +
@@ -631,7 +631,7 @@ p_km_ms <- plot(km) +
   scale_x_continuous(breaks = seq(0, 20, 5)) +
   coord_cartesian(xlim = c(0, 20), ylim = c(0, 100)) +
   labs(x = "Years after Operation", y = "Freedom from Death (%)") +
-  hv_theme("manuscript")
+  hv_theme("poster")
 
 p_ms | p_km_ms
 ```
@@ -662,7 +662,7 @@ rt_panel <- ggplot(risk_df,
   geom_text(size = 3) +
   scale_x_continuous(limits = c(0, 20), breaks = seq(0, 20, 5)) +
   labs(x = "Years after Operation", y = NULL) +
-  hv_theme("manuscript") +
+  hv_theme("poster") +
   theme(
     axis.line  = element_blank(),
     axis.ticks = element_blank()

@@ -330,7 +330,7 @@ data(parametric, package = "hvtiPlotR")
 data(nonparametric, package = "hvtiPlotR")
 
 # Set a default hvtiPlotR plotting theme
-theme_set(hvtiPlotR::hv_theme("manuscript")) 
+theme_set(hvtiPlotR::hv_theme("poster")) 
 ```
 
 One advantage of ggplot2 is that figures can be built up in successive statements. This tutorial will make extensive use of this to demonstrate the process. Starting in this code chunk, we will save the intermediate objects in the ccf_plot variable. Here we simply create an empty ggplot2 figure that we will be adding to as we work through the commands in the plot.sas macro. Note that we include the %plot() commands in the comments above the equivalent ggplot2 command for comparison.
@@ -587,7 +587,7 @@ The **hvtiPlotR** package provides four themes via `hv_theme(style)`:
 as the last `+` layer on any composed ggplot object.
 
 ```{r man_theme_demo}
-ccf_plot + hv_theme("manuscript")
+ccf_plot + hv_theme("poster")
 ```
 
 For full coverage of `scale_*`, `labs()`, `annotate()`, `coord_cartesian()`,
@@ -615,7 +615,7 @@ p_final <- ccf_plot +
     y       = "Percent in Each Category (ST)",
     caption = getwd()
   ) +
-  hv_theme("manuscript")
+  hv_theme("poster")
 
 ggsave(
   filename = "../graphs/manuscript.pdf",
