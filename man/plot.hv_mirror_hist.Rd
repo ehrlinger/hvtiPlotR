@@ -40,6 +40,7 @@ plot(mh) +
 \code{\link{hv_theme}} for the publication theme,
 \code{\link{sample_mirror_histogram_data}} for example data.
 
-Other Propensity Score & Matching:
-\code{\link{hv_mirror_hist}}
+Other Propensity Score & Matching: 
+\code{\link{hv_mirror_hist}()}
 }
+\concept{Propensity Score & Matching}
