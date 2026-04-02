@@ -387,7 +387,7 @@ mirror_histogram_diagnostics <- function(working, matched_idx, group_levels,
 #'
 #' @family Propensity Score & Matching
 #'
-#' @concept mirrored histogram propensity score overlap matching IPTW weighting mirror_histogram hv_mirror
+#' @concept mirrored histogram propensity score overlap matching IPTW weighting mirror_histogram
 #'
 #' @examples
 #' dta <- sample_mirror_histogram_data(n = 500, separation = 1.5)
