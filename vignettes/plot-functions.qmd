@@ -2394,10 +2394,16 @@ co-occurrences or any set membership data. It ports the pattern from
 `tp.complexUpset.R`, replacing hard-coded colours with `scale_fill_*`
 composition and hard-coded themes with `hv_theme()`.
 
-Apply a theme to **all panels** using the patchwork `&` operator (not `+`):
+Unlike other hvtiPlotR functions, `plot.hv_upset` returns a **patchwork
+composite** built internally by ComplexUpset. A theme must be applied via
+the patchwork `&` operator (not `+`) to cover all sub-panels simultaneously.
+`&` is also required for correct rendering: ComplexUpset's internal theme
+sets `axis.title.x` in a form that newer ggplot2 rejects unless overridden,
+so `& hv_theme()` is part of the *minimum* working call, not an optional
+decoration:
 
 ```r
-hu <- hv_upset(dta, intersect = sets)
+# Minimum working call — & hv_theme() is required, not optional
 plot(hu) & hv_theme("poster")
 ```
 
@@ -2415,18 +2421,7 @@ colSums(upset_dta)
 hu <- hv_upset(upset_dta, intersect = sets)
 ```
 
-## Bare plot
-
-```{r}
-#| label: upset_bare
-#| fig-width: 9
-#| fig-height: 5
-plot(hu)
-```
-
-## Applying a theme
-
-Use the patchwork `&` operator (not `+`) to apply `hv_theme()` across all panels simultaneously:
+## Default plot
 
 ```{r}
 #| label: upset_basic
