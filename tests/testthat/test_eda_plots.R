@@ -341,3 +341,21 @@ test_that("plot(hv_eda) is composable with hv_theme()", {
   p  <- plot(hv_eda(df, y_col = "male")) + hv_theme("manuscript")
   expect_s3_class(p, "ggplot")
 })
+
+# ---------------------------------------------------------------------------
+# print.hv_eda coverage
+# ---------------------------------------------------------------------------
+
+test_that("print.hv_eda produces <hv_eda> header", {
+  df  <- sample_eda_data(n = 100, seed = 1)
+  obj <- hv_eda(df, y_col = "male")
+  expect_output(print(obj), "<hv_eda>")
+})
+
+test_that("print.hv_eda returns x invisibly", {
+  df  <- sample_eda_data(n = 100, seed = 1)
+  obj <- hv_eda(df, y_col = "male")
+  ret <- withVisible(print(obj))
+  expect_false(ret$visible)
+  expect_identical(ret$value, obj)
+})

@@ -204,3 +204,21 @@ test_that("hv_balance threshold vlines appear at correct x values", {
 })
 
 # ---------------------------------------------------------------------------
+
+# ---------------------------------------------------------------------------
+# print.hv_balance coverage
+# ---------------------------------------------------------------------------
+
+test_that("print.hv_balance produces <hv_balance> header", {
+  df  <- sample_covariate_balance_data(n = 200, seed = 1)
+  bal <- hv_balance(df, group_col = "group")
+  expect_output(print(bal), "<hv_balance>")
+})
+
+test_that("print.hv_balance returns x invisibly", {
+  df  <- sample_covariate_balance_data(n = 200, seed = 1)
+  bal <- hv_balance(df, group_col = "group")
+  ret <- withVisible(print(bal))
+  expect_false(ret$visible)
+  expect_identical(ret$value, bal)
+})

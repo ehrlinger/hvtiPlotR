@@ -411,3 +411,35 @@ test_that("hv_ordinal errors when grade_col is absent", {
     "column"
   )
 })
+
+# ---------------------------------------------------------------------------
+# print.hv_nonparametric and print.hv_ordinal coverage
+# ---------------------------------------------------------------------------
+
+test_that("print.hv_nonparametric produces <hv_nonparametric> header", {
+  dat <- sample_nonparametric_curve_data(n = 100, seed = 1)
+  obj <- hv_nonparametric(dat)
+  expect_output(print(obj), "<hv_nonparametric>")
+})
+
+test_that("print.hv_nonparametric returns x invisibly", {
+  dat <- sample_nonparametric_curve_data(n = 100, seed = 1)
+  obj <- hv_nonparametric(dat)
+  ret <- withVisible(print(obj))
+  expect_false(ret$visible)
+  expect_identical(ret$value, obj)
+})
+
+test_that("print.hv_ordinal produces <hv_ordinal> header", {
+  dat <- sample_nonparametric_ordinal_data(n = 100, seed = 1)
+  obj <- hv_ordinal(dat)
+  expect_output(print(obj), "<hv_ordinal>")
+})
+
+test_that("print.hv_ordinal returns x invisibly", {
+  dat <- sample_nonparametric_ordinal_data(n = 100, seed = 1)
+  obj <- hv_ordinal(dat)
+  ret <- withVisible(print(obj))
+  expect_false(ret$visible)
+  expect_identical(ret$value, obj)
+})

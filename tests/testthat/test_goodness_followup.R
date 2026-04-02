@@ -305,3 +305,19 @@ test_that("plot.hv_followup type='event' errors when alpha is out of range", {
   gf <- make_gfup_event()
   expect_error(plot(gf, type = "event", alpha = -0.1), "alpha")
 })
+
+# ---------------------------------------------------------------------------
+# print.hv_followup coverage
+# ---------------------------------------------------------------------------
+
+test_that("print.hv_followup produces <hv_followup> header", {
+  obj <- hv_followup(make_gfup_data())
+  expect_output(print(obj), "<hv_followup>")
+})
+
+test_that("print.hv_followup returns x invisibly", {
+  obj <- hv_followup(make_gfup_data())
+  ret <- withVisible(print(obj))
+  expect_false(ret$visible)
+  expect_identical(ret$value, obj)
+})

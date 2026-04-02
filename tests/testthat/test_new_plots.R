@@ -628,3 +628,59 @@ test_that("hv_theme_light_ppt respects base_size: size 12 differs from size 48",
   # Changing base_size must produce a different theme object
   expect_false(identical(t_small, t_large))
 })
+
+# ---------------------------------------------------------------------------
+# print.hv_alluvial coverage
+# ---------------------------------------------------------------------------
+
+test_that("print.hv_alluvial produces <hv_alluvial> header", {
+  dta  <- sample_alluvial_data(n = 100, seed = 1)
+  axes <- c("pre_ar", "post_ar", "fu_ar")
+  obj  <- hv_alluvial(dta, axes = axes, y_col = "freq")
+  expect_output(print(obj), "<hv_alluvial>")
+})
+
+test_that("print.hv_alluvial returns x invisibly", {
+  dta  <- sample_alluvial_data(n = 100, seed = 1)
+  axes <- c("pre_ar", "post_ar", "fu_ar")
+  obj  <- hv_alluvial(dta, axes = axes, y_col = "freq")
+  ret  <- withVisible(print(obj))
+  expect_false(ret$visible)
+  expect_identical(ret$value, obj)
+})
+
+# ---------------------------------------------------------------------------
+# print.hv_longitudinal coverage
+# ---------------------------------------------------------------------------
+
+test_that("print.hv_longitudinal produces <hv_longitudinal> header", {
+  dta <- sample_longitudinal_counts_data(n = 100, seed = 1)
+  obj <- hv_longitudinal(dta)
+  expect_output(print(obj), "<hv_longitudinal>")
+})
+
+test_that("print.hv_longitudinal returns x invisibly", {
+  dta <- sample_longitudinal_counts_data(n = 100, seed = 1)
+  obj <- hv_longitudinal(dta)
+  ret <- withVisible(print(obj))
+  expect_false(ret$visible)
+  expect_identical(ret$value, obj)
+})
+
+# ---------------------------------------------------------------------------
+# print.hv_upset coverage
+# ---------------------------------------------------------------------------
+
+test_that("print.hv_upset produces <hv_upset> header", {
+  dta <- sample_upset_data(n = 200, seed = 1)
+  obj <- hv_upset(dta, intersect = sets)
+  expect_output(print(obj), "<hv_upset>")
+})
+
+test_that("print.hv_upset returns x invisibly", {
+  dta <- sample_upset_data(n = 200, seed = 1)
+  obj <- hv_upset(dta, intersect = sets)
+  ret <- withVisible(print(obj))
+  expect_false(ret$visible)
+  expect_identical(ret$value, obj)
+})

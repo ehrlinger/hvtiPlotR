@@ -151,3 +151,23 @@ test_that("hv_sankey errors when a cluster column is absent from data", {
     "not found|not a column|not in"
   )
 })
+
+# ---------------------------------------------------------------------------
+# print.hv_sankey coverage
+# ---------------------------------------------------------------------------
+
+test_that("print.hv_sankey produces <hv_sankey> header", {
+  skip_if_not_installed("ggsankey")
+  dta <- sample_cluster_sankey_data(n = 100, seed = 1)
+  obj <- hv_sankey(dta)
+  expect_output(print(obj), "<hv_sankey>")
+})
+
+test_that("print.hv_sankey returns x invisibly", {
+  skip_if_not_installed("ggsankey")
+  dta <- sample_cluster_sankey_data(n = 100, seed = 1)
+  obj <- hv_sankey(dta)
+  ret <- withVisible(print(obj))
+  expect_false(ret$visible)
+  expect_identical(ret$value, obj)
+})

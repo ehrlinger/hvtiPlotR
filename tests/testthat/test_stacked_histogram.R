@@ -175,3 +175,21 @@ test_that("hv_stacked works with non-default column names", {
   expect_match(rlang::as_label(p$mapping$x), "surg_yr")
 })
 
+
+# ---------------------------------------------------------------------------
+# print.hv_stacked coverage
+# ---------------------------------------------------------------------------
+
+test_that("print.hv_stacked produces <hv_stacked> header", {
+  df  <- sample_stacked_histogram_data(n = 200, seed = 1)
+  obj <- hv_stacked(df, x_col = "surg_yr", group_col = "group_id")
+  expect_output(print(obj), "<hv_stacked>")
+})
+
+test_that("print.hv_stacked returns x invisibly", {
+  df  <- sample_stacked_histogram_data(n = 200, seed = 1)
+  obj <- hv_stacked(df, x_col = "surg_yr", group_col = "group_id")
+  ret <- withVisible(print(obj))
+  expect_false(ret$visible)
+  expect_identical(ret$value, obj)
+})

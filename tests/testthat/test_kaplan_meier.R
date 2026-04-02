@@ -526,3 +526,25 @@ test_that("km$tables$report matches snapshot (fixed seed)", {
   )
   expect_snapshot(km$tables$report)
 })
+
+# ---------------------------------------------------------------------------
+# print.hv_survival coverage
+# ---------------------------------------------------------------------------
+
+test_that("print.hv_survival produces <hv_survival> header", {
+  km <- hv_survival(
+    sample_survival_data(n = 200, seed = 1),
+    report_times = c(1, 5, 10)
+  )
+  expect_output(print(km), "<hv_survival>")
+})
+
+test_that("print.hv_survival returns x invisibly", {
+  km  <- hv_survival(
+    sample_survival_data(n = 200, seed = 1),
+    report_times = c(1, 5, 10)
+  )
+  ret <- withVisible(print(km))
+  expect_false(ret$visible)
+  expect_identical(ret$value, km)
+})
