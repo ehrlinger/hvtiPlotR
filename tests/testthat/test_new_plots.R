@@ -635,14 +635,14 @@ test_that("hv_theme_light_ppt respects base_size: size 12 differs from size 48",
 
 test_that("print.hv_alluvial produces <hv_alluvial> header", {
   dta  <- sample_alluvial_data(n = 100, seed = 1)
-  axes <- c("pre_ar", "post_ar", "fu_ar")
+  axes <- c("pre_ar", "procedure", "post_ar")
   obj  <- hv_alluvial(dta, axes = axes, y_col = "freq")
   expect_output(print(obj), "<hv_alluvial>")
 })
 
 test_that("print.hv_alluvial returns x invisibly", {
   dta  <- sample_alluvial_data(n = 100, seed = 1)
-  axes <- c("pre_ar", "post_ar", "fu_ar")
+  axes <- c("pre_ar", "procedure", "post_ar")
   obj  <- hv_alluvial(dta, axes = axes, y_col = "freq")
   ret  <- withVisible(print(obj))
   expect_false(ret$visible)
