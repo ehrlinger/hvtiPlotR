@@ -12,7 +12,7 @@ The package ships 12 test files containing roughly 500 individual `test_that()` 
 
 | File | What it covers | Depth |
 |---|---|---|
-| `test_themes.R` | All 5 `hvti_theme_*` functions + `hvti_theme()` dispatcher + aliases | ★★★★★ |
+| `test_themes.R` | All 5 `hv_theme_*` functions + `hv_theme()` dispatcher + aliases | ★★★★★ |
 | `test_kaplan_meier.R` | `sample_survival_data` + `survival_curve` (all plot types, strata, CI, methods, validation) | ★★★★★ |
 | `test_mirror_histogram.R` | `mirror_histogram` + `sample_mirror_histogram_data` (binary and IPTW-weighted modes, internal helpers) | ★★★★★ |
 | `test_covariate_balance.R` | `covariate_balance` + `sample_covariate_balance_data` (structure, plot geometry, rendered labels) | ★★★★★ |
@@ -83,7 +83,7 @@ Targets for `expect_snapshot()` (testthat 3.x):
 
 ### 5. No cross-function integration tests
 
-The package's value proposition involves *composing* outputs: a `survival_curve` result styled with `hvti_theme()` and exported via `save_ppt()`. No test exercises this full pipeline.
+The package's value proposition involves *composing* outputs: a `survival_curve` result styled with `hv_theme()` and exported via `save_ppt()`. No test exercises this full pipeline.
 
 ---
 
@@ -283,7 +283,7 @@ test_that("full pipeline: survival_curve -> theme -> save_ppt", {
 
   expect_no_error(
     save_ppt(
-      object       = km + hvti_theme("ppt"),
+      object       = km + hv_theme("ppt"),
       template     = template,
       powerpoint   = pptx_out,
       slide_titles = "KM: SAVR vs TAVR"

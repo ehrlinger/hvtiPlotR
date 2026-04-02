@@ -97,7 +97,7 @@ add_plot_slide <- function(doc, plot, title, layout, master, width, height,
 #' @return Invisibly returns the path given by `powerpoint`.
 #'
 #' @seealso [rvg::dml()], [officer::ph_with()], [officer::ph_location()],
-#'   [hvti_theme()]
+#'   [hv_theme()]
 #'
 #' @examples
 #' \dontrun{
@@ -107,7 +107,7 @@ add_plot_slide <- function(doc, plot, title, layout, master, width, height,
 #' p1 <- ggplot(mtcars, aes(x = wt, y = mpg)) +
 #'   geom_point() +
 #'   labs(x = "Weight", y = "Miles per gallon", title = "Fuel economy") +
-#'   hvti_theme("dark_ppt")
+#'   hv_theme("dark_ppt")
 #'
 #' save_ppt(
 #'   object       = p1,
@@ -120,7 +120,7 @@ add_plot_slide <- function(doc, plot, title, layout, master, width, height,
 #' p2 <- ggplot(mtcars, aes(x = factor(cyl), y = mpg)) +
 #'   geom_boxplot() +
 #'   labs(x = "Cylinders", y = "Miles per gallon") +
-#'   hvti_theme("dark_ppt")
+#'   hv_theme("dark_ppt")
 #'
 #' save_ppt(
 #'   object       = list(p1, p2),
@@ -133,7 +133,7 @@ add_plot_slide <- function(doc, plot, title, layout, master, width, height,
 #' pm <- ggplot(mtcars, aes(x = wt, y = mpg)) +
 #'   geom_point() +
 #'   labs(x = "Weight", y = "Miles per gallon") +
-#'   hvti_theme("manuscript")
+#'   hv_theme("manuscript")
 #'
 #' save_ppt(
 #'   object       = pm,

@@ -39,5 +39,5 @@ sub2 <- eda_select_vars(dta, "male cabg nyha valve_morph")
 names(sub2)
 }
 \seealso{
-\code{\link[=hvti_eda]{hvti_eda()}}
+\code{\link[=hv_eda]{hv_eda()}}
 }

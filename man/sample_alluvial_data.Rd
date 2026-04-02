@@ -19,7 +19,7 @@ A data frame with columns:
 }
 \description{
 Generates a realistic cardiac-surgery data set suitable for demonstrating
-\code{\link[=hvti_alluvial]{hvti_alluvial()}}. Each row represents a unique combination of pre-operative
+\code{\link[=hv_alluvial]{hv_alluvial()}}. Each row represents a unique combination of pre-operative
 AV regurgitation grade, surgical procedure type, and post-operative AV
 regurgitation grade, together with the patient count (\code{freq}) for that
 combination. The co-occurrence structure reflects realistic clinical
@@ -33,5 +33,5 @@ head(dta)
 with(dta, tapply(freq, list(pre_ar, post_ar), sum, default = 0))
 }
 \seealso{
-\code{\link[=hvti_alluvial]{hvti_alluvial()}}
+\code{\link[=hv_alluvial]{hv_alluvial()}}
 }

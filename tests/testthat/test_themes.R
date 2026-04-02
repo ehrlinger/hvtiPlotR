@@ -11,24 +11,24 @@ create_test_plot <- function() {
 }
 
 # ==========================================================================
-# hvti_theme generic tests
+# hv_theme generic tests
 # ==========================================================================
 
-test_that("hvti_theme returns themes for all supported styles", {
-  expect_s3_class(hvti_theme("ppt"),       "theme")
-  expect_s3_class(hvti_theme("dark_ppt"),  "theme")
-  expect_s3_class(hvti_theme("light_ppt"), "theme")
-  expect_s3_class(hvti_theme("manuscript"), "theme")
-  expect_s3_class(hvti_theme("poster"),    "theme")
+test_that("hv_theme returns themes for all supported styles", {
+  expect_s3_class(hv_theme("ppt"),       "theme")
+  expect_s3_class(hv_theme("dark_ppt"),  "theme")
+  expect_s3_class(hv_theme("light_ppt"), "theme")
+  expect_s3_class(hv_theme("manuscript"), "theme")
+  expect_s3_class(hv_theme("poster"),    "theme")
 })
 
-test_that("hvti_theme forwards arguments to style-specific functions", {
-  theme_custom <- hvti_theme("ppt", base_size = 18, ink = "navy")
+test_that("hv_theme forwards arguments to style-specific functions", {
+  theme_custom <- hv_theme("ppt", base_size = 18, ink = "navy")
   expect_s3_class(theme_custom, "theme")
 })
 
-test_that("hvti_theme errors on unsupported styles", {
-  expect_error(hvti_theme("unknown"))
+test_that("hv_theme errors on unsupported styles", {
+  expect_error(hv_theme("unknown"))
                  
                #"Unsupported hvtiPlotR theme style")
 })

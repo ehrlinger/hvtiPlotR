@@ -4,7 +4,7 @@
 # Each public theme function calls this, then applies %+replace% theme(...)
 # for its own style overrides.
 
-hvti_theme_base <- function(base_size,
+hv_theme_base <- function(base_size,
                              base_family,
                              header_family,
                              base_line_size,

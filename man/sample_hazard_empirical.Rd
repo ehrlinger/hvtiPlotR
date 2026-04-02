@@ -65,5 +65,5 @@ emp2 <- sample_hazard_empirical(
 head(emp2)
 }
 \seealso{
-\code{\link[=hvti_hazard]{hvti_hazard()}}, \code{\link[=sample_hazard_data]{sample_hazard_data()}}
+\code{\link[=hv_hazard]{hv_hazard()}}, \code{\link[=sample_hazard_data]{sample_hazard_data()}}
 }

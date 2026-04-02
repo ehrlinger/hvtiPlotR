@@ -9,7 +9,7 @@
 # a2), computing cp0/cp1/cp2 (cumulative probabilities) and p0/p1/p2/p3
 # (individual grade probabilities), then averaging patient-specific curves with
 # PROC SUMMARY by iv_echo, the resulting `predict` dataset in LONG format is
-# the direct input to hvti_ordinal().
+# the direct input to hv_ordinal().
 #
 # MIGRATION GUIDE FOR SAS USERS:
 #   SAS keeps one column per grade: p0, p1, p2, p3.
@@ -35,7 +35,7 @@
 #     dp_long$time <- means$mtime   # or mmtime
 #
 #   Then call:
-#     hvti_ordinal(long, data_points = dp_long)
+#     hv_ordinal(long, data_points = dp_long)
 # ---------------------------------------------------------------------------
 
 #' Sample Nonparametric Ordinal Curve Data
@@ -66,7 +66,7 @@
 #' @return A long-format data frame: `time`, `estimate`, `grade` (factor).
 #'   Individual grade probabilities sum to 1 at each time point.
 #'
-#' @seealso [hvti_ordinal()], [sample_nonparametric_curve_data()],
+#' @seealso [hv_ordinal()], [sample_nonparametric_curve_data()],
 #'   [sample_nonparametric_ordinal_points()]
 #'
 #' @examples
@@ -133,7 +133,7 @@ sample_nonparametric_ordinal_data <- function(n            = 1000,
 #'
 #' @return A data frame with columns `time`, `value`, `grade`.
 #'
-#' @seealso [sample_nonparametric_ordinal_data()], [hvti_ordinal()]
+#' @seealso [sample_nonparametric_ordinal_data()], [hv_ordinal()]
 #'
 #' @examples
 #' # Default: four grade levels
@@ -202,10 +202,10 @@ sample_nonparametric_ordinal_points <- function(
 #' Prepare nonparametric ordinal outcome curve data for plotting
 #'
 #' Validates pre-computed grade-specific probability curves (and optional
-#' binned data summary points) and returns an \code{hvti_ordinal} object.
-#' Call \code{\link{plot.hvti_ordinal}} on the result to obtain a bare
+#' binned data summary points) and returns an \code{hv_ordinal} object.
+#' Call \code{\link{plot.hv_ordinal}} on the result to obtain a bare
 #' \code{ggplot2} multi-grade line plot that you can decorate with
-#' colour scales and \code{\link{hvti_theme}}.
+#' colour scales and \code{\link{hv_theme}}.
 #'
 #' **SAS column mapping (\code{predict} dataset after averaging):**
 #' - \code{time} ← \code{iv_echo} (or \code{iv_wristm})
@@ -223,7 +223,7 @@ sample_nonparametric_ordinal_points <- function(
 #'   points. Must have columns matching \code{x_col}, \code{"value"}, and
 #'   \code{grade_col}. Default \code{NULL}.
 #'
-#' @return An object of class \code{c("hvti_ordinal", "hvti_data")}:
+#' @return An object of class \code{c("hv_ordinal", "hv_data")}:
 #' \describe{
 #'   \item{\code{$data}}{The \code{curve_data} data frame.}
 #'   \item{\code{$meta}}{Named list: \code{x_col}, \code{estimate_col},
@@ -232,7 +232,7 @@ sample_nonparametric_ordinal_points <- function(
 #'   \item{\code{$tables}}{List; contains \code{data_points} when supplied.}
 #' }
 #'
-#' @seealso \code{\link{plot.hvti_ordinal}},
+#' @seealso \code{\link{plot.hv_ordinal}},
 #'   \code{\link{sample_nonparametric_ordinal_data}}
 #'
 #' @references SAS templates: \code{tp.np.tr.ivecho.average_curv.ordinal.sas},
@@ -249,7 +249,7 @@ sample_nonparametric_ordinal_points <- function(
 #'   n = 800, time_max = 5,
 #'   grade_labels = c("None", "Mild", "Moderate", "Severe")
 #' )
-#' ord <- hvti_ordinal(dat, data_points = dat_pts)
+#' ord <- hv_ordinal(dat, data_points = dat_pts)
 #' ord  # prints grade count and data-point flag
 #'
 #' plot(ord) +
@@ -265,11 +265,11 @@ sample_nonparametric_ordinal_points <- function(
 #'                               breaks = seq(0, 0.50, 0.10),
 #'                               labels = scales::percent) +
 #'   ggplot2::labs(x = "Years", y = "Percent in each TR grade") +
-#'   hvti_theme("manuscript")
+#'   hv_theme("manuscript")
 #'
 #' @importFrom rlang .data
 #' @export
-hvti_ordinal <- function(curve_data,
+hv_ordinal <- function(curve_data,
                           x_col        = "time",
                           estimate_col = "estimate",
                           grade_col    = "grade",
@@ -286,7 +286,7 @@ hvti_ordinal <- function(curve_data,
   n_grades <- length(unique(curve_data[[grade_col]]))
   tables   <- if (has_data_points) list(data_points = data_points) else list()
 
-  new_hvti_data(
+  new_hv_data(
     data = as.data.frame(curve_data),
     meta = list(
       x_col           = x_col,
@@ -297,20 +297,20 @@ hvti_ordinal <- function(curve_data,
       has_data_points = has_data_points
     ),
     tables   = tables,
-    subclass = "hvti_ordinal"
+    subclass = "hv_ordinal"
   )
 }
 
 
-#' Print an hvti_ordinal object
+#' Print an hv_ordinal object
 #'
-#' @param x   An \code{hvti_ordinal} object from \code{\link{hvti_ordinal}}.
+#' @param x   An \code{hv_ordinal} object from \code{\link{hv_ordinal}}.
 #' @param ... Ignored.
 #' @return \code{x}, invisibly.
 #' @export
-print.hvti_ordinal <- function(x, ...) {
+print.hv_ordinal <- function(x, ...) {
   m <- x$meta
-  cat("<hvti_ordinal>\n")
+  cat("<hv_ordinal>\n")
   cat(sprintf("  N curve pts : %d  (%d grades)\n", m$n_obs, m$n_grades))
   cat(sprintf("  x / estimate / grade : %s / %s / %s\n",
               m$x_col, m$estimate_col, m$grade_col))
@@ -319,12 +319,12 @@ print.hvti_ordinal <- function(x, ...) {
 }
 
 
-#' Plot an hvti_ordinal object
+#' Plot an hv_ordinal object
 #'
 #' Draws grade-specific probability curves with an optional binned data
 #' summary point overlay.
 #'
-#' @param x            An \code{hvti_ordinal} object.
+#' @param x            An \code{hv_ordinal} object.
 #' @param line_width   Width of grade-specific curve lines. Default \code{1.0}.
 #' @param point_size   Size of binned data summary points. Default \code{2.5}.
 #' @param point_shape  Integer shape for summary points. Default \code{20}.
@@ -332,7 +332,7 @@ print.hvti_ordinal <- function(x, ...) {
 #'
 #' @return A bare \code{\link[ggplot2]{ggplot}} object.
 #'
-#' @seealso \code{\link{hvti_ordinal}}, \code{\link{hvti_theme}}
+#' @seealso \code{\link{hv_ordinal}}, \code{\link{hv_theme}}
 #'
 #' @examples
 #' dat <- sample_nonparametric_ordinal_data(
@@ -341,27 +341,27 @@ print.hvti_ordinal <- function(x, ...) {
 #' )
 #'
 #' # Curves only, with RColorBrewer palette
-#' plot(hvti_ordinal(dat)) +
+#' plot(hv_ordinal(dat)) +
 #'   ggplot2::scale_colour_brewer(palette = "RdYlGn", direction = -1,
 #'                                name = "AR Grade") +
 #'   ggplot2::scale_x_continuous(breaks = 0:5) +
 #'   ggplot2::scale_y_continuous(labels = scales::percent) +
 #'   ggplot2::labs(x = "Years after Surgery", y = "Prevalence") +
-#'   hvti_theme("manuscript")
+#'   hv_theme("manuscript")
 #'
 #' # Subset: show only severe grade
-#' plot(hvti_ordinal(dat[dat$grade == "Severe", ])) +
+#' plot(hv_ordinal(dat[dat$grade == "Severe", ])) +
 #'   ggplot2::scale_colour_manual(values = c(Severe = "firebrick"),
 #'                                guide  = "none") +
 #'   ggplot2::scale_y_continuous(limits = c(0, 0.25),
 #'                               labels = scales::percent) +
 #'   ggplot2::labs(x = "Years", y = "P(Severe TR grade)") +
-#'   hvti_theme("manuscript")
+#'   hv_theme("manuscript")
 #'
 #' @importFrom ggplot2 ggplot aes geom_line geom_point
 #' @importFrom rlang .data
 #' @export
-plot.hvti_ordinal <- function(x,
+plot.hv_ordinal <- function(x,
                                line_width  = 1.0,
                                point_size  = 2.5,
                                point_shape = 20L,

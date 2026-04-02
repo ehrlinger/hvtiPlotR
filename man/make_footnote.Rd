@@ -76,7 +76,7 @@ unchanged.
 \strong{Typical workflow:}
 
 \if{html}{\out{<div class="sourceCode r">}}\preformatted{# During analysis (draft)
-p <- plot(hvti_hazard(...)) + hvti_theme("manuscript")
+p <- plot(hv_hazard(...)) + hv_theme("manuscript")
 print(p)
 make_footnote("analysis/mortality.R")   # adds draft annotation
 
@@ -95,7 +95,7 @@ library(ggplot2)
 p <- ggplot(mtcars, aes(wt, mpg)) +
   geom_point() +
   labs(title = "Motor Trend Cars") +
-  hvti_theme("manuscript")
+  hv_theme("manuscript")
 
 # Draft: print, then annotate
 print(p)
@@ -119,5 +119,5 @@ make_footnote(
 
 }
 \seealso{
-\code{\link[=save_ppt]{save_ppt()}}, \code{\link[=hvti_theme]{hvti_theme()}}
+\code{\link[=save_ppt]{save_ppt()}}, \code{\link[=hv_theme]{hv_theme()}}
 }

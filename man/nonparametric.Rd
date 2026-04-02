@@ -28,6 +28,6 @@ aortic-valve surgery registry, originally exported from SAS via
 \code{tp.hp.dead.sas} / \code{tp.np.*.sas}.
 }
 \seealso{
-\link{parametric}, \code{\link[=hvti_nonparametric]{hvti_nonparametric()}}
+\link{parametric}, \code{\link[=hv_nonparametric]{hv_nonparametric()}}
 }
 \keyword{datasets}

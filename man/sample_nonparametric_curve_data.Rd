@@ -47,7 +47,7 @@ and (if \code{groups} is not \code{NULL}) \code{group}.
 Simulates pre-computed curve output matching what SAS produces after fitting
 a two-phase nonparametric temporal trend model and averaging patient-specific
 profiles with \verb{PROC SUMMARY}. The output is suitable for direct use with
-\code{\link[=hvti_nonparametric]{hvti_nonparametric()}}.
+\code{\link[=hv_nonparametric]{hv_nonparametric()}}.
 }
 \details{
 \strong{SAS context:} In the SAS templates this dataset corresponds to
@@ -69,5 +69,5 @@ dat2 <- sample_nonparametric_curve_data(
 head(dat2)
 }
 \seealso{
-\code{\link[=hvti_nonparametric]{hvti_nonparametric()}}, \code{\link[=sample_nonparametric_curve_points]{sample_nonparametric_curve_points()}}
+\code{\link[=hv_nonparametric]{hv_nonparametric()}}, \code{\link[=sample_nonparametric_curve_points]{sample_nonparametric_curve_points()}}
 }

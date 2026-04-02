@@ -5,7 +5,7 @@
 #' Generate Sample Goodness-of-Follow-Up Data
 #'
 #' Produces a reproducible data frame suitable for testing and demonstrating
-#' [hvti_followup()]. Operation dates are drawn uniformly over the study
+#' [hv_followup()]. Operation dates are drawn uniformly over the study
 #' period; death and non-fatal event times are simulated from exponential
 #' distributions and censored at each patient's potential follow-up. The
 #' `deads` column approximates active/systematic death ascertainment by
@@ -13,7 +13,7 @@
 #' mirroring the distinction between `dead` and `deads` in the legacy
 #' `tp.dp.gfup.R` template.
 #'
-#' The column names match the defaults of [hvti_followup()]:
+#' The column names match the defaults of [hv_followup()]:
 #' `iv_opyrs`, `iv_dead`, `dead`. The event-panel columns (`iv_event`,
 #' `ev_event`, `deads`) are included so callers can pass `event_col`,
 #' `event_time_col`, and `death_for_event_col` directly.
@@ -47,7 +47,7 @@
 #' head(dta)
 #'
 #' # Death panel
-#' gf <- hvti_followup(dta)
+#' gf <- hv_followup(dta)
 #' plot(gf) +
 #'   ggplot2::scale_color_manual(
 #'     values = c("Alive" = "blue", "Dead" = "red"), name = NULL
@@ -56,7 +56,7 @@
 #'   ggplot2::labs(x = "Operation Date", y = "Follow-up (years)")
 #'
 #' # Event panel
-#' gf2 <- hvti_followup(dta, event_col = "ev_event",
+#' gf2 <- hv_followup(dta, event_col = "ev_event",
 #'                       event_time_col = "iv_event",
 #'                       death_for_event_col = "deads")
 #' plot(gf2, type = "event") +
@@ -148,9 +148,9 @@ sample_goodness_followup_data <- function(
 #' Prepare goodness-of-follow-up data for plotting
 #'
 #' Validates dates, builds per-patient follow-up frames, and returns an
-#' \code{hvti_followup} object containing the data for both the death panel
+#' \code{hv_followup} object containing the data for both the death panel
 #' (\code{type = "followup"}) and, optionally, the event panel
-#' (\code{type = "event"}).  Call \code{\link{plot.hvti_followup}} on the
+#' (\code{type = "event"}).  Call \code{\link{plot.hv_followup}} on the
 #' result to obtain a bare \code{ggplot2} object.
 #'
 #' @param data               A data frame with one row per patient.
@@ -186,7 +186,7 @@ sample_goodness_followup_data <- function(
 #' @param segment_drop       Numeric; vertical offset (years) for the segment
 #'   endpoint below the follow-up point.  Default \code{0.2}.
 #'
-#' @return An object of class \code{c("hvti_followup", "hvti_data")}:
+#' @return An object of class \code{c("hv_followup", "hv_data")}:
 #' \describe{
 #'   \item{\code{$data}}{Per-patient data frame for the death panel.}
 #'   \item{\code{$meta}}{Column names, date parameters, state levels,
@@ -196,24 +196,24 @@ sample_goodness_followup_data <- function(
 #'     \code{event_data}.}
 #' }
 #'
-#' @seealso \code{\link{plot.hvti_followup}},
+#' @seealso \code{\link{plot.hv_followup}},
 #'   \code{\link{sample_goodness_followup_data}}
 #'
 #' @examples
 #' dta <- sample_goodness_followup_data()
 #'
 #' # Death panel only
-#' gf <- hvti_followup(dta)
+#' gf <- hv_followup(dta)
 #' plot(gf) +
 #'   ggplot2::scale_color_manual(
 #'     values = c("Alive" = "steelblue", "Dead" = "firebrick"),
 #'     name = NULL
 #'   ) +
 #'   ggplot2::labs(x = "Operation Date", y = "Follow-up (years)") +
-#'   hvti_theme("manuscript")
+#'   hv_theme("manuscript")
 #'
 #' # With event panel
-#' gf2 <- hvti_followup(dta, event_col = "ev_event", event_time_col = "iv_event")
+#' gf2 <- hv_followup(dta, event_col = "ev_event", event_time_col = "iv_event")
 #' plot(gf2, type = "event") +
 #'   ggplot2::scale_color_manual(
 #'     values = c("No event" = "blue", "Non-fatal event" = "green3",
@@ -222,10 +222,10 @@ sample_goodness_followup_data <- function(
 #'   ) +
 #'   ggplot2::scale_shape_manual(values = c(1, 2, 4), name = NULL) +
 #'   ggplot2::labs(x = "Operation Date", y = "Follow-up (years)") +
-#'   hvti_theme("manuscript")
+#'   hv_theme("manuscript")
 #'
 #' @export
-hvti_followup <- function(
+hv_followup <- function(
   data,
   iv_opyrs_col         = "iv_opyrs",
   death_col            = "dead",
@@ -301,7 +301,7 @@ hvti_followup <- function(
   tables <- list(diagonal = diag_df)
   if (has_event) tables$event_data <- event_data
 
-  new_hvti_data(
+  new_hv_data(
     data = death_data,
     meta = list(
       iv_opyrs_col        = iv_opyrs_col,
@@ -321,20 +321,20 @@ hvti_followup <- function(
       n_patients          = nrow(payload)
     ),
     tables   = tables,
-    subclass = "hvti_followup"
+    subclass = "hv_followup"
   )
 }
 
 
-#' Print an hvti_followup object
+#' Print an hv_followup object
 #'
-#' @param x   An \code{hvti_followup} object from \code{\link{hvti_followup}}.
+#' @param x   An \code{hv_followup} object from \code{\link{hv_followup}}.
 #' @param ... Ignored.
 #' @return \code{x}, invisibly.
 #' @export
-print.hvti_followup <- function(x, ...) {
+print.hv_followup <- function(x, ...) {
   m <- x$meta
-  cat("<hvti_followup>\n")
+  cat("<hv_followup>\n")
   cat(sprintf("  N patients  : %d\n", m$n_patients))
   cat(sprintf("  Study period: %s \u2013 %s (close: %s)\n",
               format(m$study_start), format(m$study_end),
@@ -349,19 +349,19 @@ print.hvti_followup <- function(x, ...) {
 }
 
 
-#' Plot an hvti_followup object
+#' Plot an hv_followup object
 #'
 #' Builds a bare goodness-of-follow-up \code{ggplot2} object from an
-#' \code{\link{hvti_followup}} data object.  Each patient appears as a point
+#' \code{\link{hv_followup}} data object.  Each patient appears as a point
 #' at their operation year (x) and total follow-up time (y); a vertical
 #' segment drops from the point to indicate their current state.  An orange
 #' diagonal reference line shows the maximum possible follow-up for patients
 #' enrolled at each year.
 #'
-#' @param x                  An \code{hvti_followup} object.
+#' @param x                  An \code{hv_followup} object.
 #' @param type               Which panel to produce: \code{"followup"}
 #'   (default, death states) or \code{"event"} (requires \code{event_col} to
-#'   have been supplied to \code{\link{hvti_followup}}).
+#'   have been supplied to \code{\link{hv_followup}}).
 #' @param alpha              Point/segment transparency in \eqn{[0,1]}.
 #'   Default \code{0.8}.
 #' @param diagonal_color     Colour of the diagonal reference line.
@@ -373,11 +373,11 @@ print.hvti_followup <- function(x, ...) {
 #'
 #' @return A bare \code{\link[ggplot2]{ggplot}} object.
 #'
-#' @seealso \code{\link{hvti_followup}}, \code{\link{hvti_theme}}
+#' @seealso \code{\link{hv_followup}}, \code{\link{hv_theme}}
 #'
 #' @examples
 #' dta <- sample_goodness_followup_data()
-#' gf  <- hvti_followup(dta, event_col = "ev_event",
+#' gf  <- hv_followup(dta, event_col = "ev_event",
 #'                      event_time_col = "iv_event")
 #'
 #' # Death panel
@@ -387,7 +387,7 @@ print.hvti_followup <- function(x, ...) {
 #'     name = NULL
 #'   ) +
 #'   ggplot2::labs(x = "Operation Date", y = "Follow-up (years)") +
-#'   hvti_theme("manuscript")
+#'   hv_theme("manuscript")
 #'
 #' # Event panel
 #' plot(gf, type = "event") +
@@ -397,11 +397,11 @@ print.hvti_followup <- function(x, ...) {
 #'     name = NULL
 #'   ) +
 #'   ggplot2::labs(x = "Operation Date", y = "Follow-up (years)") +
-#'   hvti_theme("manuscript")
+#'   hv_theme("manuscript")
 #'
 #' @importFrom ggplot2 ggplot aes geom_point geom_segment geom_line
 #' @export
-plot.hvti_followup <- function(x,
+plot.hv_followup <- function(x,
                                type               = c("followup", "event"),
                                alpha              = 0.8,
                                diagonal_color     = "orange",
@@ -414,7 +414,7 @@ plot.hvti_followup <- function(x,
   if (type == "event" && !x$meta$has_event)
     stop(
       'type = "event" requires event_col and event_time_col to be supplied ',
-      "to hvti_followup().",
+      "to hv_followup().",
       call. = FALSE
     )
 

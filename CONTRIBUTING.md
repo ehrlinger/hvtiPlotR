@@ -82,12 +82,12 @@ package-level architecture:
 | Convention | Rule |
 |---|---|
 | File names | `kebab-case.R` (e.g. `nonparametric-curve-plot.R`) |
-| Function names | `hvti_<concept>()` constructor + `plot.hvti_<concept>()` method (e.g. `hvti_nonparametric()`, `plot.hvti_nonparametric()`) |
+| Function names | `hv_<concept>()` constructor + `plot.hv_<concept>()` method (e.g. `hv_nonparametric()`, `plot.hv_nonparametric()`) |
 | Column-name args | Always strings, never bare symbols (e.g. `x_col = "time"`) |
 | Colours | Never hard-coded — leave to `scale_colour_*()` / `scale_fill_*()` |
 | Themes | Never applied inside the function — leave to the caller |
 | Tidy eval | Use `.data[[col]]` from `rlang`; import with `@importFrom rlang .data` |
-| Tests | `expect_s3_class(obj, "hvti_data")` for constructor; `expect_s3_class(plot(obj), "ggplot")` for the plot method |
+| Tests | `expect_s3_class(obj, "hv_data")` for constructor; `expect_s3_class(plot(obj), "ggplot")` for the plot method |
 | Snapshots | After adding a new `expect_snapshot()` test, run `devtools::test()` once locally to generate the `.snap` baseline, then commit the file under `tests/testthat/_snaps/`. If CI is the first to run it, the snapshot will be uploaded automatically via `upload-snapshots: true` in the workflow. To accept updated snapshots after intentional output changes, run `testthat::snapshot_accept()` locally and commit the result. |
 
 ---

@@ -81,10 +81,10 @@ cb_build_plot <- function(data, std_diff_col, group_col, var_levels,
 #' Prepare covariate balance data for plotting
 #'
 #' Validates and orders a long-format standardized-mean-difference data frame
-#' for a covariate balance plot, and returns an \code{hvti_balance} object.
-#' Call \code{\link{plot.hvti_balance}} on the result to obtain a bare
+#' for a covariate balance plot, and returns an \code{hv_balance} object.
+#' Call \code{\link{plot.hv_balance}} on the result to obtain a bare
 #' \code{ggplot2} object that you can decorate with colour, shape, axis scales,
-#' and \code{\link{hvti_theme}}.
+#' and \code{\link{hv_theme}}.
 #'
 #' @param data         A data frame in \strong{long format} with one row per
 #'   covariate \eqn{\times} group combination.  Wide-format data must be
@@ -102,7 +102,7 @@ cb_build_plot <- function(data, std_diff_col, group_col, var_levels,
 #' @param threshold    Numeric; absolute SMD value at which dotted reference
 #'   lines are drawn (\eqn{\pm}\code{threshold}).  Default \code{10}.
 #'
-#' @return An object of class \code{c("hvti_balance", "hvti_data")} — a list
+#' @return An object of class \code{c("hv_balance", "hv_data")} — a list
 #'   with three elements:
 #' \describe{
 #'   \item{\code{$data}}{The input data frame with a \code{cb_index} column
@@ -113,13 +113,13 @@ cb_build_plot <- function(data, std_diff_col, group_col, var_levels,
 #'   \item{\code{$tables}}{Empty list (no accessory tables).}
 #' }
 #'
-#' @seealso \code{\link{plot.hvti_balance}},
+#' @seealso \code{\link{plot.hv_balance}},
 #'   \code{\link{sample_covariate_balance_data}}
 #'
 #' @examples
 #' library(ggplot2)
 #' dta <- sample_covariate_balance_data()
-#' cb  <- hvti_balance(dta)
+#' cb  <- hv_balance(dta)
 #' cb                   # prints variable count, group count, threshold
 #'
 #' plot(cb) +
@@ -133,10 +133,10 @@ cb_build_plot <- function(data, std_diff_col, group_col, var_levels,
 #'   ) +
 #'   scale_x_continuous(limits = c(-45, 35), breaks = seq(-40, 30, 10)) +
 #'   labs(x = "Standardized difference (%)", y = "") +
-#'   hvti_theme("manuscript")
+#'   hv_theme("manuscript")
 #'
 #' @export
-hvti_balance <- function(
+hv_balance <- function(
   data,
   variable_col = "variable",
   group_col    = "group",
@@ -157,7 +157,7 @@ hvti_balance <- function(
     factor(working[[variable_col]], levels = var_levels)
   )
 
-  new_hvti_data(
+  new_hv_data(
     data = working,
     meta = list(
       variable_col = variable_col,
@@ -169,20 +169,20 @@ hvti_balance <- function(
       n_groups     = length(unique(working[[group_col]]))
     ),
     tables   = list(),
-    subclass = "hvti_balance"
+    subclass = "hv_balance"
   )
 }
 
 
-#' Print an hvti_balance object
+#' Print an hv_balance object
 #'
-#' @param x   An \code{hvti_balance} object from \code{\link{hvti_balance}}.
+#' @param x   An \code{hv_balance} object from \code{\link{hv_balance}}.
 #' @param ... Ignored.
 #' @return \code{x}, invisibly.
 #' @export
-print.hvti_balance <- function(x, ...) {
+print.hv_balance <- function(x, ...) {
   m <- x$meta
-  cat("<hvti_balance>\n")
+  cat("<hv_balance>\n")
   cat(sprintf("  Variables   : %d\n", m$n_vars))
   cat(sprintf("  Groups      : %d (%s)\n", m$n_groups,
               paste(unique(x$data[[m$group_col]]), collapse = ", ")))
@@ -192,15 +192,15 @@ print.hvti_balance <- function(x, ...) {
 }
 
 
-#' Plot an hvti_balance object
+#' Plot an hv_balance object
 #'
 #' Builds a bare covariate balance \code{ggplot2} object from an
-#' \code{\link{hvti_balance}} data object.  Each covariate appears as a
+#' \code{\link{hv_balance}} data object.  Each covariate appears as a
 #' labelled row; points show the standardized mean difference per group.
 #' A solid line marks zero; dotted lines mark \eqn{\pm}\code{threshold}.
 #' Add colour, shape, axis scales, and a theme with \code{+}.
 #'
-#' @param x                  An \code{hvti_balance} object.
+#' @param x                  An \code{hv_balance} object.
 #' @param point_size         Passed to \code{geom_point()}. Default \code{3}.
 #' @param alpha              Point transparency in \eqn{[0,1]}. Default \code{0.8}.
 #' @param hline_linetype     Linetype for horizontal covariate guides.
@@ -214,11 +214,11 @@ print.hvti_balance <- function(x, ...) {
 #'
 #' @return A bare \code{\link[ggplot2]{ggplot}} object.
 #'
-#' @seealso \code{\link{hvti_balance}}, \code{\link{hvti_theme}}
+#' @seealso \code{\link{hv_balance}}, \code{\link{hv_theme}}
 #'
 #' @examples
 #' dta <- sample_covariate_balance_data()
-#' cb  <- hvti_balance(dta)
+#' cb  <- hv_balance(dta)
 #'
 #' plot(cb) +
 #'   ggplot2::scale_color_manual(
@@ -226,12 +226,12 @@ print.hvti_balance <- function(x, ...) {
 #'     name   = NULL
 #'   ) +
 #'   ggplot2::labs(x = "Standardized difference (%)", y = "") +
-#'   hvti_theme("manuscript")
+#'   hv_theme("manuscript")
 #'
 #' @importFrom ggplot2 ggplot aes geom_vline geom_hline geom_point
 #'   scale_y_continuous
 #' @export
-plot.hvti_balance <- function(x,
+plot.hv_balance <- function(x,
                               point_size         = 3,
                               alpha              = 0.8,
                               hline_linetype     = "dashed",
@@ -264,7 +264,7 @@ plot.hvti_balance <- function(x,
 #' Generate Sample Covariate Balance Data
 #'
 #' Produces a reproducible long-format data frame suitable for testing and
-#' demonstrating [hvti_balance()].  Rather than drawing SMDs from
+#' demonstrating [hv_balance()].  Rather than drawing SMDs from
 #' independent normals, this generator simulates patient-level covariates
 #' through a logistic propensity score model, computes group standardized mean
 #' differences before matching, then performs greedy 1:1 nearest-neighbour

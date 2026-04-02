@@ -19,17 +19,17 @@
 #'
 #' @return A [ggplot2::theme()] object.
 #'
-#' @seealso [hvti_theme()], [theme_man()], [theme_ppt()], [theme_dark_ppt()]
+#' @seealso [hv_theme()], [theme_man()], [theme_ppt()], [theme_dark_ppt()]
 #'
 #' @examples
 #' library(ggplot2)
 #' p <- ggplot(mtcars, aes(wt, mpg, colour = factor(cyl))) + geom_point()
 #'
 #' # Default poster theme (16 pt base font)
-#' p + hvti_theme_poster()
+#' p + hv_theme_poster()
 #'
 #' # Larger font for a wide-format poster
-#' p + hvti_theme_poster(base_size = 20)
+#' p + hv_theme_poster(base_size = 20)
 #'
 #' # Via alias
 #' p + theme_poster()
@@ -37,7 +37,7 @@
 #' @import ggplot2
 #' @export
 #' @aliases theme_poster
-hvti_theme_poster <- function(base_size      = 16,
+hv_theme_poster <- function(base_size      = 16,
                                base_family    = "",
                                header_family  = NULL,
                                base_line_size = base_size / 22,
@@ -45,7 +45,7 @@ hvti_theme_poster <- function(base_size      = 16,
                                ink            = "black",
                                paper          = "white",
                                accent         = "#3366FF") {
-  hvti_theme_base(
+  hv_theme_base(
     base_size      = base_size,
     base_family    = base_family,
     header_family  = header_family,
@@ -81,5 +81,5 @@ hvti_theme_poster <- function(base_size      = 16,
 }
 
 #' @export
-#' @rdname hvti_theme_poster
-theme_poster <- hvti_theme_poster
+#' @rdname hv_theme_poster
+theme_poster <- hv_theme_poster

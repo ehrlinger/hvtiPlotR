@@ -12,13 +12,13 @@
 #    and scale_colour_brewer()
 #  - Optional LOESS/mean smooth overlay replaces a separate geom_smooth() call
 #  - Ordinal y-axis labelling (plot_9 pattern) supported via y_labels parameter
-#  - Theme applied via + hvti_theme("manuscript") in examples
+#  - Theme applied via + hv_theme("manuscript") in examples
 # ---------------------------------------------------------------------------
 
 #' Sample Spaghetti / Profile Plot Data
 #'
 #' Generates a realistic repeated-measures longitudinal data set for
-#' demonstrating [hvti_spaghetti()]. Each row is one observation for one
+#' demonstrating [hv_spaghetti()]. Each row is one observation for one
 #' patient at one time point, mimicking serial echocardiographic measurements
 #' after cardiac surgery (AV mean gradient trajectory over follow-up).
 #' Patients have an irregular number of follow-up measurements and a group
@@ -37,7 +37,7 @@
 #'   - `value` — continuous outcome (numeric; AV mean gradient in mmHg)
 #'   - `group` — group label (factor)
 #'
-#' @seealso [hvti_spaghetti()]
+#' @seealso [hv_spaghetti()]
 #'
 #' @examples
 #' dta <- sample_spaghetti_data(n_patients = 100, seed = 42)
@@ -88,9 +88,9 @@ sample_spaghetti_data <- function(n_patients = 150,
 #' Prepare spaghetti / profile data for plotting
 #'
 #' Validates a long-format repeated-measures data frame and returns an
-#' \code{hvti_spaghetti} object.  Call \code{\link{plot.hvti_spaghetti}} on
+#' \code{hv_spaghetti} object.  Call \code{\link{plot.hv_spaghetti}} on
 #' the result to obtain a bare \code{ggplot2} trajectory plot that you can
-#' decorate with colour scales, axis labels, and \code{\link{hvti_theme}}.
+#' decorate with colour scales, axis labels, and \code{\link{hv_theme}}.
 #'
 #' @param data       Data frame; one row per observation per subject.
 #' @param x_col      Name of the time column. Default \code{"time"}.
@@ -100,9 +100,9 @@ sample_spaghetti_data <- function(n_patients = 150,
 #' @param colour_col Name of the column to map to line colour, or \code{NULL}
 #'   for a single uniform colour. Default \code{NULL}.
 #'
-#' @return An object of class \code{c("hvti_spaghetti", "hvti_data")}; call
+#' @return An object of class \code{c("hv_spaghetti", "hv_data")}; call
 #'   \code{plot()} on the result to render the figure — see
-#'   \code{\link{plot.hvti_spaghetti}}. The list contains:
+#'   \code{\link{plot.hv_spaghetti}}. The list contains:
 #' \describe{
 #'   \item{\code{$data}}{The validated input data frame.}
 #'   \item{\code{$meta}}{Named list: \code{x_col}, \code{y_col},
@@ -111,15 +111,15 @@ sample_spaghetti_data <- function(n_patients = 150,
 #'   \item{\code{$tables}}{Empty list.}
 #' }
 #'
-#' @seealso \code{\link{plot.hvti_spaghetti}} to render as a ggplot2 figure,
-#'   \code{\link{hvti_theme}} for the publication theme,
+#' @seealso \code{\link{plot.hv_spaghetti}} to render as a ggplot2 figure,
+#'   \code{\link{hv_theme}} for the publication theme,
 #'   \code{\link{sample_spaghetti_data}} for example data.
 #'
 #' @family Spaghetti plot
 #'
 #' @examples
 #' dta <- sample_spaghetti_data(n_patients = 150, seed = 42)
-#' sp  <- hvti_spaghetti(dta, colour_col = "group")
+#' sp  <- hv_spaghetti(dta, colour_col = "group")
 #' sp   # prints subject count, observation count, column mapping
 #'
 #' plot(sp) +
@@ -128,11 +128,11 @@ sample_spaghetti_data <- function(n_patients = 150,
 #'   ) +
 #'   ggplot2::labs(x = "Years after Operation",
 #'                 y = "AV Mean Gradient (mmHg)") +
-#'   hvti_theme("manuscript")
+#'   hv_theme("manuscript")
 #'
 #' @importFrom rlang .data
 #' @export
-hvti_spaghetti <- function(data,
+hv_spaghetti <- function(data,
                            x_col      = "time",
                            y_col      = "value",
                            id_col     = "id",
@@ -142,7 +142,7 @@ hvti_spaghetti <- function(data,
   if (!is.null(colour_col))
     .check_col(data, colour_col)
 
-  new_hvti_data(
+  new_hv_data(
     data = as.data.frame(data),
     meta = list(
       x_col      = x_col,
@@ -153,20 +153,20 @@ hvti_spaghetti <- function(data,
       n_obs      = nrow(data)
     ),
     tables   = list(),
-    subclass = "hvti_spaghetti"
+    subclass = "hv_spaghetti"
   )
 }
 
 
-#' Print an hvti_spaghetti object
+#' Print an hv_spaghetti object
 #'
-#' @param x   An \code{hvti_spaghetti} object from \code{\link{hvti_spaghetti}}.
+#' @param x   An \code{hv_spaghetti} object from \code{\link{hv_spaghetti}}.
 #' @param ... Ignored.
 #' @return \code{x}, invisibly.
 #' @export
-print.hvti_spaghetti <- function(x, ...) {
+print.hv_spaghetti <- function(x, ...) {
   m <- x$meta
-  cat("<hvti_spaghetti>\n")
+  cat("<hv_spaghetti>\n")
   cat(sprintf("  N subjects  : %d  (%d observations)\n",
               m$n_subjects, m$n_obs))
   cat(sprintf("  x / y / id  : %s / %s / %s\n",
@@ -177,12 +177,12 @@ print.hvti_spaghetti <- function(x, ...) {
 }
 
 
-#' Plot an hvti_spaghetti object
+#' Plot an hv_spaghetti object
 #'
 #' Draws one trajectory line per subject over time, optionally stratified by
 #' colour and with a LOESS (or other) smooth overlay.
 #'
-#' @param x             An \code{hvti_spaghetti} object.
+#' @param x             An \code{hv_spaghetti} object.
 #' @param line_colour   Fixed line colour used when \code{colour_col = NULL}.
 #'   Default \code{"grey50"}.
 #' @param line_width    Line width for individual trajectories. Default \code{0.2}.
@@ -200,34 +200,34 @@ print.hvti_spaghetti <- function(x, ...) {
 #' @param ...           Ignored; present for S3 consistency.
 #'
 #' @return A bare \code{\link[ggplot2]{ggplot}} object; compose with \code{+}
-#'   to add scales, axis limits, labels, and \code{\link{hvti_theme}}.
+#'   to add scales, axis limits, labels, and \code{\link{hv_theme}}.
 #'
-#' @seealso \code{\link{hvti_spaghetti}} to build the data object,
-#'   \code{\link{hvti_theme}} for the publication theme.
+#' @seealso \code{\link{hv_spaghetti}} to build the data object,
+#'   \code{\link{hv_theme}} for the publication theme.
 #'
 #' @family Spaghetti plot
 #'
 #' @examples
 #' dta <- sample_spaghetti_data(n_patients = 150, seed = 42)
-#' sp  <- hvti_spaghetti(dta, colour_col = "group")
+#' sp  <- hv_spaghetti(dta, colour_col = "group")
 #'
 #' # With LOESS smooth overlay
 #' plot(sp, add_smooth = TRUE) +
 #'   ggplot2::scale_colour_brewer(palette = "Set1", name = NULL) +
 #'   ggplot2::labs(x = "Years", y = "AV Mean Gradient (mmHg)") +
-#'   hvti_theme("manuscript")
+#'   hv_theme("manuscript")
 #'
 #' # Ordinal y-axis
 #' dta_ord <- dta
 #' dta_ord$value <- round(pmin(3, pmax(0, dta$value / 12)))
-#' plot(hvti_spaghetti(dta_ord, colour_col = "group"),
+#' plot(hv_spaghetti(dta_ord, colour_col = "group"),
 #'      y_labels = c(None = 0, Mild = 1, Moderate = 2, Severe = 3)) +
 #'   ggplot2::labs(x = "Years", y = "MR Grade") +
-#'   hvti_theme("manuscript")
+#'   hv_theme("manuscript")
 #'
 #' # --- Global theme (set once per session) ----------------------------------
 #' \dontrun{
-#' old <- ggplot2::theme_set(hvti_theme_manuscript())
+#' old <- ggplot2::theme_set(hv_theme_manuscript())
 #' plot(sp, add_smooth = TRUE) +
 #'   ggplot2::scale_colour_brewer(palette = "Set1", name = NULL) +
 #'   ggplot2::labs(x = "Years", y = "AV Mean Gradient (mmHg)")
@@ -241,7 +241,7 @@ print.hvti_spaghetti <- function(x, ...) {
 #'   scale_y_continuous
 #' @importFrom rlang .data
 #' @export
-plot.hvti_spaghetti <- function(x,
+plot.hv_spaghetti <- function(x,
                                 line_colour   = "grey50",
                                 line_width    = 0.2,
                                 alpha         = 0.8,

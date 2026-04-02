@@ -58,6 +58,6 @@ tapply(dat$estimate[dat$time == dat$time[1]],
        dat$grade[dat$time == dat$time[1]], sum)
 }
 \seealso{
-\code{\link[=hvti_ordinal]{hvti_ordinal()}}, \code{\link[=sample_nonparametric_curve_data]{sample_nonparametric_curve_data()}},
+\code{\link[=hv_ordinal]{hv_ordinal()}}, \code{\link[=sample_nonparametric_curve_data]{sample_nonparametric_curve_data()}},
 \code{\link[=sample_nonparametric_ordinal_points]{sample_nonparametric_ordinal_points()}}
 }

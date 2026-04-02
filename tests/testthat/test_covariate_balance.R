@@ -87,59 +87,59 @@ test_that("sample_covariate_balance_data higher separation increases before-matc
 })
 
 # ---------------------------------------------------------------------------
-# hvti_balance — return type
+# hv_balance — return type
 # ---------------------------------------------------------------------------
 
-test_that("hvti_balance returns an hvti_data object", {
+test_that("hv_balance returns an hv_data object", {
   dta <- sample_covariate_balance_data()
-  cb  <- hvti_balance(dta)
-  expect_s3_class(cb, "hvti_data")
+  cb  <- hv_balance(dta)
+  expect_s3_class(cb, "hv_data")
 })
 
-test_that("plot(hvti_balance) returns a ggplot object", {
+test_that("plot(hv_balance) returns a ggplot object", {
   dta <- sample_covariate_balance_data()
-  expect_s3_class(plot(hvti_balance(dta)), "ggplot")
+  expect_s3_class(plot(hv_balance(dta)), "ggplot")
 })
 
 # ---------------------------------------------------------------------------
-# hvti_balance — input validation (errors in constructor)
+# hv_balance — input validation (errors in constructor)
 # ---------------------------------------------------------------------------
 
-test_that("hvti_balance errors when data is not a data frame", {
+test_that("hv_balance errors when data is not a data frame", {
   expect_error(
-    hvti_balance(list(variable = "x", group = "y", std_diff = 1)),
+    hv_balance(list(variable = "x", group = "y", std_diff = 1)),
     "data.frame"
   )
 })
 
-test_that("hvti_balance errors on missing variable_col", {
+test_that("hv_balance errors on missing variable_col", {
   dta <- sample_covariate_balance_data()
   dta$variable <- NULL
-  expect_error(hvti_balance(dta), "Missing required column")
+  expect_error(hv_balance(dta), "Missing required column")
 })
 
-test_that("hvti_balance errors on missing group_col", {
+test_that("hv_balance errors on missing group_col", {
   dta <- sample_covariate_balance_data()
   dta$group <- NULL
-  expect_error(hvti_balance(dta), "Missing required column")
+  expect_error(hv_balance(dta), "Missing required column")
 })
 
-test_that("hvti_balance errors on missing std_diff_col", {
+test_that("hv_balance errors on missing std_diff_col", {
   dta <- sample_covariate_balance_data()
   dta$std_diff <- NULL
-  expect_error(hvti_balance(dta), "Missing required column")
+  expect_error(hv_balance(dta), "Missing required column")
 })
 
-test_that("hvti_balance errors when std_diff_col is not numeric", {
+test_that("hv_balance errors when std_diff_col is not numeric", {
   dta <- sample_covariate_balance_data()
   dta$std_diff <- as.character(dta$std_diff)
-  expect_error(hvti_balance(dta), "numeric")
+  expect_error(hv_balance(dta), "numeric")
 })
 
-test_that("hvti_balance accepts non-default column names", {
+test_that("hv_balance accepts non-default column names", {
   dta <- sample_covariate_balance_data()
   names(dta) <- c("cov", "grp", "smd")
-  cb <- hvti_balance(dta,
+  cb <- hv_balance(dta,
                      variable_col  = "cov",
                      group_col     = "grp",
                      std_diff_col  = "smd")
@@ -147,49 +147,49 @@ test_that("hvti_balance accepts non-default column names", {
 })
 
 # ---------------------------------------------------------------------------
-# plot(hvti_balance) — plot structure
+# plot(hv_balance) — plot structure
 # ---------------------------------------------------------------------------
 
-test_that("plot(hvti_balance) has a geom_point layer", {
-  p            <- plot(hvti_balance(sample_covariate_balance_data()))
+test_that("plot(hv_balance) has a geom_point layer", {
+  p            <- plot(hv_balance(sample_covariate_balance_data()))
   geom_classes <- vapply(p$layers, function(l) class(l$geom)[1], character(1))
   expect_true("GeomPoint" %in% geom_classes)
 })
 
-test_that("plot(hvti_balance) has geom_vline layers", {
-  p            <- plot(hvti_balance(sample_covariate_balance_data()))
+test_that("plot(hv_balance) has geom_vline layers", {
+  p            <- plot(hv_balance(sample_covariate_balance_data()))
   geom_classes <- vapply(p$layers, function(l) class(l$geom)[1], character(1))
   expect_true("GeomVline" %in% geom_classes)
 })
 
-test_that("plot(hvti_balance) has geom_hline layers", {
-  p            <- plot(hvti_balance(sample_covariate_balance_data()))
+test_that("plot(hv_balance) has geom_hline layers", {
+  p            <- plot(hv_balance(sample_covariate_balance_data()))
   geom_classes <- vapply(p$layers, function(l) class(l$geom)[1], character(1))
   expect_true("GeomHline" %in% geom_classes)
 })
 
-test_that("plot(hvti_balance) y scale has n breaks equal to n_vars", {
+test_that("plot(hv_balance) y scale has n breaks equal to n_vars", {
   n      <- 8L
   dta    <- sample_covariate_balance_data(n_vars = n)
-  p      <- plot(hvti_balance(dta))
+  p      <- plot(hv_balance(dta))
   built  <- ggplot2::ggplot_build(p)
   breaks <- built$layout$panel_params[[1]]$y$breaks
   expect_equal(length(breaks), n)
 })
 
-test_that("hvti_balance var_levels is respected in plot y labels", {
+test_that("hv_balance var_levels is respected in plot y labels", {
   dta          <- sample_covariate_balance_data(n_vars = 4)
   custom_order <- rev(unique(dta$variable))
-  cb           <- hvti_balance(dta, var_levels = custom_order)
+  cb           <- hv_balance(dta, var_levels = custom_order)
   p            <- plot(cb)
   built        <- ggplot2::ggplot_build(p)
   labels       <- built$layout$panel_params[[1]]$y$get_labels()
   expect_equal(labels, custom_order)
 })
 
-test_that("hvti_balance threshold vlines appear at correct x values", {
+test_that("hv_balance threshold vlines appear at correct x values", {
   dta       <- sample_covariate_balance_data()
-  p         <- plot(hvti_balance(dta, threshold = 15))
+  p         <- plot(hv_balance(dta, threshold = 15))
   built     <- ggplot2::ggplot_build(p)
   vline_idx <- which(vapply(
     p$layers,

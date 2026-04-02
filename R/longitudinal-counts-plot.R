@@ -9,7 +9,7 @@
 #  - Accepts pre-aggregated long-format data — no reshape2::melt() needed
 #  - Hard-coded colours ("blue", "red", "black") replaced by scale_fill_*
 #    and scale_colour_* on the returned ggplot objects
-#  - Hard-coded theme() calls replaced by hvti_theme("manuscript")
+#  - Hard-coded theme() calls replaced by hv_theme("manuscript")
 #  - Bar chart and table returned via plot(x, type=) dispatch; patchwork
 #    composes them (replaces the manual grid.layout / mmplot() pattern)
 #  - sample_spaghetti_data() is reused in the examples to show how to
@@ -34,7 +34,7 @@
 #'   - `series`     — `"Patients"` or `"Measurements"`
 #'   - `count`      — integer count
 #'
-#' @seealso [hvti_longitudinal()], [sample_spaghetti_data()]
+#' @seealso [hv_longitudinal()], [sample_spaghetti_data()]
 #'
 #' @examples
 #' dta <- sample_longitudinal_counts_data(n_patients = 300, seed = 42)
@@ -90,7 +90,7 @@ sample_longitudinal_counts_data <- function(n_patients = 300,
 #' Prepare longitudinal participation counts data for plotting
 #'
 #' Validates a pre-aggregated long-format counts data frame and returns an
-#' \code{hvti_longitudinal} object.  Call \code{\link{plot.hvti_longitudinal}}
+#' \code{hv_longitudinal} object.  Call \code{\link{plot.hv_longitudinal}}
 #' on the result with \code{type = "plot"} for the grouped bar chart or
 #' \code{type = "table"} for the numeric text-table panel.  Compose both
 #' panels with \pkg{patchwork}.
@@ -101,7 +101,7 @@ sample_longitudinal_counts_data <- function(n_patients = 300,
 #' @param count_col Name of the numeric count column. Default \code{"count"}.
 #' @param group_col Name of the series grouping column. Default \code{"series"}.
 #'
-#' @return An object of class \code{c("hvti_longitudinal", "hvti_data")}:
+#' @return An object of class \code{c("hv_longitudinal", "hv_data")}:
 #' \describe{
 #'   \item{\code{$data}}{The validated input data frame.}
 #'   \item{\code{$meta}}{Named list: \code{x_col}, \code{count_col},
@@ -109,12 +109,12 @@ sample_longitudinal_counts_data <- function(n_patients = 300,
 #'   \item{\code{$tables}}{Empty list.}
 #' }
 #'
-#' @seealso \code{\link{plot.hvti_longitudinal}},
+#' @seealso \code{\link{plot.hv_longitudinal}},
 #'   \code{\link{sample_longitudinal_counts_data}}
 #'
 #' @examples
 #' dta <- sample_longitudinal_counts_data(n_patients = 300, seed = 42L)
-#' lc  <- hvti_longitudinal(dta)
+#' lc  <- hv_longitudinal(dta)
 #' lc   # prints group/time-point counts
 #'
 #' library(ggplot2)
@@ -128,12 +128,12 @@ sample_longitudinal_counts_data <- function(n_patients = 300,
 #'                      expand = c(0, 0)) +
 #'   coord_cartesian(ylim = c(0, 2200)) +
 #'   labs(x = "Follow-up Window", y = "Count (n)") +
-#'   hvti_theme("manuscript") +
+#'   hv_theme("manuscript") +
 #'   theme(legend.position = c(0.85, 0.85))
 #'
 #' @importFrom rlang .data
 #' @export
-hvti_longitudinal <- function(data,
+hv_longitudinal <- function(data,
                                x_col     = "time_label",
                                count_col = "count",
                                group_col = "series") {
@@ -143,7 +143,7 @@ hvti_longitudinal <- function(data,
   n_timepoints <- length(unique(data[[x_col]]))
   n_groups     <- length(unique(data[[group_col]]))
 
-  new_hvti_data(
+  new_hv_data(
     data = as.data.frame(data),
     meta = list(
       x_col        = x_col,
@@ -154,20 +154,20 @@ hvti_longitudinal <- function(data,
       n_obs        = nrow(data)
     ),
     tables   = list(),
-    subclass = "hvti_longitudinal"
+    subclass = "hv_longitudinal"
   )
 }
 
 
-#' Print an hvti_longitudinal object
+#' Print an hv_longitudinal object
 #'
-#' @param x   An \code{hvti_longitudinal} object from \code{\link{hvti_longitudinal}}.
+#' @param x   An \code{hv_longitudinal} object from \code{\link{hv_longitudinal}}.
 #' @param ... Ignored.
 #' @return \code{x}, invisibly.
 #' @export
-print.hvti_longitudinal <- function(x, ...) {
+print.hv_longitudinal <- function(x, ...) {
   m <- x$meta
-  cat("<hvti_longitudinal>\n")
+  cat("<hv_longitudinal>\n")
   cat(sprintf("  Time points : %d\n", m$n_timepoints))
   cat(sprintf("  Groups      : %d  (%d rows)\n", m$n_groups, m$n_obs))
   cat(sprintf("  x / count / group : %s / %s / %s\n",
@@ -176,13 +176,13 @@ print.hvti_longitudinal <- function(x, ...) {
 }
 
 
-#' Plot an hvti_longitudinal object
+#' Plot an hv_longitudinal object
 #'
 #' Draws either a grouped bar chart of counts by time point (\code{type = "plot"})
 #' or a numeric text-table panel suitable for composing below the bar chart via
 #' \pkg{patchwork} (\code{type = "table"}).
 #'
-#' @param x            An \code{hvti_longitudinal} object.
+#' @param x            An \code{hv_longitudinal} object.
 #' @param type         Which panel to produce: \code{"plot"} (default) or
 #'   \code{"table"}.
 #' @param position     Bar position for \code{type = "plot"}: \code{"dodge"}
@@ -196,12 +196,12 @@ print.hvti_longitudinal <- function(x, ...) {
 #'
 #' @return A bare \code{\link[ggplot2]{ggplot}} object.
 #'
-#' @seealso \code{\link{hvti_longitudinal}}
+#' @seealso \code{\link{hv_longitudinal}}
 #'
 #' @examples
 #' library(ggplot2)
 #' dta <- sample_longitudinal_counts_data(n_patients = 300, seed = 42L)
-#' lc  <- hvti_longitudinal(dta)
+#' lc  <- hv_longitudinal(dta)
 #'
 #' # Bar chart
 #' plot(lc, type = "plot") +
@@ -210,7 +210,7 @@ print.hvti_longitudinal <- function(x, ...) {
 #'     name   = NULL
 #'   ) +
 #'   labs(x = "Follow-up Window", y = "Count (n)") +
-#'   hvti_theme("manuscript")
+#'   hv_theme("manuscript")
 #'
 #' # Text table panel
 #' plot(lc, type = "table") +
@@ -218,7 +218,7 @@ print.hvti_longitudinal <- function(x, ...) {
 #'     values = c(Patients = "steelblue", Measurements = "firebrick"),
 #'     guide  = "none"
 #'   ) +
-#'   hvti_theme("manuscript")
+#'   hv_theme("manuscript")
 #'
 #' # Compose with patchwork
 #' # p_bar   <- plot(lc, type = "plot")   + <decorators>
@@ -229,7 +229,7 @@ print.hvti_longitudinal <- function(x, ...) {
 #'   element_blank
 #' @importFrom rlang .data
 #' @export
-plot.hvti_longitudinal <- function(x,
+plot.hv_longitudinal <- function(x,
                                     type         = c("plot", "table"),
                                     position     = "dodge",
                                     label_format = NULL,
