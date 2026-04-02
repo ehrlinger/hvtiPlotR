@@ -40,11 +40,16 @@ decorate with colour scales, axis labels, and \code{\link{hv_theme}}.
 \examples{
 dta  <- sample_alluvial_data(n = 300, seed = 42)
 axes <- c("pre_ar", "procedure", "post_ar")
-al   <- hv_alluvial(dta, axes = axes, y_col = "freq",
-                      fill_col = "pre_ar")
-al   # prints axes, obs count
 
-plot(al) +
+# 1. Build data object
+al <- hv_alluvial(dta, axes = axes, y_col = "freq", fill_col = "pre_ar")
+al  # prints axes and observation count
+
+# 2. Bare plot -- undecorated ggplot returned by plot.hv_alluvial
+p <- plot(al)
+
+# 3. Decorate: fill/colour palettes, axis labels, theme
+p +
   ggplot2::scale_fill_manual(
     values = c(None     = "steelblue",
                Mild     = "goldenrod",
@@ -61,7 +66,7 @@ plot(al) +
   ) +
   ggplot2::labs(y = "Patients (n)",
                 title = "AV Regurgitation: Pre- to Post-operative") +
-  hv_theme("manuscript")
+  hv_theme("poster")
 
 }
 \seealso{

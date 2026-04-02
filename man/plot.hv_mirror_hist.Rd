@@ -32,7 +32,7 @@ mh  <- hv_mirror_hist(dta)
 
 plot(mh) +
   ggplot2::labs(x = "Propensity Score (\%)", y = "Count") +
-  hv_theme("manuscript")
+  hv_theme("poster")
 
 }
 \seealso{

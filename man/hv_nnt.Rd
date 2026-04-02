@@ -50,15 +50,21 @@ nnt_dat <- sample_nnt_data(
   groups = c("SVG" = 1.0, "ITA" = 0.75)
 )
 
-# NNT curve over time
+# 1. Build data object
 nn <- hv_nnt(nnt_dat, lower_col = "nnt_lower", upper_col = "nnt_upper")
-plot(nn) +
+nn  # prints estimate column and CI flags
+
+# 2. Bare plot -- undecorated ggplot returned by plot.hv_nnt
+p <- plot(nn)
+
+# 3. Decorate: axis scales, labels, theme
+p +
   scale_x_continuous(limits = c(0, 20), breaks = seq(0, 20, 5)) +
   scale_y_continuous(limits = c(0, 50), breaks = seq(0, 50, 10)) +
   labs(x = "Years", y = "Number Needed to Treat (NNT)") +
-  hv_theme("manuscript")
+  hv_theme("poster")
 
-# ARR curve (same data, different column)
+# ARR curve -- same 3-step pattern with a different estimate column
 ar <- hv_nnt(nnt_dat, estimate_col = "arr",
                lower_col = "arr_lower", upper_col = "arr_upper",
                na_rm = FALSE)
@@ -66,7 +72,7 @@ plot(ar) +
   scale_y_continuous(limits = c(0, 50),
                      labels = function(x) paste0(x, "\%")) +
   labs(x = "Years", y = "Absolute Risk Reduction (\%)") +
-  hv_theme("manuscript")
+  hv_theme("poster")
 
 }
 \seealso{

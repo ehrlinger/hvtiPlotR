@@ -62,10 +62,16 @@ dat_pts <- sample_nonparametric_ordinal_points(
   n = 800, time_max = 5,
   grade_labels = c("None", "Mild", "Moderate", "Severe")
 )
+
+# 1. Build data object
 ord <- hv_ordinal(dat, data_points = dat_pts)
 ord  # prints grade count and data-point flag
 
-plot(ord) +
+# 2. Bare plot -- undecorated ggplot returned by plot.hv_ordinal
+p <- plot(ord)
+
+# 3. Decorate: colour palette, axis scales, labels, theme
+p +
   ggplot2::scale_colour_manual(
     values = c(None     = "steelblue",
                Mild     = "firebrick",
@@ -78,7 +84,7 @@ plot(ord) +
                               breaks = seq(0, 0.50, 0.10),
                               labels = scales::percent) +
   ggplot2::labs(x = "Years", y = "Percent in each TR grade") +
-  hv_theme("manuscript")
+  hv_theme("poster")
 
 }
 \references{

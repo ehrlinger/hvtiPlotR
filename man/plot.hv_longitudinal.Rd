@@ -49,7 +49,7 @@ plot(lc, type = "plot") +
     name   = NULL
   ) +
   labs(x = "Follow-up Window", y = "Count (n)") +
-  hv_theme("manuscript")
+  hv_theme("poster")
 
 # Text table panel
 plot(lc, type = "table") +
@@ -57,7 +57,7 @@ plot(lc, type = "table") +
     values = c(Patients = "steelblue", Measurements = "firebrick"),
     guide  = "none"
   ) +
-  hv_theme("manuscript")
+  hv_theme("poster")
 
 # Compose with patchwork
 # p_bar   <- plot(lc, type = "plot")   + <decorators>

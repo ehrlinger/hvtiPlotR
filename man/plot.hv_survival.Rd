@@ -55,12 +55,12 @@ km  <- hv_survival(dta)
 # Default survival curve
 plot(km) +
   ggplot2::labs(x = "Years after Operation", y = "Survival (\%)") +
-  hv_theme("manuscript")
+  hv_theme("poster")
 
 # Cumulative hazard
 plot(km, type = "cumhaz") +
   ggplot2::labs(x = "Years", y = "Cumulative Hazard") +
-  hv_theme("manuscript")
+  hv_theme("poster")
 
 # Hazard rate with loess smoother
 plot(km, type = "hazard") +
@@ -69,7 +69,7 @@ plot(km, type = "hazard") +
     method = "loess", se = FALSE, span = 0.5
   ) +
   ggplot2::labs(x = "Years", y = "Instantaneous Hazard") +
-  hv_theme("manuscript")
+  hv_theme("poster")
 
 }
 \seealso{

@@ -57,10 +57,16 @@ and \code{\link{hv_theme}}.
 \examples{
 library(ggplot2)
 dta <- sample_covariate_balance_data()
-cb  <- hv_balance(dta)
-cb                   # prints variable count, group count, threshold
 
-plot(cb) +
+# 1. Build data object
+cb <- hv_balance(dta)
+cb  # prints variable count, group count, threshold
+
+# 2. Bare plot -- undecorated ggplot returned by plot.hv_balance
+p <- plot(cb)
+
+# 3. Decorate: colour/shape palettes, x-axis range, labels, theme
+p +
   scale_color_manual(
     values = c("Before match" = "red4", "After match" = "blue3"),
     name   = NULL
@@ -71,7 +77,7 @@ plot(cb) +
   ) +
   scale_x_continuous(limits = c(-45, 35), breaks = seq(-40, 30, 10)) +
   labs(x = "Standardized difference (\%)", y = "") +
-  hv_theme("manuscript")
+  hv_theme("poster")
 
 }
 \seealso{

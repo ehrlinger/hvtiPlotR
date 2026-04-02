@@ -159,7 +159,7 @@ hazard_plot(
   scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, 20),
                      labels = function(x) paste0(x, "\%")) +
   labs(x = "Years", y = "Survival (\%)") +
-  hv_theme("manuscript")
+  hv_theme("poster")
 
 # --- (2) Hazard rate curve + KM overlay ----------------------------------
 # Matches tp.hp.dead.sas (hazard panel).
@@ -178,7 +178,7 @@ hazard_plot(
   scale_y_continuous(limits = c(0, 30),
                      labels = function(x) paste0(x, "\%/yr")) +
   labs(x = "Years", y = "Hazard (\%/year)") +
-  hv_theme("manuscript")
+  hv_theme("poster")
 
 # --- (3) Cumulative hazard (tp.hp.event.weighted.sas) --------------------
 # For readmission / repeated-event analyses: cumhaz = -log(S)*100.
@@ -193,7 +193,7 @@ hazard_plot(
   scale_fill_manual(values = c("darkorange"), guide = "none") +
   scale_x_continuous(limits = c(0, 10), breaks = 0:10) +
   labs(x = "Years", y = "Cumulative Hazard (\%)") +
-  hv_theme("manuscript")
+  hv_theme("poster")
 
 # --- (4) Stratified survival (tp.hp.dead.tkdn.stratified.sas) ------------
 # Two groups (e.g. Takedown vs No Takedown) with different colours and
@@ -228,7 +228,7 @@ hazard_plot(
   scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, 20),
                      labels = function(x) paste0(x, "\%")) +
   labs(x = "Years after Esophagostomy", y = "Survival (\%)") +
-  hv_theme("manuscript")
+  hv_theme("poster")
 
 # --- (5) Life table overlay (tp.hp.dead.age_with_population_life_table) ---
 # Age-stratified study curves + US population life table reference (dashed).
@@ -271,7 +271,7 @@ hazard_plot(
                      labels = function(x) paste0(x, "\%")) +
   labs(x = "Years", y = "Survival (\%)",
        caption = "Dashed lines: US population life table") +
-  hv_theme("manuscript")
+  hv_theme("poster")
 
 # --- (6) Multivariable risk profiles (tp.hp.dead.ideal_multivariable) -----
 # Patient profiles with distinct covariate combinations (good vs poor risk).
@@ -302,7 +302,7 @@ hazard_plot(
                      labels = function(x) paste0(x, "\%")) +
   labs(x = "Years after Brain Metastases",
        y = "Survival (\%)") +
-  hv_theme("manuscript")
+  hv_theme("poster")
 
 # --- (7) Propensity-weighted / matched groups -----------------------------
 # tp.hp.dead.matching_weight.sas / tp.hp.dead.limited_FET.mtwt.sas.
@@ -338,7 +338,7 @@ hazard_plot(
   scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, 20),
                      labels = function(x) paste0(x, "\%")) +
   labs(x = "Years after Repair", y = "Survival (\%)") +
-  hv_theme("manuscript")
+  hv_theme("poster")
 
 # --- (8) Device sequencing (tp.hp.mcs.mod.dead.devseq) -------------------
 # Survival conditioned on surviving the non-LVAD phase, then the LVAD phase.
@@ -366,7 +366,7 @@ hazard_plot(
   scale_y_continuous(limits = c(0, 100),
                       labels = function(x) paste0(x, "\%")) +
   labs(x = "Time on Device", y = "Survival (\%)") +
-  hv_theme("manuscript")
+  hv_theme("poster")
 
 # --- (9) Save (dontrun) --------------------------------------------------
 \dontrun{
@@ -377,7 +377,7 @@ p <- hazard_plot(dat, estimate_col = "survival",
   scale_colour_manual(values = c("steelblue"), guide = "none") +
   scale_fill_manual(values = c("steelblue"), guide = "none") +
   labs(x = "Years", y = "Survival (\%)") +
-  hv_theme("manuscript")
+  hv_theme("poster")
 ggplot2::ggsave("survival.pdf", p, width = 11.5, height = 8)
 }
 

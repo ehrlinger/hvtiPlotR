@@ -59,7 +59,7 @@ plot(np) +
     guide  = "none"
   ) +
   ggplot2::labs(x = "Years", y = "AV Peak Gradient (mmHg)") +
-  hv_theme("manuscript")
+  hv_theme("poster")
 
 }
 \seealso{

@@ -50,10 +50,16 @@ can decorate with colour scales, axis limits, and \code{\link{hv_theme}}.
 \examples{
 dta <- sample_trends_data(n = 600, year_range = c(1985L, 2015L),
   groups = c("I", "II", "III", "IV"))
-tr  <- hv_trends(dta, summary_fn = "median")
-tr   # prints observation and group counts
 
-plot(tr) +
+# 1. Build data object
+tr <- hv_trends(dta, summary_fn = "median")
+tr  # prints observation and group counts
+
+# 2. Bare plot -- undecorated ggplot returned by plot.hv_trends
+p <- plot(tr)
+
+# 3. Decorate: colour palette, axis scales, labels, theme
+p +
   ggplot2::scale_colour_manual(
     values = c(I = "steelblue", II = "firebrick",
                III = "forestgreen", IV = "goldenrod3"),
@@ -65,7 +71,7 @@ plot(tr) +
                               breaks = seq(0, 80, 20)) +
   ggplot2::coord_cartesian(xlim = c(1985, 2015), ylim = c(0, 80)) +
   ggplot2::labs(x = "Years", y = "\%") +
-  hv_theme("manuscript")
+  hv_theme("poster")
 
 }
 \seealso{

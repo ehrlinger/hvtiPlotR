@@ -60,7 +60,7 @@ sp  <- hv_spaghetti(dta, colour_col = "group")
 plot(sp, add_smooth = TRUE) +
   ggplot2::scale_colour_brewer(palette = "Set1", name = NULL) +
   ggplot2::labs(x = "Years", y = "AV Mean Gradient (mmHg)") +
-  hv_theme("manuscript")
+  hv_theme("poster")
 
 # Ordinal y-axis
 dta_ord <- dta
@@ -68,7 +68,7 @@ dta_ord$value <- round(pmin(3, pmax(0, dta$value / 12)))
 plot(hv_spaghetti(dta_ord, colour_col = "group"),
      y_labels = c(None = 0, Mild = 1, Moderate = 2, Severe = 3)) +
   ggplot2::labs(x = "Years", y = "MR Grade") +
-  hv_theme("manuscript")
+  hv_theme("poster")
 
 # --- Global theme (set once per session) ----------------------------------
 \dontrun{

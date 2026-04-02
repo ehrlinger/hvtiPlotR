@@ -91,22 +91,28 @@ library(ggplot2)
 dat <- sample_hazard_data(n = 500, time_max = 10)
 emp <- sample_hazard_empirical(n = 500, time_max = 10, n_bins = 6)
 
-# Basic survival curve with KM overlay
+# 1. Build data object
 hp <- hv_hazard(dat,
   lower_col     = "surv_lower", upper_col = "surv_upper",
   empirical     = emp,
   emp_lower_col = "lower",     emp_upper_col = "upper"
 )
-plot(hp) +
+hp  # prints CI and empirical flags
+
+# 2. Bare plot -- undecorated ggplot returned by plot.hv_hazard
+p <- plot(hp)
+
+# 3. Decorate: colour/fill palettes, axis scales, labels, theme
+p +
   scale_colour_manual(values = c("steelblue"), guide = "none") +
   scale_fill_manual(values   = c("steelblue"), guide = "none") +
   scale_x_continuous(limits = c(0, 10), breaks = 0:10) +
   scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, 20),
                      labels = function(x) paste0(x, "\%")) +
   labs(x = "Years", y = "Survival (\%)") +
-  hv_theme("manuscript")
+  hv_theme("poster")
 
-# Stratified groups
+# Stratified groups -- colour scale adds clinical meaning
 dat2 <- sample_hazard_data(
   n = 400, groups = c("No Takedown" = 1.0, "Takedown" = 0.65)
 )
@@ -120,11 +126,10 @@ plot(hp2) +
     name   = NULL
   ) +
   labs(x = "Years", y = "Survival (\%)") +
-  hv_theme("manuscript")
+  hv_theme("poster")
 
 # --- Global theme + RColorBrewer (set once per session) ------------------
 \dontrun{
-# Apply manuscript theme globally; use scale_colour_brewer for groups.
 old <- ggplot2::theme_set(hv_theme_manuscript())
 plot(hp2) +
   scale_colour_brewer(palette = "Set1", name = NULL) +

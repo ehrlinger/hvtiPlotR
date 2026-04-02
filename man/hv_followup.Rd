@@ -91,17 +91,23 @@ result to obtain a bare \code{ggplot2} object.
 \examples{
 dta <- sample_goodness_followup_data()
 
-# Death panel only
+# 1. Build data object
 gf <- hv_followup(dta)
-plot(gf) +
+gf  # prints follow-up summary
+
+# 2. Bare plot -- undecorated ggplot returned by plot.hv_followup
+p <- plot(gf)
+
+# 3. Decorate: colour palette, axis labels, theme
+p +
   ggplot2::scale_color_manual(
     values = c("Alive" = "steelblue", "Dead" = "firebrick"),
     name = NULL
   ) +
   ggplot2::labs(x = "Operation Date", y = "Follow-up (years)") +
-  hv_theme("manuscript")
+  hv_theme("poster")
 
-# With event panel
+# With event panel -- same 3-step pattern
 gf2 <- hv_followup(dta, event_col = "ev_event", event_time_col = "iv_event")
 plot(gf2, type = "event") +
   ggplot2::scale_color_manual(
@@ -111,7 +117,7 @@ plot(gf2, type = "event") +
   ) +
   ggplot2::scale_shape_manual(values = c(1, 2, 4), name = NULL) +
   ggplot2::labs(x = "Operation Date", y = "Follow-up (years)") +
-  hv_theme("manuscript")
+  hv_theme("poster")
 
 }
 \seealso{

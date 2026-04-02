@@ -46,14 +46,20 @@ that you can decorate with colour scales, axis labels, and
 }
 \examples{
 dta <- sample_stacked_histogram_data()
-sh  <- hv_stacked(dta, x_col = "year", group_col = "category")
-sh   # prints obs / group count
 
-plot(sh) +
+# 1. Build data object
+sh <- hv_stacked(dta, x_col = "year", group_col = "category")
+sh  # prints obs / group count
+
+# 2. Bare plot -- undecorated ggplot returned by plot.hv_stacked
+p <- plot(sh)
+
+# 3. Decorate: fill/colour brewer palette, axis labels, theme
+p +
   ggplot2::scale_fill_brewer(palette = "Set1", name = "Category") +
   ggplot2::scale_color_brewer(palette = "Set1", name = "Category") +
   ggplot2::labs(x = "Year", y = "Count") +
-  hv_theme("manuscript")
+  hv_theme("poster")
 
 }
 \seealso{

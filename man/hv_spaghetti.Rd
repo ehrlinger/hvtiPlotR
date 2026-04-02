@@ -45,16 +45,22 @@ decorate with colour scales, axis labels, and \code{\link{hv_theme}}.
 }
 \examples{
 dta <- sample_spaghetti_data(n_patients = 150, seed = 42)
-sp  <- hv_spaghetti(dta, colour_col = "group")
-sp   # prints subject count, observation count, column mapping
 
-plot(sp) +
+# 1. Build data object
+sp <- hv_spaghetti(dta, colour_col = "group")
+sp  # prints subject count, observation count, column mapping
+
+# 2. Bare plot -- undecorated ggplot returned by plot.hv_spaghetti
+p <- plot(sp)
+
+# 3. Decorate: colour palette, axis labels, theme
+p +
   ggplot2::scale_colour_manual(
     values = c(Female = "firebrick", Male = "steelblue"), name = NULL
   ) +
   ggplot2::labs(x = "Years after Operation",
                 y = "AV Mean Gradient (mmHg)") +
-  hv_theme("manuscript")
+  hv_theme("poster")
 
 }
 \seealso{

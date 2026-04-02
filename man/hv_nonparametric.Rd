@@ -78,23 +78,28 @@ Covers the full range of \code{tp.np.*} SAS templates:\tabular{ll}{
 \examples{
 dat     <- sample_nonparametric_curve_data(n = 500, time_max = 12)
 dat_pts <- sample_nonparametric_curve_points(n = 500, time_max = 12)
+
+# 1. Build data object
 np <- hv_nonparametric(dat, lower_col = "lower", upper_col = "upper",
                           data_points = dat_pts)
-np   # prints CI / data-point flags
+np  # prints CI / data-point flags
 
-plot(np) +
+# 2. Bare plot -- undecorated ggplot returned by plot.hv_nonparametric
+p <- plot(np)
+
+# 3. Decorate: colour/fill palettes, axis scales, labels, theme
+p +
   ggplot2::scale_colour_manual(values = c("steelblue"), guide = "none") +
-  ggplot2::scale_fill_manual(values = c("steelblue"), guide = "none") +
+  ggplot2::scale_fill_manual(values   = c("steelblue"), guide = "none") +
   ggplot2::scale_x_continuous(limits = c(0, 12), breaks = 0:12) +
   ggplot2::scale_y_continuous(limits = c(0, 0.40),
                               breaks = seq(0, 0.40, 0.10),
                               labels = scales::percent) +
   ggplot2::labs(x = "Months", y = "Prevalence of AF") +
-  hv_theme("manuscript")
+  hv_theme("poster")
 
 # --- Global theme (set once per session) ----------------------------------
 \dontrun{
-# Apply manuscript theme globally; use scale_colour_brewer for multi-group.
 old <- ggplot2::theme_set(hv_theme_manuscript())
 plot(np) +
   ggplot2::scale_colour_manual(values = c("steelblue"), guide = "none") +

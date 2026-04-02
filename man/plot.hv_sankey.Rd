@@ -35,12 +35,12 @@ dta <- sample_cluster_sankey_data(n = 300, seed = 42)
 if (requireNamespace("ggsankey", quietly = TRUE)) {
   plot(hv_sankey(dta)) +
     ggplot2::labs(x = NULL, title = "Cluster Stability: K = 2 to 9") +
-    hv_theme("manuscript")
+    hv_theme("poster")
 
   # Subset to K = 2 to 6
   plot(hv_sankey(dta, cluster_cols = paste0("C", 2:6))) +
     ggplot2::labs(x = NULL) +
-    hv_theme("manuscript")
+    hv_theme("poster")
 }
 
 }

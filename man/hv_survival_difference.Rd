@@ -54,7 +54,7 @@ plot(sd) +
   scale_y_continuous(limits = c(-5, 30),
                      labels = function(x) paste0(x, "\%")) +
   labs(x = "Years", y = "Survival Difference (\%)") +
-  hv_theme("manuscript")
+  hv_theme("poster")
 
 }
 \seealso{

@@ -39,11 +39,17 @@ panels with \pkg{patchwork}.
 }
 \examples{
 dta <- sample_longitudinal_counts_data(n_patients = 300, seed = 42L)
-lc  <- hv_longitudinal(dta)
-lc   # prints group/time-point counts
 
+# 1. Build data object
+lc <- hv_longitudinal(dta)
+lc  # prints group/time-point counts
+
+# 2. Bare plot -- undecorated ggplot returned by plot.hv_longitudinal
 library(ggplot2)
-plot(lc, type = "plot") +
+p <- plot(lc, type = "plot")
+
+# 3. Decorate: fill palette, y-axis scale, labels, theme
+p +
   scale_fill_manual(
     values = c(Patients = "steelblue", Measurements = "firebrick"),
     name   = NULL
@@ -53,7 +59,7 @@ plot(lc, type = "plot") +
                      expand = c(0, 0)) +
   coord_cartesian(ylim = c(0, 2200)) +
   labs(x = "Follow-up Window", y = "Count (n)") +
-  hv_theme("manuscript") +
+  hv_theme("poster") +
   theme(legend.position = c(0.85, 0.85))
 
 }

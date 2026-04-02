@@ -55,7 +55,7 @@ plot(cb) +
     name   = NULL
   ) +
   ggplot2::labs(x = "Standardized difference (\%)", y = "") +
-  hv_theme("manuscript")
+  hv_theme("poster")
 
 }
 \seealso{
