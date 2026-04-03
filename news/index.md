@@ -1,5 +1,16 @@
 # Changelog
 
+## hvtiPlotR 2.0.0.9010
+
+### Bug fixes
+
+- `plot-functions.qmd`: UpSet plot chunks (`upset_data`, `upset_basic`,
+  `upset_fill`, `upset_era`) now skip on Windows
+  (`eval: !expr .Platform$OS.type != "windows"`). ComplexUpset’s
+  patchwork rendering crashes the Rscript subprocess on the Windows CI
+  runner (os error 232 / “pipe being closed”), so the examples are shown
+  only on macOS and Linux where they render reliably.
+
 ## hvtiPlotR 2.0.0.9009
 
 ### Documentation
