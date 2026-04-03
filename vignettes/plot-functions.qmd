@@ -2411,6 +2411,7 @@ plot(hu) & hv_theme("poster")
 
 ```{r}
 #| label: upset_data
+#| eval: !expr .Platform$OS.type != "windows"
 sets <- c("AV_Replacement", "AV_Repair", "MV_Replacement", "MV_Repair",
           "TV_Repair", "Aorta", "CABG")
 
@@ -2427,6 +2428,7 @@ hu <- hv_upset(upset_dta, intersect = sets)
 #| label: upset_basic
 #| fig-width: 9
 #| fig-height: 5
+#| eval: !expr .Platform$OS.type != "windows"
 plot(hu) &
   hv_theme("poster")
 ```
@@ -2437,6 +2439,7 @@ plot(hu) &
 #| label: upset_fill
 #| fig-width: 9
 #| fig-height: 5
+#| eval: !expr .Platform$OS.type != "windows"
 plot(hu,
      base_annotations = list(
        "Intersection size" = ComplexUpset::intersection_size(
@@ -2457,6 +2460,7 @@ plot(hu,
 #| label: upset_era
 #| fig-width: 9
 #| fig-height: 5
+#| eval: !expr .Platform$OS.type != "windows"
 upset_dta$era <- ifelse(seq_len(nrow(upset_dta)) <= 200, "Early", "Recent")
 hu_era <- hv_upset(upset_dta, intersect = sets)
 
