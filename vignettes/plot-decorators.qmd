@@ -78,7 +78,7 @@ The **hvtiPlotR** package provides four themes via `hv_theme(style)`. The
 ## Manuscript
 
 ```{r theme_manuscript}
-p_base +
+p_ms <- p_base +
   scale_colour_brewer(palette = "Set1", name = "Group") +
   scale_shape_manual(
     values = c("Group I" = 15, "Group II" = 19,
@@ -87,12 +87,14 @@ p_base +
   ) +
   labs(x = "Surgery Year", y = "Outcome") +
   hv_theme("manuscript")
+
+p_ms
 ```
 
 ## Poster
 
 ```{r theme_poster}
-p_base +
+p_poster <- p_base +
   scale_colour_brewer(palette = "Set1", name = "Group") +
   scale_shape_manual(
     values = c("Group I" = 15, "Group II" = 19,
@@ -101,6 +103,8 @@ p_base +
   ) +
   labs(x = "Surgery Year", y = "Outcome") +
   hv_theme("poster")
+
+p_poster
 ```
 
 ## Light PowerPoint
@@ -265,16 +269,6 @@ same object is both displayed in the session and written to disk.
 
 ```{r save_manuscript}
 #| eval: false
-p_ms <- p_base +
-  scale_colour_brewer(palette = "Set1", name = "Group") +
-  scale_shape_manual(
-    values = c("Group I" = 15, "Group II" = 19,
-               "Group III" = 17, "Group IV" = 18),
-    name = "Group"
-  ) +
-  labs(x = "Surgery Year", y = "Outcome (%)") +
-  hv_theme("manuscript")
-
 ggsave(
   filename = "../graphs/trends_manuscript.pdf",
   plot     = p_ms,
@@ -290,16 +284,6 @@ dimensions to match the poster panel size.
 
 ```{r save_poster}
 #| eval: false
-p_poster <- p_base +
-  scale_colour_brewer(palette = "Set1", name = "Group") +
-  scale_shape_manual(
-    values = c("Group I" = 15, "Group II" = 19,
-               "Group III" = 17, "Group IV" = 18),
-    name = "Group"
-  ) +
-  labs(x = "Surgery Year", y = "Outcome (%)") +
-  hv_theme("poster")
-
 ggsave(
   filename = "../graphs/trends_poster.pdf",
   plot     = p_poster,
