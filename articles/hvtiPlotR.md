@@ -330,8 +330,9 @@ run;
 **Listing 4:** `plot.sas` commands: PowerPoint graphics using CGM
 instructions.
 
-![Powerpoint Figure](./powerpoint.png)**Figure 3:** PowerPoint figure
-(SAS version)
+The legacy PowerPoint figure image is not bundled with this repository.
+The equivalent R rendering workflow is shown below in the PowerPoint
+example.
 
 You can install the package with the following commands:
 
@@ -854,7 +855,8 @@ The **hvtiPlotR** package provides four themes via `hv_theme(style)`:
 theme as the last `+` layer on any composed ggplot object.
 
 ``` r
-ccf_plot + hv_theme("poster")
+p_final <- ccf_plot + hv_theme("poster")
+p_final
 ```
 
     Warning: Removed 7 rows containing missing values or values outside the scale range
@@ -892,14 +894,6 @@ write a composed figure to disk. Dimensions of
 figures.
 
 ``` r
-p_final <- ccf_plot +
-  labs(
-    x       = "Years After Randomization",
-    y       = "Percent in Each Category (ST)",
-    caption = getwd()
-  ) +
-  hv_theme("poster")
-
 ggsave(
   filename = "../graphs/manuscript.pdf",
   plot     = p_final,

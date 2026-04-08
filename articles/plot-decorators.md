@@ -60,7 +60,7 @@ The `style` argument selects the output target.
 ### Manuscript
 
 ``` r
-p_base +
+p_ms <- p_base +
   scale_colour_brewer(palette = "Set1", name = "Group") +
   scale_shape_manual(
     values = c("Group I" = 15, "Group II" = 19,
@@ -69,6 +69,8 @@ p_base +
   ) +
   labs(x = "Surgery Year", y = "Outcome") +
   hv_theme("manuscript")
+
+p_ms
 ```
 
 ![](plot-decorators_files/figure-html/theme_manuscript-1.png)
@@ -76,7 +78,7 @@ p_base +
 ### Poster
 
 ``` r
-p_base +
+p_poster <- p_base +
   scale_colour_brewer(palette = "Set1", name = "Group") +
   scale_shape_manual(
     values = c("Group I" = 15, "Group II" = 19,
@@ -85,6 +87,8 @@ p_base +
   ) +
   labs(x = "Surgery Year", y = "Outcome") +
   hv_theme("poster")
+
+p_poster
 ```
 
 ![](plot-decorators_files/figure-html/theme_poster-1.png)
@@ -274,16 +278,6 @@ figures. Assign the fully composed plot to a variable first so the same
 object is both displayed in the session and written to disk.
 
 ``` r
-p_ms <- p_base +
-  scale_colour_brewer(palette = "Set1", name = "Group") +
-  scale_shape_manual(
-    values = c("Group I" = 15, "Group II" = 19,
-               "Group III" = 17, "Group IV" = 18),
-    name = "Group"
-  ) +
-  labs(x = "Surgery Year", y = "Outcome (%)") +
-  hv_theme("manuscript")
-
 ggsave(
   filename = "../graphs/trends_manuscript.pdf",
   plot     = p_ms,
@@ -298,16 +292,6 @@ Poster figures are typically larger and use `hv_theme("poster")`. Adjust
 dimensions to match the poster panel size.
 
 ``` r
-p_poster <- p_base +
-  scale_colour_brewer(palette = "Set1", name = "Group") +
-  scale_shape_manual(
-    values = c("Group I" = 15, "Group II" = 19,
-               "Group III" = 17, "Group IV" = 18),
-    name = "Group"
-  ) +
-  labs(x = "Surgery Year", y = "Outcome (%)") +
-  hv_theme("poster")
-
 ggsave(
   filename = "../graphs/trends_poster.pdf",
   plot     = p_poster,

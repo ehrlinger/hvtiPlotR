@@ -316,7 +316,7 @@ sh2   <- hv_stacked(hist_dta, x_col = "year", group_col = "category",
 p_fill <- plot(sh2)
 
 # Use manual colours and custom legend labels
-p_fill +
+p_final <- p_fill +
   scale_fill_manual(
     values = c("1" = "pink", "2" = "cyan", "3" = "orangered"),
     labels = c("1" = "Group A", "2" = "Group B", "3" = "Group C"),
@@ -328,6 +328,8 @@ p_fill +
   ) +
   labs(x = "Year", y = "Proportion") +
   hv_theme("poster")
+
+p_final
 ```
 
 ![](plot-functions_files/figure-html/stacked_histogram_fill-1.png)
@@ -335,18 +337,6 @@ p_fill +
 ### Saving
 
 ``` r
-p_final <- p_fill +
-  scale_fill_manual(
-    values = c("1" = "pink", "2" = "cyan", "3" = "orangered"),
-    name   = "Category"
-  ) +
-  scale_color_manual(
-    values = c("1" = "pink", "2" = "cyan", "3" = "orangered"),
-    guide  = "none"
-  ) +
-  labs(x = "Year", y = "Proportion") +
-  hv_theme("poster")
-
 ggsave(
   filename = "../graphs/stacked_histogram.pdf",
   plot     = p_final,
@@ -420,7 +410,7 @@ places group-identifying text directly on the panel.
 ``` r
 library(RColorBrewer)
 
-plot(gf, alpha = 0.8) +
+gfup_final <- plot(gf, alpha = 0.8) +
   # Colour alive = blue, dead = red (Set1 palette positions 2 and 1)
   scale_color_manual(
     values   = brewer.pal(3, "Set1")[c(2, 1)],
@@ -449,7 +439,10 @@ plot(gf, alpha = 0.8) +
            hjust = 0, size = 3.5) +
   annotate("text", x = 1993, y = 28, label = "Deceased",
            hjust = 0, size = 3.5, color = brewer.pal(3, "Set1")[1]) +
-  theme(legend.position = "none")
+  theme(legend.position = "none") +
+  hv_theme("poster")
+
+gfup_final
 ```
 
 ![](plot-functions_files/figure-html/gfup_styled-1.png)
@@ -462,26 +455,6 @@ surveillance supplementing active cross-sectional follow-up.
 ### Saving
 
 ``` r
-gfup_final <- plot(gf, alpha = 0.8) +
-  scale_color_manual(
-    values   = brewer.pal(3, "Set1")[c(2, 1)],
-    labels   = c("Alive", "Dead"),
-    na.value = "black",
-    drop     = FALSE
-  ) +
-  scale_shape_manual(values = c(1, 4), labels = c("Alive", "Dead")) +
-  scale_x_continuous(breaks = seq(1990, 2020, 3)) +
-  scale_y_continuous(breaks = seq(0, 33, 3)) +
-  coord_cartesian(ylim = c(0, 33), xlim = c(1990, 2020)) +
-  labs(x = "Operation Date", y = "Follow-up (years)",
-       color = "Status", shape = "Status") +
-  annotate("text", x = 1993, y = 31, label = "Alive at close",
-           hjust = 0, size = 3.5) +
-  annotate("text", x = 1993, y = 28, label = "Deceased",
-           hjust = 0, size = 3.5, color = brewer.pal(3, "Set1")[1]) +
-  theme(legend.position = "none") +
-  hv_theme("poster")
-
 ggsave(
   filename = "../graphs/dp_goodness-of-followup.pdf",
   plot     = gfup_final,
@@ -661,7 +634,7 @@ exact labels, x-scale, annotation positions, and legend placement from
 ``` r
 n_vars <- length(unique(dta_cb$variable))
 
-plot(cb, alpha = 0.8) +
+cb_final <- plot(cb, alpha = 0.8) +
   scale_color_manual(
     values = c("Before match" = "red4", "After match" = "blue3"),
     name   = NULL
@@ -679,6 +652,8 @@ plot(cb, alpha = 0.8) +
   annotate("text", x =  22, y = n_vars,   label = "More likely SAVR",    size = 4.5) +
   theme(legend.position = c(0.20, 0.935)) +
   hv_theme("poster")
+
+cb_final
 ```
 
 ![](plot-functions_files/figure-html/cov_balance_annotated-1.png)
@@ -709,23 +684,6 @@ plot(cb_ord, alpha = 0.8) +
 ### Saving
 
 ``` r
-n_vars   <- length(unique(dta_cb$variable))
-cb_final <- plot(cb, alpha = 0.8) +
-  scale_color_manual(
-    values = c("Before match" = "red4", "After match" = "blue3"),
-    name   = NULL
-  ) +
-  scale_shape_manual(
-    values = c("Before match" = 17L, "After match" = 15L),
-    name   = NULL
-  ) +
-  scale_x_continuous(limits = c(-40, 30), breaks = seq(-40, 30, 10)) +
-  labs(x = "Standardized difference: SAVR - TF:TAVR (%)", y = "") +
-  annotate("text", x = -30, y = 0,      label = "More likely TF-TAVR", size = 4.5) +
-  annotate("text", x =  22, y = n_vars, label = "More likely SAVR",    size = 4.5) +
-  theme(legend.position = c(0.20, 0.935)) +
-  hv_theme("poster")
-
 ggsave(
   filename = here::here("graphs", "lp_cov-balance-SAVR_TF-TAVR.pdf"),
   plot     = cb_final,
@@ -778,7 +736,7 @@ plot(km)
 ### Adding scales, labels, and annotations
 
 ``` r
-plot(km, alpha = 0.8) +
+km_final <- plot(km, alpha = 0.8) +
   scale_color_manual(values = c(All = "steelblue"), guide = "none") +
   scale_fill_manual(values  = c(All = "steelblue"), guide = "none") +
   scale_y_continuous(
@@ -796,6 +754,8 @@ plot(km, alpha = 0.8) +
            label = paste0("n = ", nrow(dta_km)),
            hjust = 0, size = 3.5) +
   hv_theme("poster")
+
+km_final
 ```
 
 ![](plot-functions_files/figure-html/km_styled-1.png)
@@ -829,16 +789,6 @@ km$tables$report
 ### Saving
 
 ``` r
-km_final <- plot(km, alpha = 0.8) +
-  scale_color_manual(values = c(All = "steelblue"), guide = "none") +
-  scale_fill_manual(values  = c(All = "steelblue"), guide = "none") +
-  scale_y_continuous(breaks = seq(0, 100, 20),
-                     labels = function(x) paste0(x, "%")) +
-  scale_x_continuous(breaks = seq(0, 20, 5)) +
-  coord_cartesian(xlim = c(0, 20), ylim = c(0, 100)) +
-  labs(x = "Years after Operation", y = "Freedom from Death (%)") +
-  hv_theme("poster")
-
 ggsave("../graphs/km_survival.pdf", km_final, width = 8, height = 6)
 ```
 
@@ -2210,7 +2160,7 @@ quick-start in the template header uses the modernised `"firebrick"` /
 `"steelblue"` equivalents.
 
 ``` r
-plot(sp_col) +
+p_sp <- plot(sp_col) +
   scale_colour_manual(
     values = c(Female = "firebrick", Male = "steelblue"),
     name   = NULL
@@ -2220,6 +2170,8 @@ plot(sp_col) +
   coord_cartesian(xlim = c(0, 5), ylim = c(0, 80)) +
   labs(x = "Years", y = "AV Mean Gradient (mmHg)") +
   hv_theme("poster")
+
+p_sp
 ```
 
 ![](plot-functions_files/figure-html/spaghetti_sex_strat-1.png)
@@ -2314,17 +2266,6 @@ Template uses `wid = 11, hei = 8.5` in
 [`pdf()`](https://rdrr.io/r/grDevices/pdf.html).
 
 ``` r
-p_sp <- plot(sp_col) +
-  scale_colour_manual(
-    values = c(Female = "firebrick", Male = "steelblue"),
-    name   = NULL
-  ) +
-  scale_x_continuous(breaks = seq(0, 5, 1)) +
-  scale_y_continuous(breaks = seq(0, 80, 20)) +
-  coord_cartesian(xlim = c(0, 5), ylim = c(0, 80)) +
-  labs(x = "Years", y = "AV Mean Gradient (mmHg)") +
-  hv_theme("poster")
-
 ggsave(here::here("graphs", "mp.amngrd_profile.pdf"),
        p_sp, width = 11, height = 8.5)
 ```
@@ -2379,8 +2320,8 @@ np <- hv_nonparametric(
 #### Bare plot
 
 ``` r
-p_np <- plot(np)
-p_np
+p_np_bare <- plot(np)
+p_np_bare
 ```
 
 ![](plot-functions_files/figure-html/np_curve_single_bare-1.png)
@@ -2388,7 +2329,7 @@ p_np
 #### Adding scales, labels, and theme
 
 ``` r
-p_np +
+p_np <- p_np_bare +
   ggplot2::scale_colour_manual(values = c("steelblue"), guide = "none") +
   ggplot2::scale_fill_manual(values   = c("steelblue"), guide = "none") +
   ggplot2::scale_x_continuous(
@@ -2403,6 +2344,8 @@ p_np +
   ) +
   ggplot2::labs(x = "Follow-up (years)", y = "Prevalence (%)") +
   hv_theme("poster")
+
+p_np
 ```
 
 ![](plot-functions_files/figure-html/np_curve_single_decorated-1.png)
@@ -2460,10 +2403,6 @@ plot(np_grp) +
 ### Saving
 
 ``` r
-p_np <- plot(np) +
-  ggplot2::labs(x = "Follow-up (years)", y = "Prevalence (%)") +
-  hv_theme("poster")
-
 # Manuscript PDF
 ggsave(here::here("graphs", "np_afib_prevalence.pdf"),
        p_np, width = 11, height = 8.5)
@@ -2529,8 +2468,8 @@ np_ord <- hv_ordinal(curve_data = ord_dat, data_points = ord_pts)
 #### Bare plot
 
 ``` r
-p_ord <- plot(np_ord)
-p_ord
+p_ord_bare <- plot(np_ord)
+p_ord_bare
 ```
 
 ![](plot-functions_files/figure-html/np_ordinal_basic_bare-1.png)
@@ -2538,7 +2477,7 @@ p_ord
 #### Adding scales, labels, and theme
 
 ``` r
-p_ord +
+p_ord <- p_ord_bare +
   ggplot2::scale_colour_manual(
     values = c(
       "None"     = "grey40",
@@ -2560,6 +2499,8 @@ p_ord +
   ) +
   hv_theme("poster") +
   ggplot2::theme(legend.position = c(0.75, 0.6))
+
+p_ord
 ```
 
 ![](plot-functions_files/figure-html/np_ordinal_basic_decorated-1.png)
@@ -2605,11 +2546,6 @@ plot(hv_ordinal(curve_data = ord_two)) +
 ### Saving
 
 ``` r
-p_ord <- plot(np_ord) +
-  ggplot2::scale_colour_brewer(palette = "Set1", name = "TR Grade") +
-  ggplot2::labs(x = "Follow-up (years)", y = "Grade prevalence (%)") +
-  hv_theme("poster")
-
 ggsave(here::here("graphs", "np_tr_ordinal.pdf"),
        p_ord, width = 11, height = 8.5)
 ```
