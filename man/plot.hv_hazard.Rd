@@ -21,7 +21,8 @@
 
 \item{line_width}{Width of the parametric curve line. Default \code{1.0}.}
 
-\item{point_size}{Size of empirical overlay points. Default \code{2.0}.}
+\item{point_size}{Size of empirical overlay points (used when
+\code{emp_geom = "point"} was set in \code{\link[=hv_hazard]{hv_hazard()}}). Default \code{2.0}.}
 
 \item{point_shape}{Shape code for empirical points (\code{1} = open circle,
 \code{0} = open square). Default \code{1}.}
