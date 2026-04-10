@@ -533,6 +533,8 @@ sample_nnt_data <- function(n        = 500,
 #'   or `NULL`. Default `NULL`.
 #' @param emp_group_col Column name for grouping in `empirical`. Default: same
 #'   as `group_col`.
+#' @param emp_geom     Geom used for the empirical overlay: `"point"`
+#'   (default, open circles) or `"step"` (Kaplan-Meier step function).
 #' @param reference    Optional data frame of population life-table survival
 #'   curves. Corresponds to the SAS `smatched` / `hmatched` datasets. See
 #'   [sample_life_table()]. Rendered as dashed lines. Default `NULL`.
@@ -857,6 +859,7 @@ hazard_plot <- function(curve_data,
                          emp_lower_col    = NULL,
                          emp_upper_col    = NULL,
                          emp_group_col    = group_col,
+                         emp_geom         = c("point", "step"),
                          reference        = NULL,
                          ref_x_col        = x_col,
                          ref_estimate_col = estimate_col,
@@ -866,6 +869,8 @@ hazard_plot <- function(curve_data,
                          point_size       = 2.0,
                          point_shape      = 1L,
                          errorbar_width   = 0.25) {
+
+  emp_geom <- match.arg(emp_geom)
 
   # --- Validate curve_data --------------------------------------------------
   .check_df(curve_data, "curve_data")
@@ -947,7 +952,7 @@ hazard_plot <- function(curve_data,
     }
   }
 
-  # --- KM empirical points --------------------------------------------------
+  # --- KM empirical overlay --------------------------------------------------
   if (!is.null(empirical)) {
     if (!is.null(emp_group_col)) {
       emp_aes <- ggplot2::aes(x      = .data[[emp_x_col]],
@@ -957,11 +962,19 @@ hazard_plot <- function(curve_data,
       emp_aes <- ggplot2::aes(x = .data[[emp_x_col]],
                               y = .data[[emp_estimate_col]])
     }
-    p <- p + ggplot2::geom_point(mapping     = emp_aes,
-                                 data        = empirical,
-                                 size        = point_size,
-                                 shape       = point_shape,
-                                 inherit.aes = FALSE)
+
+    if (emp_geom == "step") {
+      p <- p + ggplot2::geom_step(mapping     = emp_aes,
+                                  data        = empirical,
+                                  linewidth   = line_width * 0.7,
+                                  inherit.aes = FALSE)
+    } else {
+      p <- p + ggplot2::geom_point(mapping     = emp_aes,
+                                   data        = empirical,
+                                   size        = point_size,
+                                   shape       = point_shape,
+                                   inherit.aes = FALSE)
+    }
 
     # --- Error bars on empirical points -------------------------------------
     if (!is.null(emp_lower_col) && !is.null(emp_upper_col)) {
@@ -1276,6 +1289,8 @@ nnt_plot <- function(nnt_data,
 #' @param emp_upper_col  Upper error-bar column in `empirical`, or `NULL`.
 #'   Default `NULL`.
 #' @param emp_group_col  Group column in `empirical`. Defaults to `group_col`.
+#' @param emp_geom       Geom used for the empirical overlay: `"point"`
+#'   (default, open circles) or `"step"` (Kaplan-Meier step function).
 #' @param reference      Optional data frame of population life-table curves
 #'   (SAS `smatched` dataset). Stored in `$tables$reference`. Default `NULL`.
 #' @param ref_x_col      x column in `reference`. Defaults to `x_col`.
@@ -1368,10 +1383,13 @@ hv_hazard <- function(curve_data,
                         emp_lower_col    = NULL,
                         emp_upper_col    = NULL,
                         emp_group_col    = group_col,
+                        emp_geom         = c("point", "step"),
                         reference        = NULL,
                         ref_x_col        = x_col,
                         ref_estimate_col = estimate_col,
                         ref_group_col    = NULL) {
+
+  emp_geom <- match.arg(emp_geom)
 
   # --- Validate curve_data --------------------------------------------------
   .check_df(curve_data, "curve_data")
@@ -1410,6 +1428,7 @@ hv_hazard <- function(curve_data,
       emp_lower_col    = emp_lower_col,
       emp_upper_col    = emp_upper_col,
       emp_group_col    = emp_group_col,
+      emp_geom         = emp_geom,
       ref_x_col        = ref_x_col,
       ref_estimate_col = ref_estimate_col,
       ref_group_col    = ref_group_col
@@ -1458,6 +1477,8 @@ print.hv_hazard <- function(x, ...) {
 #' @param ci_alpha      Transparency of the CI ribbon. Default `0.20`.
 #' @param line_width    Width of the parametric curve line. Default `1.0`.
 #' @param point_size    Size of empirical overlay points. Default `2.0`.
+#' @param point_size    Size of empirical overlay points (used when
+#'   `emp_geom = "point"` was set in [hv_hazard()]). Default `2.0`.
 #' @param point_shape   Shape code for empirical points (`1` = open circle,
 #'   `0` = open square). Default `1`.
 #' @param errorbar_width Width of error bars on empirical points. Default
@@ -1472,7 +1493,7 @@ print.hv_hazard <- function(x, ...) {
 #'
 #' @family Hazard plot
 #'
-#' @importFrom ggplot2 ggplot aes geom_line geom_ribbon geom_point geom_errorbar
+#' @importFrom ggplot2 ggplot aes geom_line geom_step geom_ribbon geom_point geom_errorbar
 #' @importFrom rlang .data
 #' @export
 plot.hv_hazard <- function(x,
@@ -1555,13 +1576,14 @@ plot.hv_hazard <- function(x,
     }
   }
 
-  # --- KM empirical points --------------------------------------------------
+  # --- KM empirical overlay --------------------------------------------------
   if (!is.null(empirical)) {
     emp_x_col        <- m$emp_x_col
     emp_estimate_col <- m$emp_estimate_col
     emp_lower_col    <- m$emp_lower_col
     emp_upper_col    <- m$emp_upper_col
     emp_group_col    <- m$emp_group_col
+    emp_geom         <- if (!is.null(m$emp_geom)) m$emp_geom else "point"
 
     if (!is.null(emp_group_col)) {
       emp_aes <- ggplot2::aes(x      = .data[[emp_x_col]],
@@ -1571,11 +1593,19 @@ plot.hv_hazard <- function(x,
       emp_aes <- ggplot2::aes(x = .data[[emp_x_col]],
                               y = .data[[emp_estimate_col]])
     }
-    p <- p + ggplot2::geom_point(mapping     = emp_aes,
-                                 data        = empirical,
-                                 size        = point_size,
-                                 shape       = point_shape,
-                                 inherit.aes = FALSE)
+
+    if (emp_geom == "step") {
+      p <- p + ggplot2::geom_step(mapping     = emp_aes,
+                                  data        = empirical,
+                                  linewidth   = line_width * 0.7,
+                                  inherit.aes = FALSE)
+    } else {
+      p <- p + ggplot2::geom_point(mapping     = emp_aes,
+                                   data        = empirical,
+                                   size        = point_size,
+                                   shape       = point_shape,
+                                   inherit.aes = FALSE)
+    }
 
     if (!is.null(emp_lower_col) && !is.null(emp_upper_col)) {
       if (!is.null(emp_group_col)) {

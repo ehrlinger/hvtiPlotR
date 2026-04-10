@@ -17,6 +17,7 @@ hv_hazard(
   emp_lower_col = NULL,
   emp_upper_col = NULL,
   emp_group_col = group_col,
+  emp_geom = c("point", "step"),
   reference = NULL,
   ref_x_col = x_col,
   ref_estimate_col = estimate_col,
@@ -56,6 +57,9 @@ Default \code{NULL}.}
 Default \code{NULL}.}
 
 \item{emp_group_col}{Group column in \code{empirical}. Defaults to \code{group_col}.}
+
+\item{emp_geom}{Geom used for the empirical overlay: \code{"point"}
+(default, open circles) or \code{"step"} (Kaplan-Meier step function).}
 
 \item{reference}{Optional data frame of population life-table curves
 (SAS \code{smatched} dataset). Stored in \verb{$tables$reference}. Default \code{NULL}.}
