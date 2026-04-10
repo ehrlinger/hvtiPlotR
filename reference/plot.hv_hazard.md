@@ -42,7 +42,10 @@ plot(
 
 - point_size:
 
-  Size of empirical overlay points. Default `2.0`.
+  Size of empirical overlay points (used when `emp_geom = "point"` was
+  set in
+  [`hv_hazard()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_hazard.md)).
+  Default `2.0`.
 
 - point_shape:
 

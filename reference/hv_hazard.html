@@ -81,6 +81,7 @@ the figure.</p>
 <span>  emp_lower_col <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  emp_upper_col <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  emp_group_col <span class="op">=</span> <span class="va">group_col</span>,</span>
+<span>  emp_geom <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"point"</span>, <span class="st">"step"</span><span class="op">)</span>,</span>
 <span>  reference <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  ref_x_col <span class="op">=</span> <span class="va">x_col</span>,</span>
 <span>  ref_estimate_col <span class="op">=</span> <span class="va">estimate_col</span>,</span>
@@ -147,6 +148,11 @@ Default <code>NULL</code>.</p></dd>
 
 <dt id="arg-emp-group-col">emp_group_col<a class="anchor" aria-label="anchor" href="#arg-emp-group-col"></a></dt>
 <dd><p>Group column in <code>empirical</code>. Defaults to <code>group_col</code>.</p></dd>
+
+
+<dt id="arg-emp-geom">emp_geom<a class="anchor" aria-label="anchor" href="#arg-emp-geom"></a></dt>
+<dd><p>Geom used for the empirical overlay: <code>"point"</code>
+(default, open circles) or <code>"step"</code> (Kaplan-Meier step function).</p></dd>
 
 
 <dt id="arg-reference">reference<a class="anchor" aria-label="anchor" href="#arg-reference"></a></dt>

@@ -1539,7 +1539,7 @@ sessionInfo()
     [10] RColorBrewer_1.1-3      fastmap_1.2.0           Matrix_1.7-4
     [13] jsonlite_2.0.0          zip_2.3.3               survival_3.8-6
     [16] purrr_1.2.1             scales_1.4.0            fontBitstreamVera_0.1.1
-    [19] textshaping_1.0.5       cli_3.6.5               rlang_1.2.0
+    [19] textshaping_1.0.5       cli_3.6.6               rlang_1.2.0
     [22] fontquiver_0.2.1        splines_4.5.3           withr_3.0.2
     [25] yaml_2.3.12             otel_0.2.0              gdtools_0.5.0
     [28] tools_4.5.3             officer_0.7.3           uuid_1.2-2

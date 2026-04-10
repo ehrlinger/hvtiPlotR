@@ -60,6 +60,7 @@ hazard_plot(
   emp_lower_col = NULL,
   emp_upper_col = NULL,
   emp_group_col = group_col,
+  emp_geom = c("point", "step"),
   reference = NULL,
   ref_x_col = x_col,
   ref_estimate_col = estimate_col,
@@ -135,6 +136,11 @@ hazard_plot(
 - emp_group_col:
 
   Column name for grouping in `empirical`. Default: same as `group_col`.
+
+- emp_geom:
+
+  Geom used for the empirical overlay: `"point"` (default, open circles)
+  or `"step"` (Kaplan-Meier step function).
 
 - reference:
 
