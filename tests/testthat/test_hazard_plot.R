@@ -271,6 +271,17 @@ test_that("hv_hazard $tables$empirical is NULL when not supplied", {
   expect_null(obj$tables$reference)
 })
 
+test_that("hv_hazard stores emp_geom in $meta", {
+  dat <- sample_hazard_data(n = 50, seed = 1)
+  emp <- sample_hazard_empirical(n = 50, seed = 1)
+
+  obj_default <- hv_hazard(dat, empirical = emp)
+  obj_step    <- hv_hazard(dat, empirical = emp, emp_geom = "step")
+
+  expect_equal(obj_default$meta$emp_geom, "point")
+  expect_equal(obj_step$meta$emp_geom, "step")
+})
+
 # ============================================================================
 # hv_hazard — plot() return type
 # ============================================================================
@@ -346,6 +357,34 @@ test_that("plot.hv_hazard with empirical error bars has a GeomErrorbar layer", {
   )
   expect_true("GeomPoint"    %in% geoms)
   expect_true("GeomErrorbar" %in% geoms)
+})
+
+test_that("plot.hv_hazard with emp_geom='step' adds a GeomStep layer", {
+  dat   <- sample_hazard_data(n = 50, seed = 1)
+  emp   <- sample_hazard_empirical(n = 50, seed = 1)
+  geoms <- sapply(
+    plot(hv_hazard(dat, empirical = emp, emp_geom = "step"))$layers,
+    function(l) class(l$geom)[1]
+  )
+
+  expect_true("GeomStep" %in% geoms)
+  expect_false("GeomPoint" %in% geoms)
+})
+
+test_that("plot.hv_hazard with emp_geom='step' does not add GeomErrorbar", {
+  dat   <- sample_hazard_data(n = 50, seed = 1)
+  emp   <- sample_hazard_empirical(n = 50, seed = 1)
+  geoms <- sapply(
+    plot(hv_hazard(dat,
+                     empirical     = emp,
+                     emp_lower_col = "lower",
+                     emp_upper_col = "upper",
+                     emp_geom      = "step"))$layers,
+    function(l) class(l$geom)[1]
+  )
+
+  expect_true("GeomStep" %in% geoms)
+  expect_false("GeomErrorbar" %in% geoms)
 })
 
 test_that("plot.hv_hazard with reference life table adds extra GeomLine layer", {
