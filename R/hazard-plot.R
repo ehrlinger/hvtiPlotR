@@ -976,8 +976,9 @@ hazard_plot <- function(curve_data,
                                    inherit.aes = FALSE)
     }
 
-    # --- Error bars on empirical points -------------------------------------
-    if (!is.null(emp_lower_col) && !is.null(emp_upper_col)) {
+    # --- Error bars (point geom only) -----------------------------------------
+    if (emp_geom == "point" &&
+        !is.null(emp_lower_col) && !is.null(emp_upper_col)) {
       if (!is.null(emp_group_col)) {
         err_aes <- ggplot2::aes(x      = .data[[emp_x_col]],
                                 y      = .data[[emp_estimate_col]],
@@ -1607,7 +1608,9 @@ plot.hv_hazard <- function(x,
                                    inherit.aes = FALSE)
     }
 
-    if (!is.null(emp_lower_col) && !is.null(emp_upper_col)) {
+    # --- Error bars (point geom only) -----------------------------------------
+    if (emp_geom == "point" &&
+        !is.null(emp_lower_col) && !is.null(emp_upper_col)) {
       if (!is.null(emp_group_col)) {
         err_aes <- ggplot2::aes(x      = .data[[emp_x_col]],
                                 y      = .data[[emp_estimate_col]],
