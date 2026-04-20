@@ -249,3 +249,50 @@ test_that("save_ppt recycles a single slide_title across a multi-plot list", {
   )
   expect_true(file.exists(pptx_out))
 })
+
+# ============================================================================
+# panel_box parameter (fixed-panel slide placement)
+# ============================================================================
+
+test_that("save_ppt writes a deck using panel_box layout", {
+  skip_if_not_installed("officer")
+  skip_if_not_installed("rvg")
+
+  # Two plots with different y-axis label widths → different chrome per slide
+  p1 <- ggplot(mtcars, aes(hp, mpg)) + geom_point() +
+    scale_y_continuous(labels = function(x) sprintf("%3.1f", x))
+  p2 <- ggplot(mtcars, aes(hp, mpg)) + geom_point() +
+    scale_y_continuous(labels = function(x) sprintf("%8.1f", x * 10000))
+
+  tmp_tpl <- make_temp_template()
+  tmp_out <- tempfile(fileext = ".pptx")
+  on.exit(unlink(c(tmp_tpl, tmp_out)))
+
+  expect_no_error(
+    save_ppt(
+      list(p1, p2),
+      template     = tmp_tpl,
+      powerpoint   = tmp_out,
+      slide_titles = c("Small", "Big"),
+      panel_box    = list(width = 10, height = 5, left = 1.5, top = 1.5)
+    )
+  )
+  expect_true(file.exists(tmp_out))
+})
+
+test_that("save_ppt rejects panel_box missing required fields", {
+  skip_if_not_installed("officer")
+  skip_if_not_installed("rvg")
+
+  p      <- create_test_plot()
+  tmp_tpl <- make_temp_template()
+  tmp_out <- tempfile(fileext = ".pptx")
+  on.exit(unlink(c(tmp_tpl, tmp_out)))
+
+  expect_error(
+    save_ppt(p, template = tmp_tpl, powerpoint = tmp_out,
+             panel_box = list(width = 10, height = 5)),
+    "panel_box"
+  )
+})
+
