@@ -408,12 +408,10 @@ map the binary alive/dead state to colours and point shapes.
 places group-identifying text directly on the panel.
 
 ``` r
-library(RColorBrewer)
-
 gfup_final <- plot(gf, alpha = 0.8) +
   # Colour alive = blue, dead = red (Set1 palette positions 2 and 1)
   scale_color_manual(
-    values   = brewer.pal(3, "Set1")[c(2, 1)],
+    values   = c("#377EB8", "#E41A1C"),
     labels   = c("Alive", "Dead"),
     na.value = "black",
     drop     = FALSE
@@ -438,7 +436,7 @@ gfup_final <- plot(gf, alpha = 0.8) +
   annotate("text", x = 1993, y = 31, label = "Alive at close",
            hjust = 0, size = 3.5) +
   annotate("text", x = 1993, y = 28, label = "Deceased",
-           hjust = 0, size = 3.5, color = brewer.pal(3, "Set1")[1]) +
+           hjust = 0, size = 3.5, color = "#E41A1C") +
   theme(legend.position = "none") +
   hv_theme("poster")
 
@@ -1132,7 +1130,7 @@ p_cont[[3]]
 
 ### Saving EDA plots
 
-[`gridExtra::marrangeGrob()`](https://rdrr.io/pkg/gridExtra/man/arrangeGrob.html)
+[`patchwork::wrap_plots()`](https://patchwork.data-imaginist.com/reference/wrap_plots.html)
 arranges multiple plots into a grid and
 [`ggsave()`](https://ggplot2.tidyverse.org/reference/ggsave.html) writes
 each page to a separate PDF file.
@@ -1142,11 +1140,11 @@ all_plots <- c(p_bin, p_cat, p_cont)
 per_page  <- 9L  # 3 x 3 grid
 
 for (pg in seq(1, length(all_plots), by = per_page)) {
-  idx  <- seq(pg, min(pg + per_page - 1L, length(all_plots)))
-  grob <- gridExtra::marrangeGrob(all_plots[idx], nrow = 3, ncol = 3)
+  idx     <- seq(pg, min(pg + per_page - 1L, length(all_plots)))
+  pg_plot <- patchwork::wrap_plots(all_plots[idx], nrow = 3, ncol = 3)
   ggsave(
     filename = sprintf("../graphs/eda_page%02d.pdf", ceiling(pg / per_page)),
-    plot     = grob,
+    plot     = pg_plot,
     width    = 14,
     height   = 14
   )

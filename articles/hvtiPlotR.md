@@ -3,18 +3,19 @@
 ## Abstract
 
 We introduce the R package **hvtiPlotR**, tools for creating publication
-quality graphics in R for the Heart & Vascular Institute Clinical
-Investigations statistics group at the Cleveland Clinic. The
-**hvtiPlotR** package contains a tutorial for generating figures (this
-vignette) and small set of functions for formatting and saving those
-figures. These tools describe how to generate figures in R to replace
-the plot.sas macro we currently use in SAS.
+quality graphics in R for the Heart & Vascular Institute Cardiovascular
+Outcomes Registries and Research (CORR) statistics group at the
+Cleveland Clinic. The **hvtiPlotR** package contains a tutorial for
+generating figures (this vignette) and small set of functions for
+formatting and saving those figures. These tools describe how to
+generate figures in R to replace the `plot.sas` macro we currently use
+in SAS.
 
 This package vignette is a tutorial for generating our standard figures
-using the ggplot2 package commands in R. The tutorial presents a series
-of R recipes for generating figures. The **hvtiPlotR** package includes
-a set of themes designed to format those figures for inclusion in
-manuscript and PowerPoint targets.
+using the `ggplot2` package commands in R. The tutorial presents a
+series of R recipes for generating figures. The **hvtiPlotR** package
+includes a set of themes designed to format those figures for inclusion
+in manuscript and PowerPoint targets.
 
 This document is included with the **hvtiPlotR** package as a package
 vignette. The vignette is installed into R when the **hvtiPlotR**
@@ -39,9 +40,9 @@ This package vignette is an introduction to the R package **hvtiPlotR**,
 and a tutorial for creating publication quality graphics in R. The
 package and this document describe the process of creating graphics in R
 that conform to the standards of the clinical investigations statistics
-group within The Heart & Vascular Institute at the Cleveland Clinic.
-These graphics are analogous to those generated with the plot.sas macro
-in SAS.
+group within The Heart & Vascular Institute (HVTI) at the Cleveland
+Clinic. These graphics are analogous to those generated with the
+`plot.sas` macro in SAS.
 
 The document is a package vignette for the **hvtiPlotR** package, and is
 the primary documentation for the package. The latest version of the
@@ -66,9 +67,9 @@ https://github.com/ehrlinger/hvtiPlotR/issues
 
 For many years, the mainstay for generating graphics for manuscripts and
 presentations in the statistics group in The Heart & Vascular Institute
-has been the plot.sas macro using SAS. However, recently, we have had
-issues migrating this macro to newer versions of SAS (\> 8.0) and
-Microsoft Oﬃce products (\> 2003).
+has been the `plot.sas` macro using SAS. However, we have had issues
+migrating this macro to newer versions of SAS (\> 8.0) and Microsoft
+Oﬃce products (\> 2003).
 
 In an eﬀort to alleviate these version issues, and to standardize the
 generation of figures within R, we have developed the **hvtiPlotR** R
@@ -80,14 +81,14 @@ create graphics for publications and presentations with a minimal amount
 of eﬀort.
 
 The **hvtiPlotR** package implements best practices for R graphics by
-leveraging the ggplot2 package (Wickham 2009). The ggplot2 package is an
-implementation of the Grammar of Graphics (Wilkinson 2005), which is a
-formalization of graphical concepts, and the building of graphical
+leveraging the `ggplot2` package (Wickham 2009). The `ggplot2` package
+is an implementation of the Grammar of Graphics (Wilkinson 2005), which
+is a formalization of graphical concepts, and the building of graphical
 objects from a sequence of independent components. These components can
 be combined in many diﬀerent ways.
 
 The `plot.sas` macro is also an implementation of a graphics grammar.
-The grammar plot.sas is derived from the ZETA pen plotters, which used
+The grammar `plot.sas` is derived from the ZETA pen plotters, which used
 GML (Graphics Machine Language) to control between 4 and and 8 colored
 pens for generating color line and point figures.
 
@@ -122,7 +123,7 @@ exercise to translate commands between the two systems.
 This document outlines how to generate figures using the `ggplot2`
 package in **R**. Our approach is to demonstrate the **R** commands to
 generate the same elements created with `plot.sas` commands. Section 2
-gives an overview of the methodology of the plot.sas macro and
+gives an overview of the methodology of the `plot.sas` macro and
 
 Section 3 details how to create line and point plots with similar
 `ggplot2` commands. The **hvtiPlotR** package contains custom themes for
@@ -132,9 +133,9 @@ package to get the formatting correct for manuscripts or presentations.
 Section 5 describes how to save these figures to simplify the import
 into publication documents.
 
-## The plot.sas macro
+## The `plot.sas` macro
 
-We first look at some example code using the plot.sas macro. This code
+We first look at some example code using the `plot.sas` macro. This code
 is intended to generate a figure for manuscript publication and was
 modified to generate Figure 1. We will walk through this example code in
 this section to help us understand the steps for generating these
@@ -142,8 +143,8 @@ figures in R.
 
 Note the first line of the code block in Listing 1 indicates the path to
 the specific example file location. The filename statements bring in the
-plot.sas macro, indicate how to print, and where to save the graphics
-file. The plot.sas macro call starts with the %plot command.
+`plot.sas` macro, indicate how to print, and where to save the graphics
+file. The `plot.sas` macro call starts with the %plot command.
 
 The goptions statement in the first line sets global graphic values,
 including the filename (`gaccess=`) where the figure will be saved (see
@@ -207,7 +208,7 @@ figure is shown in Figure 2.
 Note that much of the figure formatting is mixed within the tuple
 statements using width, color, linepe and linecl commands. In the
 `plot.sas` macro, omitting these commands will generate a figure with
-the default values specified within the plot.sas macro or device theme
+the default values specified within the `plot.sas` macro or device theme
 (Section 4).
 
 A similar set of `plot.sas` commands (Listing 4) is used to create
@@ -219,7 +220,7 @@ code is shown in Figure 3.
 In addition to the plot.sas commands, we also have a set of graphics
 standards (graphics rules) for what to and not to include in
 presentation graphics, we will describe these rules in (Section 6). Many
-of these are incorporated into the plot.sas macro to protect the user
+of these are incorporated into the `plot.sas` macro to protect the user
 from violating these standards.
 
 ## SAS → R Quick Reference
@@ -299,8 +300,8 @@ directly.
 
 ## Generating ggplot2 graphics
 
-In order to create figures similar to using plot.sas macro, using R, we
-will make extensive use of the ggplot2 package. This will require
+In order to create figures similar to using `plot.sas` macro, using R,
+we will make extensive use of the ggplot2 package. This will require
 translating from the graphics language of plot.sas to the graphics
 language of ggplot2.
 
@@ -416,7 +417,7 @@ nonparametric <- haven::read_xpt(npar_file)
 
 Referring back to the SAS code chunks in Section 2, Listing 1 sets the
 current working directory, and does some house keeping, including
-loading the plot.sas macro. Similarly, to get started in R, we first
+loading the `plot.sas` macro. Similarly, to get started in R, we first
 load the required libraries: ggplot2 for graphics, and **hvtiPlotR** for
 themes. The following code chunk also sets the initial default theme to
 a generic black and white format, and brings in a pair of example
@@ -444,7 +445,7 @@ statements. This tutorial will make extensive use of this to demonstrate
 the process. Starting in this code chunk, we will save the intermediate
 objects in the ccf_plot variable. Here we simply create an empty ggplot2
 figure that we will be adding to as we work through the commands in the
-plot.sas macro. Note that we include the %plot() commands in the
+`plot.sas` macro. Note that we include the %plot() commands in the
 comments above the equivalent ggplot2 command for comparison.
 
 ``` r
@@ -519,10 +520,10 @@ object, or described how we want it displayed.
 
 ### Points
 
-The fundamental statement of the plot.sas macro is the tuple statement.
-The first tuple statement we see in the example code sets the data set
-(set=green), the symbol shape (symbol=dot), size (symbsize=1/2) and
-color (color=black). Listing 2 turns oﬀ lines so only points will be
+The fundamental statement of the `plot.sas` macro is the tuple
+statement. The first tuple statement we see in the example code sets the
+data set (set=green), the symbol shape (symbol=dot), size (symbsize=1/2)
+and color (color=black). Listing 2 turns oﬀ lines so only points will be
 shown (linepe=0, linecl=0,). It also handles error bars (ebarsize=3/4,
 ebar=1), which will be discuss in Section 3.6. The last line tells the
 macro about the point placement using a vector for each of the x and y
@@ -649,7 +650,7 @@ show(ccf_plot)
 Note that the x variable is the same (`iv_state`) for all three data
 series as well as the associated error bars. This is not a requirement,
 as we could have specified a diﬀerent variable name for each `geom_`
-function call. Also note that just as in the `plot.sas macro`, since we
+function call. Also note that just as in the `plot.sas` macro, since we
 do not want an error bar placed at at every data point, a large number
 points have the upper and lower error bar y values have been set to
 missing (`NA`). The `ggplot` package does print warning messages when we
@@ -808,7 +809,7 @@ Figure 10: Adjusting the viewport
 ### PowerPoint Figures
 
 As a second example, we recreate a figure that was created for
-PowerPoint with the `plot.sas macro`. In most cases, we do not include
+PowerPoint with the `plot.sas` macro. In most cases, we do not include
 points when generating presentation figures, so this figure was
 generated with only `geom_line` function calls. We also show how the
 figure can be created in a single set of function calls.

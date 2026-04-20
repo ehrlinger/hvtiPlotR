@@ -39,9 +39,8 @@ hv_sankey(
 - node_colours:
 
   Named character vector mapping node labels to fill colours. If `NULL`
-  (default), colours are drawn from
-  `RColorBrewer::brewer.pal(9, "Set1")` in the order
-  `c(2, 6, 8, 4, 3, 5, 7, 1, 9)`.
+  (default), colours are drawn from an inline Set1 hex palette in the
+  order `c(2, 6, 8, 4, 3, 5, 7, 1, 9)`.
 
 ## Value
 
