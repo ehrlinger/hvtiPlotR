@@ -209,15 +209,12 @@ hv_sankey <- function(data,
 
   # Default colours
   if (is.null(node_colours)) {
-    n_nodes <- length(node_levels)
-    if (!requireNamespace("RColorBrewer", quietly = TRUE)) {
-      pal <- grDevices::palette.colors(n = min(n_nodes, 9L))
-    } else {
-      set1_idx <- c(2L, 6L, 8L, 4L, 3L, 5L, 7L, 1L, 9L)
-      set1_idx <- set1_idx[seq_len(min(n_nodes, length(set1_idx)))]
-      pal      <- RColorBrewer::brewer.pal(9, "Set1")[set1_idx]
-      if (n_nodes > length(pal)) pal <- rep_len(pal, n_nodes)
-    }
+    n_nodes  <- length(node_levels)
+    set1     <- c("#E41A1C", "#377EB8", "#4DAF4A", "#984EA3", "#FF7F00",
+                  "#FFFF33", "#A65628", "#F781BF", "#999999")
+    set1_idx <- c(2L, 6L, 8L, 4L, 3L, 5L, 7L, 1L, 9L)
+    pal      <- set1[set1_idx[seq_len(min(n_nodes, length(set1_idx)))]]
+    if (n_nodes > length(pal)) pal <- rep_len(pal, n_nodes)
     node_colours <- stats::setNames(pal, node_levels[seq_along(pal)])
   }
 

@@ -36,8 +36,6 @@ Suggests:
     testthat (>= 3.0.0),
     devtools,
     ggsankey,
-    RColorBrewer,
-    gridExtra,
     haven,
     patchwork,
     scales,
