@@ -24,9 +24,8 @@ labels (bottom to top within each column). If \code{NULL} (default),
 the existing factor levels of the first cluster column are used.}
 
 \item{node_colours}{Named character vector mapping node labels to fill
-colours. If \code{NULL} (default), colours are drawn from
-\code{RColorBrewer::brewer.pal(9, "Set1")} in the order
-\code{c(2, 6, 8, 4, 3, 5, 7, 1, 9)}.}
+colours. If \code{NULL} (default), colours are drawn from an inline
+Set1 hex palette in the order \code{c(2, 6, 8, 4, 3, 5, 7, 1, 9)}.}
 }
 \value{
 An object of class \code{c("hv_sankey", "hv_data")}:
