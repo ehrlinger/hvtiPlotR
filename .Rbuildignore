@@ -1,9 +1,9 @@
-.gitignore
-^.*\.Rproj$         # Automatically added by RStudio,
-^\.Rproj\.user$     # used for temporary files. 
-^README\.Rmd$       # An Rmarkdown file used to generate README.md
-^cran-comments\.md$ # Comments for CRAN submission
-^NEWS\.md$          # A news file written in Markdown
+^\.gitignore$
+^.*\.Rproj$
+^\.Rproj\.user$
+^README\.Rmd$
+^cran-comments\.md$
+^NEWS\.md$
 ^\.coveralls\.yml$
 ^packrat$
 ^\.Rprofile$
@@ -33,7 +33,7 @@ framed.sty
 ^docs$
 ^pkgdown$
 hvtiPlotR.Rproj
-^vignettes/*_files$
+^vignettes/.*_files$
 ^doc$
 ^Meta$
 ^CONTRIBUTING\.md$
