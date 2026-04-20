@@ -204,6 +204,7 @@ reference:
     omit them for publication-ready output.
   contents:
   - save_ppt
+  - hv_ggsave_dims
   - make_footnote
   - makeFootnote
 

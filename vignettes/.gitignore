@@ -1,2 +1,5 @@
 *_files
 *.R
+
+/.quarto/
+**/*.quarto_ipynb
