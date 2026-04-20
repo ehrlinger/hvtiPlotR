@@ -11,9 +11,14 @@
 #'
 #' Given a fitted ggplot, returns `width` and `height` values such that, when
 #' passed to [ggplot2::ggsave()], the resulting file has a panel content area
-#' matching `width` / `height`. The "panel content area" is the bounding box
-#' that contains all panels and their internal strips and gutters, but
-#' excludes axes, axis titles, plot title, caption, legend, and plot margins.
+#' matching `width` / `height`. The "panel content area" is the rectangular
+#' bounding box of the gtable cells tagged `panel` — i.e., the smallest
+#' rectangle that encloses every plotting panel. Whatever grobs fall inside
+#' that rectangle (e.g., inter-panel gutters and strip rows that sit between
+#' facet rows) are counted as part of the target; everything outside it
+#' (axes, axis titles, plot title, caption, legend, plot margins, and any
+#' strips that sit above/below or beside the panel block such as
+#' `facet_grid` side strips) is counted as chrome.
 #'
 #' Useful for multi-panel figure sets where a constant data region is
 #' required across PDFs regardless of label length or legend placement.
@@ -48,9 +53,8 @@
 hv_ggsave_dims <- function(plot, width, height, units = c("in", "cm", "mm")) {
   if (!inherits(plot, "ggplot"))
     stop("`plot` must be a ggplot object.", call. = FALSE)
-  if (!(is.numeric(width)  && length(width)  == 1L && is.finite(width)  && width  > 0 &&
-        is.numeric(height) && length(height) == 1L && is.finite(height) && height > 0))
-    stop("`width` and `height` must be single positive numbers.", call. = FALSE)
+  .check_scalar_positive(width,  "width")
+  .check_scalar_positive(height, "height")
   units <- match.arg(units)
 
   g <- ggplot2::ggplotGrob(plot)

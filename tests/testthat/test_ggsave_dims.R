@@ -16,7 +16,7 @@ test_that("hv_ggsave_dims rejects non-positive or non-scalar dims", {
   expect_error(hv_ggsave_dims(p,  0, 3), "positive")
   expect_error(hv_ggsave_dims(p,  4, 0), "positive")
   expect_error(hv_ggsave_dims(p, -1, 3), "positive")
-  expect_error(hv_ggsave_dims(p, c(4, 5), 3), "single")
+  expect_error(hv_ggsave_dims(p, c(4, 5), 3), "scalar")
   expect_error(hv_ggsave_dims(p, NA_real_, 3), "positive")
 })
 
@@ -76,6 +76,21 @@ test_that("units conversion is consistent", {
   in_over_w <- d_in$width  - 4
   cm_over_w <- d_cm$width  - 10.16
   expect_equal(cm_over_w, in_over_w * 2.54, tolerance = 1e-3)
+})
+
+# ============================================================================
+# patchwork support
+# ============================================================================
+
+test_that("patchwork compositions are accepted", {
+  skip_if_not_installed("patchwork")
+  p1 <- ggplot(mtcars, aes(hp, mpg)) + geom_point()
+  p2 <- ggplot(mtcars, aes(wt, mpg)) + geom_point()
+  combo <- patchwork::wrap_plots(p1, p2)
+  dims <- hv_ggsave_dims(combo, 6, 3)
+  # patchwork inherits from ggplot, so no error + sensible positive dims
+  expect_gt(dims$width,  6)
+  expect_gt(dims$height, 3)
 })
 
 # ============================================================================

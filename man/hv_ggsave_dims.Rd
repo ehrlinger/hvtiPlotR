@@ -22,9 +22,14 @@ splat directly into \code{\link[ggplot2:ggsave]{ggplot2::ggsave()}} via \code{\l
 \description{
 Given a fitted ggplot, returns \code{width} and \code{height} values such that, when
 passed to \code{\link[ggplot2:ggsave]{ggplot2::ggsave()}}, the resulting file has a panel content area
-matching \code{width} / \code{height}. The "panel content area" is the bounding box
-that contains all panels and their internal strips and gutters, but
-excludes axes, axis titles, plot title, caption, legend, and plot margins.
+matching \code{width} / \code{height}. The "panel content area" is the rectangular
+bounding box of the gtable cells tagged \code{panel} — i.e., the smallest
+rectangle that encloses every plotting panel. Whatever grobs fall inside
+that rectangle (e.g., inter-panel gutters and strip rows that sit between
+facet rows) are counted as part of the target; everything outside it
+(axes, axis titles, plot title, caption, legend, plot margins, and any
+strips that sit above/below or beside the panel block such as
+\code{facet_grid} side strips) is counted as chrome.
 }
 \details{
 Useful for multi-panel figure sets where a constant data region is
