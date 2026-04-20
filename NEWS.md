@@ -1,3 +1,13 @@
+# hvtiPlotR 2.0.0.9011
+
+## New features
+
+- `hv_ggsave_dims()`: compute `ggsave()` `width`/`height` that preserve a
+  fixed panel content area regardless of axis labels, legend, title, or
+  facet strips. Returns a named list shaped to splat into `ggsave()` via
+  `do.call(ggsave, c(list(filename = ..., plot = p), dims))`. Units are
+  length-only (`"in"`, `"cm"`, `"mm"`) since the sizing device is PDF.
+
 # hvtiPlotR 2.0.0.9010
 
 ## Bug fixes
