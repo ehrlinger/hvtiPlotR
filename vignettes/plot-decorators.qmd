@@ -374,7 +374,7 @@ slide), that shift is visually jarring — the box appears to move between slide
 
 Pass `panel_box = list(width, height, left, top)` to anchor the **panel content
 area** at the same slide coordinates on every slide. `save_ppt()` calls
-[`hv_ph_location()`] for each plot, measures the axis/legend/title chrome
+`hv_ph_location()` for each plot, measures the axis/legend/title chrome
 around the panel, and adjusts per-slide placement so the panel lands at the
 target rectangle regardless of label width. Axis labels then extend outside the
 panel box as needed; device dimensions vary per plot.

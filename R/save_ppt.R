@@ -190,13 +190,14 @@ save_ppt <- function(object,
     stop("`powerpoint` must be a writable file path.", call. = FALSE)
   if (!(is.character(slide_titles) && length(slide_titles) >= 1L))
     stop("`slide_titles` must be a non-empty character vector.", call. = FALSE)
-  if (!(is.numeric(width)  && length(width)  == 1L && width  > 0 &&
-        is.numeric(height) && length(height) == 1L && height > 0))
-    stop("`width` and `height` must be positive numbers.", call. = FALSE)
-  if (!(is.numeric(left) && length(left) == 1L && left >= 0 &&
-        is.numeric(top)  && length(top)  == 1L && top  >= 0))
-    stop("`left` and `top` must be non-negative numbers.", call. = FALSE)
-  if (!is.null(panel_box)) {
+  if (is.null(panel_box)) {
+    if (!(is.numeric(width)  && length(width)  == 1L && width  > 0 &&
+          is.numeric(height) && length(height) == 1L && height > 0))
+      stop("`width` and `height` must be positive numbers.", call. = FALSE)
+    if (!(is.numeric(left) && length(left) == 1L && left >= 0 &&
+          is.numeric(top)  && length(top)  == 1L && top  >= 0))
+      stop("`left` and `top` must be non-negative numbers.", call. = FALSE)
+  } else {
     expected <- c("width", "height", "left", "top")
     if (!is.list(panel_box) || !all(expected %in% names(panel_box)))
       stop("`panel_box` must be a list with elements `width`, `height`, `left`, `top`.",
