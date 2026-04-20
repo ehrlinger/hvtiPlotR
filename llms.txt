@@ -431,6 +431,14 @@ omit them for publication-ready output.
 
 - [`save_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/save_ppt.md)
   : Save ggplot Objects to an Editable PowerPoint Presentation
+
+- [`hv_ggsave_dims()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_ggsave_dims.md)
+  :
+
+  Compute
+  [`ggsave()`](https://ggplot2.tidyverse.org/reference/ggsave.html)
+  dimensions for a fixed panel content area
+
 - [`make_footnote()`](https://ehrlinger.github.io/hvtiPlotR/reference/make_footnote.md)
   [`makeFootnote()`](https://ehrlinger.github.io/hvtiPlotR/reference/make_footnote.md)
   : Add a Draft Footnote to a Figure
