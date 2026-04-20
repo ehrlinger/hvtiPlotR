@@ -11,7 +11,7 @@ utils::globalVariables(c("node", "freq"))
 # Key differences from the original script:
 #  - No hard-coded column names or ordering vectors; caller supplies
 #    cluster_cols and node_levels
-#  - Colour palette is passed via node_colours (default: RColorBrewer Set1)
+#  - Colour palette is passed via node_colours (default: inline Set1 hex)
 #  - NSE-free internal reshape (.make_sankey_long) avoids ggsankey::make_long()
 #    non-standard evaluation
 # ---------------------------------------------------------------------------
@@ -152,9 +152,8 @@ sample_cluster_sankey_data <- function(
 #'   labels (bottom to top within each column). If \code{NULL} (default),
 #'   the existing factor levels of the first cluster column are used.
 #' @param node_colours  Named character vector mapping node labels to fill
-#'   colours. If \code{NULL} (default), colours are drawn from
-#'   \code{RColorBrewer::brewer.pal(9, "Set1")} in the order
-#'   \code{c(2, 6, 8, 4, 3, 5, 7, 1, 9)}.
+#'   colours. If \code{NULL} (default), colours are drawn from an inline
+#'   Set1 hex palette in the order \code{c(2, 6, 8, 4, 3, 5, 7, 1, 9)}.
 #'
 #' @return An object of class \code{c("hv_sankey", "hv_data")}:
 #' \describe{
