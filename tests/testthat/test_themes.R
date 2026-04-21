@@ -228,6 +228,22 @@ test_that("theme_light_ppt hides legend by default and accepts bold", {
   expect_identical(theme_light_ppt(bold = TRUE)$axis.text$face, "bold")
 })
 
+test_that("theme_light_ppt uses inside-facing ticks (negative length)", {
+  theme <- theme_light_ppt(base_size = 32)
+  tlen <- grid::convertUnit(theme$axis.ticks.length, "pt", valueOnly = TRUE)
+  expect_lt(tlen, 0)                              # negative = inside
+  expect_equal(tlen, -32 / 4, tolerance = 1e-6)   # half_line / 2
+})
+
+test_that("theme_light_ppt axis-title margins scale with base_size", {
+  t32 <- theme_light_ppt(base_size = 32)
+  t16 <- theme_light_ppt(base_size = 16)
+  m32 <- t32$axis.title.x$margin
+  m16 <- t16$axis.title.x$margin
+  # Margins scale linearly with base_size (1.5 * half_line = 0.75 * base_size in pt)
+  expect_equal(as.numeric(m32[1]), 2 * as.numeric(m16[1]), tolerance = 1e-6)
+})
+
 # ============================================================================
 # theme_poster tests
 # ============================================================================

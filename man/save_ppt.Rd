@@ -122,8 +122,8 @@ save_ppt(
 # panel inside a fixed ph_location(). On dark_ppt the black panel box
 # appears to drift between slides — visually jarring.
 #
-# Solution: pass `panel_box = list(width, height, left, top)`. This
-# describes the PANEL CONTENT AREA itself — the rectangle bounded by
+# Solution: pass `panel_box = list(width = ..., height = ..., left = ...,
+# top = ...)`. This describes the PANEL CONTENT AREA itself — the rectangle bounded by
 # the axis lines, not the outer plot extent. save_ppt() calls
 # [hv_ph_location()] for each plot, measures the axis / title / legend
 # chrome around the panel, and adjusts per-slide placement so the
@@ -165,8 +165,8 @@ save_ppt(
 )
 
 # Sizing advice: panel_left and panel_top must be large enough for the
-# widest axis labels in the deck. If chrome spills off the slide edge,
-# hv_ph_location() emits a warning naming the offending edge.
+# widest axis labels in the deck. If chrome extends past the left or top
+# slide edge, hv_ph_location() emits a warning naming that edge.
 }
 
 }
