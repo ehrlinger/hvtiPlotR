@@ -1,6 +1,45 @@
-# hvtiPlotR 2.0.0.9013
+# hvtiPlotR 2.0.0
 
-## Behaviour changes
+First stable release of the `hv_*` API. This consolidates the
+`2.0.0.9001`–`2.0.0.9013` dev cycle into a tagged release that internal
+users can anchor against for bug reports and reproducibility. Future
+development continues under `2.0.1.9xxx`.
+
+## New features — fixed-panel geometry
+
+The dominant theme of this release is making the **panel content area**
+(the rectangular data region, excluding axes/titles/legend/margins) a
+first-class target, so figures stay visually aligned across output
+devices and across slides in a deck even when axis-label widths differ.
+
+- `hv_ggsave_dims(plot, width, height, units = "in")`: compute
+  `ggsave()` `width`/`height` that preserve a fixed panel content area
+  regardless of axis labels, legend, title, or facet strips. Returns a
+  named list shaped to splat into `ggsave()` via
+  `do.call(ggsave, c(list(filename = ..., plot = p), dims))`. Units are
+  length-only (`"in"`, `"cm"`, `"mm"`) since the sizing device is PDF.
+- `hv_ph_location(plot, panel_width, panel_height, panel_left, panel_top,
+  units = "in")`: compute `officer::ph_location()`
+  `width`/`height`/`left`/`top` values that anchor a ggplot's panel to a
+  fixed rectangle on a slide, regardless of axis-label width. Measures
+  asymmetric chrome (left/right/top/bottom of the panel) via
+  `ggplotGrob()` and returns per-plot placement so the panel lands at the
+  same slide coordinates on every slide. Warns if plot chrome extends
+  past the left or top slide edge.
+- `save_ppt(..., panel_box = list(width, height, left, top))`: new
+  optional argument. When supplied, per-slide placement is computed via
+  `hv_ph_location()` so every slide anchors the panel at the given
+  rectangle — solving the "plot background box moves between slides"
+  problem on dark PPT themes where the panel is visibly filled. When
+  `panel_box = NULL` (default), the fixed `width`/`height`/`left`/`top`
+  arguments are used (legacy behavior).
+
+## New features — PPT theme polish
+
+- `hv_theme_dark_ppt(bold = TRUE)` and `hv_theme_light_ppt(bold = TRUE)`:
+  apply `face = "bold"` to axis text and axis titles.
+
+## Behaviour changes — PPT themes
 
 - `hv_theme_dark_ppt()` and `hv_theme_light_ppt()`:
   - Legend is now hidden by default (`legend.position = "none"`).
@@ -8,43 +47,38 @@
     override with `+ theme(legend.position = "right")` when needed.
   - Axis ticks now face **inside** the panel (`axis.ticks.length =
     -half_line/2 pt`) for the AATS-style inset look.
-  - Axis-text and axis-title margins are now scaled from `base_size`
-    via ggplot2's `half_line = base_size / 2` convention, so spacing
-    stays proportional when `base_size` changes. Previous unscaled
-    defaults produced cramped labels at `base_size = 32`.
+  - Axis-text and axis-title margins are now scaled from `base_size` via
+    ggplot2's `half_line = base_size / 2` convention, so spacing stays
+    proportional when `base_size` changes. Previous unscaled defaults
+    produced cramped labels at `base_size = 32`.
+  - `hv_theme_light_ppt()` gains explicit `axis.text`, `axis.line`,
+    `panel.background` (fill `"white"`, colour `"black"`, linewidth 1),
+    and `axis.ticks` elements so the light theme structurally mirrors
+    the dark theme's explicit-chrome approach (just with inverted
+    colours).
 
-## New features
+## Build / infrastructure
 
-- `hv_theme_dark_ppt(bold = TRUE)` / `hv_theme_light_ppt(bold = TRUE)`:
-  apply `face = "bold"` to axis text and axis titles. Default
-  `bold = FALSE` preserves the prior appearance.
+- `.Rbuildignore` is now tracked in git (previously `.gitignored`).
+  Three latent regex bugs fixed: anchored `.gitignore` pattern, stripped
+  inline `# ...` comments from five patterns (which had silently never
+  matched), and fixed `^vignettes/*_files$` →
+  `^vignettes/.*_files$` so `_files/` output dirs actually get excluded
+  from the build.
+- `vignettes/_quarto.yml` now tracked with `embed-resources: false` at
+  the project level, making the small-HTML / separate `_files/`
+  rendering behaviour explicit and preventing accidental repo bloat.
 
-# hvtiPlotR 2.0.0.9012
+## Dependency trim (from the merged `trends_plots` branch)
 
-## New features
-
-- `hv_ph_location()`: compute `officer::ph_location()` `width`/`height`/
-  `left`/`top` values that anchor a ggplot's **panel content area** to a
-  fixed rectangle on a slide, regardless of axis-label width. Measures
-  asymmetric chrome (left/right/top/bottom of the panel) via
-  `ggplotGrob()` and returns per-plot placement so the panel lands at the
-  same slide coordinates on every slide. Warns if plot chrome overflows
-  the left/top edge of the slide.
-- `save_ppt()`: new `panel_box = list(width, height, left, top)`
-  argument. When supplied, per-slide placement is computed via
-  `hv_ph_location()` so every slide anchors the panel at the given
-  rectangle — solving the "plot background box moves between slides"
-  problem on dark PPT themes where the panel is visibly filled.
-
-# hvtiPlotR 2.0.0.9011
-
-## New features
-
-- `hv_ggsave_dims()`: compute `ggsave()` `width`/`height` that preserve a
-  fixed panel content area regardless of axis labels, legend, title, or
-  facet strips. Returns a named list shaped to splat into `ggsave()` via
-  `do.call(ggsave, c(list(filename = ..., plot = p), dims))`. Units are
-  length-only (`"in"`, `"cm"`, `"mm"`) since the sizing device is PDF.
+- Dropped `RColorBrewer` (inline Set1 hex in `cluster_sankey_plot()`
+  and vignettes) and `gridExtra` (`marrangeGrob()` → `patchwork::wrap_plots()`
+  in the EDA multi-panel PDF pattern) from Suggests.
+- Dropped `assertthat` from Imports (`save_ppt()` now uses base `stop()`
+  with `call. = FALSE`).
+- `vignettes/hvtiPlotR.qmd` now documents `haven::read_xpt()` (and
+  `haven::read_sas()`) for importing SAS data, with a CSV-fallback
+  path for users without SAS access.
 
 # hvtiPlotR 2.0.0.9010
 
