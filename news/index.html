@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">hvtiPlotR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.0.9011</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -53,11 +53,47 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="2.0.0.9011" id="hvtiplotr-2009011">hvtiPlotR 2.0.0.9011<a class="anchor" aria-label="anchor" href="#hvtiplotr-2009011"></a></h2>
+<h2 class="pkg-version" data-toc-text="2.0.0" id="hvtiplotr-200">hvtiPlotR 2.0.0<a class="anchor" aria-label="anchor" href="#hvtiplotr-200"></a></h2>
+<p>First stable release of the <code>hv_*</code> API. This consolidates the <code>2.0.0.9001</code>–<code>2.0.0.9013</code> dev cycle into a tagged release that internal users can anchor against for bug reports and reproducibility. Future development continues under <code>2.0.1.9xxx</code>.</p>
 <div class="section level3">
-<h3 id="new-features-2-0-0-9011">New features<a class="anchor" aria-label="anchor" href="#new-features-2-0-0-9011"></a></h3>
+<h3 id="new-features--fixed-panel-geometry-2-0-0">New features — fixed-panel geometry<a class="anchor" aria-label="anchor" href="#new-features--fixed-panel-geometry-2-0-0"></a></h3>
+<p>The dominant theme of this release is making the <strong>panel content area</strong> (the rectangular data region, excluding axes/titles/legend/margins) a first-class target, so figures stay visually aligned across output devices and across slides in a deck even when axis-label widths differ.</p>
 <ul><li>
-<code><a href="../reference/hv_ggsave_dims.html">hv_ggsave_dims()</a></code>: compute <code><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave()</a></code> <code>width</code>/<code>height</code> that preserve a fixed panel content area regardless of axis labels, legend, title, or facet strips. Returns a named list shaped to splat into <code><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave()</a></code> via <code>do.call(ggsave, c(list(filename = ..., plot = p), dims))</code>. Units are length-only (<code>"in"</code>, <code>"cm"</code>, <code>"mm"</code>) since the sizing device is PDF.</li>
+<code>hv_ggsave_dims(plot, width, height, units = "in")</code>: compute <code><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave()</a></code> <code>width</code>/<code>height</code> that preserve a fixed panel content area regardless of axis labels, legend, title, or facet strips. Returns a named list shaped to splat into <code><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave()</a></code> via <code>do.call(ggsave, c(list(filename = ..., plot = p), dims))</code>. Units are length-only (<code>"in"</code>, <code>"cm"</code>, <code>"mm"</code>) since the sizing device is PDF.</li>
+<li>
+<code>hv_ph_location(plot, panel_width, panel_height, panel_left, panel_top,   units = "in")</code>: compute <code><a href="https://davidgohel.github.io/officer/reference/ph_location.html" class="external-link">officer::ph_location()</a></code> <code>width</code>/<code>height</code>/<code>left</code>/<code>top</code> values that anchor a ggplot’s panel to a fixed rectangle on a slide, regardless of axis-label width. Measures asymmetric chrome (left/right/top/bottom of the panel) via <code><a href="https://ggplot2.tidyverse.org/reference/ggplotGrob.html" class="external-link">ggplotGrob()</a></code> and returns per-plot placement so the panel lands at the same slide coordinates on every slide. Warns if plot chrome extends past the left or top slide edge.</li>
+<li>
+<code>save_ppt(..., panel_box = list(width, height, left, top))</code>: new optional argument. When supplied, per-slide placement is computed via <code><a href="../reference/hv_ph_location.html">hv_ph_location()</a></code> so every slide anchors the panel at the given rectangle — solving the “plot background box moves between slides” problem on dark PPT themes where the panel is visibly filled. When <code>panel_box = NULL</code> (default), the fixed <code>width</code>/<code>height</code>/<code>left</code>/<code>top</code> arguments are used (legacy behavior).</li>
+</ul></div>
+<div class="section level3">
+<h3 id="new-features--ppt-theme-polish-2-0-0">New features — PPT theme polish<a class="anchor" aria-label="anchor" href="#new-features--ppt-theme-polish-2-0-0"></a></h3>
+<ul><li>
+<code>hv_theme_dark_ppt(bold = TRUE)</code> and <code>hv_theme_light_ppt(bold = TRUE)</code>: apply <code>face = "bold"</code> to axis text and axis titles.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="behaviour-changes--ppt-themes-2-0-0">Behaviour changes — PPT themes<a class="anchor" aria-label="anchor" href="#behaviour-changes--ppt-themes-2-0-0"></a></h3>
+<ul><li>
+<code><a href="../reference/hv_theme_dark_ppt.html">hv_theme_dark_ppt()</a></code> and <code><a href="../reference/hv_theme_light_ppt.html">hv_theme_light_ppt()</a></code>:
+<ul><li>Legend is now hidden by default (<code>legend.position = "none"</code>). PowerPoint figures are typically annotated directly on the panel; override with <code>+ theme(legend.position = "right")</code> when needed.</li>
+<li>Axis ticks now face <strong>inside</strong> the panel (<code>axis.ticks.length =   -half_line/2 pt</code>) for the AATS-style inset look.</li>
+<li>Axis-text and axis-title margins are now scaled from <code>base_size</code> via ggplot2’s <code>half_line = base_size / 2</code> convention, so spacing stays proportional when <code>base_size</code> changes. Previous unscaled defaults produced cramped labels at <code>base_size = 32</code>.</li>
+<li>
+<code><a href="../reference/hv_theme_light_ppt.html">hv_theme_light_ppt()</a></code> gains explicit <code>axis.text</code>, <code>axis.line</code>, <code>panel.background</code> (fill <code>"white"</code>, colour <code>"black"</code>, linewidth 1), and <code>axis.ticks</code> elements so the light theme structurally mirrors the dark theme’s explicit-chrome approach (just with inverted colours).</li>
+</ul></li>
+</ul></div>
+<div class="section level3">
+<h3 id="build--infrastructure-2-0-0">Build / infrastructure<a class="anchor" aria-label="anchor" href="#build--infrastructure-2-0-0"></a></h3>
+<ul><li>
+<code>.Rbuildignore</code> is now tracked in git (previously <code>.gitignored</code>). Three latent regex bugs fixed: anchored <code>.gitignore</code> pattern, stripped inline <code># ...</code> comments from five patterns (which had silently never matched), and fixed <code>^vignettes/*_files$</code> → <code>^vignettes/.*_files$</code> so <code>_files/</code> output dirs actually get excluded from the build.</li>
+<li>
+<code>vignettes/_quarto.yml</code> now tracked with <code>embed-resources: false</code> at the project level, making the small-HTML / separate <code>_files/</code> rendering behaviour explicit and preventing accidental repo bloat.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="dependency-trim-from-the-merged-trends_plots-branch-2-0-0">Dependency trim (from the merged <code>trends_plots</code> branch)<a class="anchor" aria-label="anchor" href="#dependency-trim-from-the-merged-trends_plots-branch-2-0-0"></a></h3>
+<ul><li>Dropped <code>RColorBrewer</code> (inline Set1 hex in <code>cluster_sankey_plot()</code> and vignettes) and <code>gridExtra</code> (<code>marrangeGrob()</code> → <code><a href="https://patchwork.data-imaginist.com/reference/wrap_plots.html" class="external-link">patchwork::wrap_plots()</a></code> in the EDA multi-panel PDF pattern) from Suggests.</li>
+<li>Dropped <code>assertthat</code> from Imports (<code><a href="../reference/save_ppt.html">save_ppt()</a></code> now uses base <code><a href="https://rdrr.io/r/base/stop.html" class="external-link">stop()</a></code> with <code>call. = FALSE</code>).</li>
+<li>
+<code>vignettes/hvtiPlotR.qmd</code> now documents <code><a href="https://haven.tidyverse.org/reference/read_xpt.html" class="external-link">haven::read_xpt()</a></code> (and <code><a href="https://haven.tidyverse.org/reference/read_sas.html" class="external-link">haven::read_sas()</a></code>) for importing SAS data, with a CSV-fallback path for users without SAS access.</li>
 </ul></div>
 </div>
     <div class="section level2">
@@ -212,7 +248,7 @@
 <h2 class="pkg-version" data-toc-text="2.0.0.9001" id="hvtiplotr-2009001">hvtiPlotR 2.0.0.9001<a class="anchor" aria-label="anchor" href="#hvtiplotr-2009001"></a></h2>
 </div>
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="2.0.0" id="hvtiplotr-200">hvtiPlotR 2.0.0<a class="anchor" aria-label="anchor" href="#hvtiplotr-200"></a></h2>
+<h2 class="pkg-version" data-toc-text="2.0.0" id="hvtiplotr-200-1">hvtiPlotR 2.0.0<a class="anchor" aria-label="anchor" href="#hvtiplotr-200-1"></a></h2>
 <div class="section level3">
 <h3 id="breaking-changes--new-s3-constructor-api-2-0-0">Breaking changes — new S3 constructor API<a class="anchor" aria-label="anchor" href="#breaking-changes--new-s3-constructor-api-2-0-0"></a></h3>
 <p>All plot functions have been replaced by a two-step S3 workflow:</p>

@@ -257,6 +257,13 @@ omit them for publication-ready output.
   [`ggsave()`](https://ggplot2.tidyverse.org/reference/ggsave.html)
   dimensions for a fixed panel content area
 
+- [`hv_ph_location()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_ph_location.md)
+  :
+
+  Compute
+  [`officer::ph_location()`](https://davidgohel.github.io/officer/reference/ph_location.html)
+  args for a fixed-panel slide layout
+
 - [`make_footnote()`](https://ehrlinger.github.io/hvtiPlotR/reference/make_footnote.md)
   [`makeFootnote()`](https://ehrlinger.github.io/hvtiPlotR/reference/make_footnote.md)
   : Add a Draft Footnote to a Figure

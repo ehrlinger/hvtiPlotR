@@ -11,12 +11,12 @@ Source:
 
 Ehrlinger J (2026). *hvtiPlotR: Porting HVTI plot templates and
 methodology documentation to ggplot2 package in R*. R package version
-2.0.0.9011, <https://github.com/ehrlinger/hvtiPlotR>.
+2.0.0, <https://github.com/ehrlinger/hvtiPlotR>.
 
     @Manual{,
       title = {hvtiPlotR: Porting HVTI plot templates and methodology documentation to ggplot2 package in R},
       author = {John Ehrlinger},
       year = {2026},
-      note = {R package version 2.0.0.9011},
+      note = {R package version 2.0.0},
       url = {https://github.com/ehrlinger/hvtiPlotR},
     }

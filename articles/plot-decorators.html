@@ -24,7 +24,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">hvtiPlotR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.0.9011</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -77,7 +77,7 @@
       <h1>Decorating and Saving hvtiPlotR Plots</h1>
 
       <p class="author">John Ehrlinger <a href="mailto:ehrlinj@ccf.org" class="email">ehrlinj@ccf.org</a></p>
-      <p class="date">2026-04-20</p>
+      <p class="date">2026-04-21</p>
 
       <small class="dont-index">Source: <a href="https://github.com/ehrlinger/hvtiPlotR/blob/main/vignettes/plot-decorators.qmd" class="external-link"><code>vignettes/plot-decorators.qmd</code></a></small>
       <div class="d-none name"><code></code></div>
@@ -514,11 +514,26 @@
 <span>  slide_titles <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Temporal Trends by Group"</span>, <span class="st">"Overall Survival"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 </div>
+</section><section class="level3"><h4 id="fixed-panel-placement-across-slides">Fixed panel placement across slides<a class="anchor" aria-label="anchor" href="#fixed-panel-placement-across-slides"></a>
+</h4>
+<p>When plots have different y-axis ranges (“0-1” vs “0-10000”), the axis-label widths differ, which shifts the plot panel inside a fixed <code>ph_location()</code>. On dark PPT themes with a visible panel background (black panel on a blue-gradient slide), that shift is visually jarring — the box appears to move between slides.</p>
+<p>Pass <code>panel_box = list(width, height, left, top)</code> to anchor the <strong>panel content area</strong> at the same slide coordinates on every slide. <code><a href="../reference/save_ppt.html">save_ppt()</a></code> calls <code><a href="../reference/hv_ph_location.html">hv_ph_location()</a></code> for each plot, measures the axis/legend/title chrome around the panel, and adjusts per-slide placement so the panel lands at the target rectangle regardless of label width. Axis labels then extend outside the panel box as needed; device dimensions vary per plot.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/save_ppt.html">save_ppt</a></span><span class="op">(</span></span>
+<span>  object       <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>trends <span class="op">=</span> <span class="va">p_ppt</span>, survival <span class="op">=</span> <span class="va">p_km_ppt</span><span class="op">)</span>,</span>
+<span>  template     <span class="op">=</span> <span class="va">template</span>,</span>
+<span>  powerpoint   <span class="op">=</span> <span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org/reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="st">"graphs"</span>, <span class="st">"multi_slide_deck_aligned.pptx"</span><span class="op">)</span>,</span>
+<span>  slide_titles <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Temporal Trends by Group"</span>, <span class="st">"Overall Survival"</span><span class="op">)</span>,</span>
+<span>  panel_box    <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>width <span class="op">=</span> <span class="fl">10</span>, height <span class="op">=</span> <span class="fl">5</span>, left <span class="op">=</span> <span class="fl">1.5</span>, top <span class="op">=</span> <span class="fl">1.5</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+</div>
+<p>Make <code>panel_left</code> / <code>panel_top</code> large enough to leave room for the widest axis labels in the deck — otherwise <code><a href="../reference/hv_ph_location.html">hv_ph_location()</a></code> warns that the plot chrome spills off the slide edge.</p>
 </section></section><section class="level2"><h3 id="multi-panel-pdf-eda-batch-output">Multi-panel PDF (EDA batch output)<a class="anchor" aria-label="anchor" href="#multi-panel-pdf-eda-batch-output"></a>
 </h3>
 <p>When generating multiple plots in a loop, <code><a href="https://patchwork.data-imaginist.com/reference/wrap_plots.html" class="external-link">patchwork::wrap_plots()</a></code> arranges them into a grid and <code><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave()</a></code> writes each page.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb18"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Build a list of plots (e.g. from an hv_eda() lapply loop)</span></span>
 <span><span class="va">plot_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ef"</span>, <span class="st">"lv_mass"</span>, <span class="st">"peak_grad"</span><span class="op">)</span>,</span>
@@ -552,7 +567,7 @@
 </h3>
 <p>Pass fractional coordinates <code>c(x, y)</code> to <code>legend.position</code> inside <code><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme()</a></code>. <code>c(0, 0)</code> is the bottom-left corner; <code>c(1, 1)</code> is the top-right.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb19"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p_base</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_colour_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Set1"</span>, name <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_shape_manual</a></span><span class="op">(</span></span>
@@ -577,7 +592,7 @@
 </section><section class="level2"><h3 id="outside-the-panel-explicit-sides">Outside the panel (explicit sides)<a class="anchor" aria-label="anchor" href="#outside-the-panel-explicit-sides"></a>
 </h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb20"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p_base</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_colour_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Set1"</span>, name <span class="op">=</span> <span class="st">"Group"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_shape_manual</a></span><span class="op">(</span></span>
@@ -601,7 +616,7 @@
 </section><section class="level2"><h3 id="suppress-all-legends">Suppress all legends<a class="anchor" aria-label="anchor" href="#suppress-all-legends"></a>
 </h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb21"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">km</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_color_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>All <span class="op">=</span> <span class="st">"steelblue"</span><span class="op">)</span>, guide <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_fill_manual</a></span><span class="op">(</span>values  <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>All <span class="op">=</span> <span class="st">"steelblue"</span><span class="op">)</span>, guide <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span> <span class="op">+</span></span>
@@ -622,7 +637,7 @@
 </section><section class="level2"><h3 id="legend-text-and-key-size">Legend text and key size<a class="anchor" aria-label="anchor" href="#legend-text-and-key-size"></a>
 </h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb22"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p_base</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_colour_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Set1"</span>, name <span class="op">=</span> <span class="st">"Group"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_shape_manual</a></span><span class="op">(</span></span>
@@ -649,7 +664,7 @@
 <section class="level2"><h3 id="axis-text-size">Axis text size<a class="anchor" aria-label="anchor" href="#axis-text-size"></a>
 </h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb23"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p_base</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_colour_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Set1"</span>, name <span class="op">=</span> <span class="st">"Group"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_shape_manual</a></span><span class="op">(</span></span>
@@ -673,7 +688,7 @@
 </section><section class="level2"><h3 id="removing-minor-grid-lines">Removing minor grid lines<a class="anchor" aria-label="anchor" href="#removing-minor-grid-lines"></a>
 </h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb24"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p_base</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_colour_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Set1"</span>, name <span class="op">=</span> <span class="st">"Group"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_shape_manual</a></span><span class="op">(</span></span>
@@ -697,7 +712,7 @@
 </h3>
 <p>Useful for time-point labels or long category names.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb25"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p_base</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_colour_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Set1"</span>, name <span class="op">=</span> <span class="st">"Group"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_shape_manual</a></span><span class="op">(</span></span>
@@ -721,7 +736,7 @@
 </h3>
 <p>Titles are stripped from the base themes (they are rarely used in journal figures), but can be added back:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb26"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">km</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_color_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>All <span class="op">=</span> <span class="st">"steelblue"</span><span class="op">)</span>, guide <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_fill_manual</a></span><span class="op">(</span>values  <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>All <span class="op">=</span> <span class="st">"steelblue"</span><span class="op">)</span>, guide <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span> <span class="op">+</span></span>
@@ -751,7 +766,7 @@
 </h3>
 <p>Add breathing room around the panel, for example when a figure is placed directly on a poster without a surrounding text frame.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb27"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p_base</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_colour_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Set1"</span>, name <span class="op">=</span> <span class="st">"Group"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_shape_manual</a></span><span class="op">(</span></span>
@@ -777,7 +792,7 @@
 <section class="level2"><h3 id="side-by-side-plots">Side-by-side plots<a class="anchor" aria-label="anchor" href="#side-by-side-plots"></a>
 </h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb28"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb29"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://patchwork.data-imaginist.com" class="external-link">patchwork</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">p_ms</span> <span class="op">&lt;-</span> <span class="va">p_base</span> <span class="op">+</span></span>
@@ -812,7 +827,7 @@
 </section><section class="level2"><h3 id="controlling-relative-widths-and-heights">Controlling relative widths and heights<a class="anchor" aria-label="anchor" href="#controlling-relative-widths-and-heights"></a>
 </h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb29"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="op">(</span><span class="va">p_ms</span> <span class="op">|</span> <span class="va">p_km_ms</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://patchwork.data-imaginist.com/reference/plot_layout.html" class="external-link">plot_layout</a></span><span class="op">(</span>widths <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span>   <span class="co"># left panel twice as wide as right</span></span></code></pre></div>
 <div class="cell-output-display">
@@ -826,7 +841,7 @@
 </h3>
 <p>A common pattern with survival curves is to pair the plot with a numbers-at-risk panel. <code><a href="../reference/hv_survival.html">hv_survival()</a></code> stores the risk table as a data frame at <code>km$tables$risk</code> — columns <code>strata</code>, <code>report_time</code>, <code>n.risk</code>. Build a ggplot text panel from it, then stack with <code>/</code>.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb30"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb31"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">risk_df</span> <span class="op">&lt;-</span> <span class="va">km</span><span class="op">$</span><span class="va">tables</span><span class="op">$</span><span class="va">risk</span></span>
 <span></span>
 <span><span class="va">rt_panel</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">risk_df</span>,</span>
@@ -854,7 +869,7 @@
 </h3>
 <p><code><a href="https://patchwork.data-imaginist.com/reference/plot_annotation.html" class="external-link">plot_annotation()</a></code> adds a shared title or tags (A, B, C…) across all panels.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb31"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb32"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="op">(</span><span class="va">p_ms</span> <span class="op">|</span> <span class="va">p_km_ms</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://patchwork.data-imaginist.com/reference/plot_annotation.html" class="external-link">plot_annotation</a></span><span class="op">(</span></span>
 <span>    title <span class="op">=</span> <span class="st">"Figure 1. Outcomes after cardiac surgery"</span>,</span>
@@ -872,7 +887,7 @@
 </h3>
 <p>Assign the composed object to a variable and pass it to <code><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave()</a></code>. For PowerPoint, save each panel individually with <code><a href="../reference/save_ppt.html">save_ppt()</a></code> (patchwork composites are not editable DrawingML objects).</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb32"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb33"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">combined</span> <span class="op">&lt;-</span> <span class="op">(</span><span class="va">p_ms</span> <span class="op">|</span> <span class="va">p_km_ms</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://patchwork.data-imaginist.com/reference/plot_annotation.html" class="external-link">plot_annotation</a></span><span class="op">(</span>tag_levels <span class="op">=</span> <span class="st">"A"</span><span class="op">)</span> <span class="op">&amp;</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>plot.tag <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">12</span>, face <span class="op">=</span> <span class="st">"bold"</span><span class="op">)</span><span class="op">)</span></span>

@@ -15,7 +15,8 @@ hv_theme_light_ppt(
   base_rect_size = base_size/22,
   ink = "black",
   paper = "transparent",
-  accent = "#3366FF"
+  accent = "#3366FF",
+  bold = FALSE
 )
 
 theme_light_ppt(
@@ -26,7 +27,8 @@ theme_light_ppt(
   base_rect_size = base_size/22,
   ink = "black",
   paper = "transparent",
-  accent = "#3366FF"
+  accent = "#3366FF",
+  bold = FALSE
 )
 ```
 
@@ -67,6 +69,11 @@ theme_light_ppt(
   [`theme_grey()`](https://ggplot2.tidyverse.org/reference/ggtheme.html)
   elements. Default `"#3366FF"`.
 
+- bold:
+
+  If `TRUE`, axis text and axis titles are rendered with
+  `face = "bold"`. Default `FALSE`.
+
 ## Value
 
 A
@@ -79,6 +86,13 @@ For the default dark-background PowerPoint theme use
 [`hv_theme_dark_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_theme_dark_ppt.md)
 or its alias
 [`hv_theme_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_theme_dark_ppt.md).
+
+Legend is hidden by default since PowerPoint figures are typically
+annotated directly on the panel; add
+`+ theme(legend.position = "right")` (or similar) to override. Axis-text
+and axis-title margins are scaled from `base_size` via ggplot2's
+`half_line = base_size / 2` convention, so the spacing stays
+proportional when `base_size` changes.
 
 ## See also
 
@@ -99,6 +113,10 @@ p + hv_theme_light_ppt()
 
 # Via alias
 p + theme_light_ppt()
+
+
+# Bold axis text/titles
+p + hv_theme_light_ppt(bold = TRUE)
 
 
 # Via the generic dispatcher
