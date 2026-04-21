@@ -88,11 +88,21 @@ add_plot_slide <- function(doc, plot, title, layout, master, width, height,
 #' @param master      PowerPoint master name from the template, or `NULL` to
 #'   use the template's first available master. Default `NULL`.
 #' @param width       Plot width in inches within the slide. Default `10.1`.
+#'   Ignored when `panel_box` is supplied.
 #' @param height      Plot height in inches within the slide. Default `5.8`.
+#'   Ignored when `panel_box` is supplied.
 #' @param left        Distance in inches from the left edge of the slide.
-#'   Default `0.0`.
+#'   Default `0.0`. Ignored when `panel_box` is supplied.
 #' @param top         Distance in inches from the top of the slide.
-#'   Default `1.2` (below a standard title bar).
+#'   Default `1.2` (below a standard title bar). Ignored when `panel_box`
+#'   is supplied.
+#' @param panel_box   Optional named list `list(width, height, left, top)`
+#'   describing the **panel content area** to anchor on every slide (in
+#'   inches). When supplied, per-plot slide placement is computed via
+#'   [hv_ph_location()] so the panel lands at the same slide coordinates
+#'   on every slide regardless of axis-label width. When `NULL` (default),
+#'   the fixed `width`/`height`/`left`/`top` arguments are used for every
+#'   slide (legacy behavior).
 #'
 #' @return Invisibly returns the path given by `powerpoint`.
 #'
@@ -141,6 +151,61 @@ add_plot_slide <- function(doc, plot, title, layout, master, width, height,
 #'   powerpoint   = "graphs/manuscript.pptx",
 #'   slide_titles = "Fuel Economy"
 #' )
+#'
+#' # ----------------------------------------------------------------------
+#' # panel_box: anchor the plot panel to a fixed rectangle on every slide
+#' # ----------------------------------------------------------------------
+#' #
+#' # Problem: when plots in a deck have different y-axis ranges
+#' # (e.g. "1.0" vs "4567.2"), axis-label widths differ and shift the
+#' # panel inside a fixed ph_location(). On dark_ppt the black panel box
+#' # appears to drift between slides — visually jarring.
+#' #
+#' # Solution: pass `panel_box = list(width = ..., height = ..., left = ...,
+#' # top = ...)`. This describes the PANEL CONTENT AREA itself — the rectangle bounded by
+#' # the axis lines, not the outer plot extent. save_ppt() calls
+#' # [hv_ph_location()] for each plot, measures the axis / title / legend
+#' # chrome around the panel, and adjusts per-slide placement so the
+#' # panel lands at the target rectangle on every slide. The plot's
+#' # OUTER dimensions therefore vary per slide (chrome floats around a
+#' # constant panel), analogous to how [hv_ggsave_dims()] drives ggsave's
+#' # width/height from a target panel size.
+#'
+#' p_small <- ggplot(mtcars, aes(hp, mpg)) +
+#'   geom_point() +
+#'   scale_y_continuous(labels = function(x) sprintf("%3.1f", x)) +
+#'   labs(x = "Horsepower", y = "MPG") +
+#'   hv_theme("dark_ppt")
+#'
+#' p_big <- ggplot(mtcars, aes(hp, mpg)) +
+#'   geom_point() +
+#'   scale_y_continuous(labels = function(x) sprintf("%8.1f", x * 10000)) +
+#'   labs(x = "Horsepower", y = "MPG (x10k)") +
+#'   hv_theme("dark_ppt")
+#'
+#' # Without panel_box: panel drifts between slides because the big-number
+#' # labels eat more horizontal space than the small-number labels.
+#' save_ppt(
+#'   object       = list(p_small, p_big),
+#'   template     = "graphs/RD.pptx",
+#'   powerpoint   = "graphs/drifting_deck.pptx",
+#'   slide_titles = c("Small y-axis", "Big y-axis")
+#' )
+#'
+#' # With panel_box: target is a 10" x 5" panel at slide coordinates
+#' # (1.5", 1.5"). The panel content area lands at exactly that rectangle
+#' # on both slides; axis labels extend outside it as each plot requires.
+#' save_ppt(
+#'   object       = list(p_small, p_big),
+#'   template     = "graphs/RD.pptx",
+#'   powerpoint   = "graphs/anchored_deck.pptx",
+#'   slide_titles = c("Small y-axis", "Big y-axis"),
+#'   panel_box    = list(width = 10, height = 5, left = 1.5, top = 1.5)
+#' )
+#'
+#' # Sizing advice: panel_left and panel_top must be large enough for the
+#' # widest axis labels in the deck. If chrome extends past the left or top
+#' # slide edge, hv_ph_location() emits a warning naming that edge.
 #' }
 #'
 #' @importFrom officer read_pptx add_slide ph_with ph_location ph_location_type
@@ -155,7 +220,8 @@ save_ppt <- function(object,
                      width        = 10.1,
                      height       = 5.8,
                      left         = 0.0,
-                     top          = 1.2) {
+                     top          = 1.2,
+                     panel_box    = NULL) {
 
   ensure_officer_available()
   ensure_rvg_available()
@@ -179,12 +245,19 @@ save_ppt <- function(object,
     stop("`powerpoint` must be a writable file path.", call. = FALSE)
   if (!(is.character(slide_titles) && length(slide_titles) >= 1L))
     stop("`slide_titles` must be a non-empty character vector.", call. = FALSE)
-  if (!(is.numeric(width)  && length(width)  == 1L && width  > 0 &&
-        is.numeric(height) && length(height) == 1L && height > 0))
-    stop("`width` and `height` must be positive numbers.", call. = FALSE)
-  if (!(is.numeric(left) && length(left) == 1L && left >= 0 &&
-        is.numeric(top)  && length(top)  == 1L && top  >= 0))
-    stop("`left` and `top` must be non-negative numbers.", call. = FALSE)
+  if (is.null(panel_box)) {
+    if (!(is.numeric(width)  && length(width)  == 1L && width  > 0 &&
+          is.numeric(height) && length(height) == 1L && height > 0))
+      stop("`width` and `height` must be positive numbers.", call. = FALSE)
+    if (!(is.numeric(left) && length(left) == 1L && left >= 0 &&
+          is.numeric(top)  && length(top)  == 1L && top  >= 0))
+      stop("`left` and `top` must be non-negative numbers.", call. = FALSE)
+  } else {
+    expected <- c("width", "height", "left", "top")
+    if (!is.list(panel_box) || !all(expected %in% names(panel_box)))
+      stop("`panel_box` must be a list with elements `width`, `height`, `left`, `top`.",
+           call. = FALSE)
+  }
 
   # --- Open template ---------------------------------------------------------
   doc <- officer_safe_call(
@@ -198,16 +271,36 @@ save_ppt <- function(object,
 
   # --- Add one slide per plot ------------------------------------------------
   for (i in seq_along(plots)) {
+    if (is.null(panel_box)) {
+      slide_w <- width
+      slide_h <- height
+      slide_l <- left
+      slide_t <- top
+    } else {
+      loc <- hv_ph_location(
+        plots[[i]],
+        panel_width  = panel_box$width,
+        panel_height = panel_box$height,
+        panel_left   = panel_box$left,
+        panel_top    = panel_box$top,
+        units        = "in"
+      )
+      slide_w <- loc$width
+      slide_h <- loc$height
+      slide_l <- loc$left
+      slide_t <- loc$top
+    }
+
     doc <- add_plot_slide(
       doc    = doc,
       plot   = plots[[i]],
       title  = titles[[i]],
       layout = layout,
       master = master,
-      width  = width,
-      height = height,
-      left   = left,
-      top    = top
+      width  = slide_w,
+      height = slide_h,
+      left   = slide_l,
+      top    = slide_t
     )
   }
 

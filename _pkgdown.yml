@@ -205,6 +205,7 @@ reference:
   contents:
   - save_ppt
   - hv_ggsave_dims
+  - hv_ph_location
   - make_footnote
   - makeFootnote
 
