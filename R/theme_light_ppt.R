@@ -81,8 +81,9 @@ hv_theme_light_ppt <- function(base_size      = 32,
         linewidth = 2
       ),
       axis.text          = element_text(
-        size = base_size,
-        face = face_axis
+        size   = base_size,
+        colour = "black",
+        face   = face_axis
       ),
       axis.text.x        = element_text(
         margin = margin(t = half_line)
@@ -100,9 +101,16 @@ hv_theme_light_ppt <- function(base_size      = 32,
         face   = face_axis,
         margin = margin(r = 1.5 * half_line)
       ),
-      axis.ticks.length  = unit(-half_line / 2, "pt"),
+      axis.line          = element_line(colour = "black", linewidth = 1),
       strip.text         = element_text(size = base_size / 2),
       panel.border       = element_blank(),
+      panel.background   = element_rect(
+        fill      = "white",
+        colour    = "black",
+        linewidth = 1
+      ),
+      axis.ticks         = element_line(colour = "black", linewidth = 1),
+      axis.ticks.length  = unit(-half_line / 2, "pt"),
       panel.grid.major.x = element_blank(),
       panel.grid.major.y = element_blank(),
       panel.grid.minor   = element_blank(),
