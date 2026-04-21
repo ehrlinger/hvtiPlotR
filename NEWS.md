@@ -2,8 +2,9 @@
 
 First stable release of the `hv_*` API. This consolidates the
 `2.0.0.9001`–`2.0.0.9013` dev cycle into a tagged release that internal
-users can anchor against for bug reports and reproducibility. Future
-development continues under `2.0.1.9xxx`.
+users can anchor against for bug reports and reproducibility. Subsequent
+releases will advance the semantic version (`2.0.1`, `2.1.0`, `3.0.0`)
+directly; no `.9xxx` pre-release suffixes.
 
 ## New features — fixed-panel geometry
 
