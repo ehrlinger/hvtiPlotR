@@ -14,7 +14,8 @@ save_ppt(
   width = 10.1,
   height = 5.8,
   left = 0,
-  top = 1.2
+  top = 1.2,
+  panel_box = NULL
 )
 }
 \arguments{
@@ -37,15 +38,26 @@ Default \code{"Title and Content"}.}
 \item{master}{PowerPoint master name from the template, or \code{NULL} to
 use the template's first available master. Default \code{NULL}.}
 
-\item{width}{Plot width in inches within the slide. Default \code{10.1}.}
+\item{width}{Plot width in inches within the slide. Default \code{10.1}.
+Ignored when \code{panel_box} is supplied.}
 
-\item{height}{Plot height in inches within the slide. Default \code{5.8}.}
+\item{height}{Plot height in inches within the slide. Default \code{5.8}.
+Ignored when \code{panel_box} is supplied.}
 
 \item{left}{Distance in inches from the left edge of the slide.
-Default \code{0.0}.}
+Default \code{0.0}. Ignored when \code{panel_box} is supplied.}
 
 \item{top}{Distance in inches from the top of the slide.
-Default \code{1.2} (below a standard title bar).}
+Default \code{1.2} (below a standard title bar). Ignored when \code{panel_box}
+is supplied.}
+
+\item{panel_box}{Optional named list \code{list(width, height, left, top)}
+describing the \strong{panel content area} to anchor on every slide (in
+inches). When supplied, per-plot slide placement is computed via
+\code{\link[=hv_ph_location]{hv_ph_location()}} so the panel lands at the same slide coordinates
+on every slide regardless of axis-label width. When \code{NULL} (default),
+the fixed \code{width}/\code{height}/\code{left}/\code{top} arguments are used for every
+slide (legacy behavior).}
 }
 \value{
 Invisibly returns the path given by \code{powerpoint}.

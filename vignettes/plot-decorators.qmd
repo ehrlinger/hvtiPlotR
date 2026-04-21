@@ -365,6 +365,35 @@ save_ppt(
 )
 ```
 
+### Fixed panel placement across slides
+
+When plots have different y-axis ranges ("0-1" vs "0-10000"), the axis-label
+widths differ, which shifts the plot panel inside a fixed `ph_location()`. On
+dark PPT themes with a visible panel background (black panel on a blue-gradient
+slide), that shift is visually jarring — the box appears to move between slides.
+
+Pass `panel_box = list(width, height, left, top)` to anchor the **panel content
+area** at the same slide coordinates on every slide. `save_ppt()` calls
+`hv_ph_location()` for each plot, measures the axis/legend/title chrome
+around the panel, and adjusts per-slide placement so the panel lands at the
+target rectangle regardless of label width. Axis labels then extend outside the
+panel box as needed; device dimensions vary per plot.
+
+```{r save_ppt_panel_box}
+#| eval: false
+save_ppt(
+  object       = list(trends = p_ppt, survival = p_km_ppt),
+  template     = template,
+  powerpoint   = here::here("graphs", "multi_slide_deck_aligned.pptx"),
+  slide_titles = c("Temporal Trends by Group", "Overall Survival"),
+  panel_box    = list(width = 10, height = 5, left = 1.5, top = 1.5)
+)
+```
+
+Make `panel_left` / `panel_top` large enough to leave room for the widest
+axis labels in the deck — otherwise `hv_ph_location()` warns that the plot
+chrome spills off the slide edge.
+
 ## Multi-panel PDF (EDA batch output)
 
 When generating multiple plots in a loop, `patchwork::wrap_plots()` arranges

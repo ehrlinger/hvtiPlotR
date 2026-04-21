@@ -1,3 +1,20 @@
+# hvtiPlotR 2.0.0.9012
+
+## New features
+
+- `hv_ph_location()`: compute `officer::ph_location()` `width`/`height`/
+  `left`/`top` values that anchor a ggplot's **panel content area** to a
+  fixed rectangle on a slide, regardless of axis-label width. Measures
+  asymmetric chrome (left/right/top/bottom of the panel) via
+  `ggplotGrob()` and returns per-plot placement so the panel lands at the
+  same slide coordinates on every slide. Warns if plot chrome overflows
+  the left/top edge of the slide.
+- `save_ppt()`: new `panel_box = list(width, height, left, top)`
+  argument. When supplied, per-slide placement is computed via
+  `hv_ph_location()` so every slide anchors the panel at the given
+  rectangle — solving the "plot background box moves between slides"
+  problem on dark PPT themes where the panel is visibly filled.
+
 # hvtiPlotR 2.0.0.9011
 
 ## New features
