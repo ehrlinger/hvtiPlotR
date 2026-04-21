@@ -15,7 +15,8 @@ hv_theme_dark_ppt(
   base_rect_size = base_size/22,
   ink = "white",
   paper = "transparent",
-  accent = "#3366FF"
+  accent = "#3366FF",
+  bold = FALSE
 )
 
 theme_dark_ppt(
@@ -26,7 +27,8 @@ theme_dark_ppt(
   base_rect_size = base_size/22,
   ink = "white",
   paper = "transparent",
-  accent = "#3366FF"
+  accent = "#3366FF",
+  bold = FALSE
 )
 
 theme_ppt(
@@ -37,7 +39,8 @@ theme_ppt(
   base_rect_size = base_size/22,
   ink = "white",
   paper = "transparent",
-  accent = "#3366FF"
+  accent = "#3366FF",
+  bold = FALSE
 )
 
 hv_theme_ppt(
@@ -48,7 +51,8 @@ hv_theme_ppt(
   base_rect_size = base_size/22,
   ink = "white",
   paper = "transparent",
-  accent = "#3366FF"
+  accent = "#3366FF",
+  bold = FALSE
 )
 }
 \arguments{
@@ -71,6 +75,9 @@ Default \code{base_size / 22}.}
 
 \item{accent}{Accent colour used by some \code{theme_grey()} elements.
 Default \code{"#3366FF"}.}
+
+\item{bold}{If \code{TRUE}, axis text and axis titles are rendered
+with \code{face = "bold"}. Default \code{FALSE}.}
 }
 \value{
 A \code{\link[ggplot2:theme]{ggplot2::theme()}} object.
@@ -82,6 +89,13 @@ to dark-mode PowerPoint slides. This is the default hvtiPlotR PPT theme —
 For a light-background variant use \code{\link[=hv_theme_light_ppt]{hv_theme_light_ppt()}}.
 Removes grid lines and panel borders.
 }
+\details{
+Legend is hidden by default since PowerPoint figures are typically
+annotated directly on the panel; add \code{+ theme(legend.position = "right")}
+(or similar) to override. Axis-text and axis-title margins are scaled from
+\code{base_size} via ggplot2's \code{half_line = base_size / 2} convention, so the
+spacing stays proportional when \code{base_size} changes.
+}
 \examples{
 library(ggplot2)
 p <- ggplot(mtcars, aes(wt, mpg, colour = factor(cyl))) + geom_point()
@@ -91,6 +105,12 @@ p + hv_theme_dark_ppt()
 
 # Via alias
 p + theme_ppt()
+
+# Bold axis text/titles
+p + hv_theme_dark_ppt(bold = TRUE)
+
+# Override the default hidden legend
+p + hv_theme_dark_ppt() + theme(legend.position = "right")
 
 \dontrun{
 # Best viewed against a dark slide background
