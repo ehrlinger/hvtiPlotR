@@ -1,3 +1,24 @@
+# hvtiPlotR 2.0.0.9013
+
+## Behaviour changes
+
+- `hv_theme_dark_ppt()` and `hv_theme_light_ppt()`:
+  - Legend is now hidden by default (`legend.position = "none"`).
+    PowerPoint figures are typically annotated directly on the panel;
+    override with `+ theme(legend.position = "right")` when needed.
+  - Axis ticks now face **inside** the panel (`axis.ticks.length =
+    -half_line/2 pt`) for the AATS-style inset look.
+  - Axis-text and axis-title margins are now scaled from `base_size`
+    via ggplot2's `half_line = base_size / 2` convention, so spacing
+    stays proportional when `base_size` changes. Previous unscaled
+    defaults produced cramped labels at `base_size = 32`.
+
+## New features
+
+- `hv_theme_dark_ppt(bold = TRUE)` / `hv_theme_light_ppt(bold = TRUE)`:
+  apply `face = "bold"` to axis text and axis titles. Default
+  `bold = FALSE` preserves the prior appearance.
+
 # hvtiPlotR 2.0.0.9012
 
 ## New features

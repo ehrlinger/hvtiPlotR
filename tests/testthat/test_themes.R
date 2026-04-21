@@ -191,6 +191,43 @@ test_that("theme_dark_ppt works with different ink colors", {
   expect_s3_class(theme_custom, "theme")
 })
 
+test_that("theme_dark_ppt hides legend by default", {
+  theme <- theme_dark_ppt()
+  expect_identical(theme$legend.position, "none")
+})
+
+test_that("theme_dark_ppt bold = TRUE sets face = 'bold' on axis elements", {
+  theme_bold  <- theme_dark_ppt(bold = TRUE)
+  theme_plain <- theme_dark_ppt(bold = FALSE)
+  expect_identical(theme_bold$axis.text$face,    "bold")
+  expect_identical(theme_bold$axis.title.x$face, "bold")
+  expect_identical(theme_bold$axis.title.y$face, "bold")
+  expect_identical(theme_plain$axis.text$face,   "plain")
+})
+
+test_that("theme_dark_ppt uses inside-facing ticks (negative length)", {
+  theme <- theme_dark_ppt(base_size = 32)
+  # Inside ticks: length should be negative, scaled via half_line = base_size/2
+  tlen <- grid::convertUnit(theme$axis.ticks.length, "pt", valueOnly = TRUE)
+  expect_lt(tlen, 0)                  # negative = inside
+  expect_equal(tlen, -32 / 4, tolerance = 1e-6)  # half_line / 2
+})
+
+test_that("theme_dark_ppt axis-title margins scale with base_size", {
+  t32 <- theme_dark_ppt(base_size = 32)
+  t16 <- theme_dark_ppt(base_size = 16)
+  m32 <- t32$axis.title.x$margin
+  m16 <- t16$axis.title.x$margin
+  # Margins should be 1.5 * half_line = 0.75 * base_size in pt — half at half the size
+  expect_equal(as.numeric(m32[1]), 2 * as.numeric(m16[1]), tolerance = 1e-6)
+})
+
+test_that("theme_light_ppt hides legend by default and accepts bold", {
+  theme <- theme_light_ppt()
+  expect_identical(theme$legend.position, "none")
+  expect_identical(theme_light_ppt(bold = TRUE)$axis.text$face, "bold")
+})
+
 # ============================================================================
 # theme_poster tests
 # ============================================================================
