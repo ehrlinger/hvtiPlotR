@@ -3,90 +3,142 @@
 \name{hvtiPlotR-package}
 \alias{hvtiPlotR-package}
 \alias{hvtiPlotR}
-\title{hvtiPlotR: Publication-Quality Graphics for Clinical Manuscripts}
+\title{hvtiPlotR: Publication-Quality Graphics for Clinical Manuscripts and Slides}
 \description{
 \code{hvtiPlotR} is an R port of the \code{plot.sas} macro suite used by the
-Clinical Investigations Statistics group within the Heart & Vascular
-Institute at the Cleveland Clinic. It produces publication-quality
-graphics that conform to HVI manuscript and presentation standards using
-\code{ggplot2} and the \code{officer} package.
+Cardiovascular Outcomes, Registries and Research (CORR) statistics
+group within the Heart, Vascular and Thoracic Institute at the
+Cleveland Clinic. It produces publication-quality graphics that
+conform to HVTI manuscript, poster, and presentation standards using
+\link[ggplot2:ggplot2-package]{ggplot2::ggplot2} and the \link[officer:officer]{officer::officer} package.
+}
+\details{
+\subsection{Two-step workflow}{
 
-All plot functions follow a two-step workflow: call the constructor
-(\verb{hv_*()}) to validate and prepare data, then call \code{\link[=plot]{plot()}} on the result
-to obtain a bare \code{\link[ggplot2:ggplot]{ggplot2::ggplot()}} object that you can decorate with
-additional \code{ggplot2} layers, scales, and themes without restriction. Each
-constructor ships with a \verb{sample_*()} companion that generates realistic
-synthetic data for examples and tests.
+Every plot constructor follows the same pattern:
+\enumerate{
+\item Call \verb{hv_*()} to validate and prepare data — returns an \code{hv_data}
+S3 object that also stores diagnostics (group counts, SMDs, etc.)
+under \verb{$tables}.
+\item Call \code{plot()} on the object to obtain a bare \code{ggplot2::ggplot}
+you can decorate with scales, labels, annotations, and themes
+without restriction.
+\item Call \code{print()} on the object for a concise console summary.
+}
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{library(ggplot2)
+library(hvtiPlotR)
+
+dta <- sample_trends_data(n = 600, seed = 42)
+tr  <- hv_trends(dta)
+
+plot(tr) +
+  scale_colour_brewer(palette = "Set1", name = "Group") +
+  labs(x = "Year", y = "Outcome") +
+  hv_theme("manuscript")
+}\if{html}{\out{</div>}}
+
+Every constructor ships with a \verb{sample_*()} companion that generates
+realistic synthetic data sized and shaped like the corresponding SAS
+dataset export, so examples and unit tests run without PHI.
+}
+
 \subsection{Themes}{
 
-Use \code{hv_theme()} as the single entry point. Lower-level functions are
+Use \code{\link[=hv_theme]{hv_theme()}} as the single entry point; lower-level functions are
 also exported for direct use.
 \itemize{
 \item \code{\link[=hv_theme]{hv_theme()}}: Unified dispatcher — accepts \code{"manuscript"},
 \code{"poster"}, \code{"light_ppt"}, or \code{"dark_ppt"}.
 \item \code{\link[=hv_theme_manuscript]{hv_theme_manuscript()}} / \code{\link[=theme_manuscript]{theme_manuscript()}} / \code{\link[=theme_man]{theme_man()}}:
 Clean white-background theme for journal figures.
-\item \code{\link[=hv_theme_dark_ppt]{hv_theme_dark_ppt()}} / \code{\link[=theme_dark_ppt]{theme_dark_ppt()}} / \code{\link[=theme_ppt]{theme_ppt()}} /
-\code{\link[=hv_theme_ppt]{hv_theme_ppt()}}: Large-font theme with a dark panel for
-PowerPoint slides.
-\item \code{\link[=hv_theme_light_ppt]{hv_theme_light_ppt()}} / \code{\link[=theme_light_ppt]{theme_light_ppt()}}: Large-font theme with
-a light panel background for PowerPoint slides.
 \item \code{\link[=hv_theme_poster]{hv_theme_poster()}} / \code{\link[=theme_poster]{theme_poster()}}: Medium-font theme for
 conference posters.
+\item \code{\link[=hv_theme_dark_ppt]{hv_theme_dark_ppt()}} / \code{\link[=theme_dark_ppt]{theme_dark_ppt()}} / \code{\link[=theme_ppt]{theme_ppt()}} /
+\code{\link[=hv_theme_ppt]{hv_theme_ppt()}}: Large-font theme with a black panel for
+blue-gradient or dark PowerPoint templates.
+\item \code{\link[=hv_theme_light_ppt]{hv_theme_light_ppt()}} / \code{\link[=theme_light_ppt]{theme_light_ppt()}}: Large-font theme
+with a white panel for white-background PowerPoint templates.
 }
+
+Both PPT themes hide the legend by default, use inside-facing axis
+ticks, and scale axis-text / axis-title margins from \code{base_size} via
+ggplot2's \code{half_line} convention. Pass \code{bold = TRUE} for AATS-style
+bold axis text.
 }
 
 \subsection{Saving figures}{
 \itemize{
-\item \code{\link[=save_ppt]{save_ppt()}}: Insert one or more ggplot objects into a PowerPoint file
-as editable DrawingML vector graphics via \code{officer} and \code{rvg}.
-\item \code{\link[=make_footnote]{make_footnote()}} / \code{\link[=makeFootnote]{makeFootnote()}}: Add a draft footnote to a figure
-during analysis; omit for publication-ready output.
+\item \code{\link[=save_ppt]{save_ppt()}}: Insert one or more ggplot objects into a PowerPoint
+file as editable DrawingML vector graphics via \code{officer} + \code{rvg}.
+\item \code{\link[=make_footnote]{make_footnote()}} / \code{\link[=makeFootnote]{makeFootnote()}}: Add a draft footnote during
+analysis; omit for publication-ready output.
 }
+\subsection{Fixed-panel geometry (v2.0.0)}{
+
+When plots in a set have different axis-label widths (e.g. y-axis
+ranges from "1.0" to "4567.2"), the usual \code{ggsave()} and
+\code{officer::ph_location()} calls let the \strong{panel content area} drift
+— which is visually jarring on PPT decks where the black or white
+panel box should appear constant across slides. Two helpers solve
+this by making the panel size and slide position the \emph{target}:
+\itemize{
+\item \code{\link[=hv_ggsave_dims]{hv_ggsave_dims()}}: Given a target panel width and height,
+computes the \code{ggsave()} \code{width}/\code{height} that preserve that panel
+size. Returns a named list — splat into \code{ggsave()} via
+\code{do.call(ggsave, c(list(filename = ..., plot = p), dims))}.
+\item \code{\link[=hv_ph_location]{hv_ph_location()}}: Given a target panel rectangle on the slide,
+computes the \code{officer::ph_location()} \code{width}/\code{height}/\code{left}/\code{top}
+that anchor the panel to that rectangle regardless of axis-label
+width. Warns if chrome overflows the left or top slide edge.
+\item \code{\link[=save_ppt]{save_ppt()}} accepts \code{panel_box = list(width, height, left, top)}
+to apply \code{\link[=hv_ph_location]{hv_ph_location()}} per slide automatically.
+}
+}
+
 }
 
 \subsection{Plot constructors}{
-
-Each constructor returns an \code{hv_data} S3 object; call \code{\link[=plot]{plot()}} on it
-to produce a ggplot.
 \subsection{Propensity Score & Matching}{
 \itemize{
-\item \code{\link[=hv_mirror_hist]{hv_mirror_hist()}}: Prepare propensity-score distributions for a mirrored
-histogram comparing binary-matched or IPTW-weighted cohorts. Ports the
-\verb{tp.lp.mirror-histogram_*} and \code{tp.lp.mirror_histo_before_after_wt}
-SAS scripts.
+\item \code{\link[=hv_mirror_hist]{hv_mirror_hist()}}: Prepare propensity-score distributions for a
+mirrored histogram comparing binary-matched or IPTW-weighted
+cohorts. Ports the \verb{tp.lp.mirror-histogram_*} and
+\code{tp.lp.mirror_histo_before_after_wt} SAS scripts.
 \item \code{\link[=hv_balance]{hv_balance()}}: Prepare standardised mean difference data for a
-covariate balance dot-plot before and after propensity-score matching or
-weighting. Ports \code{tp.lp.propen.cov_balance.R}.
-\item \code{\link[=hv_stacked]{hv_stacked()}}: Prepare grouped count or proportion data for a stacked
-or filled histogram.
+covariate balance dot-plot before and after propensity-score
+matching or weighting. Ports \code{tp.lp.propen.cov_balance.R}.
+\item \code{\link[=hv_stacked]{hv_stacked()}}: Prepare grouped count or proportion data for a
+stacked or filled histogram.
 }
 }
 
 \subsection{Survival & Hazard}{
 \itemize{
-\item \code{\link[=hv_survival]{hv_survival()}}: Fit and prepare Kaplan-Meier or Nelson-Aalen survival
-curves, risk tables, and report tables. Ports the SAS \verb{\%kaplan} and
-\verb{\%nelsont} macros from \code{tp.ac.dead.sas}.
-\item \code{\link[=hv_hazard]{hv_hazard()}}: Prepare parametric hazard/survival curves from
+\item \code{\link[=hv_survival]{hv_survival()}}: Fit and prepare Kaplan-Meier or Nelson-Aalen
+survival curves, risk tables, and report tables. Ports the SAS
+\verb{\%kaplan} and \verb{\%nelsont} macros from \code{tp.ac.dead.sas}.
+\item \code{\link[=hv_hazard]{hv_hazard()}}: Prepare parametric hazard / survival curves from
 pre-fitted model output, with optional KM empirical overlay and
-population life-table reference. Ports the \verb{tp.hp.*} template family.
+population life-table reference. Ports the \verb{tp.hp.*} template
+family.
 \item \code{\link[=hv_survival_difference]{hv_survival_difference()}}: Prepare mean survival difference (life
-gained) over time between two treatment arms, with confidence ribbons.
-Ports \code{tp.hp.dead.life-gained.sas}.
+gained) over time between two treatment arms, with confidence
+ribbons. Ports \code{tp.hp.dead.life-gained.sas}.
 \item \code{\link[=hv_nnt]{hv_nnt()}}: Prepare number-needed-to-treat over time derived from
-the survival difference. Ports \code{tp.hp.numtreat.survdiff.matched.sas}.
+the survival difference. Ports
+\code{tp.hp.numtreat.survdiff.matched.sas}.
 }
 }
 
 \subsection{Nonparametric Temporal Curves}{
 \itemize{
 \item \code{\link[=hv_nonparametric]{hv_nonparametric()}}: Prepare pre-computed two-phase nonparametric
-temporal trend curves for binary or continuous outcomes with optional
-68\%/95\% CI ribbon and binned data summary points. Ports the \verb{tp.np.*}
-template family.
+temporal trend curves for binary or continuous outcomes with
+optional 68\%/95\% CI ribbon and binned data summary points. Ports
+the \verb{tp.np.*} template family.
 \item \code{\link[=hv_ordinal]{hv_ordinal()}}: Prepare grade-specific probability curves from
-cumulative proportional-odds models (e.g. TR/AR grade). Ports
+cumulative proportional-odds models (e.g. TR / AR grade). Ports
 \verb{tp.np.tr.ivecho.*} and \code{tp.np.po_ar.u_multi.ordinal.sas}.
 }
 }
@@ -94,35 +146,36 @@ cumulative proportional-odds models (e.g. TR/AR grade). Ports
 \subsection{Study Design & Goodness of Follow-Up}{
 \itemize{
 \item \code{\link[=hv_followup]{hv_followup()}}: Prepare per-patient follow-up data for a
-goodness-of-follow-up scatter plot (actual vs. potential follow-up per
-operation year). Use \code{plot(x, type = "followup")} for the death panel
-and \code{plot(x, type = "event")} for the non-fatal event panel. Ports
-\code{tp.dp.gfup.R}.
+goodness-of-follow-up scatter plot (actual vs. potential follow-up
+per operation year). Use \code{plot(x, type = "followup")} for the death
+panel and \code{plot(x, type = "event")} for the non-fatal event panel.
+Ports \code{tp.dp.gfup.R}.
 }
 }
 
 \subsection{Longitudinal & Repeated Measures}{
 \itemize{
-\item \code{\link[=hv_trends]{hv_trends()}}: Prepare patient-level data for annual trend lines with
-optional confidence ribbons for multiple groups. Ports the
+\item \code{\link[=hv_trends]{hv_trends()}}: Prepare patient-level data for annual trend lines
+with optional confidence ribbons for multiple groups. Ports the
 \verb{tp.lp.trends.*}, \verb{tp.rp.trends.*}, and \code{tp.dp.trends.R} families.
 \item \code{\link[=hv_spaghetti]{hv_spaghetti()}}: Prepare repeated-measures data for individual
 patient trajectory plots, optionally stratified by group. Ports
 \code{tp.dp.spaghetti.echo.R}.
-\item \code{\link[=hv_longitudinal]{hv_longitudinal()}}: Prepare pre-aggregated counts for a grouped bar
-chart or text table of patient and measurement counts at discrete
-follow-up windows. Use \code{plot(x, type = "plot")} for the bar chart and
-\code{plot(x, type = "table")} for the numeric table panel.
+\item \code{\link[=hv_longitudinal]{hv_longitudinal()}}: Prepare pre-aggregated counts for a grouped
+bar chart or text table of patient and measurement counts at
+discrete follow-up windows. Use \code{plot(x, type = "plot")} for the
+bar chart and \code{plot(x, type = "table")} for the numeric table panel.
 }
 }
 
 \subsection{Flow Diagrams}{
 \itemize{
 \item \code{\link[=hv_alluvial]{hv_alluvial()}}: Prepare patient-flow data for an alluvial (Sankey)
-diagram showing transitions between states across time points. Ports
-\code{tp.dp.female_bicus_preAR_sankey.R}.
-\item \code{\link[=hv_sankey]{hv_sankey()}}: Prepare cluster-assignment data for a stability Sankey
-showing how patients redistribute across K values in a PAM analysis.
+diagram showing transitions between states across time points.
+Ports \code{tp.dp.female_bicus_preAR_sankey.R}.
+\item \code{\link[=hv_sankey]{hv_sankey()}}: Prepare cluster-assignment data for a stability
+Sankey showing how patients redistribute across K values in a PAM
+analysis.
 }
 }
 
@@ -131,23 +184,55 @@ showing how patients redistribute across K values in a PAM analysis.
 \item \code{\link[=hv_eda]{hv_eda()}}: Prepare a single variable for EDA plotting: bar chart
 (categorical) or scatter + LOESS (continuous). Ports
 \code{tp.dp.EDA_barplots_scatterplots.R}.
-\item \code{\link[=eda_classify_var]{eda_classify_var()}}: Classify a vector as \code{"Cont"}, \code{"Cat_Num"}, or
-\code{"Cat_Char"} using the \code{UniqueLimit} heuristic from
+\item \code{\link[=eda_classify_var]{eda_classify_var()}}: Classify a vector as \code{"Cont"}, \code{"Cat_Num"},
+or \code{"Cat_Char"} using the \code{UniqueLimit} heuristic from
 \code{Barplot_Scatterplot_Function.R}.
-\item \code{\link[=eda_select_vars]{eda_select_vars()}}: Subset and reorder a data frame by a character
-vector or space-separated column-name string. Replaces
+\item \code{\link[=eda_select_vars]{eda_select_vars()}}: Subset and reorder a data frame by a
+character vector or space-separated column-name string. Replaces
 \code{Order_Variables()}.
-\item \code{\link[=hv_upset]{hv_upset()}}: Prepare binary indicator data for an UpSet intersection
-plot. Ports \code{tp.complexUpset.R}.
+\item \code{\link[=hv_upset]{hv_upset()}}: Prepare binary indicator data for an UpSet
+intersection plot. Ports \code{tp.complexUpset.R}.
 }
 }
 
+}
+
+\subsection{Legacy single-call plot API}{
+
+These functions predate the constructor-and-\code{plot()} split and return
+a ggplot directly. They are retained for backward compatibility with
+scripts written before the \verb{hv_*()} redesign. New code should prefer
+the constructor form.
+\itemize{
+\item \code{\link[=hazard_plot]{hazard_plot()}}: Single-call parametric hazard/survival plot —
+combine-step equivalent of \code{hv_hazard()} + \code{plot()}.
+\item \code{\link[=survival_difference_plot]{survival_difference_plot()}}: Single-call mean-survival-difference
+plot — equivalent of \code{hv_survival_difference()} + \code{plot()}.
+\item \code{\link[=nnt_plot]{nnt_plot()}}: Single-call NNT plot — equivalent of \code{hv_nnt()} +
+\code{plot()}.
+}
+}
+
+\subsection{Data class and introspection}{
+
+All \verb{hv_*()} constructors return objects that inherit from \code{hv_data}
+with a concept-specific subclass (e.g. \code{hv_survival}, \code{hv_trends}).
+\itemize{
+\item \code{\link[=is_hv_data]{is_hv_data()}}: Predicate for the shared base class.
+\item \code{inherits(x, "hv_trends")}: Check for a specific constructor's
+output.
+\item \code{x$data}: The canonical long-format data frame used by \code{plot(x)}.
+\item \code{x$meta}: Named list of structural metadata (column names, group
+levels, summary functions).
+\item \code{x$tables}: Concept-specific diagnostic or report tables (SMDs,
+risk tables, group counts, etc.).
+}
 }
 
 \subsection{Sample-data generators}{
 
-Each generator produces realistic synthetic data sized and structured to
-match the corresponding SAS dataset exports.
+Each generator produces realistic synthetic data sized and structured
+to match the corresponding SAS dataset exports.
 \itemize{
 \item \code{\link[=sample_mirror_histogram_data]{sample_mirror_histogram_data()}}: Propensity scores via a logistic
 model with greedy 1:1 caliper matching and optional IPTW weights.
@@ -156,14 +241,14 @@ before and after propensity matching.
 \item \code{\link[=sample_stacked_histogram_data]{sample_stacked_histogram_data()}}: Year-by-category count data.
 \item \code{\link[=sample_survival_data]{sample_survival_data()}}: Exponential survival times with
 administrative censoring and optional treatment strata.
-\item \code{\link[=sample_hazard_data]{sample_hazard_data()}}: Weibull parametric survival predictions on a
-fine time grid, matching the \code{predict} dataset from \verb{\%hazpred}.
+\item \code{\link[=sample_hazard_data]{sample_hazard_data()}}: Weibull parametric survival predictions on
+a fine time grid, matching the \code{predict} dataset from \verb{\%hazpred}.
 \item \code{\link[=sample_hazard_empirical]{sample_hazard_empirical()}}: Binned Kaplan-Meier empirical points
 matching the \code{plout} / \code{acpdms} dataset.
-\item \code{\link[=sample_life_table]{sample_life_table()}}: Age-group-specific Gompertz survivorship curves
-matching US population life-table SAS overlays.
-\item \code{\link[=sample_survival_difference_data]{sample_survival_difference_data()}}: Mean survival difference between
-two parametric arms with confidence bands.
+\item \code{\link[=sample_life_table]{sample_life_table()}}: Age-group-specific Gompertz survivorship
+curves matching US population life-table SAS overlays.
+\item \code{\link[=sample_survival_difference_data]{sample_survival_difference_data()}}: Mean survival difference
+between two parametric arms with confidence bands.
 \item \code{\link[=sample_nnt_data]{sample_nnt_data()}}: Number-needed-to-treat derived from survival
 difference data.
 \item \code{\link[=sample_nonparametric_curve_data]{sample_nonparametric_curve_data()}}: Two-phase nonparametric curve
@@ -172,29 +257,63 @@ predictions (binary or continuous outcome) on a fine time grid.
 summary points matching the SAS \code{means} dataset.
 \item \code{\link[=sample_nonparametric_ordinal_data]{sample_nonparametric_ordinal_data()}}: Grade-specific cumulative
 proportional-odds probability curves.
-\item \code{\link[=sample_nonparametric_ordinal_points]{sample_nonparametric_ordinal_points()}}: Binned ordinal data summary
-points per grade level.
+\item \code{\link[=sample_nonparametric_ordinal_points]{sample_nonparametric_ordinal_points()}}: Binned ordinal data
+summary points per grade level.
 \item \code{\link[=sample_goodness_followup_data]{sample_goodness_followup_data()}}: Operative cohort with operation
 dates, follow-up times, death, and non-fatal events.
-\item \code{\link[=sample_trends_data]{sample_trends_data()}}: Multi-group annual trend data with confidence
-ribbons.
+\item \code{\link[=sample_trends_data]{sample_trends_data()}}: Multi-group annual trend data with
+confidence ribbons.
 \item \code{\link[=sample_spaghetti_data]{sample_spaghetti_data()}}: Patient-level longitudinal measurements
 over time.
 \item \code{\link[=sample_longitudinal_counts_data]{sample_longitudinal_counts_data()}}: Pre-aggregated patient and
 measurement counts at discrete follow-up windows.
-\item \code{\link[=sample_alluvial_data]{sample_alluvial_data()}}: Patient flow between states across multiple
-time points in wide format.
-\item \code{\link[=sample_cluster_sankey_data]{sample_cluster_sankey_data()}}: Cluster assignments across K values
-for a PAM stability analysis.
-\item \code{\link[=sample_eda_data]{sample_eda_data()}}: Mixed-type cardiac-surgery registry simulation
-(binary, ordinal, character-categorical, and continuous variables).
-\item \code{\link[=sample_upset_data]{sample_upset_data()}}: Binary indicator columns for UpSet intersection
-analysis.
+\item \code{\link[=sample_alluvial_data]{sample_alluvial_data()}}: Patient flow between states across
+multiple time points in wide format.
+\item \code{\link[=sample_cluster_sankey_data]{sample_cluster_sankey_data()}}: Cluster assignments across K
+values for a PAM stability analysis.
+\item \code{\link[=sample_eda_data]{sample_eda_data()}}: Mixed-type cardiac-surgery registry
+simulation (binary, ordinal, character-categorical, and continuous
+variables).
+\item \code{\link[=sample_upset_data]{sample_upset_data()}}: Binary indicator columns for UpSet
+intersection analysis.
+}
+}
+
+\subsection{Scope and versioning}{
+
+\code{hvtiPlotR} targets \strong{internal HVTI / CORR use only} — it will not
+be submitted to CRAN. GitHub-only dependencies are first-class
+(\verb{Remotes:} in DESCRIPTION). Install via:
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{remotes::install_github("ehrlinger/hvtiPlotR")
+}\if{html}{\out{</div>}}
+
+Releases follow straight semantic versioning (2.0.0, 2.0.1, 2.1.0,
+3.0.0 …). The \code{main} branch tracks the most recent release;
+\code{engineering} collects changes staged for the next release. No
+\verb{.9xxx} pre-release suffix on development builds. Pin against a
+specific release tag for reproducibility, e.g.
+\code{remotes::install_github("ehrlinger/hvtiPlotR@v2.0.0")}.
+}
+
+\subsection{Vignettes}{
+\itemize{
+\item \code{vignette("hvtiPlotR")}: Introductory tutorial paralleling the SAS
+\code{plot.sas} macro, with side-by-side SAS and R examples.
+\item \code{vignette("plot-functions")}: Worked examples for every \verb{hv_*()}
+constructor with the three-step build/bare-plot/decorate pattern.
+\item \code{vignette("plot-decorators")}: Guide to scales, labels,
+annotations, coord crops, themes, and \code{ggsave()} / \code{save_ppt()}
+patterns, including the \code{panel_box} fixed-panel workflow.
+\item \code{vignette("sas-migration-guide")}: SAS \code{plot.sas} template name
+lookup mapping to the corresponding \verb{hv_*()} constructor and a
+worked R example.
 }
 }
 }
 \references{
-Wickham, H. \emph{ggplot2: Elegant Graphics for Data Analysis}. Springer, 2009.
+Wickham, H. \emph{ggplot2: Elegant Graphics for Data Analysis}. Springer,
+2009.
 
 Gohel, D. \emph{officer: Manipulation of Microsoft Word and PowerPoint
 Documents}. R package. \url{https://davidgohel.github.io/officer/}
