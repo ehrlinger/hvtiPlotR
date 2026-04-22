@@ -120,11 +120,13 @@ plot(mh) + hv_theme("manuscript")
 
 ### Utilities
 
-| Function                                                                              | Description                                                           |
-|---------------------------------------------------------------------------------------|-----------------------------------------------------------------------|
-| `hv_theme(style)`                                                                     | Generic dispatcher returning the named ggplot2 theme                  |
-| [`save_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/save_ppt.md)           | Export a ggplot to an editable PowerPoint slide using an HVI template |
-| [`make_footnote()`](https://ehrlinger.github.io/hvtiPlotR/reference/make_footnote.md) | Add a footnote annotation to the current figure                       |
+| Function                                                                                | Description                                                                                                                                                                                                                      |
+|-----------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `hv_theme(style)`                                                                       | Generic dispatcher returning the named ggplot2 theme                                                                                                                                                                             |
+| [`save_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/save_ppt.md)             | Export a ggplot to an editable PowerPoint slide using an HVI template; optional `panel_box = list(width = ..., height = ..., left = ..., top = ...)` anchors the panel content area to the same slide coordinates on every slide |
+| [`hv_ggsave_dims()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_ggsave_dims.md) | Compute [`ggsave()`](https://ggplot2.tidyverse.org/reference/ggsave.html) `width`/`height` that preserve a target panel content area regardless of axis-label, legend, or title size                                             |
+| [`hv_ph_location()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_ph_location.md) | Compute [`officer::ph_location()`](https://davidgohel.github.io/officer/reference/ph_location.html) args so a ggplot’s panel lands at a fixed slide rectangle — the per-slide worker that `save_ppt(panel_box=)` calls           |
+| [`make_footnote()`](https://ehrlinger.github.io/hvtiPlotR/reference/make_footnote.md)   | Add a footnote annotation to the current figure                                                                                                                                                                                  |
 
 ## Vignettes
 

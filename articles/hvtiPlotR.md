@@ -766,16 +766,17 @@ Figure 8: ggplot2 shape table
 
 Figure 9: R colors
 
-The RColorBrewer package (Neuwirth 2011) simplifies the selection of
-ColorBrewer colors into R. We have used RColorBrewer to get a list of
-colors, and assign colors manually to specific variable values using the
-`ggplot` [`aes()`](https://ggplot2.tidyverse.org/reference/aes.html)
-mechanism. The ColorBrewer palettes have also been built into the
-`ggplot` `scale_` functions in the `scale_color_brewer` function. We
-have made extensive use of the `palette="Set1"` color palette in figures
-we have generated. There are also a series of other `scale_color_`
-functions in ggplot2 to aid the user in selecting good color schemes for
-many diﬀerent settings.
+The ColorBrewer palette catalogue (Harrower and Brewer 2003) is built
+into `ggplot2` via
+[`scale_colour_brewer()`](https://ggplot2.tidyverse.org/reference/scale_brewer.html)
+/
+[`scale_fill_brewer()`](https://ggplot2.tidyverse.org/reference/scale_brewer.html);
+hvtiPlotR does not import the optional `RColorBrewer` package. We have
+made extensive use of the `palette = "Set1"` colour palette in the
+figures we have generated. There are also a series of other
+`scale_colour_*` functions in ggplot2 to aid the user in selecting good
+colour schemes for many diﬀerent settings — consult
+<https://colorbrewer2.org/> for an interactive palette browser.
 
 ### Global Figure Commands
 
@@ -986,10 +987,13 @@ mind when composing figures.
 ### Colour
 
 - **Multi-group figures** — use `scale_colour_brewer(palette = "Set1")`
-  for up to five groups. For more groups, select a palette manually or
-  use
-  [`RColorBrewer::brewer.pal()`](https://rdrr.io/pkg/RColorBrewer/man/ColorBrewer.html)
-  to inspect options.
+  for up to five groups. For more groups, either pass an explicit vector
+  of hex codes via
+  [`scale_colour_manual()`](https://ggplot2.tidyverse.org/reference/scale_manual.html)
+  or browse the ColorBrewer palette catalogue at
+  <https://colorbrewer2.org/>. (ggplot2 ships the Brewer palette table
+  internally; hvtiPlotR does not depend on the optional `RColorBrewer`
+  package.)
 - **Single-group survival/hazard figures** — `"steelblue"` for
   manuscript, `"white"` for dark PPT.
 - **Avoid red/green combinations** — approximately 8% of men have

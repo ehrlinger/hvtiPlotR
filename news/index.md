@@ -1,11 +1,61 @@
 # Changelog
 
+## hvtiPlotR 2.0.1
+
+### Bug fixes
+
+- [`save_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/save_ppt.md):
+  the
+  [`officer::ph_location()`](https://davidgohel.github.io/officer/reference/ph_location.html)
+  call that places each plot on its slide now uses `bg = "transparent"`
+  so the placeholder rectangle’s fill no longer shows up as an opaque
+  white box behind the plot on dark PowerPoint templates. Previously,
+  officer’s default ph_location shape had a white fill; against a
+  blue-gradient slide template that appeared as a visible white
+  rectangle larger than the ggplot panel. The ggplot itself is
+  unchanged; only the containing shape’s fill is now transparent so the
+  slide template background shows through any area outside the panel.
+- [`hv_theme_light_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_theme_light_ppt.md):
+  panel background is now `fill = "transparent"` (was `"white"`). Saving
+  a `light_ppt`-themed plot into a dark PowerPoint template previously
+  showed as an opaque white rectangle inside the panel; with a
+  transparent fill the slide template shows through. Add
+  `+ theme(panel.background = element_rect(fill = "white"))` if you
+  specifically need an opaque white panel.
+
+### Documentation
+
+- Package-level help topic
+  ([`?hvtiPlotR`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-package.md))
+  comprehensively rewritten to cover the v2.0.0 feature set: two-step
+  workflow with runnable example, fixed-panel geometry subsection
+  ([`hv_ggsave_dims()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_ggsave_dims.md)/[`hv_ph_location()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_ph_location.md)/`save_ppt(panel_box=)`),
+  legacy single-call API, `hv_data` class introspection, scope and
+  versioning, vignette index.
+- README “Utilities” table now lists
+  [`hv_ggsave_dims()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_ggsave_dims.md)
+  and
+  [`hv_ph_location()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_ph_location.md),
+  and documents `save_ppt(panel_box=)`.
+- [`save_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/save_ppt.md)
+  example rewritten to show the recommended `hv_theme("light_ppt")`
+  preview workflow saving into a dark PPT template with
+  `panel_box = list(width = 8.88, height = 4.51, left = 2.58, top = 1.29)`
+  and a
+  `scale_x_continuous(breaks = seq(0, 400, 100), expand = c(0, 0))`
+  decorator.
+- `hvtiPlotR.qmd` colour-guidance section updated to reflect that
+  ColorBrewer palettes are accessed via ggplot2’s built-in
+  [`scale_colour_brewer()`](https://ggplot2.tidyverse.org/reference/scale_brewer.html)
+  rather than a direct `RColorBrewer` dependency.
+
 ## hvtiPlotR 2.0.0
 
 First stable release of the `hv_*` API. This consolidates the
 `2.0.0.9001`–`2.0.0.9013` dev cycle into a tagged release that internal
-users can anchor against for bug reports and reproducibility. Future
-development continues under `2.0.1.9xxx`.
+users can anchor against for bug reports and reproducibility. Subsequent
+releases will advance the semantic version (`2.0.1`, `2.1.0`, `3.0.0`)
+directly; no `.9xxx` pre-release suffixes.
 
 ### New features — fixed-panel geometry
 

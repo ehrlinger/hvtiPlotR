@@ -154,49 +154,63 @@ save_ppt(
 #
 # Problem: when plots in a deck have different y-axis ranges
 # (e.g. "1.0" vs "4567.2"), axis-label widths differ and shift the
-# panel inside a fixed ph_location(). On dark_ppt the black panel box
-# appears to drift between slides — visually jarring.
+# panel inside a fixed ph_location(). Without a panel_box the plot
+# panel drifts between slides — visually jarring against the slide
+# background.
 #
 # Solution: pass `panel_box = list(width = ..., height = ..., left = ...,
-# top = ...)`. This describes the PANEL CONTENT AREA itself — the rectangle bounded by
-# the axis lines, not the outer plot extent. save_ppt() calls
-# [hv_ph_location()] for each plot, measures the axis / title / legend
-# chrome around the panel, and adjusts per-slide placement so the
-# panel lands at the target rectangle on every slide. The plot's
-# OUTER dimensions therefore vary per slide (chrome floats around a
-# constant panel), analogous to how [hv_ggsave_dims()] drives ggsave's
-# width/height from a target panel size.
+# top = ...)`. This describes the PANEL CONTENT AREA itself — the
+# rectangle bounded by the axis lines, not the outer plot extent.
+# save_ppt() calls [hv_ph_location()] for each plot, measures the
+# axis / title / legend chrome around the panel, and adjusts per-slide
+# placement so the panel lands at the target rectangle on every slide.
+# The plot's OUTER dimensions therefore vary per slide (chrome floats
+# around a constant panel), analogous to how [hv_ggsave_dims()] drives
+# ggsave's width/height from a target panel size.
+#
+# Workflow: build plots with `hv_theme("light_ppt")` so the white panel
+# + black border renders crisply in the IDE viewer during development.
+# At save time, the PowerPoint template controls the SLIDE background
+# (e.g. blue gradient), so a light_ppt plot on a dark slide template
+# produces AATS-style white-panel-on-dark-slide decks.
 
 p_small <- ggplot(mtcars, aes(hp, mpg)) +
   geom_point() +
+  scale_x_continuous(breaks = seq(0, 400, 100), expand = c(0, 0)) +
   scale_y_continuous(labels = function(x) sprintf("%3.1f", x)) +
   labs(x = "Horsepower", y = "MPG") +
-  hv_theme("dark_ppt")
+  hv_theme("light_ppt")
 
 p_big <- ggplot(mtcars, aes(hp, mpg)) +
   geom_point() +
+  scale_x_continuous(breaks = seq(0, 400, 100), expand = c(0, 0)) +
   scale_y_continuous(labels = function(x) sprintf("%8.1f", x * 10000)) +
   labs(x = "Horsepower", y = "MPG (x10k)") +
-  hv_theme("dark_ppt")
+  hv_theme("light_ppt")
+
+# Preview each plot interactively (e.g. print(p_small) in RStudio) to
+# check decoration before saving.
 
 # Without panel_box: panel drifts between slides because the big-number
 # labels eat more horizontal space than the small-number labels.
 save_ppt(
   object       = list(p_small, p_big),
-  template     = "graphs/RD.pptx",
+  template     = "graphs/RD-dark.pptx",
   powerpoint   = "graphs/drifting_deck.pptx",
   slide_titles = c("Small y-axis", "Big y-axis")
 )
 
-# With panel_box: target is a 10" x 5" panel at slide coordinates
-# (1.5", 1.5"). The panel content area lands at exactly that rectangle
+# With panel_box: target is an 8.88" x 4.51" panel at slide coordinates
+# (2.58", 1.29"). The panel content area lands at exactly that rectangle
 # on both slides; axis labels extend outside it as each plot requires.
+# The 2.58" left margin leaves room for a wide "99999.9"-style y-axis
+# label on dark PPT templates rendered at base_size = 32.
 save_ppt(
   object       = list(p_small, p_big),
-  template     = "graphs/RD.pptx",
+  template     = "graphs/RD-dark.pptx",
   powerpoint   = "graphs/anchored_deck.pptx",
   slide_titles = c("Small y-axis", "Big y-axis"),
-  panel_box    = list(width = 10, height = 5, left = 1.5, top = 1.5)
+  panel_box    = list(width = 8.88, height = 4.51, left = 2.58, top = 1.29)
 )
 
 # Sizing advice: panel_left and panel_top must be large enough for the

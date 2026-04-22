@@ -17,7 +17,7 @@ designated title placeholder via officer::ph_location_type()."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">hvtiPlotR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -59,7 +59,7 @@ designated title placeholder via officer::ph_location_type()."></head><body>
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Save ggplot Objects to an Editable PowerPoint Presentation</h1>
-      <small class="dont-index">Source: <a href="https://github.com/ehrlinger/hvtiPlotR/blob/v2.0.0/R/save_ppt.R" class="external-link"><code>R/save_ppt.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/ehrlinger/hvtiPlotR/blob/main/R/save_ppt.R" class="external-link"><code>R/save_ppt.R</code></a></small>
       <div class="d-none name"><code>save_ppt.Rd</code></div>
     </div>
 
@@ -215,49 +215,63 @@ slide (legacy behavior).</p></dd>
 <span class="r-in"><span><span class="co">#</span></span></span>
 <span class="r-in"><span><span class="co"># Problem: when plots in a deck have different y-axis ranges</span></span></span>
 <span class="r-in"><span><span class="co"># (e.g. "1.0" vs "4567.2"), axis-label widths differ and shift the</span></span></span>
-<span class="r-in"><span><span class="co"># panel inside a fixed ph_location(). On dark_ppt the black panel box</span></span></span>
-<span class="r-in"><span><span class="co"># appears to drift between slides — visually jarring.</span></span></span>
+<span class="r-in"><span><span class="co"># panel inside a fixed ph_location(). Without a panel_box the plot</span></span></span>
+<span class="r-in"><span><span class="co"># panel drifts between slides — visually jarring against the slide</span></span></span>
+<span class="r-in"><span><span class="co"># background.</span></span></span>
 <span class="r-in"><span><span class="co">#</span></span></span>
 <span class="r-in"><span><span class="co"># Solution: pass `panel_box = list(width = ..., height = ..., left = ...,</span></span></span>
-<span class="r-in"><span><span class="co"># top = ...)`. This describes the PANEL CONTENT AREA itself — the rectangle bounded by</span></span></span>
-<span class="r-in"><span><span class="co"># the axis lines, not the outer plot extent. save_ppt() calls</span></span></span>
-<span class="r-in"><span><span class="co"># [hv_ph_location()] for each plot, measures the axis / title / legend</span></span></span>
-<span class="r-in"><span><span class="co"># chrome around the panel, and adjusts per-slide placement so the</span></span></span>
-<span class="r-in"><span><span class="co"># panel lands at the target rectangle on every slide. The plot's</span></span></span>
-<span class="r-in"><span><span class="co"># OUTER dimensions therefore vary per slide (chrome floats around a</span></span></span>
-<span class="r-in"><span><span class="co"># constant panel), analogous to how [hv_ggsave_dims()] drives ggsave's</span></span></span>
-<span class="r-in"><span><span class="co"># width/height from a target panel size.</span></span></span>
+<span class="r-in"><span><span class="co"># top = ...)`. This describes the PANEL CONTENT AREA itself — the</span></span></span>
+<span class="r-in"><span><span class="co"># rectangle bounded by the axis lines, not the outer plot extent.</span></span></span>
+<span class="r-in"><span><span class="co"># save_ppt() calls [hv_ph_location()] for each plot, measures the</span></span></span>
+<span class="r-in"><span><span class="co"># axis / title / legend chrome around the panel, and adjusts per-slide</span></span></span>
+<span class="r-in"><span><span class="co"># placement so the panel lands at the target rectangle on every slide.</span></span></span>
+<span class="r-in"><span><span class="co"># The plot's OUTER dimensions therefore vary per slide (chrome floats</span></span></span>
+<span class="r-in"><span><span class="co"># around a constant panel), analogous to how [hv_ggsave_dims()] drives</span></span></span>
+<span class="r-in"><span><span class="co"># ggsave's width/height from a target panel size.</span></span></span>
+<span class="r-in"><span><span class="co">#</span></span></span>
+<span class="r-in"><span><span class="co"># Workflow: build plots with `hv_theme("light_ppt")` so the white panel</span></span></span>
+<span class="r-in"><span><span class="co"># + black border renders crisply in the IDE viewer during development.</span></span></span>
+<span class="r-in"><span><span class="co"># At save time, the PowerPoint template controls the SLIDE background</span></span></span>
+<span class="r-in"><span><span class="co"># (e.g. blue gradient), so a light_ppt plot on a dark slide template</span></span></span>
+<span class="r-in"><span><span class="co"># produces AATS-style white-panel-on-dark-slide decks.</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">p_small</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">hp</span>, <span class="va">mpg</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_x_continuous</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">400</span>, <span class="fl">100</span><span class="op">)</span>, expand <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous</a></span><span class="op">(</span>labels <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/sprintf.html" class="external-link">sprintf</a></span><span class="op">(</span><span class="st">"%3.1f"</span>, <span class="va">x</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Horsepower"</span>, y <span class="op">=</span> <span class="st">"MPG"</span><span class="op">)</span> <span class="op">+</span></span></span>
-<span class="r-in"><span>  <span class="fu"><a href="hv_theme.html">hv_theme</a></span><span class="op">(</span><span class="st">"dark_ppt"</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="hv_theme.html">hv_theme</a></span><span class="op">(</span><span class="st">"light_ppt"</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">p_big</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">hp</span>, <span class="va">mpg</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_x_continuous</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">400</span>, <span class="fl">100</span><span class="op">)</span>, expand <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous</a></span><span class="op">(</span>labels <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/sprintf.html" class="external-link">sprintf</a></span><span class="op">(</span><span class="st">"%8.1f"</span>, <span class="va">x</span> <span class="op">*</span> <span class="fl">10000</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Horsepower"</span>, y <span class="op">=</span> <span class="st">"MPG (x10k)"</span><span class="op">)</span> <span class="op">+</span></span></span>
-<span class="r-in"><span>  <span class="fu"><a href="hv_theme.html">hv_theme</a></span><span class="op">(</span><span class="st">"dark_ppt"</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="hv_theme.html">hv_theme</a></span><span class="op">(</span><span class="st">"light_ppt"</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Preview each plot interactively (e.g. print(p_small) in RStudio) to</span></span></span>
+<span class="r-in"><span><span class="co"># check decoration before saving.</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Without panel_box: panel drifts between slides because the big-number</span></span></span>
 <span class="r-in"><span><span class="co"># labels eat more horizontal space than the small-number labels.</span></span></span>
 <span class="r-in"><span><span class="fu">save_ppt</span><span class="op">(</span></span></span>
 <span class="r-in"><span>  object       <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">p_small</span>, <span class="va">p_big</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>  template     <span class="op">=</span> <span class="st">"graphs/RD.pptx"</span>,</span></span>
+<span class="r-in"><span>  template     <span class="op">=</span> <span class="st">"graphs/RD-dark.pptx"</span>,</span></span>
 <span class="r-in"><span>  powerpoint   <span class="op">=</span> <span class="st">"graphs/drifting_deck.pptx"</span>,</span></span>
 <span class="r-in"><span>  slide_titles <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Small y-axis"</span>, <span class="st">"Big y-axis"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># With panel_box: target is a 10" x 5" panel at slide coordinates</span></span></span>
-<span class="r-in"><span><span class="co"># (1.5", 1.5"). The panel content area lands at exactly that rectangle</span></span></span>
+<span class="r-in"><span><span class="co"># With panel_box: target is an 8.88" x 4.51" panel at slide coordinates</span></span></span>
+<span class="r-in"><span><span class="co"># (2.58", 1.29"). The panel content area lands at exactly that rectangle</span></span></span>
 <span class="r-in"><span><span class="co"># on both slides; axis labels extend outside it as each plot requires.</span></span></span>
+<span class="r-in"><span><span class="co"># The 2.58" left margin leaves room for a wide "99999.9"-style y-axis</span></span></span>
+<span class="r-in"><span><span class="co"># label on dark PPT templates rendered at base_size = 32.</span></span></span>
 <span class="r-in"><span><span class="fu">save_ppt</span><span class="op">(</span></span></span>
 <span class="r-in"><span>  object       <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">p_small</span>, <span class="va">p_big</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>  template     <span class="op">=</span> <span class="st">"graphs/RD.pptx"</span>,</span></span>
+<span class="r-in"><span>  template     <span class="op">=</span> <span class="st">"graphs/RD-dark.pptx"</span>,</span></span>
 <span class="r-in"><span>  powerpoint   <span class="op">=</span> <span class="st">"graphs/anchored_deck.pptx"</span>,</span></span>
 <span class="r-in"><span>  slide_titles <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Small y-axis"</span>, <span class="st">"Big y-axis"</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>  panel_box    <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>width <span class="op">=</span> <span class="fl">10</span>, height <span class="op">=</span> <span class="fl">5</span>, left <span class="op">=</span> <span class="fl">1.5</span>, top <span class="op">=</span> <span class="fl">1.5</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  panel_box    <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>width <span class="op">=</span> <span class="fl">8.88</span>, height <span class="op">=</span> <span class="fl">4.51</span>, left <span class="op">=</span> <span class="fl">2.58</span>, top <span class="op">=</span> <span class="fl">1.29</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Sizing advice: panel_left and panel_top must be large enough for the</span></span></span>

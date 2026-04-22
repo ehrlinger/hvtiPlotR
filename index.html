@@ -24,7 +24,7 @@
 
     <a class="navbar-brand me-2" href="index.html">hvtiPlotR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -319,7 +319,15 @@
 </tr>
 <tr class="even">
 <td><code><a href="reference/save_ppt.html">save_ppt()</a></code></td>
-<td>Export a ggplot to an editable PowerPoint slide using an HVI template</td>
+<td>Export a ggplot to an editable PowerPoint slide using an HVI template; optional <code>panel_box = list(width = ..., height = ..., left = ..., top = ...)</code> anchors the panel content area to the same slide coordinates on every slide</td>
+</tr>
+<tr class="odd">
+<td><code><a href="reference/hv_ggsave_dims.html">hv_ggsave_dims()</a></code></td>
+<td>Compute <code><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave()</a></code> <code>width</code>/<code>height</code> that preserve a target panel content area regardless of axis-label, legend, or title size</td>
+</tr>
+<tr class="even">
+<td><code><a href="reference/hv_ph_location.html">hv_ph_location()</a></code></td>
+<td>Compute <code><a href="https://davidgohel.github.io/officer/reference/ph_location.html" class="external-link">officer::ph_location()</a></code> args so a ggplot’s panel lands at a fixed slide rectangle — the per-slide worker that <code>save_ppt(panel_box=)</code> calls</td>
 </tr>
 <tr class="odd">
 <td><code><a href="reference/make_footnote.html">make_footnote()</a></code></td>

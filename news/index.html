@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">hvtiPlotR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -49,12 +49,31 @@
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Changelog</h1>
-      <small>Source: <a href="https://github.com/ehrlinger/hvtiPlotR/blob/v2.0.0/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
+      <small>Source: <a href="https://github.com/ehrlinger/hvtiPlotR/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
     <div class="section level2">
+<h2 class="pkg-version" data-toc-text="2.0.1" id="hvtiplotr-201">hvtiPlotR 2.0.1<a class="anchor" aria-label="anchor" href="#hvtiplotr-201"></a></h2>
+<div class="section level3">
+<h3 id="bug-fixes-2-0-1">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-2-0-1"></a></h3>
+<ul><li>
+<code><a href="../reference/save_ppt.html">save_ppt()</a></code>: the <code><a href="https://davidgohel.github.io/officer/reference/ph_location.html" class="external-link">officer::ph_location()</a></code> call that places each plot on its slide now uses <code>bg = "transparent"</code> so the placeholder rectangle’s fill no longer shows up as an opaque white box behind the plot on dark PowerPoint templates. Previously, officer’s default ph_location shape had a white fill; against a blue-gradient slide template that appeared as a visible white rectangle larger than the ggplot panel. The ggplot itself is unchanged; only the containing shape’s fill is now transparent so the slide template background shows through any area outside the panel.</li>
+<li>
+<code><a href="../reference/hv_theme_light_ppt.html">hv_theme_light_ppt()</a></code>: panel background is now <code>fill = "transparent"</code> (was <code>"white"</code>). Saving a <code>light_ppt</code>-themed plot into a dark PowerPoint template previously showed as an opaque white rectangle inside the panel; with a transparent fill the slide template shows through. Add <code>+ theme(panel.background = element_rect(fill = "white"))</code> if you specifically need an opaque white panel.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="documentation-2-0-1">Documentation<a class="anchor" aria-label="anchor" href="#documentation-2-0-1"></a></h3>
+<ul><li>Package-level help topic (<code><a href="../reference/hvtiPlotR-package.html">?hvtiPlotR</a></code>) comprehensively rewritten to cover the v2.0.0 feature set: two-step workflow with runnable example, fixed-panel geometry subsection (<code><a href="../reference/hv_ggsave_dims.html">hv_ggsave_dims()</a></code>/<code><a href="../reference/hv_ph_location.html">hv_ph_location()</a></code>/<code>save_ppt(panel_box=)</code>), legacy single-call API, <code>hv_data</code> class introspection, scope and versioning, vignette index.</li>
+<li>README “Utilities” table now lists <code><a href="../reference/hv_ggsave_dims.html">hv_ggsave_dims()</a></code> and <code><a href="../reference/hv_ph_location.html">hv_ph_location()</a></code>, and documents <code>save_ppt(panel_box=)</code>.</li>
+<li>
+<code><a href="../reference/save_ppt.html">save_ppt()</a></code> example rewritten to show the recommended <code>hv_theme("light_ppt")</code> preview workflow saving into a dark PPT template with <code>panel_box = list(width = 8.88, height = 4.51,   left = 2.58, top = 1.29)</code> and a <code>scale_x_continuous(breaks =   seq(0, 400, 100), expand = c(0, 0))</code> decorator.</li>
+<li>
+<code>hvtiPlotR.qmd</code> colour-guidance section updated to reflect that ColorBrewer palettes are accessed via ggplot2’s built-in <code><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_colour_brewer()</a></code> rather than a direct <code>RColorBrewer</code> dependency.</li>
+</ul></div>
+</div>
+    <div class="section level2">
 <h2 class="pkg-version" data-toc-text="2.0.0" id="hvtiplotr-200">hvtiPlotR 2.0.0<a class="anchor" aria-label="anchor" href="#hvtiplotr-200"></a></h2>
-<p>First stable release of the <code>hv_*</code> API. This consolidates the <code>2.0.0.9001</code>–<code>2.0.0.9013</code> dev cycle into a tagged release that internal users can anchor against for bug reports and reproducibility. Future development continues under <code>2.0.1.9xxx</code>.</p>
+<p>First stable release of the <code>hv_*</code> API. This consolidates the <code>2.0.0.9001</code>–<code>2.0.0.9013</code> dev cycle into a tagged release that internal users can anchor against for bug reports and reproducibility. Subsequent releases will advance the semantic version (<code>2.0.1</code>, <code>2.1.0</code>, <code>3.0.0</code>) directly; no <code>.9xxx</code> pre-release suffixes.</p>
 <div class="section level3">
 <h3 id="new-features--fixed-panel-geometry-2-0-0">New features — fixed-panel geometry<a class="anchor" aria-label="anchor" href="#new-features--fixed-panel-geometry-2-0-0"></a></h3>
 <p>The dominant theme of this release is making the <strong>panel content area</strong> (the rectangular data region, excluding axes/titles/legend/margins) a first-class target, so figures stay visually aligned across output devices and across slides in a deck even when axis-label widths differ.</p>

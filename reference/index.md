@@ -7,7 +7,8 @@ hvtiPlotR data objects.
 
 - [`hvtiPlotR-package`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-package.md)
   [`hvtiPlotR`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-package.md)
-  : hvtiPlotR: Publication-Quality Graphics for Clinical Manuscripts
+  : hvtiPlotR: Publication-Quality Graphics for Clinical Manuscripts and
+  Slides
 - [`is_hv_data()`](https://ehrlinger.github.io/hvtiPlotR/reference/is_hv_data.md)
   : Test whether an object is an hvtiPlotR data object
 
