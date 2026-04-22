@@ -98,6 +98,25 @@ test_that("save_ppt works with theme_ppt", {
   )
 })
 
+test_that("save_ppt runs without warnings (officer bg-namespace noise suppressed)", {
+  skip_if_not_installed("officer")
+  skip_if_not_installed("rvg")
+
+  p            <- create_test_plot() + hv_theme_dark_ppt()
+  temp_template <- make_temp_template()
+  temp_ppt     <- tempfile(fileext = ".pptx")
+  on.exit(unlink(c(temp_ppt, temp_template)))
+
+  # The ph_location(bg = "transparent") fix for the white-box issue
+  # emits three officer libxml2 warnings; suppress_officer_bg_warnings()
+  # filters them. Lock that in so a regression (officer change, filter
+  # typo) would fail this test.
+  expect_no_warning(
+    save_ppt(p, template = temp_template, powerpoint = temp_ppt,
+             slide_titles = "warning-free")
+  )
+})
+
 test_that("save_ppt works with all hvtiPlotR themes", {
   skip_if_not_installed("officer")
   skip_if_not_installed("rvg")

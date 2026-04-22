@@ -58,7 +58,10 @@ conference posters.
 \code{\link[=hv_theme_ppt]{hv_theme_ppt()}}: Large-font theme with a black panel for
 blue-gradient or dark PowerPoint templates.
 \item \code{\link[=hv_theme_light_ppt]{hv_theme_light_ppt()}} / \code{\link[=theme_light_ppt]{theme_light_ppt()}}: Large-font theme
-with a white panel for white-background PowerPoint templates.
+with a transparent panel (appears white on white-background
+PowerPoint templates; the slide template fills the panel
+rectangle). Add \code{+ theme(panel.background = element_rect(fill = "white"))} if you specifically need an opaque white panel on a
+non-white slide background.
 }
 
 Both PPT themes hide the legend by default, use inside-facing axis
