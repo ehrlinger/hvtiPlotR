@@ -228,6 +228,21 @@ test_that("theme_light_ppt hides legend by default and accepts bold", {
   expect_identical(theme_light_ppt(bold = TRUE)$axis.text$face, "bold")
 })
 
+test_that("theme_light_ppt panel.background fill is transparent (template shows through)", {
+  theme <- theme_light_ppt()
+  expect_identical(theme$panel.background$fill,   "transparent")
+  # Border stays black so the panel rectangle is visible against any template
+  expect_identical(theme$panel.background$colour, "black")
+  # And plot.background should be transparent too
+  expect_identical(theme$plot.background$fill, "transparent")
+})
+
+test_that("theme_dark_ppt retains its opaque black panel fill", {
+  theme <- theme_dark_ppt()
+  expect_identical(theme$panel.background$fill,   "black")
+  expect_identical(theme$panel.background$colour, "white")
+})
+
 test_that("theme_light_ppt uses inside-facing ticks (negative length)", {
   theme <- theme_light_ppt(base_size = 32)
   tlen <- grid::convertUnit(theme$axis.ticks.length, "pt", valueOnly = TRUE)
