@@ -9,7 +9,7 @@
 #' group within the Heart, Vascular and Thoracic Institute at the
 #' Cleveland Clinic. It produces publication-quality graphics that
 #' conform to HVTI manuscript, poster, and presentation standards using
-#' [ggplot2::ggplot2] and the [officer::officer] package.
+#' `ggplot2` and the `officer` package.
 #'
 #' @details
 #' ## Two-step workflow
@@ -82,12 +82,13 @@
 #' * [hv_ggsave_dims()]: Given a target panel width and height,
 #'   computes the `ggsave()` `width`/`height` that preserve that panel
 #'   size. Returns a named list — splat into `ggsave()` via
-#'   `do.call(ggsave, c(list(filename = ..., plot = p), dims))`.
+#'   `do.call(ggplot2::ggsave, c(list(filename = ..., plot = p), dims))`.
 #' * [hv_ph_location()]: Given a target panel rectangle on the slide,
 #'   computes the `officer::ph_location()` `width`/`height`/`left`/`top`
 #'   that anchor the panel to that rectangle regardless of axis-label
 #'   width. Warns if chrome overflows the left or top slide edge.
-#' * [save_ppt()] accepts `panel_box = list(width, height, left, top)`
+#' * [save_ppt()] accepts
+#'   `panel_box = list(width = ..., height = ..., left = ..., top = ...)`
 #'   to apply [hv_ph_location()] per slide automatically.
 #'
 #' ## Plot constructors

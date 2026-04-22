@@ -119,7 +119,7 @@ plot(mh) + hv_theme("manuscript")
 | Function | Description |
 |---|---|
 | `hv_theme(style)` | Generic dispatcher returning the named ggplot2 theme |
-| `save_ppt()` | Export a ggplot to an editable PowerPoint slide using an HVI template; optional `panel_box = list(width, height, left, top)` anchors the panel content area to the same slide coordinates on every slide |
+| `save_ppt()` | Export a ggplot to an editable PowerPoint slide using an HVI template; optional `panel_box = list(width = ..., height = ..., left = ..., top = ...)` anchors the panel content area to the same slide coordinates on every slide |
 | `hv_ggsave_dims()` | Compute `ggsave()` `width`/`height` that preserve a target panel content area regardless of axis-label, legend, or title size |
 | `hv_ph_location()` | Compute `officer::ph_location()` args so a ggplot's panel lands at a fixed slide rectangle — the per-slide worker that `save_ppt(panel_box=)` calls |
 | `make_footnote()` | Add a footnote annotation to the current figure |

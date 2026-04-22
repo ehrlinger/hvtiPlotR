@@ -104,8 +104,16 @@ hv_theme_light_ppt <- function(base_size      = 32,
       axis.line          = element_line(colour = "black", linewidth = 1),
       strip.text         = element_text(size = base_size / 2),
       panel.border       = element_blank(),
+      # Transparent panel fill so the PPT slide template background (white
+      # on a light template, blue-gradient on a dark AATS-style template)
+      # shows through. The black border still delimits the panel rectangle;
+      # the `hv_ph_location()` / `save_ppt(panel_box=)` workflow anchors
+      # that rectangle at a fixed slide position. Use
+      # `+ theme(panel.background = element_rect(fill = "white"))` to
+      # restore an opaque white panel if that's needed for a specific
+      # template.
       panel.background   = element_rect(
-        fill      = "white",
+        fill      = "transparent",
         colour    = "black",
         linewidth = 1
       ),

@@ -10,7 +10,7 @@ Cardiovascular Outcomes, Registries and Research (CORR) statistics
 group within the Heart, Vascular and Thoracic Institute at the
 Cleveland Clinic. It produces publication-quality graphics that
 conform to HVTI manuscript, poster, and presentation standards using
-\link[ggplot2:ggplot2-package]{ggplot2::ggplot2} and the \link[officer:officer]{officer::officer} package.
+\code{ggplot2} and the \code{officer} package.
 }
 \details{
 \subsection{Two-step workflow}{
@@ -86,12 +86,13 @@ this by making the panel size and slide position the \emph{target}:
 \item \code{\link[=hv_ggsave_dims]{hv_ggsave_dims()}}: Given a target panel width and height,
 computes the \code{ggsave()} \code{width}/\code{height} that preserve that panel
 size. Returns a named list — splat into \code{ggsave()} via
-\code{do.call(ggsave, c(list(filename = ..., plot = p), dims))}.
+\code{do.call(ggplot2::ggsave, c(list(filename = ..., plot = p), dims))}.
 \item \code{\link[=hv_ph_location]{hv_ph_location()}}: Given a target panel rectangle on the slide,
 computes the \code{officer::ph_location()} \code{width}/\code{height}/\code{left}/\code{top}
 that anchor the panel to that rectangle regardless of axis-label
 width. Warns if chrome overflows the left or top slide edge.
-\item \code{\link[=save_ppt]{save_ppt()}} accepts \code{panel_box = list(width, height, left, top)}
+\item \code{\link[=save_ppt]{save_ppt()}} accepts
+\code{panel_box = list(width = ..., height = ..., left = ..., top = ...)}
 to apply \code{\link[=hv_ph_location]{hv_ph_location()}} per slide automatically.
 }
 }
