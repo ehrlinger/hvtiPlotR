@@ -285,7 +285,8 @@ test_that("hv_sankey returns an hv_data object", {
 test_that("plot(hv_sankey) returns a ggplot", {
   skip_if_not_installed("ggsankey")
   dta <- sample_cluster_sankey_data(n = 50, seed = 1)
-  expect_s3_class(plot(hv_sankey(dta)), "ggplot")
+  p <- hv_muffle_known_plot_warnings(plot(hv_sankey(dta)))
+  expect_s3_class(p, "ggplot")
 })
 
 # ============================================================================
@@ -312,7 +313,7 @@ test_that("plot(hv_upset) returns without error from sample data", {
             "MV_Repair", "TV_Repair", "Aorta", "CABG")
   dta  <- sample_upset_data(n = 100, seed = 1)
   result <- tryCatch(
-    plot(hv_upset(dta, intersect = sets)),
+    hv_muffle_known_plot_warnings(plot(hv_upset(dta, intersect = sets))),
     error = function(e) {
       msg <- conditionMessage(e)
       if (grepl("valid theme|S7|patchwork", msg, ignore.case = TRUE)) {

@@ -39,3 +39,4 @@ hvtiPlotR.Rproj
 ^CONTRIBUTING\.md$
 ^testing-strategy\.md$
 ^.*\.fuse_hidden
+^\.positai$

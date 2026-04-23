@@ -16,7 +16,9 @@ hv_theme_dark_ppt(
   ink = "white",
   paper = "transparent",
   accent = "#3366FF",
-  bold = FALSE
+  bold = FALSE,
+  mono_y = FALSE,
+  title_size = NULL
 )
 
 theme_dark_ppt(
@@ -28,7 +30,9 @@ theme_dark_ppt(
   ink = "white",
   paper = "transparent",
   accent = "#3366FF",
-  bold = FALSE
+  bold = FALSE,
+  mono_y = FALSE,
+  title_size = NULL
 )
 
 theme_ppt(
@@ -40,7 +44,9 @@ theme_ppt(
   ink = "white",
   paper = "transparent",
   accent = "#3366FF",
-  bold = FALSE
+  bold = FALSE,
+  mono_y = FALSE,
+  title_size = NULL
 )
 
 hv_theme_ppt(
@@ -52,11 +58,13 @@ hv_theme_ppt(
   ink = "white",
   paper = "transparent",
   accent = "#3366FF",
-  bold = FALSE
+  bold = FALSE,
+  mono_y = FALSE,
+  title_size = NULL
 )
 }
 \arguments{
-\item{base_size}{Base font size in points.
+\item{base_size}{Base font size in points (applies to axis text).
 Default \code{32}.}
 
 \item{base_family}{Base font family. Default \code{""} (device default).}
@@ -78,6 +86,16 @@ Default \code{"#3366FF"}.}
 
 \item{bold}{If \code{TRUE}, axis text and axis titles are rendered
 with \code{face = "bold"}. Default \code{FALSE}.}
+
+\item{mono_y}{If \code{TRUE}, y-axis tick labels are rendered in a
+fixed-width (\code{"mono"}) font family. This keeps label widths constant
+across slides whose y-axis ranges differ (e.g. \code{"1.0"} vs \code{"100.0"}),
+preventing the panel from appearing to shift between slides when exported
+via \code{rvg}/\code{officer}. Default \code{FALSE}.}
+
+\item{title_size}{Font size in points for axis titles. When \code{NULL}
+(default) axis titles inherit \code{base_size}. Set to a larger value (e.g.
+\code{40}) to make titles more prominent than tick labels.}
 }
 \value{
 A \code{\link[ggplot2:theme]{ggplot2::theme()}} object.
@@ -96,6 +114,44 @@ annotated directly on the panel; add \code{+ theme(legend.position = "right")}
 \code{base_size} via ggplot2's \code{half_line = base_size / 2} convention, so the
 spacing stays proportional when \code{base_size} changes.
 }
+\section{Axis customisation via \code{+ theme(...)}}{
+
+The theme sets sensible defaults, but every element can be overridden
+after the fact with a \code{+ theme(...)} call:
+
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{# Monospace y-axis labels (already set when mono_y = TRUE, but also
+# achievable ad-hoc — useful when y-axis ranges vary across slides and
+# you need stable label widths):
+p + hv_theme_dark_ppt() +
+  theme(axis.text.y = element_text(family = "mono"))
+
+# Inward ticks of a specific physical length (negative = inward):
+p + hv_theme_dark_ppt() +
+  theme(axis.ticks.length = unit(-0.25, "cm"))
+
+# Nudge x-axis tick labels down (vjust) and away from the axis (margin):
+p + hv_theme_dark_ppt() +
+  theme(axis.text.x = element_text(vjust = 2.05,
+                                   margin = margin(t = 0.55, unit = "cm")))
+
+# Separate axis title size from axis text size:
+p + hv_theme_dark_ppt() +
+  theme(axis.title = element_text(size = 40))
+
+# Rotate x-axis labels:
+p + hv_theme_dark_ppt() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+# Restore the legend:
+p + hv_theme_dark_ppt() +
+  theme(legend.position = "right")
+}\if{html}{\out{</div>}}
+
+Note that \code{element_text()} calls in \code{+ theme()} are \emph{relative} to the
+values already set by the theme, so you only need to specify the
+attributes you want to change.
+}
+
 \examples{
 library(ggplot2)
 p <- ggplot(mtcars, aes(wt, mpg, colour = factor(cyl))) + geom_point()
@@ -108,6 +164,12 @@ p + theme_ppt()
 
 # Bold axis text/titles
 p + hv_theme_dark_ppt(bold = TRUE)
+
+# Monospace y-axis labels (stable width across slides with different ranges)
+p + hv_theme_dark_ppt(mono_y = TRUE)
+
+# Larger axis titles than tick labels
+p + hv_theme_dark_ppt(title_size = 40)
 
 # Override the default hidden legend
 p + hv_theme_dark_ppt() + theme(legend.position = "right")

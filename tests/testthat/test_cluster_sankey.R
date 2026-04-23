@@ -99,22 +99,25 @@ test_that("hv_sankey returns an hv_data object", {
 test_that("plot(hv_sankey) returns a ggplot (all K = 2:9)", {
   skip_if_not_installed("ggsankey")
   dta <- sample_cluster_sankey_data(n = 100, seed = 1)
-  expect_s3_class(plot(hv_sankey(dta)), "ggplot")
+  p <- hv_muffle_known_plot_warnings(plot(hv_sankey(dta)))
+  expect_s3_class(p, "ggplot")
 })
 
 test_that("plot(hv_sankey) works with a subset of cluster columns", {
   skip_if_not_installed("ggsankey")
   dta <- sample_cluster_sankey_data(n = 100, seed = 1)
-  expect_s3_class(
-    plot(hv_sankey(dta, cluster_cols = c("C2", "C3", "C4"))),
-    "ggplot"
+  p <- hv_muffle_known_plot_warnings(
+    plot(hv_sankey(dta, cluster_cols = c("C2", "C3", "C4")))
   )
+  expect_s3_class(p, "ggplot")
 })
 
 test_that("plot(hv_sankey) is composable with + operator", {
   skip_if_not_installed("ggsankey")
   dta <- sample_cluster_sankey_data(n = 100, seed = 1)
-  p   <- plot(hv_sankey(dta)) + ggplot2::labs(x = "Number of clusters (K)")
+  p <- hv_muffle_known_plot_warnings(
+    plot(hv_sankey(dta)) + ggplot2::labs(x = "Number of clusters (K)")
+  )
   expect_s3_class(p, "ggplot")
   expect_equal(p$labels$x, "Number of clusters (K)")
 })
@@ -122,7 +125,9 @@ test_that("plot(hv_sankey) is composable with + operator", {
 test_that("plot(hv_sankey) is composable with hv_theme()", {
   skip_if_not_installed("ggsankey")
   dta <- sample_cluster_sankey_data(n = 100, seed = 1)
-  p   <- plot(hv_sankey(dta)) + hv_theme("manuscript")
+  p <- hv_muffle_known_plot_warnings(
+    plot(hv_sankey(dta)) + hv_theme("manuscript")
+  )
   expect_s3_class(p, "ggplot")
 })
 
