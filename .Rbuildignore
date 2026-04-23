@@ -40,3 +40,5 @@ hvtiPlotR.Rproj
 ^testing-strategy\.md$
 ^.*\.fuse_hidden
 ^\.positai$
+^tests/testthat/Rplots\.pdf$
+^man-roxygen$

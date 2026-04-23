@@ -58,14 +58,17 @@ Default \code{"#3366FF"}.}
 with \code{face = "bold"}. Default \code{FALSE}.}
 
 \item{mono_y}{If \code{TRUE}, y-axis tick labels are rendered in a
-fixed-width (\code{"mono"}) font family. This keeps label widths constant
-across slides whose y-axis ranges differ (e.g. \code{"1.0"} vs \code{"100.0"}),
-preventing the panel from appearing to shift between slides when exported
-via \code{rvg}/\code{officer}. Default \code{FALSE}.}
+fixed-width (\code{"mono"}) font family, overriding \code{base_family} for the
+y-axis tick labels only (the rest of the plot still uses \code{base_family}).
+This keeps label widths constant across slides whose y-axis ranges
+differ (e.g. \code{"1.0"} vs \code{"100.0"}), preventing the panel from appearing
+to shift between slides when exported via \code{rvg}/\code{officer}. Default
+\code{FALSE}.}
 
-\item{title_size}{Font size in points for axis titles. When \code{NULL}
-(default) axis titles inherit \code{base_size}. Set to a larger value (e.g.
-\code{40}) to make titles more prominent than tick labels.}
+\item{title_size}{Font size in points for axis titles. \code{NULL} (the
+default) means "inherit \code{base_size}", so axis titles and tick labels
+are the same size. Set to a larger value (e.g. \code{40}) to make titles
+more prominent than tick labels.}
 }
 \value{
 A \code{\link[ggplot2:theme]{ggplot2::theme()}} object.
@@ -84,6 +87,14 @@ annotated directly on the panel; add \code{+ theme(legend.position = "right")}
 (or similar) to override. Axis-text and axis-title margins are scaled from
 \code{base_size} via ggplot2's \code{half_line = base_size / 2} convention, so the
 spacing stays proportional when \code{base_size} changes.
+
+The panel fill is transparent so the PPT slide template background shows
+through (white on a light template, a gradient on an AATS-style template).
+The black border still delimits the panel rectangle; the \code{\link[=hv_ph_location]{hv_ph_location()}}
+/ \code{\link[=save_ppt]{save_ppt()}} (\verb{panel_box=}) workflow anchors that rectangle at a fixed
+slide position. Use
+\code{+ theme(panel.background = element_rect(fill = "white"))} to restore an
+opaque white panel if that's needed for a specific template.
 }
 \section{Axis customisation via \code{+ theme(...)}}{
 

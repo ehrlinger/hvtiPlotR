@@ -6,10 +6,10 @@
 
 hv_muffle_known_plot_warnings <- function(expr) {
   warning_patterns <- c(
-    "The `size` argument of `element_rect\(\)` is deprecated",
+    "The `size` argument of `element_rect\\(\\)` is deprecated",
     "Using `size` aesthetic for lines was deprecated",
     "is not a valid theme\\.",
-    "`legend\\.margin` must be specified using `margin\(\)`"
+    "`legend\\.margin` must be specified using `margin\\(\\)`"
   )
 
   withCallingHandlers(

@@ -88,14 +88,17 @@ Default \code{"#3366FF"}.}
 with \code{face = "bold"}. Default \code{FALSE}.}
 
 \item{mono_y}{If \code{TRUE}, y-axis tick labels are rendered in a
-fixed-width (\code{"mono"}) font family. This keeps label widths constant
-across slides whose y-axis ranges differ (e.g. \code{"1.0"} vs \code{"100.0"}),
-preventing the panel from appearing to shift between slides when exported
-via \code{rvg}/\code{officer}. Default \code{FALSE}.}
+fixed-width (\code{"mono"}) font family, overriding \code{base_family} for the
+y-axis tick labels only (the rest of the plot still uses \code{base_family}).
+This keeps label widths constant across slides whose y-axis ranges
+differ (e.g. \code{"1.0"} vs \code{"100.0"}), preventing the panel from appearing
+to shift between slides when exported via \code{rvg}/\code{officer}. Default
+\code{FALSE}.}
 
-\item{title_size}{Font size in points for axis titles. When \code{NULL}
-(default) axis titles inherit \code{base_size}. Set to a larger value (e.g.
-\code{40}) to make titles more prominent than tick labels.}
+\item{title_size}{Font size in points for axis titles. \code{NULL} (the
+default) means "inherit \code{base_size}", so axis titles and tick labels
+are the same size. Set to a larger value (e.g. \code{40}) to make titles
+more prominent than tick labels.}
 }
 \value{
 A \code{\link[ggplot2:theme]{ggplot2::theme()}} object.
