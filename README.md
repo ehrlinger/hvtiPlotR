@@ -9,15 +9,15 @@
 
 ggplot2 themes and plot functions for creating publication-quality graphics in R, conforming to the standards of Cardiovascular Outcomes Registries and Research (CORR) within The Heart & Vascular Institute at the Cleveland Clinic. This package is the modern R replacement for the historical `plot.sas` macro.
 
-## Quick Start
-
-Install from GitHub using [remotes](https://CRAN.R-project.org/package=remotes):
+## Installation
 
 ```r
 remotes::install_github("ehrlinger/hvtiPlotR")
 ```
 
-Apply an HVI theme to any ggplot2 figure in one line:
+## Usage
+
+Apply a theme to any ggplot in one line:
 
 ```r
 library(ggplot2)
@@ -28,7 +28,7 @@ ggplot(mtcars, aes(wt, mpg, colour = factor(cyl))) +
   hv_theme("manuscript")
 ```
 
-Export the result directly to an editable PowerPoint slide:
+Export directly to an editable PowerPoint slide:
 
 ```r
 p <- ggplot(mtcars, aes(wt, mpg)) + geom_point() + hv_theme("ppt")
@@ -40,30 +40,11 @@ save_ppt(
 )
 ```
 
-## Themes
+Supported themes: `"manuscript"` (journal figures), `"ppt"` / `"dark_ppt"` (dark PowerPoint), `"light_ppt"` (light/transparent PowerPoint), `"poster"` (conference posters). Call via `hv_theme(style)` or as a direct alias — `theme_manuscript()` (`theme_man()`), `theme_ppt()` / `theme_dark_ppt()`, `theme_light_ppt()`, `theme_poster()`.
 
-Use `hv_theme()` to apply any supported style, or call the named aliases directly:
+## Plot functions
 
-| Style key | Alias(es) | Best for |
-|---|---|---|
-| `"manuscript"` | `theme_manuscript()`, `theme_man()` | Journal figures, white background |
-| `"ppt"` / `"dark_ppt"` | `theme_ppt()`, `theme_dark_ppt()` | Dark-background PowerPoint slides |
-| `"light_ppt"` | `theme_light_ppt()` | Light/transparent PowerPoint slides |
-| `"poster"` | `theme_poster()` | Conference posters |
-
-```r
-p + hv_theme("manuscript")   # via generic
-p + theme_man()                # direct alias
-p + hv_theme("ppt")          # dark PPT
-p + hv_theme("light_ppt")    # light PPT
-p + hv_theme("poster")       # poster
-```
-
-## Plot Function Gallery
-
-**hvtiPlotR 2.0 uses a two-step API.** A constructor (`hv_*()`) shapes the
-data and returns an S3 object; `plot()` renders a bare `ggplot`. Add
-`scale_*`, `labs()`, `annotate()`, and a theme with the usual `+` operator.
+hvtiPlotR 2.0 uses a two-step API: a constructor (`hv_*()`) shapes the data and returns an S3 object; `plot()` renders a bare `ggplot` you can extend with `scale_*`, `labs()`, `annotate()`, and a theme.
 
 ```r
 km <- hv_survival(sample_survival_data())
@@ -71,89 +52,50 @@ plot(km) + hv_theme("manuscript")
 km$tables$risk                         # risk-table data frame
 ```
 
-### Propensity Score & Balance
+| Function | Category | Description |
+|---|---|---|
+| `hv_mirror_hist()` | Propensity / balance | Mirrored histograms of propensity scores for two groups, before and after matching or IPTW weighting |
+| `hv_stacked()` | Propensity / balance | Stacked or proportional-fill histogram of a numeric variable by group |
+| `hv_balance()` | Propensity / balance | Standardised mean difference dot-plot for matching/weighting quality |
+| `hv_survival()` | Survival | Kaplan-Meier and Nelson-Aalen; `plot(km, type=…)` for survival, hazard, log-log, or RMST; tables via `km$tables` |
+| `hv_nonparametric()` | Survival | Nonparametric survival or event-rate curve with optional confidence intervals |
+| `hv_ordinal()` | Survival | Nonparametric curves for ordinal outcomes (e.g. severity grades) |
+| `hv_hazard()` | Survival | Parametric hazard/survival curves (Weibull etc.), with optional KM overlay |
+| `hv_survival_difference()` | Survival | Absolute treatment benefit vs. a reference group over time |
+| `hv_nnt()` | Survival | Number needed to treat derived from survival-difference estimates |
+| `hv_followup()` | Survival | Goodness-of-follow-up scatter; `plot(gf, type = "event")` for non-fatal competing events |
+| `hv_trends()` | Longitudinal | Annual means/medians with LOESS smooth, by group |
+| `hv_spaghetti()` | Longitudinal | Individual subject trajectories over time with optional per-group LOESS overlay |
+| `hv_longitudinal()` | Longitudinal | Pre-aggregated patient and measurement counts; `plot(lc, type = "table")` for text table |
+| `hv_eda()` | Exploratory | Single-variable EDA; auto-detects type (scatter + LOESS for continuous, stacked bar for categorical) |
+| `hv_upset()` | Exploratory | UpSet diagram for procedure co-occurrences or set memberships |
+| `hv_alluvial()` | Exploratory | Sankey/alluvial diagram for patient flow across categorical stages |
+| `hv_sankey()` | Exploratory | Cluster-stability Sankey across cluster solutions |
 
-| Constructor | Description |
-|---|---|
-| `hv_mirror_hist()` | Mirrored histograms showing propensity score distributions for two groups, before and after matching or IPTW weighting |
-| `hv_stacked()` | Stacked or proportional-fill histogram of a numeric variable by group |
-| `hv_balance()` | Standardised mean difference dot-plot for assessing propensity matching or weighting quality |
-
-```r
-mh <- hv_mirror_hist(sample_mirror_histogram_data(n = 2000),
-                  group_labels = c("SAVR", "TF-TAVR"))
-plot(mh) + hv_theme("manuscript")
-```
-
-### Survival & Time-to-Event
-
-| Constructor | Description |
-|---|---|
-| `hv_survival()` | Kaplan-Meier and Nelson-Aalen analysis. `plot(km, type = ...)` renders survival, cumulative hazard, hazard, log-log, or life/RMST; tables via `km$tables` |
-| `hv_nonparametric()` | Nonparametric survival or event-rate curve with optional confidence intervals |
-| `hv_ordinal()` | Nonparametric curves for ordinal outcomes (e.g. severity grades) |
-| `hv_hazard()` | Parametric hazard/survival curves from Weibull or other models, with optional KM overlay |
-| `hv_survival_difference()` | Absolute treatment benefit vs. a reference group over time |
-| `hv_nnt()` | Number needed to treat derived from survival difference estimates |
-| `hv_followup()` | Goodness-of-follow-up scatter: actual vs. potential follow-up by operation year; `plot(gf, type = "event")` for non-fatal competing events |
-
-### Longitudinal & Repeated Measures
-
-| Constructor | Description |
-|---|---|
-| `hv_trends()` | Temporal trend: annual means/medians with LOESS smooth, by group |
-| `hv_spaghetti()` | Individual subject trajectories over time with optional per-group LOESS overlay |
-| `hv_longitudinal()` | Pre-aggregated patient and measurement counts; `plot(lc, type = "table")` for text table |
-
-### Exploratory & Multivariate
-
-| Constructor | Description |
-|---|---|
-| `hv_eda()` | Exploratory plot for a single variable. Auto-detects type: scatter + LOESS for continuous, stacked bar for categorical. Missing values shown as `"(Missing)"` |
-| `hv_upset()` | UpSet diagram for visualising procedure co-occurrences or set memberships |
-| `hv_alluvial()` | Sankey/alluvial diagram for patient flow across categorical stages |
-| `hv_sankey()` | Cluster stability Sankey showing patient transitions across cluster solutions |
-
-### Utilities
+Geometry & export helpers:
 
 | Function | Description |
 |---|---|
-| `hv_theme(style)` | Generic dispatcher returning the named ggplot2 theme |
-| `save_ppt()` | Export a ggplot to an editable PowerPoint slide using an HVI template; optional `panel_box = list(width = ..., height = ..., left = ..., top = ...)` anchors the panel content area to the same slide coordinates on every slide |
-| `hv_ggsave_dims()` | Compute `ggsave()` `width`/`height` that preserve a target panel content area regardless of axis-label, legend, or title size |
-| `hv_ph_location()` | Compute `officer::ph_location()` args so a ggplot's panel lands at a fixed slide rectangle — the per-slide worker that `save_ppt(panel_box=)` calls |
+| `save_ppt()` | Export a ggplot to an editable PowerPoint slide; `panel_box = list(width, height, left, top)` anchors the panel to the same slide coordinates on every slide |
+| `hv_ggsave_dims()` | Compute `ggsave()` `width`/`height` that preserve a target panel size regardless of axis labels, legend, or title |
+| `hv_ph_location()` | Compute `officer::ph_location()` args so a ggplot panel lands at a fixed slide rectangle (called internally by `save_ppt(panel_box=)`) |
 | `make_footnote()` | Add a footnote annotation to the current figure |
 
-## Vignettes
+## Documentation
 
-Four vignettes ship with the package and are available after installation:
+Five vignettes ship with the package:
 
-```r
-vignette("hvtiPlotR",        package = "hvtiPlotR")  # SAS migration guide
-vignette("plot-functions",   package = "hvtiPlotR")  # per-function reference with worked examples
-vignette("plot-decorators",  package = "hvtiPlotR")  # composition: scale_*, labs(), themes, saving
-vignette("contributing",     package = "hvtiPlotR")  # guide for adding new plot functions
-```
+- `vignette("installation")` — full install guide (GitHub, Suggests, dev checkout, troubleshooting)
+- `vignette("hvtiPlotR")` — SAS migration guide (`plot.sas` → R)
+- `vignette("plot-functions")` — per-function reference with worked examples
+- `vignette("plot-decorators")` — composition: `scale_*`, `labs()`, themes, saving
+- `vignette("contributing")` — guide for adding new plot functions
 
-The online reference is at <https://ehrlinger.github.io/hvtiPlotR/>.
-
-## Migrating from plot.sas
-
-If you are moving existing SAS analyses to R, see the SAS migration vignette (`vignette("hvtiPlotR")`). It maps each `plot.sas` macro call to the equivalent R recipe and shows side-by-side code comparisons.
-
-The `inst/plot.README` and `inst/plot.sas` files are preserved for historical reference.
+Online reference: <https://ehrlinger.github.io/hvtiPlotR/>. The historical `plot.sas` macro is preserved in `inst/plot.sas` for reference.
 
 ## Contributing
 
-Pull requests are welcome! Please read [CONTRIBUTING.md](CONTRIBUTING.md) for
-the full guide, which covers:
-
-- **Track A** — porting a SAS template (for biostatisticians and analysts
-  adding a new plot function or sample-data generator)
-- **Track B** — package infrastructure (for R developers working on
-  dependencies, CI, testing, and CRAN compliance)
-
-Quick-start:
+See [CONTRIBUTING.md](CONTRIBUTING.md) for the full guide — Track A (porting a SAS template; for biostatisticians and analysts) and Track B (package infrastructure; for R developers). Open an [issue](https://github.com/ehrlinger/hvtiPlotR/issues) to discuss a new port before writing code, and tag `@ehrlinger` on pull requests.
 
 ```r
 devtools::install_deps(dependencies = TRUE)
@@ -161,10 +103,4 @@ devtools::load_all()
 devtools::check()
 ```
 
-Open an [issue](https://github.com/ehrlinger/hvtiPlotR/issues) to discuss a
-new port before writing code, and tag `@ehrlinger` for review on all pull
-requests.
-
-## Code of Conduct
-
-This project adheres to the [Contributor Covenant](https://www.contributor-covenant.org/version/2/1/code_of_conduct/). By participating, you are expected to uphold this code.
+This project adheres to the [Contributor Covenant](https://www.contributor-covenant.org/version/2/1/code_of_conduct/).

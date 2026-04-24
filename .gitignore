@@ -9,6 +9,7 @@ vignettes/*.log
 vignettes/*.gz
 vignettes/*.bbl
 vignettes/*.tex
+vignettes/*.html
 vignettes/figure/*.pdf
 vignettes/fig-rfr/*.pdf
 vignettes/fig-rfr/*.png

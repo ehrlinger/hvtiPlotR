@@ -1,0 +1,219 @@
+---
+title: "Installing hvtiPlotR"
+author: "John Ehrlinger <ehrlinj@ccf.org>"
+date: today
+format:
+  html:
+    toc: true
+    toc-depth: 3
+    html-math-method: mathjax
+editor:
+  markdown:
+    wrap: 80
+vignette: >
+  %\VignetteIndexEntry{Installing hvtiPlotR}
+  %\VignetteEngine{quarto::html}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, eval = FALSE, message = FALSE,
+                      warning = FALSE)
+```
+
+This vignette walks through installing **hvtiPlotR** — from a minimum
+working install for end-users, through a full install with all suggested
+packages, to a developer checkout. It closes with verification steps and
+troubleshooting for the most common issues.
+
+**hvtiPlotR** is an internal Cleveland Clinic package and is not on CRAN.
+All installs go through GitHub.
+
+## Requirements
+
+- **R** ≥ 4.1.0
+- **Pandoc** (bundled with RStudio; otherwise install separately)
+- **quarto** CLI — required only to rebuild vignettes from source; not
+  needed for normal end-user installs
+- Write access to your R library. Check with `.libPaths()`.
+
+Imports are installed automatically from CRAN: `ComplexUpset`,
+`ggalluvial`, `ggplot2` (≥ 3.4.0), `grid`, `rlang` (≥ 1.0.0), `survival`,
+`officer` (≥ 0.6.0), `rvg` (≥ 0.2.5).
+
+## Standard install
+
+Install from GitHub using the
+[remotes](https://CRAN.R-project.org/package=remotes) package:
+
+```r
+install.packages("remotes")   # if not already installed
+remotes::install_github("ehrlinger/hvtiPlotR")
+```
+
+This installs all `Imports`. Suggested packages (vignette builder,
+optional plot dependencies) are not installed by default — see the next
+section if you want the full feature set.
+
+## Install with suggested packages
+
+To install everything the vignettes and optional plot families rely on,
+request suggested dependencies. One of the suggests (`ggsankey`) is only
+on GitHub, so enable the `Remotes` field during install:
+
+```r
+remotes::install_github(
+  "ehrlinger/hvtiPlotR",
+  dependencies = TRUE                # install Suggests too
+)
+```
+
+`dependencies = TRUE` pulls:
+
+- `knitr`, `quarto` — vignette building
+- `testthat` (≥ 3.0.0), `devtools`, `pkgload`, `here` — test + dev tooling
+- `ggsankey` — cluster-stability Sankey (`hv_sankey()`); comes from
+  `davidsjoberg/ggsankey` via the `Remotes` field
+- `haven`, `patchwork`, `scales`, `tidyr` — data import and plot
+  composition
+
+If the `ggsankey` resolution fails, install it directly first:
+
+```r
+remotes::install_github("davidsjoberg/ggsankey")
+remotes::install_github("ehrlinger/hvtiPlotR", dependencies = TRUE)
+```
+
+## Developer install
+
+For contributors working on the package itself:
+
+```bash
+git clone https://github.com/ehrlinger/hvtiPlotR.git
+cd hvtiPlotR
+```
+
+Then from R, inside the package directory:
+
+```r
+install.packages(c("devtools", "remotes"))
+remotes::install_github("davidsjoberg/ggsankey")  # GitHub-only Suggest
+devtools::install_deps(dependencies = TRUE)       # CRAN Imports + Suggests
+devtools::load_all()
+devtools::check()
+```
+
+For the full contributor workflow (branching, review, CI) see
+`vignette("contributing", package = "hvtiPlotR")`.
+
+## Verifying the install
+
+After installing, run the following to confirm the package loads and a
+theme applies cleanly:
+
+```r
+library(hvtiPlotR)
+
+# Package version should match what was just installed
+packageVersion("hvtiPlotR")
+
+# Apply a theme to a ggplot
+library(ggplot2)
+ggplot(mtcars, aes(wt, mpg)) +
+  geom_point() +
+  hv_theme("manuscript")
+```
+
+If the PowerPoint export path is part of your workflow, smoke-test it
+against the bundled template:
+
+```r
+p <- ggplot(mtcars, aes(wt, mpg)) + geom_point() + hv_theme("ppt")
+
+save_ppt(
+  object     = p,
+  template   = system.file("ClevelandClinic.pptx", package = "hvtiPlotR"),
+  powerpoint = tempfile(fileext = ".pptx")
+)
+```
+
+List installed vignettes:
+
+```r
+vignette(package = "hvtiPlotR")
+```
+
+You should see at least: `installation`, `hvtiPlotR`, `plot-functions`,
+`plot-decorators`, `contributing`.
+
+## Updating
+
+Re-run the same install command. `remotes::install_github()` always
+fetches the latest commit on the default branch:
+
+```r
+remotes::install_github("ehrlinger/hvtiPlotR")
+```
+
+To install a specific branch, tag, or commit:
+
+```r
+remotes::install_github("ehrlinger/hvtiPlotR@v2.0.1")
+remotes::install_github("ehrlinger/hvtiPlotR@engineering")
+remotes::install_github("ehrlinger/hvtiPlotR@<commit-sha>")
+```
+
+To uninstall:
+
+```r
+remove.packages("hvtiPlotR")
+```
+
+## Troubleshooting
+
+**`remotes::install_github()` fails with a 403 / rate-limit error.**
+GitHub rate-limits anonymous API calls. Set a personal access token:
+
+```r
+Sys.setenv(GITHUB_PAT = "ghp_...")
+remotes::install_github("ehrlinger/hvtiPlotR")
+```
+
+**Behind a corporate proxy.** Set `http_proxy` / `https_proxy` before
+launching R, or configure `options(download.file.method = "libcurl")`.
+
+**`quarto` not found when building vignettes.** Install the quarto CLI
+from <https://quarto.org/docs/get-started/>. Package-installed
+`quarto` (the R wrapper) calls out to the CLI binary.
+
+**`ggsankey` does not install.** It is GitHub-only. Install it first:
+
+```r
+remotes::install_github("davidsjoberg/ggsankey")
+```
+
+**`officer` / `rvg` install fails (system libxml/libcurl).** On
+Debian/Ubuntu, install system headers:
+
+```bash
+sudo apt-get install libxml2-dev libcurl4-openssl-dev libssl-dev
+```
+
+On macOS, Xcode command-line tools provide these:
+
+```bash
+xcode-select --install
+```
+
+**Permission denied writing to the library path.** Either run R with
+appropriate permissions or configure a user library via `.libPaths()` /
+`R_LIBS_USER`.
+
+## Reporting installation problems
+
+Open an issue at <https://github.com/ehrlinger/hvtiPlotR/issues> and
+include the output of:
+
+```r
+sessionInfo()
+```
