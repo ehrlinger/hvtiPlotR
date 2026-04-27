@@ -62,13 +62,13 @@ plot(
 
 A bare [`ggplot`](https://ggplot2.tidyverse.org/reference/ggplot.html)
 object; compose with `+` to add scales, axis limits, labels, and
-[`hv_theme`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_theme.md).
+[`theme_hv_manuscript`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md).
 
 ## See also
 
 [`hv_trends`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_trends.md)
 to build the data object,
-[`hv_theme`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_theme.md)
+[`theme_hv_manuscript`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)
 for the publication theme.
 
 Other Temporal trends:
@@ -86,7 +86,7 @@ plot(hv_trends(one, group_col = NULL)) +
   ggplot2::scale_y_continuous(limits = c(0, 10),
                               breaks = seq(0, 10, 2)) +
   ggplot2::labs(x = "Year", y = "Cases/year") +
-  hv_theme("poster")
+  theme_hv_poster()
 #> Warning: Removed 600 rows containing non-finite outside the scale range
 #> (`stat_smooth()`).
 #> Warning: Removed 33 rows containing missing values or values outside the scale range
@@ -107,7 +107,7 @@ plot(hv_trends(dta_lp)) +
                               breaks = seq(0, 100, 10)) +
   ggplot2::coord_cartesian(xlim = c(1970, 2000), ylim = c(0, 100)) +
   ggplot2::labs(x = "Year", y = "Percent (%)") +
-  hv_theme("poster")
+  theme_hv_poster()
 
 
 # --- tp.lp.trends.age.sas: age on x-axis, 25-85 by 10 -------------------
@@ -121,7 +121,7 @@ plot(hv_trends(dta_age)) +
                               breaks = seq(0, 100, 20)) +
   ggplot2::coord_cartesian(xlim = c(25, 85), ylim = c(0, 100)) +
   ggplot2::labs(x = "Age (years)", y = "Percent (%)") +
-  hv_theme("poster")
+  theme_hv_poster()
 #> Warning: Removed 1 row containing non-finite outside the scale range (`stat_smooth()`).
 
 
@@ -140,7 +140,7 @@ plot(hv_trends(dta_poly)) +
                               breaks = seq(0, 100, 10)) +
   ggplot2::coord_cartesian(xlim = c(1990, 1999), ylim = c(0, 100)) +
   ggplot2::labs(x = "Year", y = "Percent (%)") +
-  hv_theme("poster")
+  theme_hv_poster()
 
 
 # --- Save ----------------------------------------------------------------
@@ -155,13 +155,13 @@ p <- plot(tr) +
   ggplot2::scale_x_continuous(limits = c(1985, 2015),
                               breaks = seq(1985, 2015, 5)) +
   ggplot2::labs(x = "Years", y = "%") +
-  hv_theme("poster")
+  theme_hv_poster()
 ggplot2::ggsave("trends.pdf", p, width = 11.5, height = 8)
 } # }
 
 # --- Global theme (set once per session) ----------------------------------
 if (FALSE) { # \dontrun{
-old <- ggplot2::theme_set(hv_theme_manuscript())
+old <- ggplot2::theme_set(theme_hv_manuscript())
 plot(hv_trends(dta_poly)) +
   ggplot2::scale_colour_brewer(palette = "Dark2", name = "Repair type")
 ggplot2::theme_set(old)

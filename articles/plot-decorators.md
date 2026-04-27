@@ -27,7 +27,7 @@ applied by either step. Decoration is added by chaining layers with `+`:
       labs()           +   # axis labels, title, caption
       annotate()       +   # text/arrows placed on the panel
       coord_cartesian() +  # viewport cropping
-      hv_theme()         # non-data formatting
+      theme_hv_manuscript()         # non-data formatting
 
 This vignette demonstrates each decorator in turn, using
 [`hv_trends()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_trends.md)
@@ -47,8 +47,8 @@ km     <- hv_survival(dta_km)
 
 ## Themes
 
-The **hvtiPlotR** package provides four themes via `hv_theme(style)`.
-The `style` argument selects the output target.
+The **hvtiPlotR** package provides four themes via `theme_hv_*()`. The
+`style` argument selects the output target.
 
 | Style          | Target                                  |
 |----------------|-----------------------------------------|
@@ -68,12 +68,12 @@ p_ms <- p_base +
     name = "Group"
   ) +
   labs(x = "Surgery Year", y = "Outcome") +
-  hv_theme("manuscript")
+  theme_hv_manuscript()
 
 p_ms
 ```
 
-![](plot-decorators_files/figure-html/theme_manuscript-1.png)
+![](plot-decorators_files/figure-html/theme_hv_manuscript-1.png)
 
 ### Poster
 
@@ -86,12 +86,12 @@ p_poster <- p_base +
     name = "Group"
   ) +
   labs(x = "Surgery Year", y = "Outcome") +
-  hv_theme("poster")
+  theme_hv_poster()
 
 p_poster
 ```
 
-![](plot-decorators_files/figure-html/theme_poster-1.png)
+![](plot-decorators_files/figure-html/theme_hv_poster-1.png)
 
 ### Light PowerPoint
 
@@ -104,10 +104,10 @@ p_base +
     name = "Group"
   ) +
   labs(x = "Surgery Year", y = "Outcome") +
-  hv_theme("light_ppt")
+  theme_hv_ppt_light()
 ```
 
-![](plot-decorators_files/figure-html/theme_light_ppt-1.png)
+![](plot-decorators_files/figure-html/theme_hv_ppt_light-1.png)
 
 ### Dark PowerPoint
 
@@ -120,11 +120,11 @@ p_base +
     name = "Group"
   ) +
   labs(x = "Surgery Year", y = "Outcome") +
-  hv_theme("dark_ppt") +
+  theme_hv_ppt_dark() +
   theme(plot.background = element_rect(fill = "navy", colour = "navy"))
 ```
 
-![](plot-decorators_files/figure-html/theme_dark_ppt-1.png)
+![](plot-decorators_files/figure-html/theme_hv_ppt_dark-1.png)
 
 ## Colour Scales
 
@@ -147,7 +147,7 @@ plot(km) +
   scale_x_continuous(breaks = seq(0, 20, 5)) +
   coord_cartesian(xlim = c(0, 20), ylim = c(0, 100)) +
   labs(x = "Years after Operation", y = "Freedom from Death (%)") +
-  hv_theme("poster")
+  theme_hv_poster()
 ```
 
 ![](plot-decorators_files/figure-html/scale_colour_manual-1.png)
@@ -168,7 +168,7 @@ p_base +
     name = "Group"
   ) +
   labs(x = "Surgery Year", y = "Outcome") +
-  hv_theme("poster")
+  theme_hv_poster()
 ```
 
 ![](plot-decorators_files/figure-html/scale_colour_brewer-1.png)
@@ -187,7 +187,7 @@ p_base +
     guide = "none"
   ) +
   labs(x = "Surgery Year", y = "Outcome") +
-  hv_theme("poster")
+  theme_hv_poster()
 ```
 
 ![](plot-decorators_files/figure-html/scale_no_legend-1.png)
@@ -215,7 +215,7 @@ plot(km) +
     y       = "Freedom from Death (%)",
     caption = "Logit CI, \u03b1 = 0.6827 (1 SD)"
   ) +
-  hv_theme("poster")
+  theme_hv_poster()
 ```
 
 ![](plot-decorators_files/figure-html/labs_example-1.png)
@@ -242,7 +242,7 @@ plot(km) +
            arrow = arrow(length = unit(0.2, "cm")), colour = "grey40") +
   annotate("text",    x = 10.3, y = 40,
            label = "Median survival", hjust = 0, size = 3, colour = "grey40") +
-  hv_theme("poster")
+  theme_hv_poster()
 ```
 
 ![](plot-decorators_files/figure-html/annotate_example-1.png)
@@ -263,7 +263,7 @@ p_base +
   ) +
   labs(x = "Surgery Year", y = "Outcome") +
   coord_cartesian(xlim = c(1995, 2020), ylim = c(20, 70)) +
-  hv_theme("poster")
+  theme_hv_poster()
 ```
 
 ![](plot-decorators_files/figure-html/coord_cartesian-1.png)
@@ -288,8 +288,9 @@ ggsave(
 
 ### Poster PDF
 
-Poster figures are typically larger and use `hv_theme("poster")`. Adjust
-dimensions to match the poster panel size.
+Poster figures are typically larger and use
+[`theme_hv_poster()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md).
+Adjust dimensions to match the poster panel size.
 
 ``` r
 ggsave(
@@ -319,8 +320,11 @@ Key arguments:
 | `width` / `height` | `10.1` / `5.8`                | Plot area in inches                                    |
 | `left` / `top`     | `0.0` / `1.2`                 | Position from slide edges, in inches                   |
 
-Apply `hv_theme("dark_ppt")` or `hv_theme("light_ppt")` before saving to
-match the slide background.
+Apply
+[`theme_hv_ppt_dark()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)
+or
+[`theme_hv_ppt_light()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)
+before saving to match the slide background.
 
 #### Single slide
 
@@ -335,7 +339,7 @@ p_ppt <- p_base +
     name = "Group"
   ) +
   labs(x = "Surgery Year", y = "Outcome (%)") +
-  hv_theme("dark_ppt")
+  theme_hv_ppt_dark()
 
 save_ppt(
   object       = p_ppt,
@@ -362,7 +366,7 @@ p_km_ppt <- plot(km2) +
   scale_x_continuous(breaks = seq(0, 20, 5)) +
   coord_cartesian(xlim = c(0, 20), ylim = c(0, 100)) +
   labs(x = "Years after Operation", y = "Freedom from Death (%)") +
-  hv_theme("dark_ppt")
+  theme_hv_ppt_dark()
 
 save_ppt(
   object       = list(trends = p_ppt, survival = p_km_ppt),
@@ -423,7 +427,7 @@ plot_list <- lapply(
                  y_label = yv)) +
       scale_colour_manual(values = c("steelblue"), guide = "none") +
       labs(x = "Years") +
-      hv_theme("poster")
+      theme_hv_poster()
   }
 )
 
@@ -462,7 +466,7 @@ p_base +
     name = NULL
   ) +
   labs(x = "Surgery Year", y = "Outcome") +
-  hv_theme("poster") +
+  theme_hv_poster() +
   theme(
     legend.position  = c(0.15, 0.2),        # bottom-left of panel
     legend.background = element_rect(fill = "white", colour = "grey80",
@@ -483,7 +487,7 @@ p_base +
     name = "Group"
   ) +
   labs(x = "Surgery Year", y = "Outcome") +
-  hv_theme("poster") +
+  theme_hv_poster() +
   theme(
     legend.position = "bottom",             # "right" | "left" | "top" | "bottom"
     legend.direction = "horizontal"
@@ -503,7 +507,7 @@ plot(km) +
   scale_x_continuous(breaks = seq(0, 20, 5)) +
   coord_cartesian(xlim = c(0, 20), ylim = c(0, 100)) +
   labs(x = "Years after Operation", y = "Freedom from Death (%)") +
-  hv_theme("poster")
+  theme_hv_poster()
 ```
 
 ![](plot-decorators_files/figure-html/legend_none-1.png)
@@ -523,7 +527,7 @@ p_base +
     name = "Group"
   ) +
   labs(x = "Surgery Year", y = "Outcome") +
-  hv_theme("poster") +
+  theme_hv_poster() +
   theme(
     legend.text  = element_text(size = 9),
     legend.key.size = unit(0.4, "cm")
@@ -534,7 +538,7 @@ p_base +
 
 ## Theme Overrides
 
-[`hv_theme()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_theme.md)
+[`theme_hv_manuscript()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)
 sets a complete non-data formatting baseline. Layer additional
 [`theme()`](https://ggplot2.tidyverse.org/reference/theme.html) calls
 after it to adjust individual elements without touching the rest.
@@ -550,7 +554,7 @@ p_base +
     name = "Group"
   ) +
   labs(x = "Surgery Year", y = "Outcome") +
-  hv_theme("poster") +
+  theme_hv_poster() +
   theme(
     axis.text  = element_text(size = 10),   # tick labels
     axis.title = element_text(size = 12)    # axis titles
@@ -570,7 +574,7 @@ p_base +
     name = "Group"
   ) +
   labs(x = "Surgery Year", y = "Outcome") +
-  hv_theme("poster") +
+  theme_hv_poster() +
   theme(
     panel.grid.minor = element_blank()
   )
@@ -591,7 +595,7 @@ p_base +
     name = "Group"
   ) +
   labs(x = "Surgery Year", y = "Outcome") +
-  hv_theme("poster") +
+  theme_hv_poster() +
   theme(
     axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1)
   )
@@ -618,7 +622,7 @@ plot(km) +
     x        = "Years after Operation",
     y        = "Freedom from Death (%)"
   ) +
-  hv_theme("poster") +
+  theme_hv_poster() +
   theme(
     plot.title    = element_text(size = 14, face = "bold", hjust = 0),
     plot.subtitle = element_text(size = 11, colour = "grey40", hjust = 0)
@@ -641,7 +645,7 @@ p_base +
     name = "Group"
   ) +
   labs(x = "Surgery Year", y = "Outcome") +
-  hv_theme("poster") +
+  theme_hv_poster() +
   theme(
     plot.margin = margin(t = 10, r = 20, b = 10, l = 20, unit = "pt")
   )
@@ -668,7 +672,7 @@ p_ms <- p_base +
     name = "Group"
   ) +
   labs(x = "Surgery Year", y = "Outcome") +
-  hv_theme("poster")
+  theme_hv_poster()
 
 p_km_ms <- plot(km) +
   scale_color_manual(values = c(All = "steelblue"), guide = "none") +
@@ -678,7 +682,7 @@ p_km_ms <- plot(km) +
   scale_x_continuous(breaks = seq(0, 20, 5)) +
   coord_cartesian(xlim = c(0, 20), ylim = c(0, 100)) +
   labs(x = "Years after Operation", y = "Freedom from Death (%)") +
-  hv_theme("poster")
+  theme_hv_poster()
 
 p_ms | p_km_ms
 ```
@@ -714,7 +718,7 @@ rt_panel <- ggplot(risk_df,
   geom_text(size = 3) +
   scale_x_continuous(limits = c(0, 20), breaks = seq(0, 20, 5)) +
   labs(x = "Years after Operation", y = NULL) +
-  hv_theme("poster") +
+  theme_hv_poster() +
   theme(
     axis.line  = element_blank(),
     axis.ticks = element_blank()

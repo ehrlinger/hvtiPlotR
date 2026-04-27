@@ -70,13 +70,13 @@ plot(
 
 A bare [`ggplot`](https://ggplot2.tidyverse.org/reference/ggplot.html)
 object; compose with `+` to add scales, axis limits, labels, and
-[`hv_theme`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_theme.md).
+[`theme_hv_manuscript`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md).
 
 ## See also
 
 [`hv_survival`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_survival.md)
 to build the data object,
-[`hv_theme`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_theme.md)
+[`theme_hv_manuscript`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)
 for the publication theme.
 
 Other Kaplan-Meier survival:
@@ -91,13 +91,13 @@ km  <- hv_survival(dta)
 # Default survival curve
 plot(km) +
   ggplot2::labs(x = "Years after Operation", y = "Survival (%)") +
-  hv_theme("poster")
+  theme_hv_poster()
 
 
 # Cumulative hazard
 plot(km, type = "cumhaz") +
   ggplot2::labs(x = "Years", y = "Cumulative Hazard") +
-  hv_theme("poster")
+  theme_hv_poster()
 
 
 # Hazard rate with loess smoother
@@ -107,7 +107,7 @@ plot(km, type = "hazard") +
     method = "loess", se = FALSE, span = 0.5
   ) +
   ggplot2::labs(x = "Years", y = "Instantaneous Hazard") +
-  hv_theme("poster")
+  theme_hv_poster()
 #> `geom_smooth()` using formula = 'y ~ x'
 
 ```

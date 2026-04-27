@@ -77,7 +77,7 @@
       <h1>Contributing to hvtiPlotR</h1>
 
       <p class="author">John Ehrlinger <a href="mailto:ehrlinj@ccf.org" class="email">ehrlinj@ccf.org</a></p>
-      <p class="date">2026-04-22</p>
+      <p class="date">2026-04-27</p>
 
       <small class="dont-index">Source: <a href="https://github.com/ehrlinger/hvtiPlotR/blob/main/vignettes/contributing.qmd" class="external-link"><code>vignettes/contributing.qmd</code></a></small>
       <div class="d-none name"><code></code></div>
@@ -221,7 +221,7 @@
 <span><span class="co">#'   scale_y_continuous(limits = c(0, 0.5),</span></span>
 <span><span class="co">#'                      labels = scales::percent) +</span></span>
 <span><span class="co">#'   labs(x = "BMI (kg/m²)", y = "Prevalence of AF") +</span></span>
-<span><span class="co">#'   hv_theme("manuscript")</span></span>
+<span><span class="co">#'   theme_hv_manuscript()</span></span>
 <span><span class="co">#'</span></span>
 <span><span class="co">#' @importFrom ggplot2 ggplot aes geom_line geom_ribbon geom_point</span></span>
 <span><span class="co">#' @importFrom rlang .data</span></span>
@@ -281,7 +281,7 @@
 <li>
 <strong>Column names are strings</strong>, passed via <code>x_col =</code>, <code>estimate_col =</code>, etc. Never use <code><a href="https://rlang.r-lib.org/reference/enquo.html" class="external-link">enquo()</a></code> or <code><a href="https://rdrr.io/r/base/Paren.html" class="external-link">{ }</a></code> — it makes column names opaque to the caller.</li>
 <li>
-<strong>No colours or themes</strong> are applied inside the function. The caller adds <code>scale_colour_*()</code> and <code><a href="../reference/hv_theme.html">hv_theme()</a></code> outside.</li>
+<strong>No colours or themes</strong> are applied inside the function. The caller adds <code>scale_colour_*()</code> and <code><a href="../reference/hvtiPlotR-themes.html">theme_hv_manuscript()</a></code> outside.</li>
 <li>
 <strong><code>.data[[col]]</code></strong> is used for tidy evaluation instead of bare variable names. This requires <code>@importFrom rlang .data</code>.</li>
 <li>The function returns <strong><code>p</code></strong>, not <code>print(p)</code> or <code>p + theme(...)</code>.</li>
@@ -651,7 +651,7 @@
 <div class="sourceCode cell-code" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>R version 4.5.3 (2026-03-11)
+<pre><code>R version 4.6.0 (2026-04-24)
 Platform: x86_64-pc-linux-gnu
 Running under: Ubuntu 24.04.4 LTS
 
@@ -672,7 +672,7 @@ attached base packages:
 [1] stats     graphics  grDevices utils     datasets  methods   base
 
 loaded via a namespace (and not attached):
- [1] compiler_4.5.3  fastmap_1.2.0   cli_3.6.6       tools_4.5.3
+ [1] compiler_4.6.0  fastmap_1.2.0   cli_3.6.6       tools_4.6.0
  [5] htmltools_0.5.9 otel_0.2.0      yaml_2.3.12     rmarkdown_2.31
  [9] knitr_1.51      jsonlite_2.0.0  xfun_0.57       digest_0.6.39
 [13] rlang_1.2.0     evaluate_1.0.5 </code></pre>

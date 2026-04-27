@@ -40,16 +40,15 @@ save_ppt(
 
 ## Themes
 
-Use
-[`hv_theme()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_theme.md)
-to apply any supported style, or call the named aliases directly:
+Use `hv_theme()` to apply any supported style, or call the named aliases
+directly:
 
-| Style key              | Alias(es)                                                                                                                                                                               | Best for                            |
-|------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------|
-| `"manuscript"`         | [`theme_manuscript()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_theme_manuscript.md), [`theme_man()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_theme_manuscript.md) | Journal figures, white background   |
-| `"ppt"` / `"dark_ppt"` | [`theme_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_theme_dark_ppt.md), [`theme_dark_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_theme_dark_ppt.md)       | Dark-background PowerPoint slides   |
-| `"light_ppt"`          | [`theme_light_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_theme_light_ppt.md)                                                                                            | Light/transparent PowerPoint slides |
-| `"poster"`             | [`theme_poster()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_theme_poster.md)                                                                                                  | Conference posters                  |
+| Style key              | Alias(es)                                                                                                                                                                         | Best for                            |
+|------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------|
+| `"manuscript"`         | [`theme_manuscript()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md), [`theme_man()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md) | Journal figures, white background   |
+| `"ppt"` / `"dark_ppt"` | [`theme_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md), [`theme_dark_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)   | Dark-background PowerPoint slides   |
+| `"light_ppt"`          | [`theme_light_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)                                                                                        | Light/transparent PowerPoint slides |
+| `"poster"`             | [`theme_poster()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)                                                                                           | Conference posters                  |
 
 ``` r
 p + hv_theme("manuscript")   # via generic

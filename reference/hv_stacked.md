@@ -5,7 +5,7 @@ Validates a patient-level or observation-level data frame and returns an
 [`plot.hv_stacked`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hv_stacked.md)
 on the result to obtain a bare `ggplot2` stacked (or proportional)
 histogram that you can decorate with colour scales, axis labels, and
-[`hv_theme`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_theme.md).
+[`theme_hv_manuscript`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md).
 
 ## Usage
 
@@ -89,6 +89,6 @@ p +
   ggplot2::scale_fill_brewer(palette = "Set1", name = "Category") +
   ggplot2::scale_color_brewer(palette = "Set1", name = "Category") +
   ggplot2::labs(x = "Year", y = "Count") +
-  hv_theme("poster")
+  theme_hv_poster()
 
 ```

@@ -40,7 +40,7 @@ object.
 ## See also
 
 [`hv_ordinal`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_ordinal.md),
-[`hv_theme`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_theme.md)
+[`theme_hv_manuscript`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)
 
 ## Examples
 
@@ -57,7 +57,7 @@ plot(hv_ordinal(dat)) +
   ggplot2::scale_x_continuous(breaks = 0:5) +
   ggplot2::scale_y_continuous(labels = scales::percent) +
   ggplot2::labs(x = "Years after Surgery", y = "Prevalence") +
-  hv_theme("poster")
+  theme_hv_poster()
 
 
 # Subset: show only severe grade
@@ -67,6 +67,6 @@ plot(hv_ordinal(dat[dat$grade == "Severe", ])) +
   ggplot2::scale_y_continuous(limits = c(0, 0.25),
                               labels = scales::percent) +
   ggplot2::labs(x = "Years", y = "P(Severe TR grade)") +
-  hv_theme("poster")
+  theme_hv_poster()
 
 ```

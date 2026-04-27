@@ -6,7 +6,7 @@ data object. Bars for the treated group appear above the x-axis; bars
 for the control group appear below. Matched or weighted patients are
 shown in a contrasting shade. Compose with `+` to add colour scales,
 axis labels, and
-[`hv_theme`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_theme.md).
+[`theme_hv_manuscript`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md).
 
 ## Usage
 
@@ -34,13 +34,13 @@ plot(x, alpha = 0.8, ...)
 
 A bare [`ggplot`](https://ggplot2.tidyverse.org/reference/ggplot.html)
 object; compose with `+` to add colour scales, axis limits, labels, and
-[`hv_theme`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_theme.md).
+[`theme_hv_manuscript`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md).
 
 ## See also
 
 [`hv_mirror_hist`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_mirror_hist.md)
 to build the data object,
-[`hv_theme`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_theme.md)
+[`theme_hv_manuscript`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)
 for the publication theme,
 [`sample_mirror_histogram_data`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_mirror_histogram_data.md)
 for example data.
@@ -57,6 +57,6 @@ mh  <- hv_mirror_hist(dta)
 
 plot(mh) +
   ggplot2::labs(x = "Propensity Score (%)", y = "Count") +
-  hv_theme("poster")
+  theme_hv_poster()
 
 ```

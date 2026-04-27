@@ -5,7 +5,7 @@ Renders a bare
 survival-difference curve. Compose with `geom_hline(yintercept = 0)`,
 [`scale_y_continuous()`](https://ggplot2.tidyverse.org/reference/scale_continuous.html),
 [`labs()`](https://ggplot2.tidyverse.org/reference/labs.html), and
-[`hv_theme()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_theme.md).
+[`theme_hv_manuscript()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md).
 
 ## Usage
 
@@ -42,4 +42,4 @@ object.
 
 [`hv_survival_difference()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_survival_difference.md),
 [`hv_nnt()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_nnt.md),
-[`hv_theme()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_theme.md)
+[`theme_hv_manuscript()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)

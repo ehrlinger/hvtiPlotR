@@ -6,7 +6,7 @@ Call
 [`plot.hv_balance`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hv_balance.md)
 on the result to obtain a bare `ggplot2` object that you can decorate
 with colour, shape, axis scales, and
-[`hv_theme`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_theme.md).
+[`theme_hv_manuscript`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md).
 
 ## Usage
 
@@ -108,7 +108,7 @@ p +
   ) +
   scale_x_continuous(limits = c(-45, 35), breaks = seq(-40, 30, 10)) +
   labs(x = "Standardized difference (%)", y = "") +
-  hv_theme("poster")
+  theme_hv_poster()
 #> Warning: Removed 1 row containing missing values or values outside the scale range
 #> (`geom_point()`).
 

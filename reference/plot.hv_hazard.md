@@ -7,7 +7,7 @@ from an
 object. Compose with `scale_colour_*`,
 [`scale_y_continuous()`](https://ggplot2.tidyverse.org/reference/scale_continuous.html),
 [`labs()`](https://ggplot2.tidyverse.org/reference/labs.html), and
-[`hv_theme()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_theme.md)
+[`theme_hv_manuscript()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)
 to complete the figure.
 
 ## Usage
@@ -65,13 +65,13 @@ plot(
 A
 [`ggplot2::ggplot()`](https://ggplot2.tidyverse.org/reference/ggplot.html)
 object; compose with `+` to add scales, axis limits, labels, and
-[`hv_theme()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_theme.md).
+[`theme_hv_manuscript()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md).
 
 ## See also
 
 [`hv_hazard()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_hazard.md)
 to build the data object,
-[`hv_theme()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_theme.md)
+[`theme_hv_manuscript()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)
 for the publication theme.
 
 Other Hazard plot:

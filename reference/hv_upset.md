@@ -7,7 +7,7 @@ binary (logical or 0/1 integer), computes per-set counts, and returns an
 on the result to obtain the ComplexUpset UpSet diagram. Apply a theme to
 all panels with `&`:
 
-    plot(up) & hv_theme("poster")
+    plot(up) & theme_hv_poster()
 
 ## Usage
 
@@ -74,6 +74,6 @@ up  # prints set counts
 # ComplexUpset uses & (not +) to apply a theme across all sub-panels.
 if (FALSE) { # \dontrun{
 p <- plot(up)
-p & hv_theme("poster")
+p & theme_hv_poster()
 } # }
 ```

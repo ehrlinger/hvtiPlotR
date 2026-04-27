@@ -77,7 +77,7 @@
       <h1>SAS Template Migration Guide: Finding Your Plot in R</h1>
 
       <p class="author">John Ehrlinger <a href="mailto:ehrlinj@ccf.org" class="email">ehrlinj@ccf.org</a></p>
-      <p class="date">2026-04-22</p>
+      <p class="date">2026-04-27</p>
 
       <small class="dont-index">Source: <a href="https://github.com/ehrlinger/hvtiPlotR/blob/main/vignettes/sas-migration-guide.qmd" class="external-link"><code>vignettes/sas-migration-guide.qmd</code></a></small>
       <div class="d-none name"><code></code></div>
@@ -101,8 +101,8 @@
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_colour_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"black"</span>, <span class="st">"gray40"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_x_continuous</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="fl">0</span><span class="op">:</span><span class="fl">12</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Years after Operation"</span>, y <span class="op">=</span> <span class="st">"Prevalence (%)"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/hv_theme.html">hv_theme</a></span><span class="op">(</span><span class="st">"poster"</span><span class="op">)</span></span></code></pre></div>
-<p><strong><code><a href="../reference/hv_theme.html">hv_theme()</a></code> replaces SAS <code>device=</code> / style options.</strong> Use <code>"dark_ppt"</code> / <code>"ppt"</code> for PowerPoint slides, <code>"light_ppt"</code> for light-background slides, <code>"manuscript"</code> for journal figures, and <code>"poster"</code> for conference posters.</p>
+<span>  <span class="fu"><a href="../reference/hvtiPlotR-themes.html">theme_hv_poster</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<p><strong><code><a href="../reference/hvtiPlotR-themes.html">theme_hv_manuscript()</a></code> replaces SAS <code>device=</code> / style options.</strong> Use <code>"dark_ppt"</code> / <code>"ppt"</code> for PowerPoint slides, <code>"light_ppt"</code> for light-background slides, <code>"manuscript"</code> for journal figures, and <code>"poster"</code> for conference posters.</p>
 <p><strong>Functions return a ggplot object; they do not display it.</strong> Call the plot object at the top level (or use <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code>) to render it, or save with <code><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave()</a></code> / <code><a href="../reference/save_ppt.html">save_ppt()</a></code>.</p>
 <p><strong>Pre-fitted models, not raw data.</strong> Most functions accept the <em>output</em> of a statistical model (curve datasets, probability estimates) rather than individual patient records — mirroring the SAS workflow where <code>%decompos()</code> or <code>%kaplan</code> computes estimates and a separate template step produces the figure.</p>
 <hr></section></section><section class="section level2"><h2 id="template-lookup-table">Template lookup table<a class="anchor" aria-label="anchor" href="#template-lookup-table"></a>
@@ -457,7 +457,7 @@
 <span>    y     <span class="op">=</span> <span class="st">"Prevalence (%)"</span>,</span>
 <span>    title <span class="op">=</span> <span class="st">"Atrial Fibrillation Prevalence"</span></span>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/hv_theme.html">hv_theme</a></span><span class="op">(</span><span class="st">"poster"</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/hvtiPlotR-themes.html">theme_hv_poster</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
 <div>
 <figure><p><img src="sas-migration-guide_files/figure-html/np-binary-avg-example-1.png" width="672"></p>
@@ -484,7 +484,7 @@
 <span>    y     <span class="op">=</span> <span class="st">"Prevalence (%)"</span>,</span>
 <span>    title <span class="op">=</span> <span class="st">"Atrial Fibrillation — 68% CI"</span></span>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/hv_theme.html">hv_theme</a></span><span class="op">(</span><span class="st">"poster"</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/hvtiPlotR-themes.html">theme_hv_poster</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
 <div>
 <figure><p><img src="sas-migration-guide_files/figure-html/np-binary-avg-ci-1.png" width="672"></p>
@@ -512,7 +512,7 @@
 <span>    y     <span class="op">=</span> <span class="st">"Prevalence (%)"</span>,</span>
 <span>    title <span class="op">=</span> <span class="st">"Atrial Fibrillation with Binned Observations"</span></span>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/hv_theme.html">hv_theme</a></span><span class="op">(</span><span class="st">"poster"</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/hvtiPlotR-themes.html">theme_hv_poster</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
 <div>
 <figure><p><img src="sas-migration-guide_files/figure-html/np-binary-avg-points-1.png" width="672"></p>
@@ -555,7 +555,7 @@
 <span>    label <span class="op">=</span> <span class="st">"68% CI band"</span>,</span>
 <span>    hjust <span class="op">=</span> <span class="fl">1</span>, size <span class="op">=</span> <span class="fl">3</span></span>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/hv_theme.html">hv_theme</a></span><span class="op">(</span><span class="st">"poster"</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/hvtiPlotR-themes.html">theme_hv_poster</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
 <div>
 <figure><p><img src="sas-migration-guide_files/figure-html/np-continuous-example-1.png" width="672"></p>
@@ -607,7 +607,7 @@
 <span>    fill   <span class="op">=</span> <span class="st">"Valve type"</span>,</span>
 <span>    title  <span class="op">=</span> <span class="st">"Atrial Fibrillation by Valve Type"</span></span>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/hv_theme.html">hv_theme</a></span><span class="op">(</span><span class="st">"poster"</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/hvtiPlotR-themes.html">theme_hv_poster</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
 <div>
 <figure><p><img src="sas-migration-guide_files/figure-html/np-multigroup-example-1.png" width="672"></p>
@@ -652,7 +652,7 @@
 <span>    colour <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>    title  <span class="op">=</span> <span class="st">"AF — Early and Late Phase Decomposition"</span></span>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/hv_theme.html">hv_theme</a></span><span class="op">(</span><span class="st">"poster"</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/hvtiPlotR-themes.html">theme_hv_poster</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
 <div>
 <figure><p><img src="sas-migration-guide_files/figure-html/np-phases-example-1.png" width="672"></p>
@@ -700,7 +700,7 @@
 <span>    y     <span class="op">=</span> <span class="st">"Estimated Probability"</span>,</span>
 <span>    title <span class="op">=</span> <span class="st">"Outcome Probability vs. BMI at Operation"</span></span>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/hv_theme.html">hv_theme</a></span><span class="op">(</span><span class="st">"poster"</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/hvtiPlotR-themes.html">theme_hv_poster</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
 <div>
 <figure><p><img src="sas-migration-guide_files/figure-html/np-bmi-xaxis-1.png" width="672"></p>
@@ -765,7 +765,7 @@ run;</code></pre>
 <span>    colour <span class="op">=</span> <span class="st">"TR Grade"</span>,</span>
 <span>    title  <span class="op">=</span> <span class="st">"Tricuspid Regurgitation Grade"</span></span>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/hv_theme.html">hv_theme</a></span><span class="op">(</span><span class="st">"poster"</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/hvtiPlotR-themes.html">theme_hv_poster</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
 <div>
 <figure><p><img src="sas-migration-guide_files/figure-html/np-ordinal-example-1.png" width="672"></p>
@@ -798,7 +798,7 @@ run;</code></pre>
 <span>    colour <span class="op">=</span> <span class="st">"AR Grade"</span>,</span>
 <span>    title  <span class="op">=</span> <span class="st">"AR Grade — Before vs. After Repair"</span></span>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/hv_theme.html">hv_theme</a></span><span class="op">(</span><span class="st">"poster"</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/hvtiPlotR-themes.html">theme_hv_poster</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
 <div>
 <figure><p><img src="sas-migration-guide_files/figure-html/np-ordinal-multi-example-1.png" width="672"></p>
@@ -833,7 +833,7 @@ run;</code></pre>
 <span>    y     <span class="op">=</span> <span class="st">"Probability"</span>,</span>
 <span>    title <span class="op">=</span> <span class="st">"Probability of TR Grade 2"</span></span>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/hv_theme.html">hv_theme</a></span><span class="op">(</span><span class="st">"poster"</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/hvtiPlotR-themes.html">theme_hv_poster</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
 <div>
 <figure><p><img src="sas-migration-guide_files/figure-html/np-ordinal-independence-example-1.png" width="672"></p>
@@ -874,7 +874,7 @@ run;</code></pre>
 <span>    colour <span class="op">=</span> <span class="st">"TR Grade"</span>,</span>
 <span>    title  <span class="op">=</span> <span class="st">"TR Grade — Early and Late Phase"</span></span>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/hv_theme.html">hv_theme</a></span><span class="op">(</span><span class="st">"poster"</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/hvtiPlotR-themes.html">theme_hv_poster</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
 <div>
 <figure><p><img src="sas-migration-guide_files/figure-html/np-ordinal-phases-example-1.png" width="672"></p>
@@ -904,27 +904,27 @@ run;</code></pre>
 <span>    y     <span class="op">=</span> <span class="st">"Survival (%)"</span>,</span>
 <span>    title <span class="op">=</span> <span class="st">"Freedom from Death"</span></span>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/hv_theme.html">hv_theme</a></span><span class="op">(</span><span class="st">"poster"</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="../reference/hvtiPlotR-themes.html">theme_hv_poster</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Cumulative hazard (PLOTC)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">km</span>, type <span class="op">=</span> <span class="st">"cumhaz"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Years"</span>, y <span class="op">=</span> <span class="st">"Cumulative Hazard"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/hv_theme.html">hv_theme</a></span><span class="op">(</span><span class="st">"poster"</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="../reference/hvtiPlotR-themes.html">theme_hv_poster</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Hazard rate (PLOTH)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">km</span>, type <span class="op">=</span> <span class="st">"hazard"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Years"</span>, y <span class="op">=</span> <span class="st">"Instantaneous Hazard"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/hv_theme.html">hv_theme</a></span><span class="op">(</span><span class="st">"poster"</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="../reference/hvtiPlotR-themes.html">theme_hv_poster</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Log-log survival (PH check)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">km</span>, type <span class="op">=</span> <span class="st">"loglog"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"log(Years)"</span>, y <span class="op">=</span> <span class="st">"log(-log S(t))"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/hv_theme.html">hv_theme</a></span><span class="op">(</span><span class="st">"poster"</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="../reference/hvtiPlotR-themes.html">theme_hv_poster</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Integrated survivorship (PLOTL)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">km</span>, type <span class="op">=</span> <span class="st">"life"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Years"</span>, y <span class="op">=</span> <span class="st">"Restricted Mean Survival (years)"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/hv_theme.html">hv_theme</a></span><span class="op">(</span><span class="st">"poster"</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="../reference/hvtiPlotR-themes.html">theme_hv_poster</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Access the KM data, risk table, and report table</span></span>
 <span><span class="va">km</span><span class="op">$</span><span class="va">data</span>              <span class="co"># tidy KM data frame</span></span>
@@ -991,7 +991,7 @@ run;</code></pre>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">gf</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Goodness of Follow-Up"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/hv_theme.html">hv_theme</a></span><span class="op">(</span><span class="st">"poster"</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/hvtiPlotR-themes.html">theme_hv_poster</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <hr></section><section class="section level2"><h2 id="lp-covbal">Covariate balance (<code>tp.lp.propen.cov_balance.R</code>)<a class="anchor" aria-label="anchor" href="#lp-covbal"></a>
 </h2>
 <p><strong>Port:</strong> <code>tp.lp.propen.cov_balance.R</code></p>
@@ -1040,7 +1040,7 @@ run;</code></pre>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/annotate.html" class="external-link">annotate</a></span><span class="op">(</span><span class="st">"text"</span>, x <span class="op">=</span> <span class="op">-</span><span class="fl">30</span>, y <span class="op">=</span> <span class="fl">0</span>,      label <span class="op">=</span> <span class="st">"More likely TF-TAVR"</span>, size <span class="op">=</span> <span class="fl">4.5</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/annotate.html" class="external-link">annotate</a></span><span class="op">(</span><span class="st">"text"</span>, x <span class="op">=</span>  <span class="fl">22</span>, y <span class="op">=</span> <span class="va">n_vars</span>, label <span class="op">=</span> <span class="st">"More likely SAVR"</span>,    size <span class="op">=</span> <span class="fl">4.5</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>legend.position <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.20</span>, <span class="fl">0.935</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/hv_theme.html">hv_theme</a></span><span class="op">(</span><span class="st">"poster"</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="../reference/hvtiPlotR-themes.html">theme_hv_poster</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave</a></span><span class="op">(</span><span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org/reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="st">"graphs"</span>, <span class="st">"lp_cov-balance-SAVR_TF-TAVR.pdf"</span><span class="op">)</span>,</span>
 <span>       plot <span class="op">=</span> <span class="va">stdifPlot</span>, height <span class="op">=</span> <span class="fl">7</span>, width <span class="op">=</span> <span class="fl">8</span><span class="op">)</span></span></code></pre></div>
@@ -1055,7 +1055,7 @@ run;</code></pre>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">al</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_fill_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Set2"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Patient Flow Between States"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/hv_theme.html">hv_theme</a></span><span class="op">(</span><span class="st">"poster"</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/hvtiPlotR-themes.html">theme_hv_poster</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <hr></section><section class="section level2"><h2 id="dp-cluster-sankey">Cluster stability Sankey (PAM analysis)<a class="anchor" aria-label="anchor" href="#dp-cluster-sankey"></a>
 </h2>
 <p><strong>Source:</strong> PAM clustering analysis pipeline (R script using <code>ggsankey</code>)</p>
@@ -1108,7 +1108,7 @@ run;</code></pre>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sk</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Cluster Stability: K = 2 to 9"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/hv_theme.html">hv_theme</a></span><span class="op">(</span><span class="st">"poster"</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/hvtiPlotR-themes.html">theme_hv_poster</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p>To reproduce the original analysis with patient-level cluster assignments:</p>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Build a data frame with one row per patient, columns C2..C9 (factor)</span></span>
@@ -1127,7 +1127,7 @@ run;</code></pre>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sk_grp</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/hv_theme.html">hv_theme</a></span><span class="op">(</span><span class="st">"poster"</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/hvtiPlotR-themes.html">theme_hv_poster</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <hr></section></section><section class="section level2"><h2 id="dp-upset">UpSet plot (<code>tp.complexUpset.R</code>)<a class="anchor" aria-label="anchor" href="#dp-upset"></a>
 </h2>
 <p><strong>Port:</strong> <code>tp.complexUpset.R</code></p>
@@ -1155,7 +1155,7 @@ run;</code></pre>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">80</span>, <span class="fl">20</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_cartesian.html" class="external-link">coord_cartesian</a></span><span class="op">(</span>xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">5</span><span class="op">)</span>, ylim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">80</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Years"</span>, y <span class="op">=</span> <span class="st">"AV Mean Gradient (mmHg)"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/hv_theme.html">hv_theme</a></span><span class="op">(</span><span class="st">"poster"</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/hvtiPlotR-themes.html">theme_hv_poster</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </section><section class="level2"><h3 id="unstratified-zoomed-y-axis-plot_3">Unstratified — zoomed y-axis (plot_3)<a class="anchor" aria-label="anchor" href="#unstratified-zoomed-y-axis-plot_3"></a>
 </h3>
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
@@ -1164,7 +1164,7 @@ run;</code></pre>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">30</span>, <span class="fl">10</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_cartesian.html" class="external-link">coord_cartesian</a></span><span class="op">(</span>xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">5</span><span class="op">)</span>, ylim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">30</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Years"</span>, y <span class="op">=</span> <span class="st">"AV Mean Gradient (mmHg)"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/hv_theme.html">hv_theme</a></span><span class="op">(</span><span class="st">"poster"</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/hvtiPlotR-themes.html">theme_hv_poster</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </section><section class="level2"><h3 id="stratified-by-sex-plot_2-plot_4">Stratified by sex (plot_2 / plot_4)<a class="anchor" aria-label="anchor" href="#stratified-by-sex-plot_2-plot_4"></a>
 </h3>
 <p>Template uses <code>values=c("red", "blue")</code>; modernised equivalents below.</p>
@@ -1178,7 +1178,7 @@ run;</code></pre>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">80</span>, <span class="fl">20</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_cartesian.html" class="external-link">coord_cartesian</a></span><span class="op">(</span>xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">5</span><span class="op">)</span>, ylim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">80</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Years"</span>, y <span class="op">=</span> <span class="st">"AV Mean Gradient (mmHg)"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/hv_theme.html">hv_theme</a></span><span class="op">(</span><span class="st">"poster"</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/hvtiPlotR-themes.html">theme_hv_poster</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </section><section class="level2"><h3 id="av-area-y-scale-plot_5-plot_6">AV area y-scale (plot_5 / plot_6)<a class="anchor" aria-label="anchor" href="#av-area-y-scale-plot_5-plot_6"></a>
 </h3>
 <div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
@@ -1191,7 +1191,7 @@ run;</code></pre>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">5</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_cartesian.html" class="external-link">coord_cartesian</a></span><span class="op">(</span>xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">5</span><span class="op">)</span>, ylim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">5</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Years"</span>, y <span class="op">=</span> <span class="st">"AV Area (EOA) (cm\u00b2)"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/hv_theme.html">hv_theme</a></span><span class="op">(</span><span class="st">"poster"</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/hvtiPlotR-themes.html">theme_hv_poster</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </section><section class="level2"><h3 id="dvi-y-scale-plot_7-plot_8">DVI y-scale (plot_7 / plot_8)<a class="anchor" aria-label="anchor" href="#dvi-y-scale-plot_7-plot_8"></a>
 </h3>
 <div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
@@ -1204,7 +1204,7 @@ run;</code></pre>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1.25</span>, <span class="fl">0.25</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_cartesian.html" class="external-link">coord_cartesian</a></span><span class="op">(</span>xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">5</span><span class="op">)</span>, ylim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1.25</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Years"</span>, y <span class="op">=</span> <span class="st">"DVI"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/hv_theme.html">hv_theme</a></span><span class="op">(</span><span class="st">"poster"</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/hvtiPlotR-themes.html">theme_hv_poster</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </section><section class="level2"><h3 id="ordinal-y-axis-mv-regurgitation-grade-plot_9">Ordinal y-axis — MV regurgitation grade (plot_9)<a class="anchor" aria-label="anchor" href="#ordinal-y-axis-mv-regurgitation-grade-plot_9"></a>
 </h3>
 <div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
@@ -1222,7 +1222,7 @@ run;</code></pre>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_x_continuous</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">6</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_cartesian.html" class="external-link">coord_cartesian</a></span><span class="op">(</span>xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">6</span><span class="op">)</span>, ylim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">3</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Years after Procedure"</span>, y <span class="op">=</span> <span class="st">"MV Regurgitation Grade"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/hv_theme.html">hv_theme</a></span><span class="op">(</span><span class="st">"poster"</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/hvtiPlotR-themes.html">theme_hv_poster</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <hr></section></section><section class="section level2"><h2 id="dp-trends">Trends over time (<code>tp.*.trends.*</code>)<a class="anchor" aria-label="anchor" href="#dp-trends"></a>
 </h2>
 <p><strong>Ports:</strong> <code>tp.rp.trends.sas</code>, <code>tp.lp.trends.sas</code>, <code>tp.lp.trends.age.sas</code>, <code>tp.lp.trends.polytomous.sas</code>, <code>tp.dp.trends.R</code></p>
@@ -1238,14 +1238,14 @@ run;</code></pre>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_x_continuous</a></span><span class="op">(</span>limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1968</span>, <span class="fl">2000</span><span class="op">)</span>, breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">1968</span>, <span class="fl">2000</span>, <span class="fl">4</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous</a></span><span class="op">(</span>limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">10</span><span class="op">)</span>,      breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">10</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Year"</span>, y <span class="op">=</span> <span class="st">"Cases/year"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/hv_theme.html">hv_theme</a></span><span class="op">(</span><span class="st">"poster"</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="../reference/hvtiPlotR-themes.html">theme_hv_poster</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Age: axisy order=(30 to 70 by 10)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">tr_one</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_x_continuous</a></span><span class="op">(</span>limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1968</span>, <span class="fl">2000</span><span class="op">)</span>, breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">1968</span>, <span class="fl">2000</span>, <span class="fl">4</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous</a></span><span class="op">(</span>limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">30</span>, <span class="fl">70</span><span class="op">)</span>,     breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">30</span>, <span class="fl">70</span>, <span class="fl">10</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Year"</span>, y <span class="op">=</span> <span class="st">"Age (years)"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/hv_theme.html">hv_theme</a></span><span class="op">(</span><span class="st">"poster"</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/hvtiPlotR-themes.html">theme_hv_poster</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </section><section class="level2"><h3 id="tp-lp-trends-sas-binary-outcomes-19702000-by-10-y-0100-by-10">tp.lp.trends.sas — binary % outcomes (1970–2000 by 10, y 0–100 by 10)<a class="anchor" aria-label="anchor" href="#tp-lp-trends-sas-binary-outcomes-19702000-by-10-y-0100-by-10"></a>
 </h3>
 <p>Multiple outcomes on one figure. CGM version: <code>axisx order=(1970 to 2000 by 10)</code>, <code>axisy order=(0 to 100 by 20)</code>.</p>
@@ -1266,7 +1266,7 @@ run;</code></pre>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous</a></span><span class="op">(</span>limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">100</span><span class="op">)</span>,     breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">100</span>, <span class="fl">10</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_cartesian.html" class="external-link">coord_cartesian</a></span><span class="op">(</span>xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1970</span>, <span class="fl">2000</span><span class="op">)</span>, ylim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">100</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Year"</span>, y <span class="op">=</span> <span class="st">"Percent (%)"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/hv_theme.html">hv_theme</a></span><span class="op">(</span><span class="st">"poster"</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/hvtiPlotR-themes.html">theme_hv_poster</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </section><section class="level2"><h3 id="tp-lp-trends-age-sas-age-on-x-axis-2585-by-10-y-0100-by-20">tp.lp.trends.age.sas — age on x-axis (25–85 by 10, y 0–100 by 20)<a class="anchor" aria-label="anchor" href="#tp-lp-trends-age-sas-age-on-x-axis-2585-by-10-y-0100-by-20"></a>
 </h3>
 <div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
@@ -1283,7 +1283,7 @@ run;</code></pre>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous</a></span><span class="op">(</span>limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">100</span><span class="op">)</span>, breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">100</span>, <span class="fl">20</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_cartesian.html" class="external-link">coord_cartesian</a></span><span class="op">(</span>xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">25</span>, <span class="fl">85</span><span class="op">)</span>, ylim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">100</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Age (years)"</span>, y <span class="op">=</span> <span class="st">"Percent (%)"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/hv_theme.html">hv_theme</a></span><span class="op">(</span><span class="st">"poster"</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/hvtiPlotR-themes.html">theme_hv_poster</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </section><section class="level2"><h3 id="tp-lp-trends-polytomous-sas-repair-types-19901999-by-1-y-0100-by-10">tp.lp.trends.polytomous.sas — repair types (1990–1999 by 1, y 0–100 by 10)<a class="anchor" aria-label="anchor" href="#tp-lp-trends-polytomous-sas-repair-types-19901999-by-1-y-0100-by-10"></a>
 </h3>
 <div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
@@ -1304,7 +1304,7 @@ run;</code></pre>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous</a></span><span class="op">(</span>limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">100</span><span class="op">)</span>,     breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">100</span>, <span class="fl">10</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_cartesian.html" class="external-link">coord_cartesian</a></span><span class="op">(</span>xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1990</span>, <span class="fl">1999</span><span class="op">)</span>, ylim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">100</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Year"</span>, y <span class="op">=</span> <span class="st">"Percent (%)"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/hv_theme.html">hv_theme</a></span><span class="op">(</span><span class="st">"poster"</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/hvtiPlotR-themes.html">theme_hv_poster</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </section><section class="level2"><h3 id="tp-dp-trends-r-lv-mass-index-19952015-by-5-y-0200-by-50">tp.dp.trends.R — LV mass index (1995–2015 by 5, y 0–200 by 50)<a class="anchor" aria-label="anchor" href="#tp-dp-trends-r-lv-mass-index-19952015-by-5-y-0200-by-50"></a>
 </h3>
 <div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
@@ -1317,7 +1317,7 @@ run;</code></pre>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous</a></span><span class="op">(</span>limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">200</span><span class="op">)</span>,     breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">200</span>, <span class="fl">50</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_cartesian.html" class="external-link">coord_cartesian</a></span><span class="op">(</span>xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1995</span>, <span class="fl">2015</span><span class="op">)</span>, ylim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">200</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Years"</span>, y <span class="op">=</span> <span class="st">"LV Mass Index"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/hv_theme.html">hv_theme</a></span><span class="op">(</span><span class="st">"poster"</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/hvtiPlotR-themes.html">theme_hv_poster</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </section><section class="level2"><h3 id="tp-dp-trends-r-hospital-los-with-annotation-19852015-by-5-y-020-by-5">tp.dp.trends.R — hospital LOS with annotation (1985–2015 by 5, y 0–20 by 5)<a class="anchor" aria-label="anchor" href="#tp-dp-trends-r-hospital-los-with-annotation-19852015-by-5-y-020-by-5"></a>
 </h3>
 <div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
@@ -1332,7 +1332,7 @@ run;</code></pre>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/annotate.html" class="external-link">annotate</a></span><span class="op">(</span><span class="st">"text"</span>, x <span class="op">=</span> <span class="fl">1995</span>, y <span class="op">=</span> <span class="fl">18</span>,</span>
 <span>           label <span class="op">=</span> <span class="st">"Trend: Hospital Length of Stay"</span>, size <span class="op">=</span> <span class="fl">4.5</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Years"</span>, y <span class="op">=</span> <span class="st">"Hospital LOS (Days)"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/hv_theme.html">hv_theme</a></span><span class="op">(</span><span class="st">"poster"</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/hvtiPlotR-themes.html">theme_hv_poster</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <hr></section></section><section class="section level2"><h2 id="dp-long-counts">Longitudinal patient counts (<code>tp.dp.longitudinal_patients_measures.R</code>)<a class="anchor" aria-label="anchor" href="#dp-long-counts"></a>
 </h2>
 <p><strong>Port:</strong> <code>tp.dp.longitudinal_patients_measures.R</code></p>
@@ -1348,7 +1348,7 @@ run;</code></pre>
 <span>    y     <span class="op">=</span> <span class="st">"Patients with measurement"</span>,</span>
 <span>    title <span class="op">=</span> <span class="st">"Follow-Up Echocardiogram Availability"</span></span>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/hv_theme.html">hv_theme</a></span><span class="op">(</span><span class="st">"poster"</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/hvtiPlotR-themes.html">theme_hv_poster</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <hr></section><section class="section level2"><h2 id="dp-mirror">Mirror histogram (propensity score)<a class="anchor" aria-label="anchor" href="#dp-mirror"></a>
 </h2>
 <p><strong>R equivalents:</strong> <code>tp.lp.mirror-histogram_SAVR-TF-TAVR.R</code> (binary-match), <code>tp.lp.mirror_histo_before_after_wt.R</code> (weighted IPTW)</p>
@@ -1371,7 +1371,7 @@ run;</code></pre>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/annotate.html" class="external-link">annotate</a></span><span class="op">(</span><span class="st">"text"</span>, x <span class="op">=</span> <span class="fl">20</span>, y <span class="op">=</span>  <span class="fl">100</span>, label <span class="op">=</span> <span class="st">"SAVR"</span>,    size <span class="op">=</span> <span class="fl">7</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/annotate.html" class="external-link">annotate</a></span><span class="op">(</span><span class="st">"text"</span>, x <span class="op">=</span> <span class="fl">20</span>, y <span class="op">=</span> <span class="op">-</span><span class="fl">100</span>, label <span class="op">=</span> <span class="st">"TF-TAVR"</span>, size <span class="op">=</span> <span class="fl">7</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Propensity Score (%)"</span>, y <span class="op">=</span> <span class="st">"Number of Patients"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/hv_theme.html">hv_theme</a></span><span class="op">(</span><span class="st">"poster"</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/hvtiPlotR-themes.html">theme_hv_poster</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </section><section class="level2"><h3 id="dp-mirror-weighted">Weighted IPTW mode (<code>tp.lp.mirror_histo_before_after_wt.R</code>)<a class="anchor" aria-label="anchor" href="#dp-mirror-weighted"></a>
 </h3>
 <div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
@@ -1394,7 +1394,7 @@ run;</code></pre>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/annotate.html" class="external-link">annotate</a></span><span class="op">(</span><span class="st">"text"</span>, x <span class="op">=</span> <span class="fl">30</span>, y <span class="op">=</span>  <span class="fl">150</span>, label <span class="op">=</span> <span class="st">"Limited"</span>,  color <span class="op">=</span> <span class="st">"blue"</span>, size <span class="op">=</span> <span class="fl">5</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/annotate.html" class="external-link">annotate</a></span><span class="op">(</span><span class="st">"text"</span>, x <span class="op">=</span> <span class="fl">30</span>, y <span class="op">=</span> <span class="op">-</span><span class="fl">70</span>,  label <span class="op">=</span> <span class="st">"Extended"</span>, color <span class="op">=</span> <span class="st">"red"</span>,  size <span class="op">=</span> <span class="fl">5</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Propensity Score (%)"</span>, y <span class="op">=</span> <span class="st">"#"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/hv_theme.html">hv_theme</a></span><span class="op">(</span><span class="st">"poster"</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/hvtiPlotR-themes.html">theme_hv_poster</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <hr></section></section><section class="section level2"><h2 id="dp-stacked">Stacked histogram<a class="anchor" aria-label="anchor" href="#dp-stacked"></a>
 </h2>
 <p><strong>R equivalent:</strong> <code><a href="../reference/hv_stacked.html">hv_stacked()</a></code></p>
@@ -1410,7 +1410,7 @@ run;</code></pre>
 <span>    fill  <span class="op">=</span> <span class="st">"Group"</span>,</span>
 <span>    title <span class="op">=</span> <span class="st">"Annual Case Volume by Group"</span></span>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/hv_theme.html">hv_theme</a></span><span class="op">(</span><span class="st">"poster"</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/hvtiPlotR-themes.html">theme_hv_poster</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <hr></section><section class="section level2"><h2 id="using-themes">Using themes<a class="anchor" aria-label="anchor" href="#using-themes"></a>
 </h2>
 <p>All <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code> calls return an unstyled ggplot object. Add a theme as the final layer:</p>
@@ -1428,32 +1428,32 @@ run;</code></pre>
 <tbody>
 <tr class="odd">
 <td>Dark PowerPoint slide</td>
-<td><code>hv_theme("dark_ppt")</code></td>
+<td><code><a href="../reference/hvtiPlotR-themes.html">theme_hv_ppt_dark()</a></code></td>
 <td><code>device=ppt</code></td>
 </tr>
 <tr class="even">
 <td>Light PowerPoint slide</td>
-<td><code>hv_theme("light_ppt")</code></td>
+<td><code><a href="../reference/hvtiPlotR-themes.html">theme_hv_ppt_light()</a></code></td>
 <td>
 <code>device=ppt</code> with white background</td>
 </tr>
 <tr class="odd">
 <td>Journal manuscript</td>
-<td><code>hv_theme("manuscript")</code></td>
+<td><code><a href="../reference/hvtiPlotR-themes.html">theme_hv_manuscript()</a></code></td>
 <td>
 <code>device=eps</code> / PDF</td>
 </tr>
 <tr class="even">
 <td>Conference poster</td>
-<td><code>hv_theme("poster")</code></td>
+<td><code><a href="../reference/hvtiPlotR-themes.html">theme_hv_poster()</a></code></td>
 <td>Large-font poster</td>
 </tr>
 </tbody>
 </table>
 <p>You can pass <code>base_size</code> to any theme to scale all text simultaneously:</p>
 <div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">p</span> <span class="op">+</span> <span class="fu"><a href="../reference/hv_theme.html">hv_theme</a></span><span class="op">(</span><span class="st">"manuscript"</span>, base_size <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>   <span class="co"># smaller text for double-column</span></span>
-<span><span class="va">p</span> <span class="op">+</span> <span class="fu"><a href="../reference/hv_theme.html">hv_theme</a></span><span class="op">(</span><span class="st">"poster"</span>,     base_size <span class="op">=</span> <span class="fl">24</span><span class="op">)</span>   <span class="co"># larger text for A0 poster</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">p</span> <span class="op">+</span> <span class="fu"><a href="../reference/hvtiPlotR-themes.html">theme_hv_manuscript</a></span><span class="op">(</span>base_size <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>   <span class="co"># smaller text for double-column</span></span>
+<span><span class="va">p</span> <span class="op">+</span> <span class="fu"><a href="../reference/hvtiPlotR-themes.html">theme_hv_poster</a></span><span class="op">(</span>base_size <span class="op">=</span> <span class="fl">24</span><span class="op">)</span>   <span class="co"># larger text for A0 poster</span></span></code></pre></div>
 <hr></section><section class="section level2"><h2 id="saving-figures">Saving figures<a class="anchor" aria-label="anchor" href="#saving-figures"></a>
 </h2>
 <section class="level2"><h3 id="powerpoint">PowerPoint<a class="anchor" aria-label="anchor" href="#powerpoint"></a>
@@ -1468,7 +1468,7 @@ run;</code></pre>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_colour_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"steelblue"</span><span class="op">)</span>, guide <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_fill_manual</a></span><span class="op">(</span>values   <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"steelblue"</span><span class="op">)</span>, guide <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Years"</span>, y <span class="op">=</span> <span class="st">"Prevalence (%)"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/hv_theme.html">hv_theme</a></span><span class="op">(</span><span class="st">"dark_ppt"</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="../reference/hvtiPlotR-themes.html">theme_hv_ppt_dark</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/save_ppt.html">save_ppt</a></span><span class="op">(</span></span>
 <span>  object       <span class="op">=</span> <span class="va">p_ppt</span>,</span>
@@ -1560,7 +1560,7 @@ run;</code></pre>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous</a></span><span class="op">(</span>limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">100</span><span class="op">)</span>, breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">100</span>, <span class="fl">10</span><span class="op">)</span>,</span>
 <span>                     labels <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">x</span>, <span class="st">"%"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Years after Operation"</span>, y <span class="op">=</span> <span class="st">"Survival (%)"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/hv_theme.html">hv_theme</a></span><span class="op">(</span><span class="st">"poster"</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/hvtiPlotR-themes.html">theme_hv_poster</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </section><section class="level2"><h3 id="stratified-by-covariate">Stratified by covariate<a class="anchor" aria-label="anchor" href="#stratified-by-covariate"></a>
 </h3>
 <p><code>tp.hs.dead.procedure.tdepth.sas</code> overlays curves for depth-of-invasion groups (<code>tdepth = 1, 2, 3</code>). Pass <code>group_col</code> to <code><a href="../reference/hazard_plot.html">hazard_plot()</a></code> and supply matched <code><a href="../reference/sample_hazard_data.html">sample_hazard_data()</a></code> / <code><a href="../reference/sample_hazard_empirical.html">sample_hazard_empirical()</a></code> calls with a <code>groups</code> vector whose names become the legend labels.</p>
@@ -1596,7 +1596,7 @@ run;</code></pre>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous</a></span><span class="op">(</span>limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">100</span><span class="op">)</span>, breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">100</span>, <span class="fl">10</span><span class="op">)</span>,</span>
 <span>                     labels <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">x</span>, <span class="st">"%"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Years after Operation"</span>, y <span class="op">=</span> <span class="st">"Survival (%)"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/hv_theme.html">hv_theme</a></span><span class="op">(</span><span class="st">"poster"</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/hvtiPlotR-themes.html">theme_hv_poster</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </section><section class="level2"><h3 id="hs-conditional">Conditional survival after hospital discharge<a class="anchor" aria-label="anchor" href="#hs-conditional"></a>
 </h3>
 <p><code>tp.hs.dead.conditional.setup.sas</code> computes individual survivorship curves starting from the time of hospital discharge rather than the operation date. The conditional survival <code>S(t | discharge)</code> is <code>S(t) / S(t_discharge)</code> for each patient. In R, the same <code><a href="../reference/hazard_plot.html">hazard_plot()</a></code> call is used; only the x-axis label and data preparation differ.</p>
@@ -1619,7 +1619,7 @@ run;</code></pre>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous</a></span><span class="op">(</span>limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">100</span><span class="op">)</span>, breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">100</span>, <span class="fl">10</span><span class="op">)</span>,</span>
 <span>                     labels <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">x</span>, <span class="st">"%"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Years after Discharge"</span>, y <span class="op">=</span> <span class="st">"Survival after Discharge (%)"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/hv_theme.html">hv_theme</a></span><span class="op">(</span><span class="st">"poster"</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/hvtiPlotR-themes.html">theme_hv_poster</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </section><section class="level2"><h3 id="hs-uslife">US life-table overlay<a class="anchor" aria-label="anchor" href="#hs-uslife"></a>
 </h3>
 <p><code>tp.hs.uslife_*</code> templates call <code>%usmatchd</code> to generate age-, sex-, and race-matched US population life-table survival curves for each patient. <code><a href="../reference/sample_life_table.html">sample_life_table()</a></code> provides representative matched curves stratified by age group for use in R examples.</p>
@@ -1666,7 +1666,7 @@ run;</code></pre>
 <span>                     labels <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">x</span>, <span class="st">"%"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Years after Operation"</span>, y <span class="op">=</span> <span class="st">"Survival (%)"</span>,</span>
 <span>       caption <span class="op">=</span> <span class="st">"Dashed lines: US population life table"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/hv_theme.html">hv_theme</a></span><span class="op">(</span><span class="st">"poster"</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/hvtiPlotR-themes.html">theme_hv_poster</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </section><section class="level2"><h3 id="hs-benefit">Treatment benefit distribution<a class="anchor" aria-label="anchor" href="#hs-benefit"></a>
 </h3>
 <p><code>tp.hs.dead.compare_benefit.setup.sas</code> computes, for each patient, the difference in predicted survival at a fixed time point (5 years) under two treatment arms (e.g. ASA vs. no ASA). The distribution of these individual differences shows who benefits and by how much. Use <code><a href="../reference/survival_difference_plot.html">survival_difference_plot()</a></code> to plot the mean curve over time.</p>
@@ -1689,7 +1689,7 @@ run;</code></pre>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous</a></span><span class="op">(</span>limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">5</span>, <span class="fl">40</span><span class="op">)</span>,</span>
 <span>                     labels <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">x</span>, <span class="st">"%"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Years"</span>, y <span class="op">=</span> <span class="st">"Survival Difference (%)"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/hv_theme.html">hv_theme</a></span><span class="op">(</span><span class="st">"poster"</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/hvtiPlotR-themes.html">theme_hv_poster</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <hr></section></section><section class="section level2"><h2 id="adding-new-ports">Adding new ports<a class="anchor" aria-label="anchor" href="#adding-new-ports"></a>
 </h2>
 <p>As additional SAS templates are ported to R, update this guide:</p>
@@ -1712,7 +1712,7 @@ run;</code></pre>
 <div class="sourceCode cell-code" id="cb49"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>R version 4.5.3 (2026-03-11)
+<pre><code>R version 4.6.0 (2026-04-24)
 Platform: x86_64-pc-linux-gnu
 Running under: Ubuntu 24.04.4 LTS
 
@@ -1733,28 +1733,28 @@ attached base packages:
 [1] stats     graphics  grDevices utils     datasets  methods   base
 
 other attached packages:
-[1] ggplot2_4.0.2   hvtiPlotR_2.0.1
+[1] ggplot2_4.0.3   hvtiPlotR_2.0.1
 
 loaded via a namespace (and not attached):
  [1] generics_0.1.4          tidyr_1.3.2             fontLiberation_0.1.0
  [4] xml2_1.5.2              lattice_0.22-9          digest_0.6.39
- [7] magrittr_2.0.5          evaluate_1.0.5          grid_4.5.3
-[10] RColorBrewer_1.1-3      fastmap_1.2.0           Matrix_1.7-4
+ [7] magrittr_2.0.5          evaluate_1.0.5          grid_4.6.0
+[10] RColorBrewer_1.1-3      fastmap_1.2.0           Matrix_1.7-5
 [13] jsonlite_2.0.0          zip_2.3.3               survival_3.8-6
 [16] purrr_1.2.2             scales_1.4.0            fontBitstreamVera_0.1.1
 [19] textshaping_1.0.5       cli_3.6.6               rlang_1.2.0
-[22] fontquiver_0.2.1        splines_4.5.3           withr_3.0.2
+[22] fontquiver_0.2.1        splines_4.6.0           withr_3.0.2
 [25] yaml_2.3.12             otel_0.2.0              gdtools_0.5.0
-[28] tools_4.5.3             officer_0.7.3           uuid_1.2-2
+[28] tools_4.6.0             officer_0.7.4           uuid_1.2-2
 [31] dplyr_1.2.1             colorspace_2.1-2        ComplexUpset_1.3.3
 [34] vctrs_0.7.3             R6_2.6.1                lifecycle_1.0.5
 [37] ragg_1.5.2              pkgconfig_2.0.3         pillar_1.11.1
-[40] gtable_0.3.6            glue_1.8.1              Rcpp_1.1.1-1
-[43] systemfonts_1.3.2       xfun_0.57               rvg_0.4.1
+[40] gtable_0.3.6            glue_1.8.1              Rcpp_1.1.1-1.1
+[43] systemfonts_1.3.2       xfun_0.57               rvg_0.4.2
 [46] tibble_3.3.1            tidyselect_1.2.1        knitr_1.51
 [49] farver_2.1.2            htmltools_0.5.9         patchwork_1.3.2
 [52] labeling_0.4.3          rmarkdown_2.31          ggalluvial_0.12.6
-[55] compiler_4.5.3          S7_0.2.1-1              askpass_1.2.1
+[55] compiler_4.6.0          S7_0.2.2                askpass_1.2.1
 [58] openssl_2.4.0          </code></pre>
 </div>
 </div>

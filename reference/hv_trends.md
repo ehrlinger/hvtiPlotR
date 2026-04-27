@@ -6,7 +6,7 @@ statistics (mean or median), and returns an `hv_trends` object. Call
 on the result to obtain a bare `ggplot2` trend plot (LOESS smooth +
 annual summary points) that you can decorate with colour scales, axis
 limits, and
-[`hv_theme`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_theme.md).
+[`theme_hv_manuscript`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md).
 
 ## Usage
 
@@ -71,7 +71,7 @@ The list contains:
 
 [`plot.hv_trends`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hv_trends.md)
 to render as a ggplot2 figure,
-[`hv_theme`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_theme.md)
+[`theme_hv_manuscript`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)
 for the publication theme,
 [`sample_trends_data`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_trends_data.md)
 for example data.
@@ -110,6 +110,6 @@ p +
                               breaks = seq(0, 80, 20)) +
   ggplot2::coord_cartesian(xlim = c(1985, 2015), ylim = c(0, 80)) +
   ggplot2::labs(x = "Years", y = "%") +
-  hv_theme("poster")
+  theme_hv_poster()
 
 ```

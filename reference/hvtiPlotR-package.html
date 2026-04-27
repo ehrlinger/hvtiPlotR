@@ -96,7 +96,7 @@ without restriction.</p></li>
 <span id="cb1-7"><a href="#cb1-7" tabindex="-1"></a><span class="fu">plot</span>(tr) <span class="sc">+</span></span>
 <span id="cb1-8"><a href="#cb1-8" tabindex="-1"></a>  <span class="fu">scale_colour_brewer</span>(<span class="at">palette =</span> <span class="st">"Set1"</span>, <span class="at">name =</span> <span class="st">"Group"</span>) <span class="sc">+</span></span>
 <span id="cb1-9"><a href="#cb1-9" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Year"</span>, <span class="at">y =</span> <span class="st">"Outcome"</span>) <span class="sc">+</span></span>
-<span id="cb1-10"><a href="#cb1-10" tabindex="-1"></a>  <span class="fu">hv_theme</span>(<span class="st">"manuscript"</span>)</span></code></pre><p></p></div>
+<span id="cb1-10"><a href="#cb1-10" tabindex="-1"></a>  <span class="fu">theme_hv_manuscript</span>()</span></code></pre><p></p></div>
 <p>Every constructor ships with a <code>sample_*()</code> companion that generates
 realistic synthetic data sized and shaped like the corresponding SAS
 dataset export, so examples and unit tests run without PHI.</p>
@@ -106,25 +106,24 @@ dataset export, so examples and unit tests run without PHI.</p>
 <h3 id="themes">Themes<a class="anchor" aria-label="anchor" href="#themes"></a></h3>
 
 
-<p>Use <code><a href="hv_theme.html">hv_theme()</a></code> as the single entry point; lower-level functions are
-also exported for direct use.</p><ul><li><p><code><a href="hv_theme.html">hv_theme()</a></code>: Unified dispatcher — accepts <code>"manuscript"</code>,
-<code>"poster"</code>, <code>"light_ppt"</code>, or <code>"dark_ppt"</code>.</p></li>
-<li><p><code><a href="hv_theme_manuscript.html">hv_theme_manuscript()</a></code> / <code><a href="hv_theme_manuscript.html">theme_manuscript()</a></code> / <code><a href="hv_theme_manuscript.html">theme_man()</a></code>:
-Clean white-background theme for journal figures.</p></li>
-<li><p><code><a href="hv_theme_poster.html">hv_theme_poster()</a></code> / <code><a href="hv_theme_poster.html">theme_poster()</a></code>: Medium-font theme for
+<p>Four <code>theme_hv_*()</code> functions follow ggplot2's <code><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw()</a></code> contract:
+pass <code>base_size</code> / <code>base_family</code> to control typography, then forward
+any extra named theme element through <code>...</code> (e.g.
+<code>theme_hv_manuscript(legend.position = "right")</code>) or chain a
+<code>+ theme(...)</code> call.</p><ul><li><p><code><a href="hvtiPlotR-themes.html">theme_hv_manuscript()</a></code>: Clean white-background theme for journal
+figures.</p></li>
+<li><p><code><a href="hvtiPlotR-themes.html">theme_hv_poster()</a></code>: Medium-font theme with visible axis lines for
 conference posters.</p></li>
-<li><p><code><a href="hv_theme_dark_ppt.html">hv_theme_dark_ppt()</a></code> / <code><a href="hv_theme_dark_ppt.html">theme_dark_ppt()</a></code> / <code><a href="hv_theme_dark_ppt.html">theme_ppt()</a></code> /
-<code><a href="hv_theme_dark_ppt.html">hv_theme_ppt()</a></code>: Large-font theme with a black panel for
+<li><p><code><a href="hvtiPlotR-themes.html">theme_hv_ppt_dark()</a></code>: Large-font theme with a black panel for
 blue-gradient or dark PowerPoint templates.</p></li>
-<li><p><code><a href="hv_theme_light_ppt.html">hv_theme_light_ppt()</a></code> / <code><a href="hv_theme_light_ppt.html">theme_light_ppt()</a></code>: Large-font theme
-with a transparent panel (appears white on white-background
-PowerPoint templates; the slide template fills the panel
-rectangle). Add <code>+ theme(panel.background = element_rect(fill = "white"))</code> if you specifically need an opaque white panel on a
-non-white slide background.</p></li>
+<li><p><code><a href="hvtiPlotR-themes.html">theme_hv_ppt_light()</a></code>: Large-font theme with a transparent panel
+(appears white on white-background PowerPoint templates). Add
+<code>+ theme(panel.background = element_rect(fill = "white"))</code> if you
+specifically need an opaque white panel on a non-white slide
+background.</p></li>
 </ul><p>Both PPT themes hide the legend by default, use inside-facing axis
 ticks, and scale axis-text / axis-title margins from <code>base_size</code> via
-ggplot2's <code>half_line</code> convention. Pass <code>bold = TRUE</code> for AATS-style
-bold axis text.</p>
+ggplot2's <code>half_line</code> convention.</p>
 </div>
 
 <div class="section">

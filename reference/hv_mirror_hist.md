@@ -114,7 +114,7 @@ The list contains:
 
 [`plot.hv_mirror_hist`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hv_mirror_hist.md)
 to render as a ggplot2 figure,
-[`hv_theme`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_theme.md)
+[`theme_hv_manuscript`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)
 for the publication theme,
 [`sample_mirror_histogram_data`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_mirror_histogram_data.md)
 for example data.
@@ -194,6 +194,6 @@ p <- plot(mh)
 # 3. Decorate: axis labels and theme
 p +
   ggplot2::labs(x = "Propensity Score (%)", y = "Count") +
-  hv_theme("poster")
+  theme_hv_poster()
 
 ```

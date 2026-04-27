@@ -5,7 +5,7 @@ data summary points) and returns an `hv_nonparametric` object. Call
 [`plot.hv_nonparametric`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hv_nonparametric.md)
 to obtain a bare `ggplot2` curve plot that you can decorate with
 colour/fill scales, axis limits, and
-[`hv_theme`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_theme.md).
+[`theme_hv_manuscript`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md).
 
 ## Usage
 
@@ -101,7 +101,7 @@ Covers the full range of `tp.np.*` SAS templates:
 
 [`plot.hv_nonparametric`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hv_nonparametric.md)
 to render as a ggplot2 figure,
-[`hv_theme`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_theme.md)
+[`theme_hv_manuscript`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)
 for the publication theme,
 [`sample_nonparametric_curve_data`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_nonparametric_curve_data.md)
 for example data.
@@ -137,7 +137,7 @@ p +
                               breaks = seq(0, 0.40, 0.10),
                               labels = scales::percent) +
   ggplot2::labs(x = "Months", y = "Prevalence of AF") +
-  hv_theme("poster")
+  theme_hv_poster()
 #> Warning: Removed 187 rows containing missing values or values outside the scale range
 #> (`geom_ribbon()`).
 #> Warning: Removed 53 rows containing missing values or values outside the scale range
@@ -148,7 +148,7 @@ p +
 
 # --- Global theme (set once per session) ----------------------------------
 if (FALSE) { # \dontrun{
-old <- ggplot2::theme_set(hv_theme_manuscript())
+old <- ggplot2::theme_set(theme_hv_manuscript())
 plot(np) +
   ggplot2::scale_colour_manual(values = c("steelblue"), guide = "none") +
   ggplot2::scale_fill_manual(values   = c("steelblue"), guide = "none") +

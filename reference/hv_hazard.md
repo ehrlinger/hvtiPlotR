@@ -128,7 +128,7 @@ are passed to [`plot()`](https://rdrr.io/r/graphics/plot.default.html).
 
 [`plot.hv_hazard()`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hv_hazard.md)
 to render as a ggplot2 figure,
-[`hv_theme()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_theme.md)
+[`theme_hv_manuscript()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)
 for the publication theme,
 [`sample_hazard_data()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_hazard_data.md),
 [`sample_hazard_empirical()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_hazard_empirical.md),
@@ -171,7 +171,7 @@ p +
   scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, 20),
                      labels = function(x) paste0(x, "%")) +
   labs(x = "Years", y = "Survival (%)") +
-  hv_theme("poster")
+  theme_hv_poster()
 
 
 # Stratified groups -- colour scale adds clinical meaning
@@ -188,12 +188,12 @@ plot(hp2) +
     name   = NULL
   ) +
   labs(x = "Years", y = "Survival (%)") +
-  hv_theme("poster")
+  theme_hv_poster()
 
 
 # --- Global theme + RColorBrewer (set once per session) ------------------
 if (FALSE) { # \dontrun{
-old <- ggplot2::theme_set(hv_theme_manuscript())
+old <- ggplot2::theme_set(theme_hv_manuscript())
 plot(hp2) +
   scale_colour_brewer(palette = "Set1", name = NULL) +
   scale_fill_brewer(palette   = "Set1", guide = "none") +

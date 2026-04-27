@@ -5,7 +5,7 @@ object. Call
 [`plot.hv_alluvial`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hv_alluvial.md)
 on the result to obtain a bare `ggplot2` alluvial diagram that you can
 decorate with colour scales, axis labels, and
-[`hv_theme`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_theme.md).
+[`theme_hv_manuscript`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md).
 
 ## Usage
 
@@ -98,7 +98,7 @@ p +
   ) +
   ggplot2::labs(y = "Patients (n)",
                 title = "AV Regurgitation: Pre- to Post-operative") +
-  hv_theme("poster")
+  theme_hv_poster()
 #> Warning: Some strata appear at multiple axes.
 #> Warning: Some strata appear at multiple axes.
 #> Warning: Some strata appear at multiple axes.

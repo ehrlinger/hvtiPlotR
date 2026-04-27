@@ -92,10 +92,10 @@
 <span></span>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">wt</span>, <span class="va">mpg</span>, colour <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">cyl</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="reference/hv_theme.html">hv_theme</a></span><span class="op">(</span><span class="st">"manuscript"</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu">hv_theme</span><span class="op">(</span><span class="st">"manuscript"</span><span class="op">)</span></span></code></pre></div>
 <p>Export the result directly to an editable PowerPoint slide:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">wt</span>, <span class="va">mpg</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="reference/hv_theme.html">hv_theme</a></span><span class="op">(</span><span class="st">"ppt"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">wt</span>, <span class="va">mpg</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu">hv_theme</span><span class="op">(</span><span class="st">"ppt"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="reference/save_ppt.html">save_ppt</a></span><span class="op">(</span></span>
 <span>  object     <span class="op">=</span> <span class="va">p</span>,</span>
@@ -106,7 +106,7 @@
 <div class="section level2">
 <h2 id="themes">Themes<a class="anchor" aria-label="anchor" href="#themes"></a>
 </h2>
-<p>Use <code><a href="reference/hv_theme.html">hv_theme()</a></code> to apply any supported style, or call the named aliases directly:</p>
+<p>Use <code>hv_theme()</code> to apply any supported style, or call the named aliases directly:</p>
 <table class="table">
 <colgroup>
 <col width="33%">
@@ -122,7 +122,7 @@
 <tr class="odd">
 <td><code>"manuscript"</code></td>
 <td>
-<code><a href="reference/hv_theme_manuscript.html">theme_manuscript()</a></code>, <code><a href="reference/hv_theme_manuscript.html">theme_man()</a></code>
+<code><a href="reference/hvtiPlotR-themes.html">theme_manuscript()</a></code>, <code><a href="reference/hvtiPlotR-themes.html">theme_man()</a></code>
 </td>
 <td>Journal figures, white background</td>
 </tr>
@@ -131,28 +131,28 @@
 <code>"ppt"</code> / <code>"dark_ppt"</code>
 </td>
 <td>
-<code><a href="reference/hv_theme_dark_ppt.html">theme_ppt()</a></code>, <code><a href="reference/hv_theme_dark_ppt.html">theme_dark_ppt()</a></code>
+<code><a href="reference/hvtiPlotR-themes.html">theme_ppt()</a></code>, <code><a href="reference/hvtiPlotR-themes.html">theme_dark_ppt()</a></code>
 </td>
 <td>Dark-background PowerPoint slides</td>
 </tr>
 <tr class="odd">
 <td><code>"light_ppt"</code></td>
-<td><code><a href="reference/hv_theme_light_ppt.html">theme_light_ppt()</a></code></td>
+<td><code><a href="reference/hvtiPlotR-themes.html">theme_light_ppt()</a></code></td>
 <td>Light/transparent PowerPoint slides</td>
 </tr>
 <tr class="even">
 <td><code>"poster"</code></td>
-<td><code><a href="reference/hv_theme_poster.html">theme_poster()</a></code></td>
+<td><code><a href="reference/hvtiPlotR-themes.html">theme_poster()</a></code></td>
 <td>Conference posters</td>
 </tr>
 </tbody>
 </table>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">p</span> <span class="op">+</span> <span class="fu"><a href="reference/hv_theme.html">hv_theme</a></span><span class="op">(</span><span class="st">"manuscript"</span><span class="op">)</span>   <span class="co"># via generic</span></span>
-<span><span class="va">p</span> <span class="op">+</span> <span class="fu"><a href="reference/hv_theme_manuscript.html">theme_man</a></span><span class="op">(</span><span class="op">)</span>                <span class="co"># direct alias</span></span>
-<span><span class="va">p</span> <span class="op">+</span> <span class="fu"><a href="reference/hv_theme.html">hv_theme</a></span><span class="op">(</span><span class="st">"ppt"</span><span class="op">)</span>          <span class="co"># dark PPT</span></span>
-<span><span class="va">p</span> <span class="op">+</span> <span class="fu"><a href="reference/hv_theme.html">hv_theme</a></span><span class="op">(</span><span class="st">"light_ppt"</span><span class="op">)</span>    <span class="co"># light PPT</span></span>
-<span><span class="va">p</span> <span class="op">+</span> <span class="fu"><a href="reference/hv_theme.html">hv_theme</a></span><span class="op">(</span><span class="st">"poster"</span><span class="op">)</span>       <span class="co"># poster</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">p</span> <span class="op">+</span> <span class="fu">hv_theme</span><span class="op">(</span><span class="st">"manuscript"</span><span class="op">)</span>   <span class="co"># via generic</span></span>
+<span><span class="va">p</span> <span class="op">+</span> <span class="fu"><a href="reference/hvtiPlotR-themes.html">theme_man</a></span><span class="op">(</span><span class="op">)</span>                <span class="co"># direct alias</span></span>
+<span><span class="va">p</span> <span class="op">+</span> <span class="fu">hv_theme</span><span class="op">(</span><span class="st">"ppt"</span><span class="op">)</span>          <span class="co"># dark PPT</span></span>
+<span><span class="va">p</span> <span class="op">+</span> <span class="fu">hv_theme</span><span class="op">(</span><span class="st">"light_ppt"</span><span class="op">)</span>    <span class="co"># light PPT</span></span>
+<span><span class="va">p</span> <span class="op">+</span> <span class="fu">hv_theme</span><span class="op">(</span><span class="st">"poster"</span><span class="op">)</span>       <span class="co"># poster</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="plot-function-gallery">Plot Function Gallery<a class="anchor" aria-label="anchor" href="#plot-function-gallery"></a>
@@ -160,7 +160,7 @@
 <p><strong>hvtiPlotR 2.0 uses a two-step API.</strong> A constructor (<code>hv_*()</code>) shapes the data and returns an S3 object; <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code> renders a bare <code>ggplot</code>. Add <code>scale_*</code>, <code><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs()</a></code>, <code><a href="https://ggplot2.tidyverse.org/reference/annotate.html" class="external-link">annotate()</a></code>, and a theme with the usual <code>+</code> operator.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">km</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/hv_survival.html">hv_survival</a></span><span class="op">(</span><span class="fu"><a href="reference/sample_survival_data.html">sample_survival_data</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">km</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="reference/hv_theme.html">hv_theme</a></span><span class="op">(</span><span class="st">"manuscript"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">km</span><span class="op">)</span> <span class="op">+</span> <span class="fu">hv_theme</span><span class="op">(</span><span class="st">"manuscript"</span><span class="op">)</span></span>
 <span><span class="va">km</span><span class="op">$</span><span class="va">tables</span><span class="op">$</span><span class="va">risk</span>                         <span class="co"># risk-table data frame</span></span></code></pre></div>
 <div class="section level3">
 <h3 id="propensity-score--balance">Propensity Score &amp; Balance<a class="anchor" aria-label="anchor" href="#propensity-score--balance"></a>
@@ -192,7 +192,7 @@
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mh</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/hv_mirror_hist.html">hv_mirror_hist</a></span><span class="op">(</span><span class="fu"><a href="reference/sample_mirror_histogram_data.html">sample_mirror_histogram_data</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">2000</span><span class="op">)</span>,</span>
 <span>                  group_labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"SAVR"</span>, <span class="st">"TF-TAVR"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">mh</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="reference/hv_theme.html">hv_theme</a></span><span class="op">(</span><span class="st">"manuscript"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">mh</span><span class="op">)</span> <span class="op">+</span> <span class="fu">hv_theme</span><span class="op">(</span><span class="st">"manuscript"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="survival--time-to-event">Survival &amp; Time-to-Event<a class="anchor" aria-label="anchor" href="#survival--time-to-event"></a>

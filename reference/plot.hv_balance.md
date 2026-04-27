@@ -67,7 +67,7 @@ object.
 ## See also
 
 [`hv_balance`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_balance.md),
-[`hv_theme`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_theme.md)
+[`theme_hv_manuscript`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)
 
 ## Examples
 
@@ -81,6 +81,6 @@ plot(cb) +
     name   = NULL
   ) +
   ggplot2::labs(x = "Standardized difference (%)", y = "") +
-  hv_theme("poster")
+  theme_hv_poster()
 
 ```

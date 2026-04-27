@@ -28,7 +28,7 @@ object. Add scales, labels, and themes with the usual `+` operator.
 ## See also
 
 [`hv_stacked`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_stacked.md),
-[`hv_theme`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_theme.md)
+[`theme_hv_manuscript`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)
 
 ## Examples
 
@@ -40,7 +40,7 @@ plot(hv_stacked(dta, x_col = "year", group_col = "category")) +
   ggplot2::scale_fill_brewer(palette = "Set1", name = "Category") +
   ggplot2::scale_color_brewer(palette = "Set1", name = "Category") +
   ggplot2::labs(x = "Year", y = "Count") +
-  hv_theme("poster")
+  theme_hv_poster()
 
 
 # Proportional (fill) histogram with manual colours
@@ -56,6 +56,6 @@ plot(hv_stacked(dta, x_col = "year", group_col = "category",
     guide  = "none"
   ) +
   ggplot2::labs(x = "Year", y = "Proportion") +
-  hv_theme("poster")
+  theme_hv_poster()
 
 ```

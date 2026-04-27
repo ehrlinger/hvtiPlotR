@@ -5,7 +5,7 @@ binned data summary points) and returns an `hv_ordinal` object. Call
 [`plot.hv_ordinal`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hv_ordinal.md)
 on the result to obtain a bare `ggplot2` multi-grade line plot that you
 can decorate with colour scales and
-[`hv_theme`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_theme.md).
+[`theme_hv_manuscript`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md).
 
 ## Usage
 
@@ -120,7 +120,7 @@ p +
                               breaks = seq(0, 0.50, 0.10),
                               labels = scales::percent) +
   ggplot2::labs(x = "Years", y = "Percent in each TR grade") +
-  hv_theme("poster")
+  theme_hv_poster()
 #> Warning: Removed 500 rows containing missing values or values outside the scale range
 #> (`geom_line()`).
 #> Warning: Removed 10 rows containing missing values or values outside the scale range

@@ -15,7 +15,7 @@
   rectangle larger than the ggplot panel. The ggplot itself is
   unchanged; only the containing shape’s fill is now transparent so the
   slide template background shows through any area outside the panel.
-- [`hv_theme_light_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_theme_light_ppt.md):
+- [`hv_theme_light_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md):
   panel background is now `fill = "transparent"` (was `"white"`). Saving
   a `light_ppt`-themed plot into a dark PowerPoint template previously
   showed as an opaque white rectangle inside the panel; with a
@@ -99,9 +99,9 @@ devices and across slides in a deck even when axis-label widths differ.
 
 ### Behaviour changes — PPT themes
 
-- [`hv_theme_dark_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_theme_dark_ppt.md)
+- [`hv_theme_dark_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)
   and
-  [`hv_theme_light_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_theme_light_ppt.md):
+  [`hv_theme_light_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md):
   - Legend is now hidden by default (`legend.position = "none"`).
     PowerPoint figures are typically annotated directly on the panel;
     override with `+ theme(legend.position = "right")` when needed.
@@ -112,7 +112,7 @@ devices and across slides in a deck even when axis-label widths differ.
     ggplot2’s `half_line = base_size / 2` convention, so spacing stays
     proportional when `base_size` changes. Previous unscaled defaults
     produced cramped labels at `base_size = 32`.
-  - [`hv_theme_light_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_theme_light_ppt.md)
+  - [`hv_theme_light_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)
     gains explicit `axis.text`, `axis.line`, `panel.background` (fill
     `"white"`, colour `"black"`, linewidth 1), and `axis.ticks` elements
     so the light theme structurally mirrors the dark theme’s
@@ -235,8 +235,7 @@ devices and across slides in a deck even when axis-label widths differ.
     [`hv_nnt()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_nnt.md)
   - `hvti_upset()` →
     [`hv_upset()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_upset.md)
-  - `hvti_theme()` →
-    [`hv_theme()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_theme.md)
+  - `hvti_theme()` → `hv_theme()`
   - `hvti_survival_difference()` →
     [`hv_survival_difference()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_survival_difference.md)
   - `is_hvti_data()` →
@@ -487,13 +486,12 @@ argument on [`plot()`](https://rdrr.io/r/graphics/plot.default.html):
   doc block used `##'` (silently ignored by roxygen2) instead of `#'`,
   so the function had no generated `.Rd` file. Converted all `##'` →
   `#'`, modernised `\code{}` → backtick syntax, and added `@examples`.
-- Added `@examples` to all five theme functions:
-  [`hv_theme()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_theme.md),
-  [`hv_theme_manuscript()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_theme_manuscript.md),
-  [`hv_theme_dark_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_theme_dark_ppt.md),
-  [`hv_theme_light_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_theme_light_ppt.md),
+- Added `@examples` to all five theme functions: `hv_theme()`,
+  [`hv_theme_manuscript()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md),
+  [`hv_theme_dark_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md),
+  [`hv_theme_light_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md),
   and
-  [`hv_theme_poster()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_theme_poster.md).
+  [`hv_theme_poster()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md).
 - Expanded thin (2-line) `@examples` blocks for four sample-data
   helpers:
   [`sample_life_table()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_life_table.md),
@@ -687,10 +685,8 @@ argument on [`plot()`](https://rdrr.io/r/graphics/plot.default.html):
   naturally go unmatched.
 - Added `hv_plot()` dispatcher supporting `"mirror_histogram"`,
   `"stacked_histogram"`, and `"covariate_balance"` plot types.
-- Added
-  [`hv_theme()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_theme.md)
-  dispatcher for `"manuscript"`, `"ppt"`, `"dark_ppt"`, and `"poster"`
-  themes.
+- Added `hv_theme()` dispatcher for `"manuscript"`, `"ppt"`,
+  `"dark_ppt"`, and `"poster"` themes.
 - Enabled roxygen Markdown (`Roxygen: list(markdown = TRUE)`) so
   `**bold**`, backtick code spans, and `[pkg::fn()]` cross-references
   render correctly in Rd help pages.

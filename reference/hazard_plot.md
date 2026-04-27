@@ -42,7 +42,7 @@ reference. Covers the complete family of `tp.hp.dead.*` SAS templates.
 Returns a **bare ggplot object**; compose with `scale_colour_*`,
 [`scale_y_continuous()`](https://ggplot2.tidyverse.org/reference/scale_continuous.html),
 [`labs()`](https://ggplot2.tidyverse.org/reference/labs.html),
-[`hv_theme()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_theme.md).
+[`theme_hv_manuscript()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md).
 
 ## Usage
 
@@ -208,7 +208,7 @@ SAS templates: `tp.hp.dead.sas`, `tp.hp.dead.tkdn.stratified.sas`,
 [`survival_difference_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/survival_difference_plot.md),
 [`nnt_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/nnt_plot.md),
 [`hv_survival()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_survival.md),
-[`hv_theme()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_theme.md)
+[`theme_hv_manuscript()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)
 
 ## Examples
 
@@ -236,7 +236,7 @@ hazard_plot(
   scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, 20),
                      labels = function(x) paste0(x, "%")) +
   labs(x = "Years", y = "Survival (%)") +
-  hv_theme("poster")
+  theme_hv_poster()
 
 
 # --- (2) Hazard rate curve + KM overlay ----------------------------------
@@ -256,7 +256,7 @@ hazard_plot(
   scale_y_continuous(limits = c(0, 30),
                      labels = function(x) paste0(x, "%/yr")) +
   labs(x = "Years", y = "Hazard (%/year)") +
-  hv_theme("poster")
+  theme_hv_poster()
 #> Warning: Removed 128 rows containing missing values or values outside the scale range
 #> (`geom_ribbon()`).
 
@@ -274,7 +274,7 @@ hazard_plot(
   scale_fill_manual(values = c("darkorange"), guide = "none") +
   scale_x_continuous(limits = c(0, 10), breaks = 0:10) +
   labs(x = "Years", y = "Cumulative Hazard (%)") +
-  hv_theme("poster")
+  theme_hv_poster()
 
 
 # --- (4) Stratified survival (tp.hp.dead.tkdn.stratified.sas) ------------
@@ -310,7 +310,7 @@ hazard_plot(
   scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, 20),
                      labels = function(x) paste0(x, "%")) +
   labs(x = "Years after Esophagostomy", y = "Survival (%)") +
-  hv_theme("poster")
+  theme_hv_poster()
 
 
 # --- (5) Life table overlay (tp.hp.dead.age_with_population_life_table) ---
@@ -354,7 +354,7 @@ hazard_plot(
                      labels = function(x) paste0(x, "%")) +
   labs(x = "Years", y = "Survival (%)",
        caption = "Dashed lines: US population life table") +
-  hv_theme("poster")
+  theme_hv_poster()
 
 
 # --- (6) Multivariable risk profiles (tp.hp.dead.ideal_multivariable) -----
@@ -386,7 +386,7 @@ hazard_plot(
                      labels = function(x) paste0(x, "%")) +
   labs(x = "Years after Brain Metastases",
        y = "Survival (%)") +
-  hv_theme("poster")
+  theme_hv_poster()
 
 
 # --- (7) Propensity-weighted / matched groups -----------------------------
@@ -423,7 +423,7 @@ hazard_plot(
   scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, 20),
                      labels = function(x) paste0(x, "%")) +
   labs(x = "Years after Repair", y = "Survival (%)") +
-  hv_theme("poster")
+  theme_hv_poster()
 
 
 # --- (8) Device sequencing (tp.hp.mcs.mod.dead.devseq) -------------------
@@ -452,7 +452,7 @@ hazard_plot(
   scale_y_continuous(limits = c(0, 100),
                       labels = function(x) paste0(x, "%")) +
   labs(x = "Time on Device", y = "Survival (%)") +
-  hv_theme("poster")
+  theme_hv_poster()
 
 
 # --- (9) Save (dontrun) --------------------------------------------------
@@ -464,13 +464,13 @@ p <- hazard_plot(dat, estimate_col = "survival",
   scale_colour_manual(values = c("steelblue"), guide = "none") +
   scale_fill_manual(values = c("steelblue"), guide = "none") +
   labs(x = "Years", y = "Survival (%)") +
-  hv_theme("poster")
+  theme_hv_poster()
 ggplot2::ggsave("survival.pdf", p, width = 11.5, height = 8)
 } # }
 
 # --- Global theme + RColorBrewer (set once per session) ------------------
 if (FALSE) { # \dontrun{
-old <- ggplot2::theme_set(hv_theme_manuscript())
+old <- ggplot2::theme_set(theme_hv_manuscript())
 hazard_plot(
   dat2,
   estimate_col  = "survival",

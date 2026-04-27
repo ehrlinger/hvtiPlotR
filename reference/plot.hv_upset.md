@@ -4,7 +4,7 @@ Draws an UpSet plot using
 [`upset`](https://krassowski.github.io/complex-upset/reference/upset.html).
 Apply a theme to **all panels** with `&`:
 
-    plot(up) & hv_theme("poster")
+    plot(up) & theme_hv_poster()
 
 Apply scales or annotations to the intersection panel via
 `base_annotations`.
@@ -72,7 +72,7 @@ A patchwork / ggplot composite. Use `&` to apply a theme to all panels.
 ## See also
 
 [`hv_upset`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_upset.md),
-[`hv_theme`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_theme.md)
+[`theme_hv_manuscript`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)
 
 ## Examples
 
@@ -89,28 +89,10 @@ p <- plot(up)
 #> ℹ The deprecated feature was likely used in the ComplexUpset package.
 #>   Please report the issue at
 #>   <https://github.com/krassowski/complex-upset/issues>.
-#> Warning: themes$intersections_matrix is not a valid theme.
-#> Please use `theme()` to construct themes.
-#> Warning: `legend.margin` must be specified using `margin()`
-#> ℹ For the old behavior use `legend.spacing`
-#> Warning: themes$intersections_matrix is not a valid theme.
-#> Please use `theme()` to construct themes.
-#> Warning: selected_theme is not a valid theme.
-#> Please use `theme()` to construct themes.
-#> Warning: `legend.margin` must be specified using `margin()`
-#> ℹ For the old behavior use `legend.spacing`
-#> Warning: selected_theme is not a valid theme.
-#> Please use `theme()` to construct themes.
-#> Warning: themes$overall_sizes is not a valid theme.
-#> Please use `theme()` to construct themes.
-#> Warning: `legend.margin` must be specified using `margin()`
-#> ℹ For the old behavior use `legend.spacing`
-#> Warning: themes$overall_sizes is not a valid theme.
-#> Please use `theme()` to construct themes.
 
 if (FALSE) { # \dontrun{
 # Manuscript theme applied to all panels via &
-plot(up) & hv_theme("poster")
+plot(up) & theme_hv_poster()
 
 # Custom intersection bar colour
 plot(up,
@@ -125,6 +107,6 @@ plot(up,
       ggplot2::labs(y = "Patients (n)")
   )
 ) &
-  hv_theme("poster")
+  theme_hv_poster()
 } # }
 ```

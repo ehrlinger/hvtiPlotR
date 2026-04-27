@@ -48,13 +48,13 @@ plot(
 
 A bare [`ggplot`](https://ggplot2.tidyverse.org/reference/ggplot.html)
 object; compose with `+` to add scales, axis limits, labels, and
-[`hv_theme`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_theme.md).
+[`theme_hv_manuscript`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md).
 
 ## See also
 
 [`hv_nonparametric`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_nonparametric.md)
 to build the data object,
-[`hv_theme`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_theme.md)
+[`theme_hv_manuscript`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)
 for the publication theme.
 
 Other Nonparametric curves:
@@ -86,6 +86,6 @@ plot(np) +
     guide  = "none"
   ) +
   ggplot2::labs(x = "Years", y = "AV Peak Gradient (mmHg)") +
-  hv_theme("poster")
+  theme_hv_poster()
 
 ```

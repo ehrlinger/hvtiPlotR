@@ -5,7 +5,7 @@ Validates a long-format repeated-measures data frame and returns an
 [`plot.hv_spaghetti`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hv_spaghetti.md)
 on the result to obtain a bare `ggplot2` trajectory plot that you can
 decorate with colour scales, axis labels, and
-[`hv_theme`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_theme.md).
+[`theme_hv_manuscript`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md).
 
 ## Usage
 
@@ -68,7 +68,7 @@ The list contains:
 
 [`plot.hv_spaghetti`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hv_spaghetti.md)
 to render as a ggplot2 figure,
-[`hv_theme`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_theme.md)
+[`theme_hv_manuscript`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)
 for the publication theme,
 [`sample_spaghetti_data`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_spaghetti_data.md)
 for example data.
@@ -99,7 +99,7 @@ p +
   ) +
   ggplot2::labs(x = "Years after Operation",
                 y = "AV Mean Gradient (mmHg)") +
-  hv_theme("poster")
+  theme_hv_poster()
 #> Warning: No shared levels found between `names(values)` of the manual scale and the
 #> data's colour values.
 #> Warning: Ignoring empty aesthetic: `colour`.

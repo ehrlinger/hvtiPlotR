@@ -138,7 +138,7 @@ p +
   ggplot2::annotate("text", x = 20, y = -Inf, vjust = -1,
                     label = mh$meta$group_labels[2], size = 7) +
   ggplot2::labs(x = "Propensity Score (%)", y = "Number of Patients") +
-  hv_theme("poster")
+  theme_hv_poster()
 ```
 
 ![](plot-functions_files/figure-html/mirror_histogram_decorated-1.png)
@@ -230,7 +230,7 @@ p_wt +
   ggplot2::annotate("text", x = 30, y = -Inf, vjust = -1,
                     label = mh_wt$meta$group_labels[2], color = "red",  size = 5) +
   ggplot2::labs(x = "Propensity Score (%)", y = "#") +
-  hv_theme("poster")
+  theme_hv_poster()
 ```
 
 ![](plot-functions_files/figure-html/mirror_histogram_weighted_decorated-1.png)
@@ -299,7 +299,7 @@ p_count +
   scale_fill_brewer(palette = "Set1", name = "Category") +
   scale_color_brewer(palette = "Set1", name = "Category") +
   labs(x = "Year", y = "Count") +
-  hv_theme("poster")
+  theme_hv_poster()
 ```
 
 ![](plot-functions_files/figure-html/stacked_histogram_count-1.png)
@@ -327,7 +327,7 @@ p_final <- p_fill +
     guide  = "none"
   ) +
   labs(x = "Year", y = "Proportion") +
-  hv_theme("poster")
+  theme_hv_poster()
 
 p_final
 ```
@@ -438,7 +438,7 @@ gfup_final <- plot(gf, alpha = 0.8) +
   annotate("text", x = 1993, y = 28, label = "Deceased",
            hjust = 0, size = 3.5, color = "#E41A1C") +
   theme(legend.position = "none") +
-  hv_theme("poster")
+  theme_hv_poster()
 
 gfup_final
 ```
@@ -506,7 +506,7 @@ plot(gf2, type = "event", alpha = 0.8) +
   annotate("text", x = 1993, y = 31,
            label = "Systematic follow-up", hjust = 0, size = 3.5) +
   theme(legend.position = c(0.85, 0.15)) +
-  hv_theme("poster")
+  theme_hv_poster()
 ```
 
 ![](plot-functions_files/figure-html/gfup_event_panel-1.png)
@@ -649,7 +649,7 @@ cb_final <- plot(cb, alpha = 0.8) +
   annotate("text", x = -30, y = 0,        label = "More likely TF-TAVR", size = 4.5) +
   annotate("text", x =  22, y = n_vars,   label = "More likely SAVR",    size = 4.5) +
   theme(legend.position = c(0.20, 0.935)) +
-  hv_theme("poster")
+  theme_hv_poster()
 
 cb_final
 ```
@@ -674,7 +674,7 @@ plot(cb_ord, alpha = 0.8) +
     name   = NULL
   ) +
   labs(x = "Standardized difference (%)", y = "") +
-  hv_theme("poster")
+  theme_hv_poster()
 ```
 
 ![](plot-functions_files/figure-html/cov_balance_order-1.png)
@@ -751,7 +751,7 @@ km_final <- plot(km, alpha = 0.8) +
   annotate("text", x = 1, y = 5,
            label = paste0("n = ", nrow(dta_km)),
            hjust = 0, size = 3.5) +
-  hv_theme("poster")
+  theme_hv_poster()
 
 km_final
 ```
@@ -818,7 +818,7 @@ plot(km_s, alpha = 0.8) +
   labs(x = "Years after Operation", y = "Freedom from Death (%)",
        title = "Survival by Valve Type") +
   theme(legend.position = c(0.15, 0.20)) +
-  hv_theme("poster")
+  theme_hv_poster()
 ```
 
 ![](plot-functions_files/figure-html/km_strata_data-1.png)
@@ -831,7 +831,7 @@ plot(km, type = "cumhaz") +
   labs(x = "Years after Operation", y = "Cumulative Hazard H(t)",
        title = "Nelson-Aalen Cumulative Hazard") +
   scale_color_manual(values = c(All = "steelblue"), guide = "none") +
-  hv_theme("poster")
+  theme_hv_poster()
 ```
 
 ![](plot-functions_files/figure-html/km_cumhaz-1.png)
@@ -848,7 +848,7 @@ plot(km_s, type = "loglog") +
   ) +
   labs(x = "log(Years after Operation)", y = "log(-log S(t))",
        title = "Log-Log Survival — Proportional-Hazards Check") +
-  hv_theme("poster")
+  theme_hv_poster()
 ```
 
 ![](plot-functions_files/figure-html/km_loglog-1.png)
@@ -869,7 +869,7 @@ plot(km, type = "hazard") +
   scale_x_continuous(breaks = seq(0, 20, 5)) +
   labs(x = "Years after Operation", y = "Instantaneous Hazard",
        title = "Hazard Rate") +
-  hv_theme("poster")
+  theme_hv_poster()
 ```
 
 ![](plot-functions_files/figure-html/km_hazard-1.png)
@@ -883,7 +883,7 @@ plot(km, type = "life") +
   labs(x = "Years after Operation",
        y = "Restricted Mean Survival (years)",
        title = "Integral of Survivorship") +
-  hv_theme("poster")
+  theme_hv_poster()
 ```
 
 ![](plot-functions_files/figure-html/km_life-1.png)
@@ -914,7 +914,7 @@ Three helper functions support the workflow:
 [`plot()`](https://rdrr.io/r/graphics/plot.default.html) on an `hv_eda`
 object always returns a bare `ggplot`. Colour scales, axis labels,
 annotations, and
-[`hv_theme()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_theme.md)
+[`theme_hv_manuscript()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)
 are added by the caller.
 
 ### Sample data
@@ -960,7 +960,7 @@ plot(hv_eda(dta_eda, x_col = "year", y_col = "male",
   ) +
   scale_x_discrete(breaks = seq(2005, 2020, 5)) +
   labs(x = "Surgery Year", y = "Count") +
-  hv_theme("poster")
+  theme_hv_poster()
 ```
 
 ![](plot-functions_files/figure-html/eda_binary_count-1.png)
@@ -982,7 +982,7 @@ plot(hv_eda(dta_eda, x_col = "year", y_col = "cabg",
   scale_x_discrete(breaks = seq(2005, 2020, 5)) +
   scale_y_continuous(labels = scales::percent) +
   labs(x = "Surgery Year", y = "Proportion") +
-  hv_theme("poster")
+  theme_hv_poster()
 ```
 
 ![](plot-functions_files/figure-html/eda_binary_percent-1.png)
@@ -1000,7 +1000,7 @@ plot(hv_eda(dta_eda, x_col = "year", y_col = "nyha",
   ) +
   scale_x_discrete(breaks = seq(2005, 2020, 5)) +
   labs(x = "Surgery Year", y = "Count") +
-  hv_theme("poster")
+  theme_hv_poster()
 ```
 
 ![](plot-functions_files/figure-html/eda_ordinal-1.png)
@@ -1019,7 +1019,7 @@ plot(hv_eda(dta_eda, x_col = "year", y_col = "valve_morph",
   ) +
   scale_x_discrete(breaks = seq(2005, 2020, 5)) +
   labs(x = "Surgery Year", y = "Count") +
-  hv_theme("poster")
+  theme_hv_poster()
 ```
 
 ![](plot-functions_files/figure-html/eda_char_cat-1.png)
@@ -1037,7 +1037,7 @@ plot(hv_eda(dta_eda, x_col = "op_years", y_col = "ef",
   scale_y_continuous(limits = c(20, 80), breaks = seq(20, 80, 20)) +
   labs(x = "Years from First Surgery Year",
        caption = "Tick marks on x-axis: observations with missing EF") +
-  hv_theme("poster")
+  theme_hv_poster()
 ```
 
 ![](plot-functions_files/figure-html/eda_continuous-1.png)
@@ -1060,7 +1060,7 @@ p_bin <- lapply(names(bin_vars), function(cn) {
     scale_fill_brewer(palette = "Set1", direction = -1, name = NULL) +
     scale_x_discrete(breaks = seq(2005, 2020, 5)) +
     labs(x = "Surgery Year", y = "Count") +
-    hv_theme("poster")
+    theme_hv_poster()
 })
 p_bin[[1]]
 ```
@@ -1084,7 +1084,7 @@ p_cat <- lapply(names(cat_vars), function(cn) {
     scale_fill_brewer(palette = "Set2", name = NULL) +
     scale_x_discrete(breaks = seq(2005, 2020, 5)) +
     labs(x = "Surgery Year", y = "Count") +
-    hv_theme("poster")
+    theme_hv_poster()
 })
 p_cat[[1]]
 ```
@@ -1109,7 +1109,7 @@ p_cont <- lapply(names(cont_vars), function(cn) {
     scale_colour_manual(values = c("steelblue"), guide = "none") +
     scale_x_continuous(breaks = seq(0, 15, 5)) +
     labs(x = "Years from First Surgery Year") +
-    hv_theme("poster")
+    theme_hv_poster()
 })
 p_cont[[1]]
 ```
@@ -1213,7 +1213,7 @@ plot(al_filled) +
   ) +
   labs(y = "Patients (n)",
        title = "AV Regurgitation: Pre- to Post-operative") +
-  hv_theme("poster")
+  theme_hv_poster()
 ```
 
 ![](plot-functions_files/figure-html/alluvial_filled-1.png)
@@ -1239,7 +1239,7 @@ plot(al2) +
            size = 3.5, fontface = "italic") +
   labs(y = "Patients (n)",
        title = "AV Regurgitation Before and After Surgery") +
-  hv_theme("poster")
+  theme_hv_poster()
 ```
 
 ![](plot-functions_files/figure-html/alluvial_two_axis-1.png)
@@ -1251,7 +1251,7 @@ p_al <- plot(al_filled) +
   scale_fill_brewer(palette = "RdYlGn", direction = -1) +
   scale_colour_brewer(palette = "RdYlGn", direction = -1, guide = "none") +
   labs(y = "Patients (n)") +
-  hv_theme("poster")
+  theme_hv_poster()
 
 ggsave("../graphs/alluvial.pdf", p_al, width = 8, height = 6)
 ```
@@ -1300,7 +1300,7 @@ table(dta_san$C9)
 sk <- hv_sankey(dta_san)
 plot(sk) +
   labs(title = "Cluster Stability: K = 2 to 9") +
-  hv_theme("poster")
+  theme_hv_poster()
 ```
 
 ![](plot-functions_files/figure-html/sankey_default-1.png)
@@ -1319,7 +1319,7 @@ my_cols <- c(
 sk_custom <- hv_sankey(dta_san, node_colours = my_cols)
 plot(sk_custom) +
   labs(title = "Cluster Stability: K = 2 to 9") +
-  hv_theme("poster")
+  theme_hv_poster()
 ```
 
 ![](plot-functions_files/figure-html/sankey_custom_cols-1.png)
@@ -1333,7 +1333,7 @@ range of K.
 sk_sub <- hv_sankey(dta_san, cluster_cols = paste0("C", 2:6))
 plot(sk_sub) +
   labs(title = "Cluster Stability: K = 2 to 6") +
-  hv_theme("poster")
+  theme_hv_poster()
 ```
 
 ![](plot-functions_files/figure-html/sankey_subset-1.png)
@@ -1343,7 +1343,7 @@ plot(sk_sub) +
 ``` r
 p_san <- plot(sk) +
   labs(title = "PAM Cluster Stability") +
-  hv_theme("poster")
+  theme_hv_poster()
 
 ggsave("../graphs/sankey_clusters.pdf", p_san, width = 8, height = 5)
 ```
@@ -1409,7 +1409,7 @@ hazard_plot(
   scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, 20),
                      labels = function(x) paste0(x, "%")) +
   labs(x = "Years", y = "Survival (%)") +
-  hv_theme("poster")
+  theme_hv_poster()
 ```
 
 ![](plot-functions_files/figure-html/hazard_survival-1.png)
@@ -1432,7 +1432,7 @@ hazard_plot(
   scale_y_continuous(limits = c(0, 30),
                      labels = function(x) paste0(x, "%/yr")) +
   labs(x = "Years", y = "Hazard (%/year)") +
-  hv_theme("poster")
+  theme_hv_poster()
 ```
 
 ![](plot-functions_files/figure-html/hazard_rate-1.png)
@@ -1454,7 +1454,7 @@ hazard_plot(
   scale_fill_manual(values = c("darkorange"), guide = "none") +
   scale_x_continuous(limits = c(0, 10), breaks = 0:10) +
   labs(x = "Years", y = "Cumulative Hazard (%)") +
-  hv_theme("poster")
+  theme_hv_poster()
 ```
 
 ![](plot-functions_files/figure-html/hazard_cumhaz-1.png)
@@ -1496,7 +1496,7 @@ hazard_plot(
   scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, 20),
                      labels = function(x) paste0(x, "%")) +
   labs(x = "Years after Esophagostomy", y = "Survival (%)") +
-  hv_theme("poster")
+  theme_hv_poster()
 ```
 
 ![](plot-functions_files/figure-html/hazard_stratified-1.png)
@@ -1552,7 +1552,7 @@ hazard_plot(
                      labels = function(x) paste0(x, "%")) +
   labs(x = "Years", y = "Survival (%)",
        caption = "Dashed lines: US population life table") +
-  hv_theme("poster")
+  theme_hv_poster()
 ```
 
 ![](plot-functions_files/figure-html/hazard_lifetable-1.png)
@@ -1598,7 +1598,7 @@ survival_difference_plot(
   scale_y_continuous(limits = c(-5, 40),
                      labels = function(x) paste0(x, "%")) +
   labs(x = "Years", y = "Survival Difference (%)") +
-  hv_theme("poster")
+  theme_hv_poster()
 ```
 
 ![](plot-functions_files/figure-html/surv_diff_plot-1.png)
@@ -1632,7 +1632,7 @@ survival_difference_plot(rbind(d1, d2, d3),
                       colour = "grey50") +
   scale_x_continuous(limits = c(0, 10), breaks = 0:10) +
   labs(x = "Years", y = "Survival Difference (%)") +
-  hv_theme("poster")
+  theme_hv_poster()
 ```
 
 ![](plot-functions_files/figure-html/surv_diff_multi-1.png)
@@ -1677,7 +1677,7 @@ nnt_plot(
   scale_x_continuous(limits = c(0, 20), breaks = seq(0, 20, 5)) +
   scale_y_continuous(limits = c(0, 50), breaks = seq(0, 50, 10)) +
   labs(x = "Years", y = "Number Needed to Treat") +
-  hv_theme("poster")
+  theme_hv_poster()
 ```
 
 ![](plot-functions_files/figure-html/nnt_curve-1.png)
@@ -1699,7 +1699,7 @@ nnt_plot(
   scale_y_continuous(limits = c(0, 50),
                      labels = function(x) paste0(x, "%")) +
   labs(x = "Years", y = "Absolute Risk Reduction (%)") +
-  hv_theme("poster")
+  theme_hv_poster()
 ```
 
 ![](plot-functions_files/figure-html/nnt_arr-1.png)
@@ -1719,7 +1719,7 @@ p_hp <- hazard_plot(
   scale_colour_manual(values = c("steelblue"), guide = "none") +
   scale_fill_manual(values = c("steelblue"), guide = "none") +
   labs(x = "Years", y = "Survival (%)") +
-  hv_theme("poster")
+  theme_hv_poster()
 
 ggsave("../graphs/hazard_survival.pdf", p_hp, width = 11.5, height = 8)
 ```
@@ -1747,7 +1747,7 @@ ggplot. Compose with `scale_colour_*`, `scale_shape_*`,
 [`labs()`](https://ggplot2.tidyverse.org/reference/labs.html),
 [`annotate()`](https://ggplot2.tidyverse.org/reference/annotate.html),
 and
-[`hv_theme()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_theme.md).
+[`theme_hv_manuscript()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md).
 
 ### Sample data
 
@@ -1796,7 +1796,7 @@ p_tr1 +
   scale_x_continuous(limits = c(1968, 2000), breaks = seq(1968, 2000, 4)) +
   scale_y_continuous(limits = c(0, 10),      breaks = seq(0, 10, 2)) +
   labs(x = "Year", y = "Cases/year") +
-  hv_theme("poster")
+  theme_hv_poster()
 ```
 
 ![](plot-functions_files/figure-html/trends_n_year_decorated-1.png)
@@ -1810,7 +1810,7 @@ plot(tr1) +
   scale_x_continuous(limits = c(1968, 2000), breaks = seq(1968, 2000, 4)) +
   scale_y_continuous(limits = c(30, 70),     breaks = seq(30, 70, 10)) +
   labs(x = "Year", y = "Age (years)") +
-  hv_theme("poster")
+  theme_hv_poster()
 ```
 
 ![](plot-functions_files/figure-html/trends_age-1.png)
@@ -1828,7 +1828,7 @@ plot(tr) +
   ) +
   scale_x_continuous(limits = c(1968, 2000), breaks = seq(1968, 2000, 4)) +
   labs(x = "Year", y = "Outcome (%)") +
-  hv_theme("poster")
+  theme_hv_poster()
 ```
 
 ![](plot-functions_files/figure-html/trends_multi_brewer-1.png)
@@ -1857,7 +1857,7 @@ plot(tr_med) +
   labs(x = "Year", y = "%", title = "Preoperative NYHA Class Over Time") +
   annotate("text", x = 1980, y = 75,
            label = "Trend: Preoperative NYHA", size = 4) +
-  hv_theme("poster")
+  theme_hv_poster()
 ```
 
 ![](plot-functions_files/figure-html/trends_median_manual-1.png)
@@ -1868,7 +1868,7 @@ plot(tr_med) +
 plot(tr1, se = TRUE, alpha = 0.2) +
   scale_x_continuous(limits = c(1968, 2000), breaks = seq(1968, 2000, 4)) +
   labs(x = "Year", y = "Cases/year") +
-  hv_theme("poster")
+  theme_hv_poster()
 ```
 
 ![](plot-functions_files/figure-html/trends_ribbon-1.png)
@@ -1902,7 +1902,7 @@ plot(hv_trends(dta_lp)) +
   scale_y_continuous(limits = c(0, 100),     breaks = seq(0, 100, 10)) +
   coord_cartesian(xlim = c(1970, 2000), ylim = c(0, 100)) +
   labs(x = "Year", y = "Percent (%)") +
-  hv_theme("poster")
+  theme_hv_poster()
 ```
 
 ![](plot-functions_files/figure-html/trends_binary_pct-1.png)
@@ -1937,7 +1937,7 @@ plot(hv_trends(dta_age)) +
   scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, 20)) +
   coord_cartesian(xlim = c(25, 85), ylim = c(0, 100)) +
   labs(x = "Age (years)", y = "Percent (%)") +
-  hv_theme("poster")
+  theme_hv_poster()
 ```
 
 ![](plot-functions_files/figure-html/trends_age_x-1.png)
@@ -1971,7 +1971,7 @@ plot(hv_trends(dta_poly)) +
   scale_y_continuous(limits = c(0, 100),     breaks = seq(0, 100, 10)) +
   coord_cartesian(xlim = c(1990, 1999), ylim = c(0, 100)) +
   labs(x = "Year", y = "Percent (%)") +
-  hv_theme("poster")
+  theme_hv_poster()
 ```
 
 ![](plot-functions_files/figure-html/trends_polytomous-1.png)
@@ -1995,7 +1995,7 @@ plot(hv_trends(dta_lv, group_col = NULL)) +
   scale_y_continuous(limits = c(0, 200),     breaks = seq(0, 200, 50)) +
   coord_cartesian(xlim = c(1995, 2015), ylim = c(0, 200)) +
   labs(x = "Years", y = "LV Mass Index") +
-  hv_theme("poster")
+  theme_hv_poster()
 ```
 
 ![](plot-functions_files/figure-html/trends_lv_mass-1.png)
@@ -2015,7 +2015,7 @@ plot(hv_trends(dta_vol, group_col = NULL)) +
   scale_y_continuous(limits = c(0, 400),     breaks = seq(0, 400, 50)) +
   coord_cartesian(xlim = c(1985, 2015), ylim = c(0, 400)) +
   labs(x = "Years", y = "Surgeries (#)") +
-  hv_theme("poster")
+  theme_hv_poster()
 ```
 
 ![](plot-functions_files/figure-html/trends_case_volume-1.png)
@@ -2040,7 +2040,7 @@ plot(hv_trends(dta_los, group_col = NULL)) +
   annotate("text", x = 1995, y = 18,
            label = "Trend: Hospital Length of Stay", size = 4.5) +
   labs(x = "Years", y = "Hospital LOS (Days)") +
-  hv_theme("poster")
+  theme_hv_poster()
 ```
 
 ![](plot-functions_files/figure-html/trends_los-1.png)
@@ -2057,7 +2057,7 @@ p_tr <- plot(tr) +
   ) +
   scale_x_continuous(limits = c(1968, 2000), breaks = seq(1968, 2000, 4)) +
   labs(x = "Year", y = "Outcome (%)") +
-  hv_theme("poster")
+  theme_hv_poster()
 
 ggsave(here::here("graphs", "rp.trends.pdf"), p_tr, width = 11.5, height = 8)
 ```
@@ -2080,7 +2080,7 @@ ggplot. Compose with
 [`scale_y_continuous()`](https://ggplot2.tidyverse.org/reference/scale_continuous.html),
 [`coord_cartesian()`](https://ggplot2.tidyverse.org/reference/coord_cartesian.html),
 [`labs()`](https://ggplot2.tidyverse.org/reference/labs.html), and
-[`hv_theme()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_theme.md).
+[`theme_hv_manuscript()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md).
 
 ### Sample data
 
@@ -2129,7 +2129,7 @@ plot(sp) +
   scale_y_continuous(breaks = seq(0, 80, 20)) +
   coord_cartesian(xlim = c(0, 5), ylim = c(0, 80)) +
   labs(x = "Years", y = "AV Mean Gradient (mmHg)") +
-  hv_theme("poster")
+  theme_hv_poster()
 ```
 
 ![](plot-functions_files/figure-html/spaghetti_unstrat_full-1.png)
@@ -2145,7 +2145,7 @@ plot(sp) +
   scale_y_continuous(breaks = seq(0, 30, 10)) +
   coord_cartesian(xlim = c(0, 5), ylim = c(0, 30)) +
   labs(x = "Years", y = "AV Mean Gradient (mmHg)") +
-  hv_theme("poster")
+  theme_hv_poster()
 ```
 
 ![](plot-functions_files/figure-html/spaghetti_unstrat_zoom-1.png)
@@ -2167,7 +2167,7 @@ p_sp <- plot(sp_col) +
   scale_y_continuous(breaks = seq(0, 80, 20)) +
   coord_cartesian(xlim = c(0, 5), ylim = c(0, 80)) +
   labs(x = "Years", y = "AV Mean Gradient (mmHg)") +
-  hv_theme("poster")
+  theme_hv_poster()
 
 p_sp
 ```
@@ -2189,7 +2189,7 @@ plot(sp_col) +
   scale_y_continuous(breaks = seq(0, 5, 1)) +
   coord_cartesian(xlim = c(0, 5), ylim = c(0, 5)) +
   labs(x = "Years", y = "AV Area (EOA) (cm\u00b2)") +
-  hv_theme("poster")
+  theme_hv_poster()
 ```
 
 ![](plot-functions_files/figure-html/spaghetti_avarea-1.png)
@@ -2209,7 +2209,7 @@ plot(sp_col) +
   scale_y_continuous(breaks = seq(0, 1.25, 0.25)) +
   coord_cartesian(xlim = c(0, 5), ylim = c(0, 1.25)) +
   labs(x = "Years", y = "DVI") +
-  hv_theme("poster")
+  theme_hv_poster()
 ```
 
 ![](plot-functions_files/figure-html/spaghetti_dvi-1.png)
@@ -2236,7 +2236,7 @@ plot(sp_ord, y_labels = c(None = 0, Mild = 1, Moderate = 2, Severe = 3)) +
   scale_x_continuous(breaks = seq(0, 6, 1)) +
   coord_cartesian(xlim = c(0, 6), ylim = c(0, 3)) +
   labs(x = "Years after Procedure", y = "MV Regurgitation Grade") +
-  hv_theme("poster")
+  theme_hv_poster()
 ```
 
 ![](plot-functions_files/figure-html/spaghetti_ordinal-1.png)
@@ -2253,7 +2253,7 @@ plot(sp_col, add_smooth = TRUE) +
   scale_y_continuous(breaks = seq(0, 80, 20)) +
   coord_cartesian(xlim = c(0, 5), ylim = c(0, 80)) +
   labs(x = "Years", y = "AV Mean Gradient (mmHg)") +
-  hv_theme("poster")
+  theme_hv_poster()
 ```
 
 ![](plot-functions_files/figure-html/spaghetti_smooth-1.png)
@@ -2281,7 +2281,7 @@ exported to CSV and read in with
 [`plot()`](https://rdrr.io/r/graphics/plot.default.html) returns a bare
 ggplot for composition with `scale_colour_*`,
 [`labs()`](https://ggplot2.tidyverse.org/reference/labs.html), and
-[`hv_theme()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_theme.md).
+[`theme_hv_manuscript()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md).
 
 ### Sample data
 
@@ -2341,7 +2341,7 @@ p_np <- p_np_bare +
     labels = scales::percent
   ) +
   ggplot2::labs(x = "Follow-up (years)", y = "Prevalence (%)") +
-  hv_theme("poster")
+  theme_hv_poster()
 
 p_np
 ```
@@ -2392,7 +2392,7 @@ plot(np_grp) +
     x = "Follow-up (years)",
     y = "AV Peak Gradient (mmHg)"
   ) +
-  hv_theme("poster") +
+  theme_hv_poster() +
   ggplot2::theme(legend.position = c(0.15, 0.85))
 ```
 
@@ -2495,7 +2495,7 @@ p_ord <- p_ord_bare +
     x = "Follow-up (years)",
     y = "Grade prevalence (%)"
   ) +
-  hv_theme("poster") +
+  theme_hv_poster() +
   ggplot2::theme(legend.position = c(0.75, 0.6))
 
 p_ord
@@ -2536,7 +2536,7 @@ plot(hv_ordinal(curve_data = ord_two)) +
   ggplot2::scale_y_continuous(limits = c(0, 1), breaks = seq(0, 1, 0.2),
                                labels = scales::percent) +
   ggplot2::labs(x = "Follow-up (years)", y = "Grade prevalence (%)") +
-  hv_theme("poster")
+  theme_hv_poster()
 ```
 
 ![](plot-functions_files/figure-html/np_ordinal_collapsed-1.png)
@@ -2615,7 +2615,7 @@ p_lc_bar <- plot(lc) +
   ) +
   ggplot2::coord_cartesian(ylim = c(0, 2200)) +
   ggplot2::labs(x = NULL, y = "Count (n)") +
-  hv_theme("poster") +
+  theme_hv_poster() +
   ggplot2::theme(legend.position = c(0.85, 0.85))
 
 p_lc_bar
@@ -2631,7 +2631,7 @@ p_lc_tbl <- plot(lc, type = "table") +
     values = c(Patients = "steelblue", Measurements = "firebrick"),
     guide  = "none"
   ) +
-  hv_theme("poster")
+  theme_hv_poster()
 
 p_lc_tbl
 ```
@@ -2673,19 +2673,19 @@ to visualise surgical procedure co-occurrences or any set membership
 data. It ports the pattern from `tp.complexUpset.R`, replacing
 hard-coded colours with `scale_fill_*` composition and hard-coded themes
 with
-[`hv_theme()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_theme.md).
+[`theme_hv_manuscript()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md).
 
 Unlike other hvtiPlotR functions, `plot.hv_upset` returns a **patchwork
 composite** built internally by ComplexUpset. A theme must be applied
 via the patchwork `&` operator (not `+`) to cover all sub-panels
 simultaneously. `&` is also required for correct rendering:
 ComplexUpset’s internal theme sets `axis.title.x` in a form that newer
-ggplot2 rejects unless overridden, so `& hv_theme()` is part of the
-*minimum* working call, not an optional decoration:
+ggplot2 rejects unless overridden, so `& theme_hv_manuscript()` is part
+of the *minimum* working call, not an optional decoration:
 
 ``` r
-# Minimum working call — & hv_theme() is required, not optional
-plot(hu) & hv_theme("poster")
+# Minimum working call — & theme_hv_manuscript() is required, not optional
+plot(hu) & theme_hv_poster()
 ```
 
 ### Sample data
@@ -2723,7 +2723,7 @@ hu <- hv_upset(upset_dta, intersect = sets)
 
 ``` r
 plot(hu) &
-  hv_theme("poster")
+  theme_hv_poster()
 ```
 
 ![](plot-functions_files/figure-html/upset_basic-1.png)
@@ -2742,7 +2742,7 @@ plot(hu,
          ) +
          ggplot2::labs(y = "Patients (n)")
      )) &
-  hv_theme("poster")
+  theme_hv_poster()
 ```
 
 ![](plot-functions_files/figure-html/upset_fill-1.png)
@@ -2765,7 +2765,7 @@ plot(hu_era,
          ) +
          ggplot2::labs(y = "Patients (n)")
      )) &
-  hv_theme("poster")
+  theme_hv_poster()
 ```
 
 ![](plot-functions_files/figure-html/upset_era-1.png)
@@ -2773,7 +2773,7 @@ plot(hu_era,
 ### Saving
 
 ``` r
-p_upset <- plot(hu) & hv_theme("poster")
+p_upset <- plot(hu) & theme_hv_poster()
 
 # UpSet plots are patchwork composites — use ggsave() via ggplot2
 ggplot2::ggsave(here::here("graphs", "procedure_cooccurrence.pdf"),
@@ -2813,7 +2813,7 @@ p_draft <- hazard_plot(
   scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, 20),
                      labels = function(x) paste0(x, "%")) +
   labs(x = "Years", y = "Survival (%)") +
-  hv_theme("poster")
+  theme_hv_poster()
 
 print(p_draft)
 make_footnote("vignettes/plot-functions.qmd")

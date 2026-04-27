@@ -77,7 +77,7 @@
       </dl></div><div class="section level2">
       <h2 id="themes">Themes<a class="anchor" aria-label="anchor" href="#themes"></a></h2>
 
-      <div class="section-desc"><p>Apply publication-quality themes to any ggplot2 object. Use <code><a href="../reference/hv_theme.html">hv_theme()</a></code> as the single entry point; the lower-level <code>hv_theme_*()</code> functions are also exported for direct use.</p></div>
+      <div class="section-desc"><p>Apply publication-quality themes to any ggplot2 object. Each <code>theme_hv_*()</code> function follows ggplot2’s <code><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw()</a></code> contract and forwards <code>...</code> into a final <code><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme()</a></code> call so callers can override any element inline (e.g. <code>theme_hv_manuscript(legend.position = "right")</code>). The previous <code>hv_theme_*()</code> and <code>theme_*</code> names remain as deprecated aliases.</p></div>
 
       <dl></dl></div><div class="section level2">
 
@@ -86,38 +86,10 @@
 
       <dl><dt>
 
-          <code><a href="hv_theme.html">hv_theme()</a></code>
+          <code><a href="hvtiPlotR-themes.html">theme_hv_manuscript()</a></code> <code><a href="hvtiPlotR-themes.html">theme_hv_poster()</a></code> <code><a href="hvtiPlotR-themes.html">theme_hv_ppt_dark()</a></code> <code><a href="hvtiPlotR-themes.html">theme_hv_ppt_light()</a></code> <code><a href="hvtiPlotR-themes.html">hv_theme_manuscript()</a></code> <code><a href="hvtiPlotR-themes.html">theme_manuscript()</a></code> <code><a href="hvtiPlotR-themes.html">theme_man()</a></code> <code><a href="hvtiPlotR-themes.html">hv_theme_poster()</a></code> <code><a href="hvtiPlotR-themes.html">theme_poster()</a></code> <code><a href="hvtiPlotR-themes.html">hv_theme_dark_ppt()</a></code> <code><a href="hvtiPlotR-themes.html">theme_dark_ppt()</a></code> <code><a href="hvtiPlotR-themes.html">hv_theme_ppt()</a></code> <code><a href="hvtiPlotR-themes.html">theme_ppt()</a></code> <code><a href="hvtiPlotR-themes.html">hv_theme_light_ppt()</a></code> <code><a href="hvtiPlotR-themes.html">theme_light_ppt()</a></code>
 
         </dt>
-        <dd>hvtiPlotR Theme Generic</dd>
-
-        <dt>
-
-          <code><a href="hv_theme_manuscript.html">hv_theme_manuscript()</a></code> <code><a href="hv_theme_manuscript.html">theme_manuscript()</a></code> <code><a href="hv_theme_manuscript.html">theme_man()</a></code>
-
-        </dt>
-        <dd>Theme for Manuscript Figures</dd>
-
-        <dt>
-
-          <code><a href="hv_theme_dark_ppt.html">hv_theme_dark_ppt()</a></code> <code><a href="hv_theme_dark_ppt.html">theme_dark_ppt()</a></code> <code><a href="hv_theme_dark_ppt.html">theme_ppt()</a></code> <code><a href="hv_theme_dark_ppt.html">hv_theme_ppt()</a></code>
-
-        </dt>
-        <dd>Dark PowerPoint Theme (default PPT theme)</dd>
-
-        <dt>
-
-          <code><a href="hv_theme_light_ppt.html">hv_theme_light_ppt()</a></code> <code><a href="hv_theme_light_ppt.html">theme_light_ppt()</a></code>
-
-        </dt>
-        <dd>Light PowerPoint Theme</dd>
-
-        <dt>
-
-          <code><a href="hv_theme_poster.html">hv_theme_poster()</a></code> <code><a href="hv_theme_poster.html">theme_poster()</a></code>
-
-        </dt>
-        <dd>Theme for Poster Figures</dd>
+        <dd>hvtiPlotR ggplot2 themes</dd>
       </dl></div><div class="section level2">
       <h2 id="survival-hazard">Survival &amp; Hazard<a class="anchor" aria-label="anchor" href="#survival-hazard"></a></h2>
 

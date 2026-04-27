@@ -7,7 +7,7 @@ level), and returns an `hv_eda` object. Call
 [`plot.hv_eda`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hv_eda.md)
 on the result to obtain a bare `ggplot2` barplot or scatter plot that
 you can decorate with colour scales and
-[`hv_theme`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_theme.md).
+[`theme_hv_manuscript`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md).
 
 ## Usage
 
@@ -122,7 +122,7 @@ p +
   ) +
   ggplot2::scale_x_discrete(breaks = seq(2005, 2020, 5)) +
   ggplot2::labs(x = "Surgery Year", y = "Count") +
-  hv_theme("poster")
+  theme_hv_poster()
 
 
 # Continuous variable -- same 3-step pattern
@@ -132,7 +132,7 @@ plot(ed2) +
   ggplot2::scale_colour_manual(values = c("firebrick"), guide = "none") +
   ggplot2::scale_x_continuous(breaks = seq(0, 15, 5)) +
   ggplot2::labs(x = "Years from First Surgery Year") +
-  hv_theme("poster")
+  theme_hv_poster()
 
 
 # Variable selection + lapply (varnames template pattern)
@@ -146,7 +146,7 @@ p_cont <- lapply(names(cont_vars), function(cn) {
     ggplot2::scale_colour_manual(values = c("steelblue"), guide = "none") +
     ggplot2::scale_x_continuous(breaks = seq(0, 15, 5)) +
     ggplot2::labs(x = "Years from First Surgery Year") +
-    hv_theme("poster")
+    theme_hv_poster()
 })
 p_cont[[1]]
 

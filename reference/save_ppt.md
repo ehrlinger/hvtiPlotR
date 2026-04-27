@@ -101,7 +101,7 @@ Invisibly returns the path given by `powerpoint`.
 [`rvg::dml()`](https://davidgohel.github.io/rvg/reference/dml.html),
 [`officer::ph_with()`](https://davidgohel.github.io/officer/reference/ph_with.html),
 [`officer::ph_location()`](https://davidgohel.github.io/officer/reference/ph_location.html),
-[`hv_theme()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_theme.md)
+[`theme_hv_manuscript()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)
 
 ## Examples
 
@@ -113,7 +113,7 @@ library(ggplot2)
 p1 <- ggplot(mtcars, aes(x = wt, y = mpg)) +
   geom_point() +
   labs(x = "Weight", y = "Miles per gallon", title = "Fuel economy") +
-  hv_theme("dark_ppt")
+  theme_hv_ppt_dark()
 
 save_ppt(
   object       = p1,
@@ -126,7 +126,7 @@ save_ppt(
 p2 <- ggplot(mtcars, aes(x = factor(cyl), y = mpg)) +
   geom_boxplot() +
   labs(x = "Cylinders", y = "Miles per gallon") +
-  hv_theme("dark_ppt")
+  theme_hv_ppt_dark()
 
 save_ppt(
   object       = list(p1, p2),
@@ -139,7 +139,7 @@ save_ppt(
 pm <- ggplot(mtcars, aes(x = wt, y = mpg)) +
   geom_point() +
   labs(x = "Weight", y = "Miles per gallon") +
-  hv_theme("manuscript")
+  theme_hv_manuscript()
 
 save_ppt(
   object       = pm,
@@ -168,7 +168,7 @@ save_ppt(
 # around a constant panel), analogous to how [hv_ggsave_dims()] drives
 # ggsave's width/height from a target panel size.
 #
-# Workflow: build plots with `hv_theme("light_ppt")` so the white panel
+# Workflow: build plots with `theme_hv_ppt_light()` so the white panel
 # + black border renders crisply in the IDE viewer during development.
 # At save time, the PowerPoint template controls the SLIDE background
 # (e.g. blue gradient), so a light_ppt plot on a dark slide template
@@ -179,14 +179,14 @@ p_small <- ggplot(mtcars, aes(hp, mpg)) +
   scale_x_continuous(breaks = seq(0, 400, 100), expand = c(0, 0)) +
   scale_y_continuous(labels = function(x) sprintf("%3.1f", x)) +
   labs(x = "Horsepower", y = "MPG") +
-  hv_theme("light_ppt")
+  theme_hv_ppt_light()
 
 p_big <- ggplot(mtcars, aes(hp, mpg)) +
   geom_point() +
   scale_x_continuous(breaks = seq(0, 400, 100), expand = c(0, 0)) +
   scale_y_continuous(labels = function(x) sprintf("%8.1f", x * 10000)) +
   labs(x = "Horsepower", y = "MPG (x10k)") +
-  hv_theme("light_ppt")
+  theme_hv_ppt_light()
 
 # Preview each plot interactively (e.g. print(p_small) in RStudio) to
 # check decoration before saving.

@@ -7,7 +7,7 @@ at this stage; call
 [`plot.hv_survival`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hv_survival.md)
 on the result to obtain a bare `ggplot2` object that you can decorate
 with scales, labels, and
-[`hv_theme`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_theme.md).
+[`theme_hv_manuscript`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md).
 
 ## Usage
 
@@ -94,7 +94,7 @@ SAS templates: `tp.ac.dead.sas` (`%kaplan`, `%nelsont`).
 
 [`plot.hv_survival`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hv_survival.md)
 to render as a ggplot2 figure,
-[`hv_theme`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_theme.md)
+[`theme_hv_manuscript`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)
 for the publication theme,
 [`sample_survival_data`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_survival_data.md)
 for example data.
@@ -147,7 +147,7 @@ p +
   ggplot2::coord_cartesian(xlim = c(0, 20), ylim = c(0, 100)) +
   ggplot2::labs(x = "Years after Operation", y = "Survival (%)",
                 title = "Freedom from Death") +
-  hv_theme("poster")
+  theme_hv_poster()
 #> Scale for y is already present.
 #> Adding another scale for y, which will replace the existing scale.
 
@@ -164,24 +164,24 @@ plot(km_s) +
     name   = "Valve Type"
   ) +
   ggplot2::labs(x = "Years after Operation", y = "Survival (%)") +
-  hv_theme("poster")
+  theme_hv_poster()
 
 
 # Other plot types
 plot(km, type = "cumhaz") +
   ggplot2::labs(x = "Years", y = "Cumulative Hazard") +
-  hv_theme("ppt")
+  theme_hv_ppt_dark()
 
 
 plot(km, type = "loglog") +
   ggplot2::labs(x = "log(Years)", y = "log(-log S(t))",
                 title = "PH Assumption Check") +
-  hv_theme("ppt")
+  theme_hv_ppt_dark()
 
 
 # --- Global theme + RColorBrewer (set once per session) ------------------
 if (FALSE) { # \dontrun{
-old <- ggplot2::theme_set(hv_theme_manuscript())
+old <- ggplot2::theme_set(theme_hv_manuscript())
 plot(km_s) +
   ggplot2::scale_colour_brewer(palette = "Set1", name = "Valve Type") +
   ggplot2::labs(x = "Years after Operation", y = "Survival (%)")

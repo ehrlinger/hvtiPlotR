@@ -14,28 +14,31 @@ hvtiPlotR data objects.
 
 ## Themes
 
-Apply publication-quality themes to any ggplot2 object. Use
-[`hv_theme()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_theme.md)
-as the single entry point; the lower-level `hv_theme_*()` functions are
-also exported for direct use.
+Apply publication-quality themes to any ggplot2 object. Each
+`theme_hv_*()` function follows ggplot2’s
+[`theme_bw()`](https://ggplot2.tidyverse.org/reference/ggtheme.html)
+contract and forwards `...` into a final
+[`theme()`](https://ggplot2.tidyverse.org/reference/theme.html) call so
+callers can override any element inline
+(e.g. `theme_hv_manuscript(legend.position = "right")`). The previous
+`hv_theme_*()` and `theme_*` names remain as deprecated aliases.
 
-- [`hv_theme()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_theme.md)
-  : hvtiPlotR Theme Generic
-- [`hv_theme_manuscript()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_theme_manuscript.md)
-  [`theme_manuscript()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_theme_manuscript.md)
-  [`theme_man()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_theme_manuscript.md)
-  : Theme for Manuscript Figures
-- [`hv_theme_dark_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_theme_dark_ppt.md)
-  [`theme_dark_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_theme_dark_ppt.md)
-  [`theme_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_theme_dark_ppt.md)
-  [`hv_theme_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_theme_dark_ppt.md)
-  : Dark PowerPoint Theme (default PPT theme)
-- [`hv_theme_light_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_theme_light_ppt.md)
-  [`theme_light_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_theme_light_ppt.md)
-  : Light PowerPoint Theme
-- [`hv_theme_poster()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_theme_poster.md)
-  [`theme_poster()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_theme_poster.md)
-  : Theme for Poster Figures
+- [`theme_hv_manuscript()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)
+  [`theme_hv_poster()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)
+  [`theme_hv_ppt_dark()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)
+  [`theme_hv_ppt_light()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)
+  [`hv_theme_manuscript()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)
+  [`theme_manuscript()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)
+  [`theme_man()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)
+  [`hv_theme_poster()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)
+  [`theme_poster()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)
+  [`hv_theme_dark_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)
+  [`theme_dark_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)
+  [`hv_theme_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)
+  [`theme_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)
+  [`hv_theme_light_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)
+  [`theme_light_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)
+  : hvtiPlotR ggplot2 themes
 
 ## Survival & Hazard
 

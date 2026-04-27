@@ -107,7 +107,7 @@ nnt_plot(
   scale_x_continuous(limits = c(0, 20), breaks = seq(0, 20, 5)) +
   scale_y_continuous(limits = c(0, 50), breaks = seq(0, 50, 10)) +
   labs(x = "Years", y = "Number Needed to Treat (NNT)") +
-  hv_theme("poster")
+  theme_hv_poster()
 #> Warning: Removed 248 rows containing missing values or values outside the scale range
 #> (`geom_ribbon()`).
 #> Warning: Removed 27 rows containing missing values or values outside the scale range
@@ -128,7 +128,7 @@ nnt_plot(
   scale_y_continuous(limits = c(0, 50),
                      labels = function(x) paste0(x, "%")) +
   labs(x = "Years", y = "Absolute Risk Reduction (%)") +
-  hv_theme("poster")
+  theme_hv_poster()
 #> Warning: Removed 178 rows containing missing values or values outside the scale range
 #> (`geom_ribbon()`).
 

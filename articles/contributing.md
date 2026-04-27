@@ -138,7 +138,7 @@ companions together.
 #'   scale_y_continuous(limits = c(0, 0.5),
 #'                      labels = scales::percent) +
 #'   labs(x = "BMI (kg/m²)", y = "Prevalence of AF") +
-#'   hv_theme("manuscript")
+#'   theme_hv_manuscript()
 #'
 #' @importFrom ggplot2 ggplot aes geom_line geom_ribbon geom_point
 #' @importFrom rlang .data
@@ -204,7 +204,7 @@ Key rules enforced here:
   opaque to the caller.
 - **No colours or themes** are applied inside the function. The caller
   adds `scale_colour_*()` and
-  [`hv_theme()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_theme.md)
+  [`theme_hv_manuscript()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)
   outside.
 - **`.data[[col]]`** is used for tidy evaluation instead of bare
   variable names. This requires `@importFrom rlang .data`.
@@ -566,7 +566,7 @@ Vignettes live in `vignettes/` as `.qmd` files and are built with Quarto
 sessionInfo()
 ```
 
-    R version 4.5.3 (2026-03-11)
+    R version 4.6.0 (2026-04-24)
     Platform: x86_64-pc-linux-gnu
     Running under: Ubuntu 24.04.4 LTS
 
@@ -587,7 +587,7 @@ sessionInfo()
     [1] stats     graphics  grDevices utils     datasets  methods   base
 
     loaded via a namespace (and not attached):
-     [1] compiler_4.5.3  fastmap_1.2.0   cli_3.6.6       tools_4.5.3
+     [1] compiler_4.6.0  fastmap_1.2.0   cli_3.6.6       tools_4.6.0
      [5] htmltools_0.5.9 otel_0.2.0      yaml_2.3.12     rmarkdown_2.31
      [9] knitr_1.51      jsonlite_2.0.0  xfun_0.57       digest_0.6.39
     [13] rlang_1.2.0     evaluate_1.0.5 

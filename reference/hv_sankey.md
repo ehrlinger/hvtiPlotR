@@ -81,7 +81,7 @@ if (requireNamespace("ggsankey", quietly = TRUE)) {
   # 3. Decorate: axis labels and theme
   p +
     ggplot2::labs(x = NULL, title = "Cluster Stability: K = 2 to 9") +
-    hv_theme("poster")
+    theme_hv_poster()
 }
 #> Warning: The `size` argument of `element_rect()` is deprecated as of ggplot2 3.4.0.
 #> ℹ Please use the `linewidth` argument instead.

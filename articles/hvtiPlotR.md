@@ -291,12 +291,12 @@ directly.
 
 ### Device and theme mapping
 
-| `plot.sas` device              | hvtiPlotR theme          | Use for                         |
-|--------------------------------|--------------------------|---------------------------------|
-| `device=pscolor`               | `hv_theme("manuscript")` | Journal PDF, black on white     |
-| `device=cgmmppa` + dark slide  | `hv_theme("dark_ppt")`   | Dark-background PowerPoint      |
-| `device=cgmmppa` + white slide | `hv_theme("light_ppt")`  | Light/transparent PowerPoint    |
-| —                              | `hv_theme("poster")`     | Conference poster (larger text) |
+| `plot.sas` device              | hvtiPlotR theme                                                                                | Use for                         |
+|--------------------------------|------------------------------------------------------------------------------------------------|---------------------------------|
+| `device=pscolor`               | [`theme_hv_manuscript()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md) | Journal PDF, black on white     |
+| `device=cgmmppa` + dark slide  | [`theme_hv_ppt_dark()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)   | Dark-background PowerPoint      |
+| `device=cgmmppa` + white slide | [`theme_hv_ppt_light()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)  | Light/transparent PowerPoint    |
+| —                              | [`theme_hv_poster()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)     | Conference poster (larger text) |
 
 ## Generating ggplot2 graphics
 
@@ -437,7 +437,7 @@ data(parametric, package = "hvtiPlotR")
 data(nonparametric, package = "hvtiPlotR")
 
 # Set a default hvtiPlotR plotting theme
-theme_set(hvtiPlotR::hv_theme("poster")) 
+theme_set(hvtiPlotR::theme_hv_poster()) 
 ```
 
 One advantage of ggplot2 is that figures can be built up in successive
@@ -852,12 +852,12 @@ show(ccf_pptPlot)
 
 ## Themes and Decoration
 
-The **hvtiPlotR** package provides four themes via `hv_theme(style)`:
+The **hvtiPlotR** package provides four themes via `theme_hv_*()`:
 `"manuscript"`, `"poster"`, `"light_ppt"`, and `"dark_ppt"`. Apply the
 theme as the last `+` layer on any composed ggplot object.
 
 ``` r
-p_final <- ccf_plot + hv_theme("poster")
+p_final <- ccf_plot + theme_hv_poster()
 p_final
 ```
 
@@ -913,10 +913,14 @@ Plots](https://ehrlinger.github.io/hvtiPlotR/articles/plot-decorators.md).
 Use
 [`save_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/save_ppt.md)
 to insert a ggplot as an editable vector graphic into a PowerPoint file.
-Apply `hv_theme("dark_ppt")` or `hv_theme("light_ppt")` before saving.
+Apply
+[`theme_hv_ppt_dark()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)
+or
+[`theme_hv_ppt_light()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)
+before saving.
 
 ``` r
-p_ppt <- ccf_pptPlot + hv_theme("dark_ppt")
+p_ppt <- ccf_pptPlot + theme_hv_ppt_dark()
 
 save_ppt(
   object       = p_ppt,
@@ -936,9 +940,10 @@ mind when composing figures.
 
 ### Manuscript figures
 
-- **Use `hv_theme("manuscript")`** — black text, white background, no
-  decorative fill. Never use coloured backgrounds in figures destined
-  for journals.
+- **Use
+  [`theme_hv_manuscript()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)**
+  — black text, white background, no decorative fill. Never use coloured
+  backgrounds in figures destined for journals.
 - **No chart titles** — the figure caption in the manuscript text
   carries the title. Do not add a `labs(title = ...)` layer.
 - **Axis labels are mandatory** — always supply
@@ -964,9 +969,12 @@ mind when composing figures.
 
 ### PowerPoint figures
 
-- **Use `hv_theme("dark_ppt")` or `hv_theme("light_ppt")`** — the dark
-  theme is the default for Cleveland Clinic presentation templates.
-  Match the theme to the slide background colour.
+- **Use
+  [`theme_hv_ppt_dark()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)
+  or
+  [`theme_hv_ppt_light()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)**
+  — the dark theme is the default for Cleveland Clinic presentation
+  templates. Match the theme to the slide background colour.
 - **No points on parametric curves** — presentation figures show lines
   only. Points are reserved for nonparametric data summaries.
 - **Larger line widths** — use `linewidth = 1.5` or higher so lines are

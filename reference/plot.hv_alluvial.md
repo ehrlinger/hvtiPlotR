@@ -64,7 +64,7 @@ object.
 ## See also
 
 [`hv_alluvial`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_alluvial.md),
-[`hv_theme`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_theme.md)
+[`theme_hv_manuscript`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)
 
 ## Examples
 
@@ -78,7 +78,7 @@ plot(hv_alluvial(dta, axes = axes, y_col = "freq",
   ggplot2::scale_fill_brewer(palette = "Set2", name = "Procedure") +
   ggplot2::scale_colour_brewer(palette = "Set2", guide = "none") +
   ggplot2::labs(y = "Patients (n)") +
-  hv_theme("poster")
+  theme_hv_poster()
 #> Warning: Some strata appear at multiple axes.
 #> Warning: Some strata appear at multiple axes.
 #> Warning: Some strata appear at multiple axes.
@@ -95,7 +95,7 @@ plot(hv_alluvial(
   ggplot2::scale_colour_brewer(palette = "RdYlGn", direction = -1,
                                guide = "none") +
   ggplot2::labs(y = "Patients (n)") +
-  hv_theme("poster")
+  theme_hv_poster()
 #> Warning: Some strata appear at multiple axes.
 #> Warning: Some strata appear at multiple axes.
 #> Warning: Some strata appear at multiple axes.

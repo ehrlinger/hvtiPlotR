@@ -59,7 +59,7 @@
 <ul><li>
 <code><a href="../reference/save_ppt.html">save_ppt()</a></code>: the <code><a href="https://davidgohel.github.io/officer/reference/ph_location.html" class="external-link">officer::ph_location()</a></code> call that places each plot on its slide now uses <code>bg = "transparent"</code> so the placeholder rectangle’s fill no longer shows up as an opaque white box behind the plot on dark PowerPoint templates. Previously, officer’s default ph_location shape had a white fill; against a blue-gradient slide template that appeared as a visible white rectangle larger than the ggplot panel. The ggplot itself is unchanged; only the containing shape’s fill is now transparent so the slide template background shows through any area outside the panel.</li>
 <li>
-<code><a href="../reference/hv_theme_light_ppt.html">hv_theme_light_ppt()</a></code>: panel background is now <code>fill = "transparent"</code> (was <code>"white"</code>). Saving a <code>light_ppt</code>-themed plot into a dark PowerPoint template previously showed as an opaque white rectangle inside the panel; with a transparent fill the slide template shows through. Add <code>+ theme(panel.background = element_rect(fill = "white"))</code> if you specifically need an opaque white panel.</li>
+<code><a href="../reference/hvtiPlotR-themes.html">hv_theme_light_ppt()</a></code>: panel background is now <code>fill = "transparent"</code> (was <code>"white"</code>). Saving a <code>light_ppt</code>-themed plot into a dark PowerPoint template previously showed as an opaque white rectangle inside the panel; with a transparent fill the slide template shows through. Add <code>+ theme(panel.background = element_rect(fill = "white"))</code> if you specifically need an opaque white panel.</li>
 </ul></div>
 <div class="section level3">
 <h3 id="documentation-2-0-1">Documentation<a class="anchor" aria-label="anchor" href="#documentation-2-0-1"></a></h3>
@@ -92,12 +92,12 @@
 <div class="section level3">
 <h3 id="behaviour-changes--ppt-themes-2-0-0">Behaviour changes — PPT themes<a class="anchor" aria-label="anchor" href="#behaviour-changes--ppt-themes-2-0-0"></a></h3>
 <ul><li>
-<code><a href="../reference/hv_theme_dark_ppt.html">hv_theme_dark_ppt()</a></code> and <code><a href="../reference/hv_theme_light_ppt.html">hv_theme_light_ppt()</a></code>:
+<code><a href="../reference/hvtiPlotR-themes.html">hv_theme_dark_ppt()</a></code> and <code><a href="../reference/hvtiPlotR-themes.html">hv_theme_light_ppt()</a></code>:
 <ul><li>Legend is now hidden by default (<code>legend.position = "none"</code>). PowerPoint figures are typically annotated directly on the panel; override with <code>+ theme(legend.position = "right")</code> when needed.</li>
 <li>Axis ticks now face <strong>inside</strong> the panel (<code>axis.ticks.length =   -half_line/2 pt</code>) for the AATS-style inset look.</li>
 <li>Axis-text and axis-title margins are now scaled from <code>base_size</code> via ggplot2’s <code>half_line = base_size / 2</code> convention, so spacing stays proportional when <code>base_size</code> changes. Previous unscaled defaults produced cramped labels at <code>base_size = 32</code>.</li>
 <li>
-<code><a href="../reference/hv_theme_light_ppt.html">hv_theme_light_ppt()</a></code> gains explicit <code>axis.text</code>, <code>axis.line</code>, <code>panel.background</code> (fill <code>"white"</code>, colour <code>"black"</code>, linewidth 1), and <code>axis.ticks</code> elements so the light theme structurally mirrors the dark theme’s explicit-chrome approach (just with inverted colours).</li>
+<code><a href="../reference/hvtiPlotR-themes.html">hv_theme_light_ppt()</a></code> gains explicit <code>axis.text</code>, <code>axis.line</code>, <code>panel.background</code> (fill <code>"white"</code>, colour <code>"black"</code>, linewidth 1), and <code>axis.ticks</code> elements so the light theme structurally mirrors the dark theme’s explicit-chrome approach (just with inverted colours).</li>
 </ul></li>
 </ul></div>
 <div class="section level3">
@@ -203,7 +203,7 @@
 <code>hvti_upset()</code> → <code><a href="../reference/hv_upset.html">hv_upset()</a></code>
 </li>
 <li>
-<code>hvti_theme()</code> → <code><a href="../reference/hv_theme.html">hv_theme()</a></code>
+<code>hvti_theme()</code> → <code>hv_theme()</code>
 </li>
 <li>
 <code>hvti_survival_difference()</code> → <code><a href="../reference/hv_survival_difference.html">hv_survival_difference()</a></code>
@@ -365,7 +365,7 @@
 <h3 id="documentation-2-0-0-1">Documentation<a class="anchor" aria-label="anchor" href="#documentation-2-0-0-1"></a></h3>
 <ul><li>Fixed <code><a href="../reference/save_ppt.html">save_ppt()</a></code> argument names throughout all vignettes: <code>plot =</code> → <code>object =</code>, <code>filename =</code> → <code>powerpoint =</code>. Also added correct <code>template =</code> and <code>slide_titles =</code> arguments where missing.</li>
 <li>Fixed critical roxygen bug in <code><a href="../reference/sample_mirror_histogram_data.html">sample_mirror_histogram_data()</a></code>: doc block used <code>##'</code> (silently ignored by roxygen2) instead of <code>#'</code>, so the function had no generated <code>.Rd</code> file. Converted all <code>##'</code> → <code>#'</code>, modernised <code>\code{}</code> → backtick syntax, and added <code>@examples</code>.</li>
-<li>Added <code>@examples</code> to all five theme functions: <code><a href="../reference/hv_theme.html">hv_theme()</a></code>, <code><a href="../reference/hv_theme_manuscript.html">hv_theme_manuscript()</a></code>, <code><a href="../reference/hv_theme_dark_ppt.html">hv_theme_dark_ppt()</a></code>, <code><a href="../reference/hv_theme_light_ppt.html">hv_theme_light_ppt()</a></code>, and <code><a href="../reference/hv_theme_poster.html">hv_theme_poster()</a></code>.</li>
+<li>Added <code>@examples</code> to all five theme functions: <code>hv_theme()</code>, <code><a href="../reference/hvtiPlotR-themes.html">hv_theme_manuscript()</a></code>, <code><a href="../reference/hvtiPlotR-themes.html">hv_theme_dark_ppt()</a></code>, <code><a href="../reference/hvtiPlotR-themes.html">hv_theme_light_ppt()</a></code>, and <code><a href="../reference/hvtiPlotR-themes.html">hv_theme_poster()</a></code>.</li>
 <li>Expanded thin (2-line) <code>@examples</code> blocks for four sample-data helpers: <code><a href="../reference/sample_life_table.html">sample_life_table()</a></code>, <code><a href="../reference/sample_nonparametric_curve_points.html">sample_nonparametric_curve_points()</a></code>, <code><a href="../reference/sample_nonparametric_ordinal_points.html">sample_nonparametric_ordinal_points()</a></code>, and <code><a href="../reference/sample_longitudinal_counts_data.html">sample_longitudinal_counts_data()</a></code>.</li>
 <li>Fixed <code>km$survival_plot</code> and <code>km$risk_table</code> accessor patterns in <code>vignettes/plot-decorators.qmd</code>: <code>survival_curve()</code> returns a ggplot with <em>attributes</em>, not a named list. Replaced with <code>km</code> (the returned object IS the survival plot) and <code>attr(km, "risk_table")</code>.</li>
 <li>Fixed patchwork operator-precedence bug in <code>vignettes/plot-decorators.qmd</code>: <code>p_ms | p_km_ms + plot_layout(...)</code> → <code>(p_ms | p_km_ms) + plot_layout(...)</code>.</li>
@@ -437,7 +437,7 @@
 <li>Added <code>stacked_histogram()</code> and <code><a href="../reference/sample_stacked_histogram_data.html">sample_stacked_histogram_data()</a></code> — stacked or filled histogram of a numeric variable by group.</li>
 <li>Improved <code>mirror_histogram()</code> sample data (<code><a href="../reference/sample_mirror_histogram_data.html">sample_mirror_histogram_data()</a></code>) to use a realistic logistic propensity-score model with greedy 1:1 caliper matching and optional ATE IPTW weights; extreme-PS patients naturally go unmatched.</li>
 <li>Added <code>hv_plot()</code> dispatcher supporting <code>"mirror_histogram"</code>, <code>"stacked_histogram"</code>, and <code>"covariate_balance"</code> plot types.</li>
-<li>Added <code><a href="../reference/hv_theme.html">hv_theme()</a></code> dispatcher for <code>"manuscript"</code>, <code>"ppt"</code>, <code>"dark_ppt"</code>, and <code>"poster"</code> themes.</li>
+<li>Added <code>hv_theme()</code> dispatcher for <code>"manuscript"</code>, <code>"ppt"</code>, <code>"dark_ppt"</code>, and <code>"poster"</code> themes.</li>
 <li>Enabled roxygen Markdown (<code>Roxygen: list(markdown = TRUE)</code>) so <code>**bold**</code>, backtick code spans, and <code>[pkg::fn()]</code> cross-references render correctly in Rd help pages.</li>
 <li>Added <code>survival</code> to package <code>Imports</code>.</li>
 <li>Updated package-level documentation (<code>help.R</code>) to reflect all current exported functions and sample-data generators.</li>

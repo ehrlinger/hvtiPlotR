@@ -15,20 +15,20 @@ single smoke test during early integration work.
 
 ### Test file inventory
 
-| File                       | What it covers                                                                                                                  | Depth |
-|----------------------------|---------------------------------------------------------------------------------------------------------------------------------|-------|
-| `test_themes.R`            | All 5 `hv_theme_*` functions + [`hv_theme()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_theme.md) dispatcher + aliases | ★★★★★ |
-| `test_kaplan_meier.R`      | `sample_survival_data` + `survival_curve` (all plot types, strata, CI, methods, validation)                                     | ★★★★★ |
-| `test_mirror_histogram.R`  | `mirror_histogram` + `sample_mirror_histogram_data` (binary and IPTW-weighted modes, internal helpers)                          | ★★★★★ |
-| `test_covariate_balance.R` | `covariate_balance` + `sample_covariate_balance_data` (structure, plot geometry, rendered labels)                               | ★★★★★ |
-| `test_goodness_followup.R` | `goodness_followup` + `goodness_event_plot` + `sample_goodness_followup_data`                                                   | ★★★★★ |
-| `test_save_ppt.R`          | `save_ppt` (single/list, layouts, validation)                                                                                   | ★★★★★ |
-| `test_new_plots.R`         | `alluvial_plot`, `spaghetti_plot`, `trends_plot`, `longitudinal_counts_plot/table`, `upset_plot` + all sample\_\* generators    | ★★★★☆ |
-| `test_eda_plots.R`         | `eda_classify_var`, `eda_select_vars`, `sample_eda_data`, `eda_plot` (all three variable type paths)                            | ★★★★☆ |
-| `test_stacked_histogram.R` | `stacked_histogram` + `sample_stacked_histogram_data` (position, binwidth, aesthetics)                                          | ★★★★☆ |
-| `test_footnote.R`          | `makeFootnote` + `make_footnote` (both renderers, parameter validation)                                                         | ★★★☆☆ |
-| `test_plot_integration.R`  | Smoke test for every plot function / sample\_\* pair                                                                            | ★★☆☆☆ |
-| `test_data.R`              | `parametric` + `nonparametric` built-in datasets (structure only)                                                               | ★★☆☆☆ |
+| File                       | What it covers                                                                                                               | Depth |
+|----------------------------|------------------------------------------------------------------------------------------------------------------------------|-------|
+| `test_themes.R`            | All 5 `hv_theme_*` functions + `hv_theme()` dispatcher + aliases                                                             | ★★★★★ |
+| `test_kaplan_meier.R`      | `sample_survival_data` + `survival_curve` (all plot types, strata, CI, methods, validation)                                  | ★★★★★ |
+| `test_mirror_histogram.R`  | `mirror_histogram` + `sample_mirror_histogram_data` (binary and IPTW-weighted modes, internal helpers)                       | ★★★★★ |
+| `test_covariate_balance.R` | `covariate_balance` + `sample_covariate_balance_data` (structure, plot geometry, rendered labels)                            | ★★★★★ |
+| `test_goodness_followup.R` | `goodness_followup` + `goodness_event_plot` + `sample_goodness_followup_data`                                                | ★★★★★ |
+| `test_save_ppt.R`          | `save_ppt` (single/list, layouts, validation)                                                                                | ★★★★★ |
+| `test_new_plots.R`         | `alluvial_plot`, `spaghetti_plot`, `trends_plot`, `longitudinal_counts_plot/table`, `upset_plot` + all sample\_\* generators | ★★★★☆ |
+| `test_eda_plots.R`         | `eda_classify_var`, `eda_select_vars`, `sample_eda_data`, `eda_plot` (all three variable type paths)                         | ★★★★☆ |
+| `test_stacked_histogram.R` | `stacked_histogram` + `sample_stacked_histogram_data` (position, binwidth, aesthetics)                                       | ★★★★☆ |
+| `test_footnote.R`          | `makeFootnote` + `make_footnote` (both renderers, parameter validation)                                                      | ★★★☆☆ |
+| `test_plot_integration.R`  | Smoke test for every plot function / sample\_\* pair                                                                         | ★★☆☆☆ |
+| `test_data.R`              | `parametric` + `nonparametric` built-in datasets (structure only)                                                            | ★★☆☆☆ |
 
 ------------------------------------------------------------------------
 
@@ -96,9 +96,7 @@ Targets for
 ### 5. No cross-function integration tests
 
 The package’s value proposition involves *composing* outputs: a
-`survival_curve` result styled with
-[`hv_theme()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_theme.md)
-and exported via
+`survival_curve` result styled with `hv_theme()` and exported via
 [`save_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/save_ppt.md).
 No test exercises this full pipeline.
 

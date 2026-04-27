@@ -100,7 +100,7 @@ Called for its side effect (draws text on the current device). Returns
 **Typical workflow:**
 
     # During analysis (draft)
-    p <- plot(hv_hazard(...)) + hv_theme("manuscript")
+    p <- plot(hv_hazard(...)) + theme_hv_manuscript()
     print(p)
     make_footnote("analysis/mortality.R")   # adds draft annotation
 
@@ -110,7 +110,7 @@ Called for its side effect (draws text on the current device). Returns
 ## See also
 
 [`save_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/save_ppt.md),
-[`hv_theme()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_theme.md)
+[`theme_hv_manuscript()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)
 
 ## Examples
 
@@ -126,7 +126,7 @@ library(ggplot2)
 p <- ggplot(mtcars, aes(wt, mpg)) +
   geom_point() +
   labs(title = "Motor Trend Cars") +
-  hv_theme("manuscript")
+  theme_hv_manuscript()
 
 # Draft: print, then annotate
 print(p)

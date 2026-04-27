@@ -3,11 +3,11 @@
 statistics (mean or median), and returns an hv_trends object.
 Call plot.hv_trends on the result to obtain a bare
 ggplot2 trend plot (LOESS smooth + annual summary points) that you
-can decorate with colour scales, axis limits, and hv_theme."><meta property="og:description" content="Validates a patient-level data frame, computes per-x-value summary
+can decorate with colour scales, axis limits, and theme_hv_manuscript."><meta property="og:description" content="Validates a patient-level data frame, computes per-x-value summary
 statistics (mean or median), and returns an hv_trends object.
 Call plot.hv_trends on the result to obtain a bare
 ggplot2 trend plot (LOESS smooth + annual summary points) that you
-can decorate with colour scales, axis limits, and hv_theme."></head><body>
+can decorate with colour scales, axis limits, and theme_hv_manuscript."></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
@@ -66,7 +66,7 @@ can decorate with colour scales, axis limits, and hv_theme."></head><body>
 statistics (mean or median), and returns an <code>hv_trends</code> object.
 Call <code><a href="plot.hv_trends.html">plot.hv_trends</a></code> on the result to obtain a bare
 <code>ggplot2</code> trend plot (LOESS smooth + annual summary points) that you
-can decorate with colour scales, axis limits, and <code><a href="hv_theme.html">hv_theme</a></code>.</p>
+can decorate with colour scales, axis limits, and <code><a href="hvtiPlotR-themes.html">theme_hv_manuscript</a></code>.</p>
     </div>
 
     <div class="section level2">
@@ -129,7 +129,7 @@ overlay.</p></dd>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
     <div class="dont-index"><p><code><a href="plot.hv_trends.html">plot.hv_trends</a></code> to render as a ggplot2 figure,
-<code><a href="hv_theme.html">hv_theme</a></code> for the publication theme,
+<code><a href="hvtiPlotR-themes.html">theme_hv_manuscript</a></code> for the publication theme,
 <code><a href="sample_trends_data.html">sample_trends_data</a></code> for example data.</p>
 <p>Other Temporal trends:
 <code><a href="plot.hv_trends.html">plot.hv_trends()</a></code></p></div>
@@ -165,7 +165,7 @@ overlay.</p></dd>
 <span class="r-in"><span>                              breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">80</span>, <span class="fl">20</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span></span>
 <span class="r-in"><span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_cartesian.html" class="external-link">coord_cartesian</a></span><span class="op">(</span>xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1985</span>, <span class="fl">2015</span><span class="op">)</span>, ylim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">80</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span></span>
 <span class="r-in"><span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Years"</span>, y <span class="op">=</span> <span class="st">"%"</span><span class="op">)</span> <span class="op">+</span></span></span>
-<span class="r-in"><span>  <span class="fu"><a href="hv_theme.html">hv_theme</a></span><span class="op">(</span><span class="st">"poster"</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="hvtiPlotR-themes.html">theme_hv_poster</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="hv_trends-1.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>

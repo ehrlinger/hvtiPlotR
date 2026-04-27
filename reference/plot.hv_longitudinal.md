@@ -67,7 +67,7 @@ plot(lc, type = "plot") +
     name   = NULL
   ) +
   labs(x = "Follow-up Window", y = "Count (n)") +
-  hv_theme("poster")
+  theme_hv_poster()
 
 
 # Text table panel
@@ -76,7 +76,7 @@ plot(lc, type = "table") +
     values = c(Patients = "steelblue", Measurements = "firebrick"),
     guide  = "none"
   ) +
-  hv_theme("poster")
+  theme_hv_poster()
 
 
 # Compose with patchwork

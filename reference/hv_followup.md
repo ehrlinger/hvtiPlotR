@@ -147,7 +147,7 @@ p +
     name = NULL
   ) +
   ggplot2::labs(x = "Operation Date", y = "Follow-up (years)") +
-  hv_theme("poster")
+  theme_hv_poster()
 
 
 # With event panel -- same 3-step pattern
@@ -160,6 +160,6 @@ plot(gf2, type = "event") +
   ) +
   ggplot2::scale_shape_manual(values = c(1, 2, 4), name = NULL) +
   ggplot2::labs(x = "Operation Date", y = "Follow-up (years)") +
-  hv_theme("poster")
+  theme_hv_poster()
 
 ```

@@ -35,7 +35,7 @@ Every plot constructor follows the same pattern:
     plot(tr) +
       scale_colour_brewer(palette = "Set1", name = "Group") +
       labs(x = "Year", y = "Outcome") +
-      hv_theme("manuscript")
+      theme_hv_manuscript()
 
 Every constructor ships with a `sample_*()` companion that generates
 realistic synthetic data sized and shaped like the corresponding SAS
@@ -43,51 +43,33 @@ dataset export, so examples and unit tests run without PHI.
 
 ### Themes
 
-Use
-[`hv_theme()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_theme.md)
-as the single entry point; lower-level functions are also exported for
-direct use.
+Four `theme_hv_*()` functions follow ggplot2's
+[`theme_bw()`](https://ggplot2.tidyverse.org/reference/ggtheme.html)
+contract: pass `base_size` / `base_family` to control typography, then
+forward any extra named theme element through `...` (e.g.
+`theme_hv_manuscript(legend.position = "right")`) or chain a
+`+ theme(...)` call.
 
-- [`hv_theme()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_theme.md):
-  Unified dispatcher — accepts `"manuscript"`, `"poster"`,
-  `"light_ppt"`, or `"dark_ppt"`.
-
-- [`hv_theme_manuscript()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_theme_manuscript.md)
-  /
-  [`theme_manuscript()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_theme_manuscript.md)
-  /
-  [`theme_man()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_theme_manuscript.md):
+- [`theme_hv_manuscript()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md):
   Clean white-background theme for journal figures.
 
-- [`hv_theme_poster()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_theme_poster.md)
-  /
-  [`theme_poster()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_theme_poster.md):
-  Medium-font theme for conference posters.
+- [`theme_hv_poster()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md):
+  Medium-font theme with visible axis lines for conference posters.
 
-- [`hv_theme_dark_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_theme_dark_ppt.md)
-  /
-  [`theme_dark_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_theme_dark_ppt.md)
-  /
-  [`theme_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_theme_dark_ppt.md)
-  /
-  [`hv_theme_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_theme_dark_ppt.md):
+- [`theme_hv_ppt_dark()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md):
   Large-font theme with a black panel for blue-gradient or dark
   PowerPoint templates.
 
-- [`hv_theme_light_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_theme_light_ppt.md)
-  /
-  [`theme_light_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_theme_light_ppt.md):
+- [`theme_hv_ppt_light()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md):
   Large-font theme with a transparent panel (appears white on
-  white-background PowerPoint templates; the slide template fills the
-  panel rectangle). Add
+  white-background PowerPoint templates). Add
   `+ theme(panel.background = element_rect(fill = "white"))` if you
   specifically need an opaque white panel on a non-white slide
   background.
 
 Both PPT themes hide the legend by default, use inside-facing axis
 ticks, and scale axis-text / axis-title margins from `base_size` via
-ggplot2's `half_line` convention. Pass `bold = TRUE` for AATS-style bold
-axis text.
+ggplot2's `half_line` convention.
 
 ### Saving figures
 

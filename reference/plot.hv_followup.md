@@ -62,7 +62,7 @@ object.
 ## See also
 
 [`hv_followup`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_followup.md),
-[`hv_theme`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_theme.md)
+[`theme_hv_manuscript`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)
 
 ## Examples
 
@@ -78,7 +78,7 @@ plot(gf) +
     name = NULL
   ) +
   ggplot2::labs(x = "Operation Date", y = "Follow-up (years)") +
-  hv_theme("poster")
+  theme_hv_poster()
 
 
 # Event panel
@@ -89,6 +89,6 @@ plot(gf, type = "event") +
     name = NULL
   ) +
   ggplot2::labs(x = "Operation Date", y = "Follow-up (years)") +
-  hv_theme("poster")
+  theme_hv_poster()
 
 ```
