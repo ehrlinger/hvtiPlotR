@@ -1,5 +1,66 @@
 # Changelog
 
+## hvtiPlotR 2.1.0
+
+### Theme API redesign
+
+- The four theme functions are now named
+  [`theme_hv_manuscript()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md),
+  [`theme_hv_poster()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md),
+  [`theme_hv_ppt_dark()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md),
+  and
+  [`theme_hv_ppt_light()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md),
+  matching ggplot2’s
+  [`theme_bw()`](https://ggplot2.tidyverse.org/reference/ggtheme.html) /
+  [`theme_grey()`](https://ggplot2.tidyverse.org/reference/ggtheme.html)
+  naming.
+
+- Each theme follows the
+  [`theme_bw()`](https://ggplot2.tidyverse.org/reference/ggtheme.html)
+  contract: pass `base_size` / `base_family` to control typography, then
+  forward any extra named theme element through `...` to override
+  inline. Examples:
+
+  ``` r
+  theme_hv_manuscript(legend.position = "right")
+  theme_hv_ppt_dark(axis.text.y = element_text(family = "mono"))
+  ```
+
+- The `hv_theme()` dispatcher has been **removed**. Call the named theme
+  function directly.
+
+- The `bold = TRUE`, `mono_y = TRUE`, and `title_size` kwargs on the PPT
+  themes have been **removed**. Express the equivalent overrides through
+  `...` (e.g. `axis.text = element_text(face = "bold")` or
+  `axis.text.y = element_text(family = "mono")`).
+
+- The previous names
+  ([`hv_theme_manuscript()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md),
+  [`hv_theme_poster()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md),
+  [`hv_theme_dark_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md),
+  [`hv_theme_light_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md),
+  [`hv_theme_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md),
+  [`theme_man()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md),
+  [`theme_manuscript()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md),
+  [`theme_poster()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md),
+  [`theme_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md),
+  [`theme_dark_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md),
+  [`theme_light_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md))
+  remain as **deprecated aliases** that emit a one-shot deprecation
+  warning and forward to the new theme function. Plan to remove in
+  v3.0.0.
+
+### Tests
+
+- Added `tests/testthat/helper-plot-data.R` and
+  `tests/testthat/test_example_plot_data.R`. Every `@examples` and
+  vignette plot path is exercised through
+  [`ggplot2::ggplot_build()`](https://ggplot2.tidyverse.org/reference/ggplot_build.html),
+  asserting that non-decorator layers carry observation rows, expected
+  geoms appear, and grouped/stratified plots preserve their groups.
+  Catches the “plot rendered but contains no data” defect without a
+  graphics device.
+
 ## hvtiPlotR 2.0.1
 
 ### Bug fixes
