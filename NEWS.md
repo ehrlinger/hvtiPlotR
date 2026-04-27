@@ -1,3 +1,40 @@
+# hvtiPlotR 2.1.0
+
+## Theme API redesign
+
+- The four theme functions are now named `theme_hv_manuscript()`,
+  `theme_hv_poster()`, `theme_hv_ppt_dark()`, and `theme_hv_ppt_light()`,
+  matching ggplot2's `theme_bw()` / `theme_grey()` naming.
+- Each theme follows the `theme_bw()` contract: pass `base_size` /
+  `base_family` to control typography, then forward any extra named
+  theme element through `...` to override inline. Examples:
+  ```r
+  theme_hv_manuscript(legend.position = "right")
+  theme_hv_ppt_dark(axis.text.y = element_text(family = "mono"))
+  ```
+- The `hv_theme()` dispatcher has been **removed**. Call the named
+  theme function directly.
+- The `bold = TRUE`, `mono_y = TRUE`, and `title_size` kwargs on the PPT
+  themes have been **removed**. Express the equivalent overrides through
+  `...` (e.g. `axis.text = element_text(face = "bold")` or
+  `axis.text.y = element_text(family = "mono")`).
+- The previous names (`hv_theme_manuscript()`, `hv_theme_poster()`,
+  `hv_theme_dark_ppt()`, `hv_theme_light_ppt()`, `hv_theme_ppt()`,
+  `theme_man()`, `theme_manuscript()`, `theme_poster()`, `theme_ppt()`,
+  `theme_dark_ppt()`, `theme_light_ppt()`) remain as **deprecated
+  aliases** that emit a one-shot deprecation warning and forward to the
+  new theme function. Plan to remove in v3.0.0.
+
+## Tests
+
+- Added `tests/testthat/helper-plot-data.R` and
+  `tests/testthat/test_example_plot_data.R`. Every `@examples` and
+  vignette plot path is exercised through `ggplot2::ggplot_build()`,
+  asserting that non-decorator layers carry observation rows, expected
+  geoms appear, and grouped/stratified plots preserve their groups.
+  Catches the "plot rendered but contains no data" defect without a
+  graphics device.
+
 # hvtiPlotR 2.0.1
 
 ## Bug fixes
