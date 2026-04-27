@@ -56,22 +56,18 @@ reference:
 
 - title: "Themes"
   desc: >
-    Apply publication-quality themes to any ggplot2 object. Use
-    `hv_theme()` as the single entry point; the lower-level
-    `hv_theme_*()` functions are also exported for direct use.
+    Apply publication-quality themes to any ggplot2 object. Each
+    `theme_hv_*()` function follows ggplot2's `theme_bw()` contract and
+    forwards `...` into a final `theme()` call so callers can override
+    any element inline (e.g.
+    `theme_hv_manuscript(legend.position = "right")`). The previous
+    `hv_theme_*()` and `theme_*` names remain as deprecated aliases.
   contents:
-  - hv_theme
-  - hv_theme_manuscript
-  - hv_theme_dark_ppt
-  - hv_theme_light_ppt
-  - hv_theme_poster
-  - hv_theme_ppt
-  - theme_manuscript
-  - theme_man
-  - theme_dark_ppt
-  - theme_light_ppt
-  - theme_poster
-  - theme_ppt
+  - hvtiPlotR-themes
+  - theme_hv_manuscript
+  - theme_hv_poster
+  - theme_hv_ppt_dark
+  - theme_hv_ppt_light
 
 - title: "Survival & Hazard"
   desc: >
