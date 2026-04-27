@@ -22,7 +22,7 @@ Default \code{-0.05}.}
 \value{
 A \code{\link[ggplot2]{ggplot}} object using \pkg{ggsankey} geoms.
 Compose with \code{scale_fill_manual()}, \code{labs()}, \code{theme()},
-and \code{\link{hv_theme}}.
+and \code{\link{theme_hv_manuscript}}.
 }
 \description{
 Draws a cluster stability Sankey diagram using \pkg{ggsankey} geoms.
@@ -35,15 +35,15 @@ dta <- sample_cluster_sankey_data(n = 300, seed = 42)
 if (requireNamespace("ggsankey", quietly = TRUE)) {
   plot(hv_sankey(dta)) +
     ggplot2::labs(x = NULL, title = "Cluster Stability: K = 2 to 9") +
-    hv_theme("poster")
+    theme_hv_poster()
 
   # Subset to K = 2 to 6
   plot(hv_sankey(dta, cluster_cols = paste0("C", 2:6))) +
     ggplot2::labs(x = NULL) +
-    hv_theme("poster")
+    theme_hv_poster()
 }
 
 }
 \seealso{
-\code{\link{hv_sankey}}, \code{\link{hv_theme}}
+\code{\link{hv_sankey}}, \code{\link{theme_hv_manuscript}}
 }

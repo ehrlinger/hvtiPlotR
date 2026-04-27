@@ -198,7 +198,7 @@ test_that("plot.hv_trends grouped and ungrouped plots are distinct", {
   expect_false(identical(p_grp$mapping, p_one$mapping))
 })
 
-test_that("plot.hv_trends is composable with hv_theme", {
+test_that("plot.hv_trends is composable with theme_hv_*", {
   tr <- hv_trends(dta_grp)
-  expect_s3_class(plot(tr) + hv_theme("manuscript"), "ggplot")
+  expect_s3_class(plot(tr) + theme_hv_manuscript(), "ggplot")
 })

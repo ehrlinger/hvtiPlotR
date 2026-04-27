@@ -57,7 +57,7 @@ plot(gf) +
     name = NULL
   ) +
   ggplot2::labs(x = "Operation Date", y = "Follow-up (years)") +
-  hv_theme("poster")
+  theme_hv_poster()
 
 # Event panel
 plot(gf, type = "event") +
@@ -67,9 +67,9 @@ plot(gf, type = "event") +
     name = NULL
   ) +
   ggplot2::labs(x = "Operation Date", y = "Follow-up (years)") +
-  hv_theme("poster")
+  theme_hv_poster()
 
 }
 \seealso{
-\code{\link{hv_followup}}, \code{\link{hv_theme}}
+\code{\link{hv_followup}}, \code{\link{theme_hv_manuscript}}
 }

@@ -73,7 +73,7 @@ survival_difference_plot(
   scale_y_continuous(limits = c(-5, 30),
                      labels = function(x) paste0(x, "\%")) +
   labs(x = "Years", y = "Survival Difference (\%)") +
-  hv_theme("poster")
+  theme_hv_poster()
 
 # --- (2) Multiple treatment comparisons ----------------------------------
 # Simulate three comparisons and combine (each row = one comparison)
@@ -100,7 +100,7 @@ survival_difference_plot(dall, group_col = "comparison") +
   geom_hline(yintercept = 0, linetype = "dashed", colour = "grey50") +
   scale_x_continuous(limits = c(0, 10), breaks = 0:10) +
   labs(x = "Years", y = "Survival Difference (\%)") +
-  hv_theme("poster")
+  theme_hv_poster()
 
 }
 \references{

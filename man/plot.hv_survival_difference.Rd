@@ -21,8 +21,8 @@ A \code{\link[ggplot2:ggplot]{ggplot2::ggplot()}} object.
 \description{
 Renders a bare \code{\link[ggplot2:ggplot]{ggplot2::ggplot()}} survival-difference curve.  Compose with
 \code{geom_hline(yintercept = 0)}, \code{scale_y_continuous()}, \code{labs()}, and
-\code{\link[=hv_theme]{hv_theme()}}.
+\code{\link[=theme_hv_manuscript]{theme_hv_manuscript()}}.
 }
 \seealso{
-\code{\link[=hv_survival_difference]{hv_survival_difference()}}, \code{\link[=hv_nnt]{hv_nnt()}}, \code{\link[=hv_theme]{hv_theme()}}
+\code{\link[=hv_survival_difference]{hv_survival_difference()}}, \code{\link[=hv_nnt]{hv_nnt()}}, \code{\link[=theme_hv_manuscript]{theme_hv_manuscript()}}
 }

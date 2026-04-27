@@ -52,7 +52,7 @@ Classifies \code{y_col} using \code{\link{eda_classify_var}}, pre-processes
 categorical levels (adding an explicit \code{"(Missing)"} level), and
 returns an \code{hv_eda} object.  Call \code{\link{plot.hv_eda}} on the
 result to obtain a bare \code{ggplot2} barplot or scatter plot that you can
-decorate with colour scales and \code{\link{hv_theme}}.
+decorate with colour scales and \code{\link{theme_hv_manuscript}}.
 }
 \details{
 Iterate over variables with \code{lapply()} after selecting columns with
@@ -77,7 +77,7 @@ p +
   ) +
   ggplot2::scale_x_discrete(breaks = seq(2005, 2020, 5)) +
   ggplot2::labs(x = "Surgery Year", y = "Count") +
-  hv_theme("poster")
+  theme_hv_poster()
 
 # Continuous variable -- same 3-step pattern
 ed2 <- hv_eda(dta, x_col = "op_years", y_col = "ef",
@@ -86,7 +86,7 @@ plot(ed2) +
   ggplot2::scale_colour_manual(values = c("firebrick"), guide = "none") +
   ggplot2::scale_x_continuous(breaks = seq(0, 15, 5)) +
   ggplot2::labs(x = "Years from First Surgery Year") +
-  hv_theme("poster")
+  theme_hv_poster()
 
 # Variable selection + lapply (varnames template pattern)
 cont_vars <- c(ef = "Ejection Fraction (\%)",
@@ -99,7 +99,7 @@ p_cont <- lapply(names(cont_vars), function(cn) {
     ggplot2::scale_colour_manual(values = c("steelblue"), guide = "none") +
     ggplot2::scale_x_continuous(breaks = seq(0, 15, 5)) +
     ggplot2::labs(x = "Years from First Surgery Year") +
-    hv_theme("poster")
+    theme_hv_poster()
 })
 p_cont[[1]]
 

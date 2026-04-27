@@ -98,12 +98,12 @@ p <- plot(mh)
 # 3. Decorate: axis labels and theme
 p +
   ggplot2::labs(x = "Propensity Score (\%)", y = "Count") +
-  hv_theme("poster")
+  theme_hv_poster()
 
 }
 \seealso{
 \code{\link{plot.hv_mirror_hist}} to render as a ggplot2 figure,
-\code{\link{hv_theme}} for the publication theme,
+\code{\link{theme_hv_manuscript}} for the publication theme,
 \code{\link{sample_mirror_histogram_data}} for example data.
 
 Other Propensity Score & Matching: 

@@ -216,7 +216,7 @@ sample_goodness_followup_data <- function(
 #'     name = NULL
 #'   ) +
 #'   ggplot2::labs(x = "Operation Date", y = "Follow-up (years)") +
-#'   hv_theme("poster")
+#'   theme_hv_poster()
 #'
 #' # With event panel -- same 3-step pattern
 #' gf2 <- hv_followup(dta, event_col = "ev_event", event_time_col = "iv_event")
@@ -228,7 +228,7 @@ sample_goodness_followup_data <- function(
 #'   ) +
 #'   ggplot2::scale_shape_manual(values = c(1, 2, 4), name = NULL) +
 #'   ggplot2::labs(x = "Operation Date", y = "Follow-up (years)") +
-#'   hv_theme("poster")
+#'   theme_hv_poster()
 #'
 #' @export
 hv_followup <- function(
@@ -379,7 +379,7 @@ print.hv_followup <- function(x, ...) {
 #'
 #' @return A bare \code{\link[ggplot2]{ggplot}} object.
 #'
-#' @seealso \code{\link{hv_followup}}, \code{\link{hv_theme}}
+#' @seealso \code{\link{hv_followup}}, \code{\link{theme_hv_manuscript}}
 #'
 #' @examples
 #' dta <- sample_goodness_followup_data()
@@ -393,7 +393,7 @@ print.hv_followup <- function(x, ...) {
 #'     name = NULL
 #'   ) +
 #'   ggplot2::labs(x = "Operation Date", y = "Follow-up (years)") +
-#'   hv_theme("poster")
+#'   theme_hv_poster()
 #'
 #' # Event panel
 #' plot(gf, type = "event") +
@@ -403,7 +403,7 @@ print.hv_followup <- function(x, ...) {
 #'     name = NULL
 #'   ) +
 #'   ggplot2::labs(x = "Operation Date", y = "Follow-up (years)") +
-#'   hv_theme("poster")
+#'   theme_hv_poster()
 #'
 #' @importFrom ggplot2 ggplot aes geom_point geom_segment geom_line
 #' @export

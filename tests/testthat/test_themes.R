@@ -1,380 +1,213 @@
-# Tests for theme functions
+# Tests for theme_hv_* functions and the deprecated aliases.
 library(testthat)
 library(ggplot2)
 
-utils::globalVariables(c("x", "y"))
-
-# Helper function to create a basic plot
 create_test_plot <- function() {
   ggplot(data.frame(x = 1:10, y = 1:10), aes(x, y)) +
     geom_point()
 }
 
-# ==========================================================================
-# hv_theme generic tests
-# ==========================================================================
-
-test_that("hv_theme returns themes for all supported styles", {
-  expect_s3_class(hv_theme("ppt"),       "theme")
-  expect_s3_class(hv_theme("dark_ppt"),  "theme")
-  expect_s3_class(hv_theme("light_ppt"), "theme")
-  expect_s3_class(hv_theme("manuscript"), "theme")
-  expect_s3_class(hv_theme("poster"),    "theme")
-})
-
-test_that("hv_theme forwards arguments to style-specific functions", {
-  theme_custom <- hv_theme("ppt", base_size = 18, ink = "navy")
-  expect_s3_class(theme_custom, "theme")
-})
-
-test_that("hv_theme errors on unsupported styles", {
-  expect_error(hv_theme("unknown"))
-                 
-               #"Unsupported hvtiPlotR theme style")
-})
-
 # ============================================================================
-# theme_ppt tests
+# theme_hv_manuscript
 # ============================================================================
 
-test_that("theme_ppt returns a valid theme object", {
-  theme <- theme_ppt()
-  expect_s3_class(theme, "theme")
-  expect_s3_class(theme, "gg")
+test_that("theme_hv_manuscript returns a valid theme object", {
+  th <- theme_hv_manuscript()
+  expect_s3_class(th, "theme")
+  expect_s3_class(th, "gg")
 })
 
-test_that("theme_ppt can be applied to a plot", {
-  p <- create_test_plot() + theme_ppt()
+test_that("theme_hv_manuscript composes onto a plot", {
+  p <- create_test_plot() + theme_hv_manuscript()
   expect_s3_class(p, "ggplot")
-  # Check that theme was actually applied
   expect_s3_class(p$theme, "theme")
 })
 
-test_that("theme_ppt respects base_size parameter", {
-  theme_small <- theme_ppt(base_size = 16)
-  theme_large <- theme_ppt(base_size = 48)
-  expect_s3_class(theme_small, "theme")
-  expect_s3_class(theme_large, "theme")
+test_that("theme_hv_manuscript hides legend by default", {
+  expect_identical(theme_hv_manuscript()$legend.position, "none")
 })
 
-test_that("theme_ppt respects ink and paper parameters", {
-  theme_custom <- theme_ppt(ink = "red", paper = "blue")
-  expect_s3_class(theme_custom, "theme")
+test_that("theme_hv_manuscript ... overrides default elements", {
+  th <- theme_hv_manuscript(legend.position = "right")
+  expect_identical(th$legend.position, "right")
 })
 
-test_that("theme_ppt respects all documented parameters", {
-  theme_full <- theme_ppt(
-    base_size = 24,
-    base_family = "sans",
-    header_family = "serif",
-    base_line_size = 1,
-    base_rect_size = 1,
-    ink = "black",
-    paper = "white",
-    accent = "#FF0000"
+test_that("theme_hv_manuscript ... accepts arbitrary theme elements", {
+  th <- theme_hv_manuscript(
+    axis.text.y = element_text(family = "mono")
   )
-  expect_s3_class(theme_full, "theme")
+  expect_identical(th$axis.text.y$family, "mono")
 })
 
-test_that("theme_ppt default ink is black", {
-  theme <- theme_ppt()
-  # Verify it creates a valid theme
-  expect_s3_class(theme, "theme")
-})
-
-test_that("theme_ppt default paper is transparent", {
-  theme <- theme_ppt()
-  expect_s3_class(theme, "theme")
-})
-
-# ============================================================================
-# theme_manuscript tests
-# ============================================================================
-
-test_that("theme_manuscript returns a valid theme object", {
-  theme <- theme_manuscript()
-  expect_s3_class(theme, "theme")
-  expect_s3_class(theme, "gg")
-})
-
-test_that("theme_man is an alias for theme_manuscript", {
-  expect_identical(theme_man, theme_manuscript)
-})
-
-test_that("theme_manuscript can be applied to a plot", {
-  p <- create_test_plot() + theme_manuscript()
-  expect_s3_class(p, "ggplot")
-  expect_s3_class(p$theme, "theme")
-})
-
-test_that("theme_manuscript has smaller default base_size than theme_ppt", {
-  # theme_manuscript defaults to 12, theme_ppt to 32
-  theme_man <- theme_manuscript()
-  theme_ppt <- theme_ppt()
-  expect_s3_class(theme_man, "theme")
-  expect_s3_class(theme_ppt, "theme")
-})
-
-test_that("theme_manuscript respects custom base_size", {
-  theme_custom <- theme_manuscript(base_size = 14)
-  expect_s3_class(theme_custom, "theme")
-})
-
-test_that("theme_manuscript respects ink and paper parameters", {
-  theme_custom <- theme_manuscript(ink = "blue", paper = "gray90")
-  expect_s3_class(theme_custom, "theme")
-})
-
-test_that("theme_manuscript respects all parameters", {
-  theme_full <- theme_manuscript(
-    base_size = 10,
-    base_family = "mono",
-    header_family = "sans",
+test_that("theme_hv_manuscript respects all base_grey parameters", {
+  th <- theme_hv_manuscript(
+    base_size      = 10,
+    base_family    = "mono",
+    header_family  = "sans",
     base_line_size = 0.5,
     base_rect_size = 0.5,
-    ink = "black",
-    paper = "white",
-    accent = "#0000FF"
+    ink            = "black",
+    paper          = "white",
+    accent         = "#0000FF"
   )
-  expect_s3_class(theme_full, "theme")
-})
-
-test_that("theme_man alias works identically", {
-  p1 <- create_test_plot() + theme_manuscript()
-  p2 <- create_test_plot() + theme_man()
-  expect_s3_class(p1, "ggplot")
-  expect_s3_class(p2, "ggplot")
+  expect_s3_class(th, "theme")
 })
 
 # ============================================================================
-# theme_dark_ppt tests
+# theme_hv_poster
 # ============================================================================
 
-test_that("theme_dark_ppt returns a valid theme object", {
-  theme <- theme_dark_ppt()
-  expect_s3_class(theme, "theme")
-  expect_s3_class(theme, "gg")
+test_that("theme_hv_poster returns a valid theme object", {
+  th <- theme_hv_poster()
+  expect_s3_class(th, "theme")
 })
 
-test_that("theme_dark_ppt can be applied to a plot", {
-  p <- create_test_plot() + theme_dark_ppt()
-  expect_s3_class(p, "ggplot")
-  expect_s3_class(p$theme, "theme")
+test_that("theme_hv_poster composes onto a plot and accepts ... overrides", {
+  th <- theme_hv_poster(legend.position = "bottom")
+  expect_identical(th$legend.position, "bottom")
 })
 
-test_that("theme_dark_ppt default ink is white", {
-  theme <- theme_dark_ppt()
-  expect_s3_class(theme, "theme")
+# ============================================================================
+# theme_hv_ppt_dark
+# ============================================================================
+
+test_that("theme_hv_ppt_dark hides legend by default", {
+  expect_identical(theme_hv_ppt_dark()$legend.position, "none")
 })
 
-test_that("theme_dark_ppt respects all parameters", {
-  theme_full <- theme_dark_ppt(
-    base_size = 28,
-    base_family = "sans",
-    header_family = "serif",
-    base_line_size = 1.2,
-    base_rect_size = 1.2,
-    ink = "white",
-    paper = "transparent",
-    accent = "#00FF00"
-  )
-  expect_s3_class(theme_full, "theme")
+test_that("theme_hv_ppt_dark retains opaque black panel fill", {
+  th <- theme_hv_ppt_dark()
+  expect_identical(th$panel.background$fill,   "black")
+  expect_identical(th$panel.background$colour, "white")
 })
 
-test_that("theme_dark_ppt respects base_size parameter", {
-  theme_custom <- theme_dark_ppt(base_size = 20)
-  expect_s3_class(theme_custom, "theme")
+test_that("theme_hv_ppt_dark uses inside-facing ticks (negative length)", {
+  th <- theme_hv_ppt_dark(base_size = 32)
+  tlen <- grid::convertUnit(th$axis.ticks.length, "pt", valueOnly = TRUE)
+  expect_lt(tlen, 0)
+  expect_equal(tlen, -32 / 4, tolerance = 1e-6)
 })
 
-test_that("theme_dark_ppt works with different ink colors", {
-  theme_custom <- theme_dark_ppt(ink = "yellow")
-  expect_s3_class(theme_custom, "theme")
-})
-
-test_that("theme_dark_ppt hides legend by default", {
-  theme <- theme_dark_ppt()
-  expect_identical(theme$legend.position, "none")
-})
-
-test_that("theme_dark_ppt bold = TRUE sets face = 'bold' on axis elements", {
-  theme_bold  <- theme_dark_ppt(bold = TRUE)
-  theme_plain <- theme_dark_ppt(bold = FALSE)
-  expect_identical(theme_bold$axis.text$face,    "bold")
-  expect_identical(theme_bold$axis.title.x$face, "bold")
-  expect_identical(theme_bold$axis.title.y$face, "bold")
-  expect_identical(theme_plain$axis.text$face,   "plain")
-})
-
-test_that("theme_dark_ppt uses inside-facing ticks (negative length)", {
-  theme <- theme_dark_ppt(base_size = 32)
-  # Inside ticks: length should be negative, scaled via half_line = base_size/2
-  tlen <- grid::convertUnit(theme$axis.ticks.length, "pt", valueOnly = TRUE)
-  expect_lt(tlen, 0)                  # negative = inside
-  expect_equal(tlen, -32 / 4, tolerance = 1e-6)  # half_line / 2
-})
-
-test_that("theme_dark_ppt axis-title margins scale with base_size", {
-  t32 <- theme_dark_ppt(base_size = 32)
-  t16 <- theme_dark_ppt(base_size = 16)
-  m32 <- t32$axis.title.x$margin
-  m16 <- t16$axis.title.x$margin
-  # Margins should be 1.5 * half_line = 0.75 * base_size in pt — half at half the size
+test_that("theme_hv_ppt_dark axis-title margins scale with base_size", {
+  m32 <- theme_hv_ppt_dark(base_size = 32)$axis.title.x$margin
+  m16 <- theme_hv_ppt_dark(base_size = 16)$axis.title.x$margin
   expect_equal(as.numeric(m32[1]), 2 * as.numeric(m16[1]), tolerance = 1e-6)
 })
 
-test_that("theme_light_ppt hides legend by default and accepts bold", {
-  theme <- theme_light_ppt()
-  expect_identical(theme$legend.position, "none")
-  expect_identical(theme_light_ppt(bold = TRUE)$axis.text$face, "bold")
-})
-
-test_that("theme_light_ppt panel.background fill is transparent (template shows through)", {
-  theme <- theme_light_ppt()
-  expect_identical(theme$panel.background$fill,   "transparent")
-  # Border stays black so the panel rectangle is visible against any template
-  expect_identical(theme$panel.background$colour, "black")
-  # And plot.background should be transparent too
-  expect_identical(theme$plot.background$fill, "transparent")
-})
-
-test_that("theme_dark_ppt retains its opaque black panel fill", {
-  theme <- theme_dark_ppt()
-  expect_identical(theme$panel.background$fill,   "black")
-  expect_identical(theme$panel.background$colour, "white")
-})
-
-test_that("theme_light_ppt uses inside-facing ticks (negative length)", {
-  theme <- theme_light_ppt(base_size = 32)
-  tlen <- grid::convertUnit(theme$axis.ticks.length, "pt", valueOnly = TRUE)
-  expect_lt(tlen, 0)                              # negative = inside
-  expect_equal(tlen, -32 / 4, tolerance = 1e-6)   # half_line / 2
-})
-
-test_that("theme_light_ppt axis-title margins scale with base_size", {
-  t32 <- theme_light_ppt(base_size = 32)
-  t16 <- theme_light_ppt(base_size = 16)
-  m32 <- t32$axis.title.x$margin
-  m16 <- t16$axis.title.x$margin
-  # Margins scale linearly with base_size (1.5 * half_line = 0.75 * base_size in pt)
-  expect_equal(as.numeric(m32[1]), 2 * as.numeric(m16[1]), tolerance = 1e-6)
-})
-
-# ============================================================================
-# theme_poster tests
-# ============================================================================
-
-test_that("theme_poster returns a valid theme object", {
-  theme <- theme_poster()
-  expect_s3_class(theme, "theme")
-  expect_s3_class(theme, "gg")
-})
-
-test_that("theme_poster can be applied to a plot", {
-  p <- create_test_plot() + theme_poster()
-  expect_s3_class(p, "ggplot")
-  expect_s3_class(p$theme, "theme")
-})
-
-test_that("theme_poster has medium base_size (16)", {
-  theme <- theme_poster(base_size = 16)
-  expect_s3_class(theme, "theme")
-})
-
-test_that("theme_poster respects all parameters", {
-  theme_full <- theme_poster(
-    base_size = 18,
-    base_family = "sans",
-    header_family = "serif",
-    base_line_size = 0.8,
-    base_rect_size = 0.8,
-    ink = "black",
-    paper = "white",
-    accent = "#FF00FF"
+test_that("theme_hv_ppt_dark ... can supply mono y-axis text", {
+  th <- theme_hv_ppt_dark(
+    axis.text.y = element_text(family = "mono")
   )
-  expect_s3_class(theme_full, "theme")
+  expect_identical(th$axis.text.y$family, "mono")
 })
 
-test_that("theme_poster works with custom colors", {
-  theme_custom <- theme_poster(ink = "darkblue", paper = "lightyellow")
-  expect_s3_class(theme_custom, "theme")
+test_that("theme_hv_ppt_dark ... can re-add bold axis face", {
+  th <- theme_hv_ppt_dark(
+    axis.text  = element_text(face = "bold"),
+    axis.title = element_text(face = "bold")
+  )
+  expect_identical(th$axis.text$face,  "bold")
+  expect_identical(th$axis.title$face, "bold")
 })
 
 # ============================================================================
-# Integration tests - themes work together
+# theme_hv_ppt_light
 # ============================================================================
 
-test_that("all themes can be applied to the same plot sequentially", {
-  p <- create_test_plot()
-  p1 <- p + theme_ppt()
-  p2 <- p + theme_manuscript()
-  p3 <- p + theme_dark_ppt()
-  p4 <- p + theme_poster()
-
-  expect_s3_class(p1, "ggplot")
-  expect_s3_class(p2, "ggplot")
-  expect_s3_class(p3, "ggplot")
-  expect_s3_class(p4, "ggplot")
+test_that("theme_hv_ppt_light hides legend by default", {
+  expect_identical(theme_hv_ppt_light()$legend.position, "none")
 })
 
-test_that("themes work with different plot types", {
-  # Scatter plot
-  p1 <- ggplot(mtcars, aes(wt, mpg)) + geom_point() + theme_ppt()
-  expect_s3_class(p1, "ggplot")
-
-  # Line plot
-  p2 <- ggplot(mtcars, aes(wt, mpg)) + geom_line() + theme_manuscript()
-  expect_s3_class(p2, "ggplot")
-
-  # Bar plot
-  p3 <- ggplot(mtcars, aes(x = factor(cyl))) + geom_bar() + theme_dark_ppt()
-  expect_s3_class(p3, "ggplot")
-
-  # Boxplot
-  p4 <- ggplot(mtcars, aes(x = factor(cyl), y = mpg)) +
-    geom_boxplot() + theme_poster()
-  expect_s3_class(p4, "ggplot")
+test_that("theme_hv_ppt_light has transparent panel fill (template shows through)", {
+  th <- theme_hv_ppt_light()
+  expect_identical(th$panel.background$fill,   "transparent")
+  expect_identical(th$panel.background$colour, "black")
+  expect_identical(th$plot.background$fill,    "transparent")
 })
 
-test_that("themes work with faceted plots", {
+test_that("theme_hv_ppt_light uses inside-facing ticks (negative length)", {
+  th <- theme_hv_ppt_light(base_size = 32)
+  tlen <- grid::convertUnit(th$axis.ticks.length, "pt", valueOnly = TRUE)
+  expect_lt(tlen, 0)
+  expect_equal(tlen, -32 / 4, tolerance = 1e-6)
+})
+
+# ============================================================================
+# Composition with different plot types
+# ============================================================================
+
+test_that("themes work with a faceted plot", {
   p <- ggplot(mtcars, aes(wt, mpg)) +
     geom_point() +
     facet_wrap(~cyl) +
-    theme_ppt()
+    theme_hv_ppt_dark()
   expect_s3_class(p, "ggplot")
 })
 
-test_that("themes work with titled plots", {
+test_that("themes work with a titled plot", {
   p <- create_test_plot() +
-    labs(title = "Test Title",
-         subtitle = "Test Subtitle",
-         caption = "Test Caption") +
-    theme_manuscript()
+    labs(title = "Test Title", subtitle = "Test Subtitle") +
+    theme_hv_manuscript()
   expect_s3_class(p, "ggplot")
 })
 
-# ============================================================================
-# Error handling tests
-# ============================================================================
-
-test_that("themes handle invalid base_size gracefully", {
-  # Negative base_size might cause issues but shouldn't error
-  expect_error(theme_ppt(base_size = -10), NA)
-  expect_error(theme_manuscript(base_size = 0), NA)
+test_that("themes accept unusual parameter combinations without error", {
+  expect_error(theme_hv_ppt_dark(base_size = -10),                  NA)
+  expect_error(theme_hv_manuscript(base_size = 0),                  NA)
+  expect_error(theme_hv_manuscript(base_size = 100),                NA)
+  expect_error(theme_hv_poster(base_line_size = 0.01,
+                               base_rect_size = 0.01),              NA)
+  expect_error(theme_hv_manuscript(base_family = "nonexistent"),    NA)
+  expect_error(theme_hv_ppt_dark(ink = "yellow"),                   NA)
 })
 
-test_that("themes handle unusual parameter combinations", {
-  # Same ink and paper color
-  expect_error(theme_ppt(ink = "black", paper = "black"), NA)
+# ============================================================================
+# Deprecated aliases — still work, emit a deprecation warning
+# ============================================================================
 
-  # Very large base_size
-  expect_error(theme_manuscript(base_size = 100), NA)
-
-  # Very small line/rect sizes
-  expect_error(theme_poster(base_line_size = 0.01, base_rect_size = 0.01), NA)
+test_that("theme_man is a deprecated alias for theme_hv_manuscript", {
+  expect_warning(th <- theme_man(), "deprecated")
+  expect_s3_class(th, "theme")
+  expect_identical(suppressWarnings(theme_man())$legend.position,
+                   theme_hv_manuscript()$legend.position)
 })
 
-test_that("themes work with non-standard font families", {
-  # These might not be available but shouldn't error
-  expect_error(theme_ppt(base_family = "nonexistent"), NA)
-  expect_error(theme_manuscript(header_family = "fake-font"), NA)
+test_that("theme_manuscript is a deprecated alias", {
+  expect_warning(th <- theme_manuscript(), "deprecated")
+  expect_s3_class(th, "theme")
+})
+
+test_that("hv_theme_manuscript is a deprecated alias", {
+  expect_warning(th <- hv_theme_manuscript(), "deprecated")
+  expect_s3_class(th, "theme")
+})
+
+test_that("theme_poster / hv_theme_poster are deprecated aliases", {
+  expect_warning(theme_poster(),    "deprecated")
+  expect_warning(hv_theme_poster(), "deprecated")
+})
+
+test_that("theme_ppt / theme_dark_ppt / hv_theme_ppt / hv_theme_dark_ppt all map to theme_hv_ppt_dark", {
+  expect_warning(t1 <- theme_ppt(),         "deprecated")
+  expect_warning(t2 <- theme_dark_ppt(),    "deprecated")
+  expect_warning(t3 <- hv_theme_ppt(),      "deprecated")
+  expect_warning(t4 <- hv_theme_dark_ppt(), "deprecated")
+  ref <- theme_hv_ppt_dark()
+  expect_identical(t1$panel.background$fill, ref$panel.background$fill)
+  expect_identical(t2$panel.background$fill, ref$panel.background$fill)
+  expect_identical(t3$panel.background$fill, ref$panel.background$fill)
+  expect_identical(t4$panel.background$fill, ref$panel.background$fill)
+})
+
+test_that("theme_light_ppt / hv_theme_light_ppt are deprecated aliases", {
+  expect_warning(t1 <- theme_light_ppt(),    "deprecated")
+  expect_warning(t2 <- hv_theme_light_ppt(), "deprecated")
+  ref <- theme_hv_ppt_light()
+  expect_identical(t1$panel.background$fill, ref$panel.background$fill)
+  expect_identical(t2$panel.background$fill, ref$panel.background$fill)
+})
+
+test_that("hv_theme dispatcher has been removed", {
+  expect_false(exists("hv_theme", mode = "function",
+                      envir = asNamespace("hvtiPlotR")))
 })

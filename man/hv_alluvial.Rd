@@ -35,7 +35,7 @@ An object of class \code{c("hv_alluvial", "hv_data")}:
 Validates a wide alluvial-format data frame and returns an
 \code{hv_alluvial} object.  Call \code{\link{plot.hv_alluvial}} on the
 result to obtain a bare \code{ggplot2} alluvial diagram that you can
-decorate with colour scales, axis labels, and \code{\link{hv_theme}}.
+decorate with colour scales, axis labels, and \code{\link{theme_hv_manuscript}}.
 }
 \examples{
 dta  <- sample_alluvial_data(n = 300, seed = 42)
@@ -66,7 +66,7 @@ p +
   ) +
   ggplot2::labs(y = "Patients (n)",
                 title = "AV Regurgitation: Pre- to Post-operative") +
-  hv_theme("poster")
+  theme_hv_poster()
 
 }
 \seealso{

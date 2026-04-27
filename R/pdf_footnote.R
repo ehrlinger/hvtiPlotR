@@ -18,7 +18,7 @@
 #' **Typical workflow:**
 #' ```r
 #' # During analysis (draft)
-#' p <- plot(hv_hazard(...)) + hv_theme("manuscript")
+#' p <- plot(hv_hazard(...)) + theme_hv_manuscript()
 #' print(p)
 #' make_footnote("analysis/mortality.R")   # adds draft annotation
 #'
@@ -52,7 +52,7 @@
 #' @return Called for its side effect (draws text on the current device).
 #'   Returns `invisible(NULL)`.
 #'
-#' @seealso [save_ppt()], [hv_theme()]
+#' @seealso [save_ppt()], [theme_hv_manuscript()]
 #'
 #' @examples
 #' # --- Basic use after a base-R plot ----------------------------------------
@@ -65,7 +65,7 @@
 #' p <- ggplot(mtcars, aes(wt, mpg)) +
 #'   geom_point() +
 #'   labs(title = "Motor Trend Cars") +
-#'   hv_theme("manuscript")
+#'   theme_hv_manuscript()
 #'
 #' # Draft: print, then annotate
 #' print(p)

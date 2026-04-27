@@ -119,10 +119,10 @@ test_that("plot(hv_sankey) is composable with + operator", {
   expect_equal(p$labels$x, "Number of clusters (K)")
 })
 
-test_that("plot(hv_sankey) is composable with hv_theme()", {
+test_that("plot(hv_sankey) is composable with theme_hv_manuscript()", {
   skip_if_not_installed("ggsankey")
   dta <- sample_cluster_sankey_data(n = 100, seed = 1)
-  p   <- plot(hv_sankey(dta)) + hv_theme("manuscript")
+  p   <- plot(hv_sankey(dta)) + theme_hv_manuscript()
   expect_s3_class(p, "ggplot")
 })
 

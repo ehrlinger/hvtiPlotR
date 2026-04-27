@@ -34,16 +34,16 @@
 }
 \value{
 A \code{\link[ggplot2:ggplot]{ggplot2::ggplot()}} object; compose with \code{+} to add scales,
-axis limits, labels, and \code{\link[=hv_theme]{hv_theme()}}.
+axis limits, labels, and \code{\link[=theme_hv_manuscript]{theme_hv_manuscript()}}.
 }
 \description{
 Renders a bare \code{\link[ggplot2:ggplot]{ggplot2::ggplot()}} from an \code{\link[=hv_hazard]{hv_hazard()}} object.  Compose
-with \verb{scale_colour_*}, \code{scale_y_continuous()}, \code{labs()}, and \code{\link[=hv_theme]{hv_theme()}}
+with \verb{scale_colour_*}, \code{scale_y_continuous()}, \code{labs()}, and \code{\link[=theme_hv_manuscript]{theme_hv_manuscript()}}
 to complete the figure.
 }
 \seealso{
 \code{\link[=hv_hazard]{hv_hazard()}} to build the data object,
-\code{\link[=hv_theme]{hv_theme()}} for the publication theme.
+\code{\link[=theme_hv_manuscript]{theme_hv_manuscript()}} for the publication theme.
 
 Other Hazard plot: 
 \code{\link{hv_hazard}()}

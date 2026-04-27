@@ -78,7 +78,7 @@ sample_upset_data <- function(n = 500, seed = 42L) {
 #' \code{hv_upset} object.  Call \code{\link{plot.hv_upset}} on the result
 #' to obtain the \pkg{ComplexUpset} UpSet diagram.  Apply a theme to all
 #' panels with \code{&}:
-#' \preformatted{plot(up) & hv_theme("poster")}
+#' \preformatted{plot(up) & theme_hv_poster()}
 #'
 #' @param data      A data frame. Each set-membership column must be logical
 #'   or integer (0/1).
@@ -109,7 +109,7 @@ sample_upset_data <- function(n = 500, seed = 42L) {
 #' # ComplexUpset uses & (not +) to apply a theme across all sub-panels.
 #' \dontrun{
 #' p <- plot(up)
-#' p & hv_theme("poster")
+#' p & theme_hv_poster()
 #' }
 #'
 #' @importFrom rlang .data
@@ -166,7 +166,7 @@ print.hv_upset <- function(x, ...) {
 #'
 #' Draws an UpSet plot using \code{\link[ComplexUpset]{upset}}.
 #' Apply a theme to \strong{all panels} with \code{&}:
-#' \preformatted{plot(up) & hv_theme("poster")}
+#' \preformatted{plot(up) & theme_hv_poster()}
 #' Apply scales or annotations to the intersection panel via
 #' \code{base_annotations}.
 #'
@@ -192,7 +192,7 @@ print.hv_upset <- function(x, ...) {
 #' @return A patchwork / ggplot composite. Use \code{&} to apply a theme to
 #'   all panels.
 #'
-#' @seealso \code{\link{hv_upset}}, \code{\link{hv_theme}}
+#' @seealso \code{\link{hv_upset}}, \code{\link{theme_hv_manuscript}}
 #'
 #' @examples
 #' sets <- c("AV_Replacement", "AV_Repair", "MV_Replacement", "MV_Repair",
@@ -205,7 +205,7 @@ print.hv_upset <- function(x, ...) {
 #'
 #' \dontrun{
 #' # Manuscript theme applied to all panels via &
-#' plot(up) & hv_theme("poster")
+#' plot(up) & theme_hv_poster()
 #'
 #' # Custom intersection bar colour
 #' plot(up,
@@ -220,7 +220,7 @@ print.hv_upset <- function(x, ...) {
 #'       ggplot2::labs(y = "Patients (n)")
 #'   )
 #' ) &
-#'   hv_theme("poster")
+#'   theme_hv_poster()
 #' }
 #'
 #' @importFrom ComplexUpset upset upset_set_size intersection_size

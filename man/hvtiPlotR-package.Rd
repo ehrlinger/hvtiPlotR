@@ -35,7 +35,7 @@ tr  <- hv_trends(dta)
 plot(tr) +
   scale_colour_brewer(palette = "Set1", name = "Group") +
   labs(x = "Year", y = "Outcome") +
-  hv_theme("manuscript")
+  theme_hv_manuscript()
 }\if{html}{\out{</div>}}
 
 Every constructor ships with a \verb{sample_*()} companion that generates
@@ -45,29 +45,28 @@ dataset export, so examples and unit tests run without PHI.
 
 \subsection{Themes}{
 
-Use \code{\link[=hv_theme]{hv_theme()}} as the single entry point; lower-level functions are
-also exported for direct use.
+Four \verb{theme_hv_*()} functions follow ggplot2's \code{theme_bw()} contract:
+pass \code{base_size} / \code{base_family} to control typography, then forward
+any extra named theme element through \code{...} (e.g.
+\code{theme_hv_manuscript(legend.position = "right")}) or chain a
+\code{+ theme(...)} call.
 \itemize{
-\item \code{\link[=hv_theme]{hv_theme()}}: Unified dispatcher — accepts \code{"manuscript"},
-\code{"poster"}, \code{"light_ppt"}, or \code{"dark_ppt"}.
-\item \code{\link[=hv_theme_manuscript]{hv_theme_manuscript()}} / \code{\link[=theme_manuscript]{theme_manuscript()}} / \code{\link[=theme_man]{theme_man()}}:
-Clean white-background theme for journal figures.
-\item \code{\link[=hv_theme_poster]{hv_theme_poster()}} / \code{\link[=theme_poster]{theme_poster()}}: Medium-font theme for
+\item \code{\link[=theme_hv_manuscript]{theme_hv_manuscript()}}: Clean white-background theme for journal
+figures.
+\item \code{\link[=theme_hv_poster]{theme_hv_poster()}}: Medium-font theme with visible axis lines for
 conference posters.
-\item \code{\link[=hv_theme_dark_ppt]{hv_theme_dark_ppt()}} / \code{\link[=theme_dark_ppt]{theme_dark_ppt()}} / \code{\link[=theme_ppt]{theme_ppt()}} /
-\code{\link[=hv_theme_ppt]{hv_theme_ppt()}}: Large-font theme with a black panel for
+\item \code{\link[=theme_hv_ppt_dark]{theme_hv_ppt_dark()}}: Large-font theme with a black panel for
 blue-gradient or dark PowerPoint templates.
-\item \code{\link[=hv_theme_light_ppt]{hv_theme_light_ppt()}} / \code{\link[=theme_light_ppt]{theme_light_ppt()}}: Large-font theme
-with a transparent panel (appears white on white-background
-PowerPoint templates; the slide template fills the panel
-rectangle). Add \code{+ theme(panel.background = element_rect(fill = "white"))} if you specifically need an opaque white panel on a
-non-white slide background.
+\item \code{\link[=theme_hv_ppt_light]{theme_hv_ppt_light()}}: Large-font theme with a transparent panel
+(appears white on white-background PowerPoint templates). Add
+\code{+ theme(panel.background = element_rect(fill = "white"))} if you
+specifically need an opaque white panel on a non-white slide
+background.
 }
 
 Both PPT themes hide the legend by default, use inside-facing axis
 ticks, and scale axis-text / axis-title margins from \code{base_size} via
-ggplot2's \code{half_line} convention. Pass \code{bold = TRUE} for AATS-style
-bold axis text.
+ggplot2's \code{half_line} convention.
 }
 
 \subsection{Saving figures}{

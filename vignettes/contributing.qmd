@@ -156,7 +156,7 @@ companions together.
 #'   scale_y_continuous(limits = c(0, 0.5),
 #'                      labels = scales::percent) +
 #'   labs(x = "BMI (kg/m²)", y = "Prevalence of AF") +
-#'   hv_theme("manuscript")
+#'   theme_hv_manuscript()
 #'
 #' @importFrom ggplot2 ggplot aes geom_line geom_ribbon geom_point
 #' @importFrom rlang .data
@@ -219,7 +219,7 @@ Key rules enforced here:
   Never use `enquo()` or `{{ }}` — it makes column names opaque to the
   caller.
 - **No colours or themes** are applied inside the function. The caller adds
-  `scale_colour_*()` and `hv_theme()` outside.
+  `scale_colour_*()` and `theme_hv_manuscript()` outside.
 - **`.data[[col]]`** is used for tidy evaluation instead of bare variable
   names. This requires `@importFrom rlang .data`.
 - The function returns **`p`**, not `print(p)` or `p + theme(...)`.

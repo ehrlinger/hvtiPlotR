@@ -26,7 +26,7 @@
 ##     ggplot2::coord_cartesian(xlim = c(0, 20), ylim = c(0, 100)) +
 ##     ggplot2::labs(x = "Years after Operation", y = "Survival (%)",
 ##                   title = "Freedom from Death") +
-##     hv_theme("poster")
+##     theme_hv_poster()
 ##
 ###############################################################################
 
@@ -414,7 +414,7 @@ km_build_life_plot <- function(km_df, alpha) {
 #' object containing the tidy model output and accessory tables.  No plot is
 #' built at this stage; call \code{\link{plot.hv_survival}} on the result to
 #' obtain a bare \code{ggplot2} object that you can decorate with scales,
-#' labels, and \code{\link{hv_theme}}.
+#' labels, and \code{\link{theme_hv_manuscript}}.
 #'
 #' @param data         A data frame with one row per patient.
 #' @param time_col     Name of the numeric column holding follow-up time (in
@@ -452,7 +452,7 @@ km_build_life_plot <- function(km_df, alpha) {
 #' }
 #'
 #' @seealso \code{\link{plot.hv_survival}} to render as a ggplot2 figure,
-#'   \code{\link{hv_theme}} for the publication theme,
+#'   \code{\link{theme_hv_manuscript}} for the publication theme,
 #'   \code{\link{sample_survival_data}} for example data.
 #'
 #' @family Kaplan-Meier survival
@@ -480,7 +480,7 @@ km_build_life_plot <- function(km_df, alpha) {
 #'   ggplot2::coord_cartesian(xlim = c(0, 20), ylim = c(0, 100)) +
 #'   ggplot2::labs(x = "Years after Operation", y = "Survival (%)",
 #'                 title = "Freedom from Death") +
-#'   hv_theme("poster")
+#'   theme_hv_poster()
 #'
 #' # Stratified: colour scale adds clinical meaning
 #' dta_s <- sample_survival_data(
@@ -494,21 +494,21 @@ km_build_life_plot <- function(km_df, alpha) {
 #'     name   = "Valve Type"
 #'   ) +
 #'   ggplot2::labs(x = "Years after Operation", y = "Survival (%)") +
-#'   hv_theme("poster")
+#'   theme_hv_poster()
 #'
 #' # Other plot types
 #' plot(km, type = "cumhaz") +
 #'   ggplot2::labs(x = "Years", y = "Cumulative Hazard") +
-#'   hv_theme("ppt")
+#'   theme_hv_ppt_dark()
 #'
 #' plot(km, type = "loglog") +
 #'   ggplot2::labs(x = "log(Years)", y = "log(-log S(t))",
 #'                 title = "PH Assumption Check") +
-#'   hv_theme("ppt")
+#'   theme_hv_ppt_dark()
 #'
 #' # --- Global theme + RColorBrewer (set once per session) ------------------
 #' \dontrun{
-#' old <- ggplot2::theme_set(hv_theme_manuscript())
+#' old <- ggplot2::theme_set(theme_hv_manuscript())
 #' plot(km_s) +
 #'   ggplot2::scale_colour_brewer(palette = "Set1", name = "Valve Type") +
 #'   ggplot2::labs(x = "Years after Operation", y = "Survival (%)")
@@ -637,10 +637,10 @@ print.hv_survival <- function(x, ...) {
 #' @param ...      Ignored; present for S3 consistency.
 #'
 #' @return A bare \code{\link[ggplot2]{ggplot}} object; compose with \code{+}
-#'   to add scales, axis limits, labels, and \code{\link{hv_theme}}.
+#'   to add scales, axis limits, labels, and \code{\link{theme_hv_manuscript}}.
 #'
 #' @seealso \code{\link{hv_survival}} to build the data object,
-#'   \code{\link{hv_theme}} for the publication theme.
+#'   \code{\link{theme_hv_manuscript}} for the publication theme.
 #'
 #' @family Kaplan-Meier survival
 #'
@@ -651,12 +651,12 @@ print.hv_survival <- function(x, ...) {
 #' # Default survival curve
 #' plot(km) +
 #'   ggplot2::labs(x = "Years after Operation", y = "Survival (%)") +
-#'   hv_theme("poster")
+#'   theme_hv_poster()
 #'
 #' # Cumulative hazard
 #' plot(km, type = "cumhaz") +
 #'   ggplot2::labs(x = "Years", y = "Cumulative Hazard") +
-#'   hv_theme("poster")
+#'   theme_hv_poster()
 #'
 #' # Hazard rate with loess smoother
 #' plot(km, type = "hazard") +
@@ -665,7 +665,7 @@ print.hv_survival <- function(x, ...) {
 #'     method = "loess", se = FALSE, span = 0.5
 #'   ) +
 #'   ggplot2::labs(x = "Years", y = "Instantaneous Hazard") +
-#'   hv_theme("poster")
+#'   theme_hv_poster()
 #'
 #' @importFrom ggplot2 ggplot aes geom_step geom_ribbon geom_hline
 #'   scale_y_continuous geom_point

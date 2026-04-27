@@ -144,9 +144,9 @@ test_that("plot(hv_nonparametric) is composable with + operator", {
   expect_equal(p$labels$x, "Months")
 })
 
-test_that("plot(hv_nonparametric) is composable with hv_theme()", {
+test_that("plot(hv_nonparametric) is composable with theme_hv_manuscript()", {
   dat <- sample_nonparametric_curve_data(n = 100, seed = 1)
-  p   <- plot(hv_nonparametric(dat)) + hv_theme("manuscript")
+  p   <- plot(hv_nonparametric(dat)) + theme_hv_manuscript()
   expect_s3_class(p, "ggplot")
 })
 
@@ -347,9 +347,9 @@ test_that("plot(hv_ordinal) is composable with + operator", {
   expect_equal(p$labels$x, "Years")
 })
 
-test_that("plot(hv_ordinal) is composable with hv_theme()", {
+test_that("plot(hv_ordinal) is composable with theme_hv_manuscript()", {
   dat <- sample_nonparametric_ordinal_data(n = 200, seed = 1)
-  p   <- plot(hv_ordinal(dat)) + hv_theme("manuscript")
+  p   <- plot(hv_ordinal(dat)) + theme_hv_manuscript()
   expect_s3_class(p, "ggplot")
 })
 

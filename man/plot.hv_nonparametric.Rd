@@ -29,7 +29,7 @@ Default \code{20} (filled circle).}
 }
 \value{
 A bare \code{\link[ggplot2]{ggplot}} object; compose with \code{+}
-to add scales, axis limits, labels, and \code{\link{hv_theme}}.
+to add scales, axis limits, labels, and \code{\link{theme_hv_manuscript}}.
 }
 \description{
 Draws a smooth predicted curve with optional CI ribbon and binned data
@@ -59,12 +59,12 @@ plot(np) +
     guide  = "none"
   ) +
   ggplot2::labs(x = "Years", y = "AV Peak Gradient (mmHg)") +
-  hv_theme("poster")
+  theme_hv_poster()
 
 }
 \seealso{
 \code{\link{hv_nonparametric}} to build the data object,
-\code{\link{hv_theme}} for the publication theme.
+\code{\link{theme_hv_manuscript}} for the publication theme.
 
 Other Nonparametric curves: 
 \code{\link{hv_nonparametric}()}

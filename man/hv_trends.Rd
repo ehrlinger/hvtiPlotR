@@ -45,7 +45,7 @@ Validates a patient-level data frame, computes per-x-value summary
 statistics (mean or median), and returns an \code{hv_trends} object.
 Call \code{\link{plot.hv_trends}} on the result to obtain a bare
 \code{ggplot2} trend plot (LOESS smooth + annual summary points) that you
-can decorate with colour scales, axis limits, and \code{\link{hv_theme}}.
+can decorate with colour scales, axis limits, and \code{\link{theme_hv_manuscript}}.
 }
 \examples{
 dta <- sample_trends_data(n = 600, year_range = c(1985L, 2015L),
@@ -71,12 +71,12 @@ p +
                               breaks = seq(0, 80, 20)) +
   ggplot2::coord_cartesian(xlim = c(1985, 2015), ylim = c(0, 80)) +
   ggplot2::labs(x = "Years", y = "\%") +
-  hv_theme("poster")
+  theme_hv_poster()
 
 }
 \seealso{
 \code{\link{plot.hv_trends}} to render as a ggplot2 figure,
-\code{\link{hv_theme}} for the publication theme,
+\code{\link{theme_hv_manuscript}} for the publication theme,
 \code{\link{sample_trends_data}} for example data.
 
 Other Temporal trends: 

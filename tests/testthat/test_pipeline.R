@@ -4,7 +4,7 @@
 #
 # These tests exercise the primary production workflows:
 #   1. Built-in datasets -> plot function
-#   2. hv_survival -> hv_theme -> save_ppt (full pipeline)
+#   2. hv_survival -> theme_hv_* -> save_ppt (full pipeline)
 #   3. eda_classify_var edge cases not covered elsewhere
 #   4. Built-in parametric + nonparametric datasets with their plot functions
 #
@@ -90,10 +90,10 @@ test_that("eda_classify_var handles a length-1 vector", {
 })
 
 # ============================================================================
-# End-to-end: hv_survival → hv_theme → save_ppt
+# End-to-end: hv_survival → theme_hv_* → save_ppt
 # ============================================================================
 
-test_that("full pipeline: hv_survival + hv_theme + save_ppt (single plot)", {
+test_that("full pipeline: hv_survival + theme_hv_* + save_ppt (single plot)", {
   skip_if_not_installed("officer")
   skip_if_not_installed("rvg")
 
@@ -114,7 +114,7 @@ test_that("full pipeline: hv_survival + hv_theme + save_ppt (single plot)", {
 
   expect_no_error(
     save_ppt(
-      object       = plot(km) + hv_theme("ppt"),
+      object       = plot(km) + theme_hv_ppt_dark(),
       template     = template,
       powerpoint   = pptx_out,
       slide_titles = "KM: SAVR vs TAVR"
@@ -139,7 +139,7 @@ test_that("full pipeline: list of plots → save_ppt (multi-slide)", {
 
   expect_no_error(
     save_ppt(
-      object       = list(plot(km) + hv_theme("ppt"), p2 + hv_theme("ppt")),
+      object       = list(plot(km) + theme_hv_ppt_dark(), p2 + theme_hv_ppt_dark()),
       template     = template,
       powerpoint   = pptx_out,
       slide_titles = c("Kaplan-Meier", "EF vs Follow-up Years")
@@ -149,7 +149,7 @@ test_that("full pipeline: list of plots → save_ppt (multi-slide)", {
 })
 
 # ============================================================================
-# End-to-end: hazard_plot → hv_theme (parametric pipeline)
+# End-to-end: hazard_plot → theme_hv_* (parametric pipeline)
 # ============================================================================
 
 test_that("hazard_plot with life table reference + theme composes cleanly", {
@@ -173,7 +173,7 @@ test_that("hazard_plot with life table reference + theme composes cleanly", {
     ref_estimate_col = "survival",
     ref_group_col    = "group"
   ) +
-    hv_theme("manuscript") +
+    theme_hv_manuscript() +
     ggplot2::labs(x = "Years", y = "Survival (%)")
 
   expect_s3_class(p, "ggplot")
@@ -201,7 +201,7 @@ test_that("hv_nonparametric with CI + data points + theme composes cleanly", {
       data_points = pts
     )
   ) +
-    hv_theme("manuscript") +
+    theme_hv_manuscript() +
     ggplot2::labs(x = "Months", y = "Probability")
 
   expect_s3_class(p, "ggplot")

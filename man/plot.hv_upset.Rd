@@ -49,7 +49,7 @@ all panels.
 \description{
 Draws an UpSet plot using \code{\link[ComplexUpset]{upset}}.
 Apply a theme to \strong{all panels} with \code{&}:
-\preformatted{plot(up) & hv_theme("poster")}
+\preformatted{plot(up) & theme_hv_poster()}
 Apply scales or annotations to the intersection panel via
 \code{base_annotations}.
 }
@@ -64,7 +64,7 @@ p <- plot(up)
 
 \dontrun{
 # Manuscript theme applied to all panels via &
-plot(up) & hv_theme("poster")
+plot(up) & theme_hv_poster()
 
 # Custom intersection bar colour
 plot(up,
@@ -79,10 +79,10 @@ plot(up,
       ggplot2::labs(y = "Patients (n)")
   )
 ) &
-  hv_theme("poster")
+  theme_hv_poster()
 }
 
 }
 \seealso{
-\code{\link{hv_upset}}, \code{\link{hv_theme}}
+\code{\link{hv_upset}}, \code{\link{theme_hv_manuscript}}
 }

@@ -23,5 +23,5 @@ Renders a bare \code{\link[ggplot2:ggplot]{ggplot2::ggplot()}} NNT (or ARR) curv
 object.
 }
 \seealso{
-\code{\link[=hv_nnt]{hv_nnt()}}, \code{\link[=hv_survival_difference]{hv_survival_difference()}}, \code{\link[=hv_theme]{hv_theme()}}
+\code{\link[=hv_nnt]{hv_nnt()}}, \code{\link[=hv_survival_difference]{hv_survival_difference()}}, \code{\link[=theme_hv_manuscript]{theme_hv_manuscript()}}
 }

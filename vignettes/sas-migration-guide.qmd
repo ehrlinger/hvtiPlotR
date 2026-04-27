@@ -60,10 +60,10 @@ plot(np) +
   scale_colour_manual(values = c("black", "gray40")) +
   scale_x_continuous(breaks = 0:12) +
   labs(x = "Years after Operation", y = "Prevalence (%)") +
-  hv_theme("poster")
+  theme_hv_poster()
 ```
 
-**`hv_theme()` replaces SAS `device=` / style options.** Use
+**`theme_hv_manuscript()` replaces SAS `device=` / style options.** Use
 `"dark_ppt"` / `"ppt"` for PowerPoint slides, `"light_ppt"` for
 light-background slides, `"manuscript"` for journal figures, and
 `"poster"` for conference posters.
@@ -184,7 +184,7 @@ plot(hv_nonparametric(dat)) +
     y     = "Prevalence (%)",
     title = "Atrial Fibrillation Prevalence"
   ) +
-  hv_theme("poster")
+  theme_hv_poster()
 ```
 
 Add 68% CI bands (one standard error; matches SAS `boots_ci` with `cll_p68`
@@ -207,7 +207,7 @@ plot(hv_nonparametric(
     y     = "Prevalence (%)",
     title = "Atrial Fibrillation — 68% CI"
   ) +
-  hv_theme("poster")
+  theme_hv_poster()
 ```
 
 Add binned data summary points (matches the SAS `means` dataset):
@@ -230,7 +230,7 @@ plot(hv_nonparametric(
     y     = "Prevalence (%)",
     title = "Atrial Fibrillation with Binned Observations"
   ) +
-  hv_theme("poster")
+  theme_hv_poster()
 ```
 
 ## Continuous outcome {#np-continuous}
@@ -272,7 +272,7 @@ plot(hv_nonparametric(
     label = "68% CI band",
     hjust = 1, size = 3
   ) +
-  hv_theme("poster")
+  theme_hv_poster()
 ```
 
 ## Multi-group comparison {#np-multigroup}
@@ -324,7 +324,7 @@ plot(hv_nonparametric(
     fill   = "Valve type",
     title  = "Atrial Fibrillation by Valve Type"
   ) +
-  hv_theme("poster")
+  theme_hv_poster()
 ```
 
 ## Phase decomposition {#np-phases}
@@ -368,7 +368,7 @@ plot(hv_nonparametric(
     colour = NULL,
     title  = "AF — Early and Late Phase Decomposition"
   ) +
-  hv_theme("poster")
+  theme_hv_poster()
 ```
 
 ## Covariate on the x-axis {#np-covariate-xaxis}
@@ -414,7 +414,7 @@ plot(hv_nonparametric(
     y     = "Estimated Probability",
     title = "Outcome Probability vs. BMI at Operation"
   ) +
-  hv_theme("poster")
+  theme_hv_poster()
 ```
 
 ## Ordinal outcomes {#np-ordinal}
@@ -484,7 +484,7 @@ plot(hv_ordinal(
     colour = "TR Grade",
     title  = "Tricuspid Regurgitation Grade"
   ) +
-  hv_theme("poster")
+  theme_hv_poster()
 ```
 
 ### Ordinal multi-scenario comparison {#np-ordinal-multi}
@@ -512,7 +512,7 @@ plot(hv_ordinal(combined, grade_col = "grade")) +
     colour = "AR Grade",
     title  = "AR Grade — Before vs. After Repair"
   ) +
-  hv_theme("poster")
+  theme_hv_poster()
 ```
 
 ### Ordinal phase independence {#np-ordinal-independence}
@@ -544,7 +544,7 @@ plot(hv_ordinal(
     y     = "Probability",
     title = "Probability of TR Grade 2"
   ) +
-  hv_theme("poster")
+  theme_hv_poster()
 ```
 
 ### Ordinal phases {#np-ordinal-phases}
@@ -583,7 +583,7 @@ plot(hv_ordinal(dat_ph, grade_col = "grade")) +
     colour = "TR Grade",
     title  = "TR Grade — Early and Late Phase"
   ) +
-  hv_theme("poster")
+  theme_hv_poster()
 ```
 
 ---
@@ -616,27 +616,27 @@ plot(km) +
     y     = "Survival (%)",
     title = "Freedom from Death"
   ) +
-  hv_theme("poster")
+  theme_hv_poster()
 
 # Cumulative hazard (PLOTC)
 plot(km, type = "cumhaz") +
   labs(x = "Years", y = "Cumulative Hazard") +
-  hv_theme("poster")
+  theme_hv_poster()
 
 # Hazard rate (PLOTH)
 plot(km, type = "hazard") +
   labs(x = "Years", y = "Instantaneous Hazard") +
-  hv_theme("poster")
+  theme_hv_poster()
 
 # Log-log survival (PH check)
 plot(km, type = "loglog") +
   labs(x = "log(Years)", y = "log(-log S(t))") +
-  hv_theme("poster")
+  theme_hv_poster()
 
 # Integrated survivorship (PLOTL)
 plot(km, type = "life") +
   labs(x = "Years", y = "Restricted Mean Survival (years)") +
-  hv_theme("poster")
+  theme_hv_poster()
 
 # Access the KM data, risk table, and report table
 km$data              # tidy KM data frame
@@ -671,7 +671,7 @@ gf  <- hv_followup(dta)
 
 plot(gf) +
   labs(title = "Goodness of Follow-Up") +
-  hv_theme("poster")
+  theme_hv_poster()
 ```
 
 ---
@@ -730,7 +730,7 @@ stdifPlot <- plot(cb) +
   annotate("text", x = -30, y = 0,      label = "More likely TF-TAVR", size = 4.5) +
   annotate("text", x =  22, y = n_vars, label = "More likely SAVR",    size = 4.5) +
   theme(legend.position = c(0.20, 0.935)) +
-  hv_theme("poster")
+  theme_hv_poster()
 
 ggsave(here::here("graphs", "lp_cov-balance-SAVR_TF-TAVR.pdf"),
        plot = stdifPlot, height = 7, width = 8)
@@ -751,7 +751,7 @@ al  <- hv_alluvial(dta)
 plot(al) +
   scale_fill_brewer(palette = "Set2") +
   labs(title = "Patient Flow Between States") +
-  hv_theme("poster")
+  theme_hv_poster()
 ```
 
 ---
@@ -792,7 +792,7 @@ sk      <- hv_sankey(dta_san)
 
 plot(sk) +
   labs(title = "Cluster Stability: K = 2 to 9") +
-  hv_theme("poster")
+  theme_hv_poster()
 ```
 
 To reproduce the original analysis with patient-level cluster assignments:
@@ -814,7 +814,7 @@ sk_grp <- hv_sankey(
 
 plot(sk_grp) +
   labs(x = NULL) +
-  hv_theme("poster")
+  theme_hv_poster()
 ```
 
 ---
@@ -859,7 +859,7 @@ plot(sp) +
   scale_y_continuous(breaks = seq(0, 80, 20)) +
   coord_cartesian(xlim = c(0, 5), ylim = c(0, 80)) +
   labs(x = "Years", y = "AV Mean Gradient (mmHg)") +
-  hv_theme("poster")
+  theme_hv_poster()
 ```
 
 ## Unstratified — zoomed y-axis (plot_3)
@@ -870,7 +870,7 @@ plot(sp) +
   scale_y_continuous(breaks = seq(0, 30, 10)) +
   coord_cartesian(xlim = c(0, 5), ylim = c(0, 30)) +
   labs(x = "Years", y = "AV Mean Gradient (mmHg)") +
-  hv_theme("poster")
+  theme_hv_poster()
 ```
 
 ## Stratified by sex (plot_2 / plot_4)
@@ -887,7 +887,7 @@ plot(sp_col) +
   scale_y_continuous(breaks = seq(0, 80, 20)) +
   coord_cartesian(xlim = c(0, 5), ylim = c(0, 80)) +
   labs(x = "Years", y = "AV Mean Gradient (mmHg)") +
-  hv_theme("poster")
+  theme_hv_poster()
 ```
 
 ## AV area y-scale (plot_5 / plot_6)
@@ -902,7 +902,7 @@ plot(sp_col) +
   scale_y_continuous(breaks = seq(0, 5, 1)) +
   coord_cartesian(xlim = c(0, 5), ylim = c(0, 5)) +
   labs(x = "Years", y = "AV Area (EOA) (cm\u00b2)") +
-  hv_theme("poster")
+  theme_hv_poster()
 ```
 
 ## DVI y-scale (plot_7 / plot_8)
@@ -917,7 +917,7 @@ plot(sp_col) +
   scale_y_continuous(breaks = seq(0, 1.25, 0.25)) +
   coord_cartesian(xlim = c(0, 5), ylim = c(0, 1.25)) +
   labs(x = "Years", y = "DVI") +
-  hv_theme("poster")
+  theme_hv_poster()
 ```
 
 ## Ordinal y-axis — MV regurgitation grade (plot_9)
@@ -937,7 +937,7 @@ plot(sp_ord, y_labels = c(None = 0, Mild = 1, Moderate = 2, Severe = 3)) +
   scale_x_continuous(breaks = seq(0, 6, 1)) +
   coord_cartesian(xlim = c(0, 6), ylim = c(0, 3)) +
   labs(x = "Years after Procedure", y = "MV Regurgitation Grade") +
-  hv_theme("poster")
+  theme_hv_poster()
 ```
 
 ---
@@ -960,14 +960,14 @@ plot(tr_one) +
   scale_x_continuous(limits = c(1968, 2000), breaks = seq(1968, 2000, 4)) +
   scale_y_continuous(limits = c(0, 10),      breaks = seq(0, 10, 2)) +
   labs(x = "Year", y = "Cases/year") +
-  hv_theme("poster")
+  theme_hv_poster()
 
 # Age: axisy order=(30 to 70 by 10)
 plot(tr_one) +
   scale_x_continuous(limits = c(1968, 2000), breaks = seq(1968, 2000, 4)) +
   scale_y_continuous(limits = c(30, 70),     breaks = seq(30, 70, 10)) +
   labs(x = "Year", y = "Age (years)") +
-  hv_theme("poster")
+  theme_hv_poster()
 ```
 
 ## tp.lp.trends.sas — binary % outcomes (1970–2000 by 10, y 0–100 by 10)
@@ -992,7 +992,7 @@ plot(tr_lp) +
   scale_y_continuous(limits = c(0, 100),     breaks = seq(0, 100, 10)) +
   coord_cartesian(xlim = c(1970, 2000), ylim = c(0, 100)) +
   labs(x = "Year", y = "Percent (%)") +
-  hv_theme("poster")
+  theme_hv_poster()
 ```
 
 ## tp.lp.trends.age.sas — age on x-axis (25–85 by 10, y 0–100 by 20)
@@ -1011,7 +1011,7 @@ plot(tr_age) +
   scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, 20)) +
   coord_cartesian(xlim = c(25, 85), ylim = c(0, 100)) +
   labs(x = "Age (years)", y = "Percent (%)") +
-  hv_theme("poster")
+  theme_hv_poster()
 ```
 
 ## tp.lp.trends.polytomous.sas — repair types (1990–1999 by 1, y 0–100 by 10)
@@ -1034,7 +1034,7 @@ plot(tr_poly) +
   scale_y_continuous(limits = c(0, 100),     breaks = seq(0, 100, 10)) +
   coord_cartesian(xlim = c(1990, 1999), ylim = c(0, 100)) +
   labs(x = "Year", y = "Percent (%)") +
-  hv_theme("poster")
+  theme_hv_poster()
 ```
 
 ## tp.dp.trends.R — LV mass index (1995–2015 by 5, y 0–200 by 50)
@@ -1049,7 +1049,7 @@ plot(tr_lv) +
   scale_y_continuous(limits = c(0, 200),     breaks = seq(0, 200, 50)) +
   coord_cartesian(xlim = c(1995, 2015), ylim = c(0, 200)) +
   labs(x = "Years", y = "LV Mass Index") +
-  hv_theme("poster")
+  theme_hv_poster()
 ```
 
 ## tp.dp.trends.R — hospital LOS with annotation (1985–2015 by 5, y 0–20 by 5)
@@ -1066,7 +1066,7 @@ plot(tr_los) +
   annotate("text", x = 1995, y = 18,
            label = "Trend: Hospital Length of Stay", size = 4.5) +
   labs(x = "Years", y = "Hospital LOS (Days)") +
-  hv_theme("poster")
+  theme_hv_poster()
 ```
 
 ---
@@ -1088,7 +1088,7 @@ plot(lc) +
     y     = "Patients with measurement",
     title = "Follow-Up Echocardiogram Availability"
   ) +
-  hv_theme("poster")
+  theme_hv_poster()
 ```
 
 ---
@@ -1121,7 +1121,7 @@ plot(mh) +
   annotate("text", x = 20, y =  100, label = "SAVR",    size = 7) +
   annotate("text", x = 20, y = -100, label = "TF-TAVR", size = 7) +
   labs(x = "Propensity Score (%)", y = "Number of Patients") +
-  hv_theme("poster")
+  theme_hv_poster()
 ```
 
 ## Weighted IPTW mode (`tp.lp.mirror_histo_before_after_wt.R`) {#dp-mirror-weighted}
@@ -1146,7 +1146,7 @@ plot(mh_wt) +
   annotate("text", x = 30, y =  150, label = "Limited",  color = "blue", size = 5) +
   annotate("text", x = 30, y = -70,  label = "Extended", color = "red",  size = 5) +
   labs(x = "Propensity Score (%)", y = "#") +
-  hv_theme("poster")
+  theme_hv_poster()
 ```
 
 ---
@@ -1167,7 +1167,7 @@ plot(sh) +
     fill  = "Group",
     title = "Annual Case Volume by Group"
   ) +
-  hv_theme("poster")
+  theme_hv_poster()
 ```
 
 ---
@@ -1179,16 +1179,16 @@ final layer:
 
 | Context | Call | Equivalent SAS device |
 |---|---|---|
-| Dark PowerPoint slide | `hv_theme("dark_ppt")` | `device=ppt` |
-| Light PowerPoint slide | `hv_theme("light_ppt")` | `device=ppt` with white background |
-| Journal manuscript | `hv_theme("manuscript")` | `device=eps` / PDF |
-| Conference poster | `hv_theme("poster")` | Large-font poster |
+| Dark PowerPoint slide | `theme_hv_ppt_dark()` | `device=ppt` |
+| Light PowerPoint slide | `theme_hv_ppt_light()` | `device=ppt` with white background |
+| Journal manuscript | `theme_hv_manuscript()` | `device=eps` / PDF |
+| Conference poster | `theme_hv_poster()` | Large-font poster |
 
 You can pass `base_size` to any theme to scale all text simultaneously:
 
 ```r
-p + hv_theme("manuscript", base_size = 10)   # smaller text for double-column
-p + hv_theme("poster",     base_size = 24)   # larger text for A0 poster
+p + theme_hv_manuscript(base_size = 10)   # smaller text for double-column
+p + theme_hv_poster(base_size = 24)   # larger text for A0 poster
 ```
 
 ---
@@ -1212,7 +1212,7 @@ p_ppt <- p +
   scale_colour_manual(values = c("steelblue"), guide = "none") +
   scale_fill_manual(values   = c("steelblue"), guide = "none") +
   labs(x = "Years", y = "Prevalence (%)") +
-  hv_theme("dark_ppt")
+  theme_hv_ppt_dark()
 
 save_ppt(
   object       = p_ppt,
@@ -1296,7 +1296,7 @@ hazard_plot(
   scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, 10),
                      labels = function(x) paste0(x, "%")) +
   labs(x = "Years after Operation", y = "Survival (%)") +
-  hv_theme("poster")
+  theme_hv_poster()
 ```
 
 ## Stratified by covariate
@@ -1338,7 +1338,7 @@ hazard_plot(
   scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, 10),
                      labels = function(x) paste0(x, "%")) +
   labs(x = "Years after Operation", y = "Survival (%)") +
-  hv_theme("poster")
+  theme_hv_poster()
 ```
 
 ## Conditional survival after hospital discharge {#hs-conditional}
@@ -1368,7 +1368,7 @@ hazard_plot(
   scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, 10),
                      labels = function(x) paste0(x, "%")) +
   labs(x = "Years after Discharge", y = "Survival after Discharge (%)") +
-  hv_theme("poster")
+  theme_hv_poster()
 ```
 
 ## US life-table overlay {#hs-uslife}
@@ -1421,7 +1421,7 @@ hazard_plot(
                      labels = function(x) paste0(x, "%")) +
   labs(x = "Years after Operation", y = "Survival (%)",
        caption = "Dashed lines: US population life table") +
-  hv_theme("poster")
+  theme_hv_poster()
 ```
 
 ## Treatment benefit distribution {#hs-benefit}
@@ -1451,7 +1451,7 @@ survival_difference_plot(
   scale_y_continuous(limits = c(-5, 40),
                      labels = function(x) paste0(x, "%")) +
   labs(x = "Years", y = "Survival Difference (%)") +
-  hv_theme("poster")
+  theme_hv_poster()
 ```
 
 ---

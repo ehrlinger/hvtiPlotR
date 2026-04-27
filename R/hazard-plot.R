@@ -503,7 +503,7 @@ sample_nnt_data <- function(n        = 500,
 #' - `reference`      ← the `smatched` life-table dataset
 #'
 #' Returns a **bare ggplot object**; compose with `scale_colour_*`,
-#' `scale_y_continuous()`, `labs()`, [hv_theme()].
+#' `scale_y_continuous()`, `labs()`, [theme_hv_manuscript()].
 #'
 #' @param curve_data   Data frame of parametric predictions (fine grid).
 #'   Typical source: SAS `predict` dataset exported to CSV, or
@@ -559,7 +559,7 @@ sample_nnt_data <- function(n        = 500,
 #'
 #' @seealso [sample_hazard_data()], [sample_hazard_empirical()],
 #'   [sample_life_table()], [survival_difference_plot()], [nnt_plot()],
-#'   [hv_survival()], [hv_theme()]
+#'   [hv_survival()], [theme_hv_manuscript()]
 #'
 #' @references SAS templates: \code{tp.hp.dead.sas},
 #'   \code{tp.hp.dead.tkdn.stratified.sas},
@@ -596,7 +596,7 @@ sample_nnt_data <- function(n        = 500,
 #'   scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, 20),
 #'                      labels = function(x) paste0(x, "%")) +
 #'   labs(x = "Years", y = "Survival (%)") +
-#'   hv_theme("poster")
+#'   theme_hv_poster()
 #'
 #' # --- (2) Hazard rate curve + KM overlay ----------------------------------
 #' # Matches tp.hp.dead.sas (hazard panel).
@@ -615,7 +615,7 @@ sample_nnt_data <- function(n        = 500,
 #'   scale_y_continuous(limits = c(0, 30),
 #'                      labels = function(x) paste0(x, "%/yr")) +
 #'   labs(x = "Years", y = "Hazard (%/year)") +
-#'   hv_theme("poster")
+#'   theme_hv_poster()
 #'
 #' # --- (3) Cumulative hazard (tp.hp.event.weighted.sas) --------------------
 #' # For readmission / repeated-event analyses: cumhaz = -log(S)*100.
@@ -630,7 +630,7 @@ sample_nnt_data <- function(n        = 500,
 #'   scale_fill_manual(values = c("darkorange"), guide = "none") +
 #'   scale_x_continuous(limits = c(0, 10), breaks = 0:10) +
 #'   labs(x = "Years", y = "Cumulative Hazard (%)") +
-#'   hv_theme("poster")
+#'   theme_hv_poster()
 #'
 #' # --- (4) Stratified survival (tp.hp.dead.tkdn.stratified.sas) ------------
 #' # Two groups (e.g. Takedown vs No Takedown) with different colours and
@@ -665,7 +665,7 @@ sample_nnt_data <- function(n        = 500,
 #'   scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, 20),
 #'                      labels = function(x) paste0(x, "%")) +
 #'   labs(x = "Years after Esophagostomy", y = "Survival (%)") +
-#'   hv_theme("poster")
+#'   theme_hv_poster()
 #'
 #' # --- (5) Life table overlay (tp.hp.dead.age_with_population_life_table) ---
 #' # Age-stratified study curves + US population life table reference (dashed).
@@ -708,7 +708,7 @@ sample_nnt_data <- function(n        = 500,
 #'                      labels = function(x) paste0(x, "%")) +
 #'   labs(x = "Years", y = "Survival (%)",
 #'        caption = "Dashed lines: US population life table") +
-#'   hv_theme("poster")
+#'   theme_hv_poster()
 #'
 #' # --- (6) Multivariable risk profiles (tp.hp.dead.ideal_multivariable) -----
 #' # Patient profiles with distinct covariate combinations (good vs poor risk).
@@ -739,7 +739,7 @@ sample_nnt_data <- function(n        = 500,
 #'                      labels = function(x) paste0(x, "%")) +
 #'   labs(x = "Years after Brain Metastases",
 #'        y = "Survival (%)") +
-#'   hv_theme("poster")
+#'   theme_hv_poster()
 #'
 #' # --- (7) Propensity-weighted / matched groups -----------------------------
 #' # tp.hp.dead.matching_weight.sas / tp.hp.dead.limited_FET.mtwt.sas.
@@ -775,7 +775,7 @@ sample_nnt_data <- function(n        = 500,
 #'   scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, 20),
 #'                      labels = function(x) paste0(x, "%")) +
 #'   labs(x = "Years after Repair", y = "Survival (%)") +
-#'   hv_theme("poster")
+#'   theme_hv_poster()
 #'
 #' # --- (8) Device sequencing (tp.hp.mcs.mod.dead.devseq) -------------------
 #' # Survival conditioned on surviving the non-LVAD phase, then the LVAD phase.
@@ -803,7 +803,7 @@ sample_nnt_data <- function(n        = 500,
 #'   scale_y_continuous(limits = c(0, 100),
 #'                       labels = function(x) paste0(x, "%")) +
 #'   labs(x = "Time on Device", y = "Survival (%)") +
-#'   hv_theme("poster")
+#'   theme_hv_poster()
 #'
 #' # --- (9) Save (dontrun) --------------------------------------------------
 #' \dontrun{
@@ -814,13 +814,13 @@ sample_nnt_data <- function(n        = 500,
 #'   scale_colour_manual(values = c("steelblue"), guide = "none") +
 #'   scale_fill_manual(values = c("steelblue"), guide = "none") +
 #'   labs(x = "Years", y = "Survival (%)") +
-#'   hv_theme("poster")
+#'   theme_hv_poster()
 #' ggplot2::ggsave("survival.pdf", p, width = 11.5, height = 8)
 #' }
 #'
 #' # --- Global theme + RColorBrewer (set once per session) ------------------
 #' \dontrun{
-#' old <- ggplot2::theme_set(hv_theme_manuscript())
+#' old <- ggplot2::theme_set(theme_hv_manuscript())
 #' hazard_plot(
 #'   dat2,
 #'   estimate_col  = "survival",
@@ -1059,7 +1059,7 @@ hazard_plot <- function(curve_data,
 #'   scale_y_continuous(limits = c(-5, 30),
 #'                      labels = function(x) paste0(x, "%")) +
 #'   labs(x = "Years", y = "Survival Difference (%)") +
-#'   hv_theme("poster")
+#'   theme_hv_poster()
 #'
 #' # --- (2) Multiple treatment comparisons ----------------------------------
 #' # Simulate three comparisons and combine (each row = one comparison)
@@ -1086,7 +1086,7 @@ hazard_plot <- function(curve_data,
 #'   geom_hline(yintercept = 0, linetype = "dashed", colour = "grey50") +
 #'   scale_x_continuous(limits = c(0, 10), breaks = 0:10) +
 #'   labs(x = "Years", y = "Survival Difference (%)") +
-#'   hv_theme("poster")
+#'   theme_hv_poster()
 #'
 #' @importFrom ggplot2 ggplot aes geom_line geom_ribbon
 #' @importFrom rlang .data
@@ -1195,7 +1195,7 @@ survival_difference_plot <- function(diff_data,
 #'   scale_x_continuous(limits = c(0, 20), breaks = seq(0, 20, 5)) +
 #'   scale_y_continuous(limits = c(0, 50), breaks = seq(0, 50, 10)) +
 #'   labs(x = "Years", y = "Number Needed to Treat (NNT)") +
-#'   hv_theme("poster")
+#'   theme_hv_poster()
 #'
 #' # --- (2) ARR curve over time (same data, different column) ---------------
 #' # Absolute risk reduction (%) increases over time as survival curves diverge.
@@ -1211,7 +1211,7 @@ survival_difference_plot <- function(diff_data,
 #'   scale_y_continuous(limits = c(0, 50),
 #'                      labels = function(x) paste0(x, "%")) +
 #'   labs(x = "Years", y = "Absolute Risk Reduction (%)") +
-#'   hv_theme("poster")
+#'   theme_hv_poster()
 #'
 #' @importFrom ggplot2 ggplot aes geom_line geom_ribbon
 #' @importFrom rlang .data
@@ -1305,7 +1305,7 @@ nnt_plot <- function(nnt_data,
 #'   `$tables$empirical`, `$tables$reference`.
 #'
 #' @seealso [plot.hv_hazard()] to render as a ggplot2 figure,
-#'   [hv_theme()] for the publication theme,
+#'   [theme_hv_manuscript()] for the publication theme,
 #'   [sample_hazard_data()], [sample_hazard_empirical()],
 #'   [sample_life_table()] for example data.
 #'
@@ -1336,7 +1336,7 @@ nnt_plot <- function(nnt_data,
 #'   scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, 20),
 #'                      labels = function(x) paste0(x, "%")) +
 #'   labs(x = "Years", y = "Survival (%)") +
-#'   hv_theme("poster")
+#'   theme_hv_poster()
 #'
 #' # Stratified groups -- colour scale adds clinical meaning
 #' dat2 <- sample_hazard_data(
@@ -1352,11 +1352,11 @@ nnt_plot <- function(nnt_data,
 #'     name   = NULL
 #'   ) +
 #'   labs(x = "Years", y = "Survival (%)") +
-#'   hv_theme("poster")
+#'   theme_hv_poster()
 #'
 #' # --- Global theme + RColorBrewer (set once per session) ------------------
 #' \dontrun{
-#' old <- ggplot2::theme_set(hv_theme_manuscript())
+#' old <- ggplot2::theme_set(theme_hv_manuscript())
 #' plot(hp2) +
 #'   scale_colour_brewer(palette = "Set1", name = NULL) +
 #'   scale_fill_brewer(palette   = "Set1", guide = "none") +
@@ -1471,7 +1471,7 @@ print.hv_hazard <- function(x, ...) {
 #' Plot an hv_hazard object
 #'
 #' Renders a bare [ggplot2::ggplot()] from an [hv_hazard()] object.  Compose
-#' with `scale_colour_*`, `scale_y_continuous()`, `labs()`, and [hv_theme()]
+#' with `scale_colour_*`, `scale_y_continuous()`, `labs()`, and [theme_hv_manuscript()]
 #' to complete the figure.
 #'
 #' @param x             An `hv_hazard` object from [hv_hazard()].
@@ -1487,10 +1487,10 @@ print.hv_hazard <- function(x, ...) {
 #' @param ...           Ignored; present for S3 consistency.
 #'
 #' @return A [ggplot2::ggplot()] object; compose with `+` to add scales,
-#'   axis limits, labels, and [hv_theme()].
+#'   axis limits, labels, and [theme_hv_manuscript()].
 #'
 #' @seealso [hv_hazard()] to build the data object,
-#'   [hv_theme()] for the publication theme.
+#'   [theme_hv_manuscript()] for the publication theme.
 #'
 #' @family Hazard plot
 #'
@@ -1676,7 +1676,7 @@ plot.hv_hazard <- function(x,
 #'   scale_y_continuous(limits = c(-5, 30),
 #'                      labels = function(x) paste0(x, "%")) +
 #'   labs(x = "Years", y = "Survival Difference (%)") +
-#'   hv_theme("poster")
+#'   theme_hv_poster()
 #'
 #' @export
 hv_survival_difference <- function(diff_data,
@@ -1779,7 +1779,7 @@ print.hv_survival_difference <- function(x, ...) {
 #'
 #' Renders a bare [ggplot2::ggplot()] survival-difference curve.  Compose with
 #' `geom_hline(yintercept = 0)`, `scale_y_continuous()`, `labs()`, and
-#' [hv_theme()].
+#' [theme_hv_manuscript()].
 #'
 #' @param x          An `hv_survival_difference` object.
 #' @param ci_alpha   Transparency of the CI ribbon. Default `0.20`.
@@ -1788,7 +1788,7 @@ print.hv_survival_difference <- function(x, ...) {
 #'
 #' @return A [ggplot2::ggplot()] object.
 #'
-#' @seealso [hv_survival_difference()], [hv_nnt()], [hv_theme()]
+#' @seealso [hv_survival_difference()], [hv_nnt()], [theme_hv_manuscript()]
 #'
 #' @importFrom ggplot2 ggplot aes geom_line geom_ribbon
 #' @importFrom rlang .data
@@ -1849,7 +1849,7 @@ plot.hv_survival_difference <- function(x,
 #'   scale_x_continuous(limits = c(0, 20), breaks = seq(0, 20, 5)) +
 #'   scale_y_continuous(limits = c(0, 50), breaks = seq(0, 50, 10)) +
 #'   labs(x = "Years", y = "Number Needed to Treat (NNT)") +
-#'   hv_theme("poster")
+#'   theme_hv_poster()
 #'
 #' # ARR curve -- same 3-step pattern with a different estimate column
 #' ar <- hv_nnt(nnt_dat, estimate_col = "arr",
@@ -1859,7 +1859,7 @@ plot.hv_survival_difference <- function(x,
 #'   scale_y_continuous(limits = c(0, 50),
 #'                      labels = function(x) paste0(x, "%")) +
 #'   labs(x = "Years", y = "Absolute Risk Reduction (%)") +
-#'   hv_theme("poster")
+#'   theme_hv_poster()
 #'
 #' @export
 hv_nnt <- function(nnt_data,
@@ -1928,7 +1928,7 @@ print.hv_nnt <- function(x, ...) {
 #'
 #' @return A [ggplot2::ggplot()] object.
 #'
-#' @seealso [hv_nnt()], [hv_survival_difference()], [hv_theme()]
+#' @seealso [hv_nnt()], [hv_survival_difference()], [theme_hv_manuscript()]
 #'
 #' @importFrom ggplot2 ggplot aes geom_line geom_ribbon
 #' @importFrom rlang .data

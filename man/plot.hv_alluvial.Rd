@@ -51,7 +51,7 @@ plot(hv_alluvial(dta, axes = axes, y_col = "freq",
   ggplot2::scale_fill_brewer(palette = "Set2", name = "Procedure") +
   ggplot2::scale_colour_brewer(palette = "Set2", guide = "none") +
   ggplot2::labs(y = "Patients (n)") +
-  hv_theme("poster")
+  theme_hv_poster()
 
 # Two-axis (before / after)
 plot(hv_alluvial(
@@ -64,9 +64,9 @@ plot(hv_alluvial(
   ggplot2::scale_colour_brewer(palette = "RdYlGn", direction = -1,
                                guide = "none") +
   ggplot2::labs(y = "Patients (n)") +
-  hv_theme("poster")
+  theme_hv_poster()
 
 }
 \seealso{
-\code{\link{hv_alluvial}}, \code{\link{hv_theme}}
+\code{\link{hv_alluvial}}, \code{\link{theme_hv_manuscript}}
 }

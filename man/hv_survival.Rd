@@ -63,7 +63,7 @@ survival model to patient-level data and returns an \code{hv_survival}
 object containing the tidy model output and accessory tables.  No plot is
 built at this stage; call \code{\link{plot.hv_survival}} on the result to
 obtain a bare \code{ggplot2} object that you can decorate with scales,
-labels, and \code{\link{hv_theme}}.
+labels, and \code{\link{theme_hv_manuscript}}.
 }
 \examples{
 dta <- sample_survival_data(n = 500, seed = 42)
@@ -85,7 +85,7 @@ p +
   ggplot2::coord_cartesian(xlim = c(0, 20), ylim = c(0, 100)) +
   ggplot2::labs(x = "Years after Operation", y = "Survival (\%)",
                 title = "Freedom from Death") +
-  hv_theme("poster")
+  theme_hv_poster()
 
 # Stratified: colour scale adds clinical meaning
 dta_s <- sample_survival_data(
@@ -99,21 +99,21 @@ plot(km_s) +
     name   = "Valve Type"
   ) +
   ggplot2::labs(x = "Years after Operation", y = "Survival (\%)") +
-  hv_theme("poster")
+  theme_hv_poster()
 
 # Other plot types
 plot(km, type = "cumhaz") +
   ggplot2::labs(x = "Years", y = "Cumulative Hazard") +
-  hv_theme("ppt")
+  theme_hv_ppt_dark()
 
 plot(km, type = "loglog") +
   ggplot2::labs(x = "log(Years)", y = "log(-log S(t))",
                 title = "PH Assumption Check") +
-  hv_theme("ppt")
+  theme_hv_ppt_dark()
 
 # --- Global theme + RColorBrewer (set once per session) ------------------
 \dontrun{
-old <- ggplot2::theme_set(hv_theme_manuscript())
+old <- ggplot2::theme_set(theme_hv_manuscript())
 plot(km_s) +
   ggplot2::scale_colour_brewer(palette = "Set1", name = "Valve Type") +
   ggplot2::labs(x = "Years after Operation", y = "Survival (\%)")
@@ -130,7 +130,7 @@ SAS templates: \code{tp.ac.dead.sas} (\code{\%kaplan},
 }
 \seealso{
 \code{\link{plot.hv_survival}} to render as a ggplot2 figure,
-\code{\link{hv_theme}} for the publication theme,
+\code{\link{theme_hv_manuscript}} for the publication theme,
 \code{\link{sample_survival_data}} for example data.
 
 Other Kaplan-Meier survival: 

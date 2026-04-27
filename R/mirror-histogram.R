@@ -382,7 +382,7 @@ mirror_histogram_diagnostics <- function(working, matched_idx, group_levels,
 #' }
 #'
 #' @seealso \code{\link{plot.hv_mirror_hist}} to render as a ggplot2 figure,
-#'   \code{\link{hv_theme}} for the publication theme,
+#'   \code{\link{theme_hv_manuscript}} for the publication theme,
 #'   \code{\link{sample_mirror_histogram_data}} for example data.
 #'
 #' @family Propensity Score & Matching
@@ -403,7 +403,7 @@ mirror_histogram_diagnostics <- function(working, matched_idx, group_levels,
 #' # 3. Decorate: axis labels and theme
 #' p +
 #'   ggplot2::labs(x = "Propensity Score (%)", y = "Count") +
-#'   hv_theme("poster")
+#'   theme_hv_poster()
 #'
 #' @importFrom rlang .data
 #' @export
@@ -510,7 +510,7 @@ print.hv_mirror_hist <- function(x, ...) {
 #' \code{\link{hv_mirror_hist}} data object.  Bars for the treated group
 #' appear above the x-axis; bars for the control group appear below.  Matched
 #' or weighted patients are shown in a contrasting shade.  Compose with
-#' \code{+} to add colour scales, axis labels, and \code{\link{hv_theme}}.
+#' \code{+} to add colour scales, axis labels, and \code{\link{theme_hv_manuscript}}.
 #'
 #' @param x     An \code{hv_mirror_hist} object from
 #'   \code{\link{hv_mirror_hist}}.
@@ -519,10 +519,10 @@ print.hv_mirror_hist <- function(x, ...) {
 #'
 #' @return A bare \code{\link[ggplot2]{ggplot}} object; compose with \code{+}
 #'   to add colour scales, axis limits, labels, and
-#'   \code{\link{hv_theme}}.
+#'   \code{\link{theme_hv_manuscript}}.
 #'
 #' @seealso \code{\link{hv_mirror_hist}} to build the data object,
-#'   \code{\link{hv_theme}} for the publication theme,
+#'   \code{\link{theme_hv_manuscript}} for the publication theme,
 #'   \code{\link{sample_mirror_histogram_data}} for example data.
 #'
 #' @family Propensity Score & Matching
@@ -533,7 +533,7 @@ print.hv_mirror_hist <- function(x, ...) {
 #'
 #' plot(mh) +
 #'   ggplot2::labs(x = "Propensity Score (%)", y = "Count") +
-#'   hv_theme("poster")
+#'   theme_hv_poster()
 #'
 #' @importFrom ggplot2 ggplot aes geom_bar scale_x_continuous scale_y_continuous
 #' @export

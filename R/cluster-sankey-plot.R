@@ -181,7 +181,7 @@ sample_cluster_sankey_data <- function(
 #'   # 3. Decorate: axis labels and theme
 #'   p +
 #'     ggplot2::labs(x = NULL, title = "Cluster Stability: K = 2 to 9") +
-#'     hv_theme("poster")
+#'     theme_hv_poster()
 #' }
 #'
 #' @importFrom rlang .data
@@ -271,9 +271,9 @@ print.hv_sankey <- function(x, ...) {
 #'
 #' @return A \code{\link[ggplot2]{ggplot}} object using \pkg{ggsankey} geoms.
 #'   Compose with \code{scale_fill_manual()}, \code{labs()}, \code{theme()},
-#'   and \code{\link{hv_theme}}.
+#'   and \code{\link{theme_hv_manuscript}}.
 #'
-#' @seealso \code{\link{hv_sankey}}, \code{\link{hv_theme}}
+#' @seealso \code{\link{hv_sankey}}, \code{\link{theme_hv_manuscript}}
 #'
 #' @examples
 #' dta <- sample_cluster_sankey_data(n = 300, seed = 42)
@@ -281,12 +281,12 @@ print.hv_sankey <- function(x, ...) {
 #' if (requireNamespace("ggsankey", quietly = TRUE)) {
 #'   plot(hv_sankey(dta)) +
 #'     ggplot2::labs(x = NULL, title = "Cluster Stability: K = 2 to 9") +
-#'     hv_theme("poster")
+#'     theme_hv_poster()
 #'
 #'   # Subset to K = 2 to 6
 #'   plot(hv_sankey(dta, cluster_cols = paste0("C", 2:6))) +
 #'     ggplot2::labs(x = NULL) +
-#'     hv_theme("poster")
+#'     theme_hv_poster()
 #' }
 #'
 #' @importFrom ggplot2 ggplot aes geom_vline labs scale_fill_manual theme
