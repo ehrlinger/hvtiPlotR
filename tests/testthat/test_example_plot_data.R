@@ -114,7 +114,7 @@ test_that("hv_mirror_hist plot has both top and bottom histogram bars", {
 # hv_spaghetti — longitudinal trajectories
 # ============================================================================
 
-test_that("hv_spaghetti plot has line segments for every patient", {
+test_that("hv_spaghetti plot has one line group per patient", {
   dta <- sample_spaghetti_data(n_patients = 25, seed = 1)
   sp  <- hv_spaghetti(dta)
   p   <- plot(sp)
@@ -122,8 +122,10 @@ test_that("hv_spaghetti plot has line segments for every patient", {
 
   built <- ggplot2::ggplot_build(p)
   line  <- built$data[[which(geom_classes(p) == "GeomLine")[1]]]
-  # at least as many "groups" as patients with >=2 visits
-  expect_true(length(unique(line$group)) >= 1L)
+  # plot.hv_spaghetti maps group = id, so one group per patient that has
+  # at least one rendered line segment
+  rendered_ids <- unique(dta$id[!is.na(dta$value)])
+  expect_equal(length(unique(line$group)), length(rendered_ids))
 })
 
 # ============================================================================
@@ -245,13 +247,14 @@ test_that("hv_nonparametric plot has line data", {
 })
 
 test_that("hv_nonparametric grouped plot carries every group", {
-  dat <- sample_nonparametric_curve_data(n = 80, time_max = 5,
-                                         n_points = 40, seed = 1)
-  np  <- hv_nonparametric(dat)
+  groups <- c(control = 40, treatment = 40)
+  dat <- sample_nonparametric_curve_data(n = 80, time_max = 5, n_points = 40,
+                                         groups = groups, seed = 1)
+  np  <- hv_nonparametric(dat, group_col = "group")
   p   <- plot(np)
   built <- ggplot2::ggplot_build(p)
   line  <- built$data[[which(geom_classes(p) == "GeomLine")[1]]]
-  expect_gte(length(unique(line$group)), 1L)
+  expect_equal(length(unique(line$group)), length(groups))
 })
 
 test_that("hv_ordinal plot has line data with multiple grades", {
@@ -318,7 +321,7 @@ test_that("hv_sankey plot has alluvial layer data when ggsankey installed", {
 # hv_upset — ComplexUpset; skip on theme-API incompatibilities
 # ============================================================================
 
-test_that("hv_upset plot builds with intersection data when ComplexUpset compatible", {
+test_that("hv_upset patchwork carries non-empty data on its component plots", {
   sets <- c("AV_Replacement", "AV_Repair", "MV_Replacement",
             "MV_Repair", "TV_Repair", "Aorta", "CABG")
   dta  <- sample_upset_data(n = 100, seed = 1)
@@ -336,8 +339,22 @@ test_that("hv_upset plot builds with intersection data when ComplexUpset compati
       stop(e)
     }
   ))
-  # ComplexUpset returns a patchwork; verify it carries plots with data
-  expect_true(inherits(result, c("patchwork", "ggplot")))
+
+  expect_s3_class(result, "patchwork")
+
+  # ggplot_build() fails on the assembled patchwork because of upstream
+  # theme incompatibilities, but each sub-plot's own $data slot is the
+  # input data frame — assert at least one non-spacer sub-plot carries rows.
+  sub_rows <- vapply(result$patches$plots, function(sp) {
+    if (inherits(sp, "spacer")) return(0L)
+    d <- tryCatch(sp$data, error = function(e) NULL)
+    if (is.null(d)) 0L else NROW(d)
+  }, integer(1))
+  expect_true(any(sub_rows > 0L),
+              info = paste("sub-plot row counts:",
+                           paste(sub_rows, collapse = ",")))
+  # main upset object also carries the long-format data frame
+  expect_gt(NROW(result$data), 0L)
 })
 
 # ============================================================================

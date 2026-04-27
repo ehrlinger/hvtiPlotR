@@ -25,11 +25,6 @@ geom_classes <- function(p) {
   vapply(p$layers, function(l) class(l$geom)[1], character(1))
 }
 
-#' Indices of layers that carry observation data (i.e. not pure decorators).
-data_layer_indices <- function(p) {
-  which(!geom_classes(p) %in% .decorator_geoms)
-}
-
 #' Assert that a plot is a ggplot AND has at least one data layer with rows.
 #'
 #' Optional arguments tighten the contract:
@@ -59,27 +54,27 @@ expect_plot_has_data <- function(p,
   )
 
   bad <- data_idx[rows[data_idx] < min_rows]
-  testthat::expect_length(bad, 0L)
-  if (length(bad) > 0L) {
-    message(sprintf(
-      "%s: data layers with < %d rows: %s (geoms=%s, rows=%s)",
+  testthat::expect_true(
+    length(bad) == 0L,
+    info = sprintf(
+      "%s: data layers with < %d rows: idx=%s geoms=%s rows=%s",
       label, min_rows,
       paste(bad, collapse = ","),
       paste(geoms_present[bad], collapse = ","),
       paste(rows[bad], collapse = ",")
-    ))
-  }
+    )
+  )
 
   if (!is.null(geoms)) {
     missing <- setdiff(geoms, geoms_present)
-    testthat::expect_length(missing, 0L)
-    if (length(missing) > 0L) {
-      message(sprintf(
+    testthat::expect_true(
+      length(missing) == 0L,
+      info = sprintf(
         "%s: missing expected geom(s): %s (got %s)",
         label, paste(missing, collapse = ","),
         paste(geoms_present, collapse = ",")
-      ))
-    }
+      )
+    )
   }
 
   if (!is.null(min_groups)) {
