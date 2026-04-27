@@ -17,14 +17,14 @@
 \value{
 A bare \code{\link[ggplot2]{ggplot}} object; compose with \code{+}
 to add colour scales, axis limits, labels, and
-\code{\link{hv_theme}}.
+\code{\link{theme_hv_manuscript}}.
 }
 \description{
 Builds a bare mirrored-histogram \code{ggplot2} object from an
 \code{\link{hv_mirror_hist}} data object.  Bars for the treated group
 appear above the x-axis; bars for the control group appear below.  Matched
 or weighted patients are shown in a contrasting shade.  Compose with
-\code{+} to add colour scales, axis labels, and \code{\link{hv_theme}}.
+\code{+} to add colour scales, axis labels, and \code{\link{theme_hv_manuscript}}.
 }
 \examples{
 dta <- sample_mirror_histogram_data(n = 500)
@@ -32,12 +32,12 @@ mh  <- hv_mirror_hist(dta)
 
 plot(mh) +
   ggplot2::labs(x = "Propensity Score (\%)", y = "Count") +
-  hv_theme("poster")
+  theme_hv_poster()
 
 }
 \seealso{
 \code{\link{hv_mirror_hist}} to build the data object,
-\code{\link{hv_theme}} for the publication theme,
+\code{\link{theme_hv_manuscript}} for the publication theme,
 \code{\link{sample_mirror_histogram_data}} for example data.
 
 Other Propensity Score & Matching: 

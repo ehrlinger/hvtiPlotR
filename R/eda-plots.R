@@ -12,7 +12,7 @@
 #  - eda_select_vars() replaces Order_Variables() + Mod_Data <- dta[, Order_Var]
 #  - y_label parameter replaces the var_labels / var.names override pattern
 #  - No hard-coded colours: examples use scale_fill_manual() / scale_fill_brewer()
-#  - No explicit theme: examples apply hv_theme("poster")
+#  - No explicit theme: examples apply theme_hv_poster()
 #  - NA values shown as an explicit bar segment; colour set by scale_fill_*
 #  - Continuous: geom_smooth() + geom_rug() replace base-R loess + rug()
 # ---------------------------------------------------------------------------
@@ -166,7 +166,7 @@ eda_select_vars <- function(data, vars) {
 #' categorical levels (adding an explicit \code{"(Missing)"} level), and
 #' returns an \code{hv_eda} object.  Call \code{\link{plot.hv_eda}} on the
 #' result to obtain a bare \code{ggplot2} barplot or scatter plot that you can
-#' decorate with colour scales and \code{\link{hv_theme}}.
+#' decorate with colour scales and \code{\link{theme_hv_manuscript}}.
 #'
 #' Iterate over variables with \code{lapply()} after selecting columns with
 #' \code{\link{eda_select_vars}}.
@@ -225,7 +225,7 @@ eda_select_vars <- function(data, vars) {
 #'   ) +
 #'   ggplot2::scale_x_discrete(breaks = seq(2005, 2020, 5)) +
 #'   ggplot2::labs(x = "Surgery Year", y = "Count") +
-#'   hv_theme("poster")
+#'   theme_hv_poster()
 #'
 #' # Continuous variable -- same 3-step pattern
 #' ed2 <- hv_eda(dta, x_col = "op_years", y_col = "ef",
@@ -234,7 +234,7 @@ eda_select_vars <- function(data, vars) {
 #'   ggplot2::scale_colour_manual(values = c("firebrick"), guide = "none") +
 #'   ggplot2::scale_x_continuous(breaks = seq(0, 15, 5)) +
 #'   ggplot2::labs(x = "Years from First Surgery Year") +
-#'   hv_theme("poster")
+#'   theme_hv_poster()
 #'
 #' # Variable selection + lapply (varnames template pattern)
 #' cont_vars <- c(ef = "Ejection Fraction (%)",
@@ -247,7 +247,7 @@ eda_select_vars <- function(data, vars) {
 #'     ggplot2::scale_colour_manual(values = c("steelblue"), guide = "none") +
 #'     ggplot2::scale_x_continuous(breaks = seq(0, 15, 5)) +
 #'     ggplot2::labs(x = "Years from First Surgery Year") +
-#'     hv_theme("poster")
+#'     theme_hv_poster()
 #' })
 #' p_cont[[1]]
 #'
@@ -349,7 +349,7 @@ print.hv_eda <- function(x, ...) {
 #'
 #' @return A bare \code{\link[ggplot2]{ggplot}} object.
 #'
-#' @seealso \code{\link{hv_eda}}, \code{\link{hv_theme}}
+#' @seealso \code{\link{hv_eda}}, \code{\link{theme_hv_manuscript}}
 #'
 #' @examples
 #' dta <- sample_eda_data(n = 300, seed = 42)
@@ -365,7 +365,7 @@ print.hv_eda <- function(x, ...) {
 #'   ) +
 #'   ggplot2::scale_x_discrete(breaks = seq(2005, 2020, 5)) +
 #'   ggplot2::labs(x = "Surgery Year", y = "Count") +
-#'   hv_theme("poster")
+#'   theme_hv_poster()
 #'
 #' # --- Continuous: annotated -----------------------------------------------
 #' plot(hv_eda(dta, x_col = "op_years", y_col = "peak_grad",
@@ -376,7 +376,7 @@ print.hv_eda <- function(x, ...) {
 #'   ggplot2::annotate("text", x = 12, y = 70,
 #'                     label = "LOESS span = 0.8",
 #'                     size = 3, colour = "grey40", fontface = "italic") +
-#'   hv_theme("poster")
+#'   theme_hv_poster()
 #'
 #' @importFrom ggplot2 ggplot aes geom_point geom_smooth geom_rug geom_bar
 #'   scale_y_continuous labs

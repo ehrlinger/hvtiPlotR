@@ -336,9 +336,9 @@ test_that("plot(hv_eda) is composable with labs()", {
   expect_equal(p$labels$x, "Years")
 })
 
-test_that("plot(hv_eda) is composable with hv_theme()", {
+test_that("plot(hv_eda) is composable with theme_hv_manuscript()", {
   df <- sample_eda_data(n = 100, seed = 1)
-  p  <- plot(hv_eda(df, y_col = "male")) + hv_theme("manuscript")
+  p  <- plot(hv_eda(df, y_col = "male")) + theme_hv_manuscript()
   expect_s3_class(p, "ggplot")
 })
 

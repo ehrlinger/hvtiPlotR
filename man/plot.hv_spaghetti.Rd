@@ -46,7 +46,7 @@ Default \code{NULL} (standard numeric axis).}
 }
 \value{
 A bare \code{\link[ggplot2]{ggplot}} object; compose with \code{+}
-to add scales, axis limits, labels, and \code{\link{hv_theme}}.
+to add scales, axis limits, labels, and \code{\link{theme_hv_manuscript}}.
 }
 \description{
 Draws one trajectory line per subject over time, optionally stratified by
@@ -60,7 +60,7 @@ sp  <- hv_spaghetti(dta, colour_col = "group")
 plot(sp, add_smooth = TRUE) +
   ggplot2::scale_colour_brewer(palette = "Set1", name = NULL) +
   ggplot2::labs(x = "Years", y = "AV Mean Gradient (mmHg)") +
-  hv_theme("poster")
+  theme_hv_poster()
 
 # Ordinal y-axis
 dta_ord <- dta
@@ -68,11 +68,11 @@ dta_ord$value <- round(pmin(3, pmax(0, dta$value / 12)))
 plot(hv_spaghetti(dta_ord, colour_col = "group"),
      y_labels = c(None = 0, Mild = 1, Moderate = 2, Severe = 3)) +
   ggplot2::labs(x = "Years", y = "MR Grade") +
-  hv_theme("poster")
+  theme_hv_poster()
 
 # --- Global theme (set once per session) ----------------------------------
 \dontrun{
-old <- ggplot2::theme_set(hv_theme_manuscript())
+old <- ggplot2::theme_set(theme_hv_manuscript())
 plot(sp, add_smooth = TRUE) +
   ggplot2::scale_colour_brewer(palette = "Set1", name = NULL) +
   ggplot2::labs(x = "Years", y = "AV Mean Gradient (mmHg)")
@@ -85,7 +85,7 @@ ggplot2::theme_set(old)
 }
 \seealso{
 \code{\link{hv_spaghetti}} to build the data object,
-\code{\link{hv_theme}} for the publication theme.
+\code{\link{theme_hv_manuscript}} for the publication theme.
 
 Other Spaghetti plot: 
 \code{\link{hv_spaghetti}()}

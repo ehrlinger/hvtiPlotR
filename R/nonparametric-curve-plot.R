@@ -13,7 +13,7 @@
 #   2. Export boots_ci   -> read.csv("boots_ci.csv")   -> same curve_data, lower/upper cols
 #   3. Export means      -> read.csv("means.csv")      -> data_points
 #   4. Call hv_nonparametric(curve_data, ..., data_points = ...)
-#   5. Compose with scale_colour_*, labs(), hv_theme() using + operator
+#   5. Compose with scale_colour_*, labs(), theme_hv_manuscript() using + operator
 #      (replaces the `color=` and axis options inside %plot())
 #
 # Internal two-phase helper (not exported):
@@ -268,7 +268,7 @@ sample_nonparametric_curve_points <- function(n            = 500,
 #' summary points) and returns an \code{hv_nonparametric} object.  Call
 #' \code{\link{plot.hv_nonparametric}} to obtain a bare \code{ggplot2}
 #' curve plot that you can decorate with colour/fill scales, axis limits, and
-#' \code{\link{hv_theme}}.
+#' \code{\link{theme_hv_manuscript}}.
 #'
 #' Covers the full range of \code{tp.np.*} SAS templates:
 #'
@@ -314,7 +314,7 @@ sample_nonparametric_curve_points <- function(n            = 500,
 #' }
 #'
 #' @seealso \code{\link{plot.hv_nonparametric}} to render as a ggplot2 figure,
-#'   \code{\link{hv_theme}} for the publication theme,
+#'   \code{\link{theme_hv_manuscript}} for the publication theme,
 #'   \code{\link{sample_nonparametric_curve_data}} for example data.
 #'
 #' @family Nonparametric curves
@@ -340,11 +340,11 @@ sample_nonparametric_curve_points <- function(n            = 500,
 #'                               breaks = seq(0, 0.40, 0.10),
 #'                               labels = scales::percent) +
 #'   ggplot2::labs(x = "Months", y = "Prevalence of AF") +
-#'   hv_theme("poster")
+#'   theme_hv_poster()
 #'
 #' # --- Global theme (set once per session) ----------------------------------
 #' \dontrun{
-#' old <- ggplot2::theme_set(hv_theme_manuscript())
+#' old <- ggplot2::theme_set(theme_hv_manuscript())
 #' plot(np) +
 #'   ggplot2::scale_colour_manual(values = c("steelblue"), guide = "none") +
 #'   ggplot2::scale_fill_manual(values   = c("steelblue"), guide = "none") +
@@ -437,10 +437,10 @@ print.hv_nonparametric <- function(x, ...) {
 #' @param ...          Ignored; present for S3 consistency.
 #'
 #' @return A bare \code{\link[ggplot2]{ggplot}} object; compose with \code{+}
-#'   to add scales, axis limits, labels, and \code{\link{hv_theme}}.
+#'   to add scales, axis limits, labels, and \code{\link{theme_hv_manuscript}}.
 #'
 #' @seealso \code{\link{hv_nonparametric}} to build the data object,
-#'   \code{\link{hv_theme}} for the publication theme.
+#'   \code{\link{theme_hv_manuscript}} for the publication theme.
 #'
 #' @family Nonparametric curves
 #'
@@ -468,7 +468,7 @@ print.hv_nonparametric <- function(x, ...) {
 #'     guide  = "none"
 #'   ) +
 #'   ggplot2::labs(x = "Years", y = "AV Peak Gradient (mmHg)") +
-#'   hv_theme("poster")
+#'   theme_hv_poster()
 #'
 #' @importFrom ggplot2 ggplot aes geom_line geom_ribbon geom_point
 #' @importFrom rlang .data

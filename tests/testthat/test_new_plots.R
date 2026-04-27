@@ -6,7 +6,7 @@
 #   sample_spaghetti_data, hv_spaghetti
 #   sample_trends_data, hv_trends
 #   sample_longitudinal_counts_data, hv_longitudinal
-# hv_theme("light_ppt") dispatch + theme_light_ppt alias.
+# theme_hv_ppt_light() dispatch + theme_hv_ppt_light alias.
 #
 # Every assertion tests a distinct property of a distinct object.
 # No test compares a variable to itself (assert A == A).
@@ -572,7 +572,7 @@ test_that("plot(hv_longitudinal, type='table') has a GeomText layer", {
 
 test_that("plot(hv_longitudinal, type='table') is composable with + operator", {
   dta <- sample_longitudinal_counts_data(n_patients = 60, seed = 1)
-  p   <- plot(hv_longitudinal(dta), type = "table") + hv_theme("manuscript")
+  p   <- plot(hv_longitudinal(dta), type = "table") + theme_hv_manuscript()
   expect_s3_class(p, "ggplot")
 })
 
@@ -587,44 +587,44 @@ test_that("plot(hv_longitudinal) and plot(hv_longitudinal, type='table') produce
 })
 
 # ============================================================================
-# hv_theme("light_ppt") — dispatch and alias
+# theme_hv_ppt_light() — dispatch and alias
 # ============================================================================
 
-test_that("hv_theme('light_ppt') returns a theme object", {
-  t <- hv_theme("light_ppt")
+test_that("theme_hv_ppt_light() returns a theme object", {
+  t <- theme_hv_ppt_light()
   expect_s3_class(t, "theme")
 })
 
-test_that("hv_theme_light_ppt() returns a theme object", {
-  t <- hv_theme_light_ppt()
+test_that("theme_hv_ppt_light() returns a theme object", {
+  t <- theme_hv_ppt_light()
   expect_s3_class(t, "theme")
 })
 
-test_that("theme_light_ppt is an alias pointing to hv_theme_light_ppt", {
-  expect_identical(theme_light_ppt, hv_theme_light_ppt)
+test_that("theme_hv_ppt_light is an alias pointing to theme_hv_ppt_light", {
+  expect_identical(theme_hv_ppt_light, theme_hv_ppt_light)
 })
 
-test_that("hv_theme('light_ppt') and hv_theme_light_ppt() produce the same theme", {
-  t_generic <- hv_theme("light_ppt")
-  t_direct  <- hv_theme_light_ppt()
+test_that("theme_hv_ppt_light() and theme_hv_ppt_light() produce the same theme", {
+  t_generic <- theme_hv_ppt_light()
+  t_direct  <- theme_hv_ppt_light()
   expect_equal(t_generic, t_direct)
 })
 
-test_that("hv_theme_light_ppt can be applied to a plot", {
-  p <- ggplot(mtcars, aes(wt, mpg)) + geom_point() + hv_theme_light_ppt()
+test_that("theme_hv_ppt_light can be applied to a plot", {
+  p <- ggplot(mtcars, aes(wt, mpg)) + geom_point() + theme_hv_ppt_light()
   expect_s3_class(p, "ggplot")
 })
 
-test_that("hv_theme_light_ppt and hv_theme_dark_ppt produce distinct themes", {
+test_that("theme_hv_ppt_light and theme_hv_ppt_dark produce distinct themes", {
   # Light and dark themes must not be interchangeable
-  t_light <- hv_theme_light_ppt()
-  t_dark  <- hv_theme_dark_ppt()
+  t_light <- theme_hv_ppt_light()
+  t_dark  <- theme_hv_ppt_dark()
   expect_false(identical(t_light, t_dark))
 })
 
-test_that("hv_theme_light_ppt respects base_size: size 12 differs from size 48", {
-  t_small <- hv_theme_light_ppt(base_size = 12)
-  t_large <- hv_theme_light_ppt(base_size = 48)
+test_that("theme_hv_ppt_light respects base_size: size 12 differs from size 48", {
+  t_small <- theme_hv_ppt_light(base_size = 12)
+  t_large <- theme_hv_ppt_light(base_size = 48)
   # Changing base_size must produce a different theme object
   expect_false(identical(t_small, t_large))
 })

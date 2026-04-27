@@ -27,7 +27,7 @@ plot(hv_stacked(dta, x_col = "year", group_col = "category")) +
   ggplot2::scale_fill_brewer(palette = "Set1", name = "Category") +
   ggplot2::scale_color_brewer(palette = "Set1", name = "Category") +
   ggplot2::labs(x = "Year", y = "Count") +
-  hv_theme("poster")
+  theme_hv_poster()
 
 # Proportional (fill) histogram with manual colours
 plot(hv_stacked(dta, x_col = "year", group_col = "category",
@@ -42,9 +42,9 @@ plot(hv_stacked(dta, x_col = "year", group_col = "category",
     guide  = "none"
   ) +
   ggplot2::labs(x = "Year", y = "Proportion") +
-  hv_theme("poster")
+  theme_hv_poster()
 
 }
 \seealso{
-\code{\link{hv_stacked}}, \code{\link{hv_theme}}
+\code{\link{hv_stacked}}, \code{\link{theme_hv_manuscript}}
 }

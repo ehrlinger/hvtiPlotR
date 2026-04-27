@@ -205,7 +205,7 @@ sample_nonparametric_ordinal_points <- function(
 #' binned data summary points) and returns an \code{hv_ordinal} object.
 #' Call \code{\link{plot.hv_ordinal}} on the result to obtain a bare
 #' \code{ggplot2} multi-grade line plot that you can decorate with
-#' colour scales and \code{\link{hv_theme}}.
+#' colour scales and \code{\link{theme_hv_manuscript}}.
 #'
 #' **SAS column mapping (\code{predict} dataset after averaging):**
 #' - \code{time} ← \code{iv_echo} (or \code{iv_wristm})
@@ -271,7 +271,7 @@ sample_nonparametric_ordinal_points <- function(
 #'                               breaks = seq(0, 0.50, 0.10),
 #'                               labels = scales::percent) +
 #'   ggplot2::labs(x = "Years", y = "Percent in each TR grade") +
-#'   hv_theme("poster")
+#'   theme_hv_poster()
 #'
 #' @importFrom rlang .data
 #' @export
@@ -338,7 +338,7 @@ print.hv_ordinal <- function(x, ...) {
 #'
 #' @return A bare \code{\link[ggplot2]{ggplot}} object.
 #'
-#' @seealso \code{\link{hv_ordinal}}, \code{\link{hv_theme}}
+#' @seealso \code{\link{hv_ordinal}}, \code{\link{theme_hv_manuscript}}
 #'
 #' @examples
 #' dat <- sample_nonparametric_ordinal_data(
@@ -353,7 +353,7 @@ print.hv_ordinal <- function(x, ...) {
 #'   ggplot2::scale_x_continuous(breaks = 0:5) +
 #'   ggplot2::scale_y_continuous(labels = scales::percent) +
 #'   ggplot2::labs(x = "Years after Surgery", y = "Prevalence") +
-#'   hv_theme("poster")
+#'   theme_hv_poster()
 #'
 #' # Subset: show only severe grade
 #' plot(hv_ordinal(dat[dat$grade == "Severe", ])) +
@@ -362,7 +362,7 @@ print.hv_ordinal <- function(x, ...) {
 #'   ggplot2::scale_y_continuous(limits = c(0, 0.25),
 #'                               labels = scales::percent) +
 #'   ggplot2::labs(x = "Years", y = "P(Severe TR grade)") +
-#'   hv_theme("poster")
+#'   theme_hv_poster()
 #'
 #' @importFrom ggplot2 ggplot aes geom_line geom_point
 #' @importFrom rlang .data

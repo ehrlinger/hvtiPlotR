@@ -59,7 +59,7 @@ p +
                      expand = c(0, 0)) +
   coord_cartesian(ylim = c(0, 2200)) +
   labs(x = "Follow-up Window", y = "Count (n)") +
-  hv_theme("poster") +
+  theme_hv_poster() +
   theme(legend.position = c(0.85, 0.85))
 
 }

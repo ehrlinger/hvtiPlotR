@@ -52,7 +52,7 @@ apply this to every slide in a deck.
 \dontrun{
 p <- ggplot2::ggplot(mtcars, ggplot2::aes(hp, mpg)) +
   ggplot2::geom_point() +
-  hv_theme("dark_ppt")
+  theme_hv_ppt_dark()
 
 loc <- hv_ph_location(
   p,

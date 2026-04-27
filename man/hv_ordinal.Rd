@@ -42,7 +42,7 @@ Validates pre-computed grade-specific probability curves (and optional
 binned data summary points) and returns an \code{hv_ordinal} object.
 Call \code{\link{plot.hv_ordinal}} on the result to obtain a bare
 \code{ggplot2} multi-grade line plot that you can decorate with
-colour scales and \code{\link{hv_theme}}.
+colour scales and \code{\link{theme_hv_manuscript}}.
 }
 \details{
 \strong{SAS column mapping (\code{predict} dataset after averaging):}
@@ -84,7 +84,7 @@ p +
                               breaks = seq(0, 0.50, 0.10),
                               labels = scales::percent) +
   ggplot2::labs(x = "Years", y = "Percent in each TR grade") +
-  hv_theme("poster")
+  theme_hv_poster()
 
 }
 \references{

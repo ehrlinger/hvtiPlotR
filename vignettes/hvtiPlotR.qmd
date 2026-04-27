@@ -206,10 +206,10 @@ shapes to named factor levels rather than setting `shape =` directly.
 
 | `plot.sas` device | hvtiPlotR theme | Use for |
 |---|---|---|
-| `device=pscolor` | `hv_theme("manuscript")` | Journal PDF, black on white |
-| `device=cgmmppa` + dark slide | `hv_theme("dark_ppt")` | Dark-background PowerPoint |
-| `device=cgmmppa` + white slide | `hv_theme("light_ppt")` | Light/transparent PowerPoint |
-| — | `hv_theme("poster")` | Conference poster (larger text) |
+| `device=pscolor` | `theme_hv_manuscript()` | Journal PDF, black on white |
+| `device=cgmmppa` + dark slide | `theme_hv_ppt_dark()` | Dark-background PowerPoint |
+| `device=cgmmppa` + white slide | `theme_hv_ppt_light()` | Light/transparent PowerPoint |
+| — | `theme_hv_poster()` | Conference poster (larger text) |
 
 # Generating ggplot2 graphics
 
@@ -330,7 +330,7 @@ data(parametric, package = "hvtiPlotR")
 data(nonparametric, package = "hvtiPlotR")
 
 # Set a default hvtiPlotR plotting theme
-theme_set(hvtiPlotR::hv_theme("poster")) 
+theme_set(hvtiPlotR::theme_hv_poster()) 
 ```
 
 One advantage of ggplot2 is that figures can be built up in successive statements. This tutorial will make extensive use of this to demonstrate the process. Starting in this code chunk, we will save the intermediate objects in the ccf_plot variable. Here we simply create an empty ggplot2 figure that we will be adding to as we work through the commands in the `plot.sas` macro. Note that we include the %plot() commands in the comments above the equivalent ggplot2 command for comparison.
@@ -582,12 +582,12 @@ show(ccf_pptPlot)
 
 # Themes and Decoration
 
-The **hvtiPlotR** package provides four themes via `hv_theme(style)`:
+The **hvtiPlotR** package provides four themes via `theme_hv_*()`:
 `"manuscript"`, `"poster"`, `"light_ppt"`, and `"dark_ppt"`. Apply the theme
 as the last `+` layer on any composed ggplot object.
 
 ```{r man_theme_demo}
-p_final <- ccf_plot + hv_theme("poster")
+p_final <- ccf_plot + theme_hv_poster()
 p_final
 ```
 
@@ -624,12 +624,12 @@ For a full treatment of saving to PDF, poster, and PowerPoint formats see
 ## PowerPoint graphics
 
 Use `save_ppt()` to insert a ggplot as an editable vector graphic into a
-PowerPoint file. Apply `hv_theme("dark_ppt")` or `hv_theme("light_ppt")`
+PowerPoint file. Apply `theme_hv_ppt_dark()` or `theme_hv_ppt_light()`
 before saving.
 
 ```{r save_ppt_demo}
 #| eval: false
-p_ppt <- ccf_pptPlot + hv_theme("dark_ppt")
+p_ppt <- ccf_pptPlot + theme_hv_ppt_dark()
 
 save_ppt(
   object       = p_ppt,
@@ -648,7 +648,7 @@ them; the rest are conventions to keep in mind when composing figures.
 
 ## Manuscript figures
 
-- **Use `hv_theme("manuscript")`** — black text, white background, no
+- **Use `theme_hv_manuscript()`** — black text, white background, no
   decorative fill. Never use coloured backgrounds in figures destined for
   journals.
 - **No chart titles** — the figure caption in the manuscript text carries the
@@ -673,7 +673,7 @@ them; the rest are conventions to keep in mind when composing figures.
 
 ## PowerPoint figures
 
-- **Use `hv_theme("dark_ppt")` or `hv_theme("light_ppt")`** — the dark
+- **Use `theme_hv_ppt_dark()` or `theme_hv_ppt_light()`** — the dark
   theme is the default for Cleveland Clinic presentation templates. Match the
   theme to the slide background colour.
 - **No points on parametric curves** — presentation figures show lines only.

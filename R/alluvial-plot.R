@@ -12,7 +12,7 @@
 #    and scale_fill_brewer()
 #  - stratum_fill exposed as a parameter (default "grey80") for the vertical
 #    bars, keeping flow colours independent of stratum bars
-#  - Theme applied via + hv_theme("poster") in examples
+#  - Theme applied via + theme_hv_poster() in examples
 # ---------------------------------------------------------------------------
 
 #' Sample Sankey / Alluvial Data
@@ -87,7 +87,7 @@ sample_alluvial_data <- function(n = 300, seed = 42L) {
 #' Validates a wide alluvial-format data frame and returns an
 #' \code{hv_alluvial} object.  Call \code{\link{plot.hv_alluvial}} on the
 #' result to obtain a bare \code{ggplot2} alluvial diagram that you can
-#' decorate with colour scales, axis labels, and \code{\link{hv_theme}}.
+#' decorate with colour scales, axis labels, and \code{\link{theme_hv_manuscript}}.
 #'
 #' @param data        A data frame in wide alluvial format: one row per
 #'   axis-value combination, a numeric weight column, and one column per axis.
@@ -139,7 +139,7 @@ sample_alluvial_data <- function(n = 300, seed = 42L) {
 #'   ) +
 #'   ggplot2::labs(y = "Patients (n)",
 #'                 title = "AV Regurgitation: Pre- to Post-operative") +
-#'   hv_theme("poster")
+#'   theme_hv_poster()
 #'
 #' @importFrom rlang .data
 #' @export
@@ -215,7 +215,7 @@ print.hv_alluvial <- function(x, ...) {
 #'
 #' @return A bare \code{\link[ggplot2]{ggplot}} object.
 #'
-#' @seealso \code{\link{hv_alluvial}}, \code{\link{hv_theme}}
+#' @seealso \code{\link{hv_alluvial}}, \code{\link{theme_hv_manuscript}}
 #'
 #' @examples
 #' dta  <- sample_alluvial_data(n = 300, seed = 42)
@@ -227,7 +227,7 @@ print.hv_alluvial <- function(x, ...) {
 #'   ggplot2::scale_fill_brewer(palette = "Set2", name = "Procedure") +
 #'   ggplot2::scale_colour_brewer(palette = "Set2", guide = "none") +
 #'   ggplot2::labs(y = "Patients (n)") +
-#'   hv_theme("poster")
+#'   theme_hv_poster()
 #'
 #' # Two-axis (before / after)
 #' plot(hv_alluvial(
@@ -240,7 +240,7 @@ print.hv_alluvial <- function(x, ...) {
 #'   ggplot2::scale_colour_brewer(palette = "RdYlGn", direction = -1,
 #'                                guide = "none") +
 #'   ggplot2::labs(y = "Patients (n)") +
-#'   hv_theme("poster")
+#'   theme_hv_poster()
 #'
 #' @importFrom ggalluvial geom_alluvium geom_stratum StatStratum
 #' @importFrom ggplot2 ggplot aes geom_text scale_x_continuous after_stat

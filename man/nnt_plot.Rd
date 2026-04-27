@@ -73,7 +73,7 @@ nnt_plot(
   scale_x_continuous(limits = c(0, 20), breaks = seq(0, 20, 5)) +
   scale_y_continuous(limits = c(0, 50), breaks = seq(0, 50, 10)) +
   labs(x = "Years", y = "Number Needed to Treat (NNT)") +
-  hv_theme("poster")
+  theme_hv_poster()
 
 # --- (2) ARR curve over time (same data, different column) ---------------
 # Absolute risk reduction (\%) increases over time as survival curves diverge.
@@ -89,7 +89,7 @@ nnt_plot(
   scale_y_continuous(limits = c(0, 50),
                      labels = function(x) paste0(x, "\%")) +
   labs(x = "Years", y = "Absolute Risk Reduction (\%)") +
-  hv_theme("poster")
+  theme_hv_poster()
 
 }
 \references{

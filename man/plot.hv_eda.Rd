@@ -52,7 +52,7 @@ plot(hv_eda(dta, x_col = "year", y_col = "nyha",
   ) +
   ggplot2::scale_x_discrete(breaks = seq(2005, 2020, 5)) +
   ggplot2::labs(x = "Surgery Year", y = "Count") +
-  hv_theme("poster")
+  theme_hv_poster()
 
 # --- Continuous: annotated -----------------------------------------------
 plot(hv_eda(dta, x_col = "op_years", y_col = "peak_grad",
@@ -63,9 +63,9 @@ plot(hv_eda(dta, x_col = "op_years", y_col = "peak_grad",
   ggplot2::annotate("text", x = 12, y = 70,
                     label = "LOESS span = 0.8",
                     size = 3, colour = "grey40", fontface = "italic") +
-  hv_theme("poster")
+  theme_hv_poster()
 
 }
 \seealso{
-\code{\link{hv_eda}}, \code{\link{hv_theme}}
+\code{\link{hv_eda}}, \code{\link{theme_hv_manuscript}}
 }

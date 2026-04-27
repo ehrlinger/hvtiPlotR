@@ -186,7 +186,7 @@ test_that("plot.hv_spaghetti grouped and ungrouped plots have distinct mappings"
                          p_one$layers[[1]]$mapping))
 })
 
-test_that("plot.hv_spaghetti is composable with hv_theme", {
+test_that("plot.hv_spaghetti is composable with theme_hv_*", {
   sp <- hv_spaghetti(dta_grp)
-  expect_s3_class(plot(sp) + hv_theme("manuscript"), "ggplot")
+  expect_s3_class(plot(sp) + theme_hv_manuscript(), "ggplot")
 })

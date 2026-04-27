@@ -12,7 +12,7 @@
 #    and scale_colour_brewer()
 #  - Optional LOESS/mean smooth overlay replaces a separate geom_smooth() call
 #  - Ordinal y-axis labelling (plot_9 pattern) supported via y_labels parameter
-#  - Theme applied via + hv_theme("poster") in examples
+#  - Theme applied via + theme_hv_poster() in examples
 # ---------------------------------------------------------------------------
 
 #' Sample Spaghetti / Profile Plot Data
@@ -90,7 +90,7 @@ sample_spaghetti_data <- function(n_patients = 150,
 #' Validates a long-format repeated-measures data frame and returns an
 #' \code{hv_spaghetti} object.  Call \code{\link{plot.hv_spaghetti}} on
 #' the result to obtain a bare \code{ggplot2} trajectory plot that you can
-#' decorate with colour scales, axis labels, and \code{\link{hv_theme}}.
+#' decorate with colour scales, axis labels, and \code{\link{theme_hv_manuscript}}.
 #'
 #' @param data       Data frame; one row per observation per subject.
 #' @param x_col      Name of the time column. Default \code{"time"}.
@@ -112,7 +112,7 @@ sample_spaghetti_data <- function(n_patients = 150,
 #' }
 #'
 #' @seealso \code{\link{plot.hv_spaghetti}} to render as a ggplot2 figure,
-#'   \code{\link{hv_theme}} for the publication theme,
+#'   \code{\link{theme_hv_manuscript}} for the publication theme,
 #'   \code{\link{sample_spaghetti_data}} for example data.
 #'
 #' @family Spaghetti plot
@@ -134,7 +134,7 @@ sample_spaghetti_data <- function(n_patients = 150,
 #'   ) +
 #'   ggplot2::labs(x = "Years after Operation",
 #'                 y = "AV Mean Gradient (mmHg)") +
-#'   hv_theme("poster")
+#'   theme_hv_poster()
 #'
 #' @importFrom rlang .data
 #' @export
@@ -206,10 +206,10 @@ print.hv_spaghetti <- function(x, ...) {
 #' @param ...           Ignored; present for S3 consistency.
 #'
 #' @return A bare \code{\link[ggplot2]{ggplot}} object; compose with \code{+}
-#'   to add scales, axis limits, labels, and \code{\link{hv_theme}}.
+#'   to add scales, axis limits, labels, and \code{\link{theme_hv_manuscript}}.
 #'
 #' @seealso \code{\link{hv_spaghetti}} to build the data object,
-#'   \code{\link{hv_theme}} for the publication theme.
+#'   \code{\link{theme_hv_manuscript}} for the publication theme.
 #'
 #' @family Spaghetti plot
 #'
@@ -221,7 +221,7 @@ print.hv_spaghetti <- function(x, ...) {
 #' plot(sp, add_smooth = TRUE) +
 #'   ggplot2::scale_colour_brewer(palette = "Set1", name = NULL) +
 #'   ggplot2::labs(x = "Years", y = "AV Mean Gradient (mmHg)") +
-#'   hv_theme("poster")
+#'   theme_hv_poster()
 #'
 #' # Ordinal y-axis
 #' dta_ord <- dta
@@ -229,11 +229,11 @@ print.hv_spaghetti <- function(x, ...) {
 #' plot(hv_spaghetti(dta_ord, colour_col = "group"),
 #'      y_labels = c(None = 0, Mild = 1, Moderate = 2, Severe = 3)) +
 #'   ggplot2::labs(x = "Years", y = "MR Grade") +
-#'   hv_theme("poster")
+#'   theme_hv_poster()
 #'
 #' # --- Global theme (set once per session) ----------------------------------
 #' \dontrun{
-#' old <- ggplot2::theme_set(hv_theme_manuscript())
+#' old <- ggplot2::theme_set(theme_hv_manuscript())
 #' plot(sp, add_smooth = TRUE) +
 #'   ggplot2::scale_colour_brewer(palette = "Set1", name = NULL) +
 #'   ggplot2::labs(x = "Years", y = "AV Mean Gradient (mmHg)")

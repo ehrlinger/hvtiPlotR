@@ -29,7 +29,7 @@ binary (logical or 0/1 integer), computes per-set counts, and returns an
 \code{hv_upset} object.  Call \code{\link{plot.hv_upset}} on the result
 to obtain the \pkg{ComplexUpset} UpSet diagram.  Apply a theme to all
 panels with \code{&}:
-\preformatted{plot(up) & hv_theme("poster")}
+\preformatted{plot(up) & theme_hv_poster()}
 }
 \examples{
 sets <- c("AV_Replacement", "AV_Repair", "MV_Replacement", "MV_Repair",
@@ -44,7 +44,7 @@ up  # prints set counts
 # ComplexUpset uses & (not +) to apply a theme across all sub-panels.
 \dontrun{
 p <- plot(up)
-p & hv_theme("poster")
+p & theme_hv_poster()
 }
 
 }

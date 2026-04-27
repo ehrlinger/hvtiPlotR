@@ -114,7 +114,7 @@ p +
   scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, 20),
                      labels = function(x) paste0(x, "\%")) +
   labs(x = "Years", y = "Survival (\%)") +
-  hv_theme("poster")
+  theme_hv_poster()
 
 # Stratified groups -- colour scale adds clinical meaning
 dat2 <- sample_hazard_data(
@@ -130,11 +130,11 @@ plot(hp2) +
     name   = NULL
   ) +
   labs(x = "Years", y = "Survival (\%)") +
-  hv_theme("poster")
+  theme_hv_poster()
 
 # --- Global theme + RColorBrewer (set once per session) ------------------
 \dontrun{
-old <- ggplot2::theme_set(hv_theme_manuscript())
+old <- ggplot2::theme_set(theme_hv_manuscript())
 plot(hp2) +
   scale_colour_brewer(palette = "Set1", name = NULL) +
   scale_fill_brewer(palette   = "Set1", guide = "none") +
@@ -151,7 +151,7 @@ ggplot2::theme_set(old)
 }
 \seealso{
 \code{\link[=plot.hv_hazard]{plot.hv_hazard()}} to render as a ggplot2 figure,
-\code{\link[=hv_theme]{hv_theme()}} for the publication theme,
+\code{\link[=theme_hv_manuscript]{theme_hv_manuscript()}} for the publication theme,
 \code{\link[=sample_hazard_data]{sample_hazard_data()}}, \code{\link[=sample_hazard_empirical]{sample_hazard_empirical()}},
 \code{\link[=sample_life_table]{sample_life_table()}} for example data.
 

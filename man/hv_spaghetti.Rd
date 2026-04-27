@@ -41,7 +41,7 @@ An object of class \code{c("hv_spaghetti", "hv_data")}; call
 Validates a long-format repeated-measures data frame and returns an
 \code{hv_spaghetti} object.  Call \code{\link{plot.hv_spaghetti}} on
 the result to obtain a bare \code{ggplot2} trajectory plot that you can
-decorate with colour scales, axis labels, and \code{\link{hv_theme}}.
+decorate with colour scales, axis labels, and \code{\link{theme_hv_manuscript}}.
 }
 \examples{
 dta <- sample_spaghetti_data(n_patients = 150, seed = 42)
@@ -60,12 +60,12 @@ p +
   ) +
   ggplot2::labs(x = "Years after Operation",
                 y = "AV Mean Gradient (mmHg)") +
-  hv_theme("poster")
+  theme_hv_poster()
 
 }
 \seealso{
 \code{\link{plot.hv_spaghetti}} to render as a ggplot2 figure,
-\code{\link{hv_theme}} for the publication theme,
+\code{\link{theme_hv_manuscript}} for the publication theme,
 \code{\link{sample_spaghetti_data}} for example data.
 
 Other Spaghetti plot: 

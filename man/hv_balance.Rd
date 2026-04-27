@@ -52,7 +52,7 @@ Validates and orders a long-format standardized-mean-difference data frame
 for a covariate balance plot, and returns an \code{hv_balance} object.
 Call \code{\link{plot.hv_balance}} on the result to obtain a bare
 \code{ggplot2} object that you can decorate with colour, shape, axis scales,
-and \code{\link{hv_theme}}.
+and \code{\link{theme_hv_manuscript}}.
 }
 \examples{
 library(ggplot2)
@@ -77,7 +77,7 @@ p +
   ) +
   scale_x_continuous(limits = c(-45, 35), breaks = seq(-40, 30, 10)) +
   labs(x = "Standardized difference (\%)", y = "") +
-  hv_theme("poster")
+  theme_hv_poster()
 
 }
 \seealso{

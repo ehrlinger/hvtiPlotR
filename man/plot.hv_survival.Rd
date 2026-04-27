@@ -40,7 +40,7 @@ Default \code{TRUE}.  Ignored for other \code{type} values.}
 }
 \value{
 A bare \code{\link[ggplot2]{ggplot}} object; compose with \code{+}
-to add scales, axis limits, labels, and \code{\link{hv_theme}}.
+to add scales, axis limits, labels, and \code{\link{theme_hv_manuscript}}.
 }
 \description{
 Builds a bare \code{ggplot2} object from an \code{\link{hv_survival}}
@@ -55,12 +55,12 @@ km  <- hv_survival(dta)
 # Default survival curve
 plot(km) +
   ggplot2::labs(x = "Years after Operation", y = "Survival (\%)") +
-  hv_theme("poster")
+  theme_hv_poster()
 
 # Cumulative hazard
 plot(km, type = "cumhaz") +
   ggplot2::labs(x = "Years", y = "Cumulative Hazard") +
-  hv_theme("poster")
+  theme_hv_poster()
 
 # Hazard rate with loess smoother
 plot(km, type = "hazard") +
@@ -69,12 +69,12 @@ plot(km, type = "hazard") +
     method = "loess", se = FALSE, span = 0.5
   ) +
   ggplot2::labs(x = "Years", y = "Instantaneous Hazard") +
-  hv_theme("poster")
+  theme_hv_poster()
 
 }
 \seealso{
 \code{\link{hv_survival}} to build the data object,
-\code{\link{hv_theme}} for the publication theme.
+\code{\link{theme_hv_manuscript}} for the publication theme.
 
 Other Kaplan-Meier survival: 
 \code{\link{hv_survival}()}

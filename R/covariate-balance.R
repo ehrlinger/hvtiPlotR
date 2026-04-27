@@ -84,7 +84,7 @@ cb_build_plot <- function(data, std_diff_col, group_col, var_levels,
 #' for a covariate balance plot, and returns an \code{hv_balance} object.
 #' Call \code{\link{plot.hv_balance}} on the result to obtain a bare
 #' \code{ggplot2} object that you can decorate with colour, shape, axis scales,
-#' and \code{\link{hv_theme}}.
+#' and \code{\link{theme_hv_manuscript}}.
 #'
 #' @param data         A data frame in \strong{long format} with one row per
 #'   covariate \eqn{\times} group combination.  Wide-format data must be
@@ -139,7 +139,7 @@ cb_build_plot <- function(data, std_diff_col, group_col, var_levels,
 #'   ) +
 #'   scale_x_continuous(limits = c(-45, 35), breaks = seq(-40, 30, 10)) +
 #'   labs(x = "Standardized difference (%)", y = "") +
-#'   hv_theme("poster")
+#'   theme_hv_poster()
 #'
 #' @export
 hv_balance <- function(
@@ -220,7 +220,7 @@ print.hv_balance <- function(x, ...) {
 #'
 #' @return A bare \code{\link[ggplot2]{ggplot}} object.
 #'
-#' @seealso \code{\link{hv_balance}}, \code{\link{hv_theme}}
+#' @seealso \code{\link{hv_balance}}, \code{\link{theme_hv_manuscript}}
 #'
 #' @examples
 #' dta <- sample_covariate_balance_data()
@@ -232,7 +232,7 @@ print.hv_balance <- function(x, ...) {
 #'     name   = NULL
 #'   ) +
 #'   ggplot2::labs(x = "Standardized difference (%)", y = "") +
-#'   hv_theme("poster")
+#'   theme_hv_poster()
 #'
 #' @importFrom ggplot2 ggplot aes geom_vline geom_hline geom_point
 #'   scale_y_continuous

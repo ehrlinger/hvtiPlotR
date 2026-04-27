@@ -55,9 +55,9 @@ plot(cb) +
     name   = NULL
   ) +
   ggplot2::labs(x = "Standardized difference (\%)", y = "") +
-  hv_theme("poster")
+  theme_hv_poster()
 
 }
 \seealso{
-\code{\link{hv_balance}}, \code{\link{hv_theme}}
+\code{\link{hv_balance}}, \code{\link{theme_hv_manuscript}}
 }

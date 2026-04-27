@@ -39,7 +39,7 @@ Default \code{0.2}.}
 }
 \value{
 A bare \code{\link[ggplot2]{ggplot}} object; compose with \code{+}
-to add scales, axis limits, labels, and \code{\link{hv_theme}}.
+to add scales, axis limits, labels, and \code{\link{theme_hv_manuscript}}.
 }
 \description{
 Draws a LOESS smooth overlaid with per-x-value summary-statistic points
@@ -55,7 +55,7 @@ plot(hv_trends(one, group_col = NULL)) +
   ggplot2::scale_y_continuous(limits = c(0, 10),
                               breaks = seq(0, 10, 2)) +
   ggplot2::labs(x = "Year", y = "Cases/year") +
-  hv_theme("poster")
+  theme_hv_poster()
 
 # --- tp.lp.trends.sas: binary \% outcomes, 1970-2000 by 10 ----------------
 dta_lp <- sample_trends_data(
@@ -71,7 +71,7 @@ plot(hv_trends(dta_lp)) +
                               breaks = seq(0, 100, 10)) +
   ggplot2::coord_cartesian(xlim = c(1970, 2000), ylim = c(0, 100)) +
   ggplot2::labs(x = "Year", y = "Percent (\%)") +
-  hv_theme("poster")
+  theme_hv_poster()
 
 # --- tp.lp.trends.age.sas: age on x-axis, 25-85 by 10 -------------------
 dta_age <- sample_trends_data(
@@ -84,7 +84,7 @@ plot(hv_trends(dta_age)) +
                               breaks = seq(0, 100, 20)) +
   ggplot2::coord_cartesian(xlim = c(25, 85), ylim = c(0, 100)) +
   ggplot2::labs(x = "Age (years)", y = "Percent (\%)") +
-  hv_theme("poster")
+  theme_hv_poster()
 
 # --- tp.lp.trends.polytomous.sas: repair types, 1990-1999 by 1 ----------
 dta_poly <- sample_trends_data(
@@ -101,7 +101,7 @@ plot(hv_trends(dta_poly)) +
                               breaks = seq(0, 100, 10)) +
   ggplot2::coord_cartesian(xlim = c(1990, 1999), ylim = c(0, 100)) +
   ggplot2::labs(x = "Year", y = "Percent (\%)") +
-  hv_theme("poster")
+  theme_hv_poster()
 
 # --- Save ----------------------------------------------------------------
 \dontrun{
@@ -115,13 +115,13 @@ p <- plot(tr) +
   ggplot2::scale_x_continuous(limits = c(1985, 2015),
                               breaks = seq(1985, 2015, 5)) +
   ggplot2::labs(x = "Years", y = "\%") +
-  hv_theme("poster")
+  theme_hv_poster()
 ggplot2::ggsave("trends.pdf", p, width = 11.5, height = 8)
 }
 
 # --- Global theme (set once per session) ----------------------------------
 \dontrun{
-old <- ggplot2::theme_set(hv_theme_manuscript())
+old <- ggplot2::theme_set(theme_hv_manuscript())
 plot(hv_trends(dta_poly)) +
   ggplot2::scale_colour_brewer(palette = "Dark2", name = "Repair type")
 ggplot2::theme_set(old)
@@ -133,7 +133,7 @@ ggplot2::theme_set(old)
 }
 \seealso{
 \code{\link{hv_trends}} to build the data object,
-\code{\link{hv_theme}} for the publication theme.
+\code{\link{theme_hv_manuscript}} for the publication theme.
 
 Other Temporal trends: 
 \code{\link{hv_trends}()}

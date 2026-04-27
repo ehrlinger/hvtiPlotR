@@ -52,7 +52,7 @@ Validates pre-computed curve data (and optional CI bounds and binned data
 summary points) and returns an \code{hv_nonparametric} object.  Call
 \code{\link{plot.hv_nonparametric}} to obtain a bare \code{ggplot2}
 curve plot that you can decorate with colour/fill scales, axis limits, and
-\code{\link{hv_theme}}.
+\code{\link{theme_hv_manuscript}}.
 }
 \details{
 Covers the full range of \code{tp.np.*} SAS templates:\tabular{ll}{
@@ -96,11 +96,11 @@ p +
                               breaks = seq(0, 0.40, 0.10),
                               labels = scales::percent) +
   ggplot2::labs(x = "Months", y = "Prevalence of AF") +
-  hv_theme("poster")
+  theme_hv_poster()
 
 # --- Global theme (set once per session) ----------------------------------
 \dontrun{
-old <- ggplot2::theme_set(hv_theme_manuscript())
+old <- ggplot2::theme_set(theme_hv_manuscript())
 plot(np) +
   ggplot2::scale_colour_manual(values = c("steelblue"), guide = "none") +
   ggplot2::scale_fill_manual(values   = c("steelblue"), guide = "none") +
@@ -117,7 +117,7 @@ ggplot2::theme_set(old)
 }
 \seealso{
 \code{\link{plot.hv_nonparametric}} to render as a ggplot2 figure,
-\code{\link{hv_theme}} for the publication theme,
+\code{\link{theme_hv_manuscript}} for the publication theme,
 \code{\link{sample_nonparametric_curve_data}} for example data.
 
 Other Nonparametric curves: 

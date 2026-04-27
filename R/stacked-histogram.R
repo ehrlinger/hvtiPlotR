@@ -14,7 +14,7 @@
 ##   plot(sh) +
 ##     ggplot2::scale_fill_brewer(palette = "Set1", name = "Category") +
 ##     ggplot2::scale_color_brewer(palette = "Set1", name = "Category") +
-##     hv_theme("poster")
+##     theme_hv_poster()
 ##
 ###############################################################################
 
@@ -28,7 +28,7 @@
 #' \code{hv_stacked} object.  Call \code{\link{plot.hv_stacked}} on the
 #' result to obtain a bare \code{ggplot2} stacked (or proportional) histogram
 #' that you can decorate with colour scales, axis labels, and
-#' \code{\link{hv_theme}}.
+#' \code{\link{theme_hv_manuscript}}.
 #'
 #' @param data      A data frame.
 #' @param x_col     Name of the numeric column to bin along the x-axis.
@@ -67,7 +67,7 @@
 #'   ggplot2::scale_fill_brewer(palette = "Set1", name = "Category") +
 #'   ggplot2::scale_color_brewer(palette = "Set1", name = "Category") +
 #'   ggplot2::labs(x = "Year", y = "Count") +
-#'   hv_theme("poster")
+#'   theme_hv_poster()
 #'
 #' @importFrom rlang .data
 #' @export
@@ -129,7 +129,7 @@ print.hv_stacked <- function(x, ...) {
 #' @return A bare \code{\link[ggplot2]{ggplot}} object.  Add scales, labels,
 #'   and themes with the usual \code{+} operator.
 #'
-#' @seealso \code{\link{hv_stacked}}, \code{\link{hv_theme}}
+#' @seealso \code{\link{hv_stacked}}, \code{\link{theme_hv_manuscript}}
 #'
 #' @examples
 #' dta <- sample_stacked_histogram_data()
@@ -139,7 +139,7 @@ print.hv_stacked <- function(x, ...) {
 #'   ggplot2::scale_fill_brewer(palette = "Set1", name = "Category") +
 #'   ggplot2::scale_color_brewer(palette = "Set1", name = "Category") +
 #'   ggplot2::labs(x = "Year", y = "Count") +
-#'   hv_theme("poster")
+#'   theme_hv_poster()
 #'
 #' # Proportional (fill) histogram with manual colours
 #' plot(hv_stacked(dta, x_col = "year", group_col = "category",
@@ -154,7 +154,7 @@ print.hv_stacked <- function(x, ...) {
 #'     guide  = "none"
 #'   ) +
 #'   ggplot2::labs(x = "Year", y = "Proportion") +
-#'   hv_theme("poster")
+#'   theme_hv_poster()
 #'
 #' @importFrom ggplot2 ggplot aes geom_histogram
 #' @importFrom rlang .data
