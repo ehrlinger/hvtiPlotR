@@ -164,6 +164,17 @@ autoplot.hv_data <- function(object, ...) {
   plot(object, ...)
 }
 
+# Re-export ggplot2's autoplot() generic so callers who load only
+# hvtiPlotR (without library(ggplot2)) can still write `autoplot(km)`.
+# The S3 method registration above isn't enough on its own — without
+# this re-export, the generic isn't visible in the hvtiPlotR namespace,
+# and the test suite would be order-dependent on whether ggplot2 was
+# previously attached.
+
+#' @importFrom ggplot2 autoplot
+#' @export
+ggplot2::autoplot
+
 
 #' Extract the underlying data frame from an hv_data object
 #'

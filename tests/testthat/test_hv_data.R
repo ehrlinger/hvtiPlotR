@@ -216,8 +216,11 @@ test_that("plot.hv_data error message names the subclass", {
 
 test_that("summary.hv_data returns the object invisibly", {
   obj <- make_obj(tables = list(report = data.frame(a = 1:3)))
+  # Check both: returned value equals input, AND it was returned invisibly.
   out <- capture.output(res <- summary(obj))
   expect_identical(res, obj)
+  vis <- withVisible(summary(obj))
+  expect_false(vis$visible)
 })
 
 test_that("summary.hv_data prints each named $tables entry", {
@@ -239,15 +242,30 @@ test_that("summary.hv_data handles an empty $tables slot", {
 # autoplot.hv_data — ggplot2 ecosystem hook
 # ---------------------------------------------------------------------------
 
-test_that("autoplot.hv_data dispatches to plot() and returns the same object", {
+test_that("autoplot.hv_data dispatches to plot() and returns a ggplot", {
   km <- hv_survival(sample_survival_data(n = 80, seed = 1))
-  expect_identical(autoplot(km), plot(km))
+  a <- autoplot(km)
+  p <- plot(km)
+  # Compare on structural properties rather than expect_identical(), which is
+  # brittle against environment captures and other internal-state differences
+  # between two separate build calls.
+  expect_s3_class(a, "ggplot")
+  expect_identical(class(a), class(p))
+  expect_identical(
+    vapply(a$layers, function(l) class(l$geom)[1], character(1)),
+    vapply(p$layers, function(l) class(l$geom)[1], character(1))
+  )
 })
 
 test_that("autoplot.hv_data forwards extra arguments to plot()", {
   km <- hv_survival(sample_survival_data(n = 80, seed = 1))
-  expect_identical(autoplot(km, type = "cumhaz"),
-                   plot(km, type = "cumhaz"))
+  a <- autoplot(km, type = "cumhaz")
+  p <- plot(km, type = "cumhaz")
+  expect_s3_class(a, "ggplot")
+  expect_identical(
+    vapply(a$layers, function(l) class(l$geom)[1], character(1)),
+    vapply(p$layers, function(l) class(l$geom)[1], character(1))
+  )
 })
 
 test_that("autoplot.hv_data is registered as an S3 method", {
@@ -255,6 +273,13 @@ test_that("autoplot.hv_data is registered as an S3 method", {
     !is.null(utils::getS3method("autoplot", "hv_data",
                                 envir = asNamespace("hvtiPlotR")))
   )
+})
+
+test_that("ggplot2::autoplot generic is re-exported from hvtiPlotR", {
+  # Without this re-export, callers who load only hvtiPlotR (without
+  # library(ggplot2)) would not have `autoplot()` visible, even though the
+  # S3 method is registered. This catches NAMESPACE drift.
+  expect_true("autoplot" %in% getNamespaceExports("hvtiPlotR"))
 })
 
 # ---------------------------------------------------------------------------
