@@ -209,3 +209,77 @@ test_that("plot.hv_data error message names the subclass", {
   obj <- make_obj(subclass = "hv_orphan")
   expect_error(plot(obj), "hv_orphan")
 })
+
+# ---------------------------------------------------------------------------
+# summary.hv_data — default implementation
+# ---------------------------------------------------------------------------
+
+test_that("summary.hv_data returns the object invisibly", {
+  obj <- make_obj(tables = list(report = data.frame(a = 1:3)))
+  out <- capture.output(res <- summary(obj))
+  expect_identical(res, obj)
+})
+
+test_that("summary.hv_data prints each named $tables entry", {
+  obj <- make_obj(tables = list(report = data.frame(a = 1:3),
+                                risk   = data.frame(b = 4:6)))
+  out <- paste(capture.output(summary(obj)), collapse = "\n")
+  expect_match(out, "\\$tables\\$report")
+  expect_match(out, "\\$tables\\$risk")
+})
+
+test_that("summary.hv_data handles an empty $tables slot", {
+  obj <- make_obj(tables = list())
+  expect_silent_summary <- capture.output(summary(obj))
+  # Header line is printed; no $tables sections appear
+  expect_false(any(grepl("\\$tables\\$", expect_silent_summary)))
+})
+
+# ---------------------------------------------------------------------------
+# autoplot.hv_data — ggplot2 ecosystem hook
+# ---------------------------------------------------------------------------
+
+test_that("autoplot.hv_data dispatches to plot() and returns the same object", {
+  km <- hv_survival(sample_survival_data(n = 80, seed = 1))
+  expect_identical(autoplot(km), plot(km))
+})
+
+test_that("autoplot.hv_data forwards extra arguments to plot()", {
+  km <- hv_survival(sample_survival_data(n = 80, seed = 1))
+  expect_identical(autoplot(km, type = "cumhaz"),
+                   plot(km, type = "cumhaz"))
+})
+
+test_that("autoplot.hv_data is registered as an S3 method", {
+  expect_true(
+    !is.null(utils::getS3method("autoplot", "hv_data",
+                                envir = asNamespace("hvtiPlotR")))
+  )
+})
+
+# ---------------------------------------------------------------------------
+# as.data.frame.hv_data — tidyverse-pipeline accessor
+# ---------------------------------------------------------------------------
+
+test_that("as.data.frame.hv_data returns the $data slot unchanged", {
+  obj <- make_obj()
+  expect_identical(as.data.frame(obj), obj$data)
+})
+
+test_that("data.frame() coercion dispatches through as.data.frame.hv_data", {
+  obj <- make_obj()
+  expect_s3_class(data.frame(obj), "data.frame")
+  expect_identical(data.frame(obj), obj$data)
+})
+
+test_that("as.data.frame.hv_data ignores row.names and optional formals", {
+  obj <- make_obj()
+  expect_identical(
+    as.data.frame(obj, row.names = NULL, optional = FALSE),
+    obj$data
+  )
+  expect_identical(
+    as.data.frame(obj, row.names = c("a", "b", "c"), optional = TRUE),
+    obj$data
+  )
+})

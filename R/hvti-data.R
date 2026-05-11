@@ -117,6 +117,73 @@ plot.hv_data <- function(x, ...) {
 }
 
 
+#' Summarise an hv_data object
+#'
+#' Prints the standard one-screen header (via [print.hv_data()] or the
+#' subclass override) and then walks the object's `$tables` slot, printing
+#' each named auxiliary table with a header. Lets callers see the underlying
+#' risk tables, report tables, diagnostics, etc. without having to know the
+#' `$tables` accessor path.
+#'
+#' Subclasses can override this with a more curated layout, but the default
+#' implementation is enough for every shipping hv_data subclass.
+#'
+#' @param object An `hv_data` object.
+#' @param ...    Forwarded to the underlying `print()` method.
+#'
+#' @return `object`, invisibly.
+#' @export
+summary.hv_data <- function(object, ...) {
+  print(object, ...)
+  for (nm in names(object$tables)) {
+    cat(sprintf("\n--- $tables$%s ---\n", nm))
+    print(object$tables[[nm]])
+  }
+  invisible(object)
+}
+
+
+#' Produce a ggplot from an hv_data object (`autoplot` generic)
+#'
+#' Re-exports ggplot2's [ggplot2::autoplot()] for `hv_data` objects so callers
+#' who prefer the ggplot2-ecosystem verb (`broom` / `ggfortify` / `ggsurvfit`
+#' all use it) can write `autoplot(km)` interchangeably with `plot(km)`.
+#'
+#' Dispatches to the registered `plot.<subclass>()` method, so any args
+#' that work with `plot()` work with `autoplot()`.
+#'
+#' @param object An `hv_data` object.
+#' @param ...    Forwarded to the subclass's `plot()` method.
+#'
+#' @return A `ggplot` object (or a `patchwork` composite when the underlying
+#'   `plot()` method returns one, e.g. for `hv_upset`).
+#'
+#' @importFrom ggplot2 autoplot
+#' @export
+autoplot.hv_data <- function(object, ...) {
+  plot(object, ...)
+}
+
+
+#' Extract the underlying data frame from an hv_data object
+#'
+#' Returns the `$data` slot — the tidy data frame each hv_data subclass
+#' carries for ggplot2 consumption. Lets callers use the standard
+#' [base::as.data.frame()] / [base::data.frame()] coercion in tidyverse
+#' pipelines instead of reaching for the `$data` accessor.
+#'
+#' @param x         An `hv_data` object.
+#' @param row.names Ignored; present for base-method-signature consistency.
+#' @param optional  Ignored; present for base-method-signature consistency.
+#' @param ...       Ignored.
+#'
+#' @return A `data.frame` — `x$data`.
+#' @export
+as.data.frame.hv_data <- function(x, row.names = NULL, optional = FALSE, ...) {
+  x$data
+}
+
+
 # ---------------------------------------------------------------------------
 # Predicate
 # ---------------------------------------------------------------------------
