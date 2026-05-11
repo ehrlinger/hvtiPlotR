@@ -209,3 +209,102 @@ test_that("plot.hv_data error message names the subclass", {
   obj <- make_obj(subclass = "hv_orphan")
   expect_error(plot(obj), "hv_orphan")
 })
+
+# ---------------------------------------------------------------------------
+# summary.hv_data — default implementation
+# ---------------------------------------------------------------------------
+
+test_that("summary.hv_data returns the object invisibly", {
+  obj <- make_obj(tables = list(report = data.frame(a = 1:3)))
+  # Check both: returned value equals input, AND it was returned invisibly.
+  out <- capture.output(res <- summary(obj))
+  expect_identical(res, obj)
+  vis <- withVisible(summary(obj))
+  expect_false(vis$visible)
+})
+
+test_that("summary.hv_data prints each named $tables entry", {
+  obj <- make_obj(tables = list(report = data.frame(a = 1:3),
+                                risk   = data.frame(b = 4:6)))
+  out <- paste(capture.output(summary(obj)), collapse = "\n")
+  expect_match(out, "\\$tables\\$report")
+  expect_match(out, "\\$tables\\$risk")
+})
+
+test_that("summary.hv_data handles an empty $tables slot", {
+  obj <- make_obj(tables = list())
+  expect_silent_summary <- capture.output(summary(obj))
+  # Header line is printed; no $tables sections appear
+  expect_false(any(grepl("\\$tables\\$", expect_silent_summary)))
+})
+
+# ---------------------------------------------------------------------------
+# autoplot.hv_data — ggplot2 ecosystem hook
+# ---------------------------------------------------------------------------
+
+test_that("autoplot.hv_data dispatches to plot() and returns a ggplot", {
+  km <- hv_survival(sample_survival_data(n = 80, seed = 1))
+  a <- autoplot(km)
+  p <- plot(km)
+  # Compare on structural properties rather than expect_identical(), which is
+  # brittle against environment captures and other internal-state differences
+  # between two separate build calls.
+  expect_s3_class(a, "ggplot")
+  expect_identical(class(a), class(p))
+  expect_identical(
+    vapply(a$layers, function(l) class(l$geom)[1], character(1)),
+    vapply(p$layers, function(l) class(l$geom)[1], character(1))
+  )
+})
+
+test_that("autoplot.hv_data forwards extra arguments to plot()", {
+  km <- hv_survival(sample_survival_data(n = 80, seed = 1))
+  a <- autoplot(km, type = "cumhaz")
+  p <- plot(km, type = "cumhaz")
+  expect_s3_class(a, "ggplot")
+  expect_identical(
+    vapply(a$layers, function(l) class(l$geom)[1], character(1)),
+    vapply(p$layers, function(l) class(l$geom)[1], character(1))
+  )
+})
+
+test_that("autoplot.hv_data is registered as an S3 method", {
+  expect_true(
+    !is.null(utils::getS3method("autoplot", "hv_data",
+                                envir = asNamespace("hvtiPlotR")))
+  )
+})
+
+test_that("ggplot2::autoplot generic is re-exported from hvtiPlotR", {
+  # Without this re-export, callers who load only hvtiPlotR (without
+  # library(ggplot2)) would not have `autoplot()` visible, even though the
+  # S3 method is registered. This catches NAMESPACE drift.
+  expect_true("autoplot" %in% getNamespaceExports("hvtiPlotR"))
+})
+
+# ---------------------------------------------------------------------------
+# as.data.frame.hv_data — tidyverse-pipeline accessor
+# ---------------------------------------------------------------------------
+
+test_that("as.data.frame.hv_data returns the $data slot unchanged", {
+  obj <- make_obj()
+  expect_identical(as.data.frame(obj), obj$data)
+})
+
+test_that("data.frame() coercion dispatches through as.data.frame.hv_data", {
+  obj <- make_obj()
+  expect_s3_class(data.frame(obj), "data.frame")
+  expect_identical(data.frame(obj), obj$data)
+})
+
+test_that("as.data.frame.hv_data ignores row.names and optional formals", {
+  obj <- make_obj()
+  expect_identical(
+    as.data.frame(obj, row.names = NULL, optional = FALSE),
+    obj$data
+  )
+  expect_identical(
+    as.data.frame(obj, row.names = c("a", "b", "c"), optional = TRUE),
+    obj$data
+  )
+})

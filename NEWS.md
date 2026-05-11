@@ -1,5 +1,26 @@
 # hvtiPlotR 2.2.0 (in development)
 
+## New S3 methods for `hv_data` objects (#64)
+
+Three standard-R S3 verbs are now implemented for every `hv_data`
+subclass:
+
+- **`summary()`** — prints the standard one-screen header, then walks
+  the object's `$tables` slot and prints each named auxiliary table
+  with a header. Lets callers see the underlying risk tables, report
+  tables, and diagnostics without having to know the `$tables`
+  accessor path. Subclasses can override with a curated layout.
+- **`autoplot()`** — re-exports ggplot2's `autoplot()` generic and
+  dispatches to the registered `plot.<subclass>()` method. Callers who
+  prefer the ggplot2-ecosystem verb (used by `broom`, `ggfortify`,
+  `ggsurvfit`) can write `autoplot(km)` interchangeably with
+  `plot(km)`. Extra args forward to the subclass `plot()`.
+- **`as.data.frame()`** — returns the `$data` slot. Lets callers use
+  the standard `as.data.frame()` / `data.frame()` coercion in
+  tidyverse pipelines instead of reaching for the `$data` accessor.
+
+No breaking changes — these are additive.
+
 ## UpSet plot backend swap (#62)
 
 `plot.hv_upset()` is now backed by [`ggupset`](https://cran.r-project.org/package=ggupset)
