@@ -6,52 +6,69 @@
 \usage{
 \method{plot}{hv_upset}(
   x,
-  min_size = 1,
+  n_intersections = 10L,
+  sort_by = c("freq", "degree"),
+  fill_col = NULL,
+  bar_fill = "grey40",
+  set_size = TRUE,
+  set_size_position = c("right", "left"),
+  set_size_sort = c("descending", "ascending", "none"),
+  set_size_fill = "steelblue",
   width_ratio = 0.3,
-  encode_sets = FALSE,
-  sort_sets = "descending",
-  sort_intersections = "descending",
-  set_size_position = "right",
   ...
 )
 }
 \arguments{
 \item{x}{An \code{hv_upset} object.}
 
-\item{min_size}{Minimum intersection size to display.
-Default \code{1}.}
+\item{n_intersections}{Number of intersections to display, ordered by
+\code{sort_by}. Default \code{10}.}
+
+\item{sort_by}{How to order intersections: \code{"freq"} (default,
+by frequency) or \code{"degree"} (by number of sets in each combination).}
+
+\item{fill_col}{Optional column name in \code{x$data} to fill the
+intersection bars by (stacks bars by group). Default \code{NULL} (single
+colour, supplied via \code{bar_fill}).}
+
+\item{bar_fill}{Single fill colour for the intersection bars
+when \code{fill_col} is \code{NULL}. Default \code{"grey40"}.}
+
+\item{set_size}{Logical; if \code{TRUE} (default), compose a
+set-size sidebar as a patchwork. If \code{FALSE}, return only the
+intersection-bar ggplot.}
+
+\item{set_size_position}{\code{"right"} (default) or \code{"left"}.}
+
+\item{set_size_sort}{Sort order for the sidebar: \code{"descending"}
+(default), \code{"ascending"}, or \code{"none"} (preserve \code{intersect} order).}
+
+\item{set_size_fill}{Fill colour for the sidebar bars. Default
+\code{"steelblue"}.}
 
 \item{width_ratio}{Fraction of horizontal space given to the
-set-size bar. Default \code{0.3}.}
+set-size sidebar (only used when \code{set_size = TRUE}). Default \code{0.3}.}
 
-\item{encode_sets}{Logical; when \code{FALSE} (default) set names
-are used verbatim, required for \code{\link[ggplot2]{annotate}} to
-reference a specific set by name.}
-
-\item{sort_sets}{Sort order for set-size bar:
-\code{"descending"}, \code{"ascending"}, or \code{FALSE}.
-Default \code{"descending"}.}
-
-\item{sort_intersections}{Sort order for intersection size bars.
-Default \code{"descending"}.}
-
-\item{set_size_position}{Position of the set-size bar: \code{"right"}
-(default) or \code{"left"}.}
-
-\item{...}{Additional arguments forwarded to
-\code{\link[ComplexUpset]{upset}}, e.g. \code{base_annotations},
-\code{annotations}, \code{set_sizes}.}
+\item{...}{Currently unused; reserved for future args.}
 }
 \value{
-A patchwork / ggplot composite. Use \code{&} to apply a theme to
-all panels.
+A \code{ggplot} when \code{set_size = FALSE} (themes apply with \code{+}); a
+\code{patchwork} composite when \code{set_size = TRUE} (default; themes apply
+with \code{&} to cover all sub-panels).
 }
 \description{
-Draws an UpSet plot using \code{\link[ComplexUpset]{upset}}.
-Apply a theme to \strong{all panels} with \code{&}:
+Draws an UpSet plot using \code{\link[ggupset]{scale_x_upset}}.
+}
+\details{
+When \code{set_size = TRUE} (the default) the function composes a
+patchwork of two plots: a horizontal set-size sidebar and the intersection
+bar chart. Apply themes to \strong{all panels} with patchwork's \code{&}
+operator:
 \preformatted{plot(up) & theme_hv_poster()}
-Apply scales or annotations to the intersection panel via
-\code{base_annotations}.
+
+Pass \code{set_size = FALSE} to get a single intersection-bar ggplot
+for full customisation; themes then apply via \code{+}:
+\preformatted{plot(up, set_size = FALSE) + theme_hv_poster()}
 }
 \examples{
 sets <- c("AV_Replacement", "AV_Repair", "MV_Replacement", "MV_Repair",
@@ -59,26 +76,22 @@ sets <- c("AV_Replacement", "AV_Repair", "MV_Replacement", "MV_Repair",
 dta <- sample_upset_data(n = 300, seed = 42)
 up  <- hv_upset(dta, intersect = sets)
 
-# Build the plot object (render interactively with print(p))
-p <- plot(up)
-
-\dontrun{
-# Manuscript theme applied to all panels via &
+# Default: intersection bars + set-size sidebar (patchwork composite).
+# Use `&` to theme every sub-panel.
 plot(up) & theme_hv_poster()
 
-# Custom intersection bar colour
-plot(up,
-  base_annotations = list(
-    "Intersection size" = ComplexUpset::intersection_size(
-      mapping = ggplot2::aes(fill = "n")
-    ) +
-      ggplot2::scale_fill_manual(
-        values = c("n" = "steelblue"),
-        guide  = "none"
-      ) +
-      ggplot2::labs(y = "Patients (n)")
-  )
-) &
+\dontrun{
+# Intersection bars only — single ggplot, themes apply with `+`.
+plot(up, set_size = FALSE) + theme_hv_poster()
+
+# Fill bars by an external grouping variable (e.g. era).
+dta$era <- ifelse(seq_len(nrow(dta)) <= 150, "Early", "Recent")
+up_era  <- hv_upset(dta, intersect = sets)
+plot(up_era, fill_col = "era", set_size = FALSE) +
+  ggplot2::scale_fill_manual(
+    values = c(Early = "grey60", Recent = "steelblue"),
+    name   = "Era"
+  ) +
   theme_hv_poster()
 }
 

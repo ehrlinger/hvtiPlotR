@@ -2323,29 +2323,25 @@ save_ppt(p_lc_bar,
 
 # UpSet Plot
 
-`hv_upset()` wraps `ComplexUpset::upset()` to visualise surgical procedure
-co-occurrences or any set membership data. It ports the pattern from
-`tp.complexUpset.R`, replacing hard-coded colours with `scale_fill_*`
-composition and hard-coded themes with `theme_hv_manuscript()`.
+`hv_upset()` builds an UpSet diagram via `ggupset::scale_x_upset()` to
+visualise surgical procedure co-occurrences or any set membership data.
+Unlike Venn diagrams, UpSet plots scale to many sets cleanly.
 
-Unlike other hvtiPlotR functions, `plot.hv_upset` returns a **patchwork
-composite** built internally by ComplexUpset. A theme must be applied via
-the patchwork `&` operator (not `+`) to cover all sub-panels simultaneously.
-`&` is also required for correct rendering: ComplexUpset's internal theme
-sets `axis.title.x` in a form that newer ggplot2 rejects unless overridden,
-so `& theme_hv_manuscript()` is part of the *minimum* working call, not an optional
-decoration:
+`plot.hv_upset()` returns a **ggplot** when `set_size = FALSE`, or a
+**patchwork composite** of an intersection-bar plot + a set-size sidebar
+when `set_size = TRUE` (the default). For the bare ggplot path, themes
+apply via `+` like every other hvtiPlotR plot; for the patchwork path,
+use patchwork's `&` operator to theme every sub-panel:
 
 ```r
-# Minimum working call — & theme_hv_manuscript() is required, not optional
-plot(hu) & theme_hv_poster()
+plot(hu) & theme_hv_poster()                  # default (patchwork)
+plot(hu, set_size = FALSE) + theme_hv_poster() # single ggplot
 ```
 
 ## Sample data
 
 ```{r}
 #| label: upset_data
-#| eval: !expr .Platform$OS.type != "windows"
 sets <- c("AV_Replacement", "AV_Repair", "MV_Replacement", "MV_Repair",
           "TV_Repair", "Aorta", "CABG")
 
@@ -2358,58 +2354,52 @@ hu <- hv_upset(upset_dta, intersect = sets)
 
 ## Default plot
 
+Intersection bars (top 10 by frequency) with a set-size sidebar on the
+right. `set_size = TRUE` returns a patchwork composite, so theme it with
+`&` to cover both sub-panels:
+
 ```{r}
 #| label: upset_basic
 #| fig-width: 9
 #| fig-height: 5
-#| eval: !expr .Platform$OS.type != "windows"
 plot(hu) &
   theme_hv_poster()
 ```
 
-## Custom intersection bar colour (scale_fill_manual)
+## Custom intersection bar colour
+
+The intersection bars are a standard `geom_bar()` — change the colour via
+the `bar_fill` argument (or set `set_size = FALSE` to return just the
+intersection-bar ggplot for full customisation).
 
 ```{r}
 #| label: upset_fill
 #| fig-width: 9
 #| fig-height: 5
-#| eval: !expr .Platform$OS.type != "windows"
-plot(hu,
-     base_annotations = list(
-       "Intersection size" = ComplexUpset::intersection_size(
-         mapping = ggplot2::aes(fill = "n")
-       ) +
-         ggplot2::scale_fill_manual(
-           values = c("n" = "steelblue"),
-           guide  = "none"
-         ) +
-         ggplot2::labs(y = "Patients (n)")
-     )) &
+plot(hu, bar_fill = "steelblue", set_size = FALSE) +
+  ggplot2::labs(y = "Patients (n)") +
   theme_hv_poster()
 ```
 
 ## Colour bars by era
 
+Pass `fill_col` to fill the intersection bars by a grouping column on the
+input data. Combine with `scale_fill_manual()` for explicit colour
+assignment.
+
 ```{r}
 #| label: upset_era
 #| fig-width: 9
 #| fig-height: 5
-#| eval: !expr .Platform$OS.type != "windows"
 upset_dta$era <- ifelse(seq_len(nrow(upset_dta)) <= 200, "Early", "Recent")
 hu_era <- hv_upset(upset_dta, intersect = sets)
 
-plot(hu_era,
-     base_annotations = list(
-       "Intersection size" = ComplexUpset::intersection_size(
-         counts  = FALSE,
-         mapping = ggplot2::aes(fill = era)
-       ) +
-         ggplot2::scale_fill_manual(
-           values = c("Early" = "grey60", "Recent" = "steelblue"),
-           name   = "Era"
-         ) +
-         ggplot2::labs(y = "Patients (n)")
-     )) &
+plot(hu_era, fill_col = "era", set_size = FALSE) +
+  ggplot2::scale_fill_manual(
+    values = c("Early" = "grey60", "Recent" = "steelblue"),
+    name   = "Era"
+  ) +
+  ggplot2::labs(y = "Patients (n)") +
   theme_hv_poster()
 ```
 
@@ -2420,7 +2410,8 @@ plot(hu_era,
 #| eval: false
 p_upset <- plot(hu) & theme_hv_poster()
 
-# UpSet plots are patchwork composites — use ggsave() via ggplot2
+# UpSet plot is a patchwork composite when set_size = TRUE (the default);
+# ggsave() handles it the same as any ggplot.
 ggplot2::ggsave(here::here("graphs", "procedure_cooccurrence.pdf"),
                 p_upset, width = 11, height = 6)
 ```

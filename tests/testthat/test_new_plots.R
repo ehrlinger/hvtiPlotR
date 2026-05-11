@@ -33,7 +33,8 @@ test_that("sample_upset_data has all required logical columns", {
                      "MV_Repair", "TV_Repair", "Aorta", "CABG")
   df <- sample_upset_data(n = 100, seed = 1)
   expect_true(all(expected_cols %in% names(df)))
-  # All set columns must be logical — a type change would break ComplexUpset
+  # All set columns must be logical — hv_upset() builds its list-column off
+  # the logical indicators and would otherwise reject the input.
   are_logical <- sapply(df[expected_cols], is.logical)
   expect_true(all(are_logical))
 })
