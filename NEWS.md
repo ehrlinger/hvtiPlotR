@@ -1,4 +1,4 @@
-# hvtiPlotR 2.2.0 (in development)
+# hvtiPlotR 2.2.0
 
 ## New S3 methods for `hv_data` objects (#64)
 
