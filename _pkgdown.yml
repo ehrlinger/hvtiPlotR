@@ -53,6 +53,9 @@ reference:
   contents:
   - hvtiPlotR-package
   - is_hv_data
+  - summary.hv_data
+  - autoplot.hv_data
+  - as.data.frame.hv_data
 
 - title: "Themes"
   desc: >
