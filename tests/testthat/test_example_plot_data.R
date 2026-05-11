@@ -349,6 +349,41 @@ test_that("hv_upset default plot is a patchwork carrying bars + sidebar with row
                            paste(sub_rows, collapse = ",")))
 })
 
+test_that("hv_upset coerces NA indicator entries to FALSE in the list-column", {
+  sets <- c("AV_Replacement", "AV_Repair", "MV_Replacement",
+            "MV_Repair", "TV_Repair", "Aorta", "CABG")
+  dta  <- sample_upset_data(n = 50, seed = 1)
+  dta$AV_Replacement[1:5] <- NA
+  up <- hv_upset(dta, intersect = sets)
+  has_na <- any(vapply(up$data$.Procedures,
+                       function(s) any(is.na(s)), logical(1)))
+  expect_false(has_na)
+})
+
+test_that("hv_upset errors if input already has a .Procedures column", {
+  sets <- c("AV_Replacement", "AV_Repair", "MV_Replacement",
+            "MV_Repair", "TV_Repair", "Aorta", "CABG")
+  dta  <- sample_upset_data(n = 50, seed = 1)
+  dta$.Procedures <- "oops"
+  expect_error(hv_upset(dta, intersect = sets), "\\.Procedures")
+})
+
+test_that("hv_upset set_size_sort = 'descending' puts the largest set at the top", {
+  sets <- c("AV_Replacement", "AV_Repair", "MV_Replacement",
+            "MV_Repair", "TV_Repair", "Aorta", "CABG")
+  dta  <- sample_upset_data(n = 200, seed = 1)
+  up   <- hv_upset(dta, intersect = sets)
+  p <- suppressWarnings(plot(up, set_size_sort = "descending"))
+  # patchwork host plot for set_size_position = "right" is the sidebar,
+  # which carries the (set, n) factor frame
+  side_data <- if ("set" %in% names(p$data)) p$data else p$patches$plots[[1]]$data
+  levs <- levels(side_data$set)
+  # ggplot renders factor levels bottom-to-top on a y-axis, so the LAST
+  # level is at the top — which should be the largest set count.
+  largest <- names(which.max(up$tables$set_counts))
+  expect_identical(levs[length(levs)], largest)
+})
+
 test_that("hv_upset fill_col stacks bars by an external grouping variable", {
   sets <- c("AV_Replacement", "AV_Repair", "MV_Replacement",
             "MV_Repair", "TV_Repair", "Aorta", "CABG")

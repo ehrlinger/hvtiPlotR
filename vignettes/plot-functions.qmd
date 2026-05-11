@@ -2327,12 +2327,15 @@ save_ppt(p_lc_bar,
 visualise surgical procedure co-occurrences or any set membership data.
 Unlike Venn diagrams, UpSet plots scale to many sets cleanly.
 
-`plot.hv_upset()` returns a **ggplot** (or a small `patchwork` composite
-when `set_size = TRUE`, the default, to include the set-size sidebar).
-Themes apply via `+` like every other hvtiPlotR plot:
+`plot.hv_upset()` returns a **ggplot** when `set_size = FALSE`, or a
+**patchwork composite** of an intersection-bar plot + a set-size sidebar
+when `set_size = TRUE` (the default). For the bare ggplot path, themes
+apply via `+` like every other hvtiPlotR plot; for the patchwork path,
+use patchwork's `&` operator to theme every sub-panel:
 
 ```r
-plot(hu) + theme_hv_poster()
+plot(hu) & theme_hv_poster()                  # default (patchwork)
+plot(hu, set_size = FALSE) + theme_hv_poster() # single ggplot
 ```
 
 ## Sample data
@@ -2352,13 +2355,14 @@ hu <- hv_upset(upset_dta, intersect = sets)
 ## Default plot
 
 Intersection bars (top 10 by frequency) with a set-size sidebar on the
-right.
+right. `set_size = TRUE` returns a patchwork composite, so theme it with
+`&` to cover both sub-panels:
 
 ```{r}
 #| label: upset_basic
 #| fig-width: 9
 #| fig-height: 5
-plot(hu) +
+plot(hu) &
   theme_hv_poster()
 ```
 
@@ -2404,7 +2408,7 @@ plot(hu_era, fill_col = "era", set_size = FALSE) +
 ```{r}
 #| label: upset_save
 #| eval: false
-p_upset <- plot(hu) + theme_hv_poster()
+p_upset <- plot(hu) & theme_hv_poster()
 
 # UpSet plot is a patchwork composite when set_size = TRUE (the default);
 # ggsave() handles it the same as any ggplot.

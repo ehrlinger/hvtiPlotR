@@ -106,9 +106,11 @@ sample_upset_data <- function(n = 500, seed = 42L) {
 #' up <- hv_upset(dta, intersect = sets)
 #' up  # prints set counts
 #'
-#' # 2 & 3. Bare plot + theme — themes apply via + like every other plot.
-#' p <- plot(up)
-#' p + theme_hv_poster()
+#' # 2. Plot. The default (set_size = TRUE) returns a patchwork composite,
+#' # so apply themes with `&` to theme every sub-panel. Use `+` for
+#' # set_size = FALSE (a plain ggplot).
+#' plot(up) & theme_hv_poster()
+#' plot(up, set_size = FALSE) + theme_hv_poster()
 #'
 #' @importFrom rlang .data
 #' @export
@@ -128,10 +130,19 @@ hv_upset <- function(data, intersect) {
 
   data <- as.data.frame(data)
 
+  if (".Procedures" %in% names(data))
+    stop("`data` already has a column named `.Procedures`. hv_upset() ",
+         "stores its list-column under that name internally. Rename or ",
+         "drop the existing column before calling hv_upset().",
+         call. = FALSE)
+
   # Pre-compute the list-column scale_x_upset() consumes. Stored on $data so
   # the constructor owns the data shape; plot.hv_upset() doesn't recompute.
+  # NA indicators are treated as FALSE (set not present) so the list-column
+  # entries are always plain character vectors of set names.
   ind <- as.matrix(data[intersect])
   mode(ind) <- "logical"
+  ind[is.na(ind)] <- FALSE
   data$.Procedures <- lapply(seq_len(nrow(ind)),
                              function(i) intersect[ind[i, ]])
 
@@ -171,15 +182,17 @@ print.hv_upset <- function(x, ...) {
 
 #' Plot an hv_upset object
 #'
-#' Draws an UpSet plot using \code{\link[ggupset]{scale_x_upset}}. The
-#' intersection-size bar chart is a standard ggplot, so themes apply via
-#' \code{+}:
-#' \preformatted{plot(up) + theme_hv_poster()}
+#' Draws an UpSet plot using \code{\link[ggupset]{scale_x_upset}}.
 #'
 #' When \code{set_size = TRUE} (the default) the function composes a
 #' patchwork of two plots: a horizontal set-size sidebar and the intersection
-#' bar chart. Pass \code{set_size = FALSE} to get a single intersection-bar
-#' ggplot for full customisation.
+#' bar chart. Apply themes to **all panels** with patchwork's \code{&}
+#' operator:
+#' \preformatted{plot(up) & theme_hv_poster()}
+#'
+#' Pass \code{set_size = FALSE} to get a single intersection-bar ggplot
+#' for full customisation; themes then apply via \code{+}:
+#' \preformatted{plot(up, set_size = FALSE) + theme_hv_poster()}
 #'
 #' @param x                   An \code{hv_upset} object.
 #' @param n_intersections     Number of intersections to display, ordered by
@@ -203,8 +216,9 @@ print.hv_upset <- function(x, ...) {
 #'   set-size sidebar (only used when `set_size = TRUE`). Default `0.3`.
 #' @param ...                 Currently unused; reserved for future args.
 #'
-#' @return A `ggplot` when `set_size = FALSE`; a `patchwork` composite when
-#'   `set_size = TRUE` (default). Both compose with `+ theme_hv_*()`.
+#' @return A `ggplot` when `set_size = FALSE` (themes apply with `+`); a
+#'   `patchwork` composite when `set_size = TRUE` (default; themes apply
+#'   with `&` to cover all sub-panels).
 #'
 #' @seealso \code{\link{hv_upset}}, \code{\link{theme_hv_manuscript}}
 #'
@@ -214,18 +228,18 @@ print.hv_upset <- function(x, ...) {
 #' dta <- sample_upset_data(n = 300, seed = 42)
 #' up  <- hv_upset(dta, intersect = sets)
 #'
-#' # Default: intersection bars + set-size sidebar
-#' p <- plot(up)
-#' p + theme_hv_poster()
+#' # Default: intersection bars + set-size sidebar (patchwork composite).
+#' # Use `&` to theme every sub-panel.
+#' plot(up) & theme_hv_poster()
 #'
 #' \dontrun{
-#' # Intersection bars only — single ggplot
+#' # Intersection bars only — single ggplot, themes apply with `+`.
 #' plot(up, set_size = FALSE) + theme_hv_poster()
 #'
-#' # Fill bars by an external grouping variable (e.g. era)
+#' # Fill bars by an external grouping variable (e.g. era).
 #' dta$era <- ifelse(seq_len(nrow(dta)) <= 150, "Early", "Recent")
 #' up_era  <- hv_upset(dta, intersect = sets)
-#' plot(up_era, fill_col = "era") +
+#' plot(up_era, fill_col = "era", set_size = FALSE) +
 #'   ggplot2::scale_fill_manual(
 #'     values = c(Early = "grey60", Recent = "steelblue"),
 #'     name   = "Era"
@@ -273,7 +287,11 @@ plot.hv_upset <- function(x,
 
   if (!isTRUE(set_size)) return(bars)
 
-  # Set-size sidebar — manual composition since ggupset doesn't ship one
+  # Set-size sidebar — manual composition since ggupset doesn't ship one.
+  # NB the decreasing= inversion below is intentional: ggplot renders factor
+  # levels bottom-to-top on a y-axis, so to display "descending" (largest at
+  # top) we need to put the largest count at the LAST factor level, i.e. sort
+  # values ascending (`decreasing = FALSE`).
   sc <- x$tables$set_counts
   set_order <- switch(set_size_sort,
                       descending = names(sort(sc, decreasing = FALSE)),

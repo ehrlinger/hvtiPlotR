@@ -41,9 +41,11 @@ dta <- sample_upset_data(n = 300, seed = 42)
 up <- hv_upset(dta, intersect = sets)
 up  # prints set counts
 
-# 2 & 3. Bare plot + theme — themes apply via + like every other plot.
-p <- plot(up)
-p + theme_hv_poster()
+# 2. Plot. The default (set_size = TRUE) returns a patchwork composite,
+# so apply themes with `&` to theme every sub-panel. Use `+` for
+# set_size = FALSE (a plain ggplot).
+plot(up) & theme_hv_poster()
+plot(up, set_size = FALSE) + theme_hv_poster()
 
 }
 \seealso{

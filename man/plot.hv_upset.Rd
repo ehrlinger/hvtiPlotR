@@ -52,20 +52,23 @@ set-size sidebar (only used when \code{set_size = TRUE}). Default \code{0.3}.}
 \item{...}{Currently unused; reserved for future args.}
 }
 \value{
-A \code{ggplot} when \code{set_size = FALSE}; a \code{patchwork} composite when
-\code{set_size = TRUE} (default). Both compose with \verb{+ theme_hv_*()}.
+A \code{ggplot} when \code{set_size = FALSE} (themes apply with \code{+}); a
+\code{patchwork} composite when \code{set_size = TRUE} (default; themes apply
+with \code{&} to cover all sub-panels).
 }
 \description{
-Draws an UpSet plot using \code{\link[ggupset]{scale_x_upset}}. The
-intersection-size bar chart is a standard ggplot, so themes apply via
-\code{+}:
-\preformatted{plot(up) + theme_hv_poster()}
+Draws an UpSet plot using \code{\link[ggupset]{scale_x_upset}}.
 }
 \details{
 When \code{set_size = TRUE} (the default) the function composes a
 patchwork of two plots: a horizontal set-size sidebar and the intersection
-bar chart. Pass \code{set_size = FALSE} to get a single intersection-bar
-ggplot for full customisation.
+bar chart. Apply themes to \strong{all panels} with patchwork's \code{&}
+operator:
+\preformatted{plot(up) & theme_hv_poster()}
+
+Pass \code{set_size = FALSE} to get a single intersection-bar ggplot
+for full customisation; themes then apply via \code{+}:
+\preformatted{plot(up, set_size = FALSE) + theme_hv_poster()}
 }
 \examples{
 sets <- c("AV_Replacement", "AV_Repair", "MV_Replacement", "MV_Repair",
@@ -73,18 +76,18 @@ sets <- c("AV_Replacement", "AV_Repair", "MV_Replacement", "MV_Repair",
 dta <- sample_upset_data(n = 300, seed = 42)
 up  <- hv_upset(dta, intersect = sets)
 
-# Default: intersection bars + set-size sidebar
-p <- plot(up)
-p + theme_hv_poster()
+# Default: intersection bars + set-size sidebar (patchwork composite).
+# Use `&` to theme every sub-panel.
+plot(up) & theme_hv_poster()
 
 \dontrun{
-# Intersection bars only — single ggplot
+# Intersection bars only — single ggplot, themes apply with `+`.
 plot(up, set_size = FALSE) + theme_hv_poster()
 
-# Fill bars by an external grouping variable (e.g. era)
+# Fill bars by an external grouping variable (e.g. era).
 dta$era <- ifelse(seq_len(nrow(dta)) <= 150, "Early", "Recent")
 up_era  <- hv_upset(dta, intersect = sets)
-plot(up_era, fill_col = "era") +
+plot(up_era, fill_col = "era", set_size = FALSE) +
   ggplot2::scale_fill_manual(
     values = c(Early = "grey60", Recent = "steelblue"),
     name   = "Era"
