@@ -10,26 +10,27 @@ hv_upset(data, intersect)
 \item{data}{A data frame. Each set-membership column must be logical
 or integer (0/1).}
 
-\item{intersect}{Character vector of column names to treat as sets.
-Must contain at least two names that exist in \code{data}.}
+\item{intersect}{Character vector of column names to treat as sets. Must
+contain at least two names that exist in \code{data}.}
 }
 \value{
 An object of class \code{c("hv_upset", "hv_data")}:
 \describe{
-\item{\code{$data}}{The validated input data frame.}
+\item{\code{$data}}{The validated input data frame, plus a \code{.Procedures}
+list-column derived from the indicator matrix (consumed by
+\code{scale_x_upset()}).}
 \item{\code{$meta}}{Named list: \code{intersect}, \code{n_patients},
 \code{n_sets}.}
-\item{\code{$tables}}{List with one element: \code{set_counts} — a
+\item{\code{$tables}}{List with one element: \code{set_counts} -- a
 named integer vector of per-set patient counts.}
 }
 }
 \description{
 Validates a set-membership data frame, checks all intersect columns are
 binary (logical or 0/1 integer), computes per-set counts, and returns an
-\code{hv_upset} object.  Call \code{\link{plot.hv_upset}} on the result
-to obtain the \pkg{ComplexUpset} UpSet diagram.  Apply a theme to all
-panels with \code{&}:
-\preformatted{plot(up) & theme_hv_poster()}
+\code{hv_upset} object. Call \code{\link{plot.hv_upset}} on the result to
+obtain a ggplot2 UpSet diagram (backed by
+\code{\link[ggupset]{scale_x_upset}}).
 }
 \examples{
 sets <- c("AV_Replacement", "AV_Repair", "MV_Replacement", "MV_Repair",
@@ -40,12 +41,9 @@ dta <- sample_upset_data(n = 300, seed = 42)
 up <- hv_upset(dta, intersect = sets)
 up  # prints set counts
 
-# 2 & 3. Bare plot + theme in one step
-# ComplexUpset uses & (not +) to apply a theme across all sub-panels.
-\dontrun{
+# 2 & 3. Bare plot + theme — themes apply via + like every other plot.
 p <- plot(up)
-p & theme_hv_poster()
-}
+p + theme_hv_poster()
 
 }
 \seealso{

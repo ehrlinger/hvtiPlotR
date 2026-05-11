@@ -1,3 +1,41 @@
+# hvtiPlotR 2.2.0 (in development)
+
+## UpSet plot backend swap (#62)
+
+`plot.hv_upset()` is now backed by [`ggupset`](https://cran.r-project.org/package=ggupset)
+rather than `ComplexUpset`. The intersection-size bar chart is a standard
+ggplot — themes apply via `+` like every other hvtiPlotR plot, and
+`ggplot2::ggplot_build()` works on the output. When `set_size = TRUE`
+(the default) a manual set-size sidebar is composed via `patchwork`.
+
+**Breaking changes:**
+
+- The `base_annotations` parameter has been removed. To recolour the
+  intersection bars by an external grouping variable, pass `fill_col =
+  "<column>"` to `plot()`; for a single fixed colour pass
+  `bar_fill = "<colour>"`.
+- The `min_size` parameter has been replaced by `n_intersections`
+  (top-N by frequency or degree — see `sort_by`). ComplexUpset's
+  size-threshold semantics are not preserved.
+- `encode_sets` and `sort_intersections` parameters have been removed
+  (the new equivalents are `sort_by` and `set_size_sort`).
+- Themes now apply via `+`, not `&`. `&` still works on the patchwork
+  composite when `set_size = TRUE`.
+
+**Other changes:**
+
+- The `ComplexUpset` Import has been dropped; `ggupset (>= 0.4.0)` is
+  added in its place. `patchwork` has been promoted from Suggests to
+  Imports.
+- `hv_upset()` adds a `.Procedures` list-column to its stored `$data`
+  for `scale_x_upset()` to consume.
+- The four `upset_*` vignette chunks no longer carry a Windows skip
+  gate; ggupset renders cleanly on every CI runner.
+- `tests/testthat/test_example_plot_data.R` and
+  `tests/testthat/test_plot_integration.R` drop their
+  `tryCatch / skip_if_theme_incompatibility` wrappers — the upset
+  output now passes `expect_plot_has_data()` like every other plot.
+
 # hvtiPlotR 2.1.0
 
 ## Theme API redesign

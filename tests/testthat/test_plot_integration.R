@@ -307,21 +307,23 @@ test_that("plot(hv_stacked) returns a ggplot", {
 # hv_upset — sample_upset_data
 # ============================================================================
 
-test_that("plot(hv_upset) returns without error from sample data", {
+test_that("plot(hv_upset) returns a patchwork from sample data", {
   sets <- c("AV_Replacement", "AV_Repair", "MV_Replacement",
             "MV_Repair", "TV_Repair", "Aorta", "CABG")
   dta  <- sample_upset_data(n = 100, seed = 1)
-  result <- tryCatch(
-    plot(hv_upset(dta, intersect = sets)),
-    error = function(e) {
-      msg <- conditionMessage(e)
-      if (grepl("valid theme|S7|patchwork", msg, ignore.case = TRUE)) {
-        skip(paste("ComplexUpset version incompatibility:", msg))
-      }
-      stop(e)
-    }
+  # ggupset emits "Removed N rows" when n_intersections trims the tail; benign
+  result <- suppressWarnings(plot(hv_upset(dta, intersect = sets)))
+  expect_s3_class(result, "patchwork")
+})
+
+test_that("plot(hv_upset, set_size = FALSE) returns a bare ggplot", {
+  sets <- c("AV_Replacement", "AV_Repair", "MV_Replacement",
+            "MV_Repair", "TV_Repair", "Aorta", "CABG")
+  dta  <- sample_upset_data(n = 100, seed = 1)
+  p <- suppressWarnings(
+    plot(hv_upset(dta, intersect = sets), set_size = FALSE)
   )
-  expect_true(!is.null(result))
+  expect_s3_class(p, "ggplot")
 })
 
 # ============================================================================

@@ -318,33 +318,27 @@ test_that("hv_sankey plot has alluvial layer data when ggsankey installed", {
 })
 
 # ============================================================================
-# hv_upset — ComplexUpset; skip on theme-API incompatibilities
+# hv_upset — ggupset-backed; intersection bars are a normal ggplot
 # ============================================================================
 
-test_that("hv_upset patchwork carries non-empty data on its component plots", {
+test_that("hv_upset bars-only plot has non-empty intersection data", {
   sets <- c("AV_Replacement", "AV_Repair", "MV_Replacement",
             "MV_Repair", "TV_Repair", "Aorta", "CABG")
-  dta  <- sample_upset_data(n = 100, seed = 1)
+  dta  <- sample_upset_data(n = 200, seed = 1)
+  up   <- hv_upset(dta, intersect = sets)
+  # ggupset emits "Removed N rows" when n_intersections trims the tail; benign
+  suppressWarnings(
+    expect_plot_has_data(plot(up, set_size = FALSE), geoms = "GeomBar")
+  )
+})
 
-  # ComplexUpset emits a slew of theme-API deprecation warnings against
-  # current ggplot2 — they aren't actionable here, just noise.
-  result <- suppressWarnings(tryCatch(
-    plot(hv_upset(dta, intersect = sets)),
-    error = function(e) {
-      msg <- conditionMessage(e)
-      if (grepl("valid theme|S7|patchwork|element_text",
-                msg, ignore.case = TRUE)) {
-        skip(paste("ComplexUpset version incompatibility:", msg))
-      }
-      stop(e)
-    }
-  ))
-
+test_that("hv_upset default plot is a patchwork carrying bars + sidebar with rows", {
+  sets <- c("AV_Replacement", "AV_Repair", "MV_Replacement",
+            "MV_Repair", "TV_Repair", "Aorta", "CABG")
+  dta  <- sample_upset_data(n = 200, seed = 1)
+  result <- suppressWarnings(plot(hv_upset(dta, intersect = sets)))
   expect_s3_class(result, "patchwork")
 
-  # ggplot_build() fails on the assembled patchwork because of upstream
-  # theme incompatibilities, but each sub-plot's own $data slot is the
-  # input data frame — assert at least one non-spacer sub-plot carries rows.
   sub_rows <- vapply(result$patches$plots, function(sp) {
     if (inherits(sp, "spacer")) return(0L)
     d <- tryCatch(sp$data, error = function(e) NULL)
@@ -353,8 +347,19 @@ test_that("hv_upset patchwork carries non-empty data on its component plots", {
   expect_true(any(sub_rows > 0L),
               info = paste("sub-plot row counts:",
                            paste(sub_rows, collapse = ",")))
-  # main upset object also carries the long-format data frame
-  expect_gt(NROW(result$data), 0L)
+})
+
+test_that("hv_upset fill_col stacks bars by an external grouping variable", {
+  sets <- c("AV_Replacement", "AV_Repair", "MV_Replacement",
+            "MV_Repair", "TV_Repair", "Aorta", "CABG")
+  dta  <- sample_upset_data(n = 200, seed = 1)
+  dta$era <- ifelse(seq_len(nrow(dta)) <= 100, "Early", "Recent")
+  up <- hv_upset(dta, intersect = sets)
+  p  <- suppressWarnings(plot(up, fill_col = "era", set_size = FALSE))
+  expect_plot_has_data(p, geoms = "GeomBar")
+  built <- suppressWarnings(ggplot2::ggplot_build(p))
+  bar   <- built$data[[which(geom_classes(p) == "GeomBar")[1]]]
+  expect_gte(length(unique(bar$fill)), 2L)
 })
 
 # ============================================================================
