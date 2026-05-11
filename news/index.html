@@ -55,6 +55,17 @@
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="2.2.0" id="hvtiplotr-220-in-development">hvtiPlotR 2.2.0 (in development)<a class="anchor" aria-label="anchor" href="#hvtiplotr-220-in-development"></a></h2>
 <div class="section level3">
+<h3 id="new-s3-methods-for-hv_data-objects-2-2-0">New S3 methods for <code>hv_data</code> objects (<a href="https://github.com/ehrlinger/hvtiPlotR/issues/64" class="external-link">#64</a>)<a class="anchor" aria-label="anchor" href="#new-s3-methods-for-hv_data-objects-2-2-0"></a></h3>
+<p>Three standard-R S3 verbs are now implemented for every <code>hv_data</code> subclass:</p>
+<ul><li>
+<strong><code><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary()</a></code></strong> — prints the standard one-screen header, then walks the object’s <code>$tables</code> slot and prints each named auxiliary table with a header. Lets callers see the underlying risk tables, report tables, and diagnostics without having to know the <code>$tables</code> accessor path. Subclasses can override with a curated layout.</li>
+<li>
+<strong><code><a href="https://ggplot2.tidyverse.org/reference/autoplot.html" class="external-link">autoplot()</a></code></strong> — re-exports ggplot2’s <code><a href="https://ggplot2.tidyverse.org/reference/autoplot.html" class="external-link">autoplot()</a></code> generic and dispatches to the registered <code>plot.&lt;subclass&gt;()</code> method. Callers who prefer the ggplot2-ecosystem verb (used by <code>broom</code>, <code>ggfortify</code>, <code>ggsurvfit</code>) can write <code>autoplot(km)</code> interchangeably with <code>plot(km)</code>. Extra args forward to the subclass <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code>.</li>
+<li>
+<strong><code><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame()</a></code></strong> — returns the <code>$data</code> slot. Lets callers use the standard <code><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame()</a></code> / <code><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame()</a></code> coercion in tidyverse pipelines instead of reaching for the <code>$data</code> accessor.</li>
+</ul><p>No breaking changes — these are additive.</p>
+</div>
+<div class="section level3">
 <h3 id="upset-plot-backend-swap-2-2-0">UpSet plot backend swap (<a href="https://github.com/ehrlinger/hvtiPlotR/issues/62" class="external-link">#62</a>)<a class="anchor" aria-label="anchor" href="#upset-plot-backend-swap-2-2-0"></a></h3>
 <p><code><a href="../reference/plot.hv_upset.html">plot.hv_upset()</a></code> is now backed by <a href="https://cran.r-project.org/package=ggupset" class="external-link"><code>ggupset</code></a> rather than <code>ComplexUpset</code>. The intersection-size bar chart is a standard ggplot — themes apply via <code>+</code> like every other hvtiPlotR plot, and <code><a href="https://ggplot2.tidyverse.org/reference/ggplot_build.html" class="external-link">ggplot2::ggplot_build()</a></code> works on the output. When <code>set_size = TRUE</code> (the default) a manual set-size sidebar is composed via <code>patchwork</code>.</p>
 <p><strong>Breaking changes:</strong></p>

@@ -11,6 +11,8 @@
 <url><loc>https://ehrlinger.github.io/hvtiPlotR/authors.html</loc></url>
 <url><loc>https://ehrlinger.github.io/hvtiPlotR/index.html</loc></url>
 <url><loc>https://ehrlinger.github.io/hvtiPlotR/news/index.html</loc></url>
+<url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/as.data.frame.hv_data.html</loc></url>
+<url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/autoplot.hv_data.html</loc></url>
 <url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/build_hist_counts.html</loc></url>
 <url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/build_weighted_hist_counts.html</loc></url>
 <url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/calc_smd.html</loc></url>
@@ -91,6 +93,7 @@
 <url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/print.hv_survival_difference.html</loc></url>
 <url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/print.hv_trends.html</loc></url>
 <url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/print.hv_upset.html</loc></url>
+<url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/reexports.html</loc></url>
 <url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/sample_alluvial_data.html</loc></url>
 <url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/sample_cluster_sankey_data.html</loc></url>
 <url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/sample_covariate_balance_data.html</loc></url>
@@ -113,6 +116,7 @@
 <url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/sample_trends_data.html</loc></url>
 <url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/sample_upset_data.html</loc></url>
 <url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/save_ppt.html</loc></url>
+<url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/summary.hv_data.html</loc></url>
 <url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/survival_difference_plot.html</loc></url>
 <url><loc>https://ehrlinger.github.io/hvtiPlotR/testing-strategy.html</loc></url>
 </urlset>

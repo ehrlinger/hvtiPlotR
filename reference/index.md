@@ -9,8 +9,20 @@ hvtiPlotR data objects.
   [`hvtiPlotR`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-package.md)
   : hvtiPlotR: Publication-Quality Graphics for Clinical Manuscripts and
   Slides
+
 - [`is_hv_data()`](https://ehrlinger.github.io/hvtiPlotR/reference/is_hv_data.md)
   : Test whether an object is an hvtiPlotR data object
+
+- [`summary(`*`<hv_data>`*`)`](https://ehrlinger.github.io/hvtiPlotR/reference/summary.hv_data.md)
+  : Summarise an hv_data object
+
+- [`autoplot(`*`<hv_data>`*`)`](https://ehrlinger.github.io/hvtiPlotR/reference/autoplot.hv_data.md)
+  :
+
+  Produce a ggplot from an hv_data object (`autoplot` generic)
+
+- [`as.data.frame(`*`<hv_data>`*`)`](https://ehrlinger.github.io/hvtiPlotR/reference/as.data.frame.hv_data.md)
+  : Extract the underlying data frame from an hv_data object
 
 ## Themes
 
