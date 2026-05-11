@@ -1,6 +1,7 @@
 # Decorating and Saving hvtiPlotR Plots
 
 ``` r
+
 local({
   r_libs <- trimws(Sys.getenv("R_LIBS"))
   if (nzchar(r_libs)) {
@@ -36,6 +37,7 @@ and
 as representative base plots.
 
 ``` r
+
 # Trends data — multi-group continuous outcome over time
 dta_trends <- sample_trends_data(n = 600, seed = 42)
 p_base     <- plot(hv_trends(dta_trends))
@@ -60,6 +62,7 @@ The **hvtiPlotR** package provides four themes via `theme_hv_*()`. The
 ### Manuscript
 
 ``` r
+
 p_ms <- p_base +
   scale_colour_brewer(palette = "Set1", name = "Group") +
   scale_shape_manual(
@@ -78,6 +81,7 @@ p_ms
 ### Poster
 
 ``` r
+
 p_poster <- p_base +
   scale_colour_brewer(palette = "Set1", name = "Group") +
   scale_shape_manual(
@@ -96,6 +100,7 @@ p_poster
 ### Light PowerPoint
 
 ``` r
+
 p_base +
   scale_colour_brewer(palette = "Set1", name = "Group") +
   scale_shape_manual(
@@ -112,6 +117,7 @@ p_base +
 ### Dark PowerPoint
 
 ``` r
+
 p_base +
   scale_colour_brewer(palette = "Set1", name = "Group") +
   scale_shape_manual(
@@ -139,6 +145,7 @@ Use
 when assigning specific brand or convention colours to known levels.
 
 ``` r
+
 plot(km) +
   scale_color_manual(values = c(All = "steelblue"), guide = "none") +
   scale_fill_manual(values  = c(All = "steelblue"), guide = "none") +
@@ -160,6 +167,7 @@ print-friendly. Use `palette = "Set1"` for categorical data, `"RdYlGn"`
 for diverging, `"Blues"` for sequential.
 
 ``` r
+
 p_base +
   scale_colour_brewer(palette = "Set1", name = "Group") +
   scale_shape_manual(
@@ -179,6 +187,7 @@ Pass `guide = "none"` to any scale to remove its legend entry. Use this
 when colour is self-evident from axis labels or annotations.
 
 ``` r
+
 p_base +
   scale_colour_brewer(palette = "Dark2", guide = "none") +
   scale_shape_manual(
@@ -202,6 +211,7 @@ rather than inside the plot function so they can be overridden per
 project.
 
 ``` r
+
 plot(km) +
   scale_color_manual(values = c(All = "steelblue"), guide = "none") +
   scale_fill_manual(values  = c(All = "steelblue"), guide = "none") +
@@ -227,6 +237,7 @@ places text, segments, or rectangles at fixed data coordinates. Use it
 for sample size callouts, phase labels, or directional arrows.
 
 ``` r
+
 plot(km) +
   scale_color_manual(values = c(All = "steelblue"), guide = "none") +
   scale_fill_manual(values  = c(All = "steelblue"), guide = "none") +
@@ -254,6 +265,7 @@ crops the viewport without dropping data, preserving LOESS fits computed
 on the full range.
 
 ``` r
+
 p_base +
   scale_colour_brewer(palette = "Set1", name = "Group") +
   scale_shape_manual(
@@ -278,6 +290,7 @@ figures. Assign the fully composed plot to a variable first so the same
 object is both displayed in the session and written to disk.
 
 ``` r
+
 ggsave(
   filename = "../graphs/trends_manuscript.pdf",
   plot     = p_ms,
@@ -293,6 +306,7 @@ Poster figures are typically larger and use
 Adjust dimensions to match the poster panel size.
 
 ``` r
+
 ggsave(
   filename = "../graphs/trends_poster.pdf",
   plot     = p_poster,
@@ -310,15 +324,15 @@ and text remain selectable in PowerPoint after export.
 
 Key arguments:
 
-| Argument           | Default                       | Notes                                                  |
-|--------------------|-------------------------------|--------------------------------------------------------|
-| `object`           | —                             | A single ggplot **or** a named/unnamed list of ggplots |
-| `template`         | `"../graphs/RD.pptx"`         | Existing `.pptx` used as the slide template            |
-| `powerpoint`       | `"../graphs/pptExample.pptx"` | Output file path                                       |
-| `slide_titles`     | `"Plot"`                      | Character vector recycled to the number of plots       |
-| `layout`           | `"Title and Content"`         | Slide layout from the template                         |
-| `width` / `height` | `10.1` / `5.8`                | Plot area in inches                                    |
-| `left` / `top`     | `0.0` / `1.2`                 | Position from slide edges, in inches                   |
+| Argument | Default | Notes |
+|----|----|----|
+| `object` | — | A single ggplot **or** a named/unnamed list of ggplots |
+| `template` | `"../graphs/RD.pptx"` | Existing `.pptx` used as the slide template |
+| `powerpoint` | `"../graphs/pptExample.pptx"` | Output file path |
+| `slide_titles` | `"Plot"` | Character vector recycled to the number of plots |
+| `layout` | `"Title and Content"` | Slide layout from the template |
+| `width` / `height` | `10.1` / `5.8` | Plot area in inches |
+| `left` / `top` | `0.0` / `1.2` | Position from slide edges, in inches |
 
 Apply
 [`theme_hv_ppt_dark()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)
@@ -329,6 +343,7 @@ before saving to match the slide background.
 #### Single slide
 
 ``` r
+
 template <- system.file("ClevelandClinic.pptx", package = "hvtiPlotR")
 
 p_ppt <- p_base +
@@ -355,6 +370,7 @@ Pass a named list of plots and a matching vector of titles to produce
 one slide per plot in a single call.
 
 ``` r
+
 dta_km2 <- sample_survival_data(n = 400, seed = 99)
 km2     <- hv_survival(dta_km2)
 
@@ -395,6 +411,7 @@ rectangle regardless of label width. Axis labels then extend outside the
 panel box as needed; device dimensions vary per plot.
 
 ``` r
+
 save_ppt(
   object       = list(trends = p_ppt, survival = p_km_ppt),
   template     = template,
@@ -418,6 +435,7 @@ arranges them into a grid and
 each page.
 
 ``` r
+
 # Build a list of plots (e.g. from an hv_eda() lapply loop)
 plot_list <- lapply(
   c("ef", "lv_mass", "peak_grad"),
@@ -458,6 +476,7 @@ Pass fractional coordinates `c(x, y)` to `legend.position` inside
 `c(0, 0)` is the bottom-left corner; `c(1, 1)` is the top-right.
 
 ``` r
+
 p_base +
   scale_colour_brewer(palette = "Set1", name = NULL) +
   scale_shape_manual(
@@ -479,6 +498,7 @@ p_base +
 ### Outside the panel (explicit sides)
 
 ``` r
+
 p_base +
   scale_colour_brewer(palette = "Set1", name = "Group") +
   scale_shape_manual(
@@ -499,6 +519,7 @@ p_base +
 ### Suppress all legends
 
 ``` r
+
 plot(km) +
   scale_color_manual(values = c(All = "steelblue"), guide = "none") +
   scale_fill_manual(values  = c(All = "steelblue"), guide = "none") +
@@ -519,6 +540,7 @@ aesthetics have legends and others do not.
 ### Legend text and key size
 
 ``` r
+
 p_base +
   scale_colour_brewer(palette = "Set1", name = "Group") +
   scale_shape_manual(
@@ -546,6 +568,7 @@ after it to adjust individual elements without touching the rest.
 ### Axis text size
 
 ``` r
+
 p_base +
   scale_colour_brewer(palette = "Set1", name = "Group") +
   scale_shape_manual(
@@ -566,6 +589,7 @@ p_base +
 ### Removing minor grid lines
 
 ``` r
+
 p_base +
   scale_colour_brewer(palette = "Set1", name = "Group") +
   scale_shape_manual(
@@ -587,6 +611,7 @@ p_base +
 Useful for time-point labels or long category names.
 
 ``` r
+
 p_base +
   scale_colour_brewer(palette = "Set1", name = "Group") +
   scale_shape_manual(
@@ -609,6 +634,7 @@ Titles are stripped from the base themes (they are rarely used in
 journal figures), but can be added back:
 
 ``` r
+
 plot(km) +
   scale_color_manual(values = c(All = "steelblue"), guide = "none") +
   scale_fill_manual(values  = c(All = "steelblue"), guide = "none") +
@@ -637,6 +663,7 @@ Add breathing room around the panel, for example when a figure is placed
 directly on a poster without a surrounding text frame.
 
 ``` r
+
 p_base +
   scale_colour_brewer(palette = "Set1", name = "Group") +
   scale_shape_manual(
@@ -662,6 +689,7 @@ main plot above a companion table or risk panel.
 ### Side-by-side plots
 
 ``` r
+
 library(patchwork)
 
 p_ms <- p_base +
@@ -694,6 +722,7 @@ p_ms | p_km_ms
 ### Controlling relative widths and heights
 
 ``` r
+
 (p_ms | p_km_ms) +
   plot_layout(widths = c(2, 1))   # left panel twice as wide as right
 ```
@@ -710,6 +739,7 @@ stores the risk table as a data frame at `km$tables$risk` — columns
 then stack with `/`.
 
 ``` r
+
 risk_df <- km$tables$risk
 
 rt_panel <- ggplot(risk_df,
@@ -736,6 +766,7 @@ p_km_ms / rt_panel +
 adds a shared title or tags (A, B, C…) across all panels.
 
 ``` r
+
 (p_ms | p_km_ms) +
   plot_annotation(
     title = "Figure 1. Outcomes after cardiac surgery",
@@ -755,6 +786,7 @@ PowerPoint, save each panel individually with
 (patchwork composites are not editable DrawingML objects).
 
 ``` r
+
 combined <- (p_ms | p_km_ms) +
   plot_annotation(tag_levels = "A") &
   theme(plot.tag = element_text(size = 12, face = "bold"))

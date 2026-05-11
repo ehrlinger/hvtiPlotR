@@ -1,6 +1,7 @@
 # hvtiPlotR Plot Functions
 
 ``` r
+
 local({
   r_libs <- trimws(Sys.getenv("R_LIBS"))
   if (nzchar(r_libs)) {
@@ -34,25 +35,25 @@ R templates it ports. Functions marked with — have no direct predecessor
 and were designed specifically for this package. All functions have
 worked examples in the sections below.
 
-| hvtiPlotR Constructor                                                                                       | SAS Template(s)                                                                                                                            | R Template(s)                                                                   |
-|-------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------|
-| [`hv_mirror_hist()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_mirror_hist.md)                     | —                                                                                                                                          | `tp.lp.mirror-histogram_SAVR-TF-TAVR.R`, `tp.lp.mirror_histo_before_after_wt.R` |
-| [`hv_stacked()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_stacked.md)                             | —                                                                                                                                          | —                                                                               |
-| [`hv_balance()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_balance.md)                             | —                                                                                                                                          | `tp.lp.propen.cov_balance.R`                                                    |
-| [`hv_followup()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_followup.md)                           | `tp.dp.goodness_followup.*`, `tp.dp.goodness_event.*`                                                                                      | —                                                                               |
-| [`hv_survival()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_survival.md)                           | `tp.hp.dead.sas` (basic)                                                                                                                   | `tp.hp.dead.number_risk.R`                                                      |
-| [`hazard_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/hazard_plot.md)                           | `tp.hp.dead.*`, `tp.hp.event.weighted.sas`, `tp.hp.repeated*.sas`, `tp.hp.numtreat.survdiff.matched.sas`, `tp.hs.dead.*`, `tp.hs.uslife_*` | `tp.hp.dead.number_risk.R`                                                      |
-| [`survival_difference_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/survival_difference_plot.md) | `tp.hp.dead.life-gained.sas`, `tp.hp.numtreat.survdiff.matched.sas`, `tp.hs.dead.compare_benefit.setup.sas`                                | —                                                                               |
-| [`nnt_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/nnt_plot.md)                                 | `tp.hp.numtreat.survdiff.matched.sas`                                                                                                      | —                                                                               |
-| [`hv_nonparametric()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_nonparametric.md)                 | `tp.np.*.avrg_curv.*`, `tp.np.*.u.trend.*`, `tp.np.*.double.*`, `tp.np.*.mult.*`, `tp.np.*.phases.*`, `tp.np.z0axdpo.*`                    | —                                                                               |
-| [`hv_ordinal()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_ordinal.md)                             | `tp.np.*.ordinal.*`                                                                                                                        | —                                                                               |
-| [`hv_eda()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_eda.md)                                     | —                                                                                                                                          | —                                                                               |
-| [`hv_spaghetti()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_spaghetti.md)                         | —                                                                                                                                          | `tp.dp.spaghetti.echo.R`                                                        |
-| [`hv_trends()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_trends.md)                               | `tp.lp.trends.sas`, `tp.lp.trends.age.sas`, `tp.lp.trends.polytomous.sas`, `tp.rp.trends.sas`                                              | `tp.dp.trends.R`                                                                |
-| [`hv_longitudinal()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_longitudinal.md)                   | `tp.dp.longitudinal_patients_measures.*`                                                                                                   | —                                                                               |
-| [`hv_alluvial()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_alluvial.md)                           | —                                                                                                                                          | —                                                                               |
-| [`hv_sankey()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_sankey.md)                               | —                                                                                                                                          | PAM cluster stability analysis                                                  |
-| [`hv_upset()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_upset.md)                                 | —                                                                                                                                          | —                                                                               |
+| hvtiPlotR Constructor | SAS Template(s) | R Template(s) |
+|----|----|----|
+| [`hv_mirror_hist()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_mirror_hist.md) | — | `tp.lp.mirror-histogram_SAVR-TF-TAVR.R`, `tp.lp.mirror_histo_before_after_wt.R` |
+| [`hv_stacked()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_stacked.md) | — | — |
+| [`hv_balance()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_balance.md) | — | `tp.lp.propen.cov_balance.R` |
+| [`hv_followup()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_followup.md) | `tp.dp.goodness_followup.*`, `tp.dp.goodness_event.*` | — |
+| [`hv_survival()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_survival.md) | `tp.hp.dead.sas` (basic) | `tp.hp.dead.number_risk.R` |
+| [`hazard_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/hazard_plot.md) | `tp.hp.dead.*`, `tp.hp.event.weighted.sas`, `tp.hp.repeated*.sas`, `tp.hp.numtreat.survdiff.matched.sas`, `tp.hs.dead.*`, `tp.hs.uslife_*` | `tp.hp.dead.number_risk.R` |
+| [`survival_difference_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/survival_difference_plot.md) | `tp.hp.dead.life-gained.sas`, `tp.hp.numtreat.survdiff.matched.sas`, `tp.hs.dead.compare_benefit.setup.sas` | — |
+| [`nnt_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/nnt_plot.md) | `tp.hp.numtreat.survdiff.matched.sas` | — |
+| [`hv_nonparametric()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_nonparametric.md) | `tp.np.*.avrg_curv.*`, `tp.np.*.u.trend.*`, `tp.np.*.double.*`, `tp.np.*.mult.*`, `tp.np.*.phases.*`, `tp.np.z0axdpo.*` | — |
+| [`hv_ordinal()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_ordinal.md) | `tp.np.*.ordinal.*` | — |
+| [`hv_eda()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_eda.md) | — | — |
+| [`hv_spaghetti()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_spaghetti.md) | — | `tp.dp.spaghetti.echo.R` |
+| [`hv_trends()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_trends.md) | `tp.lp.trends.sas`, `tp.lp.trends.age.sas`, `tp.lp.trends.polytomous.sas`, `tp.rp.trends.sas` | `tp.dp.trends.R` |
+| [`hv_longitudinal()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_longitudinal.md) | `tp.dp.longitudinal_patients_measures.*` | — |
+| [`hv_alluvial()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_alluvial.md) | — | — |
+| [`hv_sankey()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_sankey.md) | — | PAM cluster stability analysis |
+| [`hv_upset()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_upset.md) | — | — |
 
 Note:
 [`hazard_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/hazard_plot.md),
@@ -93,6 +94,7 @@ constructor:
 ### Binary-match mode (SAVR vs. TF-TAVR)
 
 ``` r
+
 mirror_dta <- sample_mirror_histogram_data(n = 2000, separation = 1.5)
 
 mh <- hv_mirror_hist(
@@ -111,6 +113,7 @@ mh <- hv_mirror_hist(
 ### Bare plot
 
 ``` r
+
 p <- plot(mh, alpha = 0.8)
 p
 ```
@@ -120,6 +123,7 @@ p
 ### Adding scales, labels, and theme
 
 ``` r
+
 p +
   ggplot2::scale_fill_manual(
     values = c(
@@ -156,27 +160,33 @@ mean differences (SMD) before and after matching in the
 `$tables$diagnostics` list:
 
 ``` r
+
 mh$tables$diagnostics$smd_before
 ```
 
     [1] 1.563175
 
 ``` r
+
 mh$tables$diagnostics$smd_matched
 ```
 
     [1] 0.02714868
 
 ``` r
+
 mh$tables$diagnostics$group_counts_before
 ```
+
 
        0    1
     2000 2000 
 
 ``` r
+
 mh$tables$diagnostics$group_counts_matched
 ```
+
 
       0   1
     919 919 
@@ -184,6 +194,7 @@ mh$tables$diagnostics$group_counts_matched
 ### Weighted IPTW mode (Limited vs. Extended)
 
 ``` r
+
 wt_dta <- sample_mirror_histogram_data(
   n = 2000, separation = 1.5, add_weights = TRUE
 )
@@ -203,6 +214,7 @@ mh_wt <- hv_mirror_hist(
 ### Bare plot
 
 ``` r
+
 p_wt <- plot(mh_wt, alpha = 0.8)
 p_wt
 ```
@@ -212,6 +224,7 @@ p_wt
 ### Adding scales, labels, and theme
 
 ``` r
+
 p_wt +
   ggplot2::scale_fill_manual(
     values = c(
@@ -238,12 +251,14 @@ p_wt +
 Weighted diagnostics include the effective N and weighted SMD:
 
 ``` r
+
 mh_wt$tables$diagnostics$smd_weighted
 ```
 
     [1] 0.5434922
 
 ``` r
+
 mh_wt$tables$diagnostics$effective_n_by_group
 ```
 
@@ -270,6 +285,7 @@ function generates a reproducible example dataset with `year` and
 `category` columns.
 
 ``` r
+
 # Generate sample data
 hist_dta <- sample_stacked_histogram_data(n_years = 20, start_year = 2000,
                                            n_categories = 3)
@@ -290,6 +306,7 @@ The default `position = "stack"` shows raw counts within each bin,
 equivalent to the `plot.sas` frequency histogram.
 
 ``` r
+
 # Build the S3 object, then render the bare plot
 sh <- hv_stacked(hist_dta, x_col = "year", group_col = "category")
 p_count <- plot(sh)
@@ -310,6 +327,7 @@ Setting `position = "fill"` rescales each bin so the bars sum to 1,
 making it easy to compare the relative composition across years.
 
 ``` r
+
 # Build the proportional variant
 sh2   <- hv_stacked(hist_dta, x_col = "year", group_col = "category",
                        position = "fill")
@@ -337,6 +355,7 @@ p_final
 ### Saving
 
 ``` r
+
 ggsave(
   filename = "../graphs/stacked_histogram.pdf",
   plot     = p_final,
@@ -367,6 +386,7 @@ death/censoring scatter) or `"event"` (competing non-fatal event panel).
 ### Sample data
 
 ``` r
+
 gfup_dta <- sample_goodness_followup_data(n = 300, seed = 42)
 head(gfup_dta)
 ```
@@ -382,6 +402,7 @@ head(gfup_dta)
 ### Death follow-up plot
 
 ``` r
+
 gf <- hv_followup(
   data        = gfup_dta,
   origin_year = 1990,
@@ -408,6 +429,7 @@ map the binary alive/dead state to colours and point shapes.
 places group-identifying text directly on the panel.
 
 ``` r
+
 gfup_final <- plot(gf, alpha = 0.8) +
   # Colour alive = blue, dead = red (Set1 palette positions 2 and 1)
   scale_color_manual(
@@ -453,6 +475,7 @@ surveillance supplementing active cross-sectional follow-up.
 ### Saving
 
 ``` r
+
 ggsave(
   filename = "../graphs/dp_goodness-of-followup.pdf",
   plot     = gfup_final,
@@ -470,10 +493,12 @@ reoperation), pass `event_col`, `event_time_col`, and optionally
 `type = "event"` to render the event panel.
 
 ``` r
+
 gfup_event_dta <- sample_goodness_followup_data(n = 300, seed = 42)
 ```
 
 ``` r
+
 gf2 <- hv_followup(
   gfup_event_dta,
   event_col           = "ev_event",
@@ -540,6 +565,7 @@ the numeric SMD value. When the source dataset arrives in wide format
 (one column per time-point, as the SAS export does), reshape it first:
 
 ``` r
+
 # Simulate a wide-format export (e.g. from SAS or a summary table)
 dta_wide <- data.frame(
   variable      = c("Age", "Female sex", "Hypertension", "Diabetes", "COPD"),
@@ -571,6 +597,7 @@ head(dta_long)
 ### Sample data
 
 ``` r
+
 dta_cb <- sample_covariate_balance_data(n_vars = 12)
 head(dta_cb)
 ```
@@ -584,6 +611,7 @@ head(dta_cb)
     6        Creatinine Before match     26.5
 
 ``` r
+
 # Build the S3 object once; reuse for all plot variants below
 cb <- hv_balance(dta_cb)
 ```
@@ -591,6 +619,7 @@ cb <- hv_balance(dta_cb)
 ### Bare plot
 
 ``` r
+
 plot(cb, alpha = 0.8)
 ```
 
@@ -599,6 +628,7 @@ plot(cb, alpha = 0.8)
 ### Adding colour, shape, and axis scales
 
 ``` r
+
 plot(cb, alpha = 0.8) +
   scale_color_manual(
     values = c("Before match" = "red4", "After match" = "blue3"),
@@ -630,6 +660,7 @@ exact labels, x-scale, annotation positions, and legend placement from
 `tp.lp.propen.cov_balance.R` (SAVR vs. TF-TAVR study).
 
 ``` r
+
 n_vars <- length(unique(dta_cb$variable))
 
 cb_final <- plot(cb, alpha = 0.8) +
@@ -662,6 +693,7 @@ Pass `var_levels` to the constructor to control the bottom-to-top
 display order of covariates.
 
 ``` r
+
 cb_ord <- hv_balance(dta_cb, var_levels = rev(unique(dta_cb$variable)))
 
 plot(cb_ord, alpha = 0.8) +
@@ -682,6 +714,7 @@ plot(cb_ord, alpha = 0.8) +
 ### Saving
 
 ``` r
+
 ggsave(
   filename = here::here("graphs", "lp_cov-balance-SAVR_TF-TAVR.pdf"),
   plot     = cb_final,
@@ -705,6 +738,7 @@ transform with a default confidence level of 0.95.
 ### Sample data
 
 ``` r
+
 dta_km <- sample_survival_data(n = 500, seed = 42)
 head(dta_km)
 ```
@@ -718,6 +752,7 @@ head(dta_km)
     6 20.000000 FALSE 1991.461  60.21944
 
 ``` r
+
 # Build the S3 object once; reuse across all plot variants below
 km <- hv_survival(dta_km)
 ```
@@ -725,6 +760,7 @@ km <- hv_survival(dta_km)
 ### Survival curve (PLOTS=1)
 
 ``` r
+
 # Bare plot — no scales or labels yet
 plot(km)
 ```
@@ -734,6 +770,7 @@ plot(km)
 ### Adding scales, labels, and annotations
 
 ``` r
+
 km_final <- plot(km, alpha = 0.8) +
   scale_color_manual(values = c(All = "steelblue"), guide = "none") +
   scale_fill_manual(values  = c(All = "steelblue"), guide = "none") +
@@ -761,6 +798,7 @@ km_final
 ### Numbers at risk and report table
 
 ``` r
+
 km$tables$risk
 ```
 
@@ -773,6 +811,7 @@ km$tables$risk
     6    All          25    207
 
 ``` r
+
 km$tables$report
 ```
 
@@ -787,12 +826,14 @@ km$tables$report
 ### Saving
 
 ``` r
+
 ggsave("../graphs/km_survival.pdf", km_final, width = 8, height = 6)
 ```
 
 ### Stratified analysis
 
 ``` r
+
 dta_km_s <- sample_survival_data(
   n             = 500,
   strata_levels = c("Type A", "Type B"),
@@ -826,6 +867,7 @@ plot(km_s, alpha = 0.8) +
 ### Cumulative hazard (PLOTC=1)
 
 ``` r
+
 plot(km, type = "cumhaz") +
   scale_x_continuous(breaks = seq(0, 20, 5)) +
   labs(x = "Years after Operation", y = "Cumulative Hazard H(t)",
@@ -841,6 +883,7 @@ plot(km, type = "cumhaz") +
 Parallel lines across strata indicate proportional hazards.
 
 ``` r
+
 plot(km_s, type = "loglog") +
   scale_color_manual(
     values = c("Type A" = "steelblue", "Type B" = "firebrick"),
@@ -860,6 +903,7 @@ The raw point estimates are noisy; add
 for a publication-ready smoothed hazard curve.
 
 ``` r
+
 plot(km, type = "hazard") +
   geom_smooth(
     aes(x = mid_time, y = hazard, color = strata),
@@ -877,6 +921,7 @@ plot(km, type = "hazard") +
 ### Integrated survivorship / restricted mean survival (PLOTL=1)
 
 ``` r
+
 plot(km, type = "life") +
   scale_color_manual(values = c(All = "steelblue"), guide = "none") +
   scale_x_continuous(breaks = seq(0, 20, 5)) +
@@ -920,6 +965,7 @@ are added by the caller.
 ### Sample data
 
 ``` r
+
 dta_eda <- sample_eda_data(n = 300, seed = 42)
 head(dta_eda)
 ```
@@ -933,6 +979,7 @@ head(dta_eda)
     6 2008     3.92    1    1    1    Bicuspid 20.0   148.0      45.1
 
 ``` r
+
 # Inspect auto-detected types for each column
 sapply(dta_eda, eda_classify_var)
 ```
@@ -951,6 +998,7 @@ The `y_label` argument sets the plot title and fill-legend name in place
 of the raw column name.
 
 ``` r
+
 plot(hv_eda(dta_eda, x_col = "year", y_col = "male",
               y_label = "Sex")) +
   scale_fill_manual(
@@ -972,6 +1020,7 @@ Setting `show_percent = TRUE` switches
 `position = "fill"`.
 
 ``` r
+
 plot(hv_eda(dta_eda, x_col = "year", y_col = "cabg",
               y_label = "Concomitant CABG", show_percent = TRUE)) +
   scale_fill_manual(
@@ -990,6 +1039,7 @@ plot(hv_eda(dta_eda, x_col = "year", y_col = "cabg",
 ### Ordinal and multi-level categorical
 
 ``` r
+
 plot(hv_eda(dta_eda, x_col = "year", y_col = "nyha",
               y_label = "Preoperative NYHA Class")) +
   scale_fill_brewer(
@@ -1008,6 +1058,7 @@ plot(hv_eda(dta_eda, x_col = "year", y_col = "nyha",
 ### Character categorical
 
 ``` r
+
 plot(hv_eda(dta_eda, x_col = "year", y_col = "valve_morph",
               y_label = "Valve Morphology")) +
   scale_fill_manual(
@@ -1030,6 +1081,7 @@ Continuous columns produce a scatter plot with a LOESS smoother overlay.
 Where `y_col` is `NA`, a rug mark is drawn on the x-axis.
 
 ``` r
+
 plot(hv_eda(dta_eda, x_col = "op_years", y_col = "ef",
               y_label = "Ejection Fraction (%)")) +
   scale_colour_manual(values = c("firebrick"), guide = "none") +
@@ -1051,6 +1103,7 @@ names and whose values are human-readable labels drives a single
 [`lapply()`](https://rdrr.io/r/base/lapply.html) loop.
 
 ``` r
+
 bin_vars <- c(male = "Sex (Male)", cabg = "Concomitant CABG")
 sub_bin  <- eda_select_vars(dta_eda, c("year", names(bin_vars)))
 
@@ -1068,12 +1121,14 @@ p_bin[[1]]
 ![](plot-functions_files/figure-html/eda_varnames_binary-1.png)
 
 ``` r
+
 p_bin[[2]]
 ```
 
 ![](plot-functions_files/figure-html/eda_varnames_binary-2.png)
 
 ``` r
+
 cat_vars <- c(nyha        = "NYHA Class",
               valve_morph = "Valve Morphology")
 sub_cat <- eda_select_vars(dta_eda, c("year", names(cat_vars)))
@@ -1092,12 +1147,14 @@ p_cat[[1]]
 ![](plot-functions_files/figure-html/eda_varnames_ordinal-1.png)
 
 ``` r
+
 p_cat[[2]]
 ```
 
 ![](plot-functions_files/figure-html/eda_varnames_ordinal-2.png)
 
 ``` r
+
 cont_vars <- c(ef        = "Ejection Fraction (%)",
                lv_mass   = "LV Mass Index (g/m\u00b2)",
                peak_grad = "Peak Gradient (mmHg)")
@@ -1117,12 +1174,14 @@ p_cont[[1]]
 ![](plot-functions_files/figure-html/eda_varnames_continuous-1.png)
 
 ``` r
+
 p_cont[[2]]
 ```
 
 ![](plot-functions_files/figure-html/eda_varnames_continuous-2.png)
 
 ``` r
+
 p_cont[[3]]
 ```
 
@@ -1136,6 +1195,7 @@ arranges multiple plots into a grid and
 each page to a separate PDF file.
 
 ``` r
+
 all_plots <- c(p_bin, p_cat, p_cont)
 per_page  <- 9L  # 3 x 3 grid
 
@@ -1163,6 +1223,7 @@ draws flows proportional to that count. Ports
 ### Sample data
 
 ``` r
+
 dta_al  <- sample_alluvial_data(n = 300, seed = 42)
 axes    <- c("pre_ar", "procedure", "post_ar")
 head(dta_al)
@@ -1179,6 +1240,7 @@ head(dta_al)
 ### Bare plot
 
 ``` r
+
 al <- hv_alluvial(dta_al, axes = axes, y_col = "freq")
 plot(al)
 ```
@@ -1188,6 +1250,7 @@ plot(al)
 ### Fill flows by pre-operative grade
 
 ``` r
+
 al_filled <- hv_alluvial(dta_al, axes = axes, y_col = "freq",
                             fill_col = "pre_ar")
 
@@ -1221,6 +1284,7 @@ plot(al_filled) +
 ### Two-axis before / after comparison
 
 ``` r
+
 al2 <- hv_alluvial(
   dta_al,
   axes        = c("pre_ar", "post_ar"),
@@ -1247,6 +1311,7 @@ plot(al2) +
 ### Saving
 
 ``` r
+
 p_al <- plot(al_filled) +
   scale_fill_brewer(palette = "RdYlGn", direction = -1) +
   scale_colour_brewer(palette = "RdYlGn", direction = -1, guide = "none") +
@@ -1269,12 +1334,14 @@ values. Node labels show the cluster letter and count.
 **Requires `ggsankey`** (not on CRAN):
 
 ``` r
+
 remotes::install_github("davidsjoberg/ggsankey")
 ```
 
 ### Sample data
 
 ``` r
+
 dta_san <- sample_cluster_sankey_data(n = 300, seed = 42)
 head(dta_san)
 ```
@@ -1288,8 +1355,10 @@ head(dta_san)
     6  B  B  B  B  F  F  F  F
 
 ``` r
+
 table(dta_san$C9)
 ```
+
 
      B  F  H  D  I  C  E  G  A
     59 39 22 26 11 42 38 22 41 
@@ -1297,6 +1366,7 @@ table(dta_san$C9)
 ### Default plot (K = 2 to 9)
 
 ``` r
+
 sk <- hv_sankey(dta_san)
 plot(sk) +
   labs(title = "Cluster Stability: K = 2 to 9") +
@@ -1311,6 +1381,7 @@ Replace the default Set1 colours with a fully custom named vector. Names
 must match the node labels in the data.
 
 ``` r
+
 my_cols <- c(
   A = "#1f77b4", B = "#ff7f0e", C = "#2ca02c", D = "#d62728",
   E = "#9467bd", F = "#8c564b", G = "#e377c2", H = "#7f7f7f",
@@ -1330,6 +1401,7 @@ Pass a shorter `cluster_cols` vector to the constructor to show only a
 range of K.
 
 ``` r
+
 sk_sub <- hv_sankey(dta_san, cluster_cols = paste0("C", 2:6))
 plot(sk_sub) +
   labs(title = "Cluster Stability: K = 2 to 6") +
@@ -1341,6 +1413,7 @@ plot(sk_sub) +
 ### Saving
 
 ``` r
+
 p_san <- plot(sk) +
   labs(title = "PAM Cluster Stability") +
   theme_hv_poster()
@@ -1359,15 +1432,16 @@ ports the entire `tp.hp.dead.*` SAS template family.
 The input data comes from two sources that map directly to the SAS
 output:
 
-| Column set                 | SAS dataset                                   | R function                                                                                                |
-|----------------------------|-----------------------------------------------|-----------------------------------------------------------------------------------------------------------|
-| Parametric prediction grid | `predict` (`SSURVIV`, `SCLLSURV`, `SCLUSURV`) | [`sample_hazard_data()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_hazard_data.md)           |
-| KM empirical overlay       | `plout` (`CUM_SURV`, `CL_LOWER`, `CL_UPPER`)  | [`sample_hazard_empirical()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_hazard_empirical.md) |
-| Population life table      | `smatched`                                    | [`sample_life_table()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_life_table.md)             |
+| Column set | SAS dataset | R function |
+|----|----|----|
+| Parametric prediction grid | `predict` (`SSURVIV`, `SCLLSURV`, `SCLUSURV`) | [`sample_hazard_data()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_hazard_data.md) |
+| KM empirical overlay | `plout` (`CUM_SURV`, `CL_LOWER`, `CL_UPPER`) | [`sample_hazard_empirical()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_hazard_empirical.md) |
+| Population life table | `smatched` | [`sample_life_table()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_life_table.md) |
 
 ### Sample data
 
 ``` r
+
 dat_hp  <- sample_hazard_data(n = 500, time_max = 10)
 emp_hp  <- sample_hazard_empirical(n = 500, time_max = 10, n_bins = 6)
 head(dat_hp)
@@ -1394,6 +1468,7 @@ The most common `tp.hp.dead.sas` output: smooth parametric survival with
 confidence band plus discrete KM empirical circles and error bars.
 
 ``` r
+
 hazard_plot(
   dat_hp,
   estimate_col  = "survival",
@@ -1420,6 +1495,7 @@ Switching `estimate_col` to `"hazard"` (and the matching CI columns)
 shows the instantaneous hazard rate (%/year) instead of survival.
 
 ``` r
+
 hazard_plot(
   dat_hp,
   estimate_col = "hazard",
@@ -1444,6 +1520,7 @@ Used for readmission and repeated-event analyses
 `"cumhaz"` column equals `-log(S) * 100`.
 
 ``` r
+
 hazard_plot(
   dat_hp,
   estimate_col  = "cumhaz",
@@ -1465,6 +1542,7 @@ Pass `group_col` to compare two or more groups
 (`tp.hp.dead.tkdn.stratified.sas`).
 
 ``` r
+
 dat_strat <- sample_hazard_data(
   n = 400, time_max = 10,
   groups = c("No Takedown" = 1.0, "Takedown" = 0.65)
@@ -1510,6 +1588,7 @@ life-table data frame to `reference` and set `ref_group_col` to vary the
 linetype by age group.
 
 ``` r
+
 dat_age <- sample_hazard_data(
   n = 600, time_max = 12,
   groups = c("<65" = 0.5, "65\u201380" = 1.0, "\u226580" = 1.8)
@@ -1567,6 +1646,7 @@ with an optional confidence band. This ports
 ### Sample data
 
 ``` r
+
 diff_dat <- sample_survival_difference_data(
   n      = 500,
   groups = c("Control" = 1.0, "Treatment" = 0.70)
@@ -1585,6 +1665,7 @@ head(diff_dat)
 ### Survival difference curve
 
 ``` r
+
 survival_difference_plot(
   diff_dat,
   lower_col = "diff_lower",
@@ -1609,6 +1690,7 @@ Combine several two-group differences into one long data frame and use
 `group_col` to overlay them.
 
 ``` r
+
 d1 <- sample_survival_difference_data(
   groups = c("Medical Mgmt" = 1.0, "TF-TAVR" = 0.70), seed = 1L
 )
@@ -1646,6 +1728,7 @@ porting the NNT component of `tp.hp.numtreat.survdiff.matched.sas`.
 ### Sample data
 
 ``` r
+
 nnt_dat <- sample_nnt_data(
   n      = 500,
   time_max = 20,
@@ -1667,6 +1750,7 @@ head(nnt_dat)
 NNT decreases over time as the treatment benefit accumulates.
 
 ``` r
+
 nnt_plot(
   nnt_dat,
   lower_col = "nnt_lower",
@@ -1687,6 +1771,7 @@ nnt_plot(
 The same data, plotted as ARR (%) instead of NNT.
 
 ``` r
+
 nnt_plot(
   nnt_dat,
   estimate_col = "arr",
@@ -1707,6 +1792,7 @@ nnt_plot(
 ### Saving
 
 ``` r
+
 p_hp <- hazard_plot(
   dat_hp,
   estimate_col  = "survival",
@@ -1729,13 +1815,13 @@ ggsave("../graphs/hazard_survival.pdf", p_hp, width = 11.5, height = 8)
 [`hv_trends()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_trends.md)
 ports the pattern from five SAS/R templates:
 
-| Template                      | Study                                  | Key pattern                                   |
-|-------------------------------|----------------------------------------|-----------------------------------------------|
-| `tp.rp.trends.sas`            | Tricuspid valve replacement, 1968–2000 | Single continuous outcome vs operation year   |
-| `tp.lp.trends.sas`            | Post-infarct VSD, 1969–2000            | Binary % outcomes, x 1970–2000 by 10, y 0–100 |
-| `tp.lp.trends.age.sas`        | Mitral valve surgery, 1990–1999        | Binary % vs **age** (not year), x 25–85 by 10 |
-| `tp.lp.trends.polytomous.sas` | Tricuspid valve repair, 1990–1999      | Polytomous (≥3) groups, x 1990–1999 by 1      |
-| `tp.dp.trends.R`              | Mitral degeneration, 1985–2015         | NYHA %, LV mass, %CHF, case volume, LOS       |
+| Template | Study | Key pattern |
+|----|----|----|
+| `tp.rp.trends.sas` | Tricuspid valve replacement, 1968–2000 | Single continuous outcome vs operation year |
+| `tp.lp.trends.sas` | Post-infarct VSD, 1969–2000 | Binary % outcomes, x 1970–2000 by 10, y 0–100 |
+| `tp.lp.trends.age.sas` | Mitral valve surgery, 1990–1999 | Binary % vs **age** (not year), x 25–85 by 10 |
+| `tp.lp.trends.polytomous.sas` | Tricuspid valve repair, 1990–1999 | Polytomous (≥3) groups, x 1990–1999 by 1 |
+| `tp.dp.trends.R` | Mitral degeneration, 1985–2015 | NYHA %, LV mass, %CHF, case volume, LOS |
 
 The constructor accepts patient-level data and computes annual summaries
 (mean or median) internally.
@@ -1752,6 +1838,7 @@ and
 ### Sample data
 
 ``` r
+
 # year_range matches the 1968-2000 Tricuspid Valve Replacement study in the
 # SAS template (tp.rp.trends.sas)
 dta_tr <- sample_trends_data(
@@ -1776,6 +1863,7 @@ The SAS template plots annual case volume against operation year with
 `axisx order=(1968 to 2000 by 4)` and `axisy order=(0 to 10 by 2)`.
 
 ``` r
+
 one_grp <- dta_tr[dta_tr$group == "Group I", ]
 tr1 <- hv_trends(one_grp, group_col = NULL)
 ```
@@ -1783,6 +1871,7 @@ tr1 <- hv_trends(one_grp, group_col = NULL)
 #### Bare plot
 
 ``` r
+
 p_tr1 <- plot(tr1)
 p_tr1
 ```
@@ -1792,6 +1881,7 @@ p_tr1
 #### Adding scales, labels, and theme
 
 ``` r
+
 p_tr1 +
   scale_x_continuous(limits = c(1968, 2000), breaks = seq(1968, 2000, 4)) +
   scale_y_continuous(limits = c(0, 10),      breaks = seq(0, 10, 2)) +
@@ -1806,6 +1896,7 @@ p_tr1 +
 The age figure uses the same x-axis and `axisy order=(30 to 70 by 10)`.
 
 ``` r
+
 plot(tr1) +
   scale_x_continuous(limits = c(1968, 2000), breaks = seq(1968, 2000, 4)) +
   scale_y_continuous(limits = c(30, 70),     breaks = seq(30, 70, 10)) +
@@ -1818,6 +1909,7 @@ plot(tr1) +
 ### Multiple groups with `scale_colour_brewer`
 
 ``` r
+
 tr <- hv_trends(dta_tr)
 plot(tr) +
   scale_colour_brewer(palette = "Set1", name = "Group") +
@@ -1836,6 +1928,7 @@ plot(tr) +
 ### Median summary + manual colours (NYHA style)
 
 ``` r
+
 tr_med <- hv_trends(dta_tr, summary_fn = "median")
 plot(tr_med) +
   scale_colour_manual(
@@ -1865,6 +1958,7 @@ plot(tr_med) +
 ### With confidence ribbon
 
 ``` r
+
 plot(tr1, se = TRUE, alpha = 0.2) +
   scale_x_continuous(limits = c(1968, 2000), breaks = seq(1968, 2000, 4)) +
   labs(x = "Year", y = "Cases/year") +
@@ -1881,6 +1975,7 @@ pre-op IABP %, inotropes %) on the same axes:
 outcome becomes a group.
 
 ``` r
+
 dta_lp <- sample_trends_data(
   n          = 800,
   year_range = c(1970L, 2000L),
@@ -1915,6 +2010,7 @@ real data with an `age` column and set `x_col = "age"`. The example
 below uses the sample data’s `year` column relabelled for illustration.
 
 ``` r
+
 # With real data: x_col = "age", x_col_data has values ~25 to 85
 # Illustration using sample_trends_data() with year_range spanning age range:
 dta_age <- sample_trends_data(
@@ -1948,6 +2044,7 @@ Four repair categories over a short study period (1990–1999): the SAS
 template uses `axisx order=(1990 to 1999 by 1)` for fine year breaks.
 
 ``` r
+
 dta_poly <- sample_trends_data(
   n          = 800,
   year_range = c(1990L, 1999L),
@@ -1983,6 +2080,7 @@ Continuous outcome with a larger y range:
 `coord_cartesian(xlim = c(1995, 2016), ylim = c(0, 200))`.
 
 ``` r
+
 dta_lv <- sample_trends_data(
   n          = 800,
   year_range = c(1995L, 2015L),
@@ -2003,6 +2101,7 @@ plot(hv_trends(dta_lv, group_col = NULL)) +
 ### Case volume / total surgeries per year (tp.dp.trends.R — plot4)
 
 ``` r
+
 dta_vol <- sample_trends_data(
   n          = 1000,
   year_range = c(1985L, 2015L),
@@ -2026,6 +2125,7 @@ Template: `coord_cartesian(ylim = c(0, 20))`,
 `annotate("text", 1995, 18, label="Trend: Hospital Length of Stay", size=4.5)`.
 
 ``` r
+
 dta_los <- sample_trends_data(
   n          = 800,
   year_range = c(1985L, 2015L),
@@ -2048,6 +2148,7 @@ plot(hv_trends(dta_los, group_col = NULL)) +
 ### Saving
 
 ``` r
+
 p_tr <- plot(tr) +
   scale_colour_brewer(palette = "Set1", name = "Group") +
   scale_shape_manual(
@@ -2085,6 +2186,7 @@ ggplot. Compose with
 ### Sample data
 
 ``` r
+
 # groups mirrors the Female/Male sex stratification in the template (MALE column)
 dta_sp <- sample_spaghetti_data(
   n_patients = 150,
@@ -2104,6 +2206,7 @@ head(dta_sp)
     6  2 2.04 25.16 Female
 
 ``` r
+
 # Build S3 objects for reuse below
 sp     <- hv_spaghetti(dta_sp)
 sp_col <- hv_spaghetti(dta_sp, colour_col = "group")
@@ -2112,6 +2215,7 @@ sp_col <- hv_spaghetti(dta_sp, colour_col = "group")
 ### Bare plot
 
 ``` r
+
 p_sp <- plot(sp)
 p_sp
 ```
@@ -2124,6 +2228,7 @@ Template: `scale_y_continuous(breaks=seq(0, 80, 20))`,
 `coord_cartesian(xlim = c(0, 5), ylim = c(0, 80))`.
 
 ``` r
+
 plot(sp) +
   scale_x_continuous(breaks = seq(0, 5, 1)) +
   scale_y_continuous(breaks = seq(0, 80, 20)) +
@@ -2140,6 +2245,7 @@ Template: `scale_y_continuous(breaks=seq(0, 30, 10))`,
 `coord_cartesian(ylim = c(0, 30))`.
 
 ``` r
+
 plot(sp) +
   scale_x_continuous(breaks = seq(0, 5, 1)) +
   scale_y_continuous(breaks = seq(0, 30, 10)) +
@@ -2158,6 +2264,7 @@ quick-start in the template header uses the modernised `"firebrick"` /
 `"steelblue"` equivalents.
 
 ``` r
+
 p_sp <- plot(sp_col) +
   scale_colour_manual(
     values = c(Female = "firebrick", Male = "steelblue"),
@@ -2180,6 +2287,7 @@ Template: `scale_y_continuous(breaks=seq(0, 5, 1))`,
 `coord_cartesian(ylim = c(0, 5))`, `ylab('AV Area (EOA) (cm^2)')`.
 
 ``` r
+
 plot(sp_col) +
   scale_colour_manual(
     values = c(Female = "firebrick", Male = "steelblue"),
@@ -2200,6 +2308,7 @@ Template: `scale_y_continuous(breaks=seq(0, 1.25, 0.25))`,
 `coord_cartesian(ylim = c(0, 1.25))`, `ylab('DVI')`.
 
 ``` r
+
 plot(sp_col) +
   scale_colour_manual(
     values = c(Female = "firebrick", Male = "steelblue"),
@@ -2222,6 +2331,7 @@ Template:
 early (blue) and late (red2) cohorts.
 
 ``` r
+
 dta_ord        <- dta_sp
 dta_ord$value  <- round(pmin(3, pmax(0, dta_sp$value / 12)))
 levels(dta_ord$group) <- c("Early", "Late")
@@ -2244,6 +2354,7 @@ plot(sp_ord, y_labels = c(None = 0, Mild = 1, Moderate = 2, Severe = 3)) +
 ### With LOESS smooth overlay
 
 ``` r
+
 plot(sp_col, add_smooth = TRUE) +
   scale_colour_manual(
     values = c(Female = "firebrick", Male = "steelblue"),
@@ -2264,6 +2375,7 @@ Template uses `wid = 11, hei = 8.5` in
 [`pdf()`](https://rdrr.io/r/grDevices/pdf.html).
 
 ``` r
+
 ggsave(here::here("graphs", "mp.amngrd_profile.pdf"),
        p_sp, width = 11, height = 8.5)
 ```
@@ -2286,6 +2398,7 @@ ggplot for composition with `scale_colour_*`,
 ### Sample data
 
 ``` r
+
 curve_dat <- sample_nonparametric_curve_data(
   n            = 500,
   time_max     = 12,
@@ -2307,6 +2420,7 @@ head(curve_dat)
 ### Single average curve with 68 % CI ribbon
 
 ``` r
+
 np <- hv_nonparametric(
   curve_data  = curve_dat,
   lower_col   = "lower",
@@ -2318,6 +2432,7 @@ np <- hv_nonparametric(
 #### Bare plot
 
 ``` r
+
 p_np_bare <- plot(np)
 p_np_bare
 ```
@@ -2327,6 +2442,7 @@ p_np_bare
 #### Adding scales, labels, and theme
 
 ``` r
+
 p_np <- p_np_bare +
   ggplot2::scale_colour_manual(values = c("steelblue"), guide = "none") +
   ggplot2::scale_fill_manual(values   = c("steelblue"), guide = "none") +
@@ -2357,6 +2473,7 @@ for 95 % CI bands.
 ### Two-group comparison (analogous to tp.np.avpkgrad_ozak_ind_mtwt.sas)
 
 ``` r
+
 curve_grp <- sample_nonparametric_curve_data(
   n      = 400,
   time_max = 7,
@@ -2401,6 +2518,7 @@ plot(np_grp) +
 ### Saving
 
 ``` r
+
 # Manuscript PDF
 ggsave(here::here("graphs", "np_afib_prevalence.pdf"),
        p_np, width = 11, height = 8.5)
@@ -2424,6 +2542,7 @@ The SAS `predict` dataset stores one column per grade (`p0`, `p1`, `p2`,
 format:
 
 ``` r
+
 library(tidyr)
 long <- pivot_longer(
   predict_wide,
@@ -2436,6 +2555,7 @@ long <- pivot_longer(
 ### Sample data
 
 ``` r
+
 ord_dat <- sample_nonparametric_ordinal_data(
   n            = 800,
   time_max     = 5,
@@ -2460,12 +2580,14 @@ head(ord_dat)
 ### Grade probability curves with data summary points
 
 ``` r
+
 np_ord <- hv_ordinal(curve_data = ord_dat, data_points = ord_pts)
 ```
 
 #### Bare plot
 
 ``` r
+
 p_ord_bare <- plot(np_ord)
 p_ord_bare
 ```
@@ -2475,6 +2597,7 @@ p_ord_bare
 #### Adding scales, labels, and theme
 
 ``` r
+
 p_ord <- p_ord_bare +
   ggplot2::scale_colour_manual(
     values = c(
@@ -2512,6 +2635,7 @@ For analyses that collapse higher grades (e.g. Moderate + Severe
 combined), subset and re-label before passing to the constructor:
 
 ``` r
+
 ord_collapsed <- ord_dat
 # Merge Moderate and Severe into one level
 ord_collapsed <- subset(ord_collapsed, grade %in% c("None", "Mild", "Moderate/Severe"))
@@ -2544,6 +2668,7 @@ plot(hv_ordinal(curve_data = ord_two)) +
 ### Saving
 
 ``` r
+
 ggsave(here::here("graphs", "np_tr_ordinal.pdf"),
        p_ord, width = 11, height = 8.5)
 ```
@@ -2567,6 +2692,7 @@ registry data.
 ### Sample data
 
 ``` r
+
 lc_dat <- sample_longitudinal_counts_data(n_patients = 300, seed = 42L)
 lc_dat
 ```
@@ -2588,6 +2714,7 @@ lc_dat
     14 ≥2.5 Years Measurements   620
 
 ``` r
+
 # Build the S3 object once; use for both panels
 lc <- hv_longitudinal(lc_dat)
 ```
@@ -2595,6 +2722,7 @@ lc <- hv_longitudinal(lc_dat)
 ### Bare plot
 
 ``` r
+
 p_lc_bare <- plot(lc)
 p_lc_bare
 ```
@@ -2604,6 +2732,7 @@ p_lc_bare
 ### Bar chart
 
 ``` r
+
 p_lc_bar <- plot(lc) +
   ggplot2::scale_fill_manual(
     values = c(Patients = "steelblue", Measurements = "firebrick"),
@@ -2626,6 +2755,7 @@ p_lc_bar
 ### Numeric table panel
 
 ``` r
+
 p_lc_tbl <- plot(lc, type = "table") +
   ggplot2::scale_colour_manual(
     values = c(Patients = "steelblue", Measurements = "firebrick"),
@@ -2641,6 +2771,7 @@ p_lc_tbl
 ### Two-panel layout with patchwork
 
 ``` r
+
 library(patchwork)
 
 p_lc_bar / p_lc_tbl +
@@ -2652,6 +2783,7 @@ p_lc_bar / p_lc_tbl +
 ### Saving the combined figure
 
 ``` r
+
 combined <- p_lc_bar / p_lc_tbl +
   patchwork::plot_layout(heights = c(3, 1))
 
@@ -2667,30 +2799,28 @@ save_ppt(p_lc_bar,
 ## UpSet Plot
 
 [`hv_upset()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_upset.md)
-wraps
-[`ComplexUpset::upset()`](https://krassowski.github.io/complex-upset/reference/upset.html)
+builds an UpSet diagram via
+[`ggupset::scale_x_upset()`](https://rdrr.io/pkg/ggupset/man/scale_x_upset.html)
 to visualise surgical procedure co-occurrences or any set membership
-data. It ports the pattern from `tp.complexUpset.R`, replacing
-hard-coded colours with `scale_fill_*` composition and hard-coded themes
-with
-[`theme_hv_manuscript()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md).
+data. Unlike Venn diagrams, UpSet plots scale to many sets cleanly.
 
-Unlike other hvtiPlotR functions, `plot.hv_upset` returns a **patchwork
-composite** built internally by ComplexUpset. A theme must be applied
-via the patchwork `&` operator (not `+`) to cover all sub-panels
-simultaneously. `&` is also required for correct rendering:
-ComplexUpset’s internal theme sets `axis.title.x` in a form that newer
-ggplot2 rejects unless overridden, so `& theme_hv_manuscript()` is part
-of the *minimum* working call, not an optional decoration:
+[`plot.hv_upset()`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hv_upset.md)
+returns a **ggplot** when `set_size = FALSE`, or a **patchwork
+composite** of an intersection-bar plot + a set-size sidebar when
+`set_size = TRUE` (the default). For the bare ggplot path, themes apply
+via `+` like every other hvtiPlotR plot; for the patchwork path, use
+patchwork’s `&` operator to theme every sub-panel:
 
 ``` r
-# Minimum working call — & theme_hv_manuscript() is required, not optional
-plot(hu) & theme_hv_poster()
+
+plot(hu) & theme_hv_poster()                  # default (patchwork)
+plot(hu, set_size = FALSE) + theme_hv_poster() # single ggplot
 ```
 
 ### Sample data
 
 ``` r
+
 sets <- c("AV_Replacement", "AV_Repair", "MV_Replacement", "MV_Repair",
           "TV_Repair", "Aorta", "CABG")
 
@@ -2707,6 +2837,7 @@ head(upset_dta)
     6           TRUE     FALSE          FALSE     FALSE     FALSE FALSE  TRUE
 
 ``` r
+
 colSums(upset_dta)
 ```
 
@@ -2716,32 +2847,35 @@ colSums(upset_dta)
                 56            147 
 
 ``` r
+
 hu <- hv_upset(upset_dta, intersect = sets)
 ```
 
 ### Default plot
 
+Intersection bars (top 10 by frequency) with a set-size sidebar on the
+right. `set_size = TRUE` returns a patchwork composite, so theme it with
+`&` to cover both sub-panels:
+
 ``` r
+
 plot(hu) &
   theme_hv_poster()
 ```
 
 ![](plot-functions_files/figure-html/upset_basic-1.png)
 
-### Custom intersection bar colour (scale_fill_manual)
+### Custom intersection bar colour
+
+The intersection bars are a standard
+[`geom_bar()`](https://ggplot2.tidyverse.org/reference/geom_bar.html) —
+change the colour via the `bar_fill` argument (or set `set_size = FALSE`
+to return just the intersection-bar ggplot for full customisation).
 
 ``` r
-plot(hu,
-     base_annotations = list(
-       "Intersection size" = ComplexUpset::intersection_size(
-         mapping = ggplot2::aes(fill = "n")
-       ) +
-         ggplot2::scale_fill_manual(
-           values = c("n" = "steelblue"),
-           guide  = "none"
-         ) +
-         ggplot2::labs(y = "Patients (n)")
-     )) &
+
+plot(hu, bar_fill = "steelblue", set_size = FALSE) +
+  ggplot2::labs(y = "Patients (n)") +
   theme_hv_poster()
 ```
 
@@ -2749,22 +2883,22 @@ plot(hu,
 
 ### Colour bars by era
 
+Pass `fill_col` to fill the intersection bars by a grouping column on
+the input data. Combine with
+[`scale_fill_manual()`](https://ggplot2.tidyverse.org/reference/scale_manual.html)
+for explicit colour assignment.
+
 ``` r
+
 upset_dta$era <- ifelse(seq_len(nrow(upset_dta)) <= 200, "Early", "Recent")
 hu_era <- hv_upset(upset_dta, intersect = sets)
 
-plot(hu_era,
-     base_annotations = list(
-       "Intersection size" = ComplexUpset::intersection_size(
-         counts  = FALSE,
-         mapping = ggplot2::aes(fill = era)
-       ) +
-         ggplot2::scale_fill_manual(
-           values = c("Early" = "grey60", "Recent" = "steelblue"),
-           name   = "Era"
-         ) +
-         ggplot2::labs(y = "Patients (n)")
-     )) &
+plot(hu_era, fill_col = "era", set_size = FALSE) +
+  ggplot2::scale_fill_manual(
+    values = c("Early" = "grey60", "Recent" = "steelblue"),
+    name   = "Era"
+  ) +
+  ggplot2::labs(y = "Patients (n)") +
   theme_hv_poster()
 ```
 
@@ -2773,9 +2907,11 @@ plot(hu_era,
 ### Saving
 
 ``` r
+
 p_upset <- plot(hu) & theme_hv_poster()
 
-# UpSet plots are patchwork composites — use ggsave() via ggplot2
+# UpSet plot is a patchwork composite when set_size = TRUE (the default);
+# ggsave() handles it the same as any ggplot.
 ggplot2::ggsave(here::here("graphs", "procedure_cooccurrence.pdf"),
                 p_upset, width = 11, height = 6)
 ```
@@ -2795,6 +2931,7 @@ output, simply omit the call — the plot itself is unchanged.
 ### Draft annotation pattern
 
 ``` r
+
 dta_fn <- sample_hazard_data(n = 300, time_max = 10)
 emp_fn <- sample_hazard_empirical(n = 300, time_max = 10, n_bins = 5)
 
@@ -2827,6 +2964,7 @@ Pass any string as `text` and set `timestamp = FALSE` for a stable
 label.
 
 ``` r
+
 print(p_draft)
 make_footnote(
   text      = paste("J. Ehrlinger |", Sys.Date()),
@@ -2845,5 +2983,6 @@ call writes the ggplot object directly —
 is never called, so the saved file is clean.
 
 ``` r
+
 ggsave("../graphs/fig1_survival.pdf", p_draft, width = 11, height = 8.5)
 ```

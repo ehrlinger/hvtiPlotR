@@ -49,9 +49,29 @@
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Changelog</h1>
-      <small>Source: <a href="https://github.com/ehrlinger/hvtiPlotR/blob/v2.1.0/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
+      <small>Source: <a href="https://github.com/ehrlinger/hvtiPlotR/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="2.2.0" id="hvtiplotr-220-in-development">hvtiPlotR 2.2.0 (in development)<a class="anchor" aria-label="anchor" href="#hvtiplotr-220-in-development"></a></h2>
+<div class="section level3">
+<h3 id="upset-plot-backend-swap-2-2-0">UpSet plot backend swap (<a href="https://github.com/ehrlinger/hvtiPlotR/issues/62" class="external-link">#62</a>)<a class="anchor" aria-label="anchor" href="#upset-plot-backend-swap-2-2-0"></a></h3>
+<p><code><a href="../reference/plot.hv_upset.html">plot.hv_upset()</a></code> is now backed by <a href="https://cran.r-project.org/package=ggupset" class="external-link"><code>ggupset</code></a> rather than <code>ComplexUpset</code>. The intersection-size bar chart is a standard ggplot — themes apply via <code>+</code> like every other hvtiPlotR plot, and <code><a href="https://ggplot2.tidyverse.org/reference/ggplot_build.html" class="external-link">ggplot2::ggplot_build()</a></code> works on the output. When <code>set_size = TRUE</code> (the default) a manual set-size sidebar is composed via <code>patchwork</code>.</p>
+<p><strong>Breaking changes:</strong></p>
+<ul><li>The <code>base_annotations</code> parameter has been removed. To recolour the intersection bars by an external grouping variable, pass <code>fill_col = "&lt;column&gt;"</code> to <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code>; for a single fixed colour pass <code>bar_fill = "&lt;colour&gt;"</code>.</li>
+<li>The <code>min_size</code> parameter has been replaced by <code>n_intersections</code> (top-N by frequency or degree — see <code>sort_by</code>). ComplexUpset’s size-threshold semantics are not preserved.</li>
+<li>
+<code>encode_sets</code> and <code>sort_intersections</code> parameters have been removed (the new equivalents are <code>sort_by</code> and <code>set_size_sort</code>).</li>
+<li>Themes now apply via <code>+</code>, not <code>&amp;</code>. <code>&amp;</code> still works on the patchwork composite when <code>set_size = TRUE</code>.</li>
+</ul><p><strong>Other changes:</strong></p>
+<ul><li>The <code>ComplexUpset</code> Import has been dropped; <code>ggupset (&gt;= 0.4.0)</code> is added in its place. <code>patchwork</code> has been promoted from Suggests to Imports.</li>
+<li>
+<code><a href="../reference/hv_upset.html">hv_upset()</a></code> adds a <code>.Procedures</code> list-column to its stored <code>$data</code> for <code>scale_x_upset()</code> to consume.</li>
+<li>The four <code>upset_*</code> vignette chunks no longer carry a Windows skip gate; ggupset renders cleanly on every CI runner.</li>
+<li>
+<code>tests/testthat/test_example_plot_data.R</code> and <code>tests/testthat/test_plot_integration.R</code> drop their <code>tryCatch / skip_if_theme_incompatibility</code> wrappers — the upset output now passes <code>expect_plot_has_data()</code> like every other plot.</li>
+</ul></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="2.1.0" id="hvtiplotr-210">hvtiPlotR 2.1.0<a class="anchor" aria-label="anchor" href="#hvtiplotr-210"></a></h2>
 <div class="section level3">
@@ -86,7 +106,7 @@
 <ul><li>Package-level help topic (<code><a href="../reference/hvtiPlotR-package.html">?hvtiPlotR</a></code>) comprehensively rewritten to cover the v2.0.0 feature set: two-step workflow with runnable example, fixed-panel geometry subsection (<code><a href="../reference/hv_ggsave_dims.html">hv_ggsave_dims()</a></code>/<code><a href="../reference/hv_ph_location.html">hv_ph_location()</a></code>/<code>save_ppt(panel_box=)</code>), legacy single-call API, <code>hv_data</code> class introspection, scope and versioning, vignette index.</li>
 <li>README “Utilities” table now lists <code><a href="../reference/hv_ggsave_dims.html">hv_ggsave_dims()</a></code> and <code><a href="../reference/hv_ph_location.html">hv_ph_location()</a></code>, and documents <code>save_ppt(panel_box=)</code>.</li>
 <li>
-<code><a href="../reference/save_ppt.html">save_ppt()</a></code> example rewritten to show the recommended <code>hv_theme("light_ppt")</code> preview workflow saving into a dark PPT template with <code>panel_box = list(width = 8.88, height = 4.51,   left = 2.58, top = 1.29)</code> and a <code>scale_x_continuous(breaks =   seq(0, 400, 100), expand = c(0, 0))</code> decorator.</li>
+<code><a href="../reference/save_ppt.html">save_ppt()</a></code> example rewritten to show the recommended <code>hv_theme("light_ppt")</code> preview workflow saving into a dark PPT template with <code>panel_box = list(width = 8.88, height = 4.51, left = 2.58, top = 1.29)</code> and a <code>scale_x_continuous(breaks = seq(0, 400, 100), expand = c(0, 0))</code> decorator.</li>
 <li>
 <code>hvtiPlotR.qmd</code> colour-guidance section updated to reflect that ColorBrewer palettes are accessed via ggplot2’s built-in <code><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_colour_brewer()</a></code> rather than a direct <code>RColorBrewer</code> dependency.</li>
 </ul></div>
@@ -100,7 +120,7 @@
 <ul><li>
 <code>hv_ggsave_dims(plot, width, height, units = "in")</code>: compute <code><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave()</a></code> <code>width</code>/<code>height</code> that preserve a fixed panel content area regardless of axis labels, legend, title, or facet strips. Returns a named list shaped to splat into <code><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave()</a></code> via <code>do.call(ggsave, c(list(filename = ..., plot = p), dims))</code>. Units are length-only (<code>"in"</code>, <code>"cm"</code>, <code>"mm"</code>) since the sizing device is PDF.</li>
 <li>
-<code>hv_ph_location(plot, panel_width, panel_height, panel_left, panel_top,   units = "in")</code>: compute <code><a href="https://davidgohel.github.io/officer/reference/ph_location.html" class="external-link">officer::ph_location()</a></code> <code>width</code>/<code>height</code>/<code>left</code>/<code>top</code> values that anchor a ggplot’s panel to a fixed rectangle on a slide, regardless of axis-label width. Measures asymmetric chrome (left/right/top/bottom of the panel) via <code><a href="https://ggplot2.tidyverse.org/reference/ggplotGrob.html" class="external-link">ggplotGrob()</a></code> and returns per-plot placement so the panel lands at the same slide coordinates on every slide. Warns if plot chrome extends past the left or top slide edge.</li>
+<code>hv_ph_location(plot, panel_width, panel_height, panel_left, panel_top, units = "in")</code>: compute <code><a href="https://davidgohel.github.io/officer/reference/ph_location.html" class="external-link">officer::ph_location()</a></code> <code>width</code>/<code>height</code>/<code>left</code>/<code>top</code> values that anchor a ggplot’s panel to a fixed rectangle on a slide, regardless of axis-label width. Measures asymmetric chrome (left/right/top/bottom of the panel) via <code><a href="https://ggplot2.tidyverse.org/reference/ggplotGrob.html" class="external-link">ggplotGrob()</a></code> and returns per-plot placement so the panel lands at the same slide coordinates on every slide. Warns if plot chrome extends past the left or top slide edge.</li>
 <li>
 <code>save_ppt(..., panel_box = list(width, height, left, top))</code>: new optional argument. When supplied, per-slide placement is computed via <code><a href="../reference/hv_ph_location.html">hv_ph_location()</a></code> so every slide anchors the panel at the given rectangle — solving the “plot background box moves between slides” problem on dark PPT themes where the panel is visibly filled. When <code>panel_box = NULL</code> (default), the fixed <code>width</code>/<code>height</code>/<code>left</code>/<code>top</code> arguments are used (legacy behavior).</li>
 </ul></div>
@@ -114,7 +134,7 @@
 <ul><li>
 <code><a href="../reference/hvtiPlotR-themes.html">hv_theme_dark_ppt()</a></code> and <code><a href="../reference/hvtiPlotR-themes.html">hv_theme_light_ppt()</a></code>:
 <ul><li>Legend is now hidden by default (<code>legend.position = "none"</code>). PowerPoint figures are typically annotated directly on the panel; override with <code>+ theme(legend.position = "right")</code> when needed.</li>
-<li>Axis ticks now face <strong>inside</strong> the panel (<code>axis.ticks.length =   -half_line/2 pt</code>) for the AATS-style inset look.</li>
+<li>Axis ticks now face <strong>inside</strong> the panel (<code>axis.ticks.length = -half_line/2 pt</code>) for the AATS-style inset look.</li>
 <li>Axis-text and axis-title margins are now scaled from <code>base_size</code> via ggplot2’s <code>half_line = base_size / 2</code> convention, so spacing stays proportional when <code>base_size</code> changes. Previous unscaled defaults produced cramped labels at <code>base_size = 32</code>.</li>
 <li>
 <code><a href="../reference/hvtiPlotR-themes.html">hv_theme_light_ppt()</a></code> gains explicit <code>axis.text</code>, <code>axis.line</code>, <code>panel.background</code> (fill <code>"white"</code>, colour <code>"black"</code>, linewidth 1), and <code>axis.ticks</code> elements so the light theme structurally mirrors the dark theme’s explicit-chrome approach (just with inverted colours).</li>
@@ -140,7 +160,7 @@
 <div class="section level3">
 <h3 id="bug-fixes-2-0-0-9010">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-2-0-0-9010"></a></h3>
 <ul><li>
-<code>plot-functions.qmd</code>: UpSet plot chunks (<code>upset_data</code>, <code>upset_basic</code>, <code>upset_fill</code>, <code>upset_era</code>) now skip on Windows (<code>eval: !expr   .Platform$OS.type != "windows"</code>). ComplexUpset’s patchwork rendering crashes the Rscript subprocess on the Windows CI runner (os error 232 / “pipe being closed”), so the examples are shown only on macOS and Linux where they render reliably.</li>
+<code>plot-functions.qmd</code>: UpSet plot chunks (<code>upset_data</code>, <code>upset_basic</code>, <code>upset_fill</code>, <code>upset_era</code>) now skip on Windows (<code>eval: !expr .Platform$OS.type != "windows"</code>). ComplexUpset’s patchwork rendering crashes the Rscript subprocess on the Windows CI runner (os error 232 / “pipe being closed”), so the examples are shown only on macOS and Linux where they render reliably.</li>
 </ul></div>
 </div>
     <div class="section level2">
@@ -302,39 +322,39 @@
 <p>The old single-call functions (<code>mirror_histogram()</code>, <code>survival_curve()</code>, etc.) are <strong>removed</strong>. This is a clean break; no deprecated wrappers.</p>
 <div class="section level4">
 <h4 id="constructor--old-function-mapping-2-0-0">Constructor → old function mapping<a class="anchor" aria-label="anchor" href="#constructor--old-function-mapping-2-0-0"></a></h4>
-<table class="table"><colgroup><col width="50%"><col width="50%"></colgroup><thead><tr class="header"><th>New constructor</th>
+<table class="table"><colgroup><col width="50%"><col width="50%"></colgroup><thead><tr><th>New constructor</th>
 <th>Removed function(s)</th>
-</tr></thead><tbody><tr class="odd"><td><code><a href="../reference/hv_mirror_hist.html">hv_mirror_hist()</a></code></td>
+</tr></thead><tbody><tr><td><code><a href="../reference/hv_mirror_hist.html">hv_mirror_hist()</a></code></td>
 <td><code>mirror_histogram()</code></td>
-</tr><tr class="even"><td><code><a href="../reference/hv_balance.html">hv_balance()</a></code></td>
+</tr><tr><td><code><a href="../reference/hv_balance.html">hv_balance()</a></code></td>
 <td><code>covariate_balance()</code></td>
-</tr><tr class="odd"><td><code><a href="../reference/hv_stacked.html">hv_stacked()</a></code></td>
+</tr><tr><td><code><a href="../reference/hv_stacked.html">hv_stacked()</a></code></td>
 <td><code>stacked_histogram()</code></td>
-</tr><tr class="even"><td><code><a href="../reference/hv_survival.html">hv_survival()</a></code></td>
+</tr><tr><td><code><a href="../reference/hv_survival.html">hv_survival()</a></code></td>
 <td><code>survival_curve()</code></td>
-</tr><tr class="odd"><td><code><a href="../reference/hv_nonparametric.html">hv_nonparametric()</a></code></td>
+</tr><tr><td><code><a href="../reference/hv_nonparametric.html">hv_nonparametric()</a></code></td>
 <td><code>nonparametric_curve_plot()</code></td>
-</tr><tr class="even"><td><code><a href="../reference/hv_ordinal.html">hv_ordinal()</a></code></td>
+</tr><tr><td><code><a href="../reference/hv_ordinal.html">hv_ordinal()</a></code></td>
 <td><code>nonparametric_ordinal_plot()</code></td>
-</tr><tr class="odd"><td><code><a href="../reference/hv_followup.html">hv_followup()</a></code></td>
+</tr><tr><td><code><a href="../reference/hv_followup.html">hv_followup()</a></code></td>
 <td>
 <code>goodness_followup()</code> + <code>goodness_event_plot()</code>
 </td>
-</tr><tr class="even"><td><code><a href="../reference/hv_trends.html">hv_trends()</a></code></td>
+</tr><tr><td><code><a href="../reference/hv_trends.html">hv_trends()</a></code></td>
 <td><code>trends_plot()</code></td>
-</tr><tr class="odd"><td><code><a href="../reference/hv_spaghetti.html">hv_spaghetti()</a></code></td>
+</tr><tr><td><code><a href="../reference/hv_spaghetti.html">hv_spaghetti()</a></code></td>
 <td><code>spaghetti_plot()</code></td>
-</tr><tr class="even"><td><code><a href="../reference/hv_longitudinal.html">hv_longitudinal()</a></code></td>
+</tr><tr><td><code><a href="../reference/hv_longitudinal.html">hv_longitudinal()</a></code></td>
 <td>
 <code>longitudinal_counts_plot()</code> + <code>longitudinal_counts_table()</code>
 </td>
-</tr><tr class="odd"><td><code><a href="../reference/hv_alluvial.html">hv_alluvial()</a></code></td>
+</tr><tr><td><code><a href="../reference/hv_alluvial.html">hv_alluvial()</a></code></td>
 <td><code>alluvial_plot()</code></td>
-</tr><tr class="even"><td><code><a href="../reference/hv_sankey.html">hv_sankey()</a></code></td>
+</tr><tr><td><code><a href="../reference/hv_sankey.html">hv_sankey()</a></code></td>
 <td><code>cluster_sankey_plot()</code></td>
-</tr><tr class="odd"><td><code><a href="../reference/hv_eda.html">hv_eda()</a></code></td>
+</tr><tr><td><code><a href="../reference/hv_eda.html">hv_eda()</a></code></td>
 <td><code>eda_plot()</code></td>
-</tr><tr class="even"><td><code><a href="../reference/hv_upset.html">hv_upset()</a></code></td>
+</tr><tr><td><code><a href="../reference/hv_upset.html">hv_upset()</a></code></td>
 <td><code>upset_plot()</code></td>
 </tr></tbody></table><div class="line-block">
 <code><a href="../reference/hv_hazard.html">hv_hazard()</a></code> | <code><a href="../reference/hazard_plot.html">hazard_plot()</a></code> |<br><code><a href="../reference/hv_survival_difference.html">hv_survival_difference()</a></code> | <code><a href="../reference/survival_difference_plot.html">survival_difference_plot()</a></code> |<br><code><a href="../reference/hv_nnt.html">hv_nnt()</a></code> | <code><a href="../reference/nnt_plot.html">nnt_plot()</a></code> |</div>

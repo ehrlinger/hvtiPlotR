@@ -49,7 +49,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>hvtiPlotR Testing Strategy</h1>
-      <small class="dont-index">Source: <a href="https://github.com/ehrlinger/hvtiPlotR/blob/v2.1.0/testing-strategy.md" class="external-link"><code>testing-strategy.md</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/ehrlinger/hvtiPlotR/blob/main/testing-strategy.md" class="external-link"><code>testing-strategy.md</code></a></small>
     </div>
 
 <div id="hvtiplotr-testing-strategy" class="section level1">
@@ -60,53 +60,53 @@
 <p>The package ships 12 test files containing roughly 500 individual <code><a href="https://testthat.r-lib.org/reference/test_that.html" class="external-link">test_that()</a></code> blocks. Every exported function has at least one test. The overall suite is strong in several areas but has important gaps in coverage depth, snapshot testing, and a handful of plot families that received only a single smoke test during early integration work.</p>
 <div class="section level3">
 <h3 id="test-file-inventory">Test file inventory<a class="anchor" aria-label="anchor" href="#test-file-inventory"></a></h3>
-<table class="table"><colgroup><col width="33%"><col width="33%"><col width="33%"></colgroup><thead><tr class="header"><th>File</th>
+<table class="table"><colgroup><col width="33%"><col width="33%"><col width="33%"></colgroup><thead><tr><th>File</th>
 <th>What it covers</th>
 <th>Depth</th>
-</tr></thead><tbody><tr class="odd"><td><code>test_themes.R</code></td>
+</tr></thead><tbody><tr><td><code>test_themes.R</code></td>
 <td>All 5 <code>hv_theme_*</code> functions + <code>hv_theme()</code> dispatcher + aliases</td>
 <td>★★★★★</td>
-</tr><tr class="even"><td><code>test_kaplan_meier.R</code></td>
+</tr><tr><td><code>test_kaplan_meier.R</code></td>
 <td>
 <code>sample_survival_data</code> + <code>survival_curve</code> (all plot types, strata, CI, methods, validation)</td>
 <td>★★★★★</td>
-</tr><tr class="odd"><td><code>test_mirror_histogram.R</code></td>
+</tr><tr><td><code>test_mirror_histogram.R</code></td>
 <td>
 <code>mirror_histogram</code> + <code>sample_mirror_histogram_data</code> (binary and IPTW-weighted modes, internal helpers)</td>
 <td>★★★★★</td>
-</tr><tr class="even"><td><code>test_covariate_balance.R</code></td>
+</tr><tr><td><code>test_covariate_balance.R</code></td>
 <td>
 <code>covariate_balance</code> + <code>sample_covariate_balance_data</code> (structure, plot geometry, rendered labels)</td>
 <td>★★★★★</td>
-</tr><tr class="odd"><td><code>test_goodness_followup.R</code></td>
+</tr><tr><td><code>test_goodness_followup.R</code></td>
 <td>
 <code>goodness_followup</code> + <code>goodness_event_plot</code> + <code>sample_goodness_followup_data</code>
 </td>
 <td>★★★★★</td>
-</tr><tr class="even"><td><code>test_save_ppt.R</code></td>
+</tr><tr><td><code>test_save_ppt.R</code></td>
 <td>
 <code>save_ppt</code> (single/list, layouts, validation)</td>
 <td>★★★★★</td>
-</tr><tr class="odd"><td><code>test_new_plots.R</code></td>
+</tr><tr><td><code>test_new_plots.R</code></td>
 <td>
 <code>alluvial_plot</code>, <code>spaghetti_plot</code>, <code>trends_plot</code>, <code>longitudinal_counts_plot/table</code>, <code>upset_plot</code> + all sample_* generators</td>
 <td>★★★★☆</td>
-</tr><tr class="even"><td><code>test_eda_plots.R</code></td>
+</tr><tr><td><code>test_eda_plots.R</code></td>
 <td>
 <code>eda_classify_var</code>, <code>eda_select_vars</code>, <code>sample_eda_data</code>, <code>eda_plot</code> (all three variable type paths)</td>
 <td>★★★★☆</td>
-</tr><tr class="odd"><td><code>test_stacked_histogram.R</code></td>
+</tr><tr><td><code>test_stacked_histogram.R</code></td>
 <td>
 <code>stacked_histogram</code> + <code>sample_stacked_histogram_data</code> (position, binwidth, aesthetics)</td>
 <td>★★★★☆</td>
-</tr><tr class="even"><td><code>test_footnote.R</code></td>
+</tr><tr><td><code>test_footnote.R</code></td>
 <td>
 <code>makeFootnote</code> + <code>make_footnote</code> (both renderers, parameter validation)</td>
 <td>★★★☆☆</td>
-</tr><tr class="odd"><td><code>test_plot_integration.R</code></td>
+</tr><tr><td><code>test_plot_integration.R</code></td>
 <td>Smoke test for every plot function / sample_* pair</td>
 <td>★★☆☆☆</td>
-</tr><tr class="even"><td><code>test_data.R</code></td>
+</tr><tr><td><code>test_data.R</code></td>
 <td>
 <code>parametric</code> + <code>nonparametric</code> built-in datasets (structure only)</td>
 <td>★★☆☆☆</td>
@@ -117,49 +117,49 @@
 <div class="section level3">
 <h3 id="id_1-plot-functions-with-smoke-test-only-coverage">1. Plot functions with smoke-test-only coverage<a class="anchor" aria-label="anchor" href="#id_1-plot-functions-with-smoke-test-only-coverage"></a></h3>
 <p>Six plot families live entirely in <code>test_plot_integration.R</code> with 1–2 tests each. They have no input-validation tests, no column-name flexibility tests, and no layer-structure assertions.</p>
-<table class="table"><colgroup><col width="33%"><col width="33%"><col width="33%"></colgroup><thead><tr class="header"><th>Function</th>
+<table class="table"><colgroup><col width="33%"><col width="33%"><col width="33%"></colgroup><thead><tr><th>Function</th>
 <th>Current tests</th>
 <th>Missing</th>
-</tr></thead><tbody><tr class="odd"><td><code>hazard_plot</code></td>
+</tr></thead><tbody><tr><td><code>hazard_plot</code></td>
 <td>2 (smoke, empirical overlay)</td>
 <td>Validation: missing <code>time_col</code>, wrong <code>n.groups</code>; layer: <code>GeomRibbon</code>, <code>GeomLine</code>; parametric model args</td>
-</tr><tr class="even"><td><code>survival_difference_plot</code></td>
+</tr><tr><td><code>survival_difference_plot</code></td>
 <td>1 (smoke)</td>
 <td>Validation: missing columns, out-of-range confidence; structure: reference group rendering, ribbon vs line</td>
-</tr><tr class="odd"><td><code>nnt_plot</code></td>
+</tr><tr><td><code>nnt_plot</code></td>
 <td>1 (smoke)</td>
 <td>Validation: data frame check, column presence; structure: <code>GeomLine</code>, <code>GeomRibbon</code>, inf-NNT handling</td>
-</tr><tr class="even"><td><code>nonparametric_curve_plot</code></td>
+</tr><tr><td><code>nonparametric_curve_plot</code></td>
 <td>1 (smoke)</td>
 <td>Validation, group-col tests, conf_int flag, layer structure</td>
-</tr><tr class="odd"><td><code>nonparametric_ordinal_plot</code></td>
+</tr><tr><td><code>nonparametric_ordinal_plot</code></td>
 <td>1 (smoke)</td>
 <td>Validation, grade-level ordering, cumulative vs non-cumulative mode</td>
-</tr><tr class="even"><td><code>cluster_sankey_plot</code></td>
+</tr><tr><td><code>cluster_sankey_plot</code></td>
 <td>1 (ggsankey skip)</td>
 <td>Everything — always skipped when <code>ggsankey</code> is absent</td>
 </tr></tbody></table></div>
 <div class="section level3">
 <h3 id="id_2-sample-data-generators-with-no-validation-tests">2. Sample-data generators with no validation tests<a class="anchor" aria-label="anchor" href="#id_2-sample-data-generators-with-no-validation-tests"></a></h3>
 <p>These generators are exported and documented but have no dedicated tests beyond being passed to their plot function.</p>
-<table class="table"><colgroup><col width="50%"><col width="50%"></colgroup><thead><tr class="header"><th>Generator</th>
+<table class="table"><colgroup><col width="50%"><col width="50%"></colgroup><thead><tr><th>Generator</th>
 <th>What to test</th>
-</tr></thead><tbody><tr class="odd"><td><code>sample_hazard_data</code></td>
+</tr></thead><tbody><tr><td><code>sample_hazard_data</code></td>
 <td>Column names, <code>n_groups</code> creates group column, time range, <code>seed</code> reproducibility, error on <code>n=0</code>
 </td>
-</tr><tr class="even"><td><code>sample_hazard_empirical</code></td>
+</tr><tr><td><code>sample_hazard_empirical</code></td>
 <td>Column names, <code>n_bins</code> controls row count, midpoint computation</td>
-</tr><tr class="odd"><td><code>sample_life_table</code></td>
+</tr><tr><td><code>sample_life_table</code></td>
 <td>Column names, <code>survival</code> in [0, 100], group factor levels, <code>time_max</code> respected</td>
-</tr><tr class="even"><td><code>sample_survival_difference_data</code></td>
+</tr><tr><td><code>sample_survival_difference_data</code></td>
 <td>Column names, confidence bounds straddle point estimate, seed reproducibility</td>
-</tr><tr class="odd"><td><code>sample_nnt_data</code></td>
+</tr><tr><td><code>sample_nnt_data</code></td>
 <td>Column names, NNT positive, <code>Inf</code> values when difference ≈ 0, seed reproducibility</td>
-</tr><tr class="even"><td><code>sample_nonparametric_curve_points</code></td>
+</tr><tr><td><code>sample_nonparametric_curve_points</code></td>
 <td>Column names, <code>nrow</code> matches expected, group levels, confidence bounds ordering</td>
-</tr><tr class="odd"><td><code>sample_nonparametric_ordinal_points</code></td>
+</tr><tr><td><code>sample_nonparametric_ordinal_points</code></td>
 <td>Column names, ordinal level ordering, cumulative sum ≤ 1, seed reproducibility</td>
-</tr><tr class="even"><td><code>sample_cluster_sankey_data</code></td>
+</tr><tr><td><code>sample_cluster_sankey_data</code></td>
 <td>Column names, <code>k</code> range respected, <code>n</code> rows, seed reproducibility</td>
 </tr></tbody></table></div>
 <div class="section level3">
@@ -177,25 +177,25 @@
 </ul></div>
 <div class="section level3">
 <h3 id="id_4-missing-edge-case-tests">4. Missing edge-case tests<a class="anchor" aria-label="anchor" href="#id_4-missing-edge-case-tests"></a></h3>
-<table class="table"><colgroup><col width="50%"><col width="50%"></colgroup><thead><tr class="header"><th>Function</th>
+<table class="table"><colgroup><col width="50%"><col width="50%"></colgroup><thead><tr><th>Function</th>
 <th>Untested edge case</th>
-</tr></thead><tbody><tr class="odd"><td><code>make_footnote</code></td>
+</tr></thead><tbody><tr><td><code>make_footnote</code></td>
 <td>
 <code>prefix</code> parameter (the new snake_case API has a <code>prefix</code> arg that <code>makeFootnote</code> does not expose; no test verifies prefix is prepended to rendered text)</td>
-</tr><tr class="even"><td><code>eda_classify_var</code></td>
+</tr><tr><td><code>eda_classify_var</code></td>
 <td>Logical vector input (neither <code>Cat_Char</code> nor <code>Cont</code> — what does it return?)</td>
-</tr><tr class="odd"><td><code>survival_curve</code></td>
+</tr><tr><td><code>survival_curve</code></td>
 <td>All-censored data (no events); single observation per stratum</td>
-</tr><tr class="even"><td><code>nnt_plot</code></td>
+</tr><tr><td><code>nnt_plot</code></td>
 <td>Divide-by-zero / <code>Inf</code> NNT values (survival difference of zero at some time points)</td>
-</tr><tr class="odd"><td><code>nonparametric_ordinal_plot</code></td>
+</tr><tr><td><code>nonparametric_ordinal_plot</code></td>
 <td>Fewer grade levels than expected (e.g., a stratum where only 2 of 4 grades appear)</td>
-</tr><tr class="even"><td><code>save_ppt</code></td>
+</tr><tr><td><code>save_ppt</code></td>
 <td>
 <code>slide_titles</code> length mismatch vs list length (should error with a useful message)</td>
-</tr><tr class="odd"><td><code>stacked_histogram</code></td>
+</tr><tr><td><code>stacked_histogram</code></td>
 <td>Zero-row data frame after filtering</td>
-</tr><tr class="even"><td>Built-in datasets</td>
+</tr><tr><td>Built-in datasets</td>
 <td>Using <code>parametric</code> with <code><a href="reference/hazard_plot.html">hazard_plot()</a></code> and <code>nonparametric</code> with <code>nonparametric_curve_plot()</code> — these represent the primary production use case but are only checked for structure, not usability</td>
 </tr></tbody></table></div>
 <div class="section level3">
@@ -425,37 +425,37 @@
 </div>
 <div class="section level2">
 <h2 id="coverage-targets">Coverage Targets<a class="anchor" aria-label="anchor" href="#coverage-targets"></a></h2>
-<table class="table"><colgroup><col width="33%"><col width="33%"><col width="33%"></colgroup><thead><tr class="header"><th>Category</th>
+<table class="table"><colgroup><col width="33%"><col width="33%"><col width="33%"></colgroup><thead><tr><th>Category</th>
 <th>Current estimate</th>
 <th>Target</th>
-</tr></thead><tbody><tr class="odd"><td>Theme functions</td>
+</tr></thead><tbody><tr><td>Theme functions</td>
 <td>~100% structure</td>
 <td>~100% — already sufficient</td>
-</tr><tr class="even"><td>
+</tr><tr><td>
 <code>survival_curve</code> + <code>sample_survival_data</code>
 </td>
 <td>~95%</td>
 <td>~95% — add snapshot + all-censored</td>
-</tr><tr class="odd"><td><code>mirror_histogram</code></td>
+</tr><tr><td><code>mirror_histogram</code></td>
 <td>~95%</td>
 <td>~95% — add snapshot</td>
-</tr><tr class="even"><td><code>covariate_balance</code></td>
+</tr><tr><td><code>covariate_balance</code></td>
 <td>~90%</td>
 <td>~90% — already good</td>
-</tr><tr class="odd"><td><code>save_ppt</code></td>
+</tr><tr><td><code>save_ppt</code></td>
 <td>~85%</td>
 <td>~90% — add <code>slide_titles</code> mismatch test</td>
-</tr><tr class="even"><td>
+</tr><tr><td>
 <code>hazard_plot</code> + 5 thin-coverage plots</td>
 <td>~15%</td>
 <td>~70% — priority 1 above</td>
-</tr><tr class="odd"><td>Sample-data generators (thin coverage)</td>
+</tr><tr><td>Sample-data generators (thin coverage)</td>
 <td>~20%</td>
 <td>~70% — add validation suite</td>
-</tr><tr class="even"><td>Snapshot / value regression</td>
+</tr><tr><td>Snapshot / value regression</td>
 <td>0%</td>
 <td>Add for top 4 functions</td>
-</tr><tr class="odd"><td>End-to-end pipeline</td>
+</tr><tr><td>End-to-end pipeline</td>
 <td>0%</td>
 <td>Add 1 test for each major workflow</td>
 </tr></tbody></table><hr></div>

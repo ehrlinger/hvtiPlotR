@@ -12,16 +12,16 @@ curve from a Weibull (or other parametric) model, optionally overlaid
 with Kaplan-Meier empirical estimates and a population life-table
 reference. Covers the complete family of `tp.hp.dead.*` SAS templates.
 
-|                                                       |                                             |
-|-------------------------------------------------------|---------------------------------------------|
-| SAS template                                          | R usage                                     |
-| Basic survival (tp.hp.dead.sas)                       | `hazard_plot(dat, estimate_col="survival")` |
-| Basic hazard (tp.hp.dead.sas)                         | `hazard_plot(dat, estimate_col="hazard")`   |
-| Cumulative hazard (tp.hp.event.weighted.sas)          | `hazard_plot(dat, estimate_col="cumhaz")`   |
-| Stratified by group (tp.hp.dead.tkdn.stratified.sas)  | `+ group_col="group"`                       |
-| KM empirical overlay                                  | `+ empirical=emp_data`                      |
-| Life table overlay (tp.hp.dead.uslife.stratifed.sas)  | `+ reference=lt_data`                       |
-| Age as x-axis (tp.hp.dead.age_on_horizontal_axis.sas) | `x_col="age"`                               |
+|  |  |
+|----|----|
+| SAS template | R usage |
+| Basic survival (tp.hp.dead.sas) | `hazard_plot(dat, estimate_col="survival")` |
+| Basic hazard (tp.hp.dead.sas) | `hazard_plot(dat, estimate_col="hazard")` |
+| Cumulative hazard (tp.hp.event.weighted.sas) | `hazard_plot(dat, estimate_col="cumhaz")` |
+| Stratified by group (tp.hp.dead.tkdn.stratified.sas) | `+ group_col="group"` |
+| KM empirical overlay | `+ empirical=emp_data` |
+| Life table overlay (tp.hp.dead.uslife.stratifed.sas) | `+ reference=lt_data` |
+| Age as x-axis (tp.hp.dead.age_on_horizontal_axis.sas) | `x_col="age"` |
 
 **SAS column mapping:**
 

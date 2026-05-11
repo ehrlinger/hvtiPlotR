@@ -49,7 +49,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Contributing to hvtiPlotR</h1>
-      <small class="dont-index">Source: <a href="https://github.com/ehrlinger/hvtiPlotR/blob/v2.1.0/CONTRIBUTING.md" class="external-link"><code>CONTRIBUTING.md</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/ehrlinger/hvtiPlotR/blob/main/CONTRIBUTING.md" class="external-link"><code>CONTRIBUTING.md</code></a></small>
     </div>
 
 <div id="contributing-to-hvtiplotr" class="section level1">
@@ -119,28 +119,28 @@
 </ul><hr></div>
 <div class="section level2">
 <h2 id="code-conventions">Code conventions<a class="anchor" aria-label="anchor" href="#code-conventions"></a></h2>
-<table class="table"><colgroup><col width="50%"><col width="50%"></colgroup><thead><tr class="header"><th>Convention</th>
+<table class="table"><colgroup><col width="50%"><col width="50%"></colgroup><thead><tr><th>Convention</th>
 <th>Rule</th>
-</tr></thead><tbody><tr class="odd"><td>File names</td>
+</tr></thead><tbody><tr><td>File names</td>
 <td>
 <code>kebab-case.R</code> (e.g. <code>nonparametric-curve-plot.R</code>)</td>
-</tr><tr class="even"><td>Function names</td>
+</tr><tr><td>Function names</td>
 <td>
 <code>hv_&lt;concept&gt;()</code> constructor + <code>plot.hv_&lt;concept&gt;()</code> method (e.g. <code><a href="reference/hv_nonparametric.html">hv_nonparametric()</a></code>, <code><a href="reference/plot.hv_nonparametric.html">plot.hv_nonparametric()</a></code>)</td>
-</tr><tr class="odd"><td>Column-name args</td>
+</tr><tr><td>Column-name args</td>
 <td>Always strings, never bare symbols (e.g. <code>x_col = "time"</code>)</td>
-</tr><tr class="even"><td>Colours</td>
+</tr><tr><td>Colours</td>
 <td>Never hard-coded — leave to <code>scale_colour_*()</code> / <code>scale_fill_*()</code>
 </td>
-</tr><tr class="odd"><td>Themes</td>
+</tr><tr><td>Themes</td>
 <td>Never applied inside the function — leave to the caller</td>
-</tr><tr class="even"><td>Tidy eval</td>
+</tr><tr><td>Tidy eval</td>
 <td>Use <code>.data[[col]]</code> from <code>rlang</code>; import with <code>@importFrom rlang .data</code>
 </td>
-</tr><tr class="odd"><td>Tests</td>
+</tr><tr><td>Tests</td>
 <td>
 <code>expect_s3_class(obj, "hv_data")</code> for constructor; <code>expect_s3_class(plot(obj), "ggplot")</code> for the plot method</td>
-</tr><tr class="even"><td>Snapshots</td>
+</tr><tr><td>Snapshots</td>
 <td>After adding a new <code>expect_snapshot()</code> test, run <code><a href="https://devtools.r-lib.org/reference/test.html" class="external-link">devtools::test()</a></code> once locally to generate the <code>.snap</code> baseline, then commit the file under <code>tests/testthat/_snaps/</code>. If CI is the first to run it, the snapshot will be uploaded automatically via <code>upload-snapshots: true</code> in the workflow. To accept updated snapshots after intentional output changes, run <code><a href="https://testthat.r-lib.org/reference/snapshot_accept.html" class="external-link">testthat::snapshot_accept()</a></code> locally and commit the result.</td>
 </tr></tbody></table><hr></div>
 <div class="section level2">

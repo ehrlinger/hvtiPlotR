@@ -15,20 +15,20 @@ single smoke test during early integration work.
 
 ### Test file inventory
 
-| File                       | What it covers                                                                                                               | Depth |
-|----------------------------|------------------------------------------------------------------------------------------------------------------------------|-------|
-| `test_themes.R`            | All 5 `hv_theme_*` functions + `hv_theme()` dispatcher + aliases                                                             | ★★★★★ |
-| `test_kaplan_meier.R`      | `sample_survival_data` + `survival_curve` (all plot types, strata, CI, methods, validation)                                  | ★★★★★ |
-| `test_mirror_histogram.R`  | `mirror_histogram` + `sample_mirror_histogram_data` (binary and IPTW-weighted modes, internal helpers)                       | ★★★★★ |
-| `test_covariate_balance.R` | `covariate_balance` + `sample_covariate_balance_data` (structure, plot geometry, rendered labels)                            | ★★★★★ |
-| `test_goodness_followup.R` | `goodness_followup` + `goodness_event_plot` + `sample_goodness_followup_data`                                                | ★★★★★ |
-| `test_save_ppt.R`          | `save_ppt` (single/list, layouts, validation)                                                                                | ★★★★★ |
-| `test_new_plots.R`         | `alluvial_plot`, `spaghetti_plot`, `trends_plot`, `longitudinal_counts_plot/table`, `upset_plot` + all sample\_\* generators | ★★★★☆ |
-| `test_eda_plots.R`         | `eda_classify_var`, `eda_select_vars`, `sample_eda_data`, `eda_plot` (all three variable type paths)                         | ★★★★☆ |
-| `test_stacked_histogram.R` | `stacked_histogram` + `sample_stacked_histogram_data` (position, binwidth, aesthetics)                                       | ★★★★☆ |
-| `test_footnote.R`          | `makeFootnote` + `make_footnote` (both renderers, parameter validation)                                                      | ★★★☆☆ |
-| `test_plot_integration.R`  | Smoke test for every plot function / sample\_\* pair                                                                         | ★★☆☆☆ |
-| `test_data.R`              | `parametric` + `nonparametric` built-in datasets (structure only)                                                            | ★★☆☆☆ |
+| File | What it covers | Depth |
+|----|----|----|
+| `test_themes.R` | All 5 `hv_theme_*` functions + `hv_theme()` dispatcher + aliases | ★★★★★ |
+| `test_kaplan_meier.R` | `sample_survival_data` + `survival_curve` (all plot types, strata, CI, methods, validation) | ★★★★★ |
+| `test_mirror_histogram.R` | `mirror_histogram` + `sample_mirror_histogram_data` (binary and IPTW-weighted modes, internal helpers) | ★★★★★ |
+| `test_covariate_balance.R` | `covariate_balance` + `sample_covariate_balance_data` (structure, plot geometry, rendered labels) | ★★★★★ |
+| `test_goodness_followup.R` | `goodness_followup` + `goodness_event_plot` + `sample_goodness_followup_data` | ★★★★★ |
+| `test_save_ppt.R` | `save_ppt` (single/list, layouts, validation) | ★★★★★ |
+| `test_new_plots.R` | `alluvial_plot`, `spaghetti_plot`, `trends_plot`, `longitudinal_counts_plot/table`, `upset_plot` + all sample\_\* generators | ★★★★☆ |
+| `test_eda_plots.R` | `eda_classify_var`, `eda_select_vars`, `sample_eda_data`, `eda_plot` (all three variable type paths) | ★★★★☆ |
+| `test_stacked_histogram.R` | `stacked_histogram` + `sample_stacked_histogram_data` (position, binwidth, aesthetics) | ★★★★☆ |
+| `test_footnote.R` | `makeFootnote` + `make_footnote` (both renderers, parameter validation) | ★★★☆☆ |
+| `test_plot_integration.R` | Smoke test for every plot function / sample\_\* pair | ★★☆☆☆ |
+| `test_data.R` | `parametric` + `nonparametric` built-in datasets (structure only) | ★★☆☆☆ |
 
 ------------------------------------------------------------------------
 
@@ -40,30 +40,30 @@ Six plot families live entirely in `test_plot_integration.R` with 1–2
 tests each. They have no input-validation tests, no column-name
 flexibility tests, and no layer-structure assertions.
 
-| Function                     | Current tests                | Missing                                                                                                    |
-|------------------------------|------------------------------|------------------------------------------------------------------------------------------------------------|
-| `hazard_plot`                | 2 (smoke, empirical overlay) | Validation: missing `time_col`, wrong `n.groups`; layer: `GeomRibbon`, `GeomLine`; parametric model args   |
-| `survival_difference_plot`   | 1 (smoke)                    | Validation: missing columns, out-of-range confidence; structure: reference group rendering, ribbon vs line |
-| `nnt_plot`                   | 1 (smoke)                    | Validation: data frame check, column presence; structure: `GeomLine`, `GeomRibbon`, inf-NNT handling       |
-| `nonparametric_curve_plot`   | 1 (smoke)                    | Validation, group-col tests, conf_int flag, layer structure                                                |
-| `nonparametric_ordinal_plot` | 1 (smoke)                    | Validation, grade-level ordering, cumulative vs non-cumulative mode                                        |
-| `cluster_sankey_plot`        | 1 (ggsankey skip)            | Everything — always skipped when `ggsankey` is absent                                                      |
+| Function | Current tests | Missing |
+|----|----|----|
+| `hazard_plot` | 2 (smoke, empirical overlay) | Validation: missing `time_col`, wrong `n.groups`; layer: `GeomRibbon`, `GeomLine`; parametric model args |
+| `survival_difference_plot` | 1 (smoke) | Validation: missing columns, out-of-range confidence; structure: reference group rendering, ribbon vs line |
+| `nnt_plot` | 1 (smoke) | Validation: data frame check, column presence; structure: `GeomLine`, `GeomRibbon`, inf-NNT handling |
+| `nonparametric_curve_plot` | 1 (smoke) | Validation, group-col tests, conf_int flag, layer structure |
+| `nonparametric_ordinal_plot` | 1 (smoke) | Validation, grade-level ordering, cumulative vs non-cumulative mode |
+| `cluster_sankey_plot` | 1 (ggsankey skip) | Everything — always skipped when `ggsankey` is absent |
 
 ### 2. Sample-data generators with no validation tests
 
 These generators are exported and documented but have no dedicated tests
 beyond being passed to their plot function.
 
-| Generator                             | What to test                                                                                      |
-|---------------------------------------|---------------------------------------------------------------------------------------------------|
-| `sample_hazard_data`                  | Column names, `n_groups` creates group column, time range, `seed` reproducibility, error on `n=0` |
-| `sample_hazard_empirical`             | Column names, `n_bins` controls row count, midpoint computation                                   |
-| `sample_life_table`                   | Column names, `survival` in \[0, 100\], group factor levels, `time_max` respected                 |
-| `sample_survival_difference_data`     | Column names, confidence bounds straddle point estimate, seed reproducibility                     |
-| `sample_nnt_data`                     | Column names, NNT positive, `Inf` values when difference ≈ 0, seed reproducibility                |
-| `sample_nonparametric_curve_points`   | Column names, `nrow` matches expected, group levels, confidence bounds ordering                   |
-| `sample_nonparametric_ordinal_points` | Column names, ordinal level ordering, cumulative sum ≤ 1, seed reproducibility                    |
-| `sample_cluster_sankey_data`          | Column names, `k` range respected, `n` rows, seed reproducibility                                 |
+| Generator | What to test |
+|----|----|
+| `sample_hazard_data` | Column names, `n_groups` creates group column, time range, `seed` reproducibility, error on `n=0` |
+| `sample_hazard_empirical` | Column names, `n_bins` controls row count, midpoint computation |
+| `sample_life_table` | Column names, `survival` in \[0, 100\], group factor levels, `time_max` respected |
+| `sample_survival_difference_data` | Column names, confidence bounds straddle point estimate, seed reproducibility |
+| `sample_nnt_data` | Column names, NNT positive, `Inf` values when difference ≈ 0, seed reproducibility |
+| `sample_nonparametric_curve_points` | Column names, `nrow` matches expected, group levels, confidence bounds ordering |
+| `sample_nonparametric_ordinal_points` | Column names, ordinal level ordering, cumulative sum ≤ 1, seed reproducibility |
+| `sample_cluster_sankey_data` | Column names, `k` range respected, `n` rows, seed reproducibility |
 
 ### 3. No snapshot / visual regression tests
 
@@ -82,16 +82,16 @@ Targets for
 
 ### 4. Missing edge-case tests
 
-| Function                     | Untested edge case                                                                                                                                                                                                                                                  |
-|------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `make_footnote`              | `prefix` parameter (the new snake_case API has a `prefix` arg that `makeFootnote` does not expose; no test verifies prefix is prepended to rendered text)                                                                                                           |
-| `eda_classify_var`           | Logical vector input (neither `Cat_Char` nor `Cont` — what does it return?)                                                                                                                                                                                         |
-| `survival_curve`             | All-censored data (no events); single observation per stratum                                                                                                                                                                                                       |
-| `nnt_plot`                   | Divide-by-zero / `Inf` NNT values (survival difference of zero at some time points)                                                                                                                                                                                 |
-| `nonparametric_ordinal_plot` | Fewer grade levels than expected (e.g., a stratum where only 2 of 4 grades appear)                                                                                                                                                                                  |
-| `save_ppt`                   | `slide_titles` length mismatch vs list length (should error with a useful message)                                                                                                                                                                                  |
-| `stacked_histogram`          | Zero-row data frame after filtering                                                                                                                                                                                                                                 |
-| Built-in datasets            | Using `parametric` with [`hazard_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/hazard_plot.md) and `nonparametric` with `nonparametric_curve_plot()` — these represent the primary production use case but are only checked for structure, not usability |
+| Function | Untested edge case |
+|----|----|
+| `make_footnote` | `prefix` parameter (the new snake_case API has a `prefix` arg that `makeFootnote` does not expose; no test verifies prefix is prepended to rendered text) |
+| `eda_classify_var` | Logical vector input (neither `Cat_Char` nor `Cont` — what does it return?) |
+| `survival_curve` | All-censored data (no events); single observation per stratum |
+| `nnt_plot` | Divide-by-zero / `Inf` NNT values (survival difference of zero at some time points) |
+| `nonparametric_ordinal_plot` | Fewer grade levels than expected (e.g., a stratum where only 2 of 4 grades appear) |
+| `save_ppt` | `slide_titles` length mismatch vs list length (should error with a useful message) |
+| `stacked_histogram` | Zero-row data frame after filtering |
+| Built-in datasets | Using `parametric` with [`hazard_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/hazard_plot.md) and `nonparametric` with `nonparametric_curve_plot()` — these represent the primary production use case but are only checked for structure, not usability |
 
 ### 5. No cross-function integration tests
 
@@ -123,6 +123,7 @@ patterns from `test_kaplan_meier.R`. Each file should cover:
 Example — `test_hazard_plot.R`:
 
 ``` r
+
 # tests/testthat/test_hazard_plot.R
 library(testthat)
 
@@ -214,6 +215,7 @@ clinically important numeric outputs. Run
 once to establish the baseline.
 
 ``` r
+
 # In test_kaplan_meier.R — add near the bottom:
 
 test_that("survival_curve report_table matches snapshot (fixed seed)", {
@@ -238,6 +240,7 @@ test_that("mirror_histogram diagnostics match snapshot (fixed seed)", {
 Add these to the most relevant existing test files:
 
 ``` r
+
 # In test_kaplan_meier.R — all-censored data:
 test_that("survival_curve handles all-censored data gracefully", {
   dta <- sample_survival_data(n = 100, seed = 1)
@@ -278,6 +281,7 @@ test_that("save_ppt errors when slide_titles length mismatches list length", {
 ### Priority 4 — End-to-end pipeline test
 
 ``` r
+
 # tests/testthat/test_pipeline.R
 library(testthat)
 library(ggplot2)
@@ -319,6 +323,7 @@ test_that("full pipeline: survival_curve -> theme -> save_ppt", {
 ### Priority 5 — Built-in dataset usability
 
 ``` r
+
 # In test_data.R — add after existing tests:
 
 test_that("parametric dataset works with hazard_plot()", {
@@ -343,17 +348,17 @@ test_that("nonparametric dataset works with nonparametric_curve_plot()", {
 
 ## Coverage Targets
 
-| Category                                  | Current estimate | Target                                  |
-|-------------------------------------------|------------------|-----------------------------------------|
-| Theme functions                           | ~100% structure  | ~100% — already sufficient              |
-| `survival_curve` + `sample_survival_data` | ~95%             | ~95% — add snapshot + all-censored      |
-| `mirror_histogram`                        | ~95%             | ~95% — add snapshot                     |
-| `covariate_balance`                       | ~90%             | ~90% — already good                     |
-| `save_ppt`                                | ~85%             | ~90% — add `slide_titles` mismatch test |
-| `hazard_plot` + 5 thin-coverage plots     | ~15%             | ~70% — priority 1 above                 |
-| Sample-data generators (thin coverage)    | ~20%             | ~70% — add validation suite             |
-| Snapshot / value regression               | 0%               | Add for top 4 functions                 |
-| End-to-end pipeline                       | 0%               | Add 1 test for each major workflow      |
+| Category | Current estimate | Target |
+|----|----|----|
+| Theme functions | ~100% structure | ~100% — already sufficient |
+| `survival_curve` + `sample_survival_data` | ~95% | ~95% — add snapshot + all-censored |
+| `mirror_histogram` | ~95% | ~95% — add snapshot |
+| `covariate_balance` | ~90% | ~90% — already good |
+| `save_ppt` | ~85% | ~90% — add `slide_titles` mismatch test |
+| `hazard_plot` + 5 thin-coverage plots | ~15% | ~70% — priority 1 above |
+| Sample-data generators (thin coverage) | ~20% | ~70% — add validation suite |
+| Snapshot / value regression | 0% | Add for top 4 functions |
+| End-to-end pipeline | 0% | Add 1 test for each major workflow |
 
 ------------------------------------------------------------------------
 
@@ -377,6 +382,7 @@ These categories are not worth testing:
 ## Running the Tests
 
 ``` r
+
 # All tests
 devtools::test()
 
@@ -393,5 +399,6 @@ devtools::check()
 Coverage report (requires `covr`):
 
 ``` r
+
 covr::package_coverage() |> covr::report()
 ```

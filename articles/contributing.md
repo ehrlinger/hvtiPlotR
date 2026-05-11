@@ -23,6 +23,7 @@ Clone the repository and install all dependencies declared in
 `DESCRIPTION`:
 
 ``` r
+
 # Clone (first time only)
 # git clone https://github.com/ehrlinger/hvtiPlotR.git
 
@@ -36,6 +37,7 @@ devtools::install_deps(dependencies = TRUE)
 ### The development workflow loop
 
 ``` r
+
 # Load the package into the current session without installing
 devtools::load_all()
 
@@ -96,6 +98,7 @@ family lives in its own file — plot functions and their sample-data
 companions together.
 
 ``` r
+
 # File: R/bmi-curve-plot.R
 
 #' Average BMI Curve Plot
@@ -220,6 +223,7 @@ Add `sample_bmi_curve_data()` to the same file. The generator should:
 - Produce realistic-looking data at a plausible scale.
 
 ``` r
+
 #' Sample BMI Curve Data
 #'
 #' Simulates the fitted curve output from a nonparametric BMI analysis,
@@ -270,16 +274,16 @@ sample_bmi_curve_data <- function(n       = 500,
 
 The documentation block must include all of the following:
 
-| Tag            | Required | Notes                                                    |
-|----------------|----------|----------------------------------------------------------|
-| `@description` | Yes      | One paragraph; mention the SAS template name             |
-| `@param`       | Yes      | One per argument; include default in description         |
-| `@return`      | Yes      | Describe the ggplot or data frame structure              |
-| `@seealso`     | Yes      | Link to the companion `sample_*()` and related functions |
-| `@references`  | Yes      | The exact SAS template filename(s)                       |
-| `@examples`    | Yes      | Must be runnable (use `\dontrun{}` only for file I/O)    |
-| `@importFrom`  | Yes      | Declare every function used from other packages          |
-| `@export`      | Yes      | Must be present for the function to be accessible        |
+| Tag | Required | Notes |
+|----|----|----|
+| `@description` | Yes | One paragraph; mention the SAS template name |
+| `@param` | Yes | One per argument; include default in description |
+| `@return` | Yes | Describe the ggplot or data frame structure |
+| `@seealso` | Yes | Link to the companion `sample_*()` and related functions |
+| `@references` | Yes | The exact SAS template filename(s) |
+| `@examples` | Yes | Must be runnable (use `\dontrun{}` only for file I/O) |
+| `@importFrom` | Yes | Declare every function used from other packages |
+| `@export` | Yes | Must be present for the function to be accessible |
 
 Run
 [`devtools::document()`](https://devtools.r-lib.org/reference/document.html)
@@ -339,6 +343,7 @@ in the `# Nonparametric temporal trends` family.
 Create `tests/testthat/test_bmi_curve_plot.R`:
 
 ``` r
+
 library(testthat)
 library(ggplot2)
 
@@ -387,6 +392,7 @@ Add a bullet to the current dev version at the top of `NEWS.md`:
 ### Step 10: Final checklist before opening a PR
 
 ``` r
+
 devtools::document()   # regenerate NAMESPACE + .Rd — must complete without errors
 devtools::test()       # all tests pass
 devtools::check()      # 0 errors, 0 warnings, 0 notes (ideally)
@@ -427,6 +433,7 @@ hand.**
   `#| eval: false` in the vignette chunk.
 
 ``` r
+
 # Check before adding — is it already available in base R or an existing Import?
 # Keep Imports lean; every new dependency adds installation weight.
 ```
@@ -467,6 +474,7 @@ composition grammar documented in `vignettes/plot-decorators.qmd`.
 #### Tidy evaluation
 
 ``` r
+
 # Correct — column name is a string; .data masks the data frame
 ggplot2::aes(x = .data[[x_col]], y = .data[[estimate_col]])
 
@@ -480,6 +488,7 @@ ggplot2::aes(x = !!rlang::enquo(x_col))
 Always declare `.data` in the roxygen block:
 
 ``` r
+
 #' @importFrom rlang .data
 ```
 
@@ -506,6 +515,7 @@ The `tests/testthat/_snaps/` directory stores snapshot outputs for
 tests. To update snapshots after an intentional change:
 
 ``` r
+
 testthat::snapshot_review()   # review diffs interactively
 testthat::snapshot_accept()   # accept all pending diffs
 ```
@@ -513,6 +523,7 @@ testthat::snapshot_accept()   # accept all pending diffs
 #### Running checks
 
 ``` r
+
 devtools::test()               # run all tests
 devtools::test(filter = "bmi") # run tests matching "bmi"
 devtools::check()              # full R CMD CHECK
@@ -563,6 +574,7 @@ Vignettes live in `vignettes/` as `.qmd` files and are built with Quarto
 ## Session info
 
 ``` r
+
 sessionInfo()
 ```
 

@@ -1,5 +1,48 @@
 # Changelog
 
+## hvtiPlotR 2.2.0 (in development)
+
+### UpSet plot backend swap ([\#62](https://github.com/ehrlinger/hvtiPlotR/issues/62))
+
+[`plot.hv_upset()`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hv_upset.md)
+is now backed by [`ggupset`](https://cran.r-project.org/package=ggupset)
+rather than `ComplexUpset`. The intersection-size bar chart is a
+standard ggplot — themes apply via `+` like every other hvtiPlotR plot,
+and
+[`ggplot2::ggplot_build()`](https://ggplot2.tidyverse.org/reference/ggplot_build.html)
+works on the output. When `set_size = TRUE` (the default) a manual
+set-size sidebar is composed via `patchwork`.
+
+**Breaking changes:**
+
+- The `base_annotations` parameter has been removed. To recolour the
+  intersection bars by an external grouping variable, pass
+  `fill_col = "<column>"` to
+  [`plot()`](https://rdrr.io/r/graphics/plot.default.html); for a single
+  fixed colour pass `bar_fill = "<colour>"`.
+- The `min_size` parameter has been replaced by `n_intersections` (top-N
+  by frequency or degree — see `sort_by`). ComplexUpset’s size-threshold
+  semantics are not preserved.
+- `encode_sets` and `sort_intersections` parameters have been removed
+  (the new equivalents are `sort_by` and `set_size_sort`).
+- Themes now apply via `+`, not `&`. `&` still works on the patchwork
+  composite when `set_size = TRUE`.
+
+**Other changes:**
+
+- The `ComplexUpset` Import has been dropped; `ggupset (>= 0.4.0)` is
+  added in its place. `patchwork` has been promoted from Suggests to
+  Imports.
+- [`hv_upset()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_upset.md)
+  adds a `.Procedures` list-column to its stored `$data` for
+  `scale_x_upset()` to consume.
+- The four `upset_*` vignette chunks no longer carry a Windows skip
+  gate; ggupset renders cleanly on every CI runner.
+- `tests/testthat/test_example_plot_data.R` and
+  `tests/testthat/test_plot_integration.R` drop their
+  `tryCatch / skip_if_theme_incompatibility` wrappers — the upset output
+  now passes `expect_plot_has_data()` like every other plot.
+
 ## hvtiPlotR 2.1.0
 
 ### Theme API redesign
@@ -22,6 +65,7 @@
   inline. Examples:
 
   ``` r
+
   theme_hv_manuscript(legend.position = "right")
   theme_hv_ppt_dark(axis.text.y = element_text(family = "mono"))
   ```
@@ -420,22 +464,22 @@ etc.) are **removed**. This is a clean break; no deprecated wrappers.
 
 #### Constructor → old function mapping
 
-| New constructor                                                                             | Removed function(s)                                          |
-|---------------------------------------------------------------------------------------------|--------------------------------------------------------------|
-| [`hv_mirror_hist()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_mirror_hist.md)     | `mirror_histogram()`                                         |
-| [`hv_balance()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_balance.md)             | `covariate_balance()`                                        |
-| [`hv_stacked()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_stacked.md)             | `stacked_histogram()`                                        |
-| [`hv_survival()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_survival.md)           | `survival_curve()`                                           |
-| [`hv_nonparametric()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_nonparametric.md) | `nonparametric_curve_plot()`                                 |
-| [`hv_ordinal()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_ordinal.md)             | `nonparametric_ordinal_plot()`                               |
-| [`hv_followup()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_followup.md)           | `goodness_followup()` + `goodness_event_plot()`              |
-| [`hv_trends()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_trends.md)               | `trends_plot()`                                              |
-| [`hv_spaghetti()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_spaghetti.md)         | `spaghetti_plot()`                                           |
-| [`hv_longitudinal()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_longitudinal.md)   | `longitudinal_counts_plot()` + `longitudinal_counts_table()` |
-| [`hv_alluvial()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_alluvial.md)           | `alluvial_plot()`                                            |
-| [`hv_sankey()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_sankey.md)               | `cluster_sankey_plot()`                                      |
-| [`hv_eda()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_eda.md)                     | `eda_plot()`                                                 |
-| [`hv_upset()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_upset.md)                 | `upset_plot()`                                               |
+| New constructor | Removed function(s) |
+|----|----|
+| [`hv_mirror_hist()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_mirror_hist.md) | `mirror_histogram()` |
+| [`hv_balance()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_balance.md) | `covariate_balance()` |
+| [`hv_stacked()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_stacked.md) | `stacked_histogram()` |
+| [`hv_survival()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_survival.md) | `survival_curve()` |
+| [`hv_nonparametric()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_nonparametric.md) | `nonparametric_curve_plot()` |
+| [`hv_ordinal()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_ordinal.md) | `nonparametric_ordinal_plot()` |
+| [`hv_followup()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_followup.md) | `goodness_followup()` + `goodness_event_plot()` |
+| [`hv_trends()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_trends.md) | `trends_plot()` |
+| [`hv_spaghetti()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_spaghetti.md) | `spaghetti_plot()` |
+| [`hv_longitudinal()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_longitudinal.md) | `longitudinal_counts_plot()` + `longitudinal_counts_table()` |
+| [`hv_alluvial()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_alluvial.md) | `alluvial_plot()` |
+| [`hv_sankey()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_sankey.md) | `cluster_sankey_plot()` |
+| [`hv_eda()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_eda.md) | `eda_plot()` |
+| [`hv_upset()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_upset.md) | `upset_plot()` |
 
 [`hv_hazard()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_hazard.md)
 \|

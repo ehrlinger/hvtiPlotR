@@ -12,12 +12,14 @@ Install from GitHub using
 [remotes](https://CRAN.R-project.org/package=remotes):
 
 ``` r
+
 remotes::install_github("ehrlinger/hvtiPlotR")
 ```
 
 Apply an HVI theme to any ggplot2 figure in one line:
 
 ``` r
+
 library(ggplot2)
 library(hvtiPlotR)
 
@@ -29,6 +31,7 @@ ggplot(mtcars, aes(wt, mpg, colour = factor(cyl))) +
 Export the result directly to an editable PowerPoint slide:
 
 ``` r
+
 p <- ggplot(mtcars, aes(wt, mpg)) + geom_point() + hv_theme("ppt")
 
 save_ppt(
@@ -43,14 +46,15 @@ save_ppt(
 Use `hv_theme()` to apply any supported style, or call the named aliases
 directly:
 
-| Style key              | Alias(es)                                                                                                                                                                         | Best for                            |
-|------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------|
-| `"manuscript"`         | [`theme_manuscript()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md), [`theme_man()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md) | Journal figures, white background   |
-| `"ppt"` / `"dark_ppt"` | [`theme_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md), [`theme_dark_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)   | Dark-background PowerPoint slides   |
-| `"light_ppt"`          | [`theme_light_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)                                                                                        | Light/transparent PowerPoint slides |
-| `"poster"`             | [`theme_poster()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)                                                                                           | Conference posters                  |
+| Style key | Alias(es) | Best for |
+|----|----|----|
+| `"manuscript"` | [`theme_manuscript()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md), [`theme_man()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md) | Journal figures, white background |
+| `"ppt"` / `"dark_ppt"` | [`theme_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md), [`theme_dark_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md) | Dark-background PowerPoint slides |
+| `"light_ppt"` | [`theme_light_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md) | Light/transparent PowerPoint slides |
+| `"poster"` | [`theme_poster()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md) | Conference posters |
 
 ``` r
+
 p + hv_theme("manuscript")   # via generic
 p + theme_man()                # direct alias
 p + hv_theme("ppt")          # dark PPT
@@ -69,6 +73,7 @@ the data and returns an S3 object;
 and a theme with the usual `+` operator.
 
 ``` r
+
 km <- hv_survival(sample_survival_data())
 plot(km) + hv_theme("manuscript")
 km$tables$risk                         # risk-table data frame
@@ -76,13 +81,14 @@ km$tables$risk                         # risk-table data frame
 
 ### Propensity Score & Balance
 
-| Constructor                                                                             | Description                                                                                                            |
-|-----------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------|
+| Constructor | Description |
+|----|----|
 | [`hv_mirror_hist()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_mirror_hist.md) | Mirrored histograms showing propensity score distributions for two groups, before and after matching or IPTW weighting |
-| [`hv_stacked()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_stacked.md)         | Stacked or proportional-fill histogram of a numeric variable by group                                                  |
-| [`hv_balance()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_balance.md)         | Standardised mean difference dot-plot for assessing propensity matching or weighting quality                           |
+| [`hv_stacked()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_stacked.md) | Stacked or proportional-fill histogram of a numeric variable by group |
+| [`hv_balance()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_balance.md) | Standardised mean difference dot-plot for assessing propensity matching or weighting quality |
 
 ``` r
+
 mh <- hv_mirror_hist(sample_mirror_histogram_data(n = 2000),
                   group_labels = c("SAVR", "TF-TAVR"))
 plot(mh) + hv_theme("manuscript")
@@ -90,42 +96,42 @@ plot(mh) + hv_theme("manuscript")
 
 ### Survival & Time-to-Event
 
-| Constructor                                                                                             | Description                                                                                                                                               |
-|---------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------|
-| [`hv_survival()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_survival.md)                       | Kaplan-Meier and Nelson-Aalen analysis. `plot(km, type = ...)` renders survival, cumulative hazard, hazard, log-log, or life/RMST; tables via `km$tables` |
-| [`hv_nonparametric()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_nonparametric.md)             | Nonparametric survival or event-rate curve with optional confidence intervals                                                                             |
-| [`hv_ordinal()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_ordinal.md)                         | Nonparametric curves for ordinal outcomes (e.g. severity grades)                                                                                          |
-| [`hv_hazard()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_hazard.md)                           | Parametric hazard/survival curves from Weibull or other models, with optional KM overlay                                                                  |
-| [`hv_survival_difference()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_survival_difference.md) | Absolute treatment benefit vs. a reference group over time                                                                                                |
-| [`hv_nnt()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_nnt.md)                                 | Number needed to treat derived from survival difference estimates                                                                                         |
-| [`hv_followup()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_followup.md)                       | Goodness-of-follow-up scatter: actual vs. potential follow-up by operation year; `plot(gf, type = "event")` for non-fatal competing events                |
+| Constructor | Description |
+|----|----|
+| [`hv_survival()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_survival.md) | Kaplan-Meier and Nelson-Aalen analysis. `plot(km, type = ...)` renders survival, cumulative hazard, hazard, log-log, or life/RMST; tables via `km$tables` |
+| [`hv_nonparametric()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_nonparametric.md) | Nonparametric survival or event-rate curve with optional confidence intervals |
+| [`hv_ordinal()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_ordinal.md) | Nonparametric curves for ordinal outcomes (e.g. severity grades) |
+| [`hv_hazard()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_hazard.md) | Parametric hazard/survival curves from Weibull or other models, with optional KM overlay |
+| [`hv_survival_difference()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_survival_difference.md) | Absolute treatment benefit vs. a reference group over time |
+| [`hv_nnt()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_nnt.md) | Number needed to treat derived from survival difference estimates |
+| [`hv_followup()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_followup.md) | Goodness-of-follow-up scatter: actual vs. potential follow-up by operation year; `plot(gf, type = "event")` for non-fatal competing events |
 
 ### Longitudinal & Repeated Measures
 
-| Constructor                                                                               | Description                                                                              |
-|-------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------|
-| [`hv_trends()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_trends.md)             | Temporal trend: annual means/medians with LOESS smooth, by group                         |
-| [`hv_spaghetti()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_spaghetti.md)       | Individual subject trajectories over time with optional per-group LOESS overlay          |
+| Constructor | Description |
+|----|----|
+| [`hv_trends()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_trends.md) | Temporal trend: annual means/medians with LOESS smooth, by group |
+| [`hv_spaghetti()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_spaghetti.md) | Individual subject trajectories over time with optional per-group LOESS overlay |
 | [`hv_longitudinal()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_longitudinal.md) | Pre-aggregated patient and measurement counts; `plot(lc, type = "table")` for text table |
 
 ### Exploratory & Multivariate
 
-| Constructor                                                                       | Description                                                                                                                                                   |
-|-----------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| [`hv_eda()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_eda.md)           | Exploratory plot for a single variable. Auto-detects type: scatter + LOESS for continuous, stacked bar for categorical. Missing values shown as `"(Missing)"` |
-| [`hv_upset()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_upset.md)       | UpSet diagram for visualising procedure co-occurrences or set memberships                                                                                     |
-| [`hv_alluvial()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_alluvial.md) | Sankey/alluvial diagram for patient flow across categorical stages                                                                                            |
-| [`hv_sankey()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_sankey.md)     | Cluster stability Sankey showing patient transitions across cluster solutions                                                                                 |
+| Constructor | Description |
+|----|----|
+| [`hv_eda()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_eda.md) | Exploratory plot for a single variable. Auto-detects type: scatter + LOESS for continuous, stacked bar for categorical. Missing values shown as `"(Missing)"` |
+| [`hv_upset()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_upset.md) | UpSet diagram for visualising procedure co-occurrences or set memberships |
+| [`hv_alluvial()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_alluvial.md) | Sankey/alluvial diagram for patient flow across categorical stages |
+| [`hv_sankey()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_sankey.md) | Cluster stability Sankey showing patient transitions across cluster solutions |
 
 ### Utilities
 
-| Function                                                                                | Description                                                                                                                                                                                                                      |
-|-----------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `hv_theme(style)`                                                                       | Generic dispatcher returning the named ggplot2 theme                                                                                                                                                                             |
-| [`save_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/save_ppt.md)             | Export a ggplot to an editable PowerPoint slide using an HVI template; optional `panel_box = list(width = ..., height = ..., left = ..., top = ...)` anchors the panel content area to the same slide coordinates on every slide |
-| [`hv_ggsave_dims()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_ggsave_dims.md) | Compute [`ggsave()`](https://ggplot2.tidyverse.org/reference/ggsave.html) `width`/`height` that preserve a target panel content area regardless of axis-label, legend, or title size                                             |
-| [`hv_ph_location()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_ph_location.md) | Compute [`officer::ph_location()`](https://davidgohel.github.io/officer/reference/ph_location.html) args so a ggplot’s panel lands at a fixed slide rectangle — the per-slide worker that `save_ppt(panel_box=)` calls           |
-| [`make_footnote()`](https://ehrlinger.github.io/hvtiPlotR/reference/make_footnote.md)   | Add a footnote annotation to the current figure                                                                                                                                                                                  |
+| Function | Description |
+|----|----|
+| `hv_theme(style)` | Generic dispatcher returning the named ggplot2 theme |
+| [`save_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/save_ppt.md) | Export a ggplot to an editable PowerPoint slide using an HVI template; optional `panel_box = list(width = ..., height = ..., left = ..., top = ...)` anchors the panel content area to the same slide coordinates on every slide |
+| [`hv_ggsave_dims()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_ggsave_dims.md) | Compute [`ggsave()`](https://ggplot2.tidyverse.org/reference/ggsave.html) `width`/`height` that preserve a target panel content area regardless of axis-label, legend, or title size |
+| [`hv_ph_location()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_ph_location.md) | Compute [`officer::ph_location()`](https://davidgohel.github.io/officer/reference/ph_location.html) args so a ggplot’s panel lands at a fixed slide rectangle — the per-slide worker that `save_ppt(panel_box=)` calls |
+| [`make_footnote()`](https://ehrlinger.github.io/hvtiPlotR/reference/make_footnote.md) | Add a footnote annotation to the current figure |
 
 ## Vignettes
 
@@ -133,6 +139,7 @@ Four vignettes ship with the package and are available after
 installation:
 
 ``` r
+
 vignette("hvtiPlotR",        package = "hvtiPlotR")  # SAS migration guide
 vignette("plot-functions",   package = "hvtiPlotR")  # per-function reference with worked examples
 vignette("plot-decorators",  package = "hvtiPlotR")  # composition: scale_*, labs(), themes, saving
@@ -166,6 +173,7 @@ for the full guide, which covers:
 Quick-start:
 
 ``` r
+
 devtools::install_deps(dependencies = TRUE)
 devtools::load_all()
 devtools::check()

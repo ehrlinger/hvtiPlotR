@@ -231,47 +231,47 @@ SAS script.
 
 ### Structure and output
 
-| `plot.sas` command                    | R / ggplot2 equivalent                                                                                             | Notes                        |
-|---------------------------------------|--------------------------------------------------------------------------------------------------------------------|------------------------------|
-| `%plot(goptions device=pscolor, ...)` | `ggsave(filename = "fig.pdf", width = 11, height = 8.5)`                                                           | Manuscript PDF               |
-| `%plot(goptions device=cgmmppa, ...)` | `save_ppt(object = p, template = ..., powerpoint = ...)`                                                           | Editable PPT vector          |
-| `gaccess=gsasfile "path/file.ps"`     | `ggsave(filename = here::here("graphs", "fig.pdf"), ...)`                                                          | Output file path             |
-| `id l="path/file"`                    | `labs(caption = getwd())` or [`make_footnote()`](https://ehrlinger.github.io/hvtiPlotR/reference/make_footnote.md) | Figure footnote / path label |
+| `plot.sas` command | R / ggplot2 equivalent | Notes |
+|----|----|----|
+| `%plot(goptions device=pscolor, ...)` | `ggsave(filename = "fig.pdf", width = 11, height = 8.5)` | Manuscript PDF |
+| `%plot(goptions device=cgmmppa, ...)` | `save_ppt(object = p, template = ..., powerpoint = ...)` | Editable PPT vector |
+| `gaccess=gsasfile "path/file.ps"` | `ggsave(filename = here::here("graphs", "fig.pdf"), ...)` | Output file path |
+| `id l="path/file"` | `labs(caption = getwd())` or [`make_footnote()`](https://ehrlinger.github.io/hvtiPlotR/reference/make_footnote.md) | Figure footnote / path label |
 
 ### Axis labels and scales
 
-| `plot.sas` command                              | R / ggplot2 equivalent                                          | Notes                           |
-|-------------------------------------------------|-----------------------------------------------------------------|---------------------------------|
-| `labelx l="Years After Operation"`              | `labs(x = "Years After Operation")`                             | x-axis title                    |
-| `labely l="Freedom from Event (%)"`             | `labs(y = "Freedom from Event (%)")`                            | y-axis title                    |
-| `axisx order=(0 to 10 by 2), minor=none`        | `scale_x_continuous(limits = c(0,10), breaks = seq(0,10,2))`    | x scale + tick positions        |
-| `axisy order=(0 to 100 by 20), minor=none`      | `scale_y_continuous(limits = c(0,100), breaks = seq(0,100,20))` | y scale + tick positions        |
-| `coord_cartesian(xlim=c(0,5.1), ylim=c(0,101))` | `coord_cartesian(xlim = c(0, 5.1), ylim = c(0, 101))`           | Viewport crop without data loss |
+| `plot.sas` command | R / ggplot2 equivalent | Notes |
+|----|----|----|
+| `labelx l="Years After Operation"` | `labs(x = "Years After Operation")` | x-axis title |
+| `labely l="Freedom from Event (%)"` | `labs(y = "Freedom from Event (%)")` | y-axis title |
+| `axisx order=(0 to 10 by 2), minor=none` | `scale_x_continuous(limits = c(0,10), breaks = seq(0,10,2))` | x scale + tick positions |
+| `axisy order=(0 to 100 by 20), minor=none` | `scale_y_continuous(limits = c(0,100), breaks = seq(0,100,20))` | y scale + tick positions |
+| `coord_cartesian(xlim=c(0,5.1), ylim=c(0,101))` | `coord_cartesian(xlim = c(0, 5.1), ylim = c(0, 101))` | Viewport crop without data loss |
 
 ### Tuple statements — points and error bars
 
-| `plot.sas` option                           | R / ggplot2 equivalent                                                                    | Notes                            |
-|---------------------------------------------|-------------------------------------------------------------------------------------------|----------------------------------|
-| `tuple set=..., x=t, y=est, cll=lo, clu=hi` | `nonparametric_curve_plot(curve_data, lower_col="lo", upper_col="hi")`                    | Preferred hvtiPlotR function     |
-| `symbol=dot`                                | `geom_point(shape = 20)`                                                                  | Filled circle                    |
-| `symbol=circle`                             | `geom_point(shape = 1)`                                                                   | Open circle                      |
-| `symbol=square`                             | `geom_point(shape = 15)`                                                                  | Filled square                    |
-| `symbol=diamond`                            | `geom_point(shape = 18)`                                                                  | Filled diamond                   |
-| `symbsize=1/2`                              | `size = 2.0` in [`geom_point()`](https://ggplot2.tidyverse.org/reference/geom_point.html) | Point diameter (different scale) |
-| `ebar=1, ebarsize=3/4`                      | `geom_errorbar(aes(ymin=lo, ymax=hi), width=0.3)`                                         | Confidence error bars            |
-| `linepe=0` (no connecting line)             | omit [`geom_line()`](https://ggplot2.tidyverse.org/reference/geom_path.html)              | Points only                      |
+| `plot.sas` option | R / ggplot2 equivalent | Notes |
+|----|----|----|
+| `tuple set=..., x=t, y=est, cll=lo, clu=hi` | `nonparametric_curve_plot(curve_data, lower_col="lo", upper_col="hi")` | Preferred hvtiPlotR function |
+| `symbol=dot` | `geom_point(shape = 20)` | Filled circle |
+| `symbol=circle` | `geom_point(shape = 1)` | Open circle |
+| `symbol=square` | `geom_point(shape = 15)` | Filled square |
+| `symbol=diamond` | `geom_point(shape = 18)` | Filled diamond |
+| `symbsize=1/2` | `size = 2.0` in [`geom_point()`](https://ggplot2.tidyverse.org/reference/geom_point.html) | Point diameter (different scale) |
+| `ebar=1, ebarsize=3/4` | `geom_errorbar(aes(ymin=lo, ymax=hi), width=0.3)` | Confidence error bars |
+| `linepe=0` (no connecting line) | omit [`geom_line()`](https://ggplot2.tidyverse.org/reference/geom_path.html) | Points only |
 
 ### Tuple statements — lines and ribbons
 
-| `plot.sas` option                           | R / ggplot2 equivalent                                                                       | Notes                           |
-|---------------------------------------------|----------------------------------------------------------------------------------------------|---------------------------------|
-| `tuple set=..., x=t, y=est, cll=lo, clu=hi` | `geom_line() + geom_ribbon(aes(ymin=lo, ymax=hi), alpha=0.2)`                                | Line + CI ribbon                |
-| `width=3` (thick line)                      | `linewidth = 1.2` in [`geom_line()`](https://ggplot2.tidyverse.org/reference/geom_path.html) | ggplot2 uses a different scale  |
-| `width=0.5` (thin line)                     | `linewidth = 0.5`                                                                            |                                 |
-| `color=black`                               | `colour = "black"` or `scale_colour_manual(values = ...)`                                    | Explicit colour                 |
-| `color=blue`                                | `colour = "steelblue"`                                                                       | Use ColorBrewer for multi-group |
-| `linecl=2` (dashed)                         | `linetype = "dashed"` or `scale_linetype_manual(values = ...)`                               | Line type                       |
-| `linecl=0` (solid)                          | `linetype = "solid"` (default)                                                               |                                 |
+| `plot.sas` option | R / ggplot2 equivalent | Notes |
+|----|----|----|
+| `tuple set=..., x=t, y=est, cll=lo, clu=hi` | `geom_line() + geom_ribbon(aes(ymin=lo, ymax=hi), alpha=0.2)` | Line + CI ribbon |
+| `width=3` (thick line) | `linewidth = 1.2` in [`geom_line()`](https://ggplot2.tidyverse.org/reference/geom_path.html) | ggplot2 uses a different scale |
+| `width=0.5` (thin line) | `linewidth = 0.5` |  |
+| `color=black` | `colour = "black"` or `scale_colour_manual(values = ...)` | Explicit colour |
+| `color=blue` | `colour = "steelblue"` | Use ColorBrewer for multi-group |
+| `linecl=2` (dashed) | `linetype = "dashed"` or `scale_linetype_manual(values = ...)` | Line type |
+| `linecl=0` (solid) | `linetype = "solid"` (default) |  |
 
 ### Symbols and colours reference
 
@@ -291,12 +291,12 @@ directly.
 
 ### Device and theme mapping
 
-| `plot.sas` device              | hvtiPlotR theme                                                                                | Use for                         |
-|--------------------------------|------------------------------------------------------------------------------------------------|---------------------------------|
-| `device=pscolor`               | [`theme_hv_manuscript()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md) | Journal PDF, black on white     |
-| `device=cgmmppa` + dark slide  | [`theme_hv_ppt_dark()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)   | Dark-background PowerPoint      |
-| `device=cgmmppa` + white slide | [`theme_hv_ppt_light()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)  | Light/transparent PowerPoint    |
-| —                              | [`theme_hv_poster()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)     | Conference poster (larger text) |
+| `plot.sas` device | hvtiPlotR theme | Use for |
+|----|----|----|
+| `device=pscolor` | [`theme_hv_manuscript()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md) | Journal PDF, black on white |
+| `device=cgmmppa` + dark slide | [`theme_hv_ppt_dark()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md) | Dark-background PowerPoint |
+| `device=cgmmppa` + white slide | [`theme_hv_ppt_light()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md) | Light/transparent PowerPoint |
+| — | [`theme_hv_poster()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md) | Conference poster (larger text) |
 
 ## Generating ggplot2 graphics
 
@@ -338,6 +338,7 @@ example.
 You can install the package with the following commands:
 
 ``` r
+
 # Install from GitHub using the remotes package
 install.packages("remotes")   # if not already installed
 remotes::install_github("ehrlinger/hvtiPlotR")
@@ -357,6 +358,7 @@ attribute on each column, which is accessible with
 `attr(dta$varname, "label")`.
 
 ``` r
+
 library(haven)
 
 # Read the xport file — variable labels are stored as column attributes
@@ -376,6 +378,7 @@ dta_labels <- sapply(dta, function(col) {
 which is the most convenient route when the SAS server is accessible:
 
 ``` r
+
 dta <- haven::read_sas("path/to/analysis.sas7bdat")
 ```
 
@@ -393,6 +396,7 @@ run;
 Then read it in R:
 
 ``` r
+
 dta <- read.csv(here::here("graphs", "mean_curv.csv"))
 ```
 
@@ -406,6 +410,7 @@ summary datasets expected by **hvtiPlotR** constructors (e.g.,
 **hvtiPlotR** ships two example xport files for testing:
 
 ``` r
+
 par_file  <- system.file("extdata", "par_cst.xpt",  package = "hvtiPlotR")
 npar_file <- system.file("extdata", "npar_cst.xpt", package = "hvtiPlotR")
 
@@ -424,6 +429,7 @@ a generic black and white format, and brings in a pair of example
 datasets.
 
 ``` r
+
 # load required libraries
 library("ggplot2") # Plotting environment
 if (requireNamespace("hvtiPlotR", quietly = TRUE)) {
@@ -449,6 +455,7 @@ figure that we will be adding to as we work through the commands in the
 comments above the equivalent ggplot2 command for comparison.
 
 ``` r
+
 ## To reproduce the plot.sas function, line by line.
 ###-------------
 ## There are SAS options we will not use here.
@@ -468,6 +475,7 @@ up in our R code. The ggplot2 package uses the labs function to set the
 axis labels.
 
 ``` r
+
 ###-------------
 ## Labels are a single command, scales control the axis
 #
@@ -501,6 +509,7 @@ would have a blank axis from 50 to the limits of the data. We discuss
 controlling the figure viewport in Section 3.11.
 
 ``` r
+
 ###-------------
 ## Labels are a single command, scales control the axis
 #
@@ -548,6 +557,7 @@ defined in the nonparametric data set we loaded in the setup code chunk
 in Section 3.
 
 ``` r
+
 ###-------------
 ## /******NON-PARAMETRIC: SYMBOLS AND CONFIDENCE BARS *******/
 ##
@@ -604,6 +614,7 @@ and `shape=0` for each series (Section 3.9). We manipulated the error
 bar size with the `width` argument
 
 ``` r
+
 # tuple set=green, symbol=circle, symbsize=1/2, linepe=0, linecl=0,
 # ebarsize=3/4, ebar=1,
 # x=iv_state, y=sgdead1, cll=stldead1, clu=studead1, color=blue, end;
@@ -667,6 +678,7 @@ two lines (the upper and lower confidence limit). The resulting graph is
 shown in Figure 6.
 
 ``` r
+
 # /**********PARAMETRIC : SOLID LINES AND CONFIDENCE INTERVALS**********/
 # tuple set=all, x=years, y=noinit, cll=clinit, clu=cuinit,
 # width=0.5,color=black, end;
@@ -791,6 +803,7 @@ and 1 to each axis for aesthetic reasons to avid chopping oﬀ the tick
 labels when they occur at the end of the viewport.
 
 ``` r
+
 # Special commands to force origin to 0,0
 ccf_plot <- ccf_plot +
   coord_cartesian(xlim = c(0, 5.1), ylim = c(0, 101))
@@ -816,6 +829,7 @@ generated with only `geom_line` function calls. We also show how the
 figure can be created in a single set of function calls.
 
 ``` r
+
 # %plot(goptions gsfmode=replace, device=cgmmppa, ftext=hwcgm001, end;
 #   axisx order=(0 to 5 by 1), minor=none, value=(height=2.4), end;
 #   axisy order=(0 to 100 by 20), minor=none, value=(height=2.4),
@@ -857,6 +871,7 @@ The **hvtiPlotR** package provides four themes via `theme_hv_*()`:
 theme as the last `+` layer on any composed ggplot object.
 
 ``` r
+
 p_final <- ccf_plot + theme_hv_poster()
 p_final
 ```
@@ -896,6 +911,7 @@ write a composed figure to disk. Dimensions of
 figures.
 
 ``` r
+
 ggsave(
   filename = "../graphs/manuscript.pdf",
   plot     = p_final,
@@ -920,6 +936,7 @@ or
 before saving.
 
 ``` r
+
 p_ppt <- ccf_pptPlot + theme_hv_ppt_dark()
 
 save_ppt(

@@ -4,10 +4,8 @@ Validates a set-membership data frame, checks all intersect columns are
 binary (logical or 0/1 integer), computes per-set counts, and returns an
 `hv_upset` object. Call
 [`plot.hv_upset`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hv_upset.md)
-on the result to obtain the ComplexUpset UpSet diagram. Apply a theme to
-all panels with `&`:
-
-    plot(up) & theme_hv_poster()
+on the result to obtain a ggplot2 UpSet diagram (backed by
+[`scale_x_upset`](https://rdrr.io/pkg/ggupset/man/scale_x_upset.html)).
 
 ## Usage
 
@@ -33,7 +31,8 @@ An object of class `c("hv_upset", "hv_data")`:
 
 - `$data`:
 
-  The validated input data frame.
+  The validated input data frame, plus a `.Procedures` list-column
+  derived from the indicator matrix (consumed by `scale_x_upset()`).
 
 - `$meta`:
 
@@ -41,7 +40,7 @@ An object of class `c("hv_upset", "hv_data")`:
 
 - `$tables`:
 
-  List with one element: `set_counts` — a named integer vector of
+  List with one element: `set_counts` – a named integer vector of
   per-set patient counts.
 
 ## See also
@@ -70,10 +69,17 @@ up  # prints set counts
 #>     Aorta                37
 #>     CABG                 114
 
-# 2 & 3. Bare plot + theme in one step
-# ComplexUpset uses & (not +) to apply a theme across all sub-panels.
-if (FALSE) { # \dontrun{
-p <- plot(up)
-p & theme_hv_poster()
-} # }
+# 2. Plot. The default (set_size = TRUE) returns a patchwork composite,
+# so apply themes with `&` to theme every sub-panel. Use `+` for
+# set_size = FALSE (a plain ggplot).
+plot(up) & theme_hv_poster()
+#> Warning: Removed 30 rows containing non-finite outside the scale range (`stat_count()`).
+#> Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
+#> ℹ Please use `linewidth` instead.
+#> ℹ The deprecated feature was likely used in the ggupset package.
+#>   Please report the issue at <https://github.com/const-ae/ggupset/issues>.
+
+plot(up, set_size = FALSE) + theme_hv_poster()
+#> Warning: Removed 30 rows containing non-finite outside the scale range (`stat_count()`).
+
 ```

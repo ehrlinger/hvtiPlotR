@@ -113,20 +113,20 @@
 <col width="33%">
 <col width="33%">
 </colgroup>
-<thead><tr class="header">
+<thead><tr>
 <th>Style key</th>
 <th>Alias(es)</th>
 <th>Best for</th>
 </tr></thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td><code>"manuscript"</code></td>
 <td>
 <code><a href="reference/hvtiPlotR-themes.html">theme_manuscript()</a></code>, <code><a href="reference/hvtiPlotR-themes.html">theme_man()</a></code>
 </td>
 <td>Journal figures, white background</td>
 </tr>
-<tr class="even">
+<tr>
 <td>
 <code>"ppt"</code> / <code>"dark_ppt"</code>
 </td>
@@ -135,12 +135,12 @@
 </td>
 <td>Dark-background PowerPoint slides</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><code>"light_ppt"</code></td>
 <td><code><a href="reference/hvtiPlotR-themes.html">theme_light_ppt()</a></code></td>
 <td>Light/transparent PowerPoint slides</td>
 </tr>
-<tr class="even">
+<tr>
 <td><code>"poster"</code></td>
 <td><code><a href="reference/hvtiPlotR-themes.html">theme_poster()</a></code></td>
 <td>Conference posters</td>
@@ -170,20 +170,20 @@
 <col width="50%">
 <col width="50%">
 </colgroup>
-<thead><tr class="header">
+<thead><tr>
 <th>Constructor</th>
 <th>Description</th>
 </tr></thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td><code><a href="reference/hv_mirror_hist.html">hv_mirror_hist()</a></code></td>
 <td>Mirrored histograms showing propensity score distributions for two groups, before and after matching or IPTW weighting</td>
 </tr>
-<tr class="even">
+<tr>
 <td><code><a href="reference/hv_stacked.html">hv_stacked()</a></code></td>
 <td>Stacked or proportional-fill histogram of a numeric variable by group</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><code><a href="reference/hv_balance.html">hv_balance()</a></code></td>
 <td>Standardised mean difference dot-plot for assessing propensity matching or weighting quality</td>
 </tr>
@@ -202,37 +202,37 @@
 <col width="50%">
 <col width="50%">
 </colgroup>
-<thead><tr class="header">
+<thead><tr>
 <th>Constructor</th>
 <th>Description</th>
 </tr></thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td><code><a href="reference/hv_survival.html">hv_survival()</a></code></td>
 <td>Kaplan-Meier and Nelson-Aalen analysis. <code>plot(km, type = ...)</code> renders survival, cumulative hazard, hazard, log-log, or life/RMST; tables via <code>km$tables</code>
 </td>
 </tr>
-<tr class="even">
+<tr>
 <td><code><a href="reference/hv_nonparametric.html">hv_nonparametric()</a></code></td>
 <td>Nonparametric survival or event-rate curve with optional confidence intervals</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><code><a href="reference/hv_ordinal.html">hv_ordinal()</a></code></td>
 <td>Nonparametric curves for ordinal outcomes (e.g. severity grades)</td>
 </tr>
-<tr class="even">
+<tr>
 <td><code><a href="reference/hv_hazard.html">hv_hazard()</a></code></td>
 <td>Parametric hazard/survival curves from Weibull or other models, with optional KM overlay</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><code><a href="reference/hv_survival_difference.html">hv_survival_difference()</a></code></td>
 <td>Absolute treatment benefit vs. a reference group over time</td>
 </tr>
-<tr class="even">
+<tr>
 <td><code><a href="reference/hv_nnt.html">hv_nnt()</a></code></td>
 <td>Number needed to treat derived from survival difference estimates</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><code><a href="reference/hv_followup.html">hv_followup()</a></code></td>
 <td>Goodness-of-follow-up scatter: actual vs. potential follow-up by operation year; <code>plot(gf, type = "event")</code> for non-fatal competing events</td>
 </tr>
@@ -247,20 +247,20 @@
 <col width="50%">
 <col width="50%">
 </colgroup>
-<thead><tr class="header">
+<thead><tr>
 <th>Constructor</th>
 <th>Description</th>
 </tr></thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td><code><a href="reference/hv_trends.html">hv_trends()</a></code></td>
 <td>Temporal trend: annual means/medians with LOESS smooth, by group</td>
 </tr>
-<tr class="even">
+<tr>
 <td><code><a href="reference/hv_spaghetti.html">hv_spaghetti()</a></code></td>
 <td>Individual subject trajectories over time with optional per-group LOESS overlay</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><code><a href="reference/hv_longitudinal.html">hv_longitudinal()</a></code></td>
 <td>Pre-aggregated patient and measurement counts; <code>plot(lc, type = "table")</code> for text table</td>
 </tr>
@@ -275,25 +275,25 @@
 <col width="50%">
 <col width="50%">
 </colgroup>
-<thead><tr class="header">
+<thead><tr>
 <th>Constructor</th>
 <th>Description</th>
 </tr></thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td><code><a href="reference/hv_eda.html">hv_eda()</a></code></td>
 <td>Exploratory plot for a single variable. Auto-detects type: scatter + LOESS for continuous, stacked bar for categorical. Missing values shown as <code>"(Missing)"</code>
 </td>
 </tr>
-<tr class="even">
+<tr>
 <td><code><a href="reference/hv_upset.html">hv_upset()</a></code></td>
 <td>UpSet diagram for visualising procedure co-occurrences or set memberships</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><code><a href="reference/hv_alluvial.html">hv_alluvial()</a></code></td>
 <td>Sankey/alluvial diagram for patient flow across categorical stages</td>
 </tr>
-<tr class="even">
+<tr>
 <td><code><a href="reference/hv_sankey.html">hv_sankey()</a></code></td>
 <td>Cluster stability Sankey showing patient transitions across cluster solutions</td>
 </tr>
@@ -308,28 +308,28 @@
 <col width="50%">
 <col width="50%">
 </colgroup>
-<thead><tr class="header">
+<thead><tr>
 <th>Function</th>
 <th>Description</th>
 </tr></thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td><code>hv_theme(style)</code></td>
 <td>Generic dispatcher returning the named ggplot2 theme</td>
 </tr>
-<tr class="even">
+<tr>
 <td><code><a href="reference/save_ppt.html">save_ppt()</a></code></td>
 <td>Export a ggplot to an editable PowerPoint slide using an HVI template; optional <code>panel_box = list(width = ..., height = ..., left = ..., top = ...)</code> anchors the panel content area to the same slide coordinates on every slide</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><code><a href="reference/hv_ggsave_dims.html">hv_ggsave_dims()</a></code></td>
 <td>Compute <code><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave()</a></code> <code>width</code>/<code>height</code> that preserve a target panel content area regardless of axis-label, legend, or title size</td>
 </tr>
-<tr class="even">
+<tr>
 <td><code><a href="reference/hv_ph_location.html">hv_ph_location()</a></code></td>
 <td>Compute <code><a href="https://davidgohel.github.io/officer/reference/ph_location.html" class="external-link">officer::ph_location()</a></code> args so a ggplot’s panel lands at a fixed slide rectangle — the per-slide worker that <code>save_ppt(panel_box=)</code> calls</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><code><a href="reference/make_footnote.html">make_footnote()</a></code></td>
 <td>Add a footnote annotation to the current figure</td>
 </tr>
