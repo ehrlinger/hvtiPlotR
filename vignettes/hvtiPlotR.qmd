@@ -10,7 +10,7 @@ editor:
   markdown: 
     wrap: 80
 vignette: >
-  %\VignetteIndexEntry{Vignette's Title}
+  %\VignetteIndexEntry{hvtiPlotR: Generating plot.sas Style in R}
   %\VignetteEngine{quarto::html}
   %\VignetteEncoding{UTF-8}
 ---
