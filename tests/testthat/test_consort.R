@@ -384,3 +384,39 @@ test_that("hv_consort_exclude propagates a custom excl_label into stage metadata
                        age < 18 ~ "Age < 18")
   expect_equal(tracker$stages[[1L]]$excl_label, "Removed at screening")
 })
+
+# ---------------------------------------------------------------------------
+# Copilot review follow-ups (PR #67)
+# ---------------------------------------------------------------------------
+
+test_that("hv_consort_exclude treats NA conditions as non-matches", {
+  cohort <- data.frame(
+    mrn = paste0("P", 1:5),
+    age = c(15L, NA, 25L, 30L, 16L),
+    stringsAsFactors = FALSE
+  )
+  tracker <- hv_consort_start(cohort, patient_id = mrn) |>
+    hv_consort_exclude(label = "Eligible", col = "excl_screen",
+                       age < 18 ~ "Age < 18")
+  # P1 (15) and P5 (16) excluded; P2 (NA age) is NOT excluded and does not error
+  expect_equal(tracker$data$excl_screen,
+               c("Age < 18", NA, NA, NA, "Age < 18"))
+})
+
+test_that("hv_consort_exclude errors when a formula RHS is not a single string", {
+  expect_error(
+    hv_consort_exclude(make_tracker(), label = "Eligible", col = "excl_screen",
+                       age < 18 ~ reason_symbol),
+    "right-hand side"
+  )
+})
+
+test_that("hv_consort_patients returns character IDs for an integer ID column", {
+  cohort  <- data.frame(id = 1:10, age = c(rep(15L, 3L), rep(30L, 7L)))
+  tracker <- hv_consort_start(cohort, patient_id = id) |>
+    hv_consort_exclude(label = "Eligible", col = "excl_screen",
+                       age < 18 ~ "Age < 18")
+  expect_type(hv_consort_patients(tracker, "eligible"), "character")
+  expect_type(hv_consort_patients(tracker, "screened", reason = "Age < 18"),
+              "character")
+})

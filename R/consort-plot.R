@@ -193,6 +193,10 @@ hv_consort_exclude <- function(tracker, label, col, ...,
   for (i in seq_along(formulas)) {
     if (!inherits(formulas[[i]], "formula") || !rlang::is_formula(formulas[[i]], lhs = TRUE))
       stop(sprintf("Argument %d is not a two-sided formula.", i), call. = FALSE)
+    rhs <- rlang::f_rhs(formulas[[i]])
+    if (!is.character(rhs) || length(rhs) != 1L)
+      stop(sprintf("The right-hand side of formula %d must be a single reason string.", i),
+           call. = FALSE)
   }
 
   dat          <- tracker$data
@@ -203,7 +207,10 @@ hv_consort_exclude <- function(tracker, label, col, ...,
 
   for (f in formulas) {
     condition <- rlang::eval_tidy(rlang::f_lhs(f), data = data_env)
-    reason    <- as.character(rlang::f_rhs(f))
+    # Normalise to strict TRUE/FALSE: a patient with a missing value for the
+    # exclusion criterion is treated as not matching the rule.
+    condition <- !is.na(condition) & condition
+    reason    <- rlang::f_rhs(f)
     to_excl   <- active & condition & is.na(excl_reasons)
     excl_reasons[to_excl] <- reason
   }
@@ -332,15 +339,15 @@ hv_consort_patients <- function(tracker, stage, reason = NULL) {
   dat <- tracker$data
 
   if (is.null(reason)) {
-    dat[dat[[s$include_col]] == TRUE, tracker$patient_id_col]
+    as.character(dat[dat[[s$include_col]] == TRUE, tracker$patient_id_col])
   } else {
     if (is.null(s$excl_col))
       stop(
         sprintf("Stage '%s' has no downstream exclusion column.", stage),
         call. = FALSE
       )
-    dat[!is.na(dat[[s$excl_col]]) & dat[[s$excl_col]] == reason,
-        tracker$patient_id_col]
+    as.character(dat[!is.na(dat[[s$excl_col]]) & dat[[s$excl_col]] == reason,
+                     tracker$patient_id_col])
   }
 }
 

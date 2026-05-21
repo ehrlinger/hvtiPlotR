@@ -62,7 +62,8 @@ inches). When supplied, per-plot slide placement is computed via
 \code{\link[=hv_ph_location]{hv_ph_location()}} so the panel lands at the same slide coordinates
 on every slide regardless of axis-label width. When \code{NULL} (default),
 the fixed \code{width}/\code{height}/\code{left}/\code{top} arguments are used for every
-slide (legacy behavior).}
+slide (legacy behavior). Ignored for \code{hv_consort} objects, which are
+always placed using their own metadata dimensions.}
 }
 \value{
 Invisibly returns the path given by \code{powerpoint}.

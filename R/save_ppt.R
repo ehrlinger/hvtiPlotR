@@ -173,7 +173,8 @@ add_plot_slide <- function(doc, plot, title, layout, master, width, height,
 #'   [hv_ph_location()] so the panel lands at the same slide coordinates
 #'   on every slide regardless of axis-label width. When `NULL` (default),
 #'   the fixed `width`/`height`/`left`/`top` arguments are used for every
-#'   slide (legacy behavior).
+#'   slide (legacy behavior). Ignored for `hv_consort` objects, which are
+#'   always placed using their own metadata dimensions.
 #'
 #' @return Invisibly returns the path given by `powerpoint`.
 #'
