@@ -339,3 +339,113 @@ hv_consort_patients <- function(tracker, stage, reason = NULL) {
         tracker$patient_id_col]
   }
 }
+
+# ---------------------------------------------------------------------------
+# Plot constructor
+# ---------------------------------------------------------------------------
+
+#' Build a CONSORT flow diagram from a tracker
+#'
+#' Reads the stage metadata stored in an [hv_consort_tracker], auto-derives
+#' the `orders` and `side_box` arguments for `consort::consort_plot()`, and
+#' returns an `hv_consort` object wrapping the grid diagram.
+#'
+#' @param tracker  An `hv_consort_tracker` with at least two stages (call
+#'   [hv_consort_exclude()] at least once after [hv_consort_start()]).
+#' @param side_box Character vector of exclusion-reason column names to display
+#'   as side boxes, or `"all"` (default) to include every exclusion column.
+#' @param cex      Numeric; text size scaling passed to `consort::consort_plot()`.
+#'   Default `0.9`.
+#' @param width    Diagram width in inches.  Defaults to `7`.
+#' @param height   Diagram height in inches.  Defaults to `2 + n_stages * 1.2`,
+#'   where `n_stages` is the number of stages in the tracker.
+#' @param ...      Additional arguments forwarded to `consort::consort_plot()`.
+#'
+#' @return An `hv_consort` object — a list with:
+#' \describe{
+#'   \item{`$plot`}{The grid object returned by `consort::consort_plot()`.}
+#'   \item{`$meta`}{Named list: `n_stages`, `width`, `height`, `orders`, `side_box`.}
+#'   \item{`$tracker`}{The original `hv_consort_tracker`.}
+#' }
+#'
+#' @seealso [hv_consort_start()], [hv_consort_exclude()], [plot.hv_consort()]
+#'
+#' @examples
+#' cohort <- data.frame(
+#'   mrn  = paste0("P", 1:100),
+#'   age  = sample(15:80, 100, TRUE),
+#'   echo = sample(c(TRUE, FALSE), 100, TRUE, prob = c(0.9, 0.1))
+#' )
+#' tracker <- hv_consort_start(cohort, patient_id = mrn) |>
+#'   hv_consort_exclude(label = "Eligible", col = "excl_screen",
+#'                       age < 18 ~ "Age < 18") |>
+#'   hv_consort_exclude(label = "Analyzed", col = "excl_eligible",
+#'                       !echo ~ "Missing echocardiogram")
+#' fig <- hv_consort(tracker)
+#' \dontrun{plot(fig)}
+#'
+#' @export
+hv_consort <- function(tracker, side_box = "all", cex = 0.9,
+                        width = NULL, height = NULL, ...) {
+  ct_validate_tracker(tracker)
+
+  stages   <- tracker$stages
+  n_stages <- length(stages)
+  if (n_stages < 2L)
+    stop(
+      "Tracker has only one stage. Call `hv_consort_exclude()` at least once before building the diagram.",
+      call. = FALSE
+    )
+
+  # Build orders: interleave include_col and excl_col entries
+  orders    <- character(0L)
+  side_cols <- character(0L)
+
+  for (s in stages) {
+    orders[s$include_col] <- s$label
+    if (!is.null(s$excl_col)) {
+      excl_lbl              <- if (!is.null(s$excl_label)) s$excl_label else "Excluded"
+      orders[s$excl_col]    <- excl_lbl
+      side_cols             <- c(side_cols, s$excl_col)
+    }
+  }
+
+  # Resolve side_box
+  if (identical(side_box, "all")) {
+    side_box <- side_cols
+  } else {
+    unknown <- setdiff(side_box, names(tracker$data))
+    if (length(unknown))
+      stop(sprintf("side_box column(s) not in tracker: %s",
+                   paste(unknown, collapse = ", ")),
+           call. = FALSE)
+  }
+
+  # Default dimensions
+  if (is.null(width))  width  <- 7
+  if (is.null(height)) height <- 2 + n_stages * 1.2
+
+  # Render via consort package
+  plot_obj <- consort::consort_plot(
+    data     = tracker$data,
+    orders   = orders,
+    side_box = side_box,
+    cex      = cex,
+    ...
+  )
+
+  structure(
+    list(
+      plot    = plot_obj,
+      meta    = list(
+        n_stages = n_stages,
+        width    = width,
+        height   = height,
+        orders   = orders,
+        side_box = side_box
+      ),
+      tracker = tracker
+    ),
+    class = "hv_consort"
+  )
+}

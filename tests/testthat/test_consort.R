@@ -233,3 +233,51 @@ test_that("hv_consort_patients with reason returns subset", {
 test_that("hv_consort_patients errors on unknown stage", {
   expect_error(hv_consort_patients(make_full_tracker(), "nonexistent"), "not found")
 })
+
+# ---------------------------------------------------------------------------
+# hv_consort — plot constructor
+# ---------------------------------------------------------------------------
+
+test_that("hv_consort returns hv_consort object", {
+  obj <- hv_consort(make_full_tracker())
+  expect_s3_class(obj, "hv_consort")
+})
+
+test_that("hv_consort has $plot, $meta, $tracker slots", {
+  obj <- hv_consort(make_full_tracker())
+  expect_true(all(c("plot", "meta", "tracker") %in% names(obj)))
+})
+
+test_that("hv_consort meta contains n_stages, width, height, orders, side_box", {
+  obj <- hv_consort(make_full_tracker())
+  expect_true(all(c("n_stages", "width", "height", "orders", "side_box") %in%
+                    names(obj$meta)))
+})
+
+test_that("hv_consort side_box = 'all' collects all excl columns", {
+  obj <- hv_consort(make_full_tracker(), side_box = "all")
+  expect_equal(sort(obj$meta$side_box), sort(c("excl_screen", "excl_eligible")))
+})
+
+test_that("hv_consort respects explicit side_box", {
+  obj <- hv_consort(make_full_tracker(), side_box = "excl_screen")
+  expect_equal(obj$meta$side_box, "excl_screen")
+})
+
+test_that("hv_consort computes default dimensions from stage count", {
+  tracker <- make_full_tracker()
+  obj     <- hv_consort(tracker)
+  n       <- length(tracker$stages)
+  expect_equal(obj$meta$height, 2 + n * 1.2)
+  expect_equal(obj$meta$width,  7)
+})
+
+test_that("hv_consort respects explicit width and height", {
+  obj <- hv_consort(make_full_tracker(), width = 9, height = 12)
+  expect_equal(obj$meta$width,  9)
+  expect_equal(obj$meta$height, 12)
+})
+
+test_that("hv_consort errors on non-tracker", {
+  expect_error(hv_consort(list()), "hv_consort_tracker")
+})
