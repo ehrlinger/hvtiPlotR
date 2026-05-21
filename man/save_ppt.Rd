@@ -20,7 +20,8 @@ save_ppt(
 }
 \arguments{
 \item{object}{A single ggplot object \strong{or} a named/unnamed list of
-ggplot objects. Each element produces one slide.}
+ggplot objects. Each element produces one slide. May also be an
+\code{hv_consort} object produced by \code{\link[=hv_consort]{hv_consort()}}.}
 
 \item{template}{Path to an existing \code{.pptx} file used as the slide
 template. Default \code{"../graphs/RD.pptx"}.}
@@ -39,10 +40,14 @@ Default \code{"Title and Content"}.}
 use the template's first available master. Default \code{NULL}.}
 
 \item{width}{Plot width in inches within the slide. Default \code{10.1}.
-Ignored when \code{panel_box} is supplied.}
+Ignored when \code{panel_box} is supplied. Ignored for \code{hv_consort} objects,
+whose dimensions are taken from the object's metadata (set at
+\code{hv_consort()} time).}
 
 \item{height}{Plot height in inches within the slide. Default \code{5.8}.
-Ignored when \code{panel_box} is supplied.}
+Ignored when \code{panel_box} is supplied. Ignored for \code{hv_consort} objects,
+whose dimensions are taken from the object's metadata (set at
+\code{hv_consort()} time).}
 
 \item{left}{Distance in inches from the left edge of the slide.
 Default \code{0.0}. Ignored when \code{panel_box} is supplied.}

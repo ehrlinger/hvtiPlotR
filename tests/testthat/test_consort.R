@@ -288,7 +288,7 @@ test_that("hv_consort errors on non-tracker", {
 
 test_that("plot.hv_consort draws without error", {
   obj <- hv_consort(make_full_tracker())
-  expect_no_error(suppressMessages(plot(obj)))
+  expect_no_error(suppressWarnings(plot(obj)))
 })
 
 test_that("plot.hv_consort returns invisibly", {
@@ -336,4 +336,51 @@ test_that("sample_consort_data n controls total population", {
 test_that("sample_consort_data produces a plottable consort diagram", {
   tracker <- sample_consort_data()
   expect_no_error(hv_consort(tracker))
+})
+
+# ---------------------------------------------------------------------------
+# Error-path coverage
+# ---------------------------------------------------------------------------
+
+test_that("hv_consort_exclude errors when no formulas supplied", {
+  expect_error(
+    hv_consort_exclude(make_tracker(), label = "Eligible", col = "excl_screen"),
+    "at least one formula"
+  )
+})
+
+test_that("hv_consort_exclude errors on a non-formula argument", {
+  expect_error(
+    hv_consort_exclude(make_tracker(), label = "Eligible", col = "excl_screen",
+                       "not a formula"),
+    "not a two-sided formula"
+  )
+})
+
+test_that("hv_consort_exclude errors on a duplicate exclusion column", {
+  expect_error(
+    hv_consort_exclude(make_tracker(), label = "Eligible", col = "screened",
+                       age < 18 ~ "Age < 18"),
+    "already exists"
+  )
+})
+
+test_that("hv_consort_exclude errors on a duplicate pass_col", {
+  expect_error(
+    hv_consort_exclude(make_tracker(), label = "Eligible", col = "excl_screen",
+                       pass_col = "screened", age < 18 ~ "Age < 18"),
+    "already exists"
+  )
+})
+
+test_that("hv_consort errors on a single-stage tracker", {
+  expect_error(hv_consort(make_tracker()), "at least once")
+})
+
+test_that("hv_consort_exclude propagates a custom excl_label into stage metadata", {
+  tracker <- make_tracker() |>
+    hv_consort_exclude(label = "Eligible", col = "excl_screen",
+                       excl_label = "Removed at screening",
+                       age < 18 ~ "Age < 18")
+  expect_equal(tracker$stages[[1L]]$excl_label, "Removed at screening")
 })

@@ -141,7 +141,8 @@ add_plot_slide <- function(doc, plot, title, layout, master, width, height,
 #' designated title placeholder via [officer::ph_location_type()].
 #'
 #' @param object      A single ggplot object **or** a named/unnamed list of
-#'   ggplot objects. Each element produces one slide.
+#'   ggplot objects. Each element produces one slide. May also be an
+#'   `hv_consort` object produced by [hv_consort()].
 #' @param template    Path to an existing `.pptx` file used as the slide
 #'   template. Default `"../graphs/RD.pptx"`.
 #' @param powerpoint  Output path for the new `.pptx` file.
@@ -154,9 +155,13 @@ add_plot_slide <- function(doc, plot, title, layout, master, width, height,
 #' @param master      PowerPoint master name from the template, or `NULL` to
 #'   use the template's first available master. Default `NULL`.
 #' @param width       Plot width in inches within the slide. Default `10.1`.
-#'   Ignored when `panel_box` is supplied.
+#'   Ignored when `panel_box` is supplied. Ignored for `hv_consort` objects,
+#'   whose dimensions are taken from the object's metadata (set at
+#'   `hv_consort()` time).
 #' @param height      Plot height in inches within the slide. Default `5.8`.
-#'   Ignored when `panel_box` is supplied.
+#'   Ignored when `panel_box` is supplied. Ignored for `hv_consort` objects,
+#'   whose dimensions are taken from the object's metadata (set at
+#'   `hv_consort()` time).
 #' @param left        Distance in inches from the left edge of the slide.
 #'   Default `0.0`. Ignored when `panel_box` is supplied.
 #' @param top         Distance in inches from the top of the slide.
