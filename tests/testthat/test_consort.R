@@ -281,3 +281,24 @@ test_that("hv_consort respects explicit width and height", {
 test_that("hv_consort errors on non-tracker", {
   expect_error(hv_consort(list()), "hv_consort_tracker")
 })
+
+# ---------------------------------------------------------------------------
+# plot.hv_consort + print.hv_consort
+# ---------------------------------------------------------------------------
+
+test_that("plot.hv_consort draws without error", {
+  obj <- hv_consort(make_full_tracker())
+  expect_no_error(suppressMessages(plot(obj)))
+})
+
+test_that("plot.hv_consort returns invisibly", {
+  obj    <- hv_consort(make_full_tracker())
+  result <- withVisible(plot(obj))
+  expect_false(result$visible)
+})
+
+test_that("print.hv_consort prints without error and shows class", {
+  obj <- hv_consort(make_full_tracker())
+  expect_output(print(obj), "hv_consort")
+  expect_output(print(obj), "Stages")
+})

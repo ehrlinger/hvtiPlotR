@@ -449,3 +449,41 @@ hv_consort <- function(tracker, side_box = "all", cex = 0.9,
     class = "hv_consort"
   )
 }
+
+# ---------------------------------------------------------------------------
+# S3 methods for hv_consort
+# ---------------------------------------------------------------------------
+
+#' Print an hv_consort object
+#'
+#' @param x   An `hv_consort` from [hv_consort()].
+#' @param ... Ignored.
+#' @return `x`, invisibly.
+#' @export
+print.hv_consort <- function(x, ...) {
+  cat("<hv_consort>\n")
+  cat(sprintf("  Stages     : %d\n", x$meta$n_stages))
+  cat(sprintf("  Side boxes : %s\n",
+              if (length(x$meta$side_box)) paste(x$meta$side_box, collapse = ", ")
+              else "(none)"))
+  cat(sprintf("  Dimensions : %.1f x %.1f in\n", x$meta$width, x$meta$height))
+  invisible(x)
+}
+
+
+#' Render a CONSORT flow diagram
+#'
+#' Draws the grid-based diagram stored in an `hv_consort` object.
+#' Opens a new graphics page first (`grid::grid.newpage()`).
+#'
+#' @param x   An `hv_consort` from [hv_consort()].
+#' @param ... Ignored; present for S3 consistency.
+#' @return `x`, invisibly.
+#'
+#' @seealso [hv_consort()], [save_ppt()]
+#'
+#' @export
+plot.hv_consort <- function(x, ...) {
+  plot(x$plot, ...)
+  invisible(x)
+}
