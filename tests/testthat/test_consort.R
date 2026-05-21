@@ -168,3 +168,68 @@ test_that("hv_consort_exclude errors on non-tracker input", {
   expect_error(hv_consort_exclude(list(), label = "X", col = "y"),
                "hv_consort_tracker")
 })
+
+# ---------------------------------------------------------------------------
+# Audit helpers
+# ---------------------------------------------------------------------------
+
+make_full_tracker <- function() {
+  hv_consort_start(make_cohort(), patient_id = mrn) |>
+    hv_consort_exclude(
+      label     = "Eligible",
+      col       = "excl_screen",
+      age < 18  ~ "Age < 18",
+      !has_surg ~ "No qualifying surgery"
+    ) |>
+    hv_consort_exclude(
+      label        = "Analyzed",
+      col          = "excl_eligible",
+      missing_echo ~ "Missing echocardiogram"
+    )
+}
+
+test_that("hv_consort_summary returns a data frame with one row per stage", {
+  tracker <- make_full_tracker()
+  summ    <- hv_consort_summary(tracker)
+  expect_true(is.data.frame(summ))
+  expect_equal(nrow(summ), length(tracker$stages))
+})
+
+test_that("hv_consort_summary has required columns", {
+  summ <- hv_consort_summary(make_full_tracker())
+  expect_true(all(c("label", "include_col", "n_included",
+                    "excl_col",  "n_excluded") %in% names(summ)))
+})
+
+test_that("hv_consort_summary n_included decreases monotonically", {
+  summ <- hv_consort_summary(make_full_tracker())
+  expect_true(all(diff(summ$n_included) <= 0L))
+})
+
+test_that("hv_consort_patients returns ids at a stage by include_col", {
+  tracker <- make_full_tracker()
+  ids     <- hv_consort_patients(tracker, "eligible")
+  expect_type(ids, "character")
+  n_eligible <- sum(tracker$data$eligible)
+  expect_length(ids, n_eligible)
+})
+
+test_that("hv_consort_patients matches by label (case-insensitive)", {
+  tracker <- make_full_tracker()
+  expect_equal(
+    hv_consort_patients(tracker, "eligible"),
+    hv_consort_patients(tracker, "Eligible")
+  )
+})
+
+test_that("hv_consort_patients with reason returns subset", {
+  tracker <- make_full_tracker()
+  ids     <- hv_consort_patients(tracker, "screened", reason = "Age < 18")
+  excl_rows <- tracker$data[!is.na(tracker$data$excl_screen) &
+                              tracker$data$excl_screen == "Age < 18", ]
+  expect_equal(ids, excl_rows$mrn)
+})
+
+test_that("hv_consort_patients errors on unknown stage", {
+  expect_error(hv_consort_patients(make_full_tracker(), "nonexistent"), "not found")
+})

@@ -244,3 +244,98 @@ print.hv_consort_tracker <- function(x, ...) {
   }
   invisible(x)
 }
+
+# ---------------------------------------------------------------------------
+# Audit helpers
+# ---------------------------------------------------------------------------
+
+#' Stage-level CONSORT summary table
+#'
+#' Returns a data frame with one row per stage showing patient counts
+#' and the exclusion column name, suitable for a methods-section table.
+#'
+#' @param tracker An `hv_consort_tracker`.
+#' @return A data frame with columns `label`, `include_col`, `n_included`,
+#'   `excl_col`, `n_excluded`.  `n_excluded` and `excl_col` are `NA` for the
+#'   final stage (no downstream exclusion defined yet).
+#'
+#' @seealso [hv_consort_patients()]
+#' @export
+hv_consort_summary <- function(tracker) {
+  ct_validate_tracker(tracker)
+  rows <- lapply(tracker$stages, function(s) {
+    n_in   <- sum(tracker$data[[s$include_col]], na.rm = TRUE)
+    n_excl <- if (!is.null(s$excl_col))
+                sum(!is.na(tracker$data[[s$excl_col]]), na.rm = TRUE)
+              else NA_integer_
+    data.frame(
+      label       = s$label,
+      include_col = s$include_col,
+      n_included  = n_in,
+      excl_col    = if (!is.null(s$excl_col)) s$excl_col else NA_character_,
+      n_excluded  = n_excl,
+      stringsAsFactors = FALSE
+    )
+  })
+  do.call(rbind, rows)
+}
+
+
+#' Retrieve patient IDs at a CONSORT stage
+#'
+#' Returns the IDs of patients who are active at a given stage (or who were
+#' excluded for a specific reason at a given stage).
+#'
+#' @param tracker An `hv_consort_tracker`.
+#' @param stage   Character — either the `include_col` name (e.g. `"eligible"`)
+#'   or the stage label (case-insensitive, e.g. `"Eligible"`).
+#' @param reason  Optional character.  If supplied, returns patients excluded
+#'   from *this* stage for the specified reason (the string must exactly match
+#'   a value in the exclusion column).  The `stage` arg then refers to the
+#'   stage *before* the exclusion (e.g. `"screened"` for `excl_screen`).
+#'
+#' @return A character vector of patient IDs (from the column named in
+#'   `tracker$patient_id_col`).
+#'
+#' @examples
+#' tracker <- hv_consort_start(data.frame(id = 1:10, age = c(rep(15,3), rep(30,7))),
+#'                              patient_id = id) |>
+#'   hv_consort_exclude(label = "Eligible", col = "excl_screen",
+#'                       age < 18 ~ "Age < 18")
+#' hv_consort_patients(tracker, "eligible")
+#' hv_consort_patients(tracker, "screened", reason = "Age < 18")
+#'
+#' @export
+hv_consort_patients <- function(tracker, stage, reason = NULL) {
+  ct_validate_tracker(tracker)
+  if (!is.character(stage) || length(stage) != 1L || !nzchar(stage))
+    stop("`stage` must be a non-empty character string.", call. = FALSE)
+
+  include_cols <- vapply(tracker$stages, `[[`, character(1L), "include_col")
+  labels       <- vapply(tracker$stages, `[[`, character(1L), "label")
+
+  idx <- which(include_cols == stage | tolower(labels) == tolower(stage))
+  if (length(idx) == 0L)
+    stop(
+      sprintf("Stage '%s' not found. Available include_cols: %s; labels: %s",
+              stage,
+              paste(include_cols, collapse = ", "),
+              paste(labels,       collapse = ", ")),
+      call. = FALSE
+    )
+  idx <- idx[[1L]]
+  s   <- tracker$stages[[idx]]
+  dat <- tracker$data
+
+  if (is.null(reason)) {
+    dat[dat[[s$include_col]] == TRUE, tracker$patient_id_col]
+  } else {
+    if (is.null(s$excl_col))
+      stop(
+        sprintf("Stage '%s' has no downstream exclusion column.", stage),
+        call. = FALSE
+      )
+    dat[!is.na(dat[[s$excl_col]]) & dat[[s$excl_col]] == reason,
+        tracker$patient_id_col]
+  }
+}
