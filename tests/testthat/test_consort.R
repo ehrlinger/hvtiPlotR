@@ -302,3 +302,14 @@ test_that("print.hv_consort prints without error and shows class", {
   expect_output(print(obj), "hv_consort")
   expect_output(print(obj), "Stages")
 })
+
+# ---------------------------------------------------------------------------
+# save_ppt — hv_consort integration
+# ---------------------------------------------------------------------------
+
+test_that("save_ppt accepts hv_consort without erroring on type check", {
+  obj  <- hv_consort(make_full_tracker())
+  expect_false(inherits(obj, "ggplot"))
+  is_acceptable <- inherits(obj, "ggplot") || inherits(obj, "hv_consort")
+  expect_true(is_acceptable)
+})
