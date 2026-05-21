@@ -15,8 +15,8 @@
 \code{x}, invisibly.
 }
 \description{
-Draws the grid-based diagram stored in an \code{hv_consort} object.
-Opens a new graphics page first (\code{grid::grid.newpage()}).
+Draws the grid-based diagram stored in an \code{hv_consort} object on a
+new graphics page.
 }
 \seealso{
 \code{\link[=hv_consort]{hv_consort()}}, \code{\link[=save_ppt]{save_ppt()}}

@@ -473,8 +473,8 @@ print.hv_consort <- function(x, ...) {
 
 #' Render a CONSORT flow diagram
 #'
-#' Draws the grid-based diagram stored in an `hv_consort` object.
-#' Opens a new graphics page first (`grid::grid.newpage()`).
+#' Draws the grid-based diagram stored in an `hv_consort` object on a
+#' new graphics page.
 #'
 #' @param x   An `hv_consort` from [hv_consort()].
 #' @param ... Ignored; present for S3 consistency.
