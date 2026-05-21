@@ -487,3 +487,61 @@ plot.hv_consort <- function(x, ...) {
   plot(x$plot, ...)
   invisible(x)
 }
+
+# ---------------------------------------------------------------------------
+# Sample data generator
+# ---------------------------------------------------------------------------
+
+#' Generate a sample CONSORT tracker for demos and testing
+#'
+#' Simulates a cardiac surgery cohort and builds a three-stage
+#' `hv_consort_tracker` suitable for testing [hv_consort()] and demonstrating
+#' the tracker API.
+#'
+#' @param n    Integer. Total number of simulated patients.  Default `300`.
+#' @param seed Integer random seed for reproducibility.  Default `42`.
+#'
+#' @return An `hv_consort_tracker` with three stages:
+#'   *Screened* -> *Eligible* (excl: age < 18, no STS procedure) ->
+#'   *Analyzed*  (excl: missing echocardiogram, prior trial).
+#'
+#' @examples
+#' tracker <- sample_consort_data()
+#' print(tracker)
+#' hv_consort_summary(tracker)
+#' \dontrun{
+#'   hv_consort(tracker) |> plot()
+#' }
+#'
+#' @importFrom stats runif rbinom
+#' @export
+sample_consort_data <- function(n = 300L, seed = 42L) {
+  if (!is.numeric(n) || length(n) != 1L || n < 10L || n %% 1 != 0)
+    stop("`n` must be a positive integer >= 10.", call. = FALSE)
+
+  set.seed(seed)
+  n <- as.integer(n)
+
+  data <- data.frame(
+    patient_id  = paste0("PT", sprintf("%04d", seq_len(n))),
+    age         = as.integer(round(stats::runif(n, min = 5, max = 85))),
+    has_sts_proc = stats::rbinom(n, 1L, prob = 0.92) == 1L,
+    echo_avail  = stats::rbinom(n, 1L, prob = 0.88) == 1L,
+    prior_trial = stats::rbinom(n, 1L, prob = 0.05) == 1L,
+    stringsAsFactors = FALSE
+  )
+
+  hv_consort_start(data, patient_id = patient_id, label = "Screened") |>
+    hv_consort_exclude(
+      label        = "Eligible",
+      col          = "excl_screen",
+      age < 18     ~ "Age < 18",
+      !has_sts_proc ~ "No qualifying STS procedure"
+    ) |>
+    hv_consort_exclude(
+      label        = "Analyzed",
+      col          = "excl_eligible",
+      !echo_avail  ~ "Missing echocardiogram",
+      prior_trial  ~ "Prior trial enrollment"
+    )
+}

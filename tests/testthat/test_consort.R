@@ -313,3 +313,27 @@ test_that("save_ppt accepts hv_consort without erroring on type check", {
   is_acceptable <- inherits(obj, "ggplot") || inherits(obj, "hv_consort")
   expect_true(is_acceptable)
 })
+
+# ---------------------------------------------------------------------------
+# sample_consort_data
+# ---------------------------------------------------------------------------
+
+test_that("sample_consort_data returns an hv_consort_tracker", {
+  expect_s3_class(sample_consort_data(), "hv_consort_tracker")
+})
+
+test_that("sample_consort_data is reproducible with same seed", {
+  d1 <- sample_consort_data(seed = 1L)
+  d2 <- sample_consort_data(seed = 1L)
+  expect_equal(hv_consort_summary(d1), hv_consort_summary(d2))
+})
+
+test_that("sample_consort_data n controls total population", {
+  tracker <- sample_consort_data(n = 50L)
+  expect_equal(nrow(tracker$data), 50L)
+})
+
+test_that("sample_consort_data produces a plottable consort diagram", {
+  tracker <- sample_consort_data()
+  expect_no_error(hv_consort(tracker))
+})
