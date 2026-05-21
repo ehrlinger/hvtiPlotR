@@ -181,6 +181,22 @@ reference:
   - sample_alluvial_data
   - sample_cluster_sankey_data
 
+- title: "CONSORT Patient Flow"
+  desc: >
+    Build auditable CONSORT patient-flow diagrams. Start a tracker, add
+    formula-based exclusion stages, audit who was excluded and why, then
+    render the diagram via the `consort` package.
+  contents:
+  - hv_consort_start
+  - hv_consort_exclude
+  - hv_consort_summary
+  - hv_consort_patients
+  - hv_consort
+  - plot.hv_consort
+  - print.hv_consort
+  - print.hv_consort_tracker
+  - sample_consort_data
+
 - title: "Exploratory Data Analysis"
   desc: >
     Rapid bar charts and scatter plots for variable screening, univariate
