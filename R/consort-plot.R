@@ -112,6 +112,117 @@ hv_consort_start <- function(data, patient_id, label = "Screened",
 }
 
 
+# ---------------------------------------------------------------------------
+# Stage addition
+# ---------------------------------------------------------------------------
+
+#' Add an exclusion stage to a CONSORT tracker
+#'
+#' Evaluates formula-based exclusion rules against the currently-active patient
+#' population and appends two new columns to the tracker's data frame:
+#' a character column (`col`) recording the first-matching exclusion reason for
+#' each patient, and a boolean column (`pass_col`) marking the survivors.
+#' Patients already excluded by a prior stage are automatically gated out.
+#'
+#' @param tracker  An `hv_consort_tracker` from [hv_consort_start()].
+#' @param label    Character label for the survivor box after this exclusion
+#'   (e.g. `"Eligible"`, `"Analyzed"`).
+#' @param col      Column name to store exclusion reasons (character).
+#'   This column will contain a reason string for excluded patients and `NA`
+#'   for survivors.  Required — no default.
+#' @param excl_label Character label for the side-box showing exclusion
+#'   breakdown.  Default `"Excluded"`.
+#' @param pass_col Column name for the survivor boolean column.  Defaults to
+#'   `ct_snakify(label)` (e.g. `"eligible"` when `label = "Eligible"`).
+#' @param ...  Two-sided formulas of the form
+#'   `<condition> ~ "<reason string>"`.  Conditions are evaluated with data
+#'   masking against the tracker's data frame.  The **first** matching formula
+#'   assigns the reason; subsequent formulas are not evaluated for already-
+#'   excluded patients.
+#'
+#' @return The updated `hv_consort_tracker` (invisibly — pipe-safe).
+#'
+#' @seealso [hv_consort_start()], [hv_consort()]
+#'
+#' @examples
+#' cohort <- data.frame(
+#'   mrn  = paste0("P", 1:100),
+#'   age  = sample(15:80, 100, TRUE),
+#'   echo = sample(c(TRUE, FALSE), 100, TRUE, prob = c(0.9, 0.1))
+#' )
+#'
+#' tracker <- hv_consort_start(cohort, patient_id = mrn) |>
+#'   hv_consort_exclude(
+#'     label    = "Eligible",
+#'     col      = "excl_screen",
+#'     age < 18 ~ "Age < 18"
+#'   ) |>
+#'   hv_consort_exclude(
+#'     label  = "Analyzed",
+#'     col    = "excl_eligible",
+#'     !echo  ~ "Missing echocardiogram"
+#'   )
+#'
+#' @importFrom rlang list2 f_lhs f_rhs eval_tidy as_data_mask
+#' @export
+hv_consort_exclude <- function(tracker, label, col, ...,
+                                excl_label = "Excluded", pass_col = NULL) {
+  ct_validate_tracker(tracker)
+
+  if (missing(label) || !is.character(label) || length(label) != 1L || !nzchar(label))
+    stop("`label` must be a non-empty character string.", call. = FALSE)
+  if (missing(col) || !is.character(col) || length(col) != 1L || !nzchar(col))
+    stop("`col` must be a non-empty character string naming the exclusion column.",
+         call. = FALSE)
+  if (col %in% names(tracker$data))
+    stop(sprintf("Column '%s' already exists in tracker$data.", col), call. = FALSE)
+
+  if (is.null(pass_col)) pass_col <- ct_snakify(label)
+  if (!nzchar(pass_col))
+    stop("`pass_col` / `label` produced an empty column name.", call. = FALSE)
+  if (pass_col %in% names(tracker$data))
+    stop(sprintf("Column '%s' already exists in tracker$data.", pass_col), call. = FALSE)
+
+  formulas <- rlang::list2(...)
+  if (length(formulas) == 0L)
+    stop("Provide at least one formula `<condition> ~ \"<reason>\"`.", call. = FALSE)
+  for (i in seq_along(formulas)) {
+    if (!inherits(formulas[[i]], "formula") || !rlang::is_formula(formulas[[i]], lhs = TRUE))
+      stop(sprintf("Argument %d is not a two-sided formula.", i), call. = FALSE)
+  }
+
+  dat          <- tracker$data
+  prev_include <- ct_current_include(tracker)
+  active       <- dat[[prev_include]]
+  excl_reasons <- rep(NA_character_, nrow(dat))
+  data_env     <- rlang::as_data_mask(dat)
+
+  for (f in formulas) {
+    condition <- rlang::eval_tidy(rlang::f_lhs(f), data = data_env)
+    reason    <- as.character(rlang::f_rhs(f))
+    to_excl   <- active & condition & is.na(excl_reasons)
+    excl_reasons[to_excl] <- reason
+  }
+
+  dat[[col]]      <- excl_reasons
+  dat[[pass_col]] <- active & is.na(excl_reasons)
+
+  n                              <- length(tracker$stages)
+  tracker$stages[[n]]$excl_col   <- col
+  tracker$stages[[n]]$excl_label <- excl_label
+
+  tracker$stages[[n + 1L]] <- list(
+    label       = label,
+    include_col = pass_col,
+    excl_col    = NULL,
+    excl_label  = NULL
+  )
+
+  tracker$data <- dat
+  invisible(tracker)
+}
+
+
 #' Print an hv_consort_tracker object
 #'
 #' @param x   An `hv_consort_tracker` from [hv_consort_start()].

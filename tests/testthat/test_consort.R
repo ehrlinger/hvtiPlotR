@@ -74,3 +74,97 @@ test_that("print.hv_consort_tracker prints without error", {
   expect_output(print(tracker), "hv_consort_tracker")
   expect_output(print(tracker), "Screened")
 })
+
+# ---------------------------------------------------------------------------
+# hv_consort_exclude
+# ---------------------------------------------------------------------------
+
+make_tracker <- function() {
+  hv_consort_start(make_cohort(), patient_id = mrn)
+}
+
+test_that("hv_consort_exclude adds exclusion and pass columns", {
+  tracker <- make_tracker() |>
+    hv_consort_exclude(
+      label      = "Eligible",
+      col        = "excl_screen",
+      age < 18   ~ "Age < 18",
+      !has_surg  ~ "No qualifying surgery"
+    )
+  expect_true("excl_screen" %in% names(tracker$data))
+  expect_true("eligible"    %in% names(tracker$data))
+})
+
+test_that("hv_consort_exclude respects explicit pass_col", {
+  tracker <- make_tracker() |>
+    hv_consort_exclude(
+      label    = "Eligible",
+      col      = "excl_screen",
+      pass_col = "elig",
+      age < 18 ~ "Age < 18"
+    )
+  expect_true("elig" %in% names(tracker$data))
+  expect_false("eligible" %in% names(tracker$data))
+})
+
+test_that("hv_consort_exclude uses first-match logic", {
+  cohort <- data.frame(
+    mrn    = "P1",
+    age    = 15L,
+    has_surg = FALSE,
+    stringsAsFactors = FALSE
+  )
+  tracker <- hv_consort_start(cohort, patient_id = mrn) |>
+    hv_consort_exclude(
+      label     = "Eligible",
+      col       = "excl_screen",
+      age < 18  ~ "Age < 18",
+      !has_surg ~ "No qualifying surgery"
+    )
+  # P1 matches BOTH rules; first rule wins
+  expect_equal(tracker$data$excl_screen, "Age < 18")
+})
+
+test_that("hv_consort_exclude counts excluded patients correctly", {
+  cohort  <- make_cohort(n = 20L)
+  tracker <- hv_consort_start(cohort, patient_id = mrn) |>
+    hv_consort_exclude(
+      label     = "Eligible",
+      col       = "excl_screen",
+      age < 18  ~ "Age < 18",
+      !has_surg ~ "No qualifying surgery"
+    )
+  n_excl <- sum(!is.na(tracker$data$excl_screen))
+  expect_equal(n_excl, 3L)
+})
+
+test_that("hv_consort_exclude gates on previous stage", {
+  tracker <- make_tracker() |>
+    hv_consort_exclude(
+      label     = "Eligible",
+      col       = "excl_screen",
+      age < 18  ~ "Age < 18"
+    ) |>
+    hv_consort_exclude(
+      label        = "Analyzed",
+      col          = "excl_eligible",
+      missing_echo ~ "Missing echocardiogram"
+    )
+  screen_excl <- which(!is.na(tracker$data$excl_screen))
+  expect_true(all(is.na(tracker$data$excl_eligible[screen_excl])))
+})
+
+test_that("hv_consort_exclude appends correct stage metadata", {
+  tracker <- make_tracker() |>
+    hv_consort_exclude(label = "Eligible", col = "excl_screen",
+                       age < 18 ~ "Age < 18")
+  expect_length(tracker$stages, 2L)
+  expect_equal(tracker$stages[[1L]]$excl_col,    "excl_screen")
+  expect_equal(tracker$stages[[2L]]$include_col, "eligible")
+  expect_null( tracker$stages[[2L]]$excl_col)
+})
+
+test_that("hv_consort_exclude errors on non-tracker input", {
+  expect_error(hv_consort_exclude(list(), label = "X", col = "y"),
+               "hv_consort_tracker")
+})
