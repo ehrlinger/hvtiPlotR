@@ -1,10 +1,15 @@
 ## The hvtiPlotR package
 <!-- badges: start -->
-[![CRAN status](https://img.shields.io/github/r-package/v/ehrlinger/hvtiPlotR?label=hvtiPlotR)](https://github.com/ehrlinger/hvtiPlotR)
-[![DOI](https://zenodo.org/badge/5745/ehrlinger/hvtiPlotR.png)](http://dx.doi.org/10.5281/zenodo.11780)
-![active](http://www.repostatus.org/badges/latest/active.svg)
+[![R package version](https://img.shields.io/github/r-package/v/ehrlinger/hvtiPlotR)](https://github.com/ehrlinger/hvtiPlotR)
+
+[![active](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/badges/latest/active.svg)
+
 [![R-CMD-check](https://github.com/ehrlinger/hvtiPlotR/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/ehrlinger/hvtiPlotR/actions/workflows/R-CMD-check.yaml)
+[![lint](https://github.com/ehrlinger/hvtiPlotR/actions/workflows/lint.yaml/badge.svg)](https://github.com/ehrlinger/hvtiPlotR/actions/workflows/lint.yaml)
+[![pkgdown](https://github.com/ehrlinger/hvtiPlotR/actions/workflows/pkgdown.yaml/badge.svg)](https://github.com/ehrlinger/hvtiPlotR/actions/workflows/pkgdown.yaml)
 [![Codecov test coverage](https://codecov.io/gh/ehrlinger/hvtiPlotR/graph/badge.svg)](https://app.codecov.io/gh/ehrlinger/hvtiPlotR)
+
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.11780.svg)](https://doi.org/10.5281/zenodo.11780)
 <!-- badges: end -->
 
 ggplot2 themes and plot functions for creating publication-quality graphics in R, conforming to the standards of Cardiovascular Outcomes Registries and Research (CORR) within The Heart & Vascular Institute at the Cleveland Clinic. This package is the modern R replacement for the historical `plot.sas` macro.
