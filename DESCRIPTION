@@ -22,6 +22,7 @@ Description: ggplot2 themes and methodology documentation for creating
 Depends:
     R (>= 4.1.0)
 Imports:
+    consort (>= 0.2.0),
     ggalluvial (>= 0.12.3),
     ggplot2 (>= 3.4.0),
     ggupset (>= 0.4.0),
