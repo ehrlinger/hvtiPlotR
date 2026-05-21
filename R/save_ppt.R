@@ -351,9 +351,8 @@ save_ppt <- function(object,
 
   # --- Add slides ------------------------------------------------------------
   if (is_consort) {
-    actual_w <- if (!is.null(panel_box)) object$meta$width  else width
-    actual_h <- if (!is.null(panel_box)) object$meta$height else height
-    title_1  <- if (length(slide_titles) >= 1L) slide_titles[[1L]] else ""
+    # Consort diagrams carry their own dimensions, set at hv_consort() time.
+    title_1 <- if (length(slide_titles) >= 1L) slide_titles[[1L]] else ""
 
     doc <- add_consort_slide(
       doc         = doc,
@@ -361,8 +360,8 @@ save_ppt <- function(object,
       title       = title_1,
       layout      = layout,
       master      = master,
-      width       = actual_w,
-      height      = actual_h,
+      width       = object$meta$width,
+      height      = object$meta$height,
       left        = left,
       top         = top
     )
