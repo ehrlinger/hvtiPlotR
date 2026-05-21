@@ -68,7 +68,7 @@ p +
 \code{\link{theme_hv_manuscript}} for the publication theme,
 \code{\link{sample_spaghetti_data}} for example data.
 
-Other Spaghetti plot: 
-\code{\link{plot.hv_spaghetti}()}
+Other Spaghetti plot:
+\code{\link[=plot.hv_spaghetti]{plot.hv_spaghetti()}}
 }
 \concept{Spaghetti plot}

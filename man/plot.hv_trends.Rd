@@ -135,7 +135,7 @@ ggplot2::theme_set(old)
 \code{\link{hv_trends}} to build the data object,
 \code{\link{theme_hv_manuscript}} for the publication theme.
 
-Other Temporal trends: 
-\code{\link{hv_trends}()}
+Other Temporal trends:
+\code{\link[=hv_trends]{hv_trends()}}
 }
 \concept{Temporal trends}

@@ -133,7 +133,7 @@ SAS templates: \code{tp.ac.dead.sas} (\code{\%kaplan},
 \code{\link{theme_hv_manuscript}} for the publication theme,
 \code{\link{sample_survival_data}} for example data.
 
-Other Kaplan-Meier survival: 
-\code{\link{plot.hv_survival}()}
+Other Kaplan-Meier survival:
+\code{\link[=plot.hv_survival]{plot.hv_survival()}}
 }
 \concept{Kaplan-Meier survival}

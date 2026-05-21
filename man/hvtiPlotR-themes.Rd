@@ -117,7 +117,7 @@ call site, e.g. \code{legend.position = "right"}.}
 A \code{\link[ggplot2:theme]{ggplot2::theme()}} object.
 }
 \description{
-Drop-in replacements for \code{\link[ggplot2:ggtheme]{ggplot2::theme_bw()}} and friends, carrying the
+Drop-in replacements for \code{\link[ggplot2:theme_bw]{ggplot2::theme_bw()}} and friends, carrying the
 Cardiovascular Outcomes, Registries and Research (CORR) house style for
 four publication contexts:
 }

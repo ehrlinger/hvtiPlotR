@@ -76,7 +76,7 @@ plot(km, type = "hazard") +
 \code{\link{hv_survival}} to build the data object,
 \code{\link{theme_hv_manuscript}} for the publication theme.
 
-Other Kaplan-Meier survival: 
-\code{\link{hv_survival}()}
+Other Kaplan-Meier survival:
+\code{\link[=hv_survival]{hv_survival()}}
 }
 \concept{Kaplan-Meier survival}

@@ -79,7 +79,7 @@ p +
 \code{\link{theme_hv_manuscript}} for the publication theme,
 \code{\link{sample_trends_data}} for example data.
 
-Other Temporal trends: 
-\code{\link{plot.hv_trends}()}
+Other Temporal trends:
+\code{\link[=plot.hv_trends]{plot.hv_trends()}}
 }
 \concept{Temporal trends}

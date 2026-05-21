@@ -120,7 +120,7 @@ ggplot2::theme_set(old)
 \code{\link{theme_hv_manuscript}} for the publication theme,
 \code{\link{sample_nonparametric_curve_data}} for example data.
 
-Other Nonparametric curves: 
-\code{\link{plot.hv_nonparametric}()}
+Other Nonparametric curves:
+\code{\link[=plot.hv_nonparametric]{plot.hv_nonparametric()}}
 }
 \concept{Nonparametric curves}

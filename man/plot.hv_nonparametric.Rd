@@ -66,7 +66,7 @@ plot(np) +
 \code{\link{hv_nonparametric}} to build the data object,
 \code{\link{theme_hv_manuscript}} for the publication theme.
 
-Other Nonparametric curves: 
-\code{\link{hv_nonparametric}()}
+Other Nonparametric curves:
+\code{\link[=hv_nonparametric]{hv_nonparametric()}}
 }
 \concept{Nonparametric curves}
