@@ -2,7 +2,7 @@
 
 ## hvtiPlotR 2.3.0
 
-### CONSORT patient flow tracking and diagram
+### CONSORT patient flow tracking and diagram ([\#67](https://github.com/ehrlinger/hvtiPlotR/issues/67))
 
 New two-class API for building auditable CONSORT flow diagrams from
 patient-level data.
@@ -41,6 +41,19 @@ patient-level data.
   surgery tracker for demos and testing.
 
 **Dependency:** `consort (>= 0.2.0)` added to `Imports`.
+
+### Documentation
+
+- New worked **CONSORT Patient Flow Diagram** section in the *Plot
+  Functions* vignette, covering the tracker workflow, the rendered
+  diagram, the audit helpers, and
+  [`save_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/save_ppt.md)
+  export ([\#68](https://github.com/ehrlinger/hvtiPlotR/issues/68)).
+- New “What’s New in v2.x” slide deck shipped as Quarto source at
+  `inst/slides/hvtiPlotR-whats-new.qmd` — an onboarding overview of the
+  v2.x API redesign, theme rename, and PowerPoint export, with a README
+  “Slides” section pointing to it
+  ([\#67](https://github.com/ehrlinger/hvtiPlotR/issues/67)).
 
 ## hvtiPlotR 2.2.0
 

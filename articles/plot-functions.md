@@ -53,6 +53,7 @@ worked examples in the sections below.
 | [`hv_longitudinal()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_longitudinal.md) | `tp.dp.longitudinal_patients_measures.*` | — |
 | [`hv_alluvial()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_alluvial.md) | — | — |
 | [`hv_sankey()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_sankey.md) | — | PAM cluster stability analysis |
+| [`hv_consort()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_consort.md) | — | — |
 | [`hv_upset()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_upset.md) | — | — |
 
 Note:
@@ -1419,6 +1420,160 @@ p_san <- plot(sk) +
   theme_hv_poster()
 
 ggsave("../graphs/sankey_clusters.pdf", p_san, width = 8, height = 5)
+```
+
+## CONSORT Patient Flow Diagram
+
+[`hv_consort()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_consort.md)
+builds a CONSORT-style patient-flow diagram. Unlike the other plot
+functions, the CONSORT API is **three-step** and does not use the
+`hv_data` class: build a patient-level *tracker* with
+[`hv_consort_start()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_consort_start.md),
+add one or more exclusion stages with
+[`hv_consort_exclude()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_consort_exclude.md),
+then render the diagram with
+[`hv_consort()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_consort.md).
+The diagram is drawn by the `consort` package (grid graphics), so it is
+not a `ggplot` and is not decorated with `+`.
+
+### Sample data
+
+The quickest way to see a finished tracker is
+[`sample_consort_data()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_consort_data.md),
+which simulates a cardiac-surgery cohort and returns a three-stage
+`hv_consort_tracker`.
+
+``` r
+
+tracker <- sample_consort_data(n = 300, seed = 42)
+tracker
+```
+
+    <hv_consort_tracker>
+      Patients   : 300
+      ID column  : patient_id
+      Stages     : 3
+        [screened] Screened -- N = 300
+          -> excl [excl_screen]: 73
+        [eligible] Eligible -- N = 227
+          -> excl [excl_eligible]: 41
+        [analyzed] Analyzed -- N = 186
+
+### Building a tracker from your own data
+
+Start from a data frame with one row per patient.
+[`hv_consort_start()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_consort_start.md)
+records the patient identifier and marks every patient as screened; each
+[`hv_consort_exclude()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_consort_exclude.md)
+call adds an exclusion stage. Exclusion rules are two-sided formulas —
+`<condition> ~ "<reason>"` — evaluated against the data. The first
+matching rule wins, and patients already excluded upstream are gated out
+automatically, so each stage operates only on the survivors of the last.
+
+``` r
+
+set.seed(42)
+cohort <- data.frame(
+  mrn         = paste0("P", 1:300),
+  age         = sample(12:85, 300, replace = TRUE),
+  had_surgery = sample(c(TRUE, FALSE), 300, replace = TRUE, prob = c(0.9, 0.1)),
+  echo        = sample(c(TRUE, FALSE), 300, replace = TRUE, prob = c(0.85, 0.15))
+)
+
+tracker2 <- hv_consort_start(cohort, patient_id = mrn, label = "Screened") |>
+  hv_consort_exclude(
+    label        = "Eligible",
+    col          = "excl_screen",
+    age < 18     ~ "Age < 18",
+    !had_surgery ~ "No qualifying surgery"
+  ) |>
+  hv_consort_exclude(
+    label = "Analyzed",
+    col   = "excl_eligible",
+    !echo ~ "Missing echocardiogram"
+  )
+tracker2
+```
+
+    <hv_consort_tracker>
+      Patients   : 300
+      ID column  : mrn
+      Stages     : 3
+        [screened] Screened -- N = 300
+          -> excl [excl_screen]: 59
+        [eligible] Eligible -- N = 241
+          -> excl [excl_eligible]: 32
+        [analyzed] Analyzed -- N = 209
+
+### The diagram
+
+[`hv_consort()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_consort.md)
+derives the box layout from the tracker’s stage metadata and renders the
+diagram; [`plot()`](https://rdrr.io/r/graphics/plot.default.html) draws
+it. By default every exclusion column is shown as a side box — pass a
+character vector to `side_box` to select specific ones.
+
+``` r
+
+fig <- hv_consort(tracker)
+plot(fig)
+```
+
+![](plot-functions_files/figure-html/consort_plot-1.png)
+
+### Auditing the cohort
+
+Two helpers keep the tracker auditable.
+[`hv_consort_summary()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_consort_summary.md)
+returns a per-stage count table suitable for a methods section:
+
+``` r
+
+hv_consort_summary(tracker)
+```
+
+         label include_col n_included      excl_col n_excluded
+    1 Screened    screened        300   excl_screen         73
+    2 Eligible    eligible        227 excl_eligible         41
+    3 Analyzed    analyzed        186          <NA>         NA
+
+[`hv_consort_patients()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_consort_patients.md)
+returns the patient IDs active at a stage, or the subset excluded for a
+specific reason:
+
+``` r
+
+# IDs still in the analysed cohort
+head(hv_consort_patients(tracker, "Analyzed"))
+```
+
+    [1] "PT0001" "PT0002" "PT0003" "PT0004" "PT0005" "PT0007"
+
+``` r
+
+# IDs dropped at screening for being under 18
+head(hv_consort_patients(tracker, "Screened", reason = "Age < 18"))
+```
+
+    [1] "PT0008" "PT0018" "PT0022" "PT0025" "PT0035" "PT0037"
+
+### Saving
+
+[`save_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/save_ppt.md)
+accepts an `hv_consort` object and writes the diagram to a slide as an
+editable vector graphic. The slide dimensions come from the object
+itself (set at
+[`hv_consort()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_consort.md)
+time), so `width`/`height` are not needed here.
+
+``` r
+
+save_ppt(
+  object       = hv_consort(tracker),
+  template     = "../graphs/RD.pptx",
+  powerpoint   = "../graphs/consort.pptx",
+  slide_titles = "CONSORT Patient Flow"
+)
 ```
 
 ## Hazard Plot

@@ -211,6 +211,11 @@
 <td>PAM cluster stability analysis</td>
 </tr>
 <tr class="odd">
+<td><code><a href="../reference/hv_consort.html">hv_consort()</a></code></td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr class="even">
 <td><code><a href="../reference/hv_upset.html">hv_upset()</a></code></td>
 <td>—</td>
 <td>—</td>
@@ -1477,6 +1482,120 @@ Age.After match                    Age  After match      3.5</code></pre>
 <span></span>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave</a></span><span class="op">(</span><span class="st">"../graphs/sankey_clusters.pdf"</span>, <span class="va">p_san</span>, width <span class="op">=</span> <span class="fl">8</span>, height <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span></code></pre></div>
 </div>
+</section></section><section class="section level2"><h2 id="consort-patient-flow-diagram">CONSORT Patient Flow Diagram<a class="anchor" aria-label="anchor" href="#consort-patient-flow-diagram"></a>
+</h2>
+<p><code><a href="../reference/hv_consort.html">hv_consort()</a></code> builds a CONSORT-style patient-flow diagram. Unlike the other plot functions, the CONSORT API is <strong>three-step</strong> and does not use the <code>hv_data</code> class: build a patient-level <em>tracker</em> with <code><a href="../reference/hv_consort_start.html">hv_consort_start()</a></code>, add one or more exclusion stages with <code><a href="../reference/hv_consort_exclude.html">hv_consort_exclude()</a></code>, then render the diagram with <code><a href="../reference/hv_consort.html">hv_consort()</a></code>. The diagram is drawn by the <code>consort</code> package (grid graphics), so it is not a <code>ggplot</code> and is not decorated with <code>+</code>.</p>
+<section class="level2"><h3 id="sample-data-6">Sample data<a class="anchor" aria-label="anchor" href="#sample-data-6"></a>
+</h3>
+<p>The quickest way to see a finished tracker is <code><a href="../reference/sample_consort_data.html">sample_consort_data()</a></code>, which simulates a cardiac-surgery cohort and returns a three-stage <code>hv_consort_tracker</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb89"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">tracker</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sample_consort_data.html">sample_consort_data</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">300</span>, seed <span class="op">=</span> <span class="fl">42</span><span class="op">)</span></span>
+<span><span class="va">tracker</span></span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>&lt;hv_consort_tracker&gt;
+  Patients   : 300
+  ID column  : patient_id
+  Stages     : 3
+    [screened] Screened -- N = 300
+      -&gt; excl [excl_screen]: 73
+    [eligible] Eligible -- N = 227
+      -&gt; excl [excl_eligible]: 41
+    [analyzed] Analyzed -- N = 186</code></pre>
+</div>
+</div>
+</section><section class="level2"><h3 id="building-a-tracker-from-your-own-data">Building a tracker from your own data<a class="anchor" aria-label="anchor" href="#building-a-tracker-from-your-own-data"></a>
+</h3>
+<p>Start from a data frame with one row per patient. <code><a href="../reference/hv_consort_start.html">hv_consort_start()</a></code> records the patient identifier and marks every patient as screened; each <code><a href="../reference/hv_consort_exclude.html">hv_consort_exclude()</a></code> call adds an exclusion stage. Exclusion rules are two-sided formulas — <code>&lt;condition&gt; ~ "&lt;reason&gt;"</code> — evaluated against the data. The first matching rule wins, and patients already excluded upstream are gated out automatically, so each stage operates only on the survivors of the last.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb91"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">42</span><span class="op">)</span></span>
+<span><span class="va">cohort</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
+<span>  mrn         <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"P"</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">300</span><span class="op">)</span>,</span>
+<span>  age         <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fl">12</span><span class="op">:</span><span class="fl">85</span>, <span class="fl">300</span>, replace <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
+<span>  had_surgery <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">TRUE</span>, <span class="cn">FALSE</span><span class="op">)</span>, <span class="fl">300</span>, replace <span class="op">=</span> <span class="cn">TRUE</span>, prob <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.9</span>, <span class="fl">0.1</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  echo        <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">TRUE</span>, <span class="cn">FALSE</span><span class="op">)</span>, <span class="fl">300</span>, replace <span class="op">=</span> <span class="cn">TRUE</span>, prob <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.85</span>, <span class="fl">0.15</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">tracker2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hv_consort_start.html">hv_consort_start</a></span><span class="op">(</span><span class="va">cohort</span>, patient_id <span class="op">=</span> <span class="va">mrn</span>, label <span class="op">=</span> <span class="st">"Screened"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/hv_consort_exclude.html">hv_consort_exclude</a></span><span class="op">(</span></span>
+<span>    label        <span class="op">=</span> <span class="st">"Eligible"</span>,</span>
+<span>    col          <span class="op">=</span> <span class="st">"excl_screen"</span>,</span>
+<span>    <span class="va">age</span> <span class="op">&lt;</span> <span class="fl">18</span>     <span class="op">~</span> <span class="st">"Age &lt; 18"</span>,</span>
+<span>    <span class="op">!</span><span class="va">had_surgery</span> <span class="op">~</span> <span class="st">"No qualifying surgery"</span></span>
+<span>  <span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/hv_consort_exclude.html">hv_consort_exclude</a></span><span class="op">(</span></span>
+<span>    label <span class="op">=</span> <span class="st">"Analyzed"</span>,</span>
+<span>    col   <span class="op">=</span> <span class="st">"excl_eligible"</span>,</span>
+<span>    <span class="op">!</span><span class="va">echo</span> <span class="op">~</span> <span class="st">"Missing echocardiogram"</span></span>
+<span>  <span class="op">)</span></span>
+<span><span class="va">tracker2</span></span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>&lt;hv_consort_tracker&gt;
+  Patients   : 300
+  ID column  : mrn
+  Stages     : 3
+    [screened] Screened -- N = 300
+      -&gt; excl [excl_screen]: 59
+    [eligible] Eligible -- N = 241
+      -&gt; excl [excl_eligible]: 32
+    [analyzed] Analyzed -- N = 209</code></pre>
+</div>
+</div>
+</section><section class="level2"><h3 id="the-diagram">The diagram<a class="anchor" aria-label="anchor" href="#the-diagram"></a>
+</h3>
+<p><code><a href="../reference/hv_consort.html">hv_consort()</a></code> derives the box layout from the tracker’s stage metadata and renders the diagram; <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code> draws it. By default every exclusion column is shown as a side box — pass a character vector to <code>side_box</code> to select specific ones.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb93"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">fig</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hv_consort.html">hv_consort</a></span><span class="op">(</span><span class="va">tracker</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fig</span><span class="op">)</span></span></code></pre></div>
+<div class="cell-output-display">
+<div>
+<figure><p><img src="plot-functions_files/figure-html/consort_plot-1.png" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section><section class="level2"><h3 id="auditing-the-cohort">Auditing the cohort<a class="anchor" aria-label="anchor" href="#auditing-the-cohort"></a>
+</h3>
+<p>Two helpers keep the tracker auditable. <code><a href="../reference/hv_consort_summary.html">hv_consort_summary()</a></code> returns a per-stage count table suitable for a methods section:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb94"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/hv_consort_summary.html">hv_consort_summary</a></span><span class="op">(</span><span class="va">tracker</span><span class="op">)</span></span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     label include_col n_included      excl_col n_excluded
+1 Screened    screened        300   excl_screen         73
+2 Eligible    eligible        227 excl_eligible         41
+3 Analyzed    analyzed        186          &lt;NA&gt;         NA</code></pre>
+</div>
+</div>
+<p><code><a href="../reference/hv_consort_patients.html">hv_consort_patients()</a></code> returns the patient IDs active at a stage, or the subset excluded for a specific reason:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb96"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># IDs still in the analysed cohort</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="../reference/hv_consort_patients.html">hv_consort_patients</a></span><span class="op">(</span><span class="va">tracker</span>, <span class="st">"Analyzed"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "PT0001" "PT0002" "PT0003" "PT0004" "PT0005" "PT0007"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb98"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># IDs dropped at screening for being under 18</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="../reference/hv_consort_patients.html">hv_consort_patients</a></span><span class="op">(</span><span class="va">tracker</span>, <span class="st">"Screened"</span>, reason <span class="op">=</span> <span class="st">"Age &lt; 18"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "PT0008" "PT0018" "PT0022" "PT0025" "PT0035" "PT0037"</code></pre>
+</div>
+</div>
+</section><section class="level2"><h3 id="saving-6">Saving<a class="anchor" aria-label="anchor" href="#saving-6"></a>
+</h3>
+<p><code><a href="../reference/save_ppt.html">save_ppt()</a></code> accepts an <code>hv_consort</code> object and writes the diagram to a slide as an editable vector graphic. The slide dimensions come from the object itself (set at <code><a href="../reference/hv_consort.html">hv_consort()</a></code> time), so <code>width</code>/<code>height</code> are not needed here.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb100"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/save_ppt.html">save_ppt</a></span><span class="op">(</span></span>
+<span>  object       <span class="op">=</span> <span class="fu"><a href="../reference/hv_consort.html">hv_consort</a></span><span class="op">(</span><span class="va">tracker</span><span class="op">)</span>,</span>
+<span>  template     <span class="op">=</span> <span class="st">"../graphs/RD.pptx"</span>,</span>
+<span>  powerpoint   <span class="op">=</span> <span class="st">"../graphs/consort.pptx"</span>,</span>
+<span>  slide_titles <span class="op">=</span> <span class="st">"CONSORT Patient Flow"</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+</div>
 </section></section><section class="section level2"><h2 id="hazard-plot">Hazard Plot<a class="anchor" aria-label="anchor" href="#hazard-plot"></a>
 </h2>
 <p><code><a href="../reference/hazard_plot.html">hazard_plot()</a></code> plots pre-computed parametric survival, hazard, or cumulative-hazard curves from a fitted Weibull (or other parametric) model, with optional Kaplan-Meier empirical overlay and population life-table reference. It ports the entire <code>tp.hp.dead.*</code> SAS template family.</p>
@@ -1512,10 +1631,10 @@ Age.After match                    Age  After match      3.5</code></pre>
 </tr>
 </tbody>
 </table>
-<section class="level2"><h3 id="sample-data-6">Sample data<a class="anchor" aria-label="anchor" href="#sample-data-6"></a>
+<section class="level2"><h3 id="sample-data-7">Sample data<a class="anchor" aria-label="anchor" href="#sample-data-7"></a>
 </h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb89"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb101"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">dat_hp</span>  <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sample_hazard_data.html">sample_hazard_data</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">500</span>, time_max <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
 <span><span class="va">emp_hp</span>  <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sample_hazard_empirical.html">sample_hazard_empirical</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">500</span>, time_max <span class="op">=</span> <span class="fl">10</span>, n_bins <span class="op">=</span> <span class="fl">6</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">dat_hp</span><span class="op">)</span></span></code></pre></div>
@@ -1540,7 +1659,7 @@ Age.After match                    Age  After match      3.5</code></pre>
 </h3>
 <p>The most common <code>tp.hp.dead.sas</code> output: smooth parametric survival with confidence band plus discrete KM empirical circles and error bars.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb91"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb103"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/hazard_plot.html">hazard_plot</a></span><span class="op">(</span></span>
 <span>  <span class="va">dat_hp</span>,</span>
 <span>  estimate_col  <span class="op">=</span> <span class="st">"survival"</span>,</span>
@@ -1568,7 +1687,7 @@ Age.After match                    Age  After match      3.5</code></pre>
 </h3>
 <p>Switching <code>estimate_col</code> to <code>"hazard"</code> (and the matching CI columns) shows the instantaneous hazard rate (%/year) instead of survival.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb92"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb104"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/hazard_plot.html">hazard_plot</a></span><span class="op">(</span></span>
 <span>  <span class="va">dat_hp</span>,</span>
 <span>  estimate_col <span class="op">=</span> <span class="st">"hazard"</span>,</span>
@@ -1593,7 +1712,7 @@ Age.After match                    Age  After match      3.5</code></pre>
 </h3>
 <p>Used for readmission and repeated-event analyses (<code>tp.hp.event.weighted.sas</code>, <code>tp.hp.repeated_events.sas</code>). The <code>"cumhaz"</code> column equals <code>-log(S) * 100</code>.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb93"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb105"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/hazard_plot.html">hazard_plot</a></span><span class="op">(</span></span>
 <span>  <span class="va">dat_hp</span>,</span>
 <span>  estimate_col  <span class="op">=</span> <span class="st">"cumhaz"</span>,</span>
@@ -1616,7 +1735,7 @@ Age.After match                    Age  After match      3.5</code></pre>
 </h3>
 <p>Pass <code>group_col</code> to compare two or more groups (<code>tp.hp.dead.tkdn.stratified.sas</code>).</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb94"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb106"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">dat_strat</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sample_hazard_data.html">sample_hazard_data</a></span><span class="op">(</span></span>
 <span>  n <span class="op">=</span> <span class="fl">400</span>, time_max <span class="op">=</span> <span class="fl">10</span>,</span>
 <span>  groups <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"No Takedown"</span> <span class="op">=</span> <span class="fl">1.0</span>, <span class="st">"Takedown"</span> <span class="op">=</span> <span class="fl">0.65</span><span class="op">)</span></span>
@@ -1660,7 +1779,7 @@ Age.After match                    Age  After match      3.5</code></pre>
 </h3>
 <p><code>tp.hp.dead.age_with_population_life_table.sas</code> and <code>tp.hp.dead.uslife.stratifed.sas</code> overlay US population life-table survival (dashed lines) on age-stratified study curves. Pass the life-table data frame to <code>reference</code> and set <code>ref_group_col</code> to vary the linetype by age group.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb95"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb107"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">dat_age</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sample_hazard_data.html">sample_hazard_data</a></span><span class="op">(</span></span>
 <span>  n <span class="op">=</span> <span class="fl">600</span>, time_max <span class="op">=</span> <span class="fl">12</span>,</span>
 <span>  groups <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"&lt;65"</span> <span class="op">=</span> <span class="fl">0.5</span>, <span class="st">"65\u201380"</span> <span class="op">=</span> <span class="fl">1.0</span>, <span class="st">"\u226580"</span> <span class="op">=</span> <span class="fl">1.8</span><span class="op">)</span></span>
@@ -1714,10 +1833,10 @@ Age.After match                    Age  After match      3.5</code></pre>
 </section></section><section class="section level2"><h2 id="survival-difference-life-gained-plot">Survival Difference (Life-Gained) Plot<a class="anchor" aria-label="anchor" href="#survival-difference-life-gained-plot"></a>
 </h2>
 <p><code><a href="../reference/survival_difference_plot.html">survival_difference_plot()</a></code> plots the difference <code>S_2(t) - S_1(t)</code> between two groups over time, with an optional confidence band. This ports <code>tp.hp.dead.life-gained.sas</code> (HAZDIFL macro output).</p>
-<section class="level2"><h3 id="sample-data-7">Sample data<a class="anchor" aria-label="anchor" href="#sample-data-7"></a>
+<section class="level2"><h3 id="sample-data-8">Sample data<a class="anchor" aria-label="anchor" href="#sample-data-8"></a>
 </h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb96"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb108"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">diff_dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sample_survival_difference_data.html">sample_survival_difference_data</a></span><span class="op">(</span></span>
 <span>  n      <span class="op">=</span> <span class="fl">500</span>,</span>
 <span>  groups <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Control"</span> <span class="op">=</span> <span class="fl">1.0</span>, <span class="st">"Treatment"</span> <span class="op">=</span> <span class="fl">0.70</span><span class="op">)</span></span>
@@ -1736,7 +1855,7 @@ Age.After match                    Age  After match      3.5</code></pre>
 </section><section class="level2"><h3 id="survival-difference-curve">Survival difference curve<a class="anchor" aria-label="anchor" href="#survival-difference-curve"></a>
 </h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb98"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb110"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/survival_difference_plot.html">survival_difference_plot</a></span><span class="op">(</span></span>
 <span>  <span class="va">diff_dat</span>,</span>
 <span>  lower_col <span class="op">=</span> <span class="st">"diff_lower"</span>,</span>
@@ -1762,7 +1881,7 @@ Age.After match                    Age  After match      3.5</code></pre>
 </h3>
 <p>Combine several two-group differences into one long data frame and use <code>group_col</code> to overlay them.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb99"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb111"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">d1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sample_survival_difference_data.html">sample_survival_difference_data</a></span><span class="op">(</span></span>
 <span>  groups <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Medical Mgmt"</span> <span class="op">=</span> <span class="fl">1.0</span>, <span class="st">"TF-TAVR"</span> <span class="op">=</span> <span class="fl">0.70</span><span class="op">)</span>, seed <span class="op">=</span> <span class="fl">1L</span></span>
 <span><span class="op">)</span></span>
@@ -1797,10 +1916,10 @@ Age.After match                    Age  After match      3.5</code></pre>
 </section></section><section class="section level2"><h2 id="number-needed-to-treat-nnt-plot">Number Needed to Treat (NNT) Plot<a class="anchor" aria-label="anchor" href="#number-needed-to-treat-nnt-plot"></a>
 </h2>
 <p><code><a href="../reference/nnt_plot.html">nnt_plot()</a></code> plots the number needed to treat and absolute risk reduction over time, porting the NNT component of <code>tp.hp.numtreat.survdiff.matched.sas</code>.</p>
-<section class="level2"><h3 id="sample-data-8">Sample data<a class="anchor" aria-label="anchor" href="#sample-data-8"></a>
+<section class="level2"><h3 id="sample-data-9">Sample data<a class="anchor" aria-label="anchor" href="#sample-data-9"></a>
 </h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb100"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb112"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">nnt_dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sample_nnt_data.html">sample_nnt_data</a></span><span class="op">(</span></span>
 <span>  n      <span class="op">=</span> <span class="fl">500</span>,</span>
 <span>  time_max <span class="op">=</span> <span class="fl">20</span>,</span>
@@ -1821,7 +1940,7 @@ Age.After match                    Age  After match      3.5</code></pre>
 </h3>
 <p>NNT decreases over time as the treatment benefit accumulates.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb102"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb114"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/nnt_plot.html">nnt_plot</a></span><span class="op">(</span></span>
 <span>  <span class="va">nnt_dat</span>,</span>
 <span>  lower_col <span class="op">=</span> <span class="st">"nnt_lower"</span>,</span>
@@ -1844,7 +1963,7 @@ Age.After match                    Age  After match      3.5</code></pre>
 </h3>
 <p>The same data, plotted as ARR (%) instead of NNT.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb103"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb115"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/nnt_plot.html">nnt_plot</a></span><span class="op">(</span></span>
 <span>  <span class="va">nnt_dat</span>,</span>
 <span>  estimate_col <span class="op">=</span> <span class="st">"arr"</span>,</span>
@@ -1865,10 +1984,10 @@ Age.After match                    Age  After match      3.5</code></pre>
 </div>
 </div>
 </div>
-</section><section class="level2"><h3 id="saving-6">Saving<a class="anchor" aria-label="anchor" href="#saving-6"></a>
+</section><section class="level2"><h3 id="saving-7">Saving<a class="anchor" aria-label="anchor" href="#saving-7"></a>
 </h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb104"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb116"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p_hp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hazard_plot.html">hazard_plot</a></span><span class="op">(</span></span>
 <span>  <span class="va">dat_hp</span>,</span>
 <span>  estimate_col  <span class="op">=</span> <span class="st">"survival"</span>,</span>
@@ -1928,10 +2047,10 @@ Age.After match                    Age  After match      3.5</code></pre>
 </tbody>
 </table>
 <p>The constructor accepts patient-level data and computes annual summaries (mean or median) internally. <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code> returns a bare ggplot. Compose with <code>scale_colour_*</code>, <code>scale_shape_*</code>, <code><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_x_continuous()</a></code>, <code><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous()</a></code>, <code><a href="https://ggplot2.tidyverse.org/reference/coord_cartesian.html" class="external-link">coord_cartesian()</a></code>, <code><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs()</a></code>, <code><a href="https://ggplot2.tidyverse.org/reference/annotate.html" class="external-link">annotate()</a></code>, and <code><a href="../reference/hvtiPlotR-themes.html">theme_hv_manuscript()</a></code>.</p>
-<section class="level2"><h3 id="sample-data-9">Sample data<a class="anchor" aria-label="anchor" href="#sample-data-9"></a>
+<section class="level2"><h3 id="sample-data-10">Sample data<a class="anchor" aria-label="anchor" href="#sample-data-10"></a>
 </h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb105"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb117"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># year_range matches the 1968-2000 Tricuspid Valve Replacement study in the</span></span>
 <span><span class="co"># SAS template (tp.rp.trends.sas)</span></span>
 <span><span class="va">dta_tr</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sample_trends_data.html">sample_trends_data</a></span><span class="op">(</span></span>
@@ -1954,14 +2073,14 @@ Age.After match                    Age  After match      3.5</code></pre>
 </h3>
 <p>The SAS template plots annual case volume against operation year with <code>axisx order=(1968 to 2000 by 4)</code> and <code>axisy order=(0 to 10 by 2)</code>.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb107"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb119"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">one_grp</span> <span class="op">&lt;-</span> <span class="va">dta_tr</span><span class="op">[</span><span class="va">dta_tr</span><span class="op">$</span><span class="va">group</span> <span class="op">==</span> <span class="st">"Group I"</span>, <span class="op">]</span></span>
 <span><span class="va">tr1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hv_trends.html">hv_trends</a></span><span class="op">(</span><span class="va">one_grp</span>, group_col <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
 </div>
 <section class="level3"><h4 id="bare-plot-3">Bare plot<a class="anchor" aria-label="anchor" href="#bare-plot-3"></a>
 </h4>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb108"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb120"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p_tr1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">tr1</span><span class="op">)</span></span>
 <span><span class="va">p_tr1</span></span></code></pre></div>
 <div class="cell-output-display">
@@ -1974,7 +2093,7 @@ Age.After match                    Age  After match      3.5</code></pre>
 </section><section class="level3"><h4 id="adding-scales-labels-and-theme-1">Adding scales, labels, and theme<a class="anchor" aria-label="anchor" href="#adding-scales-labels-and-theme-1"></a>
 </h4>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb109"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb121"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p_tr1</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_x_continuous</a></span><span class="op">(</span>limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1968</span>, <span class="fl">2000</span><span class="op">)</span>, breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">1968</span>, <span class="fl">2000</span>, <span class="fl">4</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous</a></span><span class="op">(</span>limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">10</span><span class="op">)</span>,      breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">10</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
@@ -1991,7 +2110,7 @@ Age.After match                    Age  After match      3.5</code></pre>
 </h3>
 <p>The age figure uses the same x-axis and <code>axisy order=(30 to 70 by 10)</code>.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb110"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb122"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">tr1</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_x_continuous</a></span><span class="op">(</span>limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1968</span>, <span class="fl">2000</span><span class="op">)</span>, breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">1968</span>, <span class="fl">2000</span>, <span class="fl">4</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous</a></span><span class="op">(</span>limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">30</span>, <span class="fl">70</span><span class="op">)</span>,     breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">30</span>, <span class="fl">70</span>, <span class="fl">10</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
@@ -2008,7 +2127,7 @@ Age.After match                    Age  After match      3.5</code></pre>
 <a class="anchor" aria-label="anchor" href="#multiple-groups-with-scale_colour_brewer"></a>
 </h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb111"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb123"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">tr</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hv_trends.html">hv_trends</a></span><span class="op">(</span><span class="va">dta_tr</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">tr</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_colour_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Set1"</span>, name <span class="op">=</span> <span class="st">"Group"</span><span class="op">)</span> <span class="op">+</span></span>
@@ -2030,7 +2149,7 @@ Age.After match                    Age  After match      3.5</code></pre>
 </section><section class="level2"><h3 id="median-summary-manual-colours-nyha-style">Median summary + manual colours (NYHA style)<a class="anchor" aria-label="anchor" href="#median-summary-manual-colours-nyha-style"></a>
 </h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb112"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb124"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">tr_med</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hv_trends.html">hv_trends</a></span><span class="op">(</span><span class="va">dta_tr</span>, summary_fn <span class="op">=</span> <span class="st">"median"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">tr_med</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_colour_manual</a></span><span class="op">(</span></span>
@@ -2063,7 +2182,7 @@ Age.After match                    Age  After match      3.5</code></pre>
 </section><section class="level2"><h3 id="with-confidence-ribbon">With confidence ribbon<a class="anchor" aria-label="anchor" href="#with-confidence-ribbon"></a>
 </h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb113"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb125"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">tr1</span>, se <span class="op">=</span> <span class="cn">TRUE</span>, alpha <span class="op">=</span> <span class="fl">0.2</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_x_continuous</a></span><span class="op">(</span>limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1968</span>, <span class="fl">2000</span><span class="op">)</span>, breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">1968</span>, <span class="fl">2000</span>, <span class="fl">4</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Year"</span>, y <span class="op">=</span> <span class="st">"Cases/year"</span><span class="op">)</span> <span class="op">+</span></span>
@@ -2079,7 +2198,7 @@ Age.After match                    Age  After match      3.5</code></pre>
 </h3>
 <p>The VSD template plots multiple binary outcomes (cardiogenic shock %, pre-op IABP %, inotropes %) on the same axes: <code>axisx order=(1970 to 2000 by 10)</code>, <code>axisy order=(0 to 100 by 10)</code>. Each outcome becomes a group.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb114"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb126"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">dta_lp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sample_trends_data.html">sample_trends_data</a></span><span class="op">(</span></span>
 <span>  n          <span class="op">=</span> <span class="fl">800</span>,</span>
 <span>  year_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1970L</span>, <span class="fl">2000L</span><span class="op">)</span>,</span>
@@ -2113,7 +2232,7 @@ Age.After match                    Age  After match      3.5</code></pre>
 </h3>
 <p>The mitral valve template uses patient age (not year) on the x-axis: <code>axisx order=(25 to 85 by 10)</code>, <code>axisy order=(0 to 100 by 20)</code>. Pass real data with an <code>age</code> column and set <code>x_col = "age"</code>. The example below uses the sample data’s <code>year</code> column relabelled for illustration.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb115"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb127"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># With real data: x_col = "age", x_col_data has values ~25 to 85</span></span>
 <span><span class="co"># Illustration using sample_trends_data() with year_range spanning age range:</span></span>
 <span><span class="va">dta_age</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sample_trends_data.html">sample_trends_data</a></span><span class="op">(</span></span>
@@ -2148,7 +2267,7 @@ Age.After match                    Age  After match      3.5</code></pre>
 </h3>
 <p>Four repair categories over a short study period (1990–1999): the SAS template uses <code>axisx order=(1990 to 1999 by 1)</code> for fine year breaks.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb116"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb128"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">dta_poly</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sample_trends_data.html">sample_trends_data</a></span><span class="op">(</span></span>
 <span>  n          <span class="op">=</span> <span class="fl">800</span>,</span>
 <span>  year_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1990L</span>, <span class="fl">1999L</span><span class="op">)</span>,</span>
@@ -2184,7 +2303,7 @@ Age.After match                    Age  After match      3.5</code></pre>
 </h3>
 <p>Continuous outcome with a larger y range: <code>scale_y_continuous(breaks=seq(0, 200, 50))</code>, <code>coord_cartesian(xlim = c(1995, 2016), ylim = c(0, 200))</code>.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb117"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb129"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">dta_lv</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sample_trends_data.html">sample_trends_data</a></span><span class="op">(</span></span>
 <span>  n          <span class="op">=</span> <span class="fl">800</span>,</span>
 <span>  year_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1995L</span>, <span class="fl">2015L</span><span class="op">)</span>,</span>
@@ -2208,7 +2327,7 @@ Age.After match                    Age  After match      3.5</code></pre>
 </section><section class="level2"><h3 id="case-volume-total-surgeries-per-year-tp-dp-trends-r-plot4">Case volume / total surgeries per year (tp.dp.trends.R — plot4)<a class="anchor" aria-label="anchor" href="#case-volume-total-surgeries-per-year-tp-dp-trends-r-plot4"></a>
 </h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb118"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb130"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">dta_vol</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sample_trends_data.html">sample_trends_data</a></span><span class="op">(</span></span>
 <span>  n          <span class="op">=</span> <span class="fl">1000</span>,</span>
 <span>  year_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1985L</span>, <span class="fl">2015L</span><span class="op">)</span>,</span>
@@ -2233,7 +2352,7 @@ Age.After match                    Age  After match      3.5</code></pre>
 </h3>
 <p>Template: <code>coord_cartesian(ylim = c(0, 20))</code>, <code>annotate("text", 1995, 18, label="Trend: Hospital Length of Stay", size=4.5)</code>.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb119"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb131"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">dta_los</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sample_trends_data.html">sample_trends_data</a></span><span class="op">(</span></span>
 <span>  n          <span class="op">=</span> <span class="fl">800</span>,</span>
 <span>  year_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1985L</span>, <span class="fl">2015L</span><span class="op">)</span>,</span>
@@ -2256,10 +2375,10 @@ Age.After match                    Age  After match      3.5</code></pre>
 </div>
 </div>
 </div>
-</section><section class="level2"><h3 id="saving-7">Saving<a class="anchor" aria-label="anchor" href="#saving-7"></a>
+</section><section class="level2"><h3 id="saving-8">Saving<a class="anchor" aria-label="anchor" href="#saving-8"></a>
 </h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb120"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb132"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p_tr</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">tr</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_colour_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Set1"</span>, name <span class="op">=</span> <span class="st">"Group"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_shape_manual</a></span><span class="op">(</span></span>
@@ -2277,10 +2396,10 @@ Age.After match                    Age  After match      3.5</code></pre>
 </h2>
 <p><code><a href="../reference/hv_spaghetti.html">hv_spaghetti()</a></code> ports the pattern from <code>tp.dp.spaghetti.echo.R</code>: one trajectory line per subject over time, with optional stratification by a grouping variable. <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code> accepts <code>add_smooth = TRUE</code> for an optional LOESS overlay. The original template covers nine figures — unstratified and sex-stratified variants of three echo outcomes (AV mean gradient, AV area, DVI) plus an ordinal MV regurgitation grade plot.</p>
 <p><code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code> returns a bare ggplot. Compose with <code><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_colour_manual()</a></code>, <code><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_x_continuous()</a></code>, <code><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous()</a></code>, <code><a href="https://ggplot2.tidyverse.org/reference/coord_cartesian.html" class="external-link">coord_cartesian()</a></code>, <code><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs()</a></code>, and <code><a href="../reference/hvtiPlotR-themes.html">theme_hv_manuscript()</a></code>.</p>
-<section class="level2"><h3 id="sample-data-10">Sample data<a class="anchor" aria-label="anchor" href="#sample-data-10"></a>
+<section class="level2"><h3 id="sample-data-11">Sample data<a class="anchor" aria-label="anchor" href="#sample-data-11"></a>
 </h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb121"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb133"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># groups mirrors the Female/Male sex stratification in the template (MALE column)</span></span>
 <span><span class="va">dta_sp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sample_spaghetti_data.html">sample_spaghetti_data</a></span><span class="op">(</span></span>
 <span>  n_patients <span class="op">=</span> <span class="fl">150</span>,</span>
@@ -2298,7 +2417,7 @@ Age.After match                    Age  After match      3.5</code></pre>
 5  1 1.96 24.00 Female
 6  2 2.04 25.16 Female</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb123"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb135"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Build S3 objects for reuse below</span></span>
 <span><span class="va">sp</span>     <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hv_spaghetti.html">hv_spaghetti</a></span><span class="op">(</span><span class="va">dta_sp</span><span class="op">)</span></span>
 <span><span class="va">sp_col</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hv_spaghetti.html">hv_spaghetti</a></span><span class="op">(</span><span class="va">dta_sp</span>, colour_col <span class="op">=</span> <span class="st">"group"</span><span class="op">)</span></span></code></pre></div>
@@ -2306,7 +2425,7 @@ Age.After match                    Age  After match      3.5</code></pre>
 </section><section class="level2"><h3 id="bare-plot-4">Bare plot<a class="anchor" aria-label="anchor" href="#bare-plot-4"></a>
 </h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb124"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb136"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p_sp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sp</span><span class="op">)</span></span>
 <span><span class="va">p_sp</span></span></code></pre></div>
 <div class="cell-output-display">
@@ -2320,7 +2439,7 @@ Age.After match                    Age  After match      3.5</code></pre>
 </h3>
 <p>Template: <code>scale_y_continuous(breaks=seq(0, 80, 20))</code>, <code>coord_cartesian(xlim = c(0, 5), ylim = c(0, 80))</code>.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb125"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb137"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sp</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_x_continuous</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">5</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">80</span>, <span class="fl">20</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
@@ -2338,7 +2457,7 @@ Age.After match                    Age  After match      3.5</code></pre>
 </h3>
 <p>Template: <code>scale_y_continuous(breaks=seq(0, 30, 10))</code>, <code>coord_cartesian(ylim = c(0, 30))</code>.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb126"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb138"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sp</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_x_continuous</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">5</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">30</span>, <span class="fl">10</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
@@ -2356,7 +2475,7 @@ Age.After match                    Age  After match      3.5</code></pre>
 </h3>
 <p>Template: <code>scale_color_manual(breaks = c("0", "1"), values=c("red", "blue"))</code>. The quick-start in the template header uses the modernised <code>"firebrick"</code> / <code>"steelblue"</code> equivalents.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb127"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb139"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p_sp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sp_col</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_colour_manual</a></span><span class="op">(</span></span>
 <span>    values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>Female <span class="op">=</span> <span class="st">"firebrick"</span>, Male <span class="op">=</span> <span class="st">"steelblue"</span><span class="op">)</span>,</span>
@@ -2380,7 +2499,7 @@ Age.After match                    Age  After match      3.5</code></pre>
 </h3>
 <p>Template: <code>scale_y_continuous(breaks=seq(0, 5, 1))</code>, <code>coord_cartesian(ylim = c(0, 5))</code>, <code>ylab('AV Area (EOA) (cm^2)')</code>.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb128"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb140"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sp_col</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_colour_manual</a></span><span class="op">(</span></span>
 <span>    values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>Female <span class="op">=</span> <span class="st">"firebrick"</span>, Male <span class="op">=</span> <span class="st">"steelblue"</span><span class="op">)</span>,</span>
@@ -2402,7 +2521,7 @@ Age.After match                    Age  After match      3.5</code></pre>
 </h3>
 <p>Template: <code>scale_y_continuous(breaks=seq(0, 1.25, 0.25))</code>, <code>coord_cartesian(ylim = c(0, 1.25))</code>, <code>ylab('DVI')</code>.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb129"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb141"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sp_col</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_colour_manual</a></span><span class="op">(</span></span>
 <span>    values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>Female <span class="op">=</span> <span class="st">"firebrick"</span>, Male <span class="op">=</span> <span class="st">"steelblue"</span><span class="op">)</span>,</span>
@@ -2424,7 +2543,7 @@ Age.After match                    Age  After match      3.5</code></pre>
 </h3>
 <p>Template: <code>scale_y_continuous(labels=c("None", "Mild", "Moderate", "Severe"))</code>, <code>coord_cartesian(xlim = c(0, 6), ylim = c(0, 3))</code>, two colour groups for early (blue) and late (red2) cohorts.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb130"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb142"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">dta_ord</span>        <span class="op">&lt;-</span> <span class="va">dta_sp</span></span>
 <span><span class="va">dta_ord</span><span class="op">$</span><span class="va">value</span>  <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">pmin</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">pmax</a></span><span class="op">(</span><span class="fl">0</span>, <span class="va">dta_sp</span><span class="op">$</span><span class="va">value</span> <span class="op">/</span> <span class="fl">12</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/levels.html" class="external-link">levels</a></span><span class="op">(</span><span class="va">dta_ord</span><span class="op">$</span><span class="va">group</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Early"</span>, <span class="st">"Late"</span><span class="op">)</span></span>
@@ -2450,7 +2569,7 @@ Age.After match                    Age  After match      3.5</code></pre>
 </section><section class="level2"><h3 id="with-loess-smooth-overlay">With LOESS smooth overlay<a class="anchor" aria-label="anchor" href="#with-loess-smooth-overlay"></a>
 </h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb131"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb143"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sp_col</span>, add_smooth <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_colour_manual</a></span><span class="op">(</span></span>
 <span>    values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>Female <span class="op">=</span> <span class="st">"firebrick"</span>, Male <span class="op">=</span> <span class="st">"steelblue"</span><span class="op">)</span>,</span>
@@ -2468,11 +2587,11 @@ Age.After match                    Age  After match      3.5</code></pre>
 </div>
 </div>
 </div>
-</section><section class="level2"><h3 id="saving-8">Saving<a class="anchor" aria-label="anchor" href="#saving-8"></a>
+</section><section class="level2"><h3 id="saving-9">Saving<a class="anchor" aria-label="anchor" href="#saving-9"></a>
 </h3>
 <p>Template uses <code>wid = 11, hei = 8.5</code> in <code><a href="https://rdrr.io/r/grDevices/pdf.html" class="external-link">pdf()</a></code>.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb132"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb144"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave</a></span><span class="op">(</span><span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org/reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="st">"graphs"</span>, <span class="st">"mp.amngrd_profile.pdf"</span><span class="op">)</span>,</span>
 <span>       <span class="va">p_sp</span>, width <span class="op">=</span> <span class="fl">11</span>, height <span class="op">=</span> <span class="fl">8.5</span><span class="op">)</span></span></code></pre></div>
 </div>
@@ -2480,10 +2599,10 @@ Age.After match                    Age  After match      3.5</code></pre>
 </h2>
 <p><code><a href="../reference/hv_nonparametric.html">hv_nonparametric()</a></code> prepares pre-computed average curves from a two-phase nonparametric temporal trend model — the R equivalent of the SAS <code>tp.np.*.avrg_curv.*</code> and <code>tp.np.*.u.trend.*</code> template family.</p>
 <p>The constructor accepts the SAS <code>mean_curv</code> / <code>boots_ci</code> datasets exported to CSV and read in with <code><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv()</a></code>. <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code> returns a bare ggplot for composition with <code>scale_colour_*</code>, <code><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs()</a></code>, and <code><a href="../reference/hvtiPlotR-themes.html">theme_hv_manuscript()</a></code>.</p>
-<section class="level2"><h3 id="sample-data-11">Sample data<a class="anchor" aria-label="anchor" href="#sample-data-11"></a>
+<section class="level2"><h3 id="sample-data-12">Sample data<a class="anchor" aria-label="anchor" href="#sample-data-12"></a>
 </h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb133"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb145"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">curve_dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sample_nonparametric_curve_data.html">sample_nonparametric_curve_data</a></span><span class="op">(</span></span>
 <span>  n            <span class="op">=</span> <span class="fl">500</span>,</span>
 <span>  time_max     <span class="op">=</span> <span class="fl">12</span>,</span>
@@ -2505,7 +2624,7 @@ Age.After match                    Age  After match      3.5</code></pre>
 </section><section class="level2"><h3 id="single-average-curve-with-68-ci-ribbon">Single average curve with 68 % CI ribbon<a class="anchor" aria-label="anchor" href="#single-average-curve-with-68-ci-ribbon"></a>
 </h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb135"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb147"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">np</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hv_nonparametric.html">hv_nonparametric</a></span><span class="op">(</span></span>
 <span>  curve_data  <span class="op">=</span> <span class="va">curve_dat</span>,</span>
 <span>  lower_col   <span class="op">=</span> <span class="st">"lower"</span>,</span>
@@ -2516,7 +2635,7 @@ Age.After match                    Age  After match      3.5</code></pre>
 <section class="level3"><h4 id="bare-plot-5">Bare plot<a class="anchor" aria-label="anchor" href="#bare-plot-5"></a>
 </h4>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb136"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb148"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p_np_bare</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">np</span><span class="op">)</span></span>
 <span><span class="va">p_np_bare</span></span></code></pre></div>
 <div class="cell-output-display">
@@ -2529,7 +2648,7 @@ Age.After match                    Age  After match      3.5</code></pre>
 </section><section class="level3"><h4 id="adding-scales-labels-and-theme-2">Adding scales, labels, and theme<a class="anchor" aria-label="anchor" href="#adding-scales-labels-and-theme-2"></a>
 </h4>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb137"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb149"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p_np</span> <span class="op">&lt;-</span> <span class="va">p_np_bare</span> <span class="op">+</span></span>
 <span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_colour_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"steelblue"</span><span class="op">)</span>, guide <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_fill_manual</a></span><span class="op">(</span>values   <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"steelblue"</span><span class="op">)</span>, guide <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span> <span class="op">+</span></span>
@@ -2558,7 +2677,7 @@ Age.After match                    Age  After match      3.5</code></pre>
 </section></section><section class="level2"><h3 id="two-group-comparison-analogous-to-tp-np-avpkgrad_ozak_ind_mtwt-sas">Two-group comparison (analogous to tp.np.avpkgrad_ozak_ind_mtwt.sas)<a class="anchor" aria-label="anchor" href="#two-group-comparison-analogous-to-tp-np-avpkgrad_ozak_ind_mtwt-sas"></a>
 </h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb138"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb150"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">curve_grp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sample_nonparametric_curve_data.html">sample_nonparametric_curve_data</a></span><span class="op">(</span></span>
 <span>  n      <span class="op">=</span> <span class="fl">400</span>,</span>
 <span>  time_max <span class="op">=</span> <span class="fl">7</span>,</span>
@@ -2603,10 +2722,10 @@ Age.After match                    Age  After match      3.5</code></pre>
 </div>
 </div>
 </div>
-</section><section class="level2"><h3 id="saving-9">Saving<a class="anchor" aria-label="anchor" href="#saving-9"></a>
+</section><section class="level2"><h3 id="saving-10">Saving<a class="anchor" aria-label="anchor" href="#saving-10"></a>
 </h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb139"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb151"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Manuscript PDF</span></span>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave</a></span><span class="op">(</span><span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org/reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="st">"graphs"</span>, <span class="st">"np_afib_prevalence.pdf"</span><span class="op">)</span>,</span>
 <span>       <span class="va">p_np</span>, width <span class="op">=</span> <span class="fl">11</span>, height <span class="op">=</span> <span class="fl">8.5</span><span class="op">)</span></span>
@@ -2620,7 +2739,7 @@ Age.After match                    Age  After match      3.5</code></pre>
 </h2>
 <p><code><a href="../reference/hv_ordinal.html">hv_ordinal()</a></code> prepares pre-computed grade-specific probability curves from a cumulative proportional-odds model — the R equivalent of <code>tp.np.*.ordinal.*</code> SAS templates (e.g. TR grade prevalence, AR severity).</p>
 <p>The SAS <code>predict</code> dataset stores one column per grade (<code>p0</code>, <code>p1</code>, <code>p2</code>, <code>p3</code>). Before calling this function, reshape it from wide to long format:</p>
-<div class="sourceCode" id="cb140"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb152"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyr.tidyverse.org" class="external-link">tidyr</a></span><span class="op">)</span></span>
 <span><span class="va">long</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html" class="external-link">pivot_longer</a></span><span class="op">(</span></span>
 <span>  <span class="va">predict_wide</span>,</span>
@@ -2628,10 +2747,10 @@ Age.After match                    Age  After match      3.5</code></pre>
 <span>  names_to  <span class="op">=</span> <span class="st">"grade"</span>,</span>
 <span>  values_to <span class="op">=</span> <span class="st">"estimate"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<section class="level2"><h3 id="sample-data-12">Sample data<a class="anchor" aria-label="anchor" href="#sample-data-12"></a>
+<section class="level2"><h3 id="sample-data-13">Sample data<a class="anchor" aria-label="anchor" href="#sample-data-13"></a>
 </h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb141"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb153"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ord_dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sample_nonparametric_ordinal_data.html">sample_nonparametric_ordinal_data</a></span><span class="op">(</span></span>
 <span>  n            <span class="op">=</span> <span class="fl">800</span>,</span>
 <span>  time_max     <span class="op">=</span> <span class="fl">5</span>,</span>
@@ -2656,13 +2775,13 @@ Age.After match                    Age  After match      3.5</code></pre>
 </section><section class="level2"><h3 id="grade-probability-curves-with-data-summary-points">Grade probability curves with data summary points<a class="anchor" aria-label="anchor" href="#grade-probability-curves-with-data-summary-points"></a>
 </h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb143"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb155"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">np_ord</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hv_ordinal.html">hv_ordinal</a></span><span class="op">(</span>curve_data <span class="op">=</span> <span class="va">ord_dat</span>, data_points <span class="op">=</span> <span class="va">ord_pts</span><span class="op">)</span></span></code></pre></div>
 </div>
 <section class="level3"><h4 id="bare-plot-6">Bare plot<a class="anchor" aria-label="anchor" href="#bare-plot-6"></a>
 </h4>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb144"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb156"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p_ord_bare</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">np_ord</span><span class="op">)</span></span>
 <span><span class="va">p_ord_bare</span></span></code></pre></div>
 <div class="cell-output-display">
@@ -2675,7 +2794,7 @@ Age.After match                    Age  After match      3.5</code></pre>
 </section><section class="level3"><h4 id="adding-scales-labels-and-theme-3">Adding scales, labels, and theme<a class="anchor" aria-label="anchor" href="#adding-scales-labels-and-theme-3"></a>
 </h4>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb145"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb157"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p_ord</span> <span class="op">&lt;-</span> <span class="va">p_ord_bare</span> <span class="op">+</span></span>
 <span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_colour_manual</a></span><span class="op">(</span></span>
 <span>    values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
@@ -2712,7 +2831,7 @@ Age.After match                    Age  After match      3.5</code></pre>
 </h3>
 <p>For analyses that collapse higher grades (e.g. Moderate + Severe combined), subset and re-label before passing to the constructor:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb146"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb158"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ord_collapsed</span> <span class="op">&lt;-</span> <span class="va">ord_dat</span></span>
 <span><span class="co"># Merge Moderate and Severe into one level</span></span>
 <span><span class="va">ord_collapsed</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">ord_collapsed</span>, <span class="va">grade</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"None"</span>, <span class="st">"Mild"</span>, <span class="st">"Moderate/Severe"</span><span class="op">)</span><span class="op">)</span></span>
@@ -2745,10 +2864,10 @@ Age.After match                    Age  After match      3.5</code></pre>
 </div>
 </div>
 </div>
-</section><section class="level2"><h3 id="saving-10">Saving<a class="anchor" aria-label="anchor" href="#saving-10"></a>
+</section><section class="level2"><h3 id="saving-11">Saving<a class="anchor" aria-label="anchor" href="#saving-11"></a>
 </h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb147"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb159"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave</a></span><span class="op">(</span><span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org/reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="st">"graphs"</span>, <span class="st">"np_tr_ordinal.pdf"</span><span class="op">)</span>,</span>
 <span>       <span class="va">p_ord</span>, width <span class="op">=</span> <span class="fl">11</span>, height <span class="op">=</span> <span class="fl">8.5</span><span class="op">)</span></span></code></pre></div>
 </div>
@@ -2756,10 +2875,10 @@ Age.After match                    Age  After match      3.5</code></pre>
 </h2>
 <p><code><a href="../reference/hv_longitudinal.html">hv_longitudinal()</a></code> reproduces the two-panel layout from <code>tp.dp.longitudinal_patients_measures.*</code>: a grouped bar chart of patients and measurements at each follow-up window, paired with a numeric summary table below. Call <code>plot(lc)</code> for the bar chart and <code>plot(lc, type = "table")</code> for the table panel. Compose the two panels with <code>patchwork</code>.</p>
 <p>Input is <strong>pre-aggregated long-format data</strong> — one row per (time window, series) combination. Use <code><a href="../reference/sample_longitudinal_counts_data.html">sample_longitudinal_counts_data()</a></code> to derive this from patient-level data, or build it yourself from your registry data.</p>
-<section class="level2"><h3 id="sample-data-13">Sample data<a class="anchor" aria-label="anchor" href="#sample-data-13"></a>
+<section class="level2"><h3 id="sample-data-14">Sample data<a class="anchor" aria-label="anchor" href="#sample-data-14"></a>
 </h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb148"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb160"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">lc_dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sample_longitudinal_counts_data.html">sample_longitudinal_counts_data</a></span><span class="op">(</span>n_patients <span class="op">=</span> <span class="fl">300</span>, seed <span class="op">=</span> <span class="fl">42L</span><span class="op">)</span></span>
 <span><span class="va">lc_dat</span></span></code></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -2779,14 +2898,14 @@ Age.After match                    Age  After match      3.5</code></pre>
 13   ≥2 Years Measurements   113
 14 ≥2.5 Years Measurements   620</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb150"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb162"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Build the S3 object once; use for both panels</span></span>
 <span><span class="va">lc</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hv_longitudinal.html">hv_longitudinal</a></span><span class="op">(</span><span class="va">lc_dat</span><span class="op">)</span></span></code></pre></div>
 </div>
 </section><section class="level2"><h3 id="bare-plot-7">Bare plot<a class="anchor" aria-label="anchor" href="#bare-plot-7"></a>
 </h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb151"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb163"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p_lc_bare</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">lc</span><span class="op">)</span></span>
 <span><span class="va">p_lc_bare</span></span></code></pre></div>
 <div class="cell-output-display">
@@ -2799,7 +2918,7 @@ Age.After match                    Age  After match      3.5</code></pre>
 </section><section class="level2"><h3 id="bar-chart">Bar chart<a class="anchor" aria-label="anchor" href="#bar-chart"></a>
 </h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb152"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb164"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p_lc_bar</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">lc</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_fill_manual</a></span><span class="op">(</span></span>
 <span>    values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>Patients <span class="op">=</span> <span class="st">"steelblue"</span>, Measurements <span class="op">=</span> <span class="st">"firebrick"</span><span class="op">)</span>,</span>
@@ -2825,7 +2944,7 @@ Age.After match                    Age  After match      3.5</code></pre>
 </section><section class="level2"><h3 id="numeric-table-panel">Numeric table panel<a class="anchor" aria-label="anchor" href="#numeric-table-panel"></a>
 </h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb153"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb165"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p_lc_tbl</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">lc</span>, type <span class="op">=</span> <span class="st">"table"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_colour_manual</a></span><span class="op">(</span></span>
 <span>    values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>Patients <span class="op">=</span> <span class="st">"steelblue"</span>, Measurements <span class="op">=</span> <span class="st">"firebrick"</span><span class="op">)</span>,</span>
@@ -2844,7 +2963,7 @@ Age.After match                    Age  After match      3.5</code></pre>
 </section><section class="level2"><h3 id="two-panel-layout-with-patchwork">Two-panel layout with patchwork<a class="anchor" aria-label="anchor" href="#two-panel-layout-with-patchwork"></a>
 </h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb154"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb166"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://patchwork.data-imaginist.com" class="external-link">patchwork</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">p_lc_bar</span> <span class="op">/</span> <span class="va">p_lc_tbl</span> <span class="op">+</span></span>
@@ -2859,7 +2978,7 @@ Age.After match                    Age  After match      3.5</code></pre>
 </section><section class="level2"><h3 id="saving-the-combined-figure">Saving the combined figure<a class="anchor" aria-label="anchor" href="#saving-the-combined-figure"></a>
 </h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb155"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb167"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">combined</span> <span class="op">&lt;-</span> <span class="va">p_lc_bar</span> <span class="op">/</span> <span class="va">p_lc_tbl</span> <span class="op">+</span></span>
 <span>  <span class="fu">patchwork</span><span class="fu">::</span><span class="fu"><a href="https://patchwork.data-imaginist.com/reference/plot_layout.html" class="external-link">plot_layout</a></span><span class="op">(</span>heights <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
@@ -2875,13 +2994,13 @@ Age.After match                    Age  After match      3.5</code></pre>
 </h2>
 <p><code><a href="../reference/hv_upset.html">hv_upset()</a></code> builds an UpSet diagram via <code><a href="https://rdrr.io/pkg/ggupset/man/scale_x_upset.html" class="external-link">ggupset::scale_x_upset()</a></code> to visualise surgical procedure co-occurrences or any set membership data. Unlike Venn diagrams, UpSet plots scale to many sets cleanly.</p>
 <p><code><a href="../reference/plot.hv_upset.html">plot.hv_upset()</a></code> returns a <strong>ggplot</strong> when <code>set_size = FALSE</code>, or a <strong>patchwork composite</strong> of an intersection-bar plot + a set-size sidebar when <code>set_size = TRUE</code> (the default). For the bare ggplot path, themes apply via <code>+</code> like every other hvtiPlotR plot; for the patchwork path, use patchwork’s <code>&amp;</code> operator to theme every sub-panel:</p>
-<div class="sourceCode" id="cb156"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb168"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">hu</span><span class="op">)</span> <span class="op">&amp;</span> <span class="fu"><a href="../reference/hvtiPlotR-themes.html">theme_hv_poster</a></span><span class="op">(</span><span class="op">)</span>                  <span class="co"># default (patchwork)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">hu</span>, set_size <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="../reference/hvtiPlotR-themes.html">theme_hv_poster</a></span><span class="op">(</span><span class="op">)</span> <span class="co"># single ggplot</span></span></code></pre></div>
-<section class="level2"><h3 id="sample-data-14">Sample data<a class="anchor" aria-label="anchor" href="#sample-data-14"></a>
+<section class="level2"><h3 id="sample-data-15">Sample data<a class="anchor" aria-label="anchor" href="#sample-data-15"></a>
 </h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb157"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb169"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">sets</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"AV_Replacement"</span>, <span class="st">"AV_Repair"</span>, <span class="st">"MV_Replacement"</span>, <span class="st">"MV_Repair"</span>,</span>
 <span>          <span class="st">"TV_Repair"</span>, <span class="st">"Aorta"</span>, <span class="st">"CABG"</span><span class="op">)</span></span>
 <span></span>
@@ -2896,7 +3015,7 @@ Age.After match                    Age  After match      3.5</code></pre>
 5          FALSE     FALSE           TRUE     FALSE      TRUE FALSE FALSE
 6           TRUE     FALSE          FALSE     FALSE     FALSE FALSE  TRUE</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb159"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb171"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/colSums.html" class="external-link">colSums</a></span><span class="op">(</span><span class="va">upset_dta</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>AV_Replacement      AV_Repair MV_Replacement      MV_Repair      TV_Repair
@@ -2904,14 +3023,14 @@ Age.After match                    Age  After match      3.5</code></pre>
          Aorta           CABG
             56            147 </code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb161"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb173"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">hu</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hv_upset.html">hv_upset</a></span><span class="op">(</span><span class="va">upset_dta</span>, intersect <span class="op">=</span> <span class="va">sets</span><span class="op">)</span></span></code></pre></div>
 </div>
 </section><section class="level2"><h3 id="default-plot">Default plot<a class="anchor" aria-label="anchor" href="#default-plot"></a>
 </h3>
 <p>Intersection bars (top 10 by frequency) with a set-size sidebar on the right. <code>set_size = TRUE</code> returns a patchwork composite, so theme it with <code>&amp;</code> to cover both sub-panels:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb162"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb174"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">hu</span><span class="op">)</span> <span class="op">&amp;</span></span>
 <span>  <span class="fu"><a href="../reference/hvtiPlotR-themes.html">theme_hv_poster</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
@@ -2925,7 +3044,7 @@ Age.After match                    Age  After match      3.5</code></pre>
 </h3>
 <p>The intersection bars are a standard <code><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html" class="external-link">geom_bar()</a></code> — change the colour via the <code>bar_fill</code> argument (or set <code>set_size = FALSE</code> to return just the intersection-bar ggplot for full customisation).</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb163"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb175"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">hu</span>, bar_fill <span class="op">=</span> <span class="st">"steelblue"</span>, set_size <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>y <span class="op">=</span> <span class="st">"Patients (n)"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/hvtiPlotR-themes.html">theme_hv_poster</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
@@ -2940,7 +3059,7 @@ Age.After match                    Age  After match      3.5</code></pre>
 </h3>
 <p>Pass <code>fill_col</code> to fill the intersection bars by a grouping column on the input data. Combine with <code><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_fill_manual()</a></code> for explicit colour assignment.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb164"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb176"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">upset_dta</span><span class="op">$</span><span class="va">era</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_len</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">upset_dta</span><span class="op">)</span><span class="op">)</span> <span class="op">&lt;=</span> <span class="fl">200</span>, <span class="st">"Early"</span>, <span class="st">"Recent"</span><span class="op">)</span></span>
 <span><span class="va">hu_era</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hv_upset.html">hv_upset</a></span><span class="op">(</span><span class="va">upset_dta</span>, intersect <span class="op">=</span> <span class="va">sets</span><span class="op">)</span></span>
 <span></span>
@@ -2958,10 +3077,10 @@ Age.After match                    Age  After match      3.5</code></pre>
 </div>
 </div>
 </div>
-</section><section class="level2"><h3 id="saving-11">Saving<a class="anchor" aria-label="anchor" href="#saving-11"></a>
+</section><section class="level2"><h3 id="saving-12">Saving<a class="anchor" aria-label="anchor" href="#saving-12"></a>
 </h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb165"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb177"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p_upset</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">hu</span><span class="op">)</span> <span class="op">&amp;</span> <span class="fu"><a href="../reference/hvtiPlotR-themes.html">theme_hv_poster</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># UpSet plot is a patchwork composite when set_size = TRUE (the default);</span></span>
@@ -2978,7 +3097,7 @@ make_footnote("R/analysis.R")        # &lt;- no footnote call</code></pre>
 <section class="level2"><h3 id="draft-annotation-pattern">Draft annotation pattern<a class="anchor" aria-label="anchor" href="#draft-annotation-pattern"></a>
 </h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb167"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb179"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">dta_fn</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sample_hazard_data.html">sample_hazard_data</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">300</span>, time_max <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
 <span><span class="va">emp_fn</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sample_hazard_empirical.html">sample_hazard_empirical</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">300</span>, time_max <span class="op">=</span> <span class="fl">10</span>, n_bins <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span>
 <span></span>
@@ -3012,7 +3131,7 @@ make_footnote("R/analysis.R")        # &lt;- no footnote call</code></pre>
 </h3>
 <p>Pass any string as <code>text</code> and set <code>timestamp = FALSE</code> for a stable label.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb168"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb180"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">p_draft</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/make_footnote.html">make_footnote</a></span><span class="op">(</span></span>
 <span>  text      <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="st">"J. Ehrlinger |"</span>, <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.Date</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>,</span>
@@ -3030,7 +3149,7 @@ make_footnote("R/analysis.R")        # &lt;- no footnote call</code></pre>
 </h3>
 <p>The <code><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave()</a></code> call writes the ggplot object directly — <code><a href="../reference/make_footnote.html">make_footnote()</a></code> is never called, so the saved file is clean.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb169"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb181"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave</a></span><span class="op">(</span><span class="st">"../graphs/fig1_survival.pdf"</span>, <span class="va">p_draft</span>, width <span class="op">=</span> <span class="fl">11</span>, height <span class="op">=</span> <span class="fl">8.5</span><span class="op">)</span></span></code></pre></div>
 </div>
 </section></section><script id="quarto-html-after-body" type="application/javascript">
