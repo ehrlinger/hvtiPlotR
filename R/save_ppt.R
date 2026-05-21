@@ -46,6 +46,45 @@ suppress_officer_bg_warnings <- function(expr) {
   )
 }
 
+# Add one editable consort slide (grid output via rvg::dml code= path) ------
+
+add_consort_slide <- function(doc, consort_obj, title, layout, master,
+                               width, height, left, top) {
+  dml_obj <- rvg::dml(code = {
+    grid::grid.draw(consort::build_grid(consort_obj$plot))
+  })
+
+  doc <- officer_safe_call(
+    officer::add_slide(doc, layout = layout, master = master),
+    action = "add slide"
+  )
+  doc <- officer_safe_call(
+    officer::ph_with(
+      doc,
+      value    = title,
+      location = officer::ph_location_type(type = "title")
+    ),
+    action = "set slide title"
+  )
+  doc <- officer_safe_call(
+    suppress_officer_bg_warnings(
+      officer::ph_with(
+        doc,
+        value    = dml_obj,
+        location = officer::ph_location(
+          width  = width,
+          height = height,
+          left   = left,
+          top    = top,
+          bg     = "transparent"
+        )
+      )
+    ),
+    action = "add consort diagram to slide"
+  )
+  doc
+}
+
 # Add one editable slide -----------------------------------------------------
 
 add_plot_slide <- function(doc, plot, title, layout, master, width, height,
@@ -102,7 +141,8 @@ add_plot_slide <- function(doc, plot, title, layout, master, width, height,
 #' designated title placeholder via [officer::ph_location_type()].
 #'
 #' @param object      A single ggplot object **or** a named/unnamed list of
-#'   ggplot objects. Each element produces one slide.
+#'   ggplot objects. Each element produces one slide. May also be an
+#'   `hv_consort` object produced by [hv_consort()].
 #' @param template    Path to an existing `.pptx` file used as the slide
 #'   template. Default `"../graphs/RD.pptx"`.
 #' @param powerpoint  Output path for the new `.pptx` file.
@@ -115,9 +155,13 @@ add_plot_slide <- function(doc, plot, title, layout, master, width, height,
 #' @param master      PowerPoint master name from the template, or `NULL` to
 #'   use the template's first available master. Default `NULL`.
 #' @param width       Plot width in inches within the slide. Default `10.1`.
-#'   Ignored when `panel_box` is supplied.
+#'   Ignored when `panel_box` is supplied. Ignored for `hv_consort` objects,
+#'   whose dimensions are taken from the object's metadata (set at
+#'   `hv_consort()` time).
 #' @param height      Plot height in inches within the slide. Default `5.8`.
-#'   Ignored when `panel_box` is supplied.
+#'   Ignored when `panel_box` is supplied. Ignored for `hv_consort` objects,
+#'   whose dimensions are taken from the object's metadata (set at
+#'   `hv_consort()` time).
 #' @param left        Distance in inches from the left edge of the slide.
 #'   Default `0.0`. Ignored when `panel_box` is supplied.
 #' @param top         Distance in inches from the top of the slide.
@@ -129,7 +173,8 @@ add_plot_slide <- function(doc, plot, title, layout, master, width, height,
 #'   [hv_ph_location()] so the panel lands at the same slide coordinates
 #'   on every slide regardless of axis-label width. When `NULL` (default),
 #'   the fixed `width`/`height`/`left`/`top` arguments are used for every
-#'   slide (legacy behavior).
+#'   slide (legacy behavior). Ignored for `hv_consort` objects, which are
+#'   always placed using their own metadata dimensions.
 #'
 #' @return Invisibly returns the path given by `powerpoint`.
 #'
@@ -251,6 +296,8 @@ add_plot_slide <- function(doc, plot, title, layout, master, width, height,
 #'
 #' @importFrom officer read_pptx add_slide ph_with ph_location ph_location_type
 #' @importFrom rvg dml
+#' @importFrom grid grid.draw
+#' @importFrom consort build_grid
 #' @export
 save_ppt <- function(object,
                      template     = "../graphs/RD.pptx",
@@ -267,11 +314,13 @@ save_ppt <- function(object,
   ensure_officer_available()
   ensure_rvg_available()
 
-  is_plot_list <- is.list(object) && !inherits(object, "ggplot")
+  is_consort   <- inherits(object, "hv_consort")
+  is_plot_list <- is.list(object) && !inherits(object, "ggplot") && !is_consort
 
   # --- Validate inputs -------------------------------------------------------
-  if (!(inherits(object, "ggplot") || is_plot_list))
-    stop("`object` must be a ggplot or a list of ggplot objects.", call. = FALSE)
+  if (!(inherits(object, "ggplot") || is_consort || is_plot_list))
+    stop("`object` must be a ggplot, an hv_consort, or a list of ggplot objects.",
+         call. = FALSE)
   if (is_plot_list) {
     if (length(object) == 0L)
       stop("`object` list cannot be empty.", call. = FALSE)
@@ -306,43 +355,61 @@ save_ppt <- function(object,
     action = "open PowerPoint template"
   )
 
-  # --- Normalise to list -----------------------------------------------------
-  plots <- if (is_plot_list) object else list(object)
-  titles <- rep_len(slide_titles, length(plots))
+  # --- Add slides ------------------------------------------------------------
+  if (is_consort) {
+    # Consort diagrams carry their own dimensions, set at hv_consort() time.
+    title_1 <- if (length(slide_titles) >= 1L) slide_titles[[1L]] else ""
 
-  # --- Add one slide per plot ------------------------------------------------
-  for (i in seq_along(plots)) {
-    if (is.null(panel_box)) {
-      slide_w <- width
-      slide_h <- height
-      slide_l <- left
-      slide_t <- top
-    } else {
-      loc <- hv_ph_location(
-        plots[[i]],
-        panel_width  = panel_box$width,
-        panel_height = panel_box$height,
-        panel_left   = panel_box$left,
-        panel_top    = panel_box$top,
-        units        = "in"
-      )
-      slide_w <- loc$width
-      slide_h <- loc$height
-      slide_l <- loc$left
-      slide_t <- loc$top
-    }
-
-    doc <- add_plot_slide(
-      doc    = doc,
-      plot   = plots[[i]],
-      title  = titles[[i]],
-      layout = layout,
-      master = master,
-      width  = slide_w,
-      height = slide_h,
-      left   = slide_l,
-      top    = slide_t
+    doc <- add_consort_slide(
+      doc         = doc,
+      consort_obj = object,
+      title       = title_1,
+      layout      = layout,
+      master      = master,
+      width       = object$meta$width,
+      height      = object$meta$height,
+      left        = left,
+      top         = top
     )
+  } else {
+    # --- Normalise to list ---------------------------------------------------
+    plots  <- if (is_plot_list) object else list(object)
+    titles <- rep_len(slide_titles, length(plots))
+
+    # --- Add one slide per plot ----------------------------------------------
+    for (i in seq_along(plots)) {
+      if (is.null(panel_box)) {
+        slide_w <- width
+        slide_h <- height
+        slide_l <- left
+        slide_t <- top
+      } else {
+        loc <- hv_ph_location(
+          plots[[i]],
+          panel_width  = panel_box$width,
+          panel_height = panel_box$height,
+          panel_left   = panel_box$left,
+          panel_top    = panel_box$top,
+          units        = "in"
+        )
+        slide_w <- loc$width
+        slide_h <- loc$height
+        slide_l <- loc$left
+        slide_t <- loc$top
+      }
+
+      doc <- add_plot_slide(
+        doc    = doc,
+        plot   = plots[[i]],
+        title  = titles[[i]],
+        layout = layout,
+        master = master,
+        width  = slide_w,
+        height = slide_h,
+        left   = slide_l,
+        top    = slide_t
+      )
+    }
   }
 
   # --- Write output ----------------------------------------------------------

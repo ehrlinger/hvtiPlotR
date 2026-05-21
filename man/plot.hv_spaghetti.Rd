@@ -87,7 +87,7 @@ ggplot2::theme_set(old)
 \code{\link{hv_spaghetti}} to build the data object,
 \code{\link{theme_hv_manuscript}} for the publication theme.
 
-Other Spaghetti plot: 
-\code{\link{hv_spaghetti}()}
+Other Spaghetti plot:
+\code{\link[=hv_spaghetti]{hv_spaghetti()}}
 }
 \concept{Spaghetti plot}

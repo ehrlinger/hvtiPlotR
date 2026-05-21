@@ -45,7 +45,7 @@ to complete the figure.
 \code{\link[=hv_hazard]{hv_hazard()}} to build the data object,
 \code{\link[=theme_hv_manuscript]{theme_hv_manuscript()}} for the publication theme.
 
-Other Hazard plot: 
-\code{\link{hv_hazard}()}
+Other Hazard plot:
+\code{\link[=hv_hazard]{hv_hazard()}}
 }
 \concept{Hazard plot}

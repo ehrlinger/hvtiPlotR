@@ -1,0 +1,353 @@
+---
+title: "hvtiPlotR: What's New in v2.x"
+subtitle: "API Redesign · New Themes · PowerPoint Export"
+author: "John Ehrlinger"
+date: today
+format:
+  revealjs:
+    slide-level: 2
+    theme: solarized
+    slide-number: true
+    progress: true
+    embed-resources: true
+    center: false             # don't vertically center — better for code slides
+    smaller: true             # slightly smaller base font size
+    scrollable: true          # allow long slides to scroll rather than overflow
+    transition: fade          # none | fade | slide | convex | zoom
+    background-transition: fade
+    code-line-numbers: true   # line numbers in code blocks
+    highlight-style: github   # github | monokai | dracula | a11y | etc.
+    footer: "hvtiPlotR v2.3.0"  # persistent footer text
+  pptx:
+    # To apply your HVI template, uncomment and set the path:
+    # reference-doc: graphs/RD.pptx
+    slide-level: 2
+  beamer:
+    slide-level: 2
+    theme: metropolis
+    keep-tex: false
+  
+---
+
+# The Three Key Changes
+
+## What Changed in v2.x
+
+::: {style="padding-left: 1.5em;"}
+1. **S3 API** — single-call plot functions replaced by a two-step
+   `hv_*()` constructor + `plot()` workflow
+
+2. **Theme functions** — renamed to `theme_hv_*()`, following ggplot2's
+   own `theme_bw()` / `theme_grey()` naming convention
+
+3. **PowerPoint export** — `save_ppt()` gains `panel_box`, which anchors
+   the plot panel to a fixed slide rectangle across all slides
+:::
+
+*Early v2.x dev build users: also rename the `hvti_*` prefix → `hv_*` throughout.*
+
+# API Redesign
+
+## The Two-Step Workflow
+
+Every plot function now follows the same two-step pattern:
+
+```r
+# Step 1: construct & validate
+km <- hv_survival(
+  data      = my_data,
+  time_col  = "time",
+  event_col = "event"
+)
+
+# Optional — inspect intermediate data
+km$tables$risk     # risk table data frame
+km$tables$report   # summary statistics
+
+# Step 2: render a bare ggplot, then decorate with +
+plot(km) +
+  scale_colour_brewer(palette = "Set1") +
+  labs(x = "Years", y = "Survival Probability") +
+  theme_hv_manuscript()
+```
+
+Validation and rendering are fully separated. You can inspect, subset, or
+re-use `km$tables` before ever calling `plot()`.
+
+## Before & After: Constructors
+
+:::: {.columns}
+
+::: {.column width="48%"}
+**v1.x — single function call**
+
+```r
+# Everything in one call —
+# no access to intermediate data
+mirror_histogram(
+  data         = my_data,
+  score_col    = "ps",
+  group_col    = "trt",
+  group_labels = c("SAVR", "TAVR")
+)
+
+survival_curve(
+  data      = my_data,
+  time_col  = "time",
+  event_col = "event"
+)
+```
+:::
+
+::: {.column width="48%"}
+**v2.x — construct, then render**
+
+```r
+# Step 1: construct
+mh <- hv_mirror_hist(
+  data         = my_data,
+  score_col    = "ps",
+  group_col    = "trt",
+  group_labels = c("SAVR", "TAVR")
+)
+
+# Step 2: render + decorate
+plot(mh) + theme_hv_manuscript()
+
+# Same pattern for survival
+km <- hv_survival(my_data, "time", "event")
+km$tables$risk          # inspect data
+plot(km) + theme_hv_ppt_dark()
+```
+:::
+
+::::
+
+## Constructor Reference: Old → New
+
+| v1.x Function | v2.x Constructor |
+|---|---|
+| `mirror_histogram()` | `hv_mirror_hist()` |
+| `covariate_balance()` | `hv_balance()` |
+| `stacked_histogram()` | `hv_stacked()` |
+| `survival_curve()` | `hv_survival()` |
+| `goodness_followup()` | `hv_followup()` |
+
+: {tbl-colwidths="[50,50]"}
+
+## Constructor Reference: Old → New (cont.)
+
+| v1.x Function | v2.x Constructor |
+|---|---|
+| `trends_plot()` | `hv_trends()` |
+| `spaghetti_plot()` | `hv_spaghetti()` |
+| `longitudinal_counts_plot()` | `hv_longitudinal()` |
+| `alluvial_plot()` | `hv_alluvial()` |
+| `upset_plot()` | `hv_upset()` |
+| `eda_plot()` | `hv_eda()` |
+| *(new in v2.3.0)* | `hv_consort()` |
+
+: {tbl-colwidths="[50,50]"}
+
+*Early v2.x dev build users: also rename `hvti_*()` → `hv_*()` throughout.*
+
+→ [vignette("hvtiPlotR")](https://ehrlinger.github.io/hvtiPlotR/articles/hvtiPlotR.html) · [vignette("plot-functions")](https://ehrlinger.github.io/hvtiPlotR/articles/plot-functions.html)
+
+## New S3 Convenience Methods (v2.2)
+
+Three standard R verbs are now available on every `hv_data` object:
+
+```r
+km <- hv_survival(my_data, "time", "event")
+
+# summary() — prints the object header + all named tables
+summary(km)
+
+# autoplot() — ggplot2-ecosystem alias for plot()
+autoplot(km) + theme_hv_manuscript()
+
+# as.data.frame() — returns the $data slot directly
+df <- as.data.frame(km)   # same as km$data
+```
+
+`autoplot()` is interchangeable with `plot()` — useful when working
+with packages like `broom` or `ggfortify` that prefer the ggplot2 verb.
+
+# Themes
+
+## Theme API: Before & After
+
+:::: {.columns}
+
+::: {.column width="48%"}
+**Old API (deprecated in v2.1)**
+
+```r
+# String dispatcher — removed
+p + hv_theme("dark_ppt")
+p + hv_theme("manuscript")
+p + hv_theme("light_ppt")
+
+# Keyword args — removed
+p + hv_theme_dark_ppt(bold = TRUE)
+p + hv_theme_light_ppt(mono_y = TRUE)
+```
+
+Deprecated aliases (`hv_theme_dark_ppt()`,
+`theme_dark_ppt()`, etc.) still emit a
+one-shot warning and forward to the new
+function — **will be removed in v3.0.0**.
+:::
+
+::: {.column width="48%"}
+**New API — v2.1+**
+
+```r
+# Named functions, ggplot2-style
+p + theme_hv_ppt_dark()
+p + theme_hv_ppt_light()
+p + theme_hv_manuscript()
+p + theme_hv_poster()
+
+# Customize inline via ...
+p + theme_hv_ppt_dark(
+  axis.text       = element_text(face = "bold"),
+  axis.text.y     = element_text(family = "mono"),
+  legend.position = "right"
+)
+```
+:::
+
+::::
+
+## Theme Customization: the `...` Pattern
+
+The `bold`, `mono_y`, and `title_size` keyword arguments have been **removed**.
+Use ggplot2's standard theme elements via `...` instead:
+
+```r
+# Old — no longer works
+p + theme_hv_ppt_dark(bold = TRUE, mono_y = TRUE)
+
+# New — pass any theme() element directly
+p + theme_hv_ppt_dark(
+  axis.text        = element_text(face = "bold"),
+  axis.text.y      = element_text(family = "mono"),
+  legend.position  = "right",
+  plot.title       = element_text(size = 18)
+)
+
+# Set globally for all plots in a session
+ggplot2::theme_set(theme_hv_manuscript())
+```
+
+Every `...` argument is forwarded directly to `ggplot2::theme()`,
+so any valid theme element works — no package-specific wrappers needed.
+
+→ **Full reference:** [vignette("plot-decorators")](https://ehrlinger.github.io/hvtiPlotR/articles/plot-decorators.html)
+
+# PowerPoint Export
+
+## `save_ppt()` — Basics
+
+```r
+# Single plot → one slide
+p <- plot(hv_survival(my_data, "time", "event")) +
+  theme_hv_ppt_dark()
+
+save_ppt(
+  object       = p,
+  template     = "graphs/RD.pptx",       # your HVI slide template
+  powerpoint   = "output/figure1.pptx",
+  slide_titles = "Kaplan–Meier: All Patients"
+)
+
+# List of plots → one slide per plot
+save_ppt(
+  object       = list(p_km, p_balance, p_trends),
+  template     = "graphs/RD.pptx",
+  powerpoint   = "output/full_deck.pptx",
+  slide_titles = c("KM Curve", "Covariate Balance", "Annual Trends")
+)
+```
+
+**Argument names changed from the old API:**
+`plot =` → `object =`   |   `filename =` → `powerpoint =`
+
+Every plot lands as an **editable DrawingML vector** — shapes, lines,
+and text remain selectable in PowerPoint.
+
+## `panel_box` — The Problem
+
+`save_ppt()` places each plot at a fixed `left` / `top` / `width` / `height`
+on the slide. But that positions the **outer plot boundary**, not the data panel.
+
+When y-axis labels vary in width across slides — `"1.0"` on one slide,
+`"99999.0"` on another — the wider labels consume more horizontal space and
+push the panel to the right. The data area lands at a **different x-position
+on every slide** (slides bounce).
+
+
+## `panel_box` — The Solution
+
+Supply `panel_box` to anchor the **panel content area** to a fixed rectangle:
+
+```r
+save_ppt(
+  object       = list(p_small_labels, p_wide_labels),
+  template     = "graphs/RD-dark.pptx",
+  powerpoint   = "output/anchored_deck.pptx",
+  slide_titles = c("Survival Curve", "Hazard Difference"),
+  panel_box    = list(
+    width  = 8.88,   # target panel width in inches
+    height = 4.51,   # target panel height in inches
+    left   = 2.58,   # leave room for the widest y-axis label
+    top    = 1.29    # below the title placeholder
+  )
+)
+```
+
+`save_ppt()` calls `hv_ph_location()` per slide, measuring each plot's
+axis chrome and adjusting the overall plot placement so the **panel lands
+at the same slide coordinates on every slide**.
+
+**Workflow tip:** develop with `theme_hv_ppt_light()` so the white panel is
+visible in your IDE viewer; save into your dark template at export time.
+
+→ **Full reference:** [vignette("plot-decorators")](https://ehrlinger.github.io/hvtiPlotR/articles/plot-decorators.html)
+
+# Migration Checklist
+
+## Update Your Scripts
+
+**S3 API**
+
+- Replace `survival_curve()`, `mirror_histogram()`, etc. with `hv_*()` + `plot()`
+- If on an early v2.x dev build, rename `hvti_*()` → `hv_*()`
+- Update `hv_upset()` calls: `base_annotations =` → `fill_col =`, `min_size =` → `n_intersections =`
+
+**Themes**
+
+- Replace `hv_theme("dark_ppt")` → `theme_hv_ppt_dark()`, and so on for each style
+- Replace `bold = TRUE` → `axis.text = element_text(face = "bold")` in `...`
+
+**PowerPoint Export**
+
+- Update `save_ppt()` arg names: `plot =` → `object =`, `filename =` → `powerpoint =`
+- Add `panel_box = list(width, height, left, top)` if your deck has variable y-axis label widths
+
+*Deprecated aliases emit a one-shot warning — will be removed in v3.0.0.*
+
+## Further Reading
+
+- [ehrlinger.github.io/hvtiPlotR](https://ehrlinger.github.io/hvtiPlotR/) — package site
+- [vignette("hvtiPlotR")](https://ehrlinger.github.io/hvtiPlotR/articles/hvtiPlotR.html) — SAS migration guide and constructor reference
+- [vignette("plot-functions")](https://ehrlinger.github.io/hvtiPlotR/articles/plot-functions.html) — worked examples for every `hv_*()` constructor
+- [vignette("plot-decorators")](https://ehrlinger.github.io/hvtiPlotR/articles/plot-decorators.html) — themes, `scale_*`, `labs()`, and `save_ppt()`
+
+**Install / update:**
+
+```r
+remotes::install_github("ehrlinger/hvtiPlotR")
+renv::snapshot()
+```

@@ -155,7 +155,7 @@ ggplot2::theme_set(old)
 \code{\link[=sample_hazard_data]{sample_hazard_data()}}, \code{\link[=sample_hazard_empirical]{sample_hazard_empirical()}},
 \code{\link[=sample_life_table]{sample_life_table()}} for example data.
 
-Other Hazard plot: 
-\code{\link{plot.hv_hazard}()}
+Other Hazard plot:
+\code{\link[=plot.hv_hazard]{plot.hv_hazard()}}
 }
 \concept{Hazard plot}
