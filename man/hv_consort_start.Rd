@@ -7,7 +7,7 @@
 hv_consort_start(data, patient_id, label = "Screened", pass_col = NULL)
 }
 \arguments{
-\item{data}{A data frame — one row per patient.}
+\item{data}{A data frame -- one row per patient.}
 
 \item{patient_id}{<\code{\link[rlang:args_data_masking]{data-masking}}> Unquoted
 name of the unique patient identifier column.}
@@ -19,7 +19,7 @@ Default \code{"Screened"}.}
 \code{ct_snakify(label)} (e.g. \code{"screened"} when \code{label = "Screened"}).}
 }
 \value{
-An \code{hv_consort_tracker} object — a list with:
+An \code{hv_consort_tracker} object -- a list with:
 \describe{
 \item{\verb{$data}}{Patient-level data frame with boolean/character columns appended per stage.}
 \item{\verb{$stages}}{Ordered list of stage descriptors (\code{label}, \code{include_col}, \code{excl_col}, \code{excl_label}).}

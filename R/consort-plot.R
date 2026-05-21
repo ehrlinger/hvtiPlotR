@@ -18,6 +18,10 @@
 ##   print.hv_consort_tracker() -- stage-by-stage summary
 ###############################################################################
 
+# Suppress R CMD check note for bare symbol used in substitute() NSE call
+# inside sample_consort_data().
+utils::globalVariables("patient_id")
+
 # ---------------------------------------------------------------------------
 # Internal helpers
 # ---------------------------------------------------------------------------
@@ -58,7 +62,7 @@ ct_validate_tracker <- function(x, arg = "tracker") {
 #' population.  Build the tracker incrementally with [hv_consort_exclude()],
 #' then convert to a diagram with [hv_consort()].
 #'
-#' @param data       A data frame — one row per patient.
+#' @param data       A data frame -- one row per patient.
 #' @param patient_id <[`data-masking`][rlang::args_data_masking]> Unquoted
 #'   name of the unique patient identifier column.
 #' @param label      Character label for the initial population box.
@@ -66,7 +70,7 @@ ct_validate_tracker <- function(x, arg = "tracker") {
 #' @param pass_col   Column name for the initial boolean column.  Defaults to
 #'   `ct_snakify(label)` (e.g. `"screened"` when `label = "Screened"`).
 #'
-#' @return An `hv_consort_tracker` object — a list with:
+#' @return An `hv_consort_tracker` object -- a list with:
 #' \describe{
 #'   \item{`$data`}{Patient-level data frame with boolean/character columns appended per stage.}
 #'   \item{`$stages`}{Ordered list of stage descriptors (`label`, `include_col`, `excl_col`, `excl_label`).}
@@ -129,7 +133,7 @@ hv_consort_start <- function(data, patient_id, label = "Screened",
 #'   (e.g. `"Eligible"`, `"Analyzed"`).
 #' @param col      Column name to store exclusion reasons (character).
 #'   This column will contain a reason string for excluded patients and `NA`
-#'   for survivors.  Required — no default.
+#'   for survivors.  Required -- no default.
 #' @param excl_label Character label for the side-box showing exclusion
 #'   breakdown.  Default `"Excluded"`.
 #' @param pass_col Column name for the survivor boolean column.  Defaults to
@@ -140,7 +144,7 @@ hv_consort_start <- function(data, patient_id, label = "Screened",
 #'   assigns the reason; subsequent formulas are not evaluated for already-
 #'   excluded patients.
 #'
-#' @return The updated `hv_consort_tracker` (invisibly — pipe-safe).
+#' @return The updated `hv_consort_tracker` (invisibly -- pipe-safe).
 #'
 #' @seealso [hv_consort_start()], [hv_consort()]
 #'
@@ -236,10 +240,10 @@ print.hv_consort_tracker <- function(x, ...) {
   cat(sprintf("  Stages     : %d\n", length(x$stages)))
   for (s in x$stages) {
     n_in <- sum(x$data[[s$include_col]], na.rm = TRUE)
-    cat(sprintf("    [%s] %s — N = %d\n", s$include_col, s$label, n_in))
+    cat(sprintf("    [%s] %s -- N = %d\n", s$include_col, s$label, n_in))
     if (!is.null(s$excl_col)) {
       n_excl <- sum(!is.na(x$data[[s$excl_col]]), na.rm = TRUE)
-      cat(sprintf("      → excl [%s]: %d\n", s$excl_col, n_excl))
+      cat(sprintf("      -> excl [%s]: %d\n", s$excl_col, n_excl))
     }
   }
   invisible(x)
@@ -287,7 +291,7 @@ hv_consort_summary <- function(tracker) {
 #' excluded for a specific reason at a given stage).
 #'
 #' @param tracker An `hv_consort_tracker`.
-#' @param stage   Character — either the `include_col` name (e.g. `"eligible"`)
+#' @param stage   Character -- either the `include_col` name (e.g. `"eligible"`)
 #'   or the stage label (case-insensitive, e.g. `"Eligible"`).
 #' @param reason  Optional character.  If supplied, returns patients excluded
 #'   from *this* stage for the specified reason (the string must exactly match
@@ -346,7 +350,7 @@ hv_consort_patients <- function(tracker, stage, reason = NULL) {
 
 #' Build a CONSORT flow diagram from a tracker
 #'
-#' Reads the stage metadata stored in an [hv_consort_tracker], auto-derives
+#' Reads the stage metadata stored in an `hv_consort_tracker`, auto-derives
 #' the `orders` and `side_box` arguments for `consort::consort_plot()`, and
 #' returns an `hv_consort` object wrapping the grid diagram.
 #'
@@ -361,7 +365,7 @@ hv_consort_patients <- function(tracker, stage, reason = NULL) {
 #'   where `n_stages` is the number of stages in the tracker.
 #' @param ...      Additional arguments forwarded to `consort::consort_plot()`.
 #'
-#' @return An `hv_consort` object — a list with:
+#' @return An `hv_consort` object -- a list with:
 #' \describe{
 #'   \item{`$plot`}{The grid object returned by `consort::consort_plot()`.}
 #'   \item{`$meta`}{Named list: `n_stages`, `width`, `height`, `orders`, `side_box`.}

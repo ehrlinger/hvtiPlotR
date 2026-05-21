@@ -9,7 +9,7 @@ hv_consort_patients(tracker, stage, reason = NULL)
 \arguments{
 \item{tracker}{An \code{hv_consort_tracker}.}
 
-\item{stage}{Character — either the \code{include_col} name (e.g. \code{"eligible"})
+\item{stage}{Character -- either the \code{include_col} name (e.g. \code{"eligible"})
 or the stage label (case-insensitive, e.g. \code{"Eligible"}).}
 
 \item{reason}{Optional character.  If supplied, returns patients excluded

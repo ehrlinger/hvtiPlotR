@@ -31,7 +31,7 @@ where \code{n_stages} is the number of stages in the tracker.}
 \item{...}{Additional arguments forwarded to \code{consort::consort_plot()}.}
 }
 \value{
-An \code{hv_consort} object — a list with:
+An \code{hv_consort} object -- a list with:
 \describe{
 \item{\verb{$plot}}{The grid object returned by \code{consort::consort_plot()}.}
 \item{\verb{$meta}}{Named list: \code{n_stages}, \code{width}, \code{height}, \code{orders}, \code{side_box}.}
@@ -39,7 +39,7 @@ An \code{hv_consort} object — a list with:
 }
 }
 \description{
-Reads the stage metadata stored in an \link{hv_consort_tracker}, auto-derives
+Reads the stage metadata stored in an \code{hv_consort_tracker}, auto-derives
 the \code{orders} and \code{side_box} arguments for \code{consort::consort_plot()}, and
 returns an \code{hv_consort} object wrapping the grid diagram.
 }

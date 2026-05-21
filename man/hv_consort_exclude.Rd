@@ -21,7 +21,7 @@ hv_consort_exclude(
 
 \item{col}{Column name to store exclusion reasons (character).
 This column will contain a reason string for excluded patients and \code{NA}
-for survivors.  Required — no default.}
+for survivors.  Required -- no default.}
 
 \item{...}{Two-sided formulas of the form
 \verb{<condition> ~ "<reason string>"}.  Conditions are evaluated with data
@@ -36,7 +36,7 @@ breakdown.  Default \code{"Excluded"}.}
 \code{ct_snakify(label)} (e.g. \code{"eligible"} when \code{label = "Eligible"}).}
 }
 \value{
-The updated \code{hv_consort_tracker} (invisibly — pipe-safe).
+The updated \code{hv_consort_tracker} (invisibly -- pipe-safe).
 }
 \description{
 Evaluates formula-based exclusion rules against the currently-active patient
