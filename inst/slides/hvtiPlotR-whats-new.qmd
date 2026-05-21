@@ -17,7 +17,7 @@ format:
     background-transition: fade
     code-line-numbers: true   # line numbers in code blocks
     highlight-style: github   # github | monokai | dracula | a11y | etc.
-    footer: "hvtiPlotR v2.2.0"  # persistent footer text
+    footer: "hvtiPlotR v2.3.0"  # persistent footer text
   pptx:
     # To apply your HVI template, uncomment and set the path:
     # reference-doc: graphs/RD.pptx
@@ -145,6 +145,7 @@ plot(km) + theme_hv_ppt_dark()
 | `alluvial_plot()` | `hv_alluvial()` |
 | `upset_plot()` | `hv_upset()` |
 | `eda_plot()` | `hv_eda()` |
+| *(new in v2.3.0)* | `hv_consort()` |
 
 : {tbl-colwidths="[50,50]"}
 
