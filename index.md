@@ -148,6 +148,25 @@ vignette("contributing",     package = "hvtiPlotR")  # guide for adding new plot
 
 The online reference is at <https://ehrlinger.github.io/hvtiPlotR/>.
 
+## Slides
+
+A short PowerPoint presentation covering the v2.x redesign — the
+two-step S3 API, the renamed theme functions, and
+`save_ppt(panel_box =)` — ships with the package as a Quarto source
+file:
+
+``` r
+
+system.file("slides/hvtiPlotR-whats-new.qmd", package = "hvtiPlotR")
+```
+
+Render it to `.pptx` with `quarto render` or
+[`quarto::quarto_render()`](https://quarto-dev.github.io/quarto-r/reference/quarto_render.html).
+The slide content is a condensed version of the detail found in
+[`vignette("plot-decorators")`](https://ehrlinger.github.io/hvtiPlotR/articles/plot-decorators.md)
+and
+[`vignette("hvtiPlotR")`](https://ehrlinger.github.io/hvtiPlotR/articles/hvtiPlotR.md).
+
 ## Migrating from plot.sas
 
 If you are moving existing SAS analyses to R, see the SAS migration

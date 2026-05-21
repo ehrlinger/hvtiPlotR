@@ -7,8 +7,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>Porting HVTI plot templates and methodology documentation to ggplot2 package in R • hvtiPlotR</title>
 <script src="lightswitch.js"></script><script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/Outfit-0.4.10/font.css" rel="stylesheet">
+<link href="deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
+<script src="deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="deps/Outfit-0.4.10/font.css" rel="stylesheet">
 <link href="deps/Fira_Code-0.4.10/font.css" rel="stylesheet">
 <link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
@@ -24,7 +24,7 @@
 
     <a class="navbar-brand me-2" href="index.html">hvtiPlotR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.3.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -349,6 +349,14 @@
 <p>The online reference is at <a href="https://ehrlinger.github.io/hvtiPlotR/" class="uri">https://ehrlinger.github.io/hvtiPlotR/</a>.</p>
 </div>
 <div class="section level2">
+<h2 id="slides">Slides<a class="anchor" aria-label="anchor" href="#slides"></a>
+</h2>
+<p>A short PowerPoint presentation covering the v2.x redesign — the two-step S3 API, the renamed theme functions, and <code>save_ppt(panel_box =)</code> — ships with the package as a Quarto source file:</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"slides/hvtiPlotR-whats-new.qmd"</span>, package <span class="op">=</span> <span class="st">"hvtiPlotR"</span><span class="op">)</span></span></code></pre></div>
+<p>Render it to <code>.pptx</code> with <code>quarto render</code> or <code><a href="https://quarto-dev.github.io/quarto-r/reference/quarto_render.html" class="external-link">quarto::quarto_render()</a></code>. The slide content is a condensed version of the detail found in <code><a href="articles/plot-decorators.html">vignette("plot-decorators")</a></code> and <code><a href="articles/hvtiPlotR.html">vignette("hvtiPlotR")</a></code>.</p>
+</div>
+<div class="section level2">
 <h2 id="migrating-from-plotsas">Migrating from plot.sas<a class="anchor" aria-label="anchor" href="#migrating-from-plotsas"></a>
 </h2>
 <p>If you are moving existing SAS analyses to R, see the SAS migration vignette (<code><a href="articles/hvtiPlotR.html">vignette("hvtiPlotR")</a></code>). It maps each <code>plot.sas</code> macro call to the equivalent R recipe and shows side-by-side code comparisons.</p>
@@ -365,7 +373,7 @@
 <strong>Track B</strong> — package infrastructure (for R developers working on dependencies, CI, testing, and CRAN compliance)</li>
 </ul>
 <p>Quick-start:</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/install_deps.html" class="external-link">install_deps</a></span><span class="op">(</span>dependencies <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/load_all.html" class="external-link">load_all</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/check.html" class="external-link">check</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>

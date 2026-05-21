@@ -22,6 +22,11 @@
 <url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/hazard_plot.html</loc></url>
 <url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/hv_alluvial.html</loc></url>
 <url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/hv_balance.html</loc></url>
+<url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/hv_consort.html</loc></url>
+<url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/hv_consort_exclude.html</loc></url>
+<url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/hv_consort_patients.html</loc></url>
+<url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/hv_consort_start.html</loc></url>
+<url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/hv_consort_summary.html</loc></url>
 <url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/hv_eda.html</loc></url>
 <url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/hv_followup.html</loc></url>
 <url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/hv_ggsave_dims.html</loc></url>
@@ -59,6 +64,7 @@
 <url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/parametric.html</loc></url>
 <url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/plot.hv_alluvial.html</loc></url>
 <url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/plot.hv_balance.html</loc></url>
+<url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/plot.hv_consort.html</loc></url>
 <url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/plot.hv_data.html</loc></url>
 <url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/plot.hv_eda.html</loc></url>
 <url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/plot.hv_followup.html</loc></url>
@@ -77,6 +83,8 @@
 <url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/plot.hv_upset.html</loc></url>
 <url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/print.hv_alluvial.html</loc></url>
 <url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/print.hv_balance.html</loc></url>
+<url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/print.hv_consort.html</loc></url>
+<url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/print.hv_consort_tracker.html</loc></url>
 <url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/print.hv_data.html</loc></url>
 <url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/print.hv_eda.html</loc></url>
 <url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/print.hv_followup.html</loc></url>
@@ -96,6 +104,7 @@
 <url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/reexports.html</loc></url>
 <url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/sample_alluvial_data.html</loc></url>
 <url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/sample_cluster_sankey_data.html</loc></url>
+<url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/sample_consort_data.html</loc></url>
 <url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/sample_covariate_balance_data.html</loc></url>
 <url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/sample_eda_data.html</loc></url>
 <url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/sample_goodness_followup_data.html</loc></url>

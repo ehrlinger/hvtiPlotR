@@ -34,7 +34,9 @@ save_ppt(
 - object:
 
   A single ggplot object **or** a named/unnamed list of ggplot objects.
-  Each element produces one slide.
+  Each element produces one slide. May also be an `hv_consort` object
+  produced by
+  [`hv_consort()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_consort.md).
 
 - template:
 
@@ -64,12 +66,18 @@ save_ppt(
 - width:
 
   Plot width in inches within the slide. Default `10.1`. Ignored when
-  `panel_box` is supplied.
+  `panel_box` is supplied. Ignored for `hv_consort` objects, whose
+  dimensions are taken from the object's metadata (set at
+  [`hv_consort()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_consort.md)
+  time).
 
 - height:
 
   Plot height in inches within the slide. Default `5.8`. Ignored when
-  `panel_box` is supplied.
+  `panel_box` is supplied. Ignored for `hv_consort` objects, whose
+  dimensions are taken from the object's metadata (set at
+  [`hv_consort()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_consort.md)
+  time).
 
 - left:
 
@@ -90,7 +98,8 @@ save_ppt(
   so the panel lands at the same slide coordinates on every slide
   regardless of axis-label width. When `NULL` (default), the fixed
   `width`/`height`/`left`/`top` arguments are used for every slide
-  (legacy behavior).
+  (legacy behavior). Ignored for `hv_consort` objects, which are always
+  placed using their own metadata dimensions.
 
 ## Value
 

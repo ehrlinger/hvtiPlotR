@@ -232,6 +232,31 @@ assignments across K values.
 - [`sample_cluster_sankey_data()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_cluster_sankey_data.md)
   : Sample Cluster Stability Sankey Data
 
+## CONSORT Patient Flow
+
+Build auditable CONSORT patient-flow diagrams. Start a tracker, add
+formula-based exclusion stages, audit who was excluded and why, then
+render the diagram via the `consort` package.
+
+- [`hv_consort_start()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_consort_start.md)
+  : Initialise a CONSORT patient-flow tracker
+- [`hv_consort_exclude()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_consort_exclude.md)
+  : Add an exclusion stage to a CONSORT tracker
+- [`hv_consort_summary()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_consort_summary.md)
+  : Stage-level CONSORT summary table
+- [`hv_consort_patients()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_consort_patients.md)
+  : Retrieve patient IDs at a CONSORT stage
+- [`hv_consort()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_consort.md)
+  : Build a CONSORT flow diagram from a tracker
+- [`plot(`*`<hv_consort>`*`)`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hv_consort.md)
+  : Render a CONSORT flow diagram
+- [`print(`*`<hv_consort>`*`)`](https://ehrlinger.github.io/hvtiPlotR/reference/print.hv_consort.md)
+  : Print an hv_consort object
+- [`print(`*`<hv_consort_tracker>`*`)`](https://ehrlinger.github.io/hvtiPlotR/reference/print.hv_consort_tracker.md)
+  : Print an hv_consort_tracker object
+- [`sample_consort_data()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_consort_data.md)
+  : Generate a sample CONSORT tracker for demos and testing
+
 ## Exploratory Data Analysis
 
 Rapid bar charts and scatter plots for variable screening, univariate

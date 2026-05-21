@@ -1,5 +1,47 @@
 # Changelog
 
+## hvtiPlotR 2.3.0
+
+### CONSORT patient flow tracking and diagram
+
+New two-class API for building auditable CONSORT flow diagrams from
+patient-level data.
+
+**Tracker lifecycle:**
+
+- `hv_consort_start(data, patient_id, label, pass_col)` — initialises a
+  tracker with one row per patient and a boolean column marking all
+  patients as screened.
+- `hv_consort_exclude(tracker, label, col, ..., excl_label, pass_col)` —
+  adds an exclusion stage via formula rules
+  (`condition ~ "Reason string"`). First-matching formula wins; gating
+  on the prior stage is automatic. Pipe-friendly.
+- `hv_consort_summary(tracker)` — returns a data frame with N included
+  and N excluded per stage; suitable for methods-section tables.
+- `hv_consort_patients(tracker, stage, reason)` — returns patient IDs at
+  any stage, or the subset excluded for a specific reason, for full
+  auditability.
+
+**Diagram:**
+
+- `hv_consort(tracker, side_box, cex, width, height)` — auto-derives
+  `orders` and `side_box` from tracker metadata and calls
+  [`consort::consort_plot()`](https://rdrr.io/pkg/consort/man/consort_plot.html).
+  `side_box = "all"` (default) includes every exclusion column; pass a
+  character vector to select specific columns.
+- `plot.hv_consort(x)` — renders the diagram via the `consort` plot
+  method.
+- [`save_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/save_ppt.md)
+  now accepts `hv_consort` objects, producing an editable DrawingML
+  vector object in the output `.pptx`.
+
+**Sample data:**
+
+- `sample_consort_data(n, seed)` — reproducible three-stage cardiac
+  surgery tracker for demos and testing.
+
+**Dependency:** `consort (>= 0.2.0)` added to `Imports`.
+
 ## hvtiPlotR 2.2.0
 
 ### New S3 methods for `hv_data` objects ([\#64](https://github.com/ehrlinger/hvtiPlotR/issues/64))
