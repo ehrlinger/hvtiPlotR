@@ -1100,7 +1100,7 @@ plot(lc) +
 
 `hv_mirror_hist()` replaces both scripts. Call `plot(mh)` to render.
 Diagnostics are in `mh$tables$diagnostics`, working data in
-`mh$tables$working`; layer scales and annotations the usual way.
+`mh$tables$working`; layer scales, annotations, and a theme the usual way.
 
 ## Binary-match mode (`tp.lp.mirror-histogram_SAVR-TF-TAVR.R`) {#dp-mirror-binary}
 
