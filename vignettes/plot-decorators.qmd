@@ -198,7 +198,7 @@ p_base +
 
 ## labs()
 
-`labs()` sets axis labels, legend title, subtitle, and caption text. We set
+`labs()` sets axis labels, the plot title, legend title, subtitle, and caption text. We set
 these outside the constructor so you can override them per project without
 touching the function itself.
 
@@ -221,7 +221,7 @@ plot(km) +
 
 ## annotate()
 
-`annotate()` places text, segments, or arrows at fixed data coordinates —
+`annotate()` places text, segments, rectangles, or arrows at fixed data coordinates —
 useful for a sample-size callout in the corner or a label pointing to an
 event of interest.
 
