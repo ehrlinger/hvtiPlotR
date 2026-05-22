@@ -47,7 +47,7 @@ up in the table below and jump to the corresponding section for a working R
 example.
 
 The guide is organized by template family (the two-letter prefix after `tp.`).
-New ports are added to this document as they become available.
+We add new ports as they become available.
 
 ## Key concepts for SAS users
 
@@ -422,7 +422,7 @@ plot(hv_nonparametric(
 **Port:** `tp.np.tr.ivecho.average_curv.ordinal.sas`
 
 Ordinal templates (TR grade, AR grade) use `hv_ordinal()`.
-The critical migration step is reshaping the SAS wide-format `predict`
+The main migration step is reshaping the SAS wide-format `predict`
 dataset (one column per grade) to long format.
 
 **SAS reshape (do this before reading into R):**
@@ -597,7 +597,7 @@ plot(hv_ordinal(dat_ph, grade_col = "grade")) +
 `hv_survival()` wraps `survfit()` from the **survival** package and returns
 an S3 object. Call `plot(km, type = ...)` to render one of the five plot types
 matching the SAS `%kaplan` / `%nelsont` macro output flags (`PLOTS`, `PLOTC`,
-`PLOTH`, `PLOTL`). Tidy data frames are accessible via `km$tables`.
+`PLOTH`, `PLOTL`). Tidy data frames live in `km$tables`.
 
 ```r
 dta <- sample_survival_data(n = 500, seed = 42)
@@ -683,9 +683,9 @@ plot(gf) +
 **R equivalent:** `hv_balance()`
 
 The SAS export arrives wide (one column per time-point). Reshape to long format
-before calling `hv_balance()`. Pass `var_levels` to control the
-bottom-to-top display order of covariates (matches `ylabel` in the original
-script).
+before you call `hv_balance()`. Pass `var_levels` to control the
+bottom-to-top display order of covariates — this matches `ylabel` in the
+original script.
 
 ```r
 # Reshape wide → long (mirrors the original script)
@@ -1098,10 +1098,9 @@ plot(lc) +
 **R equivalents:** `tp.lp.mirror-histogram_SAVR-TF-TAVR.R` (binary-match),
 `tp.lp.mirror_histo_before_after_wt.R` (weighted IPTW)
 
-Both scripts are superseded by `hv_mirror_hist()`. Call `plot(mh)` to render the
-histogram. Diagnostics are accessible via `mh$tables$diagnostics`; working
-data via `mh$tables$working`. Compose scales, annotations, and theme with the
-usual `+` operator.
+`hv_mirror_hist()` replaces both scripts. Call `plot(mh)` to render.
+Diagnostics are in `mh$tables$diagnostics`, working data in
+`mh$tables$working`; layer scales and annotations the usual way.
 
 ## Binary-match mode (`tp.lp.mirror-histogram_SAVR-TF-TAVR.R`) {#dp-mirror-binary}
 
@@ -1346,8 +1345,8 @@ hazard_plot(
 `tp.hs.dead.conditional.setup.sas` computes individual survivorship curves
 starting from the time of hospital discharge rather than the operation date.
 The conditional survival `S(t | discharge)` is `S(t) / S(t_discharge)` for
-each patient. In R, the same `hazard_plot()` call is used; only the x-axis
-label and data preparation differ.
+each patient. In R, you use the same `hazard_plot()` call — only the x-axis
+label and data preparation change.
 
 ```r
 dat_cond <- sample_hazard_data(n = 500, time_max = 10)
@@ -1428,9 +1427,8 @@ hazard_plot(
 
 `tp.hs.dead.compare_benefit.setup.sas` computes, for each patient, the
 difference in predicted survival at a fixed time point (5 years) under two
-treatment arms (e.g. ASA vs. no ASA). The distribution of these individual
-differences shows who benefits and by how much. Use `survival_difference_plot()`
-to plot the mean curve over time.
+treatment arms (e.g. ASA vs. no ASA). That per-patient distribution is the answer to "who benefits and by how much."
+`survival_difference_plot()` plots the mean difference curve over time.
 
 ```r
 diff_dat <- sample_survival_difference_data(
