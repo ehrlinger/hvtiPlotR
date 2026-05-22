@@ -763,15 +763,16 @@ and `tp.dp.EDA_barplots_scatterplots_varnames.R`, replacing base-R graphics
 with composable `ggplot2` objects.
 
 Three helpers support the workflow: `eda_classify_var()` detects whether a
-column is continuous, numeric-categorical, or character-categorical (matching
-the `UniqueLimit` logic from the template); `eda_select_vars()` subsets and
+column is continuous (`"Cont"`), numeric-categorical (`"Cat_Num"`), or
+character-categorical (`"Cat_Char"`) (matching the `UniqueLimit` logic from the
+template); `eda_select_vars()` subsets and
 reorders columns by name or space-separated string, replacing the
 `Order_Variables()` / `Mod_Data <- dta[, Order_Var]` pattern from the varnames
 template; and `sample_eda_data()` generates a reproducible mixed-type dataset
 for demonstration.
 
 `plot()` on an `hv_eda` object returns a bare `ggplot`. Add colour scales,
-axis labels, annotations, and a theme the usual way.
+axis labels, annotations, and `theme_hv_manuscript()`.
 
 ## Sample data
 
@@ -1603,7 +1604,7 @@ ggsave("../graphs/hazard_survival.pdf", p_hp, width = 11.5, height = 8)
 
 The constructor accepts patient-level data and computes annual summaries
 (mean or median) internally. `plot()` returns a bare ggplot; add scales,
-labels, annotations, and a theme the usual way.
+labels, annotations, and `theme_hv_manuscript()`.
 
 ## Sample data
 
@@ -1905,7 +1906,7 @@ ggsave(here::here("graphs", "rp.trends.pdf"), p_tr, width = 11.5, height = 8)
 `hv_spaghetti()` ports the pattern from `tp.dp.spaghetti.echo.R`: one
 trajectory line per subject over time, with optional stratification by a
 grouping variable. `plot()` accepts `add_smooth = TRUE` for an optional
-LOESS overlay and returns a bare ggplot. The original template covers nine
+LOESS overlay and returns a bare ggplot you can dress with `theme_hv_manuscript()`. The original template covers nine
 figures — unstratified and sex-stratified variants of three echo outcomes
 (AV mean gradient, AV area, DVI) plus an ordinal MV regurgitation grade
 plot.
@@ -2086,7 +2087,7 @@ nonparametric temporal trend model — the R equivalent of the SAS
 
 Pass the SAS `mean_curv` and `boots_ci` datasets (read in with
 `read.csv()`) and call `plot()` for a bare ggplot you can dress with
-colour, labels, and a theme the usual way.
+colour, labels, and `theme_hv_manuscript()`.
 
 ## Sample data
 
