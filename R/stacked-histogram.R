@@ -176,11 +176,11 @@ plot.hv_stacked <- function(x, ...) {
 #' Creates a minimal data frame suitable for demonstrating or testing
 #' \code{\link{hv_stacked}}.
 #'
-#' @param n_years      Integer. Number of consecutive years to simulate starting
+#' @param n_years      Integer; number of consecutive years to simulate starting
 #'   from \code{start_year}. Defaults to `20`.
-#' @param start_year   Integer. First calendar year in the sequence. Defaults to
+#' @param start_year   Integer; first calendar year in the sequence. Defaults to
 #'   `2000`.
-#' @param n_categories Integer. Number of distinct groups. Defaults to `3`.
+#' @param n_categories Integer; number of distinct groups. Defaults to `3`.
 #' @param seed         Integer passed to \code{\link[base]{set.seed}} for
 #'   reproducibility. Defaults to `42`.
 #'

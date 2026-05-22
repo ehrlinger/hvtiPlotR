@@ -210,7 +210,7 @@ print.hv_alluvial <- function(x, ...) {
 #' @param flow_width    Width of the alluvium flows. Default \code{1/6}.
 #' @param alpha         Transparency of the flows, \eqn{[0,1]}. Default \code{0.8}.
 #' @param knot_pos      Curvature of the flow ribbons, \eqn{[0,1]}. Default \code{0.4}.
-#' @param show_labels   Logical; whether to label each stratum. Default \code{TRUE}.
+#' @param show_labels   Logical; if TRUE, each stratum is labelled. Default \code{TRUE}.
 #' @param ...           Ignored; present for S3 consistency.
 #'
 #' @return A bare \code{\link[ggplot2]{ggplot}} object.

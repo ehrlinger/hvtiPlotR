@@ -14,12 +14,12 @@ sample_covariate_balance_data(
 )
 }
 \arguments{
-\item{n_vars}{Integer. Number of covariates to generate. Default \code{12}.}
+\item{n_vars}{Integer; number of covariates to generate. Default \code{12}.}
 
-\item{n}{Integer. Total number of simulated patients before matching.
+\item{n}{Integer; total number of simulated patients before matching.
 Default \code{600} (roughly 300 per group at \code{separation = 1.5}).}
 
-\item{separation}{Numeric. Distance between the two group means on the
+\item{separation}{Numeric; distance between the two group means on the
 log-odds scale.  Larger values push propensity score distributions
 further apart, increasing the proportion of unmatched extreme-score
 patients and residual imbalance after matching.  Default \code{1.5}.}

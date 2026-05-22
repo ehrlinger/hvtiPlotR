@@ -566,7 +566,7 @@ plot.hv_mirror_hist <- function(x, alpha = 0.8, ...) {
 #' reproduces the "many unmatched at the tails" pattern seen in real studies.
 #'
 #' @param n Number of observations **per group** (default 500).
-#' @param separation Numeric. Distance between the two group means on the
+#' @param separation Numeric; distance between the two group means on the
 #'   log-odds scale.  Larger values push the score distributions further apart
 #'   and increase the proportion of unmatched patients at the extremes
 #'   (default 1.5).

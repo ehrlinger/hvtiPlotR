@@ -12,13 +12,13 @@ sample_stacked_histogram_data(
 )
 }
 \arguments{
-\item{n_years}{Integer. Number of consecutive years to simulate starting
+\item{n_years}{Integer; number of consecutive years to simulate starting
 from \code{start_year}. Defaults to \code{20}.}
 
-\item{start_year}{Integer. First calendar year in the sequence. Defaults to
+\item{start_year}{Integer; first calendar year in the sequence. Defaults to
 \code{2000}.}
 
-\item{n_categories}{Integer. Number of distinct groups. Defaults to \code{3}.}
+\item{n_categories}{Integer; number of distinct groups. Defaults to \code{3}.}
 
 \item{seed}{Integer passed to \code{\link[base]{set.seed}} for
 reproducibility. Defaults to \code{42}.}

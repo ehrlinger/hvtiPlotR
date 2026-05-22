@@ -57,7 +57,7 @@ Default \code{1990}.}
 \item{close_date}{Data close date.  Must be \eqn{\geq}
 \code{study_end}.  Default \code{as.Date("2021-08-06")}.}
 
-\item{tolower_names}{Logical; whether to lower-case column names when
+\item{tolower_names}{Logical; if TRUE, column names are lower-cased when
 materialising the data.  Default \code{TRUE}.}
 
 \item{death_levels}{Length-2 character vector labelling the two death

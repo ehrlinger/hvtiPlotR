@@ -26,12 +26,10 @@
 #' ggsave("figures/fig1.pdf", p, width = 11, height = 8.5)
 #' ```
 #'
-#' @param text     Text to display. Defaults to the current working directory,
-#'   which conveniently identifies the project. For the typical use case pass
-#'   the script filename: `make_footnote("R/analysis.R")`.
-#' @param timestamp Logical; append `Sys.time()` to `text`? Default `TRUE`.
-#'   Set to `FALSE` for reproducible screenshots or when the file path already
-#'   contains enough context.
+#' @param text     Text to display. Defaults to the current working directory;
+#'   for most uses pass the script filename instead: `make_footnote("R/analysis.R")`.
+#' @param timestamp Logical; if TRUE, `Sys.time()` is appended to `text`. Default `TRUE`.
+#'   Set to `FALSE` for reproducible output.
 #' @param prefix   String prepended to `text` before the timestamp. Default
 #'   `"DRAFT \u2014 "`. Set to `""` to suppress the prefix.
 #' @param size     Font size as a multiplier relative to the device default

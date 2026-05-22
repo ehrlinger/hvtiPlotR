@@ -214,7 +214,7 @@ print.hv_upset <- function(x, ...) {
 #'   `"steelblue"`.
 #' @param width_ratio         Fraction of horizontal space given to the
 #'   set-size sidebar (only used when `set_size = TRUE`). Default `0.3`.
-#' @param ...                 Currently unused; reserved for future args.
+#' @param ...                 Ignored; present for S3 consistency.
 #'
 #' @return A `ggplot` when `set_size = FALSE` (themes apply with `+`); a
 #'   `patchwork` composite when `set_size = TRUE` (default; themes apply
