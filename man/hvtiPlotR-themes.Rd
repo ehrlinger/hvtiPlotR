@@ -131,22 +131,23 @@ four publication contexts:
 
 Each theme follows the \code{theme_bw()} contract: pass \code{base_size} /
 \code{base_family} to control global typography, then chain a \code{+ theme(...)}
-call to override anything else. Additionally, any extra named argument is
-forwarded straight into a final \code{\link[ggplot2:theme]{ggplot2::theme()}} call so callers can
-tweak elements inline:
+call to override anything else. Any extra named argument goes straight
+into a final \code{\link[ggplot2:theme]{ggplot2::theme()}} call; tweak elements at the call site
+without a separate \code{+} chain:
 
 \if{html}{\out{<div class="sourceCode">}}\preformatted{theme_hv_manuscript(legend.position = "right")
 theme_hv_ppt_dark(axis.text.y = element_text(family = "mono"))
 }\if{html}{\out{</div>}}
 
-Caller-supplied elements override the hvtiPlotR defaults.
+Your elements override the hvtiPlotR defaults.
 
 \code{theme_hv_ppt_dark()} is the default PPT theme: a black panel with white
 text suited to dark slide backgrounds. Use \code{\link[=theme_hv_ppt_light]{theme_hv_ppt_light()}} when the
-slide template is light. Both PPT themes hide the legend by default --
+slide template is light. Both PPT themes hide the legend by default;
 override with \code{legend.position = "right"} (or chain \code{+ theme(...)}).
 
 Margins on axis text/title are scaled from \code{base_size} via the standard
-\code{half_line = base_size / 2} convention, so spacing stays proportional when
-\code{base_size} changes.
+\code{half_line = base_size / 2} convention; a deck at \code{base_size = 28} and
+one at \code{base_size = 36} both feel proportionate without you touching
+the margins.
 }

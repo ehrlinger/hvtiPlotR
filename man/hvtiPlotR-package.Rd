@@ -8,9 +8,9 @@
 \code{hvtiPlotR} is an R port of the \code{plot.sas} macro suite used by the
 Cardiovascular Outcomes, Registries and Research (CORR) statistics
 group within the Heart, Vascular and Thoracic Institute at the
-Cleveland Clinic. It produces publication-quality graphics that
-conform to HVTI manuscript, poster, and presentation standards using
-\code{ggplot2} and the \code{officer} package.
+Cleveland Clinic. We use it to produce graphics that meet HVTI
+manuscript, poster, and presentation standards, built on \code{ggplot2}
+and the \code{officer} package.
 }
 \details{
 \subsection{Two-step workflow}{
@@ -23,8 +23,9 @@ under \verb{$tables}.
 \item Call \code{plot()} on the object to obtain a bare \code{ggplot2::ggplot}
 you can decorate with scales, labels, annotations, and themes
 without restriction.
-\item Call \code{print()} on the object for a concise console summary.
 }
+
+Calling \code{print()} on the object gives a concise console summary.
 
 \if{html}{\out{<div class="sourceCode">}}\preformatted{library(ggplot2)
 library(hvtiPlotR)
@@ -233,9 +234,6 @@ risk tables, group counts, etc.).
 }
 
 \subsection{Sample-data generators}{
-
-Each generator produces realistic synthetic data sized and structured
-to match the corresponding SAS dataset exports.
 \itemize{
 \item \code{\link[=sample_mirror_histogram_data]{sample_mirror_histogram_data()}}: Propensity scores via a logistic
 model with greedy 1:1 caliper matching and optional IPTW weights.
@@ -285,8 +283,8 @@ intersection analysis.
 \subsection{Scope and versioning}{
 
 \code{hvtiPlotR} targets \strong{internal HVTI / CORR use only} — it will not
-be submitted to CRAN. GitHub-only dependencies are first-class
-(\verb{Remotes:} in DESCRIPTION). Install via:
+be submitted to CRAN. GitHub-only dependencies are declared in
+\verb{Remotes:} in DESCRIPTION and install cleanly. Install via:
 
 \if{html}{\out{<div class="sourceCode">}}\preformatted{remotes::install_github("ehrlinger/hvtiPlotR")
 }\if{html}{\out{</div>}}

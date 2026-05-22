@@ -7,9 +7,9 @@
 #' `hvtiPlotR` is an R port of the `plot.sas` macro suite used by the
 #' Cardiovascular Outcomes, Registries and Research (CORR) statistics
 #' group within the Heart, Vascular and Thoracic Institute at the
-#' Cleveland Clinic. It produces publication-quality graphics that
-#' conform to HVTI manuscript, poster, and presentation standards using
-#' `ggplot2` and the `officer` package.
+#' Cleveland Clinic. We use it to produce graphics that meet HVTI
+#' manuscript, poster, and presentation standards, built on `ggplot2`
+#' and the `officer` package.
 #'
 #' @details
 #' ## Two-step workflow
@@ -22,7 +22,8 @@
 #' 2. Call `plot()` on the object to obtain a bare `ggplot2::ggplot`
 #'    you can decorate with scales, labels, annotations, and themes
 #'    without restriction.
-#' 3. Call `print()` on the object for a concise console summary.
+#'
+#' Calling `print()` on the object gives a concise console summary.
 #'
 #' ```
 #' library(ggplot2)
@@ -207,9 +208,6 @@
 #'
 #' ## Sample-data generators
 #'
-#' Each generator produces realistic synthetic data sized and structured
-#' to match the corresponding SAS dataset exports.
-#'
 #' * [sample_mirror_histogram_data()]: Propensity scores via a logistic
 #'   model with greedy 1:1 caliper matching and optional IPTW weights.
 #' * [sample_covariate_balance_data()]: Standardised mean differences
@@ -256,8 +254,8 @@
 #' ## Scope and versioning
 #'
 #' `hvtiPlotR` targets **internal HVTI / CORR use only** — it will not
-#' be submitted to CRAN. GitHub-only dependencies are first-class
-#' (`Remotes:` in DESCRIPTION). Install via:
+#' be submitted to CRAN. GitHub-only dependencies are declared in
+#' `Remotes:` in DESCRIPTION and install cleanly. Install via:
 #'
 #' ```
 #' remotes::install_github("ehrlinger/hvtiPlotR")

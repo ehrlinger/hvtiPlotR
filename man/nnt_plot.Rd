@@ -43,9 +43,9 @@ A \code{\link[ggplot2:ggplot]{ggplot2::ggplot()}} object.
 \code{nnt_plot()} has been superseded by the S3 constructor \code{\link[=hv_nnt]{hv_nnt()}} plus
 \code{\link[=plot.hv_nnt]{plot.hv_nnt()}}.
 
-Plots the number needed to treat (NNT) and/or absolute risk reduction (ARR)
-over time, with optional confidence bands. Covers the NNT component of
-\code{tp.hp.numtreat.survdiff.matched.sas}.
+Pass the \code{nntout} dataset and plot NNT (or ARR) over time. Add
+\code{lower_col}/\code{upper_col} for a confidence band. Covers the NNT component
+of \code{tp.hp.numtreat.survdiff.matched.sas}.
 
 \strong{SAS context:} The SAS template computes NNT at discrete time points
 (1, 5, 10, 15, 20 years) from the HAZDIFL macro output, then connects them
