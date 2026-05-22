@@ -17,13 +17,13 @@ vignette: >
 
 # Abstract
 
-We introduce the R package **hvtiPlotR**, tools for creating publication quality graphics in R for the Heart & Vascular Institute Cardiovascular Outcomes Registries and Research (CORR) statistics group at the Cleveland Clinic. The **hvtiPlotR** package contains a tutorial for generating figures (this vignette) and small set of functions for formatting and saving those figures. These tools describe how to generate figures in R to replace the `plot.sas` macro we currently use in SAS.
+We introduce the R package **hvtiPlotR**, tools for creating publication quality graphics in R for the Heart & Vascular Institute Cardiovascular Outcomes Registries and Research (CORR) statistics group at the Cleveland Clinic. The **hvtiPlotR** package contains a tutorial for generating figures (this vignette) and small set of functions for formatting and saving those figures. We use these tools to generate figures in R as a replacement for the `plot.sas` macro.
 
 This package vignette is a tutorial for generating our standard figures using the `ggplot2` package commands in R. The tutorial presents a series of R recipes for generating figures. The **hvtiPlotR** package includes a set of themes designed to format those figures for inclusion in manuscript and PowerPoint targets.
 
 This document is included with the **hvtiPlotR** package as a package vignette. The vignette is installed into R when the **hvtiPlotR** package is installed, and viewable using the command: `vignette("hvtiPlotR", package="hvtiPlotR")`.
 
-The goal of the vignette is as a tutorial to document the best practices of creating our publication quality graphics for both manuscripts and power point presentations. It is our intent to update this vignette as our standards and the **hvtiPlotR** package are modified.
+This vignette documents our best practices for publication graphics — manuscripts and PowerPoint slides both. We will update it as our standards and the **hvtiPlotR** package evolve.
 
 Keywords: *publication graphics, powerpoint, ggplot2, plot.sas*.
 
@@ -49,9 +49,9 @@ We invite comments, feature requests and bug reports for this package at https:/
 
 For many years, the mainstay for generating graphics for manuscripts and presentations in the statistics group in The Heart & Vascular Institute has been the `plot.sas` macro using SAS. However, we have had issues migrating this macro to newer versions of SAS (\> 8.0) and Microsoft Oﬃce products (\> 2003).
 
-In an eﬀort to alleviate these version issues, and to standardize the generation of figures within R, we have developed the **hvtiPlotR** R package. The goal of the package, and this vignette, is simplify the creation of publication quality graphics in R. We are specifically encoding the best practices of the HVTI Clinical Outcomes Research and Registries (CORR) formatting, so that our statisticians will be able to create graphics for publications and presentations with a minimal amount of eﬀort.
+In an eﬀort to alleviate these version issues, and to standardize the generation of figures within R, we have developed the **hvtiPlotR** R package. The goal of the package, and this vignette, is simplify the creation of publication quality graphics in R. We are specifically encoding the best practices of the HVTI Clinical Outcomes Research and Registries (CORR) formatting, so that our statisticians can generate publication-ready graphics without fighting the tooling.
 
-The **hvtiPlotR** package implements best practices for R graphics by leveraging the `ggplot2` package (Wickham 2009). The `ggplot2` package is an implementation of the Grammar of Graphics (Wilkinson 2005), which is a formalization of graphical concepts, and the building of graphical objects from a sequence of independent components. These components can be combined in many diﬀerent ways.
+The **hvtiPlotR** package builds on `ggplot2` (Wickham 2009) to implement best practices for R graphics. The `ggplot2` package is an implementation of the Grammar of Graphics (Wilkinson 2005), which is a formalization of graphical concepts, and the building of graphical objects from a sequence of independent components. These components can be combined in many diﬀerent ways.
 
 The `plot.sas` macro is also an implementation of a graphics grammar. The grammar `plot.sas` is derived from the ZETA pen plotters, which used GML (Graphics Machine Language) to control between 4 and and 8 colored pens for generating color line and point figures.
 
@@ -213,7 +213,7 @@ shapes to named factor levels rather than setting `shape =` directly.
 
 # Generating ggplot2 graphics
 
-In order to create figures similar to using `plot.sas` macro, using R, we will make extensive use of the ggplot2 package. This will require translating from the graphics language of plot.sas to the graphics language of ggplot2.
+To create figures comparable to `plot.sas` output, we rely heavily on `ggplot2`. This requires translating from the graphics language of `plot.sas` to the graphics language of `ggplot2`.
 
 For the remainder of this document, R code will be highlighted in grey boxes, as shown below. We will refer to these blocks as code chunks. You can run each code chunk individually, using copy/paste into an interactive R session, or within a stand alone R script. This tutorial requires the **hvtiPlotR** package to load the data and themes we will be discussing.
 
@@ -403,7 +403,7 @@ ccf_plot <- ccf_plot +
 show(ccf_plot)
 ```
 
-The `aes()` mechanism is a powerful way to communicate data level assignment to `geom_` functions. If you want to stratify a dataset by a variable, you can specify that within the `aes()` function call using the `by=` argument. For points, we often want the stratifying to be either a diﬀerent `color=` or `shape=` for stratified data. We can then use the `scale_color_` functions (See Section 3.10) or the `scale_shape_` functions (See Section 3.9) to control how these are assigned to the stratifying variable.
+The `aes()` mechanism is how you communicate data-level assignment to `geom_` functions. If you want to stratify a dataset by a variable, you can specify that within the `aes()` function call using the `by=` argument. For points, we often want the stratifying to be either a diﬀerent `color=` or `shape=` for stratified data. We can then use the `scale_color_` functions (See Section 3.10) or the `scale_shape_` functions (See Section 3.9) to control how these are assigned to the stratifying variable.
 
 Once we have added data to the `ggplot` object, we can display the figure as shown in Figure 4. Until now the figure has been manipulated by sequentially adding function calls to the `ccf_plot object`. To display the figure you can either use the `show()` function, or simply call the object name at the command line.
 
@@ -520,7 +520,7 @@ The shape argument takes numeric arguments. Though not user friendly, this metho
 ## Colors 
 You can specify colors in R by numeric index, name (as we have done), hexadecimal, or RGB specification. For example `col=1` and `col="white"` are equivalent. The chart in Figure 9 was produced with code developed by Glynn (2005). See his R Color Chart website for all the details you would ever need about using colors in R.
 
-Color theory encompasses a multitude of definitions, concepts and design applications - enough to fill several encyclopedias. However, there are three basic categories of color theory that are logical and useful : The color wheel, color harmony, and the context of how colors are used. ColorBrewer (Harrower and Brewer 2003) is an online tool (http://colorbrewer2.org/) designed to help people select good color schemes for maps and other graphics. We encourage the use of ColorBrewer as a good, safe introduction to selecting colors based on theoretically good practices.
+ColorBrewer (Harrower and Brewer 2003) is an online tool (http://colorbrewer2.org/) designed to help people select good color schemes for maps and other graphics. We recommend it as a practical starting point for choosing colors grounded in sound design principles.
 
 
 Figure 8: ggplot2 shape table
@@ -708,12 +708,9 @@ them; the rest are conventions to keep in mind when composing figures.
 
 ## What not to include
 
-- No decorative 3-D effects, drop shadows, or gradients.
-- No background images or watermarks.
-- No more than six groups per panel — split into separate figures if needed.
-- No axis tick marks on the top or right-hand sides.
-- No connecting lines between non-adjacent data points unless the relationship
-  is continuous (e.g., a survival curve).
+- No decorative 3-D effects, drop shadows, gradients, background images, or watermarks — they distract from the data.
+- No axis tick marks on the top or right sides. No more than six groups per panel; split into separate figures if you need more.
+- No connecting lines between non-adjacent data points unless the relationship is genuinely continuous (e.g., a survival curve).
 
 
 # Conclusions 
