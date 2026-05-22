@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="John Ehrlinger ehrlinj@ccf.org">
-<meta name="dcterms.date" content="2026-04-20">
+<meta name="dcterms.date" content="2026-05-22">
 
 <title>The hvtiPlotR package: Generating plot.sas style in R</title>
 <style>
@@ -159,7 +159,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">April 20, 2026</p>
+      <p class="date">May 22, 2026</p>
     </div>
   </div>
   
@@ -173,10 +173,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="abstract" class="level1">
 <h1>Abstract</h1>
-<p>We introduce the R package <strong>hvtiPlotR</strong>, tools for creating publication quality graphics in R for the Heart &amp; Vascular Institute Cardiovascular Outcomes Registries and Research (CORR) statistics group at the Cleveland Clinic. The <strong>hvtiPlotR</strong> package contains a tutorial for generating figures (this vignette) and small set of functions for formatting and saving those figures. These tools describe how to generate figures in R to replace the <code>plot.sas</code> macro we currently use in SAS.</p>
+<p>We introduce the R package <strong>hvtiPlotR</strong>, tools for creating publication quality graphics in R for the Heart &amp; Vascular Institute Cardiovascular Outcomes Registries and Research (CORR) statistics group at the Cleveland Clinic. The <strong>hvtiPlotR</strong> package contains a tutorial for generating figures (this vignette) and small set of functions for formatting and saving those figures. We use these tools to generate figures in R as a replacement for the <code>plot.sas</code> macro.</p>
 <p>This package vignette is a tutorial for generating our standard figures using the <code>ggplot2</code> package commands in R. The tutorial presents a series of R recipes for generating figures. The <strong>hvtiPlotR</strong> package includes a set of themes designed to format those figures for inclusion in manuscript and PowerPoint targets.</p>
 <p>This document is included with the <strong>hvtiPlotR</strong> package as a package vignette. The vignette is installed into R when the <strong>hvtiPlotR</strong> package is installed, and viewable using the command: <code>vignette("hvtiPlotR", package="hvtiPlotR")</code>.</p>
-<p>The goal of the vignette is as a tutorial to document the best practices of creating our publication quality graphics for both manuscripts and power point presentations. It is our intent to update this vignette as our standards and the <strong>hvtiPlotR</strong> package are modified.</p>
+<p>This vignette documents our best practices for publication graphics — manuscripts and PowerPoint slides both. We will update it as our standards and the <strong>hvtiPlotR</strong> package evolve.</p>
 <p>Keywords: <em>publication graphics, powerpoint, ggplot2, plot.sas</em>.</p>
 <p>Companion vignettes cover individual plot functions (<a href="plot-functions.html">hvtiPlotR Plot Functions</a>) and plot decoration and saving (<a href="plot-decorators.html">Decorating and Saving hvtiPlotR Plots</a>).</p>
 </section>
@@ -193,8 +193,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="introduction" class="level1">
 <h1>Introduction</h1>
 <p>For many years, the mainstay for generating graphics for manuscripts and presentations in the statistics group in The Heart &amp; Vascular Institute has been the <code>plot.sas</code> macro using SAS. However, we have had issues migrating this macro to newer versions of SAS (&gt; 8.0) and Microsoft Oﬃce products (&gt; 2003).</p>
-<p>In an eﬀort to alleviate these version issues, and to standardize the generation of figures within R, we have developed the <strong>hvtiPlotR</strong> R package. The goal of the package, and this vignette, is simplify the creation of publication quality graphics in R. We are specifically encoding the best practices of the HVTI Clinical Outcomes Research and Registries (CORR) formatting, so that our statisticians will be able to create graphics for publications and presentations with a minimal amount of eﬀort.</p>
-<p>The <strong>hvtiPlotR</strong> package implements best practices for R graphics by leveraging the <code>ggplot2</code> package (Wickham 2009). The <code>ggplot2</code> package is an implementation of the Grammar of Graphics (Wilkinson 2005), which is a formalization of graphical concepts, and the building of graphical objects from a sequence of independent components. These components can be combined in many diﬀerent ways.</p>
+<p>In an eﬀort to alleviate these version issues, and to standardize the generation of figures within R, we have developed the <strong>hvtiPlotR</strong> R package. The goal of the package, and this vignette, is simplify the creation of publication quality graphics in R. We are specifically encoding the best practices of the HVTI Clinical Outcomes Research and Registries (CORR) formatting, so that our statisticians can generate publication-ready graphics without fighting the tooling.</p>
+<p>The <strong>hvtiPlotR</strong> package builds on <code>ggplot2</code> (Wickham 2009) to implement best practices for R graphics. The <code>ggplot2</code> package is an implementation of the Grammar of Graphics (Wilkinson 2005), which is a formalization of graphical concepts, and the building of graphical objects from a sequence of independent components. These components can be combined in many diﬀerent ways.</p>
 <p>The <code>plot.sas</code> macro is also an implementation of a graphics grammar. The grammar <code>plot.sas</code> is derived from the ZETA pen plotters, which used GML (Graphics Machine Language) to control between 4 and and 8 colored pens for generating color line and point figures.</p>
 <pre class="sas"><code>%let STUDY=/studies/cardiac/valves/aortic/replacement/partner_publication_office/partner1b/mortality_5y
 *****************************************************************************;
@@ -514,22 +514,22 @@ tuple set=all , x=years , y=noinit , cll=clinit , clu=cuinit , width =0.5 ,
 <tbody>
 <tr class="odd">
 <td><code>device=pscolor</code></td>
-<td><code>hv_theme("manuscript")</code></td>
+<td><code>theme_hv_manuscript()</code></td>
 <td>Journal PDF, black on white</td>
 </tr>
 <tr class="even">
 <td><code>device=cgmmppa</code> + dark slide</td>
-<td><code>hv_theme("dark_ppt")</code></td>
+<td><code>theme_hv_ppt_dark()</code></td>
 <td>Dark-background PowerPoint</td>
 </tr>
 <tr class="odd">
 <td><code>device=cgmmppa</code> + white slide</td>
-<td><code>hv_theme("light_ppt")</code></td>
+<td><code>theme_hv_ppt_light()</code></td>
 <td>Light/transparent PowerPoint</td>
 </tr>
 <tr class="even">
 <td>—</td>
-<td><code>hv_theme("poster")</code></td>
+<td><code>theme_hv_poster()</code></td>
 <td>Conference poster (larger text)</td>
 </tr>
 </tbody>
@@ -538,7 +538,7 @@ tuple set=all , x=years , y=noinit , cll=clinit , clu=cuinit , width =0.5 ,
 </section>
 <section id="generating-ggplot2-graphics" class="level1">
 <h1>Generating ggplot2 graphics</h1>
-<p>In order to create figures similar to using <code>plot.sas</code> macro, using R, we will make extensive use of the ggplot2 package. This will require translating from the graphics language of plot.sas to the graphics language of ggplot2.</p>
+<p>To create figures comparable to <code>plot.sas</code> output, we rely heavily on <code>ggplot2</code>. This requires translating from the graphics language of <code>plot.sas</code> to the graphics language of <code>ggplot2</code>.</p>
 <p>For the remainder of this document, R code will be highlighted in grey boxes, as shown below. We will refer to these blocks as code chunks. You can run each code chunk individually, using copy/paste into an interactive R session, or within a stand alone R script. This tutorial requires the <strong>hvtiPlotR</strong> package to load the data and themes we will be discussing.</p>
 <pre class="sas"><code>*_____________________________________________________________________;
 * C G M F I L E S F O R P O W E R P O I N T S L I D E S *_____________________________________________________________________ 
@@ -618,7 +618,7 @@ run;</code></pre>
 <span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(nonparametric, <span class="at">package =</span> <span class="st">"hvtiPlotR"</span>)</span>
 <span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Set a default hvtiPlotR plotting theme</span></span>
-<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a><span class="fu">theme_set</span>(hvtiPlotR<span class="sc">::</span><span class="fu">hv_theme</span>(<span class="st">"poster"</span>)) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a><span class="fu">theme_set</span>(hvtiPlotR<span class="sc">::</span><span class="fu">theme_hv_poster</span>()) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>One advantage of ggplot2 is that figures can be built up in successive statements. This tutorial will make extensive use of this to demonstrate the process. Starting in this code chunk, we will save the intermediate objects in the ccf_plot variable. Here we simply create an empty ggplot2 figure that we will be adding to as we work through the commands in the <code>plot.sas</code> macro. Note that we include the %plot() commands in the comments above the equivalent ggplot2 command for comparison.</p>
 <div class="cell">
@@ -686,7 +686,7 @@ run;</code></pre>
 </div>
 </div>
 </div>
-<p>The <code>aes()</code> mechanism is a powerful way to communicate data level assignment to <code>geom_</code> functions. If you want to stratify a dataset by a variable, you can specify that within the <code>aes()</code> function call using the <code>by=</code> argument. For points, we often want the stratifying to be either a diﬀerent <code>color=</code> or <code>shape=</code> for stratified data. We can then use the <code>scale_color_</code> functions (See Section 3.10) or the <code>scale_shape_</code> functions (See Section 3.9) to control how these are assigned to the stratifying variable.</p>
+<p>The <code>aes()</code> mechanism is how you communicate data-level assignment to <code>geom_</code> functions. If you want to stratify a dataset by a variable, you can specify that within the <code>aes()</code> function call using the <code>by=</code> argument. For points, we often want the stratifying to be either a diﬀerent <code>color=</code> or <code>shape=</code> for stratified data. We can then use the <code>scale_color_</code> functions (See Section 3.10) or the <code>scale_shape_</code> functions (See Section 3.9) to control how these are assigned to the stratifying variable.</p>
 <p>Once we have added data to the <code>ggplot</code> object, we can display the figure as shown in Figure 4. Until now the figure has been manipulated by sequentially adding function calls to the <code>ccf_plot object</code>. To display the figure you can either use the <code>show()</code> function, or simply call the object name at the command line.</p>
 <p>Note that we have used the default shape, size and color for this figure. These can be manipulated by adding arguments to the <code>geom_</code> functions, outside of the <code>aes()</code> function, as we will demonstrate in the following sections.</p>
 </section>
@@ -825,10 +825,10 @@ run;</code></pre>
 <section id="colors" class="level2">
 <h2 class="anchored" data-anchor-id="colors">Colors</h2>
 <p>You can specify colors in R by numeric index, name (as we have done), hexadecimal, or RGB specification. For example <code>col=1</code> and <code>col="white"</code> are equivalent. The chart in Figure 9 was produced with code developed by Glynn (2005). See his R Color Chart website for all the details you would ever need about using colors in R.</p>
-<p>Color theory encompasses a multitude of definitions, concepts and design applications - enough to fill several encyclopedias. However, there are three basic categories of color theory that are logical and useful : The color wheel, color harmony, and the context of how colors are used. ColorBrewer (Harrower and Brewer 2003) is an online tool (http://colorbrewer2.org/) designed to help people select good color schemes for maps and other graphics. We encourage the use of ColorBrewer as a good, safe introduction to selecting colors based on theoretically good practices.</p>
+<p>ColorBrewer (Harrower and Brewer 2003) is an online tool (http://colorbrewer2.org/) designed to help people select good color schemes for maps and other graphics. We recommend it as a practical starting point for choosing colors grounded in sound design principles.</p>
 <p>Figure 8: ggplot2 shape table</p>
 <p>Figure 9: R colors</p>
-<p>The RColorBrewer package (Neuwirth 2011) simplifies the selection of ColorBrewer colors into R. We have used RColorBrewer to get a list of colors, and assign colors manually to specific variable values using the <code>ggplot</code> <code>aes()</code> mechanism. The ColorBrewer palettes have also been built into the <code>ggplot</code> <code>scale_</code> functions in the <code>scale_color_brewer</code> function. We have made extensive use of the <code>palette="Set1"</code> color palette in figures we have generated. There are also a series of other <code>scale_color_</code> functions in ggplot2 to aid the user in selecting good color schemes for many diﬀerent settings.</p>
+<p>The ColorBrewer palette catalogue (Harrower and Brewer 2003) is built into <code>ggplot2</code> via <code>scale_colour_brewer()</code> / <code>scale_fill_brewer()</code>; hvtiPlotR does not import the optional <code>RColorBrewer</code> package. We have made extensive use of the <code>palette = "Set1"</code> colour palette in the figures we have generated. There are also a series of other <code>scale_colour_*</code> functions in ggplot2 to aid the user in selecting good colour schemes for many diﬀerent settings — consult <a href="https://colorbrewer2.org/" class="uri">https://colorbrewer2.org/</a> for an interactive palette browser.</p>
 </section>
 <section id="global-figure-commands" class="level2">
 <h2 class="anchored" data-anchor-id="global-figure-commands">Global Figure Commands</h2>
@@ -902,9 +902,9 @@ run;</code></pre>
 </section>
 <section id="themes-and-decoration" class="level1">
 <h1>Themes and Decoration</h1>
-<p>The <strong>hvtiPlotR</strong> package provides four themes via <code>hv_theme(style)</code>: <code>"manuscript"</code>, <code>"poster"</code>, <code>"light_ppt"</code>, and <code>"dark_ppt"</code>. Apply the theme as the last <code>+</code> layer on any composed ggplot object.</p>
+<p>The <strong>hvtiPlotR</strong> package provides four themes via <code>theme_hv_*()</code>: <code>"manuscript"</code>, <code>"poster"</code>, <code>"light_ppt"</code>, and <code>"dark_ppt"</code>. Apply the theme as the last <code>+</code> layer on any composed ggplot object.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>p_final <span class="ot">&lt;-</span> ccf_plot <span class="sc">+</span> <span class="fu">hv_theme</span>(<span class="st">"poster"</span>)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>p_final <span class="ot">&lt;-</span> ccf_plot <span class="sc">+</span> <span class="fu">theme_hv_poster</span>()</span>
 <span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>p_final</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning: Removed 7 rows containing missing values or values outside the scale range
@@ -943,9 +943,9 @@ run;</code></pre>
 </section>
 <section id="powerpoint-graphics" class="level2">
 <h2 class="anchored" data-anchor-id="powerpoint-graphics">PowerPoint graphics</h2>
-<p>Use <code>save_ppt()</code> to insert a ggplot as an editable vector graphic into a PowerPoint file. Apply <code>hv_theme("dark_ppt")</code> or <code>hv_theme("light_ppt")</code> before saving.</p>
+<p>Use <code>save_ppt()</code> to insert a ggplot as an editable vector graphic into a PowerPoint file. Apply <code>theme_hv_ppt_dark()</code> or <code>theme_hv_ppt_light()</code> before saving.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>p_ppt <span class="ot">&lt;-</span> ccf_pptPlot <span class="sc">+</span> <span class="fu">hv_theme</span>(<span class="st">"dark_ppt"</span>)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>p_ppt <span class="ot">&lt;-</span> ccf_pptPlot <span class="sc">+</span> <span class="fu">theme_hv_ppt_dark</span>()</span>
 <span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a><span class="fu">save_ppt</span>(</span>
 <span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">object       =</span> p_ppt,</span>
@@ -962,7 +962,7 @@ run;</code></pre>
 <section id="manuscript-figures" class="level2">
 <h2 class="anchored" data-anchor-id="manuscript-figures">Manuscript figures</h2>
 <ul>
-<li><strong>Use <code>hv_theme("manuscript")</code></strong> — black text, white background, no decorative fill. Never use coloured backgrounds in figures destined for journals.</li>
+<li><strong>Use <code>theme_hv_manuscript()</code></strong> — black text, white background, no decorative fill. Never use coloured backgrounds in figures destined for journals.</li>
 <li><strong>No chart titles</strong> — the figure caption in the manuscript text carries the title. Do not add a <code>labs(title = ...)</code> layer.</li>
 <li><strong>Axis labels are mandatory</strong> — always supply <code>labs(x = ..., y = ...)</code>. Units belong in the axis label, not in the tick labels (e.g.&nbsp;<code>"Years after operation"</code>, not <code>"0 yr, 5 yr, 10 yr"</code>).</li>
 <li><strong>Percent axes</strong> — format y-axis tick labels as <code>"0%"</code>, <code>"20%"</code>, …, <code>"100%"</code> using <code>scale_y_continuous(labels = function(x) paste0(x, "%"))</code>. Do not write the <code>%</code> symbol inside the axis title.</li>
@@ -975,7 +975,7 @@ run;</code></pre>
 <section id="powerpoint-figures-1" class="level2">
 <h2 class="anchored" data-anchor-id="powerpoint-figures-1">PowerPoint figures</h2>
 <ul>
-<li><strong>Use <code>hv_theme("dark_ppt")</code> or <code>hv_theme("light_ppt")</code></strong> — the dark theme is the default for Cleveland Clinic presentation templates. Match the theme to the slide background colour.</li>
+<li><strong>Use <code>theme_hv_ppt_dark()</code> or <code>theme_hv_ppt_light()</code></strong> — the dark theme is the default for Cleveland Clinic presentation templates. Match the theme to the slide background colour.</li>
 <li><strong>No points on parametric curves</strong> — presentation figures show lines only. Points are reserved for nonparametric data summaries.</li>
 <li><strong>Larger line widths</strong> — use <code>linewidth = 1.5</code> or higher so lines are clearly visible on a projected screen. The SAS equivalent was <code>width=3</code>.</li>
 <li><strong>Fewer axis ticks</strong> — five or six ticks per axis is the maximum for slides. Use <code>scale_x_continuous(breaks = seq(0, 10, 2))</code> to control spacing.</li>
@@ -986,7 +986,7 @@ run;</code></pre>
 <section id="colour" class="level2">
 <h2 class="anchored" data-anchor-id="colour">Colour</h2>
 <ul>
-<li><strong>Multi-group figures</strong> — use <code>scale_colour_brewer(palette = "Set1")</code> for up to five groups. For more groups, select a palette manually or use <code>RColorBrewer::brewer.pal()</code> to inspect options.</li>
+<li><strong>Multi-group figures</strong> — use <code>scale_colour_brewer(palette = "Set1")</code> for up to five groups. For more groups, either pass an explicit vector of hex codes via <code>scale_colour_manual()</code> or browse the ColorBrewer palette catalogue at <a href="https://colorbrewer2.org/" class="uri">https://colorbrewer2.org/</a>. (ggplot2 ships the Brewer palette table internally; hvtiPlotR does not depend on the optional <code>RColorBrewer</code> package.)</li>
 <li><strong>Single-group survival/hazard figures</strong> — <code>"steelblue"</code> for manuscript, <code>"white"</code> for dark PPT.</li>
 <li><strong>Avoid red/green combinations</strong> — approximately 8% of men have red–green colour blindness. Use shape (<code>scale_shape_manual()</code>) and linetype (<code>scale_linetype_manual()</code>) in addition to colour so figures remain readable in greyscale print.</li>
 <li><strong>Fills vs colours</strong> — <code>scale_colour_*()</code> controls lines and points; <code>scale_fill_*()</code> controls ribbons and bars. Both must be set consistently when a legend is shown.</li>
@@ -995,11 +995,9 @@ run;</code></pre>
 <section id="what-not-to-include" class="level2">
 <h2 class="anchored" data-anchor-id="what-not-to-include">What not to include</h2>
 <ul>
-<li>No decorative 3-D effects, drop shadows, or gradients.</li>
-<li>No background images or watermarks.</li>
-<li>No more than six groups per panel — split into separate figures if needed.</li>
-<li>No axis tick marks on the top or right-hand sides.</li>
-<li>No connecting lines between non-adjacent data points unless the relationship is continuous (e.g., a survival curve).</li>
+<li>No decorative 3-D effects, drop shadows, gradients, background images, or watermarks — they distract from the data.</li>
+<li>No axis tick marks on the top or right sides. No more than six groups per panel; split into separate figures if you need more.</li>
+<li>No connecting lines between non-adjacent data points unless the relationship is genuinely continuous (e.g., a survival curve).</li>
 </ul>
 </section>
 </section>
