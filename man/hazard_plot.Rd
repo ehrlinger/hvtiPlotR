@@ -111,7 +111,7 @@ A \code{\link[ggplot2:ggplot]{ggplot2::ggplot()}} object.
 plus \code{\link[=plot.hv_hazard]{plot.hv_hazard()}}.
 
 Pass your \code{predict} dataset from a Weibull (or other parametric) model and
-get back a ggplot of the survival, hazard, or cumulative-hazard curve — with
+get back a ggplot of the survival, hazard, or cumulative-hazard curve, with
 optional KM empirical overlay and population life-table reference. Covers
 the full \verb{tp.hp.dead.*} SAS template family.\tabular{ll}{
    SAS template \tab R usage \cr

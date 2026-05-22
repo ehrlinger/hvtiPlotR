@@ -479,7 +479,7 @@ sample_nnt_data <- function(n        = 500,
 #' plus [plot.hv_hazard()].
 #'
 #' Pass your `predict` dataset from a Weibull (or other parametric) model and
-#' get back a ggplot of the survival, hazard, or cumulative-hazard curve — with
+#' get back a ggplot of the survival, hazard, or cumulative-hazard curve, with
 #' optional KM empirical overlay and population life-table reference. Covers
 #' the full `tp.hp.dead.*` SAS template family.
 #'
