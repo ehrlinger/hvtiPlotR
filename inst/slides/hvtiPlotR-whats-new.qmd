@@ -6,7 +6,7 @@ date: today
 format:
   revealjs:
     slide-level: 2
-    theme: solarized
+    theme: default
     slide-number: true
     progress: true
     embed-resources: true
