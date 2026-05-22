@@ -50,7 +50,7 @@ format:
 
 ## The Two-Step Workflow
 
-Every plot function now follows the same two-step pattern:
+You now build every plot in two steps:
 
 ```r
 # Step 1: construct & validate
@@ -71,8 +71,8 @@ plot(km) +
   theme_hv_manuscript()
 ```
 
-Validation and rendering are fully separated. You can inspect, subset, or
-re-use `km$tables` before ever calling `plot()`.
+Validation and rendering are separated — inspect, subset, or re-use
+`km$tables` before you ever call `plot()`.
 
 ## Before & After: Constructors
 
@@ -155,7 +155,7 @@ plot(km) + theme_hv_ppt_dark()
 
 ## New S3 Convenience Methods (v2.2)
 
-Three standard R verbs are now available on every `hv_data` object:
+Every `hv_data` object now speaks standard R:
 
 ```r
 km <- hv_survival(my_data, "time", "event")
@@ -170,8 +170,8 @@ autoplot(km) + theme_hv_manuscript()
 df <- as.data.frame(km)   # same as km$data
 ```
 
-`autoplot()` is interchangeable with `plot()` — useful when working
-with packages like `broom` or `ggfortify` that prefer the ggplot2 verb.
+`autoplot()` is an alias for `plot()` — handy if you're in a `broom` or
+`ggfortify` pipeline that expects the ggplot2 verb.
 
 # Themes
 
@@ -242,7 +242,7 @@ ggplot2::theme_set(theme_hv_manuscript())
 ```
 
 Every `...` argument is forwarded directly to `ggplot2::theme()`,
-so any valid theme element works — no package-specific wrappers needed.
+so anything valid there works here too.
 
 → **Full reference:** [vignette("plot-decorators")](https://ehrlinger.github.io/hvtiPlotR/articles/plot-decorators.html)
 
@@ -311,8 +311,8 @@ save_ppt(
 axis chrome and adjusting the overall plot placement so the **panel lands
 at the same slide coordinates on every slide**.
 
-**Workflow tip:** develop with `theme_hv_ppt_light()` so the white panel is
-visible in your IDE viewer; save into your dark template at export time.
+Develop with `theme_hv_ppt_light()` so the white panel is visible in your
+IDE viewer; save into your dark template at export time.
 
 → **Full reference:** [vignette("plot-decorators")](https://ehrlinger.github.io/hvtiPlotR/articles/plot-decorators.html)
 
