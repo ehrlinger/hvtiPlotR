@@ -57,8 +57,9 @@ subclass:
   a curated layout.
 - **`autoplot()`** — re-exports ggplot2's `autoplot()` generic and
   dispatches to the registered `plot.<subclass>()` method. Callers who
-  prefer the ggplot2-ecosystem verb can write `autoplot(km)` in place of
-  `plot(km)`. Extra args forward to the subclass `plot()`.
+  prefer the ggplot2-ecosystem verb (`broom`, `ggfortify`, and `ggsurvfit`
+  all use it) can write `autoplot(km)` in place of `plot(km)`. Extra args
+  forward to the subclass `plot()`.
 - **`as.data.frame()`** — returns the `$data` slot via standard
   `as.data.frame()` coercion instead of the `$data` accessor.
 
@@ -615,7 +616,8 @@ on `plot()`:
 * Named all simulation tuning constants in `sample_nonparametric_curve_data()`
   and the internal helper `.np_sample_bins()`: `eta_intercept`, `logit_shift`,
   `cont_baseline`, `cont_scale`, `cont_sigma`, `eff_frac_prob`,
-  `eff_frac_cont`. Magic numbers replaced throughout.
+  `eff_frac_cont`. Magic numbers replaced throughout the single-curve,
+  multi-group, and binned-data-summary code paths.
 * Named all simulation tuning constants in `sample_nonparametric_ordinal_data()`
   and `sample_nonparametric_ordinal_points()`: `a_first`, `a_step`,
   `eta_intercept`. Every occurrence of `-0.2`, `0.5`, and `1.2` replaced by
