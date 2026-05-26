@@ -478,10 +478,10 @@ sample_nnt_data <- function(n        = 500,
 #' `hazard_plot()` has been superseded by the S3 constructor [hv_hazard()]
 #' plus [plot.hv_hazard()].
 #'
-#' Plots a pre-computed parametric survival, hazard, or cumulative-hazard curve
-#' from a Weibull (or other parametric) model, optionally overlaid with
-#' Kaplan-Meier empirical estimates and a population life-table reference.
-#' Covers the complete family of `tp.hp.dead.*` SAS templates.
+#' Pass your `predict` dataset from a Weibull (or other parametric) model and
+#' get back a ggplot of the survival, hazard, or cumulative-hazard curve, with
+#' optional KM empirical overlay and population life-table reference. Covers
+#' the full `tp.hp.dead.*` SAS template family.
 #'
 #' | SAS template | R usage |
 #' |---|---|
@@ -1011,7 +1011,7 @@ hazard_plot <- function(curve_data,
 #' `survival_difference_plot()` has been superseded by the S3 constructor
 #' [hv_survival_difference()] plus [plot.hv_survival_difference()].
 #'
-#' Plots the difference in survival between two groups over time, with an
+#' Pass a `diffout` dataset and you get the S_2(t) - S_1(t) curve with an
 #' optional confidence band. Covers `tp.hp.dead.life-gained.sas` and the
 #' survival-difference component of `tp.hp.numtreat.survdiff.matched.sas`.
 #'
@@ -1148,9 +1148,9 @@ survival_difference_plot <- function(diff_data,
 #' `nnt_plot()` has been superseded by the S3 constructor [hv_nnt()] plus
 #' [plot.hv_nnt()].
 #'
-#' Plots the number needed to treat (NNT) and/or absolute risk reduction (ARR)
-#' over time, with optional confidence bands. Covers the NNT component of
-#' `tp.hp.numtreat.survdiff.matched.sas`.
+#' Pass the `nntout` dataset and plot NNT (or ARR) over time. Add
+#' `lower_col`/`upper_col` for a confidence band. Covers the NNT component
+#' of `tp.hp.numtreat.survdiff.matched.sas`.
 #'
 #' **SAS context:** The SAS template computes NNT at discrete time points
 #' (1, 5, 10, 15, 20 years) from the HAZDIFL macro output, then connects them

@@ -11,16 +11,16 @@
 #'
 #' Each theme follows the `theme_bw()` contract: pass `base_size` /
 #' `base_family` to control global typography, then chain a `+ theme(...)`
-#' call to override anything else. Additionally, any extra named argument is
-#' forwarded straight into a final [ggplot2::theme()] call so callers can
-#' tweak elements inline:
+#' call to override anything else. Any extra named argument goes straight
+#' into a final [ggplot2::theme()] call; tweak elements at the call site
+#' without a separate `+` chain:
 #'
 #' ```
 #' theme_hv_manuscript(legend.position = "right")
 #' theme_hv_ppt_dark(axis.text.y = element_text(family = "mono"))
 #' ```
 #'
-#' Caller-supplied elements override the hvtiPlotR defaults.
+#' Your elements override the hvtiPlotR defaults.
 #'
 #' @param base_size      Base font size in points.
 #' @param base_family    Base font family. Default `""` (device default).
@@ -143,12 +143,13 @@ theme_hv_poster <- function(base_size      = 16,
 #' @details
 #' `theme_hv_ppt_dark()` is the default PPT theme: a black panel with white
 #' text suited to dark slide backgrounds. Use [theme_hv_ppt_light()] when the
-#' slide template is light. Both PPT themes hide the legend by default --
+#' slide template is light. Both PPT themes hide the legend by default;
 #' override with `legend.position = "right"` (or chain `+ theme(...)`).
 #'
 #' Margins on axis text/title are scaled from `base_size` via the standard
-#' `half_line = base_size / 2` convention, so spacing stays proportional when
-#' `base_size` changes.
+#' `half_line = base_size / 2` convention; a deck at `base_size = 28` and
+#' one at `base_size = 36` both feel proportionate without you touching
+#' the margins.
 #' @export
 theme_hv_ppt_dark <- function(base_size      = 32,
                               base_family    = "",

@@ -282,10 +282,10 @@ plot.hv_balance <- function(x,
 #' extremes cannot be matched, leaving small residual differences for the
 #' strongest confounders.
 #'
-#' @param n_vars Integer. Number of covariates to generate. Default `12`.
-#' @param n Integer. Total number of simulated patients before matching.
+#' @param n_vars Integer; number of covariates to generate. Default `12`.
+#' @param n Integer; total number of simulated patients before matching.
 #'   Default `600` (roughly 300 per group at `separation = 1.5`).
-#' @param separation Numeric. Distance between the two group means on the
+#' @param separation Numeric; distance between the two group means on the
 #'   log-odds scale.  Larger values push propensity score distributions
 #'   further apart, increasing the proportion of unmatched extreme-score
 #'   patients and residual imbalance after matching.  Default `1.5`.

@@ -43,7 +43,7 @@ A \code{\link[ggplot2:ggplot]{ggplot2::ggplot()}} object.
 \code{survival_difference_plot()} has been superseded by the S3 constructor
 \code{\link[=hv_survival_difference]{hv_survival_difference()}} plus \code{\link[=plot.hv_survival_difference]{plot.hv_survival_difference()}}.
 
-Plots the difference in survival between two groups over time, with an
+Pass a \code{diffout} dataset and you get the S_2(t) - S_1(t) curve with an
 optional confidence band. Covers \code{tp.hp.dead.life-gained.sas} and the
 survival-difference component of \code{tp.hp.numtreat.survdiff.matched.sas}.
 

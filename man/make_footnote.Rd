@@ -26,13 +26,11 @@ makeFootnote(
 )
 }
 \arguments{
-\item{text}{Text to display. Defaults to the current working directory,
-which conveniently identifies the project. For the typical use case pass
-the script filename: \code{make_footnote("R/analysis.R")}.}
+\item{text}{Text to display. Defaults to the current working directory;
+for most uses pass the script filename instead: \code{make_footnote("R/analysis.R")}.}
 
-\item{timestamp}{Logical; append \code{Sys.time()} to \code{text}? Default \code{TRUE}.
-Set to \code{FALSE} for reproducible screenshots or when the file path already
-contains enough context.}
+\item{timestamp}{Logical; if TRUE, \code{Sys.time()} is appended to \code{text}. Default \code{TRUE}.
+Set to \code{FALSE} for reproducible output.}
 
 \item{prefix}{String prepended to \code{text} before the timestamp. Default
 \code{"DRAFT \\u2014 "}. Set to \code{""} to suppress the prefix.}

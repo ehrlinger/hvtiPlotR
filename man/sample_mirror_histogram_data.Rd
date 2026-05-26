@@ -15,7 +15,7 @@ sample_mirror_histogram_data(
 \arguments{
 \item{n}{Number of observations \strong{per group} (default 500).}
 
-\item{separation}{Numeric. Distance between the two group means on the
+\item{separation}{Numeric; distance between the two group means on the
 log-odds scale.  Larger values push the score distributions further apart
 and increase the proportion of unmatched patients at the extremes
 (default 1.5).}

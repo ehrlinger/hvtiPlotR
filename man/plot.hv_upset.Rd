@@ -49,7 +49,7 @@ intersection-bar ggplot.}
 \item{width_ratio}{Fraction of horizontal space given to the
 set-size sidebar (only used when \code{set_size = TRUE}). Default \code{0.3}.}
 
-\item{...}{Currently unused; reserved for future args.}
+\item{...}{Ignored; present for S3 consistency.}
 }
 \value{
 A \code{ggplot} when \code{set_size = FALSE} (themes apply with \code{+}); a

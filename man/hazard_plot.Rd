@@ -110,10 +110,10 @@ A \code{\link[ggplot2:ggplot]{ggplot2::ggplot()}} object.
 \code{hazard_plot()} has been superseded by the S3 constructor \code{\link[=hv_hazard]{hv_hazard()}}
 plus \code{\link[=plot.hv_hazard]{plot.hv_hazard()}}.
 
-Plots a pre-computed parametric survival, hazard, or cumulative-hazard curve
-from a Weibull (or other parametric) model, optionally overlaid with
-Kaplan-Meier empirical estimates and a population life-table reference.
-Covers the complete family of \verb{tp.hp.dead.*} SAS templates.\tabular{ll}{
+Pass your \code{predict} dataset from a Weibull (or other parametric) model and
+get back a ggplot of the survival, hazard, or cumulative-hazard curve, with
+optional KM empirical overlay and population life-table reference. Covers
+the full \verb{tp.hp.dead.*} SAS template family.\tabular{ll}{
    SAS template \tab R usage \cr
    Basic survival (tp.hp.dead.sas) \tab \code{hazard_plot(dat, estimate_col="survival")} \cr
    Basic hazard (tp.hp.dead.sas) \tab \code{hazard_plot(dat, estimate_col="hazard")} \cr

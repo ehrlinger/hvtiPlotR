@@ -176,7 +176,7 @@ sample_goodness_followup_data <- function(
 #'   \code{as.Date("2019-12-31")}.
 #' @param close_date         Data close date.  Must be \eqn{\geq}
 #'   \code{study_end}.  Default \code{as.Date("2021-08-06")}.
-#' @param tolower_names      Logical; whether to lower-case column names when
+#' @param tolower_names      Logical; if TRUE, column names are lower-cased when
 #'   materialising the data.  Default \code{TRUE}.
 #' @param death_levels       Length-2 character vector labelling the two death
 #'   states (alive first).  Default \code{c("Alive", "Dead")}.

@@ -12,7 +12,7 @@
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.11780.svg)](https://doi.org/10.5281/zenodo.11780)
 <!-- badges: end -->
 
-ggplot2 themes and plot functions for creating publication-quality graphics in R, conforming to the standards of Cardiovascular Outcomes Registries and Research (CORR) within The Heart & Vascular Institute at the Cleveland Clinic. This package is the modern R replacement for the historical `plot.sas` macro.
+hvtiPlotR packages the ggplot2 themes and plot functions we use in Cardiovascular Outcomes Registries and Research (CORR) at the Cleveland Clinic Heart & Vascular Institute. If you are migrating from the `plot.sas` macro, this is its R successor.
 
 ## Quick Start
 
@@ -22,7 +22,7 @@ Install from GitHub using [remotes](https://CRAN.R-project.org/package=remotes):
 remotes::install_github("ehrlinger/hvtiPlotR")
 ```
 
-Apply an HVI theme to any ggplot2 figure in one line:
+Apply an HVI theme to a ggplot2 figure in one line:
 
 ```r
 library(ggplot2)
@@ -131,34 +131,33 @@ plot(mh) + hv_theme("manuscript")
 
 ## Vignettes
 
-Four vignettes ship with the package and are available after installation:
+Five vignettes ship with the package. After installation, call any of them from the R console:
 
 ```r
-vignette("hvtiPlotR",        package = "hvtiPlotR")  # SAS migration guide
-vignette("plot-functions",   package = "hvtiPlotR")  # per-function reference with worked examples
-vignette("plot-decorators",  package = "hvtiPlotR")  # composition: scale_*, labs(), themes, saving
-vignette("contributing",     package = "hvtiPlotR")  # guide for adding new plot functions
+vignette("hvtiPlotR",           package = "hvtiPlotR")  # package tutorial: generating plot.sas-style figures in R
+vignette("sas-migration-guide", package = "hvtiPlotR")  # SAS template -> hvtiPlotR migration mapping
+vignette("plot-functions",      package = "hvtiPlotR")  # per-function reference with worked examples
+vignette("plot-decorators",     package = "hvtiPlotR")  # composition: scale_*, labs(), themes, saving
+vignette("contributing",        package = "hvtiPlotR")  # guide for adding new plot functions
 ```
 
 The online reference is at <https://ehrlinger.github.io/hvtiPlotR/>.
 
 ## Slides
 
-A short PowerPoint presentation covering the v2.x redesign — the two-step S3 API,
-the renamed theme functions, and `save_ppt(panel_box =)` — ships with the package
+A short PowerPoint presentation covering the v2.x redesign (the two-step S3 API,
+renamed theme functions, and `save_ppt(panel_box =)`) ships with the package
 as a Quarto source file:
 
 ```r
 system.file("slides/hvtiPlotR-whats-new.qmd", package = "hvtiPlotR")
 ```
 
-Render it to `.pptx` with `quarto render` or `quarto::quarto_render()`. The slide
-content is a condensed version of the detail found in `vignette("plot-decorators")`
-and `vignette("hvtiPlotR")`.
+Render it to `.pptx` with `quarto render` or `quarto::quarto_render()`. The slides condense what you will find in `vignette("plot-decorators")` and `vignette("hvtiPlotR")`.
 
 ## Migrating from plot.sas
 
-If you are moving existing SAS analyses to R, see the SAS migration vignette (`vignette("hvtiPlotR")`). It maps each `plot.sas` macro call to the equivalent R recipe and shows side-by-side code comparisons.
+If you are moving existing SAS analyses to R, the SAS migration vignette (`vignette("sas-migration-guide")`) maps each `plot.sas` macro call to its R equivalent.
 
 The `inst/plot.README` and `inst/plot.sas` files are preserved for historical reference.
 
@@ -186,4 +185,4 @@ requests.
 
 ## Code of Conduct
 
-This project adheres to the [Contributor Covenant](https://www.contributor-covenant.org/version/2/1/code_of_conduct/). By participating, you are expected to uphold this code.
+This project follows the [Contributor Covenant](https://www.contributor-covenant.org/version/2/1/code_of_conduct/) code of conduct.

@@ -29,7 +29,7 @@ spacing. Default \code{1/4}.}
 
 \item{knot_pos}{Curvature of the flow ribbons, \eqn{[0,1]}. Default \code{0.4}.}
 
-\item{show_labels}{Logical; whether to label each stratum. Default \code{TRUE}.}
+\item{show_labels}{Logical; if TRUE, each stratum is labelled. Default \code{TRUE}.}
 
 \item{...}{Ignored; present for S3 consistency.}
 }
