@@ -63,10 +63,11 @@ plot(np) +
   theme_hv_poster()
 ```
 
-**`theme_hv_manuscript()` replaces SAS `device=` / style options.** Use
-`"dark_ppt"` / `"ppt"` for PowerPoint slides, `"light_ppt"` for
-light-background slides, `"manuscript"` for journal figures, and
-`"poster"` for conference posters.
+**The `theme_hv_*()` functions replace SAS `device=` / style options.** Use
+`theme_hv_ppt_dark()` for PowerPoint slides on dark backgrounds,
+`theme_hv_ppt_light()` for light/transparent slides,
+`theme_hv_manuscript()` for journal figures, and `theme_hv_poster()` for
+conference posters.
 
 **Functions return a ggplot object; they do not display it.** Call the
 plot object at the top level (or use `print()`) to render it, or save with

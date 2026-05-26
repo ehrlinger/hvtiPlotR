@@ -131,13 +131,14 @@ plot(mh) + hv_theme("manuscript")
 
 ## Vignettes
 
-Four vignettes ship with the package. After installation, call any of them from the R console:
+Five vignettes ship with the package. After installation, call any of them from the R console:
 
 ```r
-vignette("hvtiPlotR",        package = "hvtiPlotR")  # SAS migration guide
-vignette("plot-functions",   package = "hvtiPlotR")  # per-function reference with worked examples
-vignette("plot-decorators",  package = "hvtiPlotR")  # composition: scale_*, labs(), themes, saving
-vignette("contributing",     package = "hvtiPlotR")  # guide for adding new plot functions
+vignette("hvtiPlotR",           package = "hvtiPlotR")  # package tutorial: generating plot.sas-style figures in R
+vignette("sas-migration-guide", package = "hvtiPlotR")  # SAS template -> hvtiPlotR migration mapping
+vignette("plot-functions",      package = "hvtiPlotR")  # per-function reference with worked examples
+vignette("plot-decorators",     package = "hvtiPlotR")  # composition: scale_*, labs(), themes, saving
+vignette("contributing",        package = "hvtiPlotR")  # guide for adding new plot functions
 ```
 
 The online reference is at <https://ehrlinger.github.io/hvtiPlotR/>.
@@ -156,7 +157,7 @@ Render it to `.pptx` with `quarto render` or `quarto::quarto_render()`. The slid
 
 ## Migrating from plot.sas
 
-If you are moving existing SAS analyses to R, the SAS migration vignette (`vignette("hvtiPlotR")`) maps each `plot.sas` macro call to its R equivalent.
+If you are moving existing SAS analyses to R, the SAS migration vignette (`vignette("sas-migration-guide")`) maps each `plot.sas` macro call to its R equivalent.
 
 The `inst/plot.README` and `inst/plot.sas` files are preserved for historical reference.
 

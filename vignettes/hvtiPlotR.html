@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="John Ehrlinger ehrlinj@ccf.org">
-<meta name="dcterms.date" content="2026-05-22">
+<meta name="dcterms.date" content="2026-05-26">
 
 <title>The hvtiPlotR package: Generating plot.sas style in R</title>
 <style>
@@ -159,7 +159,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">May 22, 2026</p>
+      <p class="date">May 26, 2026</p>
     </div>
   </div>
   
@@ -193,7 +193,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="introduction" class="level1">
 <h1>Introduction</h1>
 <p>For many years, the mainstay for generating graphics for manuscripts and presentations in the statistics group in The Heart &amp; Vascular Institute has been the <code>plot.sas</code> macro using SAS. However, we have had issues migrating this macro to newer versions of SAS (&gt; 8.0) and Microsoft Oﬃce products (&gt; 2003).</p>
-<p>In an eﬀort to alleviate these version issues, and to standardize the generation of figures within R, we have developed the <strong>hvtiPlotR</strong> R package. The goal of the package, and this vignette, is simplify the creation of publication quality graphics in R. We are specifically encoding the best practices of the HVTI Clinical Outcomes Research and Registries (CORR) formatting, so that our statisticians can generate publication-ready graphics without fighting the tooling.</p>
+<p>In an eﬀort to alleviate these version issues, and to standardize the generation of figures within R, we have developed the <strong>hvtiPlotR</strong> R package. The goal of the package, and this vignette, is to simplify the creation of publication quality graphics in R. We are specifically encoding the best practices of the HVTI Clinical Outcomes Research and Registries (CORR) formatting, so that our statisticians can generate publication-ready graphics without fighting the tooling.</p>
 <p>The <strong>hvtiPlotR</strong> package builds on <code>ggplot2</code> (Wickham 2009) to implement best practices for R graphics. The <code>ggplot2</code> package is an implementation of the Grammar of Graphics (Wilkinson 2005), which is a formalization of graphical concepts, and the building of graphical objects from a sequence of independent components. These components can be combined in many diﬀerent ways.</p>
 <p>The <code>plot.sas</code> macro is also an implementation of a graphics grammar. The grammar <code>plot.sas</code> is derived from the ZETA pen plotters, which used GML (Graphics Machine Language) to control between 4 and and 8 colored pens for generating color line and point figures.</p>
 <pre class="sas"><code>%let STUDY=/studies/cardiac/valves/aortic/replacement/partner_publication_office/partner1b/mortality_5y
@@ -902,7 +902,7 @@ run;</code></pre>
 </section>
 <section id="themes-and-decoration" class="level1">
 <h1>Themes and Decoration</h1>
-<p>The <strong>hvtiPlotR</strong> package provides four themes via <code>theme_hv_*()</code>: <code>"manuscript"</code>, <code>"poster"</code>, <code>"light_ppt"</code>, and <code>"dark_ppt"</code>. Apply the theme as the last <code>+</code> layer on any composed ggplot object.</p>
+<p>The <strong>hvtiPlotR</strong> package provides four <code>theme_hv_*()</code> functions — <code>theme_hv_manuscript()</code>, <code>theme_hv_poster()</code>, <code>theme_hv_ppt_light()</code>, and <code>theme_hv_ppt_dark()</code>. Apply one as the last <code>+</code> layer on any composed ggplot object.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>p_final <span class="ot">&lt;-</span> ccf_plot <span class="sc">+</span> <span class="fu">theme_hv_poster</span>()</span>
 <span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>p_final</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>

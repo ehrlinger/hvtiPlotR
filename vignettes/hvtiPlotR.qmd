@@ -49,7 +49,7 @@ We invite comments, feature requests and bug reports for this package at https:/
 
 For many years, the mainstay for generating graphics for manuscripts and presentations in the statistics group in The Heart & Vascular Institute has been the `plot.sas` macro using SAS. However, we have had issues migrating this macro to newer versions of SAS (\> 8.0) and Microsoft Oﬃce products (\> 2003).
 
-In an eﬀort to alleviate these version issues, and to standardize the generation of figures within R, we have developed the **hvtiPlotR** R package. The goal of the package, and this vignette, is simplify the creation of publication quality graphics in R. We are specifically encoding the best practices of the HVTI Clinical Outcomes Research and Registries (CORR) formatting, so that our statisticians can generate publication-ready graphics without fighting the tooling.
+In an eﬀort to alleviate these version issues, and to standardize the generation of figures within R, we have developed the **hvtiPlotR** R package. The goal of the package, and this vignette, is to simplify the creation of publication quality graphics in R. We are specifically encoding the best practices of the HVTI Clinical Outcomes Research and Registries (CORR) formatting, so that our statisticians can generate publication-ready graphics without fighting the tooling.
 
 The **hvtiPlotR** package builds on `ggplot2` (Wickham 2009) to implement best practices for R graphics. The `ggplot2` package is an implementation of the Grammar of Graphics (Wilkinson 2005), which is a formalization of graphical concepts, and the building of graphical objects from a sequence of independent components. These components can be combined in many diﬀerent ways.
 
@@ -582,9 +582,10 @@ show(ccf_pptPlot)
 
 # Themes and Decoration
 
-The **hvtiPlotR** package provides four themes via `theme_hv_*()`:
-`"manuscript"`, `"poster"`, `"light_ppt"`, and `"dark_ppt"`. Apply the theme
-as the last `+` layer on any composed ggplot object.
+The **hvtiPlotR** package provides four `theme_hv_*()` functions —
+`theme_hv_manuscript()`, `theme_hv_poster()`, `theme_hv_ppt_light()`, and
+`theme_hv_ppt_dark()`. Apply one as the last `+` layer on any composed ggplot
+object.
 
 ```{r man_theme_demo}
 p_final <- ccf_plot + theme_hv_poster()
