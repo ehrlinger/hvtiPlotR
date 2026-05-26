@@ -1,11 +1,8 @@
 # Contributing to hvtiPlotR
 
-This guide is for two audiences:
-
-- **Biostatisticians and analysts** who want to port a SAS template to R
-  and add it to this package. Start at [Track A](#track-a).
-- **R package developers** who want to work on testing, CI, or package
-  infrastructure. Start at [Track B](#track-b).
+If you are a biostatistician porting a SAS template to R, start at
+[Track A](#track-a). If you are here for testing, CI, or package
+infrastructure, start at [Track B](#track-b).
 
 ------------------------------------------------------------------------
 
@@ -19,8 +16,7 @@ This guide is for two audiences:
 
 ### Installing development dependencies
 
-Clone the repository and install all dependencies declared in
-`DESCRIPTION`:
+Clone the repository and install your development dependencies:
 
 ``` r
 
@@ -198,7 +194,7 @@ bmi_curve_plot <- function(curve_data,
 }
 ```
 
-Key rules enforced here:
+A few conventions the function above follows:
 
 - **Column names are strings**, passed via `x_col =`, `estimate_col =`,
   etc. Never use
@@ -272,7 +268,7 @@ sample_bmi_curve_data <- function(n       = 500,
 
 ### Step 4: Write roxygen documentation
 
-The documentation block must include all of the following:
+Your documentation block needs all of the following:
 
 | Tag | Required | Notes |
 |----|----|----|
@@ -455,7 +451,7 @@ and **no** `@export` — they will not appear in `NAMESPACE` or generate
 
 #### The bare-ggplot pattern
 
-Every plot function must:
+Every plot function in hvtiPlotR follows five rules:
 
 1.  Accept model-output data frames (not raw patient data).
 2.  Map all column references through string arguments (`x_col =`,
@@ -468,8 +464,9 @@ Every plot function must:
 5.  Not call [`print()`](https://rdrr.io/r/base/print.html) or
     [`invisible()`](https://rdrr.io/r/base/invisible.html).
 
-This pattern lets callers layer on their own choices and enables the `+`
-composition grammar documented in `vignettes/plot-decorators.qmd`.
+Return the bare ggplot and callers can layer scales, labels, and a theme
+on top — that’s the `+` composition grammar covered in
+`vignettes/plot-decorators.qmd`.
 
 #### Tidy evaluation
 
@@ -497,8 +494,8 @@ Always declare `.data` in the roxygen block:
 #### Test file layout
 
 Each source file `R/my-plot.R` should have a corresponding
-`tests/testthat/test_my_plot.R`. The minimum set of tests for a new plot
-function:
+`tests/testthat/test_my_plot.R`. At minimum, a new plot function needs
+five tests:
 
 | Test               | What to check                                         |
 |--------------------|-------------------------------------------------------|
@@ -543,8 +540,8 @@ rcmdcheck::rcmdcheck(          # more detailed output
 
 ### Vignette conventions
 
-Vignettes live in `vignettes/` as `.qmd` files and are built with Quarto
-(`VignetteBuilder: quarto`). Rules:
+Vignettes live in `vignettes/` as `.qmd` files; Quarto builds them
+(`VignetteBuilder: quarto`). A few things to keep in mind:
 
 - All code chunks that read files, write files, or access a network must
   have `#| eval: false`.
@@ -563,11 +560,11 @@ Vignettes live in `vignettes/` as `.qmd` files and are built with Quarto
     heading.
 3.  Run
     [`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
-    — zero errors and zero warnings required.
+    — you need zero errors and zero warnings before tagging.
 4.  Tag the release commit: `git tag -a vX.Y.Z -m "Release X.Y.Z"`.
 5.  Push the tag: `git push origin vX.Y.Z`.
-6.  The pkgdown GitHub Action rebuilds the documentation site
-    automatically.
+6.  The pkgdown GitHub Action picks up the tag and rebuilds the
+    documentation site — nothing else to do.
 
 ------------------------------------------------------------------------
 

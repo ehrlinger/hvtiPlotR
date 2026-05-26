@@ -24,7 +24,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">hvtiPlotR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.3.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.3.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -77,9 +77,9 @@
       <h1>Decorating and Saving hvtiPlotR Plots</h1>
 
       <p class="author">John Ehrlinger <a href="mailto:ehrlinj@ccf.org" class="email">ehrlinj@ccf.org</a></p>
-      <p class="date">2026-05-21</p>
+      <p class="date">2026-05-26</p>
 
-      <small class="dont-index">Source: <a href="https://github.com/ehrlinger/hvtiPlotR/blob/v2.3.0/vignettes/plot-decorators.qmd" class="external-link"><code>vignettes/plot-decorators.qmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/ehrlinger/hvtiPlotR/blob/main/vignettes/plot-decorators.qmd" class="external-link"><code>vignettes/plot-decorators.qmd</code></a></small>
       <div class="d-none name"><code></code></div>
     </div>
 
@@ -103,7 +103,7 @@
 </div>
 <section class="section level2"><h2 id="the-composition-pattern">The Composition Pattern<a class="anchor" aria-label="anchor" href="#the-composition-pattern"></a>
 </h2>
-<p>Every hvtiPlotR plot is built in two steps: a constructor (<code>hv_*()</code>) that shapes the data, followed by <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code> that renders a bare <code>ggplot</code> object. No colour scales, axis labels, or theme are applied by either step. Decoration is added by chaining layers with <code>+</code>:</p>
+<p>Every hvtiPlotR plot is built in two steps: a constructor (<code>hv_*()</code>) that shapes the data, followed by <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code> that renders a bare <code>ggplot</code> object. No colour scales, axis labels, or theme are applied by either step — you add those by chaining layers with <code>+</code>:</p>
 <pre><code>plot(hv_*(...)) +
   scale_colour_*() +   # data colours
   scale_fill_*()   +   # fill colours
@@ -236,7 +236,7 @@
 </div>
 </section></section><section class="section level2"><h2 id="colour-scales">Colour Scales<a class="anchor" aria-label="anchor" href="#colour-scales"></a>
 </h2>
-<p><code>scale_colour_*</code> controls line and point colours; <code>scale_fill_*</code> controls filled areas (ribbons, bars). Both share the same <code>name</code> (legend title) and <code>guide</code> (legend display) arguments.</p>
+<p><code>scale_colour_*</code> controls line and point colours; <code>scale_fill_*</code> controls filled areas (ribbons, bars). Both take the same <code>name</code> (legend title) and <code>guide</code> (legend display) arguments — set them once and both scales update.</p>
 <section class="level2"><h3 id="manual-colours">Manual colours<a class="anchor" aria-label="anchor" href="#manual-colours"></a>
 </h3>
 <p>Use <code><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_colour_manual()</a></code> when assigning specific brand or convention colours to known levels.</p>
@@ -260,7 +260,7 @@
 </div>
 </section><section class="level2"><h3 id="colorbrewer-palettes">ColorBrewer palettes<a class="anchor" aria-label="anchor" href="#colorbrewer-palettes"></a>
 </h3>
-<p><code><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_colour_brewer()</a></code> applies a ColorBrewer palette — safe, perceptually uniform, and print-friendly. Use <code>palette = "Set1"</code> for categorical data, <code>"RdYlGn"</code> for diverging, <code>"Blues"</code> for sequential.</p>
+<p><code><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_colour_brewer()</a></code> applies a ColorBrewer palette — perceptually uniform and print-safe, which matters when figures go to black-and-white PDF. Use <code>palette = "Set1"</code> for categorical data, <code>"RdYlGn"</code> for diverging, <code>"Blues"</code> for sequential.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p_base</span> <span class="op">+</span></span>
@@ -281,7 +281,7 @@
 </div>
 </section><section class="level2"><h3 id="suppressing-legends">Suppressing legends<a class="anchor" aria-label="anchor" href="#suppressing-legends"></a>
 </h3>
-<p>Pass <code>guide = "none"</code> to any scale to remove its legend entry. Use this when colour is self-evident from axis labels or annotations.</p>
+<p>Pass <code>guide = "none"</code> to any scale and that aesthetic drops out of the legend. You’d do this when the axis labels or an annotation already name the group — a redundant legend only takes up panel space.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p_base</span> <span class="op">+</span></span>
@@ -304,7 +304,7 @@
 </h2>
 <section class="level2"><h3 id="labs">labs()<a class="anchor" aria-label="anchor" href="#labs"></a>
 </h3>
-<p><code><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs()</a></code> sets the axis, legend, title, subtitle, and caption text. Set axis labels here rather than inside the plot function so they can be overridden per project.</p>
+<p><code><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs()</a></code> sets axis labels, the plot title, legend title, subtitle, and caption text. We set these outside the constructor so you can override them per project without touching the function itself.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">km</span><span class="op">)</span> <span class="op">+</span></span>
@@ -330,7 +330,7 @@
 </div>
 </section><section class="level2"><h3 id="annotate">annotate()<a class="anchor" aria-label="anchor" href="#annotate"></a>
 </h3>
-<p><code><a href="https://ggplot2.tidyverse.org/reference/annotate.html" class="external-link">annotate()</a></code> places text, segments, or rectangles at fixed data coordinates. Use it for sample size callouts, phase labels, or directional arrows.</p>
+<p><code><a href="https://ggplot2.tidyverse.org/reference/annotate.html" class="external-link">annotate()</a></code> places text, segments, rectangles, or arrows at fixed data coordinates — useful for a sample-size callout in the corner or a label pointing to an event of interest.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">km</span><span class="op">)</span> <span class="op">+</span></span>
@@ -562,7 +562,7 @@
 </div>
 </section></section><section class="section level2"><h2 id="legend-positioning">Legend Positioning<a class="anchor" aria-label="anchor" href="#legend-positioning"></a>
 </h2>
-<p>ggplot2 places the legend outside the panel by default. For publication figures it is often cleaner to place it inside the panel or suppress it entirely.</p>
+<p>ggplot2 places the legend outside the panel by default. For publication figures we usually move it inside or drop it — the axis labels often do the identification work already.</p>
 <section class="level2"><h3 id="inside-the-panel">Inside the panel<a class="anchor" aria-label="anchor" href="#inside-the-panel"></a>
 </h3>
 <p>Pass fractional coordinates <code>c(x, y)</code> to <code>legend.position</code> inside <code><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme()</a></code>. <code>c(0, 0)</code> is the bottom-left corner; <code>c(1, 1)</code> is the top-right.</p>
@@ -788,7 +788,7 @@
 </div>
 </section></section><section class="section level2"><h2 id="multi-panel-figures-with-patchwork">Multi-panel Figures with patchwork<a class="anchor" aria-label="anchor" href="#multi-panel-figures-with-patchwork"></a>
 </h2>
-<p>The <code>patchwork</code> package composes multiple ggplot objects into a single figure. Use it to place two related plots side by side, or to stack a main plot above a companion table or risk panel.</p>
+<p>The <code>patchwork</code> package composes multiple ggplot objects into a single figure. The two patterns we reach for most are side-by-side comparisons and a main plot stacked above a companion table or risk panel.</p>
 <section class="level2"><h3 id="side-by-side-plots">Side-by-side plots<a class="anchor" aria-label="anchor" href="#side-by-side-plots"></a>
 </h3>
 <div class="cell">
@@ -885,7 +885,7 @@
 </div>
 </section><section class="level2"><h3 id="saving-a-patchwork-composite">Saving a patchwork composite<a class="anchor" aria-label="anchor" href="#saving-a-patchwork-composite"></a>
 </h3>
-<p>Assign the composed object to a variable and pass it to <code><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave()</a></code>. For PowerPoint, save each panel individually with <code><a href="../reference/save_ppt.html">save_ppt()</a></code> (patchwork composites are not editable DrawingML objects).</p>
+<p>Assign the composed object to a variable and pass it to <code><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave()</a></code>. For PowerPoint, save each panel individually with <code><a href="../reference/save_ppt.html">save_ppt()</a></code> — patchwork flattens everything into a single raster, so the shapes and text are no longer editable in PowerPoint.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb33"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">combined</span> <span class="op">&lt;-</span> <span class="op">(</span><span class="va">p_ms</span> <span class="op">|</span> <span class="va">p_km_ms</span><span class="op">)</span> <span class="op">+</span></span>

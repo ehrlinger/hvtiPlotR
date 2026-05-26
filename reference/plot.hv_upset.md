@@ -74,7 +74,7 @@ plot(
 
 - ...:
 
-  Currently unused; reserved for future args.
+  Ignored; present for S3 consistency.
 
 ## Value
 

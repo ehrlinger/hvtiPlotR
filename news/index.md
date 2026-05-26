@@ -1,26 +1,42 @@
 # Changelog
 
+## hvtiPlotR 2.3.1
+
+### Documentation ([\#69](https://github.com/ehrlinger/hvtiPlotR/issues/69))
+
+- Package-wide voice rewrite of every prose surface — README, vignettes,
+  NEWS, slide deck, roxygen, DESCRIPTION `Title:` — against the
+  `writing-voice.md` spec. Prose only; no API or behavioural change.
+- Fixed stale `hv_theme()` string-key references (`"dark_ppt"`, `"ppt"`,
+  `"light_ppt"`, `"manuscript"`, `"poster"`) in the main tutorial and
+  SAS-migration vignettes. That dispatcher was removed in 2.1.0; the
+  vignettes now name the actual `theme_hv_*()` functions.
+- Fixed missing “to” in the main tutorial’s introduction (“is simplify”
+  → “is to simplify”).
+- README now lists all five vignettes (`sas-migration-guide` was
+  missing) and the “Migrating from plot.sas” section points at the
+  dedicated migration vignette.
+- Synced a copy of `writing-voice.md` into the repo root for future
+  documentation work.
+
 ## hvtiPlotR 2.3.0
 
 ### CONSORT patient flow tracking and diagram ([\#67](https://github.com/ehrlinger/hvtiPlotR/issues/67))
 
-New two-class API for building auditable CONSORT flow diagrams from
-patient-level data.
+Two-class API for CONSORT flow diagrams built from patient-level data.
 
 **Tracker lifecycle:**
 
 - `hv_consort_start(data, patient_id, label, pass_col)` — initialises a
-  tracker with one row per patient and a boolean column marking all
-  patients as screened.
+  tracker with one row per patient; all patients begin as screened.
 - `hv_consort_exclude(tracker, label, col, ..., excl_label, pass_col)` —
   adds an exclusion stage via formula rules
   (`condition ~ "Reason string"`). First-matching formula wins; gating
-  on the prior stage is automatic. Pipe-friendly.
+  on the prior stage is automatic.
 - `hv_consort_summary(tracker)` — returns a data frame with N included
   and N excluded per stage; suitable for methods-section tables.
 - `hv_consort_patients(tracker, stage, reason)` — returns patient IDs at
-  any stage, or the subset excluded for a specific reason, for full
-  auditability.
+  any stage, or the subset excluded for a specific reason.
 
 **Diagram:**
 
@@ -64,33 +80,30 @@ subclass:
 
 - **[`summary()`](https://rdrr.io/r/base/summary.html)** — prints the
   standard one-screen header, then walks the object’s `$tables` slot and
-  prints each named auxiliary table with a header. Lets callers see the
-  underlying risk tables, report tables, and diagnostics without having
-  to know the `$tables` accessor path. Subclasses can override with a
-  curated layout.
+  prints each named auxiliary table with a header. Callers get risk
+  tables, report tables, and diagnostics without reaching for `$tables`
+  directly. Subclasses can override with a curated layout.
 - **[`autoplot()`](https://ggplot2.tidyverse.org/reference/autoplot.html)**
   — re-exports ggplot2’s
   [`autoplot()`](https://ggplot2.tidyverse.org/reference/autoplot.html)
   generic and dispatches to the registered `plot.<subclass>()` method.
-  Callers who prefer the ggplot2-ecosystem verb (used by `broom`,
-  `ggfortify`, `ggsurvfit`) can write `autoplot(km)` interchangeably
-  with `plot(km)`. Extra args forward to the subclass
+  Callers who prefer the ggplot2-ecosystem verb (`broom`, `ggfortify`,
+  and `ggsurvfit` all use it) can write `autoplot(km)` in place of
+  `plot(km)`. Extra args forward to the subclass
   [`plot()`](https://rdrr.io/r/graphics/plot.default.html).
 - **[`as.data.frame()`](https://rdrr.io/r/base/as.data.frame.html)** —
-  returns the `$data` slot. Lets callers use the standard
-  [`as.data.frame()`](https://rdrr.io/r/base/as.data.frame.html) /
-  [`data.frame()`](https://rdrr.io/r/base/data.frame.html) coercion in
-  tidyverse pipelines instead of reaching for the `$data` accessor.
+  returns the `$data` slot via standard
+  [`as.data.frame()`](https://rdrr.io/r/base/as.data.frame.html)
+  coercion instead of the `$data` accessor.
 
-No breaking changes — these are additive.
+No breaking changes.
 
 ### UpSet plot backend swap ([\#62](https://github.com/ehrlinger/hvtiPlotR/issues/62))
 
 [`plot.hv_upset()`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hv_upset.md)
 is now backed by [`ggupset`](https://cran.r-project.org/package=ggupset)
 rather than `ComplexUpset`. The intersection-size bar chart is a
-standard ggplot — themes apply via `+` like every other hvtiPlotR plot,
-and
+standard ggplot; themes apply via `+`, and
 [`ggplot2::ggplot_build()`](https://ggplot2.tidyverse.org/reference/ggplot_build.html)
 works on the output. When `set_size = TRUE` (the default) a manual
 set-size sidebar is composed via `patchwork`.
@@ -143,8 +156,8 @@ set-size sidebar is composed via `patchwork`.
 - Each theme follows the
   [`theme_bw()`](https://ggplot2.tidyverse.org/reference/ggtheme.html)
   contract: pass `base_size` / `base_family` to control typography, then
-  forward any extra named theme element through `...` to override
-  inline. Examples:
+  forward any extra named theme element through `...` to override.
+  Examples:
 
   ``` r
 
@@ -214,8 +227,8 @@ set-size sidebar is composed via `patchwork`.
 
 - Package-level help topic
   ([`?hvtiPlotR`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-package.md))
-  comprehensively rewritten to cover the v2.0.0 feature set: two-step
-  workflow with runnable example, fixed-panel geometry subsection
+  rewritten to cover the v2.0.0 feature set: two-step workflow with
+  runnable example, fixed-panel geometry subsection
   ([`hv_ggsave_dims()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_ggsave_dims.md)/[`hv_ph_location()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_ph_location.md)/`save_ppt(panel_box=)`),
   legacy single-call API, `hv_data` class introspection, scope and
   versioning, vignette index.
@@ -247,15 +260,14 @@ directly; no `.9xxx` pre-release suffixes.
 ### New features — fixed-panel geometry
 
 The dominant theme of this release is making the **panel content area**
-(the rectangular data region, excluding axes/titles/legend/margins) a
-first-class target, so figures stay visually aligned across output
+(the rectangular data region, excluding axes/titles/legend/margins)
+directly addressable, so figures stay visually aligned across output
 devices and across slides in a deck even when axis-label widths differ.
 
 - `hv_ggsave_dims(plot, width, height, units = "in")`: compute
   [`ggsave()`](https://ggplot2.tidyverse.org/reference/ggsave.html)
   `width`/`height` that preserve a fixed panel content area regardless
-  of axis labels, legend, title, or facet strips. Returns a named list
-  shaped to splat into
+  of surrounding chrome. Returns a named list shaped to splat into
   [`ggsave()`](https://ggplot2.tidyverse.org/reference/ggsave.html) via
   `do.call(ggsave, c(list(filename = ..., plot = p), dims))`. Units are
   length-only (`"in"`, `"cm"`, `"mm"`) since the sizing device is PDF.
@@ -272,11 +284,10 @@ devices and across slides in a deck even when axis-label widths differ.
 - `save_ppt(..., panel_box = list(width, height, left, top))`: new
   optional argument. When supplied, per-slide placement is computed via
   [`hv_ph_location()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_ph_location.md)
-  so every slide anchors the panel at the given rectangle — solving the
-  “plot background box moves between slides” problem on dark PPT themes
-  where the panel is visibly filled. When `panel_box = NULL` (default),
-  the fixed `width`/`height`/`left`/`top` arguments are used (legacy
-  behavior).
+  so every slide anchors the panel at the given rectangle; on dark PPT
+  themes where the panel fill is visible, the panel no longer shifts
+  between slides. When `panel_box = NULL` (default), the fixed
+  `width`/`height`/`left`/`top` arguments are used (legacy behavior).
 
 ### New features — PPT theme polish
 
@@ -357,8 +368,8 @@ devices and across slides in a deck even when axis-label widths differ.
     calls with `y = Inf`/`y = -Inf` plus `vjust`, anchoring each group
     label near the top/bottom panel edge regardless of dataset size.
   - Replaced hard-coded label strings (`"SAVR"`, `"TF-TAVR"`, etc.) with
-    `mh$meta$group_labels[1]` / `[2]`, so the annotations always track
-    the labels supplied to the constructor.
+    `mh$meta$group_labels[1]` / `[2]`, so the annotations track the
+    labels supplied to the constructor.
 
 ## hvtiPlotR 2.0.0.9008
 
@@ -505,9 +516,8 @@ devices and across slides in a deck even when axis-label widths differ.
 ### Documentation
 
 - All `hv_*` constructors and `plot.hv_*` methods now carry `@family`
-  tags, creating automatic bi-directional “See also” cross-links between
-  each constructor and its plot method in the help system and pkgdown
-  reference.
+  tags; the help system and pkgdown reference both show bi-directional
+  “See also” links between each constructor and its plot method.
 - `@return` on every constructor now explicitly says “call
   [`plot()`](https://rdrr.io/r/graphics/plot.default.html) to render”
   and links to the corresponding `plot.hv_*` method.
@@ -764,7 +774,7 @@ argument on [`plot()`](https://rdrr.io/r/graphics/plot.default.html):
   `upset-plot.R` now delegate `data.frame`, column-presence,
   numeric-column, and alpha checks to `.check_df()`, `.check_cols()`,
   `.check_col()`, `.check_numeric_col()`, and `.check_alpha()`. Error
-  wording is now consistent across all entry points.
+  messages use consistent wording across all entry points.
 
 ### Code quality
 
@@ -773,7 +783,7 @@ argument on [`plot()`](https://rdrr.io/r/graphics/plot.default.html):
   and the internal helper `.np_sample_bins()`: `eta_intercept`,
   `logit_shift`, `cont_baseline`, `cont_scale`, `cont_sigma`,
   `eff_frac_prob`, `eff_frac_cont`. Magic numbers replaced throughout
-  single-curve, multi-group, and binned-data-summary code paths.
+  the single-curve, multi-group, and binned-data-summary code paths.
 - Named all simulation tuning constants in
   [`sample_nonparametric_ordinal_data()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_nonparametric_ordinal_data.md)
   and

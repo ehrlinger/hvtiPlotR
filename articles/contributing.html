@@ -24,7 +24,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">hvtiPlotR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.3.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.3.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -77,9 +77,9 @@
       <h1>Contributing to hvtiPlotR</h1>
 
       <p class="author">John Ehrlinger <a href="mailto:ehrlinj@ccf.org" class="email">ehrlinj@ccf.org</a></p>
-      <p class="date">2026-05-21</p>
+      <p class="date">2026-05-26</p>
 
-      <small class="dont-index">Source: <a href="https://github.com/ehrlinger/hvtiPlotR/blob/v2.3.0/vignettes/contributing.qmd" class="external-link"><code>vignettes/contributing.qmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/ehrlinger/hvtiPlotR/blob/main/vignettes/contributing.qmd" class="external-link"><code>vignettes/contributing.qmd</code></a></small>
       <div class="d-none name"><code></code></div>
     </div>
 
@@ -88,13 +88,7 @@
 
 
 
-    <p>This guide is for two audiences:</p>
-<ul>
-<li>
-<strong>Biostatisticians and analysts</strong> who want to port a SAS template to R and add it to this package. Start at <a href="#track-a">Track A</a>.</li>
-<li>
-<strong>R package developers</strong> who want to work on testing, CI, or package infrastructure. Start at <a href="#track-b">Track B</a>.</li>
-</ul>
+    <p>If you are a biostatistician porting a SAS template to R, start at <a href="#track-a">Track A</a>. If you are here for testing, CI, or package infrastructure, start at <a href="#track-b">Track B</a>.</p>
 <hr>
 <section class="section level2"><h2 id="setup">Development environment setup<a class="anchor" aria-label="anchor" href="#setup"></a>
 </h2>
@@ -106,7 +100,7 @@
 <li>Git</li>
 </ul></section><section class="level2"><h3 id="installing-development-dependencies">Installing development dependencies<a class="anchor" aria-label="anchor" href="#installing-development-dependencies"></a>
 </h3>
-<p>Clone the repository and install all dependencies declared in <code>DESCRIPTION</code>:</p>
+<p>Clone the repository and install your development dependencies:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Clone (first time only)</span></span>
 <span><span class="co"># git clone https://github.com/ehrlinger/hvtiPlotR.git</span></span>
@@ -276,7 +270,7 @@
 <span></span>
 <span>  <span class="va">p</span></span>
 <span><span class="op">}</span></span></code></pre></div>
-<p>Key rules enforced here:</p>
+<p>A few conventions the function above follows:</p>
 <ul>
 <li>
 <strong>Column names are strings</strong>, passed via <code>x_col =</code>, <code>estimate_col =</code>, etc. Never use <code><a href="https://rlang.r-lib.org/reference/enquo.html" class="external-link">enquo()</a></code> or <code><a href="https://rdrr.io/r/base/Paren.html" class="external-link">{ }</a></code> — it makes column names opaque to the caller.</li>
@@ -340,7 +334,7 @@
 <span><span class="op">}</span></span></code></pre></div>
 </section><section class="level2"><h3 id="step-4-write-roxygen-documentation">Step 4: Write roxygen documentation<a class="anchor" aria-label="anchor" href="#step-4-write-roxygen-documentation"></a>
 </h3>
-<p>The documentation block must include all of the following:</p>
+<p>Your documentation block needs all of the following:</p>
 <table class="table caption-top">
 <colgroup>
 <col style="width: 33%">
@@ -543,7 +537,7 @@
 <p>Internal helpers (prefixed with <code>.</code>) should have <code>@keywords internal</code> and <strong>no</strong> <code>@export</code> — they will not appear in <code>NAMESPACE</code> or generate <code>.Rd</code> files.</p>
 </section><section class="level3"><h4 id="the-bare-ggplot-pattern">The bare-ggplot pattern<a class="anchor" aria-label="anchor" href="#the-bare-ggplot-pattern"></a>
 </h4>
-<p>Every plot function must:</p>
+<p>Every plot function in hvtiPlotR follows five rules:</p>
 <ol type="1">
 <li>Accept model-output data frames (not raw patient data).</li>
 <li>Map all column references through string arguments (<code>x_col =</code>, etc.).</li>
@@ -551,7 +545,7 @@
 <li>Return an unstyled ggplot — no <code>scale_*()</code>, no <code><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs()</a></code>, no theme.</li>
 <li>Not call <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code> or <code><a href="https://rdrr.io/r/base/invisible.html" class="external-link">invisible()</a></code>.</li>
 </ol>
-<p>This pattern lets callers layer on their own choices and enables the <code>+</code> composition grammar documented in <code>vignettes/plot-decorators.qmd</code>.</p>
+<p>Return the bare ggplot and callers can layer scales, labels, and a theme on top — that’s the <code>+</code> composition grammar covered in <code>vignettes/plot-decorators.qmd</code>.</p>
 </section><section class="level3"><h4 id="tidy-evaluation">Tidy evaluation<a class="anchor" aria-label="anchor" href="#tidy-evaluation"></a>
 </h4>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
@@ -570,7 +564,7 @@
 </h3>
 <section class="level3"><h4 id="test-file-layout">Test file layout<a class="anchor" aria-label="anchor" href="#test-file-layout"></a>
 </h4>
-<p>Each source file <code>R/my-plot.R</code> should have a corresponding <code>tests/testthat/test_my_plot.R</code>. The minimum set of tests for a new plot function:</p>
+<p>Each source file <code>R/my-plot.R</code> should have a corresponding <code>tests/testthat/test_my_plot.R</code>. At minimum, a new plot function needs five tests:</p>
 <table class="table caption-top">
 <colgroup>
 <col style="width: 50%">
@@ -629,7 +623,7 @@
 <li>Vignette chunks marked <code>eval: true</code> run successfully.</li>
 </ul></section></section><section class="level2"><h3 id="vignette-conventions">Vignette conventions<a class="anchor" aria-label="anchor" href="#vignette-conventions"></a>
 </h3>
-<p>Vignettes live in <code>vignettes/</code> as <code>.qmd</code> files and are built with Quarto (<code>VignetteBuilder: quarto</code>). Rules:</p>
+<p>Vignettes live in <code>vignettes/</code> as <code>.qmd</code> files; Quarto builds them (<code>VignetteBuilder: quarto</code>). A few things to keep in mind:</p>
 <ul>
 <li>All code chunks that read files, write files, or access a network must have <code>#| eval: false</code>.</li>
 <li>Use <code><a href="https://here.r-lib.org/reference/here.html" class="external-link">here::here()</a></code> for file paths in eval-false chunks (not hard-coded absolute paths).</li>
@@ -640,10 +634,10 @@
 <ol type="1">
 <li>Update the version in <code>DESCRIPTION</code> (follow <a href="https://semver.org/" class="external-link">semantic versioning</a>: <code>MAJOR.MINOR.PATCH</code>).</li>
 <li>Move the dev entries in <code>NEWS.md</code> to a new <code># hvtiPlotR X.Y.Z</code> heading.</li>
-<li>Run <code><a href="https://devtools.r-lib.org/reference/check.html" class="external-link">devtools::check()</a></code> — zero errors and zero warnings required.</li>
+<li>Run <code><a href="https://devtools.r-lib.org/reference/check.html" class="external-link">devtools::check()</a></code> — you need zero errors and zero warnings before tagging.</li>
 <li>Tag the release commit: <code>git tag -a vX.Y.Z -m "Release X.Y.Z"</code>.</li>
 <li>Push the tag: <code>git push origin vX.Y.Z</code>.</li>
-<li>The pkgdown GitHub Action rebuilds the documentation site automatically.</li>
+<li>The pkgdown GitHub Action picks up the tag and rebuilds the documentation site — nothing else to do.</li>
 </ol>
 <hr></section></section><section class="section level2"><h2 id="session-info">Session info<a class="anchor" aria-label="anchor" href="#session-info"></a>
 </h2>

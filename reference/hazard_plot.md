@@ -7,10 +7,10 @@
 plus
 [`plot.hv_hazard()`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hv_hazard.md).
 
-Plots a pre-computed parametric survival, hazard, or cumulative-hazard
-curve from a Weibull (or other parametric) model, optionally overlaid
-with Kaplan-Meier empirical estimates and a population life-table
-reference. Covers the complete family of `tp.hp.dead.*` SAS templates.
+Pass your `predict` dataset from a Weibull (or other parametric) model
+and get back a ggplot of the survival, hazard, or cumulative-hazard
+curve, with optional KM empirical overlay and population life-table
+reference. Covers the full `tp.hp.dead.*` SAS template family.
 
 |  |  |
 |----|----|

@@ -7,9 +7,9 @@
 plus
 [`plot.hv_nnt()`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hv_nnt.md).
 
-Plots the number needed to treat (NNT) and/or absolute risk reduction
-(ARR) over time, with optional confidence bands. Covers the NNT
-component of `tp.hp.numtreat.survdiff.matched.sas`.
+Pass the `nntout` dataset and plot NNT (or ARR) over time. Add
+`lower_col`/`upper_col` for a confidence band. Covers the NNT component
+of `tp.hp.numtreat.survdiff.matched.sas`.
 
 **SAS context:** The SAS template computes NNT at discrete time points
 (1, 5, 10, 15, 20 years) from the HAZDIFL macro output, then connects

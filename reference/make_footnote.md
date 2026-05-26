@@ -33,15 +33,15 @@ makeFootnote(
 
 - text:
 
-  Text to display. Defaults to the current working directory, which
-  conveniently identifies the project. For the typical use case pass the
-  script filename: `make_footnote("R/analysis.R")`.
+  Text to display. Defaults to the current working directory; for most
+  uses pass the script filename instead:
+  `make_footnote("R/analysis.R")`.
 
 - timestamp:
 
-  Logical; append [`Sys.time()`](https://rdrr.io/r/base/Sys.time.html)
-  to `text`? Default `TRUE`. Set to `FALSE` for reproducible screenshots
-  or when the file path already contains enough context.
+  Logical; if TRUE, [`Sys.time()`](https://rdrr.io/r/base/Sys.time.html)
+  is appended to `text`. Default `TRUE`. Set to `FALSE` for reproducible
+  output.
 
 - prefix:
 

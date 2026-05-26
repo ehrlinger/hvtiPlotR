@@ -14,14 +14,14 @@ library(ggplot2)
 library(hvtiPlotR)
 ```
 
-All hvtiPlotR plot functions follow a two-step workflow. First, call the
-constructor (`hv_*()`) to validate and prepare data; this returns an S3
-object of class `c("hv_<concept>", "hv_data")`. Then call
-[`plot()`](https://rdrr.io/r/graphics/plot.default.html) on that object
-to obtain a bare `ggplot` with no colour scales, axis labels, or theme
-applied. Compose those with the usual `+` operator. See the companion
-vignette “Decorating and Saving hvtiPlotR Plots” for full coverage of
-`scale_()`,
+All hvtiPlotR plot functions follow a two-step workflow. Call the
+constructor (`hv_*()`) to validate and prepare data — it returns an S3
+object of class `c("hv_<concept>", "hv_data")` — then call
+[`plot()`](https://rdrr.io/r/graphics/plot.default.html) on the result
+to get a bare `ggplot` with no colour scales, axis labels, or theme
+applied yet. You add those with the usual `+` operator. See the
+companion vignette “Decorating and Saving hvtiPlotR Plots” for full
+coverage of `scale_()`,
 [`labs()`](https://ggplot2.tidyverse.org/reference/labs.html),
 [`annotate()`](https://ggplot2.tidyverse.org/reference/annotate.html),
 themes, and
@@ -68,14 +68,13 @@ constructor pattern.
 
 ## Mirrored Propensity Score Histogram
 
-A common figure in propensity-matched analyses is the mirrored
-histogram, which displays the propensity score distributions for two
-treatment groups before and after matching. The **hvtiPlotR** package
-provides the
+In propensity-matched analyses, we routinely produce a mirrored
+histogram to show how well matching compressed the overlap between two
+treatment groups.
 [`hv_mirror_hist()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_mirror_hist.md)
-constructor to prepare the data, and
-[`plot()`](https://rdrr.io/r/graphics/plot.default.html) to render the
-figure.
+prepares the data;
+[`plot()`](https://rdrr.io/r/graphics/plot.default.html) hands you a
+bare ggplot to dress with colour and labels.
 
 The constructor accepts a data frame with columns for the propensity
 score, group indicator, and match indicator. The
@@ -83,14 +82,12 @@ score, group indicator, and match indicator. The
 function generates example data suitable for testing.
 
 Two display modes are selected by the arguments supplied to the
-constructor:
-
-- **Binary-match mode** (`match_col`): upper bars show all observations
-  before matching; overlaid bars show the matched subset. This
-  reproduces `tp.lp.mirror-histogram_SAVR-TF-TAVR.R`.
-- **Weighted IPTW mode** (`weight_col`): upper bars show raw counts;
-  overlaid bars show per-bin IPTW weight sums. This reproduces
-  `tp.lp.mirror_histo_before_after_wt.R`.
+constructor. **Binary-match mode** (`match_col`) reproduces
+`tp.lp.mirror-histogram_SAVR-TF-TAVR.R`: upper bars show all
+observations before matching; overlaid bars show the matched subset.
+**Weighted IPTW mode** (`weight_col`) reproduces
+`tp.lp.mirror_histo_before_after_wt.R`: upper bars show raw counts;
+overlaid bars show per-bin IPTW weight sums.
 
 ### Binary-match mode (SAVR vs. TF-TAVR)
 
@@ -156,9 +153,9 @@ to positive labels. `y = Inf`/`-Inf` with `vjust` anchors each
 annotation near the panel edge regardless of data scale, so the
 positions adapt automatically to different dataset sizes.
 
-The constructor stores diagnostics with group counts and standardized
-mean differences (SMD) before and after matching in the
-`$tables$diagnostics` list:
+The constructor stores group counts and standardized mean differences
+(SMD) before and after matching in `$tables$diagnostics`. You can read
+those out directly:
 
 ``` r
 
@@ -268,17 +265,12 @@ mh_wt$tables$diagnostics$effective_n_by_group
 
 ## Stacked Histogram
 
-A common exploratory figure is the stacked histogram, which shows how
-the composition of a numeric variable changes over time or across
-another grouping dimension. The **hvtiPlotR** package provides the
+The stacked histogram shows how the composition of a numeric variable
+shifts over time or across a grouping dimension.
 [`hv_stacked()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_stacked.md)
-constructor and a
-[`plot()`](https://rdrr.io/r/graphics/plot.default.html) method to
-generate this figure.
-
-[`plot()`](https://rdrr.io/r/graphics/plot.default.html) returns a bare
-`ggplot` object — no colour scales, axis labels, or theme are applied —
-so the caller can add those freely with the usual `+` operator.
+prepares the data;
+[`plot()`](https://rdrr.io/r/graphics/plot.default.html) hands you a
+bare ggplot to dress with colour and labels.
 
 The
 [`sample_stacked_histogram_data()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_stacked_histogram_data.md)
@@ -368,21 +360,21 @@ ggsave(
 ## Goodness-of-Follow-Up Plot
 
 The goodness-of-follow-up plot is a standard quality-control figure in
-longitudinal outcome analyses. It displays each patient as a point at
-their operation date (x-axis) and follow-up duration (y-axis), with a
-short vertical tick below each point. A dashed diagonal line marks the
-maximum potential follow-up given the study start, study end, and
-follow-up closing date. The **hvtiPlotR** package provides the
-[`hv_followup()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_followup.md)
-constructor and a
-[`plot()`](https://rdrr.io/r/graphics/plot.default.html) method to build
-this figure.
+longitudinal outcome analyses. Each patient appears as a point at their
+operation date (x-axis) and follow-up duration (y-axis), with a short
+vertical tick below. A dashed diagonal line marks the maximum potential
+follow-up given the study start, study end, and follow-up closing date —
+points above the line have longer follow-up than that window alone
+explains, typically because passive surveillance supplemented active
+cross-sectional follow-up.
 
-[`plot()`](https://rdrr.io/r/graphics/plot.default.html) returns a bare
-`ggplot` object with no colour, shape, axis, or label scales applied —
-those are added by the caller with standard `ggplot2` modifiers. The
-`type` argument selects the panel: `"followup"` (default, the
-death/censoring scatter) or `"event"` (competing non-fatal event panel).
+[`hv_followup()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_followup.md)
+prepares the data;
+[`plot()`](https://rdrr.io/r/graphics/plot.default.html) hands you a
+bare ggplot with no colour, shape, axis, or label scales applied. Add
+those with the usual `+` operator. The `type` argument selects the
+panel: `"followup"` (default, the death/censoring scatter) or `"event"`
+(competing non-fatal event panel).
 
 ### Sample data
 
@@ -468,11 +460,6 @@ gfup_final
 
 ![](plot-functions_files/figure-html/gfup_styled-1.png)
 
-The diagonal dashed line represents the maximum potential follow-up.
-Points sitting above the line indicate patients with longer follow-up
-than expected from the study window, typically due to passive
-surveillance supplementing active cross-sectional follow-up.
-
 ### Saving
 
 ``` r
@@ -548,17 +535,12 @@ The covariate balance plot is the standard quality-control figure for
 propensity score matching and IPTW analyses. Each covariate occupies a
 labelled row; points show the standardized mean difference (SMD) for
 each comparison group (e.g. before and after matching). A solid vertical
-line marks zero balance; dotted vertical lines mark an imbalance
-threshold (default ±10%).
-
-The **hvtiPlotR** package provides
+line marks zero balance; the dotted lines at ±10% give you a quick
+visual threshold for acceptable balance.
 [`hv_balance()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_balance.md)
-to prepare data and
-[`plot()`](https://rdrr.io/r/graphics/plot.default.html) to render the
-figure, superseding `tp.lp.propen.cov_balance.R`.
-[`plot()`](https://rdrr.io/r/graphics/plot.default.html) returns a bare
-`ggplot` object — no colour, shape, axis labels, or theme applied — so
-all styling is added with the usual `+` operator.
+prepares the data, superseding `tp.lp.propen.cov_balance.R`;
+[`plot()`](https://rdrr.io/r/graphics/plot.default.html) hands you a
+bare ggplot to style with the usual `+` operator.
 
 Input data must be in **long format**: one row per covariate × group
 combination with columns for the covariate name, the group label, and
@@ -729,12 +711,11 @@ ggsave(
 [`hv_survival()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_survival.md)
 estimates the Kaplan-Meier product-limit survival function and stores
 all five companion plots’ data (matching the SAS `%kaplan` macro output
-`PLOTS`, `PLOTC`, `PLOTH`, `PLOTL`) plus tidy table data frames in the
-returned S3 object. Call
-[`plot()`](https://rdrr.io/r/graphics/plot.default.html) to render a
-bare ggplot for the selected `type` (default `"survival"`). Tidy tables
-are accessible via `$tables`. Confidence intervals use the logit
-transform with a default confidence level of 0.95.
+`PLOTS`, `PLOTC`, `PLOTH`, `PLOTL`) plus tidy summary tables in
+`$tables`. Call [`plot()`](https://rdrr.io/r/graphics/plot.default.html)
+with the `type` argument to render a bare ggplot for the selected panel
+(default `"survival"`). Confidence intervals use the logit transform at
+0.95 by default.
 
 ### Sample data
 
@@ -901,7 +882,7 @@ plot(km_s, type = "loglog") +
 
 The raw point estimates are noisy; add
 [`geom_smooth()`](https://ggplot2.tidyverse.org/reference/geom_smooth.html)
-for a publication-ready smoothed hazard curve.
+for a smoothed curve suitable for figures.
 
 ``` r
 
@@ -944,24 +925,22 @@ workflow from `tp.dp.EDA_barplots_scatterplots.R` and
 `tp.dp.EDA_barplots_scatterplots_varnames.R`, replacing base-R graphics
 with composable `ggplot2` objects.
 
-Three helper functions support the workflow:
-
-- [`eda_classify_var()`](https://ehrlinger.github.io/hvtiPlotR/reference/eda_classify_var.md)
-  — detects whether a column is continuous (`"Cont"`),
-  numeric-categorical (`"Cat_Num"`), or character-categorical
-  (`"Cat_Char"`), matching the `UniqueLimit` logic from the template.
-- [`eda_select_vars()`](https://ehrlinger.github.io/hvtiPlotR/reference/eda_select_vars.md)
-  — subsets and reorders columns by name or space-separated string,
-  replacing the `Order_Variables()` / `Mod_Data <- dta[, Order_Var]`
-  pattern from the varnames template.
-- [`sample_eda_data()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_eda_data.md)
-  — generates a reproducible mixed-type dataset for demonstration.
+Three helpers support the workflow:
+[`eda_classify_var()`](https://ehrlinger.github.io/hvtiPlotR/reference/eda_classify_var.md)
+detects whether a column is continuous (`"Cont"`), numeric-categorical
+(`"Cat_Num"`), or character-categorical (`"Cat_Char"`) (matching the
+`UniqueLimit` logic from the template);
+[`eda_select_vars()`](https://ehrlinger.github.io/hvtiPlotR/reference/eda_select_vars.md)
+subsets and reorders columns by name or space-separated string,
+replacing the `Order_Variables()` / `Mod_Data <- dta[, Order_Var]`
+pattern from the varnames template; and
+[`sample_eda_data()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_eda_data.md)
+generates a reproducible mixed-type dataset for demonstration.
 
 [`plot()`](https://rdrr.io/r/graphics/plot.default.html) on an `hv_eda`
-object always returns a bare `ggplot`. Colour scales, axis labels,
+object returns a bare `ggplot`. Add colour scales, axis labels,
 annotations, and
-[`theme_hv_manuscript()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)
-are added by the caller.
+[`theme_hv_manuscript()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md).
 
 ### Sample data
 
@@ -1215,11 +1194,12 @@ for (pg in seq(1, length(all_plots), by = per_page)) {
 ## Alluvial (Sankey) Plot
 
 [`hv_alluvial()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_alluvial.md)
-prepares an alluvial (Sankey-style) diagram using `ggalluvial`. Each row
-of the input is a unique combination of axis values with an associated
-patient count; [`plot()`](https://rdrr.io/r/graphics/plot.default.html)
-draws flows proportional to that count. Ports
-`tp.dp.female_bicus_preAR_sankey.R`.
+prepares an alluvial (Sankey-style) diagram using `ggalluvial`, so you
+can see how patients flow between states across time points or treatment
+stages. Each row of the input is a unique combination of axis values
+with an associated patient count;
+[`plot()`](https://rdrr.io/r/graphics/plot.default.html) draws flows
+proportional to that count. Ports `tp.dp.female_bicus_preAR_sankey.R`.
 
 ### Sample data
 
@@ -1325,12 +1305,15 @@ ggsave("../graphs/alluvial.pdf", p_al, width = 8, height = 6)
 ## Cluster Stability Sankey Plot
 
 [`hv_sankey()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_sankey.md)
-prepares a Sankey diagram showing how patients flow between labelled
-clusters as the number of clusters K increases. It ports the PAM cluster
-stability figure from the HVTI clustering analysis pipeline. Each column
-represents one value of K (default K = 2 to 9); each band shows the
-fraction of patients whose assignment changes between consecutive K
-values. Node labels show the cluster letter and count.
+prepares a Sankey diagram that lets you watch how patient cluster
+assignments shift as you increase K — a visual test of cluster
+stability. Where the bands stay wide and orderly, the solution holds;
+where they cross and fragment, you can see at a glance that K has grown
+past what the data supports. It ports the PAM cluster stability figure
+from the HVTI clustering analysis pipeline. Each column represents one
+value of K (default K = 2 to 9); each band shows the fraction of
+patients whose assignment changes between consecutive K values. Node
+labels show the cluster letter and count.
 
 **Requires `ggsankey`** (not on CRAN):
 
@@ -1425,16 +1408,15 @@ ggsave("../graphs/sankey_clusters.pdf", p_san, width = 8, height = 5)
 ## CONSORT Patient Flow Diagram
 
 [`hv_consort()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_consort.md)
-builds a CONSORT-style patient-flow diagram. Unlike the other plot
-functions, the CONSORT API is **three-step** and does not use the
-`hv_data` class: build a patient-level *tracker* with
-[`hv_consort_start()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_consort_start.md),
-add one or more exclusion stages with
-[`hv_consort_exclude()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_consort_exclude.md),
-then render the diagram with
-[`hv_consort()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_consort.md).
-The diagram is drawn by the `consort` package (grid graphics), so it is
-not a `ggplot` and is not decorated with `+`.
+builds a CONSORT-style patient-flow diagram via a **three-step API**:
+[`hv_consort_start()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_consort_start.md)
+initializes a patient-level tracker,
+[`hv_consort_exclude()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_consort_exclude.md)
+adds exclusion stages, and
+[`hv_consort()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_consort.md)
+renders the result. Because the diagram is drawn by the `consort`
+package (grid graphics), it is not a `ggplot` and you don’t decorate it
+with `+`.
 
 ### Sample data
 
@@ -1467,8 +1449,9 @@ records the patient identifier and marks every patient as screened; each
 [`hv_consort_exclude()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_consort_exclude.md)
 call adds an exclusion stage. Exclusion rules are two-sided formulas —
 `<condition> ~ "<reason>"` — evaluated against the data. The first
-matching rule wins, and patients already excluded upstream are gated out
-automatically, so each stage operates only on the survivors of the last.
+matching rule wins, and patients dropped in an earlier stage are
+automatically skipped in later ones, so each stage operates only on the
+survivors of the last.
 
 ``` r
 
@@ -1579,8 +1562,8 @@ save_ppt(
 ## Hazard Plot
 
 [`hazard_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/hazard_plot.md)
-plots pre-computed parametric survival, hazard, or cumulative-hazard
-curves from a fitted Weibull (or other parametric) model, with optional
+plots pre-computed parametric curves — survival, hazard, or cumulative
+hazard — from a fitted Weibull or other parametric model, with optional
 Kaplan-Meier empirical overlay and population life-table reference. It
 ports the entire `tp.hp.dead.*` SAS template family.
 
@@ -1902,7 +1885,9 @@ head(nnt_dat)
 
 ### NNT curve
 
-NNT decreases over time as the treatment benefit accumulates.
+NNT decreases over time as the treatment benefit accumulates — early in
+follow-up you need to treat many patients to prevent one event; by later
+years the survival gap has widened enough that fewer do.
 
 ``` r
 
@@ -1981,13 +1966,7 @@ ports the pattern from five SAS/R templates:
 The constructor accepts patient-level data and computes annual summaries
 (mean or median) internally.
 [`plot()`](https://rdrr.io/r/graphics/plot.default.html) returns a bare
-ggplot. Compose with `scale_colour_*`, `scale_shape_*`,
-[`scale_x_continuous()`](https://ggplot2.tidyverse.org/reference/scale_continuous.html),
-[`scale_y_continuous()`](https://ggplot2.tidyverse.org/reference/scale_continuous.html),
-[`coord_cartesian()`](https://ggplot2.tidyverse.org/reference/coord_cartesian.html),
-[`labs()`](https://ggplot2.tidyverse.org/reference/labs.html),
-[`annotate()`](https://ggplot2.tidyverse.org/reference/annotate.html),
-and
+ggplot; add scales, labels, annotations, and
 [`theme_hv_manuscript()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md).
 
 ### Sample data
@@ -2324,19 +2303,12 @@ ggsave(here::here("graphs", "rp.trends.pdf"), p_tr, width = 11.5, height = 8)
 ports the pattern from `tp.dp.spaghetti.echo.R`: one trajectory line per
 subject over time, with optional stratification by a grouping variable.
 [`plot()`](https://rdrr.io/r/graphics/plot.default.html) accepts
-`add_smooth = TRUE` for an optional LOESS overlay. The original template
-covers nine figures — unstratified and sex-stratified variants of three
-echo outcomes (AV mean gradient, AV area, DVI) plus an ordinal MV
-regurgitation grade plot.
-
-[`plot()`](https://rdrr.io/r/graphics/plot.default.html) returns a bare
-ggplot. Compose with
-[`scale_colour_manual()`](https://ggplot2.tidyverse.org/reference/scale_manual.html),
-[`scale_x_continuous()`](https://ggplot2.tidyverse.org/reference/scale_continuous.html),
-[`scale_y_continuous()`](https://ggplot2.tidyverse.org/reference/scale_continuous.html),
-[`coord_cartesian()`](https://ggplot2.tidyverse.org/reference/coord_cartesian.html),
-[`labs()`](https://ggplot2.tidyverse.org/reference/labs.html), and
+`add_smooth = TRUE` for an optional LOESS overlay and returns a bare
+ggplot you can dress with
 [`theme_hv_manuscript()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md).
+The original template covers nine figures — unstratified and
+sex-stratified variants of three echo outcomes (AV mean gradient, AV
+area, DVI) plus an ordinal MV regurgitation grade plot.
 
 ### Sample data
 
@@ -2542,12 +2514,10 @@ prepares pre-computed average curves from a two-phase nonparametric
 temporal trend model — the R equivalent of the SAS `tp.np.*.avrg_curv.*`
 and `tp.np.*.u.trend.*` template family.
 
-The constructor accepts the SAS `mean_curv` / `boots_ci` datasets
-exported to CSV and read in with
-[`read.csv()`](https://rdrr.io/r/utils/read.table.html).
-[`plot()`](https://rdrr.io/r/graphics/plot.default.html) returns a bare
-ggplot for composition with `scale_colour_*`,
-[`labs()`](https://ggplot2.tidyverse.org/reference/labs.html), and
+Pass the SAS `mean_curv` and `boots_ci` datasets (read in with
+[`read.csv()`](https://rdrr.io/r/utils/read.table.html)) and call
+[`plot()`](https://rdrr.io/r/graphics/plot.default.html) for a bare
+ggplot you can dress with colour, labels, and
 [`theme_hv_manuscript()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md).
 
 ### Sample data
@@ -2693,8 +2663,8 @@ cumulative proportional-odds model — the R equivalent of
 severity).
 
 The SAS `predict` dataset stores one column per grade (`p0`, `p1`, `p2`,
-`p3`). Before calling this function, reshape it from wide to long
-format:
+`p3`). You’ll need to reshape it to long format before passing it to the
+constructor:
 
 ``` r
 
@@ -2838,8 +2808,8 @@ numeric summary table below. Call `plot(lc)` for the bar chart and
 `plot(lc, type = "table")` for the table panel. Compose the two panels
 with `patchwork`.
 
-Input is **pre-aggregated long-format data** — one row per (time window,
-series) combination. Use
+Input must be **pre-aggregated long-format data** (one row per
+time-window × series combination). Use
 [`sample_longitudinal_counts_data()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_longitudinal_counts_data.md)
 to derive this from patient-level data, or build it yourself from your
 registry data.
@@ -2957,7 +2927,8 @@ save_ppt(p_lc_bar,
 builds an UpSet diagram via
 [`ggupset::scale_x_upset()`](https://rdrr.io/pkg/ggupset/man/scale_x_upset.html)
 to visualise surgical procedure co-occurrences or any set membership
-data. Unlike Venn diagrams, UpSet plots scale to many sets cleanly.
+data. Where a Venn diagram breaks down past three or four sets, UpSet
+scales cleanly to seven or more.
 
 [`plot.hv_upset()`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hv_upset.md)
 returns a **ggplot** when `set_size = FALSE`, or a **patchwork
@@ -3076,8 +3047,8 @@ ggplot2::ggsave(here::here("graphs", "procedure_cooccurrence.pdf"),
 [`make_footnote()`](https://ehrlinger.github.io/hvtiPlotR/reference/make_footnote.md)
 writes a small annotation to the **bottom-right corner** of the current
 graphics device using grid. Call it *after* printing a plot to mark the
-figure as a work-in-progress during analysis. For publication-ready
-output, simply omit the call — the plot itself is unchanged.
+figure as a work-in-progress during analysis. When you’re ready for
+final output, omit the call — the plot object itself is untouched.
 
     # During analysis                   # For publication
     print(p)                             ggsave("fig1.pdf", p, ...)

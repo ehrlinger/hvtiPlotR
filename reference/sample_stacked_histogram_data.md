@@ -18,16 +18,16 @@ sample_stacked_histogram_data(
 
 - n_years:
 
-  Integer. Number of consecutive years to simulate starting from
+  Integer; number of consecutive years to simulate starting from
   `start_year`. Defaults to `20`.
 
 - start_year:
 
-  Integer. First calendar year in the sequence. Defaults to `2000`.
+  Integer; first calendar year in the sequence. Defaults to `2000`.
 
 - n_categories:
 
-  Integer. Number of distinct groups. Defaults to `3`.
+  Integer; number of distinct groups. Defaults to `3`.
 
 - seed:
 

@@ -83,7 +83,7 @@ hv_followup(
 
 - tolower_names:
 
-  Logical; whether to lower-case column names when materialising the
+  Logical; if TRUE, column names are lower-cased when materialising the
   data. Default `TRUE`.
 
 - death_levels:

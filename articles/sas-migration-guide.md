@@ -9,7 +9,7 @@ the SAS template name (e.g.,
 below and jump to the corresponding section for a working R example.
 
 The guide is organized by template family (the two-letter prefix after
-`tp.`). New ports are added to this document as they become available.
+`tp.`). We add new ports as they become available.
 
 ### Key concepts for SAS users
 
@@ -26,11 +26,16 @@ plot(np) +
   theme_hv_poster()
 ```
 
-**[`theme_hv_manuscript()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)
-replaces SAS `device=` / style options.** Use `"dark_ppt"` / `"ppt"` for
-PowerPoint slides, `"light_ppt"` for light-background slides,
-`"manuscript"` for journal figures, and `"poster"` for conference
-posters.
+**The `theme_hv_*()` functions replace SAS `device=` / style options.**
+Use
+[`theme_hv_ppt_dark()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)
+for PowerPoint slides on dark backgrounds,
+[`theme_hv_ppt_light()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)
+for light/transparent slides,
+[`theme_hv_manuscript()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)
+for journal figures, and
+[`theme_hv_poster()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)
+for conference posters.
 
 **Functions return a ggplot object; they do not display it.** Call the
 plot object at the top level (or use
@@ -414,7 +419,7 @@ plot(hv_nonparametric(
 
 Ordinal templates (TR grade, AR grade) use
 [`hv_ordinal()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_ordinal.md).
-The critical migration step is reshaping the SAS wide-format `predict`
+The main migration step is reshaping the SAS wide-format `predict`
 dataset (one column per grade) to long format.
 
 **SAS reshape (do this before reading into R):**
@@ -604,8 +609,7 @@ plot(hv_ordinal(dat_ph, grade_col = "grade")) +
 wraps `survfit()` from the **survival** package and returns an S3
 object. Call `plot(km, type = ...)` to render one of the five plot types
 matching the SAS `%kaplan` / `%nelsont` macro output flags (`PLOTS`,
-`PLOTC`, `PLOTH`, `PLOTL`). Tidy data frames are accessible via
-`km$tables`.
+`PLOTC`, `PLOTH`, `PLOTL`). Tidy data frames live in `km$tables`.
 
 ``` r
 
@@ -695,10 +699,10 @@ plot(gf) +
 [`hv_balance()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_balance.md)
 
 The SAS export arrives wide (one column per time-point). Reshape to long
-format before calling
+format before you call
 [`hv_balance()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_balance.md).
 Pass `var_levels` to control the bottom-to-top display order of
-covariates (matches `ylabel` in the original script).
+covariates — this matches `ylabel` in the original script.
 
 ``` r
 
@@ -1141,11 +1145,10 @@ plot(lc) +
 **R equivalents:** `tp.lp.mirror-histogram_SAVR-TF-TAVR.R`
 (binary-match), `tp.lp.mirror_histo_before_after_wt.R` (weighted IPTW)
 
-Both scripts are superseded by
-[`hv_mirror_hist()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_mirror_hist.md).
-Call `plot(mh)` to render the histogram. Diagnostics are accessible via
-`mh$tables$diagnostics`; working data via `mh$tables$working`. Compose
-scales, annotations, and theme with the usual `+` operator.
+[`hv_mirror_hist()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_mirror_hist.md)
+replaces both scripts. Call `plot(mh)` to render. Diagnostics are in
+`mh$tables$diagnostics`, working data in `mh$tables$working`; layer
+scales, annotations, and a theme the usual way.
 
 ### Binary-match mode (`tp.lp.mirror-histogram_SAVR-TF-TAVR.R`)
 
@@ -1409,9 +1412,9 @@ hazard_plot(
 `tp.hs.dead.conditional.setup.sas` computes individual survivorship
 curves starting from the time of hospital discharge rather than the
 operation date. The conditional survival `S(t | discharge)` is
-`S(t) / S(t_discharge)` for each patient. In R, the same
+`S(t) / S(t_discharge)` for each patient. In R, you use the same
 [`hazard_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/hazard_plot.md)
-call is used; only the x-axis label and data preparation differ.
+call — only the x-axis label and data preparation change.
 
 ``` r
 
@@ -1495,10 +1498,10 @@ hazard_plot(
 
 `tp.hs.dead.compare_benefit.setup.sas` computes, for each patient, the
 difference in predicted survival at a fixed time point (5 years) under
-two treatment arms (e.g. ASA vs. no ASA). The distribution of these
-individual differences shows who benefits and by how much. Use
+two treatment arms (e.g. ASA vs. no ASA). That per-patient distribution
+is the answer to “who benefits and by how much.”
 [`survival_difference_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/survival_difference_plot.md)
-to plot the mean curve over time.
+plots the mean difference curve over time.
 
 ``` r
 
@@ -1578,7 +1581,7 @@ sessionInfo()
     [1] stats     graphics  grDevices utils     datasets  methods   base
 
     other attached packages:
-    [1] ggplot2_4.0.3   hvtiPlotR_2.3.0
+    [1] ggplot2_4.0.3   hvtiPlotR_2.3.1
 
     loaded via a namespace (and not attached):
      [1] generics_0.1.4          tidyr_1.3.2             fontLiberation_0.1.0
@@ -1590,7 +1593,7 @@ sessionInfo()
     [19] fontBitstreamVera_0.1.1 textshaping_1.0.5       cli_3.6.6
     [22] rlang_1.2.0             fontquiver_0.2.1        ggupset_0.4.1
     [25] splines_4.6.0           withr_3.0.2             yaml_2.3.12
-    [28] otel_0.2.0              gdtools_0.5.0           tools_4.6.0
+    [28] otel_0.2.0              gdtools_0.5.1           tools_4.6.0
     [31] officer_0.7.5           uuid_1.2-2              dplyr_1.2.1
     [34] vctrs_0.7.3             R6_2.6.1                lifecycle_1.0.5
     [37] ragg_1.5.2              pkgconfig_2.0.3         pillar_1.11.1

@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">hvtiPlotR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.3.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.3.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -49,23 +49,34 @@
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Changelog</h1>
-      <small>Source: <a href="https://github.com/ehrlinger/hvtiPlotR/blob/v2.3.0/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
+      <small>Source: <a href="https://github.com/ehrlinger/hvtiPlotR/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="2.3.1" id="hvtiplotr-231">hvtiPlotR 2.3.1<a class="anchor" aria-label="anchor" href="#hvtiplotr-231"></a></h2>
+<div class="section level3">
+<h3 id="documentation-2-3-1">Documentation (<a href="https://github.com/ehrlinger/hvtiPlotR/issues/69" class="external-link">#69</a>)<a class="anchor" aria-label="anchor" href="#documentation-2-3-1"></a></h3>
+<ul><li>Package-wide voice rewrite of every prose surface — README, vignettes, NEWS, slide deck, roxygen, DESCRIPTION <code>Title:</code> — against the <code>writing-voice.md</code> spec. Prose only; no API or behavioural change.</li>
+<li>Fixed stale <code>hv_theme()</code> string-key references (<code>"dark_ppt"</code>, <code>"ppt"</code>, <code>"light_ppt"</code>, <code>"manuscript"</code>, <code>"poster"</code>) in the main tutorial and SAS-migration vignettes. That dispatcher was removed in 2.1.0; the vignettes now name the actual <code>theme_hv_*()</code> functions.</li>
+<li>Fixed missing “to” in the main tutorial’s introduction (“is simplify” → “is to simplify”).</li>
+<li>README now lists all five vignettes (<code>sas-migration-guide</code> was missing) and the “Migrating from plot.sas” section points at the dedicated migration vignette.</li>
+<li>Synced a copy of <code>writing-voice.md</code> into the repo root for future documentation work.</li>
+</ul></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="2.3.0" id="hvtiplotr-230">hvtiPlotR 2.3.0<a class="anchor" aria-label="anchor" href="#hvtiplotr-230"></a></h2>
 <div class="section level3">
 <h3 id="consort-patient-flow-tracking-and-diagram-2-3-0">CONSORT patient flow tracking and diagram (<a href="https://github.com/ehrlinger/hvtiPlotR/issues/67" class="external-link">#67</a>)<a class="anchor" aria-label="anchor" href="#consort-patient-flow-tracking-and-diagram-2-3-0"></a></h3>
-<p>New two-class API for building auditable CONSORT flow diagrams from patient-level data.</p>
+<p>Two-class API for CONSORT flow diagrams built from patient-level data.</p>
 <p><strong>Tracker lifecycle:</strong></p>
 <ul><li>
-<code>hv_consort_start(data, patient_id, label, pass_col)</code> — initialises a tracker with one row per patient and a boolean column marking all patients as screened.</li>
+<code>hv_consort_start(data, patient_id, label, pass_col)</code> — initialises a tracker with one row per patient; all patients begin as screened.</li>
 <li>
-<code>hv_consort_exclude(tracker, label, col, ..., excl_label, pass_col)</code> — adds an exclusion stage via formula rules (<code>condition ~ "Reason string"</code>). First-matching formula wins; gating on the prior stage is automatic. Pipe-friendly.</li>
+<code>hv_consort_exclude(tracker, label, col, ..., excl_label, pass_col)</code> — adds an exclusion stage via formula rules (<code>condition ~ "Reason string"</code>). First-matching formula wins; gating on the prior stage is automatic.</li>
 <li>
 <code>hv_consort_summary(tracker)</code> — returns a data frame with N included and N excluded per stage; suitable for methods-section tables.</li>
 <li>
-<code>hv_consort_patients(tracker, stage, reason)</code> — returns patient IDs at any stage, or the subset excluded for a specific reason, for full auditability.</li>
+<code>hv_consort_patients(tracker, stage, reason)</code> — returns patient IDs at any stage, or the subset excluded for a specific reason.</li>
 </ul><p><strong>Diagram:</strong></p>
 <ul><li>
 <code>hv_consort(tracker, side_box, cex, width, height)</code> — auto-derives <code>orders</code> and <code>side_box</code> from tracker metadata and calls <code><a href="https://rdrr.io/pkg/consort/man/consort_plot.html" class="external-link">consort::consort_plot()</a></code>. <code>side_box = "all"</code> (default) includes every exclusion column; pass a character vector to select specific columns.</li>
@@ -90,16 +101,16 @@
 <h3 id="new-s3-methods-for-hv_data-objects-2-2-0">New S3 methods for <code>hv_data</code> objects (<a href="https://github.com/ehrlinger/hvtiPlotR/issues/64" class="external-link">#64</a>)<a class="anchor" aria-label="anchor" href="#new-s3-methods-for-hv_data-objects-2-2-0"></a></h3>
 <p>Three standard-R S3 verbs are now implemented for every <code>hv_data</code> subclass:</p>
 <ul><li>
-<strong><code><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary()</a></code></strong> — prints the standard one-screen header, then walks the object’s <code>$tables</code> slot and prints each named auxiliary table with a header. Lets callers see the underlying risk tables, report tables, and diagnostics without having to know the <code>$tables</code> accessor path. Subclasses can override with a curated layout.</li>
+<strong><code><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary()</a></code></strong> — prints the standard one-screen header, then walks the object’s <code>$tables</code> slot and prints each named auxiliary table with a header. Callers get risk tables, report tables, and diagnostics without reaching for <code>$tables</code> directly. Subclasses can override with a curated layout.</li>
 <li>
-<strong><code><a href="https://ggplot2.tidyverse.org/reference/autoplot.html" class="external-link">autoplot()</a></code></strong> — re-exports ggplot2’s <code><a href="https://ggplot2.tidyverse.org/reference/autoplot.html" class="external-link">autoplot()</a></code> generic and dispatches to the registered <code>plot.&lt;subclass&gt;()</code> method. Callers who prefer the ggplot2-ecosystem verb (used by <code>broom</code>, <code>ggfortify</code>, <code>ggsurvfit</code>) can write <code>autoplot(km)</code> interchangeably with <code>plot(km)</code>. Extra args forward to the subclass <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code>.</li>
+<strong><code><a href="https://ggplot2.tidyverse.org/reference/autoplot.html" class="external-link">autoplot()</a></code></strong> — re-exports ggplot2’s <code><a href="https://ggplot2.tidyverse.org/reference/autoplot.html" class="external-link">autoplot()</a></code> generic and dispatches to the registered <code>plot.&lt;subclass&gt;()</code> method. Callers who prefer the ggplot2-ecosystem verb (<code>broom</code>, <code>ggfortify</code>, and <code>ggsurvfit</code> all use it) can write <code>autoplot(km)</code> in place of <code>plot(km)</code>. Extra args forward to the subclass <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code>.</li>
 <li>
-<strong><code><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame()</a></code></strong> — returns the <code>$data</code> slot. Lets callers use the standard <code><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame()</a></code> / <code><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame()</a></code> coercion in tidyverse pipelines instead of reaching for the <code>$data</code> accessor.</li>
-</ul><p>No breaking changes — these are additive.</p>
+<strong><code><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame()</a></code></strong> — returns the <code>$data</code> slot via standard <code><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame()</a></code> coercion instead of the <code>$data</code> accessor.</li>
+</ul><p>No breaking changes.</p>
 </div>
 <div class="section level3">
 <h3 id="upset-plot-backend-swap-2-2-0">UpSet plot backend swap (<a href="https://github.com/ehrlinger/hvtiPlotR/issues/62" class="external-link">#62</a>)<a class="anchor" aria-label="anchor" href="#upset-plot-backend-swap-2-2-0"></a></h3>
-<p><code><a href="../reference/plot.hv_upset.html">plot.hv_upset()</a></code> is now backed by <a href="https://cran.r-project.org/package=ggupset" class="external-link"><code>ggupset</code></a> rather than <code>ComplexUpset</code>. The intersection-size bar chart is a standard ggplot — themes apply via <code>+</code> like every other hvtiPlotR plot, and <code><a href="https://ggplot2.tidyverse.org/reference/ggplot_build.html" class="external-link">ggplot2::ggplot_build()</a></code> works on the output. When <code>set_size = TRUE</code> (the default) a manual set-size sidebar is composed via <code>patchwork</code>.</p>
+<p><code><a href="../reference/plot.hv_upset.html">plot.hv_upset()</a></code> is now backed by <a href="https://cran.r-project.org/package=ggupset" class="external-link"><code>ggupset</code></a> rather than <code>ComplexUpset</code>. The intersection-size bar chart is a standard ggplot; themes apply via <code>+</code>, and <code><a href="https://ggplot2.tidyverse.org/reference/ggplot_build.html" class="external-link">ggplot2::ggplot_build()</a></code> works on the output. When <code>set_size = TRUE</code> (the default) a manual set-size sidebar is composed via <code>patchwork</code>.</p>
 <p><strong>Breaking changes:</strong></p>
 <ul><li>The <code>base_annotations</code> parameter has been removed. To recolour the intersection bars by an external grouping variable, pass <code>fill_col = "&lt;column&gt;"</code> to <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code>; for a single fixed colour pass <code>bar_fill = "&lt;colour&gt;"</code>.</li>
 <li>The <code>min_size</code> parameter has been replaced by <code>n_intersections</code> (top-N by frequency or degree — see <code>sort_by</code>). ComplexUpset’s size-threshold semantics are not preserved.</li>
@@ -121,7 +132,7 @@
 <h3 id="theme-api-redesign-2-1-0">Theme API redesign<a class="anchor" aria-label="anchor" href="#theme-api-redesign-2-1-0"></a></h3>
 <ul><li><p>The four theme functions are now named <code><a href="../reference/hvtiPlotR-themes.html">theme_hv_manuscript()</a></code>, <code><a href="../reference/hvtiPlotR-themes.html">theme_hv_poster()</a></code>, <code><a href="../reference/hvtiPlotR-themes.html">theme_hv_ppt_dark()</a></code>, and <code><a href="../reference/hvtiPlotR-themes.html">theme_hv_ppt_light()</a></code>, matching ggplot2’s <code><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw()</a></code> / <code><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_grey()</a></code> naming.</p></li>
 <li>
-<p>Each theme follows the <code><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw()</a></code> contract: pass <code>base_size</code> / <code>base_family</code> to control typography, then forward any extra named theme element through <code>...</code> to override inline. Examples:</p>
+<p>Each theme follows the <code><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw()</a></code> contract: pass <code>base_size</code> / <code>base_family</code> to control typography, then forward any extra named theme element through <code>...</code> to override. Examples:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/hvtiPlotR-themes.html">theme_hv_manuscript</a></span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"right"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/hvtiPlotR-themes.html">theme_hv_ppt_dark</a></span><span class="op">(</span>axis.text.y <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>family <span class="op">=</span> <span class="st">"mono"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
@@ -146,7 +157,7 @@
 </ul></div>
 <div class="section level3">
 <h3 id="documentation-2-0-1">Documentation<a class="anchor" aria-label="anchor" href="#documentation-2-0-1"></a></h3>
-<ul><li>Package-level help topic (<code><a href="../reference/hvtiPlotR-package.html">?hvtiPlotR</a></code>) comprehensively rewritten to cover the v2.0.0 feature set: two-step workflow with runnable example, fixed-panel geometry subsection (<code><a href="../reference/hv_ggsave_dims.html">hv_ggsave_dims()</a></code>/<code><a href="../reference/hv_ph_location.html">hv_ph_location()</a></code>/<code>save_ppt(panel_box=)</code>), legacy single-call API, <code>hv_data</code> class introspection, scope and versioning, vignette index.</li>
+<ul><li>Package-level help topic (<code><a href="../reference/hvtiPlotR-package.html">?hvtiPlotR</a></code>) rewritten to cover the v2.0.0 feature set: two-step workflow with runnable example, fixed-panel geometry subsection (<code><a href="../reference/hv_ggsave_dims.html">hv_ggsave_dims()</a></code>/<code><a href="../reference/hv_ph_location.html">hv_ph_location()</a></code>/<code>save_ppt(panel_box=)</code>), legacy single-call API, <code>hv_data</code> class introspection, scope and versioning, vignette index.</li>
 <li>README “Utilities” table now lists <code><a href="../reference/hv_ggsave_dims.html">hv_ggsave_dims()</a></code> and <code><a href="../reference/hv_ph_location.html">hv_ph_location()</a></code>, and documents <code>save_ppt(panel_box=)</code>.</li>
 <li>
 <code><a href="../reference/save_ppt.html">save_ppt()</a></code> example rewritten to show the recommended <code>hv_theme("light_ppt")</code> preview workflow saving into a dark PPT template with <code>panel_box = list(width = 8.88, height = 4.51, left = 2.58, top = 1.29)</code> and a <code>scale_x_continuous(breaks = seq(0, 400, 100), expand = c(0, 0))</code> decorator.</li>
@@ -159,13 +170,13 @@
 <p>First stable release of the <code>hv_*</code> API. This consolidates the <code>2.0.0.9001</code>–<code>2.0.0.9013</code> dev cycle into a tagged release that internal users can anchor against for bug reports and reproducibility. Subsequent releases will advance the semantic version (<code>2.0.1</code>, <code>2.1.0</code>, <code>3.0.0</code>) directly; no <code>.9xxx</code> pre-release suffixes.</p>
 <div class="section level3">
 <h3 id="new-features--fixed-panel-geometry-2-0-0">New features — fixed-panel geometry<a class="anchor" aria-label="anchor" href="#new-features--fixed-panel-geometry-2-0-0"></a></h3>
-<p>The dominant theme of this release is making the <strong>panel content area</strong> (the rectangular data region, excluding axes/titles/legend/margins) a first-class target, so figures stay visually aligned across output devices and across slides in a deck even when axis-label widths differ.</p>
+<p>The dominant theme of this release is making the <strong>panel content area</strong> (the rectangular data region, excluding axes/titles/legend/margins) directly addressable, so figures stay visually aligned across output devices and across slides in a deck even when axis-label widths differ.</p>
 <ul><li>
-<code>hv_ggsave_dims(plot, width, height, units = "in")</code>: compute <code><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave()</a></code> <code>width</code>/<code>height</code> that preserve a fixed panel content area regardless of axis labels, legend, title, or facet strips. Returns a named list shaped to splat into <code><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave()</a></code> via <code>do.call(ggsave, c(list(filename = ..., plot = p), dims))</code>. Units are length-only (<code>"in"</code>, <code>"cm"</code>, <code>"mm"</code>) since the sizing device is PDF.</li>
+<code>hv_ggsave_dims(plot, width, height, units = "in")</code>: compute <code><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave()</a></code> <code>width</code>/<code>height</code> that preserve a fixed panel content area regardless of surrounding chrome. Returns a named list shaped to splat into <code><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave()</a></code> via <code>do.call(ggsave, c(list(filename = ..., plot = p), dims))</code>. Units are length-only (<code>"in"</code>, <code>"cm"</code>, <code>"mm"</code>) since the sizing device is PDF.</li>
 <li>
 <code>hv_ph_location(plot, panel_width, panel_height, panel_left, panel_top, units = "in")</code>: compute <code><a href="https://davidgohel.github.io/officer/reference/ph_location.html" class="external-link">officer::ph_location()</a></code> <code>width</code>/<code>height</code>/<code>left</code>/<code>top</code> values that anchor a ggplot’s panel to a fixed rectangle on a slide, regardless of axis-label width. Measures asymmetric chrome (left/right/top/bottom of the panel) via <code><a href="https://ggplot2.tidyverse.org/reference/ggplotGrob.html" class="external-link">ggplotGrob()</a></code> and returns per-plot placement so the panel lands at the same slide coordinates on every slide. Warns if plot chrome extends past the left or top slide edge.</li>
 <li>
-<code>save_ppt(..., panel_box = list(width, height, left, top))</code>: new optional argument. When supplied, per-slide placement is computed via <code><a href="../reference/hv_ph_location.html">hv_ph_location()</a></code> so every slide anchors the panel at the given rectangle — solving the “plot background box moves between slides” problem on dark PPT themes where the panel is visibly filled. When <code>panel_box = NULL</code> (default), the fixed <code>width</code>/<code>height</code>/<code>left</code>/<code>top</code> arguments are used (legacy behavior).</li>
+<code>save_ppt(..., panel_box = list(width, height, left, top))</code>: new optional argument. When supplied, per-slide placement is computed via <code><a href="../reference/hv_ph_location.html">hv_ph_location()</a></code> so every slide anchors the panel at the given rectangle; on dark PPT themes where the panel fill is visible, the panel no longer shifts between slides. When <code>panel_box = NULL</code> (default), the fixed <code>width</code>/<code>height</code>/<code>left</code>/<code>top</code> arguments are used (legacy behavior).</li>
 </ul></div>
 <div class="section level3">
 <h3 id="new-features--ppt-theme-polish-2-0-0">New features — PPT theme polish<a class="anchor" aria-label="anchor" href="#new-features--ppt-theme-polish-2-0-0"></a></h3>
@@ -214,7 +225,7 @@
 <code>plot-functions.qmd</code>: updated both mirror-histogram decorated examples to follow standard ggplot2 mirror-plot conventions:
 <ul><li>Added <code>scale_y_continuous(labels = abs)</code> so the y-axis displays absolute counts on both halves of the panel.</li>
 <li>Replaced hard-coded y-coordinates in <code><a href="https://ggplot2.tidyverse.org/reference/annotate.html" class="external-link">annotate()</a></code> calls with <code>y = Inf</code>/<code>y = -Inf</code> plus <code>vjust</code>, anchoring each group label near the top/bottom panel edge regardless of dataset size.</li>
-<li>Replaced hard-coded label strings (<code>"SAVR"</code>, <code>"TF-TAVR"</code>, etc.) with <code>mh$meta$group_labels[1]</code> / <code>[2]</code>, so the annotations always track the labels supplied to the constructor.</li>
+<li>Replaced hard-coded label strings (<code>"SAVR"</code>, <code>"TF-TAVR"</code>, etc.) with <code>mh$meta$group_labels[1]</code> / <code>[2]</code>, so the annotations track the labels supplied to the constructor.</li>
 </ul></li>
 </ul></div>
 </div>
@@ -337,7 +348,7 @@
 </ul></div>
 <div class="section level3">
 <h3 id="documentation-2-0-0-9004">Documentation<a class="anchor" aria-label="anchor" href="#documentation-2-0-0-9004"></a></h3>
-<ul><li>All <code>hv_*</code> constructors and <code>plot.hv_*</code> methods now carry <code>@family</code> tags, creating automatic bi-directional “See also” cross-links between each constructor and its plot method in the help system and pkgdown reference.</li>
+<ul><li>All <code>hv_*</code> constructors and <code>plot.hv_*</code> methods now carry <code>@family</code> tags; the help system and pkgdown reference both show bi-directional “See also” links between each constructor and its plot method.</li>
 <li>
 <code>@return</code> on every constructor now explicitly says “call <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code> to render” and links to the corresponding <code>plot.hv_*</code> method.</li>
 <li>
@@ -482,11 +493,11 @@
 <li>
 <strong><code>call. = FALSE</code> sweep</strong> — every <code><a href="https://rdrr.io/r/base/stop.html" class="external-link">stop()</a></code> call in the package now includes <code>call. = FALSE</code> so error messages never expose internal function names to callers.</li>
 <li>
-<strong>Expanded shared validators</strong> (<code>R/validators.R</code>) to 11 files (up from 3). All of <code>alluvial-plot.R</code>, <code>covariate-balance.R</code>, <code>eda-plots.R</code>, <code>goodness-followup.R</code>, <code>hazard-plot.R</code>, <code>kaplan-meier.R</code>, <code>longitudinal-counts-plot.R</code>, <code>mirror-histogram.R</code>, <code>nonparametric-curve-plot.R</code>, <code>nonparametric-ordinal-plot.R</code>, <code>spaghetti-plot.R</code>, <code>stacked-histogram.R</code>, <code>trends-plot.R</code>, and <code>upset-plot.R</code> now delegate <code>data.frame</code>, column-presence, numeric-column, and alpha checks to <code>.check_df()</code>, <code>.check_cols()</code>, <code>.check_col()</code>, <code>.check_numeric_col()</code>, and <code>.check_alpha()</code>. Error wording is now consistent across all entry points.</li>
+<strong>Expanded shared validators</strong> (<code>R/validators.R</code>) to 11 files (up from 3). All of <code>alluvial-plot.R</code>, <code>covariate-balance.R</code>, <code>eda-plots.R</code>, <code>goodness-followup.R</code>, <code>hazard-plot.R</code>, <code>kaplan-meier.R</code>, <code>longitudinal-counts-plot.R</code>, <code>mirror-histogram.R</code>, <code>nonparametric-curve-plot.R</code>, <code>nonparametric-ordinal-plot.R</code>, <code>spaghetti-plot.R</code>, <code>stacked-histogram.R</code>, <code>trends-plot.R</code>, and <code>upset-plot.R</code> now delegate <code>data.frame</code>, column-presence, numeric-column, and alpha checks to <code>.check_df()</code>, <code>.check_cols()</code>, <code>.check_col()</code>, <code>.check_numeric_col()</code>, and <code>.check_alpha()</code>. Error messages use consistent wording across all entry points.</li>
 </ul></div>
 <div class="section level3">
 <h3 id="code-quality-2-0-0">Code quality<a class="anchor" aria-label="anchor" href="#code-quality-2-0-0"></a></h3>
-<ul><li>Named all simulation tuning constants in <code><a href="../reference/sample_nonparametric_curve_data.html">sample_nonparametric_curve_data()</a></code> and the internal helper <code>.np_sample_bins()</code>: <code>eta_intercept</code>, <code>logit_shift</code>, <code>cont_baseline</code>, <code>cont_scale</code>, <code>cont_sigma</code>, <code>eff_frac_prob</code>, <code>eff_frac_cont</code>. Magic numbers replaced throughout single-curve, multi-group, and binned-data-summary code paths.</li>
+<ul><li>Named all simulation tuning constants in <code><a href="../reference/sample_nonparametric_curve_data.html">sample_nonparametric_curve_data()</a></code> and the internal helper <code>.np_sample_bins()</code>: <code>eta_intercept</code>, <code>logit_shift</code>, <code>cont_baseline</code>, <code>cont_scale</code>, <code>cont_sigma</code>, <code>eff_frac_prob</code>, <code>eff_frac_cont</code>. Magic numbers replaced throughout the single-curve, multi-group, and binned-data-summary code paths.</li>
 <li>Named all simulation tuning constants in <code><a href="../reference/sample_nonparametric_ordinal_data.html">sample_nonparametric_ordinal_data()</a></code> and <code><a href="../reference/sample_nonparametric_ordinal_points.html">sample_nonparametric_ordinal_points()</a></code>: <code>a_first</code>, <code>a_step</code>, <code>eta_intercept</code>. Every occurrence of <code>-0.2</code>, <code>0.5</code>, and <code>1.2</code> replaced by the named constant.</li>
 <li>Extended edge-case test coverage:
 <ul><li>

@@ -7,9 +7,8 @@ quality graphics in R for the Heart & Vascular Institute Cardiovascular
 Outcomes Registries and Research (CORR) statistics group at the
 Cleveland Clinic. The **hvtiPlotR** package contains a tutorial for
 generating figures (this vignette) and small set of functions for
-formatting and saving those figures. These tools describe how to
-generate figures in R to replace the `plot.sas` macro we currently use
-in SAS.
+formatting and saving those figures. We use these tools to generate
+figures in R as a replacement for the `plot.sas` macro.
 
 This package vignette is a tutorial for generating our standard figures
 using the `ggplot2` package commands in R. The tutorial presents a
@@ -22,10 +21,9 @@ vignette. The vignette is installed into R when the **hvtiPlotR**
 package is installed, and viewable using the command:
 [`vignette("hvtiPlotR", package="hvtiPlotR")`](https://ehrlinger.github.io/hvtiPlotR/articles/hvtiPlotR.md).
 
-The goal of the vignette is as a tutorial to document the best practices
-of creating our publication quality graphics for both manuscripts and
-power point presentations. It is our intent to update this vignette as
-our standards and the **hvtiPlotR** package are modified.
+This vignette documents our best practices for publication graphics —
+manuscripts and PowerPoint slides both. We will update it as our
+standards and the **hvtiPlotR** package evolve.
 
 Keywords: *publication graphics, powerpoint, ggplot2, plot.sas*.
 
@@ -73,17 +71,16 @@ Oﬃce products (\> 2003).
 
 In an eﬀort to alleviate these version issues, and to standardize the
 generation of figures within R, we have developed the **hvtiPlotR** R
-package. The goal of the package, and this vignette, is simplify the
+package. The goal of the package, and this vignette, is to simplify the
 creation of publication quality graphics in R. We are specifically
 encoding the best practices of the HVTI Clinical Outcomes Research and
-Registries (CORR) formatting, so that our statisticians will be able to
-create graphics for publications and presentations with a minimal amount
-of eﬀort.
+Registries (CORR) formatting, so that our statisticians can generate
+publication-ready graphics without fighting the tooling.
 
-The **hvtiPlotR** package implements best practices for R graphics by
-leveraging the `ggplot2` package (Wickham 2009). The `ggplot2` package
-is an implementation of the Grammar of Graphics (Wilkinson 2005), which
-is a formalization of graphical concepts, and the building of graphical
+The **hvtiPlotR** package builds on `ggplot2` (Wickham 2009) to
+implement best practices for R graphics. The `ggplot2` package is an
+implementation of the Grammar of Graphics (Wilkinson 2005), which is a
+formalization of graphical concepts, and the building of graphical
 objects from a sequence of independent components. These components can
 be combined in many diﬀerent ways.
 
@@ -300,10 +297,9 @@ directly.
 
 ## Generating ggplot2 graphics
 
-In order to create figures similar to using `plot.sas` macro, using R,
-we will make extensive use of the ggplot2 package. This will require
-translating from the graphics language of plot.sas to the graphics
-language of ggplot2.
+To create figures comparable to `plot.sas` output, we rely heavily on
+`ggplot2`. This requires translating from the graphics language of
+`plot.sas` to the graphics language of `ggplot2`.
 
 For the remainder of this document, R code will be highlighted in grey
 boxes, as shown below. We will refer to these blocks as code chunks. You
@@ -574,9 +570,9 @@ show(ccf_plot)
 ![](hvtiPlotR_files/figure-html/fig_4-1.png)
 
 The [`aes()`](https://ggplot2.tidyverse.org/reference/aes.html)
-mechanism is a powerful way to communicate data level assignment to
-`geom_` functions. If you want to stratify a dataset by a variable, you
-can specify that within the
+mechanism is how you communicate data-level assignment to `geom_`
+functions. If you want to stratify a dataset by a variable, you can
+specify that within the
 [`aes()`](https://ggplot2.tidyverse.org/reference/aes.html) function
 call using the `by=` argument. For points, we often want the stratifying
 to be either a diﬀerent `color=` or `shape=` for stratified data. We can
@@ -764,15 +760,10 @@ are equivalent. The chart in Figure 9 was produced with code developed
 by Glynn (2005). See his R Color Chart website for all the details you
 would ever need about using colors in R.
 
-Color theory encompasses a multitude of definitions, concepts and design
-applications - enough to fill several encyclopedias. However, there are
-three basic categories of color theory that are logical and useful : The
-color wheel, color harmony, and the context of how colors are used.
 ColorBrewer (Harrower and Brewer 2003) is an online tool
 (http://colorbrewer2.org/) designed to help people select good color
-schemes for maps and other graphics. We encourage the use of ColorBrewer
-as a good, safe introduction to selecting colors based on theoretically
-good practices.
+schemes for maps and other graphics. We recommend it as a practical
+starting point for choosing colors grounded in sound design principles.
 
 Figure 8: ggplot2 shape table
 
@@ -866,9 +857,13 @@ show(ccf_pptPlot)
 
 ## Themes and Decoration
 
-The **hvtiPlotR** package provides four themes via `theme_hv_*()`:
-`"manuscript"`, `"poster"`, `"light_ppt"`, and `"dark_ppt"`. Apply the
-theme as the last `+` layer on any composed ggplot object.
+The **hvtiPlotR** package provides four `theme_hv_*()` functions —
+[`theme_hv_manuscript()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md),
+[`theme_hv_poster()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md),
+[`theme_hv_ppt_light()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md),
+and
+[`theme_hv_ppt_dark()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md).
+Apply one as the last `+` layer on any composed ggplot object.
 
 ``` r
 
@@ -1033,13 +1028,12 @@ mind when composing figures.
 
 ### What not to include
 
-- No decorative 3-D effects, drop shadows, or gradients.
-- No background images or watermarks.
-- No more than six groups per panel — split into separate figures if
-  needed.
-- No axis tick marks on the top or right-hand sides.
+- No decorative 3-D effects, drop shadows, gradients, background images,
+  or watermarks — they distract from the data.
+- No axis tick marks on the top or right sides. No more than six groups
+  per panel; split into separate figures if you need more.
 - No connecting lines between non-adjacent data points unless the
-  relationship is continuous (e.g., a survival curve).
+  relationship is genuinely continuous (e.g., a survival curve).
 
 ## Conclusions
 

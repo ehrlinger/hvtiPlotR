@@ -20,7 +20,7 @@ Every hvtiPlotR plot is built in two steps: a constructor (`hv_*()`)
 that shapes the data, followed by
 [`plot()`](https://rdrr.io/r/graphics/plot.default.html) that renders a
 bare `ggplot` object. No colour scales, axis labels, or theme are
-applied by either step. Decoration is added by chaining layers with `+`:
+applied by either step — you add those by chaining layers with `+`:
 
     plot(hv_*(...)) +
       scale_colour_*() +   # data colours
@@ -135,8 +135,9 @@ p_base +
 ## Colour Scales
 
 `scale_colour_*` controls line and point colours; `scale_fill_*`
-controls filled areas (ribbons, bars). Both share the same `name`
-(legend title) and `guide` (legend display) arguments.
+controls filled areas (ribbons, bars). Both take the same `name` (legend
+title) and `guide` (legend display) arguments — set them once and both
+scales update.
 
 ### Manual colours
 
@@ -162,9 +163,10 @@ plot(km) +
 ### ColorBrewer palettes
 
 [`scale_colour_brewer()`](https://ggplot2.tidyverse.org/reference/scale_brewer.html)
-applies a ColorBrewer palette — safe, perceptually uniform, and
-print-friendly. Use `palette = "Set1"` for categorical data, `"RdYlGn"`
-for diverging, `"Blues"` for sequential.
+applies a ColorBrewer palette — perceptually uniform and print-safe,
+which matters when figures go to black-and-white PDF. Use
+`palette = "Set1"` for categorical data, `"RdYlGn"` for diverging,
+`"Blues"` for sequential.
 
 ``` r
 
@@ -183,8 +185,9 @@ p_base +
 
 ### Suppressing legends
 
-Pass `guide = "none"` to any scale to remove its legend entry. Use this
-when colour is self-evident from axis labels or annotations.
+Pass `guide = "none"` to any scale and that aesthetic drops out of the
+legend. You’d do this when the axis labels or an annotation already name
+the group — a redundant legend only takes up panel space.
 
 ``` r
 
@@ -205,10 +208,10 @@ p_base +
 
 ### labs()
 
-[`labs()`](https://ggplot2.tidyverse.org/reference/labs.html) sets the
-axis, legend, title, subtitle, and caption text. Set axis labels here
-rather than inside the plot function so they can be overridden per
-project.
+[`labs()`](https://ggplot2.tidyverse.org/reference/labs.html) sets axis
+labels, the plot title, legend title, subtitle, and caption text. We set
+these outside the constructor so you can override them per project
+without touching the function itself.
 
 ``` r
 
@@ -233,8 +236,9 @@ plot(km) +
 ### annotate()
 
 [`annotate()`](https://ggplot2.tidyverse.org/reference/annotate.html)
-places text, segments, or rectangles at fixed data coordinates. Use it
-for sample size callouts, phase labels, or directional arrows.
+places text, segments, rectangles, or arrows at fixed data coordinates —
+useful for a sample-size callout in the corner or a label pointing to an
+event of interest.
 
 ``` r
 
@@ -466,8 +470,8 @@ for (pg in seq(1, length(plot_list), by = per_page)) {
 ## Legend Positioning
 
 ggplot2 places the legend outside the panel by default. For publication
-figures it is often cleaner to place it inside the panel or suppress it
-entirely.
+figures we usually move it inside or drop it — the axis labels often do
+the identification work already.
 
 ### Inside the panel
 
@@ -683,8 +687,8 @@ p_base +
 ## Multi-panel Figures with patchwork
 
 The `patchwork` package composes multiple ggplot objects into a single
-figure. Use it to place two related plots side by side, or to stack a
-main plot above a companion table or risk panel.
+figure. The two patterns we reach for most are side-by-side comparisons
+and a main plot stacked above a companion table or risk panel.
 
 ### Side-by-side plots
 
@@ -783,7 +787,8 @@ Assign the composed object to a variable and pass it to
 [`ggsave()`](https://ggplot2.tidyverse.org/reference/ggsave.html). For
 PowerPoint, save each panel individually with
 [`save_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/save_ppt.md)
-(patchwork composites are not editable DrawingML objects).
+— patchwork flattens everything into a single raster, so the shapes and
+text are no longer editable in PowerPoint.
 
 ``` r
 

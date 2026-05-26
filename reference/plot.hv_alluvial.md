@@ -50,7 +50,7 @@ plot(
 
 - show_labels:
 
-  Logical; whether to label each stratum. Default `TRUE`.
+  Logical; if TRUE, each stratum is labelled. Default `TRUE`.
 
 - ...:
 

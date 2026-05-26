@@ -26,16 +26,16 @@ sample_covariate_balance_data(
 
 - n_vars:
 
-  Integer. Number of covariates to generate. Default `12`.
+  Integer; number of covariates to generate. Default `12`.
 
 - n:
 
-  Integer. Total number of simulated patients before matching. Default
+  Integer; total number of simulated patients before matching. Default
   `600` (roughly 300 per group at `separation = 1.5`).
 
 - separation:
 
-  Numeric. Distance between the two group means on the log-odds scale.
+  Numeric; distance between the two group means on the log-odds scale.
   Larger values push propensity score distributions further apart,
   increasing the proportion of unmatched extreme-score patients and
   residual imbalance after matching. Default `1.5`.

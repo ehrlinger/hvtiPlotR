@@ -31,7 +31,7 @@ sample_mirror_histogram_data(
 
 - separation:
 
-  Numeric. Distance between the two group means on the log-odds scale.
+  Numeric; distance between the two group means on the log-odds scale.
   Larger values push the score distributions further apart and increase
   the proportion of unmatched patients at the extremes (default 1.5).
 

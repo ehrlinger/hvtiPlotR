@@ -7,7 +7,7 @@
 plus
 [`plot.hv_survival_difference()`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hv_survival_difference.md).
 
-Plots the difference in survival between two groups over time, with an
+Pass a `diffout` dataset and you get the S_2(t) - S_1(t) curve with an
 optional confidence band. Covers `tp.hp.dead.life-gained.sas` and the
 survival-difference component of `tp.hp.numtreat.survdiff.matched.sas`.
 
