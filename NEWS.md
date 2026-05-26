@@ -1,3 +1,22 @@
+# hvtiPlotR 2.3.1
+
+## Documentation (#69)
+
+- Package-wide voice rewrite of every prose surface — README, vignettes,
+  NEWS, slide deck, roxygen, DESCRIPTION `Title:` — against the
+  `writing-voice.md` spec. Prose only; no API or behavioural change.
+- Fixed stale `hv_theme()` string-key references (`"dark_ppt"`, `"ppt"`,
+  `"light_ppt"`, `"manuscript"`, `"poster"`) in the main tutorial and
+  SAS-migration vignettes. That dispatcher was removed in 2.1.0; the
+  vignettes now name the actual `theme_hv_*()` functions.
+- Fixed missing "to" in the main tutorial's introduction
+  ("is simplify" → "is to simplify").
+- README now lists all five vignettes (`sas-migration-guide` was
+  missing) and the "Migrating from plot.sas" section points at the
+  dedicated migration vignette.
+- Synced a copy of `writing-voice.md` into the repo root for future
+  documentation work.
+
 # hvtiPlotR 2.3.0
 
 ## CONSORT patient flow tracking and diagram (#67)
