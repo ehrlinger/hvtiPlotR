@@ -582,10 +582,14 @@ show(ccf_pptPlot)
 
 # Themes and Decoration
 
-The **hvtiPlotR** package provides four `theme_hv_*()` functions —
+The **hvtiPlotR** package provides four `theme_hv_*()` functions --
 `theme_hv_manuscript()`, `theme_hv_poster()`, `theme_hv_ppt_light()`, and
 `theme_hv_ppt_dark()`. Apply one as the last `+` layer on any composed ggplot
-object.
+object. The right choice depends on the output target: `theme_hv_manuscript()`
+is for journal figures (black on white, smaller text, no title), while the
+poster and slide themes scale up text and line weights so the figure reads at
+distance. You can see the full difference by swapping the theme call at the end
+of a pipeline -- everything else stays the same.
 
 ```{r man_theme_demo}
 p_final <- ccf_plot + theme_hv_poster()
