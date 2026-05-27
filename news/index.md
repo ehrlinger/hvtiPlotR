@@ -1,5 +1,25 @@
 # Changelog
 
+## hvtiPlotR 2.3.2
+
+### Documentation ([\#70](https://github.com/ehrlinger/hvtiPlotR/issues/70))
+
+- Vignette clarity pass: added structural grounding to all five
+  vignettes — two to four sentences before every code chunk on what the
+  recipe does, when to reach for it, and (for bare/raw plots) what to
+  look for. Applied the `memory/vignette-clarity-pass.md` workflow
+  developed for TemporalHazard 1.0.3.
+- Corrected four factual claims surfaced by review: the dashed-threshold
+  recommendation in the SAS migration guide
+  ([`geom_hline()`](https://ggplot2.tidyverse.org/reference/geom_abline.html),
+  not `annotate("hline")`); the
+  [`theme_hv_poster()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)
+  font claim (the theme does not enforce a sans-serif face); the
+  `theme(legend.position = "none")` layout-space claim (no space is
+  reserved); and the
+  [`theme_hv_manuscript()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)
+  “no title” claim (the theme does not blank `plot.title`).
+
 ## hvtiPlotR 2.3.1
 
 ### Documentation ([\#69](https://github.com/ehrlinger/hvtiPlotR/issues/69))
