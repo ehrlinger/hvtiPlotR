@@ -684,8 +684,8 @@ to a temporal-prevalence analysis. The SAS version uses `PROC FREQ` output
 aggregated by year; `hv_followup()` accepts the same aggregated data frame
 (one row per time point, with counts for total patients and patients with a
 measurement). The output is a bar chart; any goodness-of-follow-up threshold
-you add in SAS (a dashed horizontal line) becomes an `annotate("hline", ...)`
-call in R.
+you add in SAS (a dashed horizontal line) becomes a
+`geom_hline(yintercept = ..., linetype = "dashed")` call in R.
 
 ```r
 dta <- sample_goodness_followup_data(n = 300)

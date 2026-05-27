@@ -98,11 +98,13 @@ p_ms
 
 ## Poster
 
-`theme_hv_poster()` bumps text sizes up from the manuscript baseline and
-switches to a sans-serif face, so the figure reads clearly at arm's length on a
-36 x 48 inch foam board. It is also the go-to theme for in-room slide
-presentations when you are not using the PowerPoint themes -- the larger tick
-labels hold up on a projector better than the manuscript variant.
+`theme_hv_poster()` bumps the axis text and tick weights up from the manuscript
+baseline and removes the panel grid, so the figure reads clearly at arm's
+length on a 36 x 48 inch foam board. It is also the go-to theme for in-room
+slide presentations when you are not using the PowerPoint themes -- the
+larger tick labels and the boxed panel hold up on a projector better than the
+manuscript variant. Pass `base_family = "sans"` (or another family) to switch
+the font face.
 
 ```{r theme_hv_poster}
 p_poster <- p_base +
@@ -521,11 +523,11 @@ p_base +
 
 ## Suppress all legends
 
-The cleanest way to hide all legend entries is to pass `guide = "none"` on
-each `scale_*()` call that would otherwise produce a key. The alternative --
-`theme(legend.position = "none")` -- removes the rendered legend box but still
-reserves space for it in the layout; the `guide = "none"` approach is cleaner
-when you want the panel to use the full available width.
+Two ways to suppress legends, with slightly different scope.
+`theme(legend.position = "none")` hides every legend for the plot in one
+shot. `guide = "none"` on a `scale_*()` call drops only that aesthetic's
+legend — handy when you want a colour legend but no shape legend (or vice
+versa). Both reclaim the panel width either way.
 
 ```{r legend_none}
 plot(km) +
