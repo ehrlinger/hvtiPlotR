@@ -91,6 +91,12 @@ overlaid bars show per-bin IPTW weight sums.
 
 ### Binary-match mode (SAVR vs. TF-TAVR)
 
+[`sample_mirror_histogram_data()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_mirror_histogram_data.md)
+simulates 2,000 patients with a continuous propensity score (`prob_t`),
+a binary group indicator (`tavr`), and a match flag (`match`). Pass
+`score_multiplier = 100` to put the score on a 0–100 percent scale, and
+`binwidth = 5` to set 5-point bins.
+
 ``` r
 
 mirror_dta <- sample_mirror_histogram_data(n = 2000, separation = 1.5)
@@ -110,6 +116,12 @@ mh <- hv_mirror_hist(
 
 ### Bare plot
 
+The bare panel shows two mirrored bar charts – upper bars for the first
+group, lower for the second – with white fill and no scale or labels
+yet. Look for: upper and lower bars that are roughly symmetric before
+matching, with the matched (darker) overlay narrowing the distribution;
+if both panels look identical, `match_col` may not be mapping correctly.
+
 ``` r
 
 p <- plot(mh, alpha = 0.8)
@@ -119,6 +131,14 @@ p
 ![](plot-functions_files/figure-html/mirror_histogram_bare-1.png)
 
 ### Adding scales, labels, and theme
+
+[`scale_fill_manual()`](https://ggplot2.tidyverse.org/reference/scale_manual.html)
+maps the four internal fill levels (`before_g0`, `matched_g0`,
+`before_g1`, `matched_g1`) to white (pre-match) and two greens (matched
+subsets). The annotation calls use `y = Inf`/`-Inf` with `vjust` to
+anchor labels at the panel edges;
+[`theme_hv_poster()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)
+sizes text for a conference poster.
 
 ``` r
 
@@ -191,6 +211,12 @@ mh$tables$diagnostics$group_counts_matched
 
 ### Weighted IPTW mode (Limited vs. Extended)
 
+When the analysis uses inverse probability of treatment weighting rather
+than 1:1 matching, pass `weight_col` instead of `match_col`. Each bin’s
+overlay height is the sum of IPTW weights in that bin rather than a raw
+matched count. `add_weights = TRUE` in the sample-data generator
+attaches an `mt_wt` column.
+
 ``` r
 
 wt_dta <- sample_mirror_histogram_data(
@@ -211,6 +237,12 @@ mh_wt <- hv_mirror_hist(
 
 ### Bare plot
 
+The bare weighted panel looks the same as the binary-match bare plot –
+white bars with an overlay – but the overlay encodes IPTW weight sums,
+not counts. Look for: upper and lower overlay bars that are visually
+balanced, indicating good weighting; bars that remain heavily one-sided
+suggest extreme weights.
+
 ``` r
 
 p_wt <- plot(mh_wt, alpha = 0.8)
@@ -220,6 +252,14 @@ p_wt
 ![](plot-functions_files/figure-html/mirror_histogram_weighted_bare-1.png)
 
 ### Adding scales, labels, and theme
+
+The IPTW variant uses blue/red for the Limited/Extended groups, with the
+group labels coloured to match. The axis and annotation pattern is the
+same as the binary-match version; swap
+[`theme_hv_poster()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)
+for
+[`theme_hv_manuscript()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)
+when preparing the figure for a journal submission.
 
 ``` r
 
@@ -296,7 +336,12 @@ head(hist_dta)
 ### Count histogram
 
 The default `position = "stack"` shows raw counts within each bin,
-equivalent to the `plot.sas` frequency histogram.
+equivalent to the `plot.sas` frequency histogram. Build the S3 object
+with
+[`hv_stacked()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_stacked.md),
+then call [`plot()`](https://rdrr.io/r/graphics/plot.default.html) to
+get a bare ggplot you dress with colour scales and a theme in one
+pipeline.
 
 ``` r
 
@@ -317,7 +362,10 @@ p_count +
 ### Proportion (fill) histogram
 
 Setting `position = "fill"` rescales each bin so the bars sum to 1,
-making it easy to compare the relative composition across years.
+making it easy to compare the relative composition across years without
+count differences obscuring the trend. Pass the composition variant to
+[`hv_stacked()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_stacked.md)
+at construction time, then layer in manual colour and axis labels.
 
 ``` r
 
@@ -346,6 +394,14 @@ p_final
 ![](plot-functions_files/figure-html/stacked_histogram_fill-1.png)
 
 ### Saving
+
+[`ggsave()`](https://ggplot2.tidyverse.org/reference/ggsave.html) writes
+the composed figure to a PDF at 11 x 8 inches, a standard landscape size
+for posters. For an editable PowerPoint slide, use
+[`save_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/save_ppt.md)
+instead; see the companion [Decorating and
+Saving](https://ehrlinger.github.io/hvtiPlotR/articles/plot-decorators.md)
+vignette.
 
 ``` r
 
@@ -378,6 +434,12 @@ panel: `"followup"` (default, the death/censoring scatter) or `"event"`
 
 ### Sample data
 
+[`sample_goodness_followup_data()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_goodness_followup_data.md)
+generates 300 patients with operation dates, follow-up durations, vital
+status, and a simulated non-fatal event column. The constructor needs
+`study_start`, `study_end`, and `close_date` to draw the
+maximum-follow-up diagonal line correctly.
+
 ``` r
 
 gfup_dta <- sample_goodness_followup_data(n = 300, seed = 42)
@@ -393,6 +455,12 @@ head(gfup_dta)
     6  24.1620  7.4334 FALSE   7.4334    FALSE FALSE
 
 ### Death follow-up plot
+
+The bare `plot(gf)` panel shows each patient as a point and tick without
+scales, labels, or theme. Look for: a cloud of points below the
+diagonal, with some above it (patients with longer follow-up than the
+window explains); if all points fall exactly on the diagonal, the close
+date may be set incorrectly.
 
 ``` r
 
@@ -461,6 +529,11 @@ gfup_final
 ![](plot-functions_files/figure-html/gfup_styled-1.png)
 
 ### Saving
+
+[`ggsave()`](https://ggplot2.tidyverse.org/reference/ggsave.html) writes
+the figure at 6 x 6 inches – square dimensions suit the scatter’s equal
+x–y scale. For a PowerPoint version, see [Decorating and
+Saving](https://ehrlinger.github.io/hvtiPlotR/articles/plot-decorators.md).
 
 ``` r
 
@@ -579,6 +652,13 @@ head(dta_long)
 
 ### Sample data
 
+[`sample_covariate_balance_data()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_covariate_balance_data.md)
+returns 12 covariates in the long format
+[`hv_balance()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_balance.md)
+expects: one row per covariate × group combination with `variable`,
+`group`, and `std_diff` columns. Build the S3 object once and reuse it
+across the styled variants below.
+
 ``` r
 
 dta_cb <- sample_covariate_balance_data(n_vars = 12)
@@ -601,6 +681,12 @@ cb <- hv_balance(dta_cb)
 
 ### Bare plot
 
+The bare panel lays out one covariate per row with points at their SMD
+values, but no colour, shape, axis limits, or theme yet. Look for:
+points clustered near zero for the matched/weighted group and scattered
+wider for the unmatched group; if both groups look identical, check that
+`group` levels are distinct.
+
 ``` r
 
 plot(cb, alpha = 0.8)
@@ -609,6 +695,11 @@ plot(cb, alpha = 0.8)
 ![](plot-functions_files/figure-html/cov_balance_bare-1.png)
 
 ### Adding colour, shape, and axis scales
+
+We map `"Before match"` to red triangles and `"After match"` to blue
+squares – the same colour convention as `tp.lp.propen.cov_balance.R`.
+Set the x-axis limits wide enough to include your largest pre-match SMD;
+the symmetric breaks make the ±10 % threshold visually obvious.
 
 ``` r
 
@@ -673,7 +764,9 @@ cb_final
 ### Controlling covariate order
 
 Pass `var_levels` to the constructor to control the bottom-to-top
-display order of covariates.
+display order of covariates. The example below reverses the default
+order; supply any character vector that contains all covariate names in
+the order you want them to appear.
 
 ``` r
 
@@ -695,6 +788,11 @@ plot(cb_ord, alpha = 0.8) +
 ![](plot-functions_files/figure-html/cov_balance_order-1.png)
 
 ### Saving
+
+[`ggsave()`](https://ggplot2.tidyverse.org/reference/ggsave.html) writes
+the figure at 8 x 7 inches – the extra width accommodates long covariate
+labels on the y-axis. For a PowerPoint version, see [Decorating and
+Saving](https://ehrlinger.github.io/hvtiPlotR/articles/plot-decorators.md).
 
 ``` r
 
@@ -719,6 +817,15 @@ with the `type` argument to render a bare ggplot for the selected panel
 
 ### Sample data
 
+We work from a simulated cohort of 500 patients with a single follow-up
+window and right-censoring.
+[`sample_survival_data()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_survival_data.md)
+builds the data frame in the long format
+[`hv_survival()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_survival.md)
+expects — one row per patient with a `time` and an `event` column. Build
+the S3 object once and reuse it across the survival, hazard, log-log,
+and report panels below.
+
 ``` r
 
 dta_km <- sample_survival_data(n = 500, seed = 42)
@@ -741,6 +848,13 @@ km <- hv_survival(dta_km)
 
 ### Survival curve (PLOTS=1)
 
+The bare `plot(km)` panel is what `PLOTS=1` produces from the SAS
+`%kaplan` macro — the survival curve with the logit-transform 95% CI
+ribbon. No colour scale, axis labels, or theme yet; you add those in the
+next subsection. Look for: a curve that starts at 100% and is
+monotonically non-increasing, with the ribbon widening as the at-risk
+population thins.
+
 ``` r
 
 # Bare plot — no scales or labels yet
@@ -750,6 +864,16 @@ plot(km)
 ![](plot-functions_files/figure-html/km_result-1.png)
 
 ### Adding scales, labels, and annotations
+
+To get a manuscript-ready figure, we layer scales, labels, and a theme
+onto the bare plot with `+`. The pattern below is what we use most often
+in CORR: a steelblue palette for single-cohort figures, percent labels
+on the y-axis, the `n =` callout in the lower-left, and the poster-sized
+theme. Swap
+[`theme_hv_poster()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)
+for
+[`theme_hv_manuscript()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)
+when you want the journal version.
 
 ``` r
 
@@ -779,6 +903,12 @@ km_final
 
 ### Numbers at risk and report table
 
+[`hv_survival()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_survival.md)
+stores the at-risk table and the per-time-point summary in `$tables`.
+The risk table is the strip that goes under the plot in the SAS
+`%kaplan` output; the report table is the per-year summary with point
+estimates and CIs. Read either one out directly:
+
 ``` r
 
 km$tables$risk
@@ -807,12 +937,30 @@ km$tables$report
 
 ### Saving
 
+[`ggsave()`](https://ggplot2.tidyverse.org/reference/ggsave.html) writes
+the composed figure to disk — the `width`/`height` here are tuned for
+manuscript aspect ratios. For an editable PowerPoint slide use
+[`save_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/save_ppt.md)
+instead; see the companion [Decorating and
+Saving](https://ehrlinger.github.io/hvtiPlotR/articles/plot-decorators.md)
+vignette.
+
 ``` r
 
 ggsave("../graphs/km_survival.pdf", km_final, width = 8, height = 6)
 ```
 
 ### Stratified analysis
+
+To compare survival across groups, pass `group_col` to
+[`hv_survival()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_survival.md)
+and the constructor fits a separate KM curve per stratum. Below we
+simulate a two-arm valve-type cohort with a 1.4× hazard ratio, then
+style the curves with
+[`scale_color_manual()`](https://ggplot2.tidyverse.org/reference/scale_manual.html)
+so the two groups are visually distinct. Look for: clearly separated
+curves with non-overlapping CI ribbons in the windows where treatment
+effects matter most.
 
 ``` r
 
@@ -847,6 +995,11 @@ plot(km_s, alpha = 0.8) +
 ![](plot-functions_files/figure-html/km_strata_data-1.png)
 
 ### Cumulative hazard (PLOTC=1)
+
+`PLOTC=1` from the SAS `%kaplan` macro is the Nelson-Aalen cumulative
+hazard estimate `H(t) = -log S(t)`. Same KM object, different `type`
+argument. Look for: a monotonically non-decreasing curve starting at
+zero; the slope at any time point is the instantaneous hazard rate.
 
 ``` r
 
@@ -902,6 +1055,13 @@ plot(km, type = "hazard") +
 
 ### Integrated survivorship / restricted mean survival (PLOTL=1)
 
+`PLOTL=1` is the integrated survivorship — the area under the survival
+curve up to time `t`, equivalent to restricted mean survival time (RMST)
+at that horizon. Useful when the proportional-hazards assumption fails
+and a single hazard ratio summary would mislead. Look for: a curve that
+rises linearly while S(t) ≈ 1 and bends as event accumulation pulls the
+mean down.
+
 ``` r
 
 plot(km, type = "life") +
@@ -943,6 +1103,13 @@ annotations, and
 [`theme_hv_manuscript()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md).
 
 ### Sample data
+
+[`sample_eda_data()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_eda_data.md)
+returns a mixed-type dataset of 300 patients with continuous, binary,
+ordinal, and character columns spanning surgery years 2005–2020.
+[`eda_classify_var()`](https://ehrlinger.github.io/hvtiPlotR/reference/eda_classify_var.md)
+detects each column’s type before you build the plots, so you can
+confirm the classification matches your expectations.
 
 ``` r
 
@@ -1018,6 +1185,12 @@ plot(hv_eda(dta_eda, x_col = "year", y_col = "cabg",
 
 ### Ordinal and multi-level categorical
 
+Columns with more than two numeric levels are classified as `"Cat_Num"`
+and rendered as stacked count bars, one level per fill colour. Use
+[`scale_fill_brewer()`](https://ggplot2.tidyverse.org/reference/scale_brewer.html)
+with a diverging palette (here `"RdYlGn"`, reversed) to signal grade
+severity from green (low) through yellow to red (high).
+
 ``` r
 
 plot(hv_eda(dta_eda, x_col = "year", y_col = "nyha",
@@ -1036,6 +1209,12 @@ plot(hv_eda(dta_eda, x_col = "year", y_col = "nyha",
 ![](plot-functions_files/figure-html/eda_ordinal-1.png)
 
 ### Character categorical
+
+String columns are classified as `"Cat_Char"` and produce stacked count
+bars with one level per fill colour. Unlike `"Cat_Num"` columns, the
+levels are ordered alphabetically by default – use
+[`scale_fill_manual()`](https://ggplot2.tidyverse.org/reference/scale_manual.html)
+to assign colours that carry clinical meaning (here, morphology type).
 
 ``` r
 
@@ -1203,6 +1382,12 @@ proportional to that count. Ports `tp.dp.female_bicus_preAR_sankey.R`.
 
 ### Sample data
 
+[`sample_alluvial_data()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_alluvial_data.md)
+simulates 300 patients with pre-operative AR grade, procedure type, and
+post-operative AR grade columns. The `axes` vector defines the
+left-to-right display order; each unique combination of axis values
+becomes one band, sized by its `freq` count.
+
 ``` r
 
 dta_al  <- sample_alluvial_data(n = 300, seed = 42)
@@ -1220,6 +1405,12 @@ head(dta_al)
 
 ### Bare plot
 
+The bare panel shows flows between the three axis stages with uniform
+fill and no colour, labels, or theme. Look for: bands that connect every
+level of `pre_ar` through `procedure` to every level of `post_ar`, with
+band widths proportional to the `freq` column; missing bands indicate a
+combination that does not occur in the data.
+
 ``` r
 
 al <- hv_alluvial(dta_al, axes = axes, y_col = "freq")
@@ -1229,6 +1420,15 @@ plot(al)
 ![](plot-functions_files/figure-html/alluvial_bare-1.png)
 
 ### Fill flows by pre-operative grade
+
+Pass `fill_col` to the constructor to colour each flow band by the value
+of a categorical column. Here pre-operative AR grade colours the bands
+so you can trace how each grade distributes across procedure types and
+post-operative outcomes. Swap
+[`scale_fill_manual()`](https://ggplot2.tidyverse.org/reference/scale_manual.html)
+for
+[`scale_fill_brewer()`](https://ggplot2.tidyverse.org/reference/scale_brewer.html)
+when your levels map naturally to a diverging palette.
 
 ``` r
 
@@ -1264,6 +1464,13 @@ plot(al_filled) +
 
 ### Two-axis before / after comparison
 
+When you only need to compare two time points (pre- and post-operative),
+drop the middle axis and pass just two columns to `axes`. Use custom
+`axis_labels` to replace the raw column names with readable stage
+labels, and
+[`annotate()`](https://ggplot2.tidyverse.org/reference/annotate.html) to
+call out the direction of change directly on the panel.
+
 ``` r
 
 al2 <- hv_alluvial(
@@ -1290,6 +1497,12 @@ plot(al2) +
 ![](plot-functions_files/figure-html/alluvial_two_axis-1.png)
 
 ### Saving
+
+[`ggsave()`](https://ggplot2.tidyverse.org/reference/ggsave.html) writes
+the alluvial figure at 8 x 6 inches – wider than tall to give the
+horizontal flow diagram room. For a PowerPoint version, see [Decorating
+and
+Saving](https://ehrlinger.github.io/hvtiPlotR/articles/plot-decorators.md).
 
 ``` r
 
@@ -1324,6 +1537,12 @@ remotes::install_github("davidsjoberg/ggsankey")
 
 ### Sample data
 
+[`sample_cluster_sankey_data()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_cluster_sankey_data.md)
+returns 300 patients with nine cluster-assignment columns (`C2` through
+`C9`), where each column gives the PAM cluster label at that K.
+`table(dta_san$C9)` confirms the marginal counts at K = 9 before you
+pass the data to the constructor.
+
 ``` r
 
 dta_san <- sample_cluster_sankey_data(n = 300, seed = 42)
@@ -1348,6 +1567,15 @@ table(dta_san$C9)
     59 39 22 26 11 42 38 22 41 
 
 ### Default plot (K = 2 to 9)
+
+[`hv_sankey()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_sankey.md)
+reads the nine cluster-assignment columns (`C2` through `C9`) and builds
+the Sankey data automatically. Call
+[`plot()`](https://rdrr.io/r/graphics/plot.default.html) and add a title
+and theme; the default Set1 palette assigns one colour per cluster
+letter. Look for: wide bands that stay intact across K values,
+indicating a stable partition; heavy crossing and fragmentation signal
+that K has grown past what the data supports.
 
 ``` r
 
@@ -1382,7 +1610,9 @@ plot(sk_custom) +
 ### Subset of K values
 
 Pass a shorter `cluster_cols` vector to the constructor to show only a
-range of K.
+range of K. This is useful when a stability plateau is already evident
+and you want to focus the figure on, say, K = 2 to 6 for a manuscript
+panel.
 
 ``` r
 
@@ -1395,6 +1625,11 @@ plot(sk_sub) +
 ![](plot-functions_files/figure-html/sankey_subset-1.png)
 
 ### Saving
+
+[`ggsave()`](https://ggplot2.tidyverse.org/reference/ggsave.html) writes
+the figure at 8 x 5 inches – wide enough to spread K = 2 through K = 9
+across the panel. For a PowerPoint version, see [Decorating and
+Saving](https://ehrlinger.github.io/hvtiPlotR/articles/plot-decorators.md).
 
 ``` r
 
@@ -1577,6 +1812,15 @@ output:
 | Population life table | `smatched` | [`sample_life_table()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_life_table.md) |
 
 ### Sample data
+
+[`sample_hazard_data()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_hazard_data.md)
+generates the parametric prediction grid (one row per time point) with
+`survival`, `hazard`, and `cumhaz` columns plus their CI bounds – the
+same shape as the SAS `predict` dataset.
+[`sample_hazard_empirical()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_hazard_empirical.md)
+generates the KM empirical overlay with 6 binned time intervals,
+matching the `plout` dataset. Both use the same cohort size so the
+overlay aligns.
 
 ``` r
 
@@ -1783,6 +2027,12 @@ with an optional confidence band. This ports
 
 ### Sample data
 
+[`sample_survival_difference_data()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_survival_difference_data.md)
+generates two groups with a specified hazard-ratio contrast and returns
+the point-wise difference `S_2(t) - S_1(t)` with bootstrap CI bounds,
+matching the `HAZDIFL` macro output columns. Both control and treatment
+groups are simulated at the same n to keep the CI width realistic.
+
 ``` r
 
 diff_dat <- sample_survival_difference_data(
@@ -1801,6 +2051,12 @@ head(diff_dat)
     6 0.11010020 0.066810699 -0.24784775 0.38146915    99.83868    99.90549
 
 ### Survival difference curve
+
+[`survival_difference_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/survival_difference_plot.md)
+takes the pre-computed difference and CI columns directly – no grouping
+argument needed for the two-group case. The dashed horizontal line at
+zero makes the no-benefit baseline immediately visible; a positive
+difference means the treatment group has higher survival.
 
 ``` r
 
@@ -1864,6 +2120,12 @@ plots the number needed to treat and absolute risk reduction over time,
 porting the NNT component of `tp.hp.numtreat.survdiff.matched.sas`.
 
 ### Sample data
+
+[`sample_nnt_data()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_nnt_data.md)
+generates two survival curves with a specified hazard-ratio contrast and
+computes NNT and ARR at each time point with CI bounds, matching the
+structure of the `tp.hp.numtreat.survdiff.matched.sas` output. The
+`groups` argument sets the group names and their hazard multipliers.
 
 ``` r
 
@@ -1931,6 +2193,12 @@ nnt_plot(
 
 ### Saving
 
+[`ggsave()`](https://ggplot2.tidyverse.org/reference/ggsave.html) writes
+the parametric survival figure at 11.5 x 8 inches, the standard
+landscape size for the SAS template output. For a PowerPoint version,
+see [Decorating and
+Saving](https://ehrlinger.github.io/hvtiPlotR/articles/plot-decorators.md).
+
 ``` r
 
 p_hp <- hazard_plot(
@@ -1971,6 +2239,13 @@ ggplot; add scales, labels, annotations, and
 
 ### Sample data
 
+[`sample_trends_data()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_trends_data.md)
+generates patient-level data that
+[`hv_trends()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_trends.md)
+then aggregates by year. The `year_range` and `groups` arguments mirror
+the study period and group structure from the SAS template you’re
+porting; the 1968–2000 window below matches `tp.rp.trends.sas`.
+
 ``` r
 
 # year_range matches the 1968-2000 Tricuspid Valve Replacement study in the
@@ -2004,6 +2279,12 @@ tr1 <- hv_trends(one_grp, group_col = NULL)
 
 #### Bare plot
 
+The bare `plot(tr1)` panel shows the annual mean with connecting
+segments and no colour, axis limits, or theme. Look for: a line that
+traces the operation year on the x-axis against the summary statistic on
+the y-axis; if the line is flat, the `group_col = NULL` single-group
+path may be grouping incorrectly.
+
 ``` r
 
 p_tr1 <- plot(tr1)
@@ -2013,6 +2294,13 @@ p_tr1
 ![](plot-functions_files/figure-html/trends_n_year_bare-1.png)
 
 #### Adding scales, labels, and theme
+
+Lay on axis limits and breaks that match the SAS template (x: 1968–2000
+by 4; y: 0–10 by 2), then add axis labels and the poster theme. Swap
+[`theme_hv_poster()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)
+for
+[`theme_hv_manuscript()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)
+for a journal-ready version.
 
 ``` r
 
@@ -2042,6 +2330,15 @@ plot(tr1) +
 
 ### Multiple groups with `scale_colour_brewer`
 
+When `group_col` is set, the constructor computes per-group annual means
+and [`plot()`](https://rdrr.io/r/graphics/plot.default.html) draws one
+line per group.
+[`scale_colour_brewer()`](https://ggplot2.tidyverse.org/reference/scale_brewer.html)
+and
+[`scale_shape_manual()`](https://ggplot2.tidyverse.org/reference/scale_manual.html)
+together give each group a distinct colour and marker shape, which keeps
+the figure readable in greyscale print.
+
 ``` r
 
 tr <- hv_trends(dta_tr)
@@ -2060,6 +2357,11 @@ plot(tr) +
 ![](plot-functions_files/figure-html/trends_multi_brewer-1.png)
 
 ### Median summary + manual colours (NYHA style)
+
+Pass `summary_fn = "median"` when the outcome distribution is skewed and
+the median is more interpretable than the mean – typical for NYHA class
+percentage trends. Manual colours let you assign clinically meaningful
+hues (here, one colour per NYHA class).
 
 ``` r
 
@@ -2090,6 +2392,12 @@ plot(tr_med) +
 ![](plot-functions_files/figure-html/trends_median_manual-1.png)
 
 ### With confidence ribbon
+
+Pass `se = TRUE` to
+[`plot()`](https://rdrr.io/r/graphics/plot.default.html) to add a
+[`geom_ribbon()`](https://ggplot2.tidyverse.org/reference/geom_ribbon.html)
+around the mean line. The `alpha` argument controls the ribbon opacity –
+0.2 keeps the band visible without obscuring the line itself.
 
 ``` r
 
@@ -2234,6 +2542,10 @@ plot(hv_trends(dta_lv, group_col = NULL)) +
 
 ### Case volume / total surgeries per year (tp.dp.trends.R — plot4)
 
+The annual case-volume figure uses a y-axis that runs 0–400 by 50,
+matching the mitral degeneration study’s scale from `tp.dp.trends.R`. A
+single `group_col = NULL` call collapses all patients into one series.
+
 ``` r
 
 dta_vol <- sample_trends_data(
@@ -2281,6 +2593,11 @@ plot(hv_trends(dta_los, group_col = NULL)) +
 
 ### Saving
 
+[`ggsave()`](https://ggplot2.tidyverse.org/reference/ggsave.html) writes
+the trends figure at 11.5 x 8 inches. For a PowerPoint version, see
+[Decorating and
+Saving](https://ehrlinger.github.io/hvtiPlotR/articles/plot-decorators.md).
+
 ``` r
 
 p_tr <- plot(tr) +
@@ -2312,6 +2629,12 @@ area, DVI) plus an ordinal MV regurgitation grade plot.
 
 ### Sample data
 
+[`sample_spaghetti_data()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_spaghetti_data.md)
+generates 150 patients with up to 6 observations each, stratified by a
+named proportion vector that mirrors the Female/Male `MALE` column in
+the original template. Build both the unstratified and colour-stratified
+S3 objects here for reuse across the variants below.
+
 ``` r
 
 # groups mirrors the Female/Male sex stratification in the template (MALE column)
@@ -2340,6 +2663,12 @@ sp_col <- hv_spaghetti(dta_sp, colour_col = "group")
 ```
 
 ### Bare plot
+
+The bare `plot(sp)` panel draws one thin trajectory per patient over
+time with no colour, axis limits, or theme. Look for: a dense bundle of
+lines that gives a visual impression of the distribution’s shape; if
+lines are missing or the x-axis is wrong, check that the `time_col` and
+`id_col` arguments match the data structure.
 
 ``` r
 
@@ -2480,6 +2809,13 @@ plot(sp_ord, y_labels = c(None = 0, Mild = 1, Moderate = 2, Severe = 3)) +
 
 ### With LOESS smooth overlay
 
+Pass `add_smooth = TRUE` to
+[`plot()`](https://rdrr.io/r/graphics/plot.default.html) to add a LOESS
+trend line per group over the individual trajectories. The smoother uses
+[`geom_smooth()`](https://ggplot2.tidyverse.org/reference/geom_smooth.html)
+defaults; the `alpha` argument on the line layer controls individual
+trajectory opacity so the trend line stands out.
+
 ``` r
 
 plot(sp_col, add_smooth = TRUE) +
@@ -2522,6 +2858,13 @@ ggplot you can dress with colour, labels, and
 
 ### Sample data
 
+[`sample_nonparametric_curve_data()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_nonparametric_curve_data.md)
+generates the average-curve and bootstrap CI dataset;
+[`sample_nonparametric_curve_points()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_nonparametric_curve_points.md)
+generates the binned summary points that overlay the curve. Both mirror
+the structure of the SAS `mean_curv` and `boots_ci` output from the
+nonparametric temporal trend model.
+
 ``` r
 
 curve_dat <- sample_nonparametric_curve_data(
@@ -2544,6 +2887,10 @@ head(curve_dat)
 
 ### Single average curve with 68 % CI ribbon
 
+Build the S3 object once – pass `lower_col`/`upper_col` that match the
+CI columns in your data, and optionally `data_points` for the summary
+overlay. The bare plot and the decorated plot share the same object.
+
 ``` r
 
 np <- hv_nonparametric(
@@ -2556,6 +2903,12 @@ np <- hv_nonparametric(
 
 #### Bare plot
 
+The bare panel shows the average curve with its CI ribbon and the binned
+summary points in default colours and no axis formatting. Look for: a
+smooth curve passing through the binned points, with the ribbon widening
+at the extremes where the bootstrap sample thins; a flat curve suggests
+the `outcome_type` or CI columns may be misspecified.
+
 ``` r
 
 p_np_bare <- plot(np)
@@ -2565,6 +2918,12 @@ p_np_bare
 ![](plot-functions_files/figure-html/np_curve_single_bare-1.png)
 
 #### Adding scales, labels, and theme
+
+Layer on colour scales that match your analysis context, then set axis
+limits and labels to match the SAS template breaks. The example uses
+percent labels on the y-axis via
+[`scales::percent`](https://scales.r-lib.org/reference/percent_format.html);
+swap to raw units for a continuous outcome.
 
 ``` r
 
@@ -2596,6 +2955,14 @@ matching `cll_p68`/`clu_p68` in the SAS template. Switch to
 for 95 % CI bands.
 
 ### Two-group comparison (analogous to tp.np.avpkgrad_ozak_ind_mtwt.sas)
+
+Pass `group_col` to the constructor to compare two average curves in a
+single panel, one per valve type (Ozaki vs. CE-Pericardial). Each group
+gets its own CI ribbon;
+[`scale_colour_manual()`](https://ggplot2.tidyverse.org/reference/scale_manual.html)
+and
+[`scale_fill_manual()`](https://ggplot2.tidyverse.org/reference/scale_manual.html)
+assign the colours consistently between the line and the ribbon.
 
 ``` r
 
@@ -2642,6 +3009,16 @@ plot(np_grp) +
 
 ### Saving
 
+[`ggsave()`](https://ggplot2.tidyverse.org/reference/ggsave.html) writes
+the manuscript PDF at 11 x 8.5 inches;
+[`save_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/save_ppt.md)
+writes the same figure to an editable PowerPoint slide using the
+Cleveland Clinic template. See [Decorating and
+Saving](https://ehrlinger.github.io/hvtiPlotR/articles/plot-decorators.md)
+for
+[`save_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/save_ppt.md)
+options.
+
 ``` r
 
 # Manuscript PDF
@@ -2679,6 +3056,13 @@ long <- pivot_longer(
 
 ### Sample data
 
+[`sample_nonparametric_ordinal_data()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_nonparametric_ordinal_data.md)
+generates grade-specific probability curves in long format (one row per
+time × grade combination) and
+[`sample_nonparametric_ordinal_points()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_nonparametric_ordinal_points.md)
+generates the binned summary points. Both mirror the `predict` and
+`means` SAS datasets from `tp.np.*.ordinal.*`.
+
 ``` r
 
 ord_dat <- sample_nonparametric_ordinal_data(
@@ -2704,12 +3088,23 @@ head(ord_dat)
 
 ### Grade probability curves with data summary points
 
+Build the S3 object once with
+[`hv_ordinal()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_ordinal.md),
+passing both the curve data and the summary points. The same object
+drives the bare and decorated plots below.
+
 ``` r
 
 np_ord <- hv_ordinal(curve_data = ord_dat, data_points = ord_pts)
 ```
 
 #### Bare plot
+
+The bare panel draws one line per grade with overlaid summary points and
+no colour, axis formatting, or theme. Look for: four lines that sum to
+approximately 1.0 at every time point, with the `"None"` line starting
+high and declining; if lines cross or drift above 1.0, check that the
+grade probability columns were correctly reshaped to long format.
 
 ``` r
 
@@ -2720,6 +3115,11 @@ p_ord_bare
 ![](plot-functions_files/figure-html/np_ordinal_basic_bare-1.png)
 
 #### Adding scales, labels, and theme
+
+Assign clinically meaningful colours (grey for None, graduated colours
+for increasing severity) and format the y-axis as a percentage. Use
+`theme(legend.position = c(...))` to anchor the legend inside the panel
+where white space permits.
 
 ``` r
 
@@ -2792,6 +3192,10 @@ plot(hv_ordinal(curve_data = ord_two)) +
 
 ### Saving
 
+[`ggsave()`](https://ggplot2.tidyverse.org/reference/ggsave.html) writes
+the ordinal curve figure at 11 x 8.5 inches to match the SAS template
+output dimensions.
+
 ``` r
 
 ggsave(here::here("graphs", "np_tr_ordinal.pdf"),
@@ -2815,6 +3219,12 @@ to derive this from patient-level data, or build it yourself from your
 registry data.
 
 ### Sample data
+
+[`sample_longitudinal_counts_data()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_longitudinal_counts_data.md)
+derives pre-aggregated long-format data from a simulated patient-level
+registry of 300 patients: one row per time-window × series (Patients,
+Measurements) combination with a count column. Build the S3 object once
+and use it for both the bar-chart and table panels.
 
 ``` r
 
@@ -2846,6 +3256,11 @@ lc <- hv_longitudinal(lc_dat)
 
 ### Bare plot
 
+The bare `plot(lc)` panel shows grouped bars at each follow-up window
+with no fill colour, axis scale, or theme. Look for: paired bars at each
+time window with Patients always \>= Measurements; if the two series are
+equal, check that the `series_col` argument maps to the right column.
+
 ``` r
 
 p_lc_bare <- plot(lc)
@@ -2855,6 +3270,11 @@ p_lc_bare
 ![](plot-functions_files/figure-html/lc_bare-1.png)
 
 ### Bar chart
+
+Layer fill colours onto the bare plot to distinguish Patients from
+Measurements, then expand the y-axis with
+[`ggplot2::coord_cartesian()`](https://ggplot2.tidyverse.org/reference/coord_cartesian.html)
+to leave room for labels above the tallest bar.
 
 ``` r
 
@@ -2879,6 +3299,11 @@ p_lc_bar
 
 ### Numeric table panel
 
+Call `plot(lc, type = "table")` to get the numeric summary panel – the
+same counts the bar chart shows, rendered as coloured text below the
+x-axis labels. This panel is intended to be composed with `patchwork`
+below the bar chart, so keep the theme consistent.
+
 ``` r
 
 p_lc_tbl <- plot(lc, type = "table") +
@@ -2895,6 +3320,11 @@ p_lc_tbl
 
 ### Two-panel layout with patchwork
 
+Stack the bar chart above the table panel with `/` and use
+`patchwork::plot_layout(heights = c(3, 1))` to give the bar chart three
+times the vertical space. This ratio matches the original SAS template
+layout.
+
 ``` r
 
 library(patchwork)
@@ -2906,6 +3336,15 @@ p_lc_bar / p_lc_tbl +
 ![](plot-functions_files/figure-html/lc_combined-1.png)
 
 ### Saving the combined figure
+
+[`ggsave()`](https://ggplot2.tidyverse.org/reference/ggsave.html) writes
+the patchwork composite at 11 x 6 inches.
+[`save_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/save_ppt.md)
+takes the bar chart alone – patchwork composites may need
+[`ggsave()`](https://ggplot2.tidyverse.org/reference/ggsave.html) first
+– and writes it to a PowerPoint slide. See [Decorating and
+Saving](https://ehrlinger.github.io/hvtiPlotR/articles/plot-decorators.md)
+for details.
 
 ``` r
 
@@ -2944,6 +3383,13 @@ plot(hu, set_size = FALSE) + theme_hv_poster() # single ggplot
 ```
 
 ### Sample data
+
+[`sample_upset_data()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_upset_data.md)
+returns a binary indicator matrix: one column per procedure, one row per
+patient, with 1 indicating the procedure was performed. Pass the column
+names to `intersect` in the constructor to define the set membership
+axes. [`colSums()`](https://rdrr.io/r/base/colSums.html) confirms the
+marginal counts before you build.
 
 ``` r
 
@@ -3032,6 +3478,12 @@ plot(hu_era, fill_col = "era", set_size = FALSE) +
 
 ### Saving
 
+[`ggsave()`](https://ggplot2.tidyverse.org/reference/ggsave.html)
+handles a patchwork composite the same as a bare ggplot – write it at 11
+x 6 inches, wide enough for the intersection bars plus the set-size
+sidebar. For a PowerPoint version, see [Decorating and
+Saving](https://ehrlinger.github.io/hvtiPlotR/articles/plot-decorators.md).
+
 ``` r
 
 p_upset <- plot(hu) & theme_hv_poster()
@@ -3055,6 +3507,13 @@ final output, omit the call — the plot object itself is untouched.
     make_footnote("R/analysis.R")        # <- no footnote call
 
 ### Draft annotation pattern
+
+Build any hvtiPlotR figure as usual, then call
+[`print()`](https://rdrr.io/r/base/print.html) followed by
+[`make_footnote()`](https://ehrlinger.github.io/hvtiPlotR/reference/make_footnote.md)
+to stamp the bottom-right corner with the source file path and a
+timestamp. The ggplot object itself is unchanged – only the rendered
+device gets the annotation.
 
 ``` r
 

@@ -16,7 +16,10 @@ infrastructure, start at [Track B](#track-b).
 
 ### Installing development dependencies
 
-Clone the repository and install your development dependencies:
+Clone the repository, then install the development dependencies declared
+in `DESCRIPTION`. The `install_deps()` call picks up both `Imports`
+(needed at runtime) and `Suggests` (needed to run tests and build
+vignettes), so your local environment matches what CI sees.
 
 ``` r
 
@@ -31,6 +34,11 @@ devtools::install_deps(dependencies = TRUE)
 ```
 
 ### The development workflow loop
+
+These four calls cover the full cycle for any code change: reload,
+redocument, test, then check. You will run `load_all()` and `test()`
+constantly; `document()` whenever you edit roxygen comments; `check()`
+before opening a PR.
 
 ``` r
 
@@ -387,6 +395,10 @@ Add a bullet to the current dev version at the top of `NEWS.md`:
 
 ### Step 10: Final checklist before opening a PR
 
+Run these three commands in order before pushing your branch. All three
+must complete cleanly – zero errors, zero warnings, and ideally zero
+notes from `check()`. Then open a pull request against `main` on GitHub.
+
 ``` r
 
 devtools::document()   # regenerate NAMESPACE + .Rd — must complete without errors
@@ -394,13 +406,16 @@ devtools::test()       # all tests pass
 devtools::check()      # 0 errors, 0 warnings, 0 notes (ideally)
 ```
 
-Then open a pull request against `main` on GitHub.
-
 ------------------------------------------------------------------------
 
 ## Track B — Package infrastructure
 
 ### Package structure overview
+
+The tree below shows where each piece of the package lives. The two
+directories you will touch most are `R/` (one file per plot family) and
+`tests/testthat/` (one test file per source file). Everything under
+`man/` and `NAMESPACE` is auto-generated – do not edit those by hand.
 
     hvtiPlotR/
     ├── R/                    # Source: one file per plot family
@@ -470,6 +485,14 @@ on top — that’s the `+` composition grammar covered in
 
 #### Tidy evaluation
 
+We pass column names as strings (e.g., `x_col = "time"`) and reference
+them inside [`aes()`](https://ggplot2.tidyverse.org/reference/aes.html)
+with `.data[[col]]`. This keeps the caller’s interface explicit and
+avoids the non-standard evaluation pitfalls that come with
+[`enquo()`](https://rlang.r-lib.org/reference/enquo.html) or bare
+symbols. The `.data` pronoun must be declared in the roxygen block with
+`@importFrom rlang .data`.
+
 ``` r
 
 # Correct — column name is a string; .data masks the data frame
@@ -518,6 +541,14 @@ testthat::snapshot_accept()   # accept all pending diffs
 ```
 
 #### Running checks
+
+Use [`devtools::test()`](https://devtools.r-lib.org/reference/test.html)
+for fast, interactive feedback during development. Switch to
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html) –
+or the more verbose
+[`rcmdcheck::rcmdcheck()`](http://r-lib.github.io/rcmdcheck/reference/rcmdcheck.md)
+– when you want the full `R CMD CHECK` sweep, including example
+execution and vignette builds.
 
 ``` r
 

@@ -77,9 +77,9 @@
       <h1>Contributing to hvtiPlotR</h1>
 
       <p class="author">John Ehrlinger <a href="mailto:ehrlinj@ccf.org" class="email">ehrlinj@ccf.org</a></p>
-      <p class="date">2026-05-26</p>
+      <p class="date">2026-05-27</p>
 
-      <small class="dont-index">Source: <a href="https://github.com/ehrlinger/hvtiPlotR/blob/v2.3.1/vignettes/contributing.qmd" class="external-link"><code>vignettes/contributing.qmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/ehrlinger/hvtiPlotR/blob/main/vignettes/contributing.qmd" class="external-link"><code>vignettes/contributing.qmd</code></a></small>
       <div class="d-none name"><code></code></div>
     </div>
 
@@ -100,7 +100,7 @@
 <li>Git</li>
 </ul></section><section class="level2"><h3 id="installing-development-dependencies">Installing development dependencies<a class="anchor" aria-label="anchor" href="#installing-development-dependencies"></a>
 </h3>
-<p>Clone the repository and install your development dependencies:</p>
+<p>Clone the repository, then install the development dependencies declared in <code>DESCRIPTION</code>. The <code>install_deps()</code> call picks up both <code>Imports</code> (needed at runtime) and <code>Suggests</code> (needed to run tests and build vignettes), so your local environment matches what CI sees.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Clone (first time only)</span></span>
 <span><span class="co"># git clone https://github.com/ehrlinger/hvtiPlotR.git</span></span>
@@ -112,6 +112,7 @@
 <span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/install_deps.html" class="external-link">install_deps</a></span><span class="op">(</span>dependencies <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 </section><section class="level2"><h3 id="the-development-workflow-loop">The development workflow loop<a class="anchor" aria-label="anchor" href="#the-development-workflow-loop"></a>
 </h3>
+<p>These four calls cover the full cycle for any code change: reload, redocument, test, then check. You will run <code>load_all()</code> and <code>test()</code> constantly; <code>document()</code> whenever you edit roxygen comments; <code>check()</code> before opening a PR.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Load the package into the current session without installing</span></span>
 <span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/load_all.html" class="external-link">load_all</a></span><span class="op">(</span><span class="op">)</span></span>
@@ -467,15 +468,16 @@
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  Ports <span class="in">`tp.np.bmi.avrg_curv.binary.sas`</span>.</span></code></pre></div>
 </section><section class="level2"><h3 id="step-10-final-checklist-before-opening-a-pr">Step 10: Final checklist before opening a PR<a class="anchor" aria-label="anchor" href="#step-10-final-checklist-before-opening-a-pr"></a>
 </h3>
+<p>Run these three commands in order before pushing your branch. All three must complete cleanly – zero errors, zero warnings, and ideally zero notes from <code>check()</code>. Then open a pull request against <code>main</code> on GitHub.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/document.html" class="external-link">document</a></span><span class="op">(</span><span class="op">)</span>   <span class="co"># regenerate NAMESPACE + .Rd — must complete without errors</span></span>
 <span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/test.html" class="external-link">test</a></span><span class="op">(</span><span class="op">)</span>       <span class="co"># all tests pass</span></span>
 <span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/check.html" class="external-link">check</a></span><span class="op">(</span><span class="op">)</span>      <span class="co"># 0 errors, 0 warnings, 0 notes (ideally)</span></span></code></pre></div>
-<p>Then open a pull request against <code>main</code> on GitHub.</p>
 <hr></section></section><section class="section level2"><h2 id="track-b">Track B — Package infrastructure<a class="anchor" aria-label="anchor" href="#track-b"></a>
 </h2>
 <section class="level2"><h3 id="package-structure-overview">Package structure overview<a class="anchor" aria-label="anchor" href="#package-structure-overview"></a>
 </h3>
+<p>The tree below shows where each piece of the package lives. The two directories you will touch most are <code>R/</code> (one file per plot family) and <code>tests/testthat/</code> (one test file per source file). Everything under <code>man/</code> and <code>NAMESPACE</code> is auto-generated – do not edit those by hand.</p>
 <pre><code>hvtiPlotR/
 ├── R/                    # Source: one file per plot family
 ├── man/                  # Auto-generated .Rd files — do not edit manually
@@ -548,6 +550,7 @@
 <p>Return the bare ggplot and callers can layer scales, labels, and a theme on top — that’s the <code>+</code> composition grammar covered in <code>vignettes/plot-decorators.qmd</code>.</p>
 </section><section class="level3"><h4 id="tidy-evaluation">Tidy evaluation<a class="anchor" aria-label="anchor" href="#tidy-evaluation"></a>
 </h4>
+<p>We pass column names as strings (e.g., <code>x_col = "time"</code>) and reference them inside <code><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes()</a></code> with <code>.data[[col]]</code>. This keeps the caller’s interface explicit and avoids the non-standard evaluation pitfalls that come with <code><a href="https://rlang.r-lib.org/reference/enquo.html" class="external-link">enquo()</a></code> or bare symbols. The <code>.data</code> pronoun must be declared in the roxygen block with <code>@importFrom rlang .data</code>.</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Correct — column name is a string; .data masks the data frame</span></span>
 <span><span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">.data</span><span class="op">[[</span><span class="va">x_col</span><span class="op">]</span><span class="op">]</span>, y <span class="op">=</span> <span class="va">.data</span><span class="op">[[</span><span class="va">estimate_col</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span>
@@ -604,6 +607,7 @@
 <span><span class="fu">testthat</span><span class="fu">::</span><span class="fu"><a href="https://testthat.r-lib.org/reference/snapshot_accept.html" class="external-link">snapshot_accept</a></span><span class="op">(</span><span class="op">)</span>   <span class="co"># accept all pending diffs</span></span></code></pre></div>
 </section><section class="level3"><h4 id="running-checks">Running checks<a class="anchor" aria-label="anchor" href="#running-checks"></a>
 </h4>
+<p>Use <code><a href="https://devtools.r-lib.org/reference/test.html" class="external-link">devtools::test()</a></code> for fast, interactive feedback during development. Switch to <code><a href="https://devtools.r-lib.org/reference/check.html" class="external-link">devtools::check()</a></code> – or the more verbose <code><a href="http://r-lib.github.io/rcmdcheck/reference/rcmdcheck.html" class="external-link">rcmdcheck::rcmdcheck()</a></code> – when you want the full <code>R CMD CHECK</code> sweep, including example execution and vignette builds.</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/test.html" class="external-link">test</a></span><span class="op">(</span><span class="op">)</span>               <span class="co"># run all tests</span></span>
 <span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/test.html" class="external-link">test</a></span><span class="op">(</span>filter <span class="op">=</span> <span class="st">"bmi"</span><span class="op">)</span> <span class="co"># run tests matching "bmi"</span></span>

@@ -77,9 +77,9 @@
       <h1>The <strong>hvtiPlotR</strong> package: Generating plot.sas style in R</h1>
 
       <p class="author">John Ehrlinger <a href="mailto:ehrlinj@ccf.org" class="email">ehrlinj@ccf.org</a></p>
-      <p class="date">2026-05-26</p>
+      <p class="date">2026-05-27</p>
 
-      <small class="dont-index">Source: <a href="https://github.com/ehrlinger/hvtiPlotR/blob/v2.3.1/vignettes/hvtiPlotR.qmd" class="external-link"><code>vignettes/hvtiPlotR.qmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/ehrlinger/hvtiPlotR/blob/main/vignettes/hvtiPlotR.qmd" class="external-link"><code>vignettes/hvtiPlotR.qmd</code></a></small>
       <div class="d-none name"><code></code></div>
     </div>
 
@@ -814,7 +814,7 @@ run;</code></pre>
 </div>
 </section></section><section class="section level2"><h2 id="themes-and-decoration">Themes and Decoration<a class="anchor" aria-label="anchor" href="#themes-and-decoration"></a>
 </h2>
-<p>The <strong>hvtiPlotR</strong> package provides four <code>theme_hv_*()</code> functions — <code><a href="../reference/hvtiPlotR-themes.html">theme_hv_manuscript()</a></code>, <code><a href="../reference/hvtiPlotR-themes.html">theme_hv_poster()</a></code>, <code><a href="../reference/hvtiPlotR-themes.html">theme_hv_ppt_light()</a></code>, and <code><a href="../reference/hvtiPlotR-themes.html">theme_hv_ppt_dark()</a></code>. Apply one as the last <code>+</code> layer on any composed ggplot object.</p>
+<p>The <strong>hvtiPlotR</strong> package provides four <code>theme_hv_*()</code> functions – <code><a href="../reference/hvtiPlotR-themes.html">theme_hv_manuscript()</a></code>, <code><a href="../reference/hvtiPlotR-themes.html">theme_hv_poster()</a></code>, <code><a href="../reference/hvtiPlotR-themes.html">theme_hv_ppt_light()</a></code>, and <code><a href="../reference/hvtiPlotR-themes.html">theme_hv_ppt_dark()</a></code>. Apply one as the last <code>+</code> layer on any composed ggplot object. The right choice depends on the output target: <code><a href="../reference/hvtiPlotR-themes.html">theme_hv_manuscript()</a></code> is for journal figures (black on white, no panel grid, no legend by default, axes drawn as lines), while the poster and slide themes scale up text and line weights so the figure reads at distance. You can see the full difference by swapping the theme call at the end of a pipeline – everything else stays the same.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p_final</span> <span class="op">&lt;-</span> <span class="va">ccf_plot</span> <span class="op">+</span> <span class="fu"><a href="../reference/hvtiPlotR-themes.html">theme_hv_poster</a></span><span class="op">(</span><span class="op">)</span></span>

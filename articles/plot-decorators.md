@@ -61,6 +61,12 @@ The **hvtiPlotR** package provides four themes via `theme_hv_*()`. The
 
 ### Manuscript
 
+[`theme_hv_manuscript()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)
+is the default for journal submissions – white background, black text,
+minimal chrome. Font sizes are tuned for 8.5 x 11 inch letter-size PDFs
+where the figure may be reduced to a column width. Use this whenever the
+figure ends up in a Word or PDF document sent to a journal.
+
 ``` r
 
 p_ms <- p_base +
@@ -79,6 +85,15 @@ p_ms
 ![](plot-decorators_files/figure-html/theme_hv_manuscript-1.png)
 
 ### Poster
+
+[`theme_hv_poster()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)
+bumps the axis text and tick weights up from the manuscript baseline and
+removes the panel grid, so the figure reads clearly at arm’s length on a
+36 x 48 inch foam board. It is also the go-to theme for in-room slide
+presentations when you are not using the PowerPoint themes – the larger
+tick labels and the boxed panel hold up on a projector better than the
+manuscript variant. Pass `base_family = "sans"` (or another family) to
+switch the font face.
 
 ``` r
 
@@ -99,6 +114,14 @@ p_poster
 
 ### Light PowerPoint
 
+[`theme_hv_ppt_light()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)
+matches slides with a white or light-grey background – the Cleveland
+Clinic standard template, most default Office themes, and any deck where
+the content area is light. Text and lines are dark, so the figure reads
+without modification when placed on the light slide. Pair with
+[`save_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/save_ppt.md)
+to insert it as editable DrawingML.
+
 ``` r
 
 p_base +
@@ -115,6 +138,14 @@ p_base +
 ![](plot-decorators_files/figure-html/theme_hv_ppt_light-1.png)
 
 ### Dark PowerPoint
+
+[`theme_hv_ppt_dark()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)
+flips the palette for dark-background slides – navy or dark-blue
+gradient decks where white-on-dark text is the convention. The theme
+sets a transparent plot background, so the slide’s background shows
+through behind the panel. The `plot.background` override in the chunk
+below simulates that navy background in the rendered vignette; you would
+omit it when saving to an actual `.pptx` file.
 
 ``` r
 
@@ -346,6 +377,16 @@ before saving to match the slide background.
 
 #### Single slide
 
+Build a fully themed plot –
+[`theme_hv_ppt_dark()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)
+or
+[`theme_hv_ppt_light()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)
+– then pass it as `object`. The `template` argument points to an
+existing `.pptx` file whose slide master and layouts carry the brand
+fonts and background;
+[`save_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/save_ppt.md)
+appends a new slide rather than overwriting the template.
+
 ``` r
 
 template <- system.file("ClevelandClinic.pptx", package = "hvtiPlotR")
@@ -371,7 +412,10 @@ save_ppt(
 #### Multiple slides from a list
 
 Pass a named list of plots and a matching vector of titles to produce
-one slide per plot in a single call.
+one slide per plot in a single call. This is the pattern we use for
+batch-report decks where each outcome gets its own slide – the list
+keeps plots in order and the names serve as a paper trail. Every plot in
+the list should carry the same theme so the deck looks consistent.
 
 ``` r
 
@@ -436,7 +480,11 @@ When generating multiple plots in a loop,
 [`patchwork::wrap_plots()`](https://patchwork.data-imaginist.com/reference/wrap_plots.html)
 arranges them into a grid and
 [`ggsave()`](https://ggplot2.tidyverse.org/reference/ggsave.html) writes
-each page.
+each page. This is typical for EDA batches where you have a dozen or
+more outcomes to inspect – you build the list with
+[`lapply()`](https://rdrr.io/r/base/lapply.html), chunk it into pages of
+9, and let the loop handle pagination. The `per_page` constant is easy
+to adjust if you want a 2x2 or 4x4 grid instead.
 
 ``` r
 
@@ -501,6 +549,12 @@ p_base +
 
 ### Outside the panel (explicit sides)
 
+Set `legend.position` to `"right"`, `"left"`, `"top"`, or `"bottom"` to
+place the legend outside the panel area. `"bottom"` with
+`legend.direction = "horizontal"` is the most common choice for
+multi-group figures where a long label would crowd a corner inside the
+panel.
+
 ``` r
 
 p_base +
@@ -522,6 +576,12 @@ p_base +
 
 ### Suppress all legends
 
+Two ways to suppress legends, with slightly different scope.
+`theme(legend.position = "none")` hides every legend for the plot in one
+shot. `guide = "none"` on a `scale_*()` call drops only that aesthetic’s
+legend — handy when you want a colour legend but no shape legend (or
+vice versa). Both reclaim the panel width either way.
+
 ``` r
 
 plot(km) +
@@ -542,6 +602,13 @@ This is preferred over `theme(legend.position = "none")` when only some
 aesthetics have legends and others do not.
 
 ### Legend text and key size
+
+The legend inherits font size from the active theme, which is often
+slightly larger than needed when the legend sits inside a crowded panel.
+`legend.text` controls the label font; `legend.key.size` shrinks the
+colour/shape swatch. Both accept any
+[`element_text()`](https://ggplot2.tidyverse.org/reference/element.html)
+or [`unit()`](https://rdrr.io/r/grid/unit.html) value.
 
 ``` r
 
@@ -571,6 +638,12 @@ after it to adjust individual elements without touching the rest.
 
 ### Axis text size
 
+Override `axis.text` to resize tick labels and `axis.title` for the axis
+title, independent of the rest of the theme. This is useful when a
+figure is being resized for a different output target – for example,
+scaling down for a two-column journal layout where the default
+poster-sized text would be too large.
+
 ``` r
 
 p_base +
@@ -592,6 +665,12 @@ p_base +
 
 ### Removing minor grid lines
 
+Minor grid lines (`panel.grid.minor`) add density without adding
+precision – they can make a busy figure look cluttered, especially when
+there are many data series. Setting
+[`element_blank()`](https://ggplot2.tidyverse.org/reference/element.html)
+removes them while keeping the major grid intact.
+
 ``` r
 
 p_base +
@@ -612,7 +691,10 @@ p_base +
 
 ### Rotating x-axis labels
 
-Useful for time-point labels or long category names.
+Useful for time-point labels or long category names. The combination of
+`angle = 45`, `hjust = 1`, and `vjust = 1` keeps the rotated label
+right-aligned to its tick mark; without the `hjust`/`vjust` corrections
+the labels will float off-center.
 
 ``` r
 
@@ -663,8 +745,12 @@ plot(km) +
 
 ### Expanding plot margins
 
-Add breathing room around the panel, for example when a figure is placed
-directly on a poster without a surrounding text frame.
+Add breathing room around the panel – useful when a figure is placed
+directly on a poster without a surrounding text frame, or when axis
+labels clip against a tight device boundary. The
+[`margin()`](https://ggplot2.tidyverse.org/reference/element.html)
+arguments follow top / right / bottom / left order, matching CSS
+convention.
 
 ``` r
 
@@ -691,6 +777,12 @@ figure. The two patterns we reach for most are side-by-side comparisons
 and a main plot stacked above a companion table or risk panel.
 
 ### Side-by-side plots
+
+The `|` operator from patchwork places two plots next to each other in
+the same row, sharing the figure height. This is the typical layout for
+comparing two outcomes – trends and survival, for example – on a single
+manuscript figure. Both panels are built independently and composed at
+the last step, so you can adjust each one without touching the other.
 
 ``` r
 
@@ -724,6 +816,11 @@ p_ms | p_km_ms
 `|` places plots side by side; `/` stacks them vertically.
 
 ### Controlling relative widths and heights
+
+`plot_layout(widths = ...)` sets relative widths as a numeric vector –
+`c(2, 1)` makes the left panel twice as wide as the right. Use `heights`
+the same way for stacked layouts. This is the right tool when one panel
+has a wide y-axis label or a tall legend that throws off a 50/50 split.
 
 ``` r
 
@@ -767,7 +864,13 @@ p_km_ms / rt_panel +
 ### Shared axis labels and panel tags
 
 [`plot_annotation()`](https://patchwork.data-imaginist.com/reference/plot_annotation.html)
-adds a shared title or tags (A, B, C…) across all panels.
+adds a shared title or panel tags (A, B, C…) across all panels. Tags are
+required by most journals for multi-panel figures and are referenced in
+the caption as “Panel A shows…” – setting `tag_levels = "A"` generates
+them automatically. The `&` operator applies a shared
+[`theme()`](https://ggplot2.tidyverse.org/reference/theme.html) call to
+every panel at once, so you only need to set `plot.tag` formatting in
+one place.
 
 ``` r
 

@@ -13,6 +13,14 @@ The guide is organized by template family (the two-letter prefix after
 
 ### Key concepts for SAS users
 
+Two concepts trip up most SAS users on first contact. First, R does not
+have a `device=` / `GOPTIONS` call that sets the output context
+globally; you pick a theme function and append it to each plot. Second,
+the constructor never writes a file – you have to call
+[`print()`](https://rdrr.io/r/base/print.html) or assign the result to
+an object and save separately. Everything else follows from these two
+facts.
+
 **ggplot2 builds plots in layers.** Instead of one macro call with many
 `color=`, `xaxis=`, and `footnote=` options, you chain `+` operations:
 
@@ -492,6 +500,14 @@ plot(hv_ordinal(
 
 **Port:** `tp.np.po_ar.u_multi.ordinal.sas`
 
+The multi-scenario template (`po_ar` = post-op aortic regurgitation)
+places two or more ordinal grade curves side by side so you can read the
+grade distribution before repair in one panel and after repair in the
+next. In SAS this required separate `%ordinal` calls and manual page
+layout; here you bind the datasets, add a `scenario` column, and let
+[`facet_wrap()`](https://ggplot2.tidyverse.org/reference/facet_wrap.html)
+do the layout.
+
 ``` r
 
 dat_ar1 <- sample_nonparametric_ordinal_data(seed = 1)
@@ -679,6 +695,17 @@ km$tables$report     # survival at report times
 **R equivalent:**
 [`hv_followup()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_followup.md)
 
+`tp.dp.gfup.R` summarises how many patients remain under active
+follow-up at each time point – the kind of quality-check figure you run
+before committing to a temporal-prevalence analysis. The SAS version
+uses `PROC FREQ` output aggregated by year;
+[`hv_followup()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_followup.md)
+accepts the same aggregated data frame (one row per time point, with
+counts for total patients and patients with a measurement). The output
+is a bar chart; any goodness-of-follow-up threshold you add in SAS (a
+dashed horizontal line) becomes a
+`geom_hline(yintercept = ..., linetype = "dashed")` call in R.
+
 ``` r
 
 dta <- sample_goodness_followup_data(n = 300)
@@ -762,6 +789,20 @@ ggsave(here::here("graphs", "lp_cov-balance-SAVR_TF-TAVR.pdf"),
 
 **R equivalent:**
 [`hv_alluvial()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_alluvial.md)
+
+`tp.dp.female_bicus_preAR_sankey.R` traces each patient through a
+sequence of categorical states (e.g. pre-op AR grade to procedure type
+to sex subgroup), producing the flowing band diagram that the original
+script builds with `ggalluvial`. The R port wraps this with
+[`hv_alluvial()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_alluvial.md),
+which handles the internal `to_lodes_form()` reshape and sets default
+fill aesthetics. You supply a data frame with one column per state and
+let
+[`scale_fill_brewer()`](https://ggplot2.tidyverse.org/reference/scale_brewer.html)
+or a manual fill scale control the colours. See the [Alluvial section of
+the plot-functions
+vignette](https://ehrlinger.github.io/hvtiPlotR/articles/plot-functions.html#dp-sankey)
+for a decorated worked example with labels.
 
 ``` r
 
@@ -854,6 +895,16 @@ plot(sk_grp) +
 **R equivalent:**
 [`hv_upset()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_upset.md)
 
+`tp.complexUpset.R` visualises how many patients fall into each
+combination of procedure categories (CABG, Valve, MAZE, Aorta, etc.) –
+the combinatorial overlap question that Venn diagrams can’t answer
+cleanly past three sets. The SAS version used a custom `PROC TABULATE` /
+`SGPLOT` workaround; the R port replaces it with the `ComplexUpset`
+package wrapped in
+[`hv_upset()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_upset.md).
+You pass a binary-indicator data frame (one column per set, 1 = member)
+and the `intersect` argument names the sets to include.
+
 ``` r
 
 sets <- c("CABG", "Valve", "MAZE", "Aorta")
@@ -885,6 +936,13 @@ sp_col <- hv_spaghetti(dta, colour_col = "group")
 
 ### Unstratified — AV mean gradient full range (plot_1)
 
+The SAS template `tp.dp.spaghetti.echo.R` sets
+`AXISY ORDER=(0 TO 80 BY 20)` for the full gradient range. Reproduce
+that scale with
+[`coord_cartesian()`](https://ggplot2.tidyverse.org/reference/coord_cartesian.html)
+so you keep the ggplot clipping behaviour rather than silently dropping
+out-of-range trajectories.
+
 ``` r
 
 plot(sp) +
@@ -896,6 +954,15 @@ plot(sp) +
 ```
 
 ### Unstratified — zoomed y-axis (plot_3)
+
+Plot_3 in the SAS script tightens the y-axis to `ORDER=(0 TO 30 BY 10)`
+to reveal structure in the low-gradient patients that is invisible at
+the 0-80 range. Only
+[`coord_cartesian()`](https://ggplot2.tidyverse.org/reference/coord_cartesian.html)
+changes; the constructor call and data are identical to plot_1. Look
+for: trajectories that were flat in plot_1 now showing meaningful
+within-patient variation – if none appear, the patient population may
+not have a low-gradient subgroup.
 
 ``` r
 
@@ -910,6 +977,10 @@ plot(sp) +
 ### Stratified by sex (plot_2 / plot_4)
 
 Template uses `values=c("red", "blue")`; modernised equivalents below.
+Pass `colour_col = "group"` to
+[`hv_spaghetti()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_spaghetti.md)
+when constructing `sp_col` so each patient trajectory inherits the group
+colour.
 
 ``` r
 
@@ -927,6 +998,12 @@ plot(sp_col) +
 
 ### AV area y-scale (plot_5 / plot_6)
 
+Plot_5 (unstratified) and plot_6 (by sex) switch the outcome to
+effective orifice area (EOA, cm²) with `AXISY ORDER=(0 TO 5 BY 1)`. The
+only change from the gradient plots is the y-axis range and the label;
+the constructor object and colour scale reuse `sp` / `sp_col` from
+above.
+
 ``` r
 
 plot(sp_col) +
@@ -943,6 +1020,12 @@ plot(sp_col) +
 
 ### DVI y-scale (plot_7 / plot_8)
 
+Plot_7 (unstratified) and plot_8 (by sex) track the dimensionless
+velocity index (DVI), a unitless ratio bounded roughly 0-1.25. The SAS
+option is `AXISY ORDER=(0 TO 1.25 BY 0.25)`. This is the only spaghetti
+variant where a y-axis maximum above 1 is correct – do not treat values
+above 1 as outliers.
+
 ``` r
 
 plot(sp_col) +
@@ -958,6 +1041,15 @@ plot(sp_col) +
 ```
 
 ### Ordinal y-axis — MV regurgitation grade (plot_9)
+
+Plot_9 is the outlier in this template family: MV regurgitation grade is
+ordinal (None / Mild / Moderate / Severe = 0-3), not continuous. In SAS
+the y-axis was labelled with `AXISY ORDER=(0 TO 3 BY 1)` and annotated
+manually; here you pass `y_labels` to
+[`plot()`](https://rdrr.io/r/graphics/plot.default.html) to replace the
+numeric tick marks with grade names. The pre-processing step rounds the
+raw echo value to an integer 0-3 before constructing the spaghetti
+object.
 
 ``` r
 
@@ -990,6 +1082,15 @@ plot(sp_ord, y_labels = c(None = 0, Mild = 1, Moderate = 2, Severe = 3)) +
 
 ### tp.rp.trends.sas — cases/year and age (1968–2000 by 4)
 
+`tp.rp.trends.sas` is the right-panel trends template: a single smoothed
+curve for cases-per-year and a second figure for median operative age,
+both spanning 1968-2000. In SAS the two figures are separate `SGPLOT`
+calls sharing the same `axisx order=(1968 to 2000 by 4)` statement. In R
+you call the same
+[`hv_trends()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_trends.md)
+object twice with different y-axis scales – one for counts, one for age
+– so you only need to build the constructor once.
+
 ``` r
 
 one    <- sample_trends_data(n = 600, year_range = c(1968L, 2000L), groups = NULL)
@@ -1012,7 +1113,16 @@ plot(tr_one) +
 
 ### tp.lp.trends.sas — binary % outcomes (1970–2000 by 10, y 0–100 by 10)
 
-Multiple outcomes on one figure. CGM version:
+`tp.lp.trends.sas` is the left-panel trends template for binary
+percentage outcomes plotted together on a single figure – shock rate,
+pre-op IABP use, inotrope use, etc. The SAS `SGPLOT` overlays multiple
+`SCATTER` / `REG` statement pairs, one per outcome, with
+`axisx order=(1970 to 2000 by 10)` and `axisy order=(0 to 100 by 20)`.
+In R you encode the outcome identity as a group variable and use
+[`scale_colour_manual()`](https://ggplot2.tidyverse.org/reference/scale_manual.html)
+/
+[`scale_shape_manual()`](https://ggplot2.tidyverse.org/reference/scale_manual.html)
+to assign the same per-outcome styling. CGM axis spec:
 `axisx order=(1970 to 2000 by 10)`, `axisy order=(0 to 100 by 20)`.
 
 ``` r
@@ -1038,6 +1148,14 @@ plot(tr_lp) +
 
 ### tp.lp.trends.age.sas — age on x-axis (25–85 by 10, y 0–100 by 20)
 
+`tp.lp.trends.age.sas` flips the x-axis from calendar year to patient
+age at operation, showing how the proportion receiving each procedure
+type shifts with age. The SAS `axisx order=(25 to 85 by 10)` statement
+is the tell; in R you use the same
+[`hv_trends()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_trends.md)
+constructor but pass age as the x variable and set
+`scale_x_continuous(limits = c(25, 85), breaks = seq(25, 85, 10))`.
+
 ``` r
 
 dta_age <- sample_trends_data(
@@ -1057,6 +1175,16 @@ plot(tr_age) +
 ```
 
 ### tp.lp.trends.polytomous.sas — repair types (1990–1999 by 1, y 0–100 by 10)
+
+`tp.lp.trends.polytomous.sas` extends the binary trends template to
+three or more mutually exclusive categorical outcomes (CE, Cosgrove,
+Periguard, DeVega repair types) that together sum to 100%. The SAS
+template uses a separate `SCATTER` / `REG` overlay per repair type; here
+each type is a group level. Because the percents are compositional (they
+sum to roughly 100), use
+[`coord_cartesian()`](https://ggplot2.tidyverse.org/reference/coord_cartesian.html)
+rather than `scale_y_continuous(limits = ...)` to avoid silently
+dropping early time points where sample sizes are small.
 
 ``` r
 
@@ -1082,6 +1210,12 @@ plot(tr_poly) +
 
 ### tp.dp.trends.R — LV mass index (1995–2015 by 5, y 0–200 by 50)
 
+`tp.dp.trends.R` covers continuous-outcome trends, here LV mass index
+(g/m²) over a 20-year window. Unlike the SAS templates above this is an
+R script origin rather than a `.sas` file, so there is no `axisx` option
+to translate literally – the axis spec (`1995 to 2015 by 5`, y
+`0 to 200 by 50`) comes from the `scale_*_continuous()` calls below.
+
 ``` r
 
 dta_lv <- sample_trends_data(n = 800, year_range = c(1995L, 2015L),
@@ -1097,6 +1231,12 @@ plot(tr_lv) +
 ```
 
 ### tp.dp.trends.R — hospital LOS with annotation (1985–2015 by 5, y 0–20 by 5)
+
+This variant of `tp.dp.trends.R` tracks hospital length of stay (days)
+and adds a text annotation inside the plot panel – the kind of label the
+SAS `SGPLOT` `INSET` statement would place. In R an
+`annotate("text", ...)` call places it at absolute data coordinates;
+adjust the `x` and `y` values to avoid overlapping the fitted curve.
 
 ``` r
 
@@ -1122,6 +1262,18 @@ plot(tr_los) +
 
 **R equivalent:**
 [`hv_longitudinal()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_longitudinal.md)
+
+`tp.dp.longitudinal_patients_measures.R` answers the question “how many
+patients have an echocardiogram measurement at each follow-up year?” – a
+companion to the goodness-of-follow-up chart above, but focused on
+measurement availability rather than vital-status follow-up. The
+original R script used `PROC FREQ`-style counting over a long-format
+echo dataset;
+[`hv_longitudinal()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_longitudinal.md)
+accepts the same patient-level long-format frame and produces a bar
+chart with count annotations. You need one row per patient per
+observation, with columns for patient ID, follow-up year, and
+(optionally) a measurement flag.
 
 ``` r
 
@@ -1152,6 +1304,16 @@ scales, annotations, and a theme the usual way.
 
 ### Binary-match mode (`tp.lp.mirror-histogram_SAVR-TF-TAVR.R`)
 
+`tp.lp.mirror-histogram_SAVR-TF-TAVR.R` compares propensity score
+distributions for SAVR and TF-TAVR patients before and after 1:1
+nearest-neighbour matching. Upper bars show pre-match counts; a darker
+overlaid bar shows the matched subset in each bin. Pass `match_col` to
+[`hv_mirror_hist()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_mirror_hist.md)
+to activate this mode – the four internal fill levels (`before_g0`,
+`matched_g0`, `before_g1`, `matched_g1`) then map directly to the four
+[`scale_fill_manual()`](https://ggplot2.tidyverse.org/reference/scale_manual.html)
+values.
+
 ``` r
 
 dta <- sample_mirror_histogram_data(n = 400, separation = 1.5)
@@ -1173,6 +1335,14 @@ plot(mh) +
 ```
 
 ### Weighted IPTW mode (`tp.lp.mirror_histo_before_after_wt.R`)
+
+`tp.lp.mirror_histo_before_after_wt.R` replaces the matched-subset bars
+with IPTW weight sums per bin – the right display when you are weighting
+rather than matching. Pass `weight_col` instead of `match_col` to switch
+modes. The fill levels change to `before_g0`, `weighted_g0`,
+`before_g1`, `weighted_g1`, so update your
+[`scale_fill_manual()`](https://ggplot2.tidyverse.org/reference/scale_manual.html)
+values accordingly.
 
 ``` r
 
@@ -1204,6 +1374,19 @@ plot(mh_wt) +
 
 **R equivalent:**
 [`hv_stacked()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_stacked.md)
+
+This plot has no direct SAS template predecessor – it is a new addition
+designed for the annual case-volume figures that were previously
+hand-built with `PROC SGPLOT` `VBAR` / `VBARPARM` calls.
+[`hv_stacked()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_stacked.md)
+accepts a data frame with one column for the x variable (typically
+operation year) and one column for the group/fill variable. It returns a
+bar chart with stacked fills; apply
+[`scale_fill_brewer()`](https://ggplot2.tidyverse.org/reference/scale_brewer.html)
+or
+[`scale_fill_manual()`](https://ggplot2.tidyverse.org/reference/scale_manual.html)
+to set colours consistent with your other figures in the same
+presentation.
 
 ``` r
 
@@ -1285,6 +1468,17 @@ save_ppt(
 ```
 
 ### PDF / TIFF for journals
+
+[`ggsave()`](https://ggplot2.tidyverse.org/reference/ggsave.html)
+replaces the SAS `device=eps` / `device=tiff` options. For most
+journals, 3.5 x 3.5 inches (single column) at 600 dpi satisfies TIFF
+submission requirements; check the target journal’s figure guidelines
+for the exact width – double-column figures typically need 7 inches. Use
+[`theme_hv_manuscript()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)
+rather than
+[`theme_hv_poster()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)
+before saving, since manuscript figures need smaller base text sizes
+than poster figures.
 
 ``` r
 
