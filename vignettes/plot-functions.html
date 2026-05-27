@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="John Ehrlinger ehrlinj@ccf.org">
-<meta name="dcterms.date" content="2026-05-22">
+<meta name="dcterms.date" content="2026-05-27">
 
 <title>hvtiPlotR Plot Functions</title>
 <style>
@@ -291,7 +291,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">May 22, 2026</p>
+      <p class="date">May 27, 2026</p>
     </div>
   </div>
   
@@ -435,6 +435,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Two display modes are selected by the arguments supplied to the constructor. <strong>Binary-match mode</strong> (<code>match_col</code>) reproduces <code>tp.lp.mirror-histogram_SAVR-TF-TAVR.R</code>: upper bars show all observations before matching; overlaid bars show the matched subset. <strong>Weighted IPTW mode</strong> (<code>weight_col</code>) reproduces <code>tp.lp.mirror_histo_before_after_wt.R</code>: upper bars show raw counts; overlaid bars show per-bin IPTW weight sums.</p>
 <section id="binary-match-mode-savr-vs.-tf-tavr" class="level2">
 <h2 class="anchored" data-anchor-id="binary-match-mode-savr-vs.-tf-tavr">Binary-match mode (SAVR vs.&nbsp;TF-TAVR)</h2>
+<p><code>sample_mirror_histogram_data()</code> simulates 2,000 patients with a continuous propensity score (<code>prob_t</code>), a binary group indicator (<code>tavr</code>), and a match flag (<code>match</code>). Pass <code>score_multiplier = 100</code> to put the score on a 0–100 percent scale, and <code>binwidth = 5</code> to set 5-point bins.</p>
 <div class="cell" data-caption="Mirrored Propensity Score Histogram — binary-match mode">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>mirror_dta <span class="ot">&lt;-</span> <span class="fu">sample_mirror_histogram_data</span>(<span class="at">n =</span> <span class="dv">2000</span>, <span class="at">separation =</span> <span class="fl">1.5</span>)</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -453,6 +454,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="bare-plot" class="level2">
 <h2 class="anchored" data-anchor-id="bare-plot">Bare plot</h2>
+<p>The bare panel shows two mirrored bar charts – upper bars for the first group, lower for the second – with white fill and no scale or labels yet. Look for: upper and lower bars that are roughly symmetric before matching, with the matched (darker) overlay narrowing the distribution; if both panels look identical, <code>match_col</code> may not be mapping correctly.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">plot</span>(mh, <span class="at">alpha =</span> <span class="fl">0.8</span>)</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>p</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -467,6 +469,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="adding-scales-labels-and-theme" class="level2">
 <h2 class="anchored" data-anchor-id="adding-scales-labels-and-theme">Adding scales, labels, and theme</h2>
+<p><code>scale_fill_manual()</code> maps the four internal fill levels (<code>before_g0</code>, <code>matched_g0</code>, <code>before_g1</code>, <code>matched_g1</code>) to white (pre-match) and two greens (matched subsets). The annotation calls use <code>y = Inf</code>/<code>-Inf</code> with <code>vjust</code> to anchor labels at the panel edges; <code>theme_hv_poster()</code> sizes text for a conference poster.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>p <span class="sc">+</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">scale_fill_manual</span>(</span>
@@ -522,6 +525,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="weighted-iptw-mode-limited-vs.-extended" class="level2">
 <h2 class="anchored" data-anchor-id="weighted-iptw-mode-limited-vs.-extended">Weighted IPTW mode (Limited vs.&nbsp;Extended)</h2>
+<p>When the analysis uses inverse probability of treatment weighting rather than 1:1 matching, pass <code>weight_col</code> instead of <code>match_col</code>. Each bin’s overlay height is the sum of IPTW weights in that bin rather than a raw matched count. <code>add_weights = TRUE</code> in the sample-data generator attaches an <code>mt_wt</code> column.</p>
 <div class="cell" data-caption="Mirrored Propensity Score Histogram — weighted IPTW mode">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>wt_dta <span class="ot">&lt;-</span> <span class="fu">sample_mirror_histogram_data</span>(</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">n =</span> <span class="dv">2000</span>, <span class="at">separation =</span> <span class="fl">1.5</span>, <span class="at">add_weights =</span> <span class="cn">TRUE</span></span>
@@ -541,6 +545,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="mirror-iptw-bare" class="level2">
 <h2 class="anchored" data-anchor-id="mirror-iptw-bare">Bare plot</h2>
+<p>The bare weighted panel looks the same as the binary-match bare plot – white bars with an overlay – but the overlay encodes IPTW weight sums, not counts. Look for: upper and lower overlay bars that are visually balanced, indicating good weighting; bars that remain heavily one-sided suggest extreme weights.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>p_wt <span class="ot">&lt;-</span> <span class="fu">plot</span>(mh_wt, <span class="at">alpha =</span> <span class="fl">0.8</span>)</span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>p_wt</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -555,6 +560,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="mirror-iptw-decorated" class="level2">
 <h2 class="anchored" data-anchor-id="mirror-iptw-decorated">Adding scales, labels, and theme</h2>
+<p>The IPTW variant uses blue/red for the Limited/Extended groups, with the group labels coloured to match. The axis and annotation pattern is the same as the binary-match version; swap <code>theme_hv_poster()</code> for <code>theme_hv_manuscript()</code> when preparing the figure for a journal submission.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>p_wt <span class="sc">+</span></span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">scale_fill_manual</span>(</span>
@@ -618,7 +624,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <section id="count-histogram" class="level2">
 <h2 class="anchored" data-anchor-id="count-histogram">Count histogram</h2>
-<p>The default <code>position = "stack"</code> shows raw counts within each bin, equivalent to the <code>plot.sas</code> frequency histogram.</p>
+<p>The default <code>position = "stack"</code> shows raw counts within each bin, equivalent to the <code>plot.sas</code> frequency histogram. Build the S3 object with <code>hv_stacked()</code>, then call <code>plot()</code> to get a bare ggplot you dress with colour scales and a theme in one pipeline.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Build the S3 object, then render the bare plot</span></span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>sh <span class="ot">&lt;-</span> <span class="fu">hv_stacked</span>(hist_dta, <span class="at">x_col =</span> <span class="st">"year"</span>, <span class="at">group_col =</span> <span class="st">"category"</span>)</span>
@@ -641,7 +647,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="proportion-fill-histogram" class="level2">
 <h2 class="anchored" data-anchor-id="proportion-fill-histogram">Proportion (fill) histogram</h2>
-<p>Setting <code>position = "fill"</code> rescales each bin so the bars sum to 1, making it easy to compare the relative composition across years.</p>
+<p>Setting <code>position = "fill"</code> rescales each bin so the bars sum to 1, making it easy to compare the relative composition across years without count differences obscuring the trend. Pass the composition variant to <code>hv_stacked()</code> at construction time, then layer in manual colour and axis labels.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Build the proportional variant</span></span>
 <span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>sh2   <span class="ot">&lt;-</span> <span class="fu">hv_stacked</span>(hist_dta, <span class="at">x_col =</span> <span class="st">"year"</span>, <span class="at">group_col =</span> <span class="st">"category"</span>,</span>
@@ -674,6 +680,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="saving" class="level2">
 <h2 class="anchored" data-anchor-id="saving">Saving</h2>
+<p><code>ggsave()</code> writes the composed figure to a PDF at 11 x 8 inches, a standard landscape size for posters. For an editable PowerPoint slide, use <code>save_ppt()</code> instead; see the companion <a href="plot-decorators.html">Decorating and Saving</a> vignette.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(</span>
 <span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">filename =</span> <span class="st">"../graphs/stacked_histogram.pdf"</span>,</span>
@@ -690,6 +697,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><code>hv_followup()</code> prepares the data; <code>plot()</code> hands you a bare ggplot with no colour, shape, axis, or label scales applied. Add those with the usual <code>+</code> operator. The <code>type</code> argument selects the panel: <code>"followup"</code> (default, the death/censoring scatter) or <code>"event"</code> (competing non-fatal event panel).</p>
 <section id="sample-data" class="level2">
 <h2 class="anchored" data-anchor-id="sample-data">Sample data</h2>
+<p><code>sample_goodness_followup_data()</code> generates 300 patients with operation dates, follow-up durations, vital status, and a simulated non-fatal event column. The constructor needs <code>study_start</code>, <code>study_end</code>, and <code>close_date</code> to draw the maximum-follow-up diagonal line correctly.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>gfup_dta <span class="ot">&lt;-</span> <span class="fu">sample_goodness_followup_data</span>(<span class="at">n =</span> <span class="dv">300</span>, <span class="at">seed =</span> <span class="dv">42</span>)</span>
 <span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(gfup_dta)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -706,6 +714,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="death-follow-up-plot" class="level2">
 <h2 class="anchored" data-anchor-id="death-follow-up-plot">Death follow-up plot</h2>
+<p>The bare <code>plot(gf)</code> panel shows each patient as a point and tick without scales, labels, or theme. Look for: a cloud of points below the diagonal, with some above it (patients with longer follow-up than the window explains); if all points fall exactly on the diagonal, the close date may be set incorrectly.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>gf <span class="ot">&lt;-</span> <span class="fu">hv_followup</span>(</span>
 <span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">data        =</span> gfup_dta,</span>
@@ -774,6 +783,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="saving-1" class="level2">
 <h2 class="anchored" data-anchor-id="saving-1">Saving</h2>
+<p><code>ggsave()</code> writes the figure at 6 x 6 inches – square dimensions suit the scatter’s equal x–y scale. For a PowerPoint version, see <a href="plot-decorators.html">Decorating and Saving</a>.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(</span>
 <span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">filename =</span> <span class="st">"../graphs/dp_goodness-of-followup.pdf"</span>,</span>
@@ -869,6 +879,7 @@ Age.After match                    Age  After match      3.5</code></pre>
 </div>
 <section id="sample-data-1" class="level2">
 <h2 class="anchored" data-anchor-id="sample-data-1">Sample data</h2>
+<p><code>sample_covariate_balance_data()</code> returns 12 covariates in the long format <code>hv_balance()</code> expects: one row per covariate × group combination with <code>variable</code>, <code>group</code>, and <code>std_diff</code> columns. Build the S3 object once and reuse it across the styled variants below.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>dta_cb <span class="ot">&lt;-</span> <span class="fu">sample_covariate_balance_data</span>(<span class="at">n_vars =</span> <span class="dv">12</span>)</span>
 <span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(dta_cb)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -887,6 +898,7 @@ Age.After match                    Age  After match      3.5</code></pre>
 </section>
 <section id="bare-plot-1" class="level2">
 <h2 class="anchored" data-anchor-id="bare-plot-1">Bare plot</h2>
+<p>The bare panel lays out one covariate per row with points at their SMD values, but no colour, shape, axis limits, or theme yet. Look for: points clustered near zero for the matched/weighted group and scattered wider for the unmatched group; if both groups look identical, check that <code>group</code> levels are distinct.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(cb, <span class="at">alpha =</span> <span class="fl">0.8</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
@@ -900,6 +912,7 @@ Age.After match                    Age  After match      3.5</code></pre>
 </section>
 <section id="adding-colour-shape-and-axis-scales" class="level2">
 <h2 class="anchored" data-anchor-id="adding-colour-shape-and-axis-scales">Adding colour, shape, and axis scales</h2>
+<p>We map <code>"Before match"</code> to red triangles and <code>"After match"</code> to blue squares – the same colour convention as <code>tp.lp.propen.cov_balance.R</code>. Set the x-axis limits wide enough to include your largest pre-match SMD; the symmetric breaks make the ±10 % threshold visually obvious.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(cb, <span class="at">alpha =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
 <span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(</span>
@@ -965,7 +978,7 @@ Age.After match                    Age  After match      3.5</code></pre>
 </section>
 <section id="controlling-covariate-order" class="level2">
 <h2 class="anchored" data-anchor-id="controlling-covariate-order">Controlling covariate order</h2>
-<p>Pass <code>var_levels</code> to the constructor to control the bottom-to-top display order of covariates.</p>
+<p>Pass <code>var_levels</code> to the constructor to control the bottom-to-top display order of covariates. The example below reverses the default order; supply any character vector that contains all covariate names in the order you want them to appear.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>cb_ord <span class="ot">&lt;-</span> <span class="fu">hv_balance</span>(dta_cb, <span class="at">var_levels =</span> <span class="fu">rev</span>(<span class="fu">unique</span>(dta_cb<span class="sc">$</span>variable)))</span>
 <span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -991,6 +1004,7 @@ Age.After match                    Age  After match      3.5</code></pre>
 </section>
 <section id="saving-2" class="level2">
 <h2 class="anchored" data-anchor-id="saving-2">Saving</h2>
+<p><code>ggsave()</code> writes the figure at 8 x 7 inches – the extra width accommodates long covariate labels on the y-axis. For a PowerPoint version, see <a href="plot-decorators.html">Decorating and Saving</a>.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(</span>
 <span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">filename =</span> here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"graphs"</span>, <span class="st">"lp_cov-balance-SAVR_TF-TAVR.pdf"</span>),</span>
@@ -1006,6 +1020,7 @@ Age.After match                    Age  After match      3.5</code></pre>
 <p><code>hv_survival()</code> estimates the Kaplan-Meier product-limit survival function and stores all five companion plots’ data (matching the SAS <code>%kaplan</code> macro output <code>PLOTS</code>, <code>PLOTC</code>, <code>PLOTH</code>, <code>PLOTL</code>) plus tidy summary tables in <code>$tables</code>. Call <code>plot()</code> with the <code>type</code> argument to render a bare ggplot for the selected panel (default <code>"survival"</code>). Confidence intervals use the logit transform at 0.95 by default.</p>
 <section id="sample-data-2" class="level2">
 <h2 class="anchored" data-anchor-id="sample-data-2">Sample data</h2>
+<p>We work from a simulated cohort of 500 patients with a single follow-up window and right-censoring. <code>sample_survival_data()</code> builds the data frame in the long format <code>hv_survival()</code> expects — one row per patient with a <code>time</code> and an <code>event</code> column. Build the S3 object once and reuse it across the survival, hazard, log-log, and report panels below.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>dta_km <span class="ot">&lt;-</span> <span class="fu">sample_survival_data</span>(<span class="at">n =</span> <span class="dv">500</span>, <span class="at">seed =</span> <span class="dv">42</span>)</span>
 <span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(dta_km)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -1024,6 +1039,7 @@ Age.After match                    Age  After match      3.5</code></pre>
 </section>
 <section id="survival-curve-plots1" class="level2">
 <h2 class="anchored" data-anchor-id="survival-curve-plots1">Survival curve (PLOTS=1)</h2>
+<p>The bare <code>plot(km)</code> panel is what <code>PLOTS=1</code> produces from the SAS <code>%kaplan</code> macro — the survival curve with the logit-transform 95% CI ribbon. No colour scale, axis labels, or theme yet; you add those in the next subsection. Look for: a curve that starts at 100% and is monotonically non-increasing, with the ribbon widening as the at-risk population thins.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Bare plot — no scales or labels yet</span></span>
 <span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(km)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -1038,6 +1054,7 @@ Age.After match                    Age  After match      3.5</code></pre>
 </section>
 <section id="adding-scales-labels-and-annotations-1" class="level2">
 <h2 class="anchored" data-anchor-id="adding-scales-labels-and-annotations-1">Adding scales, labels, and annotations</h2>
+<p>To get a manuscript-ready figure, we layer scales, labels, and a theme onto the bare plot with <code>+</code>. The pattern below is what we use most often in CORR: a steelblue palette for single-cohort figures, percent labels on the y-axis, the <code>n =</code> callout in the lower-left, and the poster-sized theme. Swap <code>theme_hv_poster()</code> for <code>theme_hv_manuscript()</code> when you want the journal version.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>km_final <span class="ot">&lt;-</span> <span class="fu">plot</span>(km, <span class="at">alpha =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
 <span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="at">All =</span> <span class="st">"steelblue"</span>), <span class="at">guide =</span> <span class="st">"none"</span>) <span class="sc">+</span></span>
@@ -1070,6 +1087,7 @@ Age.After match                    Age  After match      3.5</code></pre>
 </section>
 <section id="numbers-at-risk-and-report-table" class="level2">
 <h2 class="anchored" data-anchor-id="numbers-at-risk-and-report-table">Numbers at risk and report table</h2>
+<p><code>hv_survival()</code> stores the at-risk table and the per-time-point summary in <code>$tables</code>. The risk table is the strip that goes under the plot in the SAS <code>%kaplan</code> output; the report table is the per-year summary with point estimates and CIs. Read either one out directly:</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>km<span class="sc">$</span>tables<span class="sc">$</span>risk</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
@@ -1095,12 +1113,14 @@ Age.After match                    Age  After match      3.5</code></pre>
 </section>
 <section id="saving-3" class="level2">
 <h2 class="anchored" data-anchor-id="saving-3">Saving</h2>
+<p><code>ggsave()</code> writes the composed figure to disk — the <code>width</code>/<code>height</code> here are tuned for manuscript aspect ratios. For an editable PowerPoint slide use <code>save_ppt()</code> instead; see the companion <a href="plot-decorators.html">Decorating and Saving</a> vignette.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="st">"../graphs/km_survival.pdf"</span>, km_final, <span class="at">width =</span> <span class="dv">8</span>, <span class="at">height =</span> <span class="dv">6</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="stratified-analysis" class="level2">
 <h2 class="anchored" data-anchor-id="stratified-analysis">Stratified analysis</h2>
+<p>To compare survival across groups, pass <code>group_col</code> to <code>hv_survival()</code> and the constructor fits a separate KM curve per stratum. Below we simulate a two-arm valve-type cohort with a 1.4× hazard ratio, then style the curves with <code>scale_color_manual()</code> so the two groups are visually distinct. Look for: clearly separated curves with non-overlapping CI ribbons in the windows where treatment effects matter most.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>dta_km_s <span class="ot">&lt;-</span> <span class="fu">sample_survival_data</span>(</span>
 <span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">n             =</span> <span class="dv">500</span>,</span>
@@ -1139,6 +1159,7 @@ Age.After match                    Age  After match      3.5</code></pre>
 </section>
 <section id="cumulative-hazard-plotc1" class="level2">
 <h2 class="anchored" data-anchor-id="cumulative-hazard-plotc1">Cumulative hazard (PLOTC=1)</h2>
+<p><code>PLOTC=1</code> from the SAS <code>%kaplan</code> macro is the Nelson-Aalen cumulative hazard estimate <code>H(t) = -log S(t)</code>. Same KM object, different <code>type</code> argument. Look for: a monotonically non-decreasing curve starting at zero; the slope at any time point is the instantaneous hazard rate.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(km, <span class="at">type =</span> <span class="st">"cumhaz"</span>) <span class="sc">+</span></span>
 <span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">20</span>, <span class="dv">5</span>)) <span class="sc">+</span></span>
@@ -1201,6 +1222,7 @@ Age.After match                    Age  After match      3.5</code></pre>
 </section>
 <section id="integrated-survivorship-restricted-mean-survival-plotl1" class="level2">
 <h2 class="anchored" data-anchor-id="integrated-survivorship-restricted-mean-survival-plotl1">Integrated survivorship / restricted mean survival (PLOTL=1)</h2>
+<p><code>PLOTL=1</code> is the integrated survivorship — the area under the survival curve up to time <code>t</code>, equivalent to restricted mean survival time (RMST) at that horizon. Useful when the proportional-hazards assumption fails and a single hazard ratio summary would mislead. Look for: a curve that rises linearly while S(t) ≈ 1 and bends as event accumulation pulls the mean down.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(km, <span class="at">type =</span> <span class="st">"life"</span>) <span class="sc">+</span></span>
 <span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="at">All =</span> <span class="st">"steelblue"</span>), <span class="at">guide =</span> <span class="st">"none"</span>) <span class="sc">+</span></span>
@@ -1226,6 +1248,7 @@ Age.After match                    Age  After match      3.5</code></pre>
 <p><code>plot()</code> on an <code>hv_eda</code> object returns a bare <code>ggplot</code>. Add colour scales, axis labels, annotations, and <code>theme_hv_manuscript()</code>.</p>
 <section id="sample-data-3" class="level2">
 <h2 class="anchored" data-anchor-id="sample-data-3">Sample data</h2>
+<p><code>sample_eda_data()</code> returns a mixed-type dataset of 300 patients with continuous, binary, ordinal, and character columns spanning surgery years 2005–2020. <code>eda_classify_var()</code> detects each column’s type before you build the plots, so you can confirm the classification matches your expectations.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>dta_eda <span class="ot">&lt;-</span> <span class="fu">sample_eda_data</span>(<span class="at">n =</span> <span class="dv">300</span>, <span class="at">seed =</span> <span class="dv">42</span>)</span>
 <span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(dta_eda)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -1297,6 +1320,7 @@ Age.After match                    Age  After match      3.5</code></pre>
 </section>
 <section id="ordinal-and-multi-level-categorical" class="level2">
 <h2 class="anchored" data-anchor-id="ordinal-and-multi-level-categorical">Ordinal and multi-level categorical</h2>
+<p>Columns with more than two numeric levels are classified as <code>"Cat_Num"</code> and rendered as stacked count bars, one level per fill colour. Use <code>scale_fill_brewer()</code> with a diverging palette (here <code>"RdYlGn"</code>, reversed) to signal grade severity from green (low) through yellow to red (high).</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">hv_eda</span>(dta_eda, <span class="at">x_col =</span> <span class="st">"year"</span>, <span class="at">y_col =</span> <span class="st">"nyha"</span>,</span>
 <span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a>              <span class="at">y_label =</span> <span class="st">"Preoperative NYHA Class"</span>)) <span class="sc">+</span></span>
@@ -1320,6 +1344,7 @@ Age.After match                    Age  After match      3.5</code></pre>
 </section>
 <section id="character-categorical" class="level2">
 <h2 class="anchored" data-anchor-id="character-categorical">Character categorical</h2>
+<p>String columns are classified as <code>"Cat_Char"</code> and produce stacked count bars with one level per fill colour. Unlike <code>"Cat_Num"</code> columns, the levels are ordered alphabetically by default – use <code>scale_fill_manual()</code> to assign colours that carry clinical meaning (here, morphology type).</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">hv_eda</span>(dta_eda, <span class="at">x_col =</span> <span class="st">"year"</span>, <span class="at">y_col =</span> <span class="st">"valve_morph"</span>,</span>
 <span id="cb64-2"><a href="#cb64-2" aria-hidden="true" tabindex="-1"></a>              <span class="at">y_label =</span> <span class="st">"Valve Morphology"</span>)) <span class="sc">+</span></span>
@@ -1490,6 +1515,7 @@ Age.After match                    Age  After match      3.5</code></pre>
 <p><code>hv_alluvial()</code> prepares an alluvial (Sankey-style) diagram using <code>ggalluvial</code>, so you can see how patients flow between states across time points or treatment stages. Each row of the input is a unique combination of axis values with an associated patient count; <code>plot()</code> draws flows proportional to that count. Ports <code>tp.dp.female_bicus_preAR_sankey.R</code>.</p>
 <section id="sample-data-4" class="level2">
 <h2 class="anchored" data-anchor-id="sample-data-4">Sample data</h2>
+<p><code>sample_alluvial_data()</code> simulates 300 patients with pre-operative AR grade, procedure type, and post-operative AR grade columns. The <code>axes</code> vector defines the left-to-right display order; each unique combination of axis values becomes one band, sized by its <code>freq</code> count.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb74"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a>dta_al  <span class="ot">&lt;-</span> <span class="fu">sample_alluvial_data</span>(<span class="at">n =</span> <span class="dv">300</span>, <span class="at">seed =</span> <span class="dv">42</span>)</span>
 <span id="cb74-2"><a href="#cb74-2" aria-hidden="true" tabindex="-1"></a>axes    <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"pre_ar"</span>, <span class="st">"procedure"</span>, <span class="st">"post_ar"</span>)</span>
@@ -1507,6 +1533,7 @@ Age.After match                    Age  After match      3.5</code></pre>
 </section>
 <section id="bare-plot-2" class="level2">
 <h2 class="anchored" data-anchor-id="bare-plot-2">Bare plot</h2>
+<p>The bare panel shows flows between the three axis stages with uniform fill and no colour, labels, or theme. Look for: bands that connect every level of <code>pre_ar</code> through <code>procedure</code> to every level of <code>post_ar</code>, with band widths proportional to the <code>freq</code> column; missing bands indicate a combination that does not occur in the data.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb76"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a>al <span class="ot">&lt;-</span> <span class="fu">hv_alluvial</span>(dta_al, <span class="at">axes =</span> axes, <span class="at">y_col =</span> <span class="st">"freq"</span>)</span>
 <span id="cb76-2"><a href="#cb76-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(al)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -1521,6 +1548,7 @@ Age.After match                    Age  After match      3.5</code></pre>
 </section>
 <section id="fill-flows-by-pre-operative-grade" class="level2">
 <h2 class="anchored" data-anchor-id="fill-flows-by-pre-operative-grade">Fill flows by pre-operative grade</h2>
+<p>Pass <code>fill_col</code> to the constructor to colour each flow band by the value of a categorical column. Here pre-operative AR grade colours the bands so you can trace how each grade distributes across procedure types and post-operative outcomes. Swap <code>scale_fill_manual()</code> for <code>scale_fill_brewer()</code> when your levels map naturally to a diverging palette.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb77"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb77-1"><a href="#cb77-1" aria-hidden="true" tabindex="-1"></a>al_filled <span class="ot">&lt;-</span> <span class="fu">hv_alluvial</span>(dta_al, <span class="at">axes =</span> axes, <span class="at">y_col =</span> <span class="st">"freq"</span>,</span>
 <span id="cb77-2"><a href="#cb77-2" aria-hidden="true" tabindex="-1"></a>                            <span class="at">fill_col =</span> <span class="st">"pre_ar"</span>)</span>
@@ -1559,6 +1587,7 @@ Age.After match                    Age  After match      3.5</code></pre>
 </section>
 <section id="two-axis-before-after-comparison" class="level2">
 <h2 class="anchored" data-anchor-id="two-axis-before-after-comparison">Two-axis before / after comparison</h2>
+<p>When you only need to compare two time points (pre- and post-operative), drop the middle axis and pass just two columns to <code>axes</code>. Use custom <code>axis_labels</code> to replace the raw column names with readable stage labels, and <code>annotate()</code> to call out the direction of change directly on the panel.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb78"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a>al2 <span class="ot">&lt;-</span> <span class="fu">hv_alluvial</span>(</span>
 <span id="cb78-2"><a href="#cb78-2" aria-hidden="true" tabindex="-1"></a>  dta_al,</span>
@@ -1590,6 +1619,7 @@ Age.After match                    Age  After match      3.5</code></pre>
 </section>
 <section id="saving-4" class="level2">
 <h2 class="anchored" data-anchor-id="saving-4">Saving</h2>
+<p><code>ggsave()</code> writes the alluvial figure at 8 x 6 inches – wider than tall to give the horizontal flow diagram room. For a PowerPoint version, see <a href="plot-decorators.html">Decorating and Saving</a>.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb79"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb79-1"><a href="#cb79-1" aria-hidden="true" tabindex="-1"></a>p_al <span class="ot">&lt;-</span> <span class="fu">plot</span>(al_filled) <span class="sc">+</span></span>
 <span id="cb79-2"><a href="#cb79-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_brewer</span>(<span class="at">palette =</span> <span class="st">"RdYlGn"</span>, <span class="at">direction =</span> <span class="sc">-</span><span class="dv">1</span>) <span class="sc">+</span></span>
@@ -1608,6 +1638,7 @@ Age.After match                    Age  After match      3.5</code></pre>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb80"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb80-1"><a href="#cb80-1" aria-hidden="true" tabindex="-1"></a>remotes<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">"davidsjoberg/ggsankey"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <section id="sample-data-5" class="level2">
 <h2 class="anchored" data-anchor-id="sample-data-5">Sample data</h2>
+<p><code>sample_cluster_sankey_data()</code> returns 300 patients with nine cluster-assignment columns (<code>C2</code> through <code>C9</code>), where each column gives the PAM cluster label at that K. <code>table(dta_san$C9)</code> confirms the marginal counts at K = 9 before you pass the data to the constructor.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb81"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb81-1"><a href="#cb81-1" aria-hidden="true" tabindex="-1"></a>dta_san <span class="ot">&lt;-</span> <span class="fu">sample_cluster_sankey_data</span>(<span class="at">n =</span> <span class="dv">300</span>, <span class="at">seed =</span> <span class="dv">42</span>)</span>
 <span id="cb81-2"><a href="#cb81-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(dta_san)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -1630,6 +1661,7 @@ Age.After match                    Age  After match      3.5</code></pre>
 </section>
 <section id="default-plot-k-2-to-9" class="level2">
 <h2 class="anchored" data-anchor-id="default-plot-k-2-to-9">Default plot (K = 2 to 9)</h2>
+<p><code>hv_sankey()</code> reads the nine cluster-assignment columns (<code>C2</code> through <code>C9</code>) and builds the Sankey data automatically. Call <code>plot()</code> and add a title and theme; the default Set1 palette assigns one colour per cluster letter. Look for: wide bands that stay intact across K values, indicating a stable partition; heavy crossing and fragmentation signal that K has grown past what the data supports.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb85"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb85-1"><a href="#cb85-1" aria-hidden="true" tabindex="-1"></a>sk <span class="ot">&lt;-</span> <span class="fu">hv_sankey</span>(dta_san)</span>
 <span id="cb85-2"><a href="#cb85-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(sk) <span class="sc">+</span></span>
@@ -1654,7 +1686,7 @@ Age.After match                    Age  After match      3.5</code></pre>
 </section>
 <section id="subset-of-k-values" class="level2">
 <h2 class="anchored" data-anchor-id="subset-of-k-values">Subset of K values</h2>
-<p>Pass a shorter <code>cluster_cols</code> vector to the constructor to show only a range of K.</p>
+<p>Pass a shorter <code>cluster_cols</code> vector to the constructor to show only a range of K. This is useful when a stability plateau is already evident and you want to focus the figure on, say, K = 2 to 6 for a manuscript panel.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb87"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb87-1"><a href="#cb87-1" aria-hidden="true" tabindex="-1"></a>sk_sub <span class="ot">&lt;-</span> <span class="fu">hv_sankey</span>(dta_san, <span class="at">cluster_cols =</span> <span class="fu">paste0</span>(<span class="st">"C"</span>, <span class="dv">2</span><span class="sc">:</span><span class="dv">6</span>))</span>
 <span id="cb87-2"><a href="#cb87-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(sk_sub) <span class="sc">+</span></span>
@@ -1664,6 +1696,7 @@ Age.After match                    Age  After match      3.5</code></pre>
 </section>
 <section id="saving-5" class="level2">
 <h2 class="anchored" data-anchor-id="saving-5">Saving</h2>
+<p><code>ggsave()</code> writes the figure at 8 x 5 inches – wide enough to spread K = 2 through K = 9 across the panel. For a PowerPoint version, see <a href="plot-decorators.html">Decorating and Saving</a>.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb88"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb88-1"><a href="#cb88-1" aria-hidden="true" tabindex="-1"></a>p_san <span class="ot">&lt;-</span> <span class="fu">plot</span>(sk) <span class="sc">+</span></span>
 <span id="cb88-2"><a href="#cb88-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"PAM Cluster Stability"</span>) <span class="sc">+</span></span>
@@ -1824,6 +1857,7 @@ Age.After match                    Age  After match      3.5</code></pre>
 </table>
 <section id="sample-data-7" class="level2">
 <h2 class="anchored" data-anchor-id="sample-data-7">Sample data</h2>
+<p><code>sample_hazard_data()</code> generates the parametric prediction grid (one row per time point) with <code>survival</code>, <code>hazard</code>, and <code>cumhaz</code> columns plus their CI bounds – the same shape as the SAS <code>predict</code> dataset. <code>sample_hazard_empirical()</code> generates the KM empirical overlay with 6 binned time intervals, matching the <code>plout</code> dataset. Both use the same cohort size so the overlay aligns.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb101"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb101-1"><a href="#cb101-1" aria-hidden="true" tabindex="-1"></a>dat_hp  <span class="ot">&lt;-</span> <span class="fu">sample_hazard_data</span>(<span class="at">n =</span> <span class="dv">500</span>, <span class="at">time_max =</span> <span class="dv">10</span>)</span>
 <span id="cb101-2"><a href="#cb101-2" aria-hidden="true" tabindex="-1"></a>emp_hp  <span class="ot">&lt;-</span> <span class="fu">sample_hazard_empirical</span>(<span class="at">n =</span> <span class="dv">500</span>, <span class="at">time_max =</span> <span class="dv">10</span>, <span class="at">n_bins =</span> <span class="dv">6</span>)</span>
@@ -2032,6 +2066,7 @@ Age.After match                    Age  After match      3.5</code></pre>
 <p><code>survival_difference_plot()</code> plots the difference <code>S_2(t) - S_1(t)</code> between two groups over time, with an optional confidence band. This ports <code>tp.hp.dead.life-gained.sas</code> (HAZDIFL macro output).</p>
 <section id="sample-data-8" class="level2">
 <h2 class="anchored" data-anchor-id="sample-data-8">Sample data</h2>
+<p><code>sample_survival_difference_data()</code> generates two groups with a specified hazard-ratio contrast and returns the point-wise difference <code>S_2(t) - S_1(t)</code> with bootstrap CI bounds, matching the <code>HAZDIFL</code> macro output columns. Both control and treatment groups are simulated at the same n to keep the CI width realistic.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb108"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb108-1"><a href="#cb108-1" aria-hidden="true" tabindex="-1"></a>diff_dat <span class="ot">&lt;-</span> <span class="fu">sample_survival_difference_data</span>(</span>
 <span id="cb108-2"><a href="#cb108-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">n      =</span> <span class="dv">500</span>,</span>
@@ -2051,6 +2086,7 @@ Age.After match                    Age  After match      3.5</code></pre>
 </section>
 <section id="survival-difference-curve" class="level2">
 <h2 class="anchored" data-anchor-id="survival-difference-curve">Survival difference curve</h2>
+<p><code>survival_difference_plot()</code> takes the pre-computed difference and CI columns directly – no grouping argument needed for the two-group case. The dashed horizontal line at zero makes the no-benefit baseline immediately visible; a positive difference means the treatment group has higher survival.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb110"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb110-1"><a href="#cb110-1" aria-hidden="true" tabindex="-1"></a><span class="fu">survival_difference_plot</span>(</span>
 <span id="cb110-2"><a href="#cb110-2" aria-hidden="true" tabindex="-1"></a>  diff_dat,</span>
@@ -2118,6 +2154,7 @@ Age.After match                    Age  After match      3.5</code></pre>
 <p><code>nnt_plot()</code> plots the number needed to treat and absolute risk reduction over time, porting the NNT component of <code>tp.hp.numtreat.survdiff.matched.sas</code>.</p>
 <section id="sample-data-9" class="level2">
 <h2 class="anchored" data-anchor-id="sample-data-9">Sample data</h2>
+<p><code>sample_nnt_data()</code> generates two survival curves with a specified hazard-ratio contrast and computes NNT and ARR at each time point with CI bounds, matching the structure of the <code>tp.hp.numtreat.survdiff.matched.sas</code> output. The <code>groups</code> argument sets the group names and their hazard multipliers.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb112"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb112-1"><a href="#cb112-1" aria-hidden="true" tabindex="-1"></a>nnt_dat <span class="ot">&lt;-</span> <span class="fu">sample_nnt_data</span>(</span>
 <span id="cb112-2"><a href="#cb112-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">n      =</span> <span class="dv">500</span>,</span>
@@ -2188,6 +2225,7 @@ Age.After match                    Age  After match      3.5</code></pre>
 </section>
 <section id="saving-7" class="level2">
 <h2 class="anchored" data-anchor-id="saving-7">Saving</h2>
+<p><code>ggsave()</code> writes the parametric survival figure at 11.5 x 8 inches, the standard landscape size for the SAS template output. For a PowerPoint version, see <a href="plot-decorators.html">Decorating and Saving</a>.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb116"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb116-1"><a href="#cb116-1" aria-hidden="true" tabindex="-1"></a>p_hp <span class="ot">&lt;-</span> <span class="fu">hazard_plot</span>(</span>
 <span id="cb116-2"><a href="#cb116-2" aria-hidden="true" tabindex="-1"></a>  dat_hp,</span>
@@ -2254,6 +2292,7 @@ Age.After match                    Age  After match      3.5</code></pre>
 <p>The constructor accepts patient-level data and computes annual summaries (mean or median) internally. <code>plot()</code> returns a bare ggplot; add scales, labels, annotations, and <code>theme_hv_manuscript()</code>.</p>
 <section id="sample-data-10" class="level2">
 <h2 class="anchored" data-anchor-id="sample-data-10">Sample data</h2>
+<p><code>sample_trends_data()</code> generates patient-level data that <code>hv_trends()</code> then aggregates by year. The <code>year_range</code> and <code>groups</code> arguments mirror the study period and group structure from the SAS template you’re porting; the 1968–2000 window below matches <code>tp.rp.trends.sas</code>.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb117"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb117-1"><a href="#cb117-1" aria-hidden="true" tabindex="-1"></a><span class="co"># year_range matches the 1968-2000 Tricuspid Valve Replacement study in the</span></span>
 <span id="cb117-2"><a href="#cb117-2" aria-hidden="true" tabindex="-1"></a><span class="co"># SAS template (tp.rp.trends.sas)</span></span>
@@ -2283,6 +2322,7 @@ Age.After match                    Age  After match      3.5</code></pre>
 </div>
 <section id="bare-plot-3" class="level3">
 <h3 class="anchored" data-anchor-id="bare-plot-3">Bare plot</h3>
+<p>The bare <code>plot(tr1)</code> panel shows the annual mean with connecting segments and no colour, axis limits, or theme. Look for: a line that traces the operation year on the x-axis against the summary statistic on the y-axis; if the line is flat, the <code>group_col = NULL</code> single-group path may be grouping incorrectly.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb120"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb120-1"><a href="#cb120-1" aria-hidden="true" tabindex="-1"></a>p_tr1 <span class="ot">&lt;-</span> <span class="fu">plot</span>(tr1)</span>
 <span id="cb120-2"><a href="#cb120-2" aria-hidden="true" tabindex="-1"></a>p_tr1</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -2297,6 +2337,7 @@ Age.After match                    Age  After match      3.5</code></pre>
 </section>
 <section id="adding-scales-labels-and-theme-1" class="level3">
 <h3 class="anchored" data-anchor-id="adding-scales-labels-and-theme-1">Adding scales, labels, and theme</h3>
+<p>Lay on axis limits and breaks that match the SAS template (x: 1968–2000 by 4; y: 0–10 by 2), then add axis labels and the poster theme. Swap <code>theme_hv_poster()</code> for <code>theme_hv_manuscript()</code> for a journal-ready version.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb121"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb121-1"><a href="#cb121-1" aria-hidden="true" tabindex="-1"></a>p_tr1 <span class="sc">+</span></span>
 <span id="cb121-2"><a href="#cb121-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">1968</span>, <span class="dv">2000</span>), <span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">1968</span>, <span class="dv">2000</span>, <span class="dv">4</span>)) <span class="sc">+</span></span>
@@ -2333,6 +2374,7 @@ Age.After match                    Age  After match      3.5</code></pre>
 </section>
 <section id="multiple-groups-with-scale_colour_brewer" class="level2">
 <h2 class="anchored" data-anchor-id="multiple-groups-with-scale_colour_brewer">Multiple groups with <code>scale_colour_brewer</code></h2>
+<p>When <code>group_col</code> is set, the constructor computes per-group annual means and <code>plot()</code> draws one line per group. <code>scale_colour_brewer()</code> and <code>scale_shape_manual()</code> together give each group a distinct colour and marker shape, which keeps the figure readable in greyscale print.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb123"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb123-1"><a href="#cb123-1" aria-hidden="true" tabindex="-1"></a>tr <span class="ot">&lt;-</span> <span class="fu">hv_trends</span>(dta_tr)</span>
 <span id="cb123-2"><a href="#cb123-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(tr) <span class="sc">+</span></span>
@@ -2356,6 +2398,7 @@ Age.After match                    Age  After match      3.5</code></pre>
 </section>
 <section id="median-summary-manual-colours-nyha-style" class="level2">
 <h2 class="anchored" data-anchor-id="median-summary-manual-colours-nyha-style">Median summary + manual colours (NYHA style)</h2>
+<p>Pass <code>summary_fn = "median"</code> when the outcome distribution is skewed and the median is more interpretable than the mean – typical for NYHA class percentage trends. Manual colours let you assign clinically meaningful hues (here, one colour per NYHA class).</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb124"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb124-1"><a href="#cb124-1" aria-hidden="true" tabindex="-1"></a>tr_med <span class="ot">&lt;-</span> <span class="fu">hv_trends</span>(dta_tr, <span class="at">summary_fn =</span> <span class="st">"median"</span>)</span>
 <span id="cb124-2"><a href="#cb124-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(tr_med) <span class="sc">+</span></span>
@@ -2390,6 +2433,7 @@ Age.After match                    Age  After match      3.5</code></pre>
 </section>
 <section id="with-confidence-ribbon" class="level2">
 <h2 class="anchored" data-anchor-id="with-confidence-ribbon">With confidence ribbon</h2>
+<p>Pass <code>se = TRUE</code> to <code>plot()</code> to add a <code>geom_ribbon()</code> around the mean line. The <code>alpha</code> argument controls the ribbon opacity – 0.2 keeps the band visible without obscuring the line itself.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb125"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb125-1"><a href="#cb125-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(tr1, <span class="at">se =</span> <span class="cn">TRUE</span>, <span class="at">alpha =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
 <span id="cb125-2"><a href="#cb125-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">1968</span>, <span class="dv">2000</span>), <span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">1968</span>, <span class="dv">2000</span>, <span class="dv">4</span>)) <span class="sc">+</span></span>
@@ -2540,6 +2584,7 @@ Age.After match                    Age  After match      3.5</code></pre>
 </section>
 <section id="case-volume-total-surgeries-per-year-tp.dp.trends.r-plot4" class="level2">
 <h2 class="anchored" data-anchor-id="case-volume-total-surgeries-per-year-tp.dp.trends.r-plot4">Case volume / total surgeries per year (tp.dp.trends.R — plot4)</h2>
+<p>The annual case-volume figure uses a y-axis that runs 0–400 by 50, matching the mitral degeneration study’s scale from <code>tp.dp.trends.R</code>. A single <code>group_col = NULL</code> call collapses all patients into one series.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb130"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb130-1"><a href="#cb130-1" aria-hidden="true" tabindex="-1"></a>dta_vol <span class="ot">&lt;-</span> <span class="fu">sample_trends_data</span>(</span>
 <span id="cb130-2"><a href="#cb130-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">n          =</span> <span class="dv">1000</span>,</span>
@@ -2593,6 +2638,7 @@ Age.After match                    Age  After match      3.5</code></pre>
 </section>
 <section id="saving-8" class="level2">
 <h2 class="anchored" data-anchor-id="saving-8">Saving</h2>
+<p><code>ggsave()</code> writes the trends figure at 11.5 x 8 inches. For a PowerPoint version, see <a href="plot-decorators.html">Decorating and Saving</a>.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb132"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb132-1"><a href="#cb132-1" aria-hidden="true" tabindex="-1"></a>p_tr <span class="ot">&lt;-</span> <span class="fu">plot</span>(tr) <span class="sc">+</span></span>
 <span id="cb132-2"><a href="#cb132-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_colour_brewer</span>(<span class="at">palette =</span> <span class="st">"Set1"</span>, <span class="at">name =</span> <span class="st">"Group"</span>) <span class="sc">+</span></span>
@@ -2614,6 +2660,7 @@ Age.After match                    Age  After match      3.5</code></pre>
 <p><code>hv_spaghetti()</code> ports the pattern from <code>tp.dp.spaghetti.echo.R</code>: one trajectory line per subject over time, with optional stratification by a grouping variable. <code>plot()</code> accepts <code>add_smooth = TRUE</code> for an optional LOESS overlay and returns a bare ggplot you can dress with <code>theme_hv_manuscript()</code>. The original template covers nine figures — unstratified and sex-stratified variants of three echo outcomes (AV mean gradient, AV area, DVI) plus an ordinal MV regurgitation grade plot.</p>
 <section id="sample-data-11" class="level2">
 <h2 class="anchored" data-anchor-id="sample-data-11">Sample data</h2>
+<p><code>sample_spaghetti_data()</code> generates 150 patients with up to 6 observations each, stratified by a named proportion vector that mirrors the Female/Male <code>MALE</code> column in the original template. Build both the unstratified and colour-stratified S3 objects here for reuse across the variants below.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb133"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb133-1"><a href="#cb133-1" aria-hidden="true" tabindex="-1"></a><span class="co"># groups mirrors the Female/Male sex stratification in the template (MALE column)</span></span>
 <span id="cb133-2"><a href="#cb133-2" aria-hidden="true" tabindex="-1"></a>dta_sp <span class="ot">&lt;-</span> <span class="fu">sample_spaghetti_data</span>(</span>
@@ -2639,6 +2686,7 @@ Age.After match                    Age  After match      3.5</code></pre>
 </section>
 <section id="bare-plot-4" class="level2">
 <h2 class="anchored" data-anchor-id="bare-plot-4">Bare plot</h2>
+<p>The bare <code>plot(sp)</code> panel draws one thin trajectory per patient over time with no colour, axis limits, or theme. Look for: a dense bundle of lines that gives a visual impression of the distribution’s shape; if lines are missing or the x-axis is wrong, check that the <code>time_col</code> and <code>id_col</code> arguments match the data structure.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb136"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb136-1"><a href="#cb136-1" aria-hidden="true" tabindex="-1"></a>p_sp <span class="ot">&lt;-</span> <span class="fu">plot</span>(sp)</span>
 <span id="cb136-2"><a href="#cb136-2" aria-hidden="true" tabindex="-1"></a>p_sp</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -2790,6 +2838,7 @@ Age.After match                    Age  After match      3.5</code></pre>
 </section>
 <section id="with-loess-smooth-overlay" class="level2">
 <h2 class="anchored" data-anchor-id="with-loess-smooth-overlay">With LOESS smooth overlay</h2>
+<p>Pass <code>add_smooth = TRUE</code> to <code>plot()</code> to add a LOESS trend line per group over the individual trajectories. The smoother uses <code>geom_smooth()</code> defaults; the <code>alpha</code> argument on the line layer controls individual trajectory opacity so the trend line stands out.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb143"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb143-1"><a href="#cb143-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(sp_col, <span class="at">add_smooth =</span> <span class="cn">TRUE</span>) <span class="sc">+</span></span>
 <span id="cb143-2"><a href="#cb143-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_colour_manual</span>(</span>
@@ -2825,6 +2874,7 @@ Age.After match                    Age  After match      3.5</code></pre>
 <p>Pass the SAS <code>mean_curv</code> and <code>boots_ci</code> datasets (read in with <code>read.csv()</code>) and call <code>plot()</code> for a bare ggplot you can dress with colour, labels, and <code>theme_hv_manuscript()</code>.</p>
 <section id="sample-data-12" class="level2">
 <h2 class="anchored" data-anchor-id="sample-data-12">Sample data</h2>
+<p><code>sample_nonparametric_curve_data()</code> generates the average-curve and bootstrap CI dataset; <code>sample_nonparametric_curve_points()</code> generates the binned summary points that overlay the curve. Both mirror the structure of the SAS <code>mean_curv</code> and <code>boots_ci</code> output from the nonparametric temporal trend model.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb145"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb145-1"><a href="#cb145-1" aria-hidden="true" tabindex="-1"></a>curve_dat <span class="ot">&lt;-</span> <span class="fu">sample_nonparametric_curve_data</span>(</span>
 <span id="cb145-2"><a href="#cb145-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">n            =</span> <span class="dv">500</span>,</span>
@@ -2847,6 +2897,7 @@ Age.After match                    Age  After match      3.5</code></pre>
 </section>
 <section id="single-average-curve-with-68-ci-ribbon" class="level2">
 <h2 class="anchored" data-anchor-id="single-average-curve-with-68-ci-ribbon">Single average curve with 68 % CI ribbon</h2>
+<p>Build the S3 object once – pass <code>lower_col</code>/<code>upper_col</code> that match the CI columns in your data, and optionally <code>data_points</code> for the summary overlay. The bare plot and the decorated plot share the same object.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb147"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb147-1"><a href="#cb147-1" aria-hidden="true" tabindex="-1"></a>np <span class="ot">&lt;-</span> <span class="fu">hv_nonparametric</span>(</span>
 <span id="cb147-2"><a href="#cb147-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">curve_data  =</span> curve_dat,</span>
@@ -2857,6 +2908,7 @@ Age.After match                    Age  After match      3.5</code></pre>
 </div>
 <section id="bare-plot-5" class="level3">
 <h3 class="anchored" data-anchor-id="bare-plot-5">Bare plot</h3>
+<p>The bare panel shows the average curve with its CI ribbon and the binned summary points in default colours and no axis formatting. Look for: a smooth curve passing through the binned points, with the ribbon widening at the extremes where the bootstrap sample thins; a flat curve suggests the <code>outcome_type</code> or CI columns may be misspecified.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb148"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb148-1"><a href="#cb148-1" aria-hidden="true" tabindex="-1"></a>p_np_bare <span class="ot">&lt;-</span> <span class="fu">plot</span>(np)</span>
 <span id="cb148-2"><a href="#cb148-2" aria-hidden="true" tabindex="-1"></a>p_np_bare</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -2871,6 +2923,7 @@ Age.After match                    Age  After match      3.5</code></pre>
 </section>
 <section id="adding-scales-labels-and-theme-2" class="level3">
 <h3 class="anchored" data-anchor-id="adding-scales-labels-and-theme-2">Adding scales, labels, and theme</h3>
+<p>Layer on colour scales that match your analysis context, then set axis limits and labels to match the SAS template breaks. The example uses percent labels on the y-axis via <code>scales::percent</code>; swap to raw units for a continuous outcome.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb149"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb149-1"><a href="#cb149-1" aria-hidden="true" tabindex="-1"></a>p_np <span class="ot">&lt;-</span> p_np_bare <span class="sc">+</span></span>
 <span id="cb149-2"><a href="#cb149-2" aria-hidden="true" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">scale_colour_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"steelblue"</span>), <span class="at">guide =</span> <span class="st">"none"</span>) <span class="sc">+</span></span>
@@ -2902,6 +2955,7 @@ Age.After match                    Age  After match      3.5</code></pre>
 </section>
 <section id="two-group-comparison-analogous-to-tp.np.avpkgrad_ozak_ind_mtwt.sas" class="level2">
 <h2 class="anchored" data-anchor-id="two-group-comparison-analogous-to-tp.np.avpkgrad_ozak_ind_mtwt.sas">Two-group comparison (analogous to tp.np.avpkgrad_ozak_ind_mtwt.sas)</h2>
+<p>Pass <code>group_col</code> to the constructor to compare two average curves in a single panel, one per valve type (Ozaki vs.&nbsp;CE-Pericardial). Each group gets its own CI ribbon; <code>scale_colour_manual()</code> and <code>scale_fill_manual()</code> assign the colours consistently between the line and the ribbon.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb150"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb150-1"><a href="#cb150-1" aria-hidden="true" tabindex="-1"></a>curve_grp <span class="ot">&lt;-</span> <span class="fu">sample_nonparametric_curve_data</span>(</span>
 <span id="cb150-2"><a href="#cb150-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">n      =</span> <span class="dv">400</span>,</span>
@@ -2951,6 +3005,7 @@ Age.After match                    Age  After match      3.5</code></pre>
 </section>
 <section id="saving-10" class="level2">
 <h2 class="anchored" data-anchor-id="saving-10">Saving</h2>
+<p><code>ggsave()</code> writes the manuscript PDF at 11 x 8.5 inches; <code>save_ppt()</code> writes the same figure to an editable PowerPoint slide using the Cleveland Clinic template. See <a href="plot-decorators.html">Decorating and Saving</a> for <code>save_ppt()</code> options.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb151"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb151-1"><a href="#cb151-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Manuscript PDF</span></span>
 <span id="cb151-2"><a href="#cb151-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"graphs"</span>, <span class="st">"np_afib_prevalence.pdf"</span>),</span>
@@ -2976,6 +3031,7 @@ Age.After match                    Age  After match      3.5</code></pre>
 <span id="cb152-7"><a href="#cb152-7" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <section id="sample-data-13" class="level2">
 <h2 class="anchored" data-anchor-id="sample-data-13">Sample data</h2>
+<p><code>sample_nonparametric_ordinal_data()</code> generates grade-specific probability curves in long format (one row per time × grade combination) and <code>sample_nonparametric_ordinal_points()</code> generates the binned summary points. Both mirror the <code>predict</code> and <code>means</code> SAS datasets from <code>tp.np.*.ordinal.*</code>.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb153"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb153-1"><a href="#cb153-1" aria-hidden="true" tabindex="-1"></a>ord_dat <span class="ot">&lt;-</span> <span class="fu">sample_nonparametric_ordinal_data</span>(</span>
 <span id="cb153-2"><a href="#cb153-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">n            =</span> <span class="dv">800</span>,</span>
@@ -3001,11 +3057,13 @@ Age.After match                    Age  After match      3.5</code></pre>
 </section>
 <section id="grade-probability-curves-with-data-summary-points" class="level2">
 <h2 class="anchored" data-anchor-id="grade-probability-curves-with-data-summary-points">Grade probability curves with data summary points</h2>
+<p>Build the S3 object once with <code>hv_ordinal()</code>, passing both the curve data and the summary points. The same object drives the bare and decorated plots below.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb155"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb155-1"><a href="#cb155-1" aria-hidden="true" tabindex="-1"></a>np_ord <span class="ot">&lt;-</span> <span class="fu">hv_ordinal</span>(<span class="at">curve_data =</span> ord_dat, <span class="at">data_points =</span> ord_pts)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <section id="bare-plot-6" class="level3">
 <h3 class="anchored" data-anchor-id="bare-plot-6">Bare plot</h3>
+<p>The bare panel draws one line per grade with overlaid summary points and no colour, axis formatting, or theme. Look for: four lines that sum to approximately 1.0 at every time point, with the <code>"None"</code> line starting high and declining; if lines cross or drift above 1.0, check that the grade probability columns were correctly reshaped to long format.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb156"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb156-1"><a href="#cb156-1" aria-hidden="true" tabindex="-1"></a>p_ord_bare <span class="ot">&lt;-</span> <span class="fu">plot</span>(np_ord)</span>
 <span id="cb156-2"><a href="#cb156-2" aria-hidden="true" tabindex="-1"></a>p_ord_bare</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -3020,6 +3078,7 @@ Age.After match                    Age  After match      3.5</code></pre>
 </section>
 <section id="adding-scales-labels-and-theme-3" class="level3">
 <h3 class="anchored" data-anchor-id="adding-scales-labels-and-theme-3">Adding scales, labels, and theme</h3>
+<p>Assign clinically meaningful colours (grey for None, graduated colours for increasing severity) and format the y-axis as a percentage. Use <code>theme(legend.position = c(...))</code> to anchor the legend inside the panel where white space permits.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb157"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb157-1"><a href="#cb157-1" aria-hidden="true" tabindex="-1"></a>p_ord <span class="ot">&lt;-</span> p_ord_bare <span class="sc">+</span></span>
 <span id="cb157-2"><a href="#cb157-2" aria-hidden="true" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">scale_colour_manual</span>(</span>
@@ -3096,6 +3155,7 @@ Age.After match                    Age  After match      3.5</code></pre>
 </section>
 <section id="saving-11" class="level2">
 <h2 class="anchored" data-anchor-id="saving-11">Saving</h2>
+<p><code>ggsave()</code> writes the ordinal curve figure at 11 x 8.5 inches to match the SAS template output dimensions.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb159"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb159-1"><a href="#cb159-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"graphs"</span>, <span class="st">"np_tr_ordinal.pdf"</span>),</span>
 <span id="cb159-2"><a href="#cb159-2" aria-hidden="true" tabindex="-1"></a>       p_ord, <span class="at">width =</span> <span class="dv">11</span>, <span class="at">height =</span> <span class="fl">8.5</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -3108,6 +3168,7 @@ Age.After match                    Age  After match      3.5</code></pre>
 <p>Input must be <strong>pre-aggregated long-format data</strong> (one row per time-window × series combination). Use <code>sample_longitudinal_counts_data()</code> to derive this from patient-level data, or build it yourself from your registry data.</p>
 <section id="sample-data-14" class="level2">
 <h2 class="anchored" data-anchor-id="sample-data-14">Sample data</h2>
+<p><code>sample_longitudinal_counts_data()</code> derives pre-aggregated long-format data from a simulated patient-level registry of 300 patients: one row per time-window × series (Patients, Measurements) combination with a count column. Build the S3 object once and use it for both the bar-chart and table panels.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb160"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb160-1"><a href="#cb160-1" aria-hidden="true" tabindex="-1"></a>lc_dat <span class="ot">&lt;-</span> <span class="fu">sample_longitudinal_counts_data</span>(<span class="at">n_patients =</span> <span class="dv">300</span>, <span class="at">seed =</span> <span class="dv">42</span>L)</span>
 <span id="cb160-2"><a href="#cb160-2" aria-hidden="true" tabindex="-1"></a>lc_dat</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -3134,6 +3195,7 @@ Age.After match                    Age  After match      3.5</code></pre>
 </section>
 <section id="bare-plot-7" class="level2">
 <h2 class="anchored" data-anchor-id="bare-plot-7">Bare plot</h2>
+<p>The bare <code>plot(lc)</code> panel shows grouped bars at each follow-up window with no fill colour, axis scale, or theme. Look for: paired bars at each time window with Patients always &gt;= Measurements; if the two series are equal, check that the <code>series_col</code> argument maps to the right column.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb163"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb163-1"><a href="#cb163-1" aria-hidden="true" tabindex="-1"></a>p_lc_bare <span class="ot">&lt;-</span> <span class="fu">plot</span>(lc)</span>
 <span id="cb163-2"><a href="#cb163-2" aria-hidden="true" tabindex="-1"></a>p_lc_bare</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -3148,6 +3210,7 @@ Age.After match                    Age  After match      3.5</code></pre>
 </section>
 <section id="bar-chart" class="level2">
 <h2 class="anchored" data-anchor-id="bar-chart">Bar chart</h2>
+<p>Layer fill colours onto the bare plot to distinguish Patients from Measurements, then expand the y-axis with <code>ggplot2::coord_cartesian()</code> to leave room for labels above the tallest bar.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb164"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb164-1"><a href="#cb164-1" aria-hidden="true" tabindex="-1"></a>p_lc_bar <span class="ot">&lt;-</span> <span class="fu">plot</span>(lc) <span class="sc">+</span></span>
 <span id="cb164-2"><a href="#cb164-2" aria-hidden="true" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">scale_fill_manual</span>(</span>
@@ -3175,6 +3238,7 @@ Age.After match                    Age  After match      3.5</code></pre>
 </section>
 <section id="numeric-table-panel" class="level2">
 <h2 class="anchored" data-anchor-id="numeric-table-panel">Numeric table panel</h2>
+<p>Call <code>plot(lc, type = "table")</code> to get the numeric summary panel – the same counts the bar chart shows, rendered as coloured text below the x-axis labels. This panel is intended to be composed with <code>patchwork</code> below the bar chart, so keep the theme consistent.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb165"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb165-1"><a href="#cb165-1" aria-hidden="true" tabindex="-1"></a>p_lc_tbl <span class="ot">&lt;-</span> <span class="fu">plot</span>(lc, <span class="at">type =</span> <span class="st">"table"</span>) <span class="sc">+</span></span>
 <span id="cb165-2"><a href="#cb165-2" aria-hidden="true" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">scale_colour_manual</span>(</span>
@@ -3195,6 +3259,7 @@ Age.After match                    Age  After match      3.5</code></pre>
 </section>
 <section id="two-panel-layout-with-patchwork" class="level2">
 <h2 class="anchored" data-anchor-id="two-panel-layout-with-patchwork">Two-panel layout with patchwork</h2>
+<p>Stack the bar chart above the table panel with <code>/</code> and use <code>patchwork::plot_layout(heights = c(3, 1))</code> to give the bar chart three times the vertical space. This ratio matches the original SAS template layout.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb166"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb166-1"><a href="#cb166-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(patchwork)</span>
 <span id="cb166-2"><a href="#cb166-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -3211,6 +3276,7 @@ Age.After match                    Age  After match      3.5</code></pre>
 </section>
 <section id="saving-the-combined-figure" class="level2">
 <h2 class="anchored" data-anchor-id="saving-the-combined-figure">Saving the combined figure</h2>
+<p><code>ggsave()</code> writes the patchwork composite at 11 x 6 inches. <code>save_ppt()</code> takes the bar chart alone – patchwork composites may need <code>ggsave()</code> first – and writes it to a PowerPoint slide. See <a href="plot-decorators.html">Decorating and Saving</a> for details.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb167"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb167-1"><a href="#cb167-1" aria-hidden="true" tabindex="-1"></a>combined <span class="ot">&lt;-</span> p_lc_bar <span class="sc">/</span> p_lc_tbl <span class="sc">+</span></span>
 <span id="cb167-2"><a href="#cb167-2" aria-hidden="true" tabindex="-1"></a>  patchwork<span class="sc">::</span><span class="fu">plot_layout</span>(<span class="at">heights =</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">1</span>))</span>
@@ -3233,6 +3299,7 @@ Age.After match                    Age  After match      3.5</code></pre>
 <span id="cb168-2"><a href="#cb168-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(hu, <span class="at">set_size =</span> <span class="cn">FALSE</span>) <span class="sc">+</span> <span class="fu">theme_hv_poster</span>() <span class="co"># single ggplot</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <section id="sample-data-15" class="level2">
 <h2 class="anchored" data-anchor-id="sample-data-15">Sample data</h2>
+<p><code>sample_upset_data()</code> returns a binary indicator matrix: one column per procedure, one row per patient, with 1 indicating the procedure was performed. Pass the column names to <code>intersect</code> in the constructor to define the set membership axes. <code>colSums()</code> confirms the marginal counts before you build.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb169"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb169-1"><a href="#cb169-1" aria-hidden="true" tabindex="-1"></a>sets <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"AV_Replacement"</span>, <span class="st">"AV_Repair"</span>, <span class="st">"MV_Replacement"</span>, <span class="st">"MV_Repair"</span>,</span>
 <span id="cb169-2"><a href="#cb169-2" aria-hidden="true" tabindex="-1"></a>          <span class="st">"TV_Repair"</span>, <span class="st">"Aorta"</span>, <span class="st">"CABG"</span>)</span>
@@ -3314,6 +3381,7 @@ Age.After match                    Age  After match      3.5</code></pre>
 </section>
 <section id="saving-12" class="level2">
 <h2 class="anchored" data-anchor-id="saving-12">Saving</h2>
+<p><code>ggsave()</code> handles a patchwork composite the same as a bare ggplot – write it at 11 x 6 inches, wide enough for the intersection bars plus the set-size sidebar. For a PowerPoint version, see <a href="plot-decorators.html">Decorating and Saving</a>.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb177"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb177-1"><a href="#cb177-1" aria-hidden="true" tabindex="-1"></a>p_upset <span class="ot">&lt;-</span> <span class="fu">plot</span>(hu) <span class="sc">&amp;</span> <span class="fu">theme_hv_poster</span>()</span>
 <span id="cb177-2"><a href="#cb177-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -3332,6 +3400,7 @@ print(p)                             ggsave("fig1.pdf", p, ...)
 make_footnote("R/analysis.R")        # &lt;- no footnote call</code></pre>
 <section id="draft-annotation-pattern" class="level2">
 <h2 class="anchored" data-anchor-id="draft-annotation-pattern">Draft annotation pattern</h2>
+<p>Build any hvtiPlotR figure as usual, then call <code>print()</code> followed by <code>make_footnote()</code> to stamp the bottom-right corner with the source file path and a timestamp. The ggplot object itself is unchanged – only the rendered device gets the annotation.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb179"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb179-1"><a href="#cb179-1" aria-hidden="true" tabindex="-1"></a>dta_fn <span class="ot">&lt;-</span> <span class="fu">sample_hazard_data</span>(<span class="at">n =</span> <span class="dv">300</span>, <span class="at">time_max =</span> <span class="dv">10</span>)</span>
 <span id="cb179-2"><a href="#cb179-2" aria-hidden="true" tabindex="-1"></a>emp_fn <span class="ot">&lt;-</span> <span class="fu">sample_hazard_empirical</span>(<span class="at">n =</span> <span class="dv">300</span>, <span class="at">time_max =</span> <span class="dv">10</span>, <span class="at">n_bins =</span> <span class="dv">5</span>)</span>

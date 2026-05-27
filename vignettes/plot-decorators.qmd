@@ -77,6 +77,11 @@ The **hvtiPlotR** package provides four themes via `theme_hv_*()`. The
 
 ## Manuscript
 
+`theme_hv_manuscript()` is the default for journal submissions -- white
+background, black text, minimal chrome. Font sizes are tuned for 8.5 x 11 inch
+letter-size PDFs where the figure may be reduced to a column width. Use this
+whenever the figure ends up in a Word or PDF document sent to a journal.
+
 ```{r theme_hv_manuscript}
 p_ms <- p_base +
   scale_colour_brewer(palette = "Set1", name = "Group") +
@@ -92,6 +97,14 @@ p_ms
 ```
 
 ## Poster
+
+`theme_hv_poster()` bumps the axis text and tick weights up from the manuscript
+baseline and removes the panel grid, so the figure reads clearly at arm's
+length on a 36 x 48 inch foam board. It is also the go-to theme for in-room
+slide presentations when you are not using the PowerPoint themes -- the
+larger tick labels and the boxed panel hold up on a projector better than the
+manuscript variant. Pass `base_family = "sans"` (or another family) to switch
+the font face.
 
 ```{r theme_hv_poster}
 p_poster <- p_base +
@@ -109,6 +122,12 @@ p_poster
 
 ## Light PowerPoint
 
+`theme_hv_ppt_light()` matches slides with a white or light-grey background --
+the Cleveland Clinic standard template, most default Office themes, and any
+deck where the content area is light. Text and lines are dark, so the figure
+reads without modification when placed on the light slide. Pair with
+`save_ppt()` to insert it as editable DrawingML.
+
 ```{r theme_hv_ppt_light}
 p_base +
   scale_colour_brewer(palette = "Set1", name = "Group") +
@@ -122,6 +141,13 @@ p_base +
 ```
 
 ## Dark PowerPoint
+
+`theme_hv_ppt_dark()` flips the palette for dark-background slides -- navy or
+dark-blue gradient decks where white-on-dark text is the convention. The theme
+sets a transparent plot background, so the slide's background shows through
+behind the panel. The `plot.background` override in the chunk below simulates
+that navy background in the rendered vignette; you would omit it when saving
+to an actual `.pptx` file.
 
 ```{r theme_hv_ppt_dark}
 p_base +
@@ -318,6 +344,12 @@ match the slide background.
 
 ### Single slide
 
+Build a fully themed plot -- `theme_hv_ppt_dark()` or `theme_hv_ppt_light()`
+-- then pass it as `object`. The `template` argument points to an existing
+`.pptx` file whose slide master and layouts carry the brand fonts and
+background; `save_ppt()` appends a new slide rather than overwriting the
+template.
+
 ```{r save_ppt_single}
 #| eval: false
 template <- system.file("ClevelandClinic.pptx", package = "hvtiPlotR")
@@ -343,7 +375,10 @@ save_ppt(
 ### Multiple slides from a list
 
 Pass a named list of plots and a matching vector of titles to produce one slide
-per plot in a single call.
+per plot in a single call. This is the pattern we use for batch-report decks
+where each outcome gets its own slide -- the list keeps plots in order and the
+names serve as a paper trail. Every plot in the list should carry the same
+theme so the deck looks consistent.
 
 ```{r save_ppt_list}
 #| eval: false
@@ -400,7 +435,11 @@ chrome spills off the slide edge.
 ## Multi-panel PDF (EDA batch output)
 
 When generating multiple plots in a loop, `patchwork::wrap_plots()` arranges
-them into a grid and `ggsave()` writes each page.
+them into a grid and `ggsave()` writes each page. This is typical for EDA
+batches where you have a dozen or more outcomes to inspect -- you build the
+list with `lapply()`, chunk it into pages of 9, and let the loop handle
+pagination. The `per_page` constant is easy to adjust if you want a 2x2 or
+4x4 grid instead.
 
 ```{r save_multipanel}
 #| eval: false
@@ -461,6 +500,11 @@ p_base +
 
 ## Outside the panel (explicit sides)
 
+Set `legend.position` to `"right"`, `"left"`, `"top"`, or `"bottom"` to place
+the legend outside the panel area. `"bottom"` with
+`legend.direction = "horizontal"` is the most common choice for multi-group
+figures where a long label would crowd a corner inside the panel.
+
 ```{r legend_outside}
 p_base +
   scale_colour_brewer(palette = "Set1", name = "Group") +
@@ -479,6 +523,12 @@ p_base +
 
 ## Suppress all legends
 
+Two ways to suppress legends, with slightly different scope.
+`theme(legend.position = "none")` hides every legend for the plot in one
+shot. `guide = "none"` on a `scale_*()` call drops only that aesthetic's
+legend — handy when you want a colour legend but no shape legend (or vice
+versa). Both reclaim the panel width either way.
+
 ```{r legend_none}
 plot(km) +
   scale_color_manual(values = c(All = "steelblue"), guide = "none") +
@@ -496,6 +546,11 @@ preferred over `theme(legend.position = "none")` when only some aesthetics
 have legends and others do not.
 
 ## Legend text and key size
+
+The legend inherits font size from the active theme, which is often slightly
+larger than needed when the legend sits inside a crowded panel. `legend.text`
+controls the label font; `legend.key.size` shrinks the colour/shape swatch.
+Both accept any `element_text()` or `unit()` value.
 
 ```{r legend_text}
 p_base +
@@ -521,6 +576,12 @@ rest.
 
 ## Axis text size
 
+Override `axis.text` to resize tick labels and `axis.title` for the axis
+title, independent of the rest of the theme. This is useful when a figure is
+being resized for a different output target -- for example, scaling down for a
+two-column journal layout where the default poster-sized text would be too
+large.
+
 ```{r theme_axis_text}
 p_base +
   scale_colour_brewer(palette = "Set1", name = "Group") +
@@ -539,6 +600,11 @@ p_base +
 
 ## Removing minor grid lines
 
+Minor grid lines (`panel.grid.minor`) add density without adding precision --
+they can make a busy figure look cluttered, especially when there are many data
+series. Setting `element_blank()` removes them while keeping the major grid
+intact.
+
 ```{r theme_grid}
 p_base +
   scale_colour_brewer(palette = "Set1", name = "Group") +
@@ -556,7 +622,10 @@ p_base +
 
 ## Rotating x-axis labels
 
-Useful for time-point labels or long category names.
+Useful for time-point labels or long category names. The combination of
+`angle = 45`, `hjust = 1`, and `vjust = 1` keeps the rotated label
+right-aligned to its tick mark; without the `hjust`/`vjust` corrections the
+labels will float off-center.
 
 ```{r theme_axis_rotate}
 p_base +
@@ -601,8 +670,10 @@ plot(km) +
 
 ## Expanding plot margins
 
-Add breathing room around the panel, for example when a figure is placed
-directly on a poster without a surrounding text frame.
+Add breathing room around the panel -- useful when a figure is placed directly
+on a poster without a surrounding text frame, or when axis labels clip against
+a tight device boundary. The `margin()` arguments follow top / right / bottom
+/ left order, matching CSS convention.
 
 ```{r theme_margin}
 p_base +
@@ -626,6 +697,12 @@ The two patterns we reach for most are side-by-side comparisons and a main
 plot stacked above a companion table or risk panel.
 
 ## Side-by-side plots
+
+The `|` operator from patchwork places two plots next to each other in the
+same row, sharing the figure height. This is the typical layout for comparing
+two outcomes -- trends and survival, for example -- on a single manuscript
+figure. Both panels are built independently and composed at the last step, so
+you can adjust each one without touching the other.
 
 ```{r patchwork_side_by_side}
 library(patchwork)
@@ -656,6 +733,11 @@ p_ms | p_km_ms
 `|` places plots side by side; `/` stacks them vertically.
 
 ## Controlling relative widths and heights
+
+`plot_layout(widths = ...)` sets relative widths as a numeric vector --
+`c(2, 1)` makes the left panel twice as wide as the right. Use `heights` the
+same way for stacked layouts. This is the right tool when one panel has a wide
+y-axis label or a tall legend that throws off a 50/50 split.
 
 ```{r patchwork_layout}
 (p_ms | p_km_ms) +
@@ -691,7 +773,12 @@ p_km_ms / rt_panel +
 
 ## Shared axis labels and panel tags
 
-`plot_annotation()` adds a shared title or tags (A, B, C…) across all panels.
+`plot_annotation()` adds a shared title or panel tags (A, B, C...) across all
+panels. Tags are required by most journals for multi-panel figures and are
+referenced in the caption as "Panel A shows..." -- setting
+`tag_levels = "A"` generates them automatically. The `&` operator applies a
+shared `theme()` call to every panel at once, so you only need to set
+`plot.tag` formatting in one place.
 
 ```{r patchwork_annotation}
 (p_ms | p_km_ms) +

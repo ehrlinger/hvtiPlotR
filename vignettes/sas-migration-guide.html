@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="John Ehrlinger ehrlinj@ccf.org">
-<meta name="dcterms.date" content="2026-05-26">
+<meta name="dcterms.date" content="2026-05-27">
 
 <title>SAS Template Migration Guide: Finding Your Plot in R</title>
 <style>
@@ -183,7 +183,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">May 26, 2026</p>
+      <p class="date">May 27, 2026</p>
     </div>
   </div>
   
@@ -201,6 +201,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>The guide is organized by template family (the two-letter prefix after <code>tp.</code>). We add new ports as they become available.</p>
 <section id="key-concepts-for-sas-users" class="level2">
 <h2 class="anchored" data-anchor-id="key-concepts-for-sas-users">Key concepts for SAS users</h2>
+<p>Two concepts trip up most SAS users on first contact. First, R does not have a <code>device=</code> / <code>GOPTIONS</code> call that sets the output context globally; you pick a theme function and append it to each plot. Second, the constructor never writes a file – you have to call <code>print()</code> or assign the result to an object and save separately. Everything else follows from these two facts.</p>
 <p><strong>ggplot2 builds plots in layers.</strong> Instead of one macro call with many <code>color=</code>, <code>xaxis=</code>, and <code>footnote=</code> options, you chain <code>+</code> operations:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>np <span class="ot">&lt;-</span> <span class="fu">hv_nonparametric</span>(dat, ...)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(np) <span class="sc">+</span></span>
@@ -885,6 +886,7 @@ run;</code></pre>
 <section id="np-ordinal-multi" class="level3">
 <h3 class="anchored" data-anchor-id="np-ordinal-multi">Ordinal multi-scenario comparison</h3>
 <p><strong>Port:</strong> <code>tp.np.po_ar.u_multi.ordinal.sas</code></p>
+<p>The multi-scenario template (<code>po_ar</code> = post-op aortic regurgitation) places two or more ordinal grade curves side by side so you can read the grade distribution before repair in one panel and after repair in the next. In SAS this required separate <code>%ordinal</code> calls and manual page layout; here you bind the datasets, add a <code>scenario</code> column, and let <code>facet_wrap()</code> do the layout.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>dat_ar1 <span class="ot">&lt;-</span> <span class="fu">sample_nonparametric_ordinal_data</span>(<span class="at">seed =</span> <span class="dv">1</span>)</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>dat_ar2 <span class="ot">&lt;-</span> <span class="fu">sample_nonparametric_ordinal_data</span>(<span class="at">seed =</span> <span class="dv">99</span>)</span>
@@ -1104,6 +1106,7 @@ run;</code></pre>
 <h1>Goodness of follow-up (<code>tp.dp.gfup.R</code>)</h1>
 <p><strong>Port:</strong> <code>tp.dp.gfup.R</code></p>
 <p><strong>R equivalent:</strong> <code>hv_followup()</code></p>
+<p><code>tp.dp.gfup.R</code> summarises how many patients remain under active follow-up at each time point – the kind of quality-check figure you run before committing to a temporal-prevalence analysis. The SAS version uses <code>PROC FREQ</code> output aggregated by year; <code>hv_followup()</code> accepts the same aggregated data frame (one row per time point, with counts for total patients and patients with a measurement). The output is a bar chart; any goodness-of-follow-up threshold you add in SAS (a dashed horizontal line) becomes a <code>geom_hline(yintercept = ..., linetype = "dashed")</code> call in R.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>dta <span class="ot">&lt;-</span> <span class="fu">sample_goodness_followup_data</span>(<span class="at">n =</span> <span class="dv">300</span>)</span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>gf  <span class="ot">&lt;-</span> <span class="fu">hv_followup</span>(dta)</span>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -1169,6 +1172,7 @@ run;</code></pre>
 <h1>Alluvial flow (<code>tp.dp.female_bicus_preAR_sankey.R</code>)</h1>
 <p><strong>Port:</strong> <code>tp.dp.female_bicus_preAR_sankey.R</code></p>
 <p><strong>R equivalent:</strong> <code>hv_alluvial()</code></p>
+<p><code>tp.dp.female_bicus_preAR_sankey.R</code> traces each patient through a sequence of categorical states (e.g.&nbsp;pre-op AR grade to procedure type to sex subgroup), producing the flowing band diagram that the original script builds with <code>ggalluvial</code>. The R port wraps this with <code>hv_alluvial()</code>, which handles the internal <code>to_lodes_form()</code> reshape and sets default fill aesthetics. You supply a data frame with one column per state and let <code>scale_fill_brewer()</code> or a manual fill scale control the colours. See the <a href="plot-functions.html#dp-sankey">Alluvial section of the plot-functions vignette</a> for a decorated worked example with labels.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>dta <span class="ot">&lt;-</span> <span class="fu">sample_alluvial_data</span>(<span class="at">n =</span> <span class="dv">200</span>)</span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>al  <span class="ot">&lt;-</span> <span class="fu">hv_alluvial</span>(dta)</span>
 <span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -1249,6 +1253,7 @@ run;</code></pre>
 <h1>UpSet plot (<code>tp.complexUpset.R</code>)</h1>
 <p><strong>Port:</strong> <code>tp.complexUpset.R</code></p>
 <p><strong>R equivalent:</strong> <code>hv_upset()</code></p>
+<p><code>tp.complexUpset.R</code> visualises how many patients fall into each combination of procedure categories (CABG, Valve, MAZE, Aorta, etc.) – the combinatorial overlap question that Venn diagrams can’t answer cleanly past three sets. The SAS version used a custom <code>PROC TABULATE</code> / <code>SGPLOT</code> workaround; the R port replaces it with the <code>ComplexUpset</code> package wrapped in <code>hv_upset()</code>. You pass a binary-indicator data frame (one column per set, 1 = member) and the <code>intersect</code> argument names the sets to include.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>sets <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"CABG"</span>, <span class="st">"Valve"</span>, <span class="st">"MAZE"</span>, <span class="st">"Aorta"</span>)</span>
 <span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>dta  <span class="ot">&lt;-</span> <span class="fu">sample_upset_data</span>(<span class="at">n =</span> <span class="dv">300</span>, <span class="at">sets =</span> sets)</span>
 <span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>hu   <span class="ot">&lt;-</span> <span class="fu">hv_upset</span>(<span class="at">data =</span> dta, <span class="at">intersect =</span> sets)</span>
@@ -1266,6 +1271,7 @@ run;</code></pre>
 <span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>sp_col <span class="ot">&lt;-</span> <span class="fu">hv_spaghetti</span>(dta, <span class="at">colour_col =</span> <span class="st">"group"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <section id="unstratified-av-mean-gradient-full-range-plot_1" class="level2">
 <h2 class="anchored" data-anchor-id="unstratified-av-mean-gradient-full-range-plot_1">Unstratified — AV mean gradient full range (plot_1)</h2>
+<p>The SAS template <code>tp.dp.spaghetti.echo.R</code> sets <code>AXISY ORDER=(0 TO 80 BY 20)</code> for the full gradient range. Reproduce that scale with <code>coord_cartesian()</code> so you keep the ggplot clipping behaviour rather than silently dropping out-of-range trajectories.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(sp) <span class="sc">+</span></span>
 <span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">5</span>, <span class="dv">1</span>)) <span class="sc">+</span></span>
 <span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">80</span>, <span class="dv">20</span>)) <span class="sc">+</span></span>
@@ -1275,6 +1281,7 @@ run;</code></pre>
 </section>
 <section id="unstratified-zoomed-y-axis-plot_3" class="level2">
 <h2 class="anchored" data-anchor-id="unstratified-zoomed-y-axis-plot_3">Unstratified — zoomed y-axis (plot_3)</h2>
+<p>Plot_3 in the SAS script tightens the y-axis to <code>ORDER=(0 TO 30 BY 10)</code> to reveal structure in the low-gradient patients that is invisible at the 0-80 range. Only <code>coord_cartesian()</code> changes; the constructor call and data are identical to plot_1. Look for: trajectories that were flat in plot_1 now showing meaningful within-patient variation – if none appear, the patient population may not have a low-gradient subgroup.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(sp) <span class="sc">+</span></span>
 <span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">5</span>, <span class="dv">1</span>)) <span class="sc">+</span></span>
 <span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">30</span>, <span class="dv">10</span>)) <span class="sc">+</span></span>
@@ -1284,7 +1291,7 @@ run;</code></pre>
 </section>
 <section id="stratified-by-sex-plot_2-plot_4" class="level2">
 <h2 class="anchored" data-anchor-id="stratified-by-sex-plot_2-plot_4">Stratified by sex (plot_2 / plot_4)</h2>
-<p>Template uses <code>values=c("red", "blue")</code>; modernised equivalents below.</p>
+<p>Template uses <code>values=c("red", "blue")</code>; modernised equivalents below. Pass <code>colour_col = "group"</code> to <code>hv_spaghetti()</code> when constructing <code>sp_col</code> so each patient trajectory inherits the group colour.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(sp_col) <span class="sc">+</span></span>
 <span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_colour_manual</span>(</span>
 <span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">values =</span> <span class="fu">c</span>(<span class="at">Female =</span> <span class="st">"firebrick"</span>, <span class="at">Male =</span> <span class="st">"steelblue"</span>),</span>
@@ -1298,6 +1305,7 @@ run;</code></pre>
 </section>
 <section id="av-area-y-scale-plot_5-plot_6" class="level2">
 <h2 class="anchored" data-anchor-id="av-area-y-scale-plot_5-plot_6">AV area y-scale (plot_5 / plot_6)</h2>
+<p>Plot_5 (unstratified) and plot_6 (by sex) switch the outcome to effective orifice area (EOA, cm<sup>2</sup>) with <code>AXISY ORDER=(0 TO 5 BY 1)</code>. The only change from the gradient plots is the y-axis range and the label; the constructor object and colour scale reuse <code>sp</code> / <code>sp_col</code> from above.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(sp_col) <span class="sc">+</span></span>
 <span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_colour_manual</span>(</span>
 <span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">values =</span> <span class="fu">c</span>(<span class="at">Female =</span> <span class="st">"firebrick"</span>, <span class="at">Male =</span> <span class="st">"steelblue"</span>),</span>
@@ -1311,6 +1319,7 @@ run;</code></pre>
 </section>
 <section id="dvi-y-scale-plot_7-plot_8" class="level2">
 <h2 class="anchored" data-anchor-id="dvi-y-scale-plot_7-plot_8">DVI y-scale (plot_7 / plot_8)</h2>
+<p>Plot_7 (unstratified) and plot_8 (by sex) track the dimensionless velocity index (DVI), a unitless ratio bounded roughly 0-1.25. The SAS option is <code>AXISY ORDER=(0 TO 1.25 BY 0.25)</code>. This is the only spaghetti variant where a y-axis maximum above 1 is correct – do not treat values above 1 as outliers.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(sp_col) <span class="sc">+</span></span>
 <span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_colour_manual</span>(</span>
 <span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">values =</span> <span class="fu">c</span>(<span class="at">Female =</span> <span class="st">"firebrick"</span>, <span class="at">Male =</span> <span class="st">"steelblue"</span>),</span>
@@ -1324,6 +1333,7 @@ run;</code></pre>
 </section>
 <section id="ordinal-y-axis-mv-regurgitation-grade-plot_9" class="level2">
 <h2 class="anchored" data-anchor-id="ordinal-y-axis-mv-regurgitation-grade-plot_9">Ordinal y-axis — MV regurgitation grade (plot_9)</h2>
+<p>Plot_9 is the outlier in this template family: MV regurgitation grade is ordinal (None / Mild / Moderate / Severe = 0-3), not continuous. In SAS the y-axis was labelled with <code>AXISY ORDER=(0 TO 3 BY 1)</code> and annotated manually; here you pass <code>y_labels</code> to <code>plot()</code> to replace the numeric tick marks with grade names. The pre-processing step rounds the raw echo value to an integer 0-3 before constructing the spaghetti object.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>dta_ord       <span class="ot">&lt;-</span> dta</span>
 <span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>dta_ord<span class="sc">$</span>value <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">pmin</span>(<span class="dv">3</span>, <span class="fu">pmax</span>(<span class="dv">0</span>, dta<span class="sc">$</span>value <span class="sc">/</span> <span class="dv">12</span>)))</span>
 <span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a><span class="fu">levels</span>(dta_ord<span class="sc">$</span>group) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Early"</span>, <span class="st">"Late"</span>)</span>
@@ -1348,6 +1358,7 @@ run;</code></pre>
 <p><strong>R equivalent:</strong> <code>hv_trends()</code></p>
 <section id="tp.rp.trends.sas-casesyear-and-age-19682000-by-4" class="level2">
 <h2 class="anchored" data-anchor-id="tp.rp.trends.sas-casesyear-and-age-19682000-by-4">tp.rp.trends.sas — cases/year and age (1968–2000 by 4)</h2>
+<p><code>tp.rp.trends.sas</code> is the right-panel trends template: a single smoothed curve for cases-per-year and a second figure for median operative age, both spanning 1968-2000. In SAS the two figures are separate <code>SGPLOT</code> calls sharing the same <code>axisx order=(1968 to 2000 by 4)</code> statement. In R you call the same <code>hv_trends()</code> object twice with different y-axis scales – one for counts, one for age – so you only need to build the constructor once.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>one    <span class="ot">&lt;-</span> <span class="fu">sample_trends_data</span>(<span class="at">n =</span> <span class="dv">600</span>, <span class="at">year_range =</span> <span class="fu">c</span>(<span class="dv">1968</span>L, <span class="dv">2000</span>L), <span class="at">groups =</span> <span class="cn">NULL</span>)</span>
 <span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>tr_one <span class="ot">&lt;-</span> <span class="fu">hv_trends</span>(one, <span class="at">group_col =</span> <span class="cn">NULL</span>)</span>
 <span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -1367,7 +1378,7 @@ run;</code></pre>
 </section>
 <section id="tp.lp.trends.sas-binary-outcomes-19702000-by-10-y-0100-by-10" class="level2">
 <h2 class="anchored" data-anchor-id="tp.lp.trends.sas-binary-outcomes-19702000-by-10-y-0100-by-10">tp.lp.trends.sas — binary % outcomes (1970–2000 by 10, y 0–100 by 10)</h2>
-<p>Multiple outcomes on one figure. CGM version: <code>axisx order=(1970 to 2000 by 10)</code>, <code>axisy order=(0 to 100 by 20)</code>.</p>
+<p><code>tp.lp.trends.sas</code> is the left-panel trends template for binary percentage outcomes plotted together on a single figure – shock rate, pre-op IABP use, inotrope use, etc. The SAS <code>SGPLOT</code> overlays multiple <code>SCATTER</code> / <code>REG</code> statement pairs, one per outcome, with <code>axisx order=(1970 to 2000 by 10)</code> and <code>axisy order=(0 to 100 by 20)</code>. In R you encode the outcome identity as a group variable and use <code>scale_colour_manual()</code> / <code>scale_shape_manual()</code> to assign the same per-outcome styling. CGM axis spec: <code>axisx order=(1970 to 2000 by 10)</code>, <code>axisy order=(0 to 100 by 20)</code>.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>dta_lp <span class="ot">&lt;-</span> <span class="fu">sample_trends_data</span>(</span>
 <span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">n =</span> <span class="dv">800</span>, <span class="at">year_range =</span> <span class="fu">c</span>(<span class="dv">1970</span>L, <span class="dv">2000</span>L),</span>
 <span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">groups =</span> <span class="fu">c</span>(<span class="st">"Shock %"</span>, <span class="st">"Pre-op IABP %"</span>, <span class="st">"Inotropes %"</span>))</span>
@@ -1388,6 +1399,7 @@ run;</code></pre>
 </section>
 <section id="tp.lp.trends.age.sas-age-on-x-axis-2585-by-10-y-0100-by-20" class="level2">
 <h2 class="anchored" data-anchor-id="tp.lp.trends.age.sas-age-on-x-axis-2585-by-10-y-0100-by-20">tp.lp.trends.age.sas — age on x-axis (25–85 by 10, y 0–100 by 20)</h2>
+<p><code>tp.lp.trends.age.sas</code> flips the x-axis from calendar year to patient age at operation, showing how the proportion receiving each procedure type shifts with age. The SAS <code>axisx order=(25 to 85 by 10)</code> statement is the tell; in R you use the same <code>hv_trends()</code> constructor but pass age as the x variable and set <code>scale_x_continuous(limits = c(25, 85), breaks = seq(25, 85, 10))</code>.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>dta_age <span class="ot">&lt;-</span> <span class="fu">sample_trends_data</span>(</span>
 <span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">n =</span> <span class="dv">600</span>, <span class="at">year_range =</span> <span class="fu">c</span>(<span class="dv">25</span>L, <span class="dv">85</span>L),</span>
 <span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">groups =</span> <span class="fu">c</span>(<span class="st">"Repair %"</span>, <span class="st">"Bioprosthesis %"</span>), <span class="at">seed =</span> <span class="dv">7</span>L)</span>
@@ -1405,6 +1417,7 @@ run;</code></pre>
 </section>
 <section id="tp.lp.trends.polytomous.sas-repair-types-19901999-by-1-y-0100-by-10" class="level2">
 <h2 class="anchored" data-anchor-id="tp.lp.trends.polytomous.sas-repair-types-19901999-by-1-y-0100-by-10">tp.lp.trends.polytomous.sas — repair types (1990–1999 by 1, y 0–100 by 10)</h2>
+<p><code>tp.lp.trends.polytomous.sas</code> extends the binary trends template to three or more mutually exclusive categorical outcomes (CE, Cosgrove, Periguard, DeVega repair types) that together sum to 100%. The SAS template uses a separate <code>SCATTER</code> / <code>REG</code> overlay per repair type; here each type is a group level. Because the percents are compositional (they sum to roughly 100), use <code>coord_cartesian()</code> rather than <code>scale_y_continuous(limits = ...)</code> to avoid silently dropping early time points where sample sizes are small.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>dta_poly <span class="ot">&lt;-</span> <span class="fu">sample_trends_data</span>(</span>
 <span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">n =</span> <span class="dv">800</span>, <span class="at">year_range =</span> <span class="fu">c</span>(<span class="dv">1990</span>L, <span class="dv">1999</span>L),</span>
 <span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">groups =</span> <span class="fu">c</span>(<span class="st">"CE"</span>, <span class="st">"Cosgrove"</span>, <span class="st">"Periguard"</span>, <span class="st">"DeVega"</span>), <span class="at">seed =</span> <span class="dv">5</span>L)</span>
@@ -1426,6 +1439,7 @@ run;</code></pre>
 </section>
 <section id="tp.dp.trends.r-lv-mass-index-19952015-by-5-y-0200-by-50" class="level2">
 <h2 class="anchored" data-anchor-id="tp.dp.trends.r-lv-mass-index-19952015-by-5-y-0200-by-50">tp.dp.trends.R — LV mass index (1995–2015 by 5, y 0–200 by 50)</h2>
+<p><code>tp.dp.trends.R</code> covers continuous-outcome trends, here LV mass index (g/m<sup>2</sup>) over a 20-year window. Unlike the SAS templates above this is an R script origin rather than a <code>.sas</code> file, so there is no <code>axisx</code> option to translate literally – the axis spec (<code>1995 to 2015 by 5</code>, y <code>0 to 200 by 50</code>) comes from the <code>scale_*_continuous()</code> calls below.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>dta_lv <span class="ot">&lt;-</span> <span class="fu">sample_trends_data</span>(<span class="at">n =</span> <span class="dv">800</span>, <span class="at">year_range =</span> <span class="fu">c</span>(<span class="dv">1995</span>L, <span class="dv">2015</span>L),</span>
 <span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>                              <span class="at">groups =</span> <span class="cn">NULL</span>, <span class="at">seed =</span> <span class="dv">3</span>L)</span>
 <span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>tr_lv  <span class="ot">&lt;-</span> <span class="fu">hv_trends</span>(dta_lv, <span class="at">group_col =</span> <span class="cn">NULL</span>)</span>
@@ -1439,6 +1453,7 @@ run;</code></pre>
 </section>
 <section id="tp.dp.trends.r-hospital-los-with-annotation-19852015-by-5-y-020-by-5" class="level2">
 <h2 class="anchored" data-anchor-id="tp.dp.trends.r-hospital-los-with-annotation-19852015-by-5-y-020-by-5">tp.dp.trends.R — hospital LOS with annotation (1985–2015 by 5, y 0–20 by 5)</h2>
+<p>This variant of <code>tp.dp.trends.R</code> tracks hospital length of stay (days) and adds a text annotation inside the plot panel – the kind of label the SAS <code>SGPLOT</code> <code>INSET</code> statement would place. In R an <code>annotate("text", ...)</code> call places it at absolute data coordinates; adjust the <code>x</code> and <code>y</code> values to avoid overlapping the fitted curve.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>dta_los <span class="ot">&lt;-</span> <span class="fu">sample_trends_data</span>(<span class="at">n =</span> <span class="dv">800</span>, <span class="at">year_range =</span> <span class="fu">c</span>(<span class="dv">1985</span>L, <span class="dv">2015</span>L),</span>
 <span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>                               <span class="at">groups =</span> <span class="cn">NULL</span>, <span class="at">seed =</span> <span class="dv">11</span>L)</span>
 <span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>tr_los  <span class="ot">&lt;-</span> <span class="fu">hv_trends</span>(dta_los, <span class="at">group_col =</span> <span class="cn">NULL</span>)</span>
@@ -1458,6 +1473,7 @@ run;</code></pre>
 <h1>Longitudinal patient counts (<code>tp.dp.longitudinal_patients_measures.R</code>)</h1>
 <p><strong>Port:</strong> <code>tp.dp.longitudinal_patients_measures.R</code></p>
 <p><strong>R equivalent:</strong> <code>hv_longitudinal()</code></p>
+<p><code>tp.dp.longitudinal_patients_measures.R</code> answers the question “how many patients have an echocardiogram measurement at each follow-up year?” – a companion to the goodness-of-follow-up chart above, but focused on measurement availability rather than vital-status follow-up. The original R script used <code>PROC FREQ</code>-style counting over a long-format echo dataset; <code>hv_longitudinal()</code> accepts the same patient-level long-format frame and produces a bar chart with count annotations. You need one row per patient per observation, with columns for patient ID, follow-up year, and (optionally) a measurement flag.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>dta <span class="ot">&lt;-</span> <span class="fu">sample_longitudinal_counts_data</span>(<span class="at">n_patients =</span> <span class="dv">150</span>)</span>
 <span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>lc  <span class="ot">&lt;-</span> <span class="fu">hv_longitudinal</span>(dta)</span>
 <span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -1477,6 +1493,7 @@ run;</code></pre>
 <p><code>hv_mirror_hist()</code> replaces both scripts. Call <code>plot(mh)</code> to render. Diagnostics are in <code>mh$tables$diagnostics</code>, working data in <code>mh$tables$working</code>; layer scales, annotations, and a theme the usual way.</p>
 <section id="dp-mirror-binary" class="level2">
 <h2 class="anchored" data-anchor-id="dp-mirror-binary">Binary-match mode (<code>tp.lp.mirror-histogram_SAVR-TF-TAVR.R</code>)</h2>
+<p><code>tp.lp.mirror-histogram_SAVR-TF-TAVR.R</code> compares propensity score distributions for SAVR and TF-TAVR patients before and after 1:1 nearest-neighbour matching. Upper bars show pre-match counts; a darker overlaid bar shows the matched subset in each bin. Pass <code>match_col</code> to <code>hv_mirror_hist()</code> to activate this mode – the four internal fill levels (<code>before_g0</code>, <code>matched_g0</code>, <code>before_g1</code>, <code>matched_g1</code>) then map directly to the four <code>scale_fill_manual()</code> values.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>dta <span class="ot">&lt;-</span> <span class="fu">sample_mirror_histogram_data</span>(<span class="at">n =</span> <span class="dv">400</span>, <span class="at">separation =</span> <span class="fl">1.5</span>)</span>
 <span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>mh  <span class="ot">&lt;-</span> <span class="fu">hv_mirror_hist</span>(dta)   <span class="co"># defaults: prob_t / tavr / match</span></span>
 <span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -1496,6 +1513,7 @@ run;</code></pre>
 </section>
 <section id="dp-mirror-weighted" class="level2">
 <h2 class="anchored" data-anchor-id="dp-mirror-weighted">Weighted IPTW mode (<code>tp.lp.mirror_histo_before_after_wt.R</code>)</h2>
+<p><code>tp.lp.mirror_histo_before_after_wt.R</code> replaces the matched-subset bars with IPTW weight sums per bin – the right display when you are weighting rather than matching. Pass <code>weight_col</code> instead of <code>match_col</code> to switch modes. The fill levels change to <code>before_g0</code>, <code>weighted_g0</code>, <code>before_g1</code>, <code>weighted_g1</code>, so update your <code>scale_fill_manual()</code> values accordingly.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>dta   <span class="ot">&lt;-</span> <span class="fu">sample_mirror_histogram_data</span>(<span class="at">n =</span> <span class="dv">400</span>, <span class="at">add_weights =</span> <span class="cn">TRUE</span>)</span>
 <span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>mh_wt <span class="ot">&lt;-</span> <span class="fu">hv_mirror_hist</span>(</span>
 <span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>  dta,</span>
@@ -1522,6 +1540,7 @@ run;</code></pre>
 <section id="dp-stacked" class="level1">
 <h1>Stacked histogram</h1>
 <p><strong>R equivalent:</strong> <code>hv_stacked()</code></p>
+<p>This plot has no direct SAS template predecessor – it is a new addition designed for the annual case-volume figures that were previously hand-built with <code>PROC SGPLOT</code> <code>VBAR</code> / <code>VBARPARM</code> calls. <code>hv_stacked()</code> accepts a data frame with one column for the x variable (typically operation year) and one column for the group/fill variable. It returns a bar chart with stacked fills; apply <code>scale_fill_brewer()</code> or <code>scale_fill_manual()</code> to set colours consistent with your other figures in the same presentation.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>dta <span class="ot">&lt;-</span> <span class="fu">sample_stacked_histogram_data</span>()</span>
 <span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>sh  <span class="ot">&lt;-</span> <span class="fu">hv_stacked</span>(dta)</span>
 <span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -1612,6 +1631,7 @@ run;</code></pre>
 </section>
 <section id="pdf-tiff-for-journals" class="level2">
 <h2 class="anchored" data-anchor-id="pdf-tiff-for-journals">PDF / TIFF for journals</h2>
+<p><code>ggsave()</code> replaces the SAS <code>device=eps</code> / <code>device=tiff</code> options. For most journals, 3.5 x 3.5 inches (single column) at 600 dpi satisfies TIFF submission requirements; check the target journal’s figure guidelines for the exact width – double-column figures typically need 7 inches. Use <code>theme_hv_manuscript()</code> rather than <code>theme_hv_poster()</code> before saving, since manuscript figures need smaller base text sizes than poster figures.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="st">"figures/afib_prevalence.pdf"</span>,  p, <span class="at">width =</span> <span class="fl">3.5</span>, <span class="at">height =</span> <span class="fl">3.5</span>, <span class="at">units =</span> <span class="st">"in"</span>)</span>
 <span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="st">"figures/afib_prevalence.tiff"</span>, p, <span class="at">width =</span> <span class="fl">3.5</span>, <span class="at">height =</span> <span class="fl">3.5</span>,</span>
 <span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>       <span class="at">units =</span> <span class="st">"in"</span>, <span class="at">dpi =</span> <span class="dv">600</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -1852,7 +1872,7 @@ attached base packages:
 [1] stats     graphics  grDevices utils     datasets  methods   base     
 
 other attached packages:
-[1] ggplot2_4.0.3   hvtiPlotR_2.3.0
+[1] ggplot2_4.0.3   hvtiPlotR_2.3.1
 
 loaded via a namespace (and not attached):
  [1] generics_0.1.4          tidyr_1.3.2             fontLiberation_0.1.0   

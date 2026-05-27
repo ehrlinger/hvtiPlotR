@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="John Ehrlinger ehrlinj@ccf.org">
-<meta name="dcterms.date" content="2026-05-22">
+<meta name="dcterms.date" content="2026-05-27">
 
 <title>Decorating and Saving hvtiPlotR Plots</title>
 <style>
@@ -165,7 +165,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">May 22, 2026</p>
+      <p class="date">May 27, 2026</p>
     </div>
   </div>
   
@@ -241,6 +241,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </table>
 <section id="manuscript" class="level2">
 <h2 class="anchored" data-anchor-id="manuscript">Manuscript</h2>
+<p><code>theme_hv_manuscript()</code> is the default for journal submissions – white background, black text, minimal chrome. Font sizes are tuned for 8.5 x 11 inch letter-size PDFs where the figure may be reduced to a column width. Use this whenever the figure ends up in a Word or PDF document sent to a journal.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>p_ms <span class="ot">&lt;-</span> p_base <span class="sc">+</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_colour_brewer</span>(<span class="at">palette =</span> <span class="st">"Set1"</span>, <span class="at">name =</span> <span class="st">"Group"</span>) <span class="sc">+</span></span>
@@ -264,6 +265,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="poster" class="level2">
 <h2 class="anchored" data-anchor-id="poster">Poster</h2>
+<p><code>theme_hv_poster()</code> bumps the axis text and tick weights up from the manuscript baseline and removes the panel grid, so the figure reads clearly at arm’s length on a 36 x 48 inch foam board. It is also the go-to theme for in-room slide presentations when you are not using the PowerPoint themes – the larger tick labels and the boxed panel hold up on a projector better than the manuscript variant. Pass <code>base_family = "sans"</code> (or another family) to switch the font face.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>p_poster <span class="ot">&lt;-</span> p_base <span class="sc">+</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_colour_brewer</span>(<span class="at">palette =</span> <span class="st">"Set1"</span>, <span class="at">name =</span> <span class="st">"Group"</span>) <span class="sc">+</span></span>
@@ -287,6 +289,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="light-powerpoint" class="level2">
 <h2 class="anchored" data-anchor-id="light-powerpoint">Light PowerPoint</h2>
+<p><code>theme_hv_ppt_light()</code> matches slides with a white or light-grey background – the Cleveland Clinic standard template, most default Office themes, and any deck where the content area is light. Text and lines are dark, so the figure reads without modification when placed on the light slide. Pair with <code>save_ppt()</code> to insert it as editable DrawingML.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>p_base <span class="sc">+</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_colour_brewer</span>(<span class="at">palette =</span> <span class="st">"Set1"</span>, <span class="at">name =</span> <span class="st">"Group"</span>) <span class="sc">+</span></span>
@@ -308,6 +311,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="dark-powerpoint" class="level2">
 <h2 class="anchored" data-anchor-id="dark-powerpoint">Dark PowerPoint</h2>
+<p><code>theme_hv_ppt_dark()</code> flips the palette for dark-background slides – navy or dark-blue gradient decks where white-on-dark text is the convention. The theme sets a transparent plot background, so the slide’s background shows through behind the panel. The <code>plot.background</code> override in the chunk below simulates that navy background in the rendered vignette; you would omit it when saving to an actual <code>.pptx</code> file.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>p_base <span class="sc">+</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_colour_brewer</span>(<span class="at">palette =</span> <span class="st">"Set1"</span>, <span class="at">name =</span> <span class="st">"Group"</span>) <span class="sc">+</span></span>
@@ -565,6 +569,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Apply <code>theme_hv_ppt_dark()</code> or <code>theme_hv_ppt_light()</code> before saving to match the slide background.</p>
 <section id="single-slide" class="level3">
 <h3 class="anchored" data-anchor-id="single-slide">Single slide</h3>
+<p>Build a fully themed plot – <code>theme_hv_ppt_dark()</code> or <code>theme_hv_ppt_light()</code> – then pass it as <code>object</code>. The <code>template</code> argument points to an existing <code>.pptx</code> file whose slide master and layouts carry the brand fonts and background; <code>save_ppt()</code> appends a new slide rather than overwriting the template.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>template <span class="ot">&lt;-</span> <span class="fu">system.file</span>(<span class="st">"ClevelandClinic.pptx"</span>, <span class="at">package =</span> <span class="st">"hvtiPlotR"</span>)</span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -588,7 +593,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="multiple-slides-from-a-list" class="level3">
 <h3 class="anchored" data-anchor-id="multiple-slides-from-a-list">Multiple slides from a list</h3>
-<p>Pass a named list of plots and a matching vector of titles to produce one slide per plot in a single call.</p>
+<p>Pass a named list of plots and a matching vector of titles to produce one slide per plot in a single call. This is the pattern we use for batch-report decks where each outcome gets its own slide – the list keeps plots in order and the names serve as a paper trail. Every plot in the list should carry the same theme so the deck looks consistent.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>dta_km2 <span class="ot">&lt;-</span> <span class="fu">sample_survival_data</span>(<span class="at">n =</span> <span class="dv">400</span>, <span class="at">seed =</span> <span class="dv">99</span>)</span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>km2     <span class="ot">&lt;-</span> <span class="fu">hv_survival</span>(dta_km2)</span>
@@ -629,7 +634,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="multi-panel-pdf-eda-batch-output" class="level2">
 <h2 class="anchored" data-anchor-id="multi-panel-pdf-eda-batch-output">Multi-panel PDF (EDA batch output)</h2>
-<p>When generating multiple plots in a loop, <code>patchwork::wrap_plots()</code> arranges them into a grid and <code>ggsave()</code> writes each page.</p>
+<p>When generating multiple plots in a loop, <code>patchwork::wrap_plots()</code> arranges them into a grid and <code>ggsave()</code> writes each page. This is typical for EDA batches where you have a dozen or more outcomes to inspect – you build the list with <code>lapply()</code>, chunk it into pages of 9, and let the loop handle pagination. The <code>per_page</code> constant is easy to adjust if you want a 2x2 or 4x4 grid instead.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Build a list of plots (e.g. from an hv_eda() lapply loop)</span></span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>plot_list <span class="ot">&lt;-</span> <span class="fu">lapply</span>(</span>
@@ -691,6 +696,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="outside-the-panel-explicit-sides" class="level2">
 <h2 class="anchored" data-anchor-id="outside-the-panel-explicit-sides">Outside the panel (explicit sides)</h2>
+<p>Set <code>legend.position</code> to <code>"right"</code>, <code>"left"</code>, <code>"top"</code>, or <code>"bottom"</code> to place the legend outside the panel area. <code>"bottom"</code> with <code>legend.direction = "horizontal"</code> is the most common choice for multi-group figures where a long label would crowd a corner inside the panel.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>p_base <span class="sc">+</span></span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_colour_brewer</span>(<span class="at">palette =</span> <span class="st">"Set1"</span>, <span class="at">name =</span> <span class="st">"Group"</span>) <span class="sc">+</span></span>
@@ -716,6 +722,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="suppress-all-legends" class="level2">
 <h2 class="anchored" data-anchor-id="suppress-all-legends">Suppress all legends</h2>
+<p>Two ways to suppress legends, with slightly different scope. <code>theme(legend.position = "none")</code> hides every legend for the plot in one shot. <code>guide = "none"</code> on a <code>scale_*()</code> call drops only that aesthetic’s legend — handy when you want a colour legend but no shape legend (or vice versa). Both reclaim the panel width either way.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(km) <span class="sc">+</span></span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="at">All =</span> <span class="st">"steelblue"</span>), <span class="at">guide =</span> <span class="st">"none"</span>) <span class="sc">+</span></span>
@@ -738,6 +745,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="legend-text-and-key-size" class="level2">
 <h2 class="anchored" data-anchor-id="legend-text-and-key-size">Legend text and key size</h2>
+<p>The legend inherits font size from the active theme, which is often slightly larger than needed when the legend sits inside a crowded panel. <code>legend.text</code> controls the label font; <code>legend.key.size</code> shrinks the colour/shape swatch. Both accept any <code>element_text()</code> or <code>unit()</code> value.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>p_base <span class="sc">+</span></span>
 <span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_colour_brewer</span>(<span class="at">palette =</span> <span class="st">"Set1"</span>, <span class="at">name =</span> <span class="st">"Group"</span>) <span class="sc">+</span></span>
@@ -767,6 +775,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><code>theme_hv_manuscript()</code> sets a complete non-data formatting baseline. Layer additional <code>theme()</code> calls after it to adjust individual elements without touching the rest.</p>
 <section id="axis-text-size" class="level2">
 <h2 class="anchored" data-anchor-id="axis-text-size">Axis text size</h2>
+<p>Override <code>axis.text</code> to resize tick labels and <code>axis.title</code> for the axis title, independent of the rest of the theme. This is useful when a figure is being resized for a different output target – for example, scaling down for a two-column journal layout where the default poster-sized text would be too large.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>p_base <span class="sc">+</span></span>
 <span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_colour_brewer</span>(<span class="at">palette =</span> <span class="st">"Set1"</span>, <span class="at">name =</span> <span class="st">"Group"</span>) <span class="sc">+</span></span>
@@ -792,6 +801,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="removing-minor-grid-lines" class="level2">
 <h2 class="anchored" data-anchor-id="removing-minor-grid-lines">Removing minor grid lines</h2>
+<p>Minor grid lines (<code>panel.grid.minor</code>) add density without adding precision – they can make a busy figure look cluttered, especially when there are many data series. Setting <code>element_blank()</code> removes them while keeping the major grid intact.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>p_base <span class="sc">+</span></span>
 <span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_colour_brewer</span>(<span class="at">palette =</span> <span class="st">"Set1"</span>, <span class="at">name =</span> <span class="st">"Group"</span>) <span class="sc">+</span></span>
@@ -816,7 +826,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="rotating-x-axis-labels" class="level2">
 <h2 class="anchored" data-anchor-id="rotating-x-axis-labels">Rotating x-axis labels</h2>
-<p>Useful for time-point labels or long category names.</p>
+<p>Useful for time-point labels or long category names. The combination of <code>angle = 45</code>, <code>hjust = 1</code>, and <code>vjust = 1</code> keeps the rotated label right-aligned to its tick mark; without the <code>hjust</code>/<code>vjust</code> corrections the labels will float off-center.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>p_base <span class="sc">+</span></span>
 <span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_colour_brewer</span>(<span class="at">palette =</span> <span class="st">"Set1"</span>, <span class="at">name =</span> <span class="st">"Group"</span>) <span class="sc">+</span></span>
@@ -872,7 +882,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="expanding-plot-margins" class="level2">
 <h2 class="anchored" data-anchor-id="expanding-plot-margins">Expanding plot margins</h2>
-<p>Add breathing room around the panel, for example when a figure is placed directly on a poster without a surrounding text frame.</p>
+<p>Add breathing room around the panel – useful when a figure is placed directly on a poster without a surrounding text frame, or when axis labels clip against a tight device boundary. The <code>margin()</code> arguments follow top / right / bottom / left order, matching CSS convention.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>p_base <span class="sc">+</span></span>
 <span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_colour_brewer</span>(<span class="at">palette =</span> <span class="st">"Set1"</span>, <span class="at">name =</span> <span class="st">"Group"</span>) <span class="sc">+</span></span>
@@ -901,6 +911,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>The <code>patchwork</code> package composes multiple ggplot objects into a single figure. The two patterns we reach for most are side-by-side comparisons and a main plot stacked above a companion table or risk panel.</p>
 <section id="side-by-side-plots" class="level2">
 <h2 class="anchored" data-anchor-id="side-by-side-plots">Side-by-side plots</h2>
+<p>The <code>|</code> operator from patchwork places two plots next to each other in the same row, sharing the figure height. This is the typical layout for comparing two outcomes – trends and survival, for example – on a single manuscript figure. Both panels are built independently and composed at the last step, so you can adjust each one without touching the other.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(patchwork)</span>
 <span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -937,6 +948,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="controlling-relative-widths-and-heights" class="level2">
 <h2 class="anchored" data-anchor-id="controlling-relative-widths-and-heights">Controlling relative widths and heights</h2>
+<p><code>plot_layout(widths = ...)</code> sets relative widths as a numeric vector – <code>c(2, 1)</code> makes the left panel twice as wide as the right. Use <code>heights</code> the same way for stacked layouts. This is the right tool when one panel has a wide y-axis label or a tall legend that throws off a 50/50 split.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>(p_ms <span class="sc">|</span> p_km_ms) <span class="sc">+</span></span>
 <span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_layout</span>(<span class="at">widths =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">1</span>))   <span class="co"># left panel twice as wide as right</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -980,7 +992,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="shared-axis-labels-and-panel-tags" class="level2">
 <h2 class="anchored" data-anchor-id="shared-axis-labels-and-panel-tags">Shared axis labels and panel tags</h2>
-<p><code>plot_annotation()</code> adds a shared title or tags (A, B, C…) across all panels.</p>
+<p><code>plot_annotation()</code> adds a shared title or panel tags (A, B, C…) across all panels. Tags are required by most journals for multi-panel figures and are referenced in the caption as “Panel A shows…” – setting <code>tag_levels = "A"</code> generates them automatically. The <code>&amp;</code> operator applies a shared <code>theme()</code> call to every panel at once, so you only need to set <code>plot.tag</code> formatting in one place.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>(p_ms <span class="sc">|</span> p_km_ms) <span class="sc">+</span></span>
 <span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_annotation</span>(</span>
