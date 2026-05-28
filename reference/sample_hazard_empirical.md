@@ -66,15 +66,15 @@ A data frame with columns `time`, `estimate`, `lower`, `upper`, and
 
 **SAS column mapping:**
 
-- `time` ← `IV_DEAD` / `iv_dead` (evaluation time points)
+- `time` \<- `IV_DEAD` / `iv_dead` (evaluation time points)
 
-- `estimate` ← `CUM_SURV` (KM survival estimate, 0–100 %)
+- `estimate` \<- `CUM_SURV` (KM survival estimate, 0–100 %)
 
-- `lower` ← `CL_LOWER` (lower 95 % CI)
+- `lower` \<- `CL_LOWER` (lower 95 % CI)
 
-- `upper` ← `CL_UPPER` (upper 95 % CI)
+- `upper` \<- `CL_UPPER` (upper 95 % CI)
 
-- `group` ← stratification variable (when `groups` is not `NULL`)
+- `group` \<- stratification variable (when `groups` is not `NULL`)
 
 ## See also
 

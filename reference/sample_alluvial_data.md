@@ -48,7 +48,7 @@ head(dta)
 #> 5     Mild Replacement    Mild    3
 #> 6 Moderate Replacement    Mild   25
 #> 8   Severe Replacement    Mild   17
-# Axes in order: pre-op grade → procedure → post-op grade
+# Axes in order: pre-op grade -> procedure -> post-op grade
 with(dta, tapply(freq, list(pre_ar, post_ar), sum, default = 0))
 #>          None Mild Moderate Severe
 #> None       69    0        0      0

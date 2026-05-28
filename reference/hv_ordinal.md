@@ -65,12 +65,12 @@ An object of class `c("hv_ordinal", "hv_data")`:
 
 **SAS column mapping (`predict` dataset after averaging):**
 
-- `time` ← `iv_echo` (or `iv_wristm`)
+- `time` \<- `iv_echo` (or `iv_wristm`)
 
-- `estimate` ← one of `p0`, `p1`, `p2`, `p3` (individual grade probs,
+- `estimate` \<- one of `p0`, `p1`, `p2`, `p3` (individual grade probs,
   after wide-to-long reshape)
 
-- `grade` ← a new column created during the reshape
+- `grade` \<- a new column created during the reshape
 
 ## References
 

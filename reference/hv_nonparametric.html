@@ -57,7 +57,7 @@ theme_hv_manuscript."></head><body>
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Prepare nonparametric temporal trend curve data for plotting</h1>
-      <small class="dont-index">Source: <a href="https://github.com/ehrlinger/hvtiPlotR/blob/v2.3.2/R/nonparametric-curve-plot.R" class="external-link"><code>R/nonparametric-curve-plot.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/ehrlinger/hvtiPlotR/blob/main/R/nonparametric-curve-plot.R" class="external-link"><code>R/nonparametric-curve-plot.R</code></a></small>
       <div class="d-none name"><code>hv_nonparametric.Rd</code></div>
     </div>
 
@@ -140,11 +140,11 @@ Must have columns matching <code>x_col</code> and <code>"value"</code>, plus
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>Covers the full range of <code>tp.np.*</code> SAS templates:</p><table class="table table"><tr><td>SAS template pattern</td><td>R usage</td></tr><tr><td>Single average curve (<code>avrg_curv</code>, <code>u.trend</code>)</td><td><code>hv_nonparametric(dat)</code></td></tr><tr><td>Curve + 68\<!-- % CI (\code{avrg_curv.ci}) \tab \code{+ lower_col + upper_col} \cr -->
-   Curve + CI + data points</td><td><code>+ data_points = ...</code></td></tr><tr><td>Two-group comparison (<code>double</code>, <code>ozak</code>)</td><td><code>+ group_col = "group"</code></td></tr><tr><td>Multi-scenario / covariate-adjusted (<code>mult</code>)</td><td><code>+ group_col = "group"</code></td></tr><tr><td>Phase decomposition (<code>phases</code>, <code>independence</code>)</td><td><code>+ group_col = "phase"</code></td></tr></table><p><strong>SAS column mapping:</strong></p><ul><li><p><code>estimate_col</code> ← <code>prev</code>, <code>mnprev</code>, <code>_p_</code>,
+   Curve + CI + data points</td><td><code>+ data_points = ...</code></td></tr><tr><td>Two-group comparison (<code>double</code>, <code>ozak</code>)</td><td><code>+ group_col = "group"</code></td></tr><tr><td>Multi-scenario / covariate-adjusted (<code>mult</code>)</td><td><code>+ group_col = "group"</code></td></tr><tr><td>Phase decomposition (<code>phases</code>, <code>independence</code>)</td><td><code>+ group_col = "phase"</code></td></tr></table><p><strong>SAS column mapping:</strong></p><ul><li><p><code>estimate_col</code> &lt;- <code>prev</code>, <code>mnprev</code>, <code>_p_</code>,
 <code>est_fev</code>, <code>est_z0d</code></p></li>
-<li><p><code>lower_col</code> ← <code>cll_p68</code> or <code>cll_p95</code></p></li>
-<li><p><code>upper_col</code> ← <code>clu_p68</code> or <code>clu_p95</code></p></li>
-<li><p><code>group_col</code> ← indicator added after wide-to-long reshape</p></li>
+<li><p><code>lower_col</code> &lt;- <code>cll_p68</code> or <code>cll_p95</code></p></li>
+<li><p><code>upper_col</code> &lt;- <code>clu_p68</code> or <code>clu_p95</code></p></li>
+<li><p><code>group_col</code> &lt;- indicator added after wide-to-long reshape</p></li>
 </ul></div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>

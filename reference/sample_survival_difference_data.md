@@ -64,18 +64,18 @@ A data frame with columns `time`, `difference`, `diff_lower`,
 
 **SAS column mapping:**
 
-- `time` ← prediction grid
+- `time` \<- prediction grid
 
-- `difference` ← survival(group 2) - survival(group 1) (percentage
+- `difference` \<- survival(group 2) - survival(group 1) (percentage
   points)
 
-- `diff_lower` ← lower CI on difference
+- `diff_lower` \<- lower CI on difference
 
-- `diff_upper` ← upper CI on difference
+- `diff_upper` \<- upper CI on difference
 
-- `group1_surv` ← survival curve for group 1
+- `group1_surv` \<- survival curve for group 1
 
-- `group2_surv` ← survival curve for group 2
+- `group2_surv` \<- survival curve for group 2
 
 ## See also
 

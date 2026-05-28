@@ -761,7 +761,7 @@ by Glynn (2005). See his R Color Chart website for all the details you
 would ever need about using colors in R.
 
 ColorBrewer (Harrower and Brewer 2003) is an online tool
-(http://colorbrewer2.org/) designed to help people select good color
+(https://colorbrewer2.org/) designed to help people select good color
 schemes for maps and other graphics. We recommend it as a practical
 starting point for choosing colors grounded in sound design principles.
 
@@ -1053,24 +1053,13 @@ command.
 
 ## References
 
-Auguie B (2012). gridExtra: functions in Grid graphics. R package
-version 0.9.1, URL http://CRAN.R-project.org/package=gridExtra.
-
-Glynn EF (2005). “R Color Chart.”
-http://research.stowers-institute.org/efg/R/ Color/Chart/index.htm.
-Accessed: 2014-09-16.
-
-Gohel D (2014). ReporteRs: Microsoft Word, Microsoft Powerpoint and HTML
-docu- ments generation from R. R package version 0.6.1, URL
-http://davidgohel.github.
-io/ReporteRs/index.html,http://groups.google.com/group/reporters-package.
+Gohel D, Skintzos P (2024). officer: Manipulation of Microsoft Word and
+PowerPoint Documents. R package version 0.6.5, URL
+https://CRAN.R-project.org/package=officer.
 
 Harrower M, Brewer CA (2003). “ColorBrewer.org: An Online Tool for
 Selecting Colour Schemes for Maps.” The Cartographic Journal, pp. 27–37.
-doi:10.1179/ 000870403235002042. URL http://colorbrewer2.org/.
-
-Neuwirth E (2011). RColorBrewer: ColorBrewer palettes. R package version
-1.0-5, URL http://CRAN.R-project.org/package=RColorBrewer.
+doi:10.1179/000870403235002042. URL https://colorbrewer2.org/.
 
 Wickham H (2009). ggplot2: elegant graphics for data analysis. Springer
 New York. ISBN 978-0-387-98140-6.

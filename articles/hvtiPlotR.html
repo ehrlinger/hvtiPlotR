@@ -77,9 +77,9 @@
       <h1>The <strong>hvtiPlotR</strong> package: Generating plot.sas style in R</h1>
 
       <p class="author">John Ehrlinger <a href="mailto:ehrlinj@ccf.org" class="email">ehrlinj@ccf.org</a></p>
-      <p class="date">2026-05-27</p>
+      <p class="date">2026-05-28</p>
 
-      <small class="dont-index">Source: <a href="https://github.com/ehrlinger/hvtiPlotR/blob/v2.3.2/vignettes/hvtiPlotR.qmd" class="external-link"><code>vignettes/hvtiPlotR.qmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/ehrlinger/hvtiPlotR/blob/main/vignettes/hvtiPlotR.qmd" class="external-link"><code>vignettes/hvtiPlotR.qmd</code></a></small>
       <div class="d-none name"><code></code></div>
     </div>
 
@@ -741,7 +741,7 @@ run;</code></pre>
 </section><section class="level2"><h3 id="colors">Colors<a class="anchor" aria-label="anchor" href="#colors"></a>
 </h3>
 <p>You can specify colors in R by numeric index, name (as we have done), hexadecimal, or RGB specification. For example <code>col=1</code> and <code>col="white"</code> are equivalent. The chart in Figure 9 was produced with code developed by Glynn (2005). See his R Color Chart website for all the details you would ever need about using colors in R.</p>
-<p>ColorBrewer (Harrower and Brewer 2003) is an online tool (http://colorbrewer2.org/) designed to help people select good color schemes for maps and other graphics. We recommend it as a practical starting point for choosing colors grounded in sound design principles.</p>
+<p>ColorBrewer (Harrower and Brewer 2003) is an online tool (https://colorbrewer2.org/) designed to help people select good color schemes for maps and other graphics. We recommend it as a practical starting point for choosing colors grounded in sound design principles.</p>
 <p>Figure 8: ggplot2 shape table</p>
 <p>Figure 9: R colors</p>
 <p>The ColorBrewer palette catalogue (Harrower and Brewer 2003) is built into <code>ggplot2</code> via <code><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_colour_brewer()</a></code> / <code><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_fill_brewer()</a></code>; hvtiPlotR does not import the optional <code>RColorBrewer</code> package. We have made extensive use of the <code>palette = "Set1"</code> colour palette in the figures we have generated. There are also a series of other <code>scale_colour_*</code> functions in ggplot2 to aid the user in selecting good colour schemes for many diﬀerent settings — consult <a href="https://colorbrewer2.org/" class="external-link uri">https://colorbrewer2.org/</a> for an interactive palette browser.</p>
@@ -925,11 +925,8 @@ run;</code></pre>
 <p>In this article, we present the <strong>hvtiPlotR</strong> package for R. The package is made up of ggplot2 themes for publication quality graphics, as well as this tutorial document included as a package vignette. The package is available from https://github.com/ehrlinger/hvtiPlotR and can be installed using the <code>remotes::install_github("ehrlinger/hvtiPlotR")</code> command.</p>
 </section><section class="section level2"><h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
 </h2>
-<p>Auguie B (2012). gridExtra: functions in Grid graphics. R package version 0.9.1, URL http://CRAN.R-project.org/package=gridExtra.</p>
-<p>Glynn EF (2005). “R Color Chart.” http://research.stowers-institute.org/efg/R/ Color/Chart/index.htm. Accessed: 2014-09-16.</p>
-<p>Gohel D (2014). ReporteRs: Microsoft Word, Microsoft Powerpoint and HTML docu- ments generation from R. R package version 0.6.1, URL http://davidgohel.github. io/ReporteRs/index.html,http://groups.google.com/group/reporters-package.</p>
-<p>Harrower M, Brewer CA (2003). “ColorBrewer.org: An Online Tool for Selecting Colour Schemes for Maps.” The Cartographic Journal, pp. 27–37. doi:10.1179/ 000870403235002042. URL http://colorbrewer2.org/.</p>
-<p>Neuwirth E (2011). RColorBrewer: ColorBrewer palettes. R package version 1.0-5, URL http://CRAN.R-project.org/package=RColorBrewer.</p>
+<p>Gohel D, Skintzos P (2024). officer: Manipulation of Microsoft Word and PowerPoint Documents. R package version 0.6.5, URL https://CRAN.R-project.org/package=officer.</p>
+<p>Harrower M, Brewer CA (2003). “ColorBrewer.org: An Online Tool for Selecting Colour Schemes for Maps.” The Cartographic Journal, pp. 27–37. doi:10.1179/000870403235002042. URL https://colorbrewer2.org/.</p>
 <p>Wickham H (2009). ggplot2: elegant graphics for data analysis. Springer New York. ISBN 978-0-387-98140-6.</p>
 <p>Wilkinson L (2005). The Grammar of Graphics (Statistics and Computing). Springer-Verlag New York, Inc., Secaucus, NJ, USA. ISBN 0387245448.</p>
 </section><section class="section level2"><h2 id="aﬃliation">Aﬃliation:<a class="anchor" aria-label="anchor" href="#a%EF%AC%83liation"></a>

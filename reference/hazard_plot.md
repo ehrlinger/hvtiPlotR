@@ -25,19 +25,19 @@ reference. Covers the full `tp.hp.dead.*` SAS template family.
 
 **SAS column mapping:**
 
-- `x_col` ← `YEARS` / `iv_dead`
+- `x_col` \<- `YEARS` / `iv_dead`
 
-- `estimate_col` ← `SSURVIV` (survival), `hazard` (%/yr), or `cumhaz`
+- `estimate_col` \<- `SSURVIV` (survival), `hazard` (%/yr), or `cumhaz`
 
-- `lower_col` ← `SCLLSURV` / `cll_p95`
+- `lower_col` \<- `SCLLSURV` / `cll_p95`
 
-- `upper_col` ← `SCLUSURV` / `clu_p95`
+- `upper_col` \<- `SCLUSURV` / `clu_p95`
 
-- `group_col` ← treatment/group indicator variable
+- `group_col` \<- treatment/group indicator variable
 
-- `empirical` ← the `plout` / `acpdms` KM output dataset
+- `empirical` \<- the `plout` / `acpdms` KM output dataset
 
-- `reference` ← the `smatched` life-table dataset
+- `reference` \<- the `smatched` life-table dataset
 
 Returns a **bare ggplot object**; compose with `scale_colour_*`,
 [`scale_y_continuous()`](https://ggplot2.tidyverse.org/reference/scale_continuous.html),

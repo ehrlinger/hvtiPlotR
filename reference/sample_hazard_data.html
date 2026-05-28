@@ -55,7 +55,7 @@ with PROC LIFEREG."></head><body>
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Sample Parametric Hazard Model Predictions</h1>
-      <small class="dont-index">Source: <a href="https://github.com/ehrlinger/hvtiPlotR/blob/v2.3.2/R/hazard-plot.R" class="external-link"><code>R/hazard-plot.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/ehrlinger/hvtiPlotR/blob/main/R/hazard-plot.R" class="external-link"><code>R/hazard-plot.R</code></a></small>
       <div class="d-none name"><code>sample_hazard_data.Rd</code></div>
     </div>
 
@@ -112,7 +112,7 @@ mortality). Default <code>1.5</code>.</p></dd>
 
 <dt id="arg-scale">scale<a class="anchor" aria-label="anchor" href="#arg-scale"></a></dt>
 <dd><p>Weibull scale parameter (characteristic time in years, i.e.
-the time at which <code>S = exp(-1) ≈ 37%</code>). Default <code>8.0</code>.</p></dd>
+the time at which <code>S = exp(-1)</code> \(\approx\) 37%). Default <code>8.0</code>.</p></dd>
 
 
 <dt id="arg-ci-level">ci_level<a class="anchor" aria-label="anchor" href="#arg-ci-level"></a></dt>
@@ -132,15 +132,15 @@ kept for API consistency with other sample functions). Default <code>42</code>.<
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p><strong>SAS column mapping:</strong></p><ul><li><p><code>time</code>         ← <code>YEARS</code> / <code>iv_dead</code> (prediction grid)</p></li>
-<li><p><code>survival</code>     ← <code>SSURVIV</code> (predicted survival, 0–100 %)</p></li>
-<li><p><code>surv_lower</code>   ← <code>SCLLSURV</code> (lower confidence limit on survival)</p></li>
-<li><p><code>surv_upper</code>   ← <code>SCLUSURV</code> (upper confidence limit on survival)</p></li>
-<li><p><code>hazard</code>       ← predicted hazard rate (%/year)</p></li>
-<li><p><code>haz_lower</code>    ← lower confidence limit on hazard</p></li>
-<li><p><code>haz_upper</code>    ← upper confidence limit on hazard</p></li>
-<li><p><code>cumhaz</code>       ← cumulative hazard (%; corresponds to <code>-log(S)*100</code>)</p></li>
-<li><p><code>group</code>        ← group stratification variable (when <code>groups</code> is not <code>NULL</code>)</p></li>
+    <p><strong>SAS column mapping:</strong></p><ul><li><p><code>time</code>         &lt;- <code>YEARS</code> / <code>iv_dead</code> (prediction grid)</p></li>
+<li><p><code>survival</code>     &lt;- <code>SSURVIV</code> (predicted survival, 0–100 %)</p></li>
+<li><p><code>surv_lower</code>   &lt;- <code>SCLLSURV</code> (lower confidence limit on survival)</p></li>
+<li><p><code>surv_upper</code>   &lt;- <code>SCLUSURV</code> (upper confidence limit on survival)</p></li>
+<li><p><code>hazard</code>       &lt;- predicted hazard rate (%/year)</p></li>
+<li><p><code>haz_lower</code>    &lt;- lower confidence limit on hazard</p></li>
+<li><p><code>haz_upper</code>    &lt;- upper confidence limit on hazard</p></li>
+<li><p><code>cumhaz</code>       &lt;- cumulative hazard (%; corresponds to <code>-log(S)*100</code>)</p></li>
+<li><p><code>group</code>        &lt;- group stratification variable (when <code>groups</code> is not <code>NULL</code>)</p></li>
 </ul></div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>

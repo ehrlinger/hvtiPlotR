@@ -64,15 +64,15 @@ A data frame with columns `time`, `arr`, `arr_lower`, `arr_upper`,
 
 **SAS column mapping:**
 
-- `time` ← prediction grid (years)
+- `time` \<- prediction grid (years)
 
-- `arr` ← absolute risk reduction (survival difference, %)
+- `arr` \<- absolute risk reduction (survival difference, %)
 
-- `arr_lower` / `arr_upper` ← CI on ARR
+- `arr_lower` / `arr_upper` \<- CI on ARR
 
-- `nnt` ← number needed to treat (= 100 / ARR)
+- `nnt` \<- number needed to treat (= 100 / ARR)
 
-- `nnt_lower` / `nnt_upper` ← CI on NNT (inverted from ARR CI)
+- `nnt_lower` / `nnt_upper` \<- CI on NNT (inverted from ARR CI)
 
 ## See also
 

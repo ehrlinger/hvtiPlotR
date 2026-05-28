@@ -51,7 +51,7 @@ sample_hazard_data(
 - scale:
 
   Weibull scale parameter (characteristic time in years, i.e. the time
-  at which `S = exp(-1) ≈ 37%`). Default `8.0`.
+  at which `S = exp(-1)` \\\approx\\ 37%). Default `8.0`.
 
 - ci_level:
 
@@ -72,23 +72,24 @@ A data frame with columns `time`, `survival`, `surv_lower`,
 
 **SAS column mapping:**
 
-- `time` ← `YEARS` / `iv_dead` (prediction grid)
+- `time` \<- `YEARS` / `iv_dead` (prediction grid)
 
-- `survival` ← `SSURVIV` (predicted survival, 0–100 %)
+- `survival` \<- `SSURVIV` (predicted survival, 0–100 %)
 
-- `surv_lower` ← `SCLLSURV` (lower confidence limit on survival)
+- `surv_lower` \<- `SCLLSURV` (lower confidence limit on survival)
 
-- `surv_upper` ← `SCLUSURV` (upper confidence limit on survival)
+- `surv_upper` \<- `SCLUSURV` (upper confidence limit on survival)
 
-- `hazard` ← predicted hazard rate (%/year)
+- `hazard` \<- predicted hazard rate (%/year)
 
-- `haz_lower` ← lower confidence limit on hazard
+- `haz_lower` \<- lower confidence limit on hazard
 
-- `haz_upper` ← upper confidence limit on hazard
+- `haz_upper` \<- upper confidence limit on hazard
 
-- `cumhaz` ← cumulative hazard (%; corresponds to `-log(S)*100`)
+- `cumhaz` \<- cumulative hazard (%; corresponds to `-log(S)*100`)
 
-- `group` ← group stratification variable (when `groups` is not `NULL`)
+- `group` \<- group stratification variable (when `groups` is not
+  `NULL`)
 
 ## See also
 

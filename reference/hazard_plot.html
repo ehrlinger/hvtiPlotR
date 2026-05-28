@@ -19,13 +19,13 @@ Age as x-axis (tp.hp.dead.age_on_horizontal_axis.sas)x_col="age"
 
 
 SAS column mapping:
-x_col          ← YEARS / iv_dead
-estimate_col   ← SSURVIV (survival), hazard (%/yr), or cumhaz
-lower_col      ← SCLLSURV / cll_p95
-upper_col      ← SCLUSURV / clu_p95
-group_col      ← treatment/group indicator variable
-empirical      ← the plout / acpdms KM output dataset
-reference      ← the smatched life-table dataset
+x_col          &amp;lt;- YEARS / iv_dead
+estimate_col   &amp;lt;- SSURVIV (survival), hazard (%/yr), or cumhaz
+lower_col      &amp;lt;- SCLLSURV / cll_p95
+upper_col      &amp;lt;- SCLUSURV / clu_p95
+group_col      &amp;lt;- treatment/group indicator variable
+empirical      &amp;lt;- the plout / acpdms KM output dataset
+reference      &amp;lt;- the smatched life-table dataset
 
 
 Returns a bare ggplot object; compose with scale_colour_*,
@@ -49,13 +49,13 @@ Age as x-axis (tp.hp.dead.age_on_horizontal_axis.sas)x_col="age"
 
 
 SAS column mapping:
-x_col          ← YEARS / iv_dead
-estimate_col   ← SSURVIV (survival), hazard (%/yr), or cumhaz
-lower_col      ← SCLLSURV / cll_p95
-upper_col      ← SCLUSURV / clu_p95
-group_col      ← treatment/group indicator variable
-empirical      ← the plout / acpdms KM output dataset
-reference      ← the smatched life-table dataset
+x_col          &amp;lt;- YEARS / iv_dead
+estimate_col   &amp;lt;- SSURVIV (survival), hazard (%/yr), or cumhaz
+lower_col      &amp;lt;- SCLLSURV / cll_p95
+upper_col      &amp;lt;- SCLUSURV / clu_p95
+group_col      &amp;lt;- treatment/group indicator variable
+empirical      &amp;lt;- the plout / acpdms KM output dataset
+reference      &amp;lt;- the smatched life-table dataset
 
 
 Returns a bare ggplot object; compose with scale_colour_*,
@@ -109,7 +109,7 @@ scale_y_continuous(), labs(), theme_hv_manuscript().'></head><body>
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Parametric Hazard / Survival Plot</h1>
-      <small class="dont-index">Source: <a href="https://github.com/ehrlinger/hvtiPlotR/blob/v2.3.2/R/hazard-plot.R" class="external-link"><code>R/hazard-plot.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/ehrlinger/hvtiPlotR/blob/main/R/hazard-plot.R" class="external-link"><code>R/hazard-plot.R</code></a></small>
       <div class="d-none name"><code>hazard_plot.Rd</code></div>
     </div>
 
@@ -120,13 +120,13 @@ plus <code><a href="plot.hv_hazard.html">plot.hv_hazard()</a></code>.</p>
 <p>Pass your <code>predict</code> dataset from a Weibull (or other parametric) model and
 get back a ggplot of the survival, hazard, or cumulative-hazard curve, with
 optional KM empirical overlay and population life-table reference. Covers
-the full <code>tp.hp.dead.*</code> SAS template family.</p><table class="table table"><tr><td>SAS template</td><td>R usage</td></tr><tr><td>Basic survival (tp.hp.dead.sas)</td><td><code>hazard_plot(dat, estimate_col="survival")</code></td></tr><tr><td>Basic hazard (tp.hp.dead.sas)</td><td><code>hazard_plot(dat, estimate_col="hazard")</code></td></tr><tr><td>Cumulative hazard (tp.hp.event.weighted.sas)</td><td><code>hazard_plot(dat, estimate_col="cumhaz")</code></td></tr><tr><td>Stratified by group (tp.hp.dead.tkdn.stratified.sas)</td><td><code>+ group_col="group"</code></td></tr><tr><td>KM empirical overlay</td><td><code>+ empirical=emp_data</code></td></tr><tr><td>Life table overlay (tp.hp.dead.uslife.stratifed.sas)</td><td><code>+ reference=lt_data</code></td></tr><tr><td>Age as x-axis (tp.hp.dead.age_on_horizontal_axis.sas)</td><td><code>x_col="age"</code></td></tr></table><p><strong>SAS column mapping:</strong></p><ul><li><p><code>x_col</code>          ← <code>YEARS</code> / <code>iv_dead</code></p></li>
-<li><p><code>estimate_col</code>   ← <code>SSURVIV</code> (survival), <code>hazard</code> (%/yr), or <code>cumhaz</code></p></li>
-<li><p><code>lower_col</code>      ← <code>SCLLSURV</code> / <code>cll_p95</code></p></li>
-<li><p><code>upper_col</code>      ← <code>SCLUSURV</code> / <code>clu_p95</code></p></li>
-<li><p><code>group_col</code>      ← treatment/group indicator variable</p></li>
-<li><p><code>empirical</code>      ← the <code>plout</code> / <code>acpdms</code> KM output dataset</p></li>
-<li><p><code>reference</code>      ← the <code>smatched</code> life-table dataset</p></li>
+the full <code>tp.hp.dead.*</code> SAS template family.</p><table class="table table"><tr><td>SAS template</td><td>R usage</td></tr><tr><td>Basic survival (tp.hp.dead.sas)</td><td><code>hazard_plot(dat, estimate_col="survival")</code></td></tr><tr><td>Basic hazard (tp.hp.dead.sas)</td><td><code>hazard_plot(dat, estimate_col="hazard")</code></td></tr><tr><td>Cumulative hazard (tp.hp.event.weighted.sas)</td><td><code>hazard_plot(dat, estimate_col="cumhaz")</code></td></tr><tr><td>Stratified by group (tp.hp.dead.tkdn.stratified.sas)</td><td><code>+ group_col="group"</code></td></tr><tr><td>KM empirical overlay</td><td><code>+ empirical=emp_data</code></td></tr><tr><td>Life table overlay (tp.hp.dead.uslife.stratifed.sas)</td><td><code>+ reference=lt_data</code></td></tr><tr><td>Age as x-axis (tp.hp.dead.age_on_horizontal_axis.sas)</td><td><code>x_col="age"</code></td></tr></table><p><strong>SAS column mapping:</strong></p><ul><li><p><code>x_col</code>          &lt;- <code>YEARS</code> / <code>iv_dead</code></p></li>
+<li><p><code>estimate_col</code>   &lt;- <code>SSURVIV</code> (survival), <code>hazard</code> (%/yr), or <code>cumhaz</code></p></li>
+<li><p><code>lower_col</code>      &lt;- <code>SCLLSURV</code> / <code>cll_p95</code></p></li>
+<li><p><code>upper_col</code>      &lt;- <code>SCLUSURV</code> / <code>clu_p95</code></p></li>
+<li><p><code>group_col</code>      &lt;- treatment/group indicator variable</p></li>
+<li><p><code>empirical</code>      &lt;- the <code>plout</code> / <code>acpdms</code> KM output dataset</p></li>
+<li><p><code>reference</code>      &lt;- the <code>smatched</code> life-table dataset</p></li>
 </ul><p>Returns a <strong>bare ggplot object</strong>; compose with <code>scale_colour_*</code>,
 <code><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous()</a></code>, <code><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs()</a></code>, <code><a href="hvtiPlotR-themes.html">theme_hv_manuscript()</a></code>.</p>
     </div>

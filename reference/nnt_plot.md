@@ -57,8 +57,8 @@ nnt_plot(
 
 - na_rm:
 
-  Remove `NA` NNT values (undefined when ARR ≈ 0) before plotting.
-  Default `TRUE`.
+  Remove `NA` NNT values (undefined when ARR \\\approx\\ 0) before
+  plotting. Default `TRUE`.
 
 - ci_alpha:
 

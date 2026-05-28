@@ -9,7 +9,7 @@ mortality, matching the US population life table overlays used in
 
 ``` r
 sample_life_table(
-  age_groups = c("<65", "65-80", "≥80"),
+  age_groups = NULL,
   age_mids = c(55, 72, 85),
   time_max = 10,
   n_points = 100
@@ -44,11 +44,11 @@ A data frame with columns `time`, `survival`, and `group`.
 
 **SAS column mapping:**
 
-- `time` ← prediction time grid (years)
+- `time` \<- prediction time grid (years)
 
-- `survival` ← `SMATCHED` (age-group-specific survivorship, 0–100 %)
+- `survival` \<- `SMATCHED` (age-group-specific survivorship, 0–100 %)
 
-- `group` ← age group label (e.g. `"<65"`, `"65-80"`, `"\u226580"`)
+- `group` \<- age group label (e.g. `"<65"`, `"65-80"`, `"\u226580"`)
 
 ## See also
 
@@ -58,7 +58,7 @@ A data frame with columns `time`, `survival`, and `group`.
 ## Examples
 
 ``` r
-# Default: three age groups (<65, 65-80, ≥80) using Gompertz mortality
+# Default: three age groups (<65, 65-80, 80+) using Gompertz mortality
 lt <- sample_life_table(time_max = 10)
 head(lt)
 #>        time  survival group

@@ -89,13 +89,13 @@ Covers the full range of `tp.np.*` SAS templates:
 
 **SAS column mapping:**
 
-- `estimate_col` ← `prev`, `mnprev`, `_p_`, `est_fev`, `est_z0d`
+- `estimate_col` \<- `prev`, `mnprev`, `_p_`, `est_fev`, `est_z0d`
 
-- `lower_col` ← `cll_p68` or `cll_p95`
+- `lower_col` \<- `cll_p68` or `cll_p95`
 
-- `upper_col` ← `clu_p68` or `clu_p95`
+- `upper_col` \<- `clu_p68` or `clu_p95`
 
-- `group_col` ← indicator added after wide-to-long reshape
+- `group_col` \<- indicator added after wide-to-long reshape
 
 ## See also
 
