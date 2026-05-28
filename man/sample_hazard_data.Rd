@@ -33,7 +33,7 @@ group indicator in \code{tp.hp.dead.tkdn.stratified.sas}.}
 mortality). Default \code{1.5}.}
 
 \item{scale}{Weibull scale parameter (characteristic time in years, i.e.
-the time at which \verb{S = exp(-1) ≈ 37\%}). Default \code{8.0}.}
+the time at which \code{S = exp(-1)} \eqn{\approx} 37\%). Default \code{8.0}.}
 
 \item{ci_level}{Confidence level for the CI bands. Default \code{0.95}.}
 
@@ -54,15 +54,15 @@ with \verb{PROC LIFEREG}.
 \details{
 \strong{SAS column mapping:}
 \itemize{
-\item \code{time}         ← \code{YEARS} / \code{iv_dead} (prediction grid)
-\item \code{survival}     ← \code{SSURVIV} (predicted survival, 0–100 \%)
-\item \code{surv_lower}   ← \code{SCLLSURV} (lower confidence limit on survival)
-\item \code{surv_upper}   ← \code{SCLUSURV} (upper confidence limit on survival)
-\item \code{hazard}       ← predicted hazard rate (\%/year)
-\item \code{haz_lower}    ← lower confidence limit on hazard
-\item \code{haz_upper}    ← upper confidence limit on hazard
-\item \code{cumhaz}       ← cumulative hazard (\%; corresponds to \code{-log(S)*100})
-\item \code{group}        ← group stratification variable (when \code{groups} is not \code{NULL})
+\item \code{time}         <- \code{YEARS} / \code{iv_dead} (prediction grid)
+\item \code{survival}     <- \code{SSURVIV} (predicted survival, 0–100 \%)
+\item \code{surv_lower}   <- \code{SCLLSURV} (lower confidence limit on survival)
+\item \code{surv_upper}   <- \code{SCLUSURV} (upper confidence limit on survival)
+\item \code{hazard}       <- predicted hazard rate (\%/year)
+\item \code{haz_lower}    <- lower confidence limit on hazard
+\item \code{haz_upper}    <- upper confidence limit on hazard
+\item \code{cumhaz}       <- cumulative hazard (\%; corresponds to \code{-log(S)*100})
+\item \code{group}        <- group stratification variable (when \code{groups} is not \code{NULL})
 }
 }
 \examples{

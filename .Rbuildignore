@@ -41,3 +41,5 @@ hvtiPlotR.Rproj
 ^.*\.fuse_hidden
 ^\.positai$
 ^writing-voice\.md$
+^Rplots\.pdf$
+^.*\.tar\.gz$

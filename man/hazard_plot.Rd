@@ -127,13 +127,13 @@ the full \verb{tp.hp.dead.*} SAS template family.\tabular{ll}{
 
 \strong{SAS column mapping:}
 \itemize{
-\item \code{x_col}          ← \code{YEARS} / \code{iv_dead}
-\item \code{estimate_col}   ← \code{SSURVIV} (survival), \code{hazard} (\%/yr), or \code{cumhaz}
-\item \code{lower_col}      ← \code{SCLLSURV} / \code{cll_p95}
-\item \code{upper_col}      ← \code{SCLUSURV} / \code{clu_p95}
-\item \code{group_col}      ← treatment/group indicator variable
-\item \code{empirical}      ← the \code{plout} / \code{acpdms} KM output dataset
-\item \code{reference}      ← the \code{smatched} life-table dataset
+\item \code{x_col}          <- \code{YEARS} / \code{iv_dead}
+\item \code{estimate_col}   <- \code{SSURVIV} (survival), \code{hazard} (\%/yr), or \code{cumhaz}
+\item \code{lower_col}      <- \code{SCLLSURV} / \code{cll_p95}
+\item \code{upper_col}      <- \code{SCLUSURV} / \code{clu_p95}
+\item \code{group_col}      <- treatment/group indicator variable
+\item \code{empirical}      <- the \code{plout} / \code{acpdms} KM output dataset
+\item \code{reference}      <- the \code{smatched} life-table dataset
 }
 
 Returns a \strong{bare ggplot object}; compose with \verb{scale_colour_*},

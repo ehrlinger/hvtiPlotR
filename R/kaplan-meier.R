@@ -11,8 +11,8 @@
 ## (PLOTS, PLOTC, PLOTH, PLOTL) plus associated data frames (tidy KM data,
 ## numbers-at-risk table, and a report table at user-supplied time points).
 ##
-## method = "kaplan-meier"  →  %kaplan  (product-limit, logit CI)
-## method = "nelson-aalen"  →  %nelsont (Fleming-Harrington, log CI on H)
+## method = "kaplan-meier"  ->  %kaplan  (product-limit, logit CI)
+## method = "nelson-aalen"  ->  %nelsont (Fleming-Harrington, log CI on H)
 ##
 ## Quick start
 ## -----------
@@ -55,7 +55,7 @@ km_fit <- function(data, time_col, event_col, group_col, conf_level, method) {
   t_ <- data[[time_col]]
   e_ <- data[[event_col]]
 
-  # method → survfit type and CI transform
+  # method -> survfit type and CI transform
   # "kaplan-meier": product-limit S(t), logit CI  — matches SAS %kaplan
   # "nelson-aalen": Fleming-Harrington H(t), log CI — matches SAS %nelsont
   surv_type <- if (method == "kaplan-meier") "kaplan-meier" else "fleming-harrington"
@@ -667,8 +667,7 @@ print.hv_survival <- function(x, ...) {
 #'   ggplot2::labs(x = "Years", y = "Instantaneous Hazard") +
 #'   theme_hv_poster()
 #'
-#' @importFrom ggplot2 ggplot aes geom_step geom_ribbon geom_hline
-#'   scale_y_continuous geom_point
+#' @importFrom ggplot2 ggplot aes geom_step geom_ribbon geom_hline scale_y_continuous geom_point
 #' @export
 plot.hv_survival <- function(x,
                                type     = c("survival", "cumhaz",

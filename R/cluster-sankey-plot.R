@@ -289,8 +289,7 @@ print.hv_sankey <- function(x, ...) {
 #'     theme_hv_poster()
 #' }
 #'
-#' @importFrom ggplot2 ggplot aes geom_vline labs scale_fill_manual theme
-#'   element_blank
+#' @importFrom ggplot2 ggplot aes geom_vline labs scale_fill_manual theme element_blank
 #' @importFrom rlang .data
 #' @export
 plot.hv_sankey <- function(x,

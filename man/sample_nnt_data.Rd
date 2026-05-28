@@ -46,11 +46,11 @@ of \code{tp.hp.numtreat.survdiff.matched.sas}.
 \details{
 \strong{SAS column mapping:}
 \itemize{
-\item \code{time}      ← prediction grid (years)
-\item \code{arr}       ← absolute risk reduction (survival difference, \%)
-\item \code{arr_lower} / \code{arr_upper} ← CI on ARR
-\item \code{nnt}       ← number needed to treat (= 100 / ARR)
-\item \code{nnt_lower} / \code{nnt_upper} ← CI on NNT (inverted from ARR CI)
+\item \code{time}      <- prediction grid (years)
+\item \code{arr}       <- absolute risk reduction (survival difference, \%)
+\item \code{arr_lower} / \code{arr_upper} <- CI on ARR
+\item \code{nnt}       <- number needed to treat (= 100 / ARR)
+\item \code{nnt_lower} / \code{nnt_upper} <- CI on NNT (inverted from ARR CI)
 }
 }
 \examples{

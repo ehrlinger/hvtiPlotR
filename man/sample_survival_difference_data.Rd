@@ -46,12 +46,12 @@ matching the output of the \code{HAZDIFL} macro used in
 \details{
 \strong{SAS column mapping:}
 \itemize{
-\item \code{time}        ← prediction grid
-\item \code{difference}  ← survival(group 2) - survival(group 1) (percentage points)
-\item \code{diff_lower}  ← lower CI on difference
-\item \code{diff_upper}  ← upper CI on difference
-\item \code{group1_surv} ← survival curve for group 1
-\item \code{group2_surv} ← survival curve for group 2
+\item \code{time}        <- prediction grid
+\item \code{difference}  <- survival(group 2) - survival(group 1) (percentage points)
+\item \code{diff_lower}  <- lower CI on difference
+\item \code{diff_upper}  <- upper CI on difference
+\item \code{group1_surv} <- survival curve for group 1
+\item \code{group2_surv} <- survival curve for group 2
 }
 }
 \examples{

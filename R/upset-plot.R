@@ -248,8 +248,7 @@ print.hv_upset <- function(x, ...) {
 #' }
 #'
 #' @importFrom ggupset scale_x_upset
-#' @importFrom ggplot2 aes geom_bar geom_col ggplot labs scale_x_reverse
-#'   element_blank theme
+#' @importFrom ggplot2 aes geom_bar geom_col ggplot labs scale_x_reverse element_blank theme
 #' @export
 plot.hv_upset <- function(x,
                           n_intersections   = 10L,

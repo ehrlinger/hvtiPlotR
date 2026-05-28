@@ -38,7 +38,7 @@
 #' @examples
 #' dta <- sample_alluvial_data(n = 300, seed = 42)
 #' head(dta)
-#' # Axes in order: pre-op grade → procedure → post-op grade
+#' # Axes in order: pre-op grade -> procedure -> post-op grade
 #' with(dta, tapply(freq, list(pre_ar, post_ar), sum, default = 0))
 #' @export
 sample_alluvial_data <- function(n = 300, seed = 42L) {

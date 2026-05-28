@@ -231,8 +231,7 @@ print.hv_longitudinal <- function(x, ...) {
 #' # p_table <- plot(lc, type = "table")  + <decorators>
 #' # p_bar / p_table + patchwork::plot_layout(heights = c(3, 1))
 #'
-#' @importFrom ggplot2 ggplot aes geom_bar geom_text scale_y_discrete theme
-#'   element_blank
+#' @importFrom ggplot2 ggplot aes geom_bar geom_text scale_y_discrete theme element_blank
 #' @importFrom rlang .data
 #' @export
 plot.hv_longitudinal <- function(x,

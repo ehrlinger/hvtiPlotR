@@ -208,10 +208,10 @@ sample_nonparametric_ordinal_points <- function(
 #' colour scales and \code{\link{theme_hv_manuscript}}.
 #'
 #' **SAS column mapping (\code{predict} dataset after averaging):**
-#' - \code{time} ← \code{iv_echo} (or \code{iv_wristm})
-#' - \code{estimate} ← one of \code{p0}, \code{p1}, \code{p2}, \code{p3}
+#' - \code{time} <- \code{iv_echo} (or \code{iv_wristm})
+#' - \code{estimate} <- one of \code{p0}, \code{p1}, \code{p2}, \code{p3}
 #'   (individual grade probs, after wide-to-long reshape)
-#' - \code{grade} ← a new column created during the reshape
+#' - \code{grade} <- a new column created during the reshape
 #'
 #' @param curve_data  Long-format data frame: one row per (time, grade)
 #'   combination. Columns: \code{x_col}, \code{estimate_col}, \code{grade_col}.

@@ -5,7 +5,7 @@
 \title{Sample Population Life Table Data}
 \usage{
 sample_life_table(
-  age_groups = c("<65", "65-80", "≥80"),
+  age_groups = NULL,
   age_mids = c(55, 72, 85),
   time_max = 10,
   n_points = 100
@@ -34,13 +34,13 @@ mortality, matching the US population life table overlays used in
 \details{
 \strong{SAS column mapping:}
 \itemize{
-\item \code{time}     ← prediction time grid (years)
-\item \code{survival} ← \code{SMATCHED} (age-group-specific survivorship, 0–100 \%)
-\item \code{group}    ← age group label (e.g. \code{"<65"}, \code{"65-80"}, \code{"\\u226580"})
+\item \code{time}     <- prediction time grid (years)
+\item \code{survival} <- \code{SMATCHED} (age-group-specific survivorship, 0–100 \%)
+\item \code{group}    <- age group label (e.g. \code{"<65"}, \code{"65-80"}, \code{"\\u226580"})
 }
 }
 \examples{
-# Default: three age groups (<65, 65-80, ≥80) using Gompertz mortality
+# Default: three age groups (<65, 65-80, 80+) using Gompertz mortality
 lt <- sample_life_table(time_max = 10)
 head(lt)
 nlevels(lt$group)    # 3 age groups

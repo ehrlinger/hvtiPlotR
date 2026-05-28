@@ -27,7 +27,7 @@ nnt_plot(
 
 \item{upper_col}{Name of the upper CI column, or \code{NULL}. Default \code{NULL}.}
 
-\item{na_rm}{Remove \code{NA} NNT values (undefined when ARR ≈ 0) before
+\item{na_rm}{Remove \code{NA} NNT values (undefined when ARR \eqn{\approx} 0) before
 plotting. Default \code{TRUE}.}
 
 \item{ci_alpha}{Transparency of the CI ribbon. Default \code{0.20}.}

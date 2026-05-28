@@ -37,7 +37,7 @@
   eta_intercept = -0.5,   # log-odds shift; centres baseline P(event) ≈ 18 %
   logit_shift   = -1.2,   # additional logit shift; P(event) ≈ 12 % at t = 0
   cont_baseline =  40,    # continuous outcome baseline (e.g. AV gradient, mmHg)
-  cont_scale    =   8,    # eta → mmHg scaling factor
+  cont_scale    =   8,    # eta -> mmHg scaling factor
   cont_sigma    =   6,    # residual SD (mmHg measurement noise)
   eff_frac_prob =   0.1,  # effective-patient fraction per time point (probability)
   eff_frac_cont =   0.05  # effective-patient fraction per time point (continuous)
@@ -282,11 +282,11 @@ sample_nonparametric_curve_points <- function(n            = 500,
 #' | Phase decomposition (`phases`, `independence`) | \code{+ group_col = "phase"} |
 #'
 #' **SAS column mapping:**
-#' - \code{estimate_col} ← \code{prev}, \code{mnprev}, \code{_p_},
+#' - \code{estimate_col} <- \code{prev}, \code{mnprev}, \code{_p_},
 #'   \code{est_fev}, \code{est_z0d}
-#' - \code{lower_col} ← \code{cll_p68} or \code{cll_p95}
-#' - \code{upper_col} ← \code{clu_p68} or \code{clu_p95}
-#' - \code{group_col} ← indicator added after wide-to-long reshape
+#' - \code{lower_col} <- \code{cll_p68} or \code{cll_p95}
+#' - \code{upper_col} <- \code{clu_p68} or \code{clu_p95}
+#' - \code{group_col} <- indicator added after wide-to-long reshape
 #'
 #' @param curve_data  Data frame; one row per (time, group) combination.
 #' @param x_col       Name of the x-axis column. Default \code{"time"}.

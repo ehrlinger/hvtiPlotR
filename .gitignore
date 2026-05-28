@@ -23,7 +23,7 @@ docs
 hvtiPlotR.Rproj
 
 .claude
-.Rcheck*
+*.Rcheck/
 .Rproj.user
 .Rhistory
 .RData
@@ -31,3 +31,5 @@ hvtiPlotR.Rproj
 /Meta/
 .fuse_hidden*
 .positai
+Rplots.pdf
+*.tar.gz
