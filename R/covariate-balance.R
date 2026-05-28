@@ -22,8 +22,7 @@ cb_validate_params <- function(threshold, point_size, hline_linewidth,
 }
 
 #' @importFrom rlang .data
-#' @importFrom ggplot2 ggplot aes geom_vline geom_hline geom_point
-#'   scale_y_continuous
+#' @importFrom ggplot2 ggplot aes geom_vline geom_hline geom_point scale_y_continuous
 cb_build_plot <- function(data, std_diff_col, group_col, var_levels,
                           threshold, point_size, alpha,
                           hline_linetype, hline_linewidth,
@@ -234,8 +233,7 @@ print.hv_balance <- function(x, ...) {
 #'   ggplot2::labs(x = "Standardized difference (%)", y = "") +
 #'   theme_hv_poster()
 #'
-#' @importFrom ggplot2 ggplot aes geom_vline geom_hline geom_point
-#'   scale_y_continuous
+#' @importFrom ggplot2 ggplot aes geom_vline geom_hline geom_point scale_y_continuous
 #' @export
 plot.hv_balance <- function(x,
                               point_size         = 3,

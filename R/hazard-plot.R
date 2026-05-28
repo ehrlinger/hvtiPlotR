@@ -101,15 +101,15 @@
 #' with `PROC LIFEREG`.
 #'
 #' **SAS column mapping:**
-#' - `time`         ← `YEARS` / `iv_dead` (prediction grid)
-#' - `survival`     ← `SSURVIV` (predicted survival, 0–100 %)
-#' - `surv_lower`   ← `SCLLSURV` (lower confidence limit on survival)
-#' - `surv_upper`   ← `SCLUSURV` (upper confidence limit on survival)
-#' - `hazard`       ← predicted hazard rate (%/year)
-#' - `haz_lower`    ← lower confidence limit on hazard
-#' - `haz_upper`    ← upper confidence limit on hazard
-#' - `cumhaz`       ← cumulative hazard (%; corresponds to `-log(S)*100`)
-#' - `group`        ← group stratification variable (when `groups` is not `NULL`)
+#' - `time`         <- `YEARS` / `iv_dead` (prediction grid)
+#' - `survival`     <- `SSURVIV` (predicted survival, 0–100 %)
+#' - `surv_lower`   <- `SCLLSURV` (lower confidence limit on survival)
+#' - `surv_upper`   <- `SCLUSURV` (upper confidence limit on survival)
+#' - `hazard`       <- predicted hazard rate (%/year)
+#' - `haz_lower`    <- lower confidence limit on hazard
+#' - `haz_upper`    <- upper confidence limit on hazard
+#' - `cumhaz`       <- cumulative hazard (%; corresponds to `-log(S)*100`)
+#' - `group`        <- group stratification variable (when `groups` is not `NULL`)
 #'
 #' @param n        Number of patients used to scale confidence-limit width.
 #'   Default `500`.
@@ -123,7 +123,7 @@
 #'   (late mortality); `shape < 1` gives decreasing hazard (early operative
 #'   mortality). Default `1.5`.
 #' @param scale    Weibull scale parameter (characteristic time in years, i.e.
-#'   the time at which `S = exp(-1) ≈ 37%`). Default `8.0`.
+#'   the time at which `S = exp(-1)` \eqn{\approx} 37%). Default `8.0`.
 #' @param ci_level Confidence level for the CI bands. Default `0.95`.
 #' @param seed     Random seed (unused for deterministic Weibull predictions;
 #'   kept for API consistency with other sample functions). Default `42`.
@@ -201,11 +201,11 @@ sample_hazard_data <- function(n        = 500,
 #' overlay in `tp.hp.dead.sas` and related templates.
 #'
 #' **SAS column mapping:**
-#' - `time`     ← `IV_DEAD` / `iv_dead` (evaluation time points)
-#' - `estimate` ← `CUM_SURV` (KM survival estimate, 0–100 %)
-#' - `lower`    ← `CL_LOWER` (lower 95 % CI)
-#' - `upper`    ← `CL_UPPER` (upper 95 % CI)
-#' - `group`    ← stratification variable (when `groups` is not `NULL`)
+#' - `time`     <- `IV_DEAD` / `iv_dead` (evaluation time points)
+#' - `estimate` <- `CUM_SURV` (KM survival estimate, 0–100 %)
+#' - `lower`    <- `CL_LOWER` (lower 95 % CI)
+#' - `upper`    <- `CL_UPPER` (upper 95 % CI)
+#' - `group`    <- stratification variable (when `groups` is not `NULL`)
 #'
 #' @param n        Number of simulated patients. Default `500`.
 #' @param time_max Upper end of the follow-up window (years). Default `10`.
@@ -268,9 +268,9 @@ sample_hazard_empirical <- function(n        = 500,
 #' `tp.hp.dead.uslife.stratifed.sas`.
 #'
 #' **SAS column mapping:**
-#' - `time`     ← prediction time grid (years)
-#' - `survival` ← `SMATCHED` (age-group-specific survivorship, 0–100 %)
-#' - `group`    ← age group label (e.g. `"<65"`, `"65-80"`, `"\u226580"`)
+#' - `time`     <- prediction time grid (years)
+#' - `survival` <- `SMATCHED` (age-group-specific survivorship, 0–100 %)
+#' - `group`    <- age group label (e.g. `"<65"`, `"65-80"`, `"\u226580"`)
 #'
 #' @param age_groups Character vector of age group labels. Default
 #'   `c("<65", "65-80", "\u226580")`.
@@ -284,7 +284,7 @@ sample_hazard_empirical <- function(n        = 500,
 #' @seealso [hv_hazard()], [sample_hazard_data()]
 #'
 #' @examples
-#' # Default: three age groups (<65, 65-80, ≥80) using Gompertz mortality
+#' # Default: three age groups (<65, 65-80, 80+) using Gompertz mortality
 #' lt <- sample_life_table(time_max = 10)
 #' head(lt)
 #' nlevels(lt$group)    # 3 age groups
@@ -298,10 +298,12 @@ sample_hazard_empirical <- function(n        = 500,
 #' )
 #' levels(lt2$group)
 #' @export
-sample_life_table <- function(age_groups = c("<65", "65-80", "\u226580"),
+sample_life_table <- function(age_groups = NULL,
                                age_mids   = c(55, 72, 85),
                                time_max   = 10,
                                n_points   = 100) {
+  if (is.null(age_groups))
+    age_groups <- c("<65", "65-80", "\u226580")
   if (length(age_groups) != length(age_mids))
     stop("`age_groups` and `age_mids` must have the same length.", call. = FALSE)
 
@@ -335,12 +337,12 @@ sample_life_table <- function(age_groups = c("<65", "65-80", "\u226580"),
 #' `tp.hp.dead.life-gained.sas`.
 #'
 #' **SAS column mapping:**
-#' - `time`        ← prediction grid
-#' - `difference`  ← survival(group 2) - survival(group 1) (percentage points)
-#' - `diff_lower`  ← lower CI on difference
-#' - `diff_upper`  ← upper CI on difference
-#' - `group1_surv` ← survival curve for group 1
-#' - `group2_surv` ← survival curve for group 2
+#' - `time`        <- prediction grid
+#' - `difference`  <- survival(group 2) - survival(group 1) (percentage points)
+#' - `diff_lower`  <- lower CI on difference
+#' - `diff_upper`  <- upper CI on difference
+#' - `group1_surv` <- survival curve for group 1
+#' - `group2_surv` <- survival curve for group 2
 #'
 #' @param n        Number of patients per group (used for CI width). Default `500`.
 #' @param time_max Upper end of the time axis (years). Default `10`.
@@ -414,11 +416,11 @@ sample_survival_difference_data <- function(n        = 500,
 #' of `tp.hp.numtreat.survdiff.matched.sas`.
 #'
 #' **SAS column mapping:**
-#' - `time`      ← prediction grid (years)
-#' - `arr`       ← absolute risk reduction (survival difference, %)
-#' - `arr_lower` / `arr_upper` ← CI on ARR
-#' - `nnt`       ← number needed to treat (= 100 / ARR)
-#' - `nnt_lower` / `nnt_upper` ← CI on NNT (inverted from ARR CI)
+#' - `time`      <- prediction grid (years)
+#' - `arr`       <- absolute risk reduction (survival difference, %)
+#' - `arr_lower` / `arr_upper` <- CI on ARR
+#' - `nnt`       <- number needed to treat (= 100 / ARR)
+#' - `nnt_lower` / `nnt_upper` <- CI on NNT (inverted from ARR CI)
 #'
 #' @inheritParams sample_survival_difference_data
 #'
@@ -494,13 +496,13 @@ sample_nnt_data <- function(n        = 500,
 #' | Age as x-axis (tp.hp.dead.age_on_horizontal_axis.sas) | `x_col="age"` |
 #'
 #' **SAS column mapping:**
-#' - `x_col`          ← `YEARS` / `iv_dead`
-#' - `estimate_col`   ← `SSURVIV` (survival), `hazard` (%/yr), or `cumhaz`
-#' - `lower_col`      ← `SCLLSURV` / `cll_p95`
-#' - `upper_col`      ← `SCLUSURV` / `clu_p95`
-#' - `group_col`      ← treatment/group indicator variable
-#' - `empirical`      ← the `plout` / `acpdms` KM output dataset
-#' - `reference`      ← the `smatched` life-table dataset
+#' - `x_col`          <- `YEARS` / `iv_dead`
+#' - `estimate_col`   <- `SSURVIV` (survival), `hazard` (%/yr), or `cumhaz`
+#' - `lower_col`      <- `SCLLSURV` / `cll_p95`
+#' - `upper_col`      <- `SCLUSURV` / `clu_p95`
+#' - `group_col`      <- treatment/group indicator variable
+#' - `empirical`      <- the `plout` / `acpdms` KM output dataset
+#' - `reference`      <- the `smatched` life-table dataset
 #'
 #' Returns a **bare ggplot object**; compose with `scale_colour_*`,
 #' `scale_y_continuous()`, `labs()`, [theme_hv_manuscript()].
@@ -1163,7 +1165,7 @@ survival_difference_plot <- function(diff_data,
 #' @param estimate_col Name of the NNT column. Default `"nnt"`.
 #' @param lower_col    Name of the lower CI column, or `NULL`. Default `NULL`.
 #' @param upper_col    Name of the upper CI column, or `NULL`. Default `NULL`.
-#' @param na_rm        Remove `NA` NNT values (undefined when ARR ≈ 0) before
+#' @param na_rm        Remove `NA` NNT values (undefined when ARR \eqn{\approx} 0) before
 #'   plotting. Default `TRUE`.
 #' @param ci_alpha     Transparency of the CI ribbon. Default `0.20`.
 #' @param line_width   Line width. Default `1.0`.

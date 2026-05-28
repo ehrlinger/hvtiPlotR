@@ -47,11 +47,11 @@ overlay in \code{tp.hp.dead.sas} and related templates.
 \details{
 \strong{SAS column mapping:}
 \itemize{
-\item \code{time}     ← \code{IV_DEAD} / \code{iv_dead} (evaluation time points)
-\item \code{estimate} ← \code{CUM_SURV} (KM survival estimate, 0–100 \%)
-\item \code{lower}    ← \code{CL_LOWER} (lower 95 \% CI)
-\item \code{upper}    ← \code{CL_UPPER} (upper 95 \% CI)
-\item \code{group}    ← stratification variable (when \code{groups} is not \code{NULL})
+\item \code{time}     <- \code{IV_DEAD} / \code{iv_dead} (evaluation time points)
+\item \code{estimate} <- \code{CUM_SURV} (KM survival estimate, 0–100 \%)
+\item \code{lower}    <- \code{CL_LOWER} (lower 95 \% CI)
+\item \code{upper}    <- \code{CL_UPPER} (upper 95 \% CI)
+\item \code{group}    <- stratification variable (when \code{groups} is not \code{NULL})
 }
 }
 \examples{

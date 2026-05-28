@@ -47,10 +47,10 @@ colour scales and \code{\link{theme_hv_manuscript}}.
 \details{
 \strong{SAS column mapping (\code{predict} dataset after averaging):}
 \itemize{
-\item \code{time} ← \code{iv_echo} (or \code{iv_wristm})
-\item \code{estimate} ← one of \code{p0}, \code{p1}, \code{p2}, \code{p3}
+\item \code{time} <- \code{iv_echo} (or \code{iv_wristm})
+\item \code{estimate} <- one of \code{p0}, \code{p1}, \code{p2}, \code{p3}
 (individual grade probs, after wide-to-long reshape)
-\item \code{grade} ← a new column created during the reshape
+\item \code{grade} <- a new column created during the reshape
 }
 }
 \examples{

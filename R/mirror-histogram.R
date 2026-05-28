@@ -622,8 +622,8 @@ sample_mirror_histogram_data <- function(n          = 500,
   set.seed(seed)
 
   # Logistic propensity score model.
-  # Control LP ~ N(-sep/2, 1) → scores cluster below 0.5.
-  # Treated LP ~ N(+sep/2, 1) → scores cluster above 0.5.
+  # Control LP ~ N(-sep/2, 1) -> scores cluster below 0.5.
+  # Treated LP ~ N(+sep/2, 1) -> scores cluster above 0.5.
   # The further a patient sits from 0.5, the fewer matching partners exist.
   ps_ctrl <- stats::plogis(stats::rnorm(n, mean = -separation / 2, sd = 1))
   ps_trt  <- stats::plogis(stats::rnorm(n, mean =  separation / 2, sd = 1))

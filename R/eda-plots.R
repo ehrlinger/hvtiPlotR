@@ -378,8 +378,7 @@ print.hv_eda <- function(x, ...) {
 #'                     size = 3, colour = "grey40", fontface = "italic") +
 #'   theme_hv_poster()
 #'
-#' @importFrom ggplot2 ggplot aes geom_point geom_smooth geom_rug geom_bar
-#'   scale_y_continuous labs
+#' @importFrom ggplot2 ggplot aes geom_point geom_smooth geom_rug geom_bar scale_y_continuous labs
 #' @importFrom rlang .data
 #' @export
 plot.hv_eda <- function(x,

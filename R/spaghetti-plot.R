@@ -243,8 +243,7 @@ print.hv_spaghetti <- function(x, ...) {
 #' # See vignette("plot-decorators", package = "hvtiPlotR") for theming,
 #' # colour scales, annotation labels, and saving plots.
 #'
-#' @importFrom ggplot2 ggplot aes geom_line geom_smooth scale_colour_identity
-#'   scale_y_continuous
+#' @importFrom ggplot2 ggplot aes geom_line geom_smooth scale_colour_identity scale_y_continuous
 #' @importFrom rlang .data
 #' @export
 plot.hv_spaghetti <- function(x,

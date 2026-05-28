@@ -68,11 +68,11 @@ Covers the full range of \code{tp.np.*} SAS templates:\tabular{ll}{
 
 \strong{SAS column mapping:}
 \itemize{
-\item \code{estimate_col} ← \code{prev}, \code{mnprev}, \code{_p_},
+\item \code{estimate_col} <- \code{prev}, \code{mnprev}, \code{_p_},
 \code{est_fev}, \code{est_z0d}
-\item \code{lower_col} ← \code{cll_p68} or \code{cll_p95}
-\item \code{upper_col} ← \code{clu_p68} or \code{clu_p95}
-\item \code{group_col} ← indicator added after wide-to-long reshape
+\item \code{lower_col} <- \code{cll_p68} or \code{cll_p95}
+\item \code{upper_col} <- \code{clu_p68} or \code{clu_p95}
+\item \code{group_col} <- indicator added after wide-to-long reshape
 }
 }
 \examples{
