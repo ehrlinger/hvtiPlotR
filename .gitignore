@@ -23,7 +23,7 @@ docs
 hvtiPlotR.Rproj
 
 .claude
-.Rcheck*
+*.Rcheck/
 .Rproj.user
 .Rhistory
 .RData
