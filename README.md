@@ -69,9 +69,10 @@ p + theme_hv_poster()       # poster
 The two PPT themes default to **Arial 32 Bold** axis tick labels and **Arial 40
 Bold** axis titles, matching the standard CORR slide deck.
 
-> The old `hv_theme("...")` dispatcher and its aliases (`theme_man()`,
-> `theme_ppt()`, `theme_dark_ppt()`, `theme_light_ppt()`, …) still work but are
-> **deprecated** — prefer the `theme_hv_*()` names above.
+> The earlier alias functions — `theme_man()`, `theme_ppt()`, `theme_dark_ppt()`,
+> `theme_light_ppt()`, `theme_poster()`, and the `hv_theme_*()` family — still
+> work but are **deprecated** (one-time warning); prefer the `theme_hv_*()` names
+> above. The old `hv_theme("...")` string dispatcher has been removed.
 
 ## Plot Function Gallery
 
