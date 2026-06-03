@@ -3027,7 +3027,7 @@ ggsave(here::here("graphs", "np_afib_prevalence.pdf"),
 
 # Editable PowerPoint
 save_ppt(p_np,
-         template   = system.file("ClevelandClinic.pptx", package = "hvtiPlotR"),
+         template   = system.file("extdata", "hv_ppt_template.pptx", package = "hvtiPlotR"),
          powerpoint = here::here("graphs", "np_afib_prevalence.pptx"))
 ```
 
@@ -3356,7 +3356,7 @@ ggsave(here::here("graphs", "longitudinal_participation.pdf"),
 
 # PowerPoint (bar chart only — patchwork composites may need ggsave first)
 save_ppt(p_lc_bar,
-         template   = system.file("ClevelandClinic.pptx", package = "hvtiPlotR"),
+         template   = system.file("extdata", "hv_ppt_template.pptx", package = "hvtiPlotR"),
          powerpoint = here::here("graphs", "longitudinal_participation.pptx"))
 ```
 

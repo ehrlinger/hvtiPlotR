@@ -34,42 +34,58 @@ library(hvtiPlotR)
 
 ggplot(mtcars, aes(wt, mpg, colour = factor(cyl))) +
   geom_point() +
-  hv_theme("manuscript")
+  theme_hv_manuscript()
 ```
 
-Export the result directly to an editable PowerPoint slide:
+Export the result directly to an editable PowerPoint slide. A small dark
+CORR template ships with the package, so you can save without supplying
+your own:
 
 ``` r
 
-p <- ggplot(mtcars, aes(wt, mpg)) + geom_point() + hv_theme("ppt")
+p <- ggplot(mtcars, aes(wt, mpg)) + geom_point() + theme_hv_ppt_dark()
 
 save_ppt(
   object     = p,
-  template   = system.file("ClevelandClinic.pptx", package = "hvtiPlotR"),
+  template   = system.file("extdata", "hv_ppt_template.pptx", package = "hvtiPlotR"),
   powerpoint = "outputs/figure1.pptx"
 )
 ```
 
 ## Themes
 
-Use `hv_theme()` to apply any supported style, or call the named aliases
-directly:
+Four themes cover the publication contexts we use. Each follows the
+[`theme_bw()`](https://ggplot2.tidyverse.org/reference/ggtheme.html)
+contract — pass `base_size` / `base_family`, or chain `+ theme(...)`, to
+override anything:
 
-| Style key | Alias(es) | Best for |
-|----|----|----|
-| `"manuscript"` | [`theme_manuscript()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md), [`theme_man()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md) | Journal figures, white background |
-| `"ppt"` / `"dark_ppt"` | [`theme_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md), [`theme_dark_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md) | Dark-background PowerPoint slides |
-| `"light_ppt"` | [`theme_light_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md) | Light/transparent PowerPoint slides |
-| `"poster"` | [`theme_poster()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md) | Conference posters |
+| Theme | Best for |
+|----|----|
+| [`theme_hv_manuscript()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md) | Journal figures, white background |
+| [`theme_hv_poster()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md) | Conference posters |
+| [`theme_hv_ppt_dark()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md) | Dark-background PowerPoint slides (black panel, white text) |
+| [`theme_hv_ppt_light()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md) | Light/transparent PowerPoint slides |
 
 ``` r
 
-p + hv_theme("manuscript")   # via generic
-p + theme_man()                # direct alias
-p + hv_theme("ppt")          # dark PPT
-p + hv_theme("light_ppt")    # light PPT
-p + hv_theme("poster")       # poster
+p + theme_hv_manuscript()   # journal figure
+p + theme_hv_ppt_dark()     # dark PPT slide
+p + theme_hv_ppt_light()    # light PPT slide
+p + theme_hv_poster()       # poster
 ```
+
+The two PPT themes default to **Arial 32 Bold** axis tick labels and
+**Arial 40 Bold** axis titles, matching the standard CORR slide deck.
+
+> The earlier alias functions —
+> [`theme_man()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md),
+> [`theme_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md),
+> [`theme_dark_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md),
+> [`theme_light_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md),
+> [`theme_poster()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md),
+> and the `hv_theme_*()` family — still work but are **deprecated**
+> (one-time warning); prefer the `theme_hv_*()` names above. The old
+> `hv_theme("...")` string dispatcher has been removed.
 
 ## Plot Function Gallery
 
@@ -84,7 +100,7 @@ and a theme with the usual `+` operator.
 ``` r
 
 km <- hv_survival(sample_survival_data())
-plot(km) + hv_theme("manuscript")
+plot(km) + theme_hv_manuscript()
 km$tables$risk                         # risk-table data frame
 ```
 
@@ -100,7 +116,7 @@ km$tables$risk                         # risk-table data frame
 
 mh <- hv_mirror_hist(sample_mirror_histogram_data(n = 2000),
                   group_labels = c("SAVR", "TF-TAVR"))
-plot(mh) + hv_theme("manuscript")
+plot(mh) + theme_hv_manuscript()
 ```
 
 ### Survival & Time-to-Event
@@ -136,8 +152,8 @@ plot(mh) + hv_theme("manuscript")
 
 | Function | Description |
 |----|----|
-| `hv_theme(style)` | Generic dispatcher returning the named ggplot2 theme |
-| [`save_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/save_ppt.md) | Export a ggplot to an editable PowerPoint slide using an HVI template; optional `panel_box = list(width = ..., height = ..., left = ..., top = ...)` anchors the panel content area to the same slide coordinates on every slide |
+| [`theme_hv_manuscript()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md) / [`theme_hv_poster()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md) / [`theme_hv_ppt_dark()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md) / [`theme_hv_ppt_light()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md) | The four publication themes — see [Themes](#themes) |
+| [`save_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/save_ppt.md) | Export a ggplot to an editable PowerPoint slide using an HVI template; `panel_box = list(width = ..., height = ..., left = ..., top = ...)` (on by default) anchors the panel content area to the same slide coordinates on every slide |
 | [`hv_ggsave_dims()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_ggsave_dims.md) | Compute [`ggsave()`](https://ggplot2.tidyverse.org/reference/ggsave.html) `width`/`height` that preserve a target panel content area regardless of axis-label, legend, or title size |
 | [`hv_ph_location()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_ph_location.md) | Compute [`officer::ph_location()`](https://davidgohel.github.io/officer/reference/ph_location.html) args so a ggplot’s panel lands at a fixed slide rectangle — the per-slide worker that `save_ppt(panel_box=)` calls |
 | [`make_footnote()`](https://ehrlinger.github.io/hvtiPlotR/reference/make_footnote.md) | Add a footnote annotation to the current figure |

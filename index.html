@@ -95,67 +95,58 @@
 <span></span>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">wt</span>, <span class="va">mpg</span>, colour <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">cyl</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">hv_theme</span><span class="op">(</span><span class="st">"manuscript"</span><span class="op">)</span></span></code></pre></div>
-<p>Export the result directly to an editable PowerPoint slide:</p>
+<span>  <span class="fu"><a href="reference/hvtiPlotR-themes.html">theme_hv_manuscript</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<p>Export the result directly to an editable PowerPoint slide. A small dark CORR template ships with the package, so you can save without supplying your own:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">wt</span>, <span class="va">mpg</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu">hv_theme</span><span class="op">(</span><span class="st">"ppt"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">wt</span>, <span class="va">mpg</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="reference/hvtiPlotR-themes.html">theme_hv_ppt_dark</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="reference/save_ppt.html">save_ppt</a></span><span class="op">(</span></span>
 <span>  object     <span class="op">=</span> <span class="va">p</span>,</span>
-<span>  template   <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"ClevelandClinic.pptx"</span>, package <span class="op">=</span> <span class="st">"hvtiPlotR"</span><span class="op">)</span>,</span>
+<span>  template   <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"hv_ppt_template.pptx"</span>, package <span class="op">=</span> <span class="st">"hvtiPlotR"</span><span class="op">)</span>,</span>
 <span>  powerpoint <span class="op">=</span> <span class="st">"outputs/figure1.pptx"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="themes">Themes<a class="anchor" aria-label="anchor" href="#themes"></a>
 </h2>
-<p>Use <code>hv_theme()</code> to apply any supported style, or call the named aliases directly:</p>
+<p>Four themes cover the publication contexts we use. Each follows the <code><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw()</a></code> contract — pass <code>base_size</code> / <code>base_family</code>, or chain <code>+ theme(...)</code>, to override anything:</p>
 <table class="table">
 <colgroup>
-<col width="33%">
-<col width="33%">
-<col width="33%">
+<col width="50%">
+<col width="50%">
 </colgroup>
 <thead><tr>
-<th>Style key</th>
-<th>Alias(es)</th>
+<th>Theme</th>
 <th>Best for</th>
 </tr></thead>
 <tbody>
 <tr>
-<td><code>"manuscript"</code></td>
-<td>
-<code><a href="reference/hvtiPlotR-themes.html">theme_manuscript()</a></code>, <code><a href="reference/hvtiPlotR-themes.html">theme_man()</a></code>
-</td>
+<td><code><a href="reference/hvtiPlotR-themes.html">theme_hv_manuscript()</a></code></td>
 <td>Journal figures, white background</td>
 </tr>
 <tr>
-<td>
-<code>"ppt"</code> / <code>"dark_ppt"</code>
-</td>
-<td>
-<code><a href="reference/hvtiPlotR-themes.html">theme_ppt()</a></code>, <code><a href="reference/hvtiPlotR-themes.html">theme_dark_ppt()</a></code>
-</td>
-<td>Dark-background PowerPoint slides</td>
-</tr>
-<tr>
-<td><code>"light_ppt"</code></td>
-<td><code><a href="reference/hvtiPlotR-themes.html">theme_light_ppt()</a></code></td>
-<td>Light/transparent PowerPoint slides</td>
-</tr>
-<tr>
-<td><code>"poster"</code></td>
-<td><code><a href="reference/hvtiPlotR-themes.html">theme_poster()</a></code></td>
+<td><code><a href="reference/hvtiPlotR-themes.html">theme_hv_poster()</a></code></td>
 <td>Conference posters</td>
+</tr>
+<tr>
+<td><code><a href="reference/hvtiPlotR-themes.html">theme_hv_ppt_dark()</a></code></td>
+<td>Dark-background PowerPoint slides (black panel, white text)</td>
+</tr>
+<tr>
+<td><code><a href="reference/hvtiPlotR-themes.html">theme_hv_ppt_light()</a></code></td>
+<td>Light/transparent PowerPoint slides</td>
 </tr>
 </tbody>
 </table>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">p</span> <span class="op">+</span> <span class="fu">hv_theme</span><span class="op">(</span><span class="st">"manuscript"</span><span class="op">)</span>   <span class="co"># via generic</span></span>
-<span><span class="va">p</span> <span class="op">+</span> <span class="fu"><a href="reference/hvtiPlotR-themes.html">theme_man</a></span><span class="op">(</span><span class="op">)</span>                <span class="co"># direct alias</span></span>
-<span><span class="va">p</span> <span class="op">+</span> <span class="fu">hv_theme</span><span class="op">(</span><span class="st">"ppt"</span><span class="op">)</span>          <span class="co"># dark PPT</span></span>
-<span><span class="va">p</span> <span class="op">+</span> <span class="fu">hv_theme</span><span class="op">(</span><span class="st">"light_ppt"</span><span class="op">)</span>    <span class="co"># light PPT</span></span>
-<span><span class="va">p</span> <span class="op">+</span> <span class="fu">hv_theme</span><span class="op">(</span><span class="st">"poster"</span><span class="op">)</span>       <span class="co"># poster</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">p</span> <span class="op">+</span> <span class="fu"><a href="reference/hvtiPlotR-themes.html">theme_hv_manuscript</a></span><span class="op">(</span><span class="op">)</span>   <span class="co"># journal figure</span></span>
+<span><span class="va">p</span> <span class="op">+</span> <span class="fu"><a href="reference/hvtiPlotR-themes.html">theme_hv_ppt_dark</a></span><span class="op">(</span><span class="op">)</span>     <span class="co"># dark PPT slide</span></span>
+<span><span class="va">p</span> <span class="op">+</span> <span class="fu"><a href="reference/hvtiPlotR-themes.html">theme_hv_ppt_light</a></span><span class="op">(</span><span class="op">)</span>    <span class="co"># light PPT slide</span></span>
+<span><span class="va">p</span> <span class="op">+</span> <span class="fu"><a href="reference/hvtiPlotR-themes.html">theme_hv_poster</a></span><span class="op">(</span><span class="op">)</span>       <span class="co"># poster</span></span></code></pre></div>
+<p>The two PPT themes default to <strong>Arial 32 Bold</strong> axis tick labels and <strong>Arial 40 Bold</strong> axis titles, matching the standard CORR slide deck.</p>
+<blockquote>
+<p>The earlier alias functions — <code><a href="reference/hvtiPlotR-themes.html">theme_man()</a></code>, <code><a href="reference/hvtiPlotR-themes.html">theme_ppt()</a></code>, <code><a href="reference/hvtiPlotR-themes.html">theme_dark_ppt()</a></code>, <code><a href="reference/hvtiPlotR-themes.html">theme_light_ppt()</a></code>, <code><a href="reference/hvtiPlotR-themes.html">theme_poster()</a></code>, and the <code>hv_theme_*()</code> family — still work but are <strong>deprecated</strong> (one-time warning); prefer the <code>theme_hv_*()</code> names above. The old <code>hv_theme("...")</code> string dispatcher has been removed.</p>
+</blockquote>
 </div>
 <div class="section level2">
 <h2 id="plot-function-gallery">Plot Function Gallery<a class="anchor" aria-label="anchor" href="#plot-function-gallery"></a>
@@ -163,7 +154,7 @@
 <p><strong>hvtiPlotR 2.0 uses a two-step API.</strong> A constructor (<code>hv_*()</code>) shapes the data and returns an S3 object; <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code> renders a bare <code>ggplot</code>. Add <code>scale_*</code>, <code><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs()</a></code>, <code><a href="https://ggplot2.tidyverse.org/reference/annotate.html" class="external-link">annotate()</a></code>, and a theme with the usual <code>+</code> operator.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">km</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/hv_survival.html">hv_survival</a></span><span class="op">(</span><span class="fu"><a href="reference/sample_survival_data.html">sample_survival_data</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">km</span><span class="op">)</span> <span class="op">+</span> <span class="fu">hv_theme</span><span class="op">(</span><span class="st">"manuscript"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">km</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="reference/hvtiPlotR-themes.html">theme_hv_manuscript</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">km</span><span class="op">$</span><span class="va">tables</span><span class="op">$</span><span class="va">risk</span>                         <span class="co"># risk-table data frame</span></span></code></pre></div>
 <div class="section level3">
 <h3 id="propensity-score--balance">Propensity Score &amp; Balance<a class="anchor" aria-label="anchor" href="#propensity-score--balance"></a>
@@ -195,7 +186,7 @@
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mh</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/hv_mirror_hist.html">hv_mirror_hist</a></span><span class="op">(</span><span class="fu"><a href="reference/sample_mirror_histogram_data.html">sample_mirror_histogram_data</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">2000</span><span class="op">)</span>,</span>
 <span>                  group_labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"SAVR"</span>, <span class="st">"TF-TAVR"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">mh</span><span class="op">)</span> <span class="op">+</span> <span class="fu">hv_theme</span><span class="op">(</span><span class="st">"manuscript"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">mh</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="reference/hvtiPlotR-themes.html">theme_hv_manuscript</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="survival--time-to-event">Survival &amp; Time-to-Event<a class="anchor" aria-label="anchor" href="#survival--time-to-event"></a>
@@ -317,12 +308,15 @@
 </tr></thead>
 <tbody>
 <tr>
-<td><code>hv_theme(style)</code></td>
-<td>Generic dispatcher returning the named ggplot2 theme</td>
+<td>
+<code><a href="reference/hvtiPlotR-themes.html">theme_hv_manuscript()</a></code> / <code><a href="reference/hvtiPlotR-themes.html">theme_hv_poster()</a></code> / <code><a href="reference/hvtiPlotR-themes.html">theme_hv_ppt_dark()</a></code> / <code><a href="reference/hvtiPlotR-themes.html">theme_hv_ppt_light()</a></code>
+</td>
+<td>The four publication themes — see <a href="#themes">Themes</a>
+</td>
 </tr>
 <tr>
 <td><code><a href="reference/save_ppt.html">save_ppt()</a></code></td>
-<td>Export a ggplot to an editable PowerPoint slide using an HVI template; optional <code>panel_box = list(width = ..., height = ..., left = ..., top = ...)</code> anchors the panel content area to the same slide coordinates on every slide</td>
+<td>Export a ggplot to an editable PowerPoint slide using an HVI template; <code>panel_box = list(width = ..., height = ..., left = ..., top = ...)</code> (on by default) anchors the panel content area to the same slide coordinates on every slide</td>
 </tr>
 <tr>
 <td><code><a href="reference/hv_ggsave_dims.html">hv_ggsave_dims()</a></code></td>

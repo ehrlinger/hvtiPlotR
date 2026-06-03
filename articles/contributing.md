@@ -423,7 +423,7 @@ directories you will touch most are `R/` (one file per plot family) and
     ├── tests/
     │   └── testthat/         # One test_*.R per source file
     ├── vignettes/            # Quarto (.qmd) vignettes
-    ├── inst/                 # Bundled files (ClevelandClinic.pptx, extdata/)
+    ├── inst/                 # Bundled files (extdata/, incl. hv_ppt_template.pptx)
     ├── DESCRIPTION           # Package metadata and dependency declarations
     ├── NAMESPACE             # Auto-generated — do not edit manually
     ├── _pkgdown.yml          # Website reference and articles layout
@@ -578,8 +578,9 @@ Vignettes live in `vignettes/` as `.qmd` files; Quarto builds them
   have `#| eval: false`.
 - Use [`here::here()`](https://here.r-lib.org/reference/here.html) for
   file paths in eval-false chunks (not hard-coded absolute paths).
-- Use `system.file("ClevelandClinic.pptx", package = "hvtiPlotR")` for
-  the bundled PPT template — never a hard-coded path.
+- Use
+  `system.file("extdata", "hv_ppt_template.pptx", package = "hvtiPlotR")`
+  for the bundled PPT template — never a hard-coded path.
 - After adding a new vignette, register it in `_pkgdown.yml` under
   `articles`.
 

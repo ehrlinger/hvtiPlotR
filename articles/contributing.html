@@ -484,7 +484,7 @@
 ├── tests/
 │   └── testthat/         # One test_*.R per source file
 ├── vignettes/            # Quarto (.qmd) vignettes
-├── inst/                 # Bundled files (ClevelandClinic.pptx, extdata/)
+├── inst/                 # Bundled files (extdata/, incl. hv_ppt_template.pptx)
 ├── DESCRIPTION           # Package metadata and dependency declarations
 ├── NAMESPACE             # Auto-generated — do not edit manually
 ├── _pkgdown.yml          # Website reference and articles layout
@@ -631,7 +631,7 @@
 <ul>
 <li>All code chunks that read files, write files, or access a network must have <code>#| eval: false</code>.</li>
 <li>Use <code><a href="https://here.r-lib.org/reference/here.html" class="external-link">here::here()</a></code> for file paths in eval-false chunks (not hard-coded absolute paths).</li>
-<li>Use <code>system.file("ClevelandClinic.pptx", package = "hvtiPlotR")</code> for the bundled PPT template — never a hard-coded path.</li>
+<li>Use <code>system.file("extdata", "hv_ppt_template.pptx", package = "hvtiPlotR")</code> for the bundled PPT template — never a hard-coded path.</li>
 <li>After adding a new vignette, register it in <code>_pkgdown.yml</code> under <code>articles</code>.</li>
 </ul></section><section class="level2"><h3 id="releasing">Releasing a new version<a class="anchor" aria-label="anchor" href="#releasing"></a>
 </h3>

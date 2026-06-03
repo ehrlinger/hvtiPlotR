@@ -389,7 +389,7 @@ appends a new slide rather than overwriting the template.
 
 ``` r
 
-template <- system.file("ClevelandClinic.pptx", package = "hvtiPlotR")
+template <- system.file("extdata", "hv_ppt_template.pptx", package = "hvtiPlotR")
 
 p_ppt <- p_base +
   scale_colour_brewer(palette = "Set1", name = "Group") +

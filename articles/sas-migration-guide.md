@@ -1442,7 +1442,7 @@ first argument is `object` (not `plot`); the output path is `powerpoint`
 ``` r
 
 # Locate the bundled Cleveland Clinic slide template
-template <- system.file("ClevelandClinic.pptx", package = "hvtiPlotR")
+template <- system.file("extdata", "hv_ppt_template.pptx", package = "hvtiPlotR")
 
 # Single slide — apply a PPT theme before saving
 p_ppt <- p +
