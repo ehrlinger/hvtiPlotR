@@ -1,3 +1,18 @@
+# hvtiPlotR 2.3.3 (in development)
+
+## Bug fixes
+
+- `save_ppt()`: the white box behind plots is gone again. The earlier fix only
+  cleared the officer placeholder's fill; `rvg::dml()` still defaults to
+  `bg = "white"`, so the DrawingML graphic painted its own opaque white canvas
+  rectangle behind the (transparent) plot. Both `dml()` calls (plots and
+  consort diagrams) now pass `bg = "transparent"`, so the slide-template
+  background shows through cleanly on dark/blue decks.
+- `theme_hv_ppt_dark()` and `theme_hv_ppt_light()` now default to
+  `base_family = "Verdana"` and `base_size = 30`, so axis tick labels and axis
+  titles render as a consistent Verdana 30 across PPT decks. Override at the
+  call site as usual, e.g. `theme_hv_ppt_dark(base_size = 32)`.
+
 # hvtiPlotR 2.3.2
 
 ## Documentation (#70)

@@ -151,8 +151,8 @@ theme_hv_poster <- function(base_size      = 16,
 #' one at `base_size = 36` both feel proportionate without you touching
 #' the margins.
 #' @export
-theme_hv_ppt_dark <- function(base_size      = 32,
-                              base_family    = "",
+theme_hv_ppt_dark <- function(base_size      = 30,
+                              base_family    = "Verdana",
                               header_family  = NULL,
                               base_line_size = base_size / 22,
                               base_rect_size = base_size / 22,
@@ -199,8 +199,8 @@ theme_hv_ppt_dark <- function(base_size      = 32,
 
 #' @rdname hvtiPlotR-themes
 #' @export
-theme_hv_ppt_light <- function(base_size      = 32,
-                               base_family    = "",
+theme_hv_ppt_light <- function(base_size      = 30,
+                               base_family    = "Verdana",
                                header_family  = NULL,
                                base_line_size = base_size / 22,
                                base_rect_size = base_size / 22,

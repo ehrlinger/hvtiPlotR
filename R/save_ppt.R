@@ -50,9 +50,15 @@ suppress_officer_bg_warnings <- function(expr) {
 
 add_consort_slide <- function(doc, consort_obj, title, layout, master,
                                width, height, left, top) {
-  dml_obj <- rvg::dml(code = {
-    grid::grid.draw(consort::build_grid(consort_obj$plot))
-  })
+  # bg = "transparent" suppresses rvg's default opaque-white canvas
+  # rectangle (the "white box"); the slide template background then shows
+  # through any area outside the diagram. See add_plot_slide() for detail.
+  dml_obj <- rvg::dml(
+    code = {
+      grid::grid.draw(consort::build_grid(consort_obj$plot))
+    },
+    bg = "transparent"
+  )
 
   doc <- officer_safe_call(
     officer::add_slide(doc, layout = layout, master = master),
@@ -89,7 +95,13 @@ add_consort_slide <- function(doc, consort_obj, title, layout, master,
 
 add_plot_slide <- function(doc, plot, title, layout, master, width, height,
                            left, top) {
-  dml_obj <- rvg::dml(ggobj = plot)
+  # bg = "transparent" suppresses rvg::dml()'s default opaque-white canvas
+  # rectangle, which renders inside the DrawingML graphic as a full-extent
+  # white box behind the plot. Without it, a dark/blue slide template shows
+  # an opaque white rectangle around the (transparent) plot background. This
+  # is distinct from the ph_location(bg = "transparent") below, which clears
+  # the officer placeholder shape's fill; both white sources must be removed.
+  dml_obj <- rvg::dml(ggobj = plot, bg = "transparent")
 
   doc <- officer_safe_call(
     officer::add_slide(doc, layout = layout, master = master),
@@ -280,7 +292,7 @@ add_plot_slide <- function(doc, plot, title, layout, master, width, height,
 #' # (2.58", 1.29"). The panel content area lands at exactly that rectangle
 #' # on both slides; axis labels extend outside it as each plot requires.
 #' # The 2.58" left margin leaves room for a wide "99999.9"-style y-axis
-#' # label on dark PPT templates rendered at base_size = 32.
+#' # label on dark PPT templates rendered at base_size = 30.
 #' save_ppt(
 #'   object       = list(p_small, p_big),
 #'   template     = "graphs/RD-dark.pptx",

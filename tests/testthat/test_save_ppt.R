@@ -117,6 +117,58 @@ test_that("save_ppt runs without warnings (officer bg-namespace noise suppressed
   )
 })
 
+test_that("save_ppt renders a transparent dml canvas (no white box)", {
+  skip_if_not_installed("officer")
+  skip_if_not_installed("rvg")
+  skip_if_not_installed("xml2")
+
+  p             <- create_test_plot() + theme_hv_ppt_dark()
+  temp_template <- make_temp_template()
+  temp_ppt      <- tempfile(fileext = ".pptx")
+  ud            <- tempfile()
+  on.exit(unlink(c(temp_ppt, temp_template, ud), recursive = TRUE))
+
+  save_ppt(p, template = temp_template, powerpoint = temp_ppt)
+
+  dir.create(ud)
+  utils::unzip(temp_ppt, exdir = ud)
+  slides <- list.files(file.path(ud, "ppt", "slides"), "^slide[0-9]+\\.xml$",
+                       full.names = TRUE)
+
+  # The editable plot lives in a <p:grpSp> whose child extent (chExt) spans
+  # the full canvas. rvg::dml(bg = "white") -- the default -- adds a same-size
+  # opaque white <p:sp> rect behind everything: the "white box" reported
+  # against dark decks. bg = "transparent" drops it. Scan every slide and
+  # assert no full-canvas opaque white rect survives in any plot group.
+  white_canvas_in <- function(grp, ns) {
+    chext <- xml2::xml_find_first(grp, "./p:grpSpPr/a:xfrm/a:chExt", ns)
+    if (is.na(chext)) return(FALSE)
+    cx <- xml2::xml_attr(chext, "cx")
+    cy <- xml2::xml_attr(chext, "cy")
+    sps <- xml2::xml_find_all(grp, "./p:sp", ns)
+    any(vapply(sps, function(sp) {
+      ext  <- xml2::xml_find_first(sp, "./p:spPr/a:xfrm/a:ext", ns)
+      fill <- xml2::xml_find_first(sp, "./p:spPr/a:solidFill/a:srgbClr", ns)
+      if (is.na(ext) || is.na(fill)) return(FALSE)
+      alpha     <- xml2::xml_find_first(fill, "./a:alpha", ns)
+      full_size <- identical(xml2::xml_attr(ext, "cx"), cx) &&
+                   identical(xml2::xml_attr(ext, "cy"), cy)
+      white     <- identical(toupper(xml2::xml_attr(fill, "val")), "FFFFFF")
+      opaque    <- is.na(alpha) || xml2::xml_attr(alpha, "val") != "0"
+      full_size && white && opaque
+    }, logical(1)))
+  }
+
+  has_white_canvas <- any(vapply(slides, function(sl) {
+    doc <- xml2::read_xml(sl)
+    ns  <- xml2::xml_ns(doc)
+    grps <- xml2::xml_find_all(doc, ".//p:grpSp", ns)
+    any(vapply(grps, white_canvas_in, logical(1), ns = ns))
+  }, logical(1)))
+
+  expect_false(has_white_canvas)
+})
+
 test_that("save_ppt works with all hvtiPlotR themes", {
   skip_if_not_installed("officer")
   skip_if_not_installed("rvg")
