@@ -1775,7 +1775,7 @@ sessionInfo()
     [1] stats     graphics  grDevices utils     datasets  methods   base
 
     other attached packages:
-    [1] ggplot2_4.0.3   hvtiPlotR_2.3.2
+    [1] ggplot2_4.0.3   hvtiPlotR_2.3.3
 
     loaded via a namespace (and not attached):
      [1] generics_0.1.4          tidyr_1.3.2             fontLiberation_0.1.0
@@ -1792,7 +1792,7 @@ sessionInfo()
     [34] vctrs_0.7.3             R6_2.6.1                lifecycle_1.0.5
     [37] ragg_1.5.2              pkgconfig_2.0.3         pillar_1.11.1
     [40] gtable_0.3.6            glue_1.8.1              Rcpp_1.1.1-1.1
-    [43] systemfonts_1.3.2       xfun_0.57               rvg_0.4.2
+    [43] systemfonts_1.3.2       xfun_0.58               rvg_0.4.2
     [46] tibble_3.3.1            tidyselect_1.2.1        knitr_1.51
     [49] farver_2.1.2            htmltools_0.5.9         labeling_0.4.3
     [52] rmarkdown_2.31          ggalluvial_0.12.6       compiler_4.6.0

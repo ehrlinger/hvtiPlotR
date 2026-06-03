@@ -11,7 +11,7 @@ four publication contexts:"></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">hvtiPlotR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.3.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.3.3</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -91,7 +91,7 @@ four publication contexts:</p>
 <span></span>
 <span><span class="fu">theme_hv_ppt_dark</span><span class="op">(</span></span>
 <span>  base_size <span class="op">=</span> <span class="fl">32</span>,</span>
-<span>  base_family <span class="op">=</span> <span class="st">""</span>,</span>
+<span>  base_family <span class="op">=</span> <span class="st">"Arial"</span>,</span>
 <span>  header_family <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  base_line_size <span class="op">=</span> <span class="va">base_size</span><span class="op">/</span><span class="fl">22</span>,</span>
 <span>  base_rect_size <span class="op">=</span> <span class="va">base_size</span><span class="op">/</span><span class="fl">22</span>,</span>
@@ -103,7 +103,7 @@ four publication contexts:</p>
 <span></span>
 <span><span class="fu">theme_hv_ppt_light</span><span class="op">(</span></span>
 <span>  base_size <span class="op">=</span> <span class="fl">32</span>,</span>
-<span>  base_family <span class="op">=</span> <span class="st">""</span>,</span>
+<span>  base_family <span class="op">=</span> <span class="st">"Arial"</span>,</span>
 <span>  header_family <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  base_line_size <span class="op">=</span> <span class="va">base_size</span><span class="op">/</span><span class="fl">22</span>,</span>
 <span>  base_rect_size <span class="op">=</span> <span class="va">base_size</span><span class="op">/</span><span class="fl">22</span>,</span>
@@ -198,7 +198,7 @@ call to override anything else. Any extra named argument goes straight
 into a final <code><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">ggplot2::theme()</a></code> call; tweak elements at the call site
 without a separate <code>+</code> chain:</p>
 <p></p><div class="sourceCode"><pre><code><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">theme_hv_manuscript</span>(<span class="at">legend.position =</span> <span class="st">"right"</span>)</span>
-<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="fu">theme_hv_ppt_dark</span>(<span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">family =</span> <span class="st">"mono"</span>))</span></code></pre><p></p></div>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="fu">theme_hv_ppt_dark</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>))</span></code></pre><p></p></div>
 <p>Your elements override the hvtiPlotR defaults.</p>
 <p><code>theme_hv_ppt_dark()</code> is the default PPT theme: a black panel with white
 text suited to dark slide backgrounds. Use <code>theme_hv_ppt_light()</code> when the

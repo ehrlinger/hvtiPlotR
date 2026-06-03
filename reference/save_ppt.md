@@ -25,7 +25,7 @@ save_ppt(
   height = 5.8,
   left = 0,
   top = 1.2,
-  panel_box = NULL
+  panel_box = list(width = 8.88, height = 4.51, left = 2.58, top = 1.63)
 )
 ```
 
@@ -91,19 +91,31 @@ save_ppt(
 
 - panel_box:
 
-  Optional named list `list(width, height, left, top)` describing the
-  **panel content area** to anchor on every slide (in inches). When
-  supplied, per-plot slide placement is computed via
+  Named list `list(width, height, left, top)` describing the **panel
+  content area** to anchor on every slide (in inches). Per-plot slide
+  placement is computed via
   [`hv_ph_location()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_ph_location.md)
   so the panel lands at the same slide coordinates on every slide
-  regardless of axis-label width. When `NULL` (default), the fixed
-  `width`/`height`/`left`/`top` arguments are used for every slide
-  (legacy behavior). Ignored for `hv_consort` objects, which are always
-  placed using their own metadata dimensions.
+  regardless of axis-label width. Defaults to
+  `list(width = 8.88, height = 4.51, left = 2.58, top = 1.63)` — the
+  standard CORR fixed-panel rectangle for AATS-style dark decks. Pass
+  `panel_box = NULL` to fall back to the fixed `width`/`height`/`left`/
+  `top` arguments for every slide (legacy behavior). Ignored for
+  `hv_consort` objects, which are always placed using their own metadata
+  dimensions.
 
 ## Value
 
 Invisibly returns the path given by `powerpoint`.
+
+## Details
+
+The package ships a small dark-background test template derived from the
+canonical CORR deck (master, layouts, theme; no content slides). Use it
+to try `save_ppt()` without hunting for a template:
+
+    template <- system.file("extdata", "hv_ppt_template.pptx",
+                            package = "hvtiPlotR")
 
 ## See also
 
@@ -118,14 +130,23 @@ Invisibly returns the path given by `powerpoint`.
 if (FALSE) { # \dontrun{
 library(ggplot2)
 
-# Single plot — dark PPT theme matches a black-background slide
-p1 <- ggplot(mtcars, aes(x = wt, y = mpg)) +
+# ----------------------------------------------------------------------
+# Recommended workflow: preview with light, save with dark
+# ----------------------------------------------------------------------
+# Build the plot with theme_hv_ppt_light() so it renders crisply in the
+# RStudio viewer (black text/border on the IDE's white background) while
+# you iterate on scales and labels:
+p_preview <- ggplot(mtcars, aes(x = wt, y = mpg)) +
   geom_point() +
   labs(x = "Weight", y = "Miles per gallon", title = "Fuel economy") +
-  theme_hv_ppt_dark()
+  theme_hv_ppt_light()
+print(p_preview)            # interactive check
 
+# When the layout looks right, swap to theme_hv_ppt_dark() for the deck
+# (white text + black panel against a dark slide template) and save:
+p_slide <- p_preview + theme_hv_ppt_dark()
 save_ppt(
-  object       = p1,
+  object       = p_slide,
   template     = "graphs/RD.pptx",
   powerpoint   = "graphs/fuel_economy.pptx",
   slide_titles = "Fuel Economy by Weight"
@@ -138,10 +159,24 @@ p2 <- ggplot(mtcars, aes(x = factor(cyl), y = mpg)) +
   theme_hv_ppt_dark()
 
 save_ppt(
-  object       = list(p1, p2),
+  object       = list(p_slide, p2),
   template     = "graphs/RD.pptx",
   powerpoint   = "graphs/deck.pptx",
   slide_titles = c("Scatter: fuel economy", "Box: mpg by cylinder count")
+)
+
+# No y-axis label — let the slide title carry the meaning. `y = NULL`
+# drops the axis title; the numeric tick labels remain.
+p_noy <- ggplot(mtcars, aes(x = factor(cyl), y = mpg)) +
+  geom_boxplot() +
+  labs(x = "Cylinders", y = NULL) +
+  theme_hv_ppt_dark()
+
+save_ppt(
+  object       = p_noy,
+  template     = "graphs/RD.pptx",
+  powerpoint   = "graphs/mpg_by_cyl.pptx",
+  slide_titles = "Miles per Gallon by Cylinder Count"
 )
 
 # Manuscript (white background) for AATS-style presentations
@@ -210,7 +245,7 @@ save_ppt(
 )
 
 # With panel_box: target is an 8.88" x 4.51" panel at slide coordinates
-# (2.58", 1.29"). The panel content area lands at exactly that rectangle
+# (2.58", 1.63"). The panel content area lands at exactly that rectangle
 # on both slides; axis labels extend outside it as each plot requires.
 # The 2.58" left margin leaves room for a wide "99999.9"-style y-axis
 # label on dark PPT templates rendered at base_size = 32.
@@ -219,7 +254,7 @@ save_ppt(
   template     = "graphs/RD-dark.pptx",
   powerpoint   = "graphs/anchored_deck.pptx",
   slide_titles = c("Small y-axis", "Big y-axis"),
-  panel_box    = list(width = 8.88, height = 4.51, left = 2.58, top = 1.29)
+  panel_box    = list(width = 8.88, height = 4.51, left = 2.58, top = 1.63)
 )
 
 # Sizing advice: panel_left and panel_top must be large enough for the

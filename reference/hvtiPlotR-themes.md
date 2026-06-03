@@ -34,7 +34,7 @@ theme_hv_poster(
 
 theme_hv_ppt_dark(
   base_size = 32,
-  base_family = "",
+  base_family = "Arial",
   header_family = NULL,
   base_line_size = base_size/22,
   base_rect_size = base_size/22,
@@ -46,7 +46,7 @@ theme_hv_ppt_dark(
 
 theme_hv_ppt_light(
   base_size = 32,
-  base_family = "",
+  base_family = "Arial",
   header_family = NULL,
   base_line_size = base_size/22,
   base_rect_size = base_size/22,
@@ -150,7 +150,7 @@ named argument goes straight into a final
 call; tweak elements at the call site without a separate `+` chain:
 
     theme_hv_manuscript(legend.position = "right")
-    theme_hv_ppt_dark(axis.text.y = element_text(family = "mono"))
+    theme_hv_ppt_dark(plot.title = element_text(hjust = 0.5))
 
 Your elements override the hvtiPlotR defaults.
 

@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">hvtiPlotR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.3.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.3.3</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -52,6 +52,29 @@
       <small>Source: <a href="https://github.com/ehrlinger/hvtiPlotR/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="2.3.3" id="hvtiplotr-233">hvtiPlotR 2.3.3<a class="anchor" aria-label="anchor" href="#hvtiplotr-233"></a></h2>
+<div class="section level3">
+<h3 id="bug-fixes-2-3-3">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-2-3-3"></a></h3>
+<ul><li>
+<code><a href="../reference/save_ppt.html">save_ppt()</a></code>: the white box behind plots is gone again. The earlier fix only cleared the officer placeholder’s fill; <code><a href="https://davidgohel.github.io/rvg/reference/dml.html" class="external-link">rvg::dml()</a></code> still defaults to <code>bg = "white"</code>, so the DrawingML graphic painted its own opaque white canvas rectangle behind the (transparent) plot. Both <code>dml()</code> calls (plots and consort diagrams) now pass <code>bg = "transparent"</code>, so the slide-template background shows through cleanly on dark/blue decks.</li>
+<li>
+<code><a href="../reference/hvtiPlotR-themes.html">theme_hv_ppt_dark()</a></code> and <code><a href="../reference/hvtiPlotR-themes.html">theme_hv_ppt_light()</a></code> now default to <code>base_family = "Arial"</code>, <code>base_size = 32</code>, with <strong>Arial 32 Bold</strong> axis tick labels and <strong>Arial 40 Bold</strong> axis titles — matching the canonical CORR deck (driveline-infections, slide 6). Axis titles scale at <code>base_size * 1.25</code>. (Slide-title fonts are controlled by the PowerPoint template, not the theme.) Override at the call site as usual, e.g. <code>theme_hv_ppt_dark(base_size = 28)</code>.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="changes-2-3-3">Changes<a class="anchor" aria-label="anchor" href="#changes-2-3-3"></a></h3>
+<ul><li>
+<code><a href="../reference/save_ppt.html">save_ppt()</a></code> now defaults <code>panel_box</code> to the standard CORR fixed-panel rectangle <code>list(width = 8.88, height = 4.51, left = 2.58, top = 1.63)</code>, so every deck anchors the plot panel at the same slide coordinates by default (AATS-style placement). Pass <code>panel_box = NULL</code> to restore the legacy fixed-<code>width</code>/<code>height</code>/<code>left</code>/<code>top</code> placement. Because the default now routes plots through <code><a href="../reference/hv_ph_location.html">hv_ph_location()</a></code>, save_ppt suppresses the benign “font family ‘Arial’ not found in PostScript font database” warning from the grob-measurement device (the slide graphic still embeds Arial via systemfonts).</li>
+</ul></div>
+<div class="section level3">
+<h3 id="documentation-2-3-3">Documentation<a class="anchor" aria-label="anchor" href="#documentation-2-3-3"></a></h3>
+<ul><li>
+<code><a href="../reference/save_ppt.html">save_ppt()</a></code> examples now show the recommended preview-light / save-dark workflow (build with <code><a href="../reference/hvtiPlotR-themes.html">theme_hv_ppt_light()</a></code> for the IDE viewer, swap to <code><a href="../reference/hvtiPlotR-themes.html">theme_hv_ppt_dark()</a></code> before saving) and add a no-y-axis-label slide (<code>labs(y = NULL)</code>).</li>
+<li>Dropped the <code>family = "mono"</code> snippet from the theme docs and switched the executed Kaplan–Meier examples off the Arial PPT themes (to <code><a href="../reference/hvtiPlotR-themes.html">theme_hv_poster()</a></code>), so <code>R CMD check</code> examples stay warning-free on hosts without Arial installed (a cause of the failing CI run).</li>
+<li>Declared <code>xml2</code> in <code>Suggests</code> (used by the save_ppt white-box test), fixing the “unstated dependencies in ‘tests’” check WARNING.</li>
+<li>Added a small (~16 KB) dark-background test template at <code>inst/extdata/hv_ppt_template.pptx</code>, derived from the canonical CORR deck (master, layouts, and theme only — content slides, notes, comments, media, and document metadata stripped). Reach it with <code>system.file("extdata", "hv_ppt_template.pptx", package = "hvtiPlotR")</code> to try <code><a href="../reference/save_ppt.html">save_ppt()</a></code> against an authentic dark slide master.</li>
+</ul></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="2.3.2" id="hvtiplotr-232">hvtiPlotR 2.3.2<a class="anchor" aria-label="anchor" href="#hvtiplotr-232"></a></h2>
 <div class="section level3">

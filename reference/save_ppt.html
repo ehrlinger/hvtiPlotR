@@ -17,7 +17,7 @@ designated title placeholder via officer::ph_location_type()."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">hvtiPlotR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.3.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.3.3</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -85,7 +85,7 @@ designated title placeholder via <code><a href="https://davidgohel.github.io/off
 <span>  height <span class="op">=</span> <span class="fl">5.8</span>,</span>
 <span>  left <span class="op">=</span> <span class="fl">0</span>,</span>
 <span>  top <span class="op">=</span> <span class="fl">1.2</span>,</span>
-<span>  panel_box <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  panel_box <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>width <span class="op">=</span> <span class="fl">8.88</span>, height <span class="op">=</span> <span class="fl">4.51</span>, left <span class="op">=</span> <span class="fl">2.58</span>, top <span class="op">=</span> <span class="fl">1.63</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -151,19 +151,30 @@ is supplied.</p></dd>
 
 
 <dt id="arg-panel-box">panel_box<a class="anchor" aria-label="anchor" href="#arg-panel-box"></a></dt>
-<dd><p>Optional named list <code>list(width, height, left, top)</code>
-describing the <strong>panel content area</strong> to anchor on every slide (in
-inches). When supplied, per-plot slide placement is computed via
-<code><a href="hv_ph_location.html">hv_ph_location()</a></code> so the panel lands at the same slide coordinates
-on every slide regardless of axis-label width. When <code>NULL</code> (default),
-the fixed <code>width</code>/<code>height</code>/<code>left</code>/<code>top</code> arguments are used for every
-slide (legacy behavior). Ignored for <code>hv_consort</code> objects, which are
-always placed using their own metadata dimensions.</p></dd>
+<dd><p>Named list <code>list(width, height, left, top)</code> describing
+the <strong>panel content area</strong> to anchor on every slide (in inches).
+Per-plot slide placement is computed via <code><a href="hv_ph_location.html">hv_ph_location()</a></code> so the panel
+lands at the same slide coordinates on every slide regardless of
+axis-label width. Defaults to
+<code>list(width = 8.88, height = 4.51, left = 2.58, top = 1.63)</code> — the
+standard CORR fixed-panel rectangle for AATS-style dark decks. Pass
+<code>panel_box = NULL</code> to fall back to the fixed <code>width</code>/<code>height</code>/<code>left</code>/
+<code>top</code> arguments for every slide (legacy behavior). Ignored for
+<code>hv_consort</code> objects, which are always placed using their own metadata
+dimensions.</p></dd>
 
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>Invisibly returns the path given by <code>powerpoint</code>.</p>
+    </div>
+    <div class="section level2">
+    <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
+    <p>The package ships a small dark-background test template derived from the
+canonical CORR deck (master, layouts, theme; no content slides). Use it to
+try <code>save_ppt()</code> without hunting for a template:</p>
+<p></p><div class="sourceCode"><pre><code><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a>template <span class="ot">&lt;-</span> <span class="fu">system.file</span>(<span class="st">"extdata"</span>, <span class="st">"hv_ppt_template.pptx"</span>,</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>                        <span class="at">package =</span> <span class="st">"hvtiPlotR"</span>)</span></code></pre><p></p></div>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
@@ -176,14 +187,23 @@ always placed using their own metadata dimensions.</p></dd>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># Single plot — dark PPT theme matches a black-background slide</span></span></span>
-<span class="r-in"><span><span class="va">p1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">wt</span>, y <span class="op">=</span> <span class="va">mpg</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span></span>
+<span class="r-in"><span><span class="co"># ----------------------------------------------------------------------</span></span></span>
+<span class="r-in"><span><span class="co"># Recommended workflow: preview with light, save with dark</span></span></span>
+<span class="r-in"><span><span class="co"># ----------------------------------------------------------------------</span></span></span>
+<span class="r-in"><span><span class="co"># Build the plot with theme_hv_ppt_light() so it renders crisply in the</span></span></span>
+<span class="r-in"><span><span class="co"># RStudio viewer (black text/border on the IDE's white background) while</span></span></span>
+<span class="r-in"><span><span class="co"># you iterate on scales and labels:</span></span></span>
+<span class="r-in"><span><span class="va">p_preview</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">wt</span>, y <span class="op">=</span> <span class="va">mpg</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Weight"</span>, y <span class="op">=</span> <span class="st">"Miles per gallon"</span>, title <span class="op">=</span> <span class="st">"Fuel economy"</span><span class="op">)</span> <span class="op">+</span></span></span>
-<span class="r-in"><span>  <span class="fu"><a href="hvtiPlotR-themes.html">theme_hv_ppt_dark</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="hvtiPlotR-themes.html">theme_hv_ppt_light</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">p_preview</span><span class="op">)</span>            <span class="co"># interactive check</span></span></span>
 <span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># When the layout looks right, swap to theme_hv_ppt_dark() for the deck</span></span></span>
+<span class="r-in"><span><span class="co"># (white text + black panel against a dark slide template) and save:</span></span></span>
+<span class="r-in"><span><span class="va">p_slide</span> <span class="op">&lt;-</span> <span class="va">p_preview</span> <span class="op">+</span> <span class="fu"><a href="hvtiPlotR-themes.html">theme_hv_ppt_dark</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">save_ppt</span><span class="op">(</span></span></span>
-<span class="r-in"><span>  object       <span class="op">=</span> <span class="va">p1</span>,</span></span>
+<span class="r-in"><span>  object       <span class="op">=</span> <span class="va">p_slide</span>,</span></span>
 <span class="r-in"><span>  template     <span class="op">=</span> <span class="st">"graphs/RD.pptx"</span>,</span></span>
 <span class="r-in"><span>  powerpoint   <span class="op">=</span> <span class="st">"graphs/fuel_economy.pptx"</span>,</span></span>
 <span class="r-in"><span>  slide_titles <span class="op">=</span> <span class="st">"Fuel Economy by Weight"</span></span></span>
@@ -196,10 +216,24 @@ always placed using their own metadata dimensions.</p></dd>
 <span class="r-in"><span>  <span class="fu"><a href="hvtiPlotR-themes.html">theme_hv_ppt_dark</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu">save_ppt</span><span class="op">(</span></span></span>
-<span class="r-in"><span>  object       <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">p1</span>, <span class="va">p2</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  object       <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">p_slide</span>, <span class="va">p2</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>  template     <span class="op">=</span> <span class="st">"graphs/RD.pptx"</span>,</span></span>
 <span class="r-in"><span>  powerpoint   <span class="op">=</span> <span class="st">"graphs/deck.pptx"</span>,</span></span>
 <span class="r-in"><span>  slide_titles <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Scatter: fuel economy"</span>, <span class="st">"Box: mpg by cylinder count"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># No y-axis label — let the slide title carry the meaning. `y = NULL`</span></span></span>
+<span class="r-in"><span><span class="co"># drops the axis title; the numeric tick labels remain.</span></span></span>
+<span class="r-in"><span><span class="va">p_noy</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">cyl</span><span class="op">)</span>, y <span class="op">=</span> <span class="va">mpg</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_boxplot.html" class="external-link">geom_boxplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Cylinders"</span>, y <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span> <span class="op">+</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="hvtiPlotR-themes.html">theme_hv_ppt_dark</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu">save_ppt</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  object       <span class="op">=</span> <span class="va">p_noy</span>,</span></span>
+<span class="r-in"><span>  template     <span class="op">=</span> <span class="st">"graphs/RD.pptx"</span>,</span></span>
+<span class="r-in"><span>  powerpoint   <span class="op">=</span> <span class="st">"graphs/mpg_by_cyl.pptx"</span>,</span></span>
+<span class="r-in"><span>  slide_titles <span class="op">=</span> <span class="st">"Miles per Gallon by Cylinder Count"</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Manuscript (white background) for AATS-style presentations</span></span></span>
@@ -268,7 +302,7 @@ always placed using their own metadata dimensions.</p></dd>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># With panel_box: target is an 8.88" x 4.51" panel at slide coordinates</span></span></span>
-<span class="r-in"><span><span class="co"># (2.58", 1.29"). The panel content area lands at exactly that rectangle</span></span></span>
+<span class="r-in"><span><span class="co"># (2.58", 1.63"). The panel content area lands at exactly that rectangle</span></span></span>
 <span class="r-in"><span><span class="co"># on both slides; axis labels extend outside it as each plot requires.</span></span></span>
 <span class="r-in"><span><span class="co"># The 2.58" left margin leaves room for a wide "99999.9"-style y-axis</span></span></span>
 <span class="r-in"><span><span class="co"># label on dark PPT templates rendered at base_size = 32.</span></span></span>
@@ -277,7 +311,7 @@ always placed using their own metadata dimensions.</p></dd>
 <span class="r-in"><span>  template     <span class="op">=</span> <span class="st">"graphs/RD-dark.pptx"</span>,</span></span>
 <span class="r-in"><span>  powerpoint   <span class="op">=</span> <span class="st">"graphs/anchored_deck.pptx"</span>,</span></span>
 <span class="r-in"><span>  slide_titles <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Small y-axis"</span>, <span class="st">"Big y-axis"</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>  panel_box    <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>width <span class="op">=</span> <span class="fl">8.88</span>, height <span class="op">=</span> <span class="fl">4.51</span>, left <span class="op">=</span> <span class="fl">2.58</span>, top <span class="op">=</span> <span class="fl">1.29</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  panel_box    <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>width <span class="op">=</span> <span class="fl">8.88</span>, height <span class="op">=</span> <span class="fl">4.51</span>, left <span class="op">=</span> <span class="fl">2.58</span>, top <span class="op">=</span> <span class="fl">1.63</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Sizing advice: panel_left and panel_top must be large enough for the</span></span></span>
