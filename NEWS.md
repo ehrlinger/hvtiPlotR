@@ -1,4 +1,4 @@
-# hvtiPlotR 2.3.3 (in development)
+# hvtiPlotR 2.3.3
 
 ## Bug fixes
 
