@@ -47,16 +47,17 @@ suppress_officer_bg_warnings <- function(expr) {
 }
 
 # hv_ph_location() measures the plot grob on a pdf(NULL) device, whose
-# PostScript font database does not know system fonts such as the PPT themes'
-# default "Arial". The device substitutes a metric-compatible font for the
-# measurement only; the actual slide graphic is rendered by rvg/dsvg via
-# systemfonts, which resolves "Arial" and embeds it correctly. Filter just
-# that benign measurement-device warning so default decks stay warning-free.
+# PostScript font database does not know the PPT themes' default "Arial".
+# The device substitutes a metric-compatible font for the measurement only;
+# the actual slide graphic is rendered by rvg/dsvg via systemfonts, which
+# resolves "Arial" and embeds it correctly. Filter ONLY the benign Arial
+# (package-default) warning -- a missing *user-specified* font should stay
+# visible, since its substituted metrics can shift panel placement.
 suppress_font_db_warnings <- function(expr) {
   withCallingHandlers(
     expr,
     warning = function(w) {
-      if (grepl("font family .* not found in (PostScript|PDF) font database",
+      if (grepl("font family ['\"]Arial['\"] not found in (PostScript|PDF) font database",
                 conditionMessage(w))) {
         invokeRestart("muffleWarning")
       }
