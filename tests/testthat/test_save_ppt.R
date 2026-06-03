@@ -376,7 +376,7 @@ test_that("save_ppt defaults panel_box to the standard fixed-panel rectangle", {
   default_box <- eval(formals(save_ppt)$panel_box)
   expect_equal(
     default_box,
-    list(width = 8.88, height = 4.51, left = 2.58, top = 1.29)
+    list(width = 8.88, height = 4.51, left = 2.58, top = 1.63)
   )
 })
 

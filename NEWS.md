@@ -19,7 +19,7 @@
 ## Changes
 
 - `save_ppt()` now defaults `panel_box` to the standard CORR fixed-panel
-  rectangle `list(width = 8.88, height = 4.51, left = 2.58, top = 1.29)`, so
+  rectangle `list(width = 8.88, height = 4.51, left = 2.58, top = 1.63)`, so
   every deck anchors the plot panel at the same slide coordinates by default
   (AATS-style placement). Pass `panel_box = NULL` to restore the legacy
   fixed-`width`/`height`/`left`/`top` placement. Because the default now

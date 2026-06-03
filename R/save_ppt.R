@@ -213,7 +213,7 @@ add_plot_slide <- function(doc, plot, title, layout, master, width, height,
 #'   Per-plot slide placement is computed via [hv_ph_location()] so the panel
 #'   lands at the same slide coordinates on every slide regardless of
 #'   axis-label width. Defaults to
-#'   `list(width = 8.88, height = 4.51, left = 2.58, top = 1.29)` — the
+#'   `list(width = 8.88, height = 4.51, left = 2.58, top = 1.63)` — the
 #'   standard CORR fixed-panel rectangle for AATS-style dark decks. Pass
 #'   `panel_box = NULL` to fall back to the fixed `width`/`height`/`left`/
 #'   `top` arguments for every slide (legacy behavior). Ignored for
@@ -344,7 +344,7 @@ add_plot_slide <- function(doc, plot, title, layout, master, width, height,
 #' )
 #'
 #' # With panel_box: target is an 8.88" x 4.51" panel at slide coordinates
-#' # (2.58", 1.29"). The panel content area lands at exactly that rectangle
+#' # (2.58", 1.63"). The panel content area lands at exactly that rectangle
 #' # on both slides; axis labels extend outside it as each plot requires.
 #' # The 2.58" left margin leaves room for a wide "99999.9"-style y-axis
 #' # label on dark PPT templates rendered at base_size = 32.
@@ -353,7 +353,7 @@ add_plot_slide <- function(doc, plot, title, layout, master, width, height,
 #'   template     = "graphs/RD-dark.pptx",
 #'   powerpoint   = "graphs/anchored_deck.pptx",
 #'   slide_titles = c("Small y-axis", "Big y-axis"),
-#'   panel_box    = list(width = 8.88, height = 4.51, left = 2.58, top = 1.29)
+#'   panel_box    = list(width = 8.88, height = 4.51, left = 2.58, top = 1.63)
 #' )
 #'
 #' # Sizing advice: panel_left and panel_top must be large enough for the
@@ -379,7 +379,7 @@ save_ppt <- function(object,
                      panel_box    = list(width  = 8.88,
                                          height = 4.51,
                                          left   = 2.58,
-                                         top    = 1.29)) {
+                                         top    = 1.63)) {
 
   ensure_officer_available()
   ensure_rvg_available()
