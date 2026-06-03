@@ -43,3 +43,4 @@ hvtiPlotR.Rproj
 ^writing-voice\.md$
 ^Rplots\.pdf$
 ^.*\.tar\.gz$
+^inst/slides/.*\.(html|pdf|pptx)$

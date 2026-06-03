@@ -33,3 +33,7 @@ hvtiPlotR.Rproj
 .positai
 Rplots.pdf
 *.tar.gz
+vignettes/*.html
+inst/slides/*.html
+inst/slides/*.pdf
+inst/slides/*.pptx
