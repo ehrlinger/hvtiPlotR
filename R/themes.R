@@ -17,7 +17,7 @@
 #'
 #' ```
 #' theme_hv_manuscript(legend.position = "right")
-#' theme_hv_ppt_dark(axis.text.y = element_text(family = "mono"))
+#' theme_hv_ppt_dark(plot.title = element_text(hjust = 0.5))
 #' ```
 #'
 #' Your elements override the hvtiPlotR defaults.

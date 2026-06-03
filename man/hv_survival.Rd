@@ -104,12 +104,12 @@ plot(km_s) +
 # Other plot types
 plot(km, type = "cumhaz") +
   ggplot2::labs(x = "Years", y = "Cumulative Hazard") +
-  theme_hv_ppt_dark()
+  theme_hv_poster()
 
 plot(km, type = "loglog") +
   ggplot2::labs(x = "log(Years)", y = "log(-log S(t))",
                 title = "PH Assumption Check") +
-  theme_hv_ppt_dark()
+  theme_hv_poster()
 
 # --- Global theme + RColorBrewer (set once per session) ------------------
 \dontrun{

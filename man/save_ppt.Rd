@@ -83,14 +83,23 @@ designated title placeholder via \code{\link[officer:ph_location_type]{officer::
 \dontrun{
 library(ggplot2)
 
-# Single plot — dark PPT theme matches a black-background slide
-p1 <- ggplot(mtcars, aes(x = wt, y = mpg)) +
+# ----------------------------------------------------------------------
+# Recommended workflow: preview with light, save with dark
+# ----------------------------------------------------------------------
+# Build the plot with theme_hv_ppt_light() so it renders crisply in the
+# RStudio viewer (black text/border on the IDE's white background) while
+# you iterate on scales and labels:
+p_preview <- ggplot(mtcars, aes(x = wt, y = mpg)) +
   geom_point() +
   labs(x = "Weight", y = "Miles per gallon", title = "Fuel economy") +
-  theme_hv_ppt_dark()
+  theme_hv_ppt_light()
+print(p_preview)            # interactive check
 
+# When the layout looks right, swap to theme_hv_ppt_dark() for the deck
+# (white text + black panel against a dark slide template) and save:
+p_slide <- p_preview + theme_hv_ppt_dark()
 save_ppt(
-  object       = p1,
+  object       = p_slide,
   template     = "graphs/RD.pptx",
   powerpoint   = "graphs/fuel_economy.pptx",
   slide_titles = "Fuel Economy by Weight"
@@ -103,10 +112,24 @@ p2 <- ggplot(mtcars, aes(x = factor(cyl), y = mpg)) +
   theme_hv_ppt_dark()
 
 save_ppt(
-  object       = list(p1, p2),
+  object       = list(p_slide, p2),
   template     = "graphs/RD.pptx",
   powerpoint   = "graphs/deck.pptx",
   slide_titles = c("Scatter: fuel economy", "Box: mpg by cylinder count")
+)
+
+# No y-axis label — let the slide title carry the meaning. `y = NULL`
+# drops the axis title; the numeric tick labels remain.
+p_noy <- ggplot(mtcars, aes(x = factor(cyl), y = mpg)) +
+  geom_boxplot() +
+  labs(x = "Cylinders", y = NULL) +
+  theme_hv_ppt_dark()
+
+save_ppt(
+  object       = p_noy,
+  template     = "graphs/RD.pptx",
+  powerpoint   = "graphs/mpg_by_cyl.pptx",
+  slide_titles = "Miles per Gallon by Cylinder Count"
 )
 
 # Manuscript (white background) for AATS-style presentations

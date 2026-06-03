@@ -27,6 +27,17 @@
   the grob-measurement device (the slide graphic still embeds Verdana via
   systemfonts).
 
+## Documentation
+
+- `save_ppt()` examples now show the recommended preview-light / save-dark
+  workflow (build with `theme_hv_ppt_light()` for the IDE viewer, swap to
+  `theme_hv_ppt_dark()` before saving) and add a no-y-axis-label slide
+  (`labs(y = NULL)`).
+- Dropped the `family = "mono"` snippet from the theme docs and switched the
+  executed Kaplan–Meier examples off the Verdana PPT themes (to
+  `theme_hv_poster()`), so `R CMD check` examples stay warning-free on hosts
+  without Verdana installed (the cause of the failing CI run).
+
 # hvtiPlotR 2.3.2
 
 ## Documentation (#70)
