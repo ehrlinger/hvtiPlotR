@@ -48,9 +48,9 @@ suppress_officer_bg_warnings <- function(expr) {
 
 # hv_ph_location() measures the plot grob on a pdf(NULL) device, whose
 # PostScript font database does not know system fonts such as the PPT themes'
-# default "Verdana". The device substitutes a metric-compatible font for the
+# default "Arial". The device substitutes a metric-compatible font for the
 # measurement only; the actual slide graphic is rendered by rvg/dsvg via
-# systemfonts, which resolves "Verdana" and embeds it correctly. Filter just
+# systemfonts, which resolves "Arial" and embeds it correctly. Filter just
 # that benign measurement-device warning so default decks stay warning-free.
 suppress_font_db_warnings <- function(expr) {
   withCallingHandlers(
@@ -336,7 +336,7 @@ add_plot_slide <- function(doc, plot, title, layout, master, width, height,
 #' # (2.58", 1.29"). The panel content area lands at exactly that rectangle
 #' # on both slides; axis labels extend outside it as each plot requires.
 #' # The 2.58" left margin leaves room for a wide "99999.9"-style y-axis
-#' # label on dark PPT templates rendered at base_size = 30.
+#' # label on dark PPT templates rendered at base_size = 32.
 #' save_ppt(
 #'   object       = list(p_small, p_big),
 #'   template     = "graphs/RD-dark.pptx",

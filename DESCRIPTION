@@ -43,7 +43,8 @@ Suggests:
     tidyr,
     quarto,
     pkgload,
-    here
+    here,
+    xml2
 Remotes:
     davidsjoberg/ggsankey
 VignetteBuilder: quarto

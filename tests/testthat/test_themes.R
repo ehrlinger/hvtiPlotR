@@ -81,17 +81,17 @@ test_that("theme_hv_ppt_dark retains opaque black panel fill", {
   expect_identical(th$panel.background$colour, "white")
 })
 
-test_that("PPT themes default to Verdana 30 Bold for axis text and titles", {
+test_that("PPT themes match the canonical Arial deck (32 bold ticks, 40 bold titles)", {
+  # Canonical reference: sl.rd26.stephens.1316.driveline_infections deck,
+  # slide 6 -- axis tick labels render Arial 32 Bold, axis titles Arial 40 Bold.
   for (th in list(theme_hv_ppt_dark(), theme_hv_ppt_light())) {
     # base_family flows to all text (incl. axis text/titles) via theme_grey().
-    expect_identical(th$text$family, "Verdana")
-    # axis tick labels are sized explicitly to base_size.
-    expect_equal(th$axis.text$size, 30)
-    # axis titles inherit base_size (30) -- no explicit override, so size
-    # is NULL here but resolves to 30 at build time; lock base_size via text.
-    expect_equal(th$text$size, 30)
-    # axis tick labels and axis titles are bold.
-    expect_identical(th$axis.text$face,  "bold")
+    expect_identical(th$text$family, "Arial")
+    # axis tick labels: Arial 32 Bold.
+    expect_equal(th$axis.text$size, 32)
+    expect_identical(th$axis.text$face, "bold")
+    # axis titles (the x/y labels themselves): Arial 40 Bold.
+    expect_equal(th$axis.title$size, 40)
     expect_identical(th$axis.title$face, "bold")
   }
 })

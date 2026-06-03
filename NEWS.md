@@ -9,11 +9,12 @@
   consort diagrams) now pass `bg = "transparent"`, so the slide-template
   background shows through cleanly on dark/blue decks.
 - `theme_hv_ppt_dark()` and `theme_hv_ppt_light()` now default to
-  `base_family = "Verdana"`, `base_size = 30`, and **bold** axis tick labels
-  and axis titles, so axes render as a consistent Verdana 30 Bold across PPT
-  decks. (Slide-title fonts are controlled by the PowerPoint template, not the
-  theme.) Override at the call site as usual, e.g.
-  `theme_hv_ppt_dark(base_size = 32, axis.text = ggplot2::element_text(face = "plain"))`.
+  `base_family = "Arial"`, `base_size = 32`, with **Arial 32 Bold** axis tick
+  labels and **Arial 40 Bold** axis titles — matching the canonical CORR deck
+  (driveline-infections, slide 6). Axis titles scale at `base_size * 1.25`.
+  (Slide-title fonts are controlled by the PowerPoint template, not the theme.)
+  Override at the call site as usual, e.g.
+  `theme_hv_ppt_dark(base_size = 28)`.
 
 ## Changes
 
@@ -23,8 +24,8 @@
   (AATS-style placement). Pass `panel_box = NULL` to restore the legacy
   fixed-`width`/`height`/`left`/`top` placement. Because the default now
   routes plots through `hv_ph_location()`, save_ppt suppresses the benign
-  "font family 'Verdana' not found in PostScript font database" warning from
-  the grob-measurement device (the slide graphic still embeds Verdana via
+  "font family 'Arial' not found in PostScript font database" warning from
+  the grob-measurement device (the slide graphic still embeds Arial via
   systemfonts).
 
 ## Documentation
@@ -34,9 +35,11 @@
   `theme_hv_ppt_dark()` before saving) and add a no-y-axis-label slide
   (`labs(y = NULL)`).
 - Dropped the `family = "mono"` snippet from the theme docs and switched the
-  executed Kaplan–Meier examples off the Verdana PPT themes (to
+  executed Kaplan–Meier examples off the Arial PPT themes (to
   `theme_hv_poster()`), so `R CMD check` examples stay warning-free on hosts
-  without Verdana installed (the cause of the failing CI run).
+  without Arial installed (a cause of the failing CI run).
+- Declared `xml2` in `Suggests` (used by the save_ppt white-box test), fixing
+  the "unstated dependencies in 'tests'" check WARNING.
 
 # hvtiPlotR 2.3.2
 

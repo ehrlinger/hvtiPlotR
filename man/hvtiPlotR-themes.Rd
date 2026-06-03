@@ -44,8 +44,8 @@ theme_hv_poster(
 )
 
 theme_hv_ppt_dark(
-  base_size = 30,
-  base_family = "Verdana",
+  base_size = 32,
+  base_family = "Arial",
   header_family = NULL,
   base_line_size = base_size/22,
   base_rect_size = base_size/22,
@@ -56,8 +56,8 @@ theme_hv_ppt_dark(
 )
 
 theme_hv_ppt_light(
-  base_size = 30,
-  base_family = "Verdana",
+  base_size = 32,
+  base_family = "Arial",
   header_family = NULL,
   base_line_size = base_size/22,
   base_rect_size = base_size/22,

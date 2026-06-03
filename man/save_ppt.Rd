@@ -201,7 +201,7 @@ save_ppt(
 # (2.58", 1.29"). The panel content area lands at exactly that rectangle
 # on both slides; axis labels extend outside it as each plot requires.
 # The 2.58" left margin leaves room for a wide "99999.9"-style y-axis
-# label on dark PPT templates rendered at base_size = 30.
+# label on dark PPT templates rendered at base_size = 32.
 save_ppt(
   object       = list(p_small, p_big),
   template     = "graphs/RD-dark.pptx",
