@@ -46,13 +46,38 @@ suppress_officer_bg_warnings <- function(expr) {
   )
 }
 
+# hv_ph_location() measures the plot grob on a pdf(NULL) device, whose
+# PostScript font database does not know the PPT themes' default "Arial".
+# The device substitutes a metric-compatible font for the measurement only;
+# the actual slide graphic is rendered by rvg/dsvg via systemfonts, which
+# resolves "Arial" and embeds it correctly. Filter ONLY the benign Arial
+# (package-default) warning -- a missing *user-specified* font should stay
+# visible, since its substituted metrics can shift panel placement.
+suppress_font_db_warnings <- function(expr) {
+  withCallingHandlers(
+    expr,
+    warning = function(w) {
+      if (grepl("font family ['\"]Arial['\"] not found in (PostScript|PDF) font database",
+                conditionMessage(w))) {
+        invokeRestart("muffleWarning")
+      }
+    }
+  )
+}
+
 # Add one editable consort slide (grid output via rvg::dml code= path) ------
 
 add_consort_slide <- function(doc, consort_obj, title, layout, master,
                                width, height, left, top) {
-  dml_obj <- rvg::dml(code = {
-    grid::grid.draw(consort::build_grid(consort_obj$plot))
-  })
+  # bg = "transparent" suppresses rvg's default opaque-white canvas
+  # rectangle (the "white box"); the slide template background then shows
+  # through any area outside the diagram. See add_plot_slide() for detail.
+  dml_obj <- rvg::dml(
+    code = {
+      grid::grid.draw(consort::build_grid(consort_obj$plot))
+    },
+    bg = "transparent"
+  )
 
   doc <- officer_safe_call(
     officer::add_slide(doc, layout = layout, master = master),
@@ -89,7 +114,13 @@ add_consort_slide <- function(doc, consort_obj, title, layout, master,
 
 add_plot_slide <- function(doc, plot, title, layout, master, width, height,
                            left, top) {
-  dml_obj <- rvg::dml(ggobj = plot)
+  # bg = "transparent" suppresses rvg::dml()'s default opaque-white canvas
+  # rectangle, which renders inside the DrawingML graphic as a full-extent
+  # white box behind the plot. Without it, a dark/blue slide template shows
+  # an opaque white rectangle around the (transparent) plot background. This
+  # is distinct from the ph_location(bg = "transparent") below, which clears
+  # the officer placeholder shape's fill; both white sources must be removed.
+  dml_obj <- rvg::dml(ggobj = plot, bg = "transparent")
 
   doc <- officer_safe_call(
     officer::add_slide(doc, layout = layout, master = master),
@@ -140,6 +171,16 @@ add_plot_slide <- function(doc, plot, title, layout, master, width, height,
 #' [officer::ph_location()] for pixel-exact positioning; titles go into the
 #' designated title placeholder via [officer::ph_location_type()].
 #'
+#' @details
+#' The package ships a small dark-background test template derived from the
+#' canonical CORR deck (master, layouts, theme; no content slides). Use it to
+#' try `save_ppt()` without hunting for a template:
+#'
+#' ```
+#' template <- system.file("extdata", "hv_ppt_template.pptx",
+#'                         package = "hvtiPlotR")
+#' ```
+#'
 #' @param object      A single ggplot object **or** a named/unnamed list of
 #'   ggplot objects. Each element produces one slide. May also be an
 #'   `hv_consort` object produced by [hv_consort()].
@@ -167,14 +208,17 @@ add_plot_slide <- function(doc, plot, title, layout, master, width, height,
 #' @param top         Distance in inches from the top of the slide.
 #'   Default `1.2` (below a standard title bar). Ignored when `panel_box`
 #'   is supplied.
-#' @param panel_box   Optional named list `list(width, height, left, top)`
-#'   describing the **panel content area** to anchor on every slide (in
-#'   inches). When supplied, per-plot slide placement is computed via
-#'   [hv_ph_location()] so the panel lands at the same slide coordinates
-#'   on every slide regardless of axis-label width. When `NULL` (default),
-#'   the fixed `width`/`height`/`left`/`top` arguments are used for every
-#'   slide (legacy behavior). Ignored for `hv_consort` objects, which are
-#'   always placed using their own metadata dimensions.
+#' @param panel_box   Named list `list(width, height, left, top)` describing
+#'   the **panel content area** to anchor on every slide (in inches).
+#'   Per-plot slide placement is computed via [hv_ph_location()] so the panel
+#'   lands at the same slide coordinates on every slide regardless of
+#'   axis-label width. Defaults to
+#'   `list(width = 8.88, height = 4.51, left = 2.58, top = 1.63)` — the
+#'   standard CORR fixed-panel rectangle for AATS-style dark decks. Pass
+#'   `panel_box = NULL` to fall back to the fixed `width`/`height`/`left`/
+#'   `top` arguments for every slide (legacy behavior). Ignored for
+#'   `hv_consort` objects, which are always placed using their own metadata
+#'   dimensions.
 #'
 #' @return Invisibly returns the path given by `powerpoint`.
 #'
@@ -185,14 +229,23 @@ add_plot_slide <- function(doc, plot, title, layout, master, width, height,
 #' \dontrun{
 #' library(ggplot2)
 #'
-#' # Single plot — dark PPT theme matches a black-background slide
-#' p1 <- ggplot(mtcars, aes(x = wt, y = mpg)) +
+#' # ----------------------------------------------------------------------
+#' # Recommended workflow: preview with light, save with dark
+#' # ----------------------------------------------------------------------
+#' # Build the plot with theme_hv_ppt_light() so it renders crisply in the
+#' # RStudio viewer (black text/border on the IDE's white background) while
+#' # you iterate on scales and labels:
+#' p_preview <- ggplot(mtcars, aes(x = wt, y = mpg)) +
 #'   geom_point() +
 #'   labs(x = "Weight", y = "Miles per gallon", title = "Fuel economy") +
-#'   theme_hv_ppt_dark()
+#'   theme_hv_ppt_light()
+#' print(p_preview)            # interactive check
 #'
+#' # When the layout looks right, swap to theme_hv_ppt_dark() for the deck
+#' # (white text + black panel against a dark slide template) and save:
+#' p_slide <- p_preview + theme_hv_ppt_dark()
 #' save_ppt(
-#'   object       = p1,
+#'   object       = p_slide,
 #'   template     = "graphs/RD.pptx",
 #'   powerpoint   = "graphs/fuel_economy.pptx",
 #'   slide_titles = "Fuel Economy by Weight"
@@ -205,10 +258,24 @@ add_plot_slide <- function(doc, plot, title, layout, master, width, height,
 #'   theme_hv_ppt_dark()
 #'
 #' save_ppt(
-#'   object       = list(p1, p2),
+#'   object       = list(p_slide, p2),
 #'   template     = "graphs/RD.pptx",
 #'   powerpoint   = "graphs/deck.pptx",
 #'   slide_titles = c("Scatter: fuel economy", "Box: mpg by cylinder count")
+#' )
+#'
+#' # No y-axis label — let the slide title carry the meaning. `y = NULL`
+#' # drops the axis title; the numeric tick labels remain.
+#' p_noy <- ggplot(mtcars, aes(x = factor(cyl), y = mpg)) +
+#'   geom_boxplot() +
+#'   labs(x = "Cylinders", y = NULL) +
+#'   theme_hv_ppt_dark()
+#'
+#' save_ppt(
+#'   object       = p_noy,
+#'   template     = "graphs/RD.pptx",
+#'   powerpoint   = "graphs/mpg_by_cyl.pptx",
+#'   slide_titles = "Miles per Gallon by Cylinder Count"
 #' )
 #'
 #' # Manuscript (white background) for AATS-style presentations
@@ -277,7 +344,7 @@ add_plot_slide <- function(doc, plot, title, layout, master, width, height,
 #' )
 #'
 #' # With panel_box: target is an 8.88" x 4.51" panel at slide coordinates
-#' # (2.58", 1.29"). The panel content area lands at exactly that rectangle
+#' # (2.58", 1.63"). The panel content area lands at exactly that rectangle
 #' # on both slides; axis labels extend outside it as each plot requires.
 #' # The 2.58" left margin leaves room for a wide "99999.9"-style y-axis
 #' # label on dark PPT templates rendered at base_size = 32.
@@ -286,7 +353,7 @@ add_plot_slide <- function(doc, plot, title, layout, master, width, height,
 #'   template     = "graphs/RD-dark.pptx",
 #'   powerpoint   = "graphs/anchored_deck.pptx",
 #'   slide_titles = c("Small y-axis", "Big y-axis"),
-#'   panel_box    = list(width = 8.88, height = 4.51, left = 2.58, top = 1.29)
+#'   panel_box    = list(width = 8.88, height = 4.51, left = 2.58, top = 1.63)
 #' )
 #'
 #' # Sizing advice: panel_left and panel_top must be large enough for the
@@ -309,7 +376,10 @@ save_ppt <- function(object,
                      height       = 5.8,
                      left         = 0.0,
                      top          = 1.2,
-                     panel_box    = NULL) {
+                     panel_box    = list(width  = 8.88,
+                                         height = 4.51,
+                                         left   = 2.58,
+                                         top    = 1.63)) {
 
   ensure_officer_available()
   ensure_rvg_available()
@@ -335,14 +405,15 @@ save_ppt <- function(object,
     stop("`powerpoint` must be a writable file path.", call. = FALSE)
   if (!(is.character(slide_titles) && length(slide_titles) >= 1L))
     stop("`slide_titles` must be a non-empty character vector.", call. = FALSE)
-  if (is.null(panel_box)) {
-    if (!(is.numeric(width)  && length(width)  == 1L && width  > 0 &&
-          is.numeric(height) && length(height) == 1L && height > 0))
-      stop("`width` and `height` must be positive numbers.", call. = FALSE)
-    if (!(is.numeric(left) && length(left) == 1L && left >= 0 &&
-          is.numeric(top)  && length(top)  == 1L && top  >= 0))
-      stop("`left` and `top` must be non-negative numbers.", call. = FALSE)
-  } else {
+  # width/height/left/top are always validated: they drive the legacy
+  # fixed-placement path used when `panel_box = NULL`.
+  if (!(is.numeric(width)  && length(width)  == 1L && width  > 0 &&
+        is.numeric(height) && length(height) == 1L && height > 0))
+    stop("`width` and `height` must be positive numbers.", call. = FALSE)
+  if (!(is.numeric(left) && length(left) == 1L && left >= 0 &&
+        is.numeric(top)  && length(top)  == 1L && top  >= 0))
+    stop("`left` and `top` must be non-negative numbers.", call. = FALSE)
+  if (!is.null(panel_box)) {
     expected <- c("width", "height", "left", "top")
     if (!is.list(panel_box) || !all(expected %in% names(panel_box)))
       stop("`panel_box` must be a list with elements `width`, `height`, `left`, `top`.",
@@ -384,13 +455,15 @@ save_ppt <- function(object,
         slide_l <- left
         slide_t <- top
       } else {
-        loc <- hv_ph_location(
-          plots[[i]],
-          panel_width  = panel_box$width,
-          panel_height = panel_box$height,
-          panel_left   = panel_box$left,
-          panel_top    = panel_box$top,
-          units        = "in"
+        loc <- suppress_font_db_warnings(
+          hv_ph_location(
+            plots[[i]],
+            panel_width  = panel_box$width,
+            panel_height = panel_box$height,
+            panel_left   = panel_box$left,
+            panel_top    = panel_box$top,
+            units        = "in"
+          )
         )
         slide_w <- loc$width
         slide_h <- loc$height

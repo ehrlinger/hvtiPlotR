@@ -1,3 +1,52 @@
+# hvtiPlotR 2.3.3
+
+## Bug fixes
+
+- `save_ppt()`: the white box behind plots is gone again. The earlier fix only
+  cleared the officer placeholder's fill; `rvg::dml()` still defaults to
+  `bg = "white"`, so the DrawingML graphic painted its own opaque white canvas
+  rectangle behind the (transparent) plot. Both `dml()` calls (plots and
+  consort diagrams) now pass `bg = "transparent"`, so the slide-template
+  background shows through cleanly on dark/blue decks.
+- `theme_hv_ppt_dark()` and `theme_hv_ppt_light()` now default to
+  `base_family = "Arial"`, `base_size = 32`, with **Arial 32 Bold** axis tick
+  labels and **Arial 40 Bold** axis titles — matching the canonical CORR deck
+  (driveline-infections, slide 6). Axis titles scale at `base_size * 1.25`.
+  (Slide-title fonts are controlled by the PowerPoint template, not the theme.)
+  Override at the call site as usual, e.g.
+  `theme_hv_ppt_dark(base_size = 28)`.
+
+## Changes
+
+- `save_ppt()` now defaults `panel_box` to the standard CORR fixed-panel
+  rectangle `list(width = 8.88, height = 4.51, left = 2.58, top = 1.63)`, so
+  every deck anchors the plot panel at the same slide coordinates by default
+  (AATS-style placement). Pass `panel_box = NULL` to restore the legacy
+  fixed-`width`/`height`/`left`/`top` placement. Because the default now
+  routes plots through `hv_ph_location()`, save_ppt suppresses the benign
+  "font family 'Arial' not found in PostScript font database" warning from
+  the grob-measurement device (the slide graphic still embeds Arial via
+  systemfonts).
+
+## Documentation
+
+- `save_ppt()` examples now show the recommended preview-light / save-dark
+  workflow (build with `theme_hv_ppt_light()` for the IDE viewer, swap to
+  `theme_hv_ppt_dark()` before saving) and add a no-y-axis-label slide
+  (`labs(y = NULL)`).
+- Dropped the `family = "mono"` snippet from the theme docs and switched the
+  executed Kaplan–Meier examples off the Arial PPT themes (to
+  `theme_hv_poster()`), so `R CMD check` examples stay warning-free on hosts
+  without Arial installed (a cause of the failing CI run).
+- Declared `xml2` in `Suggests` (used by the save_ppt white-box test), fixing
+  the "unstated dependencies in 'tests'" check WARNING.
+- Added a small (~16 KB) dark-background test template at
+  `inst/extdata/hv_ppt_template.pptx`, derived from the canonical CORR deck
+  (master, layouts, and theme only — content slides, notes, comments, media,
+  and document metadata stripped). Reach it with
+  `system.file("extdata", "hv_ppt_template.pptx", package = "hvtiPlotR")` to
+  try `save_ppt()` against an authentic dark slide master.
+
 # hvtiPlotR 2.3.2
 
 ## Documentation (#70)

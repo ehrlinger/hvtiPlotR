@@ -81,6 +81,21 @@ test_that("theme_hv_ppt_dark retains opaque black panel fill", {
   expect_identical(th$panel.background$colour, "white")
 })
 
+test_that("PPT themes match the canonical Arial deck (32 bold ticks, 40 bold titles)", {
+  # Canonical reference: sl.rd26.stephens.1316.driveline_infections deck,
+  # slide 6 -- axis tick labels render Arial 32 Bold, axis titles Arial 40 Bold.
+  for (th in list(theme_hv_ppt_dark(), theme_hv_ppt_light())) {
+    # base_family flows to all text (incl. axis text/titles) via theme_grey().
+    expect_identical(th$text$family, "Arial")
+    # axis tick labels: Arial 32 Bold.
+    expect_equal(th$axis.text$size, 32)
+    expect_identical(th$axis.text$face, "bold")
+    # axis titles (the x/y labels themselves): Arial 40 Bold.
+    expect_equal(th$axis.title$size, 40)
+    expect_identical(th$axis.title$face, "bold")
+  }
+})
+
 test_that("theme_hv_ppt_dark uses inside-facing ticks (negative length)", {
   th <- theme_hv_ppt_dark(base_size = 32)
   tlen <- grid::convertUnit(th$axis.ticks.length, "pt", valueOnly = TRUE)

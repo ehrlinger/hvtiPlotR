@@ -80,6 +80,7 @@ test_that("save_ppt works with custom width, height, left, top", {
 
   expect_no_error(
     save_ppt(p, template = temp_template, powerpoint = temp_ppt,
+             panel_box = NULL,
              width = 8, height = 5, left = 0.5, top = 1.5)
   )
 })
@@ -115,6 +116,58 @@ test_that("save_ppt runs without warnings (officer bg-namespace noise suppressed
     save_ppt(p, template = temp_template, powerpoint = temp_ppt,
              slide_titles = "warning-free")
   )
+})
+
+test_that("save_ppt renders a transparent dml canvas (no white box)", {
+  skip_if_not_installed("officer")
+  skip_if_not_installed("rvg")
+  skip_if_not_installed("xml2")
+
+  p             <- create_test_plot() + theme_hv_ppt_dark()
+  temp_template <- make_temp_template()
+  temp_ppt      <- tempfile(fileext = ".pptx")
+  ud            <- tempfile()
+  on.exit(unlink(c(temp_ppt, temp_template, ud), recursive = TRUE))
+
+  save_ppt(p, template = temp_template, powerpoint = temp_ppt)
+
+  dir.create(ud)
+  utils::unzip(temp_ppt, exdir = ud)
+  slides <- list.files(file.path(ud, "ppt", "slides"), "^slide[0-9]+\\.xml$",
+                       full.names = TRUE)
+
+  # The editable plot lives in a <p:grpSp> whose child extent (chExt) spans
+  # the full canvas. rvg::dml(bg = "white") -- the default -- adds a same-size
+  # opaque white <p:sp> rect behind everything: the "white box" reported
+  # against dark decks. bg = "transparent" drops it. Scan every slide and
+  # assert no full-canvas opaque white rect survives in any plot group.
+  white_canvas_in <- function(grp, ns) {
+    chext <- xml2::xml_find_first(grp, "./p:grpSpPr/a:xfrm/a:chExt", ns)
+    if (is.na(chext)) return(FALSE)
+    cx <- xml2::xml_attr(chext, "cx")
+    cy <- xml2::xml_attr(chext, "cy")
+    sps <- xml2::xml_find_all(grp, "./p:sp", ns)
+    any(vapply(sps, function(sp) {
+      ext  <- xml2::xml_find_first(sp, "./p:spPr/a:xfrm/a:ext", ns)
+      fill <- xml2::xml_find_first(sp, "./p:spPr/a:solidFill/a:srgbClr", ns)
+      if (is.na(ext) || is.na(fill)) return(FALSE)
+      alpha     <- xml2::xml_find_first(fill, "./a:alpha", ns)
+      full_size <- identical(xml2::xml_attr(ext, "cx"), cx) &&
+                   identical(xml2::xml_attr(ext, "cy"), cy)
+      white     <- identical(toupper(xml2::xml_attr(fill, "val")), "FFFFFF")
+      opaque    <- is.na(alpha) || xml2::xml_attr(alpha, "val") != "0"
+      full_size && white && opaque
+    }, logical(1)))
+  }
+
+  has_white_canvas <- any(vapply(slides, function(sl) {
+    doc <- xml2::read_xml(sl)
+    ns  <- xml2::xml_ns(doc)
+    grps <- xml2::xml_find_all(doc, ".//p:grpSp", ns)
+    any(vapply(grps, white_canvas_in, logical(1), ns = ns))
+  }, logical(1)))
+
+  expect_false(has_white_canvas)
 })
 
 test_that("save_ppt works with all hvtiPlotR themes", {
@@ -295,6 +348,51 @@ test_that("save_ppt writes a deck using panel_box layout", {
       slide_titles = c("Small", "Big"),
       panel_box    = list(width = 10, height = 5, left = 1.5, top = 1.5)
     )
+  )
+  expect_true(file.exists(tmp_out))
+})
+
+test_that("save_ppt works against the bundled CORR test template", {
+  skip_if_not_installed("officer")
+  skip_if_not_installed("rvg")
+
+  tpl <- system.file("extdata", "hv_ppt_template.pptx", package = "hvtiPlotR")
+  skip_if(!nzchar(tpl) || !file.exists(tpl), "bundled template not found")
+
+  p   <- create_test_plot() + theme_hv_ppt_dark()
+  out <- tempfile(fileext = ".pptx")
+  on.exit(unlink(out))
+
+  expect_no_error(
+    save_ppt(p, template = tpl, powerpoint = out, slide_titles = "Test")
+  )
+  doc <- officer::read_pptx(out)
+  expect_gte(length(doc), 1L)
+  # the template ships the "Title and Content" layout save_ppt() defaults to
+  expect_true("Title and Content" %in% officer::layout_summary(doc)$layout)
+})
+
+test_that("save_ppt defaults panel_box to the standard fixed-panel rectangle", {
+  default_box <- eval(formals(save_ppt)$panel_box)
+  expect_equal(
+    default_box,
+    list(width = 8.88, height = 4.51, left = 2.58, top = 1.63)
+  )
+})
+
+test_that("save_ppt uses the panel_box path by default (no explicit panel_box)", {
+  skip_if_not_installed("officer")
+  skip_if_not_installed("rvg")
+
+  p       <- create_test_plot() + theme_hv_ppt_dark()
+  tmp_tpl <- make_temp_template()
+  tmp_out <- tempfile(fileext = ".pptx")
+  on.exit(unlink(c(tmp_tpl, tmp_out)))
+
+  # A default call must succeed and write a file even though it now routes
+  # through hv_ph_location() (panel_box default is non-NULL).
+  expect_no_error(
+    save_ppt(p, template = tmp_tpl, powerpoint = tmp_out)
   )
   expect_true(file.exists(tmp_out))
 })

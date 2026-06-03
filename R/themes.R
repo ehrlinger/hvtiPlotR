@@ -17,7 +17,7 @@
 #'
 #' ```
 #' theme_hv_manuscript(legend.position = "right")
-#' theme_hv_ppt_dark(axis.text.y = element_text(family = "mono"))
+#' theme_hv_ppt_dark(plot.title = element_text(hjust = 0.5))
 #' ```
 #'
 #' Your elements override the hvtiPlotR defaults.
@@ -152,7 +152,7 @@ theme_hv_poster <- function(base_size      = 16,
 #' the margins.
 #' @export
 theme_hv_ppt_dark <- function(base_size      = 32,
-                              base_family    = "",
+                              base_family    = "Arial",
                               header_family  = NULL,
                               base_line_size = base_size / 22,
                               base_rect_size = base_size / 22,
@@ -168,7 +168,10 @@ theme_hv_ppt_dark <- function(base_size      = 32,
       plot.background    = element_rect(fill = "transparent",
                                         colour = "transparent",
                                         linewidth = 2),
-      axis.text          = element_text(size = base_size, colour = "white"),
+      axis.text          = element_text(size = base_size, colour = "white",
+                                         face = "bold"),
+      axis.title         = element_text(size = base_size * 1.25,
+                                        face = "bold"),
       axis.text.x        = element_text(margin = margin(t = half_line)),
       axis.text.y        = element_text(margin = margin(r = half_line),
                                         hjust  = 1),
@@ -200,7 +203,7 @@ theme_hv_ppt_dark <- function(base_size      = 32,
 #' @rdname hvtiPlotR-themes
 #' @export
 theme_hv_ppt_light <- function(base_size      = 32,
-                               base_family    = "",
+                               base_family    = "Arial",
                                header_family  = NULL,
                                base_line_size = base_size / 22,
                                base_rect_size = base_size / 22,
@@ -216,7 +219,10 @@ theme_hv_ppt_light <- function(base_size      = 32,
       plot.background    = element_rect(fill = "transparent",
                                         colour = "transparent",
                                         linewidth = 2),
-      axis.text          = element_text(size = base_size, colour = "black"),
+      axis.text          = element_text(size = base_size, colour = "black",
+                                         face = "bold"),
+      axis.title         = element_text(size = base_size * 1.25,
+                                        face = "bold"),
       axis.text.x        = element_text(margin = margin(t = half_line)),
       axis.text.y        = element_text(margin = margin(r = half_line),
                                         hjust  = 1),

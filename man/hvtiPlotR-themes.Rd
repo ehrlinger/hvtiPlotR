@@ -45,7 +45,7 @@ theme_hv_poster(
 
 theme_hv_ppt_dark(
   base_size = 32,
-  base_family = "",
+  base_family = "Arial",
   header_family = NULL,
   base_line_size = base_size/22,
   base_rect_size = base_size/22,
@@ -57,7 +57,7 @@ theme_hv_ppt_dark(
 
 theme_hv_ppt_light(
   base_size = 32,
-  base_family = "",
+  base_family = "Arial",
   header_family = NULL,
   base_line_size = base_size/22,
   base_rect_size = base_size/22,
@@ -136,7 +136,7 @@ into a final \code{\link[ggplot2:theme]{ggplot2::theme()}} call; tweak elements 
 without a separate \code{+} chain:
 
 \if{html}{\out{<div class="sourceCode">}}\preformatted{theme_hv_manuscript(legend.position = "right")
-theme_hv_ppt_dark(axis.text.y = element_text(family = "mono"))
+theme_hv_ppt_dark(plot.title = element_text(hjust = 0.5))
 }\if{html}{\out{</div>}}
 
 Your elements override the hvtiPlotR defaults.
