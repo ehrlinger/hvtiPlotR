@@ -638,7 +638,7 @@ p_ppt <- ccf_pptPlot + theme_hv_ppt_dark()
 
 save_ppt(
   object       = p_ppt,
-  template     = system.file("ClevelandClinic.pptx", package = "hvtiPlotR"),
+  template     = system.file("extdata", "hv_ppt_template.pptx", package = "hvtiPlotR"),
   powerpoint   = here::here("graphs", "presentation.pptx"),
   slide_titles = "Competing Risks"
 )

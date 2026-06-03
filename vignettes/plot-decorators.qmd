@@ -352,7 +352,7 @@ template.
 
 ```{r save_ppt_single}
 #| eval: false
-template <- system.file("ClevelandClinic.pptx", package = "hvtiPlotR")
+template <- system.file("extdata", "hv_ppt_template.pptx", package = "hvtiPlotR")
 
 p_ppt <- p_base +
   scale_colour_brewer(palette = "Set1", name = "Group") +

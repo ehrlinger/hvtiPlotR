@@ -33,3 +33,4 @@ hvtiPlotR.Rproj
 .positai
 Rplots.pdf
 *.tar.gz
+vignettes/*.html
