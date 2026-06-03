@@ -170,6 +170,16 @@ add_plot_slide <- function(doc, plot, title, layout, master, width, height,
 #' [officer::ph_location()] for pixel-exact positioning; titles go into the
 #' designated title placeholder via [officer::ph_location_type()].
 #'
+#' @details
+#' The package ships a small dark-background test template derived from the
+#' canonical CORR deck (master, layouts, theme; no content slides). Use it to
+#' try `save_ppt()` without hunting for a template:
+#'
+#' ```
+#' template <- system.file("extdata", "hv_ppt_template.pptx",
+#'                         package = "hvtiPlotR")
+#' ```
+#'
 #' @param object      A single ggplot object **or** a named/unnamed list of
 #'   ggplot objects. Each element produces one slide. May also be an
 #'   `hv_consort` object produced by [hv_consort()].

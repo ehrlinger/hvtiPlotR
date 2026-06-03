@@ -40,6 +40,12 @@
   without Arial installed (a cause of the failing CI run).
 - Declared `xml2` in `Suggests` (used by the save_ppt white-box test), fixing
   the "unstated dependencies in 'tests'" check WARNING.
+- Added a small (~16 KB) dark-background test template at
+  `inst/extdata/hv_ppt_template.pptx`, derived from the canonical CORR deck
+  (master, layouts, and theme only — content slides, notes, comments, media,
+  and document metadata stripped). Reach it with
+  `system.file("extdata", "hv_ppt_template.pptx", package = "hvtiPlotR")` to
+  try `save_ppt()` against an authentic dark slide master.
 
 # hvtiPlotR 2.3.2
 

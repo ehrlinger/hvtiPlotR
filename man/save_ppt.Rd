@@ -79,6 +79,15 @@ selectable in PowerPoint. Plots are placed via
 \code{\link[officer:ph_location]{officer::ph_location()}} for pixel-exact positioning; titles go into the
 designated title placeholder via \code{\link[officer:ph_location_type]{officer::ph_location_type()}}.
 }
+\details{
+The package ships a small dark-background test template derived from the
+canonical CORR deck (master, layouts, theme; no content slides). Use it to
+try \code{save_ppt()} without hunting for a template:
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{template <- system.file("extdata", "hv_ppt_template.pptx",
+                        package = "hvtiPlotR")
+}\if{html}{\out{</div>}}
+}
 \examples{
 \dontrun{
 library(ggplot2)

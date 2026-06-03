@@ -352,6 +352,26 @@ test_that("save_ppt writes a deck using panel_box layout", {
   expect_true(file.exists(tmp_out))
 })
 
+test_that("save_ppt works against the bundled CORR test template", {
+  skip_if_not_installed("officer")
+  skip_if_not_installed("rvg")
+
+  tpl <- system.file("extdata", "hv_ppt_template.pptx", package = "hvtiPlotR")
+  skip_if(!nzchar(tpl) || !file.exists(tpl), "bundled template not found")
+
+  p   <- create_test_plot() + theme_hv_ppt_dark()
+  out <- tempfile(fileext = ".pptx")
+  on.exit(unlink(out))
+
+  expect_no_error(
+    save_ppt(p, template = tpl, powerpoint = out, slide_titles = "Test")
+  )
+  doc <- officer::read_pptx(out)
+  expect_gte(length(doc), 1L)
+  # the template ships the "Title and Content" layout save_ppt() defaults to
+  expect_true("Title and Content" %in% officer::layout_summary(doc)$layout)
+})
+
 test_that("save_ppt defaults panel_box to the standard fixed-panel rectangle", {
   default_box <- eval(formals(save_ppt)$panel_box)
   expect_equal(
