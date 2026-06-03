@@ -46,6 +46,24 @@ suppress_officer_bg_warnings <- function(expr) {
   )
 }
 
+# hv_ph_location() measures the plot grob on a pdf(NULL) device, whose
+# PostScript font database does not know system fonts such as the PPT themes'
+# default "Verdana". The device substitutes a metric-compatible font for the
+# measurement only; the actual slide graphic is rendered by rvg/dsvg via
+# systemfonts, which resolves "Verdana" and embeds it correctly. Filter just
+# that benign measurement-device warning so default decks stay warning-free.
+suppress_font_db_warnings <- function(expr) {
+  withCallingHandlers(
+    expr,
+    warning = function(w) {
+      if (grepl("font family .* not found in (PostScript|PDF) font database",
+                conditionMessage(w))) {
+        invokeRestart("muffleWarning")
+      }
+    }
+  )
+}
+
 # Add one editable consort slide (grid output via rvg::dml code= path) ------
 
 add_consort_slide <- function(doc, consort_obj, title, layout, master,
@@ -179,14 +197,17 @@ add_plot_slide <- function(doc, plot, title, layout, master, width, height,
 #' @param top         Distance in inches from the top of the slide.
 #'   Default `1.2` (below a standard title bar). Ignored when `panel_box`
 #'   is supplied.
-#' @param panel_box   Optional named list `list(width, height, left, top)`
-#'   describing the **panel content area** to anchor on every slide (in
-#'   inches). When supplied, per-plot slide placement is computed via
-#'   [hv_ph_location()] so the panel lands at the same slide coordinates
-#'   on every slide regardless of axis-label width. When `NULL` (default),
-#'   the fixed `width`/`height`/`left`/`top` arguments are used for every
-#'   slide (legacy behavior). Ignored for `hv_consort` objects, which are
-#'   always placed using their own metadata dimensions.
+#' @param panel_box   Named list `list(width, height, left, top)` describing
+#'   the **panel content area** to anchor on every slide (in inches).
+#'   Per-plot slide placement is computed via [hv_ph_location()] so the panel
+#'   lands at the same slide coordinates on every slide regardless of
+#'   axis-label width. Defaults to
+#'   `list(width = 8.88, height = 4.51, left = 2.58, top = 1.29)` — the
+#'   standard CORR fixed-panel rectangle for AATS-style dark decks. Pass
+#'   `panel_box = NULL` to fall back to the fixed `width`/`height`/`left`/
+#'   `top` arguments for every slide (legacy behavior). Ignored for
+#'   `hv_consort` objects, which are always placed using their own metadata
+#'   dimensions.
 #'
 #' @return Invisibly returns the path given by `powerpoint`.
 #'
@@ -321,7 +342,10 @@ save_ppt <- function(object,
                      height       = 5.8,
                      left         = 0.0,
                      top          = 1.2,
-                     panel_box    = NULL) {
+                     panel_box    = list(width  = 8.88,
+                                         height = 4.51,
+                                         left   = 2.58,
+                                         top    = 1.29)) {
 
   ensure_officer_available()
   ensure_rvg_available()
@@ -347,14 +371,15 @@ save_ppt <- function(object,
     stop("`powerpoint` must be a writable file path.", call. = FALSE)
   if (!(is.character(slide_titles) && length(slide_titles) >= 1L))
     stop("`slide_titles` must be a non-empty character vector.", call. = FALSE)
-  if (is.null(panel_box)) {
-    if (!(is.numeric(width)  && length(width)  == 1L && width  > 0 &&
-          is.numeric(height) && length(height) == 1L && height > 0))
-      stop("`width` and `height` must be positive numbers.", call. = FALSE)
-    if (!(is.numeric(left) && length(left) == 1L && left >= 0 &&
-          is.numeric(top)  && length(top)  == 1L && top  >= 0))
-      stop("`left` and `top` must be non-negative numbers.", call. = FALSE)
-  } else {
+  # width/height/left/top are always validated: they drive the legacy
+  # fixed-placement path used when `panel_box = NULL`.
+  if (!(is.numeric(width)  && length(width)  == 1L && width  > 0 &&
+        is.numeric(height) && length(height) == 1L && height > 0))
+    stop("`width` and `height` must be positive numbers.", call. = FALSE)
+  if (!(is.numeric(left) && length(left) == 1L && left >= 0 &&
+        is.numeric(top)  && length(top)  == 1L && top  >= 0))
+    stop("`left` and `top` must be non-negative numbers.", call. = FALSE)
+  if (!is.null(panel_box)) {
     expected <- c("width", "height", "left", "top")
     if (!is.list(panel_box) || !all(expected %in% names(panel_box)))
       stop("`panel_box` must be a list with elements `width`, `height`, `left`, `top`.",
@@ -396,13 +421,15 @@ save_ppt <- function(object,
         slide_l <- left
         slide_t <- top
       } else {
-        loc <- hv_ph_location(
-          plots[[i]],
-          panel_width  = panel_box$width,
-          panel_height = panel_box$height,
-          panel_left   = panel_box$left,
-          panel_top    = panel_box$top,
-          units        = "in"
+        loc <- suppress_font_db_warnings(
+          hv_ph_location(
+            plots[[i]],
+            panel_width  = panel_box$width,
+            panel_height = panel_box$height,
+            panel_left   = panel_box$left,
+            panel_top    = panel_box$top,
+            units        = "in"
+          )
         )
         slide_w <- loc$width
         slide_h <- loc$height

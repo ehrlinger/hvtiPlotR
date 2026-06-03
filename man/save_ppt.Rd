@@ -15,7 +15,7 @@ save_ppt(
   height = 5.8,
   left = 0,
   top = 1.2,
-  panel_box = NULL
+  panel_box = list(width = 8.88, height = 4.51, left = 2.58, top = 1.29)
 )
 }
 \arguments{
@@ -56,14 +56,17 @@ Default \code{0.0}. Ignored when \code{panel_box} is supplied.}
 Default \code{1.2} (below a standard title bar). Ignored when \code{panel_box}
 is supplied.}
 
-\item{panel_box}{Optional named list \code{list(width, height, left, top)}
-describing the \strong{panel content area} to anchor on every slide (in
-inches). When supplied, per-plot slide placement is computed via
-\code{\link[=hv_ph_location]{hv_ph_location()}} so the panel lands at the same slide coordinates
-on every slide regardless of axis-label width. When \code{NULL} (default),
-the fixed \code{width}/\code{height}/\code{left}/\code{top} arguments are used for every
-slide (legacy behavior). Ignored for \code{hv_consort} objects, which are
-always placed using their own metadata dimensions.}
+\item{panel_box}{Named list \code{list(width, height, left, top)} describing
+the \strong{panel content area} to anchor on every slide (in inches).
+Per-plot slide placement is computed via \code{\link[=hv_ph_location]{hv_ph_location()}} so the panel
+lands at the same slide coordinates on every slide regardless of
+axis-label width. Defaults to
+\code{list(width = 8.88, height = 4.51, left = 2.58, top = 1.29)} — the
+standard CORR fixed-panel rectangle for AATS-style dark decks. Pass
+\code{panel_box = NULL} to fall back to the fixed \code{width}/\code{height}/\code{left}/
+\code{top} arguments for every slide (legacy behavior). Ignored for
+\code{hv_consort} objects, which are always placed using their own metadata
+dimensions.}
 }
 \value{
 Invisibly returns the path given by \code{powerpoint}.

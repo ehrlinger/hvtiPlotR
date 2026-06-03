@@ -81,7 +81,7 @@ test_that("theme_hv_ppt_dark retains opaque black panel fill", {
   expect_identical(th$panel.background$colour, "white")
 })
 
-test_that("PPT themes default to Verdana 30 for axis text and titles", {
+test_that("PPT themes default to Verdana 30 Bold for axis text and titles", {
   for (th in list(theme_hv_ppt_dark(), theme_hv_ppt_light())) {
     # base_family flows to all text (incl. axis text/titles) via theme_grey().
     expect_identical(th$text$family, "Verdana")
@@ -90,6 +90,9 @@ test_that("PPT themes default to Verdana 30 for axis text and titles", {
     # axis titles inherit base_size (30) -- no explicit override, so size
     # is NULL here but resolves to 30 at build time; lock base_size via text.
     expect_equal(th$text$size, 30)
+    # axis tick labels and axis titles are bold.
+    expect_identical(th$axis.text$face,  "bold")
+    expect_identical(th$axis.title$face, "bold")
   }
 })
 

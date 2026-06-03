@@ -80,6 +80,7 @@ test_that("save_ppt works with custom width, height, left, top", {
 
   expect_no_error(
     save_ppt(p, template = temp_template, powerpoint = temp_ppt,
+             panel_box = NULL,
              width = 8, height = 5, left = 0.5, top = 1.5)
   )
 })
@@ -347,6 +348,31 @@ test_that("save_ppt writes a deck using panel_box layout", {
       slide_titles = c("Small", "Big"),
       panel_box    = list(width = 10, height = 5, left = 1.5, top = 1.5)
     )
+  )
+  expect_true(file.exists(tmp_out))
+})
+
+test_that("save_ppt defaults panel_box to the standard fixed-panel rectangle", {
+  default_box <- eval(formals(save_ppt)$panel_box)
+  expect_equal(
+    default_box,
+    list(width = 8.88, height = 4.51, left = 2.58, top = 1.29)
+  )
+})
+
+test_that("save_ppt uses the panel_box path by default (no explicit panel_box)", {
+  skip_if_not_installed("officer")
+  skip_if_not_installed("rvg")
+
+  p       <- create_test_plot() + theme_hv_ppt_dark()
+  tmp_tpl <- make_temp_template()
+  tmp_out <- tempfile(fileext = ".pptx")
+  on.exit(unlink(c(tmp_tpl, tmp_out)))
+
+  # A default call must succeed and write a file even though it now routes
+  # through hv_ph_location() (panel_box default is non-NULL).
+  expect_no_error(
+    save_ppt(p, template = tmp_tpl, powerpoint = tmp_out)
   )
   expect_true(file.exists(tmp_out))
 })

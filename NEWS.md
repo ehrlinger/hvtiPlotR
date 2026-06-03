@@ -9,9 +9,23 @@
   consort diagrams) now pass `bg = "transparent"`, so the slide-template
   background shows through cleanly on dark/blue decks.
 - `theme_hv_ppt_dark()` and `theme_hv_ppt_light()` now default to
-  `base_family = "Verdana"` and `base_size = 30`, so axis tick labels and axis
-  titles render as a consistent Verdana 30 across PPT decks. Override at the
-  call site as usual, e.g. `theme_hv_ppt_dark(base_size = 32)`.
+  `base_family = "Verdana"`, `base_size = 30`, and **bold** axis tick labels
+  and axis titles, so axes render as a consistent Verdana 30 Bold across PPT
+  decks. (Slide-title fonts are controlled by the PowerPoint template, not the
+  theme.) Override at the call site as usual, e.g.
+  `theme_hv_ppt_dark(base_size = 32, axis.text = ggplot2::element_text(face = "plain"))`.
+
+## Changes
+
+- `save_ppt()` now defaults `panel_box` to the standard CORR fixed-panel
+  rectangle `list(width = 8.88, height = 4.51, left = 2.58, top = 1.29)`, so
+  every deck anchors the plot panel at the same slide coordinates by default
+  (AATS-style placement). Pass `panel_box = NULL` to restore the legacy
+  fixed-`width`/`height`/`left`/`top` placement. Because the default now
+  routes plots through `hv_ph_location()`, save_ppt suppresses the benign
+  "font family 'Verdana' not found in PostScript font database" warning from
+  the grob-measurement device (the slide graphic still embeds Verdana via
+  systemfonts).
 
 # hvtiPlotR 2.3.2
 
