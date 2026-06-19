@@ -24,7 +24,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">hvtiPlotR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.3.3</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.3.4</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -77,7 +77,7 @@
       <h1>hvtiPlotR Plot Functions</h1>
 
       <p class="author">John Ehrlinger <a href="mailto:ehrlinj@ccf.org" class="email">ehrlinj@ccf.org</a></p>
-      <p class="date">2026-06-03</p>
+      <p class="date">2026-06-19</p>
 
       <small class="dont-index">Source: <a href="https://github.com/ehrlinger/hvtiPlotR/blob/main/vignettes/plot-functions.qmd" class="external-link"><code>vignettes/plot-functions.qmd</code></a></small>
       <div class="d-none name"><code></code></div>
@@ -1409,7 +1409,7 @@ Age.After match                    Age  After match      3.5</code></pre>
 <p><code><a href="../reference/hv_sankey.html">hv_sankey()</a></code> prepares a Sankey diagram that lets you watch how patient cluster assignments shift as you increase K — a visual test of cluster stability. Where the bands stay wide and orderly, the solution holds; where they cross and fragment, you can see at a glance that K has grown past what the data supports. It ports the PAM cluster stability figure from the HVTI clustering analysis pipeline. Each column represents one value of K (default K = 2 to 9); each band shows the fraction of patients whose assignment changes between consecutive K values. Node labels show the cluster letter and count.</p>
 <p><strong>Requires <code>ggsankey</code></strong> (not on CRAN):</p>
 <div class="sourceCode" id="cb80"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"davidsjoberg/ggsankey"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"davidsjoberg/ggsankey"</span><span class="op">)</span></span></code></pre></div>
 <section class="level2"><h3 id="sample-data-5">Sample data<a class="anchor" aria-label="anchor" href="#sample-data-5"></a>
 </h3>
 <p><code><a href="../reference/sample_cluster_sankey_data.html">sample_cluster_sankey_data()</a></code> returns 300 patients with nine cluster-assignment columns (<code>C2</code> through <code>C9</code>), where each column gives the PAM cluster label at that K. <code>table(dta_san$C9)</code> confirms the marginal counts at K = 9 before you pass the data to the constructor.</p>

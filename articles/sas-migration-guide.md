@@ -1775,14 +1775,14 @@ sessionInfo()
     [1] stats     graphics  grDevices utils     datasets  methods   base
 
     other attached packages:
-    [1] ggplot2_4.0.3   hvtiPlotR_2.3.3
+    [1] ggplot2_4.0.3   hvtiPlotR_2.3.4
 
     loaded via a namespace (and not attached):
      [1] generics_0.1.4          tidyr_1.3.2             fontLiberation_0.1.0
      [4] xml2_1.5.2              lattice_0.22-9          digest_0.6.39
      [7] magrittr_2.0.5          evaluate_1.0.5          grid_4.6.0
     [10] RColorBrewer_1.1-3      fastmap_1.2.0           jsonlite_2.0.0
-    [13] Matrix_1.7-5            zip_2.3.3               consort_1.2.3
+    [13] Matrix_1.7-5            zip_3.0.0               consort_1.2.3
     [16] survival_3.8-6          purrr_1.2.2             scales_1.4.0
     [19] fontBitstreamVera_0.1.1 textshaping_1.0.5       cli_3.6.6
     [22] rlang_1.2.0             fontquiver_0.2.1        ggupset_0.4.1
@@ -1796,4 +1796,4 @@ sessionInfo()
     [46] tibble_3.3.1            tidyselect_1.2.1        knitr_1.51
     [49] farver_2.1.2            htmltools_0.5.9         labeling_0.4.3
     [52] rmarkdown_2.31          ggalluvial_0.12.6       compiler_4.6.0
-    [55] S7_0.2.2                askpass_1.2.1           openssl_2.4.1          
+    [55] S7_0.2.2                askpass_1.2.1           openssl_2.4.2          
