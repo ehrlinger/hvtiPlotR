@@ -1,3 +1,10 @@
+# hvtiPlotR 2.3.4
+
+## Bug fixes
+
+- `save_ppt()`: corrected `panel_box` defaults to
+  `list(width = 8.79, height = 4.422, left = 2.67, top = 1.29)`.
+
 # hvtiPlotR 2.3.3
 
 ## Bug fixes
