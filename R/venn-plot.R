@@ -31,7 +31,8 @@ utils::globalVariables(c("region", "n"))
     else paste(inset, collapse = " & ")
   }, character(1L))
 
-  out <- cbind(patterns, region = region, n = counts, stringsAsFactors = FALSE)
+  out <- data.frame(patterns, region = region, n = counts,
+                    stringsAsFactors = FALSE)
   rownames(out) <- NULL
   out
 }
