@@ -111,6 +111,7 @@ plot(mh) + theme_hv_manuscript()
 | `hv_survival_difference()` | Absolute treatment benefit vs. a reference group over time |
 | `hv_nnt()` | Number needed to treat derived from survival difference estimates |
 | `hv_followup()` | Goodness-of-follow-up scatter: actual vs. potential follow-up by operation year; `plot(gf, type = "event")` for non-fatal competing events |
+| `hv_atrisk()` / `hv_atrisk_compose()` | Numbers-at-risk table panel, and a composer that stacks a survival curve over it with aligned time axes |
 
 ### Longitudinal & Repeated Measures
 
