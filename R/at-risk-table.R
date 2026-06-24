@@ -12,19 +12,21 @@ utils::globalVariables(c("n.risk", "report_time", "strata"))
 # n.risk at time t = number of subjects whose follow-up time is >= t.
 # `status` is accepted for signature symmetry / future per-time event counts;
 # v1 uses only `time` and `group`.
+# NA `time` values are excluded from counts (via na.rm = TRUE in sum()) — intentional.
 .atrisk_table <- function(time, status = NULL, group = NULL, report_times) {
   if (!is.numeric(time) || length(time) == 0L)
     stop("`time` must be a non-empty numeric vector.", call. = FALSE)
   if (!(is.numeric(report_times) && length(report_times) > 0L))
     stop("`report_times` must be a non-empty numeric vector.", call. = FALSE)
   if (is.null(group)) group <- rep("Overall", length(time))
-  group <- as.character(group)
   if (length(group) != length(time))
     stop("`group` must be the same length as `time`.", call. = FALSE)
+  grp_chr       <- as.character(group)
+  strata_levels <- if (is.factor(group)) levels(droplevels(group)) else
+    sort(unique(grp_chr))
 
-  strata_levels <- unique(group)
   rows <- lapply(strata_levels, function(st) {
-    t_st <- time[group == st]
+    t_st <- time[grp_chr == st]
     do.call(rbind, lapply(report_times, function(rt) {
       data.frame(strata = st, report_time = rt,
                  n.risk = sum(t_st >= rt, na.rm = TRUE),
