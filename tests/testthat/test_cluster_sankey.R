@@ -241,6 +241,35 @@ test_that("group_labels produce milestone x-axis labels for listed columns", {
   expect_true("C3" %in% x_scale$labels)  # unlisted column stays bare
 })
 
+test_that(".derive_node_order drops NA and covers all observed labels", {
+  dta <- data.frame(
+    C2 = c("A", "B", "A", NA),
+    C3 = c("A", "B", "C", "B"),
+    stringsAsFactors = FALSE
+  )
+  ord <- .derive_node_order(dta, c("C2", "C3"))
+  expect_false(anyNA(ord))
+  expect_setequal(ord, c("A", "B", "C"))  # every non-NA label covered
+})
+
+test_that("plot.hv_sankey errors on unnamed group_labels", {
+  skip_if_not_installed("ggsankey")
+  dta <- sample_cluster_sankey_data(n = 100, seed = 1)
+  expect_error(
+    plot(hv_sankey(dta), group_labels = c("2 groups", "5 groups")),
+    "named"
+  )
+})
+
+test_that("plot.hv_sankey warns on group_labels names matching no column", {
+  skip_if_not_installed("ggsankey")
+  dta <- sample_cluster_sankey_data(n = 100, seed = 1)
+  expect_warning(
+    plot(hv_sankey(dta), group_labels = c(C2 = "2 groups", CX = "nope")),
+    "match no cluster"
+  )
+})
+
 # ---------------------------------------------------------------------------
 # print.hv_sankey coverage
 # ---------------------------------------------------------------------------

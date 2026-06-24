@@ -151,11 +151,12 @@ sample_cluster_sankey_data <- function(
   }
 
   roots <- unique(col_chr[[1L]])
+  roots <- roots[!is.na(roots)]             # NA is not a real cluster label
   ord   <- roots[order(vapply(roots, function(r) size_at(1L, r), 0),
                        decreasing = TRUE)]
 
   for (i in 2:k) {
-    pm   <- parent_of(i, ord)
+    pm   <- parent_of(i, ord)               # table() already drops NA labels
     newl <- setdiff(names(pm), ord)
     if (length(newl))
       newl <- newl[order(vapply(newl, function(s) size_at(i, s), 0),
@@ -168,7 +169,12 @@ sample_cluster_sankey_data <- function(
         append(ord, ch, after = pos)        # otherwise -> insert right
     }
   }
-  ord
+
+  # Safety net: guarantee every observed (non-NA) label is covered, so
+  # `hv_sankey()` can never coerce one to NA when factoring node/next_node.
+  all_labels <- unique(unlist(col_chr, use.names = FALSE))
+  all_labels <- all_labels[!is.na(all_labels)]
+  c(ord, setdiff(all_labels, ord))
 }
 
 # ---------------------------------------------------------------------------
@@ -228,10 +234,10 @@ sample_cluster_sankey_data <- function(
 #'   supplied, it is used verbatim but must cover every observed cluster
 #'   label.
 #' @param node_colours  Named character vector mapping node labels to fill
-#'   colours. If \code{NULL} (default), labels are mapped to the
-#'   \pkg{RColorBrewer} \code{"Set1"} palette in \code{node_levels} order.
-#'   When there are more labels than palette colours the palette is recycled
-#'   with a warning.
+#'   colours. If \code{NULL} (default), labels are mapped to an inline
+#'   ColorBrewer \code{Set1} hex palette in \code{node_levels} order (no
+#'   dependency on \pkg{RColorBrewer}). When there are more labels than
+#'   palette colours the palette is recycled with a warning.
 #'
 #' @return An object of class \code{c("hv_sankey", "hv_data")}:
 #' \describe{
@@ -417,6 +423,16 @@ plot.hv_sankey <- function(x,
   }
   .check_alpha(flow_alpha)
   .check_alpha(label_alpha)
+
+  if (!is.null(group_labels)) {
+    if (!(is.character(group_labels) && !is.null(names(group_labels))))
+      stop("`group_labels` must be a named character vector keyed by ",
+           "`cluster_cols` values.", call. = FALSE)
+    unmatched <- setdiff(names(group_labels), x$meta$cluster_cols)
+    if (length(unmatched) > 0L)
+      warning("`group_labels` name(s) match no cluster column and are ",
+              "ignored: ", paste(unmatched, collapse = ", "), call. = FALSE)
+  }
 
   san_dta      <- x$data
   node_colours <- x$meta$node_colours

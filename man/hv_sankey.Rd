@@ -27,10 +27,10 @@ supplied, it is used verbatim but must cover every observed cluster
 label.}
 
 \item{node_colours}{Named character vector mapping node labels to fill
-colours. If \code{NULL} (default), labels are mapped to the
-\pkg{RColorBrewer} \code{"Set1"} palette in \code{node_levels} order.
-When there are more labels than palette colours the palette is recycled
-with a warning.}
+colours. If \code{NULL} (default), labels are mapped to an inline
+ColorBrewer \code{Set1} hex palette in \code{node_levels} order (no
+dependency on \pkg{RColorBrewer}). When there are more labels than
+palette colours the palette is recycled with a warning.}
 }
 \value{
 An object of class \code{c("hv_sankey", "hv_data")}:
