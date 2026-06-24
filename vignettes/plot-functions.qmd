@@ -812,8 +812,8 @@ plot(km_s, alpha = 0.8) +
 
 ### Survival curve with a numbers-at-risk table
 
-`hv_atrisk()` turns the `$tables$risk` an `hv_survival` object already carries
-into a bare table panel, and `hv_atrisk_compose()` stacks the curve over it
+`hv_atrisk()` turns the `$tables$risk` that an `hv_survival` object already
+carries into a bare table panel, and `hv_atrisk_compose()` stacks the curve over it
 with the time axes aligned. The non-KM curves (`hv_nonparametric`, `hv_ordinal`,
 `hv_hazard`) take pre-summarised curve data and carry no risk table, so for
 those you hand `hv_atrisk()` the subject-level `time`/`status`/`group` columns

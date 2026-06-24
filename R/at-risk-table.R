@@ -44,6 +44,24 @@ utils::globalVariables(c("n.risk", "report_time", "strata"))
 # ---------------------------------------------------------------------------
 # Internal: resolve any accepted input into a tidy risk data frame with
 # columns strata, report_time, n.risk.
+# Internal: on the table-backed paths, `report_times` selects which of the
+# table's existing times to show (it cannot recompute counts). Times not in
+# the table are ignored with a warning; an empty selection errors.
+.select_report_times <- function(rdf, report_times) {
+  if (is.null(report_times)) return(rdf)
+  avail   <- sort(unique(rdf$report_time))
+  missing <- setdiff(report_times, avail)
+  if (length(missing) > 0L)
+    warning("`report_times` not in the risk table (ignored): ",
+            paste(missing, collapse = ", "),
+            ". Available: ", paste(avail, collapse = ", "), ".", call. = FALSE)
+  out <- rdf[rdf$report_time %in% report_times, , drop = FALSE]
+  if (nrow(out) == 0L)
+    stop("None of the requested `report_times` are in the risk table. ",
+         "Available: ", paste(avail, collapse = ", "), ".", call. = FALSE)
+  out
+}
+
 .resolve_risk_df <- function(x, time, status, group, report_times) {
   # Mode 1: an hv_data object carrying $tables$risk (e.g. hv_survival).
   if (inherits(x, "hv_data")) {
@@ -52,7 +70,7 @@ utils::globalVariables(c("n.risk", "report_time", "strata"))
       stop("This object has no `$tables$risk`. Pass subject-level data with ",
            "`time`/`status`/`group`, or a precomputed risk data frame.",
            call. = FALSE)
-    return(rdf)
+    return(.select_report_times(rdf, report_times))
   }
 
   if (!is.data.frame(x))
@@ -69,6 +87,8 @@ utils::globalVariables(c("n.risk", "report_time", "strata"))
     if (!is.null(status) && !(status %in% names(x)))
       stop("`status` column \"", status, "\" not found in `x`.", call. = FALSE)
     tv <- x[[time]]
+    if (!is.numeric(tv) || !any(is.finite(tv)))
+      stop("`time` column \"", time, "\" has no finite values.", call. = FALSE)
     gv <- if (!is.null(group)) x[[group]] else NULL
     sv <- if (!is.null(status)) x[[status]] else NULL
     rt <- report_times
@@ -93,12 +113,13 @@ utils::globalVariables(c("n.risk", "report_time", "strata"))
     stop("Precomputed risk data frame needs `strata`, ",
          "`report_time` (or `time`), and `n.risk` (or `n`) columns.",
          call. = FALSE)
-  data.frame(
-    strata      = as.character(x[["strata"]]),
+  rdf <- data.frame(
+    strata      = x[["strata"]],          # preserve type (factor order kept)
     report_time = x[[time_col]],
     n.risk      = x[[n_col]],
     stringsAsFactors = FALSE
   )
+  .select_report_times(rdf, report_times)
 }
 
 #' Numbers-at-risk table panel
@@ -119,8 +140,13 @@ utils::globalVariables(c("n.risk", "report_time", "strata"))
 #'   row order (its levels set the order); a character column orders rows
 #'   alphabetically. Default \code{NULL}.
 #' @param report_times Numeric time points for the columns. \code{NULL}
-#'   (default) uses the object's own points, or -- on the raw-data path --
-#'   an even spread derived from the observed time range.
+#'   (default) uses the table's own points, or -- on the raw-data path -- an
+#'   even spread derived from the observed time range. On the object and
+#'   precomputed-table paths a non-\code{NULL} value \emph{selects} which of
+#'   the table's existing times to show; the counts are not recomputed, and
+#'   any requested time not in the table is ignored with a warning. To use
+#'   arbitrary times for a Kaplan-Meier object, rebuild it with
+#'   \code{hv_survival(..., report_times = )} or pass the subject-level data.
 #' @param size Text size for the counts. Default \code{NULL} (3.5).
 #' @param strata_labels Optional named character vector remapping stratum row
 #'   labels. Default \code{NULL}.
@@ -149,9 +175,14 @@ hv_atrisk <- function(x, time = NULL, status = NULL, group = NULL,
          "carrying `$tables$risk`, a precomputed risk data frame, or a ",
          "subject-level data frame with a `time` column.", call. = FALSE)
 
-  # First stratum on top: reverse factor levels (ggplot puts level 1 at bottom).
-  lev <- unique(rdf$strata)
-  rdf$strata <- factor(rdf$strata, levels = rev(lev))
+  if (anyNA(rdf$strata))
+    stop("The risk table has missing `strata` values; label or drop them.",
+         call. = FALSE)
+  # First stratum on top: reverse the stratum order (ggplot puts level 1 at
+  # the bottom). Respect a factor's own levels; else use first-seen order.
+  lev <- if (is.factor(rdf$strata)) levels(droplevels(rdf$strata)) else
+    unique(as.character(rdf$strata))
+  rdf$strata <- factor(as.character(rdf$strata), levels = rev(lev))
 
   y_labels <- if (is.null(strata_labels)) ggplot2::waiver() else
     function(br) ifelse(br %in% names(strata_labels), strata_labels[br], br)

@@ -151,3 +151,52 @@ test_that("hv_atrisk_compose validates heights", {
   expect_error(hv_atrisk_compose(curve, table, heights = c(1, 2, 3)),
                "length-2 numeric")
 })
+
+# ---------------------------------------------------------------------------
+# report_times selection + strata handling on the table-backed paths
+# ---------------------------------------------------------------------------
+
+test_that("report_times selects from an hv_survival object's existing times", {
+  km <- hv_survival(sample_survival_data(n = 200, seed = 1),
+                    report_times = c(0, 5, 10, 15, 20))
+  p  <- hv_atrisk(km, report_times = c(0, 10, 20))
+  built <- ggplot2::layer_data(p, 1)
+  expect_equal(sort(unique(built$x)), c(0, 10, 20))
+})
+
+test_that("report_times not in the table warns and is dropped", {
+  km <- hv_survival(sample_survival_data(n = 200, seed = 1),
+                    report_times = c(0, 5, 10))
+  expect_warning(hv_atrisk(km, report_times = c(0, 99)), "not in the risk table")
+})
+
+test_that("report_times matching nothing errors", {
+  km <- hv_survival(sample_survival_data(n = 100, seed = 1),
+                    report_times = c(0, 5, 10))
+  expect_error(suppressWarnings(hv_atrisk(km, report_times = c(99))),
+               "None of the requested")
+})
+
+test_that("precomputed strata factor order is preserved (not alphabetised)", {
+  rdf <- data.frame(
+    strata      = factor(c("Late", "Early"), levels = c("Late", "Early")),
+    report_time = c(0, 0),
+    n.risk      = c(10, 20)
+  )
+  p   <- hv_atrisk(rdf)
+  # y is built with rev(levels) so the first level ("Late") sits on top
+  blt <- ggplot2::ggplot_build(p)
+  ylabs <- blt$layout$panel_params[[1]]$y$get_labels()
+  expect_equal(ylabs, c("Early", "Late"))  # bottom-to-top => Late on top
+})
+
+test_that("hv_atrisk errors on NA strata in a precomputed table", {
+  rdf <- data.frame(strata = c("A", NA), report_time = c(0, 0),
+                    n.risk = c(10, 8))
+  expect_error(hv_atrisk(rdf), "missing `strata`")
+})
+
+test_that("raw-data path errors when time has no finite values", {
+  dta <- data.frame(t = c(NA_real_, NA_real_), g = c("A", "B"))
+  expect_error(hv_atrisk(dta, time = "t", group = "g"), "no finite values")
+})

@@ -31,8 +31,13 @@ row order (its levels set the order); a character column orders rows
 alphabetically. Default \code{NULL}.}
 
 \item{report_times}{Numeric time points for the columns. \code{NULL}
-(default) uses the object's own points, or -- on the raw-data path --
-an even spread derived from the observed time range.}
+(default) uses the table's own points, or -- on the raw-data path -- an
+even spread derived from the observed time range. On the object and
+precomputed-table paths a non-\code{NULL} value \emph{selects} which of
+the table's existing times to show; the counts are not recomputed, and
+any requested time not in the table is ignored with a warning. To use
+arbitrary times for a Kaplan-Meier object, rebuild it with
+\code{hv_survival(..., report_times = )} or pass the subject-level data.}
 
 \item{size}{Text size for the counts. Default \code{NULL} (3.5).}
 
