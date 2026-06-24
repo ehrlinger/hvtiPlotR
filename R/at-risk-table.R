@@ -131,8 +131,7 @@ utils::globalVariables(c("n.risk", "report_time", "strata"))
 #' km <- hv_survival(sample_survival_data(n = 200, seed = 1))
 #' hv_atrisk(km)
 #'
-#' @importFrom ggplot2 ggplot aes geom_text scale_y_discrete theme_minimal
-#'   theme element_blank
+#' @importFrom ggplot2 ggplot aes geom_text scale_y_discrete theme_minimal theme element_blank
 #' @importFrom rlang .data
 #' @export
 hv_atrisk <- function(x, time = NULL, status = NULL, group = NULL,
