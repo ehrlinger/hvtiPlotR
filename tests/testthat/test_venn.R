@@ -77,10 +77,25 @@ test_that("plot(hv_venn) is composable with theme_hv_manuscript()", {
   expect_s3_class(p, "ggplot")
 })
 
-test_that("plot(hv_venn) honours show_percentage and a fill override", {
+test_that("plot(hv_venn) accepts show_percentage and a fill override", {
   dta <- sample_upset_data(n = 200, seed = 1)
   v   <- hv_venn(dta, sets = c("AV_Replacement", "MV_Replacement"))
   p   <- plot(v, show_percentage = FALSE,
               fill = c("steelblue", "firebrick"))
   expect_s3_class(p, "ggplot")
+})
+
+test_that("plot(hv_venn) errors on a wrong-length fill", {
+  dta <- sample_upset_data(n = 100, seed = 1)
+  v   <- hv_venn(dta, sets = c("AV_Replacement", "MV_Replacement", "CABG"))
+  expect_error(plot(v, fill = c("red", "blue")), "one colour per set")
+})
+
+test_that("plot(hv_venn) errors when fill and fill_color are both given", {
+  dta <- sample_upset_data(n = 100, seed = 1)
+  v   <- hv_venn(dta, sets = c("AV_Replacement", "MV_Replacement"))
+  expect_error(
+    plot(v, fill = c("red", "blue"), fill_color = c("green", "yellow")),
+    "not `fill_color`"
+  )
 })

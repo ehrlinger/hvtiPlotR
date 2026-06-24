@@ -128,14 +128,24 @@ hv_venn <- function(data, sets) {
 #' @export
 plot.hv_venn <- function(x, show_percentage = TRUE, show_counts = TRUE,
                          fill = NULL, text_size = 4, set_name_size = 6, ...) {
-  args <- list(
-    data            = x$data,
-    columns         = x$meta$sets,
-    show_percentage = show_percentage,
-    show_counts     = show_counts,
-    text_size       = text_size,
-    set_name_size   = set_name_size,
-    ...
+  dots <- list(...)
+  if (!is.null(fill)) {
+    if ("fill_color" %in% names(dots))
+      stop("Pass fill colours via `fill`, not `fill_color`.", call. = FALSE)
+    if (length(fill) != length(x$meta$sets))
+      stop("`fill` must give one colour per set (", length(x$meta$sets),
+           ").", call. = FALSE)
+  }
+  args <- c(
+    list(
+      data            = x$data,
+      columns         = x$meta$sets,
+      show_percentage = show_percentage,
+      show_counts     = show_counts,
+      text_size       = text_size,
+      set_name_size   = set_name_size
+    ),
+    dots
   )
   if (!is.null(fill)) args$fill_color <- fill
   do.call(ggvenn::ggvenn, args)
