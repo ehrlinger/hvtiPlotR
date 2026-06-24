@@ -33,14 +33,18 @@ hv_sankey(
 - node_levels:
 
   Character vector giving the display order of node labels (bottom to
-  top within each column). If `NULL` (default), the existing factor
-  levels of the first cluster column are used.
+  top within each column). If `NULL` (default), a lineage-preserving
+  order is derived from the data so each child cluster sits next to its
+  parent and flows stay uncrossed (see Details). If supplied, it is used
+  verbatim but must cover every observed cluster label.
 
 - node_colours:
 
   Named character vector mapping node labels to fill colours. If `NULL`
-  (default), colours are drawn from an inline Set1 hex palette in the
-  order `c(2, 6, 8, 4, 3, 5, 7, 1, 9)`.
+  (default), labels are mapped to an inline ColorBrewer `Set1` hex
+  palette in `node_levels` order (no dependency on RColorBrewer). When
+  there are more labels than palette colours the palette is recycled
+  with a warning.
 
 ## Value
 
@@ -59,6 +63,17 @@ An object of class `c("hv_sankey", "hv_data")`:
 - `$tables`:
 
   Empty list.
+
+## Details
+
+By default (`node_levels = NULL`) the node order is read from the data,
+not from one column's factor levels. We take every label that appears in
+any `cluster_cols` column, so no finer-K cluster is dropped to `NA`, and
+place each child next to its parent: the coarser-K cluster that
+contributes most of its members. Siblings end up together, the way
+leaves sit in a dendrogram, and the flows stay short and uncrossed. Pass
+`node_levels` yourself to override this; it is then used as given, but
+it must name every label in the data.
 
 ## See also
 

@@ -15,7 +15,7 @@ ggsankey geoms."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">hvtiPlotR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.3.4</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.4.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -96,14 +96,19 @@ assignments at each value of K, in ascending K order. Default
 
 <dt id="arg-node-levels">node_levels<a class="anchor" aria-label="anchor" href="#arg-node-levels"></a></dt>
 <dd><p>Character vector giving the display order of node
-labels (bottom to top within each column). If <code>NULL</code> (default),
-the existing factor levels of the first cluster column are used.</p></dd>
+labels (bottom to top within each column). If <code>NULL</code> (default), a
+lineage-preserving order is derived from the data so each child cluster
+sits next to its parent and flows stay uncrossed (see Details). If
+supplied, it is used verbatim but must cover every observed cluster
+label.</p></dd>
 
 
 <dt id="arg-node-colours">node_colours<a class="anchor" aria-label="anchor" href="#arg-node-colours"></a></dt>
 <dd><p>Named character vector mapping node labels to fill
-colours. If <code>NULL</code> (default), colours are drawn from an inline
-Set1 hex palette in the order <code>c(2, 6, 8, 4, 3, 5, 7, 1, 9)</code>.</p></dd>
+colours. If <code>NULL</code> (default), labels are mapped to an inline
+ColorBrewer <code>Set1</code> hex palette in <code>node_levels</code> order (no
+dependency on <span class="pkg">RColorBrewer</span>). When there are more labels than
+palette colours the palette is recycled with a warning.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -121,6 +126,17 @@ Set1 hex palette in the order <code>c(2, 6, 8, 4, 3, 5, 7, 1, 9)</code>.</p></dd
 
 
 </dl></div>
+    <div class="section level2">
+    <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
+    <p>By default (<code>node_levels = NULL</code>) the node order is read from the data,
+not from one column's factor levels. We take every label that appears in any
+<code>cluster_cols</code> column, so no finer-K cluster is dropped to <code>NA</code>,
+and place each child next to its parent: the coarser-K cluster that
+contributes most of its members. Siblings end up together, the way leaves
+sit in a dendrogram, and the flows stay short and uncrossed. Pass
+<code>node_levels</code> yourself to override this; it is then used as given, but
+it must name every label in the data.</p>
+    </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
     <div class="dont-index"><p><code><a href="plot.hv_sankey.html">plot.hv_sankey</a></code>,

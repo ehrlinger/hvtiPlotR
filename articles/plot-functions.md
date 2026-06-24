@@ -1521,12 +1521,12 @@ ggsave("../graphs/alluvial.pdf", p_al, width = 8, height = 6)
 prepares a Sankey diagram that lets you watch how patient cluster
 assignments shift as you increase K — a visual test of cluster
 stability. Where the bands stay wide and orderly, the solution holds;
-where they cross and fragment, you can see at a glance that K has grown
-past what the data supports. It ports the PAM cluster stability figure
-from the HVTI clustering analysis pipeline. Each column represents one
-value of K (default K = 2 to 9); each band shows the fraction of
-patients whose assignment changes between consecutive K values. Node
-labels show the cluster letter and count.
+where they cross and fragment, K has grown past what the data supports.
+It ports the PAM cluster stability figure from the HVTI clustering
+analysis pipeline. Each column represents one value of K (default K = 2
+to 9); each band shows the fraction of patients whose assignment changes
+between consecutive K values. Node labels show the cluster letter and
+count.
 
 **Requires `ggsankey`** (not on CRAN):
 

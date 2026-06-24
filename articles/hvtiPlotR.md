@@ -763,7 +763,7 @@ would ever need about using colors in R.
 ColorBrewer (Harrower and Brewer 2003) is an online tool
 (https://colorbrewer2.org/) designed to help people select good color
 schemes for maps and other graphics. We recommend it as a practical
-starting point for choosing colors grounded in sound design principles.
+starting point for choosing colors.
 
 Figure 8: ggplot2 shape table
 
@@ -776,9 +776,8 @@ into `ggplot2` via
 [`scale_fill_brewer()`](https://ggplot2.tidyverse.org/reference/scale_brewer.html);
 hvtiPlotR does not import the optional `RColorBrewer` package. We have
 made extensive use of the `palette = "Set1"` colour palette in the
-figures we have generated. There are also a series of other
-`scale_colour_*` functions in ggplot2 to aid the user in selecting good
-colour schemes for many diﬀerent settings — consult
+figures we have generated. ggplot2 also ships other `scale_colour_*`
+functions for many different settings. Consult
 <https://colorbrewer2.org/> for an interactive palette browser.
 
 ### Global Figure Commands

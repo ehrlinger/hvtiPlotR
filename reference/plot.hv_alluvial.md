@@ -17,6 +17,7 @@ plot(
   alpha = 0.8,
   knot_pos = 0.4,
   show_labels = TRUE,
+  show_yaxis = TRUE,
   ...
 )
 ```
@@ -51,6 +52,14 @@ plot(
 - show_labels:
 
   Logical; if TRUE, each stratum is labelled. Default `TRUE`.
+
+- show_yaxis:
+
+  Logical; if FALSE, the y-axis title, text, ticks, and line are blanked
+  for a clean milestone patient-flow look (the alluvium/stratum geometry
+  is untouched and remains composable with a later
+  [`theme()`](https://ggplot2.tidyverse.org/reference/theme.html)).
+  Default `TRUE` (counts shown).
 
 - ...:
 

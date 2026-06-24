@@ -11,7 +11,7 @@ geom_stratum."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">hvtiPlotR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.3.4</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.4.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -74,6 +74,7 @@ geom_stratum."></head><body>
 <span>  alpha <span class="op">=</span> <span class="fl">0.8</span>,</span>
 <span>  knot_pos <span class="op">=</span> <span class="fl">0.4</span>,</span>
 <span>  show_labels <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  show_yaxis <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -109,6 +110,13 @@ spacing. Default <code>1/4</code>.</p></dd>
 
 <dt id="arg-show-labels">show_labels<a class="anchor" aria-label="anchor" href="#arg-show-labels"></a></dt>
 <dd><p>Logical; if TRUE, each stratum is labelled. Default <code>TRUE</code>.</p></dd>
+
+
+<dt id="arg-show-yaxis">show_yaxis<a class="anchor" aria-label="anchor" href="#arg-show-yaxis"></a></dt>
+<dd><p>Logical; if FALSE, the y-axis title, text, ticks, and
+line are blanked for a clean milestone patient-flow look (the
+alluvium/stratum geometry is untouched and remains composable with a
+later <code><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme()</a></code>). Default <code>TRUE</code> (counts shown).</p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>

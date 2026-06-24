@@ -9,7 +9,16 @@ Draws a cluster stability Sankey diagram using ggsankey geoms.
 
 ``` r
 # S3 method for class 'hv_sankey'
-plot(x, alpha = 0.8, label_size = 8, label_hjust = -0.05, ...)
+plot(
+  x,
+  flow_alpha = 0.5,
+  label_alpha = 0.3,
+  label_size = 8,
+  label_hjust = -0.05,
+  group_labels = NULL,
+  alpha = NULL,
+  ...
+)
 ```
 
 ## Arguments
@@ -18,9 +27,15 @@ plot(x, alpha = 0.8, label_size = 8, label_hjust = -0.05, ...)
 
   An `hv_sankey` object.
 
-- alpha:
+- flow_alpha:
 
-  Transparency applied to flow bands and node labels. Default `0.8`.
+  Transparency of the flow bands and the dashed column guides, \\\[0,
+  1\]\\. Default `0.5`.
+
+- label_alpha:
+
+  Transparency of the node-label fill, \\\[0, 1\]\\. Default `0.3` (a
+  light tint behind black text).
 
 - label_size:
 
@@ -29,6 +44,19 @@ plot(x, alpha = 0.8, label_size = 8, label_hjust = -0.05, ...)
 - label_hjust:
 
   Horizontal justification offset for node labels. Default `-0.05`.
+
+- group_labels:
+
+  Optional named character vector mapping a `cluster_cols` value to a
+  milestone label. When supplied, that column's x-axis tick shows
+  `"<col>\n<label>"`; unlisted columns show the bare column name.
+  Default `NULL` (bare column names).
+
+- alpha:
+
+  **Deprecated.** If supplied, sets both `flow_alpha` and `label_alpha`
+  (back-compatibility) and emits a message steering you to the two new
+  arguments. Default `NULL`.
 
 - ...:
 

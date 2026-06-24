@@ -11,7 +11,7 @@ Requires the ggsankey package.  Install with:remotes::install_github("davidsjobe
 
     <a class="navbar-brand me-2" href="../index.html">hvtiPlotR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.3.4</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.4.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -66,7 +66,16 @@ Requires the ggsankey package.  Install with:remotes::install_github("davidsjobe
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="co"># S3 method for class 'hv_sankey'</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">x</span>, alpha <span class="op">=</span> <span class="fl">0.8</span>, label_size <span class="op">=</span> <span class="fl">8</span>, label_hjust <span class="op">=</span> <span class="op">-</span><span class="fl">0.05</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span></span>
+<span>  <span class="va">x</span>,</span>
+<span>  flow_alpha <span class="op">=</span> <span class="fl">0.5</span>,</span>
+<span>  label_alpha <span class="op">=</span> <span class="fl">0.3</span>,</span>
+<span>  label_size <span class="op">=</span> <span class="fl">8</span>,</span>
+<span>  label_hjust <span class="op">=</span> <span class="op">-</span><span class="fl">0.05</span>,</span>
+<span>  group_labels <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  alpha <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -77,9 +86,14 @@ Requires the ggsankey package.  Install with:remotes::install_github("davidsjobe
 <dd><p>An <code>hv_sankey</code> object.</p></dd>
 
 
-<dt id="arg-alpha">alpha<a class="anchor" aria-label="anchor" href="#arg-alpha"></a></dt>
-<dd><p>Transparency applied to flow bands and node labels.
-Default <code>0.8</code>.</p></dd>
+<dt id="arg-flow-alpha">flow_alpha<a class="anchor" aria-label="anchor" href="#arg-flow-alpha"></a></dt>
+<dd><p>Transparency of the flow bands and the dashed column
+guides, \([0, 1]\). Default <code>0.5</code>.</p></dd>
+
+
+<dt id="arg-label-alpha">label_alpha<a class="anchor" aria-label="anchor" href="#arg-label-alpha"></a></dt>
+<dd><p>Transparency of the node-label fill, \([0, 1]\).
+Default <code>0.3</code> (a light tint behind black text).</p></dd>
 
 
 <dt id="arg-label-size">label_size<a class="anchor" aria-label="anchor" href="#arg-label-size"></a></dt>
@@ -89,6 +103,19 @@ Default <code>0.8</code>.</p></dd>
 <dt id="arg-label-hjust">label_hjust<a class="anchor" aria-label="anchor" href="#arg-label-hjust"></a></dt>
 <dd><p>Horizontal justification offset for node labels.
 Default <code>-0.05</code>.</p></dd>
+
+
+<dt id="arg-group-labels">group_labels<a class="anchor" aria-label="anchor" href="#arg-group-labels"></a></dt>
+<dd><p>Optional named character vector mapping a
+<code>cluster_cols</code> value to a milestone label. When supplied, that
+column's x-axis tick shows <code>"&lt;col&gt;\n&lt;label&gt;"</code>; unlisted columns
+show the bare column name. Default <code>NULL</code> (bare column names).</p></dd>
+
+
+<dt id="arg-alpha">alpha<a class="anchor" aria-label="anchor" href="#arg-alpha"></a></dt>
+<dd><p><strong>Deprecated.</strong> If supplied, sets both
+<code>flow_alpha</code> and <code>label_alpha</code> (back-compatibility) and emits a
+message steering you to the two new arguments. Default <code>NULL</code>.</p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>

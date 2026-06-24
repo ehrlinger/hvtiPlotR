@@ -625,7 +625,10 @@ plot(hv_ordinal(dat_ph, grade_col = "grade")) +
 wraps `survfit()` from the **survival** package and returns an S3
 object. Call `plot(km, type = ...)` to render one of the five plot types
 matching the SAS `%kaplan` / `%nelsont` macro output flags (`PLOTS`,
-`PLOTC`, `PLOTH`, `PLOTL`). Tidy data frames live in `km$tables`.
+`PLOTC`, `PLOTH`, `PLOTL`). Because the estimates come from `survfit()`,
+the survival curve, confidence limits, and numbers at risk match what
+`%kaplan` reports — you are swapping the plotting step, not the
+estimator. Tidy data frames live in `km$tables`.
 
 ``` r
 
@@ -701,9 +704,10 @@ before committing to a temporal-prevalence analysis. The SAS version
 uses `PROC FREQ` output aggregated by year;
 [`hv_followup()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_followup.md)
 accepts the same aggregated data frame (one row per time point, with
-counts for total patients and patients with a measurement). The output
-is a bar chart; any goodness-of-follow-up threshold you add in SAS (a
-dashed horizontal line) becomes a
+counts for total patients and patients with a measurement), so the bar
+heights are the same counts `PROC FREQ` gave you — only the rendering
+moves to R. The output is a bar chart; any goodness-of-follow-up
+threshold you add in SAS (a dashed horizontal line) becomes a
 `geom_hline(yintercept = ..., linetype = "dashed")` call in R.
 
 ``` r
@@ -1775,24 +1779,24 @@ sessionInfo()
     [1] stats     graphics  grDevices utils     datasets  methods   base
 
     other attached packages:
-    [1] ggplot2_4.0.3   hvtiPlotR_2.3.4
+    [1] ggplot2_4.0.3   hvtiPlotR_2.4.0
 
     loaded via a namespace (and not attached):
      [1] generics_0.1.4          tidyr_1.3.2             fontLiberation_0.1.0
-     [4] xml2_1.5.2              lattice_0.22-9          digest_0.6.39
+     [4] xml2_1.6.0              lattice_0.22-9          digest_0.6.39
      [7] magrittr_2.0.5          evaluate_1.0.5          grid_4.6.0
     [10] RColorBrewer_1.1-3      fastmap_1.2.0           jsonlite_2.0.0
     [13] Matrix_1.7-5            zip_3.0.0               consort_1.2.3
     [16] survival_3.8-6          purrr_1.2.2             scales_1.4.0
     [19] fontBitstreamVera_0.1.1 textshaping_1.0.5       cli_3.6.6
     [22] rlang_1.2.0             fontquiver_0.2.1        ggupset_0.4.1
-    [25] splines_4.6.0           withr_3.0.2             yaml_2.3.12
+    [25] splines_4.6.0           withr_3.0.3             yaml_2.3.12
     [28] otel_0.2.0              gdtools_0.5.1           tools_4.6.0
     [31] officer_0.7.5           uuid_1.2-2              dplyr_1.2.1
     [34] vctrs_0.7.3             R6_2.6.1                lifecycle_1.0.5
     [37] ragg_1.5.2              pkgconfig_2.0.3         pillar_1.11.1
     [40] gtable_0.3.6            glue_1.8.1              Rcpp_1.1.1-1.1
-    [43] systemfonts_1.3.2       xfun_0.58               rvg_0.4.2
+    [43] systemfonts_1.3.2       xfun_0.59               rvg_0.4.2
     [46] tibble_3.3.1            tidyselect_1.2.1        knitr_1.51
     [49] farver_2.1.2            htmltools_0.5.9         labeling_0.4.3
     [52] rmarkdown_2.31          ggalluvial_0.12.6       compiler_4.6.0

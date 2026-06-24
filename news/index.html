@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">hvtiPlotR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.3.4</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.4.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -52,6 +52,22 @@
       <small>Source: <a href="https://github.com/ehrlinger/hvtiPlotR/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="2.4.0" id="hvtiplotr-240">hvtiPlotR 2.4.0<a class="anchor" aria-label="anchor" href="#hvtiplotr-240"></a></h2>
+<div class="section level3">
+<h3 id="new-features-2-4-0">New features<a class="anchor" aria-label="anchor" href="#new-features-2-4-0"></a></h3>
+<ul><li>
+<code><a href="../reference/hv_sankey.html">hv_sankey()</a></code>: with <code>node_levels = NULL</code> (default), the node order is now derived from the data instead of the first column’s factor levels. It spans every label in any <code>cluster_cols</code> column and seats each child next to its parent (the coarser-K cluster holding most of its members), so flows stay uncrossed and the spurious grey <code>NA</code> boxes are gone. An explicit <code>node_levels</code> is still used as given but must cover every observed label.</li>
+<li>
+<code><a href="../reference/plot.hv_sankey.html">plot.hv_sankey()</a></code>: <code>alpha</code> is split into <code>flow_alpha</code> (default <code>0.5</code>) for the flows and column guides and <code>label_alpha</code> (default <code>0.3</code>) for the label fill, matching the publication look. <code>alpha</code> is deprecated; if given, it sets both and emits a message.</li>
+<li>
+<code><a href="../reference/plot.hv_sankey.html">plot.hv_sankey()</a></code>: new <code>group_labels</code>, a named vector mapping a <code>cluster_cols</code> value to a milestone label (e.g. <code>c(C7 = "5 groups")</code>). That column’s x-axis tick reads <code>"&lt;col&gt;\n&lt;label&gt;"</code>; unlisted columns stay bare.</li>
+<li>
+<code><a href="../reference/plot.hv_sankey.html">plot.hv_sankey()</a></code>: default <code>node_colours</code> map labels to Set1 in node order, recycling with a warning when labels outnumber colours.</li>
+<li>
+<code><a href="../reference/plot.hv_alluvial.html">plot.hv_alluvial()</a></code>: new <code>show_yaxis</code> (default <code>TRUE</code>). Set <code>FALSE</code> to blank the y-axis title, text, ticks, and line for a clean patient-flow look; the geometry is untouched and you can still add your own <code><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme()</a></code> after.</li>
+</ul></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="2.3.4" id="hvtiplotr-234">hvtiPlotR 2.3.4<a class="anchor" aria-label="anchor" href="#hvtiplotr-234"></a></h2>
 <div class="section level3">
