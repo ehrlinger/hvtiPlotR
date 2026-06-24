@@ -104,6 +104,9 @@ test_that("print.hv_venn produces a <hv_venn> header", {
   dta <- sample_upset_data(n = 100, seed = 1)
   v   <- hv_venn(dta, sets = c("AV_Replacement", "MV_Replacement"))
   expect_output(print(v), "<hv_venn>")
+  expect_output(print(v), "N patients")
+  expect_output(print(v), "Sets")
+  expect_output(print(v), "Regions\\s*:\\s*3")  # 2 sets => 3 regions
 })
 
 test_that("print.hv_venn returns x invisibly", {
