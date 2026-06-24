@@ -82,6 +82,8 @@ reference:
   - hv_survival
   - plot.hv_survival
   - print.hv_survival
+  - hv_atrisk
+  - hv_atrisk_compose
   - hv_hazard
   - plot.hv_hazard
   - print.hv_hazard
