@@ -57,8 +57,23 @@ utils::globalVariables(c("n.risk", "report_time", "strata"))
          "(strata/time/n columns), or a subject-level data frame plus ",
          "`time` (and optional `status`/`group`).", call. = FALSE)
 
-  # Mode 3 (raw subject-level data) is handled in a later task when `time` is given.
-  if (!is.null(time)) return(NULL)  # placeholder; replaced in Task 4
+  # Mode 3: subject-level data frame + column names -> compute counts.
+  if (!is.null(time)) {
+    if (!(time %in% names(x)))
+      stop("`time` column \"", time, "\" not found in `x`.", call. = FALSE)
+    tv <- x[[time]]
+    gv <- if (!is.null(group)) x[[group]] else NULL
+    sv <- if (!is.null(status)) x[[status]] else NULL
+    rt <- report_times
+    if (is.null(rt)) {
+      rng <- range(tv, na.rm = TRUE)
+      rt  <- pretty(rng, n = 5)
+      rt  <- rt[rt >= rng[1] & rt <= rng[2]]
+      if (length(rt) == 0L) rt <- rng
+    }
+    return(.atrisk_table(time = tv, status = sv, group = gv,
+                         report_times = rt))
+  }
 
   # Mode 2: precomputed risk data frame. Normalise column aliases.
   nm <- names(x)

@@ -85,3 +85,31 @@ test_that("hv_atrisk renders a single-stratum (unstratified) object", {
   expect_s3_class(p, "ggplot")
   expect_equal(nrow(ggplot2::layer_data(p, 1)), nrow(km$tables$risk))
 })
+
+test_that("hv_atrisk computes from subject-level data via time/status/group", {
+  dta <- sample_survival_data(n = 200, strata_levels = c("A", "B"), seed = 1)
+  p   <- hv_atrisk(dta, time = "iv_dead", status = "dead",
+                   group = "valve_type", report_times = c(0, 5, 10))
+  expect_s3_class(p, "ggplot")
+  expect_equal(nrow(ggplot2::layer_data(p, 1)), 6L)  # 2 strata x 3 times
+
+  # Same as the equivalent precomputed table.
+  ref <- .atrisk_table(time = dta$iv_dead, group = dta$valve_type,
+                       report_times = c(0, 5, 10))
+  got <- ggplot2::layer_data(p, 1)
+  expect_setequal(as.numeric(as.character(got$label)), ref$n.risk)
+})
+
+test_that("hv_atrisk derives report_times from the time range when NULL", {
+  dta <- sample_survival_data(n = 100, seed = 1)
+  p   <- hv_atrisk(dta, time = "iv_dead")
+  built <- ggplot2::layer_data(p, 1)
+  expect_gt(nrow(built), 0L)
+  # derived points lie inside the observed follow-up range
+  expect_true(all(built$x >= min(dta$iv_dead) & built$x <= max(dta$iv_dead)))
+})
+
+test_that("hv_atrisk errors on an unresolvable input", {
+  expect_error(hv_atrisk(42), "hv_data object")
+  expect_error(hv_atrisk(data.frame(foo = 1)), "Precomputed risk data frame")
+})
