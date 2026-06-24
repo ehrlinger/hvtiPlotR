@@ -15,7 +15,7 @@ save_ppt(
   height = 5.8,
   left = 0,
   top = 1.2,
-  panel_box = list(width = 8.88, height = 4.51, left = 2.58, top = 1.63)
+  panel_box = list(width = 8.79, height = 4.422, left = 2.67, top = 1.29)
 )
 }
 \arguments{

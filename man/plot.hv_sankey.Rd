@@ -4,18 +4,39 @@
 \alias{plot.hv_sankey}
 \title{Plot an hv_sankey object}
 \usage{
-\method{plot}{hv_sankey}(x, alpha = 0.8, label_size = 8, label_hjust = -0.05, ...)
+\method{plot}{hv_sankey}(
+  x,
+  flow_alpha = 0.5,
+  label_alpha = 0.3,
+  label_size = 8,
+  label_hjust = -0.05,
+  group_labels = NULL,
+  alpha = NULL,
+  ...
+)
 }
 \arguments{
 \item{x}{An \code{hv_sankey} object.}
 
-\item{alpha}{Transparency applied to flow bands and node labels.
-Default \code{0.8}.}
+\item{flow_alpha}{Transparency of the flow bands and the dashed column
+guides, \eqn{[0, 1]}. Default \code{0.5}.}
+
+\item{label_alpha}{Transparency of the node-label fill, \eqn{[0, 1]}.
+Default \code{0.3} (a light tint behind black text).}
 
 \item{label_size}{Font size for node labels in points. Default \code{8}.}
 
 \item{label_hjust}{Horizontal justification offset for node labels.
 Default \code{-0.05}.}
+
+\item{group_labels}{Optional named character vector mapping a
+\code{cluster_cols} value to a milestone label. When supplied, that
+column's x-axis tick shows \code{"<col>\\n<label>"}; unlisted columns
+show the bare column name. Default \code{NULL} (bare column names).}
+
+\item{alpha}{\strong{Deprecated.} If supplied, sets both
+\code{flow_alpha} and \code{label_alpha} (back-compatibility) and emits a
+message steering you to the two new arguments. Default \code{NULL}.}
 
 \item{...}{Ignored; present for S3 consistency.}
 }

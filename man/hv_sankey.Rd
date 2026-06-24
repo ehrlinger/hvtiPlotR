@@ -20,12 +20,17 @@ assignments at each value of K, in ascending K order. Default
 \code{paste0("C", 2:9)}.}
 
 \item{node_levels}{Character vector giving the display order of node
-labels (bottom to top within each column). If \code{NULL} (default),
-the existing factor levels of the first cluster column are used.}
+labels (bottom to top within each column). If \code{NULL} (default), a
+lineage-preserving order is derived from the data so each child cluster
+sits next to its parent and flows stay uncrossed (see Details). If
+supplied, it is used verbatim but must cover every observed cluster
+label.}
 
 \item{node_colours}{Named character vector mapping node labels to fill
-colours. If \code{NULL} (default), colours are drawn from an inline
-Set1 hex palette in the order \code{c(2, 6, 8, 4, 3, 5, 7, 1, 9)}.}
+colours. If \code{NULL} (default), labels are mapped to an inline
+ColorBrewer \code{Set1} hex palette in \code{node_levels} order (no
+dependency on \pkg{RColorBrewer}). When there are more labels than
+palette colours the palette is recycled with a warning.}
 }
 \value{
 An object of class \code{c("hv_sankey", "hv_data")}:
@@ -43,6 +48,16 @@ ordering, computes default node colours if not supplied, and pre-computes
 the long-format Sankey data.  Call \code{\link{plot.hv_sankey}} on the
 result to obtain a bare \code{ggplot2} Sankey diagram using
 \pkg{ggsankey} geoms.
+}
+\details{
+By default (\code{node_levels = NULL}) the node order is read from the data,
+not from one column's factor levels. We take every label that appears in any
+\code{cluster_cols} column, so no finer-K cluster is dropped to \code{NA},
+and place each child next to its parent: the coarser-K cluster that
+contributes most of its members. Siblings end up together, the way leaves
+sit in a dendrogram, and the flows stay short and uncrossed. Pass
+\code{node_levels} yourself to override this; it is then used as given, but
+it must name every label in the data.
 }
 \examples{
 dta <- sample_cluster_sankey_data(n = 300, seed = 42)
