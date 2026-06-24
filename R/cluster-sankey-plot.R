@@ -109,6 +109,69 @@ sample_cluster_sankey_data <- function(
 }
 
 # ---------------------------------------------------------------------------
+# Internal: derive a lineage-preserving node order from the cluster columns.
+#
+# Returns a single character vector covering every cluster label observed in
+# any `cluster_cols` column, ordered so that each child cluster sits next to
+# its parent (the coarser-column cluster contributing the plurality of its
+# members). Applied to both `node` and `next_node`, this keeps Sankey flows
+# short and uncrossed and — because it spans the *union* of all labels —
+# eliminates the spurious `NA` filler nodes that arise when an order covers
+# only the first column's labels.
+#
+# Algorithm (incremental, equivalent to a depth-first leaf order):
+#   1. Seed with the coarsest column's labels, largest cluster first.
+#   2. For each finer column, take each genuinely new label and insert it
+#      immediately to the right of its parent — or to the parent's left when
+#      the parent is currently the rightmost element, so finer clusters fold
+#      inward instead of crossing past the row's edge.
+# Plurality ties are broken toward the parent appearing earliest in the order
+# derived so far.
+.derive_node_order <- function(data, cluster_cols) {
+  k <- length(cluster_cols)
+  col_chr <- lapply(cluster_cols, function(cc) as.character(data[[cc]]))
+
+  size_at <- function(i, label) sum(col_chr[[i]] == label, na.rm = TRUE)
+
+  # Parent of each level-i label = plurality level-(i-1) label, ties broken by
+  # the parent's position in the order built so far.
+  parent_of <- function(i, order_so_far) {
+    tab <- table(child = col_chr[[i]], parent = col_chr[[i - 1L]])
+    parents <- colnames(tab)
+    rank <- match(parents, order_so_far)
+    rank[is.na(rank)] <- length(order_so_far) + seq_len(sum(is.na(rank)))
+    stats::setNames(
+      vapply(seq_len(nrow(tab)), function(r) {
+        counts <- tab[r, ]
+        cand   <- which(counts == max(counts))
+        parents[cand[which.min(rank[cand])]]
+      }, character(1L)),
+      rownames(tab)
+    )
+  }
+
+  roots <- unique(col_chr[[1L]])
+  ord   <- roots[order(vapply(roots, function(r) size_at(1L, r), 0),
+                       decreasing = TRUE)]
+
+  for (i in 2:k) {
+    pm   <- parent_of(i, ord)
+    newl <- setdiff(names(pm), ord)
+    if (length(newl))
+      newl <- newl[order(vapply(newl, function(s) size_at(i, s), 0),
+                         decreasing = TRUE)]
+    for (ch in newl) {
+      pos <- match(pm[[ch]], ord)
+      ord <- if (pos == length(ord))
+        append(ord, ch, after = pos - 1L)   # parent rightmost -> insert left
+      else
+        append(ord, ch, after = pos)        # otherwise -> insert right
+    }
+  }
+  ord
+}
+
+# ---------------------------------------------------------------------------
 # Internal reshape helper — avoids ggsankey::make_long() NSE
 .make_sankey_long <- function(data, cols) {
   k   <- length(cols)
@@ -143,17 +206,32 @@ sample_cluster_sankey_data <- function(
 #' result to obtain a bare \code{ggplot2} Sankey diagram using
 #' \pkg{ggsankey} geoms.
 #'
+#' @details
+#' By default (\code{node_levels = NULL}) the node order is read from the data,
+#' not from one column's factor levels. We take every label that appears in any
+#' \code{cluster_cols} column, so no finer-K cluster is dropped to \code{NA},
+#' and place each child next to its parent: the coarser-K cluster that
+#' contributes most of its members. Siblings end up together, the way leaves
+#' sit in a dendrogram, and the flows stay short and uncrossed. Pass
+#' \code{node_levels} yourself to override this; it is then used as given, but
+#' it must name every label in the data.
+#'
 #' @param data          Data frame; one row per patient. Must contain all
 #'   columns named in \code{cluster_cols}.
 #' @param cluster_cols  Character vector of column names giving the cluster
 #'   assignments at each value of K, in ascending K order. Default
 #'   \code{paste0("C", 2:9)}.
 #' @param node_levels   Character vector giving the display order of node
-#'   labels (bottom to top within each column). If \code{NULL} (default),
-#'   the existing factor levels of the first cluster column are used.
+#'   labels (bottom to top within each column). If \code{NULL} (default), a
+#'   lineage-preserving order is derived from the data so each child cluster
+#'   sits next to its parent and flows stay uncrossed (see Details). If
+#'   supplied, it is used verbatim but must cover every observed cluster
+#'   label.
 #' @param node_colours  Named character vector mapping node labels to fill
-#'   colours. If \code{NULL} (default), colours are drawn from an inline
-#'   Set1 hex palette in the order \code{c(2, 6, 8, 4, 3, 5, 7, 1, 9)}.
+#'   colours. If \code{NULL} (default), labels are mapped to the
+#'   \pkg{RColorBrewer} \code{"Set1"} palette in \code{node_levels} order.
+#'   When there are more labels than palette colours the palette is recycled
+#'   with a warning.
 #'
 #' @return An object of class \code{c("hv_sankey", "hv_data")}:
 #' \describe{
@@ -199,22 +277,35 @@ hv_sankey <- function(data,
   if (length(cluster_cols) < 2L)
     stop("`cluster_cols` must name at least two columns.", call. = FALSE)
 
+  # Observed labels across every cluster column (the union that node_levels
+  # must cover so no label is coerced to NA).
+  observed <- unique(unlist(
+    lapply(cluster_cols, function(cc) as.character(data[[cc]])),
+    use.names = FALSE
+  ))
+  observed <- observed[!is.na(observed)]
+
   # Node ordering
   if (is.null(node_levels)) {
-    first_col   <- data[[cluster_cols[1L]]]
-    node_levels <- if (is.factor(first_col)) levels(first_col) else
-      unique(as.character(first_col))
+    node_levels <- .derive_node_order(data, cluster_cols)
+  } else {
+    missing_lab <- setdiff(observed, node_levels)
+    if (length(missing_lab) > 0L)
+      stop("`node_levels` must cover all observed cluster labels; missing: ",
+           paste(missing_lab, collapse = ", "), call. = FALSE)
   }
 
-  # Default colours
+  # Default colours: Set1 in node_levels order, recycled (with warning) when
+  # there are more labels than palette colours.
   if (is.null(node_colours)) {
-    n_nodes  <- length(node_levels)
-    set1     <- c("#E41A1C", "#377EB8", "#4DAF4A", "#984EA3", "#FF7F00",
-                  "#FFFF33", "#A65628", "#F781BF", "#999999")
-    set1_idx <- c(2L, 6L, 8L, 4L, 3L, 5L, 7L, 1L, 9L)
-    pal      <- set1[set1_idx[seq_len(min(n_nodes, length(set1_idx)))]]
-    if (n_nodes > length(pal)) pal <- rep_len(pal, n_nodes)
-    node_colours <- stats::setNames(pal, node_levels[seq_along(pal)])
+    n_nodes <- length(node_levels)
+    set1    <- c("#E41A1C", "#377EB8", "#4DAF4A", "#984EA3", "#FF7F00",
+                 "#FFFF33", "#A65628", "#F781BF", "#999999")
+    if (n_nodes > length(set1))
+      warning("More node labels (", n_nodes, ") than Set1 colours (",
+              length(set1), "); colours will repeat.", call. = FALSE)
+    pal          <- rep_len(set1, n_nodes)
+    node_colours <- stats::setNames(pal, node_levels)
   }
 
   # Reshape to long format
@@ -262,11 +353,20 @@ print.hv_sankey <- function(x, ...) {
 #' \preformatted{remotes::install_github("davidsjoberg/ggsankey")}
 #'
 #' @param x           An \code{hv_sankey} object.
-#' @param alpha       Transparency applied to flow bands and node labels.
-#'   Default \code{0.8}.
+#' @param flow_alpha  Transparency of the flow bands and the dashed column
+#'   guides, \eqn{[0, 1]}. Default \code{0.5}.
+#' @param label_alpha Transparency of the node-label fill, \eqn{[0, 1]}.
+#'   Default \code{0.3} (a light tint behind black text).
 #' @param label_size  Font size for node labels in points. Default \code{8}.
 #' @param label_hjust Horizontal justification offset for node labels.
 #'   Default \code{-0.05}.
+#' @param group_labels Optional named character vector mapping a
+#'   \code{cluster_cols} value to a milestone label. When supplied, that
+#'   column's x-axis tick shows \code{"<col>\\n<label>"}; unlisted columns
+#'   show the bare column name. Default \code{NULL} (bare column names).
+#' @param alpha       \strong{Deprecated.} If supplied, sets both
+#'   \code{flow_alpha} and \code{label_alpha} (back-compatibility) and emits a
+#'   message steering you to the two new arguments. Default \code{NULL}.
 #' @param ...         Ignored; present for S3 consistency.
 #'
 #' @return A \code{\link[ggplot2]{ggplot}} object using \pkg{ggsankey} geoms.
@@ -289,13 +389,16 @@ print.hv_sankey <- function(x, ...) {
 #'     theme_hv_poster()
 #' }
 #'
-#' @importFrom ggplot2 ggplot aes geom_vline labs scale_fill_manual theme element_blank
+#' @importFrom ggplot2 ggplot aes geom_vline labs scale_fill_manual scale_x_discrete theme element_blank
 #' @importFrom rlang .data
 #' @export
 plot.hv_sankey <- function(x,
-                              alpha       = 0.8,
-                              label_size  = 8,
-                              label_hjust = -0.05,
+                              flow_alpha   = 0.5,
+                              label_alpha  = 0.3,
+                              label_size   = 8,
+                              label_hjust  = -0.05,
+                              group_labels = NULL,
+                              alpha        = NULL,
                               ...) {
   if (!requireNamespace("ggsankey", quietly = TRUE)) {
     stop(
@@ -305,8 +408,26 @@ plot.hv_sankey <- function(x,
     )
   }
 
+  if (!is.null(alpha)) {
+    .check_alpha(alpha)
+    message("`alpha` is deprecated in plot.hv_sankey(); use `flow_alpha` and ",
+            "`label_alpha`. Setting both to ", alpha, ".")
+    flow_alpha  <- alpha
+    label_alpha <- alpha
+  }
+  .check_alpha(flow_alpha)
+  .check_alpha(label_alpha)
+
   san_dta      <- x$data
   node_colours <- x$meta$node_colours
+
+  # x-axis tick labels: milestone annotation for listed columns, bare name else
+  cluster_cols <- x$meta$cluster_cols
+  x_labels <- vapply(cluster_cols, function(cc) {
+    if (!is.null(group_labels) && cc %in% names(group_labels))
+      paste0(cc, "\n", group_labels[[cc]])
+    else cc
+  }, character(1L))
 
   p <- ggplot2::ggplot(
     san_dta,
@@ -321,9 +442,9 @@ plot.hv_sankey <- function(x,
     ggplot2::geom_vline(
       ggplot2::aes(xintercept = as.numeric(.data$x)),
       linetype = "dashed",
-      alpha    = alpha
+      alpha    = flow_alpha
     ) +
-    ggsankey::geom_sankey(alpha = alpha) +
+    ggsankey::geom_sankey(alpha = flow_alpha) +
     ggsankey::geom_sankey_label(
       ggplot2::aes(
         label = ggplot2::after_stat(
@@ -331,13 +452,14 @@ plot.hv_sankey <- function(x,
         ),
         fill  = .data$node
       ),
-      alpha  = alpha,
+      alpha  = label_alpha,
       hjust  = label_hjust,
       size   = label_size / ggplot2::.pt,
       colour = "black"
     ) +
     ggsankey::theme_sankey(base_size = 12) +
     ggplot2::scale_fill_manual(values = node_colours) +
+    ggplot2::scale_x_discrete(labels = x_labels) +
     ggplot2::theme(legend.position = "none") +
     ggplot2::labs(x = NULL)
 

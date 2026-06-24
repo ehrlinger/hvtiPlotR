@@ -1,3 +1,26 @@
+# hvtiPlotR 2.4.0
+
+## New features
+
+- `hv_sankey()`: with `node_levels = NULL` (default), the node order is now
+  derived from the data instead of the first column's factor levels. It spans
+  every label in any `cluster_cols` column and seats each child next to its
+  parent (the coarser-K cluster holding most of its members), so flows stay
+  uncrossed and the spurious grey `NA` boxes are gone. An explicit
+  `node_levels` is still used as given but must cover every observed label.
+- `plot.hv_sankey()`: `alpha` is split into `flow_alpha` (default `0.5`) for
+  the flows and column guides and `label_alpha` (default `0.3`) for the
+  label fill, matching the publication look. `alpha` is deprecated; if given,
+  it sets both and emits a message.
+- `plot.hv_sankey()`: new `group_labels`, a named vector mapping a
+  `cluster_cols` value to a milestone label (e.g. `c(C7 = "5 groups")`). That
+  column's x-axis tick reads `"<col>\n<label>"`; unlisted columns stay bare.
+- `plot.hv_sankey()`: default `node_colours` map labels to Set1 in node order,
+  recycling with a warning when labels outnumber colours.
+- `plot.hv_alluvial()`: new `show_yaxis` (default `TRUE`). Set `FALSE` to blank
+  the y-axis title, text, ticks, and line for a clean patient-flow look; the
+  geometry is untouched and you can still add your own `theme()` after.
+
 # hvtiPlotR 2.3.4
 
 ## Bug fixes

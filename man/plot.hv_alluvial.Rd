@@ -12,6 +12,7 @@
   alpha = 0.8,
   knot_pos = 0.4,
   show_labels = TRUE,
+  show_yaxis = TRUE,
   ...
 )
 }
@@ -30,6 +31,11 @@ spacing. Default \code{1/4}.}
 \item{knot_pos}{Curvature of the flow ribbons, \eqn{[0,1]}. Default \code{0.4}.}
 
 \item{show_labels}{Logical; if TRUE, each stratum is labelled. Default \code{TRUE}.}
+
+\item{show_yaxis}{Logical; if FALSE, the y-axis title, text, ticks, and
+line are blanked for a clean milestone patient-flow look (the
+alluvium/stratum geometry is untouched and remains composable with a
+later \code{theme()}). Default \code{TRUE} (counts shown).}
 
 \item{...}{Ignored; present for S3 consistency.}
 }

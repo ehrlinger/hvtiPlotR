@@ -520,14 +520,14 @@ The shape argument takes numeric arguments. Though not user friendly, this metho
 ## Colors 
 You can specify colors in R by numeric index, name (as we have done), hexadecimal, or RGB specification. For example `col=1` and `col="white"` are equivalent. The chart in Figure 9 was produced with code developed by Glynn (2005). See his R Color Chart website for all the details you would ever need about using colors in R.
 
-ColorBrewer (Harrower and Brewer 2003) is an online tool (https://colorbrewer2.org/) designed to help people select good color schemes for maps and other graphics. We recommend it as a practical starting point for choosing colors grounded in sound design principles.
+ColorBrewer (Harrower and Brewer 2003) is an online tool (https://colorbrewer2.org/) designed to help people select good color schemes for maps and other graphics. We recommend it as a practical starting point for choosing colors.
 
 
 Figure 8: ggplot2 shape table
 
 Figure 9: R colors
 
-The ColorBrewer palette catalogue (Harrower and Brewer 2003) is built into `ggplot2` via `scale_colour_brewer()` / `scale_fill_brewer()`; hvtiPlotR does not import the optional `RColorBrewer` package. We have made extensive use of the `palette = "Set1"` colour palette in the figures we have generated. There are also a series of other `scale_colour_*` functions in ggplot2 to aid the user in selecting good colour schemes for many diﬀerent settings — consult <https://colorbrewer2.org/> for an interactive palette browser.
+The ColorBrewer palette catalogue (Harrower and Brewer 2003) is built into `ggplot2` via `scale_colour_brewer()` / `scale_fill_brewer()`; hvtiPlotR does not import the optional `RColorBrewer` package. We have made extensive use of the `palette = "Set1"` colour palette in the figures we have generated. ggplot2 also ships other `scale_colour_*` functions for many different settings. Consult <https://colorbrewer2.org/> for an interactive palette browser.
 
 ## Global Figure Commands 
 By default, the ggplot2 package adds space to the figures around the data. We often want to remove this space, or focus in on a smaller window of the figure. This is accomplished with the coord_cartesian function. By specifying the xlim and/or ylim coordinates, we can crop the figure into whatever viewport we are interested in without manipulating the original dataset. Figure ?? sets the origin to (0,0) and clips the x axis at 5.1, and the y axis at 101. We have added the .1 and 1 to each axis for aesthetic reasons to avid chopping oﬀ the tick labels when they occur at the end of the viewport.

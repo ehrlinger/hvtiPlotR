@@ -211,6 +211,10 @@ print.hv_alluvial <- function(x, ...) {
 #' @param alpha         Transparency of the flows, \eqn{[0,1]}. Default \code{0.8}.
 #' @param knot_pos      Curvature of the flow ribbons, \eqn{[0,1]}. Default \code{0.4}.
 #' @param show_labels   Logical; if TRUE, each stratum is labelled. Default \code{TRUE}.
+#' @param show_yaxis    Logical; if FALSE, the y-axis title, text, ticks, and
+#'   line are blanked for a clean milestone patient-flow look (the
+#'   alluvium/stratum geometry is untouched and remains composable with a
+#'   later \code{theme()}). Default \code{TRUE} (counts shown).
 #' @param ...           Ignored; present for S3 consistency.
 #'
 #' @return A bare \code{\link[ggplot2]{ggplot}} object.
@@ -243,7 +247,7 @@ print.hv_alluvial <- function(x, ...) {
 #'   theme_hv_poster()
 #'
 #' @importFrom ggalluvial geom_alluvium geom_stratum StatStratum
-#' @importFrom ggplot2 ggplot aes geom_text scale_x_continuous after_stat
+#' @importFrom ggplot2 ggplot aes geom_text scale_x_continuous after_stat theme element_blank
 #' @importFrom rlang sym syms inject
 #' @export
 plot.hv_alluvial <- function(x,
@@ -253,6 +257,7 @@ plot.hv_alluvial <- function(x,
                                 alpha         = 0.8,
                                 knot_pos      = 0.4,
                                 show_labels   = TRUE,
+                                show_yaxis    = TRUE,
                                 ...) {
   .check_alpha(alpha)
   data        <- x$data
@@ -299,6 +304,15 @@ plot.hv_alluvial <- function(x,
     p <- p + ggplot2::geom_text(
       stat = ggalluvial::StatStratum,
       ggplot2::aes(label = ggplot2::after_stat(stratum))
+    )
+  }
+
+  if (!show_yaxis) {
+    p <- p + ggplot2::theme(
+      axis.title.y = ggplot2::element_blank(),
+      axis.text.y  = ggplot2::element_blank(),
+      axis.ticks.y = ggplot2::element_blank(),
+      axis.line.y  = ggplot2::element_blank()
     )
   }
 
