@@ -99,3 +99,17 @@ test_that("plot(hv_venn) errors when fill and fill_color are both given", {
     "not `fill_color`"
   )
 })
+
+test_that("print.hv_venn produces a <hv_venn> header", {
+  dta <- sample_upset_data(n = 100, seed = 1)
+  v   <- hv_venn(dta, sets = c("AV_Replacement", "MV_Replacement"))
+  expect_output(print(v), "<hv_venn>")
+})
+
+test_that("print.hv_venn returns x invisibly", {
+  dta <- sample_upset_data(n = 100, seed = 1)
+  v   <- hv_venn(dta, sets = c("AV_Replacement", "MV_Replacement"))
+  ret <- withVisible(print(v))
+  expect_false(ret$visible)
+  expect_identical(ret$value, v)
+})

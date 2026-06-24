@@ -150,3 +150,18 @@ plot.hv_venn <- function(x, show_percentage = TRUE, show_counts = TRUE,
   if (!is.null(fill)) args$fill_color <- fill
   do.call(ggvenn::ggvenn, args)
 }
+
+#' Print an hv_venn object
+#'
+#' @param x An \code{hv_venn} object from \code{\link{hv_venn}}.
+#' @param ... Ignored.
+#' @return \code{x}, invisibly.
+#' @export
+print.hv_venn <- function(x, ...) {
+  m <- x$meta
+  cat("<hv_venn>\n")
+  cat(sprintf("  N patients  : %d  (%d sets)\n", m$n_patients, m$n_sets))
+  cat(sprintf("  Sets        : %s\n", paste(m$sets, collapse = ", ")))
+  cat(sprintf("  Regions     : %d\n", nrow(x$tables$regions)))
+  invisible(x)
+}
