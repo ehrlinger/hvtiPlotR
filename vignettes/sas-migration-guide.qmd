@@ -85,6 +85,11 @@ individual patient records — mirroring the SAS workflow where `%decompos()`
 or `%kaplan` computes estimates and a separate template step produces the
 figure.
 
+The accompanying numbers-at-risk table — the SAS `tp.hp.dead.number_risk.R`
+figure — is `hv_atrisk(km)`, stacked under the curve with
+`hv_atrisk_compose()`; the counts are the same subjects-at-risk `PROC LIFETEST`
+prints beneath its survival plot.
+
 ---
 
 # Template lookup table

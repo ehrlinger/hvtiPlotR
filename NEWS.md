@@ -1,3 +1,18 @@
+# hvtiPlotR 2.5.0
+
+## New features
+
+- `hv_atrisk()` renders a numbers-at-risk table as a bare ggplot panel. It
+  takes a survival-family object that carries `$tables$risk` (e.g.
+  `hv_survival()`), a precomputed `strata`/`time`/`n` table, or a subject-level
+  data frame plus `time`/`status`/`group` column names (the path for the
+  curve-data constructors `hv_nonparametric`, `hv_ordinal`, `hv_hazard`, which
+  carry no risk table). Missing `report_times` are derived from the observed
+  time range.
+- `hv_atrisk_compose()` stacks a survival curve over an `hv_atrisk()` panel,
+  aligning the table's x-range to the curve's and composing them with
+  patchwork. Decorate both panels with patchwork's `&`.
+
 # hvtiPlotR 2.3.4
 
 ## Bug fixes
