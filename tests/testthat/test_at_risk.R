@@ -78,3 +78,10 @@ test_that("hv_atrisk strata_labels overrides row labels", {
   ylabs <- blt$layout$panel_params[[1]]$y$get_labels()
   expect_true(all(c("Group A", "Group B") %in% ylabs))
 })
+
+test_that("hv_atrisk renders a single-stratum (unstratified) object", {
+  km <- hv_survival(sample_survival_data(n = 100, seed = 1))
+  p  <- hv_atrisk(km)
+  expect_s3_class(p, "ggplot")
+  expect_equal(nrow(ggplot2::layer_data(p, 1)), nrow(km$tables$risk))
+})

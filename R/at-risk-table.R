@@ -120,6 +120,11 @@ hv_atrisk <- function(x, time = NULL, status = NULL, group = NULL,
                       strata_labels = NULL, ...) {
   rdf <- .resolve_risk_df(x, time, status, group, report_times)
 
+  if (is.null(rdf))
+    stop("Could not resolve `x` into a risk table. Supply an hv_data object ",
+         "carrying `$tables$risk`, a precomputed risk data frame, or a ",
+         "subject-level data frame with a `time` column.", call. = FALSE)
+
   # First stratum on top: reverse factor levels (ggplot puts level 1 at bottom).
   lev <- unique(rdf$strata)
   rdf$strata <- factor(rdf$strata, levels = rev(lev))
