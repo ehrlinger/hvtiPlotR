@@ -31,3 +31,13 @@ test_that(".atrisk_table errors on bad input", {
   expect_error(.atrisk_table(time = c(1, 2), group = "A", report_times = 1),
                "same length")
 })
+
+test_that(".atrisk_table matches km_risk_table when no events fall between report times", {
+  # Events exactly at the report times -> both conventions agree.
+  dta <- data.frame(iv_dead = c(1, 1, 2, 2, 3, 3), dead = rep(TRUE, 6))
+  km  <- hv_survival(dta, time_col = "iv_dead", event_col = "dead",
+                     report_times = c(1, 2, 3))
+  emp <- .atrisk_table(time = dta$iv_dead, report_times = c(1, 2, 3))
+  # Compare n.risk per report time (km strata label is the single-cohort name).
+  expect_equal(emp$n.risk, km$tables$risk$n.risk)
+})
