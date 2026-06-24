@@ -97,3 +97,46 @@ hv_venn <- function(data, sets) {
     subclass = "hv_venn"
   )
 }
+
+#' Plot an hv_venn object
+#'
+#' Draws a 2-3 set Venn diagram using \code{ggvenn::ggvenn()} and returns a
+#' bare \pkg{ggplot2} object you can finish with \code{+}.
+#'
+#' @param x An \code{hv_venn} object.
+#' @param show_percentage Logical; show each region's percentage. Default
+#'   \code{TRUE}.
+#' @param show_counts Logical; show each region's count. Default \code{TRUE}.
+#' @param fill Optional vector of fill colours, one per set. \code{NULL}
+#'   (default) uses \pkg{ggvenn}'s palette.
+#' @param text_size Region label text size. Default \code{4}.
+#' @param set_name_size Set name text size. Default \code{6}.
+#' @param ... Forwarded to \code{ggvenn::ggvenn()} for finer styling (unlike
+#'   most \code{plot.hv_*} methods, which ignore \code{...}; \pkg{ggvenn} bakes
+#'   labels into its geoms, so forwarding is the only way to reach them).
+#'
+#' @return A \code{\link[ggplot2]{ggplot}} object. Compose with
+#'   \code{\link{theme_hv_manuscript}}, \code{labs()}, etc.
+#'
+#' @seealso \code{\link{hv_venn}}
+#'
+#' @examples
+#' dta <- sample_upset_data(n = 300, seed = 42)
+#' v   <- hv_venn(dta, sets = c("AV_Replacement", "MV_Replacement", "CABG"))
+#' plot(v) + theme_hv_manuscript()
+#'
+#' @export
+plot.hv_venn <- function(x, show_percentage = TRUE, show_counts = TRUE,
+                         fill = NULL, text_size = 4, set_name_size = 6, ...) {
+  args <- list(
+    data            = x$data,
+    columns         = x$meta$sets,
+    show_percentage = show_percentage,
+    show_counts     = show_counts,
+    text_size       = text_size,
+    set_name_size   = set_name_size,
+    ...
+  )
+  if (!is.null(fill)) args$fill_color <- fill
+  do.call(ggvenn::ggvenn, args)
+}

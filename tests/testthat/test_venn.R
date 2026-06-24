@@ -63,3 +63,24 @@ test_that("hv_venn errors on a missing column", {
   expect_error(hv_venn(dta, sets = c("CABG", "nonexistent")),
                "not found|not a column|not in|Missing")
 })
+
+test_that("plot(hv_venn) returns a ggplot", {
+  dta <- sample_upset_data(n = 200, seed = 1)
+  v   <- hv_venn(dta, sets = c("AV_Replacement", "MV_Replacement"))
+  expect_s3_class(plot(v), "ggplot")
+})
+
+test_that("plot(hv_venn) is composable with theme_hv_manuscript()", {
+  dta <- sample_upset_data(n = 200, seed = 1)
+  v   <- hv_venn(dta, sets = c("AV_Replacement", "MV_Replacement", "CABG"))
+  p   <- plot(v) + theme_hv_manuscript()
+  expect_s3_class(p, "ggplot")
+})
+
+test_that("plot(hv_venn) honours show_percentage and a fill override", {
+  dta <- sample_upset_data(n = 200, seed = 1)
+  v   <- hv_venn(dta, sets = c("AV_Replacement", "MV_Replacement"))
+  p   <- plot(v, show_percentage = FALSE,
+              fill = c("steelblue", "firebrick"))
+  expect_s3_class(p, "ggplot")
+})
