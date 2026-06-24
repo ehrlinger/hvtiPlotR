@@ -27,3 +27,39 @@ test_that(".venn_regions has 7 regions for 3 sets and treats NA as absent", {
   expect_equal(reg$n[reg$region == "A only"], 1L)     # row 2 (row 3 NA->absent)
   expect_equal(sum(reg$n), 2L)                        # row 3 is all-absent, uncounted
 })
+
+test_that("hv_venn returns an hv_venn / hv_data object with region table", {
+  dta <- sample_upset_data(n = 200, seed = 1)
+  v   <- hv_venn(dta, sets = c("AV_Replacement", "MV_Replacement", "CABG"))
+  expect_s3_class(v, "hv_venn")
+  expect_s3_class(v, "hv_data")
+  expect_equal(v$meta$sets, c("AV_Replacement", "MV_Replacement", "CABG"))
+  expect_equal(v$meta$n_sets, 3L)
+  expect_equal(nrow(v$tables$regions), 7L)
+})
+
+test_that("hv_venn errors on fewer than 2 sets", {
+  dta <- sample_upset_data(n = 50, seed = 1)
+  expect_error(hv_venn(dta, sets = "CABG"), "at least 2")
+})
+
+test_that("hv_venn errors on more than 3 sets and names hv_upset", {
+  dta <- sample_upset_data(n = 50, seed = 1)
+  expect_error(
+    hv_venn(dta, sets = c("AV_Replacement", "AV_Repair",
+                          "MV_Replacement", "CABG")),
+    "hv_upset"
+  )
+})
+
+test_that("hv_venn errors on a non-binary column", {
+  dta <- sample_upset_data(n = 50, seed = 1)
+  dta$age <- rnorm(nrow(dta), 65, 10)
+  expect_error(hv_venn(dta, sets = c("CABG", "age")), "binary")
+})
+
+test_that("hv_venn errors on a missing column", {
+  dta <- sample_upset_data(n = 50, seed = 1)
+  expect_error(hv_venn(dta, sets = c("CABG", "nonexistent")),
+               "not found|not a column|not in|Missing")
+})
