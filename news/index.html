@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">hvtiPlotR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.4.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.5.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -52,6 +52,16 @@
       <small>Source: <a href="https://github.com/ehrlinger/hvtiPlotR/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="2.5.0" id="hvtiplotr-250">hvtiPlotR 2.5.0<a class="anchor" aria-label="anchor" href="#hvtiplotr-250"></a></h2>
+<div class="section level3">
+<h3 id="new-features-2-5-0">New features<a class="anchor" aria-label="anchor" href="#new-features-2-5-0"></a></h3>
+<ul><li>
+<code><a href="../reference/hv_atrisk.html">hv_atrisk()</a></code> renders a numbers-at-risk table as a bare ggplot panel. It takes a survival-family object that carries <code>$tables$risk</code> (e.g. <code><a href="../reference/hv_survival.html">hv_survival()</a></code>), a precomputed <code>strata</code>/<code>time</code>/<code>n</code> table, or a subject-level data frame plus <code>time</code>/<code>status</code>/<code>group</code> column names (the path for the curve-data constructors <code>hv_nonparametric</code>, <code>hv_ordinal</code>, <code>hv_hazard</code>, which carry no risk table). Missing <code>report_times</code> are derived from the observed time range.</li>
+<li>
+<code><a href="../reference/hv_atrisk_compose.html">hv_atrisk_compose()</a></code> stacks a survival curve over an <code><a href="../reference/hv_atrisk.html">hv_atrisk()</a></code> panel, aligning the table’s x-range to the curve’s and composing them with patchwork. Decorate both panels with patchwork’s <code>&amp;</code>.</li>
+</ul></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="2.4.0" id="hvtiplotr-240">hvtiPlotR 2.4.0<a class="anchor" aria-label="anchor" href="#hvtiplotr-240"></a></h2>
 <div class="section level3">

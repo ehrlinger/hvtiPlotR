@@ -57,6 +57,13 @@ than individual patient records — mirroring the SAS workflow where
 `%decompos()` or `%kaplan` computes estimates and a separate template
 step produces the figure.
 
+The accompanying numbers-at-risk table — the SAS
+`tp.hp.dead.number_risk.R` figure — is `hv_atrisk(km)`, stacked under
+the curve with
+[`hv_atrisk_compose()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_atrisk_compose.md);
+the counts are the same subjects-at-risk `PROC LIFETEST` prints beneath
+its survival plot.
+
 ------------------------------------------------------------------------
 
 ## Template lookup table
@@ -1779,14 +1786,14 @@ sessionInfo()
     [1] stats     graphics  grDevices utils     datasets  methods   base
 
     other attached packages:
-    [1] ggplot2_4.0.3   hvtiPlotR_2.4.0
+    [1] ggplot2_4.0.3   hvtiPlotR_2.5.0
 
     loaded via a namespace (and not attached):
      [1] generics_0.1.4          tidyr_1.3.2             fontLiberation_0.1.0
      [4] xml2_1.6.0              lattice_0.22-9          digest_0.6.39
      [7] magrittr_2.0.5          evaluate_1.0.5          grid_4.6.0
-    [10] RColorBrewer_1.1-3      fastmap_1.2.0           jsonlite_2.0.0
-    [13] Matrix_1.7-5            zip_3.0.0               consort_1.2.3
+    [10] RColorBrewer_1.1-3      fastmap_1.2.0           Matrix_1.7-5
+    [13] jsonlite_2.0.0          zip_3.0.0               consort_1.2.3
     [16] survival_3.8-6          purrr_1.2.2             scales_1.4.0
     [19] fontBitstreamVera_0.1.1 textshaping_1.0.5       cli_3.6.6
     [22] rlang_1.2.0             fontquiver_0.2.1        ggupset_0.4.1
@@ -1798,6 +1805,7 @@ sessionInfo()
     [40] gtable_0.3.6            glue_1.8.1              Rcpp_1.1.1-1.1
     [43] systemfonts_1.3.2       xfun_0.59               rvg_0.4.2
     [46] tibble_3.3.1            tidyselect_1.2.1        knitr_1.51
-    [49] farver_2.1.2            htmltools_0.5.9         labeling_0.4.3
-    [52] rmarkdown_2.31          ggalluvial_0.12.6       compiler_4.6.0
-    [55] S7_0.2.2                askpass_1.2.1           openssl_2.4.2          
+    [49] farver_2.1.2            htmltools_0.5.9         patchwork_1.3.2
+    [52] labeling_0.4.3          rmarkdown_2.31          ggalluvial_0.12.6
+    [55] compiler_4.6.0          S7_0.2.2                askpass_1.2.1
+    [58] openssl_2.4.2          

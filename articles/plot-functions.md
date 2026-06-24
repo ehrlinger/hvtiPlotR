@@ -994,6 +994,36 @@ plot(km_s, alpha = 0.8) +
 
 ![](plot-functions_files/figure-html/km_strata_data-1.png)
 
+#### Survival curve with a numbers-at-risk table
+
+[`hv_atrisk()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_atrisk.md)
+turns the `$tables$risk` that an `hv_survival` object already carries
+into a bare table panel, and
+[`hv_atrisk_compose()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_atrisk_compose.md)
+stacks the curve over it with the time axes aligned. The non-KM curves
+(`hv_nonparametric`, `hv_ordinal`, `hv_hazard`) take pre-summarised
+curve data and carry no risk table, so for those you hand
+[`hv_atrisk()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_atrisk.md)
+the subject-level `time`/`status`/`group` columns instead.
+
+``` r
+
+dta <- sample_survival_data(n = 400, strata_levels = c("Bioprosthetic",
+                                                       "Mechanical"), seed = 7)
+km  <- hv_survival(dta, time_col = "iv_dead", event_col = "dead",
+                   group_col = "valve_type")
+
+curve <- plot(km) +
+  ggplot2::labs(x = "Years after operation", y = "Survival")
+table <- hv_atrisk(km)
+
+hv_atrisk_compose(curve, table) & theme_hv_manuscript()
+```
+
+![](plot-functions_files/figure-html/fig-km-atrisk-1.png)
+
+Figure 1
+
 ### Cumulative hazard (PLOTC=1)
 
 `PLOTC=1` from the SAS `%kaplan` macro is the Nelson-Aalen cumulative

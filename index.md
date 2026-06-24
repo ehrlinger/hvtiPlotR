@@ -130,6 +130,7 @@ plot(mh) + theme_hv_manuscript()
 | [`hv_survival_difference()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_survival_difference.md) | Absolute treatment benefit vs. a reference group over time |
 | [`hv_nnt()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_nnt.md) | Number needed to treat derived from survival difference estimates |
 | [`hv_followup()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_followup.md) | Goodness-of-follow-up scatter: actual vs. potential follow-up by operation year; `plot(gf, type = "event")` for non-fatal competing events |
+| [`hv_atrisk()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_atrisk.md) / [`hv_atrisk_compose()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_atrisk_compose.md) | Numbers-at-risk table panel, and a composer that stacks a survival curve over it with aligned time axes |
 
 ### Longitudinal & Repeated Measures
 

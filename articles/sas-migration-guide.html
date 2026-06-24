@@ -24,7 +24,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">hvtiPlotR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.4.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.5.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -106,6 +106,7 @@
 <p><strong>The <code>theme_hv_*()</code> functions replace SAS <code>device=</code> / style options.</strong> Use <code><a href="../reference/hvtiPlotR-themes.html">theme_hv_ppt_dark()</a></code> for PowerPoint slides on dark backgrounds, <code><a href="../reference/hvtiPlotR-themes.html">theme_hv_ppt_light()</a></code> for light/transparent slides, <code><a href="../reference/hvtiPlotR-themes.html">theme_hv_manuscript()</a></code> for journal figures, and <code><a href="../reference/hvtiPlotR-themes.html">theme_hv_poster()</a></code> for conference posters.</p>
 <p><strong>Functions return a ggplot object; they do not display it.</strong> Call the plot object at the top level (or use <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code>) to render it, or save with <code><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave()</a></code> / <code><a href="../reference/save_ppt.html">save_ppt()</a></code>.</p>
 <p><strong>Pre-fitted models, not raw data.</strong> Most functions accept the <em>output</em> of a statistical model (curve datasets, probability estimates) rather than individual patient records — mirroring the SAS workflow where <code>%decompos()</code> or <code>%kaplan</code> computes estimates and a separate template step produces the figure.</p>
+<p>The accompanying numbers-at-risk table — the SAS <code>tp.hp.dead.number_risk.R</code> figure — is <code>hv_atrisk(km)</code>, stacked under the curve with <code><a href="../reference/hv_atrisk_compose.html">hv_atrisk_compose()</a></code>; the counts are the same subjects-at-risk <code>PROC LIFETEST</code> prints beneath its survival plot.</p>
 <hr></section></section><section class="section level2"><h2 id="template-lookup-table">Template lookup table<a class="anchor" aria-label="anchor" href="#template-lookup-table"></a>
 </h2>
 <table class="table caption-top">
@@ -1753,14 +1754,14 @@ attached base packages:
 [1] stats     graphics  grDevices utils     datasets  methods   base
 
 other attached packages:
-[1] ggplot2_4.0.3   hvtiPlotR_2.4.0
+[1] ggplot2_4.0.3   hvtiPlotR_2.5.0
 
 loaded via a namespace (and not attached):
  [1] generics_0.1.4          tidyr_1.3.2             fontLiberation_0.1.0
  [4] xml2_1.6.0              lattice_0.22-9          digest_0.6.39
  [7] magrittr_2.0.5          evaluate_1.0.5          grid_4.6.0
-[10] RColorBrewer_1.1-3      fastmap_1.2.0           jsonlite_2.0.0
-[13] Matrix_1.7-5            zip_3.0.0               consort_1.2.3
+[10] RColorBrewer_1.1-3      fastmap_1.2.0           Matrix_1.7-5
+[13] jsonlite_2.0.0          zip_3.0.0               consort_1.2.3
 [16] survival_3.8-6          purrr_1.2.2             scales_1.4.0
 [19] fontBitstreamVera_0.1.1 textshaping_1.0.5       cli_3.6.6
 [22] rlang_1.2.0             fontquiver_0.2.1        ggupset_0.4.1
@@ -1772,9 +1773,10 @@ loaded via a namespace (and not attached):
 [40] gtable_0.3.6            glue_1.8.1              Rcpp_1.1.1-1.1
 [43] systemfonts_1.3.2       xfun_0.59               rvg_0.4.2
 [46] tibble_3.3.1            tidyselect_1.2.1        knitr_1.51
-[49] farver_2.1.2            htmltools_0.5.9         labeling_0.4.3
-[52] rmarkdown_2.31          ggalluvial_0.12.6       compiler_4.6.0
-[55] S7_0.2.2                askpass_1.2.1           openssl_2.4.2          </code></pre>
+[49] farver_2.1.2            htmltools_0.5.9         patchwork_1.3.2
+[52] labeling_0.4.3          rmarkdown_2.31          ggalluvial_0.12.6
+[55] compiler_4.6.0          S7_0.2.2                askpass_1.2.1
+[58] openssl_2.4.2          </code></pre>
 </div>
 </div>
 </section><script id="quarto-html-after-body" type="application/javascript">

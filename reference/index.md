@@ -70,6 +70,10 @@ for pre-fitted parametric model output.
   : Plot an hv_survival object
 - [`print(`*`<hv_survival>`*`)`](https://ehrlinger.github.io/hvtiPlotR/reference/print.hv_survival.md)
   : Print an hv_survival object
+- [`hv_atrisk()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_atrisk.md)
+  : Numbers-at-risk table panel
+- [`hv_atrisk_compose()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_atrisk_compose.md)
+  : Stack a survival curve over a numbers-at-risk table
 - [`hv_hazard()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_hazard.md)
   : Prepare parametric hazard / survival data for plotting
 - [`plot(`*`<hv_hazard>`*`)`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hv_hazard.md)
