@@ -21,7 +21,10 @@ utils::globalVariables(c("n.risk", "report_time", "strata"))
   if (is.null(group)) group <- rep("Overall", length(time))
   if (length(group) != length(time))
     stop("`group` must be the same length as `time`.", call. = FALSE)
-  grp_chr       <- as.character(group)
+  grp_chr <- as.character(group)
+  if (anyNA(grp_chr))
+    stop("`group` contains missing values; drop or label them before ",
+         "building the at-risk table.", call. = FALSE)
   strata_levels <- if (is.factor(group)) levels(droplevels(group)) else
     sort(unique(grp_chr))
 
@@ -112,7 +115,9 @@ utils::globalVariables(c("n.risk", "report_time", "strata"))
 #' @param time,status,group Column names in \code{x} when \code{x} is a
 #'   subject-level data frame. \code{time} triggers the raw-data path;
 #'   \code{status} is reserved and currently unused; \code{group} splits the
-#'   table into strata. Default \code{NULL}.
+#'   table into strata. Pass \code{group} as a factor to control the stratum
+#'   row order (its levels set the order); a character column orders rows
+#'   alphabetically. Default \code{NULL}.
 #' @param report_times Numeric time points for the columns. \code{NULL}
 #'   (default) uses the object's own points, or -- on the raw-data path --
 #'   an even spread derived from the observed time range.

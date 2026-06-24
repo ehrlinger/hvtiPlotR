@@ -26,7 +26,9 @@ names, from which counts are computed.}
 \item{time, status, group}{Column names in \code{x} when \code{x} is a
 subject-level data frame. \code{time} triggers the raw-data path;
 \code{status} is reserved and currently unused; \code{group} splits the
-table into strata. Default \code{NULL}.}
+table into strata. Pass \code{group} as a factor to control the stratum
+row order (its levels set the order); a character column orders rows
+alphabetically. Default \code{NULL}.}
 
 \item{report_times}{Numeric time points for the columns. \code{NULL}
 (default) uses the object's own points, or -- on the raw-data path --

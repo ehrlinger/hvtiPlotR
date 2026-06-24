@@ -30,6 +30,11 @@ test_that(".atrisk_table errors on bad input", {
                "non-empty numeric")
   expect_error(.atrisk_table(time = c(1, 2), group = "A", report_times = 1),
                "same length")
+  expect_error(
+    .atrisk_table(time = c(1, 2, 3), group = c("A", NA, "B"),
+                  report_times = 1),
+    "missing values"
+  )
 })
 
 test_that(".atrisk_table matches km_risk_table when no events fall between report times", {
