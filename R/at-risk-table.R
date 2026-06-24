@@ -37,3 +37,109 @@ utils::globalVariables(c("n.risk", "report_time", "strata"))
   rownames(out) <- NULL
   out
 }
+
+# ---------------------------------------------------------------------------
+# Internal: resolve any accepted input into a tidy risk data frame with
+# columns strata, report_time, n.risk.
+.resolve_risk_df <- function(x, time, status, group, report_times) {
+  # Mode 1: an hv_data object carrying $tables$risk (e.g. hv_survival).
+  if (inherits(x, "hv_data")) {
+    rdf <- x$tables$risk
+    if (is.null(rdf))
+      stop("This object has no `$tables$risk`. Pass subject-level data with ",
+           "`time`/`status`/`group`, or a precomputed risk data frame.",
+           call. = FALSE)
+    return(rdf)
+  }
+
+  if (!is.data.frame(x))
+    stop("`x` must be an hv_data object, a precomputed risk data frame ",
+         "(strata/time/n columns), or a subject-level data frame plus ",
+         "`time` (and optional `status`/`group`).", call. = FALSE)
+
+  # Mode 3 (raw subject-level data) is handled in a later task when `time` is given.
+  if (!is.null(time)) return(NULL)  # placeholder; replaced in Task 4
+
+  # Mode 2: precomputed risk data frame. Normalise column aliases.
+  nm <- names(x)
+  time_col <- if ("report_time" %in% nm) "report_time" else
+    if ("time" %in% nm) "time" else NULL
+  n_col    <- if ("n.risk" %in% nm) "n.risk" else
+    if ("n" %in% nm) "n" else NULL
+  if (!("strata" %in% nm) || is.null(time_col) || is.null(n_col))
+    stop("Precomputed risk data frame needs `strata`, ",
+         "`report_time` (or `time`), and `n.risk` (or `n`) columns.",
+         call. = FALSE)
+  data.frame(
+    strata      = as.character(x[["strata"]]),
+    report_time = x[[time_col]],
+    n.risk      = x[[n_col]],
+    stringsAsFactors = FALSE
+  )
+}
+
+#' Numbers-at-risk table panel
+#'
+#' Renders a numbers-at-risk table as a bare \pkg{ggplot2} panel, ready to
+#' stack under a survival curve with \code{\link{hv_atrisk_compose}}.
+#'
+#' @param x One of: an \code{hv_data} object that carries \code{$tables$risk}
+#'   (e.g. from \code{\link{hv_survival}}); a precomputed risk data frame with
+#'   \code{strata}, \code{report_time} (or \code{time}), and \code{n.risk}
+#'   (or \code{n}) columns; or a subject-level data frame supplied together
+#'   with the \code{time} (and optional \code{status}/\code{group}) column
+#'   names, from which counts are computed.
+#' @param time,status,group Column names in \code{x} when \code{x} is a
+#'   subject-level data frame. \code{time} triggers the raw-data path;
+#'   \code{status} is reserved and currently unused; \code{group} splits the
+#'   table into strata. Default \code{NULL}.
+#' @param report_times Numeric time points for the columns. \code{NULL}
+#'   (default) uses the object's own points, or -- on the raw-data path --
+#'   an even spread derived from the observed time range.
+#' @param size Text size for the counts. Default \code{NULL} (3.5).
+#' @param strata_labels Optional named character vector remapping stratum row
+#'   labels. Default \code{NULL}.
+#' @param ... Ignored; present for S3 consistency.
+#'
+#' @return A bare \code{\link[ggplot2]{ggplot}} object: one text label per
+#'   stratum and report time, strata as y rows (first stratum on top), time on
+#'   a continuous x with axis text blanked (the curve carries the axis).
+#'
+#' @seealso \code{\link{hv_atrisk_compose}}, \code{\link{hv_survival}}
+#'
+#' @examples
+#' km <- hv_survival(sample_survival_data(n = 200, seed = 1))
+#' hv_atrisk(km)
+#'
+#' @importFrom ggplot2 ggplot aes geom_text scale_y_discrete theme_minimal
+#'   theme element_blank
+#' @importFrom rlang .data
+#' @export
+hv_atrisk <- function(x, time = NULL, status = NULL, group = NULL,
+                      report_times = NULL, size = NULL,
+                      strata_labels = NULL, ...) {
+  rdf <- .resolve_risk_df(x, time, status, group, report_times)
+
+  # First stratum on top: reverse factor levels (ggplot puts level 1 at bottom).
+  lev <- unique(rdf$strata)
+  rdf$strata <- factor(rdf$strata, levels = rev(lev))
+
+  y_labels <- if (is.null(strata_labels)) ggplot2::waiver() else
+    function(br) ifelse(br %in% names(strata_labels), strata_labels[br], br)
+
+  ggplot2::ggplot(
+    rdf, ggplot2::aes(x = .data$report_time, y = .data$strata)
+  ) +
+    ggplot2::geom_text(
+      ggplot2::aes(label = .data$n.risk),
+      size = if (is.null(size)) 3.5 else size
+    ) +
+    ggplot2::scale_y_discrete(labels = y_labels) +
+    ggplot2::theme_minimal(base_size = 12) +
+    ggplot2::theme(
+      panel.grid  = ggplot2::element_blank(),
+      axis.title  = ggplot2::element_blank(),
+      axis.text.x = ggplot2::element_blank(),
+      axis.ticks  = ggplot2::element_blank()
+    )
+}

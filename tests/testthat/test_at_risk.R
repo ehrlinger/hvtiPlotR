@@ -41,3 +41,40 @@ test_that(".atrisk_table matches km_risk_table when no events fall between repor
   # Compare n.risk per report time (km strata label is the single-cohort name).
   expect_equal(emp$n.risk, km$tables$risk$n.risk)
 })
+
+test_that("hv_atrisk renders a panel from an hv_survival object", {
+  dta <- sample_survival_data(n = 200, strata_levels = c("A", "B"), seed = 1)
+  km  <- hv_survival(dta, time_col = "iv_dead", event_col = "dead",
+                     group_col = "valve_type")
+  p   <- hv_atrisk(km)
+  expect_s3_class(p, "ggplot")
+  # one text label per (stratum x report time)
+  n_expected <- nrow(km$tables$risk)
+  built <- ggplot2::layer_data(p, 1)
+  expect_equal(nrow(built), n_expected)
+})
+
+test_that("hv_atrisk renders a panel from a precomputed risk data frame", {
+  rdf <- data.frame(strata = c("A", "A", "B", "B"),
+                    report_time = c(0, 5, 0, 5),
+                    n.risk = c(50, 30, 40, 20))
+  p   <- hv_atrisk(rdf)
+  expect_s3_class(p, "ggplot")
+  expect_equal(nrow(ggplot2::layer_data(p, 1)), 4L)
+})
+
+test_that("hv_atrisk accepts `n` and `time` column aliases", {
+  rdf <- data.frame(strata = c("A", "B"), time = c(0, 0), n = c(10, 8))
+  p   <- hv_atrisk(rdf)
+  expect_s3_class(p, "ggplot")
+  expect_equal(nrow(ggplot2::layer_data(p, 1)), 2L)
+})
+
+test_that("hv_atrisk strata_labels overrides row labels", {
+  rdf <- data.frame(strata = c("A", "B"), report_time = c(0, 0),
+                    n.risk = c(10, 8))
+  p   <- hv_atrisk(rdf, strata_labels = c(A = "Group A", B = "Group B"))
+  blt <- ggplot2::ggplot_build(p)
+  ylabs <- blt$layout$panel_params[[1]]$y$get_labels()
+  expect_true(all(c("Group A", "Group B") %in% ylabs))
+})
