@@ -113,3 +113,25 @@ test_that("hv_atrisk errors on an unresolvable input", {
   expect_error(hv_atrisk(42), "hv_data object")
   expect_error(hv_atrisk(data.frame(foo = 1)), "Precomputed risk data frame")
 })
+
+test_that("hv_atrisk_compose stacks curve over table with shared x-range", {
+  dta   <- sample_survival_data(n = 200, strata_levels = c("A", "B"), seed = 1)
+  km    <- hv_survival(dta, time_col = "iv_dead", event_col = "dead",
+                       group_col = "valve_type")
+  curve <- plot(km)
+  table <- hv_atrisk(km)
+  comp  <- hv_atrisk_compose(curve, table)
+
+  expect_s3_class(comp, "patchwork")
+  # the two patches share x-axis limits after composition
+  xr_curve <- ggplot2::ggplot_build(curve)$layout$panel_params[[1]]$x.range
+  xr_table <- ggplot2::ggplot_build(comp[[2]])$layout$panel_params[[1]]$x.range
+  expect_equal(xr_table, xr_curve, tolerance = 1e-6)
+})
+
+test_that("hv_atrisk_compose validates its inputs", {
+  dta   <- sample_survival_data(n = 50, seed = 1)
+  table <- hv_atrisk(hv_survival(dta))
+  expect_error(hv_atrisk_compose("nope", table), "ggplot")
+  expect_error(hv_atrisk_compose(table, "nope"), "ggplot")
+})

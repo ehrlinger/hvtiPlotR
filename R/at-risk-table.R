@@ -168,3 +168,42 @@ hv_atrisk <- function(x, time = NULL, status = NULL, group = NULL,
       axis.ticks  = ggplot2::element_blank()
     )
 }
+
+#' Stack a survival curve over a numbers-at-risk table
+#'
+#' Composes a curve plot over a \code{\link{hv_atrisk}} panel, aligning the
+#' table's x-range to the curve's so the counts sit under the matching times,
+#' and stacks them with \pkg{patchwork}.
+#'
+#' @param curve A \pkg{ggplot2} survival curve, e.g. \code{plot(hv_survival(...))}.
+#' @param table A \pkg{ggplot2} numbers-at-risk panel from \code{\link{hv_atrisk}}.
+#' @param heights Numeric length-2 curve:table height ratio. Default
+#'   \code{c(3, 1)}.
+#'
+#' @return A \pkg{patchwork} object (the curve above, the table below).
+#'   Decorate both panels with patchwork's \code{&}, e.g.
+#'   \code{& theme_hv_manuscript()}.
+#'
+#' @seealso \code{\link{hv_atrisk}}
+#'
+#' @examples
+#' km <- hv_survival(sample_survival_data(n = 200, seed = 1))
+#' hv_atrisk_compose(plot(km), hv_atrisk(km))
+#'
+#' @importFrom ggplot2 ggplot_build coord_cartesian
+#' @importFrom patchwork wrap_plots plot_layout
+#' @export
+hv_atrisk_compose <- function(curve, table, heights = c(3, 1)) {
+  if (!inherits(curve, "ggplot"))
+    stop("`curve` must be a ggplot object.", call. = FALSE)
+  if (!inherits(table, "ggplot"))
+    stop("`table` must be a ggplot object (from hv_atrisk()).", call. = FALSE)
+
+  # Use the curve's already-expanded x-range as the table's hard range so the
+  # two panels share identical x limits (expand = FALSE avoids re-padding).
+  xr    <- ggplot2::ggplot_build(curve)$layout$panel_params[[1]]$x.range
+  table <- table + ggplot2::coord_cartesian(xlim = xr, expand = FALSE)
+
+  patchwork::wrap_plots(curve, table, ncol = 1) +
+    patchwork::plot_layout(heights = heights)
+}
