@@ -1,3 +1,16 @@
+# hvtiPlotR 2.6.0
+
+## New features
+
+- `hv_venn()` draws a 2-3 set Venn diagram of overlapping set memberships — the
+  small-set-count companion to `hv_upset()`, reading the same logical / 0-1
+  set-membership columns. It returns an object carrying a `$tables$regions`
+  count table (one row per Venn region), and `plot()` renders a bare ggplot via
+  ggvenn that you finish with `+ theme_hv_*`. For more than three sets, use
+  `hv_upset()`.
+
+**Dependency:** `ggvenn` added to `Imports`.
+
 # hvtiPlotR 2.5.0
 
 ## New features

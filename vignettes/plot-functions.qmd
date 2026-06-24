@@ -2885,6 +2885,24 @@ plot(hu_era, fill_col = "era", set_size = FALSE) +
   theme_hv_poster()
 ```
 
+### Venn diagram (2-3 sets)
+
+For two or three overlapping groups, `hv_venn()` draws the familiar
+overlapping-circle Venn. It reads the same logical set-membership columns as
+`hv_upset()`, so the same data drives either view; reach for `hv_upset()` once
+there are more than three sets. The region counts behind the figure are kept in
+`v$tables$regions` for a methods table.
+
+```{r}
+#| label: fig-venn
+#| fig-width: 6
+#| fig-height: 5
+dta <- sample_upset_data(n = 400, seed = 7)
+v   <- hv_venn(dta, sets = c("AV_Replacement", "MV_Replacement", "CABG"))
+
+plot(v) + theme_hv_manuscript()
+```
+
 ## Saving
 
 `ggsave()` handles a patchwork composite the same as a bare ggplot -- write it
