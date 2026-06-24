@@ -198,10 +198,15 @@ hv_atrisk_compose <- function(curve, table, heights = c(3, 1)) {
     stop("`curve` must be a ggplot object.", call. = FALSE)
   if (!inherits(table, "ggplot"))
     stop("`table` must be a ggplot object (from hv_atrisk()).", call. = FALSE)
+  if (!is.numeric(heights) || length(heights) != 2L || anyNA(heights))
+    stop("`heights` must be a length-2 numeric vector.", call. = FALSE)
 
   # Use the curve's already-expanded x-range as the table's hard range so the
   # two panels share identical x limits (expand = FALSE avoids re-padding).
   xr    <- ggplot2::ggplot_build(curve)$layout$panel_params[[1]]$x.range
+  if (is.null(xr) || length(xr) != 2L)
+    stop("Could not read an x-range from `curve`; is it a rendered ggplot ",
+         "with a continuous x-axis?", call. = FALSE)
   table <- table + ggplot2::coord_cartesian(xlim = xr, expand = FALSE)
 
   patchwork::wrap_plots(curve, table, ncol = 1) +

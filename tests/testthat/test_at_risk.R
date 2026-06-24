@@ -135,3 +135,14 @@ test_that("hv_atrisk_compose validates its inputs", {
   expect_error(hv_atrisk_compose("nope", table), "ggplot")
   expect_error(hv_atrisk_compose(table, "nope"), "ggplot")
 })
+
+test_that("hv_atrisk_compose validates heights", {
+  dta   <- sample_survival_data(n = 50, seed = 1)
+  km    <- hv_survival(dta)
+  curve <- plot(km)
+  table <- hv_atrisk(km)
+  expect_error(hv_atrisk_compose(curve, table, heights = "tall"),
+               "length-2 numeric")
+  expect_error(hv_atrisk_compose(curve, table, heights = c(1, 2, 3)),
+               "length-2 numeric")
+})
