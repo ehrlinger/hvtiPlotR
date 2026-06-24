@@ -615,7 +615,10 @@ plot(hv_ordinal(dat_ph, grade_col = "grade")) +
 `hv_survival()` wraps `survfit()` from the **survival** package and returns
 an S3 object. Call `plot(km, type = ...)` to render one of the five plot types
 matching the SAS `%kaplan` / `%nelsont` macro output flags (`PLOTS`, `PLOTC`,
-`PLOTH`, `PLOTL`). Tidy data frames live in `km$tables`.
+`PLOTH`, `PLOTL`). Because the estimates come from `survfit()`, the survival
+curve, confidence limits, and numbers at risk match what `%kaplan` reports —
+you are swapping the plotting step, not the estimator. Tidy data frames live
+in `km$tables`.
 
 ```r
 dta <- sample_survival_data(n = 500, seed = 42)
@@ -688,7 +691,8 @@ each time point -- the kind of quality-check figure you run before committing
 to a temporal-prevalence analysis. The SAS version uses `PROC FREQ` output
 aggregated by year; `hv_followup()` accepts the same aggregated data frame
 (one row per time point, with counts for total patients and patients with a
-measurement). The output is a bar chart; any goodness-of-follow-up threshold
+measurement), so the bar heights are the same counts `PROC FREQ` gave you —
+only the rendering moves to R. The output is a bar chart; any goodness-of-follow-up threshold
 you add in SAS (a dashed horizontal line) becomes a
 `geom_hline(yintercept = ..., linetype = "dashed")` call in R.
 

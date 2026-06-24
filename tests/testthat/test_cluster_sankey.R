@@ -152,6 +152,124 @@ test_that("hv_sankey errors when a cluster column is absent from data", {
   )
 })
 
+# ============================================================================
+# Lineage-preserving node order (.derive_node_order) and defaults
+# ============================================================================
+
+test_that("hv_sankey long data has no NA nodes and covers all 9 labels", {
+  skip_if_not_installed("ggsankey")
+  dta <- sample_cluster_sankey_data(n = 300, seed = 42)
+  sn  <- hv_sankey(dta)
+  expect_false(anyNA(sn$data$node))
+  # next_node is NA only on the final column (no successor); earlier cols clean
+  non_terminal <- sn$data[!is.na(sn$data$next_x), ]
+  expect_false(anyNA(non_terminal$next_node))
+  expect_setequal(sn$meta$node_levels, LETTERS[1:9])
+})
+
+test_that(".derive_node_order reproduces the canonical AVSD lineage order", {
+  dta <- sample_cluster_sankey_data(n = 2000, seed = 42)
+  expect_identical(
+    .derive_node_order(dta, paste0("C", 2:9)),
+    c("B", "F", "H", "D", "I", "C", "E", "G", "A")
+  )
+})
+
+test_that("explicit node_levels missing an observed label errors", {
+  skip_if_not_installed("ggsankey")
+  dta <- sample_cluster_sankey_data(n = 200, seed = 1)
+  expect_error(
+    hv_sankey(dta, node_levels = LETTERS[1:8]),   # drops "I"
+    "cover all observed|missing"
+  )
+})
+
+test_that("complete explicit node_levels is used verbatim", {
+  skip_if_not_installed("ggsankey")
+  dta <- sample_cluster_sankey_data(n = 200, seed = 1)
+  lev <- c("A", "B", "C", "D", "E", "F", "G", "H", "I")
+  sn  <- hv_sankey(dta, node_levels = lev)
+  expect_identical(sn$meta$node_levels, lev)
+})
+
+test_that("default node_colours map Set1 in node_levels order", {
+  skip_if_not_installed("ggsankey")
+  dta <- sample_cluster_sankey_data(n = 200, seed = 1)
+  sn  <- hv_sankey(dta)
+  expect_identical(names(sn$meta$node_colours), sn$meta$node_levels)
+  expect_equal(unname(sn$meta$node_colours[1]), "#E41A1C")  # Set1[1]
+})
+
+# ============================================================================
+# plot.hv_sankey styling arguments
+# ============================================================================
+
+test_that("flow_alpha and label_alpha reach the corresponding layers", {
+  skip_if_not_installed("ggsankey")
+  dta <- sample_cluster_sankey_data(n = 100, seed = 1)
+  p   <- plot(hv_sankey(dta), flow_alpha = 0.4, label_alpha = 0.2)
+  alphas <- vapply(p$layers, function(l) {
+    a <- l$aes_params$alpha
+    if (is.null(a)) NA_real_ else a
+  }, numeric(1L))
+  expect_true(0.4 %in% alphas)   # geom_vline + geom_sankey
+  expect_true(0.2 %in% alphas)   # geom_sankey_label
+})
+
+test_that("deprecated alpha sets both alphas and emits a message", {
+  skip_if_not_installed("ggsankey")
+  dta <- sample_cluster_sankey_data(n = 100, seed = 1)
+  expect_message(p <- plot(hv_sankey(dta), alpha = 0.7), "deprecated")
+  alphas <- vapply(p$layers, function(l) {
+    a <- l$aes_params$alpha
+    if (is.null(a)) NA_real_ else a
+  }, numeric(1L))
+  expect_true(all(c(0.7) %in% alphas))
+  expect_false(any(c(0.5, 0.3) %in% alphas))
+})
+
+test_that("group_labels produce milestone x-axis labels for listed columns", {
+  skip_if_not_installed("ggsankey")
+  dta <- sample_cluster_sankey_data(n = 100, seed = 1)
+  p   <- plot(
+    hv_sankey(dta),
+    group_labels = c(C2 = "2 groups", C7 = "5 groups")
+  )
+  x_scale <- p$scales$get_scales("x")
+  expect_true("C2\n2 groups" %in% x_scale$labels)
+  expect_true("C7\n5 groups" %in% x_scale$labels)
+  expect_true("C3" %in% x_scale$labels)  # unlisted column stays bare
+})
+
+test_that(".derive_node_order drops NA and covers all observed labels", {
+  dta <- data.frame(
+    C2 = c("A", "B", "A", NA),
+    C3 = c("A", "B", "C", "B"),
+    stringsAsFactors = FALSE
+  )
+  ord <- .derive_node_order(dta, c("C2", "C3"))
+  expect_false(anyNA(ord))
+  expect_setequal(ord, c("A", "B", "C"))  # every non-NA label covered
+})
+
+test_that("plot.hv_sankey errors on unnamed group_labels", {
+  skip_if_not_installed("ggsankey")
+  dta <- sample_cluster_sankey_data(n = 100, seed = 1)
+  expect_error(
+    plot(hv_sankey(dta), group_labels = c("2 groups", "5 groups")),
+    "named"
+  )
+})
+
+test_that("plot.hv_sankey warns on group_labels names matching no column", {
+  skip_if_not_installed("ggsankey")
+  dta <- sample_cluster_sankey_data(n = 100, seed = 1)
+  expect_warning(
+    plot(hv_sankey(dta), group_labels = c(C2 = "2 groups", CX = "nope")),
+    "match no cluster"
+  )
+})
+
 # ---------------------------------------------------------------------------
 # print.hv_sankey coverage
 # ---------------------------------------------------------------------------

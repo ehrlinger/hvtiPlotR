@@ -189,6 +189,27 @@ test_that("plot(hv_alluvial) with fill_col returns a ggplot", {
   expect_s3_class(p, "ggplot")
 })
 
+test_that("show_yaxis = FALSE blanks the four y-axis elements", {
+  dta <- sample_alluvial_data(n = 100, seed = 1)
+  p   <- plot(hv_alluvial(dta, axes = c("pre_ar", "post_ar"), y_col = "freq"),
+              show_yaxis = FALSE)
+  th  <- p$theme
+  for (el in c("axis.title.y", "axis.text.y", "axis.ticks.y", "axis.line.y"))
+    expect_s3_class(th[[el]], "element_blank")
+})
+
+test_that("show_yaxis = TRUE leaves the y-axis elements untouched", {
+  dta <- sample_alluvial_data(n = 100, seed = 1)
+  p   <- plot(hv_alluvial(dta, axes = c("pre_ar", "post_ar"), y_col = "freq"),
+              show_yaxis = TRUE)
+  th  <- p$theme
+  blanked <- vapply(
+    c("axis.title.y", "axis.text.y", "axis.ticks.y", "axis.line.y"),
+    function(el) inherits(th[[el]], "element_blank"), logical(1L)
+  )
+  expect_false(any(blanked))
+})
+
 test_that("hv_alluvial errors when data is not a data frame", {
   expect_error(hv_alluvial(list(), axes = c("a", "b")), "data frame")
 })
