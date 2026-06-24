@@ -61,6 +61,10 @@ utils::globalVariables(c("n.risk", "report_time", "strata"))
   if (!is.null(time)) {
     if (!(time %in% names(x)))
       stop("`time` column \"", time, "\" not found in `x`.", call. = FALSE)
+    if (!is.null(group) && !(group %in% names(x)))
+      stop("`group` column \"", group, "\" not found in `x`.", call. = FALSE)
+    if (!is.null(status) && !(status %in% names(x)))
+      stop("`status` column \"", status, "\" not found in `x`.", call. = FALSE)
     tv <- x[[time]]
     gv <- if (!is.null(group)) x[[group]] else NULL
     sv <- if (!is.null(status)) x[[status]] else NULL
@@ -70,6 +74,7 @@ utils::globalVariables(c("n.risk", "report_time", "strata"))
       rt  <- pretty(rng, n = 5)
       rt  <- rt[rt >= rng[1] & rt <= rng[2]]
       if (length(rt) == 0L) rt <- rng
+      rt  <- unique(rt)
     }
     return(.atrisk_table(time = tv, status = sv, group = gv,
                          report_times = rt))

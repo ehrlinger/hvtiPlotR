@@ -97,7 +97,7 @@ test_that("hv_atrisk computes from subject-level data via time/status/group", {
   ref <- .atrisk_table(time = dta$iv_dead, group = dta$valve_type,
                        report_times = c(0, 5, 10))
   got <- ggplot2::layer_data(p, 1)
-  expect_setequal(as.numeric(as.character(got$label)), ref$n.risk)
+  expect_equal(sort(as.numeric(as.character(got$label))), sort(ref$n.risk))
 })
 
 test_that("hv_atrisk derives report_times from the time range when NULL", {
