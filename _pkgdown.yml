@@ -210,6 +210,9 @@ reference:
   - hv_upset
   - plot.hv_upset
   - print.hv_upset
+  - hv_venn
+  - plot.hv_venn
+  - print.hv_venn
   - eda_classify_var
   - eda_select_vars
   - sample_eda_data
