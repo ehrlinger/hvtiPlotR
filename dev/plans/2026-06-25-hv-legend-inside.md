@@ -14,7 +14,7 @@
 
 ## File Structure
 
-- **Create** `R/legend-inside.R` — `hv_legend_inside()` + four file-local internal helpers (`.legend_points`, `.legend_panel_range`, `.legend_corner_occupancy`, `.legend_corner_theme`). Single responsibility: legend auto-placement.
+- **Create** `R/legend-inside.R` — `hv_legend_inside()` + file-local internal helpers (`.legend_validate`, `.legend_points`, `.legend_corner_occupancy`, `.legend_corner_theme`). Single responsibility: legend auto-placement. Point coordinates come from `coord$transform()` (npc `[0,1]`, flip/coord-aware), not manual range normalization.
 - **Create** `tests/testthat/test_legend_inside.R` — testthat suite.
 - **Modify** `NAMESPACE` — `export(hv_legend_inside)` + importFrom (via `devtools::document()`, do not hand-edit).
 - **Modify** `R/help.R` — add a `save`/utilities bullet referencing `hv_legend_inside()` (optional, match existing list).
@@ -231,11 +231,18 @@ Add these internal helpers to `R/legend-inside.R` (above `hv_legend_inside`):
 
 ```r
 #' @noRd
-# Collect finite (x, y) from every layer of a built plot.
+# Collect finite (x, y) from every layer of a built plot, in npc panel
+# coordinates [0, 1] via the coord's own transform — so coord_flip and other
+# coordinate systems are handled correctly (data$x/$y stay in original
+# orientation while panel ranges swap under flip; coord$transform reconciles
+# both and returns npc directly).
 .legend_points <- function(b) {
+  coord <- b$layout$coord
+  pp    <- b$layout$panel_params[[1]]
   parts <- lapply(b$data, function(d) {
-    if (all(c("x", "y") %in% names(d)))
-      data.frame(x = d$x, y = d$y) else NULL
+    if (!all(c("x", "y") %in% names(d))) return(NULL)
+    td <- coord$transform(d, pp)
+    data.frame(x = td$x, y = td$y)
   })
   parts <- Filter(Negate(is.null), parts)
   if (length(parts) == 0L) return(NULL)
@@ -244,24 +251,13 @@ Add these internal helpers to `R/legend-inside.R` (above `hv_legend_inside`):
 }
 
 #' @noRd
-# Panel x/y range from a built plot (ggplot2 >= 3.3 uses x.range/y.range;
-# fall back to the ViewScale continuous_range on newer builds).
-.legend_panel_range <- function(b) {
-  pp <- b$layout$panel_params[[1]]
-  xr <- pp$x.range; if (is.null(xr)) xr <- pp$x$continuous_range
-  yr <- pp$y.range; if (is.null(yr)) yr <- pp$y$continuous_range
-  list(x = xr, y = yr)
-}
-
-#' @noRd
 # Fraction of points inside each of the four corner boxes (named tr/tl/br/bl).
-.legend_corner_occupancy <- function(x, y, rng, box_frac) {
-  nx <- (x - rng$x[1]) / diff(rng$x)
-  ny <- (y - rng$y[1]) / diff(rng$y)
-  n  <- length(nx)
+# x, y are already in npc [0, 1].
+.legend_corner_occupancy <- function(x, y, box_frac) {
+  n <- length(x)
   frac <- function(hx, hy) {
-    xin <- if (hx) nx >= (1 - box_frac) else nx <= box_frac
-    yin <- if (hy) ny >= (1 - box_frac) else ny <= box_frac
+    xin <- if (hx) x >= (1 - box_frac) else x <= box_frac
+    yin <- if (hy) y >= (1 - box_frac) else y <= box_frac
     sum(xin & yin) / n
   }
   c(tr = frac(TRUE, TRUE), tl = frac(FALSE, TRUE),
@@ -291,10 +287,7 @@ Then replace the Task-2 placeholder (`plot + fb   # placeholder ...`) with:
   pts <- .legend_points(b)
   if (is.null(pts) || nrow(pts) == 0L) return(plot + fb)
 
-  rng <- .legend_panel_range(b)
-  if (diff(rng$x) == 0 || diff(rng$y) == 0) return(plot + fb)
-
-  occ  <- .legend_corner_occupancy(pts$x, pts$y, rng, box_frac)
+  occ  <- .legend_corner_occupancy(pts$x, pts$y, box_frac)
   best <- names(occ)[which.min(occ)]   # ties -> first: tr, tl, br, bl
   if (occ[[best]] <= threshold)
     plot + .legend_corner_theme(best, pad)
@@ -475,3 +468,5 @@ gh pr create --base main --head feat/hv-legend-inside \
 **Type consistency:** helper names `.legend_points`, `.legend_panel_range`, `.legend_corner_occupancy`, `.legend_corner_theme`, `.legend_validate` are used consistently across tasks; corner keys `tr/tl/br/bl` consistent between occupancy and theme.
 
 **ggplot2 4.0 API:** placement uses `legend.position = "inside"` + `legend.position.inside` + `legend.justification.inside` (verified warning-free under `error_on = warning`); tests read those exact elements back.
+
+**coord_flip correctness:** point coordinates come from `b$layout$coord$transform(layer_data, panel_params)`, which returns npc `[0,1]` accounting for the coordinate system. Verified empirically: under `coord_flip` the layer `data$x/$y` stay in original orientation while `panel_params$x.range/$y.range` swap, so manual `data$x ÷ x.range` normalization would be wrong; `coord$transform` reconciles them. The `coord_flip` test asserts an in-panel result; the placement is now in the correct *rendered* corner.

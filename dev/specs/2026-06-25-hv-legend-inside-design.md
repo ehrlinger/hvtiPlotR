@@ -68,11 +68,13 @@ hv_legend_inside(p)               # added after the theme, so it overrides "none
    points contribute themselves. Ribbons/cols that expose only `ymin`/`ymax` are
    ignored for v1 (documented limitation). If no usable points remain, return
    `plot + theme(legend.position = fallback)` (nothing to dodge).
-4. **Normalize.** Read the panel continuous ranges from
-   `b$layout$panel_params[[1]]` (`x.range` / `y.range`, accommodating the
-   `panel_params` shape for the installed ggplot2). Map each point to the unit
-   panel `[0,1] × [0,1]`. Points are placed in built (post-transform, post-flip)
-   coordinates, so `coord_flip` and transformed scales are handled correctly.
+4. **Normalize.** Map each point to the unit panel `[0,1] × [0,1]` with
+   `b$layout$coord$transform(layer_data, panel_params)`, which returns npc
+   coordinates accounting for the coordinate system. This is why `coord_flip`
+   works: the layer `data$x/$y` stay in original orientation while
+   `panel_params$x.range/$y.range` swap under flip, so a manual
+   `data$x ÷ x.range` normalization would mismatch — `coord$transform`
+   reconciles both. (Verified empirically against ggplot2 4.0.3.)
 5. **Corner occupancy.** Define four corner boxes of size `box_frac` in each
    dimension: top-right, top-left, bottom-right, bottom-left. For each, compute
    the fraction of normalized points inside.
