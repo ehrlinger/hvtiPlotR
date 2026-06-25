@@ -11,7 +11,7 @@ geom_stratum."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">hvtiPlotR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.6.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.6.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -115,8 +115,11 @@ spacing. Default <code>1/4</code>.</p></dd>
 <dt id="arg-show-yaxis">show_yaxis<a class="anchor" aria-label="anchor" href="#arg-show-yaxis"></a></dt>
 <dd><p>Logical; if FALSE, the y-axis title, text, ticks, and
 line are blanked for a clean milestone patient-flow look (the
-alluvium/stratum geometry is untouched and remains composable with a
-later <code><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme()</a></code>). Default <code>TRUE</code> (counts shown).</p></dd>
+alluvium/stratum geometry is untouched). Default <code>TRUE</code> (counts shown).
+Note the blanking is a <code><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme()</a></code> layer, so a <em>complete</em> theme
+added afterward (e.g. <code><a href="hvtiPlotR-themes.html">theme_hv_manuscript()</a></code>) re-asserts the axis it
+styles; add the theme first and re-blank, or blank the y elements yourself
+after it, when you want both the house theme and a clean axis.</p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>

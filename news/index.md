@@ -1,5 +1,31 @@
 # Changelog
 
+## hvtiPlotR 2.6.1
+
+### Bug fixes
+
+- [`theme_hv_poster()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md),
+  [`theme_hv_ppt_dark()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md),
+  [`theme_hv_ppt_light()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md):
+  the `paper` argument now controls the figure background
+  (`plot.background` fill). It was hard-coded to `"transparent"`, so
+  passing `paper` had no effect. The PPT themes still default to
+  transparent (the slide background shows through);
+  [`theme_hv_poster()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)
+  now honours its `"white"` default.
+
+### Documentation
+
+- [`plot.hv_alluvial()`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hv_alluvial.md):
+  clarify that `show_yaxis = FALSE` is a
+  [`theme()`](https://ggplot2.tidyverse.org/reference/theme.html) layer,
+  so a complete theme added afterward
+  (e.g. [`theme_hv_manuscript()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md))
+  re-asserts the axis it styles.
+- [`plot.hv_venn()`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hv_venn.md):
+  note the diagram is coordinate-free — do not add an axis-bearing house
+  theme, which pastes spurious axes onto it. Example updated.
+
 ## hvtiPlotR 2.6.0
 
 ### New features

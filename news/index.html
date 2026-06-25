@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">hvtiPlotR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.6.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.6.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -52,6 +52,21 @@
       <small>Source: <a href="https://github.com/ehrlinger/hvtiPlotR/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="2.6.1" id="hvtiplotr-261">hvtiPlotR 2.6.1<a class="anchor" aria-label="anchor" href="#hvtiplotr-261"></a></h2>
+<div class="section level3">
+<h3 id="bug-fixes-2-6-1">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-2-6-1"></a></h3>
+<ul><li>
+<code><a href="../reference/hvtiPlotR-themes.html">theme_hv_poster()</a></code>, <code><a href="../reference/hvtiPlotR-themes.html">theme_hv_ppt_dark()</a></code>, <code><a href="../reference/hvtiPlotR-themes.html">theme_hv_ppt_light()</a></code>: the <code>paper</code> argument now controls the figure background (<code>plot.background</code> fill). It was hard-coded to <code>"transparent"</code>, so passing <code>paper</code> had no effect. The PPT themes still default to transparent (the slide background shows through); <code><a href="../reference/hvtiPlotR-themes.html">theme_hv_poster()</a></code> now honours its <code>"white"</code> default.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="documentation-2-6-1">Documentation<a class="anchor" aria-label="anchor" href="#documentation-2-6-1"></a></h3>
+<ul><li>
+<code><a href="../reference/plot.hv_alluvial.html">plot.hv_alluvial()</a></code>: clarify that <code>show_yaxis = FALSE</code> is a <code><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme()</a></code> layer, so a complete theme added afterward (e.g. <code><a href="../reference/hvtiPlotR-themes.html">theme_hv_manuscript()</a></code>) re-asserts the axis it styles.</li>
+<li>
+<code><a href="../reference/plot.hv_venn.html">plot.hv_venn()</a></code>: note the diagram is coordinate-free — do not add an axis-bearing house theme, which pastes spurious axes onto it. Example updated.</li>
+</ul></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="2.6.0" id="hvtiplotr-260">hvtiPlotR 2.6.0<a class="anchor" aria-label="anchor" href="#hvtiplotr-260"></a></h2>
 <div class="section level3">

@@ -9,7 +9,7 @@ bare ggplot2 object you can finish with +."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">hvtiPlotR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.6.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.6.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -112,8 +112,12 @@ labels into its geoms, so forwarding is the only way to reach them).</p></dd>
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>A <code><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></code> object. Compose with
-<code><a href="hvtiPlotR-themes.html">theme_hv_manuscript</a></code>, <code><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs()</a></code>, etc.</p>
+    <p>A <code><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></code> object, already styled by
+<span class="pkg">ggvenn</span> and <strong>coordinate-free</strong> (no axes). Tune it through this
+method's arguments (<code>fill</code>, <code>text_size</code>, <code>set_name_size</code>,
+<code>...</code>). Do <em>not</em> add an axis-bearing house theme such as
+<code><a href="hvtiPlotR-themes.html">theme_hv_manuscript()</a></code>: a Venn has no meaningful x/y, and the theme
+would paste spurious axes onto it.</p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
@@ -124,7 +128,7 @@ labels into its geoms, so forwarding is the only way to reach them).</p></dd>
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">dta</span> <span class="op">&lt;-</span> <span class="fu"><a href="sample_upset_data.html">sample_upset_data</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">300</span>, seed <span class="op">=</span> <span class="fl">42</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">v</span>   <span class="op">&lt;-</span> <span class="fu"><a href="hv_venn.html">hv_venn</a></span><span class="op">(</span><span class="va">dta</span>, sets <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"AV_Replacement"</span>, <span class="st">"MV_Replacement"</span>, <span class="st">"CABG"</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">v</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="hvtiPlotR-themes.html">theme_hv_manuscript</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">v</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="plot.hv_venn-1.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>

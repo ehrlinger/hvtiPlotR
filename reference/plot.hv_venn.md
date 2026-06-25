@@ -57,9 +57,13 @@ plot(
 ## Value
 
 A [`ggplot`](https://ggplot2.tidyverse.org/reference/ggplot.html)
-object. Compose with
-[`theme_hv_manuscript`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md),
-[`labs()`](https://ggplot2.tidyverse.org/reference/labs.html), etc.
+object, already styled by ggvenn and **coordinate-free** (no axes). Tune
+it through this method's arguments (`fill`, `text_size`,
+`set_name_size`, `...`). Do *not* add an axis-bearing house theme such
+as
+[`theme_hv_manuscript()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md):
+a Venn has no meaningful x/y, and the theme would paste spurious axes
+onto it.
 
 ## See also
 
@@ -70,6 +74,6 @@ object. Compose with
 ``` r
 dta <- sample_upset_data(n = 300, seed = 42)
 v   <- hv_venn(dta, sets = c("AV_Replacement", "MV_Replacement", "CABG"))
-plot(v) + theme_hv_manuscript()
+plot(v)
 
 ```
