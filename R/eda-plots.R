@@ -198,6 +198,8 @@ eda_select_vars <- function(data, vars) {
 #'     for categorical variables.}
 #' }
 #'
+#' @seealso Worked recipe with rendered output:
+#'   \url{https://ehrlinger.github.io/hvti_graphics/bar.html}.
 #' @seealso \code{\link{plot.hv_eda}}, \code{\link{sample_eda_data}},
 #'   \code{\link{eda_classify_var}}, \code{\link{eda_select_vars}}
 #'

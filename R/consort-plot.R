@@ -379,6 +379,8 @@ hv_consort_patients <- function(tracker, stage, reason = NULL) {
 #'   \item{`$tracker`}{The original `hv_consort_tracker`.}
 #' }
 #'
+#' @seealso Worked recipe with rendered output:
+#'   \url{https://ehrlinger.github.io/hvti_graphics/consort.html}.
 #' @seealso [hv_consort_start()], [hv_consort_exclude()], [plot.hv_consort()]
 #'
 #' @examples

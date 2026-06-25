@@ -102,6 +102,9 @@ p +
 
 }
 \seealso{
+Worked recipe with rendered output:
+\url{https://ehrlinger.github.io/hvti_graphics/histograms.html}.
+
 \code{\link{plot.hv_mirror_hist}} to render as a ggplot2 figure,
 \code{\link{theme_hv_manuscript}} for the publication theme,
 \code{\link{sample_mirror_histogram_data}} for example data.

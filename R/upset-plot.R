@@ -95,6 +95,8 @@ sample_upset_data <- function(n = 500, seed = 42L) {
 #'     named integer vector of per-set patient counts.}
 #' }
 #'
+#' @seealso Worked recipe with rendered output:
+#'   \url{https://ehrlinger.github.io/hvti_graphics/upset.html}.
 #' @seealso \code{\link{plot.hv_upset}}, \code{\link{sample_upset_data}}
 #'
 #' @examples

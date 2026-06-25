@@ -226,6 +226,9 @@ save_ppt(
 
 }
 \seealso{
+Worked recipe with rendered output:
+\url{https://ehrlinger.github.io/hvti_graphics/presentations.html}.
+
 \code{\link[rvg:dml]{rvg::dml()}}, \code{\link[officer:ph_with]{officer::ph_with()}}, \code{\link[officer:ph_location]{officer::ph_location()}},
 \code{\link[=theme_hv_manuscript]{theme_hv_manuscript()}}
 }

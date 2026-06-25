@@ -196,6 +196,8 @@ sample_goodness_followup_data <- function(
 #'     \code{event_data}.}
 #' }
 #'
+#' @seealso Worked recipe with rendered output:
+#'   \url{https://ehrlinger.github.io/hvti_graphics/balance.html}.
 #' @seealso \code{\link{plot.hv_followup}},
 #'   \code{\link{sample_goodness_followup_data}}
 #'

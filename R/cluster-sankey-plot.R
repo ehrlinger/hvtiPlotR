@@ -248,6 +248,8 @@ sample_cluster_sankey_data <- function(
 #'   \item{\code{$tables}}{Empty list.}
 #' }
 #'
+#' @seealso Worked recipe with rendered output:
+#'   \url{https://ehrlinger.github.io/hvti_graphics/sankey.html}.
 #' @seealso \code{\link{plot.hv_sankey}},
 #'   \code{\link{sample_cluster_sankey_data}}
 #'

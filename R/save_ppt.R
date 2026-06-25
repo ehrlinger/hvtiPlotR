@@ -222,6 +222,8 @@ add_plot_slide <- function(doc, plot, title, layout, master, width, height,
 #'
 #' @return Invisibly returns the path given by `powerpoint`.
 #'
+#' @seealso Worked recipe with rendered output:
+#'   \url{https://ehrlinger.github.io/hvti_graphics/presentations.html}.
 #' @seealso [rvg::dml()], [officer::ph_with()], [officer::ph_location()],
 #'   [theme_hv_manuscript()]
 #'

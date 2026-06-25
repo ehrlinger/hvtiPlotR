@@ -75,6 +75,9 @@ p +
 
 }
 \seealso{
+Worked recipe with rendered output:
+\url{https://ehrlinger.github.io/hvti_graphics/spaghetti.html}.
+
 \code{\link{plot.hv_trends}} to render as a ggplot2 figure,
 \code{\link{theme_hv_manuscript}} for the publication theme,
 \code{\link{sample_trends_data}} for example data.

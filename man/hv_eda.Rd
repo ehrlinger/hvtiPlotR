@@ -111,6 +111,9 @@ helper: \code{Barplot_Scatterplot_Function.R}
 (\code{Function_DataPlotting()}, \code{Order_Variables()}).
 }
 \seealso{
+Worked recipe with rendered output:
+\url{https://ehrlinger.github.io/hvti_graphics/bar.html}.
+
 \code{\link{plot.hv_eda}}, \code{\link{sample_eda_data}},
 \code{\link{eda_classify_var}}, \code{\link{eda_select_vars}}
 }
