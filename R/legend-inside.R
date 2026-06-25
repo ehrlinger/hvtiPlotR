@@ -84,6 +84,11 @@
 #' @param fallback Outside `legend.position` used when no corner is empty enough
 #'   or the plot cannot be reasoned about (facets). One of `"right"`, `"left"`,
 #'   `"top"`, `"bottom"`. Default `"right"`.
+#' @param prefer Optional preferred corner: one of `"topright"`, `"topleft"`,
+#'   `"bottomright"`, `"bottomleft"`. When set and that corner is clear (its
+#'   occupancy is within `threshold`), the legend is placed there even if another
+#'   corner is emptier. If the preferred corner is occupied, the emptiest-corner
+#'   logic applies as usual. Default `NULL` (pick the emptiest corner).
 #'
 #' @return The input `plot` with a \code{\link[ggplot2]{theme}} layer added that
 #'   sets the legend position.
@@ -101,10 +106,16 @@
 #' @importFrom ggplot2 ggplot_build theme
 #' @export
 hv_legend_inside <- function(plot, threshold = 0.08, box_frac = 0.30,
-                             pad = 0.02, fallback = "right") {
+                             pad = 0.02, fallback = "right", prefer = NULL) {
   if (!inherits(plot, "ggplot"))
     stop("`plot` must be a ggplot object.", call. = FALSE)
   fallback <- match.arg(fallback, c("right", "left", "top", "bottom"))
+  if (!is.null(prefer)) {
+    prefer <- match.arg(prefer, c("topright", "topleft",
+                                  "bottomright", "bottomleft"))
+    prefer <- c(topright = "tr", topleft = "tl",
+                bottomright = "br", bottomleft = "bl")[[prefer]]
+  }
   .legend_validate(threshold, box_frac, pad)
 
   fb <- ggplot2::theme(legend.position = fallback)
@@ -119,7 +130,12 @@ hv_legend_inside <- function(plot, threshold = 0.08, box_frac = 0.30,
   pts <- .legend_points(b)
   if (is.null(pts) || nrow(pts) == 0L) return(plot + fb)
 
-  occ  <- .legend_corner_occupancy(pts$x, pts$y, box_frac)
+  occ <- .legend_corner_occupancy(pts$x, pts$y, box_frac)
+
+  # A clear preferred corner wins, even if another corner is emptier.
+  if (!is.null(prefer) && occ[[prefer]] <= threshold)
+    return(plot + .legend_corner_theme(prefer, pad))
+
   best <- names(occ)[which.min(occ)]   # ties -> first: tr, tl, br, bl
   if (occ[[best]] <= threshold)
     plot + .legend_corner_theme(best, pad)

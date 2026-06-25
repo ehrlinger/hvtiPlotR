@@ -9,7 +9,8 @@ hv_legend_inside(
   threshold = 0.08,
   box_frac = 0.3,
   pad = 0.02,
-  fallback = "right"
+  fallback = "right",
+  prefer = NULL
 )
 }
 \arguments{
@@ -28,6 +29,12 @@ Default \code{0.02}.}
 \item{fallback}{Outside \code{legend.position} used when no corner is empty enough
 or the plot cannot be reasoned about (facets). One of \code{"right"}, \code{"left"},
 \code{"top"}, \code{"bottom"}. Default \code{"right"}.}
+
+\item{prefer}{Optional preferred corner: one of \code{"topright"}, \code{"topleft"},
+\code{"bottomright"}, \code{"bottomleft"}. When set and that corner is clear (its
+occupancy is within \code{threshold}), the legend is placed there even if another
+corner is emptier. If the preferred corner is occupied, the emptiest-corner
+logic applies as usual. Default \code{NULL} (pick the emptiest corner).}
 }
 \value{
 The input \code{plot} with a \code{\link[ggplot2]{theme}} layer added that

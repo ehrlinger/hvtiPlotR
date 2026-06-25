@@ -72,3 +72,24 @@ test_that("hv_legend_inside reads coordinates in built (post-flip) space", {
   )
   expect_identical(p$theme$legend.position, "inside")
 })
+
+test_that("hv_legend_inside honours `prefer` when that corner is clear", {
+  # Both top corners empty (points along the bottom + one centre-top); the
+  # default picks top-right (tie -> tr first), `prefer` overrides to top-left.
+  df <- data.frame(x = c(0, 0.5, 1, 0.5), y = c(0, 0, 0, 1), g = "a")
+  p  <- ggplot(df, aes(x, y, colour = g)) + geom_point()
+  expect_equal(hv_legend_inside(p)$theme$legend.position.inside,
+               c(1 - 0.02, 1 - 0.02))                       # default: top-right
+  p2 <- hv_legend_inside(p, prefer = "topleft")
+  expect_identical(p2$theme$legend.position, "inside")
+  expect_equal(p2$theme$legend.position.inside, c(0.02, 1 - 0.02))  # top-left
+})
+
+test_that("hv_legend_inside falls through when the preferred corner is occupied", {
+  p <- hv_legend_inside(mk(full_df), prefer = "topright")
+  expect_identical(p$theme$legend.position, "right")   # TR full -> fallback
+})
+
+test_that("hv_legend_inside rejects a bad `prefer`", {
+  expect_error(hv_legend_inside(mk(full_df), prefer = "middle"))
+})
