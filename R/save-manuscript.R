@@ -47,6 +47,17 @@ save_manuscript <- function(plot, file, width = 6, height = 4, units = "in",
     stop("`plot` must be a ggplot object.", call. = FALSE)
   if (!is.character(file) || length(file) != 1L)
     stop("`file` must be a single file path.", call. = FALSE)
+  pos_num <- function(x) is.numeric(x) && length(x) == 1L && is.finite(x) && x > 0
+  if (!pos_num(width))
+    stop("`width` must be a single positive number.", call. = FALSE)
+  if (!pos_num(height))
+    stop("`height` must be a single positive number.", call. = FALSE)
+  if (!pos_num(dpi))
+    stop("`dpi` must be a single positive number.", call. = FALSE)
+  units <- match.arg(units, c("in", "cm", "mm", "px"))
+  out_dir <- dirname(file)
+  if (!dir.exists(out_dir))
+    stop("Output directory does not exist: ", out_dir, call. = FALSE)
 
   ggplot2::ggsave(filename = file, plot = plot, device = device,
                   width = width, height = height, units = units, dpi = dpi, ...)
