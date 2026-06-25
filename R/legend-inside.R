@@ -62,6 +62,44 @@
   )
 }
 
+#' Place a ggplot legend inside the emptiest panel corner
+#'
+#' Inspects a built plot, finds the panel corner with the fewest data points,
+#' and anchors the legend there. When no corner is clear of data (e.g. dense
+#' multi-curve panels), or the plot is faceted, the legend is sent to an outside
+#' position instead. The CORR house convention is in-panel legends placed in
+#' dead space; this automates the corner choice.
+#'
+#' Apply it *after* the house theme (which sets `legend.position = "none"`) so
+#' its position wins.
+#'
+#' @param plot A single-panel \code{ggplot}.
+#' @param threshold Maximum fraction of data points allowed in the chosen corner
+#'   box for an in-panel legend. If the emptiest corner exceeds it, `fallback`
+#'   is used. Default `0.08`.
+#' @param box_frac Corner-box size as a fraction of panel width and height
+#'   (`<= 0.5`). Default `0.30`.
+#' @param pad Inset of the legend anchor from the panel edge, in npc units.
+#'   Default `0.02`.
+#' @param fallback Outside `legend.position` used when no corner is empty enough
+#'   or the plot cannot be reasoned about (facets). One of `"right"`, `"left"`,
+#'   `"top"`, `"bottom"`. Default `"right"`.
+#'
+#' @return The input `plot` with a \code{\link[ggplot2]{theme}} layer added that
+#'   sets the legend position.
+#'
+#' @seealso Worked recipe with rendered output:
+#'   \url{https://ehrlinger.github.io/hvti_graphics/legends.html}.
+#'
+#' @examples
+#' if (requireNamespace("ggplot2", quietly = TRUE)) {
+#'   library(ggplot2)
+#'   p <- ggplot(mtcars, aes(wt, mpg, colour = factor(cyl))) + geom_point()
+#'   hv_legend_inside(p)
+#' }
+#'
+#' @importFrom ggplot2 ggplot_build theme
+#' @export
 hv_legend_inside <- function(plot, threshold = 0.08, box_frac = 0.30,
                              pad = 0.02, fallback = "right") {
   if (!inherits(plot, "ggplot"))
