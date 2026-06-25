@@ -278,6 +278,12 @@ summaries, and set-membership visualisation.
   : Plot an hv_upset object
 - [`print(`*`<hv_upset>`*`)`](https://ehrlinger.github.io/hvtiPlotR/reference/print.hv_upset.md)
   : Print an hv_upset object
+- [`hv_venn()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_venn.md)
+  : Prepare a Venn diagram for plotting
+- [`plot(`*`<hv_venn>`*`)`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hv_venn.md)
+  : Plot an hv_venn object
+- [`print(`*`<hv_venn>`*`)`](https://ehrlinger.github.io/hvtiPlotR/reference/print.hv_venn.md)
+  : Print an hv_venn object
 - [`eda_classify_var()`](https://ehrlinger.github.io/hvtiPlotR/reference/eda_classify_var.md)
   : Classify a Variable as Continuous or Categorical
 - [`eda_select_vars()`](https://ehrlinger.github.io/hvtiPlotR/reference/eda_select_vars.md)

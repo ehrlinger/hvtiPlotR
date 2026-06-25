@@ -1,5 +1,22 @@
 # Changelog
 
+## hvtiPlotR 2.6.0
+
+### New features
+
+- [`hv_venn()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_venn.md)
+  draws a 2-3 set Venn diagram of overlapping set memberships — the
+  small-set-count companion to
+  [`hv_upset()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_upset.md),
+  reading the same logical / 0-1 set-membership columns. It returns an
+  object carrying a `$tables$regions` count table (one row per Venn
+  region), and [`plot()`](https://rdrr.io/r/graphics/plot.default.html)
+  renders a bare ggplot via ggvenn that you finish with `+ theme_hv_*`.
+  For more than three sets, use
+  [`hv_upset()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_upset.md).
+
+**Dependency:** `ggvenn` added to `Imports`.
+
 ## hvtiPlotR 2.5.0
 
 ### New features
@@ -852,9 +869,7 @@ argument on [`plot()`](https://rdrr.io/r/graphics/plot.default.html):
   [`save_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/save_ppt.md)
   single- and multi-slide examples.
 - Added `ggplot2::geom_line(..., linewidth = 1.5)` (replacing deprecated
-  `size =`) and updated
-  [`remotes::install_github()`](https://remotes.r-lib.org/reference/install_github.html)
-  (replacing
+  `size =`) and updated `remotes::install_github()` (replacing
   [`devtools::install_github()`](https://devtools.r-lib.org/reference/install-deprecated.html))
   in `vignettes/hvtiPlotR.qmd`.
 

@@ -24,7 +24,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">hvtiPlotR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.5.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.6.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -77,7 +77,7 @@
       <h1>hvtiPlotR Plot Functions</h1>
 
       <p class="author">John Ehrlinger <a href="mailto:ehrlinj@ccf.org" class="email">ehrlinj@ccf.org</a></p>
-      <p class="date">2026-06-24</p>
+      <p class="date">2026-06-25</p>
 
       <small class="dont-index">Source: <a href="https://github.com/ehrlinger/hvtiPlotR/blob/main/vignettes/plot-functions.qmd" class="external-link"><code>vignettes/plot-functions.qmd</code></a></small>
       <div class="d-none name"><code></code></div>
@@ -1435,7 +1435,7 @@ Figure 1
 <p><code><a href="../reference/hv_sankey.html">hv_sankey()</a></code> prepares a Sankey diagram that lets you watch how patient cluster assignments shift as you increase K — a visual test of cluster stability. Where the bands stay wide and orderly, the solution holds; where they cross and fragment, K has grown past what the data supports. It ports the PAM cluster stability figure from the HVTI clustering analysis pipeline. Each column represents one value of K (default K = 2 to 9); each band shows the fraction of patients whose assignment changes between consecutive K values. Node labels show the cluster letter and count.</p>
 <p><strong>Requires <code>ggsankey</code></strong> (not on CRAN):</p>
 <div class="sourceCode" id="cb81"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"davidsjoberg/ggsankey"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"davidsjoberg/ggsankey"</span><span class="op">)</span></span></code></pre></div>
 <section class="level2"><h3 id="sample-data-5">Sample data<a class="anchor" aria-label="anchor" href="#sample-data-5"></a>
 </h3>
 <p><code><a href="../reference/sample_cluster_sankey_data.html">sample_cluster_sankey_data()</a></code> returns 300 patients with nine cluster-assignment columns (<code>C2</code> through <code>C9</code>), where each column gives the PAM cluster label at that K. <code>table(dta_san$C9)</code> confirms the marginal counts at K = 9 before you pass the data to the constructor.</p>
@@ -3152,11 +3152,31 @@ Figure 1
 </div>
 </div>
 </div>
-</section><section class="level2"><h3 id="saving-12">Saving<a class="anchor" aria-label="anchor" href="#saving-12"></a>
+<section class="level3"><h4 id="venn-diagram-2-3-sets">Venn diagram (2-3 sets)<a class="anchor" aria-label="anchor" href="#venn-diagram-2-3-sets"></a>
+</h4>
+<p>For two or three overlapping groups, <code><a href="../reference/hv_venn.html">hv_venn()</a></code> draws the familiar overlapping-circle Venn. It reads the same logical set-membership columns as <code><a href="../reference/hv_upset.html">hv_upset()</a></code>, so the same data drives either view; reach for <code><a href="../reference/hv_upset.html">hv_upset()</a></code> once there are more than three sets. The region counts behind the figure are kept in <code>v$tables$regions</code> for a methods table.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb178"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">dta</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sample_upset_data.html">sample_upset_data</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">400</span>, seed <span class="op">=</span> <span class="fl">7</span><span class="op">)</span></span>
+<span><span class="va">v</span>   <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hv_venn.html">hv_venn</a></span><span class="op">(</span><span class="va">dta</span>, sets <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"AV_Replacement"</span>, <span class="st">"MV_Replacement"</span>, <span class="st">"CABG"</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">v</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="../reference/hvtiPlotR-themes.html">theme_hv_manuscript</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<div class="cell-output-display">
+<div id="fig-venn" class="quarto-float quarto-figure quarto-figure-center" width="576">
+<figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-venn-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="plot-functions_files/figure-html/fig-venn-1.png" id="fig-venn" width="576">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-venn-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure 2
+</figcaption></figure>
+</div>
+</div>
+</div>
+</section></section><section class="level2"><h3 id="saving-12">Saving<a class="anchor" aria-label="anchor" href="#saving-12"></a>
 </h3>
 <p><code><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave()</a></code> handles a patchwork composite the same as a bare ggplot – write it at 11 x 6 inches, wide enough for the intersection bars plus the set-size sidebar. For a PowerPoint version, see <a href="plot-decorators.html">Decorating and Saving</a>.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb178"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb179"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p_upset</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">hu</span><span class="op">)</span> <span class="op">&amp;</span> <span class="fu"><a href="../reference/hvtiPlotR-themes.html">theme_hv_poster</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># UpSet plot is a patchwork composite when set_size = TRUE (the default);</span></span>
@@ -3174,7 +3194,7 @@ make_footnote("R/analysis.R")        # &lt;- no footnote call</code></pre>
 </h3>
 <p>Build any hvtiPlotR figure as usual, then call <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code> followed by <code><a href="../reference/make_footnote.html">make_footnote()</a></code> to stamp the bottom-right corner with the source file path and a timestamp. The ggplot object itself is unchanged – only the rendered device gets the annotation.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb180"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb181"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">dta_fn</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sample_hazard_data.html">sample_hazard_data</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">300</span>, time_max <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
 <span><span class="va">emp_fn</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sample_hazard_empirical.html">sample_hazard_empirical</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">300</span>, time_max <span class="op">=</span> <span class="fl">10</span>, n_bins <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span>
 <span></span>
@@ -3208,7 +3228,7 @@ make_footnote("R/analysis.R")        # &lt;- no footnote call</code></pre>
 </h3>
 <p>Pass any string as <code>text</code> and set <code>timestamp = FALSE</code> for a stable label.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb181"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb182"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">p_draft</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/make_footnote.html">make_footnote</a></span><span class="op">(</span></span>
 <span>  text      <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="st">"J. Ehrlinger |"</span>, <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.Date</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>,</span>
@@ -3226,7 +3246,7 @@ make_footnote("R/analysis.R")        # &lt;- no footnote call</code></pre>
 </h3>
 <p>The <code><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave()</a></code> call writes the ggplot object directly — <code><a href="../reference/make_footnote.html">make_footnote()</a></code> is never called, so the saved file is clean.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb182"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb183"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave</a></span><span class="op">(</span><span class="st">"../graphs/fig1_survival.pdf"</span>, <span class="va">p_draft</span>, width <span class="op">=</span> <span class="fl">11</span>, height <span class="op">=</span> <span class="fl">8.5</span><span class="op">)</span></span></code></pre></div>
 </div>
 </section></section><script id="quarto-html-after-body" type="application/javascript">

@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">hvtiPlotR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.5.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.6.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -52,6 +52,15 @@
       <small>Source: <a href="https://github.com/ehrlinger/hvtiPlotR/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="2.6.0" id="hvtiplotr-260">hvtiPlotR 2.6.0<a class="anchor" aria-label="anchor" href="#hvtiplotr-260"></a></h2>
+<div class="section level3">
+<h3 id="new-features-2-6-0">New features<a class="anchor" aria-label="anchor" href="#new-features-2-6-0"></a></h3>
+<ul><li>
+<code><a href="../reference/hv_venn.html">hv_venn()</a></code> draws a 2-3 set Venn diagram of overlapping set memberships — the small-set-count companion to <code><a href="../reference/hv_upset.html">hv_upset()</a></code>, reading the same logical / 0-1 set-membership columns. It returns an object carrying a <code>$tables$regions</code> count table (one row per Venn region), and <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code> renders a bare ggplot via ggvenn that you finish with <code>+ theme_hv_*</code>. For more than three sets, use <code><a href="../reference/hv_upset.html">hv_upset()</a></code>.</li>
+</ul><p><strong>Dependency:</strong> <code>ggvenn</code> added to <code>Imports</code>.</p>
+</div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="2.5.0" id="hvtiplotr-250">hvtiPlotR 2.5.0<a class="anchor" aria-label="anchor" href="#hvtiplotr-250"></a></h2>
 <div class="section level3">
@@ -531,7 +540,7 @@
 <li>Added <code>patchwork</code> to <code>Suggests</code> in <code>DESCRIPTION</code> (required by <code>vignettes/plot-decorators.qmd</code>).</li>
 <li>Rewrote package-level help page (<code>help.R</code> / <code><a href="../reference/hvtiPlotR-package.html">?hvtiPlotR</a></code>) to document all 57 exported functions, organised by category.</li>
 <li>Expanded “Saving figures” section in <code>vignettes/sas-migration-guide.qmd</code> with correct <code><a href="../reference/save_ppt.html">save_ppt()</a></code> single- and multi-slide examples.</li>
-<li>Added <code>ggplot2::geom_line(..., linewidth = 1.5)</code> (replacing deprecated <code>size =</code>) and updated <code><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">remotes::install_github()</a></code> (replacing <code><a href="https://devtools.r-lib.org/reference/install-deprecated.html" class="external-link">devtools::install_github()</a></code>) in <code>vignettes/hvtiPlotR.qmd</code>.</li>
+<li>Added <code>ggplot2::geom_line(..., linewidth = 1.5)</code> (replacing deprecated <code>size =</code>) and updated <code>remotes::install_github()</code> (replacing <code><a href="https://devtools.r-lib.org/reference/install-deprecated.html" class="external-link">devtools::install_github()</a></code>) in <code>vignettes/hvtiPlotR.qmd</code>.</li>
 </ul></div>
 <div class="section level3">
 <h3 id="input-validation-improvements-2-0-0">Input validation improvements<a class="anchor" aria-label="anchor" href="#input-validation-improvements-2-0-0"></a></h3>

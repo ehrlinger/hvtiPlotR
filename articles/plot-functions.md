@@ -3506,6 +3506,30 @@ plot(hu_era, fill_col = "era", set_size = FALSE) +
 
 ![](plot-functions_files/figure-html/upset_era-1.png)
 
+#### Venn diagram (2-3 sets)
+
+For two or three overlapping groups,
+[`hv_venn()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_venn.md)
+draws the familiar overlapping-circle Venn. It reads the same logical
+set-membership columns as
+[`hv_upset()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_upset.md),
+so the same data drives either view; reach for
+[`hv_upset()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_upset.md)
+once there are more than three sets. The region counts behind the figure
+are kept in `v$tables$regions` for a methods table.
+
+``` r
+
+dta <- sample_upset_data(n = 400, seed = 7)
+v   <- hv_venn(dta, sets = c("AV_Replacement", "MV_Replacement", "CABG"))
+
+plot(v) + theme_hv_manuscript()
+```
+
+![](plot-functions_files/figure-html/fig-venn-1.png)
+
+Figure 2
+
 ### Saving
 
 [`ggsave()`](https://ggplot2.tidyverse.org/reference/ggsave.html)
