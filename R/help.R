@@ -11,6 +11,10 @@
 #' manuscript, poster, and presentation standards, built on `ggplot2`
 #' and the `officer` package.
 #'
+#' Worked, rendered examples for every constructor and theme live in the
+#' companion **HVTI ggplot graphics recipes** book,
+#' <https://ehrlinger.github.io/hvti_graphics/>.
+#'
 #' @details
 #' ## Two-step workflow
 #'
@@ -68,6 +72,9 @@
 #'
 #' ## Saving figures
 #'
+#' * [save_manuscript()]: Save a ggplot at the house manuscript size
+#'   (6 x 4 in) in one call — the manuscript counterpart of [save_ppt()].
+#'   Pair with [theme_hv_manuscript()] for 12 pt type.
 #' * [save_ppt()]: Insert one or more ggplot objects into a PowerPoint
 #'   file as editable DrawingML vector graphics via `officer` + `rvg`.
 #' * [make_footnote()] / [makeFootnote()]: Add a draft footnote during

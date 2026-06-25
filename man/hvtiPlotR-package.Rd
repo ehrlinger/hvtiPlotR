@@ -11,6 +11,10 @@ group within the Heart, Vascular and Thoracic Institute at the
 Cleveland Clinic. We use it to produce graphics that meet HVTI
 manuscript, poster, and presentation standards, built on \code{ggplot2}
 and the \code{officer} package.
+
+Worked, rendered examples for every constructor and theme live in the
+companion \strong{HVTI ggplot graphics recipes} book,
+\url{https://ehrlinger.github.io/hvti_graphics/}.
 }
 \details{
 \subsection{Two-step workflow}{
@@ -72,6 +76,9 @@ ggplot2's \code{half_line} convention.
 
 \subsection{Saving figures}{
 \itemize{
+\item \code{\link[=save_manuscript]{save_manuscript()}}: Save a ggplot at the house manuscript size
+(6 x 4 in) in one call — the manuscript counterpart of \code{\link[=save_ppt]{save_ppt()}}.
+Pair with \code{\link[=theme_hv_manuscript]{theme_hv_manuscript()}} for 12 pt type.
 \item \code{\link[=save_ppt]{save_ppt()}}: Insert one or more ggplot objects into a PowerPoint
 file as editable DrawingML vector graphics via \code{officer} + \code{rvg}.
 \item \code{\link[=make_footnote]{make_footnote()}} / \code{\link[=makeFootnote]{makeFootnote()}}: Add a draft footnote during

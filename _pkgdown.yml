@@ -21,8 +21,12 @@ home:
 
 navbar:
   structure:
-    right: [search, github, my_linkedin, lightswitch]
+    right: [recipes, search, github, my_linkedin, lightswitch]
   components:
+    recipes:
+      text: Recipes book
+      href: https://ehrlinger.github.io/hvti_graphics/
+      aria-label: HVTI ggplot graphics recipes book
     my_linkedin:
       icon: fa-linkedin
       href: https://www.linkedin.com/in/ehrlinger/
@@ -223,6 +227,7 @@ reference:
     Save figures to PowerPoint or PDF. Add draft footnotes during analysis;
     omit them for publication-ready output.
   contents:
+  - save_manuscript
   - save_ppt
   - hv_ggsave_dims
   - hv_ph_location
