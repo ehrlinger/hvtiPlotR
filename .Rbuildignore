@@ -44,3 +44,5 @@ hvtiPlotR.Rproj
 ^Rplots\.pdf$
 ^.*\.tar\.gz$
 ^inst/slides/.*\.(html|pdf|pptx)$
+^hazard_fixtures_key
+^inst/extdata/Yahoo slide template LIGHT ROOM\.pptx$

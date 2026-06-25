@@ -47,11 +47,11 @@ We invite comments, feature requests and bug reports for this package at https:/
 
 # Introduction
 
-For many years, the mainstay for generating graphics for manuscripts and presentations in the statistics group in The Heart & Vascular Institute has been the `plot.sas` macro using SAS. However, we have had issues migrating this macro to newer versions of SAS (\> 8.0) and Microsoft Oﬃce products (\> 2003).
+For many years, the mainstay for generating graphics for manuscripts and presentations in the statistics group in The Heart & Vascular Institute has been the `plot.sas` macro using SAS. However, we have had issues migrating this macro to newer versions of SAS (\> 8.0) and Microsoft Office products (\> 2003).
 
-In an eﬀort to alleviate these version issues, and to standardize the generation of figures within R, we have developed the **hvtiPlotR** R package. The goal of the package, and this vignette, is to simplify the creation of publication quality graphics in R. We are specifically encoding the best practices of the HVTI Clinical Outcomes Research and Registries (CORR) formatting, so that our statisticians can generate publication-ready graphics without fighting the tooling.
+In an effort to alleviate these version issues, and to standardize the generation of figures within R, we have developed the **hvtiPlotR** R package. The goal of the package, and this vignette, is to simplify the creation of publication quality graphics in R. We are specifically encoding the best practices of the HVTI Clinical Outcomes Research and Registries (CORR) formatting, so that our statisticians can generate publication-ready graphics without fighting the tooling.
 
-The **hvtiPlotR** package builds on `ggplot2` (Wickham 2009) to implement best practices for R graphics. The `ggplot2` package is an implementation of the Grammar of Graphics (Wilkinson 2005), which is a formalization of graphical concepts, and the building of graphical objects from a sequence of independent components. These components can be combined in many diﬀerent ways.
+The **hvtiPlotR** package builds on `ggplot2` (Wickham 2009) to implement best practices for R graphics. The `ggplot2` package is an implementation of the Grammar of Graphics (Wilkinson 2005), which is a formalization of graphical concepts, and the building of graphical objects from a sequence of independent components. These components can be combined in many different ways.
 
 The `plot.sas` macro is also an implementation of a graphics grammar. The grammar `plot.sas` is derived from the ZETA pen plotters, which used GML (Graphics Machine Language) to control between 4 and and 8 colored pens for generating color line and point figures.
 
@@ -134,7 +134,7 @@ The `plot.sas1` macro code is closed by the ending ); characters, and SAS is ins
 
 Note that much of the figure formatting is mixed within the tuple statements using width, color, linepe and linecl commands. In the `plot.sas` macro, omitting these commands will generate a figure with the default values specified within the `plot.sas` macro or device theme (Section 4).
 
-A similar set of `plot.sas` commands (Listing 4) is used to create presentation graphics. Diﬀerences between manuscript and presentation graphics include the target device and ftext as well as some handling of figure labels with value instead of label commands. The output from this code is shown in Figure 3.
+A similar set of `plot.sas` commands (Listing 4) is used to create presentation graphics. Differences between manuscript and presentation graphics include the target device and ftext as well as some handling of figure labels with value instead of label commands. The output from this code is shown in Figure 3.
 
 In addition to the plot.sas commands, we also have a set of graphics standards (graphics rules) for what to and not to include in presentation graphics, we will describe these rules in (Section 6). Many of these are incorporated into the `plot.sas` macro to protect the user from violating these standards.
 
@@ -362,7 +362,7 @@ ccf_plot <- ccf_plot +
 The labs function can also be used to set the plot title and legend titles. We will not cover that functionality here, details are available in Wickham (2009) or through the Internet.
 
 ## Scales
-Axis ticks are controlled with the `scale_` functions. ggplot2 has many diﬀerent `scale_` functions. These functions will work on one axis at a time, so for a typical continuous axis, we use the `scale_x_continuous` or `scale_y_continuous` functions. Major axis are controlled using the breaks argument. Listing 1 uses a sequence of numbers to set the location of major tick marks (seq(0,5,1)). One mark for every year starting at 0, and ending at 5. Minor tick marks are automatically generated, but can also be specified using a minor_breaks= argument. You could also specify the breaks using a vector of values (c(0,1,2,3,4,5)), as well as relabel the ticks manually using a labels= argument.
+Axis ticks are controlled with the `scale_` functions. ggplot2 has many different `scale_` functions. These functions will work on one axis at a time, so for a typical continuous axis, we use the `scale_x_continuous` or `scale_y_continuous` functions. Major axis are controlled using the breaks argument. Listing 1 uses a sequence of numbers to set the location of major tick marks (seq(0,5,1)). One mark for every year starting at 0, and ending at 5. Minor tick marks are automatically generated, but can also be specified using a minor_breaks= argument. You could also specify the breaks using a vector of values (c(0,1,2,3,4,5)), as well as relabel the ticks manually using a labels= argument.
 
 Note that the `scale_` functions do not restrict the figure viewport at all. They are simply used to setup and label the axis tick marks. You can specify that the y-axis ticks are only from 0 to 50, and the figure would have a blank axis from 50 to the limits of the data. We discuss controlling the figure viewport in Section 3.11.
 
@@ -381,9 +381,9 @@ ccf_plot <- ccf_plot +
 Up to this point, we have only created and decorated the plot object stored in the `ccf_plot` variable. Showing the figure (`show()`) or saving the figure (`ggsave()`) would result in an error, since we have not added any data to the object, or described how we want it displayed.
 
 ## Points 
-The fundamental statement of the `plot.sas` macro is the tuple statement. The first tuple statement we see in the example code sets the data set (set=green), the symbol shape (symbol=dot), size (symbsize=1/2) and color (color=black). Listing 2 turns oﬀ lines so only points will be shown (linepe=0, linecl=0,). It also handles error bars (ebarsize=3/4, ebar=1), which will be discuss in Section 3.6. The last line tells the macro about the point placement using a vector for each of the x and y coordinates. Points are displayed at each paired (x, y) and error bars are specified at matching y values in the upper (clu) and lower (cll) error bar limits (x=iv_state, y=sginit, cll=stlinit, clu=stuinit).
+The fundamental statement of the `plot.sas` macro is the tuple statement. The first tuple statement we see in the example code sets the data set (set=green), the symbol shape (symbol=dot), size (symbsize=1/2) and color (color=black). Listing 2 turns off lines so only points will be shown (linepe=0, linecl=0,). It also handles error bars (ebarsize=3/4, ebar=1), which will be discuss in Section 3.6. The last line tells the macro about the point placement using a vector for each of the x and y coordinates. Points are displayed at each paired (x, y) and error bars are specified at matching y values in the upper (clu) and lower (cll) error bar limits (x=iv_state, y=sginit, cll=stlinit, clu=stuinit).
 
-The geom\_ set of functions in ggplot2 is the functional equivalent to the tuple statement. The diﬀerence is the user specifies the graphical element desired using separate function calls. So points are plotting using the geom_point function, lines are generated with the geom_line (Section 3.7) and error bars are generated with the geom_errorbar function (Section 3.6).
+The geom\_ set of functions in ggplot2 is the functional equivalent to the tuple statement. The difference is the user specifies the graphical element desired using separate function calls. So points are plotting using the geom_point function, lines are generated with the geom_line (Section 3.7) and error bars are generated with the geom_errorbar function (Section 3.6).
 
 Each of these functions can take a data argument as well as a large set of decorator arguments (i.e. color, size, shape, linetype, . . . ). The aesthetic function (aes()) call is used to describe point within geom\_ function using variable names defined in the data set. The following code chunk demonstrates this by plotting the iv_state variable on the x-axis and the sginit variable along the y-axis. The variables are defined in the nonparametric data set we loaded in the setup code chunk in Section 3.
 
@@ -403,7 +403,7 @@ ccf_plot <- ccf_plot +
 show(ccf_plot)
 ```
 
-The `aes()` mechanism is how you communicate data-level assignment to `geom_` functions. If you want to stratify a dataset by a variable, you can specify that within the `aes()` function call using the `by=` argument. For points, we often want the stratifying to be either a diﬀerent `color=` or `shape=` for stratified data. We can then use the `scale_color_` functions (See Section 3.10) or the `scale_shape_` functions (See Section 3.9) to control how these are assigned to the stratifying variable.
+The `aes()` mechanism is how you communicate data-level assignment to `geom_` functions. If you want to stratify a dataset by a variable, you can specify that within the `aes()` function call using the `by=` argument. For points, we often want the stratifying to be either a different `color=` or `shape=` for stratified data. We can then use the `scale_color_` functions (See Section 3.10) or the `scale_shape_` functions (See Section 3.9) to control how these are assigned to the stratifying variable.
 
 Once we have added data to the `ggplot` object, we can display the figure as shown in Figure 4. Until now the figure has been manipulated by sequentially adding function calls to the `ccf_plot object`. To display the figure you can either use the `show()` function, or simply call the object name at the command line.
 
@@ -412,7 +412,7 @@ Note that we have used the default shape, size and color for this figure. These 
 ## Error Bars 
 Instead of using a single function to set points, lines and error bars, `ggplot` uses individual function calls to control these elements. The `geom_errorbar` function takes the same arguments as the other `geom_` functions. However, since an errorbar is defined with upper and lower limits, we need to supply an `ymax` and `ymin` argument to the graphic aesthetic function.
 
-This code chunk plots both points, and error bars for the next two data series, the `sgdead1` variable with error bars running from `stldead1` to `studead1` and `sgstrk1` variable with error bars running from `stlstrk1` to `stustrk1`. As we see in Figure 5, both series were added in `color="blue"` (Section 3.10), with diﬀerent point shapes `shape=1` and `shape=0` for each series (Section 3.9). We manipulated the error bar size with the `width` argument
+This code chunk plots both points, and error bars for the next two data series, the `sgdead1` variable with error bars running from `stldead1` to `studead1` and `sgstrk1` variable with error bars running from `stlstrk1` to `stustrk1`. As we see in Figure 5, both series were added in `color="blue"` (Section 3.10), with different point shapes `shape=1` and `shape=0` for each series (Section 3.9). We manipulated the error bar size with the `width` argument
 
 ```{r}
 #| label: error_bar_ci
@@ -453,7 +453,7 @@ show(ccf_plot)
 ```
 
 
-Note that the x variable is the same (`iv_state`) for all three data series as well as the associated error bars. This is not a requirement, as we could have specified a diﬀerent variable name for each `geom_` function call. Also note that just as in the `plot.sas` macro, since we do not want an error bar placed at at every data point, a large number points have the upper and lower error bar y values have been set to missing (`NA`). The `ggplot` package does print warning messages when we attempt to plot a series with missing values. We typically suppress those warnings, but left them here for illustration purposes only.
+Note that the x variable is the same (`iv_state`) for all three data series as well as the associated error bars. This is not a requirement, as we could have specified a different variable name for each `geom_` function call. Also note that just as in the `plot.sas` macro, since we do not want an error bar placed at at every data point, a large number points have the upper and lower error bar y values have been set to missing (`NA`). The `ggplot` package does print warning messages when we attempt to plot a series with missing values. We typically suppress those warnings, but left them here for illustration purposes only.
 
 ## Lines 
 Similar to points and error bars, the `geom_line` function is used to plot lines. We use the `linetype` argument to specify the line styles (Section 3.8). We do have to generate a separate `geom_line` function call for each limit of the confidence limit, since it is constructed of two lines (the upper and lower confidence limit). The resulting graph is shown in Figure 6.
@@ -509,10 +509,10 @@ ccf_plot <- ccf_plot +
 show(ccf_plot)
 ```
 
-Alternatively, we could use the `geom_ribbon` to generate a confidence band using a shaded region with only a single call. The aesthetic argument for `geom_ribbon` takes a `ymax` and `ymin` argument just as the `geom_errorbar` function. Note that we used a diﬀerent data set (`data=parametric`) to use a diﬀerent set of points for generating these lines.
+Alternatively, we could use the `geom_ribbon` to generate a confidence band using a shaded region with only a single call. The aesthetic argument for `geom_ribbon` takes a `ymax` and `ymin` argument just as the `geom_errorbar` function. Note that we used a different data set (`data=parametric`) to use a different set of points for generating these lines.
 
 ## Line types 
-The linetype argument takes a named string as a value, to set the diﬀerent line styles. We show a set of frequently used styles in Figure 7 for reference.
+The linetype argument takes a named string as a value, to set the different line styles. We show a set of frequently used styles in Figure 7 for reference.
 
 ## Shapes 
 The shape argument takes numeric arguments. Though not user friendly, this method is at least consistent. Figure 8 shows a catalog of shapes with corresponding numeric argument constructed using the ones place from the x-axis, and tens from the y-axis. For example, the filled dot, default point shape shown in black in Figure 6 is shape 20.
@@ -530,7 +530,7 @@ Figure 9: R colors
 The ColorBrewer palette catalogue (Harrower and Brewer 2003) is built into `ggplot2` via `scale_colour_brewer()` / `scale_fill_brewer()`; hvtiPlotR does not import the optional `RColorBrewer` package. We have made extensive use of the `palette = "Set1"` colour palette in the figures we have generated. ggplot2 also ships other `scale_colour_*` functions for many different settings. Consult <https://colorbrewer2.org/> for an interactive palette browser.
 
 ## Global Figure Commands 
-By default, the ggplot2 package adds space to the figures around the data. We often want to remove this space, or focus in on a smaller window of the figure. This is accomplished with the coord_cartesian function. By specifying the xlim and/or ylim coordinates, we can crop the figure into whatever viewport we are interested in without manipulating the original dataset. Figure ?? sets the origin to (0,0) and clips the x axis at 5.1, and the y axis at 101. We have added the .1 and 1 to each axis for aesthetic reasons to avid chopping oﬀ the tick labels when they occur at the end of the viewport.
+By default, the ggplot2 package adds space to the figures around the data. We often want to remove this space, or focus in on a smaller window of the figure. This is accomplished with the coord_cartesian function. By specifying the xlim and/or ylim coordinates, we can crop the figure into whatever viewport we are interested in without manipulating the original dataset. Figure ?? sets the origin to (0,0) and clips the x axis at 5.1, and the y axis at 101. We have added the .1 and 1 to each axis for aesthetic reasons to avid chopping off the tick labels when they occur at the end of the viewport.
 
 ```{r}
 # Special commands to force origin to 0,0
@@ -661,7 +661,7 @@ them; the rest are conventions to keep in mind when composing figures.
 - **Axis labels are mandatory** — always supply `labs(x = ..., y = ...)`.
   Units belong in the axis label, not in the tick labels (e.g. `"Years after
   operation"`, not `"0 yr, 5 yr, 10 yr"`).
-- **Percent axes** — format y-axis tick labels as `"0%"`, `"20%"`, …, `"100%"`
+- **Percent axes** — format y-axis tick labels as `"0%"`, `"20%"`, ..., `"100%"`
   using `scale_y_continuous(labels = function(x) paste0(x, "%"))`. Do not
   write the `%` symbol inside the axis title.
 - **No minor grid lines** — major grid lines are optional and should be
@@ -730,11 +730,11 @@ Wickham H (2009). ggplot2: elegant graphics for data analysis. Springer New York
 
 Wilkinson L (2005). The Grammar of Graphics (Statistics and Computing). Springer-Verlag New York, Inc., Secaucus, NJ, USA. ISBN 0387245448.
 
-# Aﬃliation: 
+# Affiliation:
 John Ehrlinger Heart, Vascular and Thoracic Institute Cleveland Clinic 9500 Euclid Ave Cleveland, Ohio 44195 
 
 E-mail: ehrlinj@ccf.org 
 
-URL: http://www.lerner.ccf.org/qhs/people/ehrlinj/ 
+URL: https://www.lerner.ccf.org/qhs/people/ehrlinj/
 
 URL: https://github.com/ehrlinger/hvtiPlotR
