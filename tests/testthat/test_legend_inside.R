@@ -90,6 +90,16 @@ test_that("hv_legend_inside falls through when the preferred corner is occupied"
   expect_identical(p$theme$legend.position, "right")   # TR full -> fallback
 })
 
+test_that("hv_legend_inside falls through to the emptiest corner when `prefer` is blocked", {
+  # Top-right occupied but top-left clear: prefer = "topright" is skipped and the
+  # legend lands in the emptiest corner (top-left), NOT the outside fallback.
+  df <- data.frame(x = c(0, 1, 1, 0.5, 0.9), y = c(0, 0, 1, 0.5, 0.1), g = "a")
+  p  <- hv_legend_inside(ggplot(df, aes(x, y, colour = g)) + geom_point(),
+                         prefer = "topright")
+  expect_identical(p$theme$legend.position, "inside")
+  expect_equal(p$theme$legend.position.inside, c(0.02, 1 - 0.02))  # top-left
+})
+
 test_that("hv_legend_inside rejects a bad `prefer`", {
   expect_error(hv_legend_inside(mk(full_df), prefer = "middle"))
 })
