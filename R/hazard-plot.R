@@ -388,7 +388,7 @@ sample_survival_difference_data <- function(n        = 500,
   s2  <- curves$survival[curves$group == grp_names[[2]]]
   t   <- curves$time[curves$group == grp_names[[1]]]
 
-  # SE from CI width (CI = estimate ± z * SE)
+  # SE from CI width (CI = estimate +/- z * SE)
   z_score <- stats::qnorm(1 - (1 - ci_level) / 2)
   se1     <- (curves$surv_upper[curves$group == grp_names[[1]]] -
               curves$surv_lower[curves$group == grp_names[[1]]]) / (2 * z_score)

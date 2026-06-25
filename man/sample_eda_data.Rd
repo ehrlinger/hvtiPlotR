@@ -26,7 +26,7 @@ scatterplots)
 \item \code{valve_morph} — character (valve morphology: Bicuspid / Tricuspid /
 Unicuspid)
 \item \code{ef}          — continuous ejection fraction (\%)
-\item \code{lv_mass}     — continuous LV mass index (g/m²)
+\item \code{lv_mass}     — continuous LV mass index (g/m^2)
 \item \code{peak_grad}   — continuous peak gradient (mmHg)
 }
 }

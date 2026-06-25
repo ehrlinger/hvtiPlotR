@@ -262,7 +262,7 @@
 #' ```
 #'
 #' Releases follow straight semantic versioning (2.0.0, 2.0.1, 2.1.0,
-#' 3.0.0 …). The `main` branch tracks the most recent release;
+#' 3.0.0 ...). The `main` branch tracks the most recent release;
 #' `engineering` collects changes staged for the next release. No
 #' `.9xxx` pre-release suffix on development builds. Pin against a
 #' specific release tag for reproducibility, e.g.

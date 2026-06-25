@@ -34,8 +34,8 @@
 # Simulation tuning constants — single source of truth for all np-curve
 # simulation functions.  Change here to update every code path.
 .NP_SIM <- list(
-  eta_intercept = -0.5,   # log-odds shift; centres baseline P(event) ≈ 18 %
-  logit_shift   = -1.2,   # additional logit shift; P(event) ≈ 12 % at t = 0
+  eta_intercept = -0.5,   # log-odds shift; centres baseline P(event) ~ 18 %
+  logit_shift   = -1.2,   # additional logit shift; P(event) ~ 12 % at t = 0
   cont_baseline =  40,    # continuous outcome baseline (e.g. AV gradient, mmHg)
   cont_scale    =   8,    # eta -> mmHg scaling factor
   cont_sigma    =   6,    # residual SD (mmHg measurement noise)
