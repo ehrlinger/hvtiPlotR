@@ -24,3 +24,9 @@ test_that("hv_legend_inside returns a ggplot with an outside legend when the pan
   expect_s3_class(p, "ggplot")
   expect_identical(p$theme$legend.position, "right")
 })
+
+test_that("hv_legend_inside falls back with a message on facets", {
+  p <- mk(full_df) + facet_wrap(~g)
+  expect_message(out <- hv_legend_inside(p), "panel")
+  expect_identical(out$theme$legend.position, "right")
+})

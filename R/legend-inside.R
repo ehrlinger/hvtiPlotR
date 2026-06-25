@@ -21,5 +21,14 @@ hv_legend_inside <- function(plot, threshold = 0.08, box_frac = 0.30,
   fallback <- match.arg(fallback, c("right", "left", "top", "bottom"))
   .legend_validate(threshold, box_frac, pad)
 
-  plot + ggplot2::theme(legend.position = fallback)
+  fb <- ggplot2::theme(legend.position = fallback)
+
+  b <- ggplot2::ggplot_build(plot)
+  if (length(b$layout$panel_params) > 1L) {
+    message("hv_legend_inside(): multiple panels; using the fallback legend ",
+            "position ('", fallback, "').")
+    return(plot + fb)
+  }
+
+  plot + fb   # placeholder until Task 3 adds corner logic
 }
