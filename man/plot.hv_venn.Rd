@@ -34,8 +34,12 @@ most \code{plot.hv_*} methods, which ignore \code{...}; \pkg{ggvenn} bakes
 labels into its geoms, so forwarding is the only way to reach them).}
 }
 \value{
-A \code{\link[ggplot2]{ggplot}} object. Compose with
-\code{\link{theme_hv_manuscript}}, \code{labs()}, etc.
+A \code{\link[ggplot2]{ggplot}} object, already styled by
+\pkg{ggvenn} and \strong{coordinate-free} (no axes). Tune it through this
+method's arguments (\code{fill}, \code{text_size}, \code{set_name_size},
+\code{...}). Do \emph{not} add an axis-bearing house theme such as
+\code{theme_hv_manuscript()}: a Venn has no meaningful x/y, and the theme
+would paste spurious axes onto it.
 }
 \description{
 Draws a 2-3 set Venn diagram using \code{ggvenn::ggvenn()} and returns a
@@ -44,7 +48,7 @@ bare \pkg{ggplot2} object you can finish with \code{+}.
 \examples{
 dta <- sample_upset_data(n = 300, seed = 42)
 v   <- hv_venn(dta, sets = c("AV_Replacement", "MV_Replacement", "CABG"))
-plot(v) + theme_hv_manuscript()
+plot(v)
 
 }
 \seealso{
