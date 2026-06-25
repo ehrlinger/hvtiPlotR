@@ -1,5 +1,28 @@
 # Changelog
 
+## hvtiPlotR 2.7.0
+
+### New features
+
+- [`save_manuscript()`](https://ehrlinger.github.io/hvtiPlotR/reference/save_manuscript.md):
+  save a ggplot at the house manuscript figure size (6 x 4 inches) in
+  one call — the manuscript counterpart of
+  [`save_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/save_ppt.md).
+  Pair it with
+  [`theme_hv_manuscript()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)
+  for the 12 pt typography; like
+  [`save_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/save_ppt.md),
+  it fixes the output geometry, not the theme. Pass
+  `device = grDevices::cairo_pdf` to embed fonts in a PDF where cairo is
+  available.
+
+### Documentation
+
+- Cross-reference the companion **HVTI ggplot graphics recipes** book
+  (<https://ehrlinger.github.io/hvti_graphics/>) from the package help
+  page, the `DESCRIPTION` `URL` field, the README, and the pkgdown
+  navbar.
+
 ## hvtiPlotR 2.6.1
 
 ### Bug fixes

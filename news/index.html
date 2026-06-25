@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">hvtiPlotR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.6.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.7.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -30,7 +30,8 @@
     <li><a class="dropdown-item" href="../articles/contributing.html">Contributing to hvtiPlotR</a></li>
   </ul></li>
 <li class="active nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
-      </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
+      </ul><ul class="navbar-nav"><li class="nav-item"><a class="external-link nav-link" href="https://ehrlinger.github.io/hvti_graphics/" aria-label="HVTI ggplot graphics recipes book">Recipes book</a></li>
+<li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
 <li class="nav-item"><a class="external-link nav-link" href="https://github.com/ehrlinger/hvtiPlotR/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
 <li class="nav-item"><a class="external-link nav-link" href="https://www.linkedin.com/in/ehrlinger/" aria-label="LinkedIn"><span class="fa fa-linkedin"></span></a></li>
@@ -52,6 +53,18 @@
       <small>Source: <a href="https://github.com/ehrlinger/hvtiPlotR/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="2.7.0" id="hvtiplotr-270">hvtiPlotR 2.7.0<a class="anchor" aria-label="anchor" href="#hvtiplotr-270"></a></h2>
+<div class="section level3">
+<h3 id="new-features-2-7-0">New features<a class="anchor" aria-label="anchor" href="#new-features-2-7-0"></a></h3>
+<ul><li>
+<code><a href="../reference/save_manuscript.html">save_manuscript()</a></code>: save a ggplot at the house manuscript figure size (6 x 4 inches) in one call — the manuscript counterpart of <code><a href="../reference/save_ppt.html">save_ppt()</a></code>. Pair it with <code><a href="../reference/hvtiPlotR-themes.html">theme_hv_manuscript()</a></code> for the 12 pt typography; like <code><a href="../reference/save_ppt.html">save_ppt()</a></code>, it fixes the output geometry, not the theme. Pass <code>device = grDevices::cairo_pdf</code> to embed fonts in a PDF where cairo is available.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="documentation-2-7-0">Documentation<a class="anchor" aria-label="anchor" href="#documentation-2-7-0"></a></h3>
+<ul><li>Cross-reference the companion <strong>HVTI ggplot graphics recipes</strong> book (<a href="https://ehrlinger.github.io/hvti_graphics/" class="external-link uri">https://ehrlinger.github.io/hvti_graphics/</a>) from the package help page, the <code>DESCRIPTION</code> <code>URL</code> field, the README, and the pkgdown navbar.</li>
+</ul></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="2.6.1" id="hvtiplotr-261">hvtiPlotR 2.6.1<a class="anchor" aria-label="anchor" href="#hvtiplotr-261"></a></h2>
 <div class="section level3">

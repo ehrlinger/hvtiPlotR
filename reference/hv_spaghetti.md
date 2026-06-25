@@ -66,6 +66,9 @@ The list contains:
 
 ## See also
 
+Worked recipe with rendered output:
+<https://ehrlinger.github.io/hvti_graphics/spaghetti.html>.
+
 [`plot.hv_spaghetti`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hv_spaghetti.md)
 to render as a ggplot2 figure,
 [`theme_hv_manuscript`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)

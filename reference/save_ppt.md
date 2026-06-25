@@ -119,6 +119,9 @@ to try `save_ppt()` without hunting for a template:
 
 ## See also
 
+Worked recipe with rendered output:
+<https://ehrlinger.github.io/hvti_graphics/presentations.html>.
+
 [`rvg::dml()`](https://davidgohel.github.io/rvg/reference/dml.html),
 [`officer::ph_with()`](https://davidgohel.github.io/officer/reference/ph_with.html),
 [`officer::ph_location()`](https://davidgohel.github.io/officer/reference/ph_location.html),

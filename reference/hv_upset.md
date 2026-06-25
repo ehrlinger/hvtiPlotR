@@ -45,6 +45,9 @@ An object of class `c("hv_upset", "hv_data")`:
 
 ## See also
 
+Worked recipe with rendered output:
+<https://ehrlinger.github.io/hvti_graphics/upset.html>.
+
 [`plot.hv_upset`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hv_upset.md),
 [`sample_upset_data`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_upset_data.md)
 

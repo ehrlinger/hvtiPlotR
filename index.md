@@ -15,6 +15,10 @@ Cardiovascular Outcomes Registries and Research (CORR) at the Cleveland
 Clinic Heart & Vascular Institute. If you are migrating from the
 `plot.sas` macro, this is its R successor.
 
+Worked, rendered examples for every constructor and theme live in the
+companion [**HVTI ggplot graphics
+recipes**](https://ehrlinger.github.io/hvti_graphics/) book.
+
 ## Quick Start
 
 Install from GitHub using

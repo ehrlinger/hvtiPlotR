@@ -59,6 +59,9 @@ An S3 object of class `c("hv_nnt", "hv_data")`.
 
 ## See also
 
+Worked recipe with rendered output:
+<https://ehrlinger.github.io/hvti_graphics/nnt.html>.
+
 [`plot.hv_nnt()`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hv_nnt.md),
 [`sample_nnt_data()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_nnt_data.md),
 [`hv_survival_difference()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_survival_difference.md)

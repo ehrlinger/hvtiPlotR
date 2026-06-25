@@ -91,6 +91,9 @@ R templates: `tp.dp.EDA_barplots_scatterplots.R`,
 
 ## See also
 
+Worked recipe with rendered output:
+<https://ehrlinger.github.io/hvti_graphics/bar.html>.
+
 [`plot.hv_eda`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hv_eda.md),
 [`sample_eda_data`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_eda_data.md),
 [`eda_classify_var`](https://ehrlinger.github.io/hvtiPlotR/reference/eda_classify_var.md),

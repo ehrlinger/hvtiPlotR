@@ -80,6 +80,9 @@ SAS templates: `tp.np.tr.ivecho.average_curv.ordinal.sas`,
 
 ## See also
 
+Worked recipe with rendered output:
+<https://ehrlinger.github.io/hvti_graphics/hazard.html>.
+
 [`plot.hv_ordinal`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hv_ordinal.md),
 [`sample_nonparametric_ordinal_data`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_nonparametric_ordinal_data.md)
 

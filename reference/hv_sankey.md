@@ -77,6 +77,9 @@ it must name every label in the data.
 
 ## See also
 
+Worked recipe with rendered output:
+<https://ehrlinger.github.io/hvti_graphics/sankey.html>.
+
 [`plot.hv_sankey`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hv_sankey.md),
 [`sample_cluster_sankey_data`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_cluster_sankey_data.md)
 

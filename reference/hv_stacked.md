@@ -64,6 +64,9 @@ An object of class `c("hv_stacked", "hv_data")`:
 
 ## See also
 
+Worked recipe with rendered output:
+<https://ehrlinger.github.io/hvti_graphics/histograms.html>.
+
 [`plot.hv_stacked`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hv_stacked.md),
 [`sample_stacked_histogram_data`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_stacked_histogram_data.md)
 

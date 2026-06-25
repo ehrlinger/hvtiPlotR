@@ -71,6 +71,9 @@ An `hv_consort` object – a list with:
 
 ## See also
 
+Worked recipe with rendered output:
+<https://ehrlinger.github.io/hvti_graphics/consort.html>.
+
 [`hv_consort_start()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_consort_start.md),
 [`hv_consort_exclude()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_consort_exclude.md),
 [`plot.hv_consort()`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hv_consort.md)

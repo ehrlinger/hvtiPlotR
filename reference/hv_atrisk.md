@@ -71,6 +71,9 @@ object: one text label per stratum and report time, strata as y rows
 
 ## See also
 
+Worked recipe with rendered output:
+<https://ehrlinger.github.io/hvti_graphics/survival.html>.
+
 [`hv_atrisk_compose`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_atrisk_compose.md),
 [`hv_survival`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_survival.md)
 

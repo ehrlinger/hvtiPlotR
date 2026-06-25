@@ -56,6 +56,9 @@ An object of class `c("hv_longitudinal", "hv_data")`:
 
 ## See also
 
+Worked recipe with rendered output:
+<https://ehrlinger.github.io/hvti_graphics/bar.html>.
+
 [`plot.hv_longitudinal`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hv_longitudinal.md),
 [`sample_longitudinal_counts_data`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_longitudinal_counts_data.md)
 

@@ -298,6 +298,9 @@ summaries, and set-membership visualisation.
 Save figures to PowerPoint or PDF. Add draft footnotes during analysis;
 omit them for publication-ready output.
 
+- [`save_manuscript()`](https://ehrlinger.github.io/hvtiPlotR/reference/save_manuscript.md)
+  : Save a ggplot at HVTI manuscript defaults
+
 - [`save_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/save_ppt.md)
   : Save ggplot Objects to an Editable PowerPoint Presentation
 

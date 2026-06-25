@@ -7,6 +7,10 @@ Clinic. We use it to produce graphics that meet HVTI manuscript, poster,
 and presentation standards, built on `ggplot2` and the `officer`
 package.
 
+Worked, rendered examples for every constructor and theme live in the
+companion **HVTI ggplot graphics recipes** book,
+<https://ehrlinger.github.io/hvti_graphics/>.
+
 ## Details
 
 ### Two-step workflow
@@ -72,6 +76,14 @@ ticks, and scale axis-text / axis-title margins from `base_size` via
 ggplot2's `half_line` convention.
 
 ### Saving figures
+
+- [`save_manuscript()`](https://ehrlinger.github.io/hvtiPlotR/reference/save_manuscript.md):
+  Save a ggplot at the house manuscript size (6 x 4 in) in one call —
+  the manuscript counterpart of
+  [`save_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/save_ppt.md).
+  Pair with
+  [`theme_hv_manuscript()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)
+  for 12 pt type.
 
 - [`save_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/save_ppt.md):
   Insert one or more ggplot objects into a PowerPoint file as editable
