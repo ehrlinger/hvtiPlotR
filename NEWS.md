@@ -8,6 +8,12 @@
   transform, so `coord_flip()` is handled correctly. Apply it after the house
   theme. See the recipes-book legends chapter.
 
+## Dependencies
+
+- Minimum `ggplot2` raised to `>= 3.5.0` (the version that introduced the
+  inside-legend API `hv_legend_inside()` uses: `legend.position = "inside"` with
+  `legend.position.inside` / `legend.justification.inside`).
+
 # hvtiPlotR 2.7.0
 
 ## New features

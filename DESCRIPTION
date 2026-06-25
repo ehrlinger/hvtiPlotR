@@ -24,7 +24,7 @@ Depends:
 Imports:
     consort (>= 0.2.0),
     ggalluvial (>= 0.12.3),
-    ggplot2 (>= 3.4.0),
+    ggplot2 (>= 3.5.0),
     ggupset (>= 0.4.0),
     ggvenn,
     grid,
