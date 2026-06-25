@@ -37,6 +37,9 @@ v$tables$regions
 
 }
 \seealso{
+Worked recipe with rendered output:
+\url{https://ehrlinger.github.io/hvti_graphics/upset.html}.
+
 \code{\link{plot.hv_venn}}, \code{\link{hv_upset}},
 \code{\link{sample_upset_data}}
 }

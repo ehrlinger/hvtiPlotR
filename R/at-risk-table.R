@@ -156,6 +156,8 @@ utils::globalVariables(c("n.risk", "report_time", "strata"))
 #'   stratum and report time, strata as y rows (first stratum on top), time on
 #'   a continuous x with axis text blanked (the curve carries the axis).
 #'
+#' @seealso Worked recipe with rendered output:
+#'   \url{https://ehrlinger.github.io/hvti_graphics/survival.html}.
 #' @seealso \code{\link{hv_atrisk_compose}}, \code{\link{hv_survival}}
 #'
 #' @examples

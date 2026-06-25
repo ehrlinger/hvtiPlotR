@@ -59,5 +59,8 @@ fig <- hv_consort(tracker)
 
 }
 \seealso{
+Worked recipe with rendered output:
+\url{https://ehrlinger.github.io/hvti_graphics/consort.html}.
+
 \code{\link[=hv_consort_start]{hv_consort_start()}}, \code{\link[=hv_consort_exclude]{hv_consort_exclude()}}, \code{\link[=plot.hv_consort]{plot.hv_consort()}}
 }

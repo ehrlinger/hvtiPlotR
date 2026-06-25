@@ -78,6 +78,9 @@ if (requireNamespace("ggsankey", quietly = TRUE)) {
 
 }
 \seealso{
+Worked recipe with rendered output:
+\url{https://ehrlinger.github.io/hvti_graphics/sankey.html}.
+
 \code{\link{plot.hv_sankey}},
 \code{\link{sample_cluster_sankey_data}}
 }

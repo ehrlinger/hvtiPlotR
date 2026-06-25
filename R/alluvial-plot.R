@@ -108,6 +108,8 @@ sample_alluvial_data <- function(n = 300, seed = 42L) {
 #'   \item{\code{$tables}}{Empty list.}
 #' }
 #'
+#' @seealso Worked recipe with rendered output:
+#'   \url{https://ehrlinger.github.io/hvti_graphics/sankey.html}.
 #' @seealso \code{\link{plot.hv_alluvial}}, \code{\link{sample_alluvial_data}}
 #'
 #' @examples

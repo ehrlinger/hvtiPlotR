@@ -49,5 +49,8 @@ plot(up, set_size = FALSE) + theme_hv_poster()
 
 }
 \seealso{
+Worked recipe with rendered output:
+\url{https://ehrlinger.github.io/hvti_graphics/upset.html}.
+
 \code{\link{plot.hv_upset}}, \code{\link{sample_upset_data}}
 }

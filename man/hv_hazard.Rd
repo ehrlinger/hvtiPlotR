@@ -150,6 +150,9 @@ ggplot2::theme_set(old)
 
 }
 \seealso{
+Worked recipe with rendered output:
+\url{https://ehrlinger.github.io/hvti_graphics/hazard.html}.
+
 \code{\link[=plot.hv_hazard]{plot.hv_hazard()}} to render as a ggplot2 figure,
 \code{\link[=theme_hv_manuscript]{theme_hv_manuscript()}} for the publication theme,
 \code{\link[=sample_hazard_data]{sample_hazard_data()}}, \code{\link[=sample_hazard_empirical]{sample_hazard_empirical()}},

@@ -111,6 +111,8 @@ sample_spaghetti_data <- function(n_patients = 150,
 #'   \item{\code{$tables}}{Empty list.}
 #' }
 #'
+#' @seealso Worked recipe with rendered output:
+#'   \url{https://ehrlinger.github.io/hvti_graphics/spaghetti.html}.
 #' @seealso \code{\link{plot.hv_spaghetti}} to render as a ggplot2 figure,
 #'   \code{\link{theme_hv_manuscript}} for the publication theme,
 #'   \code{\link{sample_spaghetti_data}} for example data.

@@ -112,6 +112,8 @@ cb_build_plot <- function(data, std_diff_col, group_col, var_levels,
 #'   \item{\code{$tables}}{Empty list (no accessory tables).}
 #' }
 #'
+#' @seealso Worked recipe with rendered output:
+#'   \url{https://ehrlinger.github.io/hvti_graphics/balance.html}.
 #' @seealso \code{\link{plot.hv_balance}},
 #'   \code{\link{sample_covariate_balance_data}}
 #'

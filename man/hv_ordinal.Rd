@@ -94,6 +94,9 @@ SAS templates: \code{tp.np.tr.ivecho.average_curv.ordinal.sas},
 \code{tp.np.tr.ivecho.u.phases.sas}.
 }
 \seealso{
+Worked recipe with rendered output:
+\url{https://ehrlinger.github.io/hvti_graphics/hazard.html}.
+
 \code{\link{plot.hv_ordinal}},
 \code{\link{sample_nonparametric_ordinal_data}}
 }

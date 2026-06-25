@@ -76,6 +76,9 @@ plot(ar) +
 
 }
 \seealso{
+Worked recipe with rendered output:
+\url{https://ehrlinger.github.io/hvti_graphics/nnt.html}.
+
 \code{\link[=plot.hv_nnt]{plot.hv_nnt()}}, \code{\link[=sample_nnt_data]{sample_nnt_data()}},
 \code{\link[=hv_survival_difference]{hv_survival_difference()}}
 }
