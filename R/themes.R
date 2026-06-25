@@ -116,7 +116,7 @@ theme_hv_poster <- function(base_size      = 16,
                    base_line_size, base_rect_size,
                    ink, paper, accent) %+replace%
     theme(
-      plot.background    = element_rect(fill = "transparent",
+      plot.background    = element_rect(fill = paper,
                                         colour = "transparent",
                                         linewidth = 2),
       axis.text          = element_text(size = base_size, colour = "black"),
@@ -165,7 +165,7 @@ theme_hv_ppt_dark <- function(base_size      = 32,
                    base_line_size, base_rect_size,
                    ink, paper, accent) %+replace%
     theme(
-      plot.background    = element_rect(fill = "transparent",
+      plot.background    = element_rect(fill = paper,
                                         colour = "transparent",
                                         linewidth = 2),
       axis.text          = element_text(size = base_size, colour = "white",
@@ -216,7 +216,7 @@ theme_hv_ppt_light <- function(base_size      = 32,
                    base_line_size, base_rect_size,
                    ink, paper, accent) %+replace%
     theme(
-      plot.background    = element_rect(fill = "transparent",
+      plot.background    = element_rect(fill = paper,
                                         colour = "transparent",
                                         linewidth = 2),
       axis.text          = element_text(size = base_size, colour = "black",

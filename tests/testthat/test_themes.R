@@ -226,3 +226,19 @@ test_that("hv_theme dispatcher has been removed", {
   expect_false(exists("hv_theme", mode = "function",
                       envir = asNamespace("hvtiPlotR")))
 })
+
+# ============================================================================
+# `paper` argument controls plot.background fill (regression: was hard-coded
+# "transparent", ignoring the argument)
+# ============================================================================
+
+test_that("paper sets plot.background fill in ppt and poster themes", {
+  expect_identical(theme_hv_ppt_dark(paper  = "grey15")$plot.background$fill, "grey15")
+  expect_identical(theme_hv_ppt_light(paper = "ivory")$plot.background$fill,  "ivory")
+  expect_identical(theme_hv_poster(paper    = "navy")$plot.background$fill,   "navy")
+})
+
+test_that("ppt themes still default plot.background to transparent", {
+  expect_identical(theme_hv_ppt_dark()$plot.background$fill,  "transparent")
+  expect_identical(theme_hv_ppt_light()$plot.background$fill, "transparent")
+})

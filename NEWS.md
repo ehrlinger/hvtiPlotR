@@ -1,3 +1,21 @@
+# hvtiPlotR 2.6.1
+
+## Bug fixes
+
+- `theme_hv_poster()`, `theme_hv_ppt_dark()`, `theme_hv_ppt_light()`: the `paper`
+  argument now controls the figure background (`plot.background` fill). It was
+  hard-coded to `"transparent"`, so passing `paper` had no effect. The PPT themes
+  still default to transparent (the slide background shows through);
+  `theme_hv_poster()` now honours its `"white"` default.
+
+## Documentation
+
+- `plot.hv_alluvial()`: clarify that `show_yaxis = FALSE` is a `theme()` layer, so
+  a complete theme added afterward (e.g. `theme_hv_manuscript()`) re-asserts the
+  axis it styles.
+- `plot.hv_venn()`: note the diagram is coordinate-free — do not add an
+  axis-bearing house theme, which pastes spurious axes onto it. Example updated.
+
 # hvtiPlotR 2.6.0
 
 ## New features
