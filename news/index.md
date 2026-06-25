@@ -1,5 +1,26 @@
 # Changelog
 
+## hvtiPlotR 2.7.1
+
+### New features
+
+- [`hv_legend_inside()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_legend_inside.md):
+  place a plot’s legend in the emptiest panel corner automatically,
+  falling back to an outside position when no corner is clear
+  (e.g. dense multi-curve panels). Coordinates come from the coord’s own
+  transform, so
+  [`coord_flip()`](https://ggplot2.tidyverse.org/reference/coord_flip.html)
+  is handled correctly. Apply it after the house theme. See the
+  recipes-book legends chapter.
+
+### Dependencies
+
+- Minimum `ggplot2` raised to `>= 3.5.0` (the version that introduced
+  the inside-legend API
+  [`hv_legend_inside()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_legend_inside.md)
+  uses: `legend.position = "inside"` with `legend.position.inside` /
+  `legend.justification.inside`).
+
 ## hvtiPlotR 2.7.0
 
 ### New features

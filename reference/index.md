@@ -311,6 +311,9 @@ omit them for publication-ready output.
   [`ggsave()`](https://ggplot2.tidyverse.org/reference/ggsave.html)
   dimensions for a fixed panel content area
 
+- [`hv_legend_inside()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_legend_inside.md)
+  : Place a ggplot legend inside the emptiest panel corner
+
 - [`hv_ph_location()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_ph_location.md)
   :
 
