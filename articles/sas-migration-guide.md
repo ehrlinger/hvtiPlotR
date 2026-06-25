@@ -859,7 +859,7 @@ remotes::install_github("davidsjoberg/ggsankey")
 | Original step | R equivalent |
 |----|----|
 | `sid_dta$C2 <- factor(...)` with `gr2_names` ordering | Factor levels set by `node_levels` argument |
-| `make_long(C2, …, C9)` | `.make_sankey_long()` (internal) |
+| `make_long(C2, ..., C9)` | `.make_sankey_long()` (internal) |
 | `geom_sankey()` + `geom_sankey_label()` | [`hv_sankey()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_sankey.md) + [`plot()`](https://rdrr.io/r/graphics/plot.default.html) |
 | `brewer.pal(9, "Set1")[c(2,6,8,4,3,5,7,1,9)]` | Default `node_colours` |
 

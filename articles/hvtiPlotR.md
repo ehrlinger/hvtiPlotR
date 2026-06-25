@@ -67,9 +67,9 @@ For many years, the mainstay for generating graphics for manuscripts and
 presentations in the statistics group in The Heart & Vascular Institute
 has been the `plot.sas` macro using SAS. However, we have had issues
 migrating this macro to newer versions of SAS (\> 8.0) and Microsoft
-Oﬃce products (\> 2003).
+Office products (\> 2003).
 
-In an eﬀort to alleviate these version issues, and to standardize the
+In an effort to alleviate these version issues, and to standardize the
 generation of figures within R, we have developed the **hvtiPlotR** R
 package. The goal of the package, and this vignette, is to simplify the
 creation of publication quality graphics in R. We are specifically
@@ -82,7 +82,7 @@ implement best practices for R graphics. The `ggplot2` package is an
 implementation of the Grammar of Graphics (Wilkinson 2005), which is a
 formalization of graphical concepts, and the building of graphical
 objects from a sequence of independent components. These components can
-be combined in many diﬀerent ways.
+be combined in many different ways.
 
 The `plot.sas` macro is also an implementation of a graphics grammar.
 The grammar `plot.sas` is derived from the ZETA pen plotters, which used
@@ -209,7 +209,7 @@ the default values specified within the `plot.sas` macro or device theme
 (Section 4).
 
 A similar set of `plot.sas` commands (Listing 4) is used to create
-presentation graphics. Diﬀerences between manuscript and presentation
+presentation graphics. Differences between manuscript and presentation
 graphics include the target device and ftext as well as some handling of
 figure labels with value instead of label commands. The output from this
 code is shown in Figure 3.
@@ -488,7 +488,7 @@ in Wickham (2009) or through the Internet.
 ### Scales
 
 Axis ticks are controlled with the `scale_` functions. ggplot2 has many
-diﬀerent `scale_` functions. These functions will work on one axis at a
+different `scale_` functions. These functions will work on one axis at a
 time, so for a typical continuous axis, we use the `scale_x_continuous`
 or `scale_y_continuous` functions. Major axis are controlled using the
 breaks argument. Listing 1 uses a sequence of numbers to set the
@@ -528,16 +528,17 @@ object, or described how we want it displayed.
 The fundamental statement of the `plot.sas` macro is the tuple
 statement. The first tuple statement we see in the example code sets the
 data set (set=green), the symbol shape (symbol=dot), size (symbsize=1/2)
-and color (color=black). Listing 2 turns oﬀ lines so only points will be
-shown (linepe=0, linecl=0,). It also handles error bars (ebarsize=3/4,
-ebar=1), which will be discuss in Section 3.6. The last line tells the
-macro about the point placement using a vector for each of the x and y
-coordinates. Points are displayed at each paired (x, y) and error bars
-are specified at matching y values in the upper (clu) and lower (cll)
-error bar limits (x=iv_state, y=sginit, cll=stlinit, clu=stuinit).
+and color (color=black). Listing 2 turns off lines so only points will
+be shown (linepe=0, linecl=0,). It also handles error bars
+(ebarsize=3/4, ebar=1), which will be discuss in Section 3.6. The last
+line tells the macro about the point placement using a vector for each
+of the x and y coordinates. Points are displayed at each paired (x, y)
+and error bars are specified at matching y values in the upper (clu) and
+lower (cll) error bar limits (x=iv_state, y=sginit, cll=stlinit,
+clu=stuinit).
 
 The geom\_ set of functions in ggplot2 is the functional equivalent to
-the tuple statement. The diﬀerence is the user specifies the graphical
+the tuple statement. The difference is the user specifies the graphical
 element desired using separate function calls. So points are plotting
 using the geom_point function, lines are generated with the geom_line
 (Section 3.7) and error bars are generated with the geom_errorbar
@@ -575,8 +576,8 @@ functions. If you want to stratify a dataset by a variable, you can
 specify that within the
 [`aes()`](https://ggplot2.tidyverse.org/reference/aes.html) function
 call using the `by=` argument. For points, we often want the stratifying
-to be either a diﬀerent `color=` or `shape=` for stratified data. We can
-then use the `scale_color_` functions (See Section 3.10) or the
+to be either a different `color=` or `shape=` for stratified data. We
+can then use the `scale_color_` functions (See Section 3.10) or the
 `scale_shape_` functions (See Section 3.9) to control how these are
 assigned to the stratifying variable.
 
@@ -605,7 +606,7 @@ This code chunk plots both points, and error bars for the next two data
 series, the `sgdead1` variable with error bars running from `stldead1`
 to `studead1` and `sgstrk1` variable with error bars running from
 `stlstrk1` to `stustrk1`. As we see in Figure 5, both series were added
-in `color="blue"` (Section 3.10), with diﬀerent point shapes `shape=1`
+in `color="blue"` (Section 3.10), with different point shapes `shape=1`
 and `shape=0` for each series (Section 3.9). We manipulated the error
 bar size with the `width` argument
 
@@ -656,7 +657,7 @@ show(ccf_plot)
 
 Note that the x variable is the same (`iv_state`) for all three data
 series as well as the associated error bars. This is not a requirement,
-as we could have specified a diﬀerent variable name for each `geom_`
+as we could have specified a different variable name for each `geom_`
 function call. Also note that just as in the `plot.sas` macro, since we
 do not want an error bar placed at at every data point, a large number
 points have the upper and lower error bar y values have been set to
@@ -734,14 +735,14 @@ show(ccf_plot)
 Alternatively, we could use the `geom_ribbon` to generate a confidence
 band using a shaded region with only a single call. The aesthetic
 argument for `geom_ribbon` takes a `ymax` and `ymin` argument just as
-the `geom_errorbar` function. Note that we used a diﬀerent data set
-(`data=parametric`) to use a diﬀerent set of points for generating these
-lines.
+the `geom_errorbar` function. Note that we used a different data set
+(`data=parametric`) to use a different set of points for generating
+these lines.
 
 ### Line types
 
 The linetype argument takes a named string as a value, to set the
-diﬀerent line styles. We show a set of frequently used styles in Figure
+different line styles. We show a set of frequently used styles in Figure
 7 for reference.
 
 ### Shapes
@@ -789,7 +790,7 @@ function. By specifying the xlim and/or ylim coordinates, we can crop
 the figure into whatever viewport we are interested in without
 manipulating the original dataset. Figure ?? sets the origin to (0,0)
 and clips the x axis at 5.1, and the y axis at 101. We have added the .1
-and 1 to each axis for aesthetic reasons to avid chopping oﬀ the tick
+and 1 to each axis for aesthetic reasons to avid chopping off the tick
 labels when they occur at the end of the viewport.
 
 ``` r
@@ -1066,13 +1067,13 @@ New York. ISBN 978-0-387-98140-6.
 Wilkinson L (2005). The Grammar of Graphics (Statistics and Computing).
 Springer-Verlag New York, Inc., Secaucus, NJ, USA. ISBN 0387245448.
 
-## Aﬃliation:
+## Affiliation:
 
 John Ehrlinger Heart, Vascular and Thoracic Institute Cleveland Clinic
 9500 Euclid Ave Cleveland, Ohio 44195
 
 E-mail: ehrlinj@ccf.org
 
-URL: http://www.lerner.ccf.org/qhs/people/ehrlinj/
+URL: https://www.lerner.ccf.org/qhs/people/ehrlinj/
 
 URL: https://github.com/ehrlinger/hvtiPlotR

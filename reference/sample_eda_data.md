@@ -50,7 +50,7 @@ A data frame with columns:
 
 - `ef` — continuous ejection fraction (%)
 
-- `lv_mass` — continuous LV mass index (g/m²)
+- `lv_mass` — continuous LV mass index (g/m^2)
 
 - `peak_grad` — continuous peak gradient (mmHg)
 
