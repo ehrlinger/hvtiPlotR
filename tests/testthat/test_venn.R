@@ -116,3 +116,10 @@ test_that("print.hv_venn returns x invisibly", {
   expect_false(ret$visible)
   expect_identical(ret$value, v)
 })
+
+test_that("plot(hv_venn) rejects reserved ggvenn args passed via ...", {
+  dta <- sample_upset_data(n = 100, seed = 1)
+  v   <- hv_venn(dta, sets = c("AV_Replacement", "MV_Replacement"))
+  expect_error(plot(v, columns = c("AV_Replacement")), "via `\\.\\.\\.`")
+  expect_error(plot(v, data = dta), "via `\\.\\.\\.`")
+})

@@ -128,7 +128,12 @@ hv_venn <- function(data, sets) {
 #' @export
 plot.hv_venn <- function(x, show_percentage = TRUE, show_counts = TRUE,
                          fill = NULL, text_size = 4, set_name_size = 6, ...) {
-  dots <- list(...)
+  dots     <- list(...)
+  reserved <- intersect(names(dots), c("data", "columns"))
+  if (length(reserved) > 0L)
+    stop("Cannot pass ", paste(sprintf("`%s`", reserved), collapse = ", "),
+         " via `...`; ", if (length(reserved) > 1L) "they are" else "it is",
+         " supplied from the hv_venn object.", call. = FALSE)
   if (!is.null(fill)) {
     if ("fill_color" %in% names(dots))
       stop("Pass fill colours via `fill`, not `fill_color`.", call. = FALSE)
