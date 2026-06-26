@@ -1,5 +1,16 @@
 # Changelog
 
+## hvtiPlotR 2.7.2
+
+### New features
+
+- [`hv_legend_inside()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_legend_inside.md)
+  gains a `prefer` argument: name a corner
+  (`"topright"`/`"topleft"`/`"bottomright"`/`"bottomleft"`) and the
+  legend goes there when that corner is clear, even if another corner is
+  emptier. When the preferred corner is occupied it falls back to the
+  emptiest-corner logic, so the occlusion guard is never given up.
+
 ## hvtiPlotR 2.7.1
 
 ### New features

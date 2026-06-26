@@ -14,7 +14,8 @@ hv_legend_inside(
   threshold = 0.08,
   box_frac = 0.3,
   pad = 0.02,
-  fallback = "right"
+  fallback = "right",
+  prefer = NULL
 )
 ```
 
@@ -45,6 +46,15 @@ hv_legend_inside(
   Outside `legend.position` used when no corner is empty enough or the
   plot cannot be reasoned about (facets). One of `"right"`, `"left"`,
   `"top"`, `"bottom"`. Default `"right"`.
+
+- prefer:
+
+  Optional preferred corner: one of `"topright"`, `"topleft"`,
+  `"bottomright"`, `"bottomleft"`. When set and that corner is clear
+  (its occupancy is within `threshold`), the legend is placed there even
+  if another corner is emptier. If the preferred corner is occupied, the
+  emptiest-corner logic applies as usual. Default `NULL` (pick the
+  emptiest corner).
 
 ## Value
 
