@@ -12,6 +12,8 @@ save_manuscript(
   units = "in",
   device = NULL,
   dpi = 300,
+  draft_file = NULL,
+  draft_dpi = NULL,
   ...
 )
 }
@@ -31,7 +33,16 @@ the file extension. For font embedding in a PDF, pass
 
 \item{dpi}{Resolution for raster formats. Default \code{300}.}
 
-\item{...}{Further arguments passed to \code{\link[ggplot2:ggsave]{ggplot2::ggsave()}}.}
+\item{draft_file}{Optional second output file path (typically \code{.png}). When
+supplied, an additional raster copy of \code{plot} is written here at the same
+\code{width}/\code{height}/\code{units}, for dragging into a Word draft manuscript.
+Default \code{NULL} (no draft copy written).}
+
+\item{draft_dpi}{Resolution for \code{draft_file}. Default \code{NULL}, which falls
+back to \code{dpi}.}
+
+\item{...}{Further arguments passed to \code{\link[ggplot2:ggsave]{ggplot2::ggsave()}} for the primary
+\code{file}. Not applied to \code{draft_file}.}
 }
 \value{
 Invisibly, the \code{file} path.
@@ -50,12 +61,24 @@ output geometry, not the theme — style the plot first, then save.
 The device is inferred from the file extension by default. For a \code{.pdf}
 where you want fonts embedded (so 12 pt type renders exactly as designed),
 pass \code{device = grDevices::cairo_pdf} — on a system with cairo/X11 support.
+
+Publisher-accepted vector formats (PDF, EPS, TIFF) often produce large or
+fragile files when dragged into a Word manuscript — Word has no native
+PDF-as-picture support and silently converts them to bloated, sometimes
+unreadable EMF. Pass \code{draft_file} (typically a \code{.png} path) to also write a
+small raster copy alongside \code{file} in the same call: keep \code{file} as the
+vector deliverable actually submitted to the journal, and drag
+\code{draft_file} into the Word draft instead.
 }
 \examples{
 \donttest{
 p <- plot(hv_survival(sample_survival_data(n = 200, seed = 42))) +
   theme_hv_manuscript()
 save_manuscript(p, file.path(tempdir(), "survival.pdf"))
+
+# also write a small draft PNG for dragging into Word
+save_manuscript(p, file.path(tempdir(), "survival.pdf"),
+                 draft_file = file.path(tempdir(), "survival_draft.png"))
 }
 
 }

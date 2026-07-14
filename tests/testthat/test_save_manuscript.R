@@ -36,3 +36,35 @@ test_that("save_manuscript honours a custom size and non-pdf format", {
   expect_silent(save_manuscript(p, f, width = 3, height = 3, dpi = 72))
   expect_true(file.exists(f))
 })
+
+test_that("save_manuscript writes an optional draft_file alongside file", {
+  p <- mk_plot()
+  f <- tempfile(fileext = ".pdf")
+  d <- tempfile(fileext = ".png")
+  on.exit(unlink(c(f, d)), add = TRUE)
+  save_manuscript(p, f, draft_file = d)
+  expect_true(file.exists(f))
+  expect_true(file.exists(d))
+})
+
+test_that("save_manuscript draft_file honours draft_dpi and falls back to dpi", {
+  p <- mk_plot()
+  f <- tempfile(fileext = ".pdf")
+  d <- tempfile(fileext = ".png")
+  on.exit(unlink(c(f, d)), add = TRUE)
+  expect_silent(save_manuscript(p, f, dpi = 150, draft_file = d, draft_dpi = 72))
+  expect_true(file.exists(d))
+})
+
+test_that("save_manuscript validates draft_file inputs", {
+  p <- mk_plot()
+  f <- tempfile(fileext = ".pdf")
+  on.exit(unlink(f), add = TRUE)
+  expect_error(save_manuscript(p, f, draft_file = c("a.png", "b.png")), "draft_file")
+  expect_error(save_manuscript(p, f, draft_file = NA_character_), "draft_file")
+  expect_error(save_manuscript(p, f, draft_file = ""), "draft_file")
+  expect_error(
+    save_manuscript(p, f, draft_file = file.path(tempdir(), "no_such_dir_xyz", "d.png")),
+    "Draft output directory does not exist"
+  )
+})
