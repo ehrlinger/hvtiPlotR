@@ -13,13 +13,14 @@
 #' where you want fonts embedded (so 12 pt type renders exactly as designed),
 #' pass `device = grDevices::cairo_pdf` — on a system with cairo/X11 support.
 #'
-#' Publisher-accepted vector formats (PDF, EPS, TIFF) often produce large or
-#' fragile files when dragged into a Word manuscript — Word has no native
-#' PDF-as-picture support and silently converts them to bloated, sometimes
-#' unreadable EMF. Pass `draft_file` (typically a `.png` path) to also write a
-#' small raster copy alongside `file` in the same call: keep `file` as the
-#' vector deliverable actually submitted to the journal, and drag
-#' `draft_file` into the Word draft instead.
+#' Publisher-accepted formats — vector (PDF, EPS) or TIFF (a raster format
+#' also accepted by journals) — often produce large or fragile files when
+#' dragged into a Word manuscript — Word has no native PDF-as-picture support
+#' and silently converts them to bloated, sometimes unreadable EMF. Pass
+#' `draft_file` (typically a `.png` path) to also write a small raster copy
+#' alongside `file` in the same call: keep `file` as the publisher deliverable
+#' actually submitted to the journal, and drag `draft_file` into the Word
+#' draft instead.
 #'
 #' @param plot A [ggplot2::ggplot()] object, e.g. `plot(hv_*())` finished with
 #'   `theme_hv_manuscript()`.
@@ -82,6 +83,10 @@ save_manuscript <- function(plot, file, width = 6, height = 4, units = "in",
     draft_out_dir <- dirname(draft_file)
     if (!dir.exists(draft_out_dir))
       stop("Draft output directory does not exist: ", draft_out_dir, call. = FALSE)
+    file_abs  <- file.path(normalizePath(out_dir, mustWork = FALSE), basename(file))
+    draft_abs <- file.path(normalizePath(draft_out_dir, mustWork = FALSE), basename(draft_file))
+    if (identical(file_abs, draft_abs))
+      stop("`draft_file` must not be the same path as `file`.", call. = FALSE)
     draft_dpi <- if (is.null(draft_dpi)) dpi else draft_dpi
     .check_scalar_positive(draft_dpi, "draft_dpi")
   }

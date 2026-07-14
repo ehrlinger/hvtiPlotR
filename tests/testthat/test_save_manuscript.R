@@ -71,3 +71,21 @@ test_that("save_manuscript validates draft_file inputs", {
   on.exit(unlink(d), add = TRUE)
   expect_error(save_manuscript(p, f, draft_file = d, draft_dpi = -1), "positive")
 })
+
+test_that("save_manuscript errors when draft_file matches file", {
+  p <- mk_plot()
+  f <- tempfile(fileext = ".pdf")
+  on.exit(unlink(f), add = TRUE)
+  expect_error(save_manuscript(p, f, draft_file = f),
+               "must not be the same path")
+  expect_false(file.exists(f))
+
+  # equivalent paths (different string, same resolved location) also caught
+  rel_dir <- tempfile()
+  dir.create(rel_dir)
+  on.exit(unlink(rel_dir, recursive = TRUE), add = TRUE)
+  f1 <- file.path(rel_dir, "out.pdf")
+  f2 <- file.path(rel_dir, ".", "out.pdf")
+  expect_error(save_manuscript(p, f1, draft_file = f2),
+               "must not be the same path")
+})

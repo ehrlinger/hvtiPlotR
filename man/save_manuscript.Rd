@@ -62,13 +62,14 @@ The device is inferred from the file extension by default. For a \code{.pdf}
 where you want fonts embedded (so 12 pt type renders exactly as designed),
 pass \code{device = grDevices::cairo_pdf} — on a system with cairo/X11 support.
 
-Publisher-accepted vector formats (PDF, EPS, TIFF) often produce large or
-fragile files when dragged into a Word manuscript — Word has no native
-PDF-as-picture support and silently converts them to bloated, sometimes
-unreadable EMF. Pass \code{draft_file} (typically a \code{.png} path) to also write a
-small raster copy alongside \code{file} in the same call: keep \code{file} as the
-vector deliverable actually submitted to the journal, and drag
-\code{draft_file} into the Word draft instead.
+Publisher-accepted formats — vector (PDF, EPS) or TIFF (a raster format
+also accepted by journals) — often produce large or fragile files when
+dragged into a Word manuscript — Word has no native PDF-as-picture support
+and silently converts them to bloated, sometimes unreadable EMF. Pass
+\code{draft_file} (typically a \code{.png} path) to also write a small raster copy
+alongside \code{file} in the same call: keep \code{file} as the publisher deliverable
+actually submitted to the journal, and drag \code{draft_file} into the Word
+draft instead.
 }
 \examples{
 \donttest{
