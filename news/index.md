@@ -1,5 +1,16 @@
 # Changelog
 
+## hvtiPlotR 2.7.3
+
+### New features
+
+- [`save_manuscript()`](https://ehrlinger.github.io/hvtiPlotR/reference/save_manuscript.md)
+  gains `draft_file`/`draft_dpi` arguments: write an additional raster
+  (typically PNG) copy alongside the primary publisher file in one call.
+  Use this to keep a small, portable draft figure for dragging into a
+  Word manuscript while `file` stays the publisher deliverable (vector
+  PDF/EPS, or raster TIFF) actually submitted to the journal.
+
 ## hvtiPlotR 2.7.2
 
 ### New features

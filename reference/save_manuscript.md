@@ -19,6 +19,8 @@ save_manuscript(
   units = "in",
   device = NULL,
   dpi = 300,
+  draft_file = NULL,
+  draft_dpi = NULL,
   ...
 )
 ```
@@ -51,10 +53,23 @@ save_manuscript(
 
   Resolution for raster formats. Default `300`.
 
+- draft_file:
+
+  Optional second output file path (typically `.png`). When supplied, an
+  additional raster copy of `plot` is written here at the same
+  `width`/`height`/`units`, for dragging into a Word draft manuscript.
+  Default `NULL` (no draft copy written).
+
+- draft_dpi:
+
+  Resolution for `draft_file`. Default `NULL`, which falls back to
+  `dpi`.
+
 - ...:
 
   Further arguments passed to
-  [`ggplot2::ggsave()`](https://ggplot2.tidyverse.org/reference/ggsave.html).
+  [`ggplot2::ggsave()`](https://ggplot2.tidyverse.org/reference/ggsave.html)
+  for the primary `file`. Not applied to `draft_file`.
 
 ## Value
 
@@ -74,6 +89,15 @@ where you want fonts embedded (so 12 pt type renders exactly as
 designed), pass `device = grDevices::cairo_pdf` — on a system with
 cairo/X11 support.
 
+Publisher-accepted formats — vector (PDF, EPS) or TIFF (a raster format
+also accepted by journals) — often produce large or fragile files when
+dragged into a Word manuscript — Word has no native PDF-as-picture
+support and silently converts them to bloated, sometimes unreadable EMF.
+Pass `draft_file` (typically a `.png` path) to also write a small raster
+copy alongside `file` in the same call: keep `file` as the publisher
+deliverable actually submitted to the journal, and drag `draft_file`
+into the Word draft instead.
+
 ## See also
 
 [`save_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/save_ppt.md)
@@ -91,5 +115,9 @@ recipes book, <https://ehrlinger.github.io/hvti_graphics/>.
 p <- plot(hv_survival(sample_survival_data(n = 200, seed = 42))) +
   theme_hv_manuscript()
 save_manuscript(p, file.path(tempdir(), "survival.pdf"))
+
+# also write a small draft PNG for dragging into Word
+save_manuscript(p, file.path(tempdir(), "survival.pdf"),
+                 draft_file = file.path(tempdir(), "survival_draft.png"))
 # }
 ```

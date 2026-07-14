@@ -1786,24 +1786,24 @@ sessionInfo()
     [1] stats     graphics  grDevices utils     datasets  methods   base
 
     other attached packages:
-    [1] ggplot2_4.0.3   hvtiPlotR_2.7.2
+    [1] ggplot2_4.0.3   hvtiPlotR_2.7.3
 
     loaded via a namespace (and not attached):
      [1] generics_0.1.4          tidyr_1.3.2             fontLiberation_0.1.0
      [4] xml2_1.6.0              lattice_0.22-9          digest_0.6.39
      [7] magrittr_2.0.5          evaluate_1.0.5          grid_4.6.1
     [10] RColorBrewer_1.1-3      fastmap_1.2.0           Matrix_1.7-5
-    [13] jsonlite_2.0.0          zip_3.0.0               consort_1.2.3
+    [13] jsonlite_2.0.0          zip_3.0.1               consort_1.2.3
     [16] survival_3.8-6          purrr_1.2.2             scales_1.4.0
     [19] fontBitstreamVera_0.1.1 textshaping_1.0.5       cli_3.6.6
-    [22] rlang_1.2.0             fontquiver_0.2.1        ggupset_0.4.1
+    [22] rlang_1.3.0             fontquiver_0.2.1        ggupset_0.4.1
     [25] splines_4.6.1           withr_3.0.3             yaml_2.3.12
     [28] otel_0.2.0              gdtools_0.5.1           tools_4.6.1
     [31] officer_0.7.5           uuid_1.2-2              dplyr_1.2.1
     [34] vctrs_0.7.3             R6_2.6.1                lifecycle_1.0.5
     [37] ragg_1.5.2              pkgconfig_2.0.3         pillar_1.11.1
-    [40] gtable_0.3.6            glue_1.8.1              Rcpp_1.1.1-1.1
-    [43] systemfonts_1.3.2       xfun_0.59               rvg_0.4.2
+    [40] gtable_0.3.6            glue_1.8.1              Rcpp_1.1.2
+    [43] systemfonts_1.3.2       xfun_0.60               rvg_0.4.2
     [46] tibble_3.3.1            tidyselect_1.2.1        knitr_1.51
     [49] farver_2.1.2            htmltools_0.5.9         patchwork_1.3.2
     [52] labeling_0.4.3          rmarkdown_2.31          ggalluvial_0.12.6

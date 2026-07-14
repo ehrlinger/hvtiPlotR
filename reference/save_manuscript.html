@@ -13,7 +13,7 @@ save_ppt(), which enforces the slide panel box."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">hvtiPlotR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.7.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.7.3</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -56,7 +56,7 @@ save_ppt(), which enforces the slide panel box."></head><body>
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Save a ggplot at HVTI manuscript defaults</h1>
-      <small class="dont-index">Source: <a href="https://github.com/ehrlinger/hvtiPlotR/blob/v2.7.2/R/save-manuscript.R" class="external-link"><code>R/save-manuscript.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/ehrlinger/hvtiPlotR/blob/main/R/save-manuscript.R" class="external-link"><code>R/save-manuscript.R</code></a></small>
       <div class="d-none name"><code>save_manuscript.Rd</code></div>
     </div>
 
@@ -77,6 +77,8 @@ out at a consistent size in one call. It is the manuscript counterpart of
 <span>  units <span class="op">=</span> <span class="st">"in"</span>,</span>
 <span>  device <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  dpi <span class="op">=</span> <span class="fl">300</span>,</span>
+<span>  draft_file <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  draft_dpi <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -110,8 +112,21 @@ the file extension. For font embedding in a PDF, pass
 <dd><p>Resolution for raster formats. Default <code>300</code>.</p></dd>
 
 
+<dt id="arg-draft-file">draft_file<a class="anchor" aria-label="anchor" href="#arg-draft-file"></a></dt>
+<dd><p>Optional second output file path (typically <code>.png</code>). When
+supplied, an additional raster copy of <code>plot</code> is written here at the same
+<code>width</code>/<code>height</code>/<code>units</code>, for dragging into a Word draft manuscript.
+Default <code>NULL</code> (no draft copy written).</p></dd>
+
+
+<dt id="arg-draft-dpi">draft_dpi<a class="anchor" aria-label="anchor" href="#arg-draft-dpi"></a></dt>
+<dd><p>Resolution for <code>draft_file</code>. Default <code>NULL</code>, which falls
+back to <code>dpi</code>.</p></dd>
+
+
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
-<dd><p>Further arguments passed to <code><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggplot2::ggsave()</a></code>.</p></dd>
+<dd><p>Further arguments passed to <code><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggplot2::ggsave()</a></code> for the primary
+<code>file</code>. Not applied to <code>draft_file</code>.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -126,6 +141,14 @@ output geometry, not the theme — style the plot first, then save.</p>
 <p>The device is inferred from the file extension by default. For a <code>.pdf</code>
 where you want fonts embedded (so 12 pt type renders exactly as designed),
 pass <code>device = grDevices::cairo_pdf</code> — on a system with cairo/X11 support.</p>
+<p>Publisher-accepted formats — vector (PDF, EPS) or TIFF (a raster format
+also accepted by journals) — often produce large or fragile files when
+dragged into a Word manuscript — Word has no native PDF-as-picture support
+and silently converts them to bloated, sometimes unreadable EMF. Pass
+<code>draft_file</code> (typically a <code>.png</code> path) to also write a small raster copy
+alongside <code>file</code> in the same call: keep <code>file</code> as the publisher deliverable
+actually submitted to the journal, and drag <code>draft_file</code> into the Word
+draft instead.</p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
@@ -141,6 +164,10 @@ in the HVTI ggplot graphics recipes book,
 <span class="r-in"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="hv_survival.html">hv_survival</a></span><span class="op">(</span><span class="fu"><a href="sample_survival_data.html">sample_survival_data</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">200</span>, seed <span class="op">=</span> <span class="fl">42</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="hvtiPlotR-themes.html">theme_hv_manuscript</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">save_manuscript</span><span class="op">(</span><span class="va">p</span>, <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"survival.pdf"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># also write a small draft PNG for dragging into Word</span></span></span>
+<span class="r-in"><span><span class="fu">save_manuscript</span><span class="op">(</span><span class="va">p</span>, <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"survival.pdf"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>                 draft_file <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"survival_draft.png"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="co"># }</span></span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
