@@ -13,6 +13,15 @@
 #' where you want fonts embedded (so 12 pt type renders exactly as designed),
 #' pass `device = grDevices::cairo_pdf` — on a system with cairo/X11 support.
 #'
+#' Publisher-accepted formats — vector (PDF, EPS) or TIFF (a raster format
+#' also accepted by journals) — often produce large or fragile files when
+#' dragged into a Word manuscript — Word has no native PDF-as-picture support
+#' and silently converts them to bloated, sometimes unreadable EMF. Pass
+#' `draft_file` (typically a `.png` path) to also write a small raster copy
+#' alongside `file` in the same call: keep `file` as the publisher deliverable
+#' actually submitted to the journal, and drag `draft_file` into the Word
+#' draft instead.
+#'
 #' @param plot A [ggplot2::ggplot()] object, e.g. `plot(hv_*())` finished with
 #'   `theme_hv_manuscript()`.
 #' @param file Output file path. Its extension sets the format (`.pdf`, `.png`,
@@ -23,7 +32,14 @@
 #'   the file extension. For font embedding in a PDF, pass
 #'   `grDevices::cairo_pdf` (requires cairo/X11 support).
 #' @param dpi Resolution for raster formats. Default `300`.
-#' @param ... Further arguments passed to [ggplot2::ggsave()].
+#' @param draft_file Optional second output file path (typically `.png`). When
+#'   supplied, an additional raster copy of `plot` is written here at the same
+#'   `width`/`height`/`units`, for dragging into a Word draft manuscript.
+#'   Default `NULL` (no draft copy written).
+#' @param draft_dpi Resolution for `draft_file`. Default `NULL`, which falls
+#'   back to `dpi`.
+#' @param ... Further arguments passed to [ggplot2::ggsave()] for the primary
+#'   `file`. Not applied to `draft_file`.
 #'
 #' @return Invisibly, the `file` path.
 #'
@@ -37,12 +53,17 @@
 #' p <- plot(hv_survival(sample_survival_data(n = 200, seed = 42))) +
 #'   theme_hv_manuscript()
 #' save_manuscript(p, file.path(tempdir(), "survival.pdf"))
+#'
+#' # also write a small draft PNG for dragging into Word
+#' save_manuscript(p, file.path(tempdir(), "survival.pdf"),
+#'                  draft_file = file.path(tempdir(), "survival_draft.png"))
 #' }
 #'
 #' @importFrom ggplot2 ggsave
 #' @export
 save_manuscript <- function(plot, file, width = 6, height = 4, units = "in",
-                            device = NULL, dpi = 300, ...) {
+                            device = NULL, dpi = 300,
+                            draft_file = NULL, draft_dpi = NULL, ...) {
   if (!inherits(plot, "ggplot"))
     stop("`plot` must be a ggplot object.", call. = FALSE)
   if (!is.character(file) || length(file) != 1L || is.na(file) || !nzchar(file))
@@ -55,7 +76,28 @@ save_manuscript <- function(plot, file, width = 6, height = 4, units = "in",
   if (!dir.exists(out_dir))
     stop("Output directory does not exist: ", out_dir, call. = FALSE)
 
+  if (!is.null(draft_file)) {
+    if (!is.character(draft_file) || length(draft_file) != 1L ||
+        is.na(draft_file) || !nzchar(draft_file))
+      stop("`draft_file` must be a single non-empty file path.", call. = FALSE)
+    draft_out_dir <- dirname(draft_file)
+    if (!dir.exists(draft_out_dir))
+      stop("Draft output directory does not exist: ", draft_out_dir, call. = FALSE)
+    file_abs  <- file.path(normalizePath(out_dir, mustWork = FALSE), basename(file))
+    draft_abs <- file.path(normalizePath(draft_out_dir, mustWork = FALSE), basename(draft_file))
+    if (identical(file_abs, draft_abs))
+      stop("`draft_file` must not be the same path as `file`.", call. = FALSE)
+    draft_dpi <- if (is.null(draft_dpi)) dpi else draft_dpi
+    .check_scalar_positive(draft_dpi, "draft_dpi")
+  }
+
   ggplot2::ggsave(filename = file, plot = plot, device = device,
                   width = width, height = height, units = units, dpi = dpi, ...)
+
+  if (!is.null(draft_file)) {
+    ggplot2::ggsave(filename = draft_file, plot = plot, device = NULL,
+                    width = width, height = height, units = units, dpi = draft_dpi)
+  }
+
   invisible(file)
 }

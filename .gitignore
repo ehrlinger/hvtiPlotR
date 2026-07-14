@@ -37,3 +37,4 @@ vignettes/*.html
 inst/slides/*.html
 inst/slides/*.pdf
 inst/slides/*.pptx
+.worktrees/
