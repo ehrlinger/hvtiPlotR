@@ -75,9 +75,6 @@ save_manuscript <- function(plot, file, width = 6, height = 4, units = "in",
   if (!dir.exists(out_dir))
     stop("Output directory does not exist: ", out_dir, call. = FALSE)
 
-  ggplot2::ggsave(filename = file, plot = plot, device = device,
-                  width = width, height = height, units = units, dpi = dpi, ...)
-
   if (!is.null(draft_file)) {
     if (!is.character(draft_file) || length(draft_file) != 1L ||
         is.na(draft_file) || !nzchar(draft_file))
@@ -87,6 +84,12 @@ save_manuscript <- function(plot, file, width = 6, height = 4, units = "in",
       stop("Draft output directory does not exist: ", draft_out_dir, call. = FALSE)
     draft_dpi <- if (is.null(draft_dpi)) dpi else draft_dpi
     .check_scalar_positive(draft_dpi, "draft_dpi")
+  }
+
+  ggplot2::ggsave(filename = file, plot = plot, device = device,
+                  width = width, height = height, units = units, dpi = dpi, ...)
+
+  if (!is.null(draft_file)) {
     ggplot2::ggsave(filename = draft_file, plot = plot, device = NULL,
                     width = width, height = height, units = units, dpi = draft_dpi)
   }

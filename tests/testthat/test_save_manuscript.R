@@ -47,7 +47,7 @@ test_that("save_manuscript writes an optional draft_file alongside file", {
   expect_true(file.exists(d))
 })
 
-test_that("save_manuscript draft_file honours draft_dpi and falls back to dpi", {
+test_that("save_manuscript draft_file honours an explicit draft_dpi", {
   p <- mk_plot()
   f <- tempfile(fileext = ".pdf")
   d <- tempfile(fileext = ".png")
@@ -67,4 +67,7 @@ test_that("save_manuscript validates draft_file inputs", {
     save_manuscript(p, f, draft_file = file.path(tempdir(), "no_such_dir_xyz", "d.png")),
     "Draft output directory does not exist"
   )
+  d <- tempfile(fileext = ".png")
+  on.exit(unlink(d), add = TRUE)
+  expect_error(save_manuscript(p, f, draft_file = d, draft_dpi = -1), "positive")
 })
