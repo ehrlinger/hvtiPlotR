@@ -19,7 +19,7 @@ format:
     highlight-style: github   # github | monokai | dracula | a11y | etc.
     footer: "hvtiPlotR v2.3.0"  # persistent footer text
   pptx:
-    # To apply your HVI template, uncomment and set the path:
+    # To apply your HVTI template, uncomment and set the path:
     # reference-doc: graphs/RD.pptx
     slide-level: 2
   beamer:
@@ -257,7 +257,7 @@ p <- plot(hv_survival(my_data, "time", "event")) +
 
 save_ppt(
   object       = p,
-  template     = "graphs/RD.pptx",       # your HVI slide template
+  template     = "graphs/RD.pptx",       # your HVTI slide template
   powerpoint   = "output/figure1.pptx",
   slide_titles = "Kaplan–Meier: All Patients"
 )
