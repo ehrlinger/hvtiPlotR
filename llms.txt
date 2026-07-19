@@ -29,7 +29,7 @@ Install from GitHub using
 remotes::install_github("ehrlinger/hvtiPlotR")
 ```
 
-Apply an HVI theme to a ggplot2 figure in one line:
+Apply an HVTI theme to a ggplot2 figure in one line:
 
 ``` r
 
@@ -159,7 +159,7 @@ plot(mh) + theme_hv_manuscript()
 | Function | Description |
 |----|----|
 | [`theme_hv_manuscript()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md) / [`theme_hv_poster()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md) / [`theme_hv_ppt_dark()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md) / [`theme_hv_ppt_light()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md) | The four publication themes — see [Themes](#themes) |
-| [`save_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/save_ppt.md) | Export a ggplot to an editable PowerPoint slide using an HVI template; `panel_box = list(width = ..., height = ..., left = ..., top = ...)` (on by default) anchors the panel content area to the same slide coordinates on every slide |
+| [`save_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/save_ppt.md) | Export a ggplot to an editable PowerPoint slide using an HVTI template; `panel_box = list(width = ..., height = ..., left = ..., top = ...)` (on by default) anchors the panel content area to the same slide coordinates on every slide |
 | [`hv_ggsave_dims()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_ggsave_dims.md) | Compute [`ggsave()`](https://ggplot2.tidyverse.org/reference/ggsave.html) `width`/`height` that preserve a target panel content area regardless of axis-label, legend, or title size |
 | [`hv_ph_location()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_ph_location.md) | Compute [`officer::ph_location()`](https://davidgohel.github.io/officer/reference/ph_location.html) args so a ggplot’s panel lands at a fixed slide rectangle — the per-slide worker that `save_ppt(panel_box=)` calls |
 | [`make_footnote()`](https://ehrlinger.github.io/hvtiPlotR/reference/make_footnote.md) | Add a footnote annotation to the current figure |
