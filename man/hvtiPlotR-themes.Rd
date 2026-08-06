@@ -151,4 +151,7 @@ Margins on axis text/title are scaled from \code{base_size} via the standard
 one at \code{base_size = 36} both feel proportionate without you touching
 the margins.
 }
-\concept{Themes}
+\seealso{
+\code{\link[=save_ppt]{save_ppt()}} to export a themed plot to an editable PowerPoint
+slide; \code{\link[=make_footnote]{make_footnote()}} to annotate a draft figure before publication.
+}

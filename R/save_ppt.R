@@ -228,8 +228,13 @@ add_plot_slide <- function(doc, plot, title, layout, master, width, height,
 #'   [theme_hv_manuscript()]
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' library(ggplot2)
+#'
+#' # The package ships a small dark-background template; use it directly
+#' # instead of hunting for a .pptx of your own.
+#' template <- system.file("extdata", "hv_ppt_template.pptx",
+#'                         package = "hvtiPlotR")
 #'
 #' # ----------------------------------------------------------------------
 #' # Recommended workflow: preview with light, save with dark
@@ -248,8 +253,8 @@ add_plot_slide <- function(doc, plot, title, layout, master, width, height,
 #' p_slide <- p_preview + theme_hv_ppt_dark()
 #' save_ppt(
 #'   object       = p_slide,
-#'   template     = "graphs/RD.pptx",
-#'   powerpoint   = "graphs/fuel_economy.pptx",
+#'   template     = template,
+#'   powerpoint   = file.path(tempdir(), "fuel_economy.pptx"),
 #'   slide_titles = "Fuel Economy by Weight"
 #' )
 #'
@@ -261,8 +266,8 @@ add_plot_slide <- function(doc, plot, title, layout, master, width, height,
 #'
 #' save_ppt(
 #'   object       = list(p_slide, p2),
-#'   template     = "graphs/RD.pptx",
-#'   powerpoint   = "graphs/deck.pptx",
+#'   template     = template,
+#'   powerpoint   = file.path(tempdir(), "deck.pptx"),
 #'   slide_titles = c("Scatter: fuel economy", "Box: mpg by cylinder count")
 #' )
 #'
@@ -275,8 +280,8 @@ add_plot_slide <- function(doc, plot, title, layout, master, width, height,
 #'
 #' save_ppt(
 #'   object       = p_noy,
-#'   template     = "graphs/RD.pptx",
-#'   powerpoint   = "graphs/mpg_by_cyl.pptx",
+#'   template     = template,
+#'   powerpoint   = file.path(tempdir(), "mpg_by_cyl.pptx"),
 #'   slide_titles = "Miles per Gallon by Cylinder Count"
 #' )
 #'
@@ -288,8 +293,8 @@ add_plot_slide <- function(doc, plot, title, layout, master, width, height,
 #'
 #' save_ppt(
 #'   object       = pm,
-#'   template     = "graphs/RD-white.pptx",
-#'   powerpoint   = "graphs/manuscript.pptx",
+#'   template     = template,
+#'   powerpoint   = file.path(tempdir(), "manuscript.pptx"),
 #'   slide_titles = "Fuel Economy"
 #' )
 #'
@@ -340,8 +345,8 @@ add_plot_slide <- function(doc, plot, title, layout, master, width, height,
 #' # labels eat more horizontal space than the small-number labels.
 #' save_ppt(
 #'   object       = list(p_small, p_big),
-#'   template     = "graphs/RD-dark.pptx",
-#'   powerpoint   = "graphs/drifting_deck.pptx",
+#'   template     = template,
+#'   powerpoint   = file.path(tempdir(), "drifting_deck.pptx"),
 #'   slide_titles = c("Small y-axis", "Big y-axis")
 #' )
 #'
@@ -352,8 +357,8 @@ add_plot_slide <- function(doc, plot, title, layout, master, width, height,
 #' # label on dark PPT templates rendered at base_size = 32.
 #' save_ppt(
 #'   object       = list(p_small, p_big),
-#'   template     = "graphs/RD-dark.pptx",
-#'   powerpoint   = "graphs/anchored_deck.pptx",
+#'   template     = template,
+#'   powerpoint   = file.path(tempdir(), "anchored_deck.pptx"),
 #'   slide_titles = c("Small y-axis", "Big y-axis"),
 #'   panel_box    = list(width = 8.88, height = 4.51, left = 2.58, top = 1.63)
 #' )
