@@ -38,6 +38,11 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: ehrlinger/ehrlinger-personal
+          # Pinned to a tag, not the default branch: an in-progress change to
+          # the composer must not redden this repo's CI. The tag moves when the
+          # standard changes, which is exactly when every repo should start
+          # reporting drift until it recomposes.
+          ref: house-style-v1
           path: .house-style-tools
 
       - uses: r-lib/actions/setup-r@v2
