@@ -13,7 +13,7 @@
     writing-voice.md               sha256:c32b3886f897
     writing-reader-profile.md      sha256:1dbeec1cd525
     writing-context.md             sha256:87d5555936e1
-    r-package-structure.md         sha256:eb077a29531e
+    r-package-structure.md         sha256:9fecf52fcd80
 -->
 
 # House Style — hvtiPlotR
@@ -516,6 +516,14 @@ hands it to `codecov/codecov-action` **once**. Set `files: ./cobertura.xml`
 and `disable_search: true`, so the action uploads what you produced rather
 than what it went looking for.
 
+Be careful with `fail_ci_if_error`. An expression of the shape
+`${{ github.event_name != 'pull_request' || secrets.CODECOV_TOKEN != '' }}`
+does not reliably yield a boolean -- GitHub's `||` returns the first truthy
+*operand*, so this can evaluate to the token string rather than `true`, and it
+is `true` for every non-PR event regardless of whether a token exists. Write a
+condition that can only be `true` or `false`, and decide deliberately whether a
+missing token should fail the build or not.
+
 `lint.yaml` sets `LINTR_ERROR_ON_LINT: true`. A lint job that reports and then
 passes is a green badge asserting nothing, which is worse than no badge — the
 README rule reads a missing badge as an honest absence and a present one as a
@@ -530,9 +538,18 @@ only here: TinyTeX installed next to a default `args` is a LaTeX distribution
 downloaded and never invoked, which is the state five workflows in this
 portfolio were in.
 
-It runs on merge rather than on every push because building the manual is
-slow, and a check that makes every PR wait is a check people learn to route
-around. Nothing ships without passing through `main`, so merge is late enough.
+It runs on pushes to the default branch rather than on pull requests, because
+building the manual is slow and a check that makes every PR wait is one people
+learn to route around. Since all work goes through a branch and PR, in practice
+that means it runs on the merge commit -- but say "on pushes to the default
+branch", not "on merge": a direct push would trigger it too, and describing a
+trigger as something narrower than it is misleads the next reader.
+
+Two details worth getting right in the workflow itself. Give it a `name:` a
+human can scan in the Actions list (`Check manual`), not the filename with its
+extension. And scope `permissions:` to `contents: read` rather than
+`read-all` -- least privilege costs nothing here and stops the job quietly
+gaining reach if a step is added later.
 
 **Additional on the `package-cran` profile.**
 
