@@ -13,7 +13,7 @@
     writing-voice.md               sha256:c32b3886f897
     writing-reader-profile.md      sha256:1dbeec1cd525
     writing-context.md             sha256:87d5555936e1
-    r-package-structure.md         sha256:02ebf47f863a
+    r-package-structure.md         sha256:eb077a29531e
 -->
 
 # House Style — hvtiPlotR
@@ -578,6 +578,35 @@ furniture.
 same five-cell matrix as `R-CMD-check.yaml`, on the same triggers, through the
 same action, with strictly fewer safeguards — no `upload-snapshots`, no
 Quarto pre-install. It is the weaker twin, not the complement it looks like.
+
+### Branch protection
+
+Every repo carries one active branch ruleset on `~DEFAULT_BRANCH` with four
+rules: `pull_request`, `copilot_code_review`, `deletion`, `non_fast_forward`.
+`required_approving_review_count` is 0 and `require_code_owner_review` is true,
+which protects `main` without stopping a single maintainer merging their own
+work.
+
+`copilot_code_review` is what makes review automatic. It requests a Copilot
+review on every PR into the default branch; it does not gate the merge on what
+Copilot says. Requesting it by hand at PR-creation time is the thing that
+doesn't survive contact with a busy week.
+
+This is worth stating because it had already drifted once. In August 2026 only
+four of eight repos enforced anything: two rulesets sat correctly configured
+but disabled, and two repos — including CRAN-published `ggRandomForests` — had
+none at all, so a direct push to `main` would simply have succeeded. The global
+rule against pushing to `main` was written down and unenforced on half the
+portfolio.
+
+A ruleset can be switched off in the web UI without anything noticing, which
+puts it in the same family as the stale synced file this whole house style
+exists to catch. Audit it with:
+
+```
+gh api repos/ehrlinger/<repo>/rulesets \
+  -q '.[] | select(.target=="branch") | "\(.enforcement) \(.name)"'
+```
 
 ## DESCRIPTION
 
