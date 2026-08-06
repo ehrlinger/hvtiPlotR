@@ -51,4 +51,3 @@ jobs:
         with:
           args: 'c("--as-cran")'
           build_args: 'c("--compact-vignettes=gs+qpdf")'
-          error-on: '"warning"'

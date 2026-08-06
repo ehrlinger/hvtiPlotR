@@ -11,7 +11,7 @@
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.11780.svg)](https://doi.org/10.5281/zenodo.11780)
 <!-- badges: end -->
 
-> hvtiPlotR is an R port of the `plot.sas` macro suite that CORR biostatisticians have used for years — the same visual layout and options, now built through ggplot2's constructor + `plot()` pattern instead of `PROC GPLOT` statements. Where a macro's job is also a statistical estimate and not just a plot (`%kaplan` / `%nelsont` survival curves, for instance), the R constructor wraps the same underlying estimator (`survival::survfit()`), so the curve, confidence limits, and numbers at risk match what the SAS macro reports. The [SAS migration guide](vignettes/sas-migration-guide.qmd) vignette walks every macro to its `hv_*()` replacement.
+> hvtiPlotR is an R port of the `plot.sas` macro suite that CORR biostatisticians have used for years — the same visual layout and options, now built through ggplot2's constructor + `plot()` pattern instead of `PROC GPLOT` statements. Where a macro's job is also a statistical estimate and not just a plot (`%kaplan` / `%nelsont` survival curves, for instance), the R constructor wraps the same underlying estimator (`survival::survfit()`), so the curve, confidence limits, and numbers at risk match what the SAS macro reports. The [SAS migration guide](https://ehrlinger.github.io/hvtiPlotR/articles/sas-migration-guide.html) vignette walks every macro to its `hv_*()` replacement.
 
 hvtiPlotR packages the ggplot2 themes and plot functions we use in Cardiovascular Outcomes Registries and Research (CORR) at the Cleveland Clinic Heart & Vascular Institute. If you are migrating from the `plot.sas` macro, this is its R successor.
 
