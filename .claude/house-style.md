@@ -13,7 +13,7 @@
     writing-voice.md               sha256:c32b3886f897
     writing-reader-profile.md      sha256:1dbeec1cd525
     writing-context.md             sha256:87d5555936e1
-    r-package-structure.md         sha256:1ddeef6aee2c
+    r-package-structure.md         sha256:708b4defc1f3
 -->
 
 # House Style — hvtiPlotR
@@ -261,8 +261,10 @@ the biostatistician who already knows R and is deciding whether this
 package's front door matches the other seven.
 
 Derived from `hvtiPlotR`, the de-facto template across the eight-package
-portfolio, and recorded so the other seven can be brought into line with it
-rather than drifting further from it.
+portfolio, with a small number of deliberate improvements it does not yet
+itself reflect. Recorded so the other seven — and hvtiPlotR, on those few
+points — can be brought into line with it rather than the rules drifting to
+match whichever package they came from.
 
 ## README canonical order
 
@@ -333,10 +335,11 @@ hvtiRutilities is replaced by the standard GitHub r-package badge — it's
 doing the same job with more code to maintain.
 
 **Function reference** is grouped markdown tables by domain, one table per
-function family, each with a `Function` column and a `Description` column.
-Not nested bullet lists, and not prose. The README's job here is
-navigational — it maps "what am I trying to do" onto "which function" — and
-a table does that in a way a reader can scan that a paragraph can't.
+function family, each a two-column table naming the callable and describing
+it — the name column is `Function` or `Constructor`, whichever fits the
+package's API. Not nested bullet lists, and not prose. The README's job here
+is navigational — it maps "what am I trying to do" onto "which function" —
+and a table does that in a way a reader can scan that a paragraph can't.
 Tutorial content belongs in the vignettes; behavioral detail belongs in
 roxygen `@details`.
 
@@ -350,7 +353,12 @@ mandatory, no exceptions — it's a CRAN requirement, and it's already on the
 release checklist, so an export missing one should never reach that gate in
 the first place.
 
-Internal helpers carry `@keywords internal`.
+Internal helpers stay out of the public index — by `@keywords internal` or
+`@noRd`, whichever fits the helper. `@keywords internal` keeps a documented
+topic that's simply hidden from the reference index, right for a helper a
+determined reader might still want to look up. `@noRd` generates no topic at
+all, right for a helper that's purely an implementation detail. The rule is
+the outcome, not the tag: nothing internal shows up in the public index.
 
 **Package-level documentation** lives in `R/<pkg>-package.R`, the filename
 `usethis::use_package_doc()` generates. Three packages currently keep this
@@ -383,7 +391,7 @@ methods write-up shouldn't have to guess which file it's hiding in.
 |---|---|---|
 | Overview | `<pkg>.qmd` | all packages |
 | SAS migration | `sas-migration-guide.qmd` | SAS ports; persona (c) |
-| Reference | one per function family | packages with more than one family |
+| Reference | one or more; consolidated or split by family | packages with more than one family |
 | Methods and mathematics | e.g. `mathematical-foundations.qmd` | method packages |
 | Contributing | `contributing.qmd` | optional |
 
@@ -391,6 +399,16 @@ The SAS-migration vignette ties each R function to the SAS macro it replaces
 and states that the numbers match. Persona (c) doesn't need hand-holding
 through R — they already know R. What they need is confirmation that this
 gives the same answer as the SAS they already trust.
+
+**Reference vignettes.** "One or more" isn't a headcount to hit — it means a
+reference vignette can cover every function family in a single indexed
+document, or be split family by family, whichever suits the package, so long
+as no family goes undocumented and the overview vignette or the pkgdown
+index tells a reader where to look. hvtiPlotR takes the consolidated form:
+`plot-functions.qmd` documents the plotting functions and
+`plot-decorators.qmd` documents the decorator family, both indexed from the
+overview vignette. Under this rule `plot-decorators.qmd` is simply a second
+reference vignette, not a free-form topic outside the table above.
 
 **Naming exemption.** TemporalHazard keeps `sas-to-r-migration.qmd` rather
 than renaming to the standard filename. Renaming a published vignette breaks
