@@ -26,3 +26,6 @@ eda_classify_var(c(1, 2, 3, 4))            # "Cat_Num"
 eda_classify_var(rnorm(50))                # "Cont"
 eda_classify_var(c("A", "B", "A"))         # "Cat_Char"
 }
+\seealso{
+\code{\link[=hv_eda]{hv_eda()}}, \code{\link[=eda_select_vars]{eda_select_vars()}}
+}

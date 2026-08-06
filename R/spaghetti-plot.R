@@ -234,7 +234,7 @@ print.hv_spaghetti <- function(x, ...) {
 #'   theme_hv_poster()
 #'
 #' # --- Global theme (set once per session) ----------------------------------
-#' \dontrun{
+#' \donttest{
 #' old <- ggplot2::theme_set(theme_hv_manuscript())
 #' plot(sp, add_smooth = TRUE) +
 #'   ggplot2::scale_colour_brewer(palette = "Set1", name = NULL) +

@@ -203,5 +203,6 @@ as.data.frame.hv_data <- function(x, row.names = NULL, optional = FALSE, ...) {
 #'
 #' @param x Any R object.
 #' @return `TRUE` if `x` inherits from `"hv_data"`, `FALSE` otherwise.
+#' @seealso [summary.hv_data()], [autoplot.hv_data()], [as.data.frame.hv_data()]
 #' @export
 is_hv_data <- function(x) inherits(x, "hv_data")

@@ -328,7 +328,7 @@ print.hv_trends <- function(x, ...) {
 #'   theme_hv_poster()
 #'
 #' # --- Save ----------------------------------------------------------------
-#' \dontrun{
+#' \donttest{
 #' tr <- hv_trends(
 #'   sample_trends_data(n = 800, year_range = c(1985L, 2015L),
 #'                      groups = c("I", "II", "III", "IV")),
@@ -344,7 +344,7 @@ print.hv_trends <- function(x, ...) {
 #' }
 #'
 #' # --- Global theme (set once per session) ----------------------------------
-#' \dontrun{
+#' \donttest{
 #' old <- ggplot2::theme_set(theme_hv_manuscript())
 #' plot(hv_trends(dta_poly)) +
 #'   ggplot2::scale_colour_brewer(palette = "Dark2", name = "Repair type")

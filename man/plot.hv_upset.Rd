@@ -80,7 +80,7 @@ up  <- hv_upset(dta, intersect = sets)
 # Use `&` to theme every sub-panel.
 plot(up) & theme_hv_poster()
 
-\dontrun{
+\donttest{
 # Intersection bars only — single ggplot, themes apply with `+`.
 plot(up, set_size = FALSE) + theme_hv_poster()
 

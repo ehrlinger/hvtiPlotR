@@ -43,7 +43,7 @@
 #'   argument that delegates to this helper.
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' p <- ggplot2::ggplot(mtcars, ggplot2::aes(hp, mpg)) +
 #'   ggplot2::geom_point() +
 #'   theme_hv_ppt_dark()

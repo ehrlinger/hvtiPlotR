@@ -37,3 +37,6 @@ head(dta)
 table(dta$year, dta$category)
 
 }
+\seealso{
+\code{\link[=hv_stacked]{hv_stacked()}}
+}

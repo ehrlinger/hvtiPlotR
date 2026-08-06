@@ -90,3 +90,6 @@ plot(gf2, type = "event") +
   ggplot2::labs(x = "Operation Date", y = "Follow-up (years)")
 
 }
+\seealso{
+\code{\link[=hv_followup]{hv_followup()}}
+}

@@ -151,3 +151,4 @@ Margins on axis text/title are scaled from \code{base_size} via the standard
 one at \code{base_size = 36} both feel proportionate without you touching
 the margins.
 }
+\concept{Themes}

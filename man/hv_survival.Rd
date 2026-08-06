@@ -112,7 +112,7 @@ plot(km, type = "loglog") +
   theme_hv_poster()
 
 # --- Global theme + RColorBrewer (set once per session) ------------------
-\dontrun{
+\donttest{
 old <- ggplot2::theme_set(theme_hv_manuscript())
 plot(km_s) +
   ggplot2::scale_colour_brewer(palette = "Set1", name = "Valve Type") +
@@ -137,6 +137,7 @@ Worked recipe with rendered output:
 \code{\link{sample_survival_data}} for example data.
 
 Other Kaplan-Meier survival:
-\code{\link[=plot.hv_survival]{plot.hv_survival()}}
+\code{\link[=plot.hv_survival]{plot.hv_survival()}},
+\code{\link[=sample_survival_data]{sample_survival_data()}}
 }
 \concept{Kaplan-Meier survival}

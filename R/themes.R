@@ -39,6 +39,8 @@
 #'
 #' @return A [ggplot2::theme()] object.
 #'
+#' @family Themes
+#'
 #' @name hvtiPlotR-themes
 #' @import ggplot2
 NULL

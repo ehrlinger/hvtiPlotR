@@ -25,8 +25,11 @@ the tracker API.
 tracker <- sample_consort_data()
 print(tracker)
 hv_consort_summary(tracker)
-\dontrun{
+\donttest{
   hv_consort(tracker) |> plot()
 }
 
+}
+\seealso{
+\code{\link[=hv_consort_start]{hv_consort_start()}}, \code{\link[=hv_consort]{hv_consort()}}
 }

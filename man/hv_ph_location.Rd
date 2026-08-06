@@ -49,7 +49,7 @@ Use with \code{\link[=save_ppt]{save_ppt()}} via \code{panel_box = list(width, h
 apply this to every slide in a deck.
 }
 \examples{
-\dontrun{
+\donttest{
 p <- ggplot2::ggplot(mtcars, ggplot2::aes(hp, mpg)) +
   ggplot2::geom_point() +
   theme_hv_ppt_dark()

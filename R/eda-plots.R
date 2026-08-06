@@ -29,6 +29,8 @@
 #'
 #' @return A length-1 character: `"Cont"`, `"Cat_Num"`, or `"Cat_Char"`.
 #'
+#' @seealso [hv_eda()], [eda_select_vars()]
+#'
 #' @examples
 #' eda_classify_var(c(0, 1, 1, 0, NA))        # "Cat_Num"
 #' eda_classify_var(c(1, 2, 3, 4))            # "Cat_Num"
