@@ -1,3 +1,12 @@
+# hvtiPlotR 2.7.4
+
+## Documentation
+
+- Documentation now follows the composed house style. The package-level
+  documentation moved from `R/help.R` to `R/hvtiPlotR-package.R`, and the
+  stale root `writing-voice.md` was replaced by the generated
+  `.claude/house-style.md`. No user-facing behaviour changed.
+
 # hvtiPlotR 2.7.3
 
 ## New features
