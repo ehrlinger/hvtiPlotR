@@ -13,7 +13,7 @@
     writing-voice.md               sha256:c32b3886f897
     writing-reader-profile.md      sha256:1dbeec1cd525
     writing-context.md             sha256:87d5555936e1
-    r-package-structure.md         sha256:207bf5097790
+    r-package-structure.md         sha256:a81ad17fd5a5
 -->
 
 # House Style — hvtiPlotR
@@ -498,6 +498,7 @@ globs, they double every run.
 | `R-CMD-check.yaml` | Does it build and pass its tests where people use it? | `push[main]`, `pull_request` | macos·release, windows·release, ubuntu·devel, ubuntu·release, ubuntu·oldrel-1 |
 | `test-coverage.yaml` | How much of the code do the tests reach, and which way is it moving? | `push[main]`, `pull_request` | ubuntu·release |
 | `lint.yaml` | Does it match the style the rest of the portfolio is written in? | `push[main]`, `pull_request` | ubuntu·release |
+| `lint.yaml` → `docs-current` job | Do the generated `man/` files still match their roxygen sources? | `pull_request` | ubuntu·release |
 | `pkgdown.yaml` | Does the docs site still build, and does every exported topic still have a home? | `push[main]`, `pull_request`, `release`, `dispatch` | ubuntu·release |
 | `check-manual.yaml` | Does the PDF manual build, and is every `.Rd` free of raw Unicode? | `push[main]`, `release: published`, `workflow_dispatch` | ubuntu·release |
 
@@ -529,6 +530,36 @@ passes is a green badge asserting nothing, which is worse than no badge — the
 README rule reads a missing badge as an honest absence and a present one as a
 claim. Commit a `.lintr` so the rules live in the repo rather than in whichever
 `lintr` version the runner happened to install.
+
+`lint.yaml` also carries a **`docs-current`** job, on `pull_request` only:
+
+```yaml
+- name: Documentation is current
+  run: |
+    Rscript -e 'devtools::document()'
+    git diff --exit-code man/ NAMESPACE
+```
+
+It answers a question no other workflow answers, which is the bar for adding
+anything: *are the generated files in sync with the sources they come from?*
+`check-manual.yaml` would catch the same drift, but it deliberately runs on
+pushes to the default branch rather than on pull requests, so it only speaks
+after the merge. That gap is real and was hit within a day of this standard
+existing — hvtiRdatasets PR #3 changed the `URL:` field in `DESCRIPTION` without
+regenerating `man/`, passed every check it ran, and the drift surfaced only once
+it reached `main`, needing a second PR to fix.
+
+Put it in `lint.yaml` rather than a sixth workflow. It needs the same R setup
+lint already does, it takes seconds, and `lint.yaml` has become this portfolio's
+fast-pull-request-checks file — hvtiPlotR already runs the house-style drift
+check there. Adding a whole workflow for a two-line job would inflate the count
+the "name the question" rule exists to hold down.
+
+Two things make this reliable rather than flaky. `DESCRIPTION` pins
+`Config/roxygen2/version`, so the runner regenerates with the same roxygen the
+author used and a version bump can't masquerade as drift. And it does **not**
+build the manual, so the check-time budget decision stands untouched — this is
+a `git diff`, not a LaTeX run.
 
 `check-manual.yaml` is the one that runs `--as-cran` **without**
 `--no-manual`, so the PDF manual is actually built. That step is what catches
