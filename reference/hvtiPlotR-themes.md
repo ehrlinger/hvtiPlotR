@@ -163,3 +163,15 @@ Margins on axis text/title are scaled from `base_size` via the standard
 `half_line = base_size / 2` convention; a deck at `base_size = 28` and
 one at `base_size = 36` both feel proportionate without you touching the
 margins.
+
+`base_family` defaults to `"Arial"`, the CORR slide standard. Arial
+isn't one of R's built-in PostScript fonts, so a device that resolves
+fonts through that closed metrics table
+([`postscript()`](https://rdrr.io/r/grDevices/postscript.html)/[`pdf()`](https://rdrr.io/r/grDevices/pdf.html),
+e.g. `R CMD check` or headless Linux rendering) cannot draw it directly.
+When that happens, the plot falls back to `"Helvetica"` (metrically
+compatible) automatically at draw time, with a one-time session message
+explaining why; devices that resolve fonts via the OS (quartz, cairo,
+RStudio's graphics device) are unaffected and keep using real Arial. No
+global font registry is modified. See `.hv_family_resolves()` in
+`ppt-font-fallback.R` for the mechanism.
