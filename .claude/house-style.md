@@ -13,7 +13,7 @@
     writing-voice.md               sha256:c32b3886f897
     writing-reader-profile.md      sha256:1dbeec1cd525
     writing-context.md             sha256:87d5555936e1
-    r-package-structure.md         sha256:de8c5fcbd4ac
+    r-package-structure.md         sha256:02ebf47f863a
 -->
 
 # House Style — hvtiPlotR
@@ -476,6 +476,108 @@ Follows the hvtiPlotR model:
 Every exported object appears in exactly one `reference:` section. pkgdown
 fails the build on an unreferenced topic, and that failure is the check that
 keeps this rule honest rather than aspirational.
+
+## Continuous integration
+
+Five workflows required of every package, two more on the CRAN profile. A
+package running more than that is almost certainly checking the same thing
+twice — which has already happened three times here, and the cost isn't the
+runner minutes, it's that a wall of green checks stops being read.
+
+The rule for adding another: name the question it answers that no existing
+workflow answers. If the answer is "the same one, on a different day," it
+doesn't get added.
+
+**Required of every package.** The first four run on `pull_request` and on
+`push` to the default branch. Since all work goes through a branch and PR,
+that push trigger is really the merge trigger — don't add feature-branch
+globs, they double every run.
+
+| File | Question it answers | Trigger | Matrix |
+|---|---|---|---|
+| `R-CMD-check.yaml` | Does it build and pass its tests where people use it? | `push[main]`, `pull_request` | macos·release, windows·release, ubuntu·devel, ubuntu·release, ubuntu·oldrel-1 |
+| `test-coverage.yaml` | How much of the code do the tests reach, and which way is it moving? | `push[main]`, `pull_request` | ubuntu·release |
+| `lint.yaml` | Does it match the style the rest of the portfolio is written in? | `push[main]`, `pull_request` | ubuntu·release |
+| `pkgdown.yaml` | Does the docs site still build, and does every exported topic still have a home? | `push[main]`, `pull_request`, `release`, `dispatch` | ubuntu·release |
+| `check-manual.yaml` | Does the PDF manual build, and is every `.Rd` free of raw Unicode? | `push[main]`, `release: published`, `workflow_dispatch` | ubuntu·release |
+
+`R-CMD-check.yaml` runs `r-lib/actions/check-r-package@v2` and leaves `args`
+at its default, which is `c("--no-manual", "--as-cran")` — so the CRAN gate is
+already on, and a second workflow to "add `--as-cran`" is adding nothing. Set
+`build_args: 'c("--no-manual","--compact-vignettes=gs+qpdf")'` and
+`upload-snapshots: true`. Don't restate `error-on: 'warning'`; it's the
+default, and writing a default out invites the belief that it was chosen. On a
+Quarto-vignette package, install the package into the user library before the
+check step — Quarto's subprocess can't resolve `library(<pkg>)` on Windows
+otherwise, and the failure looks like a package defect when it isn't.
+
+`test-coverage.yaml` writes cobertura from `covr::package_coverage()` and
+hands it to `codecov/codecov-action` **once**. Set `files: ./cobertura.xml`
+and `disable_search: true`, so the action uploads what you produced rather
+than what it went looking for.
+
+`lint.yaml` sets `LINTR_ERROR_ON_LINT: true`. A lint job that reports and then
+passes is a green badge asserting nothing, which is worse than no badge — the
+README rule reads a missing badge as an honest absence and a present one as a
+claim. Commit a `.lintr` so the rules live in the repo rather than in whichever
+`lintr` version the runner happened to install.
+
+`check-manual.yaml` is the one that runs `--as-cran` **without**
+`--no-manual`, so the PDF manual is actually built. That step is what catches
+raw Unicode in `.Rd` — Greek letters, β̂, combining marks — which
+`--no-manual` skips in silence. It needs `r-lib/actions/setup-tinytex@v2`, and
+only here: TinyTeX installed next to a default `args` is a LaTeX distribution
+downloaded and never invoked, which is the state five workflows in this
+portfolio were in.
+
+It runs on merge rather than on every push because building the manual is
+slow, and a check that makes every PR wait is a check people learn to route
+around. Nothing ships without passing through `main`, so merge is late enough.
+
+**Additional on the `package-cran` profile.**
+
+| File | Trigger | Matrix |
+|---|---|---|
+| `spelling.yaml` | `push[main]`, `pull_request` | ubuntu·release |
+| `check-release.yaml` | `release: published`, `workflow_dispatch` | windows·release, **windows·devel**, macos·release, ubuntu·release, ubuntu·devel |
+
+`spelling.yaml` runs `spelling::spell_check_package(use_wordlist = TRUE)`
+against `inst/WORDLIST`. CRAN rejects on misspelled documentation and the check
+takes under a minute, so on a CRAN-bound package it isn't optional. It's cheap
+enough to be worth having anywhere an `inst/WORDLIST` already exists.
+
+`check-release.yaml` is the submission gate, and it is **not** a second
+everyday check — that is exactly what the triplication here was. It differs
+from `check-manual.yaml` in three ways that only matter when a tarball is
+about to go to CRAN: `_R_CHECK_CRAN_INCOMING_` and
+`_R_CHECK_CRAN_INCOMING_REMOTE_` both on; **windows·devel** in the matrix,
+which is the win-builder branch that surprises most often and belongs in no
+other matrix here; and the `check` directory uploaded as an artifact on
+success as well as failure, because `00check.log` carries the per-step
+`[Ns/Ns]` timings and the passing runs are the ones worth trending.
+
+Read those timings against the check-time budget in
+`r-package-release-checklist.md` before submitting. A local total is not the
+number to trust — for ggRandomForests 3.5.1 the local check was 4m44s while
+win-builder returned 8, 10 and 12 minutes, a 2.5x machine factor the margin
+has to absorb. In both CRAN packages the dominant term is the vignette
+rebuild, so that's where the lever is.
+
+**Deliberately not required.**
+
+`rhub.yaml` is `workflow_dispatch`-only so it costs nothing per push, but it
+belongs on `package-cran` alone, and only where `secrets.RHUB_TOKEN` is set.
+Its value is the flavors GitHub runners can't give you — gcc-UBSAN,
+clang-ASAN, valgrind, noLD. On an internal package there's no submission for
+those to protect, and an unmodified copy of the r-hub template is provenance
+without coverage. Where you keep it, dispatch it before a submission and
+record the result in `cran-comments.md`, so the file is evidence rather than
+furniture.
+
+`check-standard.yaml` should not exist. Everywhere it appears here it runs the
+same five-cell matrix as `R-CMD-check.yaml`, on the same triggers, through the
+same action, with strictly fewer safeguards — no `upload-snapshots`, no
+Quarto pre-install. It is the weaker twin, not the complement it looks like.
 
 ## DESCRIPTION
 
