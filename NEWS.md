@@ -1,5 +1,18 @@
 # hvtiPlotR 2.7.4
 
+## Bug fixes
+
+- `theme_hv_ppt_dark()` / `theme_hv_ppt_light()` no longer error on a
+  graphics device that can't resolve the default `base_family = "Arial"`
+  (e.g. `postscript()`/`pdf()` on Linux, which is what `R CMD check
+  --run-donttest` renders examples with). The active device is checked at
+  draw time -- immediately before `print()`/`grid.draw()` hand off to
+  ggplot2 -- and falls back to `"Helvetica"` (metrically compatible) only
+  when Arial genuinely can't be resolved there, with a one-time session
+  message explaining why. Devices that resolve system fonts directly
+  (quartz, cairo, RStudio's graphics device) are unaffected and continue to
+  render real Arial. No global font registry is modified.
+
 ## Documentation
 
 - Documentation now follows the composed house style. The package-level
