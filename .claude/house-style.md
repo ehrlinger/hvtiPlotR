@@ -13,7 +13,7 @@
     writing-voice.md               sha256:c32b3886f897
     writing-reader-profile.md      sha256:1dbeec1cd525
     writing-context.md             sha256:87d5555936e1
-    r-package-structure.md         sha256:708b4defc1f3
+    r-package-structure.md         sha256:b0ddb025bae9
 -->
 
 # House Style — hvtiPlotR
@@ -322,13 +322,37 @@ are implemented and which aren't, so a reader can judge readiness without
 going and reading the NEWS file. Once you cross 1.0.0 the block goes away —
 the version number is now doing that job.
 
-**Badge tiers**, in fixed order, each tier its own blank-line-separated
-block:
+**Badge tiers.** The order below is fixed; the contents are not. Include a
+badge when the thing it reports on exists, skip it when it doesn't, and don't
+reorder around a skip. Each tier is its own blank-line-separated block, and a
+tier that ends up empty just isn't there.
 
-- *Universal:* R-CMD-check, codecov, repostatus, pkgdown.
-- *Internal only:* GitHub r-package version.
-- *CRAN only:* CRAN status, cranlogs, cranlogs grand-total.
-- *Optional:* lint, lifecycle, License, DOI.
+Two are required of every package, because both are always achievable:
+
+- **R-CMD-check** — every repo in the portfolio already runs the workflow, so
+  a missing badge means the badge is missing, not the check. A package whose
+  README doesn't say whether it currently builds is asking the reader to go
+  find out.
+- **repostatus** — a static shield, no infrastructure behind it at all. It's
+  the one line telling a reader whether this thing is alive, and there's no
+  version of "we couldn't manage it".
+
+The rest are required *when the thing they report exists*, and their absence
+should mean the underlying thing is genuinely absent:
+
+- **codecov** — if the repo has a test-coverage workflow.
+- **pkgdown** — if the package has a pkgdown site.
+- **CRAN status, cranlogs, cranlogs grand-total** — `package-cran` profile
+  only. On an internal package these are meaningless, not merely optional.
+
+Then, in this order, whichever apply:
+
+- GitHub r-package version, lint, lifecycle, License, DOI.
+
+An audit finding a badge absent asks one question: is the underlying thing
+absent too? If it is, the README is honest and there's nothing to fix. If it
+isn't — a codecov workflow running with no badge, a pkgdown site nobody links
+to — that's the gap.
 
 The hand-rolled dynamic-regex version badge currently living in
 hvtiRutilities is replaced by the standard GitHub r-package badge — it's
