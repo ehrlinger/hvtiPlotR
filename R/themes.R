@@ -150,6 +150,17 @@ theme_hv_poster <- function(base_size      = 16,
 #' `half_line = base_size / 2` convention; a deck at `base_size = 28` and
 #' one at `base_size = 36` both feel proportionate without you touching
 #' the margins.
+#'
+#' `base_family` defaults to `"Arial"`, the CORR slide standard. Arial isn't
+#' one of R's built-in PostScript fonts, so a device that resolves fonts
+#' through that closed metrics table (`postscript()`/`pdf()`, e.g. `R CMD
+#' check` or headless Linux rendering) cannot draw it directly. When that
+#' happens, the plot falls back to `"Helvetica"` (metrically compatible)
+#' automatically at draw time, with a one-time session message explaining
+#' why; devices that resolve fonts via the OS (quartz, cairo, RStudio's
+#' graphics device) are unaffected and keep using real Arial. No global
+#' font registry is modified. See `.hv_family_resolves()` in
+#' `ppt-font-fallback.R` for the mechanism.
 #' @export
 theme_hv_ppt_dark <- function(base_size      = 32,
                               base_family    = "Arial",
@@ -193,7 +204,7 @@ theme_hv_ppt_dark <- function(base_size      = 32,
       plot.margin        = unit(c(0, 0, 0, 0), "inches")
     )
   if (...length() > 0L) base <- base %+replace% theme(...)
-  base
+  .hv_tag_ppt_font_requests(base, base_family, header_family)
 }
 
 # ----------------------------------------------------------------------------
@@ -250,7 +261,7 @@ theme_hv_ppt_light <- function(base_size      = 32,
       plot.margin        = unit(c(0, 0, 0, 0), "inches")
     )
   if (...length() > 0L) base <- base %+replace% theme(...)
-  base
+  .hv_tag_ppt_font_requests(base, base_family, header_family)
 }
 
 # ----------------------------------------------------------------------------

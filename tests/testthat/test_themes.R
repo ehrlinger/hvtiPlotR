@@ -148,6 +148,60 @@ test_that("theme_hv_ppt_light uses inside-facing ticks (negative length)", {
 })
 
 # ============================================================================
+# Arial font fallback (theme_hv_ppt_dark / theme_hv_ppt_light)
+# ============================================================================
+
+test_that("theme_hv_ppt_dark plot renders without erroring on a font-less pdf device", {
+  p <- create_test_plot() + theme_hv_ppt_dark()
+  f <- tempfile(fileext = ".pdf")
+  grDevices::pdf(f)
+  on.exit(grDevices::dev.off(), add = TRUE)
+  expect_error(suppressMessages(print(p)), NA)
+})
+
+test_that("theme_hv_ppt_light plot renders without erroring on a font-less postscript device", {
+  p <- create_test_plot() + theme_hv_ppt_light()
+  f <- tempfile(fileext = ".ps")
+  grDevices::postscript(f)
+  on.exit(grDevices::dev.off(), add = TRUE)
+  expect_error(suppressMessages(print(p)), NA)
+})
+
+test_that("Arial falls back to Helvetica when the active device can't resolve it", {
+  p <- create_test_plot() + theme_hv_ppt_dark()
+  f <- tempfile(fileext = ".pdf")
+  grDevices::pdf(f)
+  on.exit(grDevices::dev.off(), add = TRUE)
+  resolved <- suppressMessages(.hv_resolve_ppt_family(p))
+  expect_identical(resolved$theme$text$family, "Helvetica")
+})
+
+test_that("an explicitly resolvable family is preserved (no fallback) at draw time", {
+  p <- create_test_plot() + theme_hv_ppt_dark()
+  f <- tempfile(fileext = ".pdf")
+  grDevices::pdf(f)
+  on.exit(grDevices::dev.off(), add = TRUE)
+  # Simulate a device (e.g. quartz) that genuinely resolves "Arial" -- the
+  # explicit/default base_family must be honoured, not silently swapped.
+  testthat::local_mocked_bindings(.hv_family_resolves = function(family) TRUE)
+  resolved <- .hv_resolve_ppt_family(p)
+  expect_identical(resolved$theme$text$family, "Arial")
+  expect_identical(resolved, p) # no fallback theme layer added at all
+})
+
+test_that("theme_hv_manuscript / theme_hv_poster are untagged and unaffected", {
+  p <- create_test_plot() + theme_hv_manuscript()
+  expect_null(attr(p, "hv_font_requests"))
+  expect_false(inherits(p, "hv_ppt_plot"))
+})
+
+test_that("a non-Arial base_family is left untagged", {
+  th <- theme_hv_ppt_dark(base_family = "mono")
+  expect_null(attr(th, "hv_font_requests"))
+  expect_false(inherits(th, "hv_ppt_theme"))
+})
+
+# ============================================================================
 # Composition with different plot types
 # ============================================================================
 
