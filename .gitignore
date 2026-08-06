@@ -22,7 +22,8 @@ inst/doc
 docs
 hvtiPlotR.Rproj
 
-.claude
+.claude/*
+!.claude/house-style.md
 *.Rcheck/
 .Rproj.user
 .Rhistory

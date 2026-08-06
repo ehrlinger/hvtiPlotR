@@ -40,7 +40,6 @@ hvtiPlotR.Rproj
 ^testing-strategy\.md$
 ^.*\.fuse_hidden
 ^\.positai$
-^writing-voice\.md$
 ^Rplots\.pdf$
 ^.*\.tar\.gz$
 ^inst/slides/.*\.(html|pdf|pptx)$
