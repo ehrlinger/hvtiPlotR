@@ -13,7 +13,7 @@
     writing-voice.md               sha256:c32b3886f897
     writing-reader-profile.md      sha256:1dbeec1cd525
     writing-context.md             sha256:87d5555936e1
-    r-package-structure.md         sha256:b0ddb025bae9
+    r-package-structure.md         sha256:de8c5fcbd4ac
 -->
 
 # House Style — hvtiPlotR
@@ -327,32 +327,46 @@ badge when the thing it reports on exists, skip it when it doesn't, and don't
 reorder around a skip. Each tier is its own blank-line-separated block, and a
 tier that ends up empty just isn't there.
 
-Two are required of every package, because both are always achievable:
+Six are required of every package, in this order:
 
-- **R-CMD-check** — every repo in the portfolio already runs the workflow, so
-  a missing badge means the badge is missing, not the check. A package whose
-  README doesn't say whether it currently builds is asking the reader to go
-  find out.
-- **repostatus** — a static shield, no infrastructure behind it at all. It's
-  the one line telling a reader whether this thing is alive, and there's no
-  version of "we couldn't manage it".
+1. **R-CMD-check**
+2. **codecov**
+3. **repostatus**
+4. **pkgdown**
+5. **GitHub r-package version**
+6. **lint**
 
-The rest are required *when the thing they report exists*, and their absence
-should mean the underlying thing is genuinely absent:
+These are required because they're already true. Seven of the eight packages
+run the lint, pkgdown, and test-coverage workflows today; what's missing is
+mostly the badge, not the machinery. A workflow running green that the README
+never mentions is coverage nobody can see, which is its own small version of
+the staleness problem — the check works, and the reader has no way to know.
+repostatus is a static shield with no infrastructure behind it at all, and the
+version badge just reads `DESCRIPTION`, so neither has an excuse.
 
-- **codecov** — if the repo has a test-coverage workflow.
-- **pkgdown** — if the package has a pkgdown site.
-- **CRAN status, cranlogs, cranlogs grand-total** — `package-cran` profile
-  only. On an internal package these are meaningless, not merely optional.
+Where a badge is genuinely missing because the underlying thing is missing,
+the fix is to add the workflow, not to drop the badge. Only hvtiRdatasets is
+in that position, lacking lint, pkgdown, and test-coverage entirely.
 
-Then, in this order, whichever apply:
+**Required for the `package-cran` profile**, after the six:
 
-- GitHub r-package version, lint, lifecycle, License, DOI.
+- CRAN status, cranlogs, cranlogs grand-total.
 
-An audit finding a badge absent asks one question: is the underlying thing
-absent too? If it is, the README is honest and there's nothing to fix. If it
-isn't — a codecov workflow running with no badge, a pkgdown site nobody links
-to — that's the gap.
+On an internal package these are meaningless rather than merely optional, so
+they're absent there and that absence is correct. A CRAN package keeps the
+GitHub version badge as well — the two report different numbers, and the gap
+between the released version and the development one is worth seeing.
+
+**Optional**, in this order where they apply:
+
+- lifecycle, License, DOI.
+
+DOI appears only where a Zenodo deposit exists; lifecycle only where the
+package makes a stability claim it means.
+
+Because five of the six required badges report on a workflow, this rule and
+the CI standard have to move together. Requiring the codecov, pkgdown, and
+lint badges is the same as requiring those three workflows.
 
 The hand-rolled dynamic-regex version badge currently living in
 hvtiRutilities is replaced by the standard GitHub r-package badge — it's
