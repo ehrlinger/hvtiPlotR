@@ -13,7 +13,7 @@
     writing-voice.md               sha256:c32b3886f897
     writing-reader-profile.md      sha256:1dbeec1cd525
     writing-context.md             sha256:87d5555936e1
-    r-package-structure.md         sha256:9fecf52fcd80
+    r-package-structure.md         sha256:207bf5097790
 -->
 
 # House Style — hvtiPlotR
@@ -595,6 +595,40 @@ furniture.
 same five-cell matrix as `R-CMD-check.yaml`, on the same triggers, through the
 same action, with strictly fewer safeguards — no `upload-snapshots`, no
 Quarto pre-install. It is the weaker twin, not the complement it looks like.
+
+### The house style drift check
+
+Every repo carrying a composed `.claude/house-style.md` also carries a CI job
+that recomposes from source and fails when the committed artifact disagrees.
+That job checks out the composer from `ehrlinger/ehrlinger-personal`, and it
+**pins `ref: house-style-v1`** rather than taking the default branch.
+
+The pin is a tag, not a commit SHA, and the distinction matters. That repo
+holds two things: the composer script, and a mirrored copy of the four source
+documents CI compares against, because a runner has no vault. Pinning to a SHA
+would freeze the *reference sources* along with the tool, so the check would
+answer "no drift" forever and become decoration. Taking the default branch has
+the opposite problem: a half-finished commit on the composer reddens every
+consumer repo at once.
+
+A moving tag keeps both properties. Advance it deliberately when the standard
+changes:
+
+```
+git tag -f -a house-style-v1 <commit> -m 'what changed'
+git push -f origin house-style-v1
+```
+
+Advancing it is what makes every repo start reporting drift until it
+recomposes — the intended signal, not a failure. Between advances, consumer CI
+is stable against whatever is happening on the composer's branches.
+
+Be straight about what this does and doesn't buy: a given CI run is
+reproducible only until the tag next moves. That is weaker than a SHA and
+stronger than a branch, and the reason it is the right trade here is that
+moves are deliberate and rare rather than incidental to every push. Use
+`house-style-v2` if the composer's CLI ever changes incompatibly, so repos can
+migrate on their own schedule.
 
 ### Branch protection
 
