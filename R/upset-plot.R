@@ -234,7 +234,7 @@ print.hv_upset <- function(x, ...) {
 #' # Use `&` to theme every sub-panel.
 #' plot(up) & theme_hv_poster()
 #'
-#' \dontrun{
+#' \donttest{
 #' # Intersection bars only — single ggplot, themes apply with `+`.
 #' plot(up, set_size = FALSE) + theme_hv_poster()
 #'

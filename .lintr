@@ -1,0 +1,17 @@
+# House lint configuration.
+#
+# line_length 120 rather than lintr's 80: this package's plot constructors take
+# many named arguments and the calls read better whole than wrapped.
+#
+# indentation_linter and commented_code_linter are off. Both fire heavily on
+# the aligned-argument style used throughout R/ and on vignette chunks that
+# deliberately show an alternative call commented out. Neither catches a defect
+# here, and leaving them on buries the linters that do.
+#
+# Everything else is lintr's default and IS enforced -- commas, infix spaces,
+# object naming and length, object usage.
+linters: linters_with_defaults(
+    line_length_linter = line_length_linter(120L),
+    indentation_linter = NULL,
+    commented_code_linter = NULL
+  )

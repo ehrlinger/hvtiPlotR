@@ -104,7 +104,7 @@ plot(hv_trends(dta_poly)) +
   theme_hv_poster()
 
 # --- Save ----------------------------------------------------------------
-\dontrun{
+\donttest{
 tr <- hv_trends(
   sample_trends_data(n = 800, year_range = c(1985L, 2015L),
                      groups = c("I", "II", "III", "IV")),
@@ -120,7 +120,7 @@ ggplot2::ggsave("trends.pdf", p, width = 11.5, height = 8)
 }
 
 # --- Global theme (set once per session) ----------------------------------
-\dontrun{
+\donttest{
 old <- ggplot2::theme_set(theme_hv_manuscript())
 plot(hv_trends(dta_poly)) +
   ggplot2::scale_colour_brewer(palette = "Dark2", name = "Repair type")

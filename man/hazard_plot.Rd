@@ -373,7 +373,7 @@ hazard_plot(
   theme_hv_poster()
 
 # --- (9) Save (dontrun) --------------------------------------------------
-\dontrun{
+\donttest{
 p <- hazard_plot(dat, estimate_col = "survival",
                  lower_col = "surv_lower", upper_col = "surv_upper",
                  empirical = emp,
@@ -386,7 +386,7 @@ ggplot2::ggsave("survival.pdf", p, width = 11.5, height = 8)
 }
 
 # --- Global theme + RColorBrewer (set once per session) ------------------
-\dontrun{
+\donttest{
 old <- ggplot2::theme_set(theme_hv_manuscript())
 hazard_plot(
   dat2,

@@ -13,6 +13,15 @@ jobs:
     runs-on: ubuntu-latest
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+      # NOT enforcing yet -- hvtiPlotR carries 98 lints under the committed
+      # .lintr (535 with lintr's bare defaults), all pre-existing. The house
+      # standard requires `true`, and this repo is the deliberate exception
+      # until that debt is worked down; see the tracking issue.
+      #
+      # The lint badge therefore reports rather than gates here. That is a
+      # weaker claim than the README rule assumes, which is why it is
+      # written down instead of quietly left `false`.
+      LINTR_ERROR_ON_LINT: false
     steps:
       - uses: actions/checkout@v4
 
@@ -27,3 +36,37 @@ jobs:
       - name: Lint
         run: lintr::lint_package()
         shell: Rscript {0}
+
+  house-style:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check out the house style composer
+        uses: actions/checkout@v4
+        with:
+          repository: ehrlinger/ehrlinger-personal
+          # Pinned to a tag, not the default branch: an in-progress change to
+          # the composer must not redden this repo's CI. The tag moves when the
+          # standard changes, which is exactly when every repo should start
+          # reporting drift until it recomposes.
+          ref: house-style-v1
+          path: .house-style-tools
+
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          use-public-rspm: true
+
+      - name: Install composer dependencies
+        run: install.packages(c("yaml", "digest"))
+        shell: Rscript {0}
+
+      - name: Point the registry at this checkout
+        run: |
+          sed -i "s|path: ~/Documents/GitHub/hvtiPlotR|path: $GITHUB_WORKSPACE|" \
+            .house-style-tools/tools/house-style/repos.yml
+
+      - name: Verify the house style artifact is current
+        run: |
+          Rscript .house-style-tools/tools/house-style/compose-house-style.R \
+            --check --repo hvtiPlotR

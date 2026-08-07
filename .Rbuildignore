@@ -40,7 +40,6 @@ hvtiPlotR.Rproj
 ^testing-strategy\.md$
 ^.*\.fuse_hidden
 ^\.positai$
-^writing-voice\.md$
 ^Rplots\.pdf$
 ^.*\.tar\.gz$
 ^inst/slides/.*\.(html|pdf|pptx)$
@@ -48,3 +47,4 @@ hvtiPlotR.Rproj
 ^inst/extdata/Yahoo slide template LIGHT ROOM\.pptx$
 ^dev$
 ^LICENSE\.md$
+^CLAUDE\.md$

@@ -110,7 +110,8 @@ Worked recipe with rendered output:
 \code{\link{sample_mirror_histogram_data}} for example data.
 
 Other Propensity Score & Matching:
-\code{\link[=plot.hv_mirror_hist]{plot.hv_mirror_hist()}}
+\code{\link[=plot.hv_mirror_hist]{plot.hv_mirror_hist()}},
+\code{\link[=sample_covariate_balance_data]{sample_covariate_balance_data()}}
 }
 \concept{Propensity Score & Matching}
 \concept{mirrored histogram propensity score overlap matching IPTW weighting mirror_histogram}

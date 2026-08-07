@@ -133,7 +133,7 @@ plot(hp2) +
   theme_hv_poster()
 
 # --- Global theme + RColorBrewer (set once per session) ------------------
-\dontrun{
+\donttest{
 old <- ggplot2::theme_set(theme_hv_manuscript())
 plot(hp2) +
   scale_colour_brewer(palette = "Set1", name = NULL) +

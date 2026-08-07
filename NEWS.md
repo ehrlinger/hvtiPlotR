@@ -13,6 +13,13 @@
   (quartz, cairo, RStudio's graphics device) are unaffected and continue to
   render real Arial. No global font registry is modified.
 
+## Documentation
+
+- Documentation now follows the composed house style. The package-level
+  documentation moved from `R/help.R` to `R/hvtiPlotR-package.R`, and the
+  stale root `writing-voice.md` was replaced by the generated
+  `.claude/house-style.md`. No user-facing behaviour changed.
+
 # hvtiPlotR 2.7.3
 
 ## New features

@@ -509,7 +509,7 @@ km_build_life_plot <- function(km_df, alpha) {
 #'   theme_hv_poster()
 #'
 #' # --- Global theme + RColorBrewer (set once per session) ------------------
-#' \dontrun{
+#' \donttest{
 #' old <- ggplot2::theme_set(theme_hv_manuscript())
 #' plot(km_s) +
 #'   ggplot2::scale_colour_brewer(palette = "Set1", name = "Valve Type") +
@@ -740,6 +740,8 @@ plot.hv_survival <- function(x,
 #'   seed          = 42
 #' )
 #' table(dta_s$valve_type)
+#'
+#' @family Kaplan-Meier survival
 #'
 #' @importFrom stats rnorm rexp runif
 #' @export

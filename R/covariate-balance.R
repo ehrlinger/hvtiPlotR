@@ -299,6 +299,8 @@ plot.hv_balance <- function(x,
 #' @return A data frame with `2 * n_vars` rows and columns `variable`, `group`,
 #'   and `std_diff` (standardized mean difference as a percentage).
 #'
+#' @family Propensity Score & Matching
+#'
 #' @examples
 #' dta <- sample_covariate_balance_data()
 #' head(dta)

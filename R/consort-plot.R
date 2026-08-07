@@ -308,6 +308,8 @@ hv_consort_summary <- function(tracker) {
 #' @return A character vector of patient IDs (from the column named in
 #'   `tracker$patient_id_col`).
 #'
+#' @seealso [hv_consort_start()], [hv_consort_exclude()], [hv_consort_summary()]
+#'
 #' @examples
 #' tracker <- hv_consort_start(data.frame(id = 1:10, age = c(rep(15,3), rep(30,7))),
 #'                              patient_id = id) |>
@@ -395,7 +397,7 @@ hv_consort_patients <- function(tracker, stage, reason = NULL) {
 #'   hv_consort_exclude(label = "Analyzed", col = "excl_eligible",
 #'                       !echo ~ "Missing echocardiogram")
 #' fig <- hv_consort(tracker)
-#' \dontrun{plot(fig)}
+#' \donttest{plot(fig)}
 #'
 #' @export
 hv_consort <- function(tracker, side_box = "all", cex = 0.9,
@@ -518,11 +520,13 @@ plot.hv_consort <- function(x, ...) {
 #'   *Screened* -> *Eligible* (excl: age < 18, no STS procedure) ->
 #'   *Analyzed*  (excl: missing echocardiogram, prior trial).
 #'
+#' @seealso [hv_consort_start()], [hv_consort()]
+#'
 #' @examples
 #' tracker <- sample_consort_data()
 #' print(tracker)
 #' hv_consort_summary(tracker)
-#' \dontrun{
+#' \donttest{
 #'   hv_consort(tracker) |> plot()
 #' }
 #'

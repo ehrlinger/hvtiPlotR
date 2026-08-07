@@ -41,6 +41,7 @@ plot(mh) +
 \code{\link{sample_mirror_histogram_data}} for example data.
 
 Other Propensity Score & Matching:
-\code{\link[=hv_mirror_hist]{hv_mirror_hist()}}
+\code{\link[=hv_mirror_hist]{hv_mirror_hist()}},
+\code{\link[=sample_covariate_balance_data]{sample_covariate_balance_data()}}
 }
 \concept{Propensity Score & Matching}

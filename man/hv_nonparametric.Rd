@@ -99,7 +99,7 @@ p +
   theme_hv_poster()
 
 # --- Global theme (set once per session) ----------------------------------
-\dontrun{
+\donttest{
 old <- ggplot2::theme_set(theme_hv_manuscript())
 plot(np) +
   ggplot2::scale_colour_manual(values = c("steelblue"), guide = "none") +

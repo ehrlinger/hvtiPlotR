@@ -15,3 +15,6 @@ is_hv_data(x)
 \description{
 Test whether an object is an hvtiPlotR data object
 }
+\seealso{
+\code{\link[=summary.hv_data]{summary.hv_data()}}, \code{\link[=autoplot.hv_data]{autoplot.hv_data()}}, \code{\link[=as.data.frame.hv_data]{as.data.frame.hv_data()}}
+}

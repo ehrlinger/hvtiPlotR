@@ -189,6 +189,8 @@ plot.hv_stacked <- function(x, ...) {
 #' @return A data frame with columns \code{year} (integer) and
 #'   \code{category} (integer, 1 to \code{n_categories}).
 #'
+#' @seealso [hv_stacked()]
+#'
 #' @examples
 #' dta <- sample_stacked_histogram_data()
 #' head(dta)

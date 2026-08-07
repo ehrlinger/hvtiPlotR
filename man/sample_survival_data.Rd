@@ -70,3 +70,9 @@ dta_s <- sample_survival_data(
 table(dta_s$valve_type)
 
 }
+\seealso{
+Other Kaplan-Meier survival:
+\code{\link[=hv_survival]{hv_survival()}},
+\code{\link[=plot.hv_survival]{plot.hv_survival()}}
+}
+\concept{Kaplan-Meier survival}

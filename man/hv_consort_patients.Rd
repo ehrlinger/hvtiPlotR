@@ -34,3 +34,6 @@ hv_consort_patients(tracker, "eligible")
 hv_consort_patients(tracker, "screened", reason = "Age < 18")
 
 }
+\seealso{
+\code{\link[=hv_consort_start]{hv_consort_start()}}, \code{\link[=hv_consort_exclude]{hv_consort_exclude()}}, \code{\link[=hv_consort_summary]{hv_consort_summary()}}
+}

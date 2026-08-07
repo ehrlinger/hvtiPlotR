@@ -161,3 +161,7 @@ graphics device) are unaffected and keep using real Arial. No global
 font registry is modified. See \code{.hv_family_resolves()} in
 \code{ppt-font-fallback.R} for the mechanism.
 }
+\seealso{
+\code{\link[=save_ppt]{save_ppt()}} to export a themed plot to an editable PowerPoint
+slide; \code{\link[=make_footnote]{make_footnote()}} to annotate a draft figure before publication.
+}

@@ -808,7 +808,7 @@ sample_nnt_data <- function(n        = 500,
 #'   theme_hv_poster()
 #'
 #' # --- (9) Save (dontrun) --------------------------------------------------
-#' \dontrun{
+#' \donttest{
 #' p <- hazard_plot(dat, estimate_col = "survival",
 #'                  lower_col = "surv_lower", upper_col = "surv_upper",
 #'                  empirical = emp,
@@ -821,7 +821,7 @@ sample_nnt_data <- function(n        = 500,
 #' }
 #'
 #' # --- Global theme + RColorBrewer (set once per session) ------------------
-#' \dontrun{
+#' \donttest{
 #' old <- ggplot2::theme_set(theme_hv_manuscript())
 #' hazard_plot(
 #'   dat2,
@@ -1359,7 +1359,7 @@ nnt_plot <- function(nnt_data,
 #'   theme_hv_poster()
 #'
 #' # --- Global theme + RColorBrewer (set once per session) ------------------
-#' \dontrun{
+#' \donttest{
 #' old <- ggplot2::theme_set(theme_hv_manuscript())
 #' plot(hp2) +
 #'   scale_colour_brewer(palette = "Set1", name = NULL) +

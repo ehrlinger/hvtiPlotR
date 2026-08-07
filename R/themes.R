@@ -39,6 +39,9 @@
 #'
 #' @return A [ggplot2::theme()] object.
 #'
+#' @seealso [save_ppt()] to export a themed plot to an editable PowerPoint
+#'   slide; [make_footnote()] to annotate a draft figure before publication.
+#'
 #' @name hvtiPlotR-themes
 #' @import ggplot2
 NULL

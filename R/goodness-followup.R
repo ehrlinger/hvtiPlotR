@@ -42,6 +42,8 @@
 #'       `dead`).}
 #'   }
 #'
+#' @seealso [hv_followup()]
+#'
 #' @examples
 #' dta <- sample_goodness_followup_data()
 #' head(dta)

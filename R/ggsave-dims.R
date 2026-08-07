@@ -33,8 +33,11 @@
 #' @return A named list with elements `width`, `height`, `units` — shaped to
 #'   splat directly into [ggplot2::ggsave()] via [do.call()] (see examples).
 #'
+#' @seealso [hv_ph_location()] for the slide-placement analogue used with
+#'   [save_ppt()].
+#'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' p <- ggplot2::ggplot(mtcars, ggplot2::aes(hp, mpg)) +
 #'   ggplot2::geom_point() +
 #'   ggplot2::labs(title = "Long title that eats vertical space",
