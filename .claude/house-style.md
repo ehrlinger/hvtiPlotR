@@ -13,7 +13,7 @@
     writing-voice.md               sha256:6ca5d2b7682a
     writing-reader-profile.md      sha256:179212de138c
     writing-context.md             sha256:87d5555936e1
-    r-package-structure.md         sha256:23804617f4ff
+    r-package-structure.md         sha256:9761d9e8dc0b
 -->
 
 # House Style — hvtiPlotR
@@ -645,6 +645,31 @@ version genuinely must be read in two live jobs, derive it from
 `Config/roxygen2/version` in `DESCRIPTION`, which is the value the check is
 asserting against anyway. Otherwise delete the copy that no step uses.
 
+Both copies being *live* is the harder case, and the paragraph above does not
+reach it. temporal_hazard carried `any::roxygen2@8.1.0` in `R-CMD-check.yaml`
+and again in `pkgdown.yaml`, and neither was a leftover: each fed a real
+`roxygenise()` call, one gating the check matrix and one running before the
+site build. With no dead copy to delete, "delete the copy that no step uses"
+had nothing to act on.
+
+Ask why the generator runs twice, not which copy to delete. Two live calls to
+the same generator usually mean one of them regenerates something already
+committed and already verified, which is drift-masking arriving by a different
+route. pkgdown's call was that.
+`install.packages(".", repos = NULL, type = "source")` already builds the help
+database from the committed `man/*.Rd`, and pkgdown's reference index reads
+those same files, so regenerating first supplied nothing. It overwrote the
+committed docs seconds before the build, and a stale `man/` would have
+published a correct-looking site over a wrong repo. Deleting that call is what
+took the pin back down to one. The duplicate count was the symptom; the
+redundant step was the defect.
+
+So read a duplicate pin as a question about the steps rather than about the
+`extra-packages` lines. A second use that survives that question is legitimate
+and keeps its pin, and then you derive both from `Config/roxygen2/version`
+rather than writing the number into two files.
+(temporal_hazard PR #106, 2026-08-07.)
+
 So when moving a step between workflows, delete its dependencies in the same
 commit. Grep the workflow for every package it installs and confirm something
 still calls it.
@@ -762,8 +787,8 @@ The test is cheap and worth running when unsure — compose from the tag and fro
 repo=hvtiPlotR    # the consumer to test against
 
 old=$(mktemp -d); new=$(mktemp -d)
-git archive house-style-v1 | tar -x -C "$old"
-git archive main          | tar -x -C "$new"
+git archive house-style-v1 | tar -x -f - -C "$old"
+git archive main          | tar -x -f - -C "$new"
 
 Rscript "$old/compose-house-style.R" --check --repo "$repo" --vault "$old/sources"
 Rscript "$new/compose-house-style.R" --check --repo "$repo" --vault "$new/sources"
