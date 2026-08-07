@@ -45,7 +45,7 @@ jobs:
       - name: Check out the house style composer
         uses: actions/checkout@v4
         with:
-          repository: ehrlinger/ehrlinger-personal
+          repository: ehrlinger/house-style
           # Pinned to a tag, not the default branch: an in-progress change to
           # the composer must not redden this repo's CI. The tag moves when the
           # standard changes, which is exactly when every repo should start
@@ -64,9 +64,9 @@ jobs:
       - name: Point the registry at this checkout
         run: |
           sed -i "s|path: ~/Documents/GitHub/hvtiPlotR|path: $GITHUB_WORKSPACE|" \
-            .house-style-tools/tools/house-style/repos.yml
+            .house-style-tools/repos.yml
 
       - name: Verify the house style artifact is current
         run: |
-          Rscript .house-style-tools/tools/house-style/compose-house-style.R \
+          Rscript .house-style-tools/compose-house-style.R \
             --check --repo hvtiPlotR
