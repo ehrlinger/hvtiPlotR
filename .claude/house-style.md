@@ -10,8 +10,8 @@
   profile:         package-internal
   default persona: (a)
   sources:
-    writing-voice.md               sha256:c32b3886f897
-    writing-reader-profile.md      sha256:1dbeec1cd525
+    writing-voice.md               sha256:6ca5d2b7682a
+    writing-reader-profile.md      sha256:179212de138c
     writing-context.md             sha256:87d5555936e1
     r-package-structure.md         sha256:a81ad17fd5a5
 -->
@@ -112,9 +112,8 @@ Canonical samples of the voice, by register. When in doubt, read the one whose
 register matches the task.
 
 - **Plain-English explanatory** (the gold standard for teaching a method):
-  `boilerplates/methods/VarPro Modeling in Plain English.docx` and
-  `boilerplates/methods/supp_SIDclustering_methods.docx` (OneDrive, CORR
-  Analysis Team). Opens from the familiar, carries one analogy throughout
+  the CORR methods boilerplates — the plain-English VarPro write-up and the
+  SID-clustering supplement (internal, CORR Analysis Team share). Opens from the familiar, carries one analogy throughout
   (fruit basket, noise-reduction filter), question-headed sections, "we"/"you",
   numbered-problems-answered-later callback.
 - **Short-form announcement** (LinkedIn / release posts): the TemporalHazard
@@ -177,7 +176,7 @@ also governs two public CRAN packages whose readers have no HVTI context. See
 
 ## (a) HVTI/CORR biostatistician — DEFAULT for the recipes book
 
-The biostats team (Austin, Kelsey, Wendy) adopting the house plotting style.
+The CORR biostatistics team adopting the house plotting style.
 
 - **Already knows:** R, ggplot2, survival analysis, the CORR datasets.
 - **Wants from a recipe:** all three at once — runnable code to copy, a call on
