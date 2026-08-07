@@ -103,7 +103,8 @@ for the publication theme,
 for example data.
 
 Other Kaplan-Meier survival:
-[`plot.hv_survival()`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hv_survival.md)
+[`plot.hv_survival()`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hv_survival.md),
+[`sample_survival_data()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_survival_data.md)
 
 ## Examples
 
@@ -183,13 +184,14 @@ plot(km, type = "loglog") +
 
 
 # --- Global theme + RColorBrewer (set once per session) ------------------
-if (FALSE) { # \dontrun{
+# \donttest{
 old <- ggplot2::theme_set(theme_hv_manuscript())
 plot(km_s) +
   ggplot2::scale_colour_brewer(palette = "Set1", name = "Valve Type") +
   ggplot2::labs(x = "Years after Operation", y = "Survival (%)")
+
 ggplot2::theme_set(old)
-} # }
+# }
 
 # See vignette("plot-decorators", package = "hvtiPlotR") for theming,
 # colour scales, annotation labels, and saving plots.

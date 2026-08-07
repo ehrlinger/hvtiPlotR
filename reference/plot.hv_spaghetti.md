@@ -108,13 +108,15 @@ plot(hv_spaghetti(dta_ord, colour_col = "group"),
 
 
 # --- Global theme (set once per session) ----------------------------------
-if (FALSE) { # \dontrun{
+# \donttest{
 old <- ggplot2::theme_set(theme_hv_manuscript())
 plot(sp, add_smooth = TRUE) +
   ggplot2::scale_colour_brewer(palette = "Set1", name = NULL) +
   ggplot2::labs(x = "Years", y = "AV Mean Gradient (mmHg)")
+#> Warning: Ignoring empty aesthetic: `colour`.
+
 ggplot2::theme_set(old)
-} # }
+# }
 
 # See vignette("plot-decorators", package = "hvtiPlotR") for theming,
 # colour scales, annotation labels, and saving plots.

@@ -130,8 +130,13 @@ Worked recipe with rendered output:
 ## Examples
 
 ``` r
-if (FALSE) { # \dontrun{
+# \donttest{
 library(ggplot2)
+
+# The package ships a small dark-background template; use it directly
+# instead of hunting for a .pptx of your own.
+template <- system.file("extdata", "hv_ppt_template.pptx",
+                        package = "hvtiPlotR")
 
 # ----------------------------------------------------------------------
 # Recommended workflow: preview with light, save with dark
@@ -145,13 +150,14 @@ p_preview <- ggplot(mtcars, aes(x = wt, y = mpg)) +
   theme_hv_ppt_light()
 print(p_preview)            # interactive check
 
+
 # When the layout looks right, swap to theme_hv_ppt_dark() for the deck
 # (white text + black panel against a dark slide template) and save:
 p_slide <- p_preview + theme_hv_ppt_dark()
 save_ppt(
   object       = p_slide,
-  template     = "graphs/RD.pptx",
-  powerpoint   = "graphs/fuel_economy.pptx",
+  template     = template,
+  powerpoint   = file.path(tempdir(), "fuel_economy.pptx"),
   slide_titles = "Fuel Economy by Weight"
 )
 
@@ -163,8 +169,8 @@ p2 <- ggplot(mtcars, aes(x = factor(cyl), y = mpg)) +
 
 save_ppt(
   object       = list(p_slide, p2),
-  template     = "graphs/RD.pptx",
-  powerpoint   = "graphs/deck.pptx",
+  template     = template,
+  powerpoint   = file.path(tempdir(), "deck.pptx"),
   slide_titles = c("Scatter: fuel economy", "Box: mpg by cylinder count")
 )
 
@@ -177,8 +183,8 @@ p_noy <- ggplot(mtcars, aes(x = factor(cyl), y = mpg)) +
 
 save_ppt(
   object       = p_noy,
-  template     = "graphs/RD.pptx",
-  powerpoint   = "graphs/mpg_by_cyl.pptx",
+  template     = template,
+  powerpoint   = file.path(tempdir(), "mpg_by_cyl.pptx"),
   slide_titles = "Miles per Gallon by Cylinder Count"
 )
 
@@ -190,8 +196,8 @@ pm <- ggplot(mtcars, aes(x = wt, y = mpg)) +
 
 save_ppt(
   object       = pm,
-  template     = "graphs/RD-white.pptx",
-  powerpoint   = "graphs/manuscript.pptx",
+  template     = template,
+  powerpoint   = file.path(tempdir(), "manuscript.pptx"),
   slide_titles = "Fuel Economy"
 )
 
@@ -242,10 +248,11 @@ p_big <- ggplot(mtcars, aes(hp, mpg)) +
 # labels eat more horizontal space than the small-number labels.
 save_ppt(
   object       = list(p_small, p_big),
-  template     = "graphs/RD-dark.pptx",
-  powerpoint   = "graphs/drifting_deck.pptx",
+  template     = template,
+  powerpoint   = file.path(tempdir(), "drifting_deck.pptx"),
   slide_titles = c("Small y-axis", "Big y-axis")
 )
+#> Warning: hv_ph_location(): plot chrome does not fit left/top of panel on slide (left=-0.337 in). Increase `panel_left`/`panel_top` to leave room for axis labels.
 
 # With panel_box: target is an 8.88" x 4.51" panel at slide coordinates
 # (2.58", 1.63"). The panel content area lands at exactly that rectangle
@@ -254,14 +261,15 @@ save_ppt(
 # label on dark PPT templates rendered at base_size = 32.
 save_ppt(
   object       = list(p_small, p_big),
-  template     = "graphs/RD-dark.pptx",
-  powerpoint   = "graphs/anchored_deck.pptx",
+  template     = template,
+  powerpoint   = file.path(tempdir(), "anchored_deck.pptx"),
   slide_titles = c("Small y-axis", "Big y-axis"),
   panel_box    = list(width = 8.88, height = 4.51, left = 2.58, top = 1.63)
 )
+#> Warning: hv_ph_location(): plot chrome does not fit left/top of panel on slide (left=-0.427 in). Increase `panel_left`/`panel_top` to leave room for axis labels.
 
 # Sizing advice: panel_left and panel_top must be large enough for the
 # widest axis labels in the deck. If chrome extends past the left or top
 # slide edge, hv_ph_location() emits a warning naming that edge.
-} # }
+# }
 ```

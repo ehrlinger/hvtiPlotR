@@ -39,6 +39,10 @@ sample_stacked_histogram_data(
 A data frame with columns `year` (integer) and `category` (integer, 1 to
 `n_categories`).
 
+## See also
+
+[`hv_stacked()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_stacked.md)
+
 ## Examples
 
 ``` r

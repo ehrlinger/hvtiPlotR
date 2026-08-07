@@ -175,3 +175,10 @@ explaining why; devices that resolve fonts via the OS (quartz, cairo,
 RStudio's graphics device) are unaffected and keep using real Arial. No
 global font registry is modified. See `.hv_family_resolves()` in
 `ppt-font-fallback.R` for the mechanism.
+
+## See also
+
+[`save_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/save_ppt.md)
+to export a themed plot to an editable PowerPoint slide;
+[`make_footnote()`](https://ehrlinger.github.io/hvtiPlotR/reference/make_footnote.md)
+to annotate a draft figure before publication.

@@ -74,6 +74,12 @@ A data frame with columns:
 
   (Only when `strata_levels` is not `NULL`) Character stratum label.
 
+## See also
+
+Other Kaplan-Meier survival:
+[`hv_survival()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_survival.md),
+[`plot.hv_survival()`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hv_survival.md)
+
 ## Examples
 
 ``` r

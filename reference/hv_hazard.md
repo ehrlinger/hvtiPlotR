@@ -195,7 +195,7 @@ plot(hp2) +
 
 
 # --- Global theme + RColorBrewer (set once per session) ------------------
-if (FALSE) { # \dontrun{
+# \donttest{
 old <- ggplot2::theme_set(theme_hv_manuscript())
 plot(hp2) +
   scale_colour_brewer(palette = "Set1", name = NULL) +
@@ -204,8 +204,9 @@ plot(hp2) +
   scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, 20),
                      labels = function(x) paste0(x, "%")) +
   labs(x = "Years", y = "Survival (%)")
+
 ggplot2::theme_set(old)
-} # }
+# }
 
 # See vignette("plot-decorators", package = "hvtiPlotR") for theming,
 # colour scales, annotation labels, and saving plots.

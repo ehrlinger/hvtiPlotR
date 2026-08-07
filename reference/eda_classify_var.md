@@ -26,6 +26,11 @@ eda_classify_var(x, unique_limit = 6L)
 
 A length-1 character: `"Cont"`, `"Cat_Num"`, or `"Cat_Char"`.
 
+## See also
+
+[`hv_eda()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_eda.md),
+[`eda_select_vars()`](https://ehrlinger.github.io/hvtiPlotR/reference/eda_select_vars.md)
+
 ## Examples
 
 ``` r

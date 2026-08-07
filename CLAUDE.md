@@ -50,9 +50,14 @@ refresh it (`/regenerate-codemap`) rather than working from a guess.
     If there’s no test covering the change, add or propose one rather
     than declaring success from inspection.
 
-## Voice
+## Voice and documentation persona
 
 Prose in vignettes, README, roxygen `@description`/`@details`, and
-release/post copy follows the `ehrlinger-writing` harness — my voice,
-reader persona, project context. Apply it for any documentation text in
-this repo.
+release/post copy follows the `ehrlinger-writing` harness. Documentation
+structure follows the house style.
+
+**Default reader persona: (a) HVTI/CORR biostatistician.** The SAS
+migration guide addresses persona (c), the bilingual SAS-to-R reader.
+
+Both are composed into `.claude/house-style.md`, which is generated —
+edit the vault sources and recompose, never the artifact.

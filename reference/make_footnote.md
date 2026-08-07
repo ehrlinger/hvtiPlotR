@@ -121,7 +121,7 @@ make_footnote("examples/basic.R")
 
 
 # --- With a ggplot2 figure and manuscript theme ---------------------------
-if (FALSE) { # \dontrun{
+# \donttest{
 library(ggplot2)
 p <- ggplot(mtcars, aes(wt, mpg)) +
   geom_point() +
@@ -132,9 +132,10 @@ p <- ggplot(mtcars, aes(wt, mpg)) +
 print(p)
 make_footnote("R/exploratory.R")
 
+
 # Publication: save without footnote
-ggsave("figures/fig1.pdf", p, width = 11, height = 8.5)
-} # }
+ggsave(file.path(tempdir(), "fig1.pdf"), p, width = 11, height = 8.5)
+# }
 
 # --- Custom position and no timestamp ------------------------------------
 plot(1:10)

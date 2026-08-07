@@ -43,8 +43,11 @@ worked examples in the sections below.
 | [`hv_followup()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_followup.md) | `tp.dp.goodness_followup.*`, `tp.dp.goodness_event.*` | — |
 | [`hv_survival()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_survival.md) | `tp.hp.dead.sas` (basic) | `tp.hp.dead.number_risk.R` |
 | [`hazard_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/hazard_plot.md) | `tp.hp.dead.*`, `tp.hp.event.weighted.sas`, `tp.hp.repeated*.sas`, `tp.hp.numtreat.survdiff.matched.sas`, `tp.hs.dead.*`, `tp.hs.uslife_*` | `tp.hp.dead.number_risk.R` |
+| [`hv_hazard()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_hazard.md) | `tp.hp.dead.*`, `tp.hp.event.weighted.sas`, `tp.hp.repeated*.sas`, `tp.hp.numtreat.survdiff.matched.sas`, `tp.hs.dead.*`, `tp.hs.uslife_*` | `tp.hp.dead.number_risk.R` |
 | [`survival_difference_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/survival_difference_plot.md) | `tp.hp.dead.life-gained.sas`, `tp.hp.numtreat.survdiff.matched.sas`, `tp.hs.dead.compare_benefit.setup.sas` | — |
+| [`hv_survival_difference()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_survival_difference.md) | `tp.hp.dead.life-gained.sas`, `tp.hp.numtreat.survdiff.matched.sas`, `tp.hs.dead.compare_benefit.setup.sas` | — |
 | [`nnt_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/nnt_plot.md) | `tp.hp.numtreat.survdiff.matched.sas` | — |
+| [`hv_nnt()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_nnt.md) | `tp.hp.numtreat.survdiff.matched.sas` | — |
 | [`hv_nonparametric()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_nonparametric.md) | `tp.np.*.avrg_curv.*`, `tp.np.*.u.trend.*`, `tp.np.*.double.*`, `tp.np.*.mult.*`, `tp.np.*.phases.*`, `tp.np.z0axdpo.*` | — |
 | [`hv_ordinal()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_ordinal.md) | `tp.np.*.ordinal.*` | — |
 | [`hv_eda()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_eda.md) | — | — |
@@ -61,8 +64,14 @@ Note:
 [`survival_difference_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/survival_difference_plot.md),
 and
 [`nnt_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/nnt_plot.md)
-retain the legacy single-call API pending migration to the two-step
-constructor pattern.
+retain the legacy single-call API alongside the two-step
+[`hv_hazard()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_hazard.md),
+[`hv_survival_difference()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_survival_difference.md),
+and
+[`hv_nnt()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_nnt.md)
+constructors, documented in the [Hazard Plot](#hazard-plot), [Survival
+Difference](#survival-difference-life-gained-plot), and [Number Needed
+to Treat](#number-needed-to-treat-nnt-plot) sections below.
 
 : {tbl-colwidths=“\[28,44,28\]”}
 
@@ -2048,6 +2057,66 @@ hazard_plot(
 
 ![](plot-functions_files/figure-html/hazard_lifetable-1.png)
 
+### The `hv_hazard()` object interface
+
+Every
+[`hazard_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/hazard_plot.md)
+call above re-validates and re-passes `curve_data`, `empirical`, and
+`reference` from scratch.
+[`hv_hazard()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_hazard.md)
+does that validation once and stores the result as an S3 object – the
+same build-once,
+[`plot()`](https://rdrr.io/r/graphics/plot.default.html)-as-needed
+pattern
+[`hv_survival()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_survival.md)
+uses for the KM curve. Reach for it when a hazard fit feeds more than
+one figure, or when downstream code already dispatches on `hv_data`
+subclasses and you want the hazard curve to fit that pattern too.
+
+``` r
+
+hz <- hv_hazard(
+  dat_hp,
+  lower_col     = "surv_lower",
+  upper_col     = "surv_upper",
+  empirical     = emp_hp,
+  emp_lower_col = "lower",
+  emp_upper_col = "upper"
+)
+hz
+```
+
+    <hv_hazard>
+      x col       : time
+      estimate    : survival
+      CI          : surv_lower -- surv_upper
+      $data       : 500 rows × 10 cols
+      $empirical  : 6 rows
+
+``` r
+
+plot(hz) +
+  scale_colour_manual(values = c("steelblue"), guide = "none") +
+  scale_fill_manual(values = c("steelblue"), guide = "none") +
+  scale_x_continuous(limits = c(0, 10), breaks = 0:10) +
+  scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, 20),
+                     labels = function(x) paste0(x, "%")) +
+  labs(x = "Years", y = "Survival (%)") +
+  theme_hv_poster()
+```
+
+![](plot-functions_files/figure-html/hv_hazard_object-1.png)
+
+`hz$tables` carries the `empirical` and `reference` data frames you
+passed in, nothing more – unlike
+[`hv_survival()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_survival.md),
+[`hv_hazard()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_hazard.md)
+never fits a risk table. If you want a numbers-at-risk strip under a
+parametric curve, hand
+[`hv_atrisk()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_atrisk.md)
+the subject-level `time`/`status`/`group` columns directly, as noted in
+the numbers-at-risk section above.
+
 ## Survival Difference (Life-Gained) Plot
 
 [`survival_difference_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/survival_difference_plot.md)
@@ -2143,6 +2212,52 @@ survival_difference_plot(rbind(d1, d2, d3),
 
 ![](plot-functions_files/figure-html/surv_diff_multi-1.png)
 
+### The `hv_survival_difference()` object interface
+
+[`survival_difference_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/survival_difference_plot.md)
+renders straight from `diff_dat`.
+[`hv_survival_difference()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_survival_difference.md)
+stores the same estimate and CI columns as an S3 object first, so
+[`print()`](https://rdrr.io/r/base/print.html) confirms which columns it
+picked up before you spend time styling the plot – worth doing when
+you’re scripting several comparisons and want a mis-named CI column to
+fail loudly instead of quietly plotting a flat line.
+
+``` r
+
+sd <- hv_survival_difference(
+  diff_dat,
+  lower_col = "diff_lower",
+  upper_col = "diff_upper"
+)
+sd
+```
+
+    <hv_survival_difference>
+      x col       : time
+      estimate    : difference
+      CI          : diff_lower -- diff_upper
+      $data       : 500 rows × 6 cols
+
+``` r
+
+plot(sd) +
+  scale_colour_manual(values = c("steelblue"), guide = "none") +
+  scale_fill_manual(values = c("steelblue"), guide = "none") +
+  ggplot2::geom_hline(yintercept = 0, linetype = "dashed",
+                      colour = "grey50") +
+  scale_x_continuous(limits = c(0, 10), breaks = 0:10) +
+  scale_y_continuous(limits = c(-5, 40),
+                     labels = function(x) paste0(x, "%")) +
+  labs(x = "Years", y = "Survival Difference (%)") +
+  theme_hv_poster()
+```
+
+![](plot-functions_files/figure-html/hv_survival_difference_object-1.png)
+
+A worked example with rendered output lives in the [hvti_graphics recipe
+book](https://ehrlinger.github.io/hvti_graphics/nnt.html).
+
 ## Number Needed to Treat (NNT) Plot
 
 [`nnt_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/nnt_plot.md)
@@ -2220,6 +2335,43 @@ nnt_plot(
 ```
 
 ![](plot-functions_files/figure-html/nnt_arr-1.png)
+
+### The `hv_nnt()` object interface
+
+[`nnt_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/nnt_plot.md)
+takes `nnt_dat` as-is.
+[`hv_nnt()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_nnt.md)
+wraps it as an object and, by default, drops rows where `estimate_col`
+is `NA` – for NNT that’s every time point where the absolute risk
+reduction is near zero and “number needed to treat” is undefined. Set
+`na_rm = FALSE` if you want those rows kept in `$data`, for example to
+see exactly where the curve would have broken.
+
+``` r
+
+nn <- hv_nnt(nnt_dat, lower_col = "nnt_lower", upper_col = "nnt_upper")
+nn
+```
+
+    <hv_nnt>
+      x col       : time
+      estimate    : nnt
+      CI          : nnt_lower -- nnt_upper
+      na_rm       : TRUE
+      $data       : 496 rows × 7 cols
+
+``` r
+
+plot(nn) +
+  scale_colour_manual(values = c("steelblue"), guide = "none") +
+  scale_fill_manual(values = c("steelblue"), guide = "none") +
+  scale_x_continuous(limits = c(0, 20), breaks = seq(0, 20, 5)) +
+  scale_y_continuous(limits = c(0, 50), breaks = seq(0, 50, 10)) +
+  labs(x = "Years", y = "Number Needed to Treat") +
+  theme_hv_poster()
+```
+
+![](plot-functions_files/figure-html/hv_nnt_object-1.png)
 
 ### Saving
 

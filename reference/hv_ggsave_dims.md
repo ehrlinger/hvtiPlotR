@@ -52,10 +52,16 @@ Always measured with a PDF sizing device, which is why `units` is
 limited to length (inches, cm, mm) — DPI is irrelevant for vector
 output.
 
+## See also
+
+[`hv_ph_location()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_ph_location.md)
+for the slide-placement analogue used with
+[`save_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/save_ppt.md).
+
 ## Examples
 
 ``` r
-if (FALSE) { # \dontrun{
+# \donttest{
 p <- ggplot2::ggplot(mtcars, ggplot2::aes(hp, mpg)) +
   ggplot2::geom_point() +
   ggplot2::labs(title = "Long title that eats vertical space",
@@ -66,5 +72,5 @@ do.call(
   ggplot2::ggsave,
   c(list(filename = "fig.pdf", plot = p), dims)
 )
-} # }
+# }
 ```

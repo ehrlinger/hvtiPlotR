@@ -27,6 +27,11 @@ An `hv_consort_tracker` with three stages: *Screened* -\> *Eligible*
 (excl: age \< 18, no STS procedure) -\> *Analyzed* (excl: missing
 echocardiogram, prior trial).
 
+## See also
+
+[`hv_consort_start()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_consort_start.md),
+[`hv_consort()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_consort.md)
+
 ## Examples
 
 ``` r
@@ -46,7 +51,8 @@ hv_consort_summary(tracker)
 #> 1 Screened    screened        300   excl_screen         73
 #> 2 Eligible    eligible        227 excl_eligible         41
 #> 3 Analyzed    analyzed        186          <NA>         NA
-if (FALSE) { # \dontrun{
+# \donttest{
   hv_consort(tracker) |> plot()
-} # }
+
+# }
 ```

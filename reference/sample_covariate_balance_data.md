@@ -68,6 +68,12 @@ substantially reduces imbalance, but patients at the propensity score
 extremes cannot be matched, leaving small residual differences for the
 strongest confounders.
 
+## See also
+
+Other Propensity Score & Matching:
+[`hv_mirror_hist()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_mirror_hist.md),
+[`plot.hv_mirror_hist()`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hv_mirror_hist.md)
+
 ## Examples
 
 ``` r

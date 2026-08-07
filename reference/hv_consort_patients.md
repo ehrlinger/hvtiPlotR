@@ -32,6 +32,12 @@ hv_consort_patients(tracker, stage, reason = NULL)
 A character vector of patient IDs (from the column named in
 `tracker$patient_id_col`).
 
+## See also
+
+[`hv_consort_start()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_consort_start.md),
+[`hv_consort_exclude()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_consort_exclude.md),
+[`hv_consort_summary()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_consort_summary.md)
+
 ## Examples
 
 ``` r

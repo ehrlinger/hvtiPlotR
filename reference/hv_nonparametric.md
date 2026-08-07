@@ -150,17 +150,18 @@ p +
 
 
 # --- Global theme (set once per session) ----------------------------------
-if (FALSE) { # \dontrun{
+# \donttest{
 old <- ggplot2::theme_set(theme_hv_manuscript())
 plot(np) +
   ggplot2::scale_colour_manual(values = c("steelblue"), guide = "none") +
   ggplot2::scale_fill_manual(values   = c("steelblue"), guide = "none") +
   ggplot2::labs(x = "Months", y = "Prevalence of AF")
+
 # For multi-group curves swap scale_colour_manual with:
 #   ggplot2::scale_colour_brewer(palette = "Set1", name = NULL)
 #   ggplot2::scale_fill_brewer(palette = "Set1", guide = "none")
 ggplot2::theme_set(old)
-} # }
+# }
 
 # See vignette("plot-decorators", package = "hvtiPlotR") for theming,
 # colour scales, annotation labels, and saving plots.

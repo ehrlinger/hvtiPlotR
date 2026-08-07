@@ -80,7 +80,8 @@ to build the data object,
 for the publication theme.
 
 Other Kaplan-Meier survival:
-[`hv_survival()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_survival.md)
+[`hv_survival()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_survival.md),
+[`sample_survival_data()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_survival_data.md)
 
 ## Examples
 

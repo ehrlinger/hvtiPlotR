@@ -169,9 +169,11 @@ for full customisation; themes then apply via <code>+</code>:</p><div class="sou
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Removed 30 rows containing non-finite outside the scale range (`stat_count()`).</span>
 <span class="r-plt img"><img src="plot.hv_upset-1.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
+<span class="r-in"><span><span class="co"># \donttest{</span></span></span>
 <span class="r-in"><span><span class="co"># Intersection bars only — single ggplot, themes apply with `+`.</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">up</span>, set_size <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="hvtiPlotR-themes.html">theme_hv_poster</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Removed 30 rows containing non-finite outside the scale range (`stat_count()`).</span>
+<span class="r-plt img"><img src="plot.hv_upset-2.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Fill bars by an external grouping variable (e.g. era).</span></span></span>
 <span class="r-in"><span><span class="va">dta</span><span class="op">$</span><span class="va">era</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_len</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">dta</span><span class="op">)</span><span class="op">)</span> <span class="op">&lt;=</span> <span class="fl">150</span>, <span class="st">"Early"</span>, <span class="st">"Recent"</span><span class="op">)</span></span></span>
@@ -182,7 +184,9 @@ for full customisation; themes then apply via <code>+</code>:</p><div class="sou
 <span class="r-in"><span>    name   <span class="op">=</span> <span class="st">"Era"</span></span></span>
 <span class="r-in"><span>  <span class="op">)</span> <span class="op">+</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="hvtiPlotR-themes.html">theme_hv_poster</a></span><span class="op">(</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Removed 30 rows containing non-finite outside the scale range (`stat_count()`).</span>
+<span class="r-plt img"><img src="plot.hv_upset-3.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span><span class="co"># }</span></span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

@@ -73,23 +73,28 @@
   </div>
 </nav><div class="container template-home">
 <div class="row">
-  <main id="main" class="col-md-9"><div class="section level2">
-<h2 id="the-hvtiplotr-package">The hvtiPlotR package<a class="anchor" aria-label="anchor" href="#the-hvtiplotr-package"></a>
-</h2>
+  <main id="main" class="col-md-9"><div class="section level1">
+<div class="page-header"><h1 id="hvtiplotr--ggplot2-themes-and-plot-functions-for-corr-clinical-figures">hvtiPlotR — ggplot2 themes and plot functions for CORR clinical figures<a class="anchor" aria-label="anchor" href="#hvtiplotr--ggplot2-themes-and-plot-functions-for-corr-clinical-figures"></a>
+</h1></div>
 <!-- badges: start -->
 
-<p><a href="https://www.repostatus.org/badges/latest/active.svg" class="external-link"><img src="https://www.repostatus.org/badges/latest/active.svg" alt="active"></a></p>
-<p><a href="https://github.com/ehrlinger/hvtiPlotR/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/ehrlinger/hvtiPlotR/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a> <a href="https://github.com/ehrlinger/hvtiPlotR/actions/workflows/lint.yaml" class="external-link"><img src="https://github.com/ehrlinger/hvtiPlotR/actions/workflows/lint.yaml/badge.svg" alt="lint"></a> <a href="https://github.com/ehrlinger/hvtiPlotR/actions/workflows/pkgdown.yaml" class="external-link"><img src="https://github.com/ehrlinger/hvtiPlotR/actions/workflows/pkgdown.yaml/badge.svg" alt="pkgdown"></a> <a href="https://app.codecov.io/gh/ehrlinger/hvtiPlotR" class="external-link"><img src="https://codecov.io/gh/ehrlinger/hvtiPlotR/graph/badge.svg" alt="Codecov test coverage"></a></p>
-<p><a href="https://doi.org/10.5281/zenodo.11780" class="external-link"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.11780.svg" alt="DOI"></a> <!-- badges: end --></p>
+<p><a href="https://github.com/ehrlinger/hvtiPlotR" class="external-link"><img src="https://img.shields.io/github/r-package/v/ehrlinger/hvtiPlotR" alt="R package version"></a></p>
+<p><a href="https://github.com/ehrlinger/hvtiPlotR/actions/workflows/lint.yaml" class="external-link"><img src="https://github.com/ehrlinger/hvtiPlotR/actions/workflows/lint.yaml/badge.svg" alt="lint"></a> <a href="https://doi.org/10.5281/zenodo.11780" class="external-link"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.11780.svg" alt="DOI"></a> <!-- badges: end --></p>
+<blockquote>
+<p>hvtiPlotR is an R port of the <code>plot.sas</code> macro suite that CORR biostatisticians have used for years — the same visual layout and options, now built through ggplot2’s constructor + <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code> pattern instead of <code>PROC GPLOT</code> statements. Where a macro’s job is also a statistical estimate and not just a plot (<code>%kaplan</code> / <code>%nelsont</code> survival curves, for instance), the R constructor wraps the same underlying estimator (<code><a href="https://rdrr.io/pkg/survival/man/survfit.html" class="external-link">survival::survfit()</a></code>), so the curve, confidence limits, and numbers at risk match what the SAS macro reports. The <a href="https://ehrlinger.github.io/hvtiPlotR/articles/sas-migration-guide.html">SAS migration guide</a> vignette walks every macro to its <code>hv_*()</code> replacement.</p>
+</blockquote>
 <p>hvtiPlotR packages the ggplot2 themes and plot functions we use in Cardiovascular Outcomes Registries and Research (CORR) at the Cleveland Clinic Heart &amp; Vascular Institute. If you are migrating from the <code>plot.sas</code> macro, this is its R successor.</p>
-<p>Worked, rendered examples for every constructor and theme live in the companion <a href="https://ehrlinger.github.io/hvti_graphics/" class="external-link"><strong>HVTI ggplot graphics recipes</strong></a> book.</p>
-</div>
+<p>Worked, rendered examples for every constructor and theme live in the companion <a href="https://ehrlinger.github.io/hvti_graphics/" class="external-link"><strong>HVTI ggplot graphics recipes</strong></a> book. The full reference — every function, the vignettes, and the changelog — is online at <a href="https://ehrlinger.github.io/hvtiPlotR/" class="uri">https://ehrlinger.github.io/hvtiPlotR/</a>.</p>
 <div class="section level2">
-<h2 id="quick-start">Quick Start<a class="anchor" aria-label="anchor" href="#quick-start"></a>
+<h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
 <p>Install from GitHub using <a href="https://CRAN.R-project.org/package=remotes" class="external-link">remotes</a>:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"ehrlinger/hvtiPlotR"</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="quick-start">Quick Start<a class="anchor" aria-label="anchor" href="#quick-start"></a>
+</h2>
 <p>Apply an HVTI theme to a ggplot2 figure in one line:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
@@ -357,7 +362,6 @@
 <span><span class="fu"><a href="https://rdrr.io/r/utils/vignette.html" class="external-link">vignette</a></span><span class="op">(</span><span class="st">"plot-functions"</span>,      package <span class="op">=</span> <span class="st">"hvtiPlotR"</span><span class="op">)</span>  <span class="co"># per-function reference with worked examples</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/vignette.html" class="external-link">vignette</a></span><span class="op">(</span><span class="st">"plot-decorators"</span>,     package <span class="op">=</span> <span class="st">"hvtiPlotR"</span><span class="op">)</span>  <span class="co"># composition: scale_*, labs(), themes, saving</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/vignette.html" class="external-link">vignette</a></span><span class="op">(</span><span class="st">"contributing"</span>,        package <span class="op">=</span> <span class="st">"hvtiPlotR"</span><span class="op">)</span>  <span class="co"># guide for adding new plot functions</span></span></code></pre></div>
-<p>The online reference is at <a href="https://ehrlinger.github.io/hvtiPlotR/" class="uri">https://ehrlinger.github.io/hvtiPlotR/</a>.</p>
 </div>
 <div class="section level2">
 <h2 id="slides">Slides<a class="anchor" aria-label="anchor" href="#slides"></a>
@@ -372,6 +376,21 @@
 </h2>
 <p>If you are moving existing SAS analyses to R, the SAS migration vignette (<code><a href="articles/sas-migration-guide.html">vignette("sas-migration-guide")</a></code>) maps each <code>plot.sas</code> macro call to its R equivalent.</p>
 <p>The <code>inst/plot.README</code> and <code>inst/plot.sas</code> files are preserved for historical reference.</p>
+</div>
+<div class="section level2">
+<h2 id="related-packages">Related Packages<a class="anchor" aria-label="anchor" href="#related-packages"></a>
+</h2>
+<p>hvtiPlotR is one part of the HVTI CORR R ecosystem. The packages a reader of this one is most likely to reach for next:</p>
+<ul>
+<li>
+<a href="https://github.com/ehrlinger/hvtiPropensityScores" class="external-link"><strong>hvtiPropensityScores</strong></a> — builds the matched/weighted datasets and SMD balance tables that <code><a href="reference/hv_mirror_hist.html">hv_mirror_hist()</a></code> and <code><a href="reference/hv_balance.html">hv_balance()</a></code> are built to plot.</li>
+<li>
+<a href="https://github.com/ehrlinger/hvtiRdatasets" class="external-link"><strong>hvtiRdatasets</strong></a> — builds and verifies the analysis-ready CORR datasets you would feed into these constructors in place of the <code>sample_*()</code> generators.</li>
+<li>
+<a href="https://github.com/ehrlinger/hvtiRtables" class="external-link"><strong>hvtiRtables</strong></a> — produces the Table 1 / manuscript tables that typically accompany the figures built here.</li>
+<li>
+<a href="https://ehrlinger.github.io/hvti_graphics/" class="external-link"><strong>HVTI ggplot graphics recipes</strong></a> — the companion recipes book, with worked examples that tie the constructors above into a house style for clinical figures.</li>
+</ul>
 </div>
 <div class="section level2">
 <h2 id="contributing">Contributing<a class="anchor" aria-label="anchor" href="#contributing"></a>
@@ -395,7 +414,7 @@
 </h2>
 <p>This project follows the <a href="https://www.contributor-covenant.org/version/2/1/code_of_conduct/" class="external-link">Contributor Covenant</a> code of conduct.</p>
 </div>
-
+</div>
   </main><aside class="col-md-3"><div class="package-badges">
 <h2 data-toc-skip>Package badges</h2>
 <ul class="list-unstyled">

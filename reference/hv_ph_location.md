@@ -80,7 +80,7 @@ which accepts a `panel_box` argument that delegates to this helper.
 ## Examples
 
 ``` r
-if (FALSE) { # \dontrun{
+# \donttest{
 p <- ggplot2::ggplot(mtcars, ggplot2::aes(hp, mpg)) +
   ggplot2::geom_point() +
   theme_hv_ppt_dark()
@@ -90,11 +90,15 @@ loc <- hv_ph_location(
   panel_width  = 10, panel_height = 5,
   panel_left   = 0.5, panel_top   = 1.5
 )
+#> Warning: font family 'Arial' not found in PostScript font database
+#> Warning: font family 'Arial' not found in PostScript font database
+#> Warning: font family 'Arial' not found in PostScript font database
+#> Warning: hv_ph_location(): plot chrome does not fit left/top of panel on slide (left=-1.148 in). Increase `panel_left`/`panel_top` to leave room for axis labels.
 # doc <- officer::read_pptx(template)
 # doc <- officer::add_slide(doc, layout = "Title and Content")
 # doc <- officer::ph_with(
 #   doc, rvg::dml(ggobj = p),
 #   location = do.call(officer::ph_location, loc)
 # )
-} # }
+# }
 ```

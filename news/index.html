@@ -60,6 +60,10 @@
 <ul><li>
 <code><a href="../reference/hvtiPlotR-themes.html">theme_hv_ppt_dark()</a></code> / <code><a href="../reference/hvtiPlotR-themes.html">theme_hv_ppt_light()</a></code> no longer error on a graphics device that can’t resolve the default <code>base_family = "Arial"</code> (e.g. <code><a href="https://rdrr.io/r/grDevices/postscript.html" class="external-link">postscript()</a></code>/<code><a href="https://rdrr.io/r/grDevices/pdf.html" class="external-link">pdf()</a></code> on Linux, which is what <code>R CMD check --run-donttest</code> renders examples with). The active device is checked at draw time – immediately before <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code>/<code>grid.draw()</code> hand off to ggplot2 – and falls back to <code>"Helvetica"</code> (metrically compatible) only when Arial genuinely can’t be resolved there, with a one-time session message explaining why. Devices that resolve system fonts directly (quartz, cairo, RStudio’s graphics device) are unaffected and continue to render real Arial. No global font registry is modified.</li>
 </ul></div>
+<div class="section level3">
+<h3 id="documentation-2-7-4">Documentation<a class="anchor" aria-label="anchor" href="#documentation-2-7-4"></a></h3>
+<ul><li>Documentation now follows the composed house style. The package-level documentation moved from <code>R/help.R</code> to <code>R/hvtiPlotR-package.R</code>, and the stale root <code>writing-voice.md</code> was replaced by the generated <code>.claude/house-style.md</code>. No user-facing behaviour changed.</li>
+</ul></div>
 </div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="2.7.3" id="hvtiplotr-273">hvtiPlotR 2.7.3<a class="anchor" aria-label="anchor" href="#hvtiplotr-273"></a></h2>

@@ -96,6 +96,10 @@ The column names match the defaults of
 `ev_event`, `deads`) are included so callers can pass `event_col`,
 `event_time_col`, and `death_for_event_col` directly.
 
+## See also
+
+[`hv_followup()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_followup.md)
+
 ## Examples
 
 ``` r
