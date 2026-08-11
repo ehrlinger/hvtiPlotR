@@ -8,7 +8,12 @@
   than failing: `NA` and a negative time each reported 100% survival, and
   `Inf` reported the final survival estimate at time `Inf`. The failure was
   silent, so the table was misleading rather than obviously wrong. Both
-  functions now share a `.check_report_times()` validator.
+  functions now share a `.check_report_times()` validator. The check applies
+  on every entry point, including `hv_atrisk()` called with an `hv_data`
+  object or a precomputed risk table -- those route through
+  `.select_report_times()`, where bad values were previously dropped with an
+  "ignored" warning instead of erroring. `report_times = NULL` still means
+  "every time already in the table".
 
 - `hv_upset()` and `hv_venn()` now reject duplicated entries in `intersect`
   and `sets`. A repeated name mangled the column to `A.1`, producing two
@@ -20,6 +25,12 @@
   `.html`, and the `.superpowers/` tool-state directory. These added 230
   paths to the source tarball and triggered an `R CMD check` warning about
   rendered artifacts in `vignettes/`.
+
+- Three `\donttest` examples wrote PDFs into the working directory
+  (`survival.pdf`, `trends.pdf`, `fig.pdf`). `--as-cran` executes those
+  blocks, so the files landed in the check directory and were reported as
+  non-standard. They now write to `tempdir()`, which is what CRAN policy
+  requires of examples regardless of the NOTE.
 
 # hvtiPlotR 2.7.5
 
