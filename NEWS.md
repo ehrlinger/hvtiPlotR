@@ -1,4 +1,4 @@
-# hvtiPlotR 2.7.7
+# hvtiPlotR 2.7.6
 
 ## Bug fixes
 
@@ -30,10 +30,6 @@
   came from `as.numeric(names(tapply(...)))`, so factor labels and dates
   became `NA` and their summary points vanished from the plot. The original
   x type is now preserved through aggregation.
-
-# hvtiPlotR 2.7.6
-
-## Bug fixes
 
 - `hv_survival()` and `hv_atrisk()` now reject `report_times` containing
   `NA`, `NaN`, `Inf`, or negative values. Previously these were accepted and
