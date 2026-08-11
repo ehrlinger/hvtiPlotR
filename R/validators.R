@@ -107,7 +107,7 @@
 # input cohort: printing N = nrow(data) while the fit saw fewer rows means the
 # reported N does not describe the estimates. Warns once, naming the columns
 # responsible, and returns the counts for $meta.
-.exclude_incomplete <- function(data, columns) {
+.exclude_incomplete <- function(data, columns, context = NULL) {
   keep       <- stats::complete.cases(data[, columns, drop = FALSE])
   n_input    <- nrow(data)
   n_excluded <- sum(!keep)
@@ -117,8 +117,9 @@
                                logical(1))]
     warning(
       sprintf(
-        "%d of %d row(s) excluded for missing values in %s; analysing %d.",
+        "%d of %d row(s) excluded%s for missing values in %s; analysing %d.",
         n_excluded, n_input,
+        if (is.null(context)) "" else paste0(" from the ", context),
         paste(sprintf("`%s`", culprits), collapse = ", "),
         n_input - n_excluded
       ),

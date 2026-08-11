@@ -236,3 +236,19 @@ test_that("hv_trends still handles numeric time points", {
   expect_equal(tr$tables$summary$yr, c(2020, 2021))
   expect_equal(tr$tables$summary$val, c(1.5, 3.5))
 })
+
+test_that("hv_trends tolerates NA time points without a length mismatch", {
+  # .tapply_keys() uses sort(), which drops NA (na.last = NA), matching
+  # tapply()'s own dropping of NA indices -- the two stay the same length.
+  dta <- data.frame(yr = c(2020, 2020, 2021, NA), val = c(1, 2, 3, 4))
+  expect_no_error(tr <- hv_trends(dta, x_col = "yr", y_col = "val",
+                                  group_col = NULL))
+  expect_equal(tr$tables$summary$yr, c(2020, 2021))
+  expect_false(anyNA(tr$tables$summary$yr))
+
+  dta2 <- data.frame(yr = c(2020, 2020, 2021, NA), val = c(1, 2, 3, 4),
+                     grp = rep("A", 4))
+  expect_no_error(tr2 <- hv_trends(dta2, x_col = "yr", y_col = "val",
+                                   group_col = "grp"))
+  expect_equal(nrow(tr2$tables$summary), 2L)
+})

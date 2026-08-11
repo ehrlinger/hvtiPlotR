@@ -10,7 +10,10 @@
   patients but reported 20. Both now exclude incomplete rows explicitly,
   warn once naming the columns responsible, and report `n_obs` /
   `n_patients` as the analysed cohort alongside `n_input` and `n_excluded`.
-  `print()` shows the split whenever anything was excluded.
+  `print()` shows the split whenever anything was excluded. The event panel
+  requires more columns than the death panel, so the two can hold different
+  cohorts; each is filtered and warned about separately, and the event
+  panel's counts are reported as `n_event_patients` / `n_event_excluded`.
 
 - The `hv_followup()` event panel no longer misclassifies death-before-event
   as a non-fatal event. The state was taken from the event flag alone, and

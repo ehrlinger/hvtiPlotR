@@ -199,6 +199,13 @@ sample_goodness_followup_data <- function(
 #' \code{$meta$n_excluded}, so the reported N always describes the plotted
 #' points.
 #'
+#' The event panel requires more columns than the death panel, so the two can
+#' have different cohorts: a patient with a complete death record but a
+#' missing event time appears in one panel and not the other.  Each panel is
+#' therefore filtered and warned about separately, and the event panel's
+#' counts are reported as \code{$meta$n_event_patients} and
+#' \code{$meta$n_event_excluded}.
+#'
 #' @return An object of class \code{c("hv_followup", "hv_data")}:
 #' \describe{
 #'   \item{\code{$data}}{Per-patient data frame for the death panel.}
@@ -291,7 +298,8 @@ hv_followup <- function(
   # --- Death panel ----------------------------------------------------------
   gf_require_columns(payload, c(iv_opyrs_col, death_time_col, death_col))
   death_excl <- .exclude_incomplete(payload, c(iv_opyrs_col, death_time_col,
-                                               death_col))
+                                               death_col),
+                                    context = "death panel")
   death_df   <- death_excl$data[, c(iv_opyrs_col, death_time_col, death_col),
                                 drop = FALSE]
   if (!nrow(death_df))
@@ -312,7 +320,12 @@ hv_followup <- function(
     event_cols <- c(iv_opyrs_col, event_time_col, event_col, eff_death_col,
                     death_time_col)
     gf_require_columns(payload, event_cols)
-    event_df <- gf_prepare_frame(payload, event_cols)
+    # The event panel needs more columns than the death panel, so it has its
+    # own cohort. Reporting only the death panel's counts would describe a
+    # different set of patients than event_data actually contains.
+    event_excl <- .exclude_incomplete(payload, event_cols,
+                                      context = "event panel")
+    event_df   <- event_excl$data[, event_cols, drop = FALSE]
     if (!nrow(event_df))
       stop("No rows available to build the event follow-up plot.", call. = FALSE)
     event_data <- gf_build_event_frame(
@@ -343,7 +356,9 @@ hv_followup <- function(
       has_event           = has_event,
       n_patients          = death_excl$n_analyzed,
       n_input             = death_excl$n_input,
-      n_excluded          = death_excl$n_excluded
+      n_excluded          = death_excl$n_excluded,
+      n_event_patients    = if (has_event) event_excl$n_analyzed else NULL,
+      n_event_excluded    = if (has_event) event_excl$n_excluded else NULL
     ),
     tables   = tables,
     subclass = "hv_followup"
@@ -365,6 +380,10 @@ print.hv_followup <- function(x, ...) {
     cat(sprintf(
       "                %d analysed of %d input; %d excluded for missing values\n",
       m$n_patients, m$n_input, m$n_excluded))
+  if (isTRUE(m$n_event_excluded > 0L))
+    cat(sprintf(
+      "  Event panel : %d analysed; %d excluded for missing values\n",
+      m$n_event_patients, m$n_event_excluded))
   cat(sprintf("  Study period: %s \u2013 %s (close: %s)\n",
               format(m$study_start), format(m$study_end),
               format(m$close_date)))

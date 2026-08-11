@@ -100,6 +100,13 @@ warning naming the columns responsible.  \code{$meta$n_patients} reports
 the \emph{analysed} cohort, alongside \code{$meta$n_input} and
 \code{$meta$n_excluded}, so the reported N always describes the plotted
 points.
+
+The event panel requires more columns than the death panel, so the two can
+have different cohorts: a patient with a complete death record but a
+missing event time appears in one panel and not the other.  Each panel is
+therefore filtered and warned about separately, and the event panel's
+counts are reported as \code{$meta$n_event_patients} and
+\code{$meta$n_event_excluded}.
 }
 
 \examples{

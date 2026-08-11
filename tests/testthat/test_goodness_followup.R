@@ -396,3 +396,54 @@ test_that("hv_followup is silent when no rows are dropped", {
   expect_equal(gf$meta$n_excluded, 0L)
   expect_equal(gf$meta$n_patients, nrow(gf$data))
 })
+
+test_that("event panel reports its own cohort when only event columns are missing", {
+  # The event panel needs more columns than the death panel, so a complete
+  # death record with a missing event time belongs in one panel but not the
+  # other. Previously the event rows were dropped by gf_prepare_frame() with
+  # no warning, and $meta described only the death panel's cohort.
+  dta <- data.frame(
+    iv_opyrs = c(1, 2, 3),
+    iv_dead  = c(5, 6, 7),
+    dead     = c(FALSE, FALSE, FALSE),
+    iv_event = c(1, 2, NA),
+    ev_event = c(TRUE, FALSE, TRUE)
+  )
+  expect_warning(
+    gf <- hv_followup(dta, event_col = "ev_event", event_time_col = "iv_event"),
+    "excluded from the event panel"
+  )
+  # Death panel keeps all three -- it does not need the event columns.
+  expect_equal(gf$meta$n_patients, 3L)
+  expect_equal(gf$meta$n_excluded, 0L)
+  expect_equal(nrow(gf$data), 3L)
+  # Event panel reports its own, smaller cohort.
+  expect_equal(gf$meta$n_event_patients, 2L)
+  expect_equal(gf$meta$n_event_excluded, 1L)
+  expect_equal(nrow(gf$tables$event_data), gf$meta$n_event_patients)
+  expect_output(print(gf), "Event panel : 2 analysed; 1 excluded")
+})
+
+test_that("each panel's exclusion warning names its own panel", {
+  dta <- data.frame(
+    iv_opyrs = c(1, 2, 3),
+    iv_dead  = c(5, NA, 7),
+    dead     = c(FALSE, FALSE, FALSE),
+    iv_event = c(1, 2, NA),
+    ev_event = c(TRUE, FALSE, TRUE)
+  )
+  w <- character()
+  withCallingHandlers(
+    hv_followup(dta, event_col = "ev_event", event_time_col = "iv_event"),
+    warning = function(x) { w <<- c(w, conditionMessage(x))
+                            invokeRestart("muffleWarning") }
+  )
+  expect_true(any(grepl("death panel", w)))
+  expect_true(any(grepl("event panel", w)))
+})
+
+test_that("no event-panel counts are reported when there is no event panel", {
+  gf <- hv_followup(make_gfup_data())
+  expect_null(gf$meta$n_event_patients)
+  expect_null(gf$meta$n_event_excluded)
+})
