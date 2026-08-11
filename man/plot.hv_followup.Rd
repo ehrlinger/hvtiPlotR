@@ -70,6 +70,9 @@ plot(gf, type = "event") +
   ggplot2::labs(x = "Operation Date", y = "Follow-up (years)") +
   theme_hv_poster()
 
+# Legacy stem below each point -- restored with a positive segment_drop
+plot(hv_followup(dta, segment_drop = 0.2))
+
 }
 \seealso{
 \code{\link{hv_followup}}, \code{\link{theme_hv_manuscript}}

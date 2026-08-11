@@ -411,6 +411,9 @@ print.hv_followup <- function(x, ...) {
 #'   ggplot2::labs(x = "Operation Date", y = "Follow-up (years)") +
 #'   theme_hv_poster()
 #'
+#' # Legacy stem below each point -- restored with a positive segment_drop
+#' plot(hv_followup(dta, segment_drop = 0.2))
+#'
 #' @importFrom ggplot2 ggplot aes geom_point geom_segment geom_line
 #' @export
 plot.hv_followup <- function(x,
