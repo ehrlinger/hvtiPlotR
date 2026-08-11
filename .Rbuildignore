@@ -51,3 +51,4 @@ hvtiPlotR.Rproj
 ^vignettes/\.quarto$
 ^vignettes/.*\.html$
 ^\.superpowers$
+^\.lintr$

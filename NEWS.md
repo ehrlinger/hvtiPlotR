@@ -26,6 +26,10 @@
   paths to the source tarball and triggered an `R CMD check` warning about
   rendered artifacts in `vignettes/`.
 
+- `.Rbuildignore` also excludes `.lintr`. It is a development-time lint
+  configuration, not part of the installed package, and shipping it drew an
+  `R CMD check` NOTE about hidden files. It stays tracked in git.
+
 - Three `\donttest` examples wrote PDFs into the working directory
   (`survival.pdf`, `trends.pdf`, `fig.pdf`). `--as-cran` executes those
   blocks, so the files landed in the check directory and were reported as
