@@ -120,12 +120,23 @@ test_that("hv_followup death_levels are respected in plot", {
   expect_true(all(levels(p$data$state) %in% c("Alive", "Dead")))
 })
 
-test_that("plot(hv_followup) contains geom_point, geom_segment, and geom_line", {
+test_that("plot(hv_followup) contains geom_point and geom_line", {
   p           <- plot(hv_followup(make_gfup_data()))
   layer_geoms <- vapply(p$layers, function(l) class(l$geom)[1], character(1))
-  expect_true("GeomPoint"   %in% layer_geoms)
+  expect_true("GeomPoint" %in% layer_geoms)
+  expect_true("GeomLine"  %in% layer_geoms)
+})
+
+test_that("plot(hv_followup) draws no stem segment by default", {
+  p           <- plot(hv_followup(make_gfup_data()))
+  layer_geoms <- vapply(p$layers, function(l) class(l$geom)[1], character(1))
+  expect_false("GeomSegment" %in% layer_geoms)
+})
+
+test_that("plot(hv_followup) restores the stem when segment_drop > 0", {
+  p           <- plot(hv_followup(make_gfup_data(), segment_drop = 0.2))
+  layer_geoms <- vapply(p$layers, function(l) class(l$geom)[1], character(1))
   expect_true("GeomSegment" %in% layer_geoms)
-  expect_true("GeomLine"    %in% layer_geoms)
 })
 
 test_that("hv_followup origin_year is reflected in plot operation_year", {
@@ -237,11 +248,11 @@ test_that("hv_followup death_for_event_col is respected", {
   expect_equal(nlevels(p$data$state), 3L)
 })
 
-test_that("plot(hv_followup, type='event') contains geom_point, geom_segment, and geom_line", {
+test_that("plot(hv_followup, type='event') contains geom_point and geom_line", {
   p           <- plot(make_gfup_event(), type = "event")
   layer_geoms <- vapply(p$layers, function(l) class(l$geom)[1], character(1))
   expect_true("GeomPoint"   %in% layer_geoms)
-  expect_true("GeomSegment" %in% layer_geoms)
+  expect_false("GeomSegment" %in% layer_geoms)
   expect_true("GeomLine"    %in% layer_geoms)
 })
 

@@ -72,13 +72,13 @@ test_that("hv_balance plot has SMD points for every covariate", {
 })
 
 # ============================================================================
-# hv_followup — follow-up dot/segment plot, both default and event types
+# hv_followup — follow-up dot plot, both default and event types
 # ============================================================================
 
-test_that("hv_followup default plot has segment + point + reference line", {
+test_that("hv_followup default plot has point + reference line", {
   dta <- sample_goodness_followup_data(n = 80, seed = 1)
   expect_plot_has_data(plot(hv_followup(dta)),
-                       geoms = c("GeomPoint", "GeomSegment"))
+                       geoms = c("GeomPoint", "GeomLine"))
 })
 
 test_that("hv_followup event plot has data", {
@@ -87,7 +87,7 @@ test_that("hv_followup event plot has data", {
                      event_col      = "ev_event",
                      event_time_col = "iv_event")
   expect_plot_has_data(plot(gf, type = "event"),
-                       geoms = c("GeomPoint", "GeomSegment"))
+                       geoms = c("GeomPoint", "GeomLine"))
 })
 
 # ============================================================================
