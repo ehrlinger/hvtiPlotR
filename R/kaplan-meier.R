@@ -444,12 +444,20 @@ km_build_life_plot <- function(km_df, alpha) {
 #'     \code{life}, \code{proplife}, \code{log_cumhaz}, \code{log_time}.}
 #'   \item{\code{$meta}}{Named list: \code{time_col}, \code{event_col},
 #'     \code{group_col}, \code{method}, \code{conf_level},
-#'     \code{report_times}, \code{n_obs}, \code{n_events}.}
+#'     \code{report_times}, \code{n_obs} (the \emph{analysed} cohort),
+#'     \code{n_input}, \code{n_excluded}, \code{n_events}.}
 #'   \item{\code{$tables}}{Named list with two data frames:
 #'     \code{risk} (\code{strata}, \code{report_time}, \code{n.risk}) and
 #'     \code{report} (\code{strata}, \code{report_time}, \code{surv},
 #'     \code{lower}, \code{upper}, \code{n.risk}, \code{n.event}).}
 #' }
+#'
+#' @section Missing data:
+#' Rows with a missing time, event, or grouping value are excluded before
+#' fitting, with a warning naming the columns responsible.  \code{$meta$n_obs}
+#' and \code{print()} report the \emph{analysed} cohort, alongside
+#' \code{n_input} and \code{n_excluded}, so the reported N always matches the
+#' cohort the estimates describe.
 #'
 #' @seealso Worked recipe with rendered output:
 #'   \url{https://ehrlinger.github.io/hvti_graphics/survival.html}.
@@ -553,6 +561,14 @@ hv_survival <- function(data,
   .check_report_times(report_times)
 
   # --- Fit ------------------------------------------------------------------
+  # survfit() drops incomplete rows itself; excluding them up front keeps the
+  # reported cohort and the fitted cohort identical rather than merely close.
+  excl  <- .exclude_incomplete(data, required_cols)
+  data  <- excl$data
+  if (!nrow(data))
+    stop("No complete rows available to fit the survival model.",
+         call. = FALSE)
+
   fit   <- km_fit(data, time_col, event_col, group_col, conf_level, method)
   km_df <- km_extract_tidy(fit, group_col)
 
@@ -570,7 +586,9 @@ hv_survival <- function(data,
       method       = method,
       conf_level   = conf_level,
       report_times = report_times,
-      n_obs        = nrow(data),
+      n_obs        = excl$n_analyzed,
+      n_input      = excl$n_input,
+      n_excluded   = excl$n_excluded,
       n_events     = sum(as.integer(data[[event_col]]), na.rm = TRUE)
     ),
     tables = list(
@@ -599,6 +617,10 @@ print.hv_survival <- function(x, ...) {
   cat(sprintf("  N obs       : %d  (events: %d, %.1f%%)\n",
               m$n_obs, m$n_events,
               100 * m$n_events / max(m$n_obs, 1L)))
+  if (isTRUE(m$n_excluded > 0L))
+    cat(sprintf(
+      "                %d analysed of %d input; %d excluded for missing values\n",
+      m$n_obs, m$n_input, m$n_excluded))
   cat(sprintf("  Conf level  : %.0f%%\n", m$conf_level * 100))
   cat(sprintf("  Report times: %s\n",
               paste(m$report_times, collapse = ", ")))

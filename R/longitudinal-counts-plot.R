@@ -147,6 +147,12 @@ hv_longitudinal <- function(data,
                                group_col = "series") {
   .check_df(data)
   .check_cols(data, c(x_col, count_col, group_col))
+  .check_count_col(data, count_col)
+  # A missing time or series label silently collapses into an "NA" category
+  # that reads as a real group on the axis and in the legend.
+  for (cl in c(x_col, group_col))
+    if (anyNA(data[[cl]]))
+      stop(sprintf("`%s` must not contain missing values.", cl), call. = FALSE)
 
   n_timepoints <- length(unique(data[[x_col]]))
   n_groups     <- length(unique(data[[group_col]]))

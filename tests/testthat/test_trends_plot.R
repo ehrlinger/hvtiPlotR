@@ -202,3 +202,37 @@ test_that("plot.hv_trends is composable with theme_hv_*", {
   tr <- hv_trends(dta_grp)
   expect_s3_class(plot(tr) + theme_hv_manuscript(), "ggplot")
 })
+
+# ===========================================================================
+# Non-numeric time points must survive aggregation
+# ===========================================================================
+
+test_that("hv_trends preserves factor time points in the summary", {
+  # as.numeric(names(tapply(...))) turned factor labels into NA, so the
+  # summary points silently vanished from the plot.
+  dta <- data.frame(
+    yr  = factor(rep(c("Q1", "Q2"), each = 4), levels = c("Q1", "Q2")),
+    val = c(1, 2, 3, 4, 5, 6, 7, 8),
+    grp = rep(c("A", "B"), 4)
+  )
+  tr <- hv_trends(dta, x_col = "yr", y_col = "val", group_col = "grp")
+  expect_false(anyNA(tr$tables$summary$yr))
+  expect_setequal(as.character(tr$tables$summary$yr), c("Q1", "Q2"))
+})
+
+test_that("hv_trends preserves Date time points in the summary", {
+  dta <- data.frame(
+    yr  = rep(as.Date(c("2020-01-01", "2021-01-01")), each = 2),
+    val = c(1, 2, 3, 4)
+  )
+  tr <- hv_trends(dta, x_col = "yr", y_col = "val", group_col = NULL)
+  expect_s3_class(tr$tables$summary$yr, "Date")
+  expect_false(anyNA(tr$tables$summary$yr))
+})
+
+test_that("hv_trends still handles numeric time points", {
+  dta <- data.frame(yr = rep(c(2020, 2021), each = 2), val = c(1, 2, 3, 4))
+  tr  <- hv_trends(dta, x_col = "yr", y_col = "val", group_col = NULL)
+  expect_equal(tr$tables$summary$yr, c(2020, 2021))
+  expect_equal(tr$tables$summary$val, c(1.5, 3.5))
+})

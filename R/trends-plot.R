@@ -185,7 +185,7 @@ hv_trends <- function(data,
       lapply(split(data, data[[group_col]]), function(sub) {
         agg <- tapply(sub[[y_col]], sub[[x_col]], sfn)
         data.frame(
-          x     = as.numeric(names(agg)),
+          x     = .tapply_keys(sub[[x_col]]),
           y     = as.numeric(agg),
           group = sub[[group_col]][1L]
         )
@@ -201,7 +201,7 @@ hv_trends <- function(data,
   } else {
     agg      <- tapply(data[[y_col]], data[[x_col]], sfn)
     ann_data <- data.frame(
-      x = as.numeric(names(agg)),
+      x = .tapply_keys(data[[x_col]]),
       y = as.numeric(agg)
     )
     names(ann_data) <- c(x_col, y_col)

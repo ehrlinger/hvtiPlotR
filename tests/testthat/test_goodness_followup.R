@@ -332,3 +332,67 @@ test_that("print.hv_followup returns x invisibly", {
   expect_false(ret$visible)
   expect_identical(ret$value, obj)
 })
+
+# ===========================================================================
+# Event-panel ordering and the missing-data contract
+# ===========================================================================
+
+test_that("event panel labels death-before-event as Death, not Non-fatal event", {
+  # Patient 1 dies at year 1 but carries an event flag recorded at year 2.
+  # The event flag alone would label this "Non-fatal event", contradicting
+  # the documented "death before non-fatal event" state.
+  dta <- data.frame(
+    iv_opyrs = c(5, 5, 5),
+    iv_dead  = c(1, 1, 8),
+    dead     = c(TRUE, TRUE, FALSE),
+    iv_event = c(2, 1, 3),
+    ev_event = c(TRUE, FALSE, TRUE)
+  )
+  gf <- hv_followup(dta, event_col = "ev_event", event_time_col = "iv_event",
+                    death_for_event_col = "dead")
+  state <- as.character(gf$tables$event_data$state)
+
+  expect_equal(state[1], "Death")            # event flagged after death
+  expect_equal(state[2], "Death")            # died, no event
+  expect_equal(state[3], "Non-fatal event")  # event genuinely first
+})
+
+test_that("event panel keeps the event when it strictly precedes death", {
+  dta <- data.frame(
+    iv_opyrs = 5, iv_dead = 6, dead = TRUE,
+    iv_event = 2, ev_event = TRUE
+  )
+  gf <- hv_followup(dta, event_col = "ev_event", event_time_col = "iv_event",
+                    death_for_event_col = "dead")
+  expect_equal(as.character(gf$tables$event_data$state), "Non-fatal event")
+})
+
+test_that("event panel gives ties to death", {
+  dta <- data.frame(
+    iv_opyrs = 5, iv_dead = 3, dead = TRUE,
+    iv_event = 3, ev_event = TRUE
+  )
+  gf <- hv_followup(dta, event_col = "ev_event", event_time_col = "iv_event",
+                    death_for_event_col = "dead")
+  expect_equal(as.character(gf$tables$event_data$state), "Death")
+})
+
+test_that("hv_followup warns and reports the analyzed cohort", {
+  dta <- data.frame(
+    iv_opyrs = c(1, 2, 3),
+    iv_dead  = c(1, 2, NA),
+    dead     = c(TRUE, FALSE, TRUE)
+  )
+  expect_warning(gf <- hv_followup(dta), "1 of 3 row\\(s\\) excluded")
+  expect_equal(gf$meta$n_patients, 2L)
+  expect_equal(gf$meta$n_input, 3L)
+  expect_equal(gf$meta$n_excluded, 1L)
+  expect_equal(nrow(gf$data), gf$meta$n_patients)
+  expect_output(print(gf), "2 analysed of 3 input")
+})
+
+test_that("hv_followup is silent when no rows are dropped", {
+  expect_no_warning(gf <- hv_followup(make_gfup_data()))
+  expect_equal(gf$meta$n_excluded, 0L)
+  expect_equal(gf$meta$n_patients, nrow(gf$data))
+})

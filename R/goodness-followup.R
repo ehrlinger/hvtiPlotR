@@ -165,7 +165,10 @@ sample_goodness_followup_data <- function(
 #'   Default \code{"iv_dead"}.
 #' @param event_col          Name of the non-fatal event indicator column.
 #'   Required to compute the event panel (\code{type = "event"}).
-#'   Default \code{NULL} (event panel unavailable).
+#'   Default \code{NULL} (event panel unavailable).  The flag alone does not
+#'   decide the state: the event time is compared against
+#'   \code{death_time_col}, and a flagged event is only counted as non-fatal
+#'   when it strictly precedes death.  Ties go to death.
 #' @param event_time_col     Name of the time-to-event column.
 #'   Required when \code{event_col} is supplied.  Default \code{NULL}.
 #' @param death_for_event_col Name of the death column to use specifically in
@@ -189,11 +192,19 @@ sample_goodness_followup_data <- function(
 #'   endpoint below the follow-up point.  Default \code{0} (no segment drawn).
 #'   Set to a positive value to restore the legacy stem below each point.
 #'
+#' @section Missing data:
+#' Patients with a missing value in any required column are excluded, with a
+#' warning naming the columns responsible.  \code{$meta$n_patients} reports
+#' the \emph{analysed} cohort, alongside \code{$meta$n_input} and
+#' \code{$meta$n_excluded}, so the reported N always describes the plotted
+#' points.
+#'
 #' @return An object of class \code{c("hv_followup", "hv_data")}:
 #' \describe{
 #'   \item{\code{$data}}{Per-patient data frame for the death panel.}
 #'   \item{\code{$meta}}{Column names, date parameters, state levels,
-#'     \code{has_event} flag.}
+#'     \code{has_event} flag, and the cohort counts \code{n_patients}
+#'     (analysed), \code{n_input}, and \code{n_excluded}.}
 #'   \item{\code{$tables}}{Named list with \code{diagonal} (the study-period
 #'     reference diagonal) and, when event columns are supplied,
 #'     \code{event_data}.}
@@ -279,8 +290,10 @@ hv_followup <- function(
 
   # --- Death panel ----------------------------------------------------------
   gf_require_columns(payload, c(iv_opyrs_col, death_time_col, death_col))
-  death_df <- gf_prepare_frame(payload, c(iv_opyrs_col, death_time_col,
-                                          death_col))
+  death_excl <- .exclude_incomplete(payload, c(iv_opyrs_col, death_time_col,
+                                               death_col))
+  death_df   <- death_excl$data[, c(iv_opyrs_col, death_time_col, death_col),
+                                drop = FALSE]
   if (!nrow(death_df))
     stop("No rows available to build the death follow-up plot.", call. = FALSE)
   death_data <- gf_build_death_frame(
@@ -294,18 +307,17 @@ hv_followup <- function(
   if (has_event) {
     eff_death_col <- if (is.null(death_for_event_col)) death_col else
       death_for_event_col
-    gf_require_columns(payload,
-                       c(iv_opyrs_col, event_time_col, event_col,
-                         eff_death_col))
-    event_df <- gf_prepare_frame(
-      payload,
-      c(iv_opyrs_col, event_time_col, event_col, eff_death_col)
-    )
+    # death_time_col is required here, not just for the death panel: without
+    # it the event panel cannot tell whether death preceded the flagged event.
+    event_cols <- c(iv_opyrs_col, event_time_col, event_col, eff_death_col,
+                    death_time_col)
+    gf_require_columns(payload, event_cols)
+    event_df <- gf_prepare_frame(payload, event_cols)
     if (!nrow(event_df))
       stop("No rows available to build the event follow-up plot.", call. = FALSE)
     event_data <- gf_build_event_frame(
       event_df, iv_opyrs_col, event_time_col, event_col,
-      eff_death_col, event_levels, origin_year, segment_drop
+      eff_death_col, death_time_col, event_levels, origin_year, segment_drop
     )
   }
 
@@ -329,7 +341,9 @@ hv_followup <- function(
       event_levels        = event_levels,
       segment_drop        = segment_drop,
       has_event           = has_event,
-      n_patients          = nrow(payload)
+      n_patients          = death_excl$n_analyzed,
+      n_input             = death_excl$n_input,
+      n_excluded          = death_excl$n_excluded
     ),
     tables   = tables,
     subclass = "hv_followup"
@@ -347,6 +361,10 @@ print.hv_followup <- function(x, ...) {
   m <- x$meta
   cat("<hv_followup>\n")
   cat(sprintf("  N patients  : %d\n", m$n_patients))
+  if (isTRUE(m$n_excluded > 0L))
+    cat(sprintf(
+      "                %d analysed of %d input; %d excluded for missing values\n",
+      m$n_patients, m$n_input, m$n_excluded))
   cat(sprintf("  Study period: %s \u2013 %s (close: %s)\n",
               format(m$study_start), format(m$study_end),
               format(m$close_date)))
@@ -528,14 +546,24 @@ gf_build_death_frame <- function(df, iv_col, follow_col, flag_col,
 #   levels[2] = non-fatal event occurred first
 #   levels[3] = death before the non-fatal event
 # This mirrors the ev_evnt coding in the legacy tp.dp.gfup.R template.
+#
+# The event flag alone cannot distinguish levels[2] from levels[3]: a patient
+# who died at year 1 with an event recorded at year 2 would be labelled
+# "non-fatal event", contradicting the state definitions above. The event time
+# is therefore compared against the death time, and the event only wins when
+# it strictly precedes death. Ties go to death, since an event recorded at the
+# moment of death is not a non-fatal one.
 gf_build_event_frame <- function(df, iv_col, follow_col, event_col,
-                                 death_col, levels, origin_year,
-                                 segment_drop) {
+                                 death_col, death_time_col, levels,
+                                 origin_year, segment_drop) {
   operation_year <- origin_year + as.numeric(df[[iv_col]])
   follow_up      <- as.numeric(df[[follow_col]])
   event_flag     <- as.logical(df[[event_col]])
   death_flag     <- as.logical(df[[death_col]])
-  state <- ifelse(event_flag, levels[2],
+  death_time     <- as.numeric(df[[death_time_col]])
+
+  event_first <- event_flag & (!death_flag | follow_up < death_time)
+  state <- ifelse(event_first, levels[2],
                   ifelse(death_flag, levels[3], levels[1]))
   data.frame(
     operation_year = operation_year,

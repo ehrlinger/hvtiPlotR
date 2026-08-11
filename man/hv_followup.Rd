@@ -37,7 +37,10 @@ Default \code{"iv_dead"}.}
 
 \item{event_col}{Name of the non-fatal event indicator column.
 Required to compute the event panel (\code{type = "event"}).
-Default \code{NULL} (event panel unavailable).}
+Default \code{NULL} (event panel unavailable).  The flag alone does not
+decide the state: the event time is compared against
+\code{death_time_col}, and a flagged event is only counted as non-fatal
+when it strictly precedes death.  Ties go to death.}
 
 \item{event_time_col}{Name of the time-to-event column.
 Required when \code{event_col} is supplied.  Default \code{NULL}.}
@@ -76,7 +79,8 @@ An object of class \code{c("hv_followup", "hv_data")}:
 \describe{
 \item{\code{$data}}{Per-patient data frame for the death panel.}
 \item{\code{$meta}}{Column names, date parameters, state levels,
-\code{has_event} flag.}
+\code{has_event} flag, and the cohort counts \code{n_patients}
+(analysed), \code{n_input}, and \code{n_excluded}.}
 \item{\code{$tables}}{Named list with \code{diagonal} (the study-period
 reference diagonal) and, when event columns are supplied,
 \code{event_data}.}
@@ -89,6 +93,15 @@ Validates dates, builds per-patient follow-up frames, and returns an
 (\code{type = "event"}).  Call \code{\link{plot.hv_followup}} on the
 result to obtain a bare \code{ggplot2} object.
 }
+\section{Missing data}{
+
+Patients with a missing value in any required column are excluded, with a
+warning naming the columns responsible.  \code{$meta$n_patients} reports
+the \emph{analysed} cohort, alongside \code{$meta$n_input} and
+\code{$meta$n_excluded}, so the reported N always describes the plotted
+points.
+}
+
 \examples{
 dta <- sample_goodness_followup_data()
 

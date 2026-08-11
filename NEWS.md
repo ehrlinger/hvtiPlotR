@@ -1,3 +1,36 @@
+# hvtiPlotR 2.7.7
+
+## Bug fixes
+
+- `hv_survival()` and `hv_followup()` no longer report a cohort size that
+  differs from the one actually analysed. Both silently dropped incomplete
+  rows -- `survfit()` omits them, and `hv_followup()` filtered with
+  `complete.cases()` -- while `$meta` and `print()` kept reporting
+  `nrow(data)`. A 20-row input with two missing follow-up times fitted 18
+  patients but reported 20. Both now exclude incomplete rows explicitly,
+  warn once naming the columns responsible, and report `n_obs` /
+  `n_patients` as the analysed cohort alongside `n_input` and `n_excluded`.
+  `print()` shows the split whenever anything was excluded.
+
+- The `hv_followup()` event panel no longer misclassifies death-before-event
+  as a non-fatal event. The state was taken from the event flag alone, and
+  `gf_build_event_frame()` never received the death time, so it structurally
+  could not order the two: a patient dying at year 1 with an event recorded
+  at year 2 was labelled "Non-fatal event", contradicting the documented
+  "death before non-fatal event" state. The event time is now compared
+  against `death_time_col`, and a flagged event only counts as non-fatal
+  when it strictly precedes death. Ties go to death.
+
+- `hv_longitudinal()` now rejects negative and non-finite counts, which
+  previously rendered as downward bars without warning, and rejects missing
+  time or series labels, which collapsed into an `NA` category that read as
+  a real group on the axis and in the legend.
+
+- `hv_trends()` no longer loses non-numeric time points. Summary positions
+  came from `as.numeric(names(tapply(...)))`, so factor labels and dates
+  became `NA` and their summary points vanished from the plot. The original
+  x type is now preserved through aggregation.
+
 # hvtiPlotR 2.7.6
 
 ## Bug fixes
