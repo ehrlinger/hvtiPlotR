@@ -102,6 +102,66 @@
 }
 
 #' @noRd
+# Shared missing-data contract. Incomplete rows are excluded from the
+# analysis, so the object must report the *analyzed* cohort rather than the
+# input cohort: printing N = nrow(data) while the fit saw fewer rows means the
+# reported N does not describe the estimates. Warns once, naming the columns
+# responsible, and returns the counts for $meta.
+.exclude_incomplete <- function(data, columns, context = NULL) {
+  keep       <- stats::complete.cases(data[, columns, drop = FALSE])
+  n_input    <- nrow(data)
+  n_excluded <- sum(!keep)
+
+  if (n_excluded > 0L) {
+    culprits <- columns[vapply(columns, function(cl) anyNA(data[[cl]]),
+                               logical(1))]
+    warning(
+      sprintf(
+        "%d of %d row(s) excluded%s for missing values in %s; analysing %d.",
+        n_excluded, n_input,
+        if (is.null(context)) "" else paste0(" from the ", context),
+        paste(sprintf("`%s`", culprits), collapse = ", "),
+        n_input - n_excluded
+      ),
+      call. = FALSE
+    )
+  }
+
+  list(
+    data       = data[keep, , drop = FALSE],
+    n_input    = n_input,
+    n_analyzed = n_input - n_excluded,
+    n_excluded = n_excluded
+  )
+}
+
+#' @noRd
+# The grouping keys tapply() produces, in tapply()'s own order, with the
+# original type intact. as.numeric(names(tapply(...))) silently turns factor
+# labels and Dates into NA, dropping those summary points from the plot.
+.tapply_keys <- function(x) {
+  if (is.factor(x)) factor(levels(x), levels = levels(x)) else sort(unique(x))
+}
+
+#' @noRd
+# Finite, non-negative numeric column (e.g. event counts, which cannot be
+# negative and must not silently render a downward bar).
+.check_count_col <- function(data, col) {
+  v <- data[[col]]
+  if (!is.numeric(v))
+    stop(sprintf("`%s` must be numeric. Got: %s", col, class(v)[1L]),
+         call. = FALSE)
+  bad <- !is.na(v) & (!is.finite(v) | v < 0)
+  if (any(bad))
+    stop(
+      sprintf("`%s` must be finite and non-negative. Offending value(s): %s",
+              col, paste(unique(v[bad]), collapse = ", ")),
+      call. = FALSE
+    )
+  invisible(data)
+}
+
+#' @noRd
 # Standard alpha validator — enforces [0, 1] (fully transparent to opaque).
 # Using (0, 1] was inconsistent across functions and contradicted docs that
 # stated [0, 1]; alpha = 0 is valid in ggplot2 and useful for hiding elements.

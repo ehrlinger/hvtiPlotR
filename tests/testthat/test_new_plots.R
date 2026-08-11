@@ -706,3 +706,44 @@ test_that("print.hv_upset returns x invisibly", {
   expect_false(ret$visible)
   expect_identical(ret$value, obj)
 })
+
+# ===========================================================================
+# hv_longitudinal — counts must be real counts
+# ===========================================================================
+
+test_that("hv_longitudinal rejects negative counts", {
+  dta <- data.frame(yr = c(2020, 2021), n = c(-2, 5), grp = c("A", "A"))
+  expect_error(
+    hv_longitudinal(dta, x_col = "yr", count_col = "n", group_col = "grp"),
+    "finite and non-negative"
+  )
+})
+
+test_that("hv_longitudinal rejects non-finite counts", {
+  dta <- data.frame(yr = c(2020, 2021), n = c(Inf, 5), grp = c("A", "A"))
+  expect_error(
+    hv_longitudinal(dta, x_col = "yr", count_col = "n", group_col = "grp"),
+    "finite and non-negative"
+  )
+})
+
+test_that("hv_longitudinal rejects missing time or series labels", {
+  dta <- data.frame(yr = c(2020, NA), n = c(2, 5), grp = c("A", "A"))
+  expect_error(
+    hv_longitudinal(dta, x_col = "yr", count_col = "n", group_col = "grp"),
+    "must not contain missing values"
+  )
+  dta2 <- data.frame(yr = c(2020, 2021), n = c(2, 5), grp = c("A", NA))
+  expect_error(
+    hv_longitudinal(dta2, x_col = "yr", count_col = "n", group_col = "grp"),
+    "must not contain missing values"
+  )
+})
+
+test_that("hv_longitudinal accepts zero counts", {
+  dta <- data.frame(yr = c(2020, 2021), n = c(0, 5), grp = c("A", "A"))
+  expect_s3_class(
+    hv_longitudinal(dta, x_col = "yr", count_col = "n", group_col = "grp"),
+    "hv_longitudinal"
+  )
+})

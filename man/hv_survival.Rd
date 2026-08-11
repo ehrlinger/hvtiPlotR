@@ -50,7 +50,8 @@ Columns: \code{time}, \code{surv}, \code{lower}, \code{upper},
 \code{life}, \code{proplife}, \code{log_cumhaz}, \code{log_time}.}
 \item{\code{$meta}}{Named list: \code{time_col}, \code{event_col},
 \code{group_col}, \code{method}, \code{conf_level},
-\code{report_times}, \code{n_obs}, \code{n_events}.}
+\code{report_times}, \code{n_obs} (the \emph{analysed} cohort),
+\code{n_input}, \code{n_excluded}, \code{n_events}.}
 \item{\code{$tables}}{Named list with two data frames:
 \code{risk} (\code{strata}, \code{report_time}, \code{n.risk}) and
 \code{report} (\code{strata}, \code{report_time}, \code{surv},
@@ -65,6 +66,15 @@ built at this stage; call \code{\link{plot.hv_survival}} on the result to
 obtain a bare \code{ggplot2} object that you can decorate with scales,
 labels, and \code{\link{theme_hv_manuscript}}.
 }
+\section{Missing data}{
+
+Rows with a missing time, event, or grouping value are excluded before
+fitting, with a warning naming the columns responsible.  \code{$meta$n_obs}
+and \code{print()} report the \emph{analysed} cohort, alongside
+\code{n_input} and \code{n_excluded}, so the reported N always matches the
+cohort the estimates describe.
+}
+
 \examples{
 dta <- sample_survival_data(n = 500, seed = 42)
 

@@ -563,3 +563,42 @@ test_that("print.hv_survival returns x invisibly", {
   expect_false(ret$visible)
   expect_identical(ret$value, km)
 })
+
+# ===========================================================================
+# Missing-data contract — the analyzed cohort must be what gets reported
+# ===========================================================================
+
+test_that("hv_survival warns and reports analyzed vs input counts", {
+  dta <- sample_survival_data(n = 20, seed = 3)
+  dta$iv_dead[1:2] <- NA
+
+  expect_warning(km <- hv_survival(dta), "2 of 20 row\\(s\\) excluded")
+
+  # The reported N must describe the estimates: previously meta said 20 while
+  # the fit saw 18, so the printed cohort did not match the curve.
+  expect_equal(km$meta$n_obs, 18L)
+  expect_equal(km$meta$n_input, 20L)
+  expect_equal(km$meta$n_excluded, 2L)
+  expect_equal(km$data$n.risk[1], km$meta$n_obs)
+})
+
+test_that("hv_survival print shows the exclusion when rows are dropped", {
+  dta <- sample_survival_data(n = 20, seed = 3)
+  dta$iv_dead[1:2] <- NA
+  km <- suppressWarnings(hv_survival(dta))
+  expect_output(print(km), "18 analysed of 20 input")
+})
+
+test_that("hv_survival is silent and reports input count when data is complete", {
+  dta <- sample_survival_data(n = 30, seed = 4)
+  expect_no_warning(km <- hv_survival(dta))
+  expect_equal(km$meta$n_obs, 30L)
+  expect_equal(km$meta$n_excluded, 0L)
+  expect_silent(invisible(capture.output(print(km))))
+})
+
+test_that("hv_survival errors when no complete rows remain", {
+  dta <- sample_survival_data(n = 10, seed = 5)
+  dta$iv_dead <- NA_real_
+  expect_error(suppressWarnings(hv_survival(dta)), "No complete rows")
+})
