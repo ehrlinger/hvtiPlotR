@@ -426,12 +426,11 @@ ggsave(
 
 The goodness-of-follow-up plot is a standard quality-control figure in
 longitudinal outcome analyses. Each patient appears as a point at their
-operation date (x-axis) and follow-up duration (y-axis), with a short
-vertical tick below. A dashed diagonal line marks the maximum potential
-follow-up given the study start, study end, and follow-up closing date —
-points above the line have longer follow-up than that window alone
-explains, typically because passive surveillance supplemented active
-cross-sectional follow-up.
+operation date (x-axis) and follow-up duration (y-axis). A dashed
+diagonal line marks the maximum potential follow-up given the study
+start, study end, and follow-up closing date — points above the line
+have longer follow-up than that window alone explains, typically because
+passive surveillance supplemented active cross-sectional follow-up.
 
 [`hv_followup()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_followup.md)
 prepares the data;
@@ -465,11 +464,11 @@ head(gfup_dta)
 
 ### Death follow-up plot
 
-The bare `plot(gf)` panel shows each patient as a point and tick without
-scales, labels, or theme. Look for: a cloud of points below the
-diagonal, with some above it (patients with longer follow-up than the
-window explains); if all points fall exactly on the diagonal, the close
-date may be set incorrectly.
+The bare `plot(gf)` panel shows each patient as a point without scales,
+labels, or theme. Look for: a cloud of points below the diagonal, with
+some above it (patients with longer follow-up than the window explains);
+if all points fall exactly on the diagonal, the close date may be set
+incorrectly.
 
 ``` r
 
@@ -486,6 +485,19 @@ plot(gf)
 ```
 
 ![](plot-functions_files/figure-html/gfup_basic-1.png)
+
+The legacy SAS template drew a short vertical tick below each point.
+[`hv_followup()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_followup.md)
+no longer does, because at realistic cohort sizes the ticks smear the
+point cloud and strike a line through each legend key. Pass a positive
+`segment_drop` (in years) to restore them:
+
+``` r
+
+plot(hv_followup(gfup_dta, segment_drop = 0.2))
+```
+
+![](plot-functions_files/figure-html/gfup_segment_drop-1.png)
 
 ### Adding scales, labels, and annotations
 

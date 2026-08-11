@@ -705,27 +705,55 @@ km$tables$report     # survival at report times
 **R equivalent:**
 [`hv_followup()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_followup.md)
 
-`tp.dp.gfup.R` summarises how many patients remain under active
-follow-up at each time point – the kind of quality-check figure you run
-before committing to a temporal-prevalence analysis. The SAS version
-uses `PROC FREQ` output aggregated by year;
+`tp.dp.gfup.R` renders the goodness-of-follow-up scatter – the kind of
+quality-check figure you run before committing to a temporal-prevalence
+analysis.
 [`hv_followup()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_followup.md)
-accepts the same aggregated data frame (one row per time point, with
-counts for total patients and patients with a measurement), so the bar
-heights are the same counts `PROC FREQ` gave you — only the rendering
-moves to R. The output is a bar chart; any goodness-of-follow-up
-threshold you add in SAS (a dashed horizontal line) becomes a
-`geom_hline(yintercept = ..., linetype = "dashed")` call in R.
+takes the patient-level data frame directly: one row per patient, with
+the operation year, the follow-up duration, and the vital-status flag.
+It does not want counts aggregated by year, so there is no `PROC FREQ`
+step to port.
+
+Each patient becomes one point, positioned by operation date (x) and
+follow-up duration (y), and shaped and coloured by vital status. The
+dashed diagonal is the maximum potential follow-up implied by
+`study_start`, `study_end`, and `close_date` –
+[`hv_followup()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_followup.md)
+draws it for you from those three arguments, so it is not a
+[`geom_hline()`](https://ggplot2.tidyverse.org/reference/geom_abline.html)
+you add by hand. Points sitting above the diagonal have longer follow-up
+than the enrolment window alone explains, typically because passive
+surveillance supplemented active cross-sectional follow-up.
+
+Pass the three date arguments explicitly; the diagonal is only
+meaningful if they match the study the data came from.
 
 ``` r
 
 dta <- sample_goodness_followup_data(n = 300)
-gf  <- hv_followup(dta)
+gf  <- hv_followup(
+  data        = dta,
+  origin_year = 1990,
+  study_start = as.Date("1990-01-01"),
+  study_end   = as.Date("2019-12-31"),
+  close_date  = as.Date("2021-08-06")
+)
 
 plot(gf) +
-  labs(title = "Goodness of Follow-Up") +
+  scale_color_manual(
+    values = c("Alive" = "steelblue", "Dead" = "firebrick"), name = NULL
+  ) +
+  scale_shape_manual(values = c(1, 4), name = NULL) +
+  labs(title = "Goodness of Follow-Up",
+       x = "Operation Date", y = "Follow-up (years)") +
   theme_hv_poster()
 ```
+
+For the competing non-fatal event panel, supply `event_col` and
+`event_time_col` to
+[`hv_followup()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_followup.md)
+and pass `type = "event"` to
+[`plot()`](https://rdrr.io/r/graphics/plot.default.html).
 
 ------------------------------------------------------------------------
 
@@ -1786,7 +1814,7 @@ sessionInfo()
     [1] stats     graphics  grDevices utils     datasets  methods   base
 
     other attached packages:
-    [1] ggplot2_4.0.3   hvtiPlotR_2.7.4
+    [1] ggplot2_4.0.3   hvtiPlotR_2.7.5
 
     loaded via a namespace (and not attached):
      [1] generics_0.1.4          tidyr_1.3.2             fontLiberation_0.1.0

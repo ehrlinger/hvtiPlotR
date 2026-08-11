@@ -1,5 +1,21 @@
 # Changelog
 
+## hvtiPlotR 2.7.5
+
+### Bug fixes
+
+- [`plot.hv_followup()`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hv_followup.md)
+  no longer draws a vertical stem below each patient’s point. The stem
+  was a carryover from the legacy `tp.dp.gfup.R` SAS template; at
+  realistic cohort sizes it smears the point cloud and, because it
+  shares the `colour` aesthetic with the points, it also struck a line
+  through every glyph in the legend key.
+  [`hv_followup()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_followup.md)
+  now defaults `segment_drop = 0` and the segment layer is omitted
+  entirely when the drop is zero, so both the panel and the legend show
+  bare shapes. Pass `segment_drop = 0.2` to restore the previous
+  appearance.
+
 ## hvtiPlotR 2.7.4
 
 ### Bug fixes
@@ -987,7 +1003,9 @@ argument on [`plot()`](https://rdrr.io/r/graphics/plot.default.html):
   [`save_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/save_ppt.md)
   single- and multi-slide examples.
 - Added `ggplot2::geom_line(..., linewidth = 1.5)` (replacing deprecated
-  `size =`) and updated `remotes::install_github()` (replacing
+  `size =`) and updated
+  [`remotes::install_github()`](https://remotes.r-lib.org/reference/install_github.html)
+  (replacing
   [`devtools::install_github()`](https://devtools.r-lib.org/reference/install-deprecated.html))
   in `vignettes/hvtiPlotR.qmd`.
 

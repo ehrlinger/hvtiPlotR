@@ -25,7 +25,7 @@ hv_followup(
   tolower_names = TRUE,
   death_levels = c("Alive", "Dead"),
   event_levels = c("No event", "Non-fatal event", "Death"),
-  segment_drop = 0.2
+  segment_drop = 0
 )
 ```
 
@@ -99,7 +99,8 @@ hv_followup(
 - segment_drop:
 
   Numeric; vertical offset (years) for the segment endpoint below the
-  follow-up point. Default `0.2`.
+  follow-up point. Default `0` (no segment drawn). Set to a positive
+  value to restore the legacy stem below each point.
 
 ## Value
 

@@ -24,7 +24,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">hvtiPlotR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.7.4</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.7.5</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -78,7 +78,7 @@
       <h1>SAS Template Migration Guide: Finding Your Plot in R</h1>
 
       <p class="author">John Ehrlinger <a href="mailto:ehrlinj@ccf.org" class="email">ehrlinj@ccf.org</a></p>
-      <p class="date">2026-08-10</p>
+      <p class="date">2026-08-11</p>
 
       <small class="dont-index">Source: <a href="https://github.com/ehrlinger/hvtiPlotR/blob/main/vignettes/sas-migration-guide.qmd" class="external-link"><code>vignettes/sas-migration-guide.qmd</code></a></small>
       <div class="d-none name"><code></code></div>
@@ -989,14 +989,28 @@ run;</code></pre>
 </h2>
 <p><strong>Port:</strong> <code>tp.dp.gfup.R</code></p>
 <p><strong>R equivalent:</strong> <code><a href="../reference/hv_followup.html">hv_followup()</a></code></p>
-<p><code>tp.dp.gfup.R</code> summarises how many patients remain under active follow-up at each time point – the kind of quality-check figure you run before committing to a temporal-prevalence analysis. The SAS version uses <code>PROC FREQ</code> output aggregated by year; <code><a href="../reference/hv_followup.html">hv_followup()</a></code> accepts the same aggregated data frame (one row per time point, with counts for total patients and patients with a measurement), so the bar heights are the same counts <code>PROC FREQ</code> gave you — only the rendering moves to R. The output is a bar chart; any goodness-of-follow-up threshold you add in SAS (a dashed horizontal line) becomes a <code>geom_hline(yintercept = ..., linetype = "dashed")</code> call in R.</p>
+<p><code>tp.dp.gfup.R</code> renders the goodness-of-follow-up scatter – the kind of quality-check figure you run before committing to a temporal-prevalence analysis. <code><a href="../reference/hv_followup.html">hv_followup()</a></code> takes the patient-level data frame directly: one row per patient, with the operation year, the follow-up duration, and the vital-status flag. It does not want counts aggregated by year, so there is no <code>PROC FREQ</code> step to port.</p>
+<p>Each patient becomes one point, positioned by operation date (x) and follow-up duration (y), and shaped and coloured by vital status. The dashed diagonal is the maximum potential follow-up implied by <code>study_start</code>, <code>study_end</code>, and <code>close_date</code> – <code><a href="../reference/hv_followup.html">hv_followup()</a></code> draws it for you from those three arguments, so it is not a <code><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html" class="external-link">geom_hline()</a></code> you add by hand. Points sitting above the diagonal have longer follow-up than the enrolment window alone explains, typically because passive surveillance supplemented active cross-sectional follow-up.</p>
+<p>Pass the three date arguments explicitly; the diagonal is only meaningful if they match the study the data came from.</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">dta</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sample_goodness_followup_data.html">sample_goodness_followup_data</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">300</span><span class="op">)</span></span>
-<span><span class="va">gf</span>  <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hv_followup.html">hv_followup</a></span><span class="op">(</span><span class="va">dta</span><span class="op">)</span></span>
+<span><span class="va">gf</span>  <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hv_followup.html">hv_followup</a></span><span class="op">(</span></span>
+<span>  data        <span class="op">=</span> <span class="va">dta</span>,</span>
+<span>  origin_year <span class="op">=</span> <span class="fl">1990</span>,</span>
+<span>  study_start <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/as.Date.html" class="external-link">as.Date</a></span><span class="op">(</span><span class="st">"1990-01-01"</span><span class="op">)</span>,</span>
+<span>  study_end   <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/as.Date.html" class="external-link">as.Date</a></span><span class="op">(</span><span class="st">"2019-12-31"</span><span class="op">)</span>,</span>
+<span>  close_date  <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/as.Date.html" class="external-link">as.Date</a></span><span class="op">(</span><span class="st">"2021-08-06"</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">gf</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Goodness of Follow-Up"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_color_manual</a></span><span class="op">(</span></span>
+<span>    values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Alive"</span> <span class="op">=</span> <span class="st">"steelblue"</span>, <span class="st">"Dead"</span> <span class="op">=</span> <span class="st">"firebrick"</span><span class="op">)</span>, name <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_shape_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">4</span><span class="op">)</span>, name <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Goodness of Follow-Up"</span>,</span>
+<span>       x <span class="op">=</span> <span class="st">"Operation Date"</span>, y <span class="op">=</span> <span class="st">"Follow-up (years)"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/hvtiPlotR-themes.html">theme_hv_poster</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<p>For the competing non-fatal event panel, supply <code>event_col</code> and <code>event_time_col</code> to <code><a href="../reference/hv_followup.html">hv_followup()</a></code> and pass <code>type = "event"</code> to <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code>.</p>
 <hr></section><section class="section level2"><h2 id="lp-covbal">Covariate balance (<code>tp.lp.propen.cov_balance.R</code>)<a class="anchor" aria-label="anchor" href="#lp-covbal"></a>
 </h2>
 <p><strong>Port:</strong> <code>tp.lp.propen.cov_balance.R</code></p>
@@ -1070,7 +1084,7 @@ run;</code></pre>
 <p>The original code used <code><a href="https://rdrr.io/pkg/ggsankey/man/make_long.html" class="external-link">ggsankey::make_long()</a></code> with hard-coded column names and ordering vectors. The R port accepts any cluster columns and ordering via <code>cluster_cols</code> and <code>node_levels</code> arguments.</p>
 <p><strong>Requires <code>ggsankey</code></strong> (install from GitHub):</p>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"davidsjoberg/ggsankey"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"davidsjoberg/ggsankey"</span><span class="op">)</span></span></code></pre></div>
 <section class="level3"><h4 id="sasr-workflow-r-equivalent">SAS/R workflow → R equivalent<a class="anchor" aria-label="anchor" href="#sasr-workflow-r-equivalent"></a>
 </h4>
 <table class="table caption-top">
@@ -1755,7 +1769,7 @@ attached base packages:
 [1] stats     graphics  grDevices utils     datasets  methods   base
 
 other attached packages:
-[1] ggplot2_4.0.3   hvtiPlotR_2.7.4
+[1] ggplot2_4.0.3   hvtiPlotR_2.7.5
 
 loaded via a namespace (and not attached):
  [1] generics_0.1.4          tidyr_1.3.2             fontLiberation_0.1.0
