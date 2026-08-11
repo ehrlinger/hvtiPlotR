@@ -85,7 +85,9 @@ hv_stacked <- function(data,
   if (!is.numeric(binwidth) || length(binwidth) != 1L || !(binwidth > 0))
     stop("`binwidth` must be a positive numeric scalar.", call. = FALSE)
 
-  n_groups <- length(unique(data[[group_col]]))
+  .check_complete_labels(data, group_col)
+  incomplete <- .count_incomplete(data, x_col)
+  n_groups   <- length(unique(data[[group_col]]))
 
   new_hv_data(
     data = as.data.frame(data),
@@ -95,6 +97,7 @@ hv_stacked <- function(data,
       binwidth  = binwidth,
       position  = position,
       n_obs     = nrow(data),
+      n_missing = incomplete$n_missing,
       n_groups  = n_groups
     ),
     tables   = list(),
@@ -112,7 +115,10 @@ hv_stacked <- function(data,
 print.hv_stacked <- function(x, ...) {
   m <- x$meta
   cat("<hv_stacked>\n")
-  cat(sprintf("  N obs       : %d  (%d groups)\n", m$n_obs, m$n_groups))
+  cat(sprintf("  N obs       : %d  (%d groups)%s\n", m$n_obs, m$n_groups,
+              if (isTRUE(m$n_missing > 0L))
+                sprintf("  [%d not drawn: missing values]", m$n_missing)
+              else ""))
   cat(sprintf("  x / group   : %s / %s\n", m$x_col, m$group_col))
   cat(sprintf("  binwidth    : %g\n", m$binwidth))
   cat(sprintf("  position    : %s\n", m$position))

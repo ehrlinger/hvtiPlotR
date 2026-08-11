@@ -22,7 +22,8 @@ dta_one <- sample_spaghetti_data(n_patients = 60, seed = 2L)  # used without col
 test_that("hv_spaghetti $meta contains all expected keys", {
   sp <- hv_spaghetti(dta_grp, colour_col = "group")
   expect_named(sp$meta,
-    c("x_col", "y_col", "id_col", "colour_col", "n_subjects", "n_obs"),
+    c("x_col", "y_col", "id_col", "colour_col", "n_subjects", "n_obs",
+      "n_missing"),
     ignore.order = TRUE
   )
 })

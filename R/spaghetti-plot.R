@@ -149,6 +149,8 @@ hv_spaghetti <- function(data,
   .check_cols(data, c(x_col, y_col, id_col))
   if (!is.null(colour_col))
     .check_col(data, colour_col)
+  .check_complete_labels(data, c(id_col, colour_col))
+  incomplete <- .count_incomplete(data, c(x_col, y_col))
 
   new_hv_data(
     data = as.data.frame(data),
@@ -158,7 +160,8 @@ hv_spaghetti <- function(data,
       id_col     = id_col,
       colour_col = colour_col,
       n_subjects = length(unique(data[[id_col]])),
-      n_obs      = nrow(data)
+      n_obs      = nrow(data),
+      n_missing  = incomplete$n_missing
     ),
     tables   = list(),
     subclass = "hv_spaghetti"
@@ -175,8 +178,11 @@ hv_spaghetti <- function(data,
 print.hv_spaghetti <- function(x, ...) {
   m <- x$meta
   cat("<hv_spaghetti>\n")
-  cat(sprintf("  N subjects  : %d  (%d observations)\n",
-              m$n_subjects, m$n_obs))
+  cat(sprintf("  N subjects  : %d  (%d observations)%s\n",
+              m$n_subjects, m$n_obs,
+              if (isTRUE(m$n_missing > 0L))
+                sprintf("  [%d not drawn: missing values]", m$n_missing)
+              else ""))
   cat(sprintf("  x / y / id  : %s / %s / %s\n",
               m$x_col, m$y_col, m$id_col))
   if (!is.null(m$colour_col))

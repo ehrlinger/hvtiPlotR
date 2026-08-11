@@ -24,6 +24,27 @@
   against `death_time_col`, and a flagged event only counts as non-fatal
   when it strictly precedes death. Ties go to death.
 
+- The missing-data contract is now package-wide, in two deliberately
+  different shapes. **Analysis** constructors (`hv_survival()`,
+  `hv_followup()`) *exclude* incomplete rows, because the fit they wrap
+  already has — reporting a cohort the fit never saw is simply wrong.
+  **Plot** constructors (`hv_trends()`, `hv_spaghetti()`, `hv_stacked()`,
+  `hv_balance()`, `hv_longitudinal()`) *account* for them instead: they warn
+  once, record `n_missing` in `$meta`, and `print()` shows the count — but
+  they do not filter. Pre-filtering there would also swallow ggplot2's own
+  "Removed n rows" warning, which legitimately fires for values outside a
+  zoomed scale range and not only for missing ones. `hv_mirror_hist()`
+  already reported `n_dropped` and keeps its existing diagnostics table.
+
+- Grouping and label columns are treated as a third case: they must be
+  complete, and a missing value there is now an error. Such a value does not
+  drop the row — it silently merges it into an `"NA"` group that reads as a
+  real series in the legend, or, for `hv_spaghetti()`'s `id_col`, fuses
+  unrelated subjects into a single trajectory. Affects `group_col` in
+  `hv_trends()`/`hv_stacked()`, `id_col` and `colour_col` in
+  `hv_spaghetti()`, and `variable_col`/`group_col` in `hv_balance()`;
+  `hv_longitudinal()` already behaved this way.
+
 - `hv_longitudinal()` now rejects negative and non-finite counts, which
   previously rendered as downward bars without warning, and rejects missing
   time or series labels, which collapsed into an `NA` category that read as
@@ -51,6 +72,20 @@
   and `sets`. A repeated name mangled the column to `A.1`, producing two
   contradictory "A only" regions and a nonsense "A & A" self-intersection.
 
+## Documentation
+
+- The SAS migration guide had four factual errors beyond the follow-up
+  section, all now corrected against the functions they describe: the UpSet
+  section still named `ComplexUpset` as the backend (it has been `ggupset`
+  since 2.2.0); the alluvial section credited an internal `to_lodes_form()`
+  reshape that `hv_alluvial()` does not perform; the covariate-balance
+  section described the wide SAS export as "one column per time-point" when
+  the columns are comparisons (`Before match` / `After match`); and the
+  longitudinal section claimed `hv_longitudinal()` accepts a patient-level
+  frame when it takes pre-aggregated counts. The survival section also
+  conflated five plot types with four SAS output flags, and now names which
+  is which.
+
 ## Packaging
 
 - `.Rbuildignore` now excludes `vignettes/.quarto/`, rendered vignette
@@ -61,6 +96,10 @@
 - `.Rbuildignore` also excludes `.lintr`. It is a development-time lint
   configuration, not part of the installed package, and shipping it drew an
   `R CMD check` NOTE about hidden files. It stays tracked in git.
+
+- The `Authors@R` email now matches the `Maintainer` field
+  (`john.ehrlinger@gmail.com`). The two had disagreed, which `R CMD check`
+  reports as a DESCRIPTION meta-information NOTE.
 
 - Three `\donttest` examples wrote PDFs into the working directory
   (`survival.pdf`, `trends.pdf`, `fig.pdf`). `--as-cran` executes those

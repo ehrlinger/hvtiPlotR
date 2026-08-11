@@ -475,7 +475,13 @@ plot.hv_sankey <- function(x,
       size   = label_size / ggplot2::.pt,
       colour = "black"
     ) +
-    ggsankey::theme_sankey(base_size = 12) +
+    # ggsankey::theme_sankey() calls element_rect(size = ), deprecated in
+    # ggplot2 3.4.0 in favour of linewidth. The warning is raised inside
+    # ggsankey and there is nothing to fix on our side, so it is muffled
+    # here rather than left to fire on every hv_sankey() call. Scoped to
+    # this one call and to lifecycle warnings only -- any other warning
+    # ggsankey raises still surfaces.
+    .suppress_deprecation(ggsankey::theme_sankey(base_size = 12)) +
     ggplot2::scale_fill_manual(values = node_colours) +
     ggplot2::scale_x_discrete(labels = x_labels) +
     ggplot2::theme(legend.position = "none") +

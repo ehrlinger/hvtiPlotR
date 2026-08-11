@@ -499,7 +499,11 @@ print.hv_consort <- function(x, ...) {
 #'
 #' @export
 plot.hv_consort <- function(x, ...) {
-  plot(x$plot, ...)
+  # The `consort` package prefixes exclusion labels with a bullet (U+2022).
+  # Devices without that glyph (pdf(), postscript()) warn once per label via
+  # mbcsToSbcs and substitute ".". The diagram still draws correctly, so the
+  # warning is noise on every render; muffled narrowly here.
+  .suppress_glyph_warning(plot(x$plot, ...))
   invisible(x)
 }
 
