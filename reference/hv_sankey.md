@@ -101,9 +101,5 @@ if (requireNamespace("ggsankey", quietly = TRUE)) {
     ggplot2::labs(x = NULL, title = "Cluster Stability: K = 2 to 9") +
     theme_hv_poster()
 }
-#> Warning: The `size` argument of `element_rect()` is deprecated as of ggplot2 3.4.0.
-#> ℹ Please use the `linewidth` argument instead.
-#> ℹ The deprecated feature was likely used in the ggsankey package.
-#>   Please report the issue at <https://github.com/davidsjoberg/ggsankey/issues>.
 
 ```

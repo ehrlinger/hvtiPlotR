@@ -630,12 +630,22 @@ plot(hv_ordinal(dat_ph, grade_col = "grade")) +
 
 [`hv_survival()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_survival.md)
 wraps `survfit()` from the **survival** package and returns an S3
-object. Call `plot(km, type = ...)` to render one of the five plot types
-matching the SAS `%kaplan` / `%nelsont` macro output flags (`PLOTS`,
-`PLOTC`, `PLOTH`, `PLOTL`). Because the estimates come from `survfit()`,
-the survival curve, confidence limits, and numbers at risk match what
-`%kaplan` reports — you are swapping the plotting step, not the
-estimator. Tidy data frames live in `km$tables`.
+object. Call `plot(km, type = ...)` to render one of five panels. Four
+map onto the SAS `%kaplan` / `%nelsont` output flags — `"survival"`
+(`PLOTS`), `"cumhaz"` (`PLOTC`), `"hazard"` (`PLOTH`), `"life"`
+(`PLOTL`) — and `"loglog"` is the extra one, the log-log plot you read
+to check the proportional-hazards assumption. Because the estimates come
+from `survfit()`, the survival curve, confidence limits, and numbers at
+risk match what `%kaplan` reports — you are swapping the plotting step,
+not the estimator. Tidy data frames live in `km$tables`.
+
+One difference from SAS worth knowing. `survfit()` drops records with a
+missing time, event, or strata value, and
+[`hv_survival()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_survival.md)
+makes that visible rather than leaving you to infer it: it warns, naming
+the columns responsible, and `print(km)` reports the **analysed** cohort
+alongside the input count. So the N you see is always the N the curve
+describes. Check it the way you would read the SAS log for `NMISS`.
 
 ``` r
 
@@ -764,11 +774,13 @@ and pass `type = "event"` to
 **R equivalent:**
 [`hv_balance()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_balance.md)
 
-The SAS export arrives wide (one column per time-point). Reshape to long
-format before you call
-[`hv_balance()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_balance.md).
-Pass `var_levels` to control the bottom-to-top display order of
-covariates — this matches `ylabel` in the original script.
+The SAS export arrives wide — one column per comparison (`Before match`,
+`After match`), one row per covariate. Reshape to long format before you
+call
+[`hv_balance()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_balance.md),
+so each row is one covariate in one comparison. Pass `var_levels` to
+control the bottom-to-top display order of covariates — this matches
+`ylabel` in the original script.
 
 ``` r
 
@@ -834,9 +846,9 @@ sequence of categorical states (e.g. pre-op AR grade to procedure type
 to sex subgroup), producing the flowing band diagram that the original
 script builds with `ggalluvial`. The R port wraps this with
 [`hv_alluvial()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_alluvial.md),
-which handles the internal `to_lodes_form()` reshape and sets default
-fill aesthetics. You supply a data frame with one column per state and
-let
+which builds the `geom_alluvium()`/`geom_stratum()` layers and sets
+default fill aesthetics for you. You supply a data frame with one column
+per state, name those columns in `axes`, and let
 [`scale_fill_brewer()`](https://ggplot2.tidyverse.org/reference/scale_brewer.html)
 or a manual fill scale control the colours. See the [Alluvial section of
 the plot-functions
@@ -938,11 +950,21 @@ plot(sk_grp) +
 combination of procedure categories (CABG, Valve, MAZE, Aorta, etc.) –
 the combinatorial overlap question that Venn diagrams can’t answer
 cleanly past three sets. The SAS version used a custom `PROC TABULATE` /
-`SGPLOT` workaround; the R port replaces it with the `ComplexUpset`
-package wrapped in
+`SGPLOT` workaround; the R port replaces it with
+[`ggupset::scale_x_upset()`](https://rdrr.io/pkg/ggupset/man/scale_x_upset.html)
+wrapped in
 [`hv_upset()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_upset.md).
 You pass a binary-indicator data frame (one column per set, 1 = member)
 and the `intersect` argument names the sets to include.
+
+Two things to know about the display.
+[`plot()`](https://rdrr.io/r/graphics/plot.default.html) shows the
+largest `n_intersections` combinations (default 10) — patients whose
+combination falls outside that set are not drawn, and ggplot2 reports
+them as removed rows. And by default the result is a **patchwork
+composite** (the intersection bars plus a set-size panel), so themes
+apply with `&`; pass `set_size = FALSE` for a plain ggplot you can
+extend with `+`.
 
 ``` r
 
@@ -1307,12 +1329,20 @@ patients have an echocardiogram measurement at each follow-up year?” – a
 companion to the goodness-of-follow-up chart above, but focused on
 measurement availability rather than vital-status follow-up. The
 original R script used `PROC FREQ`-style counting over a long-format
-echo dataset;
+echo dataset.
+
 [`hv_longitudinal()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_longitudinal.md)
-accepts the same patient-level long-format frame and produces a bar
-chart with count annotations. You need one row per patient per
-observation, with columns for patient ID, follow-up year, and
-(optionally) a measurement flag.
+picks up **after** that counting step: it takes the aggregated frame,
+one row per series per time point, with a discrete time label, a series
+name, and an integer count. It does not bin patient-level records for
+you — do that upstream
+([`sample_longitudinal_counts_data()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_longitudinal_counts_data.md)
+shows the pattern, binning
+[`sample_spaghetti_data()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_spaghetti_data.md)
+into follow-up windows). Counts must be finite and non-negative, and the
+time and series labels must not be missing; a missing label would
+otherwise become an `NA` category that reads as a real group on the
+axis.
 
 ``` r
 

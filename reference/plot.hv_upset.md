@@ -31,7 +31,10 @@ plot(
 - n_intersections:
 
   Number of intersections to display, ordered by `sort_by`. Default
-  `10`.
+  `10`. Patients whose combination falls outside the top
+  `n_intersections` are **not drawn**, and ggplot2 reports them as
+  removed rows. That is expected, not an error: raise `n_intersections`
+  to show more of the cohort.
 
 - sort_by:
 

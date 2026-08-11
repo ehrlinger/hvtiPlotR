@@ -86,7 +86,10 @@
 
 <dt id="arg-n-intersections">n_intersections<a class="anchor" aria-label="anchor" href="#arg-n-intersections"></a></dt>
 <dd><p>Number of intersections to display, ordered by
-<code>sort_by</code>. Default <code>10</code>.</p></dd>
+<code>sort_by</code>. Default <code>10</code>. Patients whose combination falls outside the
+top <code>n_intersections</code> are <strong>not drawn</strong>, and <span class="pkg">ggplot2</span> reports them
+as removed rows. That is expected, not an error: raise
+<code>n_intersections</code> to show more of the cohort.</p></dd>
 
 
 <dt id="arg-sort-by">sort_by<a class="anchor" aria-label="anchor" href="#arg-sort-by"></a></dt>
