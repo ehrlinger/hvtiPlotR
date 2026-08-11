@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">hvtiPlotR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.7.5</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.7.6</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -53,6 +53,20 @@
       <small>Source: <a href="https://github.com/ehrlinger/hvtiPlotR/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="2.7.6" id="hvtiplotr-276">hvtiPlotR 2.7.6<a class="anchor" aria-label="anchor" href="#hvtiplotr-276"></a></h2>
+<div class="section level3">
+<h3 id="bug-fixes-2-7-6">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-2-7-6"></a></h3>
+<ul><li><p><code><a href="../reference/hv_survival.html">hv_survival()</a></code> and <code><a href="../reference/hv_atrisk.html">hv_atrisk()</a></code> now reject <code>report_times</code> containing <code>NA</code>, <code>NaN</code>, <code>Inf</code>, or negative values. Previously these were accepted and survived into the risk and report tables as plausible-looking rows rather than failing: <code>NA</code> and a negative time each reported 100% survival, and <code>Inf</code> reported the final survival estimate at time <code>Inf</code>. The failure was silent, so the table was misleading rather than obviously wrong. Both functions now share a <code>.check_report_times()</code> validator. The check applies on every entry point, including <code><a href="../reference/hv_atrisk.html">hv_atrisk()</a></code> called with an <code>hv_data</code> object or a precomputed risk table – those route through <code>.select_report_times()</code>, where bad values were previously dropped with an “ignored” warning instead of erroring. <code>report_times = NULL</code> still means “every time already in the table”.</p></li>
+<li><p><code><a href="../reference/hv_upset.html">hv_upset()</a></code> and <code><a href="../reference/hv_venn.html">hv_venn()</a></code> now reject duplicated entries in <code>intersect</code> and <code>sets</code>. A repeated name mangled the column to <code>A.1</code>, producing two contradictory “A only” regions and a nonsense “A &amp; A” self-intersection.</p></li>
+</ul></div>
+<div class="section level3">
+<h3 id="packaging-2-7-6">Packaging<a class="anchor" aria-label="anchor" href="#packaging-2-7-6"></a></h3>
+<ul><li><p><code>.Rbuildignore</code> now excludes <code>vignettes/.quarto/</code>, rendered vignette <code>.html</code>, and the <code>.superpowers/</code> tool-state directory. These added 230 paths to the source tarball and triggered an <code>R CMD check</code> warning about rendered artifacts in <code>vignettes/</code>.</p></li>
+<li><p><code>.Rbuildignore</code> also excludes <code>.lintr</code>. It is a development-time lint configuration, not part of the installed package, and shipping it drew an <code>R CMD check</code> NOTE about hidden files. It stays tracked in git.</p></li>
+<li><p>Three <code>\donttest</code> examples wrote PDFs into the working directory (<code>survival.pdf</code>, <code>trends.pdf</code>, <code>fig.pdf</code>). <code>--as-cran</code> executes those blocks, so the files landed in the check directory and were reported as non-standard. They now write to <code><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir()</a></code>, which is what CRAN policy requires of examples regardless of the NOTE.</p></li>
+</ul></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="2.7.5" id="hvtiplotr-275">hvtiPlotR 2.7.5<a class="anchor" aria-label="anchor" href="#hvtiplotr-275"></a></h2>
 <div class="section level3">

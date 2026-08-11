@@ -465,7 +465,8 @@ p <- hazard_plot(dat, estimate_col = "survival",
   scale_fill_manual(values = c("steelblue"), guide = "none") +
   labs(x = "Years", y = "Survival (%)") +
   theme_hv_poster()
-ggplot2::ggsave("survival.pdf", p, width = 11.5, height = 8)
+ggplot2::ggsave(file.path(tempdir(), "survival.pdf"), p,
+                width = 11.5, height = 8)
 # }
 
 # --- Global theme + RColorBrewer (set once per session) ------------------
