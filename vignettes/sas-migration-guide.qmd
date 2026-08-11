@@ -128,14 +128,14 @@ prints beneath its survival plot.
 | `tp.lp.mirror-histogram_SAVR-TF-TAVR.R` | lp | `hv_mirror_hist()` | [Mirror histogram — binary-match](#dp-mirror) |
 | `tp.lp.mirror_histo_before_after_wt.R` | lp | `hv_mirror_hist(weight_col = ...)` | [Mirror histogram — weighted IPTW](#dp-mirror) |
 | Stacked histogram | dp | `hv_stacked()` | [Stacked histogram](#dp-stacked) |
-| `tp.hs.dead.setup.sas` | hs | `hazard_plot()` | [Parametric hazard/survival](#hs-dead) |
-| `tp.hs.dead_uses_setup.sas` | hs | `hazard_plot()` | [Parametric hazard/survival](#hs-dead) |
-| `tp.hs.dead.procedure.tdepth.sas` | hs | `hazard_plot()` | [Parametric hazard/survival](#hs-dead) |
-| `tp.hs.dead.conditional.setup.sas` | hs | `hazard_plot()` | [Conditional survival](#hs-dead) |
-| `tp.hs.dead.conditional.uses_setup.sas` | hs | `hazard_plot()` | [Conditional survival](#hs-dead) |
-| `tp.hs.dead.compare_benefit.setup.sas` | hs | `survival_difference_plot()` | [Treatment benefit distribution](#hs-dead) |
-| `tp.hs.uslife_estimates_generate_stratify_.age.sas` | hs | `hazard_plot()` | [US life-table overlay](#hs-dead) |
-| `tp.hs.uslife_generates_matched_estimates.sas` | hs | `hazard_plot()` | [US life-table overlay](#hs-dead) |
+| `tp.hs.dead.setup.sas` | hs | `hv_hazard()` | [Parametric hazard/survival](#hs-dead) |
+| `tp.hs.dead_uses_setup.sas` | hs | `hv_hazard()` | [Parametric hazard/survival](#hs-dead) |
+| `tp.hs.dead.procedure.tdepth.sas` | hs | `hv_hazard()` | [Parametric hazard/survival](#hs-dead) |
+| `tp.hs.dead.conditional.setup.sas` | hs | `hv_hazard()` | [Conditional survival](#hs-dead) |
+| `tp.hs.dead.conditional.uses_setup.sas` | hs | `hv_hazard()` | [Conditional survival](#hs-dead) |
+| `tp.hs.dead.compare_benefit.setup.sas` | hs | `hv_survival_difference()` | [Treatment benefit distribution](#hs-dead) |
+| `tp.hs.uslife_estimates_generate_stratify_.age.sas` | hs | `hv_hazard()` | [US life-table overlay](#hs-dead) |
+| `tp.hs.uslife_generates_matched_estimates.sas` | hs | `hv_hazard()` | [US life-table overlay](#hs-dead) |
 
 ---
 
@@ -1453,7 +1453,7 @@ ggsave("figures/afib_prevalence.tiff", p, width = 3.5, height = 3.5,
 `tp.hs.uslife_estimates_generate_stratify_.age.sas`,
 `tp.hs.uslife_generates_matched_estimates.sas`
 
-**R equivalents:** `hazard_plot()`, `survival_difference_plot()`
+**R equivalents:** `hv_hazard()`, `hv_survival_difference()`
 
 The `tp.hs.*` family extends `tp.hp.dead.*` by using the `%hazpred` macro to
 generate patient-specific parametric survival predictions from a fitted
@@ -1466,7 +1466,7 @@ multivariable hazard model. The *setup* templates compute and store:
 
 Subsequent *use* templates stratify the aggregated mean curves by a covariate
 and overlay Kaplan-Meier estimates from `%kaplan`. The resulting SAS datasets
-map directly to `hazard_plot()` in R:
+map directly to `hv_hazard()` in R:
 
 | SAS dataset | Columns used | R source |
 |---|---|---|
@@ -1485,7 +1485,7 @@ with error bars).
 dat_hp <- sample_hazard_data(n = 500, time_max = 10)
 emp_hp <- sample_hazard_empirical(n = 500, time_max = 10, n_bins = 6)
 
-hazard_plot(
+hv_hazard(
   dat_hp,
   estimate_col  = "survival",
   lower_col     = "surv_lower",
@@ -1506,7 +1506,7 @@ hazard_plot(
 ## Stratified by covariate
 
 `tp.hs.dead.procedure.tdepth.sas` overlays curves for depth-of-invasion groups
-(`tdepth = 1, 2, 3`). Pass `group_col` to `hazard_plot()` and supply matched
+(`tdepth = 1, 2, 3`). Pass `group_col` to `hv_hazard()` and supply matched
 `sample_hazard_data()` / `sample_hazard_empirical()` calls with a `groups`
 vector whose names become the legend labels.
 
@@ -1520,7 +1520,7 @@ emp_strat <- sample_hazard_empirical(
   groups = c("pT1" = 0.4, "pT2" = 1.0, "pT3" = 1.8)
 )
 
-hazard_plot(
+hv_hazard(
   dat_strat,
   estimate_col  = "survival",
   lower_col     = "surv_lower",
@@ -1550,14 +1550,14 @@ hazard_plot(
 `tp.hs.dead.conditional.setup.sas` computes individual survivorship curves
 starting from the time of hospital discharge rather than the operation date.
 The conditional survival `S(t | discharge)` is `S(t) / S(t_discharge)` for
-each patient. In R, you use the same `hazard_plot()` call — only the x-axis
+each patient. In R, you use the same `hv_hazard()` call — only the x-axis
 label and data preparation change.
 
 ```r
 dat_cond <- sample_hazard_data(n = 500, time_max = 10)
 emp_cond <- sample_hazard_empirical(n = 500, time_max = 10, n_bins = 6)
 
-hazard_plot(
+hv_hazard(
   dat_cond,
   estimate_col  = "survival",
   lower_col     = "surv_lower",
@@ -1597,7 +1597,7 @@ lt <- sample_life_table(
   time_max   = 10
 )
 
-hazard_plot(
+hv_hazard(
   dat_age,
   estimate_col     = "survival",
   lower_col        = "surv_lower",
@@ -1633,7 +1633,7 @@ hazard_plot(
 `tp.hs.dead.compare_benefit.setup.sas` computes, for each patient, the
 difference in predicted survival at a fixed time point (5 years) under two
 treatment arms (e.g. ASA vs. no ASA). That per-patient distribution is the answer to "who benefits and by how much."
-`survival_difference_plot()` plots the mean difference curve over time.
+`hv_survival_difference()` plots the mean difference curve over time.
 
 ```r
 diff_dat <- sample_survival_difference_data(
@@ -1641,7 +1641,7 @@ diff_dat <- sample_survival_difference_data(
   groups = c("No ASA" = 1.0, "ASA" = 0.75)
 )
 
-survival_difference_plot(
+hv_survival_difference(
   diff_dat,
   lower_col = "diff_lower",
   upper_col = "diff_upper"

@@ -1,3 +1,15 @@
+# hvtiPlotR 2.7.7
+
+## Documentation
+
+- The migration guide's parametric hazard / survival-difference section
+  taught the deprecated v1.x API throughout -- `hazard_plot()`,
+  `survival_difference_plot()`, `nnt_plot()` -- in its prose, its lookup
+  table, and its code blocks. Those aliases still work, but a *migration*
+  guide teaching the names being migrated away from is backwards. All 19
+  occurrences now use `hv_hazard()`, `hv_survival_difference()`, and
+  `hv_nnt()`.
+
 # hvtiPlotR 2.7.6
 
 ## Bug fixes
@@ -85,6 +97,7 @@
   frame when it takes pre-aggregated counts. The survival section also
   conflated five plot types with four SAS output flags, and now names which
   is which.
+
 
 ## Packaging
 
