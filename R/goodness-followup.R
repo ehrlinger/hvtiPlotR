@@ -439,7 +439,7 @@ plot.hv_followup <- function(x,
     diagonal_color,
     diagonal_linetype,
     diagonal_linewidth,
-    x$meta$segment_drop
+    segment_drop = x$meta$segment_drop
   )
 }
 
