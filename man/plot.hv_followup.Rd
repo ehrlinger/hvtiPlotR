@@ -40,10 +40,11 @@ A bare \code{\link[ggplot2]{ggplot}} object.
 \description{
 Builds a bare goodness-of-follow-up \code{ggplot2} object from an
 \code{\link{hv_followup}} data object.  Each patient appears as a point
-at their operation year (x) and total follow-up time (y); a vertical
-segment drops from the point to indicate their current state.  An orange
-diagonal reference line shows the maximum possible follow-up for patients
-enrolled at each year.
+at their operation year (x) and total follow-up time (y), shaped and
+coloured by their state.  An orange diagonal reference line shows the
+maximum possible follow-up for patients enrolled at each year.  A vertical
+stem below each point is drawn only when \code{hv_followup()} was called
+with a positive \code{segment_drop}.
 }
 \examples{
 dta <- sample_goodness_followup_data()
@@ -68,6 +69,9 @@ plot(gf, type = "event") +
   ) +
   ggplot2::labs(x = "Operation Date", y = "Follow-up (years)") +
   theme_hv_poster()
+
+# Legacy stem below each point -- restored with a positive segment_drop
+plot(hv_followup(dta, segment_drop = 0.2))
 
 }
 \seealso{

@@ -186,7 +186,8 @@ sample_goodness_followup_data <- function(
 #'   (event-free, non-fatal event, death).
 #'   Default \code{c("No event", "Non-fatal event", "Death")}.
 #' @param segment_drop       Numeric; vertical offset (years) for the segment
-#'   endpoint below the follow-up point.  Default \code{0.2}.
+#'   endpoint below the follow-up point.  Default \code{0} (no segment drawn).
+#'   Set to a positive value to restore the legacy stem below each point.
 #'
 #' @return An object of class \code{c("hv_followup", "hv_data")}:
 #' \describe{
@@ -250,7 +251,7 @@ hv_followup <- function(
   tolower_names        = TRUE,
   death_levels         = c("Alive", "Dead"),
   event_levels         = c("No event", "Non-fatal event", "Death"),
-  segment_drop         = 0.2
+  segment_drop         = 0
 ) {
   if (length(death_levels) != 2L)
     stop("`death_levels` must contain exactly two labels.", call. = FALSE)
@@ -363,10 +364,11 @@ print.hv_followup <- function(x, ...) {
 #'
 #' Builds a bare goodness-of-follow-up \code{ggplot2} object from an
 #' \code{\link{hv_followup}} data object.  Each patient appears as a point
-#' at their operation year (x) and total follow-up time (y); a vertical
-#' segment drops from the point to indicate their current state.  An orange
-#' diagonal reference line shows the maximum possible follow-up for patients
-#' enrolled at each year.
+#' at their operation year (x) and total follow-up time (y), shaped and
+#' coloured by their state.  An orange diagonal reference line shows the
+#' maximum possible follow-up for patients enrolled at each year.  A vertical
+#' stem below each point is drawn only when \code{hv_followup()} was called
+#' with a positive \code{segment_drop}.
 #'
 #' @param x                  An \code{hv_followup} object.
 #' @param type               Which panel to produce: \code{"followup"}
@@ -409,6 +411,9 @@ print.hv_followup <- function(x, ...) {
 #'   ggplot2::labs(x = "Operation Date", y = "Follow-up (years)") +
 #'   theme_hv_poster()
 #'
+#' # Legacy stem below each point -- restored with a positive segment_drop
+#' plot(hv_followup(dta, segment_drop = 0.2))
+#'
 #' @importFrom ggplot2 ggplot aes geom_point geom_segment geom_line
 #' @export
 plot.hv_followup <- function(x,
@@ -436,7 +441,8 @@ plot.hv_followup <- function(x,
     alpha,
     diagonal_color,
     diagonal_linetype,
-    diagonal_linewidth
+    diagonal_linewidth,
+    segment_drop = x$meta$segment_drop
   )
 }
 
@@ -541,10 +547,14 @@ gf_build_event_frame <- function(df, iv_col, follow_col, event_col,
 
 # Shared plotting scaffold — works for both the binary death panel and the
 # three-level event panel because both use the same column names.
+#
+# The stem segment is omitted when `segment_drop` is zero. Drawing a
+# zero-length segment would be invisible in the panel but would still add a
+# line to every legend key, striking through the point glyph.
 gf_build_followup_plot <- function(data, diagonal, alpha,
                                    diagonal_color, diagonal_linetype,
-                                   diagonal_linewidth) {
-  ggplot2::ggplot(
+                                   diagonal_linewidth, segment_drop) {
+  p <- ggplot2::ggplot(
     data,
     ggplot2::aes(.data[["operation_year"]], .data[["follow_up"]])
   ) +
@@ -554,15 +564,19 @@ gf_build_followup_plot <- function(data, diagonal, alpha,
         shape = .data[["state"]]
       ),
       alpha = alpha
-    ) +
-    ggplot2::geom_segment(
+    )
+
+  if (segment_drop > 0)
+    p <- p + ggplot2::geom_segment(
       ggplot2::aes(
         xend  = .data[["operation_year"]],
         yend  = .data[["segment_end"]],
         color = .data[["state"]]
       ),
       alpha = alpha
-    ) +
+    )
+
+  p +
     ggplot2::geom_line(
       data         = diagonal,
       ggplot2::aes(.data[["operation_year"]], .data[["follow_up"]]),

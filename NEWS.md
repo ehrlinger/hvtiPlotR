@@ -1,3 +1,16 @@
+# hvtiPlotR 2.7.5
+
+## Bug fixes
+
+- `plot.hv_followup()` no longer draws a vertical stem below each patient's
+  point. The stem was a carryover from the legacy `tp.dp.gfup.R` SAS
+  template; at realistic cohort sizes it smears the point cloud and, because
+  it shares the `colour` aesthetic with the points, it also struck a line
+  through every glyph in the legend key. `hv_followup()` now defaults
+  `segment_drop = 0` and the segment layer is omitted entirely when the drop
+  is zero, so both the panel and the legend show bare shapes. Pass
+  `segment_drop = 0.2` to restore the previous appearance.
+
 # hvtiPlotR 2.7.4
 
 ## Bug fixes

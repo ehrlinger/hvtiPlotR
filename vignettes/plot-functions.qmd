@@ -347,8 +347,8 @@ ggsave(
 
 The goodness-of-follow-up plot is a standard quality-control figure in
 longitudinal outcome analyses. Each patient appears as a point at their
-operation date (x-axis) and follow-up duration (y-axis), with a short
-vertical tick below. A dashed diagonal line marks the maximum potential
+operation date (x-axis) and follow-up duration (y-axis). A dashed
+diagonal line marks the maximum potential
 follow-up given the study start, study end, and follow-up closing date —
 points above the line have longer follow-up than that window alone
 explains, typically because passive surveillance supplemented active
@@ -375,7 +375,7 @@ head(gfup_dta)
 
 ## Death follow-up plot
 
-The bare `plot(gf)` panel shows each patient as a point and tick without
+The bare `plot(gf)` panel shows each patient as a point without
 scales, labels, or theme. Look for: a cloud of points below the diagonal,
 with some above it (patients with longer follow-up than the window explains);
 if all points fall exactly on the diagonal, the close date may be set
@@ -393,6 +393,16 @@ gf <- hv_followup(
 
 # Bare plot — no scales or labels yet
 plot(gf)
+```
+
+The legacy SAS template drew a short vertical tick below each point.
+`hv_followup()` no longer does, because at realistic cohort sizes the ticks
+smear the point cloud and strike a line through each legend key. Pass a
+positive `segment_drop` (in years) to restore them:
+
+```{r}
+#| label: gfup_segment_drop
+plot(hv_followup(gfup_dta, segment_drop = 0.2))
 ```
 
 ## Adding scales, labels, and annotations

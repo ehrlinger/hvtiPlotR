@@ -19,7 +19,7 @@ hv_followup(
   tolower_names = TRUE,
   death_levels = c("Alive", "Dead"),
   event_levels = c("No event", "Non-fatal event", "Death"),
-  segment_drop = 0.2
+  segment_drop = 0
 )
 }
 \arguments{
@@ -68,7 +68,8 @@ states (alive first).  Default \code{c("Alive", "Dead")}.}
 Default \code{c("No event", "Non-fatal event", "Death")}.}
 
 \item{segment_drop}{Numeric; vertical offset (years) for the segment
-endpoint below the follow-up point.  Default \code{0.2}.}
+endpoint below the follow-up point.  Default \code{0} (no segment drawn).
+Set to a positive value to restore the legacy stem below each point.}
 }
 \value{
 An object of class \code{c("hv_followup", "hv_data")}:
