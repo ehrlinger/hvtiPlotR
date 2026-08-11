@@ -208,3 +208,34 @@ test_that("raw-data path errors when time has no finite values", {
   dta <- data.frame(t = c(NA_real_, NA_real_), g = c("A", "B"))
   expect_error(hv_atrisk(dta, time = "t", group = "g"), "no finite values")
 })
+
+# ===========================================================================
+# report_times validation must hold on the table-backed entry points too
+# ===========================================================================
+
+test_that("hv_atrisk errors on bad report_times via an hv_data object", {
+  km <- hv_survival(sample_survival_data(n = 100, seed = 1))
+  # These previously downgraded to an "ignored" warning because the hv_data
+  # path routes through .select_report_times(), which did not validate.
+  expect_error(hv_atrisk(km, report_times = c(1, Inf)),
+               "finite and non-negative")
+  expect_error(hv_atrisk(km, report_times = c(-1, 1)),
+               "finite and non-negative")
+  expect_error(hv_atrisk(km, report_times = c(1, NA)),
+               "finite and non-negative")
+})
+
+test_that("hv_atrisk errors on bad report_times via a precomputed risk table", {
+  km  <- hv_survival(sample_survival_data(n = 100, seed = 1))
+  rdf <- km$tables$risk
+  expect_error(hv_atrisk(rdf, report_times = c(1, Inf)),
+               "finite and non-negative")
+  expect_error(hv_atrisk(rdf, report_times = c(-1, 0)),
+               "finite and non-negative")
+})
+
+test_that("hv_atrisk still accepts report_times = NULL (all table times)", {
+  km <- hv_survival(sample_survival_data(n = 100, seed = 1))
+  expect_no_error(at <- hv_atrisk(km, report_times = NULL))
+  expect_setequal(unique(at$data$report_time), unique(km$tables$risk$report_time))
+})
