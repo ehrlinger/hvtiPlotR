@@ -170,6 +170,9 @@ hv_trends <- function(data,
   .check_cols(data, c(x_col, y_col))
   if (!is.null(group_col))
     .check_col(data, group_col)
+  incomplete <- .count_incomplete(
+    data, c(x_col, y_col, if (!is.null(group_col)) group_col)
+  )
 
   summary_fn <- match.arg(summary_fn)
   sfn <- if (summary_fn == "mean") {
@@ -216,6 +219,7 @@ hv_trends <- function(data,
       group_col  = group_col,
       summary_fn = summary_fn,
       n_obs      = nrow(data),
+      n_missing  = incomplete$n_missing,
       n_groups   = n_groups
     ),
     tables   = list(summary = ann_data),
@@ -233,7 +237,10 @@ hv_trends <- function(data,
 print.hv_trends <- function(x, ...) {
   m <- x$meta
   cat("<hv_trends>\n")
-  cat(sprintf("  N obs       : %d  (%d groups)\n", m$n_obs, m$n_groups))
+  cat(sprintf("  N obs       : %d  (%d groups)%s\n", m$n_obs, m$n_groups,
+              if (isTRUE(m$n_missing > 0L))
+                sprintf("  [%d not drawn: missing values]", m$n_missing)
+              else ""))
   cat(sprintf("  x / y       : %s / %s\n", m$x_col, m$y_col))
   if (!is.null(m$group_col))
     cat(sprintf("  Group col   : %s\n", m$group_col))

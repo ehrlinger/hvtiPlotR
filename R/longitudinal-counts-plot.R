@@ -154,6 +154,9 @@ hv_longitudinal <- function(data,
     if (anyNA(data[[cl]]))
       stop(sprintf("`%s` must not contain missing values.", cl), call. = FALSE)
 
+  # Labels are already required to be complete above, so only the count
+  # column can still carry NA here.
+  incomplete   <- .count_incomplete(data, count_col)
   n_timepoints <- length(unique(data[[x_col]]))
   n_groups     <- length(unique(data[[group_col]]))
 
@@ -165,7 +168,8 @@ hv_longitudinal <- function(data,
       group_col    = group_col,
       n_timepoints = n_timepoints,
       n_groups     = n_groups,
-      n_obs        = nrow(data)
+      n_obs        = nrow(data),
+      n_missing    = incomplete$n_missing
     ),
     tables   = list(),
     subclass = "hv_longitudinal"
@@ -183,7 +187,10 @@ print.hv_longitudinal <- function(x, ...) {
   m <- x$meta
   cat("<hv_longitudinal>\n")
   cat(sprintf("  Time points : %d\n", m$n_timepoints))
-  cat(sprintf("  Groups      : %d  (%d rows)\n", m$n_groups, m$n_obs))
+  cat(sprintf("  Groups      : %d  (%d rows)%s\n", m$n_groups, m$n_obs,
+              if (isTRUE(m$n_missing > 0L))
+                sprintf("  [%d not drawn: missing counts]", m$n_missing)
+              else ""))
   cat(sprintf("  x / count / group : %s / %s / %s\n",
               m$x_col, m$count_col, m$group_col))
   invisible(x)

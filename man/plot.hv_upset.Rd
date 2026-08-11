@@ -22,7 +22,10 @@
 \item{x}{An \code{hv_upset} object.}
 
 \item{n_intersections}{Number of intersections to display, ordered by
-\code{sort_by}. Default \code{10}.}
+\code{sort_by}. Default \code{10}. Patients whose combination falls outside the
+top \code{n_intersections} are \strong{not drawn}, and \pkg{ggplot2} reports them
+as removed rows. That is expected, not an error: raise
+\code{n_intersections} to show more of the cohort.}
 
 \item{sort_by}{How to order intersections: \code{"freq"} (default,
 by frequency) or \code{"degree"} (by number of sets in each combination).}

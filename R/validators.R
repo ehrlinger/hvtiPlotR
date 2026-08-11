@@ -136,6 +136,38 @@
 }
 
 #' @noRd
+# Missing-data accounting for the plot-only constructors. Unlike
+# .exclude_incomplete(), this does NOT filter: it warns and returns the
+# counts, leaving the rows in place for ggplot2 to drop at draw time.
+#
+# The distinction is deliberate. An analysis constructor must filter, because
+# the fit it wraps already has -- reporting a cohort the fit never saw is
+# simply wrong. A plot constructor has no fit; pre-filtering here would also
+# swallow ggplot2's own "Removed n rows" warning, which legitimately fires
+# for values outside a zoomed scale range and not only for missing ones.
+# So: analysis constructors filter, plot constructors account.
+.count_incomplete <- function(data, columns) {
+  keep      <- stats::complete.cases(data[, columns, drop = FALSE])
+  n_input   <- nrow(data)
+  n_missing <- sum(!keep)
+
+  if (n_missing > 0L) {
+    culprits <- columns[vapply(columns, function(cl) anyNA(data[[cl]]),
+                               logical(1))]
+    warning(
+      sprintf(
+        "%d of %d row(s) have missing values in %s; they will not be drawn.",
+        n_missing, n_input,
+        paste(sprintf("`%s`", culprits), collapse = ", ")
+      ),
+      call. = FALSE
+    )
+  }
+
+  list(n_input = n_input, n_missing = n_missing)
+}
+
+#' @noRd
 # The grouping keys tapply() produces, in tapply()'s own order, with the
 # original type intact. as.numeric(names(tapply(...))) silently turns factor
 # labels and Dates into NA, dropping those summary points from the plot.
@@ -159,6 +191,37 @@
       call. = FALSE
     )
   invisible(data)
+}
+
+#' @noRd
+# Evaluate `expr`, muffling only lifecycle deprecation warnings raised by a
+# dependency we do not control. Deliberately narrow: any other warning still
+# propagates, so this cannot mask a problem in our own code. A blanket
+# suppressWarnings() would.
+.suppress_deprecation <- function(expr) {
+  withCallingHandlers(
+    expr,
+    warning = function(w) {
+      if (inherits(w, "lifecycle_warning_deprecated") ||
+          grepl("deprecated", conditionMessage(w), fixed = TRUE))
+        invokeRestart("muffleWarning")
+    }
+  )
+}
+
+#' @noRd
+# Evaluate `expr`, muffling only the glyph-substitution warning R raises when
+# a graphics device cannot render a character (e.g. the bullet the `consort`
+# package puts in its exclusion labels, on pdf()/postscript()). The figure is
+# still drawn; only the glyph degrades. Narrow by design.
+.suppress_glyph_warning <- function(expr) {
+  withCallingHandlers(
+    expr,
+    warning = function(w) {
+      if (grepl("mbcsToSbcs|conversion failure", conditionMessage(w)))
+        invokeRestart("muffleWarning")
+    }
+  )
 }
 
 #' @noRd

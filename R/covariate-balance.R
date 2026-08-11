@@ -155,7 +155,9 @@ hv_balance <- function(
   cb_validate_params(threshold, point_size = 3, hline_linewidth = 0.25,
                      vline_linewidth = 0.2)
 
-  working <- as.data.frame(data)
+  incomplete <- .count_incomplete(data, c(variable_col, group_col,
+                                          std_diff_col))
+  working    <- as.data.frame(data)
 
   if (is.null(var_levels))
     var_levels <- unique(as.character(working[[variable_col]]))
@@ -173,6 +175,7 @@ hv_balance <- function(
       var_levels   = var_levels,
       threshold    = threshold,
       n_vars       = length(var_levels),
+      n_missing    = incomplete$n_missing,
       n_groups     = length(unique(working[[group_col]]))
     ),
     tables   = list(),
@@ -190,7 +193,10 @@ hv_balance <- function(
 print.hv_balance <- function(x, ...) {
   m <- x$meta
   cat("<hv_balance>\n")
-  cat(sprintf("  Variables   : %d\n", m$n_vars))
+  cat(sprintf("  Variables   : %d%s\n", m$n_vars,
+              if (isTRUE(m$n_missing > 0L))
+                sprintf("  [%d row(s) not drawn: missing values]", m$n_missing)
+              else ""))
   cat(sprintf("  Groups      : %d (%s)\n", m$n_groups,
               paste(unique(x$data[[m$group_col]]), collapse = ", ")))
   cat(sprintf("  SMD col     : %s\n", m$std_diff_col))
