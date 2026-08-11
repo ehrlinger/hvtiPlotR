@@ -550,8 +550,7 @@ hv_survival <- function(data,
   if (!is.numeric(conf_level) || length(conf_level) != 1L ||
       !(conf_level > 0 && conf_level < 1))
     stop("`conf_level` must be a single number in (0, 1).", call. = FALSE)
-  if (!(is.numeric(report_times) && length(report_times) > 0L))
-    stop("`report_times` must be a non-empty numeric vector.", call. = FALSE)
+  .check_report_times(report_times)
 
   # --- Fit ------------------------------------------------------------------
   fit   <- km_fit(data, time_col, event_col, group_col, conf_level, method)

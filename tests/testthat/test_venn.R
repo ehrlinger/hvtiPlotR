@@ -43,6 +43,25 @@ test_that("hv_venn errors on fewer than 2 sets", {
   expect_error(hv_venn(dta, sets = "CABG"), "at least 2")
 })
 
+test_that("hv_venn errors on duplicate set names", {
+  dta <- sample_upset_data(n = 50, seed = 1)
+  # A repeated name mangles the column to `AV_Replacement.1`, producing two
+  # contradictory "AV_Replacement only" regions and a nonsense self-
+  # intersection rather than an error.
+  expect_error(
+    hv_venn(dta, sets = c("AV_Replacement", "AV_Replacement")),
+    "duplicate names"
+  )
+})
+
+test_that("hv_upset errors on duplicate set names", {
+  dta <- sample_upset_data(n = 50, seed = 1)
+  expect_error(
+    hv_upset(dta, intersect = c("CABG", "AV_Replacement", "CABG")),
+    "duplicate names"
+  )
+})
+
 test_that("hv_venn errors on more than 3 sets and names hv_upset", {
   dta <- sample_upset_data(n = 50, seed = 1)
   expect_error(

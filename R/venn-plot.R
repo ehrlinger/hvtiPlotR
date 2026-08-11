@@ -78,6 +78,7 @@ hv_venn <- function(data, sets) {
   if (length(sets) > 3L)
     stop("`hv_venn()` supports at most 3 sets; use `hv_upset()` for more.",
          call. = FALSE)
+  .check_no_duplicates(sets, "sets")
   .check_cols(data, sets)
   non_binary <- sets[!vapply(data[sets], function(x)
     is.logical(x) || (is.numeric(x) && all(x %in% c(0, 1, NA))),

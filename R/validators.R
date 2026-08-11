@@ -67,6 +67,41 @@
 }
 
 #' @noRd
+# Report times must be finite and non-negative. A non-finite or negative
+# entry is not merely odd input: it survives into the risk and report tables
+# as a plausible-looking row (NA reports 100% survival at time NA; Inf
+# reports the final survival estimate at time Inf), so the failure is silent
+# and the table is misleading rather than obviously wrong.
+.check_report_times <- function(report_times, arg = "report_times") {
+  if (!(is.numeric(report_times) && length(report_times) > 0L))
+    stop(sprintf("`%s` must be a non-empty numeric vector.", arg),
+         call. = FALSE)
+  bad <- !is.finite(report_times) | report_times < 0
+  if (any(bad))
+    stop(
+      sprintf("`%s` must be finite and non-negative. Offending value(s): %s",
+              arg, paste(report_times[bad], collapse = ", ")),
+      call. = FALSE
+    )
+  invisible(report_times)
+}
+
+#' @noRd
+# Set/column selections must name distinct columns. A repeated name yields a
+# data frame with a mangled duplicate column (`A`, `A.1`), which downstream
+# produces contradictory regions ("A only" twice) and a nonsense "A & A"
+# intersection.
+.check_no_duplicates <- function(x, arg) {
+  if (anyDuplicated(x))
+    stop(
+      sprintf("`%s` must not contain duplicate names. Repeated: %s",
+              arg, paste(unique(x[duplicated(x)]), collapse = ", ")),
+      call. = FALSE
+    )
+  invisible(x)
+}
+
+#' @noRd
 # Standard alpha validator — enforces [0, 1] (fully transparent to opaque).
 # Using (0, 1] was inconsistent across functions and contradicted docs that
 # stated [0, 1]; alpha = 0 is valid in ggplot2 and useful for hiding elements.

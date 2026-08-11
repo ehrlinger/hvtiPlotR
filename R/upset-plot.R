@@ -121,6 +121,7 @@ hv_upset <- function(data, intersect) {
   if (!(is.character(intersect) && length(intersect) >= 2L))
     stop("`intersect` must be a character vector of at least 2 column names.",
          call. = FALSE)
+  .check_no_duplicates(intersect, "intersect")
   .check_cols(data, intersect)
   non_binary <- intersect[!vapply(data[intersect], function(x)
     is.logical(x) || (is.numeric(x) && all(x %in% c(0, 1, NA))),

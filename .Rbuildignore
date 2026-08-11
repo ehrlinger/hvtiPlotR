@@ -48,3 +48,6 @@ hvtiPlotR.Rproj
 ^dev$
 ^LICENSE\.md$
 ^CLAUDE\.md$
+^vignettes/\.quarto$
+^vignettes/.*\.html$
+^\.superpowers$

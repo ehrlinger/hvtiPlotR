@@ -28,6 +28,14 @@ test_that(".atrisk_table errors on bad input", {
                "non-empty numeric")
   expect_error(.atrisk_table(time = c(1, 2), report_times = NULL),
                "non-empty numeric")
+  # Non-finite / negative times survive into the table as plausible-looking
+  # rows rather than failing loudly, so they must be rejected up front.
+  expect_error(.atrisk_table(time = c(1, 2), report_times = c(1, NA)),
+               "finite and non-negative")
+  expect_error(.atrisk_table(time = c(1, 2), report_times = Inf),
+               "finite and non-negative")
+  expect_error(.atrisk_table(time = c(1, 2), report_times = c(-3, 1)),
+               "finite and non-negative")
   expect_error(.atrisk_table(time = c(1, 2), group = "A", report_times = 1),
                "same length")
   expect_error(
