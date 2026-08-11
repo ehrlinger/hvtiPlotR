@@ -1,3 +1,41 @@
+# hvtiPlotR 2.7.6
+
+## Bug fixes
+
+- `hv_survival()` and `hv_atrisk()` now reject `report_times` containing
+  `NA`, `NaN`, `Inf`, or negative values. Previously these were accepted and
+  survived into the risk and report tables as plausible-looking rows rather
+  than failing: `NA` and a negative time each reported 100% survival, and
+  `Inf` reported the final survival estimate at time `Inf`. The failure was
+  silent, so the table was misleading rather than obviously wrong. Both
+  functions now share a `.check_report_times()` validator. The check applies
+  on every entry point, including `hv_atrisk()` called with an `hv_data`
+  object or a precomputed risk table -- those route through
+  `.select_report_times()`, where bad values were previously dropped with an
+  "ignored" warning instead of erroring. `report_times = NULL` still means
+  "every time already in the table".
+
+- `hv_upset()` and `hv_venn()` now reject duplicated entries in `intersect`
+  and `sets`. A repeated name mangled the column to `A.1`, producing two
+  contradictory "A only" regions and a nonsense "A & A" self-intersection.
+
+## Packaging
+
+- `.Rbuildignore` now excludes `vignettes/.quarto/`, rendered vignette
+  `.html`, and the `.superpowers/` tool-state directory. These added 230
+  paths to the source tarball and triggered an `R CMD check` warning about
+  rendered artifacts in `vignettes/`.
+
+- `.Rbuildignore` also excludes `.lintr`. It is a development-time lint
+  configuration, not part of the installed package, and shipping it drew an
+  `R CMD check` NOTE about hidden files. It stays tracked in git.
+
+- Three `\donttest` examples wrote PDFs into the working directory
+  (`survival.pdf`, `trends.pdf`, `fig.pdf`). `--as-cran` executes those
+  blocks, so the files landed in the check directory and were reported as
+  non-standard. They now write to `tempdir()`, which is what CRAN policy
+  requires of examples regardless of the NOTE.
+
 # hvtiPlotR 2.7.5
 
 ## Bug fixes

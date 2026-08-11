@@ -340,7 +340,8 @@ print.hv_trends <- function(x, ...) {
 #'                               breaks = seq(1985, 2015, 5)) +
 #'   ggplot2::labs(x = "Years", y = "%") +
 #'   theme_hv_poster()
-#' ggplot2::ggsave("trends.pdf", p, width = 11.5, height = 8)
+#' ggplot2::ggsave(file.path(tempdir(), "trends.pdf"), p,
+#'                 width = 11.5, height = 8)
 #' }
 #'
 #' # --- Global theme (set once per session) ----------------------------------

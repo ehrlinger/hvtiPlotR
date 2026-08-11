@@ -46,7 +46,7 @@
 #' dims <- hv_ggsave_dims(p, width = 4, height = 3)
 #' do.call(
 #'   ggplot2::ggsave,
-#'   c(list(filename = "fig.pdf", plot = p), dims)
+#'   c(list(filename = file.path(tempdir(), "fig.pdf"), plot = p), dims)
 #' )
 #' }
 #' @importFrom ggplot2 ggplotGrob

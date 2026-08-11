@@ -16,8 +16,7 @@ utils::globalVariables(c("n.risk", "report_time", "strata"))
 .atrisk_table <- function(time, status = NULL, group = NULL, report_times) {
   if (!is.numeric(time) || length(time) == 0L)
     stop("`time` must be a non-empty numeric vector.", call. = FALSE)
-  if (!(is.numeric(report_times) && length(report_times) > 0L))
-    stop("`report_times` must be a non-empty numeric vector.", call. = FALSE)
+  .check_report_times(report_times)
   if (is.null(group)) group <- rep("Overall", length(time))
   if (length(group) != length(time))
     stop("`group` must be the same length as `time`.", call. = FALSE)
@@ -48,7 +47,14 @@ utils::globalVariables(c("n.risk", "report_time", "strata"))
 # table's existing times to show (it cannot recompute counts). Times not in
 # the table are ignored with a warning; an empty selection errors.
 .select_report_times <- function(rdf, report_times) {
+  # NULL means "every time already in the table" and is a supported input on
+  # these paths, so it short-circuits before validation. Anything else is
+  # validated here as well as in .atrisk_table(): otherwise NA/Inf/negative
+  # reaching hv_atrisk() via an hv_data object or a precomputed table would
+  # be quietly dropped by the %in% filter below with only an "ignored"
+  # warning, rather than erroring as it does on the subject-level path.
   if (is.null(report_times)) return(rdf)
+  .check_report_times(report_times)
   avail   <- sort(unique(rdf$report_time))
   missing <- setdiff(report_times, avail)
   if (length(missing) > 0L)

@@ -98,6 +98,21 @@ test_that("sample_survival_data higher hazard_ratio increases event proportion",
   expect_gt(prop_high, prop_low)
 })
 
+test_that("hv_survival errors on non-finite or negative report_times", {
+  dta <- sample_survival_data(n = 100, seed = 1)
+  # Each of these previously produced a plausible-looking table row instead
+  # of an error: NA and -3 report 100% survival, Inf reports the final
+  # survival estimate at time Inf.
+  expect_error(hv_survival(dta, report_times = c(1, NA)),
+               "finite and non-negative")
+  expect_error(hv_survival(dta, report_times = c(1, Inf)),
+               "finite and non-negative")
+  expect_error(hv_survival(dta, report_times = c(-3, 1)),
+               "finite and non-negative")
+  expect_error(hv_survival(dta, report_times = NaN),
+               "finite and non-negative")
+})
+
 test_that("sample_survival_data errors on non-positive n", {
   expect_error(sample_survival_data(n = 0), "positive integer")
 })
