@@ -65,3 +65,50 @@ for (nm in names(plot_constructors)) {
     })
   })
 }
+
+# ---------------------------------------------------------------------------
+# Label / grouping columns are a different failure mode: a missing value there
+# does NOT drop the row, it silently merges it into an "NA" group. So those
+# error rather than being counted as "not drawn".
+# ---------------------------------------------------------------------------
+
+test_that("hv_spaghetti rejects a missing subject id", {
+  d <- data.frame(time = c(0, 1, 0, 1), value = c(1, 2, 3, 4),
+                  id = c("p1", "p1", "p2", NA))
+  # Previously counted as n_missing, but all four rows still rendered -- the
+  # NA-id row was drawn, fused with any other id-less rows into one line.
+  expect_error(hv_spaghetti(d), "must not contain missing values")
+})
+
+test_that("hv_spaghetti rejects a missing colour label", {
+  d <- data.frame(time = c(0, 1), value = c(1, 2), id = c("p1", "p1"),
+                  grp = c("A", NA))
+  expect_error(hv_spaghetti(d, colour_col = "grp"),
+               "must not contain missing values")
+})
+
+test_that("hv_trends rejects a missing group label", {
+  d <- data.frame(year = c(2020, 2021), value = c(1, 2), group = c("A", NA))
+  expect_error(hv_trends(d), "must not contain missing values")
+})
+
+test_that("hv_stacked rejects a missing group label", {
+  d <- data.frame(year = c(2020, 2021), category = c("A", NA))
+  expect_error(hv_stacked(d), "must not contain missing values")
+})
+
+test_that("hv_balance rejects a missing variable or group label", {
+  d <- data.frame(variable = c("Age", NA), group = c("Before", "Before"),
+                  std_diff = c(1, 2))
+  expect_error(hv_balance(d), "must not contain missing values")
+  d2 <- data.frame(variable = c("Age", "BMI"), group = c("Before", NA),
+                   std_diff = c(1, 2))
+  expect_error(hv_balance(d2), "must not contain missing values")
+})
+
+test_that("a NULL grouping column is not treated as missing", {
+  d <- data.frame(year = c(2020, 2020, 2021), value = c(1, 2, 3))
+  expect_no_error(hv_trends(d, group_col = NULL))
+  d2 <- data.frame(time = c(0, 1), value = c(1, 2), id = c("p1", "p1"))
+  expect_no_error(hv_spaghetti(d2, colour_col = NULL))
+})

@@ -85,7 +85,8 @@ hv_stacked <- function(data,
   if (!is.numeric(binwidth) || length(binwidth) != 1L || !(binwidth > 0))
     stop("`binwidth` must be a positive numeric scalar.", call. = FALSE)
 
-  incomplete <- .count_incomplete(data, c(x_col, group_col))
+  .check_complete_labels(data, group_col)
+  incomplete <- .count_incomplete(data, x_col)
   n_groups   <- length(unique(data[[group_col]]))
 
   new_hv_data(

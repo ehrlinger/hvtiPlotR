@@ -170,9 +170,8 @@ hv_trends <- function(data,
   .check_cols(data, c(x_col, y_col))
   if (!is.null(group_col))
     .check_col(data, group_col)
-  incomplete <- .count_incomplete(
-    data, c(x_col, y_col, if (!is.null(group_col)) group_col)
-  )
+  .check_complete_labels(data, group_col)
+  incomplete <- .count_incomplete(data, c(x_col, y_col))
 
   summary_fn <- match.arg(summary_fn)
   sfn <- if (summary_fn == "mean") {

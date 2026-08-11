@@ -155,8 +155,8 @@ hv_balance <- function(
   cb_validate_params(threshold, point_size = 3, hline_linewidth = 0.25,
                      vline_linewidth = 0.2)
 
-  incomplete <- .count_incomplete(data, c(variable_col, group_col,
-                                          std_diff_col))
+  .check_complete_labels(data, c(variable_col, group_col))
+  incomplete <- .count_incomplete(data, std_diff_col)
   working    <- as.data.frame(data)
 
   if (is.null(var_levels))

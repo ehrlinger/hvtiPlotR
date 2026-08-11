@@ -136,6 +136,24 @@
 }
 
 #' @noRd
+# Grouping and label columns must be complete. A missing value here does not
+# drop the row -- it silently merges it into an "NA" group, which then reads
+# as a real series in the legend or, for an id column, fuses unrelated
+# subjects into one trajectory. That is a data error, not something to
+# account for, so it errors rather than warns. Contrast .count_incomplete(),
+# which handles the value columns whose absence genuinely stops a row being
+# drawn.
+.check_complete_labels <- function(data, columns) {
+  for (cl in columns)
+    if (!is.null(cl) && anyNA(data[[cl]]))
+      stop(sprintf(
+        paste("`%s` must not contain missing values: they would be drawn as",
+              "an \"NA\" group rather than dropped."), cl),
+        call. = FALSE)
+  invisible(data)
+}
+
+#' @noRd
 # Missing-data accounting for the plot-only constructors. Unlike
 # .exclude_incomplete(), this does NOT filter: it warns and returns the
 # counts, leaving the rows in place for ggplot2 to drop at draw time.

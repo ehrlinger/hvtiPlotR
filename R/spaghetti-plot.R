@@ -149,7 +149,8 @@ hv_spaghetti <- function(data,
   .check_cols(data, c(x_col, y_col, id_col))
   if (!is.null(colour_col))
     .check_col(data, colour_col)
-  incomplete <- .count_incomplete(data, c(x_col, y_col, id_col))
+  .check_complete_labels(data, c(id_col, colour_col))
+  incomplete <- .count_incomplete(data, c(x_col, y_col))
 
   new_hv_data(
     data = as.data.frame(data),

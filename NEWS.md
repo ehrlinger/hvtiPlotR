@@ -36,6 +36,15 @@
   zoomed scale range and not only for missing ones. `hv_mirror_hist()`
   already reported `n_dropped` and keeps its existing diagnostics table.
 
+- Grouping and label columns are treated as a third case: they must be
+  complete, and a missing value there is now an error. Such a value does not
+  drop the row — it silently merges it into an `"NA"` group that reads as a
+  real series in the legend, or, for `hv_spaghetti()`'s `id_col`, fuses
+  unrelated subjects into a single trajectory. Affects `group_col` in
+  `hv_trends()`/`hv_stacked()`, `id_col` and `colour_col` in
+  `hv_spaghetti()`, and `variable_col`/`group_col` in `hv_balance()`;
+  `hv_longitudinal()` already behaved this way.
+
 - `hv_longitudinal()` now rejects negative and non-finite counts, which
   previously rendered as downward bars without warning, and rejects missing
   time or series labels, which collapsed into an `NA` category that read as
