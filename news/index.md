@@ -6,6 +6,50 @@
 
 - [`hv_survival()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_survival.md)
   and
+  [`hv_followup()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_followup.md)
+  no longer report a cohort size that differs from the one actually
+  analysed. Both silently dropped incomplete rows – `survfit()` omits
+  them, and
+  [`hv_followup()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_followup.md)
+  filtered with
+  [`complete.cases()`](https://rdrr.io/r/stats/complete.cases.html) –
+  while `$meta` and [`print()`](https://rdrr.io/r/base/print.html) kept
+  reporting `nrow(data)`. A 20-row input with two missing follow-up
+  times fitted 18 patients but reported 20. Both now exclude incomplete
+  rows explicitly, warn once naming the columns responsible, and report
+  `n_obs` / `n_patients` as the analysed cohort alongside `n_input` and
+  `n_excluded`. [`print()`](https://rdrr.io/r/base/print.html) shows the
+  split whenever anything was excluded. The event panel requires more
+  columns than the death panel, so the two can hold different cohorts;
+  each is filtered and warned about separately, and the event panel’s
+  counts are reported as `n_event_patients` / `n_event_excluded`.
+
+- The
+  [`hv_followup()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_followup.md)
+  event panel no longer misclassifies death-before-event as a non-fatal
+  event. The state was taken from the event flag alone, and
+  `gf_build_event_frame()` never received the death time, so it
+  structurally could not order the two: a patient dying at year 1 with
+  an event recorded at year 2 was labelled “Non-fatal event”,
+  contradicting the documented “death before non-fatal event” state. The
+  event time is now compared against `death_time_col`, and a flagged
+  event only counts as non-fatal when it strictly precedes death. Ties
+  go to death.
+
+- [`hv_longitudinal()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_longitudinal.md)
+  now rejects negative and non-finite counts, which previously rendered
+  as downward bars without warning, and rejects missing time or series
+  labels, which collapsed into an `NA` category that read as a real
+  group on the axis and in the legend.
+
+- [`hv_trends()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_trends.md)
+  no longer loses non-numeric time points. Summary positions came from
+  `as.numeric(names(tapply(...)))`, so factor labels and dates became
+  `NA` and their summary points vanished from the plot. The original x
+  type is now preserved through aggregation.
+
+- [`hv_survival()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_survival.md)
+  and
   [`hv_atrisk()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_atrisk.md)
   now reject `report_times` containing `NA`, `NaN`, `Inf`, or negative
   values. Previously these were accepted and survived into the risk and

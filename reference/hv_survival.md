@@ -78,13 +78,22 @@ The list has three elements:
 - `$meta`:
 
   Named list: `time_col`, `event_col`, `group_col`, `method`,
-  `conf_level`, `report_times`, `n_obs`, `n_events`.
+  `conf_level`, `report_times`, `n_obs` (the *analysed* cohort),
+  `n_input`, `n_excluded`, `n_events`.
 
 - `$tables`:
 
   Named list with two data frames: `risk` (`strata`, `report_time`,
   `n.risk`) and `report` (`strata`, `report_time`, `surv`, `lower`,
   `upper`, `n.risk`, `n.event`).
+
+## Missing data
+
+Rows with a missing time, event, or grouping value are excluded before
+fitting, with a warning naming the columns responsible. `$meta$n_obs`
+and [`print()`](https://rdrr.io/r/base/print.html) report the *analysed*
+cohort, alongside `n_input` and `n_excluded`, so the reported N always
+matches the cohort the estimates describe.
 
 ## References
 

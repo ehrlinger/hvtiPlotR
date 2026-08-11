@@ -141,7 +141,8 @@ Columns: <code>time</code>, <code>surv</code>, <code>lower</code>, <code>upper</
 <dt><code>$meta</code></dt>
 <dd><p>Named list: <code>time_col</code>, <code>event_col</code>,
 <code>group_col</code>, <code>method</code>, <code>conf_level</code>,
-<code>report_times</code>, <code>n_obs</code>, <code>n_events</code>.</p></dd>
+<code>report_times</code>, <code>n_obs</code> (the <em>analysed</em> cohort),
+<code>n_input</code>, <code>n_excluded</code>, <code>n_events</code>.</p></dd>
 
 <dt><code>$tables</code></dt>
 <dd><p>Named list with two data frames:
@@ -151,6 +152,16 @@ Columns: <code>time</code>, <code>surv</code>, <code>lower</code>, <code>upper</
 
 
 </dl></div>
+    <div class="section level2">
+    <h2 id="missing-data">Missing data<a class="anchor" aria-label="anchor" href="#missing-data"></a></h2>
+
+
+<p>Rows with a missing time, event, or grouping value are excluded before
+fitting, with a warning naming the columns responsible.  <code>$meta$n_obs</code>
+and <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code> report the <em>analysed</em> cohort, alongside
+<code>n_input</code> and <code>n_excluded</code>, so the reported N always matches the
+cohort the estimates describe.</p>
+    </div>
     <div class="section level2">
     <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a></h2>
     <p>SAS templates: <code>tp.ac.dead.sas</code> (<code>%kaplan</code>,

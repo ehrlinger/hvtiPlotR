@@ -52,7 +52,10 @@ hv_followup(
 
   Name of the non-fatal event indicator column. Required to compute the
   event panel (`type = "event"`). Default `NULL` (event panel
-  unavailable).
+  unavailable). The flag alone does not decide the state: the event time
+  is compared against `death_time_col`, and a flagged event is only
+  counted as non-fatal when it strictly precedes death. Ties go to
+  death.
 
 - event_time_col:
 
@@ -112,12 +115,27 @@ An object of class `c("hv_followup", "hv_data")`:
 
 - `$meta`:
 
-  Column names, date parameters, state levels, `has_event` flag.
+  Column names, date parameters, state levels, `has_event` flag, and the
+  cohort counts `n_patients` (analysed), `n_input`, and `n_excluded`.
 
 - `$tables`:
 
   Named list with `diagonal` (the study-period reference diagonal) and,
   when event columns are supplied, `event_data`.
+
+## Missing data
+
+Patients with a missing value in any required column are excluded, with
+a warning naming the columns responsible. `$meta$n_patients` reports the
+*analysed* cohort, alongside `$meta$n_input` and `$meta$n_excluded`, so
+the reported N always describes the plotted points.
+
+The event panel requires more columns than the death panel, so the two
+can have different cohorts: a patient with a complete death record but a
+missing event time appears in one panel and not the other. Each panel is
+therefore filtered and warned about separately, and the event panel's
+counts are reported as `$meta$n_event_patients` and
+`$meta$n_event_excluded`.
 
 ## See also
 

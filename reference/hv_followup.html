@@ -118,7 +118,10 @@ Default <code>"iv_dead"</code>.</p></dd>
 <dt id="arg-event-col">event_col<a class="anchor" aria-label="anchor" href="#arg-event-col"></a></dt>
 <dd><p>Name of the non-fatal event indicator column.
 Required to compute the event panel (<code>type = "event"</code>).
-Default <code>NULL</code> (event panel unavailable).</p></dd>
+Default <code>NULL</code> (event panel unavailable).  The flag alone does not
+decide the state: the event time is compared against
+<code>death_time_col</code>, and a flagged event is only counted as non-fatal
+when it strictly precedes death.  Ties go to death.</p></dd>
 
 
 <dt id="arg-event-time-col">event_time_col<a class="anchor" aria-label="anchor" href="#arg-event-time-col"></a></dt>
@@ -180,7 +183,8 @@ Set to a positive value to restore the legacy stem below each point.</p></dd>
 
 <dt><code>$meta</code></dt>
 <dd><p>Column names, date parameters, state levels,
-<code>has_event</code> flag.</p></dd>
+<code>has_event</code> flag, and the cohort counts <code>n_patients</code>
+(analysed), <code>n_input</code>, and <code>n_excluded</code>.</p></dd>
 
 <dt><code>$tables</code></dt>
 <dd><p>Named list with <code>diagonal</code> (the study-period
@@ -189,6 +193,22 @@ reference diagonal) and, when event columns are supplied,
 
 
 </dl></div>
+    <div class="section level2">
+    <h2 id="missing-data">Missing data<a class="anchor" aria-label="anchor" href="#missing-data"></a></h2>
+
+
+<p>Patients with a missing value in any required column are excluded, with a
+warning naming the columns responsible.  <code>$meta$n_patients</code> reports
+the <em>analysed</em> cohort, alongside <code>$meta$n_input</code> and
+<code>$meta$n_excluded</code>, so the reported N always describes the plotted
+points.</p>
+<p>The event panel requires more columns than the death panel, so the two can
+have different cohorts: a patient with a complete death record but a
+missing event time appears in one panel and not the other.  Each panel is
+therefore filtered and warned about separately, and the event panel's
+counts are reported as <code>$meta$n_event_patients</code> and
+<code>$meta$n_event_excluded</code>.</p>
+    </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
     <div class="dont-index"><p>Worked recipe with rendered output:
