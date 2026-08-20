@@ -19,7 +19,7 @@ imports this file.
 
 ## Definition of done
 
-- `devtools::test()` passes. The runner is `tests/testthat/test-all.R`.
+- `devtools::test()` passes. The runner is `tests/test-all.R`.
 - `devtools::check()` is **0 errors, 0 warnings, 0 notes**. Verified 2026-08-20 at 2.7.6
   (1m 46s with `--no-manual` and vignettes skipped; the manual has its own gate).
 - `devtools::document()` has been run and `man/` and `NAMESPACE` are committed with the
