@@ -52,3 +52,4 @@ hvtiPlotR.Rproj
 ^vignettes/.*\.html$
 ^\.superpowers$
 ^\.lintr$
+^AGENTS\.md$
