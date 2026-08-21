@@ -115,6 +115,19 @@
     ggplot2::element_text(family = "Helvetica")
   })
   names(overrides) <- fallback_roots
+
+  # ggplot2 >= 4.0 resolves a text geom's `family` through the theme's `geom`
+  # element (element_geom()), which theme_grey() seeds from base_family
+  # alongside `text`. Patching `text` alone leaves geom_text() and
+  # annotate("text", ...) still asking the device for Arial, and on
+  # postscript()/pdf() that is fatal ("invalid font type"), not merely ugly.
+  # House style labels series by annotation rather than by a legend, so a
+  # PPT-themed plot usually carries a text geom. Guarded on the symbol
+  # because DESCRIPTION still admits ggplot2 3.5, where it does not exist.
+  if ("text" %in% fallback_roots &&
+      "element_geom" %in% getNamespaceExports("ggplot2"))
+    overrides[["geom"]] <- ggplot2::element_geom(family = "Helvetica")
+
   x + do.call(ggplot2::theme, overrides)
 }
 

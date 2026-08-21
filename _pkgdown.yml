@@ -69,12 +69,20 @@ reference:
     any element inline (e.g.
     `theme_hv_manuscript(legend.position = "right")`). The previous
     `hv_theme_*()` and `theme_*` names remain as deprecated aliases.
+    `hv_ppt_series()` bundles a theme with matching colour and shape scales
+    into one object you add to every plot in a deck, and `hv_ppt_palette()`
+    hands back those colours for a figure that needs them outside the
+    decorator. House-style figures carry no legend; series are named by
+    annotation drawn in the theme's ink to match the axis, not in a series
+    colour.
   contents:
   - hvtiPlotR-themes
   - theme_hv_manuscript
   - theme_hv_poster
   - theme_hv_ppt_dark
   - theme_hv_ppt_light
+  - hv_ppt_series
+  - hv_ppt_palette
 
 - title: "Survival & Hazard"
   desc: >

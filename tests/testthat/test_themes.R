@@ -176,6 +176,25 @@ test_that("Arial falls back to Helvetica when the active device can't resolve it
   expect_identical(resolved$theme$text$family, "Helvetica")
 })
 
+test_that("the fallback reaches text geoms, not just theme elements", {
+  # ggplot2 >= 4.0 resolves a text geom's family through the theme's `geom`
+  # element, which theme_grey() seeds from base_family alongside `text`.
+  # Patching `text` alone left annotate("text", ...) asking for Arial, which
+  # errors outright on pdf()/postscript(). House style labels series by
+  # annotation, so this is the common case, not an edge one.
+  skip_if_not("element_geom" %in% getNamespaceExports("ggplot2"))
+  p <- create_test_plot() + theme_hv_ppt_dark() +
+    annotate("text", x = 5, y = 5, label = "Group I")
+  f <- tempfile(fileext = ".pdf")
+  grDevices::pdf(f)
+  on.exit(grDevices::dev.off(), add = TRUE)
+
+  resolved <- suppressMessages(.hv_resolve_ppt_family(p))
+  built    <- ggplot_build(resolved)
+  expect_identical(unique(built$data[[2]]$family), "Helvetica")
+  expect_error(suppressMessages(suppressWarnings(print(p))), NA)
+})
+
 test_that("an explicitly resolvable family is preserved (no fallback) at draw time", {
   p <- create_test_plot() + theme_hv_ppt_dark()
   f <- tempfile(fileext = ".pdf")
