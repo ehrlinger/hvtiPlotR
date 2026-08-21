@@ -20,6 +20,20 @@
   one. Annotation is not one of these uses; a label takes the theme's ink to
   match the axis, white on a slide and black in a manuscript.
 
+## Bug fixes
+
+- The Arial fallback in `theme_hv_ppt_dark()` / `theme_hv_ppt_light()` now
+  covers text geoms as well as theme elements. ggplot2 4.0 resolves a text
+  geom's `family` through the theme's `geom` element, which `theme_grey()`
+  seeds from `base_family` alongside `text`, so patching `text` alone left
+  `geom_text()` and `annotate("text", ...)` still asking the device for
+  Arial. On `postscript()` / `pdf()` that is fatal ("invalid font type"),
+  not merely a substituted glyph, so a PPT-themed plot carrying an
+  annotation could not be drawn on those devices at all. House style names
+  series by annotation rather than by a legend, which makes this the common
+  case; no existing example or test drew a text geom on a PPT theme, which
+  is why it went unseen.
+
 # hvtiPlotR 2.7.6
 
 ## Bug fixes
