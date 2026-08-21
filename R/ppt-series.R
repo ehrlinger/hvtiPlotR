@@ -120,13 +120,10 @@ hv_ppt_palette <- function(mode = c("dark", "light"), n = NULL) {
 #'
 #' ## No legend, by house standard
 #'
-#' The three themes that finish a figure for publication, [theme_hv_manuscript()],
-#' [theme_hv_ppt_dark()] and [theme_hv_ppt_light()], set
-#' `legend.position = "none"`, and this decorator leaves that alone. CORR
-#' figures name the series where the series sits, on a slide and in a
-#' manuscript alike, so the reader's eye never travels out to a key and back.
-#' ([theme_hv_poster()] is the exception and keeps ggplot2's `"right"`; a poster
-#' is read up close, with room beside the panel.)
+#' Every `theme_hv_*()` sets `legend.position = "none"`, and this decorator
+#' leaves that alone. CORR figures name the series where the series sits, on a
+#' slide, on a poster and in a manuscript alike, so the reader's eye never
+#' travels out to a key and back.
 #'
 #' Annotation is drawn in the theme's ink, not in the colour of the series it
 #' names: white on a dark slide, black on a light slide and in a manuscript.
@@ -220,11 +217,9 @@ hv_ppt_series <- function(mode    = c("dark", "light"),
     stop("`shapes` must be a numeric vector with no missing values.",
          call. = FALSE)
 
-  # No legend override here. theme_hv_ppt_dark()/light() both set
+  # No legend override here. Every theme_hv_*() sets
   # legend.position = "none" because house style names the series by
   # annotation, not by a key; `...` still lets a caller ask for one.
-  # (theme_hv_poster() does NOT set it and inherits "right", but this
-  # function never reaches for the poster theme.)
   theme_fn <- if (mode == "dark") theme_hv_ppt_dark else theme_hv_ppt_light
 
   list(

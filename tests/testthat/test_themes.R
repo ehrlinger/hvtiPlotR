@@ -67,6 +67,32 @@ test_that("theme_hv_poster composes onto a plot and accepts ... overrides", {
   expect_identical(th$legend.position, "bottom")
 })
 
+test_that("theme_hv_poster hides the legend by default", {
+  expect_identical(theme_hv_poster()$legend.position, "none")
+})
+
+# House style names a series by annotation rather than by a key, on every
+# output target. The docs stated this as a property of all four themes while
+# only three carried it -- theme_hv_poster() silently inherited theme_grey()'s
+# "right" until 2.7.8. Asserting the set, not each theme separately, is what
+# makes the claim testable: a fifth theme added without it fails here.
+test_that("every theme_hv_*() hides the legend by default", {
+  themes <- list(
+    theme_hv_manuscript = theme_hv_manuscript(),
+    theme_hv_poster     = theme_hv_poster(),
+    theme_hv_ppt_dark   = theme_hv_ppt_dark(),
+    theme_hv_ppt_light  = theme_hv_ppt_light()
+  )
+  positions <- vapply(themes,
+                      function(th) calc_element("legend.position", th),
+                      character(1))
+  expect_identical(positions,
+                   c(theme_hv_manuscript = "none",
+                     theme_hv_poster     = "none",
+                     theme_hv_ppt_dark   = "none",
+                     theme_hv_ppt_light  = "none"))
+})
+
 # ============================================================================
 # theme_hv_ppt_dark
 # ============================================================================

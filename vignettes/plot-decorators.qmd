@@ -197,12 +197,10 @@ a specific set.
 
 ## Naming the series without a legend
 
-House style carries no legend. `theme_hv_manuscript()`, `theme_hv_ppt_dark()`
-and `theme_hv_ppt_light()` all set `legend.position = "none"`, and
-`hv_ppt_series()` leaves that alone, because a CORR figure names the series
-where the series sits rather than sending the reader out to a key and back.
-(`theme_hv_poster()` is the one that does not: it inherits ggplot2's `"right"`,
-on the reasoning that a poster is read up close and has room beside the panel.)
+House style carries no legend. Every `theme_hv_*()` sets
+`legend.position = "none"`, and `hv_ppt_series()` leaves that alone, because a
+CORR figure names the series where the series sits rather than sending the
+reader out to a key and back.
 
 The label takes the same ink as the axis, white on a dark slide and black on a
 light slide or in a manuscript, not the colour of the curve it names:
