@@ -55,7 +55,7 @@ test_that("hv_ppt_palette rejects more colours than it holds", {
 })
 
 # ============================================================================
-# hv_ppt_series — shape of the returned object
+# hv_ppt_series: shape of the returned object
 # ============================================================================
 
 test_that("hv_ppt_series returns a theme and two scales", {
@@ -91,7 +91,7 @@ test_that("hv_ppt_series validates colours and shapes", {
 })
 
 # ============================================================================
-# hv_ppt_series — composed onto a plot
+# hv_ppt_series: composed onto a plot
 # ============================================================================
 
 test_that("a decorated trends plot still carries its data and its groups", {
@@ -125,7 +125,7 @@ test_that("the list route preserves the PPT font-fallback tagging", {
 })
 
 # ============================================================================
-# hv_ppt_series — the legend stays off
+# hv_ppt_series: the legend stays off
 # ============================================================================
 
 test_that("hv_ppt_series leaves the house-style legend off", {
@@ -157,7 +157,7 @@ test_that("... forwards other theme arguments to the wrapped theme", {
 })
 
 # ============================================================================
-# hv_ppt_series — ungrouped plots
+# hv_ppt_series: ungrouped plots
 # ============================================================================
 
 test_that("an ungrouped plot keeps its data when the scales go unused", {
