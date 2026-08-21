@@ -71,6 +71,8 @@ export(hv_nnt)
 export(hv_nonparametric)
 export(hv_ordinal)
 export(hv_ph_location)
+export(hv_ppt_palette)
+export(hv_ppt_series)
 export(hv_sankey)
 export(hv_spaghetti)
 export(hv_stacked)
@@ -157,7 +159,9 @@ importFrom(ggplot2,
   ggsave,
   labs,
   scale_colour_identity,
+  scale_colour_manual,
   scale_fill_manual,
+  scale_shape_manual,
   scale_x_continuous,
   scale_x_discrete,
   scale_x_reverse,

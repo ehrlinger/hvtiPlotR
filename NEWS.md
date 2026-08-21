@@ -1,3 +1,25 @@
+# hvtiPlotR 2.7.7
+
+## New features
+
+- `hv_ppt_series()` bundles a PowerPoint theme with matching colour and shape
+  scales into one object you add to every plot in a deck, so the per-slide
+  finishing step is defined once instead of copied per figure. A `theme()`
+  cannot do this on its own: it governs the non-data ink and nothing that
+  draws from the data, which is why `theme_hv_ppt_dark(geom_point(...))` has
+  no effect. The return value is a plain list, and ggplot2's `+` unrolls it,
+  so it composes exactly like a theme. Colour and shape both map the grouping
+  column, since a projector flattens colour differences that read cleanly on
+  a monitor. The house-style `legend.position = "none"` is left alone; pass
+  `legend.position` through `...` when a draft wants a key.
+
+- `hv_ppt_palette()` returns those colours as a character vector, so a figure
+  that needs them outside the decorator reaches for the one definition instead
+  of pasted hex codes. Six Okabe-Ito colourblind-safe hues, reordered per
+  background: high-luminance first on a dark slide, darker first on a light
+  one. Annotation is not one of these uses; a label takes the theme's ink to
+  match the axis, white on a slide and black in a manuscript.
+
 # hvtiPlotR 2.7.6
 
 ## Bug fixes
