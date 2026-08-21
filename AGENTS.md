@@ -100,9 +100,14 @@ imports this file.
   `ggRandomForests` adds `required_status_checks`. Verify rather than assuming the family
   matches.
   ⚠️ The merge-blocking settings are **parameters of the `pull_request` rule**, one level below
-  the rule types listed above, which is why a list of rule types never shows them. Read them
-  with `gh api repos/ehrlinger/<repo>/rulesets/<id>` and pick out
-  `.rules[] | select(.type=="pull_request") | .parameters`.
+  the rule types listed above, which is why a list of rule types never shows them. Read them in
+  one call, `--jq` included:
+
+  ```sh
+  gh api repos/ehrlinger/<repo>/rulesets/<id> \
+    --jq '.rules[] | select(.type=="pull_request") | .parameters'
+  ```
+
   ⚠️ It requires **zero approvals**, and `require_code_owner_review` is **false**, so a PR can
   merge unreviewed. Adding a `CODEOWNERS` file does not change that on its own; the flag has to
   be turned on as well. Checked against the API on 2026-08-21.
