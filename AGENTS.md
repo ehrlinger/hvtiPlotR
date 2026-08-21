@@ -112,20 +112,45 @@ Read them:
 
 - **Never push to `main`.** Branch, then open a PR and let the
   maintainer merge.
+
 - **`main` is protected by a GitHub ruleset, and nothing in this repo
   records that.** A clone shows no trace of it, so it is stated here.
-  The ruleset is named `protect main`, is identical across all twelve
-  repositories in the HVTI R package family, and enforces four rules on
-  the default branch: no deletion, no force-push, pull-request-only, and
-  an **automatic Copilot code review** on every PR. A rejected push
-  comes from the server, not a local hook. ⚠️ It currently requires
-  **zero approvals**. `require_code_owner_review` is set but inert
-  because no repository in the family has a `CODEOWNERS` file, so a PR
-  can merge unreviewed. Adding `CODEOWNERS` makes that flag live.
+  The ruleset is named `protect main`, carries the same four rules in
+  every repository that has one, and enforces them on the default
+  branch: no deletion, no force-push, pull-request-only, and an
+  **automatic Copilot code review** on every PR. A rejected push comes
+  from the server, not a local hook. ⚠️ Fourteen repositories carry it,
+  not twelve, and they are not byte-identical: `ggRandomForests` adds
+  `required_status_checks`. Verify rather than assuming the family
+  matches. ⚠️ The merge-blocking settings are **parameters of the
+  `pull_request` rule**, one level below the rule types listed above,
+  which is why a list of rule types never shows them. Read them in one
+  call, `--jq` included:
+
+  ``` sh
+  gh api repos/ehrlinger/<repo>/rulesets/<id> \
+    --jq '.rules[] | select(.type=="pull_request") | .parameters'
+  ```
+
+  ⚠️ It requires **zero approvals**, and `require_code_owner_review` is
+  **false**, so a PR can merge unreviewed. Adding a `CODEOWNERS` file
+  does not change that on its own; the flag has to be turned on as well.
+  Checked against the API on 2026-08-21. ⚠️
+  `required_review_thread_resolution` was turned **off** across all
+  fourteen repositories on 2026-08-21. Copilot still reviews every PR
+  and still opens threads, but an unresolved thread no longer blocks the
+  merge button. Nothing now forces that feedback to be read, so address
+  and resolve Copilot threads before handing a PR over. ⚠️
+  `require_extra_approval_for_unattributed_changes` is **true** and was
+  deliberately left alone. It can demand an approval on commits GitHub
+  cannot attribute to a user account.
+
 - Versions are **straight three digits** (`2.7.6`). Never a `.9000`
   suffix or a fourth digit.
+
 - **Patch-digit bumps only**, as fixes land. Minor and major are the
   maintainer’s decision.
+
 - Bump `DESCRIPTION`, refresh its `Date`, and add the matching `NEWS.md`
   entry in the same commit.
 

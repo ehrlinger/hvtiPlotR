@@ -121,14 +121,16 @@
 </ul></div>
 <div class="section level2">
 <h2 id="git-and-versioning">Git and versioning<a class="anchor" aria-label="anchor" href="#git-and-versioning"></a></h2>
-<ul><li>
-<strong>Never push to <code>main</code>.</strong> Branch, then open a PR and let the maintainer merge.</li>
+<ul><li><p><strong>Never push to <code>main</code>.</strong> Branch, then open a PR and let the maintainer merge.</p></li>
 <li>
-<strong><code>main</code> is protected by a GitHub ruleset, and nothing in this repo records that.</strong> A clone shows no trace of it, so it is stated here. The ruleset is named <code>protect main</code>, is identical across all twelve repositories in the HVTI R package family, and enforces four rules on the default branch: no deletion, no force-push, pull-request-only, and an <strong>automatic Copilot code review</strong> on every PR. A rejected push comes from the server, not a local hook. ⚠️ It currently requires <strong>zero approvals</strong>. <code>require_code_owner_review</code> is set but inert because no repository in the family has a <code>CODEOWNERS</code> file, so a PR can merge unreviewed. Adding <code>CODEOWNERS</code> makes that flag live.</li>
-<li>Versions are <strong>straight three digits</strong> (<code>2.7.6</code>). Never a <code>.9000</code> suffix or a fourth digit.</li>
-<li>
-<strong>Patch-digit bumps only</strong>, as fixes land. Minor and major are the maintainer’s decision.</li>
-<li>Bump <code>DESCRIPTION</code>, refresh its <code>Date</code>, and add the matching <code>NEWS.md</code> entry in the same commit.</li>
+<p><strong><code>main</code> is protected by a GitHub ruleset, and nothing in this repo records that.</strong> A clone shows no trace of it, so it is stated here. The ruleset is named <code>protect main</code>, carries the same four rules in every repository that has one, and enforces them on the default branch: no deletion, no force-push, pull-request-only, and an <strong>automatic Copilot code review</strong> on every PR. A rejected push comes from the server, not a local hook. ⚠️ Fourteen repositories carry it, not twelve, and they are not byte-identical: <code>ggRandomForests</code> adds <code>required_status_checks</code>. Verify rather than assuming the family matches. ⚠️ The merge-blocking settings are <strong>parameters of the <code>pull_request</code> rule</strong>, one level below the rule types listed above, which is why a list of rule types never shows them. Read them in one call, <code>--jq</code> included:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="ex">gh</span> api repos/ehrlinger/<span class="op">&lt;</span>repo<span class="op">&gt;</span>/rulesets/<span class="op">&lt;</span>id<span class="op">&gt;</span> <span class="dt">\</span></span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>  <span class="at">--jq</span> <span class="st">'.rules[] | select(.type=="pull_request") | .parameters'</span></span></code></pre></div>
+<p>⚠️ It requires <strong>zero approvals</strong>, and <code>require_code_owner_review</code> is <strong>false</strong>, so a PR can merge unreviewed. Adding a <code>CODEOWNERS</code> file does not change that on its own; the flag has to be turned on as well. Checked against the API on 2026-08-21. ⚠️ <code>required_review_thread_resolution</code> was turned <strong>off</strong> across all fourteen repositories on 2026-08-21. Copilot still reviews every PR and still opens threads, but an unresolved thread no longer blocks the merge button. Nothing now forces that feedback to be read, so address and resolve Copilot threads before handing a PR over. ⚠️ <code>require_extra_approval_for_unattributed_changes</code> is <strong>true</strong> and was deliberately left alone. It can demand an approval on commits GitHub cannot attribute to a user account.</p>
+</li>
+<li><p>Versions are <strong>straight three digits</strong> (<code>2.7.6</code>). Never a <code>.9000</code> suffix or a fourth digit.</p></li>
+<li><p><strong>Patch-digit bumps only</strong>, as fixes land. Minor and major are the maintainer’s decision.</p></li>
+<li><p>Bump <code>DESCRIPTION</code>, refresh its <code>Date</code>, and add the matching <code>NEWS.md</code> entry in the same commit.</p></li>
 </ul></div>
 <div class="section level2">
 <h2 id="change-discipline">Change discipline<a class="anchor" aria-label="anchor" href="#change-discipline"></a></h2>
