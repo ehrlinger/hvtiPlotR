@@ -84,7 +84,7 @@
 <td>the PDF manual build — catches raw Unicode in <code>.Rd</code> that <code>--no-manual</code> skips</td>
 </tr><tr><td><code>lint.yaml</code></td>
 <td>
-<strong>nothing — it reports, it does not gate.</strong> <code>LINTR_ERROR_ON_LINT: false</code> is set deliberately while the pre-existing lint debt is worked down (<a href="https://github.com/ehrlinger/hvtiPlotR/issues/89" class="external-link">#89</a>: 98 lints under <code>.lintr</code>, 535 under lintr’s bare defaults). A green lint badge here is not a clean-lint claim. The <code>house-style</code> job in the same workflow <strong>does</strong> gate, on house-style artifact drift.</td>
+<strong>nothing: it reports, it does not gate.</strong> <code>LINTR_ERROR_ON_LINT: false</code> is set deliberately while the pre-existing lint debt is worked down (<a href="https://github.com/ehrlinger/hvtiPlotR/issues/89" class="external-link">#89</a>: 98 lints under <code>.lintr</code>, 535 under lintr’s bare defaults). A green lint badge here is not a clean-lint claim. The <code>house-style</code> job in the same workflow <strong>does</strong> gate, on house-style artifact drift.</td>
 </tr><tr><td><code>pkgdown.yaml</code></td>
 <td>the site build</td>
 </tr><tr><td><code>test-coverage.yaml</code></td>
