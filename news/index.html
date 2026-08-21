@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">hvtiPlotR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.7.7</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.7.8</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -50,9 +50,18 @@
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Changelog</h1>
-      <small>Source: <a href="https://github.com/ehrlinger/hvtiPlotR/blob/v2.7.7/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
+      <small>Source: <a href="https://github.com/ehrlinger/hvtiPlotR/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="2.7.8" id="hvtiplotr-278">hvtiPlotR 2.7.8<a class="anchor" aria-label="anchor" href="#hvtiplotr-278"></a></h2>
+<div class="section level3">
+<h3 id="documentation-2-7-8">Documentation<a class="anchor" aria-label="anchor" href="#documentation-2-7-8"></a></h3>
+<ul><li><p>Corrected two overstatements introduced in 2.7.7, both of the same shape: a claim that held for most cases stated as though it held for all.</p></li>
+<li><p><code><a href="../reference/hv_ppt_series.html">hv_ppt_series()</a></code> and <code>vignettes/plot-decorators.qmd</code> said every <code>theme_hv_*()</code> sets <code>legend.position = "none"</code>. Three do: <code><a href="../reference/hvtiPlotR-themes.html">theme_hv_manuscript()</a></code>, <code><a href="../reference/hvtiPlotR-themes.html">theme_hv_ppt_dark()</a></code> and <code><a href="../reference/hvtiPlotR-themes.html">theme_hv_ppt_light()</a></code>. <code><a href="../reference/hvtiPlotR-themes.html">theme_hv_poster()</a></code> never set it and inherits ggplot2’s <code>"right"</code>. Nothing about the decorator’s behaviour changes, since it only ever reaches for the two PowerPoint themes, but a reader following the docs to the poster theme would have been misled about what they were getting. No theme was changed: whether a poster should carry a legend is a house-style question, not a documentation one.</p></li>
+<li><p><code><a href="../reference/hv_ppt_palette.html">hv_ppt_palette()</a></code> said the reordering puts the strongest contrast first. That is true of the first entry in the dark ordering only. Measured against each ordering’s own background, neither ordering is monotonic in contrast ratio, and black is deliberately <strong>last</strong> in the light ordering while carrying the highest ratio of any colour here (21:1 on white). The <code>@details</code> now say what the ordering actually guarantees, which is that each ordering leads with its highest-contrast hue, and give the real reason black is last: house style draws annotation in the theme’s ink, so a black series would be confusable with the label naming it.</p></li>
+</ul></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="2.7.7" id="hvtiplotr-277">hvtiPlotR 2.7.7<a class="anchor" aria-label="anchor" href="#hvtiplotr-277"></a></h2>
 <div class="section level3">

@@ -21,7 +21,7 @@ matching shape scale, so a whole deck takes its look from one definition."></hea
 
     <a class="navbar-brand me-2" href="../index.html">hvtiPlotR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.7.7</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.7.8</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -64,7 +64,7 @@ matching shape scale, so a whole deck takes its look from one definition."></hea
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Slide styling for a grouped plot, in one reusable object</h1>
-      <small class="dont-index">Source: <a href="https://github.com/ehrlinger/hvtiPlotR/blob/v2.7.7/R/ppt-series.R" class="external-link"><code>R/ppt-series.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/ehrlinger/hvtiPlotR/blob/main/R/ppt-series.R" class="external-link"><code>R/ppt-series.R</code></a></small>
       <div class="d-none name"><code>hv_ppt_series.Rd</code></div>
     </div>
 
@@ -161,10 +161,13 @@ pass longer vectors for a wider variable.</p>
 <h3 id="no-legend-by-house-standard">No legend, by house standard<a class="anchor" aria-label="anchor" href="#no-legend-by-house-standard"></a></h3>
 
 
-<p>Every <code>theme_hv_*()</code> sets <code>legend.position = "none"</code>, and this decorator
-leaves that alone. CORR figures name the series where the series sits, on a
-slide and in a manuscript alike, so the reader's eye never travels out to a
-key and back.</p>
+<p>The three themes that finish a figure for publication, <code><a href="hvtiPlotR-themes.html">theme_hv_manuscript()</a></code>,
+<code><a href="hvtiPlotR-themes.html">theme_hv_ppt_dark()</a></code> and <code><a href="hvtiPlotR-themes.html">theme_hv_ppt_light()</a></code>, set
+<code>legend.position = "none"</code>, and this decorator leaves that alone. CORR
+figures name the series where the series sits, on a slide and in a
+manuscript alike, so the reader's eye never travels out to a key and back.
+(<code><a href="hvtiPlotR-themes.html">theme_hv_poster()</a></code> is the exception and keeps ggplot2's <code>"right"</code>; a poster
+is read up close, with room beside the panel.)</p>
 <p>Annotation is drawn in the theme's ink, not in the colour of the series it
 names: white on a dark slide, black on a light slide and in a manuscript.
 That is the <code>ink</code> the theme already gives the axis text and axis lines, so

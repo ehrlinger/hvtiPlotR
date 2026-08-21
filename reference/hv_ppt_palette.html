@@ -13,7 +13,7 @@ into a script, where they drift the first time the palette changes."></head><bod
 
     <a class="navbar-brand me-2" href="../index.html">hvtiPlotR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.7.7</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.7.8</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -56,7 +56,7 @@ into a script, where they drift the first time the palette changes."></head><bod
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Series colours for a slide or a manuscript figure</h1>
-      <small class="dont-index">Source: <a href="https://github.com/ehrlinger/hvtiPlotR/blob/v2.7.7/R/ppt-series.R" class="external-link"><code>R/ppt-series.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/ehrlinger/hvtiPlotR/blob/main/R/ppt-series.R" class="external-link"><code>R/ppt-series.R</code></a></small>
       <div class="d-none name"><code>hv_ppt_palette.Rd</code></div>
     </div>
 
@@ -94,9 +94,14 @@ into a script, where they drift the first time the palette changes.</p>
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>The colours are the Okabe-Ito colourblind-safe palette, reordered for the
 background: high-luminance hues first on a dark slide, darker ones first on
-a light slide, so the first series always has the strongest contrast against
-the surface it sits on. Black appears only in the light ordering; on a dark
-panel it is invisible. These are not CORR brand colours.</p>
+a light slide. Each ordering leads with its highest-contrast hue, 15.9:1 on
+a black panel and 5.2:1 on a white one, but past that first entry the order
+is not a contrast ranking and should not be read as one. Black appears only
+in the light ordering, and it sits <strong>last</strong> there despite carrying the
+highest ratio of anything here (21:1 on white): house style draws annotation
+in the theme's ink, so a black series would be confusable with the label
+naming it. On a dark panel black is invisible, which is why that ordering
+omits it. These are not CORR brand colours.</p>
 <p>Six colours are supplied. Ask for more than that and you get an error rather
 than a silently recycled palette, because two series sharing a colour is a
 worse outcome than a stopped script.</p>

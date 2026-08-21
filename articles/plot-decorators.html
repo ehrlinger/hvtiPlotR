@@ -24,7 +24,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">hvtiPlotR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.7.7</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.7.8</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -80,7 +80,7 @@
       <p class="author">John Ehrlinger <a href="mailto:ehrlinj@ccf.org" class="email">ehrlinj@ccf.org</a></p>
       <p class="date">2026-08-21</p>
 
-      <small class="dont-index">Source: <a href="https://github.com/ehrlinger/hvtiPlotR/blob/v2.7.7/vignettes/plot-decorators.qmd" class="external-link"><code>vignettes/plot-decorators.qmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/ehrlinger/hvtiPlotR/blob/main/vignettes/plot-decorators.qmd" class="external-link"><code>vignettes/plot-decorators.qmd</code></a></small>
       <div class="d-none name"><code></code></div>
     </div>
 
@@ -261,7 +261,7 @@
 <p>The colours are the Okabe-Ito colourblind-safe palette, reordered so the highest-luminance hues come first on a dark slide and the darker ones first on a light slide. Colour and shape both map the grouping column, which is worth keeping even though it looks redundant on your monitor: a projector in a dark room flattens colour differences that read cleanly on screen, and the shapes survive where the hues do not. Pass <code>colours</code> or <code>shapes</code> when a deck calls for a specific set.</p>
 </section><section class="level2"><h3 id="naming-the-series-without-a-legend">Naming the series without a legend<a class="anchor" aria-label="anchor" href="#naming-the-series-without-a-legend"></a>
 </h3>
-<p>House style carries no legend. Every <code>theme_hv_*()</code> sets <code>legend.position = "none"</code>, and <code><a href="../reference/hv_ppt_series.html">hv_ppt_series()</a></code> leaves that alone, because a CORR figure names the series where the series sits rather than sending the reader out to a key and back.</p>
+<p>House style carries no legend. <code><a href="../reference/hvtiPlotR-themes.html">theme_hv_manuscript()</a></code>, <code><a href="../reference/hvtiPlotR-themes.html">theme_hv_ppt_dark()</a></code> and <code><a href="../reference/hvtiPlotR-themes.html">theme_hv_ppt_light()</a></code> all set <code>legend.position = "none"</code>, and <code><a href="../reference/hv_ppt_series.html">hv_ppt_series()</a></code> leaves that alone, because a CORR figure names the series where the series sits rather than sending the reader out to a key and back. (<code><a href="../reference/hvtiPlotR-themes.html">theme_hv_poster()</a></code> is the one that does not: it inherits ggplot2’s <code>"right"</code>, on the reasoning that a poster is read up close and has room beside the panel.)</p>
 <p>The label takes the same ink as the axis, white on a dark slide and black on a light slide or in a manuscript, not the colour of the curve it names:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb9"><pre class="downlit sourceCode r">

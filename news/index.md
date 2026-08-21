@@ -1,5 +1,39 @@
 # Changelog
 
+## hvtiPlotR 2.7.8
+
+### Documentation
+
+- Corrected two overstatements introduced in 2.7.7, both of the same
+  shape: a claim that held for most cases stated as though it held for
+  all.
+
+- [`hv_ppt_series()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_ppt_series.md)
+  and `vignettes/plot-decorators.qmd` said every `theme_hv_*()` sets
+  `legend.position = "none"`. Three do:
+  [`theme_hv_manuscript()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md),
+  [`theme_hv_ppt_dark()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)
+  and
+  [`theme_hv_ppt_light()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md).
+  [`theme_hv_poster()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)
+  never set it and inherits ggplot2’s `"right"`. Nothing about the
+  decorator’s behaviour changes, since it only ever reaches for the two
+  PowerPoint themes, but a reader following the docs to the poster theme
+  would have been misled about what they were getting. No theme was
+  changed: whether a poster should carry a legend is a house-style
+  question, not a documentation one.
+
+- [`hv_ppt_palette()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_ppt_palette.md)
+  said the reordering puts the strongest contrast first. That is true of
+  the first entry in the dark ordering only. Measured against each
+  ordering’s own background, neither ordering is monotonic in contrast
+  ratio, and black is deliberately **last** in the light ordering while
+  carrying the highest ratio of any colour here (21:1 on white). The
+  `@details` now say what the ordering actually guarantees, which is
+  that each ordering leads with its highest-contrast hue, and give the
+  real reason black is last: house style draws annotation in the theme’s
+  ink, so a black series would be confusable with the label naming it.
+
 ## hvtiPlotR 2.7.7
 
 ### New features
