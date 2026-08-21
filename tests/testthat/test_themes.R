@@ -74,23 +74,30 @@ test_that("theme_hv_poster hides the legend by default", {
 # House style names a series by annotation rather than by a key, on every
 # output target. The docs stated this as a property of all four themes while
 # only three carried it -- theme_hv_poster() silently inherited theme_grey()'s
-# "right" until 2.7.8. Asserting the set, not each theme separately, is what
-# makes the claim testable: a fifth theme added without it fails here.
-test_that("every theme_hv_*() hides the legend by default", {
-  themes <- list(
-    theme_hv_manuscript = theme_hv_manuscript(),
-    theme_hv_poster     = theme_hv_poster(),
-    theme_hv_ppt_dark   = theme_hv_ppt_dark(),
-    theme_hv_ppt_light  = theme_hv_ppt_light()
-  )
-  positions <- vapply(themes,
-                      function(th) calc_element("legend.position", th),
-                      character(1))
-  expect_identical(positions,
-                   c(theme_hv_manuscript = "none",
-                     theme_hv_poster     = "none",
-                     theme_hv_ppt_dark   = "none",
-                     theme_hv_ppt_light  = "none"))
+# "right" until 2.7.8.
+#
+# The theme list is DISCOVERED rather than written out. A hard-coded list reads
+# as a set-wide contract while only ever checking the themes that existed when
+# it was written, so a fifth theme_hv_*() would have to opt in by being named
+# here -- the same gap that let the poster theme drift in the first place.
+# The deprecated aliases are hv_theme_*() and theme_*() and do not match this
+# prefix, so only the canonical constructors are checked.
+test_that("every exported theme_hv_*() hides the legend by default", {
+  theme_fns <- sort(grep("^theme_hv_",
+                         getNamespaceExports("hvtiPlotR"),
+                         value = TRUE))
+
+  # Guard the discovery itself: if the prefix ever stops matching, the
+  # comparison below would pass vacuously against an empty set.
+  expect_gte(length(theme_fns), 4L)
+
+  positions <- vapply(theme_fns, function(nm) {
+    calc_element("legend.position", getExportedValue("hvtiPlotR", nm)())
+  }, character(1))
+
+  # Naming the offenders rather than comparing whole vectors, so a failure
+  # says which theme drifted instead of printing two parallel lists.
+  expect_identical(names(positions)[positions != "none"], character(0))
 })
 
 # ============================================================================

@@ -12,8 +12,12 @@
   now render without one**; pass `legend.position = "right"` through `...`, or
   chain `+ theme(legend.position = "right")`, to restore it.
 
-- A test now asserts the property across all four themes as a set rather than
-  one theme at a time, so a fifth theme added without it fails.
+- A test now asserts the property across the theme family as a set rather than
+  one theme at a time, discovering the exported `theme_hv_*()` functions rather
+  than listing them. A hard-coded list reads as a set-wide contract while only
+  checking the themes that existed when it was written, which is the gap that
+  let the poster theme drift; a fifth theme is now covered without anyone
+  remembering to add it.
 
 ## Documentation
 
