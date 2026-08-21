@@ -163,6 +163,95 @@ p_base +
 
 ![](plot-decorators_files/figure-html/theme_hv_ppt_dark-1.png)
 
+### One decorator for a whole deck
+
+The two dark-slide chunks above show the shape of the problem. Every
+plot in a deck wants the same theme, the same colours and the same
+shapes, and copying those lines figure by figure is how one slide
+quietly drifts out of step with the rest. Note also that a theme cannot
+carry any of it.
+[`theme()`](https://ggplot2.tidyverse.org/reference/theme.html) governs
+the non-data ink, the text, panel, grid and ticks, and nothing that
+draws from the data, so no theme element sets a series colour. Passing
+the layer to the theme instead does not rescue it:
+`theme_hv_ppt_dark(geom_point(colour = "yellow"))` forwards its `...` to
+[`theme()`](https://ggplot2.tidyverse.org/reference/theme.html), which
+errors on anything that is not a theme element. Colours and shapes
+belong to the scales, added with `+`.
+
+[`hv_ppt_series()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_ppt_series.md)
+returns the theme and both scales as a single object. ggplot2’s `+`
+unrolls a plain list, so you define the look once and add it wherever
+you need it:
+
+``` r
+
+ppt <- hv_ppt_series(mode = "dark")
+
+p_base +
+  labs(x = "Surgery Year", y = "Outcome") +
+  ppt +
+  theme(plot.background = element_rect(fill = "navy", colour = "navy"))
+```
+
+![](plot-decorators_files/figure-html/hv_ppt_series-1.png)
+
+The colours are the Okabe-Ito colourblind-safe palette, reordered so the
+highest-luminance hues come first on a dark slide and the darker ones
+first on a light slide. Colour and shape both map the grouping column,
+which is worth keeping even though it looks redundant on your monitor: a
+projector in a dark room flattens colour differences that read cleanly
+on screen, and the shapes survive where the hues do not. Pass `colours`
+or `shapes` when a deck calls for a specific set.
+
+### Naming the series without a legend
+
+House style carries no legend. Every `theme_hv_*()` sets
+`legend.position = "none"`, and
+[`hv_ppt_series()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_ppt_series.md)
+leaves that alone, because a CORR figure names the series where the
+series sits rather than sending the reader out to a key and back.
+
+The label takes the same ink as the axis, white on a dark slide and
+black on a light slide or in a manuscript, not the colour of the curve
+it names:
+
+``` r
+
+p_base +
+  labs(x = "Surgery Year", y = "Outcome") +
+  ppt +
+  annotate("text", x = 2012, y = 56, label = "Group I",
+           colour = "white", size = 5, hjust = 0) +
+  theme(plot.background = element_rect(fill = "navy", colour = "navy"))
+```
+
+![](plot-decorators_files/figure-html/hv_ppt_series_annotate-1.png)
+
+[`hv_ppt_palette()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_ppt_palette.md)
+hands back the colours themselves when a figure needs them outside the
+decorator, so a script reaches for the one definition instead of pasted
+hex codes:
+
+``` r
+
+hv_ppt_palette("dark")
+```
+
+    [1] "#F0E442" "#56B4E9" "#E69F00" "#009E73" "#CC79A7" "#D55E00"
+
+``` r
+
+hv_ppt_palette("light", n = 4)
+```
+
+    [1] "#0072B2" "#D55E00" "#009E73" "#CC79A7"
+
+If a working draft does want a key, pass `legend.position` straight
+through: `hv_ppt_series(legend.position = "top", name = "Group")`.
+Colour and shape share `name`, so ggplot2 merges them into one legend
+rather than stacking two.
+
 ## Colour Scales
 
 `scale_colour_*` controls line and point colours; `scale_fill_*`

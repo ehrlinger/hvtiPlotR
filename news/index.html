@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">hvtiPlotR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.7.6</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.7.7</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -53,6 +53,18 @@
       <small>Source: <a href="https://github.com/ehrlinger/hvtiPlotR/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="2.7.7" id="hvtiplotr-277">hvtiPlotR 2.7.7<a class="anchor" aria-label="anchor" href="#hvtiplotr-277"></a></h2>
+<div class="section level3">
+<h3 id="new-features-2-7-7">New features<a class="anchor" aria-label="anchor" href="#new-features-2-7-7"></a></h3>
+<ul><li><p><code><a href="../reference/hv_ppt_series.html">hv_ppt_series()</a></code> bundles a PowerPoint theme with matching colour and shape scales into one object you add to every plot in a deck, so the per-slide finishing step is defined once instead of copied per figure. A <code><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme()</a></code> cannot do this on its own: it governs the non-data ink and nothing that draws from the data, so no theme element sets a series colour, and passing a layer to a <code>theme_hv_*()</code> call errors rather than styling anything, since that <code>...</code> is forwarded straight to <code><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme()</a></code>. Colours and shapes belong to the scales. The return value is a plain list, and ggplot2’s <code>+</code> unrolls it, so it composes exactly like a theme. Colour and shape both map the grouping column, since a projector flattens colour differences that read cleanly on a monitor. The house-style <code>legend.position = "none"</code> is left alone; pass <code>legend.position</code> through <code>...</code> when a draft wants a key.</p></li>
+<li><p><code><a href="../reference/hv_ppt_palette.html">hv_ppt_palette()</a></code> returns those colours as a character vector, so a figure that needs them outside the decorator reaches for the one definition instead of pasted hex codes. Six Okabe-Ito colourblind-safe hues, reordered per background: high-luminance first on a dark slide, darker first on a light one. Annotation is not one of these uses; a label takes the theme’s ink to match the axis, white on a slide and black in a manuscript.</p></li>
+</ul></div>
+<div class="section level3">
+<h3 id="bug-fixes-2-7-7">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-2-7-7"></a></h3>
+<ul><li>The Arial fallback in <code><a href="../reference/hvtiPlotR-themes.html">theme_hv_ppt_dark()</a></code> / <code><a href="../reference/hvtiPlotR-themes.html">theme_hv_ppt_light()</a></code> now covers text geoms as well as theme elements. ggplot2 4.0 resolves a text geom’s <code>family</code> through the theme’s <code>geom</code> element, which <code><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_grey()</a></code> seeds from <code>base_family</code> alongside <code>text</code>, so patching <code>text</code> alone left <code><a href="https://ggplot2.tidyverse.org/reference/geom_text.html" class="external-link">geom_text()</a></code> and <code>annotate("text", ...)</code> still asking the device for Arial. On <code><a href="https://rdrr.io/r/grDevices/postscript.html" class="external-link">postscript()</a></code> / <code><a href="https://rdrr.io/r/grDevices/pdf.html" class="external-link">pdf()</a></code> that is fatal (“invalid font type”), not merely a substituted glyph, so a PPT-themed plot carrying an annotation could not be drawn on those devices at all. House style names series by annotation rather than by a legend, which makes this the common case; no existing example or test drew a text geom on a PPT theme, which is why it went unseen.</li>
+</ul></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="2.7.6" id="hvtiplotr-276">hvtiPlotR 2.7.6<a class="anchor" aria-label="anchor" href="#hvtiplotr-276"></a></h2>
 <div class="section level3">

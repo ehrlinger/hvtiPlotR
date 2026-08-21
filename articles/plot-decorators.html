@@ -24,7 +24,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">hvtiPlotR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.7.6</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.7.7</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -239,6 +239,59 @@
 </div>
 </div>
 </div>
+</section><section class="level2"><h3 id="one-decorator-for-a-whole-deck">One decorator for a whole deck<a class="anchor" aria-label="anchor" href="#one-decorator-for-a-whole-deck"></a>
+</h3>
+<p>The two dark-slide chunks above show the shape of the problem. Every plot in a deck wants the same theme, the same colours and the same shapes, and copying those lines figure by figure is how one slide quietly drifts out of step with the rest. Note also that a theme cannot carry any of it. <code><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme()</a></code> governs the non-data ink, the text, panel, grid and ticks, and nothing that draws from the data, so no theme element sets a series colour. Passing the layer to the theme instead does not rescue it: <code>theme_hv_ppt_dark(geom_point(colour = "yellow"))</code> forwards its <code>...</code> to <code><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme()</a></code>, which errors on anything that is not a theme element. Colours and shapes belong to the scales, added with <code>+</code>.</p>
+<p><code><a href="../reference/hv_ppt_series.html">hv_ppt_series()</a></code> returns the theme and both scales as a single object. ggplot2’s <code>+</code> unrolls a plain list, so you define the look once and add it wherever you need it:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">ppt</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hv_ppt_series.html">hv_ppt_series</a></span><span class="op">(</span>mode <span class="op">=</span> <span class="st">"dark"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">p_base</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Surgery Year"</span>, y <span class="op">=</span> <span class="st">"Outcome"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="va">ppt</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>plot.background <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_rect</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="st">"navy"</span>, colour <span class="op">=</span> <span class="st">"navy"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<div class="cell-output-display">
+<div>
+<figure><p><img src="plot-decorators_files/figure-html/hv_ppt_series-1.png" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The colours are the Okabe-Ito colourblind-safe palette, reordered so the highest-luminance hues come first on a dark slide and the darker ones first on a light slide. Colour and shape both map the grouping column, which is worth keeping even though it looks redundant on your monitor: a projector in a dark room flattens colour differences that read cleanly on screen, and the shapes survive where the hues do not. Pass <code>colours</code> or <code>shapes</code> when a deck calls for a specific set.</p>
+</section><section class="level2"><h3 id="naming-the-series-without-a-legend">Naming the series without a legend<a class="anchor" aria-label="anchor" href="#naming-the-series-without-a-legend"></a>
+</h3>
+<p>House style carries no legend. Every <code>theme_hv_*()</code> sets <code>legend.position = "none"</code>, and <code><a href="../reference/hv_ppt_series.html">hv_ppt_series()</a></code> leaves that alone, because a CORR figure names the series where the series sits rather than sending the reader out to a key and back.</p>
+<p>The label takes the same ink as the axis, white on a dark slide and black on a light slide or in a manuscript, not the colour of the curve it names:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">p_base</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Surgery Year"</span>, y <span class="op">=</span> <span class="st">"Outcome"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="va">ppt</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/annotate.html" class="external-link">annotate</a></span><span class="op">(</span><span class="st">"text"</span>, x <span class="op">=</span> <span class="fl">2012</span>, y <span class="op">=</span> <span class="fl">56</span>, label <span class="op">=</span> <span class="st">"Group I"</span>,</span>
+<span>           colour <span class="op">=</span> <span class="st">"white"</span>, size <span class="op">=</span> <span class="fl">5</span>, hjust <span class="op">=</span> <span class="fl">0</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>plot.background <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_rect</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="st">"navy"</span>, colour <span class="op">=</span> <span class="st">"navy"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<div class="cell-output-display">
+<div>
+<figure><p><img src="plot-decorators_files/figure-html/hv_ppt_series_annotate-1.png" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><code><a href="../reference/hv_ppt_palette.html">hv_ppt_palette()</a></code> hands back the colours themselves when a figure needs them outside the decorator, so a script reaches for the one definition instead of pasted hex codes:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/hv_ppt_palette.html">hv_ppt_palette</a></span><span class="op">(</span><span class="st">"dark"</span><span class="op">)</span></span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "#F0E442" "#56B4E9" "#E69F00" "#009E73" "#CC79A7" "#D55E00"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/hv_ppt_palette.html">hv_ppt_palette</a></span><span class="op">(</span><span class="st">"light"</span>, n <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "#0072B2" "#D55E00" "#009E73" "#CC79A7"</code></pre>
+</div>
+</div>
+<p>If a working draft does want a key, pass <code>legend.position</code> straight through: <code>hv_ppt_series(legend.position = "top", name = "Group")</code>. Colour and shape share <code>name</code>, so ggplot2 merges them into one legend rather than stacking two.</p>
 </section></section><section class="section level2"><h2 id="colour-scales">Colour Scales<a class="anchor" aria-label="anchor" href="#colour-scales"></a>
 </h2>
 <p><code>scale_colour_*</code> controls line and point colours; <code>scale_fill_*</code> controls filled areas (ribbons, bars). Both take the same <code>name</code> (legend title) and <code>guide</code> (legend display) arguments — set them once and both scales update.</p>
@@ -246,7 +299,7 @@
 </h3>
 <p>Use <code><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_colour_manual()</a></code> when assigning specific brand or convention colours to known levels.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">km</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_color_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>All <span class="op">=</span> <span class="st">"steelblue"</span><span class="op">)</span>, guide <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_fill_manual</a></span><span class="op">(</span>values  <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>All <span class="op">=</span> <span class="st">"steelblue"</span><span class="op">)</span>, guide <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span> <span class="op">+</span></span>
@@ -267,7 +320,7 @@
 </h3>
 <p><code><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_colour_brewer()</a></code> applies a ColorBrewer palette — perceptually uniform and print-safe, which matters when figures go to black-and-white PDF. Use <code>palette = "Set1"</code> for categorical data, <code>"RdYlGn"</code> for diverging, <code>"Blues"</code> for sequential.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p_base</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_colour_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Set1"</span>, name <span class="op">=</span> <span class="st">"Group"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_shape_manual</a></span><span class="op">(</span></span>
@@ -288,7 +341,7 @@
 </h3>
 <p>Pass <code>guide = "none"</code> to any scale and that aesthetic drops out of the legend. You’d do this when the axis labels or an annotation already name the group — a redundant legend only takes up panel space.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p_base</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_colour_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Dark2"</span>, guide <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_shape_manual</a></span><span class="op">(</span></span>
@@ -311,7 +364,7 @@
 </h3>
 <p><code><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs()</a></code> sets axis labels, the plot title, legend title, subtitle, and caption text. We set these outside the constructor so you can override them per project without touching the function itself.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">km</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_color_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>All <span class="op">=</span> <span class="st">"steelblue"</span><span class="op">)</span>, guide <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_fill_manual</a></span><span class="op">(</span>values  <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>All <span class="op">=</span> <span class="st">"steelblue"</span><span class="op">)</span>, guide <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span> <span class="op">+</span></span>
@@ -337,7 +390,7 @@
 </h3>
 <p><code><a href="https://ggplot2.tidyverse.org/reference/annotate.html" class="external-link">annotate()</a></code> places text, segments, rectangles, or arrows at fixed data coordinates — useful for a sample-size callout in the corner or a label pointing to an event of interest.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">km</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_color_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>All <span class="op">=</span> <span class="st">"steelblue"</span><span class="op">)</span>, guide <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_fill_manual</a></span><span class="op">(</span>values  <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>All <span class="op">=</span> <span class="st">"steelblue"</span><span class="op">)</span>, guide <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span> <span class="op">+</span></span>
@@ -365,7 +418,7 @@
 </h3>
 <p><code><a href="https://ggplot2.tidyverse.org/reference/coord_cartesian.html" class="external-link">coord_cartesian()</a></code> crops the viewport without dropping data, preserving LOESS fits computed on the full range.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p_base</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_colour_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Set1"</span>, name <span class="op">=</span> <span class="st">"Group"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_shape_manual</a></span><span class="op">(</span></span>
@@ -389,7 +442,7 @@
 </h3>
 <p>Use <code><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave()</a></code> with <code>width = 11, height = 8.5</code> (US Letter landscape) for manuscript figures. Assign the fully composed plot to a variable first so the same object is both displayed in the session and written to disk.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave</a></span><span class="op">(</span></span>
 <span>  filename <span class="op">=</span> <span class="st">"../graphs/trends_manuscript.pdf"</span>,</span>
 <span>  plot     <span class="op">=</span> <span class="va">p_ms</span>,</span>
@@ -401,7 +454,7 @@
 </h3>
 <p>Poster figures are typically larger and use <code><a href="../reference/hvtiPlotR-themes.html">theme_hv_poster()</a></code>. Adjust dimensions to match the poster panel size.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave</a></span><span class="op">(</span></span>
 <span>  filename <span class="op">=</span> <span class="st">"../graphs/trends_poster.pdf"</span>,</span>
 <span>  plot     <span class="op">=</span> <span class="va">p_poster</span>,</span>
@@ -475,7 +528,7 @@
 </h4>
 <p>Build a fully themed plot – <code><a href="../reference/hvtiPlotR-themes.html">theme_hv_ppt_dark()</a></code> or <code><a href="../reference/hvtiPlotR-themes.html">theme_hv_ppt_light()</a></code> – then pass it as <code>object</code>. The <code>template</code> argument points to an existing <code>.pptx</code> file whose slide master and layouts carry the brand fonts and background; <code><a href="../reference/save_ppt.html">save_ppt()</a></code> appends a new slide rather than overwriting the template.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">template</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"hv_ppt_template.pptx"</span>, package <span class="op">=</span> <span class="st">"hvtiPlotR"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">p_ppt</span> <span class="op">&lt;-</span> <span class="va">p_base</span> <span class="op">+</span></span>
@@ -499,7 +552,7 @@
 </h4>
 <p>Pass a named list of plots and a matching vector of titles to produce one slide per plot in a single call. This is the pattern we use for batch-report decks where each outcome gets its own slide – the list keeps plots in order and the names serve as a paper trail. Every plot in the list should carry the same theme so the deck looks consistent.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb17"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">dta_km2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sample_survival_data.html">sample_survival_data</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">400</span>, seed <span class="op">=</span> <span class="fl">99</span><span class="op">)</span></span>
 <span><span class="va">km2</span>     <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hv_survival.html">hv_survival</a></span><span class="op">(</span><span class="va">dta_km2</span><span class="op">)</span></span>
 <span></span>
@@ -525,7 +578,7 @@
 <p>When plots have different y-axis ranges (“0-1” vs “0-10000”), the axis-label widths differ, which shifts the plot panel inside a fixed <code>ph_location()</code>. On dark PPT themes with a visible panel background (black panel on a blue-gradient slide), that shift is visually jarring — the box appears to move between slides.</p>
 <p>Pass <code>panel_box = list(width, height, left, top)</code> to anchor the <strong>panel content area</strong> at the same slide coordinates on every slide. <code><a href="../reference/save_ppt.html">save_ppt()</a></code> calls <code><a href="../reference/hv_ph_location.html">hv_ph_location()</a></code> for each plot, measures the axis/legend/title chrome around the panel, and adjusts per-slide placement so the panel lands at the target rectangle regardless of label width. Axis labels then extend outside the panel box as needed; device dimensions vary per plot.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb18"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/save_ppt.html">save_ppt</a></span><span class="op">(</span></span>
 <span>  object       <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>trends <span class="op">=</span> <span class="va">p_ppt</span>, survival <span class="op">=</span> <span class="va">p_km_ppt</span><span class="op">)</span>,</span>
 <span>  template     <span class="op">=</span> <span class="va">template</span>,</span>
@@ -539,7 +592,7 @@
 </h3>
 <p>When generating multiple plots in a loop, <code><a href="https://patchwork.data-imaginist.com/reference/wrap_plots.html" class="external-link">patchwork::wrap_plots()</a></code> arranges them into a grid and <code><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave()</a></code> writes each page. This is typical for EDA batches where you have a dozen or more outcomes to inspect – you build the list with <code><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply()</a></code>, chunk it into pages of 9, and let the loop handle pagination. The <code>per_page</code> constant is easy to adjust if you want a 2x2 or 4x4 grid instead.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb19"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Build a list of plots (e.g. from an hv_eda() lapply loop)</span></span>
 <span><span class="va">plot_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ef"</span>, <span class="st">"lv_mass"</span>, <span class="st">"peak_grad"</span><span class="op">)</span>,</span>
@@ -573,7 +626,7 @@
 </h3>
 <p>Pass fractional coordinates <code>c(x, y)</code> to <code>legend.position</code> inside <code><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme()</a></code>. <code>c(0, 0)</code> is the bottom-left corner; <code>c(1, 1)</code> is the top-right.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb20"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p_base</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_colour_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Set1"</span>, name <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_shape_manual</a></span><span class="op">(</span></span>
@@ -599,7 +652,7 @@
 </h3>
 <p>Set <code>legend.position</code> to <code>"right"</code>, <code>"left"</code>, <code>"top"</code>, or <code>"bottom"</code> to place the legend outside the panel area. <code>"bottom"</code> with <code>legend.direction = "horizontal"</code> is the most common choice for multi-group figures where a long label would crowd a corner inside the panel.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb21"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p_base</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_colour_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Set1"</span>, name <span class="op">=</span> <span class="st">"Group"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_shape_manual</a></span><span class="op">(</span></span>
@@ -624,7 +677,7 @@
 </h3>
 <p>Two ways to suppress legends, with slightly different scope. <code>theme(legend.position = "none")</code> hides every legend for the plot in one shot. <code>guide = "none"</code> on a <code>scale_*()</code> call drops only that aesthetic’s legend — handy when you want a colour legend but no shape legend (or vice versa). Both reclaim the panel width either way.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb22"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">km</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_color_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>All <span class="op">=</span> <span class="st">"steelblue"</span><span class="op">)</span>, guide <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_fill_manual</a></span><span class="op">(</span>values  <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>All <span class="op">=</span> <span class="st">"steelblue"</span><span class="op">)</span>, guide <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span> <span class="op">+</span></span>
@@ -646,7 +699,7 @@
 </h3>
 <p>The legend inherits font size from the active theme, which is often slightly larger than needed when the legend sits inside a crowded panel. <code>legend.text</code> controls the label font; <code>legend.key.size</code> shrinks the colour/shape swatch. Both accept any <code><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text()</a></code> or <code><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit()</a></code> value.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb23"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb29"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p_base</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_colour_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Set1"</span>, name <span class="op">=</span> <span class="st">"Group"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_shape_manual</a></span><span class="op">(</span></span>
@@ -674,7 +727,7 @@
 </h3>
 <p>Override <code>axis.text</code> to resize tick labels and <code>axis.title</code> for the axis title, independent of the rest of the theme. This is useful when a figure is being resized for a different output target – for example, scaling down for a two-column journal layout where the default poster-sized text would be too large.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb24"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p_base</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_colour_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Set1"</span>, name <span class="op">=</span> <span class="st">"Group"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_shape_manual</a></span><span class="op">(</span></span>
@@ -699,7 +752,7 @@
 </h3>
 <p>Minor grid lines (<code>panel.grid.minor</code>) add density without adding precision – they can make a busy figure look cluttered, especially when there are many data series. Setting <code><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank()</a></code> removes them while keeping the major grid intact.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb25"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb31"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p_base</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_colour_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Set1"</span>, name <span class="op">=</span> <span class="st">"Group"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_shape_manual</a></span><span class="op">(</span></span>
@@ -723,7 +776,7 @@
 </h3>
 <p>Useful for time-point labels or long category names. The combination of <code>angle = 45</code>, <code>hjust = 1</code>, and <code>vjust = 1</code> keeps the rotated label right-aligned to its tick mark; without the <code>hjust</code>/<code>vjust</code> corrections the labels will float off-center.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb26"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb32"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p_base</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_colour_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Set1"</span>, name <span class="op">=</span> <span class="st">"Group"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_shape_manual</a></span><span class="op">(</span></span>
@@ -747,7 +800,7 @@
 </h3>
 <p>Titles are stripped from the base themes (they are rarely used in journal figures), but can be added back:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb27"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb33"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">km</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_color_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>All <span class="op">=</span> <span class="st">"steelblue"</span><span class="op">)</span>, guide <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_fill_manual</a></span><span class="op">(</span>values  <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>All <span class="op">=</span> <span class="st">"steelblue"</span><span class="op">)</span>, guide <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span> <span class="op">+</span></span>
@@ -777,7 +830,7 @@
 </h3>
 <p>Add breathing room around the panel – useful when a figure is placed directly on a poster without a surrounding text frame, or when axis labels clip against a tight device boundary. The <code><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">margin()</a></code> arguments follow top / right / bottom / left order, matching CSS convention.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb28"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb34"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p_base</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_colour_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Set1"</span>, name <span class="op">=</span> <span class="st">"Group"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_shape_manual</a></span><span class="op">(</span></span>
@@ -804,7 +857,7 @@
 </h3>
 <p>The <code>|</code> operator from patchwork places two plots next to each other in the same row, sharing the figure height. This is the typical layout for comparing two outcomes – trends and survival, for example – on a single manuscript figure. Both panels are built independently and composed at the last step, so you can adjust each one without touching the other.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb29"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb35"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://patchwork.data-imaginist.com" class="external-link">patchwork</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">p_ms</span> <span class="op">&lt;-</span> <span class="va">p_base</span> <span class="op">+</span></span>
@@ -840,7 +893,7 @@
 </h3>
 <p><code>plot_layout(widths = ...)</code> sets relative widths as a numeric vector – <code>c(2, 1)</code> makes the left panel twice as wide as the right. Use <code>heights</code> the same way for stacked layouts. This is the right tool when one panel has a wide y-axis label or a tall legend that throws off a 50/50 split.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb30"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb36"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="op">(</span><span class="va">p_ms</span> <span class="op">|</span> <span class="va">p_km_ms</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://patchwork.data-imaginist.com/reference/plot_layout.html" class="external-link">plot_layout</a></span><span class="op">(</span>widths <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span>   <span class="co"># left panel twice as wide as right</span></span></code></pre></div>
 <div class="cell-output-display">
@@ -854,7 +907,7 @@
 </h3>
 <p>A common pattern with survival curves is to pair the plot with a numbers-at-risk panel. <code><a href="../reference/hv_survival.html">hv_survival()</a></code> stores the risk table as a data frame at <code>km$tables$risk</code> — columns <code>strata</code>, <code>report_time</code>, <code>n.risk</code>. Build a ggplot text panel from it, then stack with <code>/</code>.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb31"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb37"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">risk_df</span> <span class="op">&lt;-</span> <span class="va">km</span><span class="op">$</span><span class="va">tables</span><span class="op">$</span><span class="va">risk</span></span>
 <span></span>
 <span><span class="va">rt_panel</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">risk_df</span>,</span>
@@ -882,7 +935,7 @@
 </h3>
 <p><code><a href="https://patchwork.data-imaginist.com/reference/plot_annotation.html" class="external-link">plot_annotation()</a></code> adds a shared title or panel tags (A, B, C…) across all panels. Tags are required by most journals for multi-panel figures and are referenced in the caption as “Panel A shows…” – setting <code>tag_levels = "A"</code> generates them automatically. The <code>&amp;</code> operator applies a shared <code><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme()</a></code> call to every panel at once, so you only need to set <code>plot.tag</code> formatting in one place.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb32"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb38"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="op">(</span><span class="va">p_ms</span> <span class="op">|</span> <span class="va">p_km_ms</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://patchwork.data-imaginist.com/reference/plot_annotation.html" class="external-link">plot_annotation</a></span><span class="op">(</span></span>
 <span>    title <span class="op">=</span> <span class="st">"Figure 1. Outcomes after cardiac surgery"</span>,</span>
@@ -900,7 +953,7 @@
 </h3>
 <p>Assign the composed object to a variable and pass it to <code><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave()</a></code>. For PowerPoint, save each panel individually with <code><a href="../reference/save_ppt.html">save_ppt()</a></code> — patchwork flattens everything into a single raster, so the shapes and text are no longer editable in PowerPoint.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb33"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb39"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">combined</span> <span class="op">&lt;-</span> <span class="op">(</span><span class="va">p_ms</span> <span class="op">|</span> <span class="va">p_km_ms</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://patchwork.data-imaginist.com/reference/plot_annotation.html" class="external-link">plot_annotation</a></span><span class="op">(</span>tag_levels <span class="op">=</span> <span class="st">"A"</span><span class="op">)</span> <span class="op">&amp;</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>plot.tag <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">12</span>, face <span class="op">=</span> <span class="st">"bold"</span><span class="op">)</span><span class="op">)</span></span>

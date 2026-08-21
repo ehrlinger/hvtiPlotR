@@ -34,6 +34,14 @@ contract and forwards `...` into a final
 callers can override any element inline
 (e.g. `theme_hv_manuscript(legend.position = "right")`). The previous
 `hv_theme_*()` and `theme_*` names remain as deprecated aliases.
+[`hv_ppt_series()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_ppt_series.md)
+bundles a theme with matching colour and shape scales into one object
+you add to every plot in a deck, and
+[`hv_ppt_palette()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_ppt_palette.md)
+hands back those colours for a figure that needs them outside the
+decorator. House-style figures carry no legend; series are named by
+annotation drawn in the theme’s ink to match the axis, not in a series
+colour.
 
 - [`theme_hv_manuscript()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)
   [`theme_hv_poster()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)
@@ -51,6 +59,10 @@ callers can override any element inline
   [`hv_theme_light_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)
   [`theme_light_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)
   : hvtiPlotR ggplot2 themes
+- [`hv_ppt_series()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_ppt_series.md)
+  : Slide styling for a grouped plot, in one reusable object
+- [`hv_ppt_palette()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_ppt_palette.md)
+  : Series colours for a slide or a manuscript figure
 
 ## Survival & Hazard
 

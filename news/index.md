@@ -1,5 +1,56 @@
 # Changelog
 
+## hvtiPlotR 2.7.7
+
+### New features
+
+- [`hv_ppt_series()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_ppt_series.md)
+  bundles a PowerPoint theme with matching colour and shape scales into
+  one object you add to every plot in a deck, so the per-slide finishing
+  step is defined once instead of copied per figure. A
+  [`theme()`](https://ggplot2.tidyverse.org/reference/theme.html) cannot
+  do this on its own: it governs the non-data ink and nothing that draws
+  from the data, so no theme element sets a series colour, and passing a
+  layer to a `theme_hv_*()` call errors rather than styling anything,
+  since that `...` is forwarded straight to
+  [`theme()`](https://ggplot2.tidyverse.org/reference/theme.html).
+  Colours and shapes belong to the scales. The return value is a plain
+  list, and ggplot2’s `+` unrolls it, so it composes exactly like a
+  theme. Colour and shape both map the grouping column, since a
+  projector flattens colour differences that read cleanly on a monitor.
+  The house-style `legend.position = "none"` is left alone; pass
+  `legend.position` through `...` when a draft wants a key.
+
+- [`hv_ppt_palette()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_ppt_palette.md)
+  returns those colours as a character vector, so a figure that needs
+  them outside the decorator reaches for the one definition instead of
+  pasted hex codes. Six Okabe-Ito colourblind-safe hues, reordered per
+  background: high-luminance first on a dark slide, darker first on a
+  light one. Annotation is not one of these uses; a label takes the
+  theme’s ink to match the axis, white on a slide and black in a
+  manuscript.
+
+### Bug fixes
+
+- The Arial fallback in
+  [`theme_hv_ppt_dark()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)
+  /
+  [`theme_hv_ppt_light()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)
+  now covers text geoms as well as theme elements. ggplot2 4.0 resolves
+  a text geom’s `family` through the theme’s `geom` element, which
+  [`theme_grey()`](https://ggplot2.tidyverse.org/reference/ggtheme.html)
+  seeds from `base_family` alongside `text`, so patching `text` alone
+  left
+  [`geom_text()`](https://ggplot2.tidyverse.org/reference/geom_text.html)
+  and `annotate("text", ...)` still asking the device for Arial. On
+  [`postscript()`](https://rdrr.io/r/grDevices/postscript.html) /
+  [`pdf()`](https://rdrr.io/r/grDevices/pdf.html) that is fatal
+  (“invalid font type”), not merely a substituted glyph, so a PPT-themed
+  plot carrying an annotation could not be drawn on those devices at
+  all. House style names series by annotation rather than by a legend,
+  which makes this the common case; no existing example or test drew a
+  text geom on a PPT theme, which is why it went unseen.
+
 ## hvtiPlotR 2.7.6
 
 ### Bug fixes
