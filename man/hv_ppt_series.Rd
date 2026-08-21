@@ -81,13 +81,10 @@ pass longer vectors for a wider variable.
 
 \subsection{No legend, by house standard}{
 
-The three themes that finish a figure for publication, \code{\link[=theme_hv_manuscript]{theme_hv_manuscript()}},
-\code{\link[=theme_hv_ppt_dark]{theme_hv_ppt_dark()}} and \code{\link[=theme_hv_ppt_light]{theme_hv_ppt_light()}}, set
-\code{legend.position = "none"}, and this decorator leaves that alone. CORR
-figures name the series where the series sits, on a slide and in a
-manuscript alike, so the reader's eye never travels out to a key and back.
-(\code{\link[=theme_hv_poster]{theme_hv_poster()}} is the exception and keeps ggplot2's \code{"right"}; a poster
-is read up close, with room beside the panel.)
+Every \verb{theme_hv_*()} sets \code{legend.position = "none"}, and this decorator
+leaves that alone. CORR figures name the series where the series sits, on a
+slide, on a poster and in a manuscript alike, so the reader's eye never
+travels out to a key and back.
 
 Annotation is drawn in the theme's ink, not in the colour of the series it
 names: white on a dark slide, black on a light slide and in a manuscript.

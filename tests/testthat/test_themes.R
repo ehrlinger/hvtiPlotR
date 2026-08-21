@@ -67,6 +67,39 @@ test_that("theme_hv_poster composes onto a plot and accepts ... overrides", {
   expect_identical(th$legend.position, "bottom")
 })
 
+test_that("theme_hv_poster hides the legend by default", {
+  expect_identical(theme_hv_poster()$legend.position, "none")
+})
+
+# House style names a series by annotation rather than by a key, on every
+# output target. The docs stated this as a property of all four themes while
+# only three carried it -- theme_hv_poster() silently inherited theme_grey()'s
+# "right" until 2.7.8.
+#
+# The theme list is DISCOVERED rather than written out. A hard-coded list reads
+# as a set-wide contract while only ever checking the themes that existed when
+# it was written, so a fifth theme_hv_*() would have to opt in by being named
+# here -- the same gap that let the poster theme drift in the first place.
+# The deprecated aliases are hv_theme_*() and theme_*() and do not match this
+# prefix, so only the canonical constructors are checked.
+test_that("every exported theme_hv_*() hides the legend by default", {
+  theme_fns <- sort(grep("^theme_hv_",
+                         getNamespaceExports("hvtiPlotR"),
+                         value = TRUE))
+
+  # Guard the discovery itself: if the prefix ever stops matching, the
+  # comparison below would pass vacuously against an empty set.
+  expect_gte(length(theme_fns), 4L)
+
+  positions <- vapply(theme_fns, function(nm) {
+    calc_element("legend.position", getExportedValue("hvtiPlotR", nm)())
+  }, character(1))
+
+  # Naming the offenders rather than comparing whole vectors, so a failure
+  # says which theme drifted instead of printing two parallel lists.
+  expect_identical(names(positions)[positions != "none"], character(0))
+})
+
 # ============================================================================
 # theme_hv_ppt_dark
 # ============================================================================

@@ -1,5 +1,24 @@
 # hvtiPlotR 2.7.8
 
+## Behaviour change
+
+- `theme_hv_poster()` now sets `legend.position = "none"`, matching
+  `theme_hv_manuscript()`, `theme_hv_ppt_dark()` and `theme_hv_ppt_light()`.
+  It previously inherited `theme_grey()`'s `"right"`, which made it the one
+  theme in the family that drew a key. House style names a series by
+  annotation on every output target, so the poster theme was the outlier, not
+  the rule, and the docs had been describing four themes as though they all
+  behaved this way. **A poster figure that relied on the automatic legend will
+  now render without one**; pass `legend.position = "right"` through `...`, or
+  chain `+ theme(legend.position = "right")`, to restore it.
+
+- A test now asserts the property across the theme family as a set rather than
+  one theme at a time, discovering the exported `theme_hv_*()` functions rather
+  than listing them. A hard-coded list reads as a set-wide contract while only
+  checking the themes that existed when it was written, which is the gap that
+  let the poster theme drift; a fifth theme is now covered without anyone
+  remembering to add it.
+
 ## Documentation
 
 - Corrected two overstatements introduced in 2.7.7, both of the same shape: a
@@ -8,12 +27,11 @@
 - `hv_ppt_series()` and `vignettes/plot-decorators.qmd` said every
   `theme_hv_*()` sets `legend.position = "none"`. Three do:
   `theme_hv_manuscript()`, `theme_hv_ppt_dark()` and `theme_hv_ppt_light()`.
-  `theme_hv_poster()` never set it and inherits ggplot2's `"right"`. Nothing
-  about the decorator's behaviour changes, since it only ever reaches for the
-  two PowerPoint themes, but a reader following the docs to the poster theme
-  would have been misled about what they were getting. No theme was changed:
-  whether a poster should carry a legend is a house-style question, not a
-  documentation one.
+  `theme_hv_poster()` never set it and inherited ggplot2's `"right"`. The docs
+  were corrected first to describe that, and the theme has since been changed
+  to match the other three (see **Behaviour change** above), which makes the
+  original "every `theme_hv_*()`" wording true rather than merely accurate
+  about an inconsistency.
 
 - `hv_ppt_palette()` said the reordering puts the strongest contrast first.
   That is true of the first entry in the dark ordering only. Measured against
