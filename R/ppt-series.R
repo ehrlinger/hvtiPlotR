@@ -89,9 +89,11 @@ hv_ppt_palette <- function(mode = c("dark", "light"), n = NULL) {
 #'
 #' A theme cannot do this job alone. [ggplot2::theme()] governs the non-data
 #' ink, the text, panel, grid and ticks, and nothing that draws from the data,
-#' which is why `theme_hv_ppt_dark(geom_point(...))` has no effect. Series
-#' colour and shape live in the scales, and those are what this function adds
-#' alongside the theme.
+#' so no theme element sets a series colour. Nor can a layer be smuggled in
+#' through the theme's `...`, which is forwarded to [ggplot2::theme()] and
+#' errors on anything that is not a theme element. Series colour and shape
+#' live in the scales, and those are what this function adds alongside the
+#' theme.
 #'
 #' ## Colour and shape carry the same variable
 #'

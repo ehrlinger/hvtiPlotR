@@ -169,8 +169,10 @@ deck wants the same theme, the same colours and the same shapes, and copying
 those lines figure by figure is how one slide quietly drifts out of step with
 the rest. Note also that a theme cannot carry any of it. `theme()` governs the
 non-data ink, the text, panel, grid and ticks, and nothing that draws from the
-data, so `theme_hv_ppt_dark(geom_point(colour = "yellow"))` has no effect at
-all.
+data, so no theme element sets a series colour. Passing the layer to the theme
+instead does not rescue it: `theme_hv_ppt_dark(geom_point(colour = "yellow"))`
+forwards its `...` to `theme()`, which errors on anything that is not a theme
+element. Colours and shapes belong to the scales, added with `+`.
 
 `hv_ppt_series()` returns the theme and both scales as a single object.
 ggplot2's `+` unrolls a plain list, so you define the look once and add it

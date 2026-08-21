@@ -6,8 +6,10 @@
   scales into one object you add to every plot in a deck, so the per-slide
   finishing step is defined once instead of copied per figure. A `theme()`
   cannot do this on its own: it governs the non-data ink and nothing that
-  draws from the data, which is why `theme_hv_ppt_dark(geom_point(...))` has
-  no effect. The return value is a plain list, and ggplot2's `+` unrolls it,
+  draws from the data, so no theme element sets a series colour, and passing
+  a layer to a `theme_hv_*()` call errors rather than styling anything, since
+  that `...` is forwarded straight to `theme()`. Colours and shapes belong to
+  the scales. The return value is a plain list, and ggplot2's `+` unrolls it,
   so it composes exactly like a theme. Colour and shape both map the grouping
   column, since a projector flattens colour differences that read cleanly on
   a monitor. The house-style `legend.position = "none"` is left alone; pass
