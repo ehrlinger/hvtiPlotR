@@ -206,18 +206,11 @@ or `shapes` when a deck calls for a specific set.
 
 ### Naming the series without a legend
 
-House style carries no legend.
-[`theme_hv_manuscript()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md),
-[`theme_hv_ppt_dark()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)
-and
-[`theme_hv_ppt_light()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)
-all set `legend.position = "none"`, and
+House style carries no legend. Every `theme_hv_*()` sets
+`legend.position = "none"`, and
 [`hv_ppt_series()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_ppt_series.md)
 leaves that alone, because a CORR figure names the series where the
 series sits rather than sending the reader out to a key and back.
-([`theme_hv_poster()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)
-is the one that does not: it inherits ggplot2’s `"right"`, on the
-reasoning that a poster is read up close and has room beside the panel.)
 
 The label takes the same ink as the axis, white on a dark slide and
 black on a light slide or in a manuscript, not the colour of the curve

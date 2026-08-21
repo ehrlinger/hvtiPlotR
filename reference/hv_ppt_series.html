@@ -161,13 +161,10 @@ pass longer vectors for a wider variable.</p>
 <h3 id="no-legend-by-house-standard">No legend, by house standard<a class="anchor" aria-label="anchor" href="#no-legend-by-house-standard"></a></h3>
 
 
-<p>The three themes that finish a figure for publication, <code><a href="hvtiPlotR-themes.html">theme_hv_manuscript()</a></code>,
-<code><a href="hvtiPlotR-themes.html">theme_hv_ppt_dark()</a></code> and <code><a href="hvtiPlotR-themes.html">theme_hv_ppt_light()</a></code>, set
-<code>legend.position = "none"</code>, and this decorator leaves that alone. CORR
-figures name the series where the series sits, on a slide and in a
-manuscript alike, so the reader's eye never travels out to a key and back.
-(<code><a href="hvtiPlotR-themes.html">theme_hv_poster()</a></code> is the exception and keeps ggplot2's <code>"right"</code>; a poster
-is read up close, with room beside the panel.)</p>
+<p>Every <code>theme_hv_*()</code> sets <code>legend.position = "none"</code>, and this decorator
+leaves that alone. CORR figures name the series where the series sits, on a
+slide, on a poster and in a manuscript alike, so the reader's eye never
+travels out to a key and back.</p>
 <p>Annotation is drawn in the theme's ink, not in the colour of the series it
 names: white on a dark slide, black on a light slide and in a manuscript.
 That is the <code>ink</code> the theme already gives the axis text and axis lines, so

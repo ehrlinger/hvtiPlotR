@@ -99,18 +99,10 @@ of values, so pass longer vectors for a wider variable.
 
 ### No legend, by house standard
 
-The three themes that finish a figure for publication,
-[`theme_hv_manuscript()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md),
-[`theme_hv_ppt_dark()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)
-and
-[`theme_hv_ppt_light()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md),
-set `legend.position = "none"`, and this decorator leaves that alone.
-CORR figures name the series where the series sits, on a slide and in a
-manuscript alike, so the reader's eye never travels out to a key and
-back.
-([`theme_hv_poster()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)
-is the exception and keeps ggplot2's `"right"`; a poster is read up
-close, with room beside the panel.)
+Every `theme_hv_*()` sets `legend.position = "none"`, and this decorator
+leaves that alone. CORR figures name the series where the series sits,
+on a slide, on a poster and in a manuscript alike, so the reader's eye
+never travels out to a key and back.
 
 Annotation is drawn in the theme's ink, not in the colour of the series
 it names: white on a dark slide, black on a light slide and in a
