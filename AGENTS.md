@@ -34,7 +34,7 @@ imports this file.
 |---|---|
 | `R-CMD-check.yaml` | `R CMD check` across platforms |
 | `check-manual.yaml` | the PDF manual build — catches raw Unicode in `.Rd` that `--no-manual` skips |
-| `lint.yaml` | **nothing — it reports, it does not gate.** `LINTR_ERROR_ON_LINT: false` is set deliberately while the pre-existing lint debt is worked down ([#89](https://github.com/ehrlinger/hvtiPlotR/issues/89): 98 lints under `.lintr`, 535 under lintr's bare defaults). A green lint badge here is not a clean-lint claim. The `house-style` job in the same workflow **does** gate, on house-style artifact drift. |
+| `lint.yaml` | **nothing: it reports, it does not gate.** `LINTR_ERROR_ON_LINT: false` is set deliberately while the pre-existing lint debt is worked down ([#89](https://github.com/ehrlinger/hvtiPlotR/issues/89): 98 lints under `.lintr`, 535 under lintr's bare defaults). A green lint badge here is not a clean-lint claim. The `house-style` job in the same workflow **does** gate, on house-style artifact drift. |
 | `pkgdown.yaml` | the site build |
 | `test-coverage.yaml` | coverage upload; snapshots upload via `upload-snapshots: true` |
 
