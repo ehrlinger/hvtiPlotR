@@ -25,9 +25,14 @@ into a script, where they drift the first time the palette changes.
 \details{
 The colours are the Okabe-Ito colourblind-safe palette, reordered for the
 background: high-luminance hues first on a dark slide, darker ones first on
-a light slide, so the first series always has the strongest contrast against
-the surface it sits on. Black appears only in the light ordering; on a dark
-panel it is invisible. These are not CORR brand colours.
+a light slide. Each ordering leads with its highest-contrast hue, 15.9:1 on
+a black panel and 5.2:1 on a white one, but past that first entry the order
+is not a contrast ranking and should not be read as one. Black appears only
+in the light ordering, and it sits \strong{last} there despite carrying the
+highest ratio of anything here (21:1 on white): house style draws annotation
+in the theme's ink, so a black series would be confusable with the label
+naming it. On a dark panel black is invisible, which is why that ordering
+omits it. These are not CORR brand colours.
 
 Six colours are supplied. Ask for more than that and you get an error rather
 than a silently recycled palette, because two series sharing a colour is a

@@ -20,9 +20,14 @@
 #' @details
 #' The colours are the Okabe-Ito colourblind-safe palette, reordered for the
 #' background: high-luminance hues first on a dark slide, darker ones first on
-#' a light slide, so the first series always has the strongest contrast against
-#' the surface it sits on. Black appears only in the light ordering; on a dark
-#' panel it is invisible. These are not CORR brand colours.
+#' a light slide. Each ordering leads with its highest-contrast hue, 15.9:1 on
+#' a black panel and 5.2:1 on a white one, but past that first entry the order
+#' is not a contrast ranking and should not be read as one. Black appears only
+#' in the light ordering, and it sits **last** there despite carrying the
+#' highest ratio of anything here (21:1 on white): house style draws annotation
+#' in the theme's ink, so a black series would be confusable with the label
+#' naming it. On a dark panel black is invisible, which is why that ordering
+#' omits it. These are not CORR brand colours.
 #'
 #' Six colours are supplied. Ask for more than that and you get an error rather
 #' than a silently recycled palette, because two series sharing a colour is a
@@ -115,10 +120,13 @@ hv_ppt_palette <- function(mode = c("dark", "light"), n = NULL) {
 #'
 #' ## No legend, by house standard
 #'
-#' Every `theme_hv_*()` sets `legend.position = "none"`, and this decorator
-#' leaves that alone. CORR figures name the series where the series sits, on a
-#' slide and in a manuscript alike, so the reader's eye never travels out to a
-#' key and back.
+#' The three themes that finish a figure for publication, [theme_hv_manuscript()],
+#' [theme_hv_ppt_dark()] and [theme_hv_ppt_light()], set
+#' `legend.position = "none"`, and this decorator leaves that alone. CORR
+#' figures name the series where the series sits, on a slide and in a
+#' manuscript alike, so the reader's eye never travels out to a key and back.
+#' ([theme_hv_poster()] is the exception and keeps ggplot2's `"right"`; a poster
+#' is read up close, with room beside the panel.)
 #'
 #' Annotation is drawn in the theme's ink, not in the colour of the series it
 #' names: white on a dark slide, black on a light slide and in a manuscript.
@@ -212,9 +220,11 @@ hv_ppt_series <- function(mode    = c("dark", "light"),
     stop("`shapes` must be a numeric vector with no missing values.",
          call. = FALSE)
 
-  # No legend override here. All four theme_hv_*() functions set
+  # No legend override here. theme_hv_ppt_dark()/light() both set
   # legend.position = "none" because house style names the series by
   # annotation, not by a key; `...` still lets a caller ask for one.
+  # (theme_hv_poster() does NOT set it and inherits "right", but this
+  # function never reaches for the poster theme.)
   theme_fn <- if (mode == "dark") theme_hv_ppt_dark else theme_hv_ppt_light
 
   list(
