@@ -140,7 +140,7 @@ make_footnote <- function(text       = getwd(),
 #' @param footnoteText Equivalent to `text` in [make_footnote()].
 #' @param color        Equivalent to `colour` in [make_footnote()].
 #' @export
-makeFootnote <- function(footnoteText = getwd(),
+makeFootnote <- function(footnoteText = getwd(), # nolint: object_name_linter.
                          size         = 0.7,
                          color        = grey(0.5),
                          timestamp    = TRUE) {

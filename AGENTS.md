@@ -34,7 +34,7 @@ imports this file.
 |---|---|
 | `R-CMD-check.yaml` | `R CMD check` across platforms |
 | `check-manual.yaml` | the PDF manual build — catches raw Unicode in `.Rd` that `--no-manual` skips |
-| `lint.yaml` | **nothing: it reports, it does not gate.** `LINTR_ERROR_ON_LINT: false` is set deliberately while the pre-existing lint debt is worked down ([#89](https://github.com/ehrlinger/hvtiPlotR/issues/89): 98 lints under `.lintr`, 535 under lintr's bare defaults). A green lint badge here is not a clean-lint claim. The `house-style` job in the same workflow **does** gate, on house-style artifact drift. |
+| `lint.yaml` | **any lint under `.lintr`.** `LINTR_ERROR_ON_LINT: true` since 2.7.9, when the 98 pre-existing lints were cleared ([#89](https://github.com/ehrlinger/hvtiPlotR/issues/89)). Run `lintr::lint_package()` before pushing; it must return zero. The `house-style` job in the same workflow gates separately, on house-style artifact drift. |
 | `pkgdown.yaml` | the site build |
 | `test-coverage.yaml` | coverage upload; snapshots upload via `upload-snapshots: true` |
 
@@ -51,10 +51,17 @@ imports this file.
   constructors take many named arguments and read better whole than wrapped.
   ⚠️ A third value in the family: `hvtiRutilities` is 80, `hvtiRtemplates` is 135. Read
   `.lintr` rather than assuming.
-- **`indentation_linter` and `commented_code_linter` are OFF**, deliberately: both fire
-  heavily on the aligned-argument style used throughout `R/` and on vignette chunks that show
-  an alternative call commented out. Everything else is lintr's default and **is** enforced —
-  commas, infix spaces, object naming and length, object usage.
+- **`.lintr` deviates from lintr's defaults in three places, and only three.**
+  `indentation_linter` and `commented_code_linter` are OFF, because both fire heavily on the
+  aligned-argument style used throughout `R/` and on vignette chunks that show an alternative
+  call commented out. `object_length_linter` is 35 rather than 30, because six exported
+  `sample_*` generators are longer than 30 and renaming an export is a breaking change.
+  `object_name_linter` accepts `SNAKE_CASE` as well as `snake_case`, for the score-scale
+  constants that shout deliberately. Everything else is lintr's default and **is** enforced.
+  ⚠️ The gate is live, so the temptation is to widen a rule here to clear one awkward site.
+  Do not. A genuine false positive goes behind a `# nolint: <linter>.` on the line, with a
+  comment saying why the tool is wrong; there are six of them, four in `R/` and two in
+  `tests/`, and each one carries its reason.
 - **Test files are `test_*.R` with an underscore**, not the `test-*.R` hyphen used in
   `hvtiRutilities` and `hvtiRtemplates`. Match the local convention when adding a file.
 - **A plot test must prove the plot has data.** `tests/testthat/helper-plot-data.R` drives

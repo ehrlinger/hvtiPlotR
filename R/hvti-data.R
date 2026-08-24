@@ -190,7 +190,7 @@ ggplot2::autoplot
 #'
 #' @return A `data.frame` — `x$data`.
 #' @export
-as.data.frame.hv_data <- function(x, row.names = NULL, optional = FALSE, ...) {
+as.data.frame.hv_data <- function(x, row.names = NULL, optional = FALSE, ...) { # nolint: object_name_linter.
   x$data
 }
 
