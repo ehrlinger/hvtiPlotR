@@ -439,7 +439,7 @@ data(parametric, package = "hvtiPlotR")
 data(nonparametric, package = "hvtiPlotR")
 
 # Set a default hvtiPlotR plotting theme
-theme_set(hvtiPlotR::theme_hv_poster()) 
+theme_set(hvtiPlotR::theme_hv_poster())
 ```
 
 One advantage of ggplot2 is that figures can be built up in successive

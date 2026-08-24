@@ -647,7 +647,7 @@ the numeric SMD value. When the source dataset arrives in wide format
 dta_wide <- data.frame(
   variable      = c("Age", "Female sex", "Hypertension", "Diabetes", "COPD"),
   `Before match` = c(22.1, -15.3,  18.7, -9.4,  11.2),
-  `After match`  = c( 3.5,   2.1,  -1.8,  4.0,  -2.3),
+  `After match`  = c(3.5,   2.1,  -1.8,  4.0,  -2.3),
   check.names = FALSE
 )
 

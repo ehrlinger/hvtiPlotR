@@ -1,5 +1,36 @@
 # Changelog
 
+## hvtiPlotR 2.7.9
+
+### Lint debt
+
+Work on [\#89](https://github.com/ehrlinger/hvtiPlotR/issues/89).
+Nothing here changes what any function does; the suite is unchanged at
+1629 passing tests.
+
+- Whitespace, commas, semicolons, braces and one over-long `@importFrom`
+  line brought into line with `.lintr`. The two multi-line anonymous
+  functions in
+  [`hv_upset()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_upset.md)
+  and
+  [`hv_venn()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_venn.md)
+  are now written as a single-line predicate passed to
+  [`vapply()`](https://rdrr.io/r/base/lapply.html), which reads better
+  than the braces lintr wanted.
+- [`plot.hv_eda()`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hv_eda.md)
+  no longer assigns `y_col_name`, which nothing read. The y label comes
+  from `meta$y_label`.
+- Tests that build a plot inside a helper function now use the `.data`
+  pronoun in
+  [`aes()`](https://ggplot2.tidyverse.org/reference/aes.html), so the
+  linter can see the column references.
+- Two false positives are marked with `# nolint` and a note saying why:
+  [`hv_consort_start()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_consort_start.md)
+  takes a bare column name by design, and the survival times in
+  `.hp_km_binned()` are read inside a formula, which
+  [`codetools::checkUsage()`](https://rdrr.io/pkg/codetools/man/checkUsage.html)
+  does not walk.
+
 ## hvtiPlotR 2.7.8
 
 ### Behaviour change

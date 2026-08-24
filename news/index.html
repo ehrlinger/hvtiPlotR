@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">hvtiPlotR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.7.8</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.7.9</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -53,6 +53,18 @@
       <small>Source: <a href="https://github.com/ehrlinger/hvtiPlotR/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="2.7.9" id="hvtiplotr-279">hvtiPlotR 2.7.9<a class="anchor" aria-label="anchor" href="#hvtiplotr-279"></a></h2>
+<div class="section level3">
+<h3 id="lint-debt-2-7-9">Lint debt<a class="anchor" aria-label="anchor" href="#lint-debt-2-7-9"></a></h3>
+<p>Work on <a href="https://github.com/ehrlinger/hvtiPlotR/issues/89" class="external-link">#89</a>. Nothing here changes what any function does; the suite is unchanged at 1629 passing tests.</p>
+<ul><li>Whitespace, commas, semicolons, braces and one over-long <code>@importFrom</code> line brought into line with <code>.lintr</code>. The two multi-line anonymous functions in <code><a href="../reference/hv_upset.html">hv_upset()</a></code> and <code><a href="../reference/hv_venn.html">hv_venn()</a></code> are now written as a single-line predicate passed to <code><a href="https://rdrr.io/r/base/lapply.html" class="external-link">vapply()</a></code>, which reads better than the braces lintr wanted.</li>
+<li>
+<code><a href="../reference/plot.hv_eda.html">plot.hv_eda()</a></code> no longer assigns <code>y_col_name</code>, which nothing read. The y label comes from <code>meta$y_label</code>.</li>
+<li>Tests that build a plot inside a helper function now use the <code>.data</code> pronoun in <code><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes()</a></code>, so the linter can see the column references.</li>
+<li>Two false positives are marked with <code># nolint</code> and a note saying why: <code><a href="../reference/hv_consort_start.html">hv_consort_start()</a></code> takes a bare column name by design, and the survival times in <code>.hp_km_binned()</code> are read inside a formula, which <code><a href="https://rdrr.io/pkg/codetools/man/checkUsage.html" class="external-link">codetools::checkUsage()</a></code> does not walk.</li>
+</ul></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="2.7.8" id="hvtiplotr-278">hvtiPlotR 2.7.8<a class="anchor" aria-label="anchor" href="#hvtiplotr-278"></a></h2>
 <div class="section level3">
