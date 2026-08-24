@@ -2,7 +2,7 @@
 library(testthat)
 library(ggplot2)
 
-mk <- function(df) ggplot(df, aes(x, y, colour = g)) + geom_point()
+mk <- function(df) ggplot(df, aes(.data$x, .data$y, colour = .data$g)) + geom_point()
 # a plot whose points fill all four corners (no clear empty corner)
 full_df <- data.frame(
   x = c(0, 0, 1, 1, 0.05, 0.95, 0.05, 0.95),
@@ -42,13 +42,14 @@ test_that("hv_legend_inside places the legend in the empty corner", {
     bl = c(0.02,      0.02)
   )
   fixtures <- list(
-    tr = data.frame(x = c(0,0,1,0.5,0.1), y = c(0,1,0,0.5,0.1)),
-    tl = data.frame(x = c(0,1,1,0.5,0.9), y = c(0,0,1,0.5,0.1)),
-    br = data.frame(x = c(0,0,1,0.5,0.1), y = c(0,1,1,0.5,0.9)),
-    bl = data.frame(x = c(0,1,1,0.5,0.9), y = c(1,0,1,0.5,0.9))
+    tr = data.frame(x = c(0, 0, 1, 0.5, 0.1), y = c(0, 1, 0, 0.5, 0.1)),
+    tl = data.frame(x = c(0, 1, 1, 0.5, 0.9), y = c(0, 0, 1, 0.5, 0.1)),
+    br = data.frame(x = c(0, 0, 1, 0.5, 0.1), y = c(0, 1, 1, 0.5, 0.9)),
+    bl = data.frame(x = c(0, 1, 1, 0.5, 0.9), y = c(1, 0, 1, 0.5, 0.9))
   )
   for (corner in names(cases)) {
-    df <- fixtures[[corner]]; df$g <- "a"
+    df <- fixtures[[corner]]
+    df$g <- "a"
     p <- hv_legend_inside(ggplot(df, aes(x, y, colour = g)) + geom_point())
     expect_identical(p$theme$legend.position, "inside", info = paste("corner", corner))
     expect_equal(inside_pos(p), cases[[corner]], info = paste("corner", corner))
@@ -66,7 +67,7 @@ test_that("hv_legend_inside falls back when there are no usable points", {
 })
 
 test_that("hv_legend_inside reads coordinates in built (post-flip) space", {
-  df <- data.frame(x = c(0,0,1,0.5,0.1), y = c(0,1,0,0.5,0.1), g = "a")
+  df <- data.frame(x = c(0, 0, 1, 0.5, 0.1), y = c(0, 1, 0, 0.5, 0.1), g = "a")
   p <- hv_legend_inside(
     ggplot(df, aes(x, y, colour = g)) + geom_point() + coord_flip()
   )

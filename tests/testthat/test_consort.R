@@ -79,8 +79,10 @@ test_that("print.hv_consort_tracker prints without error", {
 # hv_consort_exclude
 # ---------------------------------------------------------------------------
 
+# `mrn` is a column of the fixture, not a variable this helper binds:
+# hv_consort_start() substitute()s the bare symbol under data-masking.
 make_tracker <- function() {
-  hv_consort_start(make_cohort(), patient_id = mrn)
+  hv_consort_start(make_cohort(), patient_id = mrn) # nolint: object_usage_linter.
 }
 
 test_that("hv_consort_exclude adds exclusion and pass columns", {
@@ -161,7 +163,7 @@ test_that("hv_consort_exclude appends correct stage metadata", {
   expect_length(tracker$stages, 2L)
   expect_equal(tracker$stages[[1L]]$excl_col,    "excl_screen")
   expect_equal(tracker$stages[[2L]]$include_col, "eligible")
-  expect_null( tracker$stages[[2L]]$excl_col)
+  expect_null(tracker$stages[[2L]]$excl_col)
 })
 
 test_that("hv_consort_exclude errors on non-tracker input", {
@@ -173,8 +175,10 @@ test_that("hv_consort_exclude errors on non-tracker input", {
 # Audit helpers
 # ---------------------------------------------------------------------------
 
+# `mrn` is a column of the fixture, not a variable this helper binds:
+# hv_consort_start() substitute()s the bare symbol under data-masking.
 make_full_tracker <- function() {
-  hv_consort_start(make_cohort(), patient_id = mrn) |>
+  hv_consort_start(make_cohort(), patient_id = mrn) |> # nolint: object_usage_linter.
     hv_consort_exclude(
       label     = "Eligible",
       col       = "excl_screen",

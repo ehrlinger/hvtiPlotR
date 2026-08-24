@@ -1,3 +1,23 @@
+# hvtiPlotR 2.7.9
+
+## Lint debt
+
+Work on [#89](https://github.com/ehrlinger/hvtiPlotR/issues/89). Nothing here
+changes what any function does; the suite is unchanged at 1629 passing tests.
+
+- Whitespace, commas, semicolons, braces and one over-long `@importFrom` line
+  brought into line with `.lintr`. The two multi-line anonymous functions in
+  `hv_upset()` and `hv_venn()` are now written as a single-line predicate
+  passed to `vapply()`, which reads better than the braces lintr wanted.
+- `plot.hv_eda()` no longer assigns `y_col_name`, which nothing read. The y
+  label comes from `meta$y_label`.
+- Tests that build a plot inside a helper function now use the `.data`
+  pronoun in `aes()`, so the linter can see the column references.
+- Two false positives are marked with `# nolint` and a note saying why:
+  `hv_consort_start()` takes a bare column name by design, and the survival
+  times in `.hp_km_binned()` are read inside a formula, which
+  `codetools::checkUsage()` does not walk.
+
 # hvtiPlotR 2.7.8
 
 ## Behaviour change
