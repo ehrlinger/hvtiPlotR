@@ -51,5 +51,7 @@ hvtiPlotR.Rproj
 ^vignettes/\.quarto$
 ^vignettes/.*\.html$
 ^\.superpowers$
+^\.worktrees$
+^\.remember$
 ^\.lintr$
 ^AGENTS\.md$

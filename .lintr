@@ -3,15 +3,30 @@
 # line_length 120 rather than lintr's 80: this package's plot constructors take
 # many named arguments and the calls read better whole than wrapped.
 #
+# object_length 35 rather than lintr's 30: six exported sample-data generators
+# are longer than 30 characters, the longest being
+# sample_nonparametric_ordinal_points at 35. Renaming an export is a breaking
+# change for every package that draws through this one, and the names are
+# descriptive rather than careless, so the threshold moves instead.
+#
+# object_name accepts SNAKE_CASE alongside snake_case: the score-scale
+# constants in mirror-histogram.R and .NP_SIM in nonparametric-curve-plot.R
+# shout deliberately, so that HVTI_SCORE_MAX is visibly a package constant and
+# not a local at every use site.
+#
 # indentation_linter and commented_code_linter are off. Both fire heavily on
 # the aligned-argument style used throughout R/ and on vignette chunks that
 # deliberately show an alternative call commented out. Neither catches a defect
 # here, and leaving them on buries the linters that do.
 #
 # Everything else is lintr's default and IS enforced -- commas, infix spaces,
-# object naming and length, object usage.
+# object usage. The workflow gates on this file, so a lint that is genuinely a
+# false positive belongs behind a `# nolint` carrying the reason, not behind a
+# widened rule here.
 linters: linters_with_defaults(
     line_length_linter = line_length_linter(120L),
+    object_length_linter = object_length_linter(35L),
+    object_name_linter = object_name_linter(c("snake_case", "SNAKE_CASE", "symbols")),
     indentation_linter = NULL,
     commented_code_linter = NULL
   )

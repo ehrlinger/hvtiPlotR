@@ -190,7 +190,9 @@ ggplot2::autoplot
 #'
 #' @return A `data.frame` — `x$data`.
 #' @export
-as.data.frame.hv_data <- function(x, row.names = NULL, optional = FALSE, ...) {
+# row.names is dictated by the as.data.frame generic, not chosen here. Renaming
+# it would break the signature match that S3 dispatch relies on.
+as.data.frame.hv_data <- function(x, row.names = NULL, optional = FALSE, ...) { # nolint: object_name_linter.
   x$data
 }
 

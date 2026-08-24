@@ -359,19 +359,19 @@ sample_covariate_balance_data <- function(
   # --- Patient-level simulation ----------------------------------------------
   # Covariate matrix: each column ~ N(0,1).
   # Beta coefficients ~ N(0, separation/sqrt(n_vars)) so total PS variance ~ 1.
-  X     <- matrix(stats::rnorm(n * n_vars), nrow = n, ncol = n_vars)
+  x_mat <- matrix(stats::rnorm(n * n_vars), nrow = n, ncol = n_vars)
   betas <- stats::rnorm(n_vars, mean = 0, sd = separation / sqrt(n_vars))
 
   # Centre the linear predictor so ~50% of patients are treated.
-  lp    <- drop(X %*% betas)
+  lp    <- drop(x_mat %*% betas)
   lp    <- lp - stats::median(lp)
   ps    <- stats::plogis(lp)
   treat <- stats::rbinom(n, 1L, ps)
 
   # --- SMDs before matching --------------------------------------------------
   smds_before <- vapply(seq_len(n_vars), function(j) {
-    x0 <- X[treat == 0, j]
-    x1 <- X[treat == 1, j]
+    x0 <- x_mat[treat == 0, j]
+    x1 <- x_mat[treat == 1, j]
     if (length(x0) < 2 || length(x1) < 2) return(NA_real_)
     pooled_sd <- sqrt((stats::var(x0) + stats::var(x1)) / 2)
     if (is.na(pooled_sd) || pooled_sd == 0) return(0)
@@ -411,12 +411,12 @@ sample_covariate_balance_data <- function(
   }
 
   # --- SMDs after matching ---------------------------------------------------
-  X_mc <- X[idx0[m_ctrl], , drop = FALSE]
-  X_mt <- X[idx1[m_trt],  , drop = FALSE]
+  x_mc <- x_mat[idx0[m_ctrl], , drop = FALSE]
+  x_mt <- x_mat[idx1[m_trt],  , drop = FALSE]
 
   smds_after <- vapply(seq_len(n_vars), function(j) {
-    x0 <- X_mc[, j]
-    x1 <- X_mt[, j]
+    x0 <- x_mc[, j]
+    x1 <- x_mt[, j]
     if (length(x0) < 2 || length(x1) < 2) return(NA_real_)
     pooled_sd <- sqrt((stats::var(x0) + stats::var(x1)) / 2)
     if (is.na(pooled_sd) || pooled_sd == 0) return(0)

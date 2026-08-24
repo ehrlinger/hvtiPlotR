@@ -17,6 +17,17 @@ changes what any function does; the suite is unchanged at 1629 passing tests.
   `hv_consort_start()` takes a bare column name by design, and the survival
   times in `.hp_km_binned()` are read inside a formula, which
   `codetools::checkUsage()` does not walk.
+- The naming lints are cleared and **the lint workflow now gates**:
+  `LINTR_ERROR_ON_LINT` is `true`, so `lintr::lint_package()` must return zero
+  before a push. `.lintr` states its three deviations from lintr's defaults
+  and the reason for each: line length 120, `object_length` 35 because six
+  exported `sample_*` generators are longer than 30 and renaming an export is
+  a breaking change, and `SNAKE_CASE` accepted alongside `snake_case` for the
+  score-scale constants.
+- The design-matrix locals in `sample_covariate_balance_data()` are now
+  `x_mat` / `x_mc` / `x_mt`, and one vignette variable is `ccf_ppt_plot`.
+  `makeFootnote()` and its `footnoteText` argument keep their camelCase, being
+  the public API of the release before the rename.
 
 # hvtiPlotR 2.7.8
 
