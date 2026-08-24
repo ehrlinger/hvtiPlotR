@@ -837,4 +837,3 @@ sample_survival_data <- function(n             = 500,
     do.call(rbind, parts)
   }
 }
-

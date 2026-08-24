@@ -330,7 +330,7 @@ data(parametric, package = "hvtiPlotR")
 data(nonparametric, package = "hvtiPlotR")
 
 # Set a default hvtiPlotR plotting theme
-theme_set(hvtiPlotR::theme_hv_poster()) 
+theme_set(hvtiPlotR::theme_hv_poster())
 ```
 
 One advantage of ggplot2 is that figures can be built up in successive statements. This tutorial will make extensive use of this to demonstrate the process. Starting in this code chunk, we will save the intermediate objects in the ccf_plot variable. Here we simply create an empty ggplot2 figure that we will be adding to as we work through the commands in the `plot.sas` macro. Note that we include the %plot() commands in the comments above the equivalent ggplot2 command for comparison.

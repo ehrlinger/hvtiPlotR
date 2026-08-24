@@ -53,9 +53,12 @@ calc_smd <- function(score, group, group_levels) {
 calc_weighted_smd <- function(score, weights, group, group_levels) {
   idx0 <- group == group_levels[1]
   idx1 <- group == group_levels[2]
-  s0 <- score[idx0];   w0 <- weights[idx0]
-  s1 <- score[idx1];   w1 <- weights[idx1]
-  sw0 <- sum(w0);      sw1 <- sum(w1)
+  s0 <- score[idx0]
+  w0 <- weights[idx0]
+  s1 <- score[idx1]
+  w1 <- weights[idx1]
+  sw0 <- sum(w0)
+  sw1 <- sum(w1)
   if (sw0 == 0 || sw1 == 0 ||
       sum(w0 > 0) < 2 || sum(w1 > 0) < 2) {
     return(NA_real_)
@@ -231,7 +234,9 @@ assemble_mirror_histogram_plot_df <- function(working, group_levels, group_label
 }
 
 # Internal: Build ggplot object for mirrored histogram
-#' @importFrom ggplot2 ggplot geom_hline geom_col scale_fill_manual scale_x_continuous scale_y_continuous labs annotate coord_cartesian aes theme_minimal
+#' @importFrom ggplot2 ggplot geom_hline geom_col scale_fill_manual
+#' @importFrom ggplot2 scale_x_continuous scale_y_continuous labs annotate
+#' @importFrom ggplot2 coord_cartesian aes theme_minimal
 build_mirror_histogram_plot <- function(plot_df, group_labels, binwidth,
                                         lower, upper, y_breaks, alpha) {
   ggplot2::ggplot() +
@@ -663,4 +668,3 @@ sample_mirror_histogram_data <- function(n          = 500,
 
   df
 }
-

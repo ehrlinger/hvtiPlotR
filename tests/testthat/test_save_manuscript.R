@@ -2,7 +2,7 @@
 library(testthat)
 library(ggplot2)
 
-mk_plot <- function() ggplot(mtcars, aes(mpg, wt)) + geom_point()
+mk_plot <- function() ggplot(mtcars, aes(.data$mpg, .data$wt)) + geom_point()
 
 test_that("save_manuscript writes a file and returns the path invisibly", {
   p <- mk_plot()

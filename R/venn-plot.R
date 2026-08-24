@@ -80,9 +80,11 @@ hv_venn <- function(data, sets) {
          call. = FALSE)
   .check_no_duplicates(sets, "sets")
   .check_cols(data, sets)
-  non_binary <- sets[!vapply(data[sets], function(x)
-    is.logical(x) || (is.numeric(x) && all(x %in% c(0, 1, NA))),
-    logical(1))]
+  non_binary <- sets[!vapply(
+    data[sets],
+    function(x) is.logical(x) || (is.numeric(x) && all(x %in% c(0, 1, NA))),
+    logical(1)
+  )]
   if (length(non_binary) > 0L)
     stop("hv_venn requires binary (0/1 or logical) columns. ",
          "Non-binary column(s): ", paste(non_binary, collapse = ", "), ".",

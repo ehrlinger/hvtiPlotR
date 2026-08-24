@@ -3,7 +3,7 @@ library(testthat)
 library(ggplot2)
 
 create_test_plot <- function() {
-  ggplot(data.frame(x = 1:10, y = 1:10), aes(x, y)) +
+  ggplot(data.frame(x = 1:10, y = 1:10), aes(.data$x, .data$y)) +
     geom_point()
 }
 

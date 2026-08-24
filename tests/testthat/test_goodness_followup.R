@@ -435,8 +435,10 @@ test_that("each panel's exclusion warning names its own panel", {
   w <- character()
   withCallingHandlers(
     hv_followup(dta, event_col = "ev_event", event_time_col = "iv_event"),
-    warning = function(x) { w <<- c(w, conditionMessage(x))
-                            invokeRestart("muffleWarning") }
+    warning = function(x) {
+      w <<- c(w, conditionMessage(x))
+      invokeRestart("muffleWarning")
+    }
   )
   expect_true(any(grepl("death panel", w)))
   expect_true(any(grepl("event panel", w)))

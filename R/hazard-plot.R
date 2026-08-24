@@ -69,8 +69,10 @@
 .hp_km_binned <- function(n, shape, scale, time_max, n_bins, ci_level, seed) {
   set.seed(seed)
   u        <- stats::runif(n)
-  t_event  <- scale * (-log(pmax(u, 1e-9)))^(1 / shape)
-  t_censor <- stats::runif(n, time_max * 0.2, time_max * 1.5)
+  # Both are read inside the survfit() formula below, which
+  # codetools::checkUsage does not walk.
+  t_event  <- scale * (-log(pmax(u, 1e-9)))^(1 / shape) # nolint: object_usage_linter.
+  t_censor <- stats::runif(n, time_max * 0.2, time_max * 1.5) # nolint: object_usage_linter.
 
   km_fit <- survival::survfit(
     survival::Surv(

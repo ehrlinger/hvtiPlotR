@@ -422,7 +422,7 @@ plot(hv_nonparametric(
     labels = scales::percent
   ) +
   labs(
-    x     = expression(BMI ~ (kg/m^2)),
+    x     = expression(BMI ~ (kg / m^2)),
     y     = "Estimated Probability",
     title = "Outcome Probability vs. BMI at Operation"
   ) +

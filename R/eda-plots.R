@@ -45,7 +45,7 @@ eda_classify_var <- function(x, unique_limit = 6L) {
   if (any(vals > unique_limit) || any(vals < 0))                   return("Cont")
   if (!isTRUE(all.equal(vals, as.integer(vals),
                          check.attributes = FALSE)))               return("Cont")
-  return("Cat_Num")
+  "Cat_Num"
 }
 
 # ---------------------------------------------------------------------------
@@ -396,7 +396,6 @@ plot.hv_eda <- function(x,
   label        <- meta$y_label
   show_percent <- meta$show_percent
   x_col_name   <- meta$x_col
-  y_col_name   <- meta$y_col
 
   if (var_type == "Cont") {
     rug_data <- x$tables$rug_data

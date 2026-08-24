@@ -5,7 +5,7 @@ library(ggplot2)
 
 # Helper: minimal test plot
 create_test_plot <- function() {
-  ggplot(data.frame(x = 1:10, y = 1:10), aes(x, y)) + geom_point()
+  ggplot(data.frame(x = 1:10, y = 1:10), aes(.data$x, .data$y)) + geom_point()
 }
 
 # Helper: create a minimal in-memory pptx template and write to a temp file
@@ -412,4 +412,3 @@ test_that("save_ppt rejects panel_box missing required fields", {
     "panel_box"
   )
 })
-
