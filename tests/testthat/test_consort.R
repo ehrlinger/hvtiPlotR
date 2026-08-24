@@ -79,6 +79,8 @@ test_that("print.hv_consort_tracker prints without error", {
 # hv_consort_exclude
 # ---------------------------------------------------------------------------
 
+# `mrn` is a column of the fixture, not a variable this helper binds:
+# hv_consort_start() substitute()s the bare symbol under data-masking.
 make_tracker <- function() {
   hv_consort_start(make_cohort(), patient_id = mrn) # nolint: object_usage_linter.
 }
@@ -173,6 +175,8 @@ test_that("hv_consort_exclude errors on non-tracker input", {
 # Audit helpers
 # ---------------------------------------------------------------------------
 
+# `mrn` is a column of the fixture, not a variable this helper binds:
+# hv_consort_start() substitute()s the bare symbol under data-masking.
 make_full_tracker <- function() {
   hv_consort_start(make_cohort(), patient_id = mrn) |> # nolint: object_usage_linter.
     hv_consort_exclude(
