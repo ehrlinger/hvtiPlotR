@@ -60,9 +60,12 @@ imports this file.
 - **A plot test must prove the plot has data.** `tests/testthat/helper-plot-data.R` drives
   ggplot2's `ggplot_build()` so a plot that "renders" while every layer holds zero rows is
   caught — the same protection as a visual review without needing a graphics device. It
-  keeps a `.decorator_geoms` list (`GeomHline`, `GeomVline`, `GeomAbline`, `GeomBlank`)
-  whose layer data is constant decoration and therefore *not* evidence that the plotted
-  dataset has rows. `expect_s3_class(plot(obj), "ggplot")` alone is a smoke test, not
+  keeps a `.decorator_geoms` list (`GeomHline`, `GeomVline`, `GeomAbline`) whose row count
+  is decoration and therefore *not* evidence that the plotted dataset has rows: those layers
+  are exempt from `min_rows` but must still draw at least one row, because a reference line
+  can be mapped to the data — `plot.hv_sankey()` draws one — and so can collapse to zero.
+  `GeomBlank` is listed separately in `.empty_geoms` and exempt outright, since drawing
+  nothing is its purpose. `expect_s3_class(plot(obj), "ggplot")` alone is a smoke test, not
   coverage.
 - **Every exported object must be added to `_pkgdown.yml`.** The `reference:` index is
   explicit — 15 titled sections against 76 exports — and pkgdown errors on a topic missing
