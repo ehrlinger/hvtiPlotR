@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">hvtiPlotR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.7.9</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.7.10</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -53,6 +53,19 @@
       <small>Source: <a href="https://github.com/ehrlinger/hvtiPlotR/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="2.7.10" id="hvtiplotr-2710">hvtiPlotR 2.7.10<a class="anchor" aria-label="anchor" href="#hvtiplotr-2710"></a></h2>
+<div class="section level3">
+<h3 id="test-helper-reference-lines-must-draw-something-2-7-10">Test helper: reference lines must draw something<a class="anchor" aria-label="anchor" href="#test-helper-reference-lines-must-draw-something-2-7-10"></a></h3>
+<p>Fixes <a href="https://github.com/ehrlinger/hvtiPlotR/issues/114" class="external-link">#114</a>. Test infrastructure only; no exported function changes.</p>
+<p><code>expect_plot_has_data()</code> exempted <code>GeomHline</code>, <code>GeomVline</code>, <code>GeomAbline</code> and <code>GeomBlank</code> from its row check by geom class alone. That is right for a literal <code>geom_hline(yintercept = 0)</code>, whose single row says nothing about the plotted data, but <code><a href="../reference/plot.hv_sankey.html">plot.hv_sankey()</a></code> maps its dashed vlines to the data with <code>aes(xintercept = ...)</code>, so that layer could silently collapse to zero rows and still pass.</p>
+<ul><li>Reference-line geoms are now exempt from <code>min_rows</code> but must carry at least one row. A decoration that drew nothing is a defect whichever way the geom was given its intercept.</li>
+<li>
+<code>GeomBlank</code> is exempt outright and is now named separately, since drawing nothing is what it is for.</li>
+<li>Note that the mapping cannot be used to tell the two forms apart: ggplot2 builds <code>geom_hline(yintercept = 0)</code> as <code>aes(yintercept = yintercept)</code> over a one-row frame, so both forms carry a mapping.</li>
+<li>New <code>test_plot_data_helper.R</code> pins all three cases — a mapped reference line that drew nothing, a literal one that drew its single row, and an empty <code><a href="https://ggplot2.tidyverse.org/reference/geom_blank.html" class="external-link">geom_blank()</a></code> — and <code><a href="../reference/plot.hv_sankey.html">plot.hv_sankey()</a></code> now has a data-carrying assertion. Suite at 1684 passing tests.</li>
+</ul></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="2.7.9" id="hvtiplotr-279">hvtiPlotR 2.7.9<a class="anchor" aria-label="anchor" href="#hvtiplotr-279"></a></h2>
 <div class="section level3">

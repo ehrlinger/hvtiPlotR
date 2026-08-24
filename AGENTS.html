@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="index.html">hvtiPlotR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.7.9</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.7.10</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -102,7 +102,7 @@
 <li>
 <strong>Test files are <code>test_*.R</code> with an underscore</strong>, not the <code>test-*.R</code> hyphen used in <code>hvtiRutilities</code> and <code>hvtiRtemplates</code>. Match the local convention when adding a file.</li>
 <li>
-<strong>A plot test must prove the plot has data.</strong> <code>tests/testthat/helper-plot-data.R</code> drives ggplot2’s <code>ggplot_build()</code> so a plot that “renders” while every layer holds zero rows is caught — the same protection as a visual review without needing a graphics device. It keeps a <code>.decorator_geoms</code> list (<code>GeomHline</code>, <code>GeomVline</code>, <code>GeomAbline</code>, <code>GeomBlank</code>) whose layer data is constant decoration and therefore <em>not</em> evidence that the plotted dataset has rows. <code>expect_s3_class(plot(obj), "ggplot")</code> alone is a smoke test, not coverage.</li>
+<strong>A plot test must prove the plot has data.</strong> <code>tests/testthat/helper-plot-data.R</code> drives ggplot2’s <code>ggplot_build()</code> so a plot that “renders” while every layer holds zero rows is caught — the same protection as a visual review without needing a graphics device. It keeps a <code>.decorator_geoms</code> list (<code>GeomHline</code>, <code>GeomVline</code>, <code>GeomAbline</code>) whose row count is decoration and therefore <em>not</em> evidence that the plotted dataset has rows: those layers are exempt from <code>min_rows</code> but must still draw at least one row, because a reference line can be mapped to the data — <code><a href="reference/plot.hv_sankey.html">plot.hv_sankey()</a></code> draws one — and so can collapse to zero. <code>GeomBlank</code> is listed separately in <code>.empty_geoms</code> and exempt outright, since drawing nothing is its purpose. <code>expect_s3_class(plot(obj), "ggplot")</code> alone is a smoke test, not coverage.</li>
 <li>
 <strong>Every exported object must be added to <code>_pkgdown.yml</code>.</strong> The <code>reference:</code> index is explicit — 15 titled sections against 76 exports — and pkgdown errors on a topic missing from it. ⚠️ <code>hvtiRtemplates</code> deliberately has <strong>no</strong> <code>reference:</code> section so pkgdown auto-indexes. Two conventions in one family.</li>
 <li>
