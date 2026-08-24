@@ -784,7 +784,7 @@ run;</code></pre>
 <span><span class="co">#   tuple set=all, x=years, y=nostrk, width=3, color=red, end;</span></span>
 <span><span class="co">#   tuple set=all, x=years, y=nodeath, width=3, color=blue, end;</span></span>
 <span><span class="co"># );</span></span>
-<span><span class="va">ccf_pptPlot</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span><span class="va">ccf_ppt_plot</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_x_continuous</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">5</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">100</span>, <span class="fl">20</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">geom_line</a></span><span class="op">(</span></span>
@@ -805,7 +805,7 @@ run;</code></pre>
 <span>    color <span class="op">=</span> <span class="st">"blue"</span>,</span>
 <span>    linewidth <span class="op">=</span> <span class="fl">1.5</span></span>
 <span>  <span class="op">)</span></span>
-<span><span class="fu">show</span><span class="op">(</span><span class="va">ccf_pptPlot</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">show</span><span class="op">(</span><span class="va">ccf_ppt_plot</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
 <div>
 <figure><p><img src="hvtiPlotR_files/figure-html/powerpoint_fig1-1.png" width="672"></p>
@@ -858,7 +858,7 @@ run;</code></pre>
 <p>Use <code><a href="../reference/save_ppt.html">save_ppt()</a></code> to insert a ggplot as an editable vector graphic into a PowerPoint file. Apply <code><a href="../reference/hvtiPlotR-themes.html">theme_hv_ppt_dark()</a></code> or <code><a href="../reference/hvtiPlotR-themes.html">theme_hv_ppt_light()</a></code> before saving.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb30"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">p_ppt</span> <span class="op">&lt;-</span> <span class="va">ccf_pptPlot</span> <span class="op">+</span> <span class="fu"><a href="../reference/hvtiPlotR-themes.html">theme_hv_ppt_dark</a></span><span class="op">(</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">p_ppt</span> <span class="op">&lt;-</span> <span class="va">ccf_ppt_plot</span> <span class="op">+</span> <span class="fu"><a href="../reference/hvtiPlotR-themes.html">theme_hv_ppt_dark</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/save_ppt.html">save_ppt</a></span><span class="op">(</span></span>
 <span>  object       <span class="op">=</span> <span class="va">p_ppt</span>,</span>

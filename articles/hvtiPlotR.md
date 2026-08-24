@@ -829,7 +829,7 @@ figure can be created in a single set of function calls.
 #   tuple set=all, x=years, y=nostrk, width=3, color=red, end;
 #   tuple set=all, x=years, y=nodeath, width=3, color=blue, end;
 # );
-ccf_pptPlot <- ggplot() +
+ccf_ppt_plot <- ggplot() +
   scale_x_continuous(breaks = seq(0, 5, 1)) +
   scale_y_continuous(breaks = seq(0, 100, 20)) +
   geom_line(
@@ -850,7 +850,7 @@ ccf_pptPlot <- ggplot() +
     color = "blue",
     linewidth = 1.5
   )
-show(ccf_pptPlot)
+show(ccf_ppt_plot)
 ```
 
 ![](hvtiPlotR_files/figure-html/powerpoint_fig1-1.png)
@@ -939,7 +939,7 @@ before saving.
 
 ``` r
 
-p_ppt <- ccf_pptPlot + theme_hv_ppt_dark()
+p_ppt <- ccf_ppt_plot + theme_hv_ppt_dark()
 
 save_ppt(
   object       = p_ppt,

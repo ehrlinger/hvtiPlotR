@@ -84,7 +84,7 @@
 <td>the PDF manual build — catches raw Unicode in <code>.Rd</code> that <code>--no-manual</code> skips</td>
 </tr><tr><td><code>lint.yaml</code></td>
 <td>
-<strong>nothing: it reports, it does not gate.</strong> <code>LINTR_ERROR_ON_LINT: false</code> is set deliberately while the pre-existing lint debt is worked down (<a href="https://github.com/ehrlinger/hvtiPlotR/issues/89" class="external-link">#89</a>: 98 lints under <code>.lintr</code>, 535 under lintr’s bare defaults). A green lint badge here is not a clean-lint claim. The <code>house-style</code> job in the same workflow <strong>does</strong> gate, on house-style artifact drift.</td>
+<strong>any lint under <code>.lintr</code>.</strong> <code>LINTR_ERROR_ON_LINT: true</code> since 2.7.9, when the 98 pre-existing lints were cleared (<a href="https://github.com/ehrlinger/hvtiPlotR/issues/89" class="external-link">#89</a>). Run <code><a href="https://lintr.r-lib.org/reference/lint.html" class="external-link">lintr::lint_package()</a></code> before pushing; it must return zero. The <code>house-style</code> job in the same workflow gates separately, on house-style artifact drift.</td>
 </tr><tr><td><code>pkgdown.yaml</code></td>
 <td>the site build</td>
 </tr><tr><td><code>test-coverage.yaml</code></td>
@@ -98,7 +98,7 @@
 <li>
 <strong>Lines are 120 characters here.</strong> <code>.lintr</code> raises <code>line_length_linter</code> because the plot constructors take many named arguments and read better whole than wrapped. ⚠️ A third value in the family: <code>hvtiRutilities</code> is 80, <code>hvtiRtemplates</code> is 135. Read <code>.lintr</code> rather than assuming.</li>
 <li>
-<strong><code>indentation_linter</code> and <code>commented_code_linter</code> are OFF</strong>, deliberately: both fire heavily on the aligned-argument style used throughout <code>R/</code> and on vignette chunks that show an alternative call commented out. Everything else is lintr’s default and <strong>is</strong> enforced — commas, infix spaces, object naming and length, object usage.</li>
+<strong><code>.lintr</code> deviates from lintr’s defaults in three places, and only three.</strong> <code>indentation_linter</code> and <code>commented_code_linter</code> are OFF, because both fire heavily on the aligned-argument style used throughout <code>R/</code> and on vignette chunks that show an alternative call commented out. <code>object_length_linter</code> is 35 rather than 30, because six exported <code>sample_*</code> generators are longer than 30 and renaming an export is a breaking change. <code>object_name_linter</code> accepts <code>SNAKE_CASE</code> as well as <code>snake_case</code>, for the score-scale constants that shout deliberately. Everything else is lintr’s default and <strong>is</strong> enforced. ⚠️ The gate is live, so the temptation is to widen a rule here to clear one awkward site. Do not. A genuine false positive goes behind a <code># nolint: &lt;linter&gt;.</code> on the line, with a comment saying why the tool is wrong; there are six of them, four in <code>R/</code> and two in <code>tests/</code>, and each one carries its reason.</li>
 <li>
 <strong>Test files are <code>test_*.R</code> with an underscore</strong>, not the <code>test-*.R</code> hyphen used in <code>hvtiRutilities</code> and <code>hvtiRtemplates</code>. Match the local convention when adding a file.</li>
 <li>
