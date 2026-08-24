@@ -39,3 +39,7 @@ inst/slides/*.html
 inst/slides/*.pdf
 inst/slides/*.pptx
 .worktrees/
+
+# Agent tool directories (already .Rbuildignore-d; keep them out of git too)
+.codegraph/
+.superpowers/
