@@ -20,9 +20,10 @@ still pass.
 - Note that the mapping cannot be used to tell the two forms apart: ggplot2
   builds `geom_hline(yintercept = 0)` as `aes(yintercept = yintercept)` over a
   one-row frame, so both forms carry a mapping.
-- New `test_plot_data_helper.R` pins both halves of the rule, and
-  `plot.hv_sankey()` now has a data-carrying assertion. Suite at 1678 passing
-  tests.
+- New `test_plot_data_helper.R` pins all three cases — a mapped reference line
+  that drew nothing, a literal one that drew its single row, and an empty
+  `geom_blank()` — and `plot.hv_sankey()` now has a data-carrying assertion.
+  Suite at 1684 passing tests.
 
 # hvtiPlotR 2.7.9
 

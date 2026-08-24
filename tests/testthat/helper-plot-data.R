@@ -38,13 +38,17 @@ geom_classes <- function(p) {
 
 #' Assert that a plot is a ggplot AND has at least one data layer with rows.
 #'
+#' A *data layer* below is one that is neither a reference line
+#' (`.decorator_geoms`) nor an empty geom (`.empty_geoms`); both of those are
+#' held to their own rule and neither counts towards `min_rows` or `min_groups`.
+#'
 #' Optional arguments tighten the contract:
-#' - `min_rows`: every non-decorator layer must have at least this many rows.
-#'               Reference-line layers are held to one row, not `min_rows`.
+#' - `min_rows`: every data layer must have at least this many rows. Reference
+#'               lines are held to one row instead; empty geoms are exempt.
 #' - `geoms`:    each name in this vector must appear among the plot's geoms.
-#' - `min_groups`: at least one non-decorator layer must split into this many
-#'                 distinct `group` values (catches plots where stratification
-#'                 silently collapsed to a single group).
+#' - `min_groups`: at least one data layer must split into this many distinct
+#'                 `group` values (catches plots where stratification silently
+#'                 collapsed to a single group).
 expect_plot_has_data <- function(p,
                                  min_rows   = 1L,
                                  geoms      = NULL,
