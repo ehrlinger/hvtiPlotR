@@ -102,6 +102,15 @@ test_that("plot(hv_sankey) returns a ggplot (all K = 2:9)", {
   expect_s3_class(plot(hv_sankey(dta)), "ggplot")
 })
 
+test_that("plot(hv_sankey) layers carry data, including the reference lines", {
+  skip_if_not_installed("ggsankey")
+  dta <- sample_cluster_sankey_data(n = 100, seed = 1)
+  # The dashed vlines are mapped to the data here, not to a literal xintercept,
+  # so they are held to the same standard as the flows they mark.
+  expect_plot_has_data(plot(hv_sankey(dta)),
+                       geoms = c("GeomVline", "GeomPolygon", "GeomRect"))
+})
+
 test_that("plot(hv_sankey) works with a subset of cluster columns", {
   skip_if_not_installed("ggsankey")
   dta <- sample_cluster_sankey_data(n = 100, seed = 1)

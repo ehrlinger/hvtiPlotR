@@ -6,10 +6,21 @@
 # layer is caught — we get the same protection as a visual review without
 # requiring a graphics device.
 
-# Geoms whose layer data is constant decoration (a single yintercept, vline,
-# slope/intercept) and therefore not evidence that the *plotted* dataset has
-# rows. Any other geom found in a hvtiPlotR plot must carry observation rows.
-.decorator_geoms <- c("GeomHline", "GeomVline", "GeomAbline", "GeomBlank")
+# Geoms that draw nothing and exist only to extend a scale. Their layer data is
+# legitimately allowed to be empty, so they are exempt from the row check.
+.empty_geoms <- c("GeomBlank")
+
+# Geoms whose row count is decoration rather than observations — one row per
+# reference line. These are exempt from `min_rows`: a single yintercept is not
+# evidence that the *plotted* dataset has rows. They are NOT exempt from having
+# to draw something. Exempting them by geom class alone hides a real failure,
+# because a reference line can be mapped to the data and so can collapse to
+# zero rows — `plot.hv_sankey()` draws `geom_vline(aes(xintercept = ...))`,
+# which carries one row per observation. A decoration that drew nothing is a
+# defect whether the geom was given a literal intercept or an `aes()`.
+.decorator_geoms <- c("GeomHline", "GeomVline", "GeomAbline")
+
+# Any other geom found in a hvtiPlotR plot must carry observation rows.
 
 #' Row counts per built layer of a ggplot.
 #'
@@ -27,12 +38,17 @@ geom_classes <- function(p) {
 
 #' Assert that a plot is a ggplot AND has at least one data layer with rows.
 #'
+#' A *data layer* below is one that is neither a reference line
+#' (`.decorator_geoms`) nor an empty geom (`.empty_geoms`); both of those are
+#' held to their own rule and neither counts towards `min_rows` or `min_groups`.
+#'
 #' Optional arguments tighten the contract:
-#' - `min_rows`: every non-decorator layer must have at least this many rows.
+#' - `min_rows`: every data layer must have at least this many rows. Reference
+#'               lines are held to one row instead; empty geoms are exempt.
 #' - `geoms`:    each name in this vector must appear among the plot's geoms.
-#' - `min_groups`: at least one non-decorator layer must split into this many
-#'                 distinct `group` values (catches plots where stratification
-#'                 silently collapsed to a single group).
+#' - `min_groups`: at least one data layer must split into this many distinct
+#'                 `group` values (catches plots where stratification silently
+#'                 collapsed to a single group).
 expect_plot_has_data <- function(p,
                                  min_rows   = 1L,
                                  geoms      = NULL,
@@ -43,7 +59,8 @@ expect_plot_has_data <- function(p,
   built  <- ggplot2::ggplot_build(p)
   rows   <- vapply(built$data, NROW, integer(1))
   geoms_present <- geom_classes(p)
-  data_idx <- which(!geoms_present %in% .decorator_geoms)
+  data_idx <- which(!geoms_present %in% c(.decorator_geoms, .empty_geoms))
+  deco_idx <- which(geoms_present %in% .decorator_geoms)
 
   testthat::expect_true(
     length(data_idx) > 0L,
@@ -62,6 +79,17 @@ expect_plot_has_data <- function(p,
       paste(bad, collapse = ","),
       paste(geoms_present[bad], collapse = ","),
       paste(rows[bad], collapse = ",")
+    )
+  )
+
+  bad_deco <- deco_idx[rows[deco_idx] < 1L]
+  testthat::expect_true(
+    length(bad_deco) == 0L,
+    info = sprintf(
+      "%s: reference-line layers that drew nothing: idx=%s geoms=%s",
+      label,
+      paste(bad_deco, collapse = ","),
+      paste(geoms_present[bad_deco], collapse = ",")
     )
   )
 

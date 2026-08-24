@@ -1,3 +1,30 @@
+# hvtiPlotR 2.7.10
+
+## Test helper: reference lines must draw something
+
+Fixes [#114](https://github.com/ehrlinger/hvtiPlotR/issues/114). Test
+infrastructure only; no exported function changes.
+
+`expect_plot_has_data()` exempted `GeomHline`, `GeomVline`, `GeomAbline` and
+`GeomBlank` from its row check by geom class alone. That is right for a literal
+`geom_hline(yintercept = 0)`, whose single row says nothing about the plotted
+data, but `plot.hv_sankey()` maps its dashed vlines to the data with
+`aes(xintercept = ...)`, so that layer could silently collapse to zero rows and
+still pass.
+
+- Reference-line geoms are now exempt from `min_rows` but must carry at least
+  one row. A decoration that drew nothing is a defect whichever way the geom
+  was given its intercept.
+- `GeomBlank` is exempt outright and is now named separately, since drawing
+  nothing is what it is for.
+- Note that the mapping cannot be used to tell the two forms apart: ggplot2
+  builds `geom_hline(yintercept = 0)` as `aes(yintercept = yintercept)` over a
+  one-row frame, so both forms carry a mapping.
+- New `test_plot_data_helper.R` pins all three cases — a mapped reference line
+  that drew nothing, a literal one that drew its single row, and an empty
+  `geom_blank()` — and `plot.hv_sankey()` now has a data-carrying assertion.
+  Suite at 1684 passing tests.
+
 # hvtiPlotR 2.7.9
 
 ## Lint debt
