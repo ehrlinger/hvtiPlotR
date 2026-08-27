@@ -163,7 +163,7 @@ utils::globalVariables(c("n.risk", "report_time", "strata"))
 #'   a continuous x with axis text blanked (the curve carries the axis).
 #'
 #' @seealso Worked recipe with rendered output:
-#'   \url{https://ehrlinger.github.io/hvti_graphics/survival.html}.
+#'   \url{https://ehrlinger.github.io/hvtiGraphics/survival.html}.
 #' @seealso \code{\link{hv_atrisk_compose}}, \code{\link{hv_survival}}
 #'
 #' @examples

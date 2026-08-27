@@ -46,7 +46,7 @@
 #' @seealso [save_ppt()] for slides, [theme_hv_manuscript()] for the 12 pt
 #'   typography, [hv_ggsave_dims()] for fixed-panel sizing. Worked examples live
 #'   in the HVTI ggplot graphics recipes book,
-#'   <https://ehrlinger.github.io/hvti_graphics/>.
+#'   <https://ehrlinger.github.io/hvtiGraphics/>.
 #'
 #' @examples
 #' \donttest{

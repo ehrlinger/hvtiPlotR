@@ -109,7 +109,7 @@ sample_alluvial_data <- function(n = 300, seed = 42L) {
 #' }
 #'
 #' @seealso Worked recipe with rendered output:
-#'   \url{https://ehrlinger.github.io/hvti_graphics/sankey.html}.
+#'   \url{https://ehrlinger.github.io/hvtiGraphics/sankey.html}.
 #' @seealso \code{\link{plot.hv_alluvial}}, \code{\link{sample_alluvial_data}}
 #'
 #' @examples

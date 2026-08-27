@@ -15,7 +15,7 @@
 
 hvtiPlotR packages the ggplot2 themes and plot functions we use in Cardiovascular Outcomes Registries and Research (CORR) at the Cleveland Clinic Heart & Vascular Institute. If you are migrating from the `plot.sas` macro, this is its R successor.
 
-Worked, rendered examples for every constructor and theme live in the companion [**HVTI ggplot graphics recipes**](https://ehrlinger.github.io/hvti_graphics/) book. The full reference — every function, the vignettes, and the changelog — is online at <https://ehrlinger.github.io/hvtiPlotR/>.
+Worked, rendered examples for every constructor and theme live in the companion [**HVTI ggplot graphics recipes**](https://ehrlinger.github.io/hvtiGraphics/) book. The full reference — every function, the vignettes, and the changelog — is online at <https://ehrlinger.github.io/hvtiPlotR/>.
 
 ## Installation
 
@@ -183,7 +183,7 @@ hvtiPlotR is one part of the HVTI CORR R ecosystem. The packages a reader of thi
 - [**hvtiPropensityScores**](https://github.com/ehrlinger/hvtiPropensityScores) — builds the matched/weighted datasets and SMD balance tables that `hv_mirror_hist()` and `hv_balance()` are built to plot.
 - [**hvtiRdatasets**](https://github.com/ehrlinger/hvtiRdatasets) — builds and verifies the analysis-ready CORR datasets you would feed into these constructors in place of the `sample_*()` generators.
 - [**hvtiRtables**](https://github.com/ehrlinger/hvtiRtables) — produces the Table 1 / manuscript tables that typically accompany the figures built here.
-- [**HVTI ggplot graphics recipes**](https://ehrlinger.github.io/hvti_graphics/) — the companion recipes book, with worked examples that tie the constructors above into a house style for clinical figures.
+- [**HVTI ggplot graphics recipes**](https://ehrlinger.github.io/hvtiGraphics/) — the companion recipes book, with worked examples that tie the constructors above into a house style for clinical figures.
 
 ## Contributing
 

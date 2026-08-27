@@ -143,7 +143,7 @@ plot(gf2, type = "event") +
 }
 \seealso{
 Worked recipe with rendered output:
-\url{https://ehrlinger.github.io/hvti_graphics/balance.html}.
+\url{https://ehrlinger.github.io/hvtiGraphics/balance.html}.
 
 \code{\link{plot.hv_followup}},
 \code{\link{sample_goodness_followup_data}}

@@ -333,7 +333,7 @@ changes what any function does; the suite is unchanged at 1629 passing tests.
 ## Documentation
 
 - Cross-reference the companion **HVTI ggplot graphics recipes** book
-  (<https://ehrlinger.github.io/hvti_graphics/>) from the package help page,
+  (<https://ehrlinger.github.io/hvtiGraphics/>) from the package help page,
   the `DESCRIPTION` `URL` field, the README, and the pkgdown navbar.
 
 # hvtiPlotR 2.6.1

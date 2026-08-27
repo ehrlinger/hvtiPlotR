@@ -13,7 +13,7 @@ Authors@R: c(
 Maintainer: John Ehrlinger <john.ehrlinger@gmail.com>
 License: GPL-3
 Encoding: UTF-8
-URL: https://github.com/ehrlinger/hvtiPlotR, https://ehrlinger.github.io/hvtiPlotR/, https://ehrlinger.github.io/hvti_graphics/
+URL: https://github.com/ehrlinger/hvtiPlotR, https://ehrlinger.github.io/hvtiPlotR/, https://ehrlinger.github.io/hvtiGraphics/
 BugReports: https://github.com/ehrlinger/hvtiPlotR/issues
 Description: ggplot2 themes and methodology documentation for creating
     publication quality graphics in R conforming to the standards of Cardiovascular Outcomes 

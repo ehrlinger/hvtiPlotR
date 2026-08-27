@@ -14,7 +14,7 @@ and the \code{officer} package.
 
 Worked, rendered examples for every constructor and theme live in the
 companion \strong{HVTI ggplot graphics recipes} book,
-\url{https://ehrlinger.github.io/hvti_graphics/}.
+\url{https://ehrlinger.github.io/hvtiGraphics/}.
 }
 \details{
 \subsection{Two-step workflow}{

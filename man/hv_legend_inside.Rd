@@ -61,5 +61,5 @@ if (requireNamespace("ggplot2", quietly = TRUE)) {
 }
 \seealso{
 Worked recipe with rendered output:
-\url{https://ehrlinger.github.io/hvti_graphics/legends.html}.
+\url{https://ehrlinger.github.io/hvtiGraphics/legends.html}.
 }

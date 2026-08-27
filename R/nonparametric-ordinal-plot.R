@@ -233,7 +233,7 @@ sample_nonparametric_ordinal_points <- function(
 #' }
 #'
 #' @seealso Worked recipe with rendered output:
-#'   \url{https://ehrlinger.github.io/hvti_graphics/hazard.html}.
+#'   \url{https://ehrlinger.github.io/hvtiGraphics/hazard.html}.
 #' @seealso \code{\link{plot.hv_ordinal}},
 #'   \code{\link{sample_nonparametric_ordinal_data}}
 #'

@@ -94,7 +94,7 @@
 #'   sets the legend position.
 #'
 #' @seealso Worked recipe with rendered output:
-#'   \url{https://ehrlinger.github.io/hvti_graphics/legends.html}.
+#'   \url{https://ehrlinger.github.io/hvtiGraphics/legends.html}.
 #'
 #' @examples
 #' if (requireNamespace("ggplot2", quietly = TRUE)) {

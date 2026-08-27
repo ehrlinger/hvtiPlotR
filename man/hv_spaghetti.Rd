@@ -65,7 +65,7 @@ p +
 }
 \seealso{
 Worked recipe with rendered output:
-\url{https://ehrlinger.github.io/hvti_graphics/spaghetti.html}.
+\url{https://ehrlinger.github.io/hvtiGraphics/spaghetti.html}.
 
 \code{\link{plot.hv_spaghetti}} to render as a ggplot2 figure,
 \code{\link{theme_hv_manuscript}} for the publication theme,

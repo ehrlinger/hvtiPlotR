@@ -50,7 +50,7 @@
 #' }
 #'
 #' @seealso Worked recipe with rendered output:
-#'   \url{https://ehrlinger.github.io/hvti_graphics/histograms.html}.
+#'   \url{https://ehrlinger.github.io/hvtiGraphics/histograms.html}.
 #' @seealso \code{\link{plot.hv_stacked}},
 #'   \code{\link{sample_stacked_histogram_data}}
 #'
