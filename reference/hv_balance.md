@@ -76,7 +76,7 @@ elements:
 ## See also
 
 Worked recipe with rendered output:
-<https://ehrlinger.github.io/hvti_graphics/balance.html>.
+<https://ehrlinger.github.io/hvtiGraphics/balance.html>.
 
 [`plot.hv_balance`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hv_balance.md),
 [`sample_covariate_balance_data`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_covariate_balance_data.md)

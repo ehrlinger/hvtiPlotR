@@ -140,7 +140,7 @@ counts are reported as `$meta$n_event_patients` and
 ## See also
 
 Worked recipe with rendered output:
-<https://ehrlinger.github.io/hvti_graphics/balance.html>.
+<https://ehrlinger.github.io/hvtiGraphics/balance.html>.
 
 [`plot.hv_followup`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hv_followup.md),
 [`sample_goodness_followup_data`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_goodness_followup_data.md)

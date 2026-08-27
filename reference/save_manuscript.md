@@ -106,7 +106,7 @@ for slides,
 for the 12 pt typography,
 [`hv_ggsave_dims()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_ggsave_dims.md)
 for fixed-panel sizing. Worked examples live in the HVTI ggplot graphics
-recipes book, <https://ehrlinger.github.io/hvti_graphics/>.
+recipes book, <https://ehrlinger.github.io/hvtiGraphics/>.
 
 ## Examples
 

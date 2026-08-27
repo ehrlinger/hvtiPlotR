@@ -27,7 +27,7 @@ Clinic Heart & Vascular Institute. If you are migrating from the
 
 Worked, rendered examples for every constructor and theme live in the
 companion [**HVTI ggplot graphics
-recipes**](https://ehrlinger.github.io/hvti_graphics/) book. The full
+recipes**](https://ehrlinger.github.io/hvtiGraphics/) book. The full
 reference — every function, the vignettes, and the changelog — is online
 at <https://ehrlinger.github.io/hvtiPlotR/>.
 
@@ -237,7 +237,7 @@ reader of this one is most likely to reach for next:
   the Table 1 / manuscript tables that typically accompany the figures
   built here.
 - [**HVTI ggplot graphics
-  recipes**](https://ehrlinger.github.io/hvti_graphics/) — the companion
+  recipes**](https://ehrlinger.github.io/hvtiGraphics/) — the companion
   recipes book, with worked examples that tie the constructors above
   into a house style for clinical figures.
 

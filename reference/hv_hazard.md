@@ -127,7 +127,7 @@ are passed to [`plot()`](https://rdrr.io/r/graphics/plot.default.html).
 ## See also
 
 Worked recipe with rendered output:
-<https://ehrlinger.github.io/hvti_graphics/hazard.html>.
+<https://ehrlinger.github.io/hvtiGraphics/hazard.html>.
 
 [`plot.hv_hazard()`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hv_hazard.md)
 to render as a ggplot2 figure,

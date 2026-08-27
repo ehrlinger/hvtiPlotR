@@ -9,7 +9,7 @@ package.
 
 Worked, rendered examples for every constructor and theme live in the
 companion **HVTI ggplot graphics recipes** book,
-<https://ehrlinger.github.io/hvti_graphics/>.
+<https://ehrlinger.github.io/hvtiGraphics/>.
 
 ## Details
 

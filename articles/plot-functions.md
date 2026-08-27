@@ -2267,8 +2267,8 @@ plot(sd) +
 
 ![](plot-functions_files/figure-html/hv_survival_difference_object-1.png)
 
-A worked example with rendered output lives in the [hvti_graphics recipe
-book](https://ehrlinger.github.io/hvti_graphics/nnt.html).
+A worked example with rendered output lives in the [HVTI Recipes
+book](https://ehrlinger.github.io/hvtiGraphics/nnt.html).
 
 ## Number Needed to Treat (NNT) Plot
 

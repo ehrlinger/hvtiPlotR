@@ -70,7 +70,7 @@ so its position wins.
 ## See also
 
 Worked recipe with rendered output:
-<https://ehrlinger.github.io/hvti_graphics/legends.html>.
+<https://ehrlinger.github.io/hvtiGraphics/legends.html>.
 
 ## Examples
 

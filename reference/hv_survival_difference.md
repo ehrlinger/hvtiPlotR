@@ -53,7 +53,7 @@ An S3 object of class `c("hv_survival_difference", "hv_data")`.
 ## See also
 
 Worked recipe with rendered output:
-<https://ehrlinger.github.io/hvti_graphics/nnt.html>.
+<https://ehrlinger.github.io/hvtiGraphics/nnt.html>.
 
 [`plot.hv_survival_difference()`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hv_survival_difference.md),
 [`sample_survival_difference_data()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_survival_difference_data.md),

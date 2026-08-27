@@ -102,7 +102,7 @@ SAS templates: `tp.ac.dead.sas` (`%kaplan`, `%nelsont`).
 ## See also
 
 Worked recipe with rendered output:
-<https://ehrlinger.github.io/hvti_graphics/survival.html>.
+<https://ehrlinger.github.io/hvtiGraphics/survival.html>.
 
 [`plot.hv_survival`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hv_survival.md)
 to render as a ggplot2 figure,

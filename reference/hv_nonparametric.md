@@ -100,7 +100,7 @@ Covers the full range of `tp.np.*` SAS templates:
 ## See also
 
 Worked recipe with rendered output:
-<https://ehrlinger.github.io/hvti_graphics/hazard.html>.
+<https://ehrlinger.github.io/hvtiGraphics/hazard.html>.
 
 [`plot.hv_nonparametric`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hv_nonparametric.md)
 to render as a ggplot2 figure,
