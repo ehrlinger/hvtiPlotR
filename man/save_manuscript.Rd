@@ -87,5 +87,5 @@ save_manuscript(p, file.path(tempdir(), "survival.pdf"),
 \code{\link[=save_ppt]{save_ppt()}} for slides, \code{\link[=theme_hv_manuscript]{theme_hv_manuscript()}} for the 12 pt
 typography, \code{\link[=hv_ggsave_dims]{hv_ggsave_dims()}} for fixed-panel sizing. Worked examples live
 in the HVTI ggplot graphics recipes book,
-\url{https://ehrlinger.github.io/hvti_graphics/}.
+\url{https://ehrlinger.github.io/hvtiGraphics/}.
 }

@@ -125,7 +125,7 @@ sample_trends_data <- function(n          = 600,
 #' }
 #'
 #' @seealso Worked recipe with rendered output:
-#'   \url{https://ehrlinger.github.io/hvti_graphics/spaghetti.html}.
+#'   \url{https://ehrlinger.github.io/hvtiGraphics/spaghetti.html}.
 #' @seealso \code{\link{plot.hv_trends}} to render as a ggplot2 figure,
 #'   \code{\link{theme_hv_manuscript}} for the publication theme,
 #'   \code{\link{sample_trends_data}} for example data.

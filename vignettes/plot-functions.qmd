@@ -1822,7 +1822,7 @@ plot(sd) +
 ```
 
 A worked example with rendered output lives in the
-[hvti_graphics recipe book](https://ehrlinger.github.io/hvti_graphics/nnt.html).
+[HVTI Recipes book](https://ehrlinger.github.io/hvtiGraphics/nnt.html).
 
 # Number Needed to Treat (NNT) Plot
 

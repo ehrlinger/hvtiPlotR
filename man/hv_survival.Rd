@@ -140,7 +140,7 @@ SAS templates: \code{tp.ac.dead.sas} (\code{\%kaplan},
 }
 \seealso{
 Worked recipe with rendered output:
-\url{https://ehrlinger.github.io/hvti_graphics/survival.html}.
+\url{https://ehrlinger.github.io/hvtiGraphics/survival.html}.
 
 \code{\link{plot.hv_survival}} to render as a ggplot2 figure,
 \code{\link{theme_hv_manuscript}} for the publication theme,

@@ -65,7 +65,7 @@ p +
 }
 \seealso{
 Worked recipe with rendered output:
-\url{https://ehrlinger.github.io/hvti_graphics/bar.html}.
+\url{https://ehrlinger.github.io/hvtiGraphics/bar.html}.
 
 \code{\link{plot.hv_longitudinal}},
 \code{\link{sample_longitudinal_counts_data}}

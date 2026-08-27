@@ -249,7 +249,7 @@ sample_cluster_sankey_data <- function(
 #' }
 #'
 #' @seealso Worked recipe with rendered output:
-#'   \url{https://ehrlinger.github.io/hvti_graphics/sankey.html}.
+#'   \url{https://ehrlinger.github.io/hvtiGraphics/sankey.html}.
 #' @seealso \code{\link{plot.hv_sankey}},
 #'   \code{\link{sample_cluster_sankey_data}}
 #'

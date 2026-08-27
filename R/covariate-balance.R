@@ -113,7 +113,7 @@ cb_build_plot <- function(data, std_diff_col, group_col, var_levels,
 #' }
 #'
 #' @seealso Worked recipe with rendered output:
-#'   \url{https://ehrlinger.github.io/hvti_graphics/balance.html}.
+#'   \url{https://ehrlinger.github.io/hvtiGraphics/balance.html}.
 #' @seealso \code{\link{plot.hv_balance}},
 #'   \code{\link{sample_covariate_balance_data}}
 #'

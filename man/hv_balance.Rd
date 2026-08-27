@@ -82,7 +82,7 @@ p +
 }
 \seealso{
 Worked recipe with rendered output:
-\url{https://ehrlinger.github.io/hvti_graphics/balance.html}.
+\url{https://ehrlinger.github.io/hvtiGraphics/balance.html}.
 
 \code{\link{plot.hv_balance}},
 \code{\link{sample_covariate_balance_data}}

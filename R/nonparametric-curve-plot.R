@@ -314,7 +314,7 @@ sample_nonparametric_curve_points <- function(n            = 500,
 #' }
 #'
 #' @seealso Worked recipe with rendered output:
-#'   \url{https://ehrlinger.github.io/hvti_graphics/hazard.html}.
+#'   \url{https://ehrlinger.github.io/hvtiGraphics/hazard.html}.
 #' @seealso \code{\link{plot.hv_nonparametric}} to render as a ggplot2 figure,
 #'   \code{\link{theme_hv_manuscript}} for the publication theme,
 #'   \code{\link{sample_nonparametric_curve_data}} for example data.

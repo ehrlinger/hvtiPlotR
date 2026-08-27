@@ -1310,7 +1310,7 @@ nnt_plot <- function(nnt_data,
 #'   `$tables$empirical`, `$tables$reference`.
 #'
 #' @seealso Worked recipe with rendered output:
-#'   \url{https://ehrlinger.github.io/hvti_graphics/hazard.html}.
+#'   \url{https://ehrlinger.github.io/hvtiGraphics/hazard.html}.
 #' @seealso [plot.hv_hazard()] to render as a ggplot2 figure,
 #'   [theme_hv_manuscript()] for the publication theme,
 #'   [sample_hazard_data()], [sample_hazard_empirical()],
@@ -1665,7 +1665,7 @@ plot.hv_hazard <- function(x,
 #' @return An S3 object of class `c("hv_survival_difference", "hv_data")`.
 #'
 #' @seealso Worked recipe with rendered output:
-#'   \url{https://ehrlinger.github.io/hvti_graphics/nnt.html}.
+#'   \url{https://ehrlinger.github.io/hvtiGraphics/nnt.html}.
 #' @seealso [plot.hv_survival_difference()],
 #'   [sample_survival_difference_data()], [hv_nnt()]
 #'
@@ -1836,7 +1836,7 @@ plot.hv_survival_difference <- function(x,
 #' @return An S3 object of class `c("hv_nnt", "hv_data")`.
 #'
 #' @seealso Worked recipe with rendered output:
-#'   \url{https://ehrlinger.github.io/hvti_graphics/nnt.html}.
+#'   \url{https://ehrlinger.github.io/hvtiGraphics/nnt.html}.
 #' @seealso [plot.hv_nnt()], [sample_nnt_data()],
 #'   [hv_survival_difference()]
 #'

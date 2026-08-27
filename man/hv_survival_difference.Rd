@@ -59,7 +59,7 @@ plot(sd) +
 }
 \seealso{
 Worked recipe with rendered output:
-\url{https://ehrlinger.github.io/hvti_graphics/nnt.html}.
+\url{https://ehrlinger.github.io/hvtiGraphics/nnt.html}.
 
 \code{\link[=plot.hv_survival_difference]{plot.hv_survival_difference()}},
 \code{\link[=sample_survival_difference_data]{sample_survival_difference_data()}}, \code{\link[=hv_nnt]{hv_nnt()}}
