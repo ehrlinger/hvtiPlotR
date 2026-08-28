@@ -19,7 +19,7 @@ jsslogo.jpg
 *.bbl
 
 inst/doc
-docs
+/docs/
 hvtiPlotR.Rproj
 
 .claude/*
