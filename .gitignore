@@ -43,3 +43,11 @@ inst/slides/*.pptx
 # Agent tool directories (already .Rbuildignore-d; keep them out of git too)
 .codegraph/
 .superpowers/
+
+# A local slide template that lives in inst/extdata beside the tracked
+# hv_ppt_template.pptx but is not a package asset. Already .Rbuildignore-d
+# (line 47) so it never reached a tarball, but nothing kept it out of git and
+# a git add -A swept it into an unrelated commit. Named rather than globbed:
+# hv_ppt_template.pptx in the same directory IS tracked, and a *.pptx rule
+# would leave it ignored-but-tracked.
+inst/extdata/Yahoo slide template LIGHT ROOM.pptx
