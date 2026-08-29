@@ -193,32 +193,18 @@ km_extract_tidy <- function(fit, group_col) {
 
 ##' Build numbers-at-risk table
 ##'
-##' For each stratum, finds the last observed \code{n.risk} at or before each
-##' report time.
+##' For each stratum, counts analysed subjects whose observed follow-up time is
+##' greater than or equal to each report time.
 ##'
-##' @param km_df        Tidy KM data frame from \code{km_extract_tidy}.
+##' @param time         Numeric vector of observed follow-up times.
 ##' @param report_times Numeric vector of time points.
+##' @param group        Optional stratum vector, or \code{NULL} for one cohort.
 ##' @return A data frame with columns \code{strata}, \code{report_time},
 ##'   \code{n.risk}.
 ##' @keywords internal
-km_risk_table <- function(km_df, report_times) {
-  strata_levels <- unique(km_df$strata)
-
-  rows <- lapply(strata_levels, function(st) {
-    sub_df <- km_df[km_df$strata == st, ]
-    lapply(report_times, function(t) {
-      idx <- which(sub_df$time <= t)
-      if (length(idx) == 0L) {
-        nr <- sub_df$n.risk[1]
-      } else {
-        nr <- sub_df$n.risk[max(idx)]
-      }
-      data.frame(strata = st, report_time = t, n.risk = nr,
-                 stringsAsFactors = FALSE)
-    })
-  })
-
-  do.call(rbind, do.call(c, rows))
+km_risk_table <- function(time, report_times, group = NULL) {
+  if (is.null(group)) group <- rep("All", length(time))
+  .atrisk_table(time = time, group = group, report_times = report_times)
 }
 
 ##' Build report table at specified time points
@@ -447,7 +433,9 @@ km_build_life_plot <- function(km_df, alpha) {
 #'     \code{report_times}, \code{n_obs} (the \emph{analysed} cohort),
 #'     \code{n_input}, \code{n_excluded}, \code{n_events}.}
 #'   \item{\code{$tables}}{Named list with two data frames:
-#'     \code{risk} (\code{strata}, \code{report_time}, \code{n.risk}) and
+#'     \code{risk} (\code{strata}, \code{report_time}, \code{n.risk}), where
+#'     \code{n.risk} counts analysed subjects with follow-up greater than or
+#'     equal to the exact report time, and
 #'     \code{report} (\code{strata}, \code{report_time}, \code{surv},
 #'     \code{lower}, \code{upper}, \code{n.risk}, \code{n.event}).}
 #' }
@@ -573,7 +561,12 @@ hv_survival <- function(data,
   km_df <- km_extract_tidy(fit, group_col)
 
   # --- Tables ---------------------------------------------------------------
-  risk_tbl   <- km_risk_table(km_df, report_times)
+  risk_group <- if (is.null(group_col)) {
+    factor(rep("All", nrow(data)), levels = "All")
+  } else {
+    factor(as.character(data[[group_col]]), levels = unique(km_df$strata))
+  }
+  risk_tbl   <- km_risk_table(data[[time_col]], report_times, risk_group)
   report_tbl <- km_report_table(km_df, report_times)
 
   # --- Assemble -------------------------------------------------------------

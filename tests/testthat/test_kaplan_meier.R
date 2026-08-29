@@ -185,6 +185,45 @@ test_that("hv_survival $tables$report is not NULL", {
   expect_false(is.null(km$tables$report))
 })
 
+test_that("hv_survival counts subjects at risk at exact report times", {
+  dta <- data.frame(
+    follow_up = c(1, 2, 3, 4),
+    event     = c(1, 0, 1, 0)
+  )
+
+  km <- hv_survival(
+    dta,
+    time_col = "follow_up",
+    event_col = "event",
+    report_times = c(1.5, 2, 2.5, 4)
+  )
+
+  expect_named(km$tables$risk, c("strata", "report_time", "n.risk"))
+  expect_equal(km$tables$risk$strata, rep("All", 4))
+  expect_equal(km$tables$risk$report_time, c(1.5, 2, 2.5, 4))
+  expect_equal(km$tables$risk$n.risk, c(3, 3, 2, 1))
+})
+
+test_that("hv_survival preserves strata order in exact at-risk counts", {
+  dta <- data.frame(
+    follow_up = c(1, 2, 3, 4, 1.5, 2.5, 3.5, 4.5),
+    event     = c(1, 0, 1, 0, 0, 1, 0, 1),
+    treatment = factor(rep(c("A", "B"), each = 4), levels = c("B", "A"))
+  )
+
+  km <- hv_survival(
+    dta,
+    time_col = "follow_up",
+    event_col = "event",
+    group_col = "treatment",
+    report_times = c(2, 2.5, 3)
+  )
+
+  expect_equal(km$tables$risk$strata, rep(c("B", "A"), each = 3))
+  expect_equal(km$tables$risk$report_time, rep(c(2, 2.5, 3), 2))
+  expect_equal(km$tables$risk$n.risk, c(3, 3, 2, 3, 2, 2))
+})
+
 test_that("plot(hv_survival) returns a ggplot", {
   dta <- sample_survival_data(n = 100, seed = 1)
   km  <- hv_survival(dta)
