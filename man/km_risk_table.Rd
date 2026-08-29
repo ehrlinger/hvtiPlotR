@@ -4,19 +4,21 @@
 \alias{km_risk_table}
 \title{Build numbers-at-risk table}
 \usage{
-km_risk_table(km_df, report_times)
+km_risk_table(time, report_times, group = NULL)
 }
 \arguments{
-\item{km_df}{Tidy KM data frame from \code{km_extract_tidy}.}
+\item{time}{Numeric vector of observed follow-up times.}
 
 \item{report_times}{Numeric vector of time points.}
+
+\item{group}{Optional stratum vector, or \code{NULL} for one cohort.}
 }
 \value{
 A data frame with columns \code{strata}, \code{report_time},
 \code{n.risk}.
 }
 \description{
-For each stratum, finds the last observed \code{n.risk} at or before each
-report time.
+For each stratum, counts analysed subjects whose observed follow-up time is
+greater than or equal to each report time.
 }
 \keyword{internal}

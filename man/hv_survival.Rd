@@ -53,7 +53,9 @@ Columns: \code{time}, \code{surv}, \code{lower}, \code{upper},
 \code{report_times}, \code{n_obs} (the \emph{analysed} cohort),
 \code{n_input}, \code{n_excluded}, \code{n_events}.}
 \item{\code{$tables}}{Named list with two data frames:
-\code{risk} (\code{strata}, \code{report_time}, \code{n.risk}) and
+\code{risk} (\code{strata}, \code{report_time}, \code{n.risk}), where
+\code{n.risk} counts analysed subjects with follow-up greater than or
+equal to the exact report time, and
 \code{report} (\code{strata}, \code{report_time}, \code{surv},
 \code{lower}, \code{upper}, \code{n.risk}, \code{n.event}).}
 }
