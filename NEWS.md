@@ -1,3 +1,43 @@
+# hvtiPlotR 2.7.11
+
+## `sample_hazard_cohort()`: at-risk tables under hazard figures
+
+New export. `hv_atrisk()` counts subjects still under observation, so it cannot
+work from `sample_hazard_data()` or `sample_nnt_data()` — both are prediction
+grids with no subjects in them. That left `hv_hazard()` and `hv_nnt()` figures
+with no honest way to carry a numbers-at-risk table, and the tempting fix —
+simulating a fresh cohort at figure-assembly time — produces counts that did not
+come from the same draw as the curve above them. Nothing in the rendered output
+distinguishes the two.
+
+`sample_hazard_empirical()` was already drawing exactly the right cohort and
+discarding it one line after fitting its Kaplan-Meier overlay to it.
+`sample_hazard_cohort()` returns that cohort: subject-level `time` and `status`
+(plus `group` when `groups` is supplied), from the same seeded draw. Refitting
+KM to it reproduces `sample_hazard_empirical()`'s estimates exactly, and a test
+asserts that invariant so the two cannot drift apart.
+
+```r
+arms <- c("No Takedown" = 1.0, "Takedown" = 0.65)
+coh  <- sample_hazard_cohort(n = 400, time_max = 10, groups = arms)
+haz  <- hv_hazard(sample_hazard_data(n = 400, time_max = 10, groups = arms),
+                  group_col = "group")
+hv_atrisk_compose(
+  plot(haz),
+  hv_atrisk(coh, time = "time", status = "status", group = "group",
+            report_times = c(0, 2, 4, 6, 8, 10))
+)
+```
+
+Note that `sample_hazard_data()` is an *analytic* Weibull curve at the same
+parameters, not a fit to this cohort. The two share a generative model, not an
+estimation step, so such a figure should not be captioned as a model fitted to
+these subjects.
+
+No behaviour changes. `.hp_km_binned()` was refactored onto the shared
+`.hp_draw_cohort()` helper with the random-number draw order preserved, so
+`sample_hazard_empirical()` output is byte-identical and no snapshots move.
+
 # hvtiPlotR 2.7.10
 
 ## Test helper: reference lines must draw something
