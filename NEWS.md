@@ -1,3 +1,48 @@
+# hvtiPlotR 2.7.12
+
+## `groups` multipliers are validated across the sample generators
+
+Follow-up to 2.7.11, which validated `groups` in the newly added
+`sample_hazard_cohort()` but left its siblings alone. They had the same gap.
+
+A `groups` multiplier that is negative, zero, `NA` or `Inf` did not stop any of
+these generators. It produced a full-looking data frame carrying `NA`/`NaN`
+estimates, or -- for a zero multiplier -- a silently meaningless arm in which
+nobody ever has an event. Measured before the fix:
+
+| generator | `c(A = 1, B = -0.5)` | `c(A = 1, B = 0)` | `c(A = 1, B = NA)` |
+|---|---|---|---|
+| `sample_hazard_data()` | NaN rows | infinite scale, no events | NA rows |
+| `sample_hazard_empirical()` | NA rows | infinite scale, no events | obscure survfit error |
+| `sample_survival_difference_data()` | NaN rows | infinite scale, no events | NA rows |
+| `sample_nnt_data()` | NaN rows | NA rows | NA rows |
+| `sample_nonparametric_curve_data()` | NaN rows (via `log()`) | `-Inf` (via `log()`) | NA rows |
+| `sample_nonparametric_curve_points()` | negative half-life, no NA | NA rows | NA rows |
+
+None of that is obviously wrong on inspection; it renders as a plausible
+figure. All six now error instead, via the shared validator introduced in
+2.7.11. `sample_survival_difference_data()` and `sample_nnt_data()` inherit the
+check by delegating to `sample_hazard_data()`, and a test pins that delegation.
+
+`sample_nonparametric_curve_points()` scales its two half-lives by the
+multiplier, so a negative one yields a negative half-life and a full data frame
+with no `NA` in it at all -- the quietest case of the set. It documents the
+`groups` contract via `@inheritParams`, so leaving it unvalidated would have
+had its man page promise a guarantee the function did not keep.
+
+The validator is renamed `.check_group_multipliers()` (from
+`.check_hazard_groups()`) because `sample_nonparametric_curve_data()` passes
+its multiplier through `log()` rather than dividing a Weibull scale -- the
+contract generalises, the name should too. Internal; no exported name changes.
+
+**Behaviour change.** Calls that previously returned NA-laden data now error.
+No test, example or vignette in the package passed such a value, so nothing
+here changed, but downstream code relying on the old silent behaviour will now
+see an error -- which is the intent.
+
+`@param groups` on all six now states the contract: names present, non-empty
+and distinct; multipliers finite and greater than zero.
+
 # hvtiPlotR 2.7.11
 
 ## `sample_hazard_cohort()`: at-risk tables under hazard figures

@@ -254,15 +254,21 @@
 }
 
 #' @noRd
-# Hazard-multiplier `groups` vectors must be named, distinct, finite and
-# strictly positive. Like `.check_report_times()`, the failure mode here is
-# silence rather than noise: the multiplier divides the Weibull scale, so a
+# `groups` multiplier vectors must be named, distinct, finite and strictly
+# positive. Used by every sample generator whose `groups` argument is a named
+# vector of per-arm multipliers rather than plain labels.
+#
+# Like `.check_report_times()`, the failure mode here is silence rather than
+# noise. In the hazard family the multiplier divides the Weibull scale, so a
 # negative one yields negative follow-up times, zero yields an infinite scale
-# (an arm in which nobody ever has an event), and `NA` yields `NA` times. All
-# three survive into an at-risk table as plausible-looking counts --
-# `.atrisk_table()` counts `sum(time >= t, na.rm = TRUE)` and simply reports
-# a smaller number -- so the figure is misleading rather than obviously wrong.
-.check_hazard_groups <- function(groups, arg = "groups") {
+# (an arm in which nobody ever has an event), and `NA` yields `NA` times; in
+# `sample_nonparametric_curve_data()` it is passed through `log()`, so a
+# negative one yields `NaN` and zero yields `-Inf`. None of these stop the
+# generator. They flow into a plotted data frame and then into a figure --
+# `.atrisk_table()`, for instance, counts `sum(time >= t, na.rm = TRUE)` and
+# simply reports a smaller, entirely plausible number -- so the result is
+# misleading rather than obviously wrong.
+.check_group_multipliers <- function(groups, arg = "groups") {
   if (!(is.numeric(groups) && length(groups) > 0L))
     stop(sprintf("`%s` must be a non-empty numeric vector of hazard multipliers.", arg),
          call. = FALSE)

@@ -65,7 +65,8 @@
 #'   Default `500` (matches the SAS `inc=(max-min)/499.9` loop).
 #' @param groups      `NULL` for a single average curve, or a named numeric
 #'   vector of group-specific hazard multipliers,
-#'   e.g. `c("Ozaki" = 0.8, "CE-Pericardial" = 1.2)`.
+#'   e.g. `c("Ozaki" = 0.8, "CE-Pericardial" = 1.2)`. Names must be present, non-empty and distinct;
+#'   multipliers must be finite and greater than zero.
 #' @param outcome_type `"probability"` (binary outcome, 0-1 scale) or
 #'   `"continuous"`. Default `"probability"`.
 #' @param ci_level    Confidence level for bootstrap-style CI bands.
@@ -142,6 +143,7 @@ sample_nonparametric_curve_data <- function(n            = 500,
                            upper    = hi)
 
   } else {
+    .check_group_multipliers(groups)
     grp_names  <- names(groups)
     curve_list <- lapply(seq_along(groups), function(i) {
       eta <- .np_two_phase(t_grid, e0 = log(groups[[i]]) + eta_intercept,
@@ -218,6 +220,7 @@ sample_nonparametric_curve_points <- function(n            = 500,
   if (is.null(groups)) {
     dp_df <- .np_sample_bins(n, time_max, thalf1, thalf2, outcome_type, n_bins)
   } else {
+    .check_group_multipliers(groups)
     grp_names <- names(groups)
     dp_list <- lapply(seq_along(groups), function(i) {
       df         <- .np_sample_bins(n, time_max, thalf1 * groups[[i]],

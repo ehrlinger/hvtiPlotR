@@ -27,7 +27,8 @@ Default \code{500} (matches the SAS \code{inc=(max-min)/499.9} loop).}
 
 \item{groups}{\code{NULL} for a single average curve, or a named numeric
 vector of group-specific hazard multipliers,
-e.g. \code{c("Ozaki" = 0.8, "CE-Pericardial" = 1.2)}.}
+e.g. \code{c("Ozaki" = 0.8, "CE-Pericardial" = 1.2)}. Names must be present, non-empty and distinct;
+multipliers must be finite and greater than zero.}
 
 \item{outcome_type}{\code{"probability"} (binary outcome, 0-1 scale) or
 \code{"continuous"}. Default \code{"probability"}.}

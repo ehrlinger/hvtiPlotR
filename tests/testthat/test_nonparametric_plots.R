@@ -443,3 +443,46 @@ test_that("print.hv_ordinal returns x invisibly", {
   expect_false(ret$visible)
   expect_identical(ret$value, obj)
 })
+
+# ============================================================================
+# groups multiplier validation
+# ============================================================================
+
+# Here the multiplier goes through log(), so a negative one yields NaN and a
+# zero yields -Inf -- both of which previously flowed into the returned curve
+# rather than stopping the generator.
+test_that("sample_nonparametric_curve_data rejects bad group multipliers", {
+  expect_error(sample_nonparametric_curve_data(n = 40, groups = c(A = 1, B = -0.5)),
+               "finite and > 0")
+  expect_error(sample_nonparametric_curve_data(n = 40, groups = c(A = 1, B = 0)),
+               "finite and > 0")
+  expect_error(sample_nonparametric_curve_data(n = 40, groups = c(A = 1, B = NA_real_)),
+               "finite and > 0")
+  expect_error(sample_nonparametric_curve_data(n = 40, groups = c(A = 1, A = 2)), "distinct")
+})
+
+test_that("valid nonparametric group multipliers are still accepted", {
+  d <- sample_nonparametric_curve_data(n = 40, groups = c("Ozaki" = 0.8, "CE" = 1.2))
+  expect_s3_class(d, "data.frame")
+  expect_false(anyNA(d))
+})
+
+# sample_nonparametric_curve_points() inherits the `groups` contract in its
+# .Rd via @inheritParams, so it has to enforce it too -- otherwise the man
+# page promises a guarantee the function does not keep. Here the multiplier
+# scales the two half-lives, so a negative one yields a negative half-life,
+# which produces a full 20 rows with no NA at all: the silent case.
+test_that("sample_nonparametric_curve_points rejects bad group multipliers", {
+  expect_error(sample_nonparametric_curve_points(n = 40, groups = c(A = 1, B = -0.5)),
+               "finite and > 0")
+  expect_error(sample_nonparametric_curve_points(n = 40, groups = c(A = 1, B = 0)),
+               "finite and > 0")
+  expect_error(sample_nonparametric_curve_points(n = 40, groups = c(A = 1, B = NA_real_)),
+               "finite and > 0")
+})
+
+test_that("valid nonparametric point multipliers are still accepted", {
+  d <- sample_nonparametric_curve_points(n = 40, groups = c("Ozaki" = 0.8, "CE" = 1.2))
+  expect_s3_class(d, "data.frame")
+  expect_false(anyNA(d))
+})

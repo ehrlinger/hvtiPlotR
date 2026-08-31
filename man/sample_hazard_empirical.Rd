@@ -24,7 +24,9 @@ sample_hazard_empirical(
 to the discrete annotation points in the SAS templates. Default \code{6}.}
 
 \item{groups}{\code{NULL} for a single group, or a named numeric vector of
-hazard multipliers matching those passed to \code{\link[=sample_hazard_data]{sample_hazard_data()}}.}
+hazard multipliers matching those passed to \code{\link[=sample_hazard_data]{sample_hazard_data()}}.
+Names must be present, non-empty and distinct;
+multipliers must be finite and greater than zero.}
 
 \item{shape}{Weibull shape parameter. Default \code{1.5}.}
 
