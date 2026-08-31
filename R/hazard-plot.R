@@ -65,20 +65,30 @@
        upper = exp(log(h) + z_score * se_log))
 }
 
-# Simulate patient survival times and return KM estimates at binned time points.
-.hp_km_binned <- function(n, shape, scale, time_max, n_bins, ci_level, seed) {
+# Simulate one subject-level cohort: Weibull event times, uniform censoring,
+# administrative truncation at 1.2 x time_max. Shared by .hp_km_binned() and
+# sample_hazard_cohort() so the KM overlay and the at-risk counts describe the
+# same subjects for a given seed.
+.hp_draw_cohort <- function(n, shape, scale, time_max, seed) {
   set.seed(seed)
   u        <- stats::runif(n)
-  # Both are read inside the survfit() formula below, which
-  # codetools::checkUsage does not walk.
-  t_event  <- scale * (-log(pmax(u, 1e-9)))^(1 / shape) # nolint: object_usage_linter.
-  t_censor <- stats::runif(n, time_max * 0.2, time_max * 1.5) # nolint: object_usage_linter.
+  t_event  <- scale * (-log(pmax(u, 1e-9)))^(1 / shape)
+  t_censor <- stats::runif(n, time_max * 0.2, time_max * 1.5)
+  horizon  <- time_max * 1.2
+  data.frame(
+    time   = pmin(t_event, t_censor, horizon),
+    status = as.integer(t_event <= t_censor & t_event <= horizon)
+  )
+}
+
+# Fit KM to that cohort and return estimates at binned time points.
+.hp_km_binned <- function(n, shape, scale, time_max, n_bins, ci_level, seed) {
+  # Read inside the survfit() formula below, which codetools::checkUsage
+  # does not walk -- so the linter cannot see the use.
+  cohort <- .hp_draw_cohort(n, shape, scale, time_max, seed) # nolint: object_usage_linter.
 
   km_fit <- survival::survfit(
-    survival::Surv(
-      pmin(t_event, t_censor, time_max * 1.2),
-      as.integer(t_event <= t_censor & t_event <= time_max * 1.2)
-    ) ~ 1,
+    survival::Surv(cohort$time, cohort$status) ~ 1,
     conf.int  = ci_level,
     conf.type = "log-log"
   )
@@ -262,6 +272,90 @@ sample_hazard_empirical <- function(n        = 500,
 
 # ============================================================================
 
+#' Sample Subject-Level Cohort Behind the Hazard Examples
+#'
+#' @description
+#' Returns the subject-level survival data that [sample_hazard_empirical()]
+#' simulates internally and then discards. Use it when a hazard figure needs a
+#' numbers-at-risk table: [hv_atrisk()] counts subjects still under observation
+#' and therefore cannot work from [sample_hazard_data()], which is a prediction
+#' grid with no subjects in it.
+#'
+#' @details
+#' For a given `n`, `time_max`, `groups`, `shape`, `scale` and `seed` this draws
+#' the *same* cohort that [sample_hazard_empirical()] fits its Kaplan-Meier
+#' overlay to, so the counts and the overlay describe the same subjects. Event
+#' times are Weibull, censoring is uniform on `[0.2, 1.5] * time_max`, and
+#' follow-up is administratively truncated at `1.2 * time_max`. When `groups` is
+#' supplied each level is an independent draw of `n` subjects, matching
+#' [sample_hazard_empirical()]'s balanced-arms convention.
+#'
+#' Note that [sample_hazard_data()] is an *analytic* Weibull curve evaluated at
+#' the same parameters — it is not fitted to this cohort. The two share a
+#' generative model, not an estimation step, so a figure combining them should
+#' not be captioned as a model fit to these subjects.
+#'
+#' @param n        Number of simulated subjects **per group**. Default `500`.
+#' @param time_max Scale of the follow-up window (years). Default `10`. Note
+#'   that this is **not** a hard maximum on the returned `time`: follow-up is
+#'   administratively truncated at `1.2 * time_max`, matching the cohort
+#'   [sample_hazard_empirical()] fits to, so returned times run up to `12` at
+#'   the default. It *is* the upper end of the grid in [sample_hazard_data()]
+#'   and of the bins in [sample_hazard_empirical()].
+#' @param groups   `NULL` for a single group, or a named numeric vector of
+#'   hazard multipliers matching those passed to [sample_hazard_data()]. Names
+#'   must be present, non-empty and distinct; multipliers must be finite and
+#'   greater than zero.
+#' @param shape    Weibull shape parameter. Default `1.5`.
+#' @param scale    Weibull scale parameter (years). Default `8.0`.
+#' @param seed     Random seed. Default `42`.
+#'
+#' @return A data frame with one row per subject and columns `time` (follow-up
+#'   time, years) and `status` (`1` event, `0` censored), plus a factor `group`
+#'   column when `groups` is not `NULL`.
+#'
+#' @seealso [hv_atrisk()], [hv_atrisk_compose()], [sample_hazard_empirical()],
+#'   [sample_hazard_data()]
+#'
+#' @examples
+#' coh <- sample_hazard_cohort(n = 500, time_max = 10)
+#' nrow(coh)
+#' mean(coh$status)
+#'
+#' # Numbers at risk under a parametric hazard figure. The cohort and the
+#' # curve share n / shape / scale / seed, so the counts belong under it.
+#' arms <- c("No Takedown" = 1.0, "Takedown" = 0.65)
+#' coh2 <- sample_hazard_cohort(n = 400, time_max = 10, groups = arms)
+#' haz  <- hv_hazard(
+#'   sample_hazard_data(n = 400, time_max = 10, groups = arms),
+#'   group_col = "group"
+#' )
+#' hv_atrisk_compose(
+#'   plot(haz),
+#'   hv_atrisk(coh2, time = "time", status = "status", group = "group",
+#'             report_times = c(0, 2, 4, 6, 8, 10))
+#' )
+#' @export
+sample_hazard_cohort <- function(n        = 500,
+                                 time_max = 10,
+                                 groups   = NULL,
+                                 shape    = 1.5,
+                                 scale    = 8.0,
+                                 seed     = 42L) {
+  if (is.null(groups)) {
+    return(.hp_draw_cohort(n, shape, scale, time_max, seed))
+  }
+  .check_hazard_groups(groups)
+  grp_names <- names(groups)
+  coh_list <- lapply(seq_along(groups), function(i) {
+    df       <- .hp_draw_cohort(n, shape, scale / groups[[i]], time_max, seed + i * 100L)
+    df$group <- grp_names[[i]]
+    df
+  })
+  out       <- do.call(rbind, coh_list)
+  out$group <- factor(out$group, levels = grp_names)
+  out
+}
 #' Sample Population Life Table Data
 #'
 #' Generates age-group-specific population survival curves using Gompertz

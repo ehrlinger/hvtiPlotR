@@ -108,6 +108,7 @@ reference:
   - sample_survival_data
   - sample_hazard_data
   - sample_hazard_empirical
+  - sample_hazard_cohort
   - sample_life_table
   - sample_survival_difference_data
   - sample_nnt_data

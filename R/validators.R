@@ -252,3 +252,35 @@
     stop("`alpha` must be a number in [0, 1].", call. = FALSE)
   invisible(alpha)
 }
+
+#' @noRd
+# Hazard-multiplier `groups` vectors must be named, distinct, finite and
+# strictly positive. Like `.check_report_times()`, the failure mode here is
+# silence rather than noise: the multiplier divides the Weibull scale, so a
+# negative one yields negative follow-up times, zero yields an infinite scale
+# (an arm in which nobody ever has an event), and `NA` yields `NA` times. All
+# three survive into an at-risk table as plausible-looking counts --
+# `.atrisk_table()` counts `sum(time >= t, na.rm = TRUE)` and simply reports
+# a smaller number -- so the figure is misleading rather than obviously wrong.
+.check_hazard_groups <- function(groups, arg = "groups") {
+  if (!(is.numeric(groups) && length(groups) > 0L))
+    stop(sprintf("`%s` must be a non-empty numeric vector of hazard multipliers.", arg),
+         call. = FALSE)
+  nms <- names(groups)
+  # nzchar(NA) is TRUE (keepNA = FALSE), so anyNA() must be checked separately.
+  if (is.null(nms) || anyNA(nms) || !all(nzchar(nms)))
+    stop(sprintf("`%s` must be a named numeric vector; every element needs a non-empty name.", arg),
+         call. = FALSE)
+  if (anyDuplicated(nms) > 0L)
+    stop(sprintf("`%s` names must be distinct. Duplicated: %s",
+                 arg, paste(unique(nms[duplicated(nms)]), collapse = ", ")),
+         call. = FALSE)
+  bad <- !is.finite(groups) | groups <= 0
+  if (any(bad))
+    stop(
+      sprintf("`%s` multipliers must be finite and > 0. Offending value(s): %s",
+              arg, paste(sprintf("%s = %s", nms[bad], groups[bad]), collapse = ", ")),
+      call. = FALSE
+    )
+  invisible(groups)
+}

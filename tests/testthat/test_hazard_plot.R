@@ -870,3 +870,138 @@ test_that("hv_nnt $meta includes has_ci and n_obs", {
   # n_obs reflects pre-na_rm count
   expect_true(obj$meta$n_obs > 0)
 })
+
+# ============================================================================
+# sample_hazard_cohort
+# ============================================================================
+
+test_that("sample_hazard_cohort returns subject-level time and status", {
+  coh <- sample_hazard_cohort(n = 100, seed = 1)
+  expect_true(is.data.frame(coh))
+  expect_identical(names(coh), c("time", "status"))
+  expect_equal(nrow(coh), 100L)
+  expect_true(all(coh$status %in% c(0L, 1L)))
+  expect_true(all(is.finite(coh$time) & coh$time > 0))
+})
+
+test_that("sample_hazard_cohort truncates follow-up at 1.2 * time_max", {
+  coh <- sample_hazard_cohort(n = 300, time_max = 10, seed = 3)
+  expect_lte(max(coh$time), 12)
+})
+
+test_that("sample_hazard_cohort draws n subjects per group, in level order", {
+  arms <- c("No Takedown" = 1.0, "Takedown" = 0.65)
+  coh  <- sample_hazard_cohort(n = 100, groups = arms, seed = 1)
+  expect_equal(nrow(coh), 200L)
+  expect_identical(levels(coh$group), names(arms))
+  expect_equal(unname(table(coh$group)), c(100L, 100L), ignore_attr = TRUE)
+})
+
+test_that("sample_hazard_cohort rejects an unnamed groups vector", {
+  expect_error(sample_hazard_cohort(groups = c(1.0, 0.65)), "named")
+})
+
+# A bad multiplier is not merely odd input. It divides the Weibull scale, so a
+# negative one produces negative follow-up times and NA produces NA times --
+# both of which .atrisk_table() counts with na.rm = TRUE and reports as a
+# smaller, entirely plausible-looking number. Rejecting them loudly is the
+# whole point of this function, so each is pinned.
+test_that("sample_hazard_cohort rejects non-finite or non-positive multipliers", {
+  expect_error(sample_hazard_cohort(groups = c(A = 1, B = -0.5)), "finite and > 0")
+  expect_error(sample_hazard_cohort(groups = c(A = 1, B = 0)), "finite and > 0")
+  expect_error(sample_hazard_cohort(groups = c(A = 1, B = NA_real_)), "finite and > 0")
+  expect_error(sample_hazard_cohort(groups = c(A = 1, B = Inf)), "finite and > 0")
+})
+
+test_that("sample_hazard_cohort rejects NA, empty and duplicated group names", {
+  g <- c(1, 2)
+  names(g) <- c("A", NA)
+  # nzchar(NA) is TRUE, so an NA name slips past a plain nzchar() guard.
+  expect_error(sample_hazard_cohort(groups = g), "non-empty name")
+  expect_error(sample_hazard_cohort(groups = c(A = 1, 2)), "non-empty name")
+  expect_error(sample_hazard_cohort(groups = c(A = 1, A = 2)), "distinct")
+})
+
+test_that("sample_hazard_cohort rejects an empty groups vector", {
+  expect_error(
+    sample_hazard_cohort(groups = structure(numeric(0), names = character(0))),
+    "non-empty numeric vector"
+  )
+})
+
+test_that("sample_hazard_cohort is reproducible with same seed", {
+  expect_identical(sample_hazard_cohort(n = 80, seed = 5),
+                   sample_hazard_cohort(n = 80, seed = 5))
+})
+
+# This is the load-bearing invariant of the function: the cohort must be the
+# very cohort sample_hazard_empirical() fits its KM overlay to, not merely one
+# drawn from the same distribution. If these drift apart, an at-risk table
+# built from the cohort would describe different subjects than the curve above
+# it -- exactly the silently-wrong figure this function exists to prevent.
+test_that("sample_hazard_cohort reproduces sample_hazard_empirical's KM", {
+  coh <- sample_hazard_cohort(n = 200, time_max = 10, seed = 7)
+  fit <- survival::survfit(
+    survival::Surv(coh$time, coh$status) ~ 1,
+    conf.int = 0.95, conf.type = "log-log"
+  )
+  refit <- summary(fit, times = seq(10 / 6, 10, length.out = 6),
+                   extend = TRUE)$surv * 100
+  emp <- sample_hazard_empirical(n = 200, time_max = 10, n_bins = 6, seed = 7)
+  expect_equal(refit, emp$estimate)
+})
+
+test_that("sample_hazard_cohort group cohorts match the grouped empirical KM", {
+  arms <- c("Control" = 1.0, "Treatment" = 0.65)
+  coh  <- sample_hazard_cohort(n = 150, time_max = 10, groups = arms, seed = 2)
+  emp  <- sample_hazard_empirical(n = 150, time_max = 10, n_bins = 6,
+                                  groups = arms, seed = 2)
+  for (arm in names(arms)) {
+    sub <- coh[coh$group == arm, , drop = FALSE]
+    fit <- survival::survfit(
+      survival::Surv(sub$time, sub$status) ~ 1,
+      conf.int = 0.95, conf.type = "log-log"
+    )
+    refit <- summary(fit, times = seq(10 / 6, 10, length.out = 6),
+                     extend = TRUE)$surv * 100
+    expect_equal(refit, emp$estimate[emp$group == arm])
+  }
+})
+
+test_that("sample_hazard_cohort feeds hv_atrisk with descending counts", {
+  arms <- c("No Takedown" = 1.0, "Takedown" = 0.65)
+  coh  <- sample_hazard_cohort(n = 200, time_max = 10, groups = arms, seed = 4)
+  tbl  <- hvtiPlotR:::.atrisk_table(coh$time, coh$status, coh$group,
+                                    report_times = c(0, 2, 4, 6, 8, 10))
+  expect_equal(nrow(tbl), 12L)
+  expect_true(all(tbl$n.risk[tbl$report_time == 0] == 200L))
+  for (st in unique(tbl$strata)) {
+    n <- tbl$n.risk[tbl$strata == st][order(tbl$report_time[tbl$strata == st])]
+    expect_true(all(diff(n) <= 0))
+  }
+})
+
+test_that("hv_atrisk on a hazard cohort draws a table carrying data", {
+  arms <- c("No Takedown" = 1.0, "Takedown" = 0.65)
+  coh  <- sample_hazard_cohort(n = 200, time_max = 10, groups = arms, seed = 4)
+  p <- hv_atrisk(coh, time = "time", status = "status", group = "group",
+                 report_times = c(0, 2, 4, 6, 8, 10))
+  # 2 strata x 6 report times = 12 labels; a table that renders with fewer
+  # has silently dropped a stratum or a time.
+  expect_plot_has_data(p, min_rows = 12L, min_groups = 2L)
+})
+
+test_that("hazard curve composes over a cohort at-risk table", {
+  arms <- c("No Takedown" = 1.0, "Takedown" = 0.65)
+  coh  <- sample_hazard_cohort(n = 200, time_max = 10, groups = arms, seed = 4)
+  haz  <- hv_hazard(
+    sample_hazard_data(n = 200, time_max = 10, groups = arms),
+    group_col = "group"
+  )
+  cmp <- hv_atrisk_compose(
+    plot(haz),
+    hv_atrisk(coh, time = "time", status = "status", group = "group",
+              report_times = c(0, 2, 4, 6, 8, 10))
+  )
+  expect_s3_class(cmp, "patchwork")
+})
