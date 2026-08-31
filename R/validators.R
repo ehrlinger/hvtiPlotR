@@ -269,7 +269,7 @@
   nms <- names(groups)
   # nzchar(NA) is TRUE (keepNA = FALSE), so anyNA() must be checked separately.
   if (is.null(nms) || anyNA(nms) || !all(nzchar(nms)))
-    stop(sprintf("`%s` must be a *named* numeric vector; every element needs a non-empty name.", arg),
+    stop(sprintf("`%s` must be a named numeric vector; every element needs a non-empty name.", arg),
          call. = FALSE)
   if (anyDuplicated(nms) > 0L)
     stop(sprintf("`%s` names must be distinct. Duplicated: %s",
