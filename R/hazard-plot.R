@@ -296,9 +296,16 @@ sample_hazard_empirical <- function(n        = 500,
 #' not be captioned as a model fit to these subjects.
 #'
 #' @param n        Number of simulated subjects **per group**. Default `500`.
-#' @param time_max Upper end of the follow-up window (years). Default `10`.
+#' @param time_max Scale of the follow-up window (years). Default `10`. Note
+#'   that this is **not** a hard maximum on the returned `time`: follow-up is
+#'   administratively truncated at `1.2 * time_max`, matching the cohort
+#'   [sample_hazard_empirical()] fits to, so returned times run up to `12` at
+#'   the default. It *is* the upper end of the grid in [sample_hazard_data()]
+#'   and of the bins in [sample_hazard_empirical()].
 #' @param groups   `NULL` for a single group, or a named numeric vector of
-#'   hazard multipliers matching those passed to [sample_hazard_data()].
+#'   hazard multipliers matching those passed to [sample_hazard_data()]. Names
+#'   must be present, non-empty and distinct; multipliers must be finite and
+#'   greater than zero.
 #' @param shape    Weibull shape parameter. Default `1.5`.
 #' @param scale    Weibull scale parameter (years). Default `8.0`.
 #' @param seed     Random seed. Default `42`.
@@ -338,9 +345,8 @@ sample_hazard_cohort <- function(n        = 500,
   if (is.null(groups)) {
     return(.hp_draw_cohort(n, shape, scale, time_max, seed))
   }
+  .check_hazard_groups(groups)
   grp_names <- names(groups)
-  if (is.null(grp_names) || any(!nzchar(grp_names)))
-    stop("`groups` must be a *named* numeric vector of hazard multipliers.", call. = FALSE)
   coh_list <- lapply(seq_along(groups), function(i) {
     df       <- .hp_draw_cohort(n, shape, scale / groups[[i]], time_max, seed + i * 100L)
     df$group <- grp_names[[i]]

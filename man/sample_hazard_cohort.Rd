@@ -16,10 +16,17 @@ sample_hazard_cohort(
 \arguments{
 \item{n}{Number of simulated subjects \strong{per group}. Default \code{500}.}
 
-\item{time_max}{Upper end of the follow-up window (years). Default \code{10}.}
+\item{time_max}{Scale of the follow-up window (years). Default \code{10}. Note
+that this is \strong{not} a hard maximum on the returned \code{time}: follow-up is
+administratively truncated at \code{1.2 * time_max}, matching the cohort
+\code{\link[=sample_hazard_empirical]{sample_hazard_empirical()}} fits to, so returned times run up to \code{12} at
+the default. It \emph{is} the upper end of the grid in \code{\link[=sample_hazard_data]{sample_hazard_data()}}
+and of the bins in \code{\link[=sample_hazard_empirical]{sample_hazard_empirical()}}.}
 
 \item{groups}{\code{NULL} for a single group, or a named numeric vector of
-hazard multipliers matching those passed to \code{\link[=sample_hazard_data]{sample_hazard_data()}}.}
+hazard multipliers matching those passed to \code{\link[=sample_hazard_data]{sample_hazard_data()}}. Names
+must be present, non-empty and distinct; multipliers must be finite and
+greater than zero.}
 
 \item{shape}{Weibull shape parameter. Default \code{1.5}.}
 

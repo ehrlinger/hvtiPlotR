@@ -901,6 +901,34 @@ test_that("sample_hazard_cohort rejects an unnamed groups vector", {
   expect_error(sample_hazard_cohort(groups = c(1.0, 0.65)), "named")
 })
 
+# A bad multiplier is not merely odd input. It divides the Weibull scale, so a
+# negative one produces negative follow-up times and NA produces NA times --
+# both of which .atrisk_table() counts with na.rm = TRUE and reports as a
+# smaller, entirely plausible-looking number. Rejecting them loudly is the
+# whole point of this function, so each is pinned.
+test_that("sample_hazard_cohort rejects non-finite or non-positive multipliers", {
+  expect_error(sample_hazard_cohort(groups = c(A = 1, B = -0.5)), "finite and > 0")
+  expect_error(sample_hazard_cohort(groups = c(A = 1, B = 0)), "finite and > 0")
+  expect_error(sample_hazard_cohort(groups = c(A = 1, B = NA_real_)), "finite and > 0")
+  expect_error(sample_hazard_cohort(groups = c(A = 1, B = Inf)), "finite and > 0")
+})
+
+test_that("sample_hazard_cohort rejects NA, empty and duplicated group names", {
+  g <- c(1, 2)
+  names(g) <- c("A", NA)
+  # nzchar(NA) is TRUE, so an NA name slips past a plain nzchar() guard.
+  expect_error(sample_hazard_cohort(groups = g), "non-empty name")
+  expect_error(sample_hazard_cohort(groups = c(A = 1, 2)), "non-empty name")
+  expect_error(sample_hazard_cohort(groups = c(A = 1, A = 2)), "distinct")
+})
+
+test_that("sample_hazard_cohort rejects an empty groups vector", {
+  expect_error(
+    sample_hazard_cohort(groups = structure(numeric(0), names = character(0))),
+    "non-empty numeric vector"
+  )
+})
+
 test_that("sample_hazard_cohort is reproducible with same seed", {
   expect_identical(sample_hazard_cohort(n = 80, seed = 5),
                    sample_hazard_cohort(n = 80, seed = 5))
