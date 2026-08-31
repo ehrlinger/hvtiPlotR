@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="index.html">hvtiPlotR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.7.10</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.7.11</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -55,7 +55,7 @@
 
 <div id="hvtiplotr" class="section level1">
 
-<p>Plot constructors and methods for the HVTI CORR group — the largest public surface in the family: <strong>76 exports and 47 registered S3 methods</strong>. Nearly everything downstream draws through it, so a change to a returned object’s class, element names or column names is a breaking change for other packages, not just for this one.</p>
+<p>Plot constructors and methods for the HVTI CORR group — the largest public surface in the family: <strong>79 exports and 47 registered S3 methods</strong>. Nearly everything downstream draws through it, so a change to a returned object’s class, element names or column names is a breaking change for other packages, not just for this one.</p>
 <p>This file is the operational contract and applies in full. It is tool neutral, so Codex and any other agent read the same rules. Claude Code affordances live in <code>CLAUDE.md</code>, which imports this file.</p>
 <p><strong>Two companion documents already exist and are not restated here.</strong> Read them:</p>
 <ul><li>
@@ -67,7 +67,7 @@
 <ul><li>
 <code><a href="https://devtools.r-lib.org/reference/test.html" class="external-link">devtools::test()</a></code> passes. The runner is <code>tests/test-all.R</code>.</li>
 <li>
-<code><a href="https://devtools.r-lib.org/reference/check.html" class="external-link">devtools::check()</a></code> is <strong>0 errors, 0 warnings, 0 notes</strong>. Verified 2026-08-20 at 2.7.6 (1m 46s with <code>--no-manual</code> and vignettes skipped; the manual has its own gate).</li>
+<code><a href="https://devtools.r-lib.org/reference/check.html" class="external-link">devtools::check()</a></code> is <strong>0 errors, 0 warnings, 0 notes</strong>. Verified 2026-08-20 at 2.7.6 (1m 46s with <code>--no-manual</code> and vignettes skipped; the manual has its own gate), and again 2026-08-31 at 2.7.11 from a clean <code>git archive</code> export with vignettes <strong>built</strong>, which is the invocation that gives a trustworthy 0/0/0 — see the locale and clean-export notes under the gates table.</li>
 <li>
 <code><a href="https://devtools.r-lib.org/reference/document.html" class="external-link">devtools::document()</a></code> has been run and <code>man/</code> and <code>NAMESPACE</code> are committed with the source change.</li>
 <li>Every new export appears in <code>_pkgdown.yml</code> — the index here is explicit; see the rules.</li>
@@ -75,22 +75,37 @@
 </ul></div>
 <div class="section level2">
 <h2 id="the-automated-gates">The automated gates<a class="anchor" aria-label="anchor" href="#the-automated-gates"></a></h2>
-<table class="table"><colgroup><col width="50%"><col width="50%"></colgroup><thead><tr><th>workflow</th>
+<table class="table"><colgroup><col width="33%"><col width="33%"><col width="33%"></colgroup><thead><tr><th>workflow</th>
+<th>runs on</th>
 <th>fails on</th>
 </tr></thead><tbody><tr><td><code>R-CMD-check.yaml</code></td>
+<td>PR + push to <code>main</code>
+</td>
 <td>
 <code>R CMD check</code> across platforms</td>
-</tr><tr><td><code>check-manual.yaml</code></td>
-<td>the PDF manual build — catches raw Unicode in <code>.Rd</code> that <code>--no-manual</code> skips</td>
 </tr><tr><td><code>lint.yaml</code></td>
+<td>PR + push to <code>main</code>
+</td>
 <td>
 <strong>any lint under <code>.lintr</code>.</strong> <code>LINTR_ERROR_ON_LINT: true</code> since 2.7.9, when the 98 pre-existing lints were cleared (<a href="https://github.com/ehrlinger/hvtiPlotR/issues/89" class="external-link">#89</a>). Run <code><a href="https://lintr.r-lib.org/reference/lint.html" class="external-link">lintr::lint_package()</a></code> before pushing; it must return zero. The <code>house-style</code> job in the same workflow gates separately, on house-style artifact drift.</td>
 </tr><tr><td><code>pkgdown.yaml</code></td>
+<td>PR + push to <code>main</code>, release, manual</td>
 <td>the site build</td>
 </tr><tr><td><code>test-coverage.yaml</code></td>
+<td>PR + push to <code>main</code>
+</td>
 <td>coverage upload; snapshots upload via <code>upload-snapshots: true</code>
 </td>
-</tr></tbody></table></div>
+</tr><tr><td><code>check-manual.yaml</code></td>
+<td><strong>push to <code>main</code> only — never a PR</strong></td>
+<td>the PDF manual build — catches raw Unicode in <code>.Rd</code> that <code>--no-manual</code> skips</td>
+</tr></tbody></table><p>⚠️ <strong><code>check-manual.yaml</code> does not gate pull requests.</strong> Its triggers are <code>push</code> to <code>main</code>/<code>master</code>, <code>release</code> and <code>workflow_dispatch</code>; there is no <code>pull_request</code>. So a raw-Unicode <code>.Rd</code> passes every check a PR runs and only turns <code>main</code> red <em>after</em> the merge. If a change touches <code>man/</code> or any roxygen block, build the manual yourself before handing the PR over:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="ex">R</span> CMD Rd2pdf <span class="at">--no-preview</span> <span class="at">--output</span><span class="op">=</span>/tmp/manual.pdf .</span></code></pre></div>
+<p>En and em dashes are fine and already appear in 30 of the <code>man/*.Rd</code> files; they are the only non-ASCII characters in the tree. It is Greek letters, combining marks and the like that break the build. The <code>pdfTeX warning (dest): ... referenced but does not exist</code> lines are long-standing cross-reference noise, not a failure.</p>
+<p>⚠️ <strong>Reproducing <code>R CMD check</code> locally needs a UTF-8 locale.</strong> A plain <code>Rscript</code> session can report <code>LC_CTYPE</code> as bare <code>en_US</code> (observed on macOS, 2026-08-31), and tangling <code>vignettes/sas-migration-guide.qmd</code> then dies with <code>conversion failure on 'FEV₁ Temporal Trend' in 'mbcsToSbcs'</code>. That is an environment artifact, not a package defect, but it surfaces as a check ERROR and reads exactly like a regression from whatever branch you are on. The runners are unaffected — <code>R-CMD-check.yaml</code> has been green on <code>main</code> throughout. Build from a clean export rather than the working tree, too: a working-tree build leaves <code>inst/doc</code> empty, which fabricates two vignette WARNINGs and hides the real result:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="va">LC_ALL</span><span class="op">=</span>en_US.UTF-8 <span class="ex">R</span> CMD check <span class="at">--no-manual</span> hvtiPlotR_<span class="op">&lt;</span>version<span class="op">&gt;</span>.tar.gz</span></code></pre></div>
+<p>⚠️ Four of the five workflows carry <code>paths-ignore: ['.claude/**']</code>, so a commit touching only the generated house-style artifact skips them. <code>lint.yaml</code> deliberately does <strong>not</strong>, because its <code>house-style</code> job is precisely what checks that artifact.</p>
+</div>
 <div class="section level2">
 <h2 id="rules-for-this-repo">Rules for this repo<a class="anchor" aria-label="anchor" href="#rules-for-this-repo"></a></h2>
 <ul><li>
@@ -98,13 +113,13 @@
 <li>
 <strong>Lines are 120 characters here.</strong> <code>.lintr</code> raises <code>line_length_linter</code> because the plot constructors take many named arguments and read better whole than wrapped. ⚠️ A third value in the family: <code>hvtiRutilities</code> is 80, <code>hvtiRtemplates</code> is 135. Read <code>.lintr</code> rather than assuming.</li>
 <li>
-<strong><code>.lintr</code> deviates from lintr’s defaults in three places, and only three.</strong> <code>indentation_linter</code> and <code>commented_code_linter</code> are OFF, because both fire heavily on the aligned-argument style used throughout <code>R/</code> and on vignette chunks that show an alternative call commented out. <code>object_length_linter</code> is 35 rather than 30, because six exported <code>sample_*</code> generators are longer than 30 and renaming an export is a breaking change. <code>object_name_linter</code> accepts <code>SNAKE_CASE</code> as well as <code>snake_case</code>, for the score-scale constants that shout deliberately. Everything else is lintr’s default and <strong>is</strong> enforced. ⚠️ The gate is live, so the temptation is to widen a rule here to clear one awkward site. Do not. A genuine false positive goes behind a <code># nolint: &lt;linter&gt;.</code> on the line, with a comment saying why the tool is wrong; there are six of them, four in <code>R/</code> and two in <code>tests/</code>, and each one carries its reason.</li>
+<strong><code>.lintr</code> deviates from lintr’s defaults in three places, and only three.</strong> <code>indentation_linter</code> and <code>commented_code_linter</code> are OFF, because both fire heavily on the aligned-argument style used throughout <code>R/</code> and on vignette chunks that show an alternative call commented out. <code>object_length_linter</code> is 35 rather than 30, because six exported <code>sample_*</code> generators are longer than 30 and renaming an export is a breaking change. <code>object_name_linter</code> accepts <code>SNAKE_CASE</code> as well as <code>snake_case</code>, for the score-scale constants that shout deliberately. Everything else is lintr’s default and <strong>is</strong> enforced. ⚠️ The gate is live, so the temptation is to widen a rule here to clear one awkward site. Do not. A genuine false positive goes behind a <code># nolint: &lt;linter&gt;.</code> on the line, with a comment saying why the tool is wrong; there are five of them, three in <code>R/</code> and two in <code>tests/</code>, and each one carries its reason.</li>
 <li>
 <strong>Test files are <code>test_*.R</code> with an underscore</strong>, not the <code>test-*.R</code> hyphen used in <code>hvtiRutilities</code> and <code>hvtiRtemplates</code>. Match the local convention when adding a file.</li>
 <li>
 <strong>A plot test must prove the plot has data.</strong> <code>tests/testthat/helper-plot-data.R</code> drives ggplot2’s <code>ggplot_build()</code> so a plot that “renders” while every layer holds zero rows is caught — the same protection as a visual review without needing a graphics device. It keeps a <code>.decorator_geoms</code> list (<code>GeomHline</code>, <code>GeomVline</code>, <code>GeomAbline</code>) whose row count is decoration and therefore <em>not</em> evidence that the plotted dataset has rows: those layers are exempt from <code>min_rows</code> but must still draw at least one row, because a reference line can be mapped to the data — <code><a href="reference/plot.hv_sankey.html">plot.hv_sankey()</a></code> draws one — and so can collapse to zero. <code>GeomBlank</code> is listed separately in <code>.empty_geoms</code> and exempt outright, since drawing nothing is its purpose. <code>expect_s3_class(plot(obj), "ggplot")</code> alone is a smoke test, not coverage.</li>
 <li>
-<strong>Every exported object must be added to <code>_pkgdown.yml</code>.</strong> The <code>reference:</code> index is explicit — 15 titled sections against 76 exports — and pkgdown errors on a topic missing from it. ⚠️ <code>hvtiRtemplates</code> deliberately has <strong>no</strong> <code>reference:</code> section so pkgdown auto-indexes. Two conventions in one family.</li>
+<strong>Every exported object must be added to <code>_pkgdown.yml</code>.</strong> The <code>reference:</code> index is explicit — 15 titled sections against 79 exports — and pkgdown errors on a topic missing from it. ⚠️ <code>hvtiRtemplates</code> deliberately has <strong>no</strong> <code>reference:</code> section so pkgdown auto-indexes. Two conventions in one family.</li>
 <li>
 <strong>Changing a returned object’s class, element names or column names is a breaking change.</strong> This package is the family’s plotting layer; check who consumes the object before altering its shape.</li>
 <li>
@@ -125,8 +140,8 @@
 <ul><li><p><strong>Never push to <code>main</code>.</strong> Branch, then open a PR and let the maintainer merge.</p></li>
 <li>
 <p><strong><code>main</code> is protected by a GitHub ruleset, and nothing in this repo records that.</strong> A clone shows no trace of it, so it is stated here. The ruleset is named <code>protect main</code>, carries the same four rules in every repository that has one, and enforces them on the default branch: no deletion, no force-push, pull-request-only, and an <strong>automatic Copilot code review</strong> on every PR. A rejected push comes from the server, not a local hook. ⚠️ Fourteen repositories carry it, not twelve, and they are not byte-identical: <code>ggRandomForests</code> adds <code>required_status_checks</code>. Verify rather than assuming the family matches. ⚠️ The merge-blocking settings are <strong>parameters of the <code>pull_request</code> rule</strong>, one level below the rule types listed above, which is why a list of rule types never shows them. Read them in one call, <code>--jq</code> included:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="ex">gh</span> api repos/ehrlinger/<span class="op">&lt;</span>repo<span class="op">&gt;</span>/rulesets/<span class="op">&lt;</span>id<span class="op">&gt;</span> <span class="dt">\</span></span>
-<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>  <span class="at">--jq</span> <span class="st">'.rules[] | select(.type=="pull_request") | .parameters'</span></span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="ex">gh</span> api repos/ehrlinger/<span class="op">&lt;</span>repo<span class="op">&gt;</span>/rulesets/<span class="op">&lt;</span>id<span class="op">&gt;</span> <span class="dt">\</span></span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>  <span class="at">--jq</span> <span class="st">'.rules[] | select(.type=="pull_request") | .parameters'</span></span></code></pre></div>
 <p>⚠️ It requires <strong>zero approvals</strong>, and <code>require_code_owner_review</code> is <strong>false</strong>, so a PR can merge unreviewed. Adding a <code>CODEOWNERS</code> file does not change that on its own; the flag has to be turned on as well. Checked against the API on 2026-08-21. ⚠️ <code>required_review_thread_resolution</code> was turned <strong>off</strong> across all fourteen repositories on 2026-08-21. Copilot still reviews every PR and still opens threads, but an unresolved thread no longer blocks the merge button. Nothing now forces that feedback to be read, so address and resolve Copilot threads before handing a PR over. ⚠️ <code>require_extra_approval_for_unattributed_changes</code> is <strong>true</strong> and was deliberately left alone. It can demand an approval on commits GitHub cannot attribute to a user account.</p>
 </li>
 <li><p>Versions are <strong>straight three digits</strong> (<code>2.7.6</code>). Never a <code>.9000</code> suffix or a fourth digit.</p></li>

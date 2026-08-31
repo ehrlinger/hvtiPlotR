@@ -1,7 +1,7 @@
 # hvtiPlotR
 
 Plot constructors and methods for the HVTI CORR group — the largest
-public surface in the family: **76 exports and 47 registered S3
+public surface in the family: **79 exports and 47 registered S3
 methods**. Nearly everything downstream draws through it, so a change to
 a returned object’s class, element names or column names is a breaking
 change for other packages, not just for this one.
@@ -28,7 +28,10 @@ Read them:
 - [`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
   is **0 errors, 0 warnings, 0 notes**. Verified 2026-08-20 at 2.7.6 (1m
   46s with `--no-manual` and vignettes skipped; the manual has its own
-  gate).
+  gate), and again 2026-08-31 at 2.7.11 from a clean `git archive`
+  export with vignettes **built**, which is the invocation that gives a
+  trustworthy 0/0/0 — see the locale and clean-export notes under the
+  gates table.
 - [`devtools::document()`](https://devtools.r-lib.org/reference/document.html)
   has been run and `man/` and `NAMESPACE` are committed with the source
   change.
@@ -39,13 +42,51 @@ Read them:
 
 ## The automated gates
 
-| workflow | fails on |
-|----|----|
-| `R-CMD-check.yaml` | `R CMD check` across platforms |
-| `check-manual.yaml` | the PDF manual build — catches raw Unicode in `.Rd` that `--no-manual` skips |
-| `lint.yaml` | **any lint under `.lintr`.** `LINTR_ERROR_ON_LINT: true` since 2.7.9, when the 98 pre-existing lints were cleared ([\#89](https://github.com/ehrlinger/hvtiPlotR/issues/89)). Run [`lintr::lint_package()`](https://lintr.r-lib.org/reference/lint.html) before pushing; it must return zero. The `house-style` job in the same workflow gates separately, on house-style artifact drift. |
-| `pkgdown.yaml` | the site build |
-| `test-coverage.yaml` | coverage upload; snapshots upload via `upload-snapshots: true` |
+| workflow | runs on | fails on |
+|----|----|----|
+| `R-CMD-check.yaml` | PR + push to `main` | `R CMD check` across platforms |
+| `lint.yaml` | PR + push to `main` | **any lint under `.lintr`.** `LINTR_ERROR_ON_LINT: true` since 2.7.9, when the 98 pre-existing lints were cleared ([\#89](https://github.com/ehrlinger/hvtiPlotR/issues/89)). Run [`lintr::lint_package()`](https://lintr.r-lib.org/reference/lint.html) before pushing; it must return zero. The `house-style` job in the same workflow gates separately, on house-style artifact drift. |
+| `pkgdown.yaml` | PR + push to `main`, release, manual | the site build |
+| `test-coverage.yaml` | PR + push to `main` | coverage upload; snapshots upload via `upload-snapshots: true` |
+| `check-manual.yaml` | **push to `main` only — never a PR** | the PDF manual build — catches raw Unicode in `.Rd` that `--no-manual` skips |
+
+⚠️ **`check-manual.yaml` does not gate pull requests.** Its triggers are
+`push` to `main`/`master`, `release` and `workflow_dispatch`; there is
+no `pull_request`. So a raw-Unicode `.Rd` passes every check a PR runs
+and only turns `main` red *after* the merge. If a change touches `man/`
+or any roxygen block, build the manual yourself before handing the PR
+over:
+
+``` sh
+R CMD Rd2pdf --no-preview --output=/tmp/manual.pdf .
+```
+
+En and em dashes are fine and already appear in 30 of the `man/*.Rd`
+files; they are the only non-ASCII characters in the tree. It is Greek
+letters, combining marks and the like that break the build. The
+`pdfTeX warning (dest): ... referenced but does not exist` lines are
+long-standing cross-reference noise, not a failure.
+
+⚠️ **Reproducing `R CMD check` locally needs a UTF-8 locale.** A plain
+`Rscript` session can report `LC_CTYPE` as bare `en_US` (observed on
+macOS, 2026-08-31), and tangling `vignettes/sas-migration-guide.qmd`
+then dies with
+`conversion failure on 'FEV₁ Temporal Trend' in 'mbcsToSbcs'`. That is
+an environment artifact, not a package defect, but it surfaces as a
+check ERROR and reads exactly like a regression from whatever branch you
+are on. The runners are unaffected — `R-CMD-check.yaml` has been green
+on `main` throughout. Build from a clean export rather than the working
+tree, too: a working-tree build leaves `inst/doc` empty, which
+fabricates two vignette WARNINGs and hides the real result:
+
+``` sh
+LC_ALL=en_US.UTF-8 R CMD check --no-manual hvtiPlotR_<version>.tar.gz
+```
+
+⚠️ Four of the five workflows carry `paths-ignore: ['.claude/**']`, so a
+commit touching only the generated house-style artifact skips them.
+`lint.yaml` deliberately does **not**, because its `house-style` job is
+precisely what checks that artifact.
 
 ## Rules for this repo
 
@@ -74,8 +115,8 @@ Read them:
   ⚠️ The gate is live, so the temptation is to widen a rule here to
   clear one awkward site. Do not. A genuine false positive goes behind a
   `# nolint: <linter>.` on the line, with a comment saying why the tool
-  is wrong; there are six of them, four in `R/` and two in `tests/`, and
-  each one carries its reason.
+  is wrong; there are five of them, three in `R/` and two in `tests/`,
+  and each one carries its reason.
 - **Test files are `test_*.R` with an underscore**, not the `test-*.R`
   hyphen used in `hvtiRutilities` and `hvtiRtemplates`. Match the local
   convention when adding a file.
@@ -94,7 +135,7 @@ Read them:
   nothing is its purpose. `expect_s3_class(plot(obj), "ggplot")` alone
   is a smoke test, not coverage.
 - **Every exported object must be added to `_pkgdown.yml`.** The
-  `reference:` index is explicit — 15 titled sections against 76 exports
+  `reference:` index is explicit — 15 titled sections against 79 exports
   — and pkgdown errors on a topic missing from it. ⚠️ `hvtiRtemplates`
   deliberately has **no** `reference:` section so pkgdown auto-indexes.
   Two conventions in one family.

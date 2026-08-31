@@ -110,6 +110,8 @@ for pre-fitted parametric model output.
   : Sample Parametric Hazard Model Predictions
 - [`sample_hazard_empirical()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_hazard_empirical.md)
   : Sample Kaplan-Meier Empirical Points for Hazard Plot Overlay
+- [`sample_hazard_cohort()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_hazard_cohort.md)
+  : Sample Subject-Level Cohort Behind the Hazard Examples
 - [`sample_life_table()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_life_table.md)
   : Sample Population Life Table Data
 - [`sample_survival_difference_data()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_survival_difference_data.md)
