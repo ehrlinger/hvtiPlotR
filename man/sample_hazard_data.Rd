@@ -26,7 +26,8 @@ Default \code{500}.}
 \item{groups}{\code{NULL} for a single curve, or a named numeric vector of
 hazard multipliers, e.g. \code{c("Control" = 1.0, "Treatment" = 0.7)}.
 A multiplier < 1 means lower hazard (better survival). Analogous to the
-group indicator in \code{tp.hp.dead.tkdn.stratified.sas}.}
+group indicator in \code{tp.hp.dead.tkdn.stratified.sas}. Names must be present, non-empty and distinct;
+multipliers must be finite and greater than zero.}
 
 \item{shape}{Weibull shape parameter. \code{shape > 1} gives increasing hazard
 (late mortality); \code{shape < 1} gives decreasing hazard (early operative

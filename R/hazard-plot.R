@@ -130,7 +130,8 @@
 #' @param groups   `NULL` for a single curve, or a named numeric vector of
 #'   hazard multipliers, e.g. `c("Control" = 1.0, "Treatment" = 0.7)`.
 #'   A multiplier < 1 means lower hazard (better survival). Analogous to the
-#'   group indicator in `tp.hp.dead.tkdn.stratified.sas`.
+#'   group indicator in `tp.hp.dead.tkdn.stratified.sas`. Names must be present, non-empty and distinct;
+#'   multipliers must be finite and greater than zero.
 #' @param shape    Weibull shape parameter. `shape > 1` gives increasing hazard
 #'   (late mortality); `shape < 1` gives decreasing hazard (early operative
 #'   mortality). Default `1.5`.
@@ -191,6 +192,7 @@ sample_hazard_data <- function(n        = 500,
   if (is.null(groups)) {
     .make_row(scale, n)
   } else {
+    .check_group_multipliers(groups)
     grp_names  <- names(groups)
     curve_list <- lapply(seq_along(groups), function(i) {
       df        <- .make_row(scale / groups[[i]], n)
@@ -225,6 +227,8 @@ sample_hazard_data <- function(n        = 500,
 #'   to the discrete annotation points in the SAS templates. Default `6`.
 #' @param groups   `NULL` for a single group, or a named numeric vector of
 #'   hazard multipliers matching those passed to [sample_hazard_data()].
+#'   Names must be present, non-empty and distinct;
+#'   multipliers must be finite and greater than zero.
 #' @param shape    Weibull shape parameter. Default `1.5`.
 #' @param scale    Weibull scale parameter (years). Default `8.0`.
 #' @param ci_level Confidence level. Default `0.95`.
@@ -257,6 +261,7 @@ sample_hazard_empirical <- function(n        = 500,
   if (is.null(groups)) {
     .hp_km_binned(n, shape, scale, time_max, n_bins, ci_level, seed)
   } else {
+    .check_group_multipliers(groups)
     grp_names <- names(groups)
     emp_list  <- lapply(seq_along(groups), function(i) {
       df        <- .hp_km_binned(n, shape, scale / groups[[i]],
@@ -345,7 +350,7 @@ sample_hazard_cohort <- function(n        = 500,
   if (is.null(groups)) {
     return(.hp_draw_cohort(n, shape, scale, time_max, seed))
   }
-  .check_hazard_groups(groups)
+  .check_group_multipliers(groups)
   grp_names <- names(groups)
   coh_list <- lapply(seq_along(groups), function(i) {
     df       <- .hp_draw_cohort(n, shape, scale / groups[[i]], time_max, seed + i * 100L)
@@ -445,7 +450,8 @@ sample_life_table <- function(age_groups = NULL,
 #' @param n_points Number of prediction grid points. Default `500`.
 #' @param groups   Named numeric vector of length 2; hazard multipliers for
 #'   groups 1 and 2. The group with the smaller multiplier has better survival.
-#'   Default `c("Control" = 1.0, "Treatment" = 0.7)`.
+#'   Default `c("Control" = 1.0, "Treatment" = 0.7)`. Names must be present, non-empty and distinct;
+#'   multipliers must be finite and greater than zero.
 #' @param shape    Weibull shape. Default `1.5`.
 #' @param scale    Weibull scale (years). Default `8.0`.
 #' @param ci_level Confidence level. Default `0.95`.

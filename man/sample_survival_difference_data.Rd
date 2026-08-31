@@ -24,7 +24,8 @@ sample_survival_difference_data(
 
 \item{groups}{Named numeric vector of length 2; hazard multipliers for
 groups 1 and 2. The group with the smaller multiplier has better survival.
-Default \code{c("Control" = 1.0, "Treatment" = 0.7)}.}
+Default \code{c("Control" = 1.0, "Treatment" = 0.7)}. Names must be present, non-empty and distinct;
+multipliers must be finite and greater than zero.}
 
 \item{shape}{Weibull shape. Default \code{1.5}.}
 

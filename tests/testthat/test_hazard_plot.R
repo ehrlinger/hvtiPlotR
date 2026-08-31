@@ -1005,3 +1005,40 @@ test_that("hazard curve composes over a cohort at-risk table", {
   )
   expect_s3_class(cmp, "patchwork")
 })
+
+# ============================================================================
+# groups multiplier validation across the hazard family
+# ============================================================================
+
+# The multiplier divides the Weibull scale. Before validation each of these
+# returned a full-looking data frame carrying NA/NaN estimates (or, for a zero
+# multiplier, a silently meaningless arm in which nobody ever has an event),
+# which then rendered as a plausible but wrong figure. Erroring is the point.
+test_that("sample_hazard_data rejects bad group multipliers", {
+  expect_error(sample_hazard_data(n = 40, groups = c(A = 1, B = -0.5)), "finite and > 0")
+  expect_error(sample_hazard_data(n = 40, groups = c(A = 1, B = 0)), "finite and > 0")
+  expect_error(sample_hazard_data(n = 40, groups = c(A = 1, B = NA_real_)), "finite and > 0")
+  expect_error(sample_hazard_data(n = 40, groups = c(A = 1, A = 2)), "distinct")
+  expect_error(sample_hazard_data(n = 40, groups = c(A = 1, 2)), "non-empty name")
+})
+
+test_that("sample_hazard_empirical rejects bad group multipliers", {
+  expect_error(sample_hazard_empirical(n = 40, groups = c(A = 1, B = -0.5)), "finite and > 0")
+  expect_error(sample_hazard_empirical(n = 40, groups = c(A = 1, B = NA_real_)), "finite and > 0")
+})
+
+# These two do not validate directly -- they delegate to sample_hazard_data().
+# Pinned so the delegation is not quietly refactored away.
+test_that("survival-difference and NNT inherit the multiplier check", {
+  expect_error(sample_survival_difference_data(n = 40, groups = c(A = 1, B = -0.5)),
+               "finite and > 0")
+  expect_error(sample_nnt_data(n = 40, groups = c(A = 1, B = 0)), "finite and > 0")
+})
+
+test_that("valid group multipliers are still accepted unchanged", {
+  arms <- c("Control" = 1.0, "Treatment" = 0.7)
+  expect_s3_class(sample_hazard_data(n = 40, groups = arms), "data.frame")
+  expect_s3_class(sample_hazard_empirical(n = 40, groups = arms), "data.frame")
+  expect_s3_class(sample_survival_difference_data(n = 40, groups = arms), "data.frame")
+  expect_s3_class(sample_nnt_data(n = 40, groups = arms), "data.frame")
+})
