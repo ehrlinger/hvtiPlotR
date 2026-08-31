@@ -220,6 +220,7 @@ sample_nonparametric_curve_points <- function(n            = 500,
   if (is.null(groups)) {
     dp_df <- .np_sample_bins(n, time_max, thalf1, thalf2, outcome_type, n_bins)
   } else {
+    .check_group_multipliers(groups)
     grp_names <- names(groups)
     dp_list <- lapply(seq_along(groups), function(i) {
       df         <- .np_sample_bins(n, time_max, thalf1 * groups[[i]],

@@ -17,11 +17,18 @@ nobody ever has an event. Measured before the fix:
 | `sample_survival_difference_data()` | NaN rows | infinite scale, no events | NA rows |
 | `sample_nnt_data()` | NaN rows | NA rows | NA rows |
 | `sample_nonparametric_curve_data()` | NaN rows (via `log()`) | `-Inf` (via `log()`) | NA rows |
+| `sample_nonparametric_curve_points()` | negative half-life, no NA | NA rows | NA rows |
 
 None of that is obviously wrong on inspection; it renders as a plausible
-figure. All five now error instead, via the shared validator introduced in
+figure. All six now error instead, via the shared validator introduced in
 2.7.11. `sample_survival_difference_data()` and `sample_nnt_data()` inherit the
 check by delegating to `sample_hazard_data()`, and a test pins that delegation.
+
+`sample_nonparametric_curve_points()` scales its two half-lives by the
+multiplier, so a negative one yields a negative half-life and a full data frame
+with no `NA` in it at all -- the quietest case of the set. It documents the
+`groups` contract via `@inheritParams`, so leaving it unvalidated would have
+had its man page promise a guarantee the function did not keep.
 
 The validator is renamed `.check_group_multipliers()` (from
 `.check_hazard_groups()`) because `sample_nonparametric_curve_data()` passes
@@ -33,7 +40,7 @@ No test, example or vignette in the package passed such a value, so nothing
 here changed, but downstream code relying on the old silent behaviour will now
 see an error -- which is the intent.
 
-`@param groups` on all five now states the contract: names present, non-empty
+`@param groups` on all six now states the contract: names present, non-empty
 and distinct; multipliers finite and greater than zero.
 
 # hvtiPlotR 2.7.11
