@@ -37,7 +37,9 @@ sample_nnt_data(
 
   Named numeric vector of length 2; hazard multipliers for groups 1
   and 2. The group with the smaller multiplier has better survival.
-  Default `c("Control" = 1.0, "Treatment" = 0.7)`.
+  Default `c("Control" = 1.0, "Treatment" = 0.7)`. Names must be
+  present, non-empty and distinct; multipliers must be finite and
+  greater than zero.
 
 - shape:
 

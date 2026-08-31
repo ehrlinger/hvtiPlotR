@@ -13,7 +13,7 @@ overlay in tp.hp.dead.sas and related templates."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">hvtiPlotR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.7.11</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.7.12</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -100,7 +100,9 @@ to the discrete annotation points in the SAS templates. Default <code>6</code>.<
 
 <dt id="arg-groups">groups<a class="anchor" aria-label="anchor" href="#arg-groups"></a></dt>
 <dd><p><code>NULL</code> for a single group, or a named numeric vector of
-hazard multipliers matching those passed to <code><a href="sample_hazard_data.html">sample_hazard_data()</a></code>.</p></dd>
+hazard multipliers matching those passed to <code><a href="sample_hazard_data.html">sample_hazard_data()</a></code>.
+Names must be present, non-empty and distinct;
+multipliers must be finite and greater than zero.</p></dd>
 
 
 <dt id="arg-shape">shape<a class="anchor" aria-label="anchor" href="#arg-shape"></a></dt>

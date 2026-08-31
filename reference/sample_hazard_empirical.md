@@ -40,6 +40,8 @@ sample_hazard_empirical(
   `NULL` for a single group, or a named numeric vector of hazard
   multipliers matching those passed to
   [`sample_hazard_data()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_hazard_data.md).
+  Names must be present, non-empty and distinct; multipliers must be
+  finite and greater than zero.
 
 - shape:
 

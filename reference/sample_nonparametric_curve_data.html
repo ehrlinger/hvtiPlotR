@@ -13,7 +13,7 @@ hv_nonparametric()."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">hvtiPlotR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.7.11</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.7.12</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -103,7 +103,8 @@ Default <code>500</code> (matches the SAS <code>inc=(max-min)/499.9</code> loop)
 <dt id="arg-groups">groups<a class="anchor" aria-label="anchor" href="#arg-groups"></a></dt>
 <dd><p><code>NULL</code> for a single average curve, or a named numeric
 vector of group-specific hazard multipliers,
-e.g. <code>c("Ozaki" = 0.8, "CE-Pericardial" = 1.2)</code>.</p></dd>
+e.g. <code>c("Ozaki" = 0.8, "CE-Pericardial" = 1.2)</code>. Names must be present, non-empty and distinct;
+multipliers must be finite and greater than zero.</p></dd>
 
 
 <dt id="arg-outcome-type">outcome_type<a class="anchor" aria-label="anchor" href="#arg-outcome-type"></a></dt>

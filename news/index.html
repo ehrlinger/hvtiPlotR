@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">hvtiPlotR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.7.11</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.7.12</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -53,6 +53,49 @@
       <small>Source: <a href="https://github.com/ehrlinger/hvtiPlotR/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="2.7.12" id="hvtiplotr-2712">hvtiPlotR 2.7.12<a class="anchor" aria-label="anchor" href="#hvtiplotr-2712"></a></h2>
+<div class="section level3">
+<h3 id="groups-multipliers-are-validated-across-the-sample-generators-2-7-12">
+<code>groups</code> multipliers are validated across the sample generators<a class="anchor" aria-label="anchor" href="#groups-multipliers-are-validated-across-the-sample-generators-2-7-12"></a></h3>
+<p>Follow-up to 2.7.11, which validated <code>groups</code> in the newly added <code><a href="../reference/sample_hazard_cohort.html">sample_hazard_cohort()</a></code> but left its siblings alone. They had the same gap.</p>
+<p>A <code>groups</code> multiplier that is negative, zero, <code>NA</code> or <code>Inf</code> did not stop any of these generators. It produced a full-looking data frame carrying <code>NA</code>/<code>NaN</code> estimates, or – for a zero multiplier – a silently meaningless arm in which nobody ever has an event. Measured before the fix:</p>
+<table class="table"><colgroup><col width="25%"><col width="25%"><col width="25%"><col width="25%"></colgroup><thead><tr><th>generator</th>
+<th><code>c(A = 1, B = -0.5)</code></th>
+<th><code>c(A = 1, B = 0)</code></th>
+<th><code>c(A = 1, B = NA)</code></th>
+</tr></thead><tbody><tr><td><code><a href="../reference/sample_hazard_data.html">sample_hazard_data()</a></code></td>
+<td>NaN rows</td>
+<td>infinite scale, no events</td>
+<td>NA rows</td>
+</tr><tr><td><code><a href="../reference/sample_hazard_empirical.html">sample_hazard_empirical()</a></code></td>
+<td>NA rows</td>
+<td>infinite scale, no events</td>
+<td>obscure survfit error</td>
+</tr><tr><td><code><a href="../reference/sample_survival_difference_data.html">sample_survival_difference_data()</a></code></td>
+<td>NaN rows</td>
+<td>infinite scale, no events</td>
+<td>NA rows</td>
+</tr><tr><td><code><a href="../reference/sample_nnt_data.html">sample_nnt_data()</a></code></td>
+<td>NaN rows</td>
+<td>NA rows</td>
+<td>NA rows</td>
+</tr><tr><td><code><a href="../reference/sample_nonparametric_curve_data.html">sample_nonparametric_curve_data()</a></code></td>
+<td>NaN rows (via <code><a href="https://rdrr.io/r/base/Log.html" class="external-link">log()</a></code>)</td>
+<td>
+<code>-Inf</code> (via <code><a href="https://rdrr.io/r/base/Log.html" class="external-link">log()</a></code>)</td>
+<td>NA rows</td>
+</tr><tr><td><code><a href="../reference/sample_nonparametric_curve_points.html">sample_nonparametric_curve_points()</a></code></td>
+<td>negative half-life, no NA</td>
+<td>NA rows</td>
+<td>NA rows</td>
+</tr></tbody></table><p>None of that is obviously wrong on inspection; it renders as a plausible figure. All six now error instead, via the shared validator introduced in 2.7.11. <code><a href="../reference/sample_survival_difference_data.html">sample_survival_difference_data()</a></code> and <code><a href="../reference/sample_nnt_data.html">sample_nnt_data()</a></code> inherit the check by delegating to <code><a href="../reference/sample_hazard_data.html">sample_hazard_data()</a></code>, and a test pins that delegation.</p>
+<p><code><a href="../reference/sample_nonparametric_curve_points.html">sample_nonparametric_curve_points()</a></code> scales its two half-lives by the multiplier, so a negative one yields a negative half-life and a full data frame with no <code>NA</code> in it at all – the quietest case of the set. It documents the <code>groups</code> contract via <code>@inheritParams</code>, so leaving it unvalidated would have had its man page promise a guarantee the function did not keep.</p>
+<p>The validator is renamed <code>.check_group_multipliers()</code> (from <code>.check_hazard_groups()</code>) because <code><a href="../reference/sample_nonparametric_curve_data.html">sample_nonparametric_curve_data()</a></code> passes its multiplier through <code><a href="https://rdrr.io/r/base/Log.html" class="external-link">log()</a></code> rather than dividing a Weibull scale – the contract generalises, the name should too. Internal; no exported name changes.</p>
+<p><strong>Behaviour change.</strong> Calls that previously returned NA-laden data now error. No test, example or vignette in the package passed such a value, so nothing here changed, but downstream code relying on the old silent behaviour will now see an error – which is the intent.</p>
+<p><code>@param groups</code> on all six now states the contract: names present, non-empty and distinct; multipliers finite and greater than zero.</p>
+</div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="2.7.11" id="hvtiplotr-2711">hvtiPlotR 2.7.11<a class="anchor" aria-label="anchor" href="#hvtiplotr-2711"></a></h2>
 <div class="section level3">

@@ -40,7 +40,9 @@ sample_nonparametric_curve_points(
 
   `NULL` for a single average curve, or a named numeric vector of
   group-specific hazard multipliers, e.g.
-  `c("Ozaki" = 0.8, "CE-Pericardial" = 1.2)`.
+  `c("Ozaki" = 0.8, "CE-Pericardial" = 1.2)`. Names must be present,
+  non-empty and distinct; multipliers must be finite and greater than
+  zero.
 
 - outcome_type:
 

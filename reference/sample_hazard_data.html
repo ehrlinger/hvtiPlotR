@@ -13,7 +13,7 @@ with PROC LIFEREG."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">hvtiPlotR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.7.11</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.7.12</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -102,7 +102,8 @@ Default <code>500</code>.</p></dd>
 <dd><p><code>NULL</code> for a single curve, or a named numeric vector of
 hazard multipliers, e.g. <code>c("Control" = 1.0, "Treatment" = 0.7)</code>.
 A multiplier &lt; 1 means lower hazard (better survival). Analogous to the
-group indicator in <code>tp.hp.dead.tkdn.stratified.sas</code>.</p></dd>
+group indicator in <code>tp.hp.dead.tkdn.stratified.sas</code>. Names must be present, non-empty and distinct;
+multipliers must be finite and greater than zero.</p></dd>
 
 
 <dt id="arg-shape">shape<a class="anchor" aria-label="anchor" href="#arg-shape"></a></dt>

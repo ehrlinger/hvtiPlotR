@@ -11,7 +11,7 @@ tp.hp.dead.life-gained.sas."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">hvtiPlotR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.7.11</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.7.12</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -97,7 +97,8 @@ matching the output of the <code>HAZDIFL</code> macro used in
 <dt id="arg-groups">groups<a class="anchor" aria-label="anchor" href="#arg-groups"></a></dt>
 <dd><p>Named numeric vector of length 2; hazard multipliers for
 groups 1 and 2. The group with the smaller multiplier has better survival.
-Default <code>c("Control" = 1.0, "Treatment" = 0.7)</code>.</p></dd>
+Default <code>c("Control" = 1.0, "Treatment" = 0.7)</code>. Names must be present, non-empty and distinct;
+multipliers must be finite and greater than zero.</p></dd>
 
 
 <dt id="arg-shape">shape<a class="anchor" aria-label="anchor" href="#arg-shape"></a></dt>
