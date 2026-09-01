@@ -180,8 +180,8 @@ The `inst/plot.README` and `inst/plot.sas` files are preserved for historical re
 
 hvtiPlotR is one part of the HVTI CORR R ecosystem. The packages a reader of this one is most likely to reach for next:
 
-- [**hvtiPropensityScores**](https://github.com/ehrlinger/hvtiPropensityScores) — builds the matched/weighted datasets and SMD balance tables that `hv_mirror_hist()` and `hv_balance()` are built to plot.
-- [**hvtiRdatasets**](https://github.com/ehrlinger/hvtiRdatasets) — builds and verifies the analysis-ready CORR datasets you would feed into these constructors in place of the `sample_*()` generators.
+- [**hvtiRpropensity**](https://github.com/ehrlinger/hvtiRpropensity) — builds the matched/weighted datasets and SMD balance tables that `hv_mirror_hist()` and `hv_balance()` are built to plot.
+- [**hvtiRdatabuild**](https://github.com/ehrlinger/hvtiRdatabuild) — builds and verifies the analysis-ready CORR datasets you would feed into these constructors in place of the `sample_*()` generators.
 - [**hvtiRtables**](https://github.com/ehrlinger/hvtiRtables) — produces the Table 1 / manuscript tables that typically accompany the figures built here.
 - [**HVTI ggplot graphics recipes**](https://ehrlinger.github.io/hvtiGraphics/) — the companion recipes book, with worked examples that tie the constructors above into a house style for clinical figures.
 
