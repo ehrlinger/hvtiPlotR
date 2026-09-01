@@ -224,13 +224,13 @@ historical reference.
 hvtiPlotR is one part of the HVTI CORR R ecosystem. The packages a
 reader of this one is most likely to reach for next:
 
-- [**hvtiPropensityScores**](https://github.com/ehrlinger/hvtiPropensityScores)
-  — builds the matched/weighted datasets and SMD balance tables that
+- [**hvtiRpropensity**](https://github.com/ehrlinger/hvtiRpropensity) —
+  builds the matched/weighted datasets and SMD balance tables that
   [`hv_mirror_hist()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_mirror_hist.md)
   and
   [`hv_balance()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_balance.md)
   are built to plot.
-- [**hvtiRdatasets**](https://github.com/ehrlinger/hvtiRdatasets) —
+- [**hvtiRdatabuild**](https://github.com/ehrlinger/hvtiRdatabuild) —
   builds and verifies the analysis-ready CORR datasets you would feed
   into these constructors in place of the `sample_*()` generators.
 - [**hvtiRtables**](https://github.com/ehrlinger/hvtiRtables) — produces
