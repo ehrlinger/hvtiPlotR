@@ -1864,6 +1864,6 @@ sessionInfo()
     [43] systemfonts_1.3.2       xfun_0.60               rvg_0.4.2
     [46] tibble_3.3.1            tidyselect_1.2.1        knitr_1.51
     [49] farver_2.1.2            htmltools_0.5.9         patchwork_1.3.2
-    [52] labeling_0.4.3          rmarkdown_2.31          ggalluvial_0.12.6
+    [52] labeling_0.4.3          rmarkdown_2.32          ggalluvial_0.12.6
     [55] compiler_4.6.1          S7_0.2.2                askpass_1.2.1
     [58] openssl_2.4.2          
