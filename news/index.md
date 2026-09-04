@@ -1,5 +1,45 @@
 # Changelog
 
+## hvtiPlotR 2.7.13
+
+### Numbers at risk are counted at the report time, not carried forward to it
+
+`hv_survival()$tables$risk` overstated `n.risk` at any report time that
+fell between two observed event or censoring times. Released in 2.7.12
+and earlier; the risk row under a Kaplan-Meier figure was too large
+whenever nobody happened to be observed at exactly the reported year.
+
+[`km_risk_table()`](https://ehrlinger.github.io/hvtiPlotR/reference/km_risk_table.md)
+walked the `survfit()` summary and, for each report time, took the last
+row at or before it. That row’s `n.risk` is the count just before *that*
+row’s time, not before the report time, so everyone who left the risk
+set in the interval between was still being counted. The gap grows with
+the follow-up gaps: on a cohort where the nearest observation before
+year 10 is year 8, the year-10 row reported the year-8 number.
+
+Past the end of follow-up it did not degrade, it froze. With no summary
+row after the last observation, every later report time inherited the
+final row for ever. On a 300-subject cohort censored administratively at
+year 20, the default `report_times` asked for year 25 and the table
+answered 57 at risk; the correct answer is none. Between-time drift was
+an off-by-one or two per row, but this was the whole tail of the table.
+
+It now counts the analysed subjects whose observed follow-up is at least
+the report time, delegating to the same `.atrisk_table()` helper that
+[`hv_atrisk()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_atrisk.md)
+draws from. The table and the panel beneath the curve can no longer
+disagree, and the count is taken over the analysed cohort – the one
+`meta$n_obs` reports, after incomplete rows are excluded – rather than
+over survfit’s rows.
+
+**Numbers change; shape does not.** `$tables$risk` keeps its `strata`,
+`report_time`, `n.risk` columns, its stratum order and its row order, so
+nothing downstream needs to move. Figures carrying an at-risk row will
+show smaller, correct numbers at some report times.
+
+Regression tests cover the between-observation case, the exact-boundary
+case and stratum ordering, stratified and not.
+
 ## hvtiPlotR 2.7.12
 
 ### `groups` multipliers are validated across the sample generators

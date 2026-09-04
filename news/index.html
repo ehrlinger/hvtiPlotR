@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">hvtiPlotR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.7.12</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.7.13</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -53,6 +53,18 @@
       <small>Source: <a href="https://github.com/ehrlinger/hvtiPlotR/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="2.7.13" id="hvtiplotr-2713">hvtiPlotR 2.7.13<a class="anchor" aria-label="anchor" href="#hvtiplotr-2713"></a></h2>
+<div class="section level3">
+<h3 id="numbers-at-risk-are-counted-at-the-report-time-not-carried-forward-to-it-2-7-13">Numbers at risk are counted at the report time, not carried forward to it<a class="anchor" aria-label="anchor" href="#numbers-at-risk-are-counted-at-the-report-time-not-carried-forward-to-it-2-7-13"></a></h3>
+<p><code>hv_survival()$tables$risk</code> overstated <code>n.risk</code> at any report time that fell between two observed event or censoring times. Released in 2.7.12 and earlier; the risk row under a Kaplan-Meier figure was too large whenever nobody happened to be observed at exactly the reported year.</p>
+<p><code><a href="../reference/km_risk_table.html">km_risk_table()</a></code> walked the <code>survfit()</code> summary and, for each report time, took the last row at or before it. That row’s <code>n.risk</code> is the count just before <em>that</em> row’s time, not before the report time, so everyone who left the risk set in the interval between was still being counted. The gap grows with the follow-up gaps: on a cohort where the nearest observation before year 10 is year 8, the year-10 row reported the year-8 number.</p>
+<p>Past the end of follow-up it did not degrade, it froze. With no summary row after the last observation, every later report time inherited the final row for ever. On a 300-subject cohort censored administratively at year 20, the default <code>report_times</code> asked for year 25 and the table answered 57 at risk; the correct answer is none. Between-time drift was an off-by-one or two per row, but this was the whole tail of the table.</p>
+<p>It now counts the analysed subjects whose observed follow-up is at least the report time, delegating to the same <code>.atrisk_table()</code> helper that <code><a href="../reference/hv_atrisk.html">hv_atrisk()</a></code> draws from. The table and the panel beneath the curve can no longer disagree, and the count is taken over the analysed cohort – the one <code>meta$n_obs</code> reports, after incomplete rows are excluded – rather than over survfit’s rows.</p>
+<p><strong>Numbers change; shape does not.</strong> <code>$tables$risk</code> keeps its <code>strata</code>, <code>report_time</code>, <code>n.risk</code> columns, its stratum order and its row order, so nothing downstream needs to move. Figures carrying an at-risk row will show smaller, correct numbers at some report times.</p>
+<p>Regression tests cover the between-observation case, the exact-boundary case and stratum ordering, stratified and not.</p>
+</div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="2.7.12" id="hvtiplotr-2712">hvtiPlotR 2.7.12<a class="anchor" aria-label="anchor" href="#hvtiplotr-2712"></a></h2>
 <div class="section level3">
