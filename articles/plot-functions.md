@@ -936,12 +936,12 @@ km$tables$risk
 ```
 
       strata report_time n.risk
-    1    All           1    478
-    2    All           5    412
-    3    All          10    322
-    4    All          15    260
+    1    All           1    477
+    2    All           5    411
+    3    All          10    321
+    4    All          15    259
     5    All          20    207
-    6    All          25    207
+    6    All          25      0
 
 ``` r
 

@@ -1,23 +1,27 @@
 # Build numbers-at-risk table
 
-For each stratum, finds the last observed `n.risk` at or before each
-report time.
+For each stratum, counts analysed subjects whose observed follow-up time
+is greater than or equal to each report time.
 
 ## Usage
 
 ``` r
-km_risk_table(km_df, report_times)
+km_risk_table(time, report_times, group = NULL)
 ```
 
 ## Arguments
 
-- km_df:
+- time:
 
-  Tidy KM data frame from `km_extract_tidy`.
+  Numeric vector of observed follow-up times.
 
 - report_times:
 
   Numeric vector of time points.
+
+- group:
+
+  Optional stratum vector, or `NULL` for one cohort.
 
 ## Value
 

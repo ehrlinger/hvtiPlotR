@@ -146,7 +146,9 @@ Columns: <code>time</code>, <code>surv</code>, <code>lower</code>, <code>upper</
 
 <dt><code>$tables</code></dt>
 <dd><p>Named list with two data frames:
-<code>risk</code> (<code>strata</code>, <code>report_time</code>, <code>n.risk</code>) and
+<code>risk</code> (<code>strata</code>, <code>report_time</code>, <code>n.risk</code>), where
+<code>n.risk</code> counts analysed subjects with follow-up greater than or
+equal to the exact report time, and
 <code>report</code> (<code>strata</code>, <code>report_time</code>, <code>surv</code>,
 <code>lower</code>, <code>upper</code>, <code>n.risk</code>, <code>n.event</code>).</p></dd>
 
@@ -205,12 +207,12 @@ cohort the estimates describe.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6    All          25 0.414 0.3715880 0.4577269    207       0</span>
 <span class="r-in"><span><span class="va">km</span><span class="op">$</span><span class="va">tables</span><span class="op">$</span><span class="va">risk</span>   <span class="co"># numbers at risk</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   strata report_time n.risk</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1    All           1    478</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2    All           5    412</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3    All          10    322</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4    All          15    260</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1    All           1    477</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2    All           5    411</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3    All          10    321</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4    All          15    259</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5    All          20    207</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6    All          25    207</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6    All          25      0</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># 2. Bare plot -- undecorated ggplot returned by plot.hv_survival</span></span></span>
 <span class="r-in"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">km</span><span class="op">)</span></span></span>

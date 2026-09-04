@@ -84,8 +84,10 @@ The list has three elements:
 - `$tables`:
 
   Named list with two data frames: `risk` (`strata`, `report_time`,
-  `n.risk`) and `report` (`strata`, `report_time`, `surv`, `lower`,
-  `upper`, `n.risk`, `n.event`).
+  `n.risk`), where `n.risk` counts analysed subjects with follow-up
+  greater than or equal to the exact report time, and `report`
+  (`strata`, `report_time`, `surv`, `lower`, `upper`, `n.risk`,
+  `n.event`).
 
 ## Missing data
 
@@ -142,12 +144,12 @@ km$tables$report # survival estimates at report_times
 #> 6    All          25 0.414 0.3715880 0.4577269    207       0
 km$tables$risk   # numbers at risk
 #>   strata report_time n.risk
-#> 1    All           1    478
-#> 2    All           5    412
-#> 3    All          10    322
-#> 4    All          15    260
+#> 1    All           1    477
+#> 2    All           5    411
+#> 3    All          10    321
+#> 4    All          15    259
 #> 5    All          20    207
-#> 6    All          25    207
+#> 6    All          25      0
 
 # 2. Bare plot -- undecorated ggplot returned by plot.hv_survival
 p <- plot(km)
