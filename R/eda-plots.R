@@ -24,8 +24,15 @@
 #' non-negative whole numbers with no more than `unique_limit` distinct values.
 #'
 #' @param x            A vector (one column of a data frame).
+#' @param var_name A string containing the name of the variable/column
+#' @param type_overrides A named vector of variables and variable types
+#' ("Cont", "Cat_Num", or "Cat_Char") to manually set their classifications, 
+#' e.g., c(var_name = "Cat_Num"). Default `NULL`
 #' @param unique_limit Integer threshold. Numeric columns with more distinct
 #'   values than this are classified as `"Cont"`. Default `6`.
+#' @param unique_bound Integer threshold.  Numeric columns that contain any values
+#'   greater than this are classified as `"Cont"`, regardless of number of distinct values.
+#'   Default `100`
 #'
 #' @return A length-1 character: `"Cont"`, `"Cat_Num"`, or `"Cat_Char"`.
 #'
@@ -37,17 +44,36 @@
 #' eda_classify_var(rnorm(50))                # "Cont"
 #' eda_classify_var(c("A", "B", "A"))         # "Cat_Char"
 #' @export
-eda_classify_var <- function(x, unique_limit = 6L) {
-  if (!is.numeric(x)) return("Cat_Char")
-  vals  <- na.omit(x)
+eda_classify_var <- function(x, var_name, type_overrides = NULL, 
+                             unique_limit = 6L, unique_bound = 100) {
+  if (!is.null(type_overrides) &&
+      var_name %in% names(type_overrides)) {
+    return(type_overrides[[var_name]])
+  }
+  
+  if (!is.numeric(x))
+    return("Cat_Char")
+  
+  vals <- na.omit(x)
+  
   n_unq <- length(unique(vals))
-  if (n_unq > unique_limit)                                        return("Cont")
-  if (any(vals > unique_limit) || any(vals < 0))                   return("Cont")
-  if (!isTRUE(all.equal(vals, as.integer(vals),
-                         check.attributes = FALSE)))               return("Cont")
+  
+  if (n_unq > unique_limit)
+    return("Cont")
+  
+  if (any(vals > unique_bound) || any(vals < 0))
+    return("Cont")
+  
+  if (!isTRUE(all.equal(
+    vals,
+    as.integer(vals),
+    check.attributes = FALSE
+  ))) {
+    return("Cont")
+  }
+  
   "Cat_Num"
 }
-
 # ---------------------------------------------------------------------------
 
 #' Sample EDA Data
@@ -182,6 +208,10 @@ eda_select_vars <- function(data, vars) {
 #'   (categorical).  When \code{NULL} (default), \code{y_col} is used.
 #' @param unique_limit Integer threshold passed to \code{\link{eda_classify_var}}
 #'   to distinguish categorical from continuous numeric columns.  Default \code{6}.
+#' @param unique_bound Integer threshold passed to \code{\link{eda_classify_var}}
+#'   to distinguish categorical from continuous numeric columns.  Default \code{100}.
+#' @param type_overrides Vector of manually set classifications passed to
+#'   \code{\link{eda_classify_var}}.  Default \code{NULL}
 #' @param show_percent Logical; for categorical plots, use proportions
 #'   (\code{position = "fill"}) instead of counts (\code{position = "stack"})?
 #'   Default \code{FALSE}.
@@ -263,12 +293,20 @@ hv_eda <- function(data,
                      y_col        = "ef",
                      y_label      = NULL,
                      unique_limit = 6L,
+                     unique_bound = 100,
+                     type_overrides = NULL,
                      show_percent = FALSE) {
   .check_df(data)
   .check_cols(data, c(x_col, y_col))
 
   label    <- if (!is.null(y_label)) y_label else y_col
-  var_type <- eda_classify_var(data[[y_col]], unique_limit)
+  var_type <- eda_classify_var(
+    x = data[[y_col]],
+    var_name = y_col,
+    type_overrides = type_overrides,
+    unique_limit = unique_limit,
+    unique_bound = unique_bound
+  )
 
   if (var_type == "Cont") {
     # --- Continuous: rename columns for predictable plotting -----------------
@@ -279,14 +317,13 @@ hv_eda <- function(data,
   } else {
     # --- Categorical: explicit (Missing) level --------------------------------
     yv  <- as.character(data[[y_col]])
-    yv[is.na(yv)] <- "(Missing)"
 
     if (var_type == "Cat_Num") {
       base_levels <- as.character(sort(unique(na.omit(data[[y_col]]))))
     } else {
       base_levels <- unique(as.character(na.omit(data[[y_col]])))
     }
-    yf <- factor(yv, levels = c(base_levels, "(Missing)"))
+    yf <- factor(yv, levels = c(base_levels))
 
     plot_data <- data.frame(x = factor(data[[x_col]]), fill = yf)
     tables    <- list()
@@ -349,6 +386,10 @@ print.hv_eda <- function(x, ...) {
 #' @param smooth_span   LOESS span. Default \code{0.8}.
 #' @param smooth_se     Logical; show confidence ribbon around smooth?
 #'   Default \code{FALSE}.
+#' @param loess_cutoff  Integer, if the y-variable has less unique values than this,
+#'   the smooth line will not be plotted.  Default \code{10}.
+#' @param group_bars    Logical; Plot as grouped bars instead of stacked?
+#'   Default \code{FALSE}.
 #' @param ...           Ignored; present for S3 consistency.
 #'
 #' @return A bare \code{\link[ggplot2]{ggplot}} object.
@@ -389,6 +430,8 @@ plot.hv_eda <- function(x,
                            smooth_method = "loess",
                            smooth_span   = 0.8,
                            smooth_se     = FALSE,
+                           loess_cutoff = 10,
+                           group_bars = FALSE,
                            ...) {
   data         <- x$data
   meta         <- x$meta
@@ -403,15 +446,19 @@ plot.hv_eda <- function(x,
     p <- ggplot2::ggplot(data, ggplot2::aes(x = .data[["x"]],
                                             y = .data[["y"]])) +
       ggplot2::geom_point(na.rm = TRUE, size = 0.9, alpha = 0.4) +
-      ggplot2::geom_smooth(
-        method    = smooth_method,
-        formula   = y ~ x,
-        span      = smooth_span,
-        se        = smooth_se,
-        linewidth = 1,
-        na.rm     = TRUE
-      ) +
       ggplot2::labs(x = x_col_name, y = label, title = label)
+    
+    if(length(unique(na.omit(x$data[[2]]))) > loess_cutoff){
+      p <- p +
+        ggplot2::geom_smooth(
+          method    = smooth_method,
+          formula   = y ~ x,
+          span      = smooth_span,
+          se        = smooth_se,
+          linewidth = 1,
+          na.rm     = TRUE
+        )
+    }
 
     if (nrow(rug_data) > 0L) {
       p <- p + ggplot2::geom_rug(
@@ -428,19 +475,65 @@ plot.hv_eda <- function(x,
 
   # --- Categorical bar chart ------------------------------------------------
   y_lab <- if (show_percent) "Proportion" else "Count"
-  pos   <- if (show_percent) "fill" else "stack"
-
-  p <- ggplot2::ggplot(data, ggplot2::aes(x    = .data[["x"]],
-                                          fill = .data[["fill"]])) +
-    ggplot2::geom_bar(position = pos) +
-    ggplot2::labs(x = x_col_name, y = y_lab, fill = label, title = label)
-
-  if (show_percent) {
-    p <- p + ggplot2::scale_y_continuous(
-      labels = if (requireNamespace("scales", quietly = TRUE))
-        scales::percent else NULL
+  
+  # Preserve original visible order when using reverse=TRUE
+  if (is.factor(data$fill)) {
+    data$fill <- factor(
+      data$fill,
+      levels = rev(levels(data$fill))
     )
   }
-
+  
+  # Special handling for binary 0/1 variables
+  vals <- sort(unique(stats::na.omit(as.character(data$fill))))
+  
+  if (identical(vals, c("0", "1"))) {
+    data$fill <- factor(
+      as.character(data$fill),
+      levels = c("1", "0")
+    )
+  }
+  
+  p <- ggplot2::ggplot(
+    data,
+    ggplot2::aes(
+      x = .data[["x"]],
+      fill = .data[["fill"]]
+    )
+  ) +
+    ggplot2::labs(
+      x = x_col_name,
+      y = y_lab,
+      fill = label,
+      title = label
+    )
+  
+  if (show_percent) {
+    
+    p <- p +
+      ggplot2::geom_bar(
+        position = ggplot2::position_fill(reverse = TRUE)
+      ) +
+      ggplot2::scale_y_continuous(
+        labels = if (requireNamespace("scales", quietly = TRUE))
+          scales::percent else NULL
+      )
+    
+  } else if (group_bars) {
+    
+    p <- p +
+      ggplot2::geom_bar(
+        position = ggplot2::position_dodge(preserve = "single", reverse = TRUE)
+      )
+    
+  } else {
+    
+    p <- p +
+      ggplot2::geom_bar(
+        position = ggplot2::position_stack(reverse = TRUE)
+      )
+    
+  }
+  
   p
 }
