@@ -114,6 +114,7 @@ prints beneath its survival plot.
 | `tp.ac.dead.sas` (via `%kaplan` / `%nelsont`) | ac | `hv_survival()` | [Kaplan–Meier survival](#ac-dead) |
 | `tp.cp.dead.sas` | cp | `hv_survival()` | [Kaplan–Meier survival](#ac-dead) |
 | `tp.dp.gfup.R` | dp | `hv_followup()` | [Goodness of follow-up](#dp-gfup) |
+| `descriptive/dc.tables.ods.sas` (`PROC CORR PLOTS=MATRIX`) | dc | `hv_correlation_matrix()` | [Correlation matrix](#dc-correlation) |
 | `tp.lp.propen.cov_balance.R` | lp | `hv_balance()` | [Covariate balance](#lp-covbal) |
 | `tp.dp.female_bicus_preAR_sankey.R` | dp | `hv_alluvial()` | [Alluvial](#dp-sankey) |
 | PAM cluster stability analysis | dp | `hv_sankey()` | [Cluster stability Sankey](#dp-cluster-sankey) |
@@ -1062,6 +1063,39 @@ plot(sp_ord, y_labels = c(None = 0, Mild = 1, Moderate = 2, Severe = 3)) +
   labs(x = "Years after Procedure", y = "MV Regurgitation Grade") +
   theme_hv_poster()
 ```
+
+---
+
+# Correlation matrix (`descriptive/dc.tables.ods.sas`) {#dc-correlation}
+
+**Port:** the `PROC CORR ... PLOTS=MATRIX` variant of
+`descriptive/dc.tables.ods.sas`
+
+**R equivalent:** `hv_correlation_matrix()`
+
+The SAS job combines a coefficient table with a scatter-plot matrix. In R,
+`hv_correlation_matrix()` owns the plot and its pairwise coefficient matrix;
+`hvtiRtables::hv_correlation_table()` owns the formatted Pearson/Spearman table
+and Fisher intervals.
+
+```r
+dta_cor <- sample_correlation_data(n = 300, seed = 42)
+cm <- hv_correlation_matrix(
+  dta_cor,
+  vars = c("a1c", "glucose", "creatinine", "albumin"),
+  labels = c("HbA1c", "Glucose", "Creatinine", "Albumin")
+)
+
+cm$tables$coefficients
+
+plot(cm) +
+  theme_hv_manuscript()
+```
+
+As in `PROC CORR`, missing observations are deleted pairwise: a missing value
+thins only panels involving that variable. The matrix is points-only by design;
+decorate the returned ggplot with a package theme and scales, and use the
+separate table function when coefficients or intervals belong in the report.
 
 ---
 

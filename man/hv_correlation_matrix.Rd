@@ -39,9 +39,10 @@ Rows missing either coordinate are dropped panel by panel (pairwise
 deletion, as \verb{proc corr} does), so a variable with missing values thins
 only the panels it appears in.
 
-A single \code{warning()} names any variable with fewer than 3 non-missing
-values, or no variation, since its panels are empty or flat and its
-coefficients are \code{NA}.
+A single \code{warning()} names variables with fewer than 3 non-missing values or
+no variation, and otherwise-usable pairs with fewer than 3 pairwise-complete
+observations. These panels are sparse or flat, so their coefficients may be
+unstable or \code{NA}.
 
 At large sizes (about 73 MB at 17 variables by 11,000 rows), write a raster
 format such as PNG rather than PDF, since every point is a vector object in
@@ -53,6 +54,9 @@ cm <- hv_correlation_matrix(d, c("a1c", "glucose", "creatinine", "albumin"))
 plot(cm) + theme_hv_manuscript()
 # strip.placement moves the variable names outside the axis
 plot(cm) + ggplot2::theme(strip.placement = "outside")
+}
+\references{
+SAS template: \code{descriptive/dc.tables.ods.sas}.
 }
 \seealso{
 \code{\link[=plot.hv_correlation_matrix]{plot.hv_correlation_matrix()}}, \code{\link[=sample_correlation_data]{sample_correlation_data()}}

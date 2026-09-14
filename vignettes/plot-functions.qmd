@@ -64,6 +64,7 @@ the sections below.
 | `hv_nnt()` | `tp.hp.numtreat.survdiff.matched.sas` | — |
 | `hv_nonparametric()` | `tp.np.*.avrg_curv.*`, `tp.np.*.u.trend.*`, `tp.np.*.double.*`, `tp.np.*.mult.*`, `tp.np.*.phases.*`, `tp.np.z0axdpo.*` | — |
 | `hv_ordinal()` | `tp.np.*.ordinal.*` | — |
+| `hv_correlation_matrix()` | `descriptive/dc.tables.ods.sas` (`PROC CORR PLOTS=MATRIX`) | — |
 | `hv_eda()` | — | — |
 | `hv_spaghetti()` | — | `tp.dp.spaghetti.echo.R` |
 | `hv_trends()` | `tp.lp.trends.sas`, `tp.lp.trends.age.sas`, `tp.lp.trends.polytomous.sas`, `tp.rp.trends.sas` | `tp.dp.trends.R` |
@@ -922,6 +923,35 @@ plot(km, type = "life") +
        title = "Integral of Survivorship") +
   theme_hv_poster()
 ```
+
+# Correlation Matrix
+
+`hv_correlation_matrix()` is the plotting half of the legacy
+`descriptive/dc.tables.ods.sas` correlation job. It reproduces
+`PROC CORR PLOTS=MATRIX` as a lower-triangle scatter-plot matrix and keeps the
+pairwise coefficient matrix in the returned object's tables. The companion
+coefficient report with Fisher intervals is
+`hvtiRtables::hv_correlation_table()`.
+
+```{r}
+#| label: correlation-matrix
+dta_cor <- sample_correlation_data(n = 300, seed = 42)
+cm <- hv_correlation_matrix(
+  dta_cor,
+  vars = c("a1c", "glucose", "creatinine", "albumin"),
+  labels = c("HbA1c", "Glucose", "Creatinine", "Albumin")
+)
+
+cm$tables$coefficients
+
+plot(cm) +
+  theme_hv_manuscript()
+```
+
+Missing observations are removed separately within each panel, matching
+`PROC CORR` pairwise deletion. A warning identifies variables or pairs with
+too little overlap to support a stable coefficient; the panel remains present
+so the missing-data pattern is visible rather than silently disappearing.
 
 # EDA Barplots and Scatterplots
 

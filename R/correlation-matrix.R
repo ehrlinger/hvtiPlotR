@@ -12,13 +12,16 @@
 #' @export
 sample_correlation_data <- function(n = 300, seed = 42) {
   set.seed(seed)
-  a1c <- stats::rnorm(n, 6.5, 1.2)
+  a1c <- round(stats::rnorm(n, 6.5, 1.2), 1)
   data.frame(
-    a1c        = round(a1c, 1),
+    a1c        = a1c,
     glucose    = round(20 * a1c + stats::rnorm(n, 0, 25)),
     creatinine = round(stats::rlnorm(n, 0, 0.3), 2),
     albumin    = round(4 - 0.1 * a1c + stats::rnorm(n, 0, 0.4), 1),
-    a1c_grp    = cut(a1c, c(-Inf, 6, 7, Inf), labels = c("<6", "6-7", ">7"))
+    a1c_grp    = factor(
+      ifelse(a1c < 6, "<6", ifelse(a1c <= 7, "6-7", ">7")),
+      levels = c("<6", "6-7", ">7")
+    )
   )
 }
 
@@ -34,9 +37,10 @@ sample_correlation_data <- function(n = 300, seed = 42) {
 #' deletion, as `proc corr` does), so a variable with missing values thins
 #' only the panels it appears in.
 #'
-#' A single `warning()` names any variable with fewer than 3 non-missing
-#' values, or no variation, since its panels are empty or flat and its
-#' coefficients are `NA`.
+#' A single `warning()` names variables with fewer than 3 non-missing values or
+#' no variation, and otherwise-usable pairs with fewer than 3 pairwise-complete
+#' observations. These panels are sparse or flat, so their coefficients may be
+#' unstable or `NA`.
 #'
 #' At large sizes (about 73 MB at 17 variables by 11,000 rows), write a raster
 #' format such as PNG rather than PDF, since every point is a vector object in
@@ -52,6 +56,7 @@ sample_correlation_data <- function(n = 300, seed = 42) {
 #'   deletion, not a per-panel count), and `$tables$coefficients`, the
 #'   pairwise coefficient matrix.
 #' @seealso [plot.hv_correlation_matrix()], [sample_correlation_data()]
+#' @references SAS template: `descriptive/dc.tables.ods.sas`.
 #' @examples
 #' d <- sample_correlation_data()
 #' cm <- hv_correlation_matrix(d, c("a1c", "glucose", "creatinine", "albumin"))
@@ -92,19 +97,42 @@ hv_correlation_matrix <- function(data, vars, labels = NULL,
   long$col_var <- factor(long$col_var, levels = labels)
   long$row_var <- factor(long$row_var, levels = labels)
 
-  n_ok  <- vapply(data[vars], function(x) sum(!is.na(x)), integer(1))
+  n_ok <- vapply(data[vars], function(x) sum(!is.na(x)), integer(1))
   const <- vapply(data[vars], function(x) {
     x <- x[!is.na(x)]
     length(x) >= 1L && length(unique(x)) == 1L
   }, logical(1))
-  bad <- vars[n_ok < 3L | const]
-  if (length(bad))
+  sparse <- vars[n_ok < 3L]
+  flat <- vars[const]
+  pair_n <- vapply(seq_len(ncol(idx)), function(p) {
+    sum(stats::complete.cases(data[vars[idx[, p]]]))
+  }, integer(1))
+  pair_usable <- !vars[idx[1L, ]] %in% sparse & !vars[idx[2L, ]] %in% sparse
+  sparse_pairs <- vapply(which(pair_n < 3L & pair_usable), function(p) {
+    paste(vars[idx[, p]], collapse = " / ")
+  }, character(1))
+  warning_parts <- character()
+  if (length(sparse)) {
+    warning_parts <- c(warning_parts,
+                       paste0("Fewer than 3 non-missing values (sparse): ",
+                              paste(sparse, collapse = ", ")))
+  }
+  if (length(flat)) {
+    warning_parts <- c(warning_parts,
+                       paste0("No variation: ", paste(flat, collapse = ", ")))
+  }
+  if (length(sparse_pairs)) {
+    warning_parts <- c(warning_parts,
+                       paste0("Fewer than 3 pairwise-complete values (sparse overlap): ",
+                              paste(sparse_pairs, collapse = ", ")))
+  }
+  if (length(warning_parts)) {
     warning(
-      "Fewer than 3 non-missing values, or no variation, for: ",
-      paste(bad, collapse = ", "),
-      ". Their panels are empty or flat and their coefficients are NA.",
+      paste(warning_parts, collapse = "; "),
+      ". Sparse or flat panels can have unstable or NA coefficients.",
       call. = FALSE
     )
+  }
 
   coef <- suppressWarnings(stats::cor(data[vars], use = "pairwise.complete.obs",
                                       method = method))
@@ -132,10 +160,11 @@ hv_correlation_matrix <- function(data, vars, labels = NULL,
 #' @importFrom rlang .data
 #' @export
 plot.hv_correlation_matrix <- function(x, alpha = 0.3, point_size = 0.6, ...) {
+  .check_alpha(alpha)
   ggplot2::ggplot(x$data, ggplot2::aes(x = .data$x, y = .data$y)) +
     ggplot2::geom_point(alpha = alpha, size = point_size) +
     ggplot2::facet_grid(rows = ggplot2::vars(.data$row_var),
                         cols = ggplot2::vars(.data$col_var),
-                        scales = "free", switch = "both") +
+                        scales = "free", switch = "both", drop = FALSE) +
     ggplot2::labs(x = NULL, y = NULL)
 }
