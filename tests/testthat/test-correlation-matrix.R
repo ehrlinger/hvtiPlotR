@@ -1,0 +1,44 @@
+test_that("sample_correlation_data is deterministic and shaped", {
+  a <- sample_correlation_data(n = 50, seed = 1)
+  expect_identical(a, sample_correlation_data(n = 50, seed = 1))
+  expect_equal(nrow(a), 50L)
+  expect_true(all(c("a1c", "glucose", "creatinine", "albumin", "a1c_grp") %in% names(a)))
+})
+
+test_that("hv_correlation_matrix builds the lower triangle", {
+  d <- sample_correlation_data(n = 100)
+  cm <- hv_correlation_matrix(d, vars = c("a1c", "glucose", "creatinine", "albumin"))
+  expect_s3_class(cm, c("hv_correlation_matrix", "hv_data"))
+  panels <- unique(cm$data[c("col_var", "row_var")])
+  expect_equal(nrow(panels), 6L)
+  # lower triangle: the row variable always comes after the column variable
+  expect_true(all(as.integer(panels$row_var) > as.integer(panels$col_var)))
+  expect_equal(nrow(cm$data), 6L * 100L)
+})
+
+test_that("rows missing either coordinate are dropped per panel", {
+  d <- sample_correlation_data(n = 100)
+  d$glucose[1:10] <- NA
+  cm <- hv_correlation_matrix(d, vars = c("a1c", "glucose", "albumin"))
+  counts <- table(paste(cm$data$col_var, cm$data$row_var))
+  expect_equal(as.integer(counts[["a1c glucose"]]), 90L)
+  expect_equal(as.integer(counts[["a1c albumin"]]), 100L)
+})
+
+test_that("coefficients are the pairwise matrix under labels", {
+  d <- sample_correlation_data(n = 100)
+  cm <- hv_correlation_matrix(d, vars = c("a1c", "glucose"),
+                              labels = c("HbA1c", "Glucose"), method = "spearman")
+  expect_equal(dimnames(cm$tables$coefficients)[[1]], c("HbA1c", "Glucose"))
+  expect_equal(cm$tables$coefficients[1, 2],
+               stats::cor(d$a1c, d$glucose, method = "spearman"))
+  expect_equal(levels(cm$data$col_var), c("HbA1c", "Glucose"))
+})
+
+test_that("errors are clear", {
+  d <- sample_correlation_data(n = 20)
+  expect_error(hv_correlation_matrix(d, vars = "a1c"), "at least two")
+  expect_error(hv_correlation_matrix(d, vars = c("a1c", "a1c_grp")), "numeric")
+  expect_error(hv_correlation_matrix(d, vars = c("a1c", "glucose"), labels = "x"),
+               "one label per")
+})
