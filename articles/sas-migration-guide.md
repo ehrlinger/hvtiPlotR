@@ -88,6 +88,7 @@ its survival plot.
 | `tp.ac.dead.sas` (via `%kaplan` / `%nelsont`) | ac | [`hv_survival()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_survival.md) | [Kaplan–Meier survival](#ac-dead) |
 | `tp.cp.dead.sas` | cp | [`hv_survival()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_survival.md) | [Kaplan–Meier survival](#ac-dead) |
 | `tp.dp.gfup.R` | dp | [`hv_followup()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_followup.md) | [Goodness of follow-up](#dp-gfup) |
+| `descriptive/dc.tables.ods.sas` (`PROC CORR PLOTS=MATRIX`) | dc | [`hv_correlation_matrix()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_correlation_matrix.md) | [Correlation matrix](#dc-correlation) |
 | `tp.lp.propen.cov_balance.R` | lp | [`hv_balance()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_balance.md) | [Covariate balance](#lp-covbal) |
 | `tp.dp.female_bicus_preAR_sankey.R` | dp | [`hv_alluvial()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_alluvial.md) | [Alluvial](#dp-sankey) |
 | PAM cluster stability analysis | dp | [`hv_sankey()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_sankey.md) | [Cluster stability Sankey](#dp-cluster-sankey) |
@@ -1130,6 +1131,44 @@ plot(sp_ord, y_labels = c(None = 0, Mild = 1, Moderate = 2, Severe = 3)) +
   labs(x = "Years after Procedure", y = "MV Regurgitation Grade") +
   theme_hv_poster()
 ```
+
+------------------------------------------------------------------------
+
+## Correlation matrix (`descriptive/dc.tables.ods.sas`)
+
+**Port:** the `PROC CORR ... PLOTS=MATRIX` variant of
+`descriptive/dc.tables.ods.sas`
+
+**R equivalent:**
+[`hv_correlation_matrix()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_correlation_matrix.md)
+
+The SAS job combines a coefficient table with a scatter-plot matrix. In
+R,
+[`hv_correlation_matrix()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_correlation_matrix.md)
+owns the plot and its pairwise coefficient matrix;
+`hvtiRtables::hv_correlation_table()` owns the formatted
+Pearson/Spearman table and Fisher intervals.
+
+``` r
+
+dta_cor <- sample_correlation_data(n = 300, seed = 42)
+cm <- hv_correlation_matrix(
+  dta_cor,
+  vars = c("a1c", "glucose", "creatinine", "albumin"),
+  labels = c("HbA1c", "Glucose", "Creatinine", "Albumin")
+)
+
+cm$tables$coefficients
+
+plot(cm) +
+  theme_hv_manuscript()
+```
+
+As in `PROC CORR`, missing observations are deleted pairwise: a missing
+value thins only panels involving that variable. The matrix is
+points-only by design; decorate the returned ggplot with a package theme
+and scales, and use the separate table function when coefficients or
+intervals belong in the report.
 
 ------------------------------------------------------------------------
 

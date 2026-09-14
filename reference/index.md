@@ -286,6 +286,12 @@ summaries, and set-membership visualisation.
   : Plot an hv_eda object
 - [`print(`*`<hv_eda>`*`)`](https://ehrlinger.github.io/hvtiPlotR/reference/print.hv_eda.md)
   : Print an hv_eda object
+- [`hv_correlation_matrix()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_correlation_matrix.md)
+  : Prepare a scatter-plot matrix
+- [`plot(`*`<hv_correlation_matrix>`*`)`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hv_correlation_matrix.md)
+  : Plot an hv_correlation_matrix object
+- [`sample_correlation_data()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_correlation_data.md)
+  : Sample data for hv_correlation_matrix()
 - [`hv_upset()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_upset.md)
   : Prepare UpSet co-occurrence data for plotting
 - [`plot(`*`<hv_upset>`*`)`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hv_upset.md)

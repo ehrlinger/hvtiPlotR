@@ -50,6 +50,7 @@ worked examples in the sections below.
 | [`hv_nnt()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_nnt.md) | `tp.hp.numtreat.survdiff.matched.sas` | — |
 | [`hv_nonparametric()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_nonparametric.md) | `tp.np.*.avrg_curv.*`, `tp.np.*.u.trend.*`, `tp.np.*.double.*`, `tp.np.*.mult.*`, `tp.np.*.phases.*`, `tp.np.z0axdpo.*` | — |
 | [`hv_ordinal()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_ordinal.md) | `tp.np.*.ordinal.*` | — |
+| [`hv_correlation_matrix()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_correlation_matrix.md) | `descriptive/dc.tables.ods.sas` (`PROC CORR PLOTS=MATRIX`) | — |
 | [`hv_eda()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_eda.md) | — | — |
 | [`hv_spaghetti()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_spaghetti.md) | — | `tp.dp.spaghetti.echo.R` |
 | [`hv_trends()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_trends.md) | `tp.lp.trends.sas`, `tp.lp.trends.age.sas`, `tp.lp.trends.polytomous.sas`, `tp.rp.trends.sas` | `tp.dp.trends.R` |
@@ -1125,6 +1126,47 @@ plot(km, type = "life") +
 ```
 
 ![](plot-functions_files/figure-html/km_life-1.png)
+
+## Correlation Matrix
+
+[`hv_correlation_matrix()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_correlation_matrix.md)
+is the plotting half of the legacy `descriptive/dc.tables.ods.sas`
+correlation job. It reproduces `PROC CORR PLOTS=MATRIX` as a
+lower-triangle scatter-plot matrix and keeps the pairwise coefficient
+matrix in the returned object’s tables. The companion coefficient report
+with Fisher intervals is `hvtiRtables::hv_correlation_table()`.
+
+``` r
+
+dta_cor <- sample_correlation_data(n = 300, seed = 42)
+cm <- hv_correlation_matrix(
+  dta_cor,
+  vars = c("a1c", "glucose", "creatinine", "albumin"),
+  labels = c("HbA1c", "Glucose", "Creatinine", "Albumin")
+)
+
+cm$tables$coefficients
+```
+
+                    HbA1c    Glucose  Creatinine     Albumin
+    HbA1c       1.0000000  0.7009743 -0.10219372 -0.24999981
+    Glucose     0.7009743  1.0000000 -0.11322375 -0.18131165
+    Creatinine -0.1021937 -0.1132238  1.00000000  0.05984457
+    Albumin    -0.2499998 -0.1813117  0.05984457  1.00000000
+
+``` r
+
+plot(cm) +
+  theme_hv_manuscript()
+```
+
+![](plot-functions_files/figure-html/correlation-matrix-1.png)
+
+Missing observations are removed separately within each panel, matching
+`PROC CORR` pairwise deletion. A warning identifies variables or pairs
+with too little overlap to support a stable coefficient; the panel
+remains present so the missing-data pattern is visible rather than
+silently disappearing.
 
 ## EDA Barplots and Scatterplots
 
