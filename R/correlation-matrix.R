@@ -34,6 +34,10 @@ sample_correlation_data <- function(n = 300, seed = 42) {
 #' deletion, as `proc corr` does), so a variable with missing values thins
 #' only the panels it appears in.
 #'
+#' A single `warning()` names any variable with fewer than 3 non-missing
+#' values, or no variation, since its panels are empty or flat and its
+#' coefficients are `NA`.
+#'
 #' At large sizes (about 73 MB at 17 variables by 11,000 rows), write a raster
 #' format such as PNG rather than PDF, since every point is a vector object in
 #' a PDF, and lower `alpha` so overplotted panels stay legible.
@@ -76,33 +80,30 @@ hv_correlation_matrix <- function(data, vars, labels = NULL,
          call. = FALSE)
 
   idx <- utils::combn(seq_along(vars), 2L)
-  pair_n <- matrix(NA_integer_, length(vars), length(vars))
   long <- do.call(rbind, lapply(seq_len(ncol(idx)), function(p) {
     i <- idx[1L, p]
     j <- idx[2L, p]
     x <- data[[vars[i]]]
     y <- data[[vars[j]]]
     ok <- !is.na(x) & !is.na(y)
-    pair_n[i, j] <<- sum(ok)
-    pair_n[j, i] <<- sum(ok)
     data.frame(col_var = rep(labels[i], sum(ok)), row_var = rep(labels[j], sum(ok)),
                x = x[ok], y = y[ok], stringsAsFactors = FALSE)
   }))
   long$col_var <- factor(long$col_var, levels = labels)
   long$row_var <- factor(long$row_var, levels = labels)
 
-  sparse <- vars[vapply(seq_along(vars), function(i) {
-    min(pair_n[i, -i]) < 3L
-  }, logical(1))]
-  constant <- vars[vapply(vars, function(v) {
-    x <- data[[v]]
-    length(unique(x[!is.na(x)])) <= 1L
-  }, logical(1))]
-  degenerate <- union(sparse, constant)
-  if (length(degenerate))
+  n_ok  <- vapply(data[vars], function(x) sum(!is.na(x)), integer(1))
+  const <- vapply(data[vars], function(x) {
+    x <- x[!is.na(x)]
+    length(x) >= 1L && length(unique(x)) == 1L
+  }, logical(1))
+  bad <- vars[n_ok < 3L | const]
+  if (length(bad))
     warning(
-      "Fewer than 3 complete pairs, or zero variance, for: ",
-      paste(degenerate, collapse = ", "), call. = FALSE
+      "Fewer than 3 non-missing values, or no variation, for: ",
+      paste(bad, collapse = ", "),
+      ". Their panels are empty or flat and their coefficients are NA.",
+      call. = FALSE
     )
 
   coef <- suppressWarnings(stats::cor(data[vars], use = "pairwise.complete.obs",

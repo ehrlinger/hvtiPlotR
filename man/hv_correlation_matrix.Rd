@@ -39,6 +39,10 @@ Rows missing either coordinate are dropped panel by panel (pairwise
 deletion, as \verb{proc corr} does), so a variable with missing values thins
 only the panels it appears in.
 
+A single \code{warning()} names any variable with fewer than 3 non-missing
+values, or no variation, since its panels are empty or flat and its
+coefficients are \code{NA}.
+
 At large sizes (about 73 MB at 17 variables by 11,000 rows), write a raster
 format such as PNG rather than PDF, since every point is a vector object in
 a PDF, and lower \code{alpha} so overplotted panels stay legible.

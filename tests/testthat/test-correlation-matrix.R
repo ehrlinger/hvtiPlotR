@@ -78,13 +78,23 @@ test_that("numeric labels are an error", {
   )
 })
 
-test_that("degenerate variables warn once, naming each of them", {
+test_that("degenerate variables warn once, naming only the degenerate ones", {
   d <- sample_correlation_data(n = 30)
   d$all_na <- NA_real_
   d$const  <- 5
-  expect_warning(
-    hv_correlation_matrix(d, vars = c("a1c", "glucose", "all_na", "const")),
-    "all_na|const"
+  w <- expect_warning(
+    hv_correlation_matrix(d, vars = c("a1c", "glucose", "all_na", "const"))
+  )
+  expect_match(w$message, "all_na")
+  expect_match(w$message, "const")
+  expect_false(grepl("a1c", w$message, fixed = TRUE))
+  expect_false(grepl("glucose", w$message, fixed = TRUE))
+})
+
+test_that("clean data raises no degenerate-variable warning", {
+  expect_no_warning(
+    hv_correlation_matrix(sample_correlation_data(),
+                          c("a1c", "glucose", "creatinine", "albumin"))
   )
 })
 
