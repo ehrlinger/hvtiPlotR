@@ -1,3 +1,13 @@
+# hvtiPlotR (unreleased)
+
+## New `hv_correlation_matrix()`: the scatter-plot matrix of `proc corr plots=matrix`
+
+Lower-triangle scatter panels over any set of numeric variables, pairwise
+deletion per panel, and the coefficient matrix in `$tables$coefficients`.
+`sample_correlation_data()` is its companion. It backs the `dc-tables` job
+template; the coefficient table with Fisher intervals is
+`hvtiRtables::hv_correlation_table()`.
+
 # hvtiPlotR 2.7.13
 
 ## Numbers at risk are counted at the report time, not carried forward to it

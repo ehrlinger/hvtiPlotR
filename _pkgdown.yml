@@ -220,6 +220,9 @@ reference:
   - hv_eda
   - plot.hv_eda
   - print.hv_eda
+  - hv_correlation_matrix
+  - plot.hv_correlation_matrix
+  - sample_correlation_data
   - hv_upset
   - plot.hv_upset
   - print.hv_upset
