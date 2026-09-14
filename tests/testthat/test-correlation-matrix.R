@@ -42,3 +42,12 @@ test_that("errors are clear", {
   expect_error(hv_correlation_matrix(d, vars = c("a1c", "glucose"), labels = "x"),
                "one label per")
 })
+
+test_that("plot returns a bare faceted ggplot", {
+  cm <- hv_correlation_matrix(sample_correlation_data(n = 50),
+                              c("a1c", "glucose", "albumin"))
+  p <- plot(cm)
+  expect_s3_class(p, "ggplot")
+  expect_s3_class(p$facet, "FacetGrid")
+  expect_s3_class(ggplot2::ggplot_build(p), "ggplot_built")
+})

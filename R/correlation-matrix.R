@@ -88,3 +88,24 @@ hv_correlation_matrix <- function(data, vars, labels = NULL,
     subclass = "hv_correlation_matrix"
   )
 }
+
+#' Plot an hv_correlation_matrix object
+#'
+#' Bare scatter-plot matrix: points only, free scales per panel, variable
+#' names in the strips. Decorate with a `theme_hv_*()` theme.
+#'
+#' @param x An `hv_correlation_matrix` object.
+#' @param alpha Point transparency; large cohorts need it low.
+#' @param point_size Point size.
+#' @param ... Ignored.
+#' @return A `ggplot` object.
+#' @importFrom rlang .data
+#' @export
+plot.hv_correlation_matrix <- function(x, alpha = 0.3, point_size = 0.6, ...) {
+  ggplot2::ggplot(x$data, ggplot2::aes(x = .data$x, y = .data$y)) +
+    ggplot2::geom_point(alpha = alpha, size = point_size) +
+    ggplot2::facet_grid(rows = ggplot2::vars(.data$row_var),
+                        cols = ggplot2::vars(.data$col_var),
+                        scales = "free", switch = "both") +
+    ggplot2::labs(x = NULL, y = NULL)
+}
