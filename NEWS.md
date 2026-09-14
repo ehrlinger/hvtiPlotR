@@ -1,5 +1,13 @@
 # hvtiPlotR (unreleased)
 
+## New `hv_correlation_matrix()`: the scatter-plot matrix of `proc corr plots=matrix`
+
+Lower-triangle scatter panels over any set of numeric variables, pairwise
+deletion per panel, and the coefficient matrix in `$tables$coefficients`.
+`sample_correlation_data()` is its companion. It is the plot half of the
+`dc-tables` job in the hvtiR job catalog; the coefficient table with Fisher
+intervals is `hvtiRtables::hv_correlation_table()`.
+
 ## `ggsankey` installs with `hvtiPlotR`
 
 `ggsankey` moves from `Suggests` to `Imports`. The exported
