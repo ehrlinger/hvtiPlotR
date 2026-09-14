@@ -4,9 +4,9 @@
 
 Lower-triangle scatter panels over any set of numeric variables, pairwise
 deletion per panel, and the coefficient matrix in `$tables$coefficients`.
-`sample_correlation_data()` is its companion. It backs the `dc-tables` job
-template; the coefficient table with Fisher intervals is
-`hvtiRtables::hv_correlation_table()`.
+`sample_correlation_data()` is its companion. It is the plot half of the
+`dc-tables` job in the hvtiR job catalog; the coefficient table with Fisher
+intervals is `hvtiRtables::hv_correlation_table()`.
 
 # hvtiPlotR 2.7.13
 

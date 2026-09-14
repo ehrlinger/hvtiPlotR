@@ -23,24 +23,32 @@ hv_correlation_matrix(
 \value{
 An object of class \code{c("hv_correlation_matrix", "hv_data")}:
 \verb{$data} (columns \code{col_var}, \code{row_var}, \code{x}, \code{y}), \verb{$meta} (\code{vars},
-\code{labels}, \code{method}, \code{n_obs}), and \verb{$tables$coefficients}, the pairwise
-coefficient matrix.
+\code{labels}, \code{method}, \code{n_obs}, which is \code{nrow(data)} before any pairwise
+deletion, not a per-panel count), and \verb{$tables$coefficients}, the
+pairwise coefficient matrix.
 }
 \description{
-The plot half of SAS \verb{proc corr ... plots=matrix}: one scatter panel per
-unordered pair of \code{vars}, lower triangle only. Call \code{\link[=plot]{plot()}} on the result
-for a bare \code{ggplot}; the coefficient table with Fisher intervals is
-\code{hvtiRtables::hv_correlation_table()}.
+The scatter-plot-matrix analogue of SAS \verb{proc corr ... plots=matrix}: one
+scatter panel per unordered pair of \code{vars}, lower triangle only. It is the
+plot half of the \code{dc-tables} job in the hvtiR job catalog. Call \code{\link[=plot]{plot()}}
+on the result for a bare \code{ggplot}; the coefficient table with Fisher
+intervals is \code{hvtiRtables::hv_correlation_table()}.
 }
 \details{
 Rows missing either coordinate are dropped panel by panel (pairwise
 deletion, as \verb{proc corr} does), so a variable with missing values thins
 only the panels it appears in.
+
+At large sizes (about 73 MB at 17 variables by 11,000 rows), write a raster
+format such as PNG rather than PDF, since every point is a vector object in
+a PDF, and lower \code{alpha} so overplotted panels stay legible.
 }
 \examples{
 d <- sample_correlation_data()
 cm <- hv_correlation_matrix(d, c("a1c", "glucose", "creatinine", "albumin"))
 plot(cm) + theme_hv_manuscript()
+# strip.placement moves the variable names outside the axis
+plot(cm) + ggplot2::theme(strip.placement = "outside")
 }
 \seealso{
 \code{\link[=plot.hv_correlation_matrix]{plot.hv_correlation_matrix()}}, \code{\link[=sample_correlation_data]{sample_correlation_data()}}

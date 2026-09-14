@@ -43,6 +43,51 @@ test_that("errors are clear", {
                "one label per")
 })
 
+test_that("a missing column is reported before the length check", {
+  d <- sample_correlation_data(n = 20)
+  expect_error(hv_correlation_matrix(d, vars = "nope"), "Missing required column")
+})
+
+test_that("duplicate vars is an error", {
+  d <- sample_correlation_data(n = 20)
+  expect_error(hv_correlation_matrix(d, vars = c("a1c", "a1c", "glucose")),
+               "vars.*duplicate")
+})
+
+test_that("duplicate labels is an error", {
+  d <- sample_correlation_data(n = 20)
+  expect_error(
+    hv_correlation_matrix(d, vars = c("a1c", "glucose"), labels = c("x", "x")),
+    "labels"
+  )
+})
+
+test_that("an NA label is an error", {
+  d <- sample_correlation_data(n = 20)
+  expect_error(
+    hv_correlation_matrix(d, vars = c("a1c", "glucose"), labels = c("x", NA_character_)),
+    "labels"
+  )
+})
+
+test_that("numeric labels are an error", {
+  d <- sample_correlation_data(n = 20)
+  expect_error(
+    hv_correlation_matrix(d, vars = c("a1c", "glucose"), labels = c(1, 2)),
+    "labels"
+  )
+})
+
+test_that("degenerate variables warn once, naming each of them", {
+  d <- sample_correlation_data(n = 30)
+  d$all_na <- NA_real_
+  d$const  <- 5
+  expect_warning(
+    hv_correlation_matrix(d, vars = c("a1c", "glucose", "all_na", "const")),
+    "all_na|const"
+  )
+})
+
 test_that("plot returns a bare faceted ggplot", {
   cm <- hv_correlation_matrix(sample_correlation_data(n = 50),
                               c("a1c", "glucose", "albumin"))
@@ -50,4 +95,15 @@ test_that("plot returns a bare faceted ggplot", {
   expect_s3_class(p, "ggplot")
   expect_s3_class(p$facet, "FacetGrid")
   expect_s3_class(ggplot2::ggplot_build(p), "ggplot_built")
+})
+
+test_that("plot panels form a lower triangle", {
+  cm <- hv_correlation_matrix(sample_correlation_data(n = 30),
+                              c("a1c", "glucose", "creatinine", "albumin"))
+  built <- ggplot2::ggplot_build(plot(cm))
+  layout <- built$layout$layout
+  data_panels <- unique(built$data[[1]]$PANEL)
+  has_data <- layout[layout$PANEL %in% data_panels, ]
+  expect_equal(nrow(has_data), 6L)
+  expect_true(all(has_data$ROW >= has_data$COL))
 })
