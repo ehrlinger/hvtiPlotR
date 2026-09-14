@@ -1,3 +1,12 @@
+# hvtiPlotR (unreleased)
+
+## `ggsankey` installs with `hvtiPlotR`
+
+`ggsankey` moves from `Suggests` to `Imports`. The exported
+`plot.hv_sankey()` method requires it at runtime, so installers now resolve
+`davidsjoberg/ggsankey` through the existing `Remotes` entry instead of
+leaving a newly installed `hvtiPlotR` unable to draw Sankey plots.
+
 # hvtiPlotR 2.7.13
 
 ## Numbers at risk are counted at the report time, not carried forward to it
