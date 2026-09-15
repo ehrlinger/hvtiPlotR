@@ -163,6 +163,7 @@ plot(mh) + theme_hv_manuscript()
 | Constructor | Description |
 |----|----|
 | [`hv_eda()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_eda.md) | Exploratory plot for a single variable. Auto-detects type: scatter + LOESS for continuous, stacked bar for categorical. Missing values shown as `"(Missing)"` |
+| [`hv_correlation_matrix()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_correlation_matrix.md) | Lower-triangle scatter-plot matrix for numeric variables, with pairwise deletion per panel and the coefficient matrix in `$tables$coefficients` |
 | [`hv_upset()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_upset.md) | UpSet diagram for visualising procedure co-occurrences or set memberships |
 | [`hv_venn()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_venn.md) | Venn diagram of 2-3 overlapping set memberships, with a region-count table; the small-set-count companion to [`hv_upset()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_upset.md) |
 | [`hv_alluvial()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_alluvial.md) | Sankey/alluvial diagram for patient flow across categorical stages |
