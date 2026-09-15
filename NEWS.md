@@ -1,3 +1,20 @@
+# hvtiPlotR 2.7.14
+
+## New `hv_correlation_matrix()`: the scatter-plot matrix of `proc corr plots=matrix`
+
+Lower-triangle scatter panels over any set of numeric variables, pairwise
+deletion per panel, and the coefficient matrix in `$tables$coefficients`.
+`sample_correlation_data()` is its companion. It is the plot half of the
+`dc-tables` job in the hvtiR job catalog; the coefficient table with Fisher
+intervals is `hvtiRtables::hv_correlation_table()`.
+
+## `ggsankey` installs with `hvtiPlotR`
+
+`ggsankey` moves from `Suggests` to `Imports`. The exported
+`plot.hv_sankey()` method requires it at runtime, so installers now resolve
+`davidsjoberg/ggsankey` through the existing `Remotes` entry instead of
+leaving a newly installed `hvtiPlotR` unable to draw Sankey plots.
+
 # hvtiPlotR 2.7.13
 
 ## Numbers at risk are counted at the report time, not carried forward to it

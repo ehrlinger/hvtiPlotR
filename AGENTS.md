@@ -37,12 +37,12 @@ imports this file.
 |---|---|---|
 | `R-CMD-check.yaml` | PR + push to `main` | `R CMD check` across platforms |
 | `lint.yaml` | PR + push to `main` | **any lint under `.lintr`.** `LINTR_ERROR_ON_LINT: true` since 2.7.9, when the 98 pre-existing lints were cleared ([#89](https://github.com/ehrlinger/hvtiPlotR/issues/89)). Run `lintr::lint_package()` before pushing; it must return zero. The `house-style` job in the same workflow gates separately, on house-style artifact drift. |
-| `pkgdown.yaml` | PR + push to `main`, release, manual | the site build |
+| `pkgdown.yaml` | PR + push to `main`, manual | the site build |
 | `test-coverage.yaml` | PR + push to `main` | coverage upload; snapshots upload via `upload-snapshots: true` |
 | `check-manual.yaml` | **push to `main` only — never a PR** | the PDF manual build — catches raw Unicode in `.Rd` that `--no-manual` skips |
 
 ⚠️ **`check-manual.yaml` does not gate pull requests.** Its triggers are `push` to
-`main`/`master`, `release` and `workflow_dispatch`; there is no `pull_request`. So a raw-Unicode
+`main`/`master` and `workflow_dispatch`; there is no `pull_request`. So a raw-Unicode
 `.Rd` passes every check a PR runs and only turns `main` red *after* the merge. If a change
 touches `man/` or any roxygen block, build the manual yourself before handing the PR over:
 
@@ -169,6 +169,12 @@ generated house-style artifact skips them. `lint.yaml` deliberately does **not**
   version and updates `DESCRIPTION` and its `Date`, at most once a day. The heading is gone
   again after a bump, so the next change re-adds it. `.claude/house-style.md` carries the rule
   and the reasoning.
+- **A change that ships nothing gets no `NEWS.md` entry and no bump.** That is a pull request
+  whose every changed file is left out of the tarball `R CMD build` produces, meaning the base
+  branch's `.Rbuildignore` excludes it: here `.github/`, `AGENTS.md` and `CLAUDE.md` among
+  others. One shipped file means the change ships, and the usual rules apply. No user can
+  observe a change that ships nothing, so the pull request and its commit message are the
+  record. Read `.Rbuildignore` rather than judging by feel.
 
 ## Change discipline
 
