@@ -6,20 +6,14 @@
 \usage{
 eda_classify_var(
   x,
-  var_name,
-  type_overrides = NULL,
   unique_limit = 6L,
-  unique_bound = 100
+  unique_bound = 100,
+  var_name = NULL,
+  type_overrides = NULL
 )
 }
 \arguments{
 \item{x}{A vector (one column of a data frame).}
-
-\item{var_name}{A string containing the name of the variable/column}
-
-\item{type_overrides}{A named vector of variables and variable types
-("Cont", "Cat_Num", or "Cat_Char") to manually set their classifications,
-e.g., c(var_name = "Cat_Num"). Default \code{NULL}}
 
 \item{unique_limit}{Integer threshold. Numeric columns with more distinct
 values than this are classified as \code{"Cont"}. Default \code{6}.}
@@ -27,6 +21,12 @@ values than this are classified as \code{"Cont"}. Default \code{6}.}
 \item{unique_bound}{Integer threshold.  Numeric columns that contain any values
 greater than this are classified as \code{"Cont"}, regardless of number of distinct values.
 Default \code{100}}
+
+\item{var_name}{A string containing the name of the variable/column.  Default \code{NULL}}
+
+\item{type_overrides}{A named vector of variables and variable types
+("Cont", "Cat_Num", or "Cat_Char") to manually set their classifications,
+e.g., c(severity = "Cat_Num"). Default \code{NULL}}
 }
 \value{
 A length-1 character: \code{"Cont"}, \code{"Cat_Num"}, or \code{"Cat_Char"}.

@@ -24,15 +24,15 @@
 #' non-negative whole numbers with no more than `unique_limit` distinct values.
 #'
 #' @param x            A vector (one column of a data frame).
-#' @param var_name A string containing the name of the variable/column
-#' @param type_overrides A named vector of variables and variable types
-#' ("Cont", "Cat_Num", or "Cat_Char") to manually set their classifications,
-#' e.g., c(var_name = "Cat_Num"). Default `NULL`
 #' @param unique_limit Integer threshold. Numeric columns with more distinct
 #'   values than this are classified as `"Cont"`. Default `6`.
 #' @param unique_bound Integer threshold.  Numeric columns that contain any values
 #'   greater than this are classified as `"Cont"`, regardless of number of distinct values.
 #'   Default `100`
+#' @param var_name A string containing the name of the variable/column.  Default `NULL`
+#' @param type_overrides A named vector of variables and variable types
+#' ("Cont", "Cat_Num", or "Cat_Char") to manually set their classifications,
+#' e.g., c(severity = "Cat_Num"). Default `NULL`
 #'
 #' @return A length-1 character: `"Cont"`, `"Cat_Num"`, or `"Cat_Char"`.
 #'
@@ -44,10 +44,18 @@
 #' eda_classify_var(rnorm(50))                # "Cont"
 #' eda_classify_var(c("A", "B", "A"))         # "Cat_Char"
 #' @export
-eda_classify_var <- function(x, var_name, type_overrides = NULL,
-                             unique_limit = 6L, unique_bound = 100) {
+eda_classify_var <- function(x, unique_limit = 6L, unique_bound = 100,
+                             var_name = NULL, type_overrides = NULL) {
+  
   if (!is.null(type_overrides) &&
+      !is.null(var_name) &&
       var_name %in% names(type_overrides)) {
+        if (!isTRUE(type_overrides[[var_name]] %in% c("Cont", "Cat_Num", "Cat_Char"))) {
+          stop(
+            "`type_overrides` values must be \"Cont\", \"Cat_Num\", or \"Cat_Char\".",
+            call. = FALSE
+          )
+        }
     return(type_overrides[[var_name]])
   }
 
@@ -302,10 +310,10 @@ hv_eda <- function(data,
   label    <- if (!is.null(y_label)) y_label else y_col
   var_type <- eda_classify_var(
     x = data[[y_col]],
-    var_name = y_col,
-    type_overrides = type_overrides,
     unique_limit = unique_limit,
-    unique_bound = unique_bound
+    unique_bound = unique_bound,
+    var_name = y_col,
+    type_overrides = type_overrides
   )
 
   if (var_type == "Cont") {
@@ -448,7 +456,7 @@ plot.hv_eda <- function(x,
       ggplot2::geom_point(na.rm = TRUE, size = 0.9, alpha = 0.4) +
       ggplot2::labs(x = x_col_name, y = label, title = label)
 
-    if (length(unique(na.omit(x$data[[2]]))) > loess_cutoff) {
+    if (length(unique(na.omit(x$data[[2]]))) >= loess_cutoff) {
       p <- p +
         ggplot2::geom_smooth(
           method    = smooth_method,
