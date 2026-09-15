@@ -26,7 +26,7 @@
 #' @param x            A vector (one column of a data frame).
 #' @param var_name A string containing the name of the variable/column
 #' @param type_overrides A named vector of variables and variable types
-#' ("Cont", "Cat_Num", or "Cat_Char") to manually set their classifications, 
+#' ("Cont", "Cat_Num", or "Cat_Char") to manually set their classifications,
 #' e.g., c(var_name = "Cat_Num"). Default `NULL`
 #' @param unique_limit Integer threshold. Numeric columns with more distinct
 #'   values than this are classified as `"Cont"`. Default `6`.
@@ -44,26 +44,26 @@
 #' eda_classify_var(rnorm(50))                # "Cont"
 #' eda_classify_var(c("A", "B", "A"))         # "Cat_Char"
 #' @export
-eda_classify_var <- function(x, var_name, type_overrides = NULL, 
+eda_classify_var <- function(x, var_name, type_overrides = NULL,
                              unique_limit = 6L, unique_bound = 100) {
   if (!is.null(type_overrides) &&
       var_name %in% names(type_overrides)) {
     return(type_overrides[[var_name]])
   }
-  
+
   if (!is.numeric(x))
     return("Cat_Char")
-  
+
   vals <- na.omit(x)
-  
+
   n_unq <- length(unique(vals))
-  
+
   if (n_unq > unique_limit)
     return("Cont")
-  
+
   if (any(vals > unique_bound) || any(vals < 0))
     return("Cont")
-  
+
   if (!isTRUE(all.equal(
     vals,
     as.integer(vals),
@@ -71,7 +71,7 @@ eda_classify_var <- function(x, var_name, type_overrides = NULL,
   ))) {
     return("Cont")
   }
-  
+
   "Cat_Num"
 }
 # ---------------------------------------------------------------------------
@@ -447,8 +447,8 @@ plot.hv_eda <- function(x,
                                             y = .data[["y"]])) +
       ggplot2::geom_point(na.rm = TRUE, size = 0.9, alpha = 0.4) +
       ggplot2::labs(x = x_col_name, y = label, title = label)
-    
-    if(length(unique(na.omit(x$data[[2]]))) > loess_cutoff){
+
+    if (length(unique(na.omit(x$data[[2]]))) > loess_cutoff) {
       p <- p +
         ggplot2::geom_smooth(
           method    = smooth_method,
@@ -475,7 +475,7 @@ plot.hv_eda <- function(x,
 
   # --- Categorical bar chart ------------------------------------------------
   y_lab <- if (show_percent) "Proportion" else "Count"
-  
+
   # Preserve original visible order when using reverse=TRUE
   # in order to plot NA on top
   if (is.factor(data$fill)) {
@@ -484,18 +484,18 @@ plot.hv_eda <- function(x,
       levels = rev(levels(data$fill))
     )
   }
-  
+
   # Making sure binary 0/1 behave as desired even when only one level 
   # is present in a variable
   vals <- sort(unique(stats::na.omit(as.character(data$fill))))
-  
+
   if (identical(vals, c("0", "1"))) {
     data$fill <- factor(
       as.character(data$fill),
       levels = c("1", "0")
     )
   }
-  
+
   p <- ggplot2::ggplot(
     data,
     ggplot2::aes(
@@ -509,9 +509,9 @@ plot.hv_eda <- function(x,
       fill = label,
       title = label
     )
-  
+
   if (show_percent) {
-    
+
     p <- p +
       ggplot2::geom_bar(
         position = ggplot2::position_fill(reverse = TRUE)
@@ -520,21 +520,21 @@ plot.hv_eda <- function(x,
         labels = if (requireNamespace("scales", quietly = TRUE))
           scales::percent else NULL
       )
-    
+
   } else if (group_bars) {
-    
+
     p <- p +
       ggplot2::geom_bar(
         position = ggplot2::position_dodge(preserve = "single", reverse = TRUE)
       )
-    
+
   } else {
-    
+
     p <- p +
       ggplot2::geom_bar(
         position = ggplot2::position_stack(reverse = TRUE)
       )
-    
+
   }
   
   p
