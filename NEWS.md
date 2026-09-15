@@ -1,4 +1,4 @@
-# hvtiPlotR (unreleased)
+# hvtiPlotR 2.7.14
 
 ## New `hv_correlation_matrix()`: the scatter-plot matrix of `proc corr plots=matrix`
 
