@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">hvtiPlotR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.7.13</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.7.14</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -53,6 +53,20 @@
       <small>Source: <a href="https://github.com/ehrlinger/hvtiPlotR/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="2.7.14" id="hvtiplotr-2714">hvtiPlotR 2.7.14<a class="anchor" aria-label="anchor" href="#hvtiplotr-2714"></a></h2>
+<div class="section level3">
+<h3 id="new-hv_correlation_matrix-the-scatter-plot-matrix-of-proc-corr-plotsmatrix-2-7-14">New <code>hv_correlation_matrix()</code>: the scatter-plot matrix of <code>proc corr plots=matrix</code>
+<a class="anchor" aria-label="anchor" href="#new-hv_correlation_matrix-the-scatter-plot-matrix-of-proc-corr-plotsmatrix-2-7-14"></a></h3>
+<p>Lower-triangle scatter panels over any set of numeric variables, pairwise deletion per panel, and the coefficient matrix in <code>$tables$coefficients</code>. <code><a href="../reference/sample_correlation_data.html">sample_correlation_data()</a></code> is its companion. It is the plot half of the <code>dc-tables</code> job in the hvtiR job catalog; the coefficient table with Fisher intervals is <code>hvtiRtables::hv_correlation_table()</code>.</p>
+</div>
+<div class="section level3">
+<h3 id="ggsankey-installs-with-hvtiplotr-2-7-14">
+<code>ggsankey</code> installs with <code>hvtiPlotR</code>
+<a class="anchor" aria-label="anchor" href="#ggsankey-installs-with-hvtiplotr-2-7-14"></a></h3>
+<p><code>ggsankey</code> moves from <code>Suggests</code> to <code>Imports</code>. The exported <code><a href="../reference/plot.hv_sankey.html">plot.hv_sankey()</a></code> method requires it at runtime, so installers now resolve <code>davidsjoberg/ggsankey</code> through the existing <code>Remotes</code> entry instead of leaving a newly installed <code>hvtiPlotR</code> unable to draw Sankey plots.</p>
+</div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="2.7.13" id="hvtiplotr-2713">hvtiPlotR 2.7.13<a class="anchor" aria-label="anchor" href="#hvtiplotr-2713"></a></h2>
 <div class="section level3">
