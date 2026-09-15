@@ -46,7 +46,7 @@
 #' @export
 eda_classify_var <- function(x, unique_limit = 6L, unique_bound = 100,
                              var_name = NULL, type_overrides = NULL) {
-  
+
   if (!is.null(type_overrides) &&
       !is.null(var_name) &&
       var_name %in% names(type_overrides)) {
