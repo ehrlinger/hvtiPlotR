@@ -321,7 +321,7 @@ hv_eda <- function(data,
     if (var_type == "Cat_Num") {
       base_levels <- as.character(sort(unique(na.omit(data[[y_col]]))))
     } else {
-      base_levels <- unique(as.character(na.omit(data[[y_col]])))
+      base_levels <- sort(unique(as.character(na.omit(data[[y_col]]))))
     }
     yf <- factor(yv, levels = c(base_levels))
 
@@ -477,6 +477,7 @@ plot.hv_eda <- function(x,
   y_lab <- if (show_percent) "Proportion" else "Count"
   
   # Preserve original visible order when using reverse=TRUE
+  # in order to plot NA on top
   if (is.factor(data$fill)) {
     data$fill <- factor(
       data$fill,
@@ -484,7 +485,8 @@ plot.hv_eda <- function(x,
     )
   }
   
-  # Special handling for binary 0/1 variables
+  # Making sure binary 0/1 behave as desired even when only one level 
+  # is present in a variable
   vals <- sort(unique(stats::na.omit(as.character(data$fill))))
   
   if (identical(vals, c("0", "1"))) {

@@ -4,7 +4,15 @@
 \alias{plot.hv_eda}
 \title{Plot an hv_eda object}
 \usage{
-\method{plot}{hv_eda}(x, smooth_method = "loess", smooth_span = 0.8, smooth_se = FALSE, ...)
+\method{plot}{hv_eda}(
+  x,
+  smooth_method = "loess",
+  smooth_span = 0.8,
+  smooth_se = FALSE,
+  loess_cutoff = 10,
+  group_bars = FALSE,
+  ...
+)
 }
 \arguments{
 \item{x}{An \code{hv_eda} object.}
@@ -15,6 +23,12 @@
 \item{smooth_span}{LOESS span. Default \code{0.8}.}
 
 \item{smooth_se}{Logical; show confidence ribbon around smooth?
+Default \code{FALSE}.}
+
+\item{loess_cutoff}{Integer, if the y-variable has less unique values than this,
+the smooth line will not be plotted.  Default \code{10}.}
+
+\item{group_bars}{Logical; Plot as grouped bars instead of stacked?
 Default \code{FALSE}.}
 
 \item{...}{Ignored; present for S3 consistency.}
