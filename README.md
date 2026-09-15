@@ -131,6 +131,7 @@ plot(mh) + theme_hv_manuscript()
 | Constructor | Description |
 |---|---|
 | `hv_eda()` | Exploratory plot for a single variable. Auto-detects type: scatter + LOESS for continuous, stacked bar for categorical. Missing values shown as `"(Missing)"` |
+| `hv_correlation_matrix()` | Lower-triangle scatter-plot matrix for numeric variables, with pairwise deletion per panel and the coefficient matrix in `$tables$coefficients` |
 | `hv_upset()` | UpSet diagram for visualising procedure co-occurrences or set memberships |
 | `hv_venn()` | Venn diagram of 2-3 overlapping set memberships, with a region-count table; the small-set-count companion to `hv_upset()` |
 | `hv_alluvial()` | Sankey/alluvial diagram for patient flow across categorical stages |
