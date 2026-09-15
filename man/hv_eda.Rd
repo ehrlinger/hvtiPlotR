@@ -10,6 +10,8 @@ hv_eda(
   y_col = "ef",
   y_label = NULL,
   unique_limit = 6L,
+  unique_bound = 100,
+  type_overrides = NULL,
   show_percent = FALSE
 )
 }
@@ -27,6 +29,12 @@ the plot title, y-axis label (continuous), and fill-legend name
 
 \item{unique_limit}{Integer threshold passed to \code{\link{eda_classify_var}}
 to distinguish categorical from continuous numeric columns.  Default \code{6}.}
+
+\item{unique_bound}{Integer threshold passed to \code{\link{eda_classify_var}}
+to distinguish categorical from continuous numeric columns.  Default \code{100}.}
+
+\item{type_overrides}{Vector of manually set classifications passed to
+\code{\link{eda_classify_var}}.  Default \code{NULL}}
 
 \item{show_percent}{Logical; for categorical plots, use proportions
 (\code{position = "fill"}) instead of counts (\code{position = "stack"})?

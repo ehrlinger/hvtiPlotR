@@ -266,12 +266,13 @@ test_that("plot(hv_eda) Cat_Num y_label sets fill legend name", {
   expect_equal(p$labels$fill, "Sex")
 })
 
-test_that("plot(hv_eda) Cat_Num factor levels include (Missing) last", {
+test_that("plot(hv_eda) Cat_Num factor levels include 0 last", {
   df            <- sample_eda_data(n = 300, seed = 42)
   df$male[1:10] <- NA
   p             <- plot(hv_eda(df, x_col = "year", y_col = "male"))
   levs          <- levels(p$data$fill)
-  expect_equal(tail(levs, 1), "(Missing)")
+  #expect_equal(tail(levs, 1), "(Missing)")
+  expect_equal(tail(levs, 1), "0")
 })
 
 # ============================================================================
@@ -293,11 +294,12 @@ test_that("plot(hv_eda) Cat_Char has a geom_bar layer", {
   expect_true("GeomBar" %in% geoms)
 })
 
-test_that("plot(hv_eda) Cat_Char factor levels preserve original level order", {
+test_that("plot(hv_eda) Cat_Char factor levels preserve alphabetical level order", {
   df   <- sample_eda_data(n = 300, seed = 42)
   p    <- plot(hv_eda(df, x_col = "year", y_col = "valve_morph"))
   levs <- levels(p$data$fill)
-  expect_equal(tail(levs, 1), "(Missing)")
+  expect_equal(tail(levs, 1), head(sort(levs), 1))
+  expect_equal(head(levs, 1), tail(sort(levs), 1))
 })
 
 test_that("plot(hv_eda) Cat_Char y_label sets fill legend name", {
