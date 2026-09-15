@@ -485,7 +485,7 @@ plot.hv_eda <- function(x,
     )
   }
 
-  # Making sure binary 0/1 behave as desired even when only one level 
+  # Making sure binary 0/1 behave as desired even when only one level
   # is present in a variable
   vals <- sort(unique(stats::na.omit(as.character(data$fill))))
 
@@ -536,6 +536,6 @@ plot.hv_eda <- function(x,
       )
 
   }
-  
+
   p
 }
