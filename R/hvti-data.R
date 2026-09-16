@@ -188,7 +188,7 @@ ggplot2::autoplot
 #' @param optional  Ignored; present for base-method-signature consistency.
 #' @param ...       Ignored.
 #'
-#' @return A `data.frame`, `x$data`.
+#' @return The `data.frame` stored in `x$data`.
 #' @export
 # row.names is dictated by the as.data.frame generic, not chosen here. Renaming
 # it would break the signature match that S3 dispatch relies on.

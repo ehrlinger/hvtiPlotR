@@ -16,7 +16,7 @@
 \item{...}{Ignored.}
 }
 \value{
-A \code{data.frame}, \code{x$data}.
+The \code{data.frame} stored in \code{x$data}.
 }
 \description{
 Returns the \verb{$data} slot, the tidy data frame each hv_data subclass

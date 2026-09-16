@@ -363,7 +363,7 @@ add_plot_slide <- function(doc, plot, title, layout, master, width, height,
 #'   panel_box    = list(width = 8.88, height = 4.51, left = 2.58, top = 1.63)
 #' )
 #'
-#' # Sizing advice: panel_left and panel_top must be large enough for the
+#' # Sizing advice: panel_box$left and panel_box$top must be large enough for the
 #' # widest axis labels in the deck. If chrome extends past the left or top
 #' # slide edge, hv_ph_location() emits a warning naming that edge.
 #' }
