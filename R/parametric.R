@@ -5,9 +5,10 @@
 #' parametric survival model fitted to an aortic-valve surgery cohort and
 #' exported from SAS via `tp.hp.dead.sas`.
 #'
-#' The three outcomes tracked are:
+#' The three states tracked are competing risks; at every time point the
+#' percentages in the three states sum to 100 (see `check`):
 #' \describe{
-#'   \item{init}{Re-operation (re-initialisation)}
+#'   \item{init}{Event-free (still in the initial state)}
 #'   \item{death}{Death}
 #'   \item{strk}{Stroke}
 #' }
@@ -15,8 +16,8 @@
 #' upper 95 % CI on the survival estimate; `he*` = hazard rate estimate;
 #' `hl*/hu*` = lower / upper 95 % CI on the hazard; `ve*` = variance of the
 #' survival estimate; `no*` = cumulative incidence (percent); `cl*/cu*` = lower
-#' / upper 95 % CI on the cumulative incidence; `no1*` = probability of
-#' entering the state at exactly time t; `tx*/tx1*` = cumulative hazard
+#' / upper 95 % CI on the cumulative incidence; `no1*` = identical to `no*` in
+#' this extract; `tx*/tx1*` = cumulative hazard
 #' integral (Weibull model output, used internally).
 #'
 #' @format A data frame with 2001 rows (fine time grid) and 41 columns:
@@ -36,7 +37,7 @@
 #'   \item{nodeath}{Cumulative probability of death by time t (percent).}
 #'   \item{cldeath}{Lower 95 % confidence limit for \code{nodeath}.}
 #'   \item{cudeath}{Upper 95 % confidence limit for \code{nodeath}.}
-#'   \item{no1death}{Probability of entering the death state at exactly time t.}
+#'   \item{no1death}{Identical to \code{nodeath} in this extract.}
 #'   \item{tx1death}{Cumulative hazard integral for death (Weibull model internal).}
 #'   \item{txdeath}{Cumulative hazard for death (same scale as \code{tx1death}).}
 #'   \item{sestrk}{Parametric survival estimate: freedom from stroke (percent).}
@@ -49,19 +50,19 @@
 #'   \item{nostrk}{Cumulative probability of stroke by time t (percent).}
 #'   \item{clstrk}{Lower 95 % confidence limit for \code{nostrk}.}
 #'   \item{custrk}{Upper 95 % confidence limit for \code{nostrk}.}
-#'   \item{no1strk}{Probability of entering the stroke state at exactly time t.}
+#'   \item{no1strk}{Identical to \code{nostrk} in this extract.}
 #'   \item{tx1strk}{Cumulative hazard integral for stroke (Weibull model internal).}
 #'   \item{txstrk}{Cumulative hazard for stroke (same scale as \code{tx1strk}).}
-#'   \item{cestrk}{Complement: probability of surviving stroke-free to time t (percent).}
-#'   \item{noinit}{Parametric estimate of freedom from re-operation (percent).}
+#'   \item{cestrk}{Percent free of stroke, \code{100 - nostrk}.}
+#'   \item{noinit}{Percent event-free (still in the initial state).}
 #'   \item{clinit}{Lower 95 % confidence limit for \code{noinit}.}
 #'   \item{cuinit}{Upper 95 % confidence limit for \code{noinit}.}
-#'   \item{no1init}{Probability of entering the re-operated state at exactly time t.}
+#'   \item{no1init}{Identical to \code{noinit} in this extract.}
 #'   \item{z}{Log-hazard estimate for the pooled Weibull model.}
 #'   \item{sez}{Standard error of \code{z}.}
 #'   \item{cllz}{Lower 95 % confidence limit for \code{z} (log-hazard scale).}
 #'   \item{cluz}{Upper 95 % confidence limit for \code{z} (log-hazard scale).}
-#'   \item{check}{Row sum of \code{noinit}, \code{nodeath}, \code{nostrk}, and \code{cestrk}; should equal 100.}
+#'   \item{check}{Row sum of \code{noinit}, \code{nodeath} and \code{nostrk}; about 100.}
 #' }
 #'
 #' @docType data

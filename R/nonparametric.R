@@ -2,7 +2,7 @@
 #'
 #' A dataset containing nonparametric competing-risk estimates used for
 #' examples in the package vignettes: the empirical companion to
-#' [parametric], over the same three states (remaining in the initial state,
+#' [parametric], over the same three states (event-free,
 #' death, and stroke). Originally exported from SAS via
 #' \code{tp.hp.dead.sas} / \code{tp.np.*.sas}.
 #'
@@ -15,7 +15,7 @@
 #' \describe{
 #'   \item{iv_state}{Follow-up time in years (0 to about 4.9); the x-axis in
 #'     the vignette plots.}
-#'   \item{sginit}{Percent remaining in the initial state (event-free).}
+#'   \item{sginit}{Percent event-free (still in the initial state).}
 #'   \item{stlinit}{Lower confidence limit for \code{sginit}; all `NA` in this
 #'     extract.}
 #'   \item{stuinit}{Upper confidence limit for \code{sginit}; all `NA` in this
