@@ -27,9 +27,9 @@ Default \code{"dead"}.}
 stratify the analysis.  \code{NULL} (default) produces an unstratified
 estimate labelled \code{"All"}.}
 
-\item{method}{Estimator: \code{"kaplan-meier"} (default, logit CI —
+\item{method}{Estimator: \code{"kaplan-meier"} (default, logit CI;
 mirrors SAS \code{\%kaplan}) or \code{"nelson-aalen"} (Fleming-Harrington
-cumulative hazard with log CI — mirrors SAS \code{\%nelsont}, preferred
+cumulative hazard with log CI; mirrors SAS \code{\%nelsont}, preferred
 when \eqn{S(t)} approaches zero).}
 
 \item{conf_level}{Confidence level for the CI band.  Default \code{0.95}.}
@@ -40,7 +40,7 @@ Default \code{c(1, 5, 10, 15, 20, 25)}.}
 }
 \value{
 An object of class \code{c("hv_survival", "hv_data")} (a list);
-call \code{plot()} on the result to render the figure — see
+call \code{plot()} on the result to render the figure; see
 \code{\link{plot.hv_survival}}. The list has three elements:
 \describe{
 \item{\code{$data}}{Tidy data frame with one row per (time, strata) pair.

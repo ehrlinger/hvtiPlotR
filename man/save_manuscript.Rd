@@ -24,7 +24,7 @@ save_manuscript(
 \item{file}{Output file path. Its extension sets the format (\code{.pdf}, \code{.png},
 ...).}
 
-\item{width, height, units}{Figure size. Default \code{6} x \code{4} \code{"in"} — the HVTI
+\item{width, height, units}{Figure size. Default \code{6} x \code{4} \code{"in"}, the HVTI
 manuscript default.}
 
 \item{device}{Graphics device. \code{NULL} (default) lets \pkg{ggplot2} pick from
@@ -49,26 +49,26 @@ Invisibly, the \code{file} path.
 }
 \description{
 A thin wrapper around \code{\link[ggplot2:ggsave]{ggplot2::ggsave()}} that enforces the house manuscript
-figure size — \strong{6 inches wide by 4 inches tall} — so journal figures come
+figure size, 6 inches wide by 4 inches tall, so journal figures come
 out at a consistent size in one call. It is the manuscript counterpart of
 \code{\link[=save_ppt]{save_ppt()}}, which enforces the slide panel box.
 }
 \details{
 Pair it with \code{\link[=theme_hv_manuscript]{theme_hv_manuscript()}}, whose 12 pt \code{base_size} supplies the
 manuscript typography. Like \code{\link[=save_ppt]{save_ppt()}}, \code{save_manuscript()} fixes the
-output geometry, not the theme — style the plot first, then save.
+output geometry, not the theme; style the plot first, then save.
 
 The device is inferred from the file extension by default. For a \code{.pdf}
 where you want fonts embedded (so 12 pt type renders exactly as designed),
-pass \code{device = grDevices::cairo_pdf} — on a system with cairo/X11 support.
+pass \code{device = grDevices::cairo_pdf} (on a system with cairo/X11 support).
 
-Publisher-accepted formats — vector (PDF, EPS) or TIFF (a raster format
-also accepted by journals) — often produce large or fragile files when
-dragged into a Word manuscript — Word has no native PDF-as-picture support
+Publisher-accepted formats, vector (PDF, EPS) or TIFF (a raster format
+also accepted by journals), often produce large or fragile files when
+dragged into a Word manuscript. Word has no native PDF-as-picture support
 and silently converts them to bloated, sometimes unreadable EMF. Pass
 \code{draft_file} (typically a \code{.png} path) to also write a small raster copy
 alongside \code{file} in the same call: keep \code{file} as the publisher deliverable
-actually submitted to the journal, and drag \code{draft_file} into the Word
+submitted to the journal, and drag \code{draft_file} into the Word
 draft instead.
 }
 \examples{

@@ -32,10 +32,10 @@
 #' @param seed        Random seed for reproducibility. Default `42`.
 #'
 #' @return A data frame with columns:
-#'   - `id`    — patient identifier (integer)
-#'   - `time`  — years from index procedure (numeric)
-#'   - `value` — continuous outcome (numeric; AV mean gradient in mmHg)
-#'   - `group` — group label (factor)
+#'   - `id`: patient identifier (integer)
+#'   - `time`: years from index procedure (numeric)
+#'   - `value`: continuous outcome (numeric; AV mean gradient in mmHg)
+#'   - `group`: group label (factor)
 #'
 #' @seealso [hv_spaghetti()]
 #'
@@ -101,7 +101,7 @@ sample_spaghetti_data <- function(n_patients = 150,
 #'   for a single uniform colour. Default \code{NULL}.
 #'
 #' @return An object of class \code{c("hv_spaghetti", "hv_data")}; call
-#'   \code{plot()} on the result to render the figure — see
+#'   \code{plot()} on the result to render the figure; see
 #'   \code{\link{plot.hv_spaghetti}}. The list contains:
 #' \describe{
 #'   \item{\code{$data}}{The validated input data frame.}

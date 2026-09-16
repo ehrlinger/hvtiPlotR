@@ -65,7 +65,7 @@ Draws an UpSet plot using \code{\link[ggupset]{scale_x_upset}}.
 \details{
 When \code{set_size = TRUE} (the default) the function composes a
 patchwork of two plots: a horizontal set-size sidebar and the intersection
-bar chart. Apply themes to \strong{all panels} with patchwork's \code{&}
+bar chart. Apply themes to all panels with patchwork's \code{&}
 operator:
 \preformatted{plot(up) & theme_hv_poster()}
 

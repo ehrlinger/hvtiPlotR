@@ -25,10 +25,10 @@ sampling probabilities (summing to 1). Default
 \value{
 A data frame with columns:
 \itemize{
-\item \code{id}    — patient identifier (integer)
-\item \code{time}  — years from index procedure (numeric)
-\item \code{value} — continuous outcome (numeric; AV mean gradient in mmHg)
-\item \code{group} — group label (factor)
+\item \code{id}: patient identifier (integer)
+\item \code{time}: years from index procedure (numeric)
+\item \code{value}: continuous outcome (numeric; AV mean gradient in mmHg)
+\item \code{group}: group label (factor)
 }
 }
 \description{

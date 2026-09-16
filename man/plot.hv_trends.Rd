@@ -29,7 +29,7 @@ Default \code{FALSE}.}
 \item{point_size}{Size of the annual summary points. Default \code{2.5}.}
 
 \item{point_shape}{Integer shape code for the summary points (single-group
-only; ignored when \code{group_col} is set — use
+only; ignored when \code{group_col} is set; use
 \code{scale_shape_manual()} instead). Default \code{19L}.}
 
 \item{alpha}{Transparency of the smooth ribbon when \code{se = TRUE}.

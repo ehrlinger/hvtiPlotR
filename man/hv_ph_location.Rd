@@ -29,14 +29,14 @@ the panel, in \code{units}.}
 \item{units}{One of \code{"in"}, \code{"cm"}, \code{"mm"}. Default \code{"in"}.}
 }
 \value{
-A named list with elements \code{width}, \code{height}, \code{left}, \code{top} — all
+A named list with elements \code{width}, \code{height}, \code{left}, \code{top}, all
 in \code{units}. Splat into \code{\link[officer:ph_location]{officer::ph_location()}} via \code{\link[=do.call]{do.call()}}.
 }
 \description{
 Given a fitted ggplot and a target panel rectangle (width/height/left/top
 on the slide), returns the \code{width}, \code{height}, \code{left}, \code{top} values to pass
 to \code{\link[officer:ph_location]{officer::ph_location()}} such that the \emph{panel content area} of the plot
-lands at the specified slide coordinates — regardless of how much room the
+lands at the specified slide coordinates, regardless of how much room the
 axis labels, axis titles, legend, plot title, or plot margins consume.
 }
 \details{

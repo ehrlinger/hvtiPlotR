@@ -20,7 +20,7 @@
 #'
 #' Every plot constructor follows the same pattern:
 #'
-#' 1. Call `hv_*()` to validate and prepare data — returns an `hv_data`
+#' 1. Call `hv_*()` to validate and prepare data. It returns an `hv_data`
 #'    S3 object that also stores diagnostics (group counts, SMDs, etc.)
 #'    under `$tables`.
 #' 2. Call `plot()` on the object to obtain a bare `ggplot2::ggplot`
@@ -73,7 +73,7 @@
 #' ## Saving figures
 #'
 #' * [save_manuscript()]: Save a ggplot at the house manuscript size
-#'   (6 x 4 in) in one call — the manuscript counterpart of [save_ppt()].
+#'   (6 x 4 in) in one call; the manuscript counterpart of [save_ppt()].
 #'   Pair with [theme_hv_manuscript()] for 12 pt type.
 #' * [save_ppt()]: Insert one or more ggplot objects into a PowerPoint
 #'   file as editable DrawingML vector graphics via `officer` + `rvg`.
@@ -84,14 +84,14 @@
 #'
 #' When plots in a set have different axis-label widths (e.g. y-axis
 #' ranges from "1.0" to "4567.2"), the usual `ggsave()` and
-#' `officer::ph_location()` calls let the **panel content area** drift
-#' — which is visually jarring on PPT decks where the black or white
+#' `officer::ph_location()` calls let the panel content area drift,
+#' which is visually jarring on PPT decks where the black or white
 #' panel box should appear constant across slides. Two helpers solve
 #' this by making the panel size and slide position the *target*:
 #'
 #' * [hv_ggsave_dims()]: Given a target panel width and height,
 #'   computes the `ggsave()` `width`/`height` that preserve that panel
-#'   size. Returns a named list — splat into `ggsave()` via
+#'   size. Returns a named list to splat into `ggsave()` via
 #'   `do.call(ggplot2::ggsave, c(list(filename = ..., plot = p), dims))`.
 #' * [hv_ph_location()]: Given a target panel rectangle on the slide,
 #'   computes the `officer::ph_location()` `width`/`height`/`left`/`top`
@@ -192,11 +192,11 @@
 #' scripts written before the `hv_*()` redesign. New code should prefer
 #' the constructor form.
 #'
-#' * [hazard_plot()]: Single-call parametric hazard/survival plot —
+#' * [hazard_plot()]: Single-call parametric hazard/survival plot,
 #'   combine-step equivalent of `hv_hazard()` + `plot()`.
 #' * [survival_difference_plot()]: Single-call mean-survival-difference
-#'   plot — equivalent of `hv_survival_difference()` + `plot()`.
-#' * [nnt_plot()]: Single-call NNT plot — equivalent of `hv_nnt()` +
+#'   plot, equivalent of `hv_survival_difference()` + `plot()`.
+#' * [nnt_plot()]: Single-call NNT plot, equivalent of `hv_nnt()` +
 #'   `plot()`.
 #'
 #' ## Data class and introspection
@@ -260,7 +260,7 @@
 #'
 #' ## Scope and versioning
 #'
-#' `hvtiPlotR` targets **internal HVTI / CORR use only** — it will not
+#' `hvtiPlotR` targets internal HVTI / CORR use only; it will not
 #' be submitted to CRAN. GitHub-only dependencies are declared in
 #' `Remotes:` in DESCRIPTION and install cleanly. Install via:
 #'

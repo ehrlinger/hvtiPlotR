@@ -21,7 +21,7 @@ list-column derived from the indicator matrix (consumed by
 \code{scale_x_upset()}).}
 \item{\code{$meta}}{Named list: \code{intersect}, \code{n_patients},
 \code{n_sets}.}
-\item{\code{$tables}}{List with one element: \code{set_counts} -- a
+\item{\code{$tables}}{List with one element: \code{set_counts}, a
 named integer vector of per-set patient counts.}
 }
 }

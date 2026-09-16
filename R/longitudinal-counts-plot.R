@@ -30,9 +30,9 @@
 #' @param seed       Random seed. Default `42`.
 #'
 #' @return A data frame in long format with columns:
-#'   - `time_label` — ordered factor of follow-up windows
-#'   - `series`     — `"Patients"` or `"Measurements"`
-#'   - `count`      — integer count
+#'   - `time_label`: ordered factor of follow-up windows
+#'   - `series`: `"Patients"` or `"Measurements"`
+#'   - `count`: integer count
 #'
 #' @seealso [hv_longitudinal()], [sample_spaghetti_data()]
 #'

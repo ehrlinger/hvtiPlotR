@@ -36,7 +36,7 @@ Defaults to the order of first appearance in \code{data[[variable_col]]}.}
 lines are drawn (\eqn{\pm}\code{threshold}).  Default \code{10}.}
 }
 \value{
-An object of class \code{c("hv_balance", "hv_data")} — a list
+An object of class \code{c("hv_balance", "hv_data")}: a list
 with three elements:
 \describe{
 \item{\code{$data}}{The input data frame with a \code{cb_index} column

@@ -28,14 +28,14 @@ group. Default \code{"group"}.}
 }
 \value{
 An object of class \code{c("hv_trends", "hv_data")}; call
-\code{plot()} on the result to render the figure — see
-\code{\link{plot.hv_trends}}. The list contains:
+\code{plot()} on the result to render the figure (see
+\code{\link{plot.hv_trends}}). The list contains:
 \describe{
 \item{\code{$data}}{The original patient-level data frame.}
 \item{\code{$meta}}{Named list: \code{x_col}, \code{y_col},
 \code{group_col}, \code{summary_fn}, \code{n_obs},
 \code{n_groups}.}
-\item{\code{$tables}}{List with one element: \code{summary} — a data
+\item{\code{$tables}}{List with one element: \code{summary}, a data
 frame of per-x (per-group) summary statistics used for the point
 overlay.}
 }

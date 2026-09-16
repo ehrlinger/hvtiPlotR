@@ -4,10 +4,10 @@
 #' Cardiovascular Outcomes, Registries and Research (CORR) house style for
 #' four publication contexts:
 #'
-#' * `theme_hv_manuscript()` - clean white background for journal figures
-#' * `theme_hv_poster()` - medium-font theme with visible axis lines for posters
-#' * `theme_hv_ppt_dark()` - dark panel background, white text, large font
-#' * `theme_hv_ppt_light()` - light/transparent panel background, black text
+#' * `theme_hv_manuscript()`: clean white background for journal figures
+#' * `theme_hv_poster()`: medium-font theme with visible axis lines for posters
+#' * `theme_hv_ppt_dark()`: dark panel background, white text, large font
+#' * `theme_hv_ppt_light()`: light/transparent panel background, black text
 #'
 #' Each theme follows the `theme_bw()` contract: pass `base_size` /
 #' `base_family` to control global typography, then chain a `+ theme(...)`

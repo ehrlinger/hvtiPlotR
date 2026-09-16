@@ -35,10 +35,10 @@
 #'   \describe{
 #'     \item{`iv_opyrs`}{Years from `origin_year` to operation date.}
 #'     \item{`iv_dead`}{Follow-up years to death or censoring.}
-#'     \item{`dead`}{Logical — all-source death indicator.}
+#'     \item{`dead`}{Logical all-source death indicator.}
 #'     \item{`iv_event`}{Follow-up years to non-fatal event or censoring.}
-#'     \item{`ev_event`}{Logical — non-fatal event indicator.}
-#'     \item{`deads`}{Logical — active/systematic death indicator (subset of
+#'     \item{`ev_event`}{Logical non-fatal event indicator.}
+#'     \item{`deads`}{Logical active/systematic death indicator (subset of
 #'       `dead`).}
 #'   }
 #'

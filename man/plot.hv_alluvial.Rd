@@ -35,7 +35,7 @@ spacing. Default \code{1/4}.}
 \item{show_yaxis}{Logical; if FALSE, the y-axis title, text, ticks, and
 line are blanked for a clean milestone patient-flow look (the
 alluvium/stratum geometry is untouched). Default \code{TRUE} (counts shown).
-Note the blanking is a \code{theme()} layer, so a \emph{complete} theme
+The blanking is a \code{theme()} layer, so a \emph{complete} theme
 added afterward (e.g. \code{theme_hv_manuscript()}) re-asserts the axis it
 styles; add the theme first and re-blank, or blank the y elements yourself
 after it, when you want both the house theme and a clean axis.}

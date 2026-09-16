@@ -2,11 +2,16 @@
 
 ## Updates to `eda_classify_var()`, `hv_eda()`, and `plot.hv_eda()`
 
-Implemented manual variable classification via type_overrides, 
-added unique_bound to improve classification flexibility, 
-and updated hv_eda to preserve NA values for improved plotting. 
-Enhanced plotting with a loess_cutoff option, support for grouped bar charts 
-via group_bars, and improved handling of missing values in stacked bar plots.
+`eda_classify_var()` takes a `type_overrides` argument to set a variable's
+class by hand (`"Cont"`, `"Cat_Num"` or `"Cat_Char"`), and a `unique_bound`
+argument: a numeric column with any value above it is classified `"Cont"`
+whatever its number of distinct values. `hv_eda()` passes both through and
+keeps `NA` values so the plot can show them.
+
+`plot.hv_eda()` gains `loess_cutoff`, which skips the smooth when the
+y-variable has fewer distinct values than the cutoff, and `group_bars`, which
+draws grouped bars instead of stacked ones. Missing values in stacked bar plots
+are handled better.
 
 # hvtiPlotR 2.7.14
 

@@ -15,7 +15,7 @@ A bare \code{ggplot} object.
 \description{
 Plots \eqn{\log H(t) = \log(-\log S(t))} against \eqn{\log t}, which
 linearises a Weibull survival model and is used to assess the
-proportional-hazards assumption — parallel lines indicate proportional
+proportional-hazards assumption: parallel lines indicate proportional
 hazards.  Corresponds to the SAS \code{LN_CUMHZ * LN_INT} plot produced
 when \code{PLOTC=1}.
 }

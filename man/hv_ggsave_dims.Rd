@@ -16,14 +16,14 @@ hv_ggsave_dims(plot, width, height, units = c("in", "cm", "mm"))
 \item{units}{One of \code{"in"}, \code{"cm"}, \code{"mm"}. Default \code{"in"}.}
 }
 \value{
-A named list with elements \code{width}, \code{height}, \code{units} — shaped to
+A named list with elements \code{width}, \code{height}, \code{units}, shaped to
 splat directly into \code{\link[ggplot2:ggsave]{ggplot2::ggsave()}} via \code{\link[=do.call]{do.call()}} (see examples).
 }
 \description{
 Given a fitted ggplot, returns \code{width} and \code{height} values such that, when
 passed to \code{\link[ggplot2:ggsave]{ggplot2::ggsave()}}, the resulting file has a panel content area
 matching \code{width} / \code{height}. The "panel content area" is the rectangular
-bounding box of the gtable cells tagged \code{panel} — i.e., the smallest
+bounding box of the gtable cells tagged \code{panel}, i.e., the smallest
 rectangle that encloses every plotting panel. Whatever grobs fall inside
 that rectangle (e.g., inter-panel gutters and strip rows that sit between
 facet rows) are counted as part of the target; everything outside it
@@ -35,7 +35,7 @@ strips that sit above/below or beside the panel block such as
 Useful for multi-panel figure sets where a constant data region is
 required across PDFs regardless of label length or legend placement.
 Always measured with a PDF sizing device, which is why \code{units} is limited
-to length (inches, cm, mm) — DPI is irrelevant for vector output.
+to length (inches, cm, mm); DPI is irrelevant for vector output.
 }
 \examples{
 \donttest{

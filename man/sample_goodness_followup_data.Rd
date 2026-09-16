@@ -40,10 +40,10 @@ A data frame with columns:
 \describe{
 \item{\code{iv_opyrs}}{Years from \code{origin_year} to operation date.}
 \item{\code{iv_dead}}{Follow-up years to death or censoring.}
-\item{\code{dead}}{Logical — all-source death indicator.}
+\item{\code{dead}}{Logical all-source death indicator.}
 \item{\code{iv_event}}{Follow-up years to non-fatal event or censoring.}
-\item{\code{ev_event}}{Logical — non-fatal event indicator.}
-\item{\code{deads}}{Logical — active/systematic death indicator (subset of
+\item{\code{ev_event}}{Logical non-fatal event indicator.}
+\item{\code{deads}}{Logical active/systematic death indicator (subset of
 \code{dead}).}
 }
 }

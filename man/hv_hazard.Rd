@@ -73,13 +73,13 @@ Default \code{NULL}.}
 }
 \value{
 An S3 object of class \code{c("hv_hazard", "hv_data")}; call
-\code{plot()} on the result to render — see \code{\link[=plot.hv_hazard]{plot.hv_hazard()}}. The object
+\code{plot()} on the result to render (see \code{\link[=plot.hv_hazard]{plot.hv_hazard()}}). The object
 contains: \verb{$data} (curve data frame), \verb{$meta} (all column-name mappings),
 \verb{$tables$empirical}, \verb{$tables$reference}.
 }
 \description{
-Validates and stores pre-computed parametric curve data — and optional
-Kaplan-Meier empirical overlay and population life-table reference — as an
+Validates and stores pre-computed parametric curve data (and optional
+Kaplan-Meier empirical overlay and population life-table reference) as an
 \code{hv_hazard} object.  Pass the result to \code{\link[=plot.hv_hazard]{plot.hv_hazard()}} to render
 the figure.
 }

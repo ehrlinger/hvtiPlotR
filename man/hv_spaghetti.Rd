@@ -27,7 +27,7 @@ for a single uniform colour. Default \code{NULL}.}
 }
 \value{
 An object of class \code{c("hv_spaghetti", "hv_data")}; call
-\code{plot()} on the result to render the figure — see
+\code{plot()} on the result to render the figure; see
 \code{\link{plot.hv_spaghetti}}. The list contains:
 \describe{
 \item{\code{$data}}{The validated input data frame.}

@@ -47,7 +47,7 @@ utils::globalVariables(c("region", "n"))
 #'
 #' @param data A data frame; one row per patient. Each set column must be
 #'   logical or 0/1 numeric.
-#' @param sets Character vector of \strong{2 to 3} column names to draw as sets.
+#' @param sets Character vector of 2 to 3 column names to draw as sets.
 #'
 #' @return An object of class \code{c("hv_venn", "hv_data")}:
 #' \describe{
@@ -121,7 +121,7 @@ hv_venn <- function(data, sets) {
 #'   labels into its geoms, so forwarding is the only way to reach them).
 #'
 #' @return A \code{\link[ggplot2]{ggplot}} object, already styled by
-#'   \pkg{ggvenn} and \strong{coordinate-free} (no axes). Tune it through this
+#'   \pkg{ggvenn} and coordinate-free (no axes). Tune it through this
 #'   method's arguments (\code{fill}, \code{text_size}, \code{set_name_size},
 #'   \code{...}). Do \emph{not} add an axis-bearing house theme such as
 #'   \code{theme_hv_manuscript()}: a Venn has no meaningful x/y, and the theme

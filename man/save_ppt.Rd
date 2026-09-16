@@ -57,11 +57,11 @@ Default \code{1.2} (below a standard title bar). Ignored when \code{panel_box}
 is supplied.}
 
 \item{panel_box}{Named list \code{list(width, height, left, top)} describing
-the \strong{panel content area} to anchor on every slide (in inches).
+the panel content area to anchor on every slide (in inches).
 Per-plot slide placement is computed via \code{\link[=hv_ph_location]{hv_ph_location()}} so the panel
 lands at the same slide coordinates on every slide regardless of
 axis-label width. Defaults to
-\code{list(width = 8.88, height = 4.51, left = 2.58, top = 1.63)} — the
+\code{list(width = 8.88, height = 4.51, left = 2.58, top = 1.63)}, the
 standard CORR fixed-panel rectangle for AATS-style dark decks. Pass
 \code{panel_box = NULL} to fall back to the fixed \code{width}/\code{height}/\code{left}/
 \code{top} arguments for every slide (legacy behavior). Ignored for
@@ -74,7 +74,7 @@ Invisibly returns the path given by \code{powerpoint}.
 \description{
 Writes one ggplot per slide into a PowerPoint file using
 \code{\link[officer:ph_with]{officer::ph_with()}} and \code{\link[rvg:dml]{rvg::dml()}} so that every plot lands as an
-\strong{editable DrawingML vector graphic} — shapes, lines, and text remain
+editable DrawingML vector graphic: shapes, lines, and text remain
 selectable in PowerPoint. Plots are placed via
 \code{\link[officer:ph_location]{officer::ph_location()}} for pixel-exact positioning; titles go into the
 designated title placeholder via \code{\link[officer:ph_location_type]{officer::ph_location_type()}}.

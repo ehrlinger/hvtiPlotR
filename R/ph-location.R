@@ -15,7 +15,7 @@
 #' Given a fitted ggplot and a target panel rectangle (width/height/left/top
 #' on the slide), returns the `width`, `height`, `left`, `top` values to pass
 #' to [officer::ph_location()] such that the *panel content area* of the plot
-#' lands at the specified slide coordinates — regardless of how much room the
+#' lands at the specified slide coordinates, regardless of how much room the
 #' axis labels, axis titles, legend, plot title, or plot margins consume.
 #'
 #' The panel content area is the rectangular bounding box of the gtable cells
@@ -35,7 +35,7 @@
 #'   the panel, in `units`.
 #' @param units        One of `"in"`, `"cm"`, `"mm"`. Default `"in"`.
 #'
-#' @return A named list with elements `width`, `height`, `left`, `top` — all
+#' @return A named list with elements `width`, `height`, `left`, `top`, all
 #'   in `units`. Splat into [officer::ph_location()] via [do.call()].
 #'
 #' @seealso [hv_ggsave_dims()] for the sizing-only analogue used with

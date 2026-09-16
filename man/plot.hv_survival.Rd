@@ -45,7 +45,7 @@ to add scales, axis limits, labels, and \code{\link{theme_hv_manuscript}}.
 \description{
 Builds a bare \code{ggplot2} object from an \code{\link{hv_survival}}
 data object.  The plot contains the correct aesthetics and geometries but
-no scale, label, or theme modifications — add those with \code{+} as you
+no scale, label, or theme modifications; add those with \code{+} as you
 would with any \code{ggplot2} object.
 }
 \examples{

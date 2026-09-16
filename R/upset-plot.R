@@ -91,7 +91,7 @@ sample_upset_data <- function(n = 500, seed = 42L) {
 #'     `scale_x_upset()`).}
 #'   \item{\code{$meta}}{Named list: \code{intersect}, \code{n_patients},
 #'     \code{n_sets}.}
-#'   \item{\code{$tables}}{List with one element: \code{set_counts} -- a
+#'   \item{\code{$tables}}{List with one element: \code{set_counts}, a
 #'     named integer vector of per-set patient counts.}
 #' }
 #'
@@ -191,7 +191,7 @@ print.hv_upset <- function(x, ...) {
 #'
 #' When \code{set_size = TRUE} (the default) the function composes a
 #' patchwork of two plots: a horizontal set-size sidebar and the intersection
-#' bar chart. Apply themes to **all panels** with patchwork's \code{&}
+#' bar chart. Apply themes to all panels with patchwork's \code{&}
 #' operator:
 #' \preformatted{plot(up) & theme_hv_poster()}
 #'

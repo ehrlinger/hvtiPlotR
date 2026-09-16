@@ -40,8 +40,8 @@
 #'
 #' @return A character vector of hex colours, in series order.
 #'
-#' @seealso [hv_ppt_series()], which applies these to a plot. Note that
-#'   annotation text is drawn in the theme's ink, matching the axis, rather
+#' @seealso [hv_ppt_series()], which applies these to a plot.
+#'   Annotation text is drawn in the theme's ink, matching the axis, rather
 #'   than in a series colour, so these are not the values to label a curve
 #'   with.
 #'
@@ -84,7 +84,7 @@ hv_ppt_palette <- function(mode = c("dark", "light"), n = NULL) {
 #'
 #' @details
 #' The return value is a plain list, and ggplot2's `+` unrolls a list element
-#' by element, so it composes just like a theme:
+#' by element, so it composes like a theme:
 #'
 #' ```
 #' ppt <- hv_ppt_series()

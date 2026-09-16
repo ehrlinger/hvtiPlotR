@@ -24,8 +24,8 @@ parameter). Defaults to \code{0.05}.}
 \code{c("Type A", "Type B")}).  When \code{NULL} (the default) a single
 unstratified cohort is generated.}
 
-\item{hazard_ratios}{Numeric vector of hazard multipliers — one per element
-of \code{strata_levels} — relative to \code{hazard_rate}.  Defaults to
+\item{hazard_ratios}{Numeric vector of hazard multipliers, one per element
+of \code{strata_levels}, relative to \code{hazard_rate}.  Defaults to
 all 1 (equal hazard across strata).  Ignored when \code{strata_levels}
 is \code{NULL}.}
 
@@ -42,7 +42,7 @@ A data frame with columns:
 \code{study_years}.}
 \item{\code{dead}}{Logical event indicator; \code{TRUE} if the subject
 experienced the event before administrative censoring.}
-\item{\code{iv_opyrs}}{Operation year offset — uniform over
+\item{\code{iv_opyrs}}{Operation year offset, uniform over
 \code{[1990, 1990 + study_years]}.}
 \item{\code{age_at_op}}{Age at operation (years); drawn from
 \eqn{N(65, 10)}, capped to \code{[30, 90]}.}
@@ -53,7 +53,7 @@ experienced the event before administrative censoring.}
 \description{
 Simulates exponential survival times with administrative censoring at
 \code{study_years}.  The default \code{hazard_rate = 0.05} yields roughly
-63\\% 20-year mortality — a realistic range for cardiac surgery cohorts.
+63\\% 20-year mortality, a realistic range for cardiac surgery cohorts.
 }
 \examples{
 # Unstratified

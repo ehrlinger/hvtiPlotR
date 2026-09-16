@@ -31,7 +31,7 @@ row order (its levels set the order); a character column orders rows
 alphabetically. Default \code{NULL}.}
 
 \item{report_times}{Numeric time points for the columns. \code{NULL}
-(default) uses the table's own points, or -- on the raw-data path -- an
+(default) uses the table's own points or, on the raw-data path, an
 even spread derived from the observed time range. On the object and
 precomputed-table paths a non-\code{NULL} value \emph{selects} which of
 the table's existing times to show; the counts are not recomputed, and

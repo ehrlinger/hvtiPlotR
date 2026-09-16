@@ -12,7 +12,7 @@
 #' Given a fitted ggplot, returns `width` and `height` values such that, when
 #' passed to [ggplot2::ggsave()], the resulting file has a panel content area
 #' matching `width` / `height`. The "panel content area" is the rectangular
-#' bounding box of the gtable cells tagged `panel` — i.e., the smallest
+#' bounding box of the gtable cells tagged `panel`, i.e., the smallest
 #' rectangle that encloses every plotting panel. Whatever grobs fall inside
 #' that rectangle (e.g., inter-panel gutters and strip rows that sit between
 #' facet rows) are counted as part of the target; everything outside it
@@ -23,14 +23,14 @@
 #' Useful for multi-panel figure sets where a constant data region is
 #' required across PDFs regardless of label length or legend placement.
 #' Always measured with a PDF sizing device, which is why `units` is limited
-#' to length (inches, cm, mm) — DPI is irrelevant for vector output.
+#' to length (inches, cm, mm); DPI is irrelevant for vector output.
 #'
 #' @param plot   A ggplot (or patchwork) object.
 #' @param width  Target panel content area width, in `units`.
 #' @param height Target panel content area height, in `units`.
 #' @param units  One of `"in"`, `"cm"`, `"mm"`. Default `"in"`.
 #'
-#' @return A named list with elements `width`, `height`, `units` — shaped to
+#' @return A named list with elements `width`, `height`, `units`, shaped to
 #'   splat directly into [ggplot2::ggsave()] via [do.call()] (see examples).
 #'
 #' @seealso [hv_ph_location()] for the slide-placement analogue used with

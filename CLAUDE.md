@@ -9,7 +9,7 @@ affordances live here.
 ## Before you touch code
 
 `AGENTS.md` says to orient before editing, which matters more here than in most of the family:
-76 exports and 47 S3 methods is too much surface to infer from a partial file read. In Claude
+81 exports and 48 S3 methods is too much surface to infer from a partial file read. In Claude
 Code the way to do that is the codemap — it lives in the Obsidian vault under
 `Claude/repomaps/` and is read via the `read-codemap` skill (`/codemap hvtiPlotR`). If the
 codemap looks stale, say so and offer to refresh it (`/regenerate-codemap`) rather than
@@ -17,7 +17,7 @@ working from a guess.
 
 If the vault is not available, say so rather than staying quiet about it, then orient from the
 repo itself — `NAMESPACE`, `CONTRIBUTING.md`, and `_pkgdown.yml`'s reference sections, which
-group the 76 exports by concept — before editing.
+group the 81 exports by concept — before editing.
 
 ## Prose
 

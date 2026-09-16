@@ -37,7 +37,7 @@ Must have columns matching \code{x_col} and \code{"value"}, plus
 }
 \value{
 An object of class \code{c("hv_nonparametric", "hv_data")}; call
-\code{plot()} on the result to render the figure — see
+\code{plot()} on the result to render the figure; see
 \code{\link{plot.hv_nonparametric}}. The list contains:
 \describe{
 \item{\code{$data}}{The \code{curve_data} data frame.}

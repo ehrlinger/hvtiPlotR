@@ -77,12 +77,12 @@ devtools::build_vignettes()
 ```
 
 `devtools::load_all()` re-sources all `R/*.R` files and makes every exported
-function available immediately — much faster than `install.packages()` during
+function available immediately, much faster than `install.packages()` during
 development.
 
 ---
 
-# Track A — Porting a SAS template {#track-a}
+# Track A: Porting a SAS template {#track-a}
 
 This track walks through adding a brand-new plot function by porting an
 existing SAS template. We use a fictional template
@@ -114,7 +114,7 @@ Before writing any R code, identify:
 ## Step 2: Create the R source file
 
 Create `R/my-curve-plot.R` (use kebab-case for the filename). Every plot
-family lives in its own file — plot functions and their sample-data
+family lives in its own file, with the plot functions and their sample-data
 companions together.
 
 ```r
@@ -220,7 +220,7 @@ bmi_curve_plot <- function(curve_data,
 A few conventions the function above follows:
 
 - **Column names are strings**, passed via `x_col =`, `estimate_col =`, etc.
-  Never use `enquo()` or `{{ }}` — it makes column names opaque to the
+  Never use `enquo()` or `{{ }}`; it makes column names opaque to the
   caller.
 - **No colours or themes** are applied inside the function. The caller adds
   `scale_colour_*()` and `theme_hv_manuscript()` outside.
@@ -234,7 +234,7 @@ Add `sample_bmi_curve_data()` to the same file. The generator should:
 
 - Accept `n` (patient count), `time_max` / range, and `seed`.
 - Return a data frame whose column names **match the R defaults** (`time`,
-  `estimate`, `lower`, `upper`) — not the SAS column names.
+  `estimate`, `lower`, `upper`), not the SAS column names.
 - Produce realistic-looking data at a plausible scale.
 
 ```r
@@ -388,7 +388,8 @@ Run with `devtools::test(filter = "bmi")`.
 
 ## Step 9: Update NEWS.md
 
-Add a bullet to the current dev version at the top of `NEWS.md`:
+Add a bullet under the `# hvtiPlotR (unreleased)` heading at the top of `NEWS.md`,
+adding that heading if it is not already there:
 
 ```markdown
 * Added `bmi_curve_plot()` and `sample_bmi_curve_data()` — nonparametric
@@ -399,7 +400,7 @@ Add a bullet to the current dev version at the top of `NEWS.md`:
 ## Step 10: Final checklist before opening a PR
 
 Run these three commands in order before pushing your branch. All three must
-complete cleanly -- zero errors, zero warnings, and ideally zero notes from
+complete cleanly, with zero errors, zero warnings, and zero notes from
 `check()`. Then open a pull request against `main` on GitHub.
 
 ```r
@@ -410,14 +411,14 @@ devtools::check()      # 0 errors, 0 warnings, 0 notes (ideally)
 
 ---
 
-# Track B — Package infrastructure {#track-b}
+# Track B: Package infrastructure {#track-b}
 
 ## Package structure overview
 
 The tree below shows where each piece of the package lives. The two directories
 you will touch most are `R/` (one file per plot family) and
 `tests/testthat/` (one test file per source file). Everything under `man/` and
-`NAMESPACE` is auto-generated -- do not edit those by hand.
+`NAMESPACE` is auto-generated; do not edit those by hand.
 
 ```
 hvtiPlotR/
@@ -461,7 +462,7 @@ from the roxygen comments in `R/*.R`. **Never edit these files by hand.**
 | Internal helpers | `.` prefix | `.bmi_compute_ci()` |
 
 Internal helpers (prefixed with `.`) should have `@keywords internal` and
-**no** `@export` — they will not appear in `NAMESPACE` or generate `.Rd`
+no `@export`, so they will not appear in `NAMESPACE` or generate `.Rd`
 files.
 
 ### The bare-ggplot pattern
@@ -471,11 +472,11 @@ Every plot function in hvtiPlotR follows five rules:
 1. Accept model-output data frames (not raw patient data).
 2. Map all column references through string arguments (`x_col =`, etc.).
 3. Use `.data[[col]]` for tidy evaluation inside `aes()`.
-4. Return an unstyled ggplot — no `scale_*()`, no `labs()`, no theme.
+4. Return an unstyled ggplot: no `scale_*()`, no `labs()`, no theme.
 5. Not call `print()` or `invisible()`.
 
 Return the bare ggplot and callers can layer scales, labels, and a theme on
-top — that's the `+` composition grammar covered in
+top with the `+` composition grammar covered in
 `vignettes/plot-decorators.qmd`.
 
 ### Tidy evaluation
@@ -530,8 +531,8 @@ testthat::snapshot_accept()   # accept all pending diffs
 ### Running checks
 
 Use `devtools::test()` for fast, interactive feedback during development.
-Switch to `devtools::check()` -- or the more verbose `rcmdcheck::rcmdcheck()`
--- when you want the full `R CMD CHECK` sweep, including example execution and
+Switch to `devtools::check()` (or the more verbose `rcmdcheck::rcmdcheck()`)
+when you want the full `R CMD CHECK` sweep, including example execution and
 vignette builds.
 
 ```r
@@ -562,7 +563,7 @@ Vignettes live in `vignettes/` as `.qmd` files; Quarto builds them
 - Use `here::here()` for file paths in eval-false chunks (not hard-coded
   absolute paths).
 - Use `system.file("extdata", "hv_ppt_template.pptx", package = "hvtiPlotR")` for the
-  bundled PPT template — never a hard-coded path.
+  bundled PPT template, never a hard-coded path.
 - After adding a new vignette, register it in `_pkgdown.yml` under
   `articles`.
 
@@ -570,13 +571,13 @@ Vignettes live in `vignettes/` as `.qmd` files; Quarto builds them
 
 1. Update the version in `DESCRIPTION` (follow
    [semantic versioning](https://semver.org/): `MAJOR.MINOR.PATCH`).
-2. Move the dev entries in `NEWS.md` to a new `# hvtiPlotR X.Y.Z` heading.
-3. Run `devtools::check()` — you need zero errors and zero warnings before
-   tagging.
+2. Rename the `# hvtiPlotR (unreleased)` heading in `NEWS.md` to `# hvtiPlotR X.Y.Z`.
+3. Run `devtools::check()`; you need zero errors, zero warnings, and zero notes
+   before tagging.
 4. Tag the release commit: `git tag -a vX.Y.Z -m "Release X.Y.Z"`.
 5. Push the tag: `git push origin vX.Y.Z`.
 6. The pkgdown GitHub Action picks up the tag and rebuilds the documentation
-   site — nothing else to do.
+   site.
 
 ---
 

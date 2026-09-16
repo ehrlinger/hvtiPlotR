@@ -29,7 +29,7 @@
 #' Generates a realistic patient-level longitudinal data set for demonstrating
 #' [hv_trends()]. Each row is one patient with a surgery year, continuous
 #' outcome (`value`), and a grouping variable (`group`). Trend patterns are
-#' modelled so that group means diverge over time — matching the multi-group
+#' modelled so that group means diverge over time, matching the multi-group
 #' NYHA / LV-mass / LOS pattern in the SAS template.
 #'
 #' @param n          Total number of patients. Default `600`.
@@ -43,9 +43,9 @@
 #' @param seed       Random seed for reproducibility. Default `42`.
 #'
 #' @return A data frame with columns:
-#'   - `year`  — x-axis value (integer; surgery year or patient age)
-#'   - `value` — continuous outcome (numeric)
-#'   - `group` — group label (factor, ordered by `groups`); absent when
+#'   - `year`: x-axis value (integer; surgery year or patient age)
+#'   - `value`: continuous outcome (numeric)
+#'   - `group`: group label (factor, ordered by `groups`); absent when
 #'     `groups = NULL`
 #'
 #' @seealso [hv_trends()]
@@ -112,14 +112,14 @@ sample_trends_data <- function(n          = 600,
 #'   \code{"mean"} or \code{"median"}. Default \code{"mean"}.
 #'
 #' @return An object of class \code{c("hv_trends", "hv_data")}; call
-#'   \code{plot()} on the result to render the figure — see
-#'   \code{\link{plot.hv_trends}}. The list contains:
+#'   \code{plot()} on the result to render the figure (see
+#'   \code{\link{plot.hv_trends}}). The list contains:
 #' \describe{
 #'   \item{\code{$data}}{The original patient-level data frame.}
 #'   \item{\code{$meta}}{Named list: \code{x_col}, \code{y_col},
 #'     \code{group_col}, \code{summary_fn}, \code{n_obs},
 #'     \code{n_groups}.}
-#'   \item{\code{$tables}}{List with one element: \code{summary} — a data
+#'   \item{\code{$tables}}{List with one element: \code{summary}, a data
 #'     frame of per-x (per-group) summary statistics used for the point
 #'     overlay.}
 #' }
@@ -261,7 +261,7 @@ print.hv_trends <- function(x, ...) {
 #'   Default \code{FALSE}.
 #' @param point_size   Size of the annual summary points. Default \code{2.5}.
 #' @param point_shape  Integer shape code for the summary points (single-group
-#'   only; ignored when \code{group_col} is set — use
+#'   only; ignored when \code{group_col} is set; use
 #'   \code{scale_shape_manual()} instead). Default \code{19L}.
 #' @param alpha        Transparency of the smooth ribbon when \code{se = TRUE}.
 #'   Default \code{0.2}.

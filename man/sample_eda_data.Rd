@@ -17,17 +17,17 @@ Default \code{c(2005L, 2020L)}.}
 \value{
 A data frame with columns:
 \itemize{
-\item \code{year}        — integer surgery year (discrete x for barplots)
-\item \code{op_years}    — continuous years from first year in range (x for
+\item \code{year}: integer surgery year (discrete x for barplots)
+\item \code{op_years}: continuous years from first year in range (x for
 scatterplots)
-\item \code{male}        — binary 0/1 (sex)
-\item \code{cabg}        — binary 0/1 (concomitant CABG)
-\item \code{nyha}        — ordinal 1–4 (NYHA class)
-\item \code{valve_morph} — character (valve morphology: Bicuspid / Tricuspid /
+\item \code{male}: binary 0/1 (sex)
+\item \code{cabg}: binary 0/1 (concomitant CABG)
+\item \code{nyha}: ordinal 1–4 (NYHA class)
+\item \code{valve_morph}: character (valve morphology: Bicuspid / Tricuspid /
 Unicuspid)
-\item \code{ef}          — continuous ejection fraction (\%)
-\item \code{lv_mass}     — continuous LV mass index (g/m^2)
-\item \code{peak_grad}   — continuous peak gradient (mmHg)
+\item \code{ef}: continuous ejection fraction (\%)
+\item \code{lv_mass}: continuous LV mass index (g/m^2)
+\item \code{peak_grad}: continuous peak gradient (mmHg)
 }
 }
 \description{

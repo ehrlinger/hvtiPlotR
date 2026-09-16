@@ -35,7 +35,7 @@ labels into its geoms, so forwarding is the only way to reach them).}
 }
 \value{
 A \code{\link[ggplot2]{ggplot}} object, already styled by
-\pkg{ggvenn} and \strong{coordinate-free} (no axes). Tune it through this
+\pkg{ggvenn} and coordinate-free (no axes). Tune it through this
 method's arguments (\code{fill}, \code{text_size}, \code{set_name_size},
 \code{...}). Do \emph{not} add an axis-bearing house theme such as
 \code{theme_hv_manuscript()}: a Venn has no meaningful x/y, and the theme
