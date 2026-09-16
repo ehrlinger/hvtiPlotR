@@ -66,7 +66,13 @@ non-negative whole numbers with no more than <code>unique_limit</code> distinct 
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">eda_classify_var</span><span class="op">(</span><span class="va">x</span>, unique_limit <span class="op">=</span> <span class="fl">6L</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">eda_classify_var</span><span class="op">(</span></span>
+<span>  <span class="va">x</span>,</span>
+<span>  unique_limit <span class="op">=</span> <span class="fl">6L</span>,</span>
+<span>  unique_bound <span class="op">=</span> <span class="fl">100</span>,</span>
+<span>  var_name <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  type_overrides <span class="op">=</span> <span class="cn">NULL</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -80,6 +86,22 @@ non-negative whole numbers with no more than <code>unique_limit</code> distinct 
 <dt id="arg-unique-limit">unique_limit<a class="anchor" aria-label="anchor" href="#arg-unique-limit"></a></dt>
 <dd><p>Integer threshold. Numeric columns with more distinct
 values than this are classified as <code>"Cont"</code>. Default <code>6</code>.</p></dd>
+
+
+<dt id="arg-unique-bound">unique_bound<a class="anchor" aria-label="anchor" href="#arg-unique-bound"></a></dt>
+<dd><p>Integer threshold.  Numeric columns that contain any values
+greater than this are classified as <code>"Cont"</code>, regardless of number of distinct values.
+Default <code>100</code></p></dd>
+
+
+<dt id="arg-var-name">var_name<a class="anchor" aria-label="anchor" href="#arg-var-name"></a></dt>
+<dd><p>A string containing the name of the variable/column.  Default <code>NULL</code></p></dd>
+
+
+<dt id="arg-type-overrides">type_overrides<a class="anchor" aria-label="anchor" href="#arg-type-overrides"></a></dt>
+<dd><p>A named vector of variables and variable types
+("Cont", "Cat_Num", or "Cat_Char") to manually set their classifications,
+e.g., c(severity = "Cat_Num"). Default <code>NULL</code></p></dd>
 
 </dl></div>
     <div class="section level2">

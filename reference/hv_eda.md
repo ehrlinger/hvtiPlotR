@@ -18,6 +18,8 @@ hv_eda(
   y_col = "ef",
   y_label = NULL,
   unique_limit = 6L,
+  unique_bound = 100,
+  type_overrides = NULL,
   show_percent = FALSE
 )
 ```
@@ -49,6 +51,19 @@ hv_eda(
   [`eda_classify_var`](https://ehrlinger.github.io/hvtiPlotR/reference/eda_classify_var.md)
   to distinguish categorical from continuous numeric columns. Default
   `6`.
+
+- unique_bound:
+
+  Integer threshold passed to
+  [`eda_classify_var`](https://ehrlinger.github.io/hvtiPlotR/reference/eda_classify_var.md)
+  to distinguish categorical from continuous numeric columns. Default
+  `100`.
+
+- type_overrides:
+
+  Vector of manually set classifications passed to
+  [`eda_classify_var`](https://ehrlinger.github.io/hvtiPlotR/reference/eda_classify_var.md).
+  Default `NULL`
 
 - show_percent:
 

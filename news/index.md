@@ -1,5 +1,15 @@
 # Changelog
 
+## hvtiPlotR 2.7.15
+
+### Updates to `eda_classify_var()`, `hv_eda()`, and `plot.hv_eda()`
+
+Implemented manual variable classification via type_overrides, added
+unique_bound to improve classification flexibility, and updated hv_eda
+to preserve NA values for improved plotting. Enhanced plotting with a
+loess_cutoff option, support for grouped bar charts via group_bars, and
+improved handling of missing values in stacked bar plots.
+
 ## hvtiPlotR 2.7.14
 
 ### New `hv_correlation_matrix()`: the scatter-plot matrix of `proc corr plots=matrix`

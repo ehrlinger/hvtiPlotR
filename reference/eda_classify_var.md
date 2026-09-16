@@ -8,7 +8,13 @@ with no more than `unique_limit` distinct values.
 ## Usage
 
 ``` r
-eda_classify_var(x, unique_limit = 6L)
+eda_classify_var(
+  x,
+  unique_limit = 6L,
+  unique_bound = 100,
+  var_name = NULL,
+  type_overrides = NULL
+)
 ```
 
 ## Arguments
@@ -21,6 +27,22 @@ eda_classify_var(x, unique_limit = 6L)
 
   Integer threshold. Numeric columns with more distinct values than this
   are classified as `"Cont"`. Default `6`.
+
+- unique_bound:
+
+  Integer threshold. Numeric columns that contain any values greater
+  than this are classified as `"Cont"`, regardless of number of distinct
+  values. Default `100`
+
+- var_name:
+
+  A string containing the name of the variable/column. Default `NULL`
+
+- type_overrides:
+
+  A named vector of variables and variable types ("Cont", "Cat_Num", or
+  "Cat_Char") to manually set their classifications, e.g., c(severity =
+  "Cat_Num"). Default `NULL`
 
 ## Value
 

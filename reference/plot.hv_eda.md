@@ -8,7 +8,15 @@ the chart:
 
 ``` r
 # S3 method for class 'hv_eda'
-plot(x, smooth_method = "loess", smooth_span = 0.8, smooth_se = FALSE, ...)
+plot(
+  x,
+  smooth_method = "loess",
+  smooth_span = 0.8,
+  smooth_se = FALSE,
+  loess_cutoff = 10,
+  group_bars = FALSE,
+  ...
+)
 ```
 
 ## Arguments
@@ -30,6 +38,15 @@ plot(x, smooth_method = "loess", smooth_span = 0.8, smooth_se = FALSE, ...)
 - smooth_se:
 
   Logical; show confidence ribbon around smooth? Default `FALSE`.
+
+- loess_cutoff:
+
+  Integer, if the y-variable has less unique values than this, the
+  smooth line will not be plotted. Default `10`.
+
+- group_bars:
+
+  Logical; Plot as grouped bars instead of stacked? Default `FALSE`.
 
 - ...:
 
