@@ -1,4 +1,4 @@
-# hvtiPlotR (unreleased)
+# hvtiPlotR 2.7.15
 
 ## Documentation pass across vignettes, reference pages and README
 
