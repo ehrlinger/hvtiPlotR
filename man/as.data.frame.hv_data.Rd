@@ -16,10 +16,10 @@
 \item{...}{Ignored.}
 }
 \value{
-A \code{data.frame} — \code{x$data}.
+The \code{data.frame} stored in \code{x$data}.
 }
 \description{
-Returns the \verb{$data} slot — the tidy data frame each hv_data subclass
+Returns the \verb{$data} slot, the tidy data frame each hv_data subclass
 carries for ggplot2 consumption. Lets callers use the standard
 \code{\link[base:as.data.frame]{base::as.data.frame()}} / \code{\link[base:data.frame]{base::data.frame()}} coercion in tidyverse
 pipelines instead of reaching for the \verb{$data} accessor.

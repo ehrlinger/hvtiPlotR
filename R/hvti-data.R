@@ -38,10 +38,10 @@
 #' to create its return value.  It enforces the three-slot contract
 #' (`$data`, `$meta`, `$tables`) and attaches the two-level S3 class vector.
 #'
-#' @param data     A data frame -- the primary tidy data ready for ggplot2.
+#' @param data     A data frame holding the primary tidy data ready for ggplot2.
 #' @param meta     A named list of metadata (column names, method choices,
 #'   computed statistics, etc.).
-#' @param tables   A named list of auxiliary objects — typically data frames
+#' @param tables   A named list of auxiliary objects, typically data frames
 #'   (risk tables, report tables, etc.) but may also contain vectors or other
 #'   R objects (e.g. named integer vectors for set counts).  May be `list()`.
 #' @param subclass A single string naming the specific subclass
@@ -178,7 +178,7 @@ ggplot2::autoplot
 
 #' Extract the underlying data frame from an hv_data object
 #'
-#' Returns the `$data` slot — the tidy data frame each hv_data subclass
+#' Returns the `$data` slot, the tidy data frame each hv_data subclass
 #' carries for ggplot2 consumption. Lets callers use the standard
 #' [base::as.data.frame()] / [base::data.frame()] coercion in tidyverse
 #' pipelines instead of reaching for the `$data` accessor.
@@ -188,7 +188,7 @@ ggplot2::autoplot
 #' @param optional  Ignored; present for base-method-signature consistency.
 #' @param ...       Ignored.
 #'
-#' @return A `data.frame` — `x$data`.
+#' @return The `data.frame` stored in `x$data`.
 #' @export
 # row.names is dictated by the as.data.frame generic, not chosen here. Renaming
 # it would break the signature match that S3 dispatch relies on.

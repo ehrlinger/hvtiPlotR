@@ -50,7 +50,7 @@ categorical variables: columns \code{x} (factor) and \code{fill}
 \item{\code{$meta}}{Named list: \code{x_col}, \code{y_col},
 \code{y_label}, \code{var_type} (\code{"Cont"}, \code{"Cat_Num"}, or
 \code{"Cat_Char"}), \code{show_percent}, \code{n_obs}.}
-\item{\code{$tables}}{For continuous variables: \code{rug_data} — rows
+\item{\code{$tables}}{For continuous variables: \code{rug_data}, the rows
 where \code{y_col} is \code{NA}, used for the rug layer.  Empty list
 for categorical variables.}
 }

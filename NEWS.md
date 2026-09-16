@@ -1,12 +1,31 @@
-# hvtiPlotR 2.7.15
+# hvtiPlotR (unreleased)
+
+## Documentation pass across vignettes, reference pages and README
+
+Prose is tightened throughout, and stale references are corrected:
+`plot-decorators` no longer documents a `style` argument no theme has, and
+names `panel_box` rather than `panel_left`/`panel_top`; the `hvtiPlotR`
+vignette's quick reference points to `hv_nonparametric()`, its section and
+figure references resolve, and the template map lists the R templates behind
+`hv_eda()` and `hv_alluvial()`. The contributing guide's Track A now teaches the
+`hv_<concept>()` constructor and `plot.hv_<concept>()` method pair, with tests
+that prove the plot carries data. The `parametric` and `nonparametric`
+dataset pages now describe `init` as the event-free state, not re-operation,
+and match the columns actually shipped. `DESCRIPTION` has a title-case `Title`
+and a `Description` that starts with a capital letter.
 
 ## Updates to `eda_classify_var()`, `hv_eda()`, and `plot.hv_eda()`
 
-Implemented manual variable classification via type_overrides, 
-added unique_bound to improve classification flexibility, 
-and updated hv_eda to preserve NA values for improved plotting. 
-Enhanced plotting with a loess_cutoff option, support for grouped bar charts 
-via group_bars, and improved handling of missing values in stacked bar plots.
+`eda_classify_var()` takes a `type_overrides` argument to set a variable's
+class by hand (`"Cont"`, `"Cat_Num"` or `"Cat_Char"`), and a `unique_bound`
+argument: a numeric column with any value above it is classified `"Cont"`
+whatever its number of distinct values. `hv_eda()` passes both through and
+keeps `NA` values so the plot can show them.
+
+`plot.hv_eda()` gains `loess_cutoff`, which skips the smooth when the
+y-variable has fewer distinct values than the cutoff, and `group_bars`, which
+draws grouped bars instead of stacked ones. Missing values in stacked bar plots
+are handled better.
 
 # hvtiPlotR 2.7.14
 

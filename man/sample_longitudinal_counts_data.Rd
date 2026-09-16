@@ -18,9 +18,9 @@ sample_longitudinal_counts_data(n_patients = 300, max_obs = 6, seed = 42L)
 \value{
 A data frame in long format with columns:
 \itemize{
-\item \code{time_label} — ordered factor of follow-up windows
-\item \code{series}     — \code{"Patients"} or \code{"Measurements"}
-\item \code{count}      — integer count
+\item \code{time_label}: ordered factor of follow-up windows
+\item \code{series}: \code{"Patients"} or \code{"Measurements"}
+\item \code{count}: integer count
 }
 }
 \description{

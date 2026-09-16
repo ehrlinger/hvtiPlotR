@@ -123,10 +123,10 @@ four publication contexts:
 }
 \details{
 \itemize{
-\item \code{theme_hv_manuscript()} - clean white background for journal figures
-\item \code{theme_hv_poster()} - medium-font theme with visible axis lines for posters
-\item \code{theme_hv_ppt_dark()} - dark panel background, white text, large font
-\item \code{theme_hv_ppt_light()} - light/transparent panel background, black text
+\item \code{theme_hv_manuscript()}: clean white background for journal figures
+\item \code{theme_hv_poster()}: medium-font theme with visible axis lines for posters
+\item \code{theme_hv_ppt_dark()}: dark panel background, white text, large font
+\item \code{theme_hv_ppt_light()}: light/transparent panel background, black text
 }
 
 Each theme follows the \code{theme_bw()} contract: pass \code{base_size} /

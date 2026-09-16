@@ -89,9 +89,9 @@ km_fit <- function(data, time_col, event_col, group_col, conf_level, method) {
 ##'
 ##' \describe{
 ##'   \item{\code{cumhaz}}{Cumulative hazard H(t) = -log S(t).}
-##'   \item{\code{log_cumhaz}}{log H(t) — y-axis of the log-log survival
+##'   \item{\code{log_cumhaz}}{log H(t), the y-axis of the log-log survival
 ##'     plot used to assess the proportional-hazards assumption.}
-##'   \item{\code{log_time}}{log(t) — x-axis of log-scale PLOTC plots.}
+##'   \item{\code{log_time}}{log(t), the x-axis of log-scale PLOTC plots.}
 ##'   \item{\code{hazard}}{Instantaneous hazard estimate:
 ##'     log(S(t_prev) / S(t)) / (t - t_prev).  Only defined at event times
 ##'     with \code{delta_t > 0}; \code{NA} at censoring times.}
@@ -101,7 +101,7 @@ km_fit <- function(data, time_col, event_col, group_col, conf_level, method) {
 ##'   \item{\code{life}}{Cumulative integral of the survival function
 ##'     (restricted mean survival time) using the SAS trapezoidal rule:
 ##'     LIFE += delta_t * (3*S(t) - S(t_prev)) / 2.}
-##'   \item{\code{proplife}}{LIFE / t — proportionate life length.}
+##'   \item{\code{proplife}}{LIFE / t, the proportionate life length.}
 ##' }
 ##'
 ##' @param fit       A \code{survfit} object.
@@ -339,7 +339,7 @@ km_build_hazard_plot <- function(km_df, alpha) {
 ##'
 ##' Plots \eqn{\log H(t) = \log(-\log S(t))} against \eqn{\log t}, which
 ##' linearises a Weibull survival model and is used to assess the
-##' proportional-hazards assumption — parallel lines indicate proportional
+##' proportional-hazards assumption: parallel lines indicate proportional
 ##' hazards.  Corresponds to the SAS \code{LN_CUMHZ * LN_INT} plot produced
 ##' when \code{PLOTC=1}.
 ##'
@@ -410,9 +410,9 @@ km_build_life_plot <- function(km_df, alpha) {
 #' @param group_col    Optional name of a character or factor column used to
 #'   stratify the analysis.  \code{NULL} (default) produces an unstratified
 #'   estimate labelled \code{"All"}.
-#' @param method       Estimator: \code{"kaplan-meier"} (default, logit CI —
+#' @param method       Estimator: \code{"kaplan-meier"} (default, logit CI;
 #'   mirrors SAS \code{\%kaplan}) or \code{"nelson-aalen"} (Fleming-Harrington
-#'   cumulative hazard with log CI — mirrors SAS \code{\%nelsont}, preferred
+#'   cumulative hazard with log CI; mirrors SAS \code{\%nelsont}, preferred
 #'   when \eqn{S(t)} approaches zero).
 #' @param conf_level   Confidence level for the CI band.  Default \code{0.95}.
 #' @param report_times Numeric vector of time points at which survival
@@ -420,7 +420,7 @@ km_build_life_plot <- function(km_df, alpha) {
 #'   Default \code{c(1, 5, 10, 15, 20, 25)}.
 #'
 #' @return An object of class \code{c("hv_survival", "hv_data")} (a list);
-#'   call \code{plot()} on the result to render the figure — see
+#'   call \code{plot()} on the result to render the figure; see
 #'   \code{\link{plot.hv_survival}}. The list has three elements:
 #' \describe{
 #'   \item{\code{$data}}{Tidy data frame with one row per (time, strata) pair.
@@ -628,7 +628,7 @@ print.hv_survival <- function(x, ...) {
 #'
 #' Builds a bare \code{ggplot2} object from an \code{\link{hv_survival}}
 #' data object.  The plot contains the correct aesthetics and geometries but
-#' no scale, label, or theme modifications — add those with \code{+} as you
+#' no scale, label, or theme modifications; add those with \code{+} as you
 #' would with any \code{ggplot2} object.
 #'
 #' @param x        An \code{hv_survival} object.
@@ -709,7 +709,7 @@ plot.hv_survival <- function(x,
 #'
 #' Simulates exponential survival times with administrative censoring at
 #' \code{study_years}.  The default \code{hazard_rate = 0.05} yields roughly
-#' 63\% 20-year mortality — a realistic range for cardiac surgery cohorts.
+#' 63\% 20-year mortality, a realistic range for cardiac surgery cohorts.
 #'
 #' @param n             Number of observations. Must be a positive integer.
 #'   Defaults to \code{500}.
@@ -718,8 +718,8 @@ plot.hv_survival <- function(x,
 #' @param strata_levels Optional character vector of stratum labels (e.g.
 #'   \code{c("Type A", "Type B")}).  When \code{NULL} (the default) a single
 #'   unstratified cohort is generated.
-#' @param hazard_ratios Numeric vector of hazard multipliers — one per element
-#'   of \code{strata_levels} — relative to \code{hazard_rate}.  Defaults to
+#' @param hazard_ratios Numeric vector of hazard multipliers, one per element
+#'   of \code{strata_levels}, relative to \code{hazard_rate}.  Defaults to
 #'   all 1 (equal hazard across strata).  Ignored when \code{strata_levels}
 #'   is \code{NULL}.
 #' @param study_years   Length of administrative follow-up in years.  Subjects
@@ -733,7 +733,7 @@ plot.hv_survival <- function(x,
 #'     \code{study_years}.}
 #'   \item{\code{dead}}{Logical event indicator; \code{TRUE} if the subject
 #'     experienced the event before administrative censoring.}
-#'   \item{\code{iv_opyrs}}{Operation year offset — uniform over
+#'   \item{\code{iv_opyrs}}{Operation year offset, uniform over
 #'     \code{[1990, 1990 + study_years]}.}
 #'   \item{\code{age_at_op}}{Age at operation (years); drawn from
 #'     \eqn{N(65, 10)}, capped to \code{[30, 90]}.}

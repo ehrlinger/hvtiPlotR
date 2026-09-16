@@ -50,8 +50,8 @@ supplied, bar heights reflect weighted counts instead of raw counts.}
 }
 \value{
 An object of class \code{c("hv_mirror_hist", "hv_data")}; call
-\code{plot()} on the result to render the figure — see
-\code{\link{plot.hv_mirror_hist}}.  The list contains:
+\code{plot()} on the result to render the figure (see
+\code{\link{plot.hv_mirror_hist}}).  The list contains:
 \describe{
 \item{\code{$data}}{Tidy data frame of histogram bar coordinates for
 \code{\link{plot.hv_mirror_hist}}.}

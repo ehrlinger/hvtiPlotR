@@ -1,32 +1,32 @@
 #' Save a ggplot at HVTI manuscript defaults
 #'
 #' A thin wrapper around [ggplot2::ggsave()] that enforces the house manuscript
-#' figure size — **6 inches wide by 4 inches tall** — so journal figures come
+#' figure size, 6 inches wide by 4 inches tall, so journal figures come
 #' out at a consistent size in one call. It is the manuscript counterpart of
 #' [save_ppt()], which enforces the slide panel box.
 #'
 #' Pair it with [theme_hv_manuscript()], whose 12 pt `base_size` supplies the
 #' manuscript typography. Like [save_ppt()], `save_manuscript()` fixes the
-#' output geometry, not the theme — style the plot first, then save.
+#' output geometry, not the theme; style the plot first, then save.
 #'
 #' The device is inferred from the file extension by default. For a `.pdf`
 #' where you want fonts embedded (so 12 pt type renders exactly as designed),
-#' pass `device = grDevices::cairo_pdf` — on a system with cairo/X11 support.
+#' pass `device = grDevices::cairo_pdf` (on a system with cairo/X11 support).
 #'
-#' Publisher-accepted formats — vector (PDF, EPS) or TIFF (a raster format
-#' also accepted by journals) — often produce large or fragile files when
-#' dragged into a Word manuscript — Word has no native PDF-as-picture support
+#' Publisher-accepted formats, vector (PDF, EPS) or TIFF (a raster format
+#' also accepted by journals), often produce large or fragile files when
+#' dragged into a Word manuscript. Word has no native PDF-as-picture support
 #' and silently converts them to bloated, sometimes unreadable EMF. Pass
 #' `draft_file` (typically a `.png` path) to also write a small raster copy
 #' alongside `file` in the same call: keep `file` as the publisher deliverable
-#' actually submitted to the journal, and drag `draft_file` into the Word
+#' submitted to the journal, and drag `draft_file` into the Word
 #' draft instead.
 #'
 #' @param plot A [ggplot2::ggplot()] object, e.g. `plot(hv_*())` finished with
 #'   `theme_hv_manuscript()`.
 #' @param file Output file path. Its extension sets the format (`.pdf`, `.png`,
 #'   ...).
-#' @param width,height,units Figure size. Default `6` x `4` `"in"` — the HVTI
+#' @param width,height,units Figure size. Default `6` x `4` `"in"`, the HVTI
 #'   manuscript default.
 #' @param device Graphics device. `NULL` (default) lets \pkg{ggplot2} pick from
 #'   the file extension. For font embedding in a PDF, pass

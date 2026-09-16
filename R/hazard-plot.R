@@ -295,8 +295,8 @@ sample_hazard_empirical <- function(n        = 500,
 #' supplied each level is an independent draw of `n` subjects, matching
 #' [sample_hazard_empirical()]'s balanced-arms convention.
 #'
-#' Note that [sample_hazard_data()] is an *analytic* Weibull curve evaluated at
-#' the same parameters — it is not fitted to this cohort. The two share a
+#' [sample_hazard_data()] is an *analytic* Weibull curve evaluated at
+#' the same parameters; it is not fitted to this cohort. The two share a
 #' generative model, not an estimation step, so a figure combining them should
 #' not be captioned as a model fit to these subjects.
 #'
@@ -1364,8 +1364,8 @@ nnt_plot <- function(nnt_data,
 
 #' Prepare parametric hazard / survival data for plotting
 #'
-#' Validates and stores pre-computed parametric curve data — and optional
-#' Kaplan-Meier empirical overlay and population life-table reference — as an
+#' Validates and stores pre-computed parametric curve data (and optional
+#' Kaplan-Meier empirical overlay and population life-table reference) as an
 #' `hv_hazard` object.  Pass the result to [plot.hv_hazard()] to render
 #' the figure.
 #'
@@ -1405,7 +1405,7 @@ nnt_plot <- function(nnt_data,
 #'   Default `NULL`.
 #'
 #' @return An S3 object of class `c("hv_hazard", "hv_data")`; call
-#'   `plot()` on the result to render — see [plot.hv_hazard()]. The object
+#'   `plot()` on the result to render (see [plot.hv_hazard()]). The object
 #'   contains: `$data` (curve data frame), `$meta` (all column-name mappings),
 #'   `$tables$empirical`, `$tables$reference`.
 #'

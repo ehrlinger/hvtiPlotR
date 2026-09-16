@@ -28,9 +28,9 @@ single-group figure (no \code{group} column returned; use with
 \value{
 A data frame with columns:
 \itemize{
-\item \code{year}  — x-axis value (integer; surgery year or patient age)
-\item \code{value} — continuous outcome (numeric)
-\item \code{group} — group label (factor, ordered by \code{groups}); absent when
+\item \code{year}: x-axis value (integer; surgery year or patient age)
+\item \code{value}: continuous outcome (numeric)
+\item \code{group}: group label (factor, ordered by \code{groups}); absent when
 \code{groups = NULL}
 }
 }
@@ -38,7 +38,7 @@ A data frame with columns:
 Generates a realistic patient-level longitudinal data set for demonstrating
 \code{\link[=hv_trends]{hv_trends()}}. Each row is one patient with a surgery year, continuous
 outcome (\code{value}), and a grouping variable (\code{group}). Trend patterns are
-modelled so that group means diverge over time — matching the multi-group
+modelled so that group means diverge over time, matching the multi-group
 NYHA / LV-mass / LOS pattern in the SAS template.
 }
 \examples{

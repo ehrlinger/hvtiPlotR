@@ -55,8 +55,8 @@ follow-up is administratively truncated at \code{1.2 * time_max}. When \code{gro
 supplied each level is an independent draw of \code{n} subjects, matching
 \code{\link[=sample_hazard_empirical]{sample_hazard_empirical()}}'s balanced-arms convention.
 
-Note that \code{\link[=sample_hazard_data]{sample_hazard_data()}} is an \emph{analytic} Weibull curve evaluated at
-the same parameters — it is not fitted to this cohort. The two share a
+\code{\link[=sample_hazard_data]{sample_hazard_data()}} is an \emph{analytic} Weibull curve evaluated at
+the same parameters; it is not fitted to this cohort. The two share a
 generative model, not an estimation step, so a figure combining them should
 not be captioned as a model fit to these subjects.
 }

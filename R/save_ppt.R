@@ -166,7 +166,7 @@ add_plot_slide <- function(doc, plot, title, layout, master, width, height,
 #'
 #' Writes one ggplot per slide into a PowerPoint file using
 #' [officer::ph_with()] and [rvg::dml()] so that every plot lands as an
-#' **editable DrawingML vector graphic** — shapes, lines, and text remain
+#' editable DrawingML vector graphic: shapes, lines, and text remain
 #' selectable in PowerPoint. Plots are placed via
 #' [officer::ph_location()] for pixel-exact positioning; titles go into the
 #' designated title placeholder via [officer::ph_location_type()].
@@ -209,11 +209,11 @@ add_plot_slide <- function(doc, plot, title, layout, master, width, height,
 #'   Default `1.2` (below a standard title bar). Ignored when `panel_box`
 #'   is supplied.
 #' @param panel_box   Named list `list(width, height, left, top)` describing
-#'   the **panel content area** to anchor on every slide (in inches).
+#'   the panel content area to anchor on every slide (in inches).
 #'   Per-plot slide placement is computed via [hv_ph_location()] so the panel
 #'   lands at the same slide coordinates on every slide regardless of
 #'   axis-label width. Defaults to
-#'   `list(width = 8.88, height = 4.51, left = 2.58, top = 1.63)` — the
+#'   `list(width = 8.88, height = 4.51, left = 2.58, top = 1.63)`, the
 #'   standard CORR fixed-panel rectangle for AATS-style dark decks. Pass
 #'   `panel_box = NULL` to fall back to the fixed `width`/`height`/`left`/
 #'   `top` arguments for every slide (legacy behavior). Ignored for
@@ -363,7 +363,7 @@ add_plot_slide <- function(doc, plot, title, layout, master, width, height,
 #'   panel_box    = list(width = 8.88, height = 4.51, left = 2.58, top = 1.63)
 #' )
 #'
-#' # Sizing advice: panel_left and panel_top must be large enough for the
+#' # Sizing advice: panel_box$left and panel_box$top must be large enough for the
 #' # widest axis labels in the deck. If chrome extends past the left or top
 #' # slide edge, hv_ph_location() emits a warning naming that edge.
 #' }

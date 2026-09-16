@@ -46,7 +46,7 @@ matching shape scale, so a whole deck takes its look from one definition.
 }
 \details{
 The return value is a plain list, and ggplot2's \code{+} unrolls a list element
-by element, so it composes just like a theme:
+by element, so it composes like a theme:
 
 \if{html}{\out{<div class="sourceCode">}}\preformatted{ppt <- hv_ppt_series()
 p1  <- p1 + ppt

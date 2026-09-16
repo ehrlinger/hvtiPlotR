@@ -10,7 +10,7 @@ hv_venn(data, sets)
 \item{data}{A data frame; one row per patient. Each set column must be
 logical or 0/1 numeric.}
 
-\item{sets}{Character vector of \strong{2 to 3} column names to draw as sets.}
+\item{sets}{Character vector of 2 to 3 column names to draw as sets.}
 }
 \value{
 An object of class \code{c("hv_venn", "hv_data")}:

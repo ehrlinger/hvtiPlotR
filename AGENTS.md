@@ -1,7 +1,7 @@
 # hvtiPlotR
 
 Plot constructors and methods for the HVTI CORR group — the largest public surface in the
-family: **79 exports and 47 registered S3 methods**. Nearly everything downstream draws
+family: **81 exports and 48 registered S3 methods**. Nearly everything downstream draws
 through it, so a change to a returned object's class, element names or column names is a
 breaking change for other packages, not just for this one.
 
@@ -109,7 +109,7 @@ generated house-style artifact skips them. `lint.yaml` deliberately does **not**
   nothing is its purpose. `expect_s3_class(plot(obj), "ggplot")` alone is a smoke test, not
   coverage.
 - **Every exported object must be added to `_pkgdown.yml`.** The `reference:` index is
-  explicit — 15 titled sections against 79 exports — and pkgdown errors on a topic missing
+  explicit — 15 titled sections against 81 exports — and pkgdown errors on a topic missing
   from it.
   ⚠️ `hvtiRtemplates` deliberately has **no** `reference:` section so pkgdown auto-indexes.
   Two conventions in one family.

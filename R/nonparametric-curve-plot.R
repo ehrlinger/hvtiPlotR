@@ -306,7 +306,7 @@ sample_nonparametric_curve_points <- function(n            = 500,
 #'   \code{group_col} when stratified. Default \code{NULL}.
 #'
 #' @return An object of class \code{c("hv_nonparametric", "hv_data")}; call
-#'   \code{plot()} on the result to render the figure — see
+#'   \code{plot()} on the result to render the figure; see
 #'   \code{\link{plot.hv_nonparametric}}. The list contains:
 #' \describe{
 #'   \item{\code{$data}}{The \code{curve_data} data frame.}

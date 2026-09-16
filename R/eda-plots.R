@@ -97,17 +97,17 @@ eda_classify_var <- function(x, unique_limit = 6L, unique_bound = 100,
 #' @param seed       Random seed for reproducibility. Default `42`.
 #'
 #' @return A data frame with columns:
-#'   - `year`        — integer surgery year (discrete x for barplots)
-#'   - `op_years`    — continuous years from first year in range (x for
+#'   - `year`: integer surgery year (discrete x for barplots)
+#'   - `op_years`: continuous years from first year in range (x for
 #'     scatterplots)
-#'   - `male`        — binary 0/1 (sex)
-#'   - `cabg`        — binary 0/1 (concomitant CABG)
-#'   - `nyha`        — ordinal 1–4 (NYHA class)
-#'   - `valve_morph` — character (valve morphology: Bicuspid / Tricuspid /
+#'   - `male`: binary 0/1 (sex)
+#'   - `cabg`: binary 0/1 (concomitant CABG)
+#'   - `nyha`: ordinal 1–4 (NYHA class)
+#'   - `valve_morph`: character (valve morphology: Bicuspid / Tricuspid /
 #'     Unicuspid)
-#'   - `ef`          — continuous ejection fraction (%)
-#'   - `lv_mass`     — continuous LV mass index (g/m^2)
-#'   - `peak_grad`   — continuous peak gradient (mmHg)
+#'   - `ef`: continuous ejection fraction (%)
+#'   - `lv_mass`: continuous LV mass index (g/m^2)
+#'   - `peak_grad`: continuous peak gradient (mmHg)
 #'
 #' @seealso [hv_eda()], [eda_classify_var()], [eda_select_vars()]
 #'
@@ -233,7 +233,7 @@ eda_select_vars <- function(data, vars) {
 #'   \item{\code{$meta}}{Named list: \code{x_col}, \code{y_col},
 #'     \code{y_label}, \code{var_type} (\code{"Cont"}, \code{"Cat_Num"}, or
 #'     \code{"Cat_Char"}), \code{show_percent}, \code{n_obs}.}
-#'   \item{\code{$tables}}{For continuous variables: \code{rug_data} — rows
+#'   \item{\code{$tables}}{For continuous variables: \code{rug_data}, the rows
 #'     where \code{y_col} is \code{NA}, used for the rug layer.  Empty list
 #'     for categorical variables.}
 #' }

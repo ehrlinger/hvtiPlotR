@@ -43,8 +43,8 @@ hv_ppt_palette("dark")
 hv_ppt_palette("light", n = 4)
 }
 \seealso{
-\code{\link[=hv_ppt_series]{hv_ppt_series()}}, which applies these to a plot. Note that
-annotation text is drawn in the theme's ink, matching the axis, rather
+\code{\link[=hv_ppt_series]{hv_ppt_series()}}, which applies these to a plot.
+Annotation text is drawn in the theme's ink, matching the axis, rather
 than in a series colour, so these are not the values to label a curve
 with.
 }

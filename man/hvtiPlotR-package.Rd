@@ -21,7 +21,7 @@ companion \strong{HVTI ggplot graphics recipes} book,
 
 Every plot constructor follows the same pattern:
 \enumerate{
-\item Call \verb{hv_*()} to validate and prepare data — returns an \code{hv_data}
+\item Call \verb{hv_*()} to validate and prepare data. It returns an \code{hv_data}
 S3 object that also stores diagnostics (group counts, SMDs, etc.)
 under \verb{$tables}.
 \item Call \code{plot()} on the object to obtain a bare \code{ggplot2::ggplot}
@@ -77,7 +77,7 @@ ggplot2's \code{half_line} convention.
 \subsection{Saving figures}{
 \itemize{
 \item \code{\link[=save_manuscript]{save_manuscript()}}: Save a ggplot at the house manuscript size
-(6 x 4 in) in one call — the manuscript counterpart of \code{\link[=save_ppt]{save_ppt()}}.
+(6 x 4 in) in one call; the manuscript counterpart of \code{\link[=save_ppt]{save_ppt()}}.
 Pair with \code{\link[=theme_hv_manuscript]{theme_hv_manuscript()}} for 12 pt type.
 \item \code{\link[=save_ppt]{save_ppt()}}: Insert one or more ggplot objects into a PowerPoint
 file as editable DrawingML vector graphics via \code{officer} + \code{rvg}.
@@ -88,14 +88,14 @@ analysis; omit for publication-ready output.
 
 When plots in a set have different axis-label widths (e.g. y-axis
 ranges from "1.0" to "4567.2"), the usual \code{ggsave()} and
-\code{officer::ph_location()} calls let the \strong{panel content area} drift
-— which is visually jarring on PPT decks where the black or white
+\code{officer::ph_location()} calls let the panel content area drift,
+which is visually jarring on PPT decks where the black or white
 panel box should appear constant across slides. Two helpers solve
 this by making the panel size and slide position the \emph{target}:
 \itemize{
 \item \code{\link[=hv_ggsave_dims]{hv_ggsave_dims()}}: Given a target panel width and height,
 computes the \code{ggsave()} \code{width}/\code{height} that preserve that panel
-size. Returns a named list — splat into \code{ggsave()} via
+size. Returns a named list to splat into \code{ggsave()} via
 \code{do.call(ggplot2::ggsave, c(list(filename = ..., plot = p), dims))}.
 \item \code{\link[=hv_ph_location]{hv_ph_location()}}: Given a target panel rectangle on the slide,
 computes the \code{officer::ph_location()} \code{width}/\code{height}/\code{left}/\code{top}
@@ -215,11 +215,11 @@ a ggplot directly. They are retained for backward compatibility with
 scripts written before the \verb{hv_*()} redesign. New code should prefer
 the constructor form.
 \itemize{
-\item \code{\link[=hazard_plot]{hazard_plot()}}: Single-call parametric hazard/survival plot —
+\item \code{\link[=hazard_plot]{hazard_plot()}}: Single-call parametric hazard/survival plot,
 combine-step equivalent of \code{hv_hazard()} + \code{plot()}.
 \item \code{\link[=survival_difference_plot]{survival_difference_plot()}}: Single-call mean-survival-difference
-plot — equivalent of \code{hv_survival_difference()} + \code{plot()}.
-\item \code{\link[=nnt_plot]{nnt_plot()}}: Single-call NNT plot — equivalent of \code{hv_nnt()} +
+plot, equivalent of \code{hv_survival_difference()} + \code{plot()}.
+\item \code{\link[=nnt_plot]{nnt_plot()}}: Single-call NNT plot, equivalent of \code{hv_nnt()} +
 \code{plot()}.
 }
 }
@@ -289,7 +289,7 @@ intersection analysis.
 
 \subsection{Scope and versioning}{
 
-\code{hvtiPlotR} targets \strong{internal HVTI / CORR use only} — it will not
+\code{hvtiPlotR} targets internal HVTI / CORR use only; it will not
 be submitted to CRAN. GitHub-only dependencies are declared in
 \verb{Remotes:} in DESCRIPTION and install cleanly. Install via:
 

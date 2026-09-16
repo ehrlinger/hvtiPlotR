@@ -7,12 +7,12 @@
 new_hv_data(data, meta, tables = list(), subclass)
 }
 \arguments{
-\item{data}{A data frame -- the primary tidy data ready for ggplot2.}
+\item{data}{A data frame holding the primary tidy data ready for ggplot2.}
 
 \item{meta}{A named list of metadata (column names, method choices,
 computed statistics, etc.).}
 
-\item{tables}{A named list of auxiliary objects — typically data frames
+\item{tables}{A named list of auxiliary objects, typically data frames
 (risk tables, report tables, etc.) but may also contain vectors or other
 R objects (e.g. named integer vectors for set counts).  May be \code{list()}.}
 

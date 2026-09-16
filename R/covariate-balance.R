@@ -101,7 +101,7 @@ cb_build_plot <- function(data, std_diff_col, group_col, var_levels,
 #' @param threshold    Numeric; absolute SMD value at which dotted reference
 #'   lines are drawn (\eqn{\pm}\code{threshold}).  Default \code{10}.
 #'
-#' @return An object of class \code{c("hv_balance", "hv_data")} — a list
+#' @return An object of class \code{c("hv_balance", "hv_data")}: a list
 #'   with three elements:
 #' \describe{
 #'   \item{\code{$data}}{The input data frame with a \code{cb_index} column

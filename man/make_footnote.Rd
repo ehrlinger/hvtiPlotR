@@ -67,7 +67,7 @@ Returns \code{invisible(NULL)}.
 \description{
 Writes a small text annotation in the bottom-right corner of the \strong{current}
 graphics device using grid. Call this \emph{after} printing or displaying the
-plot. For publication-ready figures, simply omit the call — the plot is
+plot. For publication-ready figures, omit the call; the plot is
 unchanged.
 }
 \details{
