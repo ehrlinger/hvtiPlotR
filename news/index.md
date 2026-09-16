@@ -1,5 +1,42 @@
 # Changelog
 
+## hvtiPlotR 2.7.15
+
+### Documentation pass across vignettes, reference pages and README
+
+Prose is tightened throughout, and stale references are corrected:
+`plot-decorators` no longer documents a `style` argument no theme has,
+and names `panel_box` rather than `panel_left`/`panel_top`; the
+`hvtiPlotR` vignette’s quick reference points to
+[`hv_nonparametric()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_nonparametric.md),
+its section and figure references resolve, and the template map lists
+the R templates behind
+[`hv_eda()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_eda.md)
+and
+[`hv_alluvial()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_alluvial.md).
+The contributing guide’s Track A now teaches the `hv_<concept>()`
+constructor and `plot.hv_<concept>()` method pair, with tests that prove
+the plot carries data. The `parametric` and `nonparametric` dataset
+pages now describe `init` as the event-free state, not re-operation, and
+match the columns actually shipped. `DESCRIPTION` has a title-case
+`Title` and a `Description` that starts with a capital letter.
+
+### Updates to `eda_classify_var()`, `hv_eda()`, and `plot.hv_eda()`
+
+[`eda_classify_var()`](https://ehrlinger.github.io/hvtiPlotR/reference/eda_classify_var.md)
+takes a `type_overrides` argument to set a variable’s class by hand
+(`"Cont"`, `"Cat_Num"` or `"Cat_Char"`), and a `unique_bound` argument:
+a numeric column with any value above it is classified `"Cont"` whatever
+its number of distinct values.
+[`hv_eda()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_eda.md)
+passes both through and keeps `NA` values so the plot can show them.
+
+[`plot.hv_eda()`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hv_eda.md)
+gains `loess_cutoff`, which skips the smooth when the y-variable has
+fewer distinct values than the cutoff, and `group_bars`, which draws
+grouped bars instead of stacked ones. Missing values in stacked bar
+plots are handled better.
+
 ## hvtiPlotR 2.7.14
 
 ### New `hv_correlation_matrix()`: the scatter-plot matrix of `proc corr plots=matrix`

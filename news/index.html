@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">hvtiPlotR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.7.14</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.7.15</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -53,6 +53,19 @@
       <small>Source: <a href="https://github.com/ehrlinger/hvtiPlotR/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="2.7.15" id="hvtiplotr-2715">hvtiPlotR 2.7.15<a class="anchor" aria-label="anchor" href="#hvtiplotr-2715"></a></h2>
+<div class="section level3">
+<h3 id="documentation-pass-across-vignettes-reference-pages-and-readme-2-7-15">Documentation pass across vignettes, reference pages and README<a class="anchor" aria-label="anchor" href="#documentation-pass-across-vignettes-reference-pages-and-readme-2-7-15"></a></h3>
+<p>Prose is tightened throughout, and stale references are corrected: <code>plot-decorators</code> no longer documents a <code>style</code> argument no theme has, and names <code>panel_box</code> rather than <code>panel_left</code>/<code>panel_top</code>; the <code>hvtiPlotR</code> vignette’s quick reference points to <code><a href="../reference/hv_nonparametric.html">hv_nonparametric()</a></code>, its section and figure references resolve, and the template map lists the R templates behind <code><a href="../reference/hv_eda.html">hv_eda()</a></code> and <code><a href="../reference/hv_alluvial.html">hv_alluvial()</a></code>. The contributing guide’s Track A now teaches the <code>hv_&lt;concept&gt;()</code> constructor and <code>plot.hv_&lt;concept&gt;()</code> method pair, with tests that prove the plot carries data. The <code>parametric</code> and <code>nonparametric</code> dataset pages now describe <code>init</code> as the event-free state, not re-operation, and match the columns actually shipped. <code>DESCRIPTION</code> has a title-case <code>Title</code> and a <code>Description</code> that starts with a capital letter.</p>
+</div>
+<div class="section level3">
+<h3 id="updates-to-eda_classify_var-hv_eda-and-plothv_eda-2-7-15">Updates to <code>eda_classify_var()</code>, <code>hv_eda()</code>, and <code>plot.hv_eda()</code>
+<a class="anchor" aria-label="anchor" href="#updates-to-eda_classify_var-hv_eda-and-plothv_eda-2-7-15"></a></h3>
+<p><code><a href="../reference/eda_classify_var.html">eda_classify_var()</a></code> takes a <code>type_overrides</code> argument to set a variable’s class by hand (<code>"Cont"</code>, <code>"Cat_Num"</code> or <code>"Cat_Char"</code>), and a <code>unique_bound</code> argument: a numeric column with any value above it is classified <code>"Cont"</code> whatever its number of distinct values. <code><a href="../reference/hv_eda.html">hv_eda()</a></code> passes both through and keeps <code>NA</code> values so the plot can show them.</p>
+<p><code><a href="../reference/plot.hv_eda.html">plot.hv_eda()</a></code> gains <code>loess_cutoff</code>, which skips the smooth when the y-variable has fewer distinct values than the cutoff, and <code>group_bars</code>, which draws grouped bars instead of stacked ones. Missing values in stacked bar plots are handled better.</p>
+</div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="2.7.14" id="hvtiplotr-2714">hvtiPlotR 2.7.14<a class="anchor" aria-label="anchor" href="#hvtiplotr-2714"></a></h2>
 <div class="section level3">
