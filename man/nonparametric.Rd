@@ -5,27 +5,36 @@
 \alias{nonparametric}
 \title{Nonparametric survival estimates}
 \format{
-A data frame with one row per patient and 10 columns:
+A data frame with 126 rows (one per event time) and 10 columns:
 \describe{
-\item{iv_state}{Initial valve state (character/factor); used as the
-x-axis grouping variable in nonparametric plots.}
-\item{sginit}{Initial SG (St. Jude Medical Silzone) indicator (numeric).}
-\item{stlinit}{Initial STL indicator (numeric).}
-\item{stuinit}{Initial STU indicator (numeric).}
-\item{sgdead1}{Death indicator for SG group (logical/integer; 1 = event).}
-\item{sgstrk1}{Stroke indicator for SG group (logical/integer; 1 = event).}
-\item{stldead1}{Death indicator for STL group (logical/integer; 1 = event).}
-\item{studead1}{Death indicator for STU group (logical/integer; 1 = event).}
-\item{stlstrk1}{Stroke indicator for STL group (logical/integer; 1 = event).}
-\item{stustrk1}{Stroke indicator for STU group (logical/integer; 1 = event).}
+\item{iv_state}{Follow-up time in years (0 to about 4.9); the x-axis in
+the vignette plots.}
+\item{sginit}{Percent remaining in the initial state (event-free).}
+\item{stlinit}{Lower confidence limit for \code{sginit}; all \code{NA} in this
+extract.}
+\item{stuinit}{Upper confidence limit for \code{sginit}; all \code{NA} in this
+extract.}
+\item{sgdead1}{Cumulative percent dead; \code{NA} at times with no death.}
+\item{sgstrk1}{Cumulative percent with stroke; \code{NA} at times with no
+stroke.}
+\item{stldead1}{Lower confidence limit for \code{sgdead1} (6 time points).}
+\item{studead1}{Upper confidence limit for \code{sgdead1} (6 time points).}
+\item{stlstrk1}{Lower confidence limit for \code{sgstrk1} (3 time points).}
+\item{stustrk1}{Upper confidence limit for \code{sgstrk1} (3 time points).}
 }
 }
 \description{
-A dataset containing nonparametric empirical survival estimates used for
-examples in the package vignettes.  The data represent follow-up outcomes
-for patients stratified by initial valve state (\code{iv_state}) from an
-aortic-valve surgery registry, originally exported from SAS via
+A dataset containing nonparametric competing-risk estimates used for
+examples in the package vignettes: the empirical companion to
+\link{parametric}, over the same three states (remaining in the initial state,
+death, and stroke). Originally exported from SAS via
 \code{tp.hp.dead.sas} / \code{tp.np.*.sas}.
+}
+\details{
+Column prefixes follow the SAS naming: \verb{sg*} is the estimate, \verb{stl*} and
+\verb{stu*} its lower and upper confidence limits. The limits are filled only
+at the handful of times where an error bar is drawn and are \code{NA} elsewhere,
+which is how \code{plot.sas} thins error bars.
 }
 \seealso{
 \link{parametric}, \code{\link[=hv_nonparametric]{hv_nonparametric()}}
