@@ -56,7 +56,7 @@ hv_balance(
 
 ## Value
 
-An object of class `c("hv_balance", "hv_data")` — a list with three
+An object of class `c("hv_balance", "hv_data")`: a list with three
 elements:
 
 - `$data`:

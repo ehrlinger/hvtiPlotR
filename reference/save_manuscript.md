@@ -2,8 +2,8 @@
 
 A thin wrapper around
 [`ggplot2::ggsave()`](https://ggplot2.tidyverse.org/reference/ggsave.html)
-that enforces the house manuscript figure size — **6 inches wide by 4
-inches tall** — so journal figures come out at a consistent size in one
+that enforces the house manuscript figure size, 6 inches wide by 4
+inches tall, so journal figures come out at a consistent size in one
 call. It is the manuscript counterpart of
 [`save_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/save_ppt.md),
 which enforces the slide panel box.
@@ -40,7 +40,7 @@ save_manuscript(
 
 - width, height, units:
 
-  Figure size. Default `6` x `4` `"in"` — the HVTI manuscript default.
+  Figure size. Default `6` x `4` `"in"`, the HVTI manuscript default.
 
 - device:
 
@@ -81,22 +81,22 @@ Pair it with
 [`theme_hv_manuscript()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md),
 whose 12 pt `base_size` supplies the manuscript typography. Like
 [`save_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/save_ppt.md),
-`save_manuscript()` fixes the output geometry, not the theme — style the
+`save_manuscript()` fixes the output geometry, not the theme; style the
 plot first, then save.
 
 The device is inferred from the file extension by default. For a `.pdf`
 where you want fonts embedded (so 12 pt type renders exactly as
-designed), pass `device = grDevices::cairo_pdf` — on a system with
-cairo/X11 support.
+designed), pass `device = grDevices::cairo_pdf` (on a system with
+cairo/X11 support).
 
-Publisher-accepted formats — vector (PDF, EPS) or TIFF (a raster format
-also accepted by journals) — often produce large or fragile files when
-dragged into a Word manuscript — Word has no native PDF-as-picture
+Publisher-accepted formats, vector (PDF, EPS) or TIFF (a raster format
+also accepted by journals), often produce large or fragile files when
+dragged into a Word manuscript. Word has no native PDF-as-picture
 support and silently converts them to bloated, sometimes unreadable EMF.
 Pass `draft_file` (typically a `.png` path) to also write a small raster
 copy alongside `file` in the same call: keep `file` as the publisher
-deliverable actually submitted to the journal, and drag `draft_file`
-into the Word draft instead.
+deliverable submitted to the journal, and drag `draft_file` into the
+Word draft instead.
 
 ## See also
 

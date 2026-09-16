@@ -21,7 +21,7 @@ vignette. The vignette is installed into R when the **hvtiPlotR**
 package is installed, and viewable using the command:
 [`vignette("hvtiPlotR", package="hvtiPlotR")`](https://ehrlinger.github.io/hvtiPlotR/articles/hvtiPlotR.md).
 
-This vignette documents our best practices for publication graphics —
+This vignette documents our best practices for publication graphics, for
 manuscripts and PowerPoint slides both. We will update it as our
 standards and the **hvtiPlotR** package evolve.
 
@@ -58,8 +58,6 @@ The package can be installed using
 
 We invite comments, feature requests and bug reports for this package at
 https://github.com/ehrlinger/hvtiPlotR/issues
-
-![figure](./manuscript.png)**Figure 1:** Demonstration figure
 
 ## Introduction
 
@@ -119,24 +117,26 @@ exercise to translate commands between the two systems.
 
 This document outlines how to generate figures using the `ggplot2`
 package in **R**. Our approach is to demonstrate the **R** commands to
-generate the same elements created with `plot.sas` commands. Section 2
-gives an overview of the methodology of the `plot.sas` macro and
+generate the same elements created with `plot.sas` commands. [The
+`plot.sas` macro](#sec-plotsas) gives an overview of the methodology of
+the `plot.sas` macro.
 
-Section 3 details how to create line and point plots with similar
-`ggplot2` commands. The **hvtiPlotR** package contains custom themes for
-figures. Once a figure has been created using `ggplot2` commands,
-Section 4 details how to use the themes contained in the **hvtiPlotR**
-package to get the formatting correct for manuscripts or presentations.
-Section 5 describes how to save these figures to simplify the import
-into publication documents.
+[Generating ggplot2 graphics](#sec-ggplot) details how to create line
+and point plots with similar `ggplot2` commands. The **hvtiPlotR**
+package contains custom themes for figures. Once a figure has been
+created using `ggplot2` commands, [Themes and Decoration](#sec-themes)
+details how to use the themes contained in the **hvtiPlotR** package to
+get the formatting correct for manuscripts or presentations. [Saving
+publication graphics](#sec-saving) describes how to save these figures
+to simplify the import into publication documents.
 
 ## The `plot.sas` macro
 
 We first look at some example code using the `plot.sas` macro. This code
 is intended to generate a figure for manuscript publication and was
-modified to generate Figure 1. We will walk through this example code in
-this section to help us understand the steps for generating these
-figures in R.
+modified to generate [Figure 1](#fig-sas-manuscript). We will walk
+through this example code in this section to help us understand the
+steps for generating these figures in R.
 
 Note the first line of the code block in Listing 1 indicates the path to
 the specific example file location. The filename statements bring in the
@@ -145,8 +145,9 @@ file. The `plot.sas` macro call starts with the %plot command.
 
 The goptions statement in the first line sets global graphic values,
 including the filename (`gaccess=`) where the figure will be saved (see
-Section 5). Each plot.sas command is terminated with the end; statement.
-We’ll look at each of the remaining command type individually.
+[Saving publication graphics](#sec-saving)). Each plot.sas command is
+terminated with the end; statement. We’ll look at each of the remaining
+command type individually.
 
 ``` sas
 ******NON - PARAMETRIC : SYMBOLS AND CONFIDENCE BARS *******
@@ -178,47 +179,50 @@ tuple set=all , x=years , y=noinit , cll=clinit , clu=cuinit , width =0.5 ,
 **Listing 3:** `plot.sas` commands: lines tuple statements.
 
 The `id l=` command sets the footnote text used for manuscript figures
-to identify where the figure is saved (see Section 5). The `labelx` and
-`labely` commands set the axis label text (Section 3.3) and the `axisx`
-and `axisy` set the scales for each axis locating text and tics (Section
-3.4).
+to identify where the figure is saved (see [Saving publication
+graphics](#sec-saving)). The `labelx` and `labely` commands set the axis
+label text ([Labels](#sec-labels)) and the `axisx` and `axisy` set the
+scales for each axis locating text and tics ([Scales](#sec-scales)).
 
 The `plot.sas` continues in Listing 2. Here, the tuple command builds up
 graphics objects within the figure plot window. This first set of tuple
 commands constructs a set of three elements containing both points
-(Section 3.5) and errorbars (Section 3.6). Each tuple statement operates
-on the dataset indicated by the set command. Symbols shapes and sizes
-are specified with the symbol and symbsize commands (Section 3.9).
+([Points](#sec-points)) and errorbars ([Error Bars](#sec-errorbars)).
+Each tuple statement operates on the dataset indicated by the set
+command. Symbols shapes and sizes are specified with the symbol and
+symbsize commands ([Shapes](#sec-shapes)).
 
 The second set of tuple statements in Listing 3 construct a set of three
-elements containing lines and confidence intervals (Section 3.7).
+elements containing lines and confidence intervals
+([Lines](#sec-lines)).
 
 The `plot.sas1` macro code is closed by the ending ); characters, and
 SAS is instructed to run; the code. Running combines building the figure
 by combining elements from label, axis and tuple statements and saving
 it into the file specified by the gsasfile variable. The resulting
-figure is shown in Figure 2.
+figure is shown in [Figure 1](#fig-sas-manuscript).
 
-![Manuscript figure](./manuscript.png)**Figure 2:** Manuscript figure
-(SAS version)
+![](./manuscript.png)
 
-Note that much of the figure formatting is mixed within the tuple
-statements using width, color, linepe and linecl commands. In the
-`plot.sas` macro, omitting these commands will generate a figure with
-the default values specified within the `plot.sas` macro or device theme
-(Section 4).
+Figure 1: Manuscript figure (SAS version).
+
+Much of the figure formatting is mixed within the tuple statements using
+width, color, linepe and linecl commands. In the `plot.sas` macro,
+omitting these commands will generate a figure with the default values
+specified within the `plot.sas` macro or device theme ([Themes and
+Decoration](#sec-themes)).
 
 A similar set of `plot.sas` commands (Listing 4) is used to create
 presentation graphics. Differences between manuscript and presentation
 graphics include the target device and ftext as well as some handling of
-figure labels with value instead of label commands. The output from this
-code is shown in Figure 3.
+figure labels with value instead of label commands. [Figure 6](#fig-ppt)
+recreates that output in R.
 
 In addition to the plot.sas commands, we also have a set of graphics
 standards (graphics rules) for what to and not to include in
-presentation graphics, we will describe these rules in (Section 6). Many
-of these are incorporated into the `plot.sas` macro to protect the user
-from violating these standards.
+presentation graphics, we will describe these rules in [Graphics rules
+to live by](#sec-rules). Many of these are incorporated into the
+`plot.sas` macro to protect the user from violating these standards.
 
 ## SAS → R Quick Reference
 
@@ -245,11 +249,11 @@ SAS script.
 | `axisy order=(0 to 100 by 20), minor=none` | `scale_y_continuous(limits = c(0,100), breaks = seq(0,100,20))` | y scale + tick positions |
 | `coord_cartesian(xlim=c(0,5.1), ylim=c(0,101))` | `coord_cartesian(xlim = c(0, 5.1), ylim = c(0, 101))` | Viewport crop without data loss |
 
-### Tuple statements — points and error bars
+### Tuple statements: points and error bars
 
 | `plot.sas` option | R / ggplot2 equivalent | Notes |
 |----|----|----|
-| `tuple set=..., x=t, y=est, cll=lo, clu=hi` | `nonparametric_curve_plot(curve_data, lower_col="lo", upper_col="hi")` | Preferred hvtiPlotR function |
+| `tuple set=..., x=t, y=est, cll=lo, clu=hi` | `hv_nonparametric(curve_data, x_col="t", estimate_col="est", lower_col="lo", upper_col="hi")` | Preferred hvtiPlotR function |
 | `symbol=dot` | `geom_point(shape = 20)` | Filled circle |
 | `symbol=circle` | `geom_point(shape = 1)` | Open circle |
 | `symbol=square` | `geom_point(shape = 15)` | Filled square |
@@ -258,7 +262,7 @@ SAS script.
 | `ebar=1, ebarsize=3/4` | `geom_errorbar(aes(ymin=lo, ymax=hi), width=0.3)` | Confidence error bars |
 | `linepe=0` (no connecting line) | omit [`geom_line()`](https://ggplot2.tidyverse.org/reference/geom_path.html) | Points only |
 
-### Tuple statements — lines and ribbons
+### Tuple statements: lines and ribbons
 
 | `plot.sas` option | R / ggplot2 equivalent | Notes |
 |----|----|----|
@@ -293,7 +297,7 @@ directly.
 | `device=pscolor` | [`theme_hv_manuscript()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md) | Journal PDF, black on white |
 | `device=cgmmppa` + dark slide | [`theme_hv_ppt_dark()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md) | Dark-background PowerPoint |
 | `device=cgmmppa` + white slide | [`theme_hv_ppt_light()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md) | Light/transparent PowerPoint |
-| — | [`theme_hv_poster()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md) | Conference poster (larger text) |
+| (none) | [`theme_hv_poster()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md) | Conference poster (larger text) |
 
 ## Generating ggplot2 graphics
 
@@ -346,7 +350,7 @@ For most of this document, we assume that the data analysis has been
 completed in SAS. The first step in creating figures in R is to get the
 data out of SAS. There are two common approaches.
 
-#### Option 1 — SAS xport file (recommended when you have SAS access)
+#### Option 1: SAS xport file (recommended when you have SAS access)
 
 Use the **haven** package (included in **hvtiPlotR**’s `Suggests`) to
 read SAS xport (`.xpt`) files. It preserves variable labels as a `label`
@@ -378,7 +382,7 @@ which is the most convenient route when the SAS server is accessible:
 dta <- haven::read_sas("path/to/analysis.sas7bdat")
 ```
 
-#### Option 2 — CSV export (when SAS is not available)
+#### Option 2: CSV export (when SAS is not available)
 
 Export the summary dataset from SAS using `PROC EXPORT`:
 
@@ -416,13 +420,13 @@ nonparametric <- haven::read_xpt(npar_file)
 
 ### Initialize the figure
 
-Referring back to the SAS code chunks in Section 2, Listing 1 sets the
-current working directory, and does some house keeping, including
-loading the `plot.sas` macro. Similarly, to get started in R, we first
-load the required libraries: ggplot2 for graphics, and **hvtiPlotR** for
-themes. The following code chunk also sets the initial default theme to
-a generic black and white format, and brings in a pair of example
-datasets.
+Referring back to the SAS code chunks in [The `plot.sas`
+macro](#sec-plotsas), Listing 1 sets the current working directory, and
+does some house keeping, including loading the `plot.sas` macro.
+Similarly, to get started in R, we first load the required libraries:
+ggplot2 for graphics, and **hvtiPlotR** for themes. The following code
+chunk also sets the initial default theme to a generic black and white
+format, and brings in a pair of example datasets.
 
 ``` r
 
@@ -445,10 +449,10 @@ theme_set(hvtiPlotR::theme_hv_poster())
 One advantage of ggplot2 is that figures can be built up in successive
 statements. This tutorial will make extensive use of this to demonstrate
 the process. Starting in this code chunk, we will save the intermediate
-objects in the ccf_plot variable. Here we simply create an empty ggplot2
-figure that we will be adding to as we work through the commands in the
-`plot.sas` macro. Note that we include the %plot() commands in the
-comments above the equivalent ggplot2 command for comparison.
+objects in the ccf_plot variable. Here we create an empty ggplot2 figure
+that we will be adding to as we work through the commands in the
+`plot.sas` macro. We include the %plot() commands in the comments above
+the equivalent ggplot2 command for comparison.
 
 ``` r
 
@@ -461,14 +465,14 @@ ccf_plot <- ggplot()
 ```
 
 In R, we set the equivalent variables gsmode, device and gaccess when
-saving the figure (Section 5).
+saving the figure ([Saving publication graphics](#sec-saving)).
 
 ### Labels
 
-The next section of Listing 1 in Section 2 sets the x and y axis titles,
-as well as the location of the major axis tick marks. We will split this
-up in our R code. The ggplot2 package uses the labs function to set the
-axis labels.
+The next section of Listing 1 in [The `plot.sas` macro](#sec-plotsas)
+sets the x and y axis titles, as well as the location of the major axis
+tick marks. We will split this up in our R code. The ggplot2 package
+uses the labs function to set the axis labels.
 
 ``` r
 
@@ -498,11 +502,11 @@ generated, but can also be specified using a minor_breaks= argument. You
 could also specify the breaks using a vector of values (c(0,1,2,3,4,5)),
 as well as relabel the ticks manually using a labels= argument.
 
-Note that the `scale_` functions do not restrict the figure viewport at
-all. They are simply used to setup and label the axis tick marks. You
-can specify that the y-axis ticks are only from 0 to 50, and the figure
-would have a blank axis from 50 to the limits of the data. We discuss
-controlling the figure viewport in Section 3.11.
+The `scale_` functions do not restrict the figure viewport at all. They
+only set up and label the axis tick marks. You can specify that the
+y-axis ticks are only from 0 to 50, and the figure would have a blank
+axis from 50 to the limits of the data. We discuss controlling the
+figure viewport in [Global Figure Commands](#sec-viewport).
 
 ``` r
 
@@ -530,19 +534,19 @@ statement. The first tuple statement we see in the example code sets the
 data set (set=green), the symbol shape (symbol=dot), size (symbsize=1/2)
 and color (color=black). Listing 2 turns off lines so only points will
 be shown (linepe=0, linecl=0,). It also handles error bars
-(ebarsize=3/4, ebar=1), which will be discuss in Section 3.6. The last
-line tells the macro about the point placement using a vector for each
-of the x and y coordinates. Points are displayed at each paired (x, y)
-and error bars are specified at matching y values in the upper (clu) and
-lower (cll) error bar limits (x=iv_state, y=sginit, cll=stlinit,
-clu=stuinit).
+(ebarsize=3/4, ebar=1), which will be discuss in [Error
+Bars](#sec-errorbars). The last line tells the macro about the point
+placement using a vector for each of the x and y coordinates. Points are
+displayed at each paired (x, y) and error bars are specified at matching
+y values in the upper (clu) and lower (cll) error bar limits
+(x=iv_state, y=sginit, cll=stlinit, clu=stuinit).
 
 The geom\_ set of functions in ggplot2 is the functional equivalent to
 the tuple statement. The difference is the user specifies the graphical
 element desired using separate function calls. So points are plotting
 using the geom_point function, lines are generated with the geom_line
-(Section 3.7) and error bars are generated with the geom_errorbar
-function (Section 3.6).
+([Lines](#sec-lines)) and error bars are generated with the
+geom_errorbar function ([Error Bars](#sec-errorbars)).
 
 Each of these functions can take a data argument as well as a large set
 of decorator arguments (i.e. color, size, shape, linetype, . . . ). The
@@ -551,7 +555,7 @@ function using variable names defined in the data set. The following
 code chunk demonstrates this by plotting the iv_state variable on the
 x-axis and the sginit variable along the y-axis. The variables are
 defined in the nonparametric data set we loaded in the setup code chunk
-in Section 3.
+in [Initialize the figure](#sec-init).
 
 ``` r
 
@@ -568,30 +572,32 @@ ccf_plot <- ccf_plot +
 show(ccf_plot)
 ```
 
-![](hvtiPlotR_files/figure-html/fig_4-1.png)
+![](hvtiPlotR_files/figure-html/fig-points-1.png)
+
+Figure 2: Point plot.
 
 The [`aes()`](https://ggplot2.tidyverse.org/reference/aes.html)
 mechanism is how you communicate data-level assignment to `geom_`
-functions. If you want to stratify a dataset by a variable, you can
-specify that within the
+functions. If you want to stratify a dataset by a variable, you can map
+it within the
 [`aes()`](https://ggplot2.tidyverse.org/reference/aes.html) function
-call using the `by=` argument. For points, we often want the stratifying
-to be either a different `color=` or `shape=` for stratified data. We
-can then use the `scale_color_` functions (See Section 3.10) or the
-`scale_shape_` functions (See Section 3.9) to control how these are
-assigned to the stratifying variable.
+call with the `group=` aesthetic. For points, we often want the
+stratifying to be either a different `color=` or `shape=` for stratified
+data. We can then use the `scale_color_` functions (see
+[Colors](#sec-colors)) or the `scale_shape_` functions (see
+[Shapes](#sec-shapes)) to control how these are assigned to the
+stratifying variable.
 
 Once we have added data to the `ggplot` object, we can display the
-figure as shown in Figure 4. Until now the figure has been manipulated
-by sequentially adding function calls to the `ccf_plot object`. To
-display the figure you can either use the `show()` function, or simply
-call the object name at the command line.
+figure as shown in [Figure 2](#fig-points). Until now the figure has
+been manipulated by sequentially adding function calls to the
+`ccf_plot object`. To display the figure you can either use the `show()`
+function, or call the object name at the command line.
 
-Note that we have used the default shape, size and color for this
-figure. These can be manipulated by adding arguments to the `geom_`
-functions, outside of the
-[`aes()`](https://ggplot2.tidyverse.org/reference/aes.html) function, as
-we will demonstrate in the following sections.
+We have used the default shape, size and color for this figure. These
+can be manipulated by adding arguments to the `geom_` functions, outside
+of the [`aes()`](https://ggplot2.tidyverse.org/reference/aes.html)
+function, as we will demonstrate in the following sections.
 
 ### Error Bars
 
@@ -605,10 +611,11 @@ aesthetic function.
 This code chunk plots both points, and error bars for the next two data
 series, the `sgdead1` variable with error bars running from `stldead1`
 to `studead1` and `sgstrk1` variable with error bars running from
-`stlstrk1` to `stustrk1`. As we see in Figure 5, both series were added
-in `color="blue"` (Section 3.10), with different point shapes `shape=1`
-and `shape=0` for each series (Section 3.9). We manipulated the error
-bar size with the `width` argument
+`stlstrk1` to `stustrk1`. As [Figure 3](#fig-errorbars) shows, both
+series were added in `color="blue"` ([Colors](#sec-colors)), with
+different point shapes `shape=1` and `shape=0` for each series
+([Shapes](#sec-shapes)). We manipulated the error bar size with the
+`width` argument
 
 ``` r
 
@@ -653,26 +660,28 @@ show(ccf_plot)
     Warning: Removed 117 rows containing missing values or values outside the scale range
     (`geom_point()`).
 
-![](hvtiPlotR_files/figure-html/error_bar_ci-1.png)
+![](hvtiPlotR_files/figure-html/fig-errorbars-1.png)
 
-Note that the x variable is the same (`iv_state`) for all three data
-series as well as the associated error bars. This is not a requirement,
-as we could have specified a different variable name for each `geom_`
-function call. Also note that just as in the `plot.sas` macro, since we
-do not want an error bar placed at at every data point, a large number
-points have the upper and lower error bar y values have been set to
-missing (`NA`). The `ggplot` package does print warning messages when we
-attempt to plot a series with missing values. We typically suppress
-those warnings, but left them here for illustration purposes only.
+Figure 3: Points with error bars.
+
+The x variable is the same (`iv_state`) for all three data series as
+well as the associated error bars. This is not a requirement, as we
+could have specified a different variable name for each `geom_` function
+call. Just as in the `plot.sas` macro, since we do not want an error bar
+placed at every data point, a large number of points have their upper
+and lower error bar y values set to missing (`NA`). The `ggplot` package
+does print warning messages when we attempt to plot a series with
+missing values. We typically suppress those warnings, but left them here
+for illustration purposes only.
 
 ### Lines
 
 Similar to points and error bars, the `geom_line` function is used to
 plot lines. We use the `linetype` argument to specify the line styles
-(Section 3.8). We do have to generate a separate `geom_line` function
-call for each limit of the confidence limit, since it is constructed of
-two lines (the upper and lower confidence limit). The resulting graph is
-shown in Figure 6.
+([Line types](#sec-linetypes)). We do have to generate a separate
+`geom_line` function call for each limit of the confidence limit, since
+it is constructed of two lines (the upper and lower confidence limit).
+The resulting graph is shown in [Figure 4](#fig-lines).
 
 ``` r
 
@@ -730,45 +739,41 @@ show(ccf_plot)
     Warning: Removed 117 rows containing missing values or values outside the scale range
     (`geom_point()`).
 
-![](hvtiPlotR_files/figure-html/error_lines_ci-1.png)
+![](hvtiPlotR_files/figure-html/fig-lines-1.png)
+
+Figure 4: Lines with confidence limits.
 
 Alternatively, we could use the `geom_ribbon` to generate a confidence
 band using a shaded region with only a single call. The aesthetic
 argument for `geom_ribbon` takes a `ymax` and `ymin` argument just as
-the `geom_errorbar` function. Note that we used a different data set
+the `geom_errorbar` function. We used a different data set
 (`data=parametric`) to use a different set of points for generating
 these lines.
 
 ### Line types
 
 The linetype argument takes a named string as a value, to set the
-different line styles. We show a set of frequently used styles in Figure
-7 for reference.
+different line styles: `"solid"`, `"dashed"`, `"dotted"`, `"dotdash"`,
+`"longdash"` and `"twodash"`.
 
 ### Shapes
 
 The shape argument takes numeric arguments. Though not user friendly,
-this method is at least consistent. Figure 8 shows a catalog of shapes
-with corresponding numeric argument constructed using the ones place
-from the x-axis, and tens from the y-axis. For example, the filled dot,
-default point shape shown in black in Figure 6 is shape 20.
+this method is at least consistent. Shapes 0 to 25 are available; the
+default filled dot shown in black in [Figure 2](#fig-points) is shape
+19.
 
 ### Colors
 
 You can specify colors in R by numeric index, name (as we have done),
 hexadecimal, or RGB specification. For example `col=1` and `col="white"`
-are equivalent. The chart in Figure 9 was produced with code developed
-by Glynn (2005). See his R Color Chart website for all the details you
-would ever need about using colors in R.
+are equivalent. Glynn (2005) publishes an R Color Chart with all the
+details you would ever need about using colors in R.
 
 ColorBrewer (Harrower and Brewer 2003) is an online tool
 (https://colorbrewer2.org/) designed to help people select good color
 schemes for maps and other graphics. We recommend it as a practical
 starting point for choosing colors.
-
-Figure 8: ggplot2 shape table
-
-Figure 9: R colors
 
 The ColorBrewer palette catalogue (Harrower and Brewer 2003) is built
 into `ggplot2` via
@@ -788,10 +793,10 @@ data. We often want to remove this space, or focus in on a smaller
 window of the figure. This is accomplished with the coord_cartesian
 function. By specifying the xlim and/or ylim coordinates, we can crop
 the figure into whatever viewport we are interested in without
-manipulating the original dataset. Figure ?? sets the origin to (0,0)
-and clips the x axis at 5.1, and the y axis at 101. We have added the .1
-and 1 to each axis for aesthetic reasons to avid chopping off the tick
-labels when they occur at the end of the viewport.
+manipulating the original dataset. [Figure 5](#fig-viewport) sets the
+origin to (0,0) and clips the x axis at 5.1, and the y axis at 101. We
+have added the .1 and 1 to each axis for aesthetic reasons to avoid
+chopping off the tick labels when they occur at the end of the viewport.
 
 ``` r
 
@@ -807,9 +812,9 @@ show(ccf_plot)
     Warning: Removed 117 rows containing missing values or values outside the scale range
     (`geom_point()`).
 
-![](hvtiPlotR_files/figure-html/unnamed-chunk-5-1.png)
+![](hvtiPlotR_files/figure-html/fig-viewport-1.png)
 
-Figure 10: Adjusting the viewport
+Figure 5: Adjusting the viewport.
 
 ### PowerPoint Figures
 
@@ -853,11 +858,13 @@ ccf_ppt_plot <- ggplot() +
 show(ccf_ppt_plot)
 ```
 
-![](hvtiPlotR_files/figure-html/powerpoint_fig1-1.png)
+![](hvtiPlotR_files/figure-html/fig-ppt-1.png)
+
+Figure 6: The PowerPoint figure recreated in R.
 
 ## Themes and Decoration
 
-The **hvtiPlotR** package provides four `theme_hv_*()` functions –
+The **hvtiPlotR** package provides four `theme_hv_*()` functions:
 [`theme_hv_manuscript()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md),
 [`theme_hv_poster()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md),
 [`theme_hv_ppt_light()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md),
@@ -868,9 +875,9 @@ choice depends on the output target:
 [`theme_hv_manuscript()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)
 is for journal figures (black on white, no panel grid, no legend by
 default, axes drawn as lines), while the poster and slide themes scale
-up text and line weights so the figure reads at distance. You can see
-the full difference by swapping the theme call at the end of a pipeline
-– everything else stays the same.
+up text and line weights so the figure reads at distance. To see the
+full difference, swap the theme call at the end of a pipeline;
+everything else stays the same.
 
 ``` r
 
@@ -960,28 +967,27 @@ mind when composing figures.
 ### Manuscript figures
 
 - **Use
-  [`theme_hv_manuscript()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)**
-  — black text, white background, no decorative fill. Never use coloured
+  [`theme_hv_manuscript()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)**:
+  black text, white background, no decorative fill. Never use coloured
   backgrounds in figures destined for journals.
-- **No chart titles** — the figure caption in the manuscript text
-  carries the title. Do not add a `labs(title = ...)` layer.
-- **Axis labels are mandatory** — always supply
-  `labs(x = ..., y = ...)`. Units belong in the axis label, not in the
-  tick labels (e.g. `"Years after operation"`, not
-  `"0 yr, 5 yr, 10 yr"`).
-- **Percent axes** — format y-axis tick labels as `"0%"`, `"20%"`, …,
+- **No chart titles**: the figure caption in the manuscript text carries
+  the title. Do not add a `labs(title = ...)` layer.
+- **Axis labels are mandatory**: always supply `labs(x = ..., y = ...)`.
+  Units belong in the axis label, not in the tick labels
+  (e.g. `"Years after operation"`, not `"0 yr, 5 yr, 10 yr"`).
+- **Percent axes**: format y-axis tick labels as `"0%"`, `"20%"`, …,
   `"100%"` using
   `scale_y_continuous(labels = function(x) paste0(x, "%"))`. Do not
   write the `%` symbol inside the axis title.
-- **No minor grid lines** — major grid lines are optional and should be
+- **No minor grid lines**: major grid lines are optional and should be
   light grey if used. Minor grid lines are never used.
-- **Confidence intervals as ribbons or error bars** — always show CIs
+- **Confidence intervals as ribbons or error bars**: always show CIs
   where they are available. Use `alpha = 0.2` for ribbons so they do not
   obscure the curve.
-- **Save at US Letter landscape** — `ggsave(width = 11, height = 8.5)`.
+- **Save at US Letter landscape**: `ggsave(width = 11, height = 8.5)`.
   Most journals accept this dimension; adjust only when the journal
   specifies otherwise.
-- **Identify the file** — include a `labs(caption = getwd())` or call
+- **Identify the file**: include a `labs(caption = getwd())` or call
   [`make_footnote()`](https://ehrlinger.github.io/hvtiPlotR/reference/make_footnote.md)
   during analysis to track which script produced the figure. Remove this
   before final submission.
@@ -991,20 +997,20 @@ mind when composing figures.
 - **Use
   [`theme_hv_ppt_dark()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)
   or
-  [`theme_hv_ppt_light()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)**
-  — the dark theme is the default for Cleveland Clinic presentation
+  [`theme_hv_ppt_light()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)**:
+  the dark theme is the default for Cleveland Clinic presentation
   templates. Match the theme to the slide background colour.
-- **No points on parametric curves** — presentation figures show lines
+- **No points on parametric curves**: presentation figures show lines
   only. Points are reserved for nonparametric data summaries.
-- **Larger line widths** — use `linewidth = 1.5` or higher so lines are
+- **Larger line widths**: use `linewidth = 1.5` or higher so lines are
   clearly visible on a projected screen. The SAS equivalent was
   `width=3`.
-- **Fewer axis ticks** — five or six ticks per axis is the maximum for
+- **Fewer axis ticks**: five or six ticks per axis is the maximum for
   slides. Use `scale_x_continuous(breaks = seq(0, 10, 2))` to control
   spacing.
-- **No captions** — slide titles carry the figure description. Do not
-  add `labs(caption = ...)` to presentation figures.
-- **Export as editable vector** — use
+- **No captions**: slide titles carry the figure description. Do not add
+  `labs(caption = ...)` to presentation figures.
+- **Export as editable vector**: use
   [`save_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/save_ppt.md)
   rather than
   [`ggsave()`](https://ggplot2.tidyverse.org/reference/ggsave.html) so
@@ -1013,7 +1019,7 @@ mind when composing figures.
 
 ### Colour
 
-- **Multi-group figures** — use `scale_colour_brewer(palette = "Set1")`
+- **Multi-group figures**: use `scale_colour_brewer(palette = "Set1")`
   for up to five groups. For more groups, either pass an explicit vector
   of hex codes via
   [`scale_colour_manual()`](https://ggplot2.tidyverse.org/reference/scale_manual.html)
@@ -1021,22 +1027,22 @@ mind when composing figures.
   <https://colorbrewer2.org/>. (ggplot2 ships the Brewer palette table
   internally; hvtiPlotR does not depend on the optional `RColorBrewer`
   package.)
-- **Single-group survival/hazard figures** — `"steelblue"` for
+- **Single-group survival/hazard figures**: `"steelblue"` for
   manuscript, `"white"` for dark PPT.
-- **Avoid red/green combinations** — approximately 8% of men have
+- **Avoid red/green combinations**: approximately 8% of men have
   red–green colour blindness. Use shape
   ([`scale_shape_manual()`](https://ggplot2.tidyverse.org/reference/scale_manual.html))
   and linetype
   ([`scale_linetype_manual()`](https://ggplot2.tidyverse.org/reference/scale_manual.html))
   in addition to colour so figures remain readable in greyscale print.
-- **Fills vs colours** — `scale_colour_*()` controls lines and points;
+- **Fills vs colours**: `scale_colour_*()` controls lines and points;
   `scale_fill_*()` controls ribbons and bars. Both must be set
   consistently when a legend is shown.
 
 ### What not to include
 
 - No decorative 3-D effects, drop shadows, gradients, background images,
-  or watermarks — they distract from the data.
+  or watermarks. They distract from the data.
 - No axis tick marks on the top or right sides. No more than six groups
   per panel; split into separate figures if you need more.
 - No connecting lines between non-adjacent data points unless the
@@ -1044,12 +1050,11 @@ mind when composing figures.
 
 ## Conclusions
 
-In this article, we present the **hvtiPlotR** package for R. The package
-is made up of ggplot2 themes for publication quality graphics, as well
-as this tutorial document included as a package vignette. The package is
-available from https://github.com/ehrlinger/hvtiPlotR and can be
-installed using the `remotes::install_github("ehrlinger/hvtiPlotR")`
-command.
+The **hvtiPlotR** package for R is made up of ggplot2 themes for
+publication quality graphics, as well as this tutorial document included
+as a package vignette. The package is available from
+https://github.com/ehrlinger/hvtiPlotR and can be installed using the
+`remotes::install_github("ehrlinger/hvtiPlotR")` command.
 
 ## References
 

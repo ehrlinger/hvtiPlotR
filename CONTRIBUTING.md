@@ -94,7 +94,7 @@ package-level architecture:
 | Colours | Never hard-coded — leave to `scale_colour_*()` / `scale_fill_*()` |
 | Themes | Never applied inside the function — leave to the caller |
 | Tidy eval | Use `.data[[col]]` from `rlang`; import with `@importFrom rlang .data` |
-| Tests | `expect_s3_class(obj, "hv_data")` for constructor; `expect_s3_class(plot(obj), "ggplot")` for the plot method |
+| Tests | `expect_s3_class(obj, "hv_data")` for constructor; `expect_plot_has_data(plot(obj))` for the plot method (a class check alone is a smoke test) |
 | Snapshots | After adding a new `expect_snapshot()` test, run [`devtools::test()`](https://devtools.r-lib.org/reference/test.html) once locally to generate the `.snap` baseline, then commit the file under `tests/testthat/_snaps/`. If CI is the first to run it, the snapshot will be uploaded automatically via `upload-snapshots: true` in the workflow. To accept updated snapshots after intentional output changes, run [`testthat::snapshot_accept()`](https://testthat.r-lib.org/reference/snapshot_accept.html) locally and commit the result. |
 
 ------------------------------------------------------------------------

@@ -46,7 +46,7 @@ plot(
 - point_shape:
 
   Integer shape code for the summary points (single-group only; ignored
-  when `group_col` is set — use
+  when `group_col` is set; use
   [`scale_shape_manual()`](https://ggplot2.tidyverse.org/reference/scale_manual.html)
   instead). Default `19L`.
 

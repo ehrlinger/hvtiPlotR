@@ -17,9 +17,9 @@ companion **HVTI ggplot graphics recipes** book,
 
 Every plot constructor follows the same pattern:
 
-1.  Call `hv_*()` to validate and prepare data — returns an `hv_data` S3
-    object that also stores diagnostics (group counts, SMDs, etc.) under
-    `$tables`.
+1.  Call `hv_*()` to validate and prepare data. It returns an `hv_data`
+    S3 object that also stores diagnostics (group counts, SMDs, etc.)
+    under `$tables`.
 
 2.  Call [`plot()`](https://rdrr.io/r/graphics/plot.default.html) on the
     object to obtain a bare
@@ -78,8 +78,8 @@ ggplot2's `half_line` convention.
 ### Saving figures
 
 - [`save_manuscript()`](https://ehrlinger.github.io/hvtiPlotR/reference/save_manuscript.md):
-  Save a ggplot at the house manuscript size (6 x 4 in) in one call —
-  the manuscript counterpart of
+  Save a ggplot at the house manuscript size (6 x 4 in) in one call; the
+  manuscript counterpart of
   [`save_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/save_ppt.md).
   Pair with
   [`theme_hv_manuscript()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)
@@ -101,16 +101,16 @@ When plots in a set have different axis-label widths (e.g. y-axis ranges
 from "1.0" to "4567.2"), the usual
 [`ggsave()`](https://ggplot2.tidyverse.org/reference/ggsave.html) and
 [`officer::ph_location()`](https://davidgohel.github.io/officer/reference/ph_location.html)
-calls let the **panel content area** drift — which is visually jarring
-on PPT decks where the black or white panel box should appear constant
-across slides. Two helpers solve this by making the panel size and slide
+calls let the panel content area drift, which is visually jarring on PPT
+decks where the black or white panel box should appear constant across
+slides. Two helpers solve this by making the panel size and slide
 position the *target*:
 
 - [`hv_ggsave_dims()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_ggsave_dims.md):
   Given a target panel width and height, computes the
   [`ggsave()`](https://ggplot2.tidyverse.org/reference/ggsave.html)
-  `width`/`height` that preserve that panel size. Returns a named list —
-  splat into
+  `width`/`height` that preserve that panel size. Returns a named list
+  to splat into
   [`ggsave()`](https://ggplot2.tidyverse.org/reference/ggsave.html) via
   `do.call(ggplot2::ggsave, c(list(filename = ..., plot = p), dims))`.
 
@@ -245,18 +245,18 @@ compatibility with scripts written before the `hv_*()` redesign. New
 code should prefer the constructor form.
 
 - [`hazard_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/hazard_plot.md):
-  Single-call parametric hazard/survival plot — combine-step equivalent
+  Single-call parametric hazard/survival plot, combine-step equivalent
   of
   [`hv_hazard()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_hazard.md) +
   [`plot()`](https://rdrr.io/r/graphics/plot.default.html).
 
 - [`survival_difference_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/survival_difference_plot.md):
-  Single-call mean-survival-difference plot — equivalent of
+  Single-call mean-survival-difference plot, equivalent of
   [`hv_survival_difference()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_survival_difference.md) +
   [`plot()`](https://rdrr.io/r/graphics/plot.default.html).
 
 - [`nnt_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/nnt_plot.md):
-  Single-call NNT plot — equivalent of
+  Single-call NNT plot, equivalent of
   [`hv_nnt()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_nnt.md) +
   [`plot()`](https://rdrr.io/r/graphics/plot.default.html).
 
@@ -357,7 +357,7 @@ with a concept-specific subclass (e.g. `hv_survival`, `hv_trends`).
 
 ### Scope and versioning
 
-`hvtiPlotR` targets **internal HVTI / CORR use only** — it will not be
+`hvtiPlotR` targets internal HVTI / CORR use only; it will not be
 submitted to CRAN. GitHub-only dependencies are declared in `Remotes:`
 in DESCRIPTION and install cleanly. Install via:
 

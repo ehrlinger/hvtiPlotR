@@ -116,7 +116,7 @@ exported from SAS via <code>tp.hp.dead.sas</code>.</p>
 <dd><p>Upper 95 % confidence limit for <code>nodeath</code>.</p></dd>
 
 <dt>no1death</dt>
-<dd><p>Probability of entering the death state at exactly time t.</p></dd>
+<dd><p>Identical to <code>nodeath</code> in this extract.</p></dd>
 
 <dt>tx1death</dt>
 <dd><p>Cumulative hazard integral for death (Weibull model internal).</p></dd>
@@ -155,7 +155,7 @@ exported from SAS via <code>tp.hp.dead.sas</code>.</p>
 <dd><p>Upper 95 % confidence limit for <code>nostrk</code>.</p></dd>
 
 <dt>no1strk</dt>
-<dd><p>Probability of entering the stroke state at exactly time t.</p></dd>
+<dd><p>Identical to <code>nostrk</code> in this extract.</p></dd>
 
 <dt>tx1strk</dt>
 <dd><p>Cumulative hazard integral for stroke (Weibull model internal).</p></dd>
@@ -164,10 +164,10 @@ exported from SAS via <code>tp.hp.dead.sas</code>.</p>
 <dd><p>Cumulative hazard for stroke (same scale as <code>tx1strk</code>).</p></dd>
 
 <dt>cestrk</dt>
-<dd><p>Complement: probability of surviving stroke-free to time t (percent).</p></dd>
+<dd><p>Percent free of stroke, <code>100 - nostrk</code>.</p></dd>
 
 <dt>noinit</dt>
-<dd><p>Parametric estimate of freedom from re-operation (percent).</p></dd>
+<dd><p>Percent event-free (still in the initial state).</p></dd>
 
 <dt>clinit</dt>
 <dd><p>Lower 95 % confidence limit for <code>noinit</code>.</p></dd>
@@ -176,7 +176,7 @@ exported from SAS via <code>tp.hp.dead.sas</code>.</p>
 <dd><p>Upper 95 % confidence limit for <code>noinit</code>.</p></dd>
 
 <dt>no1init</dt>
-<dd><p>Probability of entering the re-operated state at exactly time t.</p></dd>
+<dd><p>Identical to <code>noinit</code> in this extract.</p></dd>
 
 <dt>z</dt>
 <dd><p>Log-hazard estimate for the pooled Weibull model.</p></dd>
@@ -191,14 +191,15 @@ exported from SAS via <code>tp.hp.dead.sas</code>.</p>
 <dd><p>Upper 95 % confidence limit for <code>z</code> (log-hazard scale).</p></dd>
 
 <dt>check</dt>
-<dd><p>Row sum of <code>noinit</code>, <code>nodeath</code>, <code>nostrk</code>, and <code>cestrk</code>; should equal 100.</p></dd>
+<dd><p>Row sum of <code>noinit</code>, <code>nodeath</code> and <code>nostrk</code>; about 100.</p></dd>
 
 
 </dl></div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>The three outcomes tracked are:</p><dl><dt>init</dt>
-<dd><p>Re-operation (re-initialisation)</p></dd>
+    <p>The three states tracked are competing risks; at every time point the
+percentages in the three states sum to 100 (see <code>check</code>):</p><dl><dt>init</dt>
+<dd><p>Event-free (still in the initial state)</p></dd>
 
 <dt>death</dt>
 <dd><p>Death</p></dd>
@@ -211,8 +212,8 @@ exported from SAS via <code>tp.hp.dead.sas</code>.</p>
 upper 95 % CI on the survival estimate; <code>he*</code> = hazard rate estimate;
 <code>hl*/hu*</code> = lower / upper 95 % CI on the hazard; <code>ve*</code> = variance of the
 survival estimate; <code>no*</code> = cumulative incidence (percent); <code>cl*/cu*</code> = lower
-/ upper 95 % CI on the cumulative incidence; <code>no1*</code> = probability of
-entering the state at exactly time t; <code>tx*/tx1*</code> = cumulative hazard
+/ upper 95 % CI on the cumulative incidence; <code>no1*</code> = identical to <code>no*</code> in
+this extract; <code>tx*/tx1*</code> = cumulative hazard
 integral (Weibull model output, used internally).</p>
     </div>
     <div class="section level2">

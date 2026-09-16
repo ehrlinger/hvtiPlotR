@@ -34,25 +34,25 @@ sample_eda_data(n = 300L, year_range = c(2005L, 2020L), seed = 42L)
 
 A data frame with columns:
 
-- `year` — integer surgery year (discrete x for barplots)
+- `year`: integer surgery year (discrete x for barplots)
 
-- `op_years` — continuous years from first year in range (x for
+- `op_years`: continuous years from first year in range (x for
   scatterplots)
 
-- `male` — binary 0/1 (sex)
+- `male`: binary 0/1 (sex)
 
-- `cabg` — binary 0/1 (concomitant CABG)
+- `cabg`: binary 0/1 (concomitant CABG)
 
-- `nyha` — ordinal 1–4 (NYHA class)
+- `nyha`: ordinal 1–4 (NYHA class)
 
-- `valve_morph` — character (valve morphology: Bicuspid / Tricuspid /
+- `valve_morph`: character (valve morphology: Bicuspid / Tricuspid /
   Unicuspid)
 
-- `ef` — continuous ejection fraction (%)
+- `ef`: continuous ejection fraction (%)
 
-- `lv_mass` — continuous LV mass index (g/m^2)
+- `lv_mass`: continuous LV mass index (g/m^2)
 
-- `peak_grad` — continuous peak gradient (mmHg)
+- `peak_grad`: continuous peak gradient (mmHg)
 
 ## See also
 

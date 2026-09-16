@@ -1,4 +1,4 @@
-# hvtiPlotR — ggplot2 themes and plot functions for CORR clinical figures
+# hvtiPlotR: ggplot2 themes and plot functions for CORR clinical figures
 
 [![R package
 version](https://img.shields.io/github/r-package/v/ehrlinger/hvtiPlotR)](https://github.com/ehrlinger/hvtiPlotR)
@@ -7,13 +7,12 @@ version](https://img.shields.io/github/r-package/v/ehrlinger/hvtiPlotR)](https:/
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.11780.svg)](https://doi.org/10.5281/zenodo.11780)
 
 > hvtiPlotR is an R port of the `plot.sas` macro suite that CORR
-> biostatisticians have used for years — the same visual layout and
-> options, now built through ggplot2’s constructor +
+> biostatisticians have used for years. It keeps the same visual layout
+> and options, built through ggplot2’s constructor +
 > [`plot()`](https://rdrr.io/r/graphics/plot.default.html) pattern
 > instead of `PROC GPLOT` statements. Where a macro’s job is also a
-> statistical estimate and not just a plot (`%kaplan` / `%nelsont`
-> survival curves, for instance), the R constructor wraps the same
-> underlying estimator
+> statistical estimate (`%kaplan` / `%nelsont` survival curves, for
+> instance), the R constructor wraps the same underlying estimator
 > ([`survival::survfit()`](https://rdrr.io/pkg/survival/man/survfit.html)),
 > so the curve, confidence limits, and numbers at risk match what the
 > SAS macro reports. The [SAS migration
@@ -28,7 +27,7 @@ Clinic Heart & Vascular Institute. If you are migrating from the
 Worked, rendered examples for every constructor and theme live in the
 companion [**HVTI ggplot graphics
 recipes**](https://ehrlinger.github.io/hvtiGraphics/) book. The full
-reference — every function, the vignettes, and the changelog — is online
+reference (every function, the vignettes, and the changelog) is online
 at <https://ehrlinger.github.io/hvtiPlotR/>.
 
 ## Installation
@@ -74,7 +73,7 @@ save_ppt(
 
 Four themes cover the publication contexts we use. Each follows the
 [`theme_bw()`](https://ggplot2.tidyverse.org/reference/ggtheme.html)
-contract — pass `base_size` / `base_family`, or chain `+ theme(...)`, to
+contract. Pass `base_size` / `base_family`, or chain `+ theme(...)`, to
 override anything:
 
 | Theme | Best for |
@@ -92,17 +91,17 @@ p + theme_hv_ppt_light()    # light PPT slide
 p + theme_hv_poster()       # poster
 ```
 
-The two PPT themes default to **Arial 32 Bold** axis tick labels and
-**Arial 40 Bold** axis titles, matching the standard CORR slide deck.
+The two PPT themes default to Arial 32 Bold axis tick labels and Arial
+40 Bold axis titles, matching the standard CORR slide deck.
 
-> The earlier alias functions —
-> [`theme_man()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md),
+> The earlier alias functions
+> ([`theme_man()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md),
 > [`theme_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md),
 > [`theme_dark_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md),
 > [`theme_light_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md),
 > [`theme_poster()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md),
-> and the `hv_theme_*()` family — still work but are **deprecated**
-> (one-time warning); prefer the `theme_hv_*()` names above. The old
+> and the `hv_theme_*()` family) still work but are deprecated (one-time
+> warning); prefer the `theme_hv_*()` names above. The old
 > `hv_theme("...")` string dispatcher has been removed.
 
 ## Plot Function Gallery
@@ -173,10 +172,10 @@ plot(mh) + theme_hv_manuscript()
 
 | Function | Description |
 |----|----|
-| [`theme_hv_manuscript()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md) / [`theme_hv_poster()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md) / [`theme_hv_ppt_dark()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md) / [`theme_hv_ppt_light()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md) | The four publication themes — see [Themes](#themes) |
+| [`theme_hv_manuscript()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md) / [`theme_hv_poster()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md) / [`theme_hv_ppt_dark()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md) / [`theme_hv_ppt_light()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md) | The four publication themes; see [Themes](#themes) |
 | [`save_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/save_ppt.md) | Export a ggplot to an editable PowerPoint slide using an HVTI template; `panel_box = list(width = ..., height = ..., left = ..., top = ...)` (on by default) anchors the panel content area to the same slide coordinates on every slide |
 | [`hv_ggsave_dims()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_ggsave_dims.md) | Compute [`ggsave()`](https://ggplot2.tidyverse.org/reference/ggsave.html) `width`/`height` that preserve a target panel content area regardless of axis-label, legend, or title size |
-| [`hv_ph_location()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_ph_location.md) | Compute [`officer::ph_location()`](https://davidgohel.github.io/officer/reference/ph_location.html) args so a ggplot’s panel lands at a fixed slide rectangle — the per-slide worker that `save_ppt(panel_box=)` calls |
+| [`hv_ph_location()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_ph_location.md) | Compute [`officer::ph_location()`](https://davidgohel.github.io/officer/reference/ph_location.html) args so a ggplot’s panel lands at a fixed slide rectangle; the per-slide worker that `save_ppt(panel_box=)` calls |
 | [`make_footnote()`](https://ehrlinger.github.io/hvtiPlotR/reference/make_footnote.md) | Add a footnote annotation to the current figure |
 
 ## Vignettes
@@ -225,32 +224,32 @@ historical reference.
 hvtiPlotR is one part of the HVTI CORR R ecosystem. The packages a
 reader of this one is most likely to reach for next:
 
-- [**hvtiRpropensity**](https://github.com/ehrlinger/hvtiRpropensity) —
+- [**hvtiRpropensity**](https://github.com/ehrlinger/hvtiRpropensity)
   builds the matched/weighted datasets and SMD balance tables that
   [`hv_mirror_hist()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_mirror_hist.md)
   and
   [`hv_balance()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_balance.md)
   are built to plot.
-- [**hvtiRdatabuild**](https://github.com/ehrlinger/hvtiRdatabuild) —
+- [**hvtiRdatabuild**](https://github.com/ehrlinger/hvtiRdatabuild)
   builds and verifies the analysis-ready CORR datasets you would feed
   into these constructors in place of the `sample_*()` generators.
-- [**hvtiRtables**](https://github.com/ehrlinger/hvtiRtables) — produces
+- [**hvtiRtables**](https://github.com/ehrlinger/hvtiRtables) produces
   the Table 1 / manuscript tables that typically accompany the figures
   built here.
 - [**HVTI ggplot graphics
-  recipes**](https://ehrlinger.github.io/hvtiGraphics/) — the companion
+  recipes**](https://ehrlinger.github.io/hvtiGraphics/) is the companion
   recipes book, with worked examples that tie the constructors above
   into a house style for clinical figures.
 
 ## Contributing
 
-Pull requests are welcome! Please read
+Pull requests are welcome. Read
 [CONTRIBUTING.md](https://ehrlinger.github.io/hvtiPlotR/CONTRIBUTING.md)
 for the full guide, which covers:
 
-- **Track A** — porting a SAS template (for biostatisticians and
-  analysts adding a new plot function or sample-data generator)
-- **Track B** — package infrastructure (for R developers working on
+- Track A: porting a SAS template (for biostatisticians and analysts
+  adding a new plot function or sample-data generator)
+- Track B: package infrastructure (for R developers working on
   dependencies, CI, testing, and CRAN compliance)
 
 Quick-start:

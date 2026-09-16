@@ -5,16 +5,16 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>HVTI ggplot2 themes and clinical plot functions for the Cleveland Clinic Heart &amp; Vascular Institute • hvtiPlotR</title>
+<title>HVTI ggplot2 Themes and Clinical Plot Functions for the Cleveland Clinic Heart &amp; Vascular Institute • hvtiPlotR</title>
 <script src="lightswitch.js"></script><script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
 <script src="deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="deps/Outfit-0.4.10/font.css" rel="stylesheet">
 <link href="deps/Fira_Code-0.4.10/font.css" rel="stylesheet">
 <link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
-<script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="HVTI ggplot2 themes and clinical plot functions for the Cleveland Clinic Heart &amp; Vascular Institute">
-<meta name="description" content="ggplot2 themes and methodology documentation for creating publication quality graphics in R conforming to the standards of Cardiovascular Outcomes Registries and Research (CORR) within The Heart \&amp; Vascular Institute at the Cleveland Clinic.">
-<meta property="og:description" content="ggplot2 themes and methodology documentation for creating publication quality graphics in R conforming to the standards of Cardiovascular Outcomes Registries and Research (CORR) within The Heart \&amp; Vascular Institute at the Cleveland Clinic.">
+<script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="HVTI ggplot2 Themes and Clinical Plot Functions for the Cleveland Clinic Heart &amp; Vascular Institute">
+<meta name="description" content="Themes, clinical plot constructors and methods for creating publication quality ggplot2 graphics in R that conform to the standards of Cardiovascular Outcomes Registries and Research (CORR) within The Heart \&amp; Vascular Institute at the Cleveland Clinic.">
+<meta property="og:description" content="Themes, clinical plot constructors and methods for creating publication quality ggplot2 graphics in R that conform to the standards of Cardiovascular Outcomes Registries and Research (CORR) within The Heart \&amp; Vascular Institute at the Cleveland Clinic.">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -74,17 +74,17 @@
 </nav><div class="container template-home">
 <div class="row">
   <main id="main" class="col-md-9"><div class="section level1">
-<div class="page-header"><h1 id="hvtiplotr--ggplot2-themes-and-plot-functions-for-corr-clinical-figures">hvtiPlotR — ggplot2 themes and plot functions for CORR clinical figures<a class="anchor" aria-label="anchor" href="#hvtiplotr--ggplot2-themes-and-plot-functions-for-corr-clinical-figures"></a>
+<div class="page-header"><h1 id="hvtiplotr-ggplot2-themes-and-plot-functions-for-corr-clinical-figures">hvtiPlotR: ggplot2 themes and plot functions for CORR clinical figures<a class="anchor" aria-label="anchor" href="#hvtiplotr-ggplot2-themes-and-plot-functions-for-corr-clinical-figures"></a>
 </h1></div>
 <!-- badges: start -->
 
 <p><a href="https://github.com/ehrlinger/hvtiPlotR" class="external-link"><img src="https://img.shields.io/github/r-package/v/ehrlinger/hvtiPlotR" alt="R package version"></a></p>
 <p><a href="https://github.com/ehrlinger/hvtiPlotR/actions/workflows/lint.yaml" class="external-link"><img src="https://github.com/ehrlinger/hvtiPlotR/actions/workflows/lint.yaml/badge.svg" alt="lint"></a> <a href="https://doi.org/10.5281/zenodo.11780" class="external-link"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.11780.svg" alt="DOI"></a> <!-- badges: end --></p>
 <blockquote>
-<p>hvtiPlotR is an R port of the <code>plot.sas</code> macro suite that CORR biostatisticians have used for years — the same visual layout and options, now built through ggplot2’s constructor + <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code> pattern instead of <code>PROC GPLOT</code> statements. Where a macro’s job is also a statistical estimate and not just a plot (<code>%kaplan</code> / <code>%nelsont</code> survival curves, for instance), the R constructor wraps the same underlying estimator (<code><a href="https://rdrr.io/pkg/survival/man/survfit.html" class="external-link">survival::survfit()</a></code>), so the curve, confidence limits, and numbers at risk match what the SAS macro reports. The <a href="https://ehrlinger.github.io/hvtiPlotR/articles/sas-migration-guide.html">SAS migration guide</a> vignette walks every macro to its <code>hv_*()</code> replacement.</p>
+<p>hvtiPlotR is an R port of the <code>plot.sas</code> macro suite that CORR biostatisticians have used for years. It keeps the same visual layout and options, built through ggplot2’s constructor + <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code> pattern instead of <code>PROC GPLOT</code> statements. Where a macro’s job is also a statistical estimate (<code>%kaplan</code> / <code>%nelsont</code> survival curves, for instance), the R constructor wraps the same underlying estimator (<code><a href="https://rdrr.io/pkg/survival/man/survfit.html" class="external-link">survival::survfit()</a></code>), so the curve, confidence limits, and numbers at risk match what the SAS macro reports. The <a href="https://ehrlinger.github.io/hvtiPlotR/articles/sas-migration-guide.html">SAS migration guide</a> vignette walks every macro to its <code>hv_*()</code> replacement.</p>
 </blockquote>
 <p>hvtiPlotR packages the ggplot2 themes and plot functions we use in Cardiovascular Outcomes Registries and Research (CORR) at the Cleveland Clinic Heart &amp; Vascular Institute. If you are migrating from the <code>plot.sas</code> macro, this is its R successor.</p>
-<p>Worked, rendered examples for every constructor and theme live in the companion <a href="https://ehrlinger.github.io/hvtiGraphics/" class="external-link"><strong>HVTI ggplot graphics recipes</strong></a> book. The full reference — every function, the vignettes, and the changelog — is online at <a href="https://ehrlinger.github.io/hvtiPlotR/" class="uri">https://ehrlinger.github.io/hvtiPlotR/</a>.</p>
+<p>Worked, rendered examples for every constructor and theme live in the companion <a href="https://ehrlinger.github.io/hvtiGraphics/" class="external-link"><strong>HVTI ggplot graphics recipes</strong></a> book. The full reference (every function, the vignettes, and the changelog) is online at <a href="https://ehrlinger.github.io/hvtiPlotR/" class="uri">https://ehrlinger.github.io/hvtiPlotR/</a>.</p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
@@ -116,7 +116,7 @@
 <div class="section level2">
 <h2 id="themes">Themes<a class="anchor" aria-label="anchor" href="#themes"></a>
 </h2>
-<p>Four themes cover the publication contexts we use. Each follows the <code><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw()</a></code> contract — pass <code>base_size</code> / <code>base_family</code>, or chain <code>+ theme(...)</code>, to override anything:</p>
+<p>Four themes cover the publication contexts we use. Each follows the <code><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw()</a></code> contract. Pass <code>base_size</code> / <code>base_family</code>, or chain <code>+ theme(...)</code>, to override anything:</p>
 <table class="table">
 <colgroup>
 <col width="50%">
@@ -150,9 +150,9 @@
 <span><span class="va">p</span> <span class="op">+</span> <span class="fu"><a href="reference/hvtiPlotR-themes.html">theme_hv_ppt_dark</a></span><span class="op">(</span><span class="op">)</span>     <span class="co"># dark PPT slide</span></span>
 <span><span class="va">p</span> <span class="op">+</span> <span class="fu"><a href="reference/hvtiPlotR-themes.html">theme_hv_ppt_light</a></span><span class="op">(</span><span class="op">)</span>    <span class="co"># light PPT slide</span></span>
 <span><span class="va">p</span> <span class="op">+</span> <span class="fu"><a href="reference/hvtiPlotR-themes.html">theme_hv_poster</a></span><span class="op">(</span><span class="op">)</span>       <span class="co"># poster</span></span></code></pre></div>
-<p>The two PPT themes default to <strong>Arial 32 Bold</strong> axis tick labels and <strong>Arial 40 Bold</strong> axis titles, matching the standard CORR slide deck.</p>
+<p>The two PPT themes default to Arial 32 Bold axis tick labels and Arial 40 Bold axis titles, matching the standard CORR slide deck.</p>
 <blockquote>
-<p>The earlier alias functions — <code><a href="reference/hvtiPlotR-themes.html">theme_man()</a></code>, <code><a href="reference/hvtiPlotR-themes.html">theme_ppt()</a></code>, <code><a href="reference/hvtiPlotR-themes.html">theme_dark_ppt()</a></code>, <code><a href="reference/hvtiPlotR-themes.html">theme_light_ppt()</a></code>, <code><a href="reference/hvtiPlotR-themes.html">theme_poster()</a></code>, and the <code>hv_theme_*()</code> family — still work but are <strong>deprecated</strong> (one-time warning); prefer the <code>theme_hv_*()</code> names above. The old <code>hv_theme("...")</code> string dispatcher has been removed.</p>
+<p>The earlier alias functions (<code><a href="reference/hvtiPlotR-themes.html">theme_man()</a></code>, <code><a href="reference/hvtiPlotR-themes.html">theme_ppt()</a></code>, <code><a href="reference/hvtiPlotR-themes.html">theme_dark_ppt()</a></code>, <code><a href="reference/hvtiPlotR-themes.html">theme_light_ppt()</a></code>, <code><a href="reference/hvtiPlotR-themes.html">theme_poster()</a></code>, and the <code>hv_theme_*()</code> family) still work but are deprecated (one-time warning); prefer the <code>theme_hv_*()</code> names above. The old <code>hv_theme("...")</code> string dispatcher has been removed.</p>
 </blockquote>
 </div>
 <div class="section level2">
@@ -334,7 +334,7 @@
 <td>
 <code><a href="reference/hvtiPlotR-themes.html">theme_hv_manuscript()</a></code> / <code><a href="reference/hvtiPlotR-themes.html">theme_hv_poster()</a></code> / <code><a href="reference/hvtiPlotR-themes.html">theme_hv_ppt_dark()</a></code> / <code><a href="reference/hvtiPlotR-themes.html">theme_hv_ppt_light()</a></code>
 </td>
-<td>The four publication themes — see <a href="#themes">Themes</a>
+<td>The four publication themes; see <a href="#themes">Themes</a>
 </td>
 </tr>
 <tr>
@@ -347,7 +347,7 @@
 </tr>
 <tr>
 <td><code><a href="reference/hv_ph_location.html">hv_ph_location()</a></code></td>
-<td>Compute <code><a href="https://davidgohel.github.io/officer/reference/ph_location.html" class="external-link">officer::ph_location()</a></code> args so a ggplot’s panel lands at a fixed slide rectangle — the per-slide worker that <code>save_ppt(panel_box=)</code> calls</td>
+<td>Compute <code><a href="https://davidgohel.github.io/officer/reference/ph_location.html" class="external-link">officer::ph_location()</a></code> args so a ggplot’s panel lands at a fixed slide rectangle; the per-slide worker that <code>save_ppt(panel_box=)</code> calls</td>
 </tr>
 <tr>
 <td><code><a href="reference/make_footnote.html">make_footnote()</a></code></td>
@@ -388,24 +388,22 @@
 <p>hvtiPlotR is one part of the HVTI CORR R ecosystem. The packages a reader of this one is most likely to reach for next:</p>
 <ul>
 <li>
-<a href="https://github.com/ehrlinger/hvtiRpropensity" class="external-link"><strong>hvtiRpropensity</strong></a> — builds the matched/weighted datasets and SMD balance tables that <code><a href="reference/hv_mirror_hist.html">hv_mirror_hist()</a></code> and <code><a href="reference/hv_balance.html">hv_balance()</a></code> are built to plot.</li>
+<a href="https://github.com/ehrlinger/hvtiRpropensity" class="external-link"><strong>hvtiRpropensity</strong></a> builds the matched/weighted datasets and SMD balance tables that <code><a href="reference/hv_mirror_hist.html">hv_mirror_hist()</a></code> and <code><a href="reference/hv_balance.html">hv_balance()</a></code> are built to plot.</li>
 <li>
-<a href="https://github.com/ehrlinger/hvtiRdatabuild" class="external-link"><strong>hvtiRdatabuild</strong></a> — builds and verifies the analysis-ready CORR datasets you would feed into these constructors in place of the <code>sample_*()</code> generators.</li>
+<a href="https://github.com/ehrlinger/hvtiRdatabuild" class="external-link"><strong>hvtiRdatabuild</strong></a> builds and verifies the analysis-ready CORR datasets you would feed into these constructors in place of the <code>sample_*()</code> generators.</li>
 <li>
-<a href="https://github.com/ehrlinger/hvtiRtables" class="external-link"><strong>hvtiRtables</strong></a> — produces the Table 1 / manuscript tables that typically accompany the figures built here.</li>
+<a href="https://github.com/ehrlinger/hvtiRtables" class="external-link"><strong>hvtiRtables</strong></a> produces the Table 1 / manuscript tables that typically accompany the figures built here.</li>
 <li>
-<a href="https://ehrlinger.github.io/hvtiGraphics/" class="external-link"><strong>HVTI ggplot graphics recipes</strong></a> — the companion recipes book, with worked examples that tie the constructors above into a house style for clinical figures.</li>
+<a href="https://ehrlinger.github.io/hvtiGraphics/" class="external-link"><strong>HVTI ggplot graphics recipes</strong></a> is the companion recipes book, with worked examples that tie the constructors above into a house style for clinical figures.</li>
 </ul>
 </div>
 <div class="section level2">
 <h2 id="contributing">Contributing<a class="anchor" aria-label="anchor" href="#contributing"></a>
 </h2>
-<p>Pull requests are welcome! Please read <a href="CONTRIBUTING.html">CONTRIBUTING.md</a> for the full guide, which covers:</p>
+<p>Pull requests are welcome. Read <a href="CONTRIBUTING.html">CONTRIBUTING.md</a> for the full guide, which covers:</p>
 <ul>
-<li>
-<strong>Track A</strong> — porting a SAS template (for biostatisticians and analysts adding a new plot function or sample-data generator)</li>
-<li>
-<strong>Track B</strong> — package infrastructure (for R developers working on dependencies, CI, testing, and CRAN compliance)</li>
+<li>Track A: porting a SAS template (for biostatisticians and analysts adding a new plot function or sample-data generator)</li>
+<li>Track B: package infrastructure (for R developers working on dependencies, CI, testing, and CRAN compliance)</li>
 </ul>
 <p>Quick-start:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">

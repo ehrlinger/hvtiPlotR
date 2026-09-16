@@ -40,8 +40,8 @@ An object of class `c("hv_upset", "hv_data")`:
 
 - `$tables`:
 
-  List with one element: `set_counts` – a named integer vector of
-  per-set patient counts.
+  List with one element: `set_counts`, a named integer vector of per-set
+  patient counts.
 
 ## See also
 

@@ -57,7 +57,7 @@ plot(
 
   Logical; if FALSE, the y-axis title, text, ticks, and line are blanked
   for a clean milestone patient-flow look (the alluvium/stratum geometry
-  is untouched). Default `TRUE` (counts shown). Note the blanking is a
+  is untouched). Default `TRUE` (counts shown). The blanking is a
   [`theme()`](https://ggplot2.tidyverse.org/reference/theme.html) layer,
   so a *complete* theme added afterward (e.g.
   [`theme_hv_manuscript()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md))

@@ -17,7 +17,7 @@ hv_consort_patients(tracker, stage, reason = NULL)
 
 - stage:
 
-  Character – either the `include_col` name (e.g. `"eligible"`) or the
+  Character: either the `include_col` name (e.g. `"eligible"`) or the
   stage label (case-insensitive, e.g. `"Eligible"`).
 
 - reason:

@@ -15,8 +15,8 @@ library(hvtiPlotR)
 ```
 
 All hvtiPlotR plot functions follow a two-step workflow. Call the
-constructor (`hv_*()`) to validate and prepare data — it returns an S3
-object of class `c("hv_<concept>", "hv_data")` — then call
+constructor (`hv_*()`) to validate and prepare data (it returns an S3
+object of class `c("hv_<concept>", "hv_data")`), then call
 [`plot()`](https://rdrr.io/r/graphics/plot.default.html) on the result
 to get a bare `ggplot` with no colour scales, axis labels, or theme
 applied yet. You add those with the usual `+` operator. See the
@@ -31,34 +31,35 @@ patterns.
 ## Template Reference Map
 
 The table below maps each hvtiPlotR constructor to the original SAS and
-R templates it ports. Functions marked with — have no direct predecessor
-and were designed specifically for this package. All functions have
-worked examples in the sections below.
+R templates it ports. A cell reads “none” where no template exists;
+functions with none in both columns have no direct predecessor and were
+designed for this package. All functions have worked examples in the
+sections below.
 
 | hvtiPlotR Constructor | SAS Template(s) | R Template(s) |
 |----|----|----|
-| [`hv_mirror_hist()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_mirror_hist.md) | — | `tp.lp.mirror-histogram_SAVR-TF-TAVR.R`, `tp.lp.mirror_histo_before_after_wt.R` |
-| [`hv_stacked()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_stacked.md) | — | — |
-| [`hv_balance()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_balance.md) | — | `tp.lp.propen.cov_balance.R` |
-| [`hv_followup()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_followup.md) | `tp.dp.goodness_followup.*`, `tp.dp.goodness_event.*` | — |
+| [`hv_mirror_hist()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_mirror_hist.md) | none | `tp.lp.mirror-histogram_SAVR-TF-TAVR.R`, `tp.lp.mirror_histo_before_after_wt.R` |
+| [`hv_stacked()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_stacked.md) | none | none |
+| [`hv_balance()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_balance.md) | none | `tp.lp.propen.cov_balance.R` |
+| [`hv_followup()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_followup.md) | `tp.dp.goodness_followup.*`, `tp.dp.goodness_event.*` | none |
 | [`hv_survival()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_survival.md) | `tp.hp.dead.sas` (basic) | `tp.hp.dead.number_risk.R` |
 | [`hazard_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/hazard_plot.md) | `tp.hp.dead.*`, `tp.hp.event.weighted.sas`, `tp.hp.repeated*.sas`, `tp.hp.numtreat.survdiff.matched.sas`, `tp.hs.dead.*`, `tp.hs.uslife_*` | `tp.hp.dead.number_risk.R` |
 | [`hv_hazard()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_hazard.md) | `tp.hp.dead.*`, `tp.hp.event.weighted.sas`, `tp.hp.repeated*.sas`, `tp.hp.numtreat.survdiff.matched.sas`, `tp.hs.dead.*`, `tp.hs.uslife_*` | `tp.hp.dead.number_risk.R` |
-| [`survival_difference_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/survival_difference_plot.md) | `tp.hp.dead.life-gained.sas`, `tp.hp.numtreat.survdiff.matched.sas`, `tp.hs.dead.compare_benefit.setup.sas` | — |
-| [`hv_survival_difference()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_survival_difference.md) | `tp.hp.dead.life-gained.sas`, `tp.hp.numtreat.survdiff.matched.sas`, `tp.hs.dead.compare_benefit.setup.sas` | — |
-| [`nnt_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/nnt_plot.md) | `tp.hp.numtreat.survdiff.matched.sas` | — |
-| [`hv_nnt()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_nnt.md) | `tp.hp.numtreat.survdiff.matched.sas` | — |
-| [`hv_nonparametric()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_nonparametric.md) | `tp.np.*.avrg_curv.*`, `tp.np.*.u.trend.*`, `tp.np.*.double.*`, `tp.np.*.mult.*`, `tp.np.*.phases.*`, `tp.np.z0axdpo.*` | — |
-| [`hv_ordinal()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_ordinal.md) | `tp.np.*.ordinal.*` | — |
-| [`hv_correlation_matrix()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_correlation_matrix.md) | `descriptive/dc.tables.ods.sas` (`PROC CORR PLOTS=MATRIX`) | — |
-| [`hv_eda()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_eda.md) | — | — |
-| [`hv_spaghetti()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_spaghetti.md) | — | `tp.dp.spaghetti.echo.R` |
+| [`survival_difference_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/survival_difference_plot.md) | `tp.hp.dead.life-gained.sas`, `tp.hp.numtreat.survdiff.matched.sas`, `tp.hs.dead.compare_benefit.setup.sas` | none |
+| [`hv_survival_difference()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_survival_difference.md) | `tp.hp.dead.life-gained.sas`, `tp.hp.numtreat.survdiff.matched.sas`, `tp.hs.dead.compare_benefit.setup.sas` | none |
+| [`nnt_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/nnt_plot.md) | `tp.hp.numtreat.survdiff.matched.sas` | none |
+| [`hv_nnt()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_nnt.md) | `tp.hp.numtreat.survdiff.matched.sas` | none |
+| [`hv_nonparametric()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_nonparametric.md) | `tp.np.*.avrg_curv.*`, `tp.np.*.u.trend.*`, `tp.np.*.double.*`, `tp.np.*.mult.*`, `tp.np.*.phases.*`, `tp.np.z0axdpo.*` | none |
+| [`hv_ordinal()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_ordinal.md) | `tp.np.*.ordinal.*` | none |
+| [`hv_correlation_matrix()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_correlation_matrix.md) | `descriptive/dc.tables.ods.sas` (`PROC CORR PLOTS=MATRIX`) | none |
+| [`hv_eda()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_eda.md) | none | `tp.dp.EDA_barplots_scatterplots.R`, `tp.dp.EDA_barplots_scatterplots_varnames.R` |
+| [`hv_spaghetti()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_spaghetti.md) | none | `tp.dp.spaghetti.echo.R` |
 | [`hv_trends()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_trends.md) | `tp.lp.trends.sas`, `tp.lp.trends.age.sas`, `tp.lp.trends.polytomous.sas`, `tp.rp.trends.sas` | `tp.dp.trends.R` |
-| [`hv_longitudinal()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_longitudinal.md) | `tp.dp.longitudinal_patients_measures.*` | — |
-| [`hv_alluvial()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_alluvial.md) | — | — |
-| [`hv_sankey()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_sankey.md) | — | PAM cluster stability analysis |
-| [`hv_consort()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_consort.md) | — | — |
-| [`hv_upset()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_upset.md) | — | — |
+| [`hv_longitudinal()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_longitudinal.md) | `tp.dp.longitudinal_patients_measures.*` | none |
+| [`hv_alluvial()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_alluvial.md) | none | `tp.dp.female_bicus_preAR_sankey.R` |
+| [`hv_sankey()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_sankey.md) | none | PAM cluster stability analysis |
+| [`hv_consort()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_consort.md) | none | none |
+| [`hv_upset()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_upset.md) | none | none |
 
 Note:
 [`hazard_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/hazard_plot.md),
@@ -87,9 +88,9 @@ prepares the data;
 bare ggplot to dress with colour and labels.
 
 The constructor accepts a data frame with columns for the propensity
-score, group indicator, and match indicator. The
+score, group indicator, and match indicator.
 [`sample_mirror_histogram_data()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_mirror_histogram_data.md)
-function generates example data suitable for testing.
+generates example data for testing.
 
 Two display modes are selected by the arguments supplied to the
 constructor. **Binary-match mode** (`match_col`) reproduces
@@ -126,9 +127,9 @@ mh <- hv_mirror_hist(
 
 ### Bare plot
 
-The bare panel shows two mirrored bar charts – upper bars for the first
-group, lower for the second – with white fill and no scale or labels
-yet. Look for: upper and lower bars that are roughly symmetric before
+The bare panel shows two mirrored bar charts (upper bars for the first
+group, lower for the second) with white fill and no scale or labels yet.
+Look for: upper and lower bars that are roughly symmetric before
 matching, with the matched (darker) overlay narrowing the distribution;
 if both panels look identical, `match_col` may not be mapping correctly.
 
@@ -181,7 +182,7 @@ group label; lower panel = second group label.
 `scale_y_continuous(labels = abs)` converts the internal negative counts
 to positive labels. `y = Inf`/`-Inf` with `vjust` anchors each
 annotation near the panel edge regardless of data scale, so the
-positions adapt automatically to different dataset sizes.
+positions adapt to different dataset sizes.
 
 The constructor stores group counts and standardized mean differences
 (SMD) before and after matching in `$tables$diagnostics`. You can read
@@ -247,8 +248,8 @@ mh_wt <- hv_mirror_hist(
 
 ### Bare plot
 
-The bare weighted panel looks the same as the binary-match bare plot –
-white bars with an overlay – but the overlay encodes IPTW weight sums,
+The bare weighted panel looks the same as the binary-match bare plot
+(white bars with an overlay), but the overlay encodes IPTW weight sums,
 not counts. Look for: upper and lower overlay bars that are visually
 balanced, indicating good weighting; bars that remain heavily one-sided
 suggest extreme weights.
@@ -429,8 +430,8 @@ The goodness-of-follow-up plot is a standard quality-control figure in
 longitudinal outcome analyses. Each patient appears as a point at their
 operation date (x-axis) and follow-up duration (y-axis). A dashed
 diagonal line marks the maximum potential follow-up given the study
-start, study end, and follow-up closing date — points above the line
-have longer follow-up than that window alone explains, typically because
+start, study end, and follow-up closing date. Points above the line have
+longer follow-up than that window alone explains, typically because
 passive surveillance supplemented active cross-sectional follow-up.
 
 [`hv_followup()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_followup.md)
@@ -553,7 +554,7 @@ gfup_final
 ### Saving
 
 [`ggsave()`](https://ggplot2.tidyverse.org/reference/ggsave.html) writes
-the figure at 6 x 6 inches – square dimensions suit the scatter’s equal
+the figure at 6 x 6 inches; square dimensions suit the scatter’s equal
 x–y scale. For a PowerPoint version, see [Decorating and
 Saving](https://ehrlinger.github.io/hvtiPlotR/articles/plot-decorators.md).
 
@@ -719,9 +720,9 @@ plot(cb, alpha = 0.8)
 ### Adding colour, shape, and axis scales
 
 We map `"Before match"` to red triangles and `"After match"` to blue
-squares – the same colour convention as `tp.lp.propen.cov_balance.R`.
-Set the x-axis limits wide enough to include your largest pre-match SMD;
-the symmetric breaks make the ±10 % threshold visually obvious.
+squares, the same colour convention as `tp.lp.propen.cov_balance.R`. Set
+the x-axis limits wide enough to include your largest pre-match SMD; the
+symmetric breaks make the ±10 % threshold easy to read.
 
 ``` r
 
@@ -812,7 +813,7 @@ plot(cb_ord, alpha = 0.8) +
 ### Saving
 
 [`ggsave()`](https://ggplot2.tidyverse.org/reference/ggsave.html) writes
-the figure at 8 x 7 inches – the extra width accommodates long covariate
+the figure at 8 x 7 inches; the extra width accommodates long covariate
 labels on the y-axis. For a PowerPoint version, see [Decorating and
 Saving](https://ehrlinger.github.io/hvtiPlotR/articles/plot-decorators.md).
 
@@ -844,7 +845,7 @@ window and right-censoring.
 [`sample_survival_data()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_survival_data.md)
 builds the data frame in the long format
 [`hv_survival()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_survival.md)
-expects — one row per patient with a `time` and an `event` column. Build
+expects: one row per patient with a `time` and an `event` column. Build
 the S3 object once and reuse it across the survival, hazard, log-log,
 and report panels below.
 
@@ -871,7 +872,7 @@ km <- hv_survival(dta_km)
 ### Survival curve (PLOTS=1)
 
 The bare `plot(km)` panel is what `PLOTS=1` produces from the SAS
-`%kaplan` macro — the survival curve with the logit-transform 95% CI
+`%kaplan` macro: the survival curve with the logit-transform 95% CI
 ribbon. No colour scale, axis labels, or theme yet; you add those in the
 next subsection. Look for: a curve that starts at 100% and is
 monotonically non-increasing, with the ribbon widening as the at-risk
@@ -960,7 +961,7 @@ km$tables$report
 ### Saving
 
 [`ggsave()`](https://ggplot2.tidyverse.org/reference/ggsave.html) writes
-the composed figure to disk — the `width`/`height` here are tuned for
+the composed figure to disk; the `width`/`height` here are tuned for
 manuscript aspect ratios. For an editable PowerPoint slide use
 [`save_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/save_ppt.md)
 instead; see the companion [Decorating and
@@ -1107,7 +1108,7 @@ plot(km, type = "hazard") +
 
 ### Integrated survivorship / restricted mean survival (PLOTL=1)
 
-`PLOTL=1` is the integrated survivorship — the area under the survival
+`PLOTL=1` is the integrated survivorship, the area under the survival
 curve up to time `t`, equivalent to restricted mean survival time (RMST)
 at that horizon. Useful when the proportional-hazards assumption fails
 and a single hazard ratio summary would mislead. Look for: a curve that
@@ -1170,9 +1171,8 @@ silently disappearing.
 
 ## EDA Barplots and Scatterplots
 
-The **hvtiPlotR** package provides
 [`hv_eda()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_eda.md)
-for exploratory data analysis of all variables in a dataset against a
+runs exploratory data analysis of all variables in a dataset against a
 reference time axis. It replicates the `Function_DataPlotting()`
 workflow from `tp.dp.EDA_barplots_scatterplots.R` and
 `tp.dp.EDA_barplots_scatterplots_varnames.R`, replacing base-R graphics
@@ -1305,7 +1305,7 @@ plot(hv_eda(dta_eda, x_col = "year", y_col = "nyha",
 
 String columns are classified as `"Cat_Char"` and produce stacked count
 bars with one level per fill colour. Unlike `"Cat_Num"` columns, the
-levels are ordered alphabetically by default – use
+levels are ordered alphabetically by default; use
 [`scale_fill_manual()`](https://ggplot2.tidyverse.org/reference/scale_manual.html)
 to assign colours that carry clinical meaning (here, morphology type).
 
@@ -1592,7 +1592,7 @@ plot(al2) +
 ### Saving
 
 [`ggsave()`](https://ggplot2.tidyverse.org/reference/ggsave.html) writes
-the alluvial figure at 8 x 6 inches – wider than tall to give the
+the alluvial figure at 8 x 6 inches, wider than tall, to give the
 horizontal flow diagram room. For a PowerPoint version, see [Decorating
 and
 Saving](https://ehrlinger.github.io/hvtiPlotR/articles/plot-decorators.md).
@@ -1612,12 +1612,12 @@ ggsave("../graphs/alluvial.pdf", p_al, width = 8, height = 6)
 
 [`hv_sankey()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_sankey.md)
 prepares a Sankey diagram that lets you watch how patient cluster
-assignments shift as you increase K — a visual test of cluster
-stability. Where the bands stay wide and orderly, the solution holds;
-where they cross and fragment, K has grown past what the data supports.
-It ports the PAM cluster stability figure from the HVTI clustering
-analysis pipeline. Each column represents one value of K (default K = 2
-to 9); each band shows the fraction of patients whose assignment changes
+assignments shift as you increase K, a visual test of cluster stability.
+Where the bands stay wide and orderly, the solution holds; where they
+cross and fragment, K has grown past what the data supports. It ports
+the PAM cluster stability figure from the HVTI clustering analysis
+pipeline. Each column represents one value of K (default K = 2 to 9);
+each band shows the fraction of patients whose assignment changes
 between consecutive K values. Node labels show the cluster letter and
 count.
 
@@ -1720,7 +1720,7 @@ plot(sk_sub) +
 ### Saving
 
 [`ggsave()`](https://ggplot2.tidyverse.org/reference/ggsave.html) writes
-the figure at 8 x 5 inches – wide enough to spread K = 2 through K = 9
+the figure at 8 x 5 inches, wide enough to spread K = 2 through K = 9
 across the panel. For a PowerPoint version, see [Decorating and
 Saving](https://ehrlinger.github.io/hvtiPlotR/articles/plot-decorators.md).
 
@@ -1775,8 +1775,8 @@ Start from a data frame with one row per patient.
 [`hv_consort_start()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_consort_start.md)
 records the patient identifier and marks every patient as screened; each
 [`hv_consort_exclude()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_consort_exclude.md)
-call adds an exclusion stage. Exclusion rules are two-sided formulas —
-`<condition> ~ "<reason>"` — evaluated against the data. The first
+call adds an exclusion stage. Exclusion rules are two-sided formulas
+(`<condition> ~ "<reason>"`) evaluated against the data. The first
 matching rule wins, and patients dropped in an earlier stage are
 automatically skipped in later ones, so each stage operates only on the
 survivors of the last.
@@ -1821,7 +1821,7 @@ tracker2
 [`hv_consort()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_consort.md)
 derives the box layout from the tracker’s stage metadata and renders the
 diagram; [`plot()`](https://rdrr.io/r/graphics/plot.default.html) draws
-it. By default every exclusion column is shown as a side box — pass a
+it. By default every exclusion column is shown as a side box; pass a
 character vector to `side_box` to select specific ones.
 
 ``` r
@@ -1890,8 +1890,8 @@ save_ppt(
 ## Hazard Plot
 
 [`hazard_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/hazard_plot.md)
-plots pre-computed parametric curves — survival, hazard, or cumulative
-hazard — from a fitted Weibull or other parametric model, with optional
+plots pre-computed parametric curves (survival, hazard, or cumulative
+hazard) from a fitted Weibull or other parametric model, with optional
 Kaplan-Meier empirical overlay and population life-table reference. It
 ports the entire `tp.hp.dead.*` SAS template family.
 
@@ -1908,7 +1908,7 @@ output:
 
 [`sample_hazard_data()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_hazard_data.md)
 generates the parametric prediction grid (one row per time point) with
-`survival`, `hazard`, and `cumhaz` columns plus their CI bounds – the
+`survival`, `hazard`, and `cumhaz` columns plus their CI bounds, the
 same shape as the SAS `predict` dataset.
 [`sample_hazard_empirical()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_hazard_empirical.md)
 generates the KM empirical overlay with 6 binned time intervals,
@@ -2118,7 +2118,7 @@ Every
 call above re-validates and re-passes `curve_data`, `empirical`, and
 `reference` from scratch.
 [`hv_hazard()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_hazard.md)
-does that validation once and stores the result as an S3 object – the
+does that validation once and stores the result as an S3 object: the
 same build-once,
 [`plot()`](https://rdrr.io/r/graphics/plot.default.html)-as-needed
 pattern
@@ -2162,7 +2162,7 @@ plot(hz) +
 ![](plot-functions_files/figure-html/hv_hazard_object-1.png)
 
 `hz$tables` carries the `empirical` and `reference` data frames you
-passed in, nothing more – unlike
+passed in, nothing more. Unlike
 [`hv_survival()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_survival.md),
 [`hv_hazard()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_hazard.md)
 never fits a risk table. If you want a numbers-at-risk strip under a
@@ -2206,10 +2206,10 @@ head(diff_dat)
 ### Survival difference curve
 
 [`survival_difference_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/survival_difference_plot.md)
-takes the pre-computed difference and CI columns directly – no grouping
-argument needed for the two-group case. The dashed horizontal line at
-zero makes the no-benefit baseline immediately visible; a positive
-difference means the treatment group has higher survival.
+takes the pre-computed difference and CI columns directly; the two-group
+case needs no grouping argument. The dashed horizontal line at zero
+marks the no-benefit baseline; a positive difference means the treatment
+group has higher survival.
 
 ``` r
 
@@ -2273,9 +2273,9 @@ renders straight from `diff_dat`.
 [`hv_survival_difference()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_survival_difference.md)
 stores the same estimate and CI columns as an S3 object first, so
 [`print()`](https://rdrr.io/r/base/print.html) confirms which columns it
-picked up before you spend time styling the plot – worth doing when
-you’re scripting several comparisons and want a mis-named CI column to
-fail loudly instead of quietly plotting a flat line.
+picked up before you spend time styling the plot. That is worth doing
+when you’re scripting several comparisons and want a mis-named CI column
+to fail loudly instead of quietly plotting a flat line.
 
 ``` r
 
@@ -2346,7 +2346,7 @@ head(nnt_dat)
 
 ### NNT curve
 
-NNT decreases over time as the treatment benefit accumulates — early in
+NNT decreases over time as the treatment benefit accumulates. Early in
 follow-up you need to treat many patients to prevent one event; by later
 years the survival gap has widened enough that fewer do.
 
@@ -2396,7 +2396,7 @@ nnt_plot(
 takes `nnt_dat` as-is.
 [`hv_nnt()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_nnt.md)
 wraps it as an object and, by default, drops rows where `estimate_col`
-is `NA` – for NNT that’s every time point where the absolute risk
+is `NA`. For NNT that’s every time point where the absolute risk
 reduction is near zero and “number needed to treat” is undefined. Set
 `na_rm = FALSE` if you want those rows kept in `$data`, for example to
 see exactly where the curve would have broken.
@@ -2595,7 +2595,7 @@ plot(tr) +
 ### Median summary + manual colours (NYHA style)
 
 Pass `summary_fn = "median"` when the outcome distribution is skewed and
-the median is more interpretable than the mean – typical for NYHA class
+the median is more interpretable than the mean, typical for NYHA class
 percentage trends. Manual colours let you assign clinically meaningful
 hues (here, one colour per NYHA class).
 
@@ -2632,7 +2632,7 @@ plot(tr_med) +
 Pass `se = TRUE` to
 [`plot()`](https://rdrr.io/r/graphics/plot.default.html) to add a
 [`geom_ribbon()`](https://ggplot2.tidyverse.org/reference/geom_ribbon.html)
-around the mean line. The `alpha` argument controls the ribbon opacity –
+around the mean line. The `alpha` argument controls the ribbon opacity;
 0.2 keeps the band visible without obscuring the line itself.
 
 ``` r
@@ -2716,7 +2716,7 @@ plot(hv_trends(dta_age)) +
 
 ![](plot-functions_files/figure-html/trends_age_x-1.png)
 
-### Polytomous groups — repair types (tp.lp.trends.polytomous.sas)
+### Polytomous groups: repair types (tp.lp.trends.polytomous.sas)
 
 Four repair categories over a short study period (1990–1999): the SAS
 template uses `axisx order=(1990 to 1999 by 1)` for fine year breaks.
@@ -2751,7 +2751,7 @@ plot(hv_trends(dta_poly)) +
 
 ![](plot-functions_files/figure-html/trends_polytomous-1.png)
 
-### LV mass index (tp.dp.trends.R — plot2)
+### LV mass index (tp.dp.trends.R, plot2)
 
 Continuous outcome with a larger y range:
 `scale_y_continuous(breaks=seq(0, 200, 50))`,
@@ -2776,7 +2776,7 @@ plot(hv_trends(dta_lv, group_col = NULL)) +
 
 ![](plot-functions_files/figure-html/trends_lv_mass-1.png)
 
-### Case volume / total surgeries per year (tp.dp.trends.R — plot4)
+### Case volume / total surgeries per year (tp.dp.trends.R, plot4)
 
 The annual case-volume figure uses a y-axis that runs 0–400 by 50,
 matching the mitral degeneration study’s scale from `tp.dp.trends.R`. A
@@ -2801,7 +2801,7 @@ plot(hv_trends(dta_vol, group_col = NULL)) +
 
 ![](plot-functions_files/figure-html/trends_case_volume-1.png)
 
-### Annotated trend — hospital LOS (tp.dp.trends.R — plot5)
+### Annotated trend: hospital LOS (tp.dp.trends.R, plot5)
 
 Template: `coord_cartesian(ylim = c(0, 20))`,
 `annotate("text", 1995, 18, label="Trend: Hospital Length of Stay", size=4.5)`.
@@ -2859,7 +2859,7 @@ subject over time, with optional stratification by a grouping variable.
 `add_smooth = TRUE` for an optional LOESS overlay and returns a bare
 ggplot you can dress with
 [`theme_hv_manuscript()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md).
-The original template covers nine figures — unstratified and
+The original template covers nine figures: unstratified and
 sex-stratified variants of three echo outcomes (AV mean gradient, AV
 area, DVI) plus an ordinal MV regurgitation grade plot.
 
@@ -2914,7 +2914,7 @@ p_sp
 
 ![](plot-functions_files/figure-html/spaghetti_bare-1.png)
 
-### Unstratified — AV mean gradient, full range (plot_1)
+### Unstratified: AV mean gradient, full range (plot_1)
 
 Template: `scale_y_continuous(breaks=seq(0, 80, 20))`,
 `coord_cartesian(xlim = c(0, 5), ylim = c(0, 80))`.
@@ -2931,7 +2931,7 @@ plot(sp) +
 
 ![](plot-functions_files/figure-html/spaghetti_unstrat_full-1.png)
 
-### Unstratified — zoomed y-axis (plot_3)
+### Unstratified: zoomed y-axis (plot_3)
 
 Template: `scale_y_continuous(breaks=seq(0, 30, 10))`,
 `coord_cartesian(ylim = c(0, 30))`.
@@ -2948,7 +2948,7 @@ plot(sp) +
 
 ![](plot-functions_files/figure-html/spaghetti_unstrat_zoom-1.png)
 
-### Stratified by sex — AV mean gradient (plot_2 / plot_4)
+### Stratified by sex: AV mean gradient (plot_2 / plot_4)
 
 Template:
 `scale_color_manual(breaks = c("0", "1"), values=c("red", "blue"))`. The
@@ -3015,7 +3015,7 @@ plot(sp_col) +
 
 ![](plot-functions_files/figure-html/spaghetti_dvi-1.png)
 
-### Ordinal y-axis — MV regurgitation grade (plot_9)
+### Ordinal y-axis: MV regurgitation grade (plot_9)
 
 Template:
 `scale_y_continuous(labels=c("None", "Mild", "Moderate", "Severe"))`,
@@ -3083,7 +3083,7 @@ ggsave(here::here("graphs", "mp.amngrd_profile.pdf"),
 
 [`hv_nonparametric()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_nonparametric.md)
 prepares pre-computed average curves from a two-phase nonparametric
-temporal trend model — the R equivalent of the SAS `tp.np.*.avrg_curv.*`
+temporal trend model, the R equivalent of the SAS `tp.np.*.avrg_curv.*`
 and `tp.np.*.u.trend.*` template family.
 
 Pass the SAS `mean_curv` and `boots_ci` datasets (read in with
@@ -3123,8 +3123,8 @@ head(curve_dat)
 
 ### Single average curve with 68 % CI ribbon
 
-Build the S3 object once – pass `lower_col`/`upper_col` that match the
-CI columns in your data, and optionally `data_points` for the summary
+Build the S3 object once. Pass `lower_col`/`upper_col` that match the CI
+columns in your data, and optionally `data_points` for the summary
 overlay. The bare plot and the decorated plot share the same object.
 
 ``` r
@@ -3271,7 +3271,7 @@ save_ppt(p_np,
 
 [`hv_ordinal()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_ordinal.md)
 prepares pre-computed grade-specific probability curves from a
-cumulative proportional-odds model — the R equivalent of
+cumulative proportional-odds model, the R equivalent of
 `tp.np.*.ordinal.*` SAS templates (e.g. TR grade prevalence, AR
 severity).
 
@@ -3535,7 +3535,7 @@ p_lc_bar
 
 ### Numeric table panel
 
-Call `plot(lc, type = "table")` to get the numeric summary panel – the
+Call `plot(lc, type = "table")` to get the numeric summary panel: the
 same counts the bar chart shows, rendered as coloured text below the
 x-axis labels. This panel is intended to be composed with `patchwork`
 below the bar chart, so keep the theme consistent.
@@ -3576,9 +3576,9 @@ p_lc_bar / p_lc_tbl +
 [`ggsave()`](https://ggplot2.tidyverse.org/reference/ggsave.html) writes
 the patchwork composite at 11 x 6 inches.
 [`save_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/save_ppt.md)
-takes the bar chart alone – patchwork composites may need
-[`ggsave()`](https://ggplot2.tidyverse.org/reference/ggsave.html) first
-– and writes it to a PowerPoint slide. See [Decorating and
+takes the bar chart alone (patchwork composites may need
+[`ggsave()`](https://ggplot2.tidyverse.org/reference/ggsave.html) first)
+and writes it to a PowerPoint slide. See [Decorating and
 Saving](https://ehrlinger.github.io/hvtiPlotR/articles/plot-decorators.md)
 for details.
 
@@ -3676,7 +3676,7 @@ plot(hu) &
 ### Custom intersection bar colour
 
 The intersection bars are a standard
-[`geom_bar()`](https://ggplot2.tidyverse.org/reference/geom_bar.html) —
+[`geom_bar()`](https://ggplot2.tidyverse.org/reference/geom_bar.html);
 change the colour via the `bar_fill` argument (or set `set_size = FALSE`
 to return just the intersection-bar ggplot for full customisation).
 
@@ -3739,7 +3739,7 @@ Figure 2
 ### Saving
 
 [`ggsave()`](https://ggplot2.tidyverse.org/reference/ggsave.html)
-handles a patchwork composite the same as a bare ggplot – write it at 11
+handles a patchwork composite the same as a bare ggplot; write it at 11
 x 6 inches, wide enough for the intersection bars plus the set-size
 sidebar. For a PowerPoint version, see [Decorating and
 Saving](https://ehrlinger.github.io/hvtiPlotR/articles/plot-decorators.md).
@@ -3760,7 +3760,7 @@ ggplot2::ggsave(here::here("graphs", "procedure_cooccurrence.pdf"),
 writes a small annotation to the **bottom-right corner** of the current
 graphics device using grid. Call it *after* printing a plot to mark the
 figure as a work-in-progress during analysis. When you’re ready for
-final output, omit the call — the plot object itself is untouched.
+final output, omit the call. The plot object itself is untouched.
 
     # During analysis                   # For publication
     print(p)                             ggsave("fig1.pdf", p, ...)
@@ -3772,7 +3772,7 @@ Build any hvtiPlotR figure as usual, then call
 [`print()`](https://rdrr.io/r/base/print.html) followed by
 [`make_footnote()`](https://ehrlinger.github.io/hvtiPlotR/reference/make_footnote.md)
 to stamp the bottom-right corner with the source file path and a
-timestamp. The ggplot object itself is unchanged – only the rendered
+timestamp. The ggplot object itself is unchanged; only the rendered
 device gets the annotation.
 
 ``` r
@@ -3823,7 +3823,7 @@ make_footnote(
 ### Saving without the footnote
 
 The [`ggsave()`](https://ggplot2.tidyverse.org/reference/ggsave.html)
-call writes the ggplot object directly —
+call writes the ggplot object directly;
 [`make_footnote()`](https://ehrlinger.github.io/hvtiPlotR/reference/make_footnote.md)
 is never called, so the saved file is clean.
 

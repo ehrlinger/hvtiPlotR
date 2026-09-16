@@ -36,7 +36,7 @@ hv_consort_exclude(
 
   Column name to store exclusion reasons (character). This column will
   contain a reason string for excluded patients and `NA` for survivors.
-  Required – no default.
+  Required; there is no default.
 
 - ...:
 
@@ -57,7 +57,7 @@ hv_consort_exclude(
 
 ## Value
 
-The updated `hv_consort_tracker` (invisibly – pipe-safe).
+The updated `hv_consort_tracker` (invisibly, so it is pipe-safe).
 
 ## See also
 

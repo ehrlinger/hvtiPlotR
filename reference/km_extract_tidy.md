@@ -32,12 +32,12 @@ A data frame.
 
 - `log_cumhaz`:
 
-  log H(t) — y-axis of the log-log survival plot used to assess the
+  log H(t), the y-axis of the log-log survival plot used to assess the
   proportional-hazards assumption.
 
 - `log_time`:
 
-  log(t) — x-axis of log-scale PLOTC plots.
+  log(t), the x-axis of log-scale PLOTC plots.
 
 - `hazard`:
 
@@ -62,4 +62,4 @@ A data frame.
 
 - `proplife`:
 
-  LIFE / t — proportionate life length.
+  LIFE / t, the proportionate life length.

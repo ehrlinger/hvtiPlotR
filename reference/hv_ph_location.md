@@ -5,7 +5,7 @@ Given a fitted ggplot and a target panel rectangle
 `left`, `top` values to pass to
 [`officer::ph_location()`](https://davidgohel.github.io/officer/reference/ph_location.html)
 such that the *panel content area* of the plot lands at the specified
-slide coordinates — regardless of how much room the axis labels, axis
+slide coordinates, regardless of how much room the axis labels, axis
 titles, legend, plot title, or plot margins consume.
 
 ## Usage
@@ -51,7 +51,7 @@ hv_ph_location(
 
 ## Value
 
-A named list with elements `width`, `height`, `left`, `top` — all in
+A named list with elements `width`, `height`, `left`, `top`, all in
 `units`. Splat into
 [`officer::ph_location()`](https://davidgohel.github.io/officer/reference/ph_location.html)
 via [`do.call()`](https://rdrr.io/r/base/do.call.html).

@@ -15,7 +15,7 @@ new_hv_data(data, meta, tables = list(), subclass)
 
 - data:
 
-  A data frame – the primary tidy data ready for ggplot2.
+  A data frame holding the primary tidy data ready for ggplot2.
 
 - meta:
 
@@ -24,9 +24,9 @@ new_hv_data(data, meta, tables = list(), subclass)
 
 - tables:
 
-  A named list of auxiliary objects — typically data frames (risk
-  tables, report tables, etc.) but may also contain vectors or other R
-  objects (e.g. named integer vectors for set counts). May be
+  A named list of auxiliary objects, typically data frames (risk tables,
+  report tables, etc.) but may also contain vectors or other R objects
+  (e.g. named integer vectors for set counts). May be
   [`list()`](https://rdrr.io/r/base/list.html).
 
 - subclass:

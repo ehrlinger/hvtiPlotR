@@ -16,7 +16,7 @@ The guide is organized by template family (the two-letter prefix after
 Two concepts trip up most SAS users on first contact. First, R does not
 have a `device=` / `GOPTIONS` call that sets the output context
 globally; you pick a theme function and append it to each plot. Second,
-the constructor never writes a file – you have to call
+the constructor never writes a file; you have to call
 [`print()`](https://rdrr.io/r/base/print.html) or assign the result to
 an object and save separately. Everything else follows from these two
 facts.
@@ -53,13 +53,13 @@ with [`ggsave()`](https://ggplot2.tidyverse.org/reference/ggsave.html) /
 
 **Pre-fitted models, not raw data.** Most functions accept the *output*
 of a statistical model (curve datasets, probability estimates) rather
-than individual patient records — mirroring the SAS workflow where
+than individual patient records. This mirrors the SAS workflow, where
 `%decompos()` or `%kaplan` computes estimates and a separate template
 step produces the figure.
 
-The accompanying numbers-at-risk table — the SAS
-`tp.hp.dead.number_risk.R` figure — is `hv_atrisk(km)`, stacked under
-the curve with
+The accompanying numbers-at-risk table (the SAS
+`tp.hp.dead.number_risk.R` figure) is `hv_atrisk(km)`, stacked under the
+curve with
 [`hv_atrisk_compose()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_atrisk_compose.md);
 the counts are the same subjects-at-risk `PROC LIFETEST` prints beneath
 its survival plot.
@@ -70,16 +70,16 @@ its survival plot.
 
 | SAS Template | Family | R Constructor | Section |
 |----|----|----|----|
-| `tp.np.afib.ivwristm.avrg_curv.binary.sas` | np | [`hv_nonparametric()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_nonparametric.md) | [Average curve — binary](#np-binary-avg) |
+| `tp.np.afib.ivwristm.avrg_curv.binary.sas` | np | [`hv_nonparametric()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_nonparametric.md) | [Average curve: binary](#np-binary-avg) |
 | `tp.np.afib.ivwristm.pt_spec_phases.binary.sas` | np | [`hv_nonparametric()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_nonparametric.md) | [Phase decomposition](#np-phases) |
-| `tp.np.afib.ivwristm.pt_specific.binary.sas` | np | [`hv_nonparametric()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_nonparametric.md) | [Average curve — binary](#np-binary-avg) |
+| `tp.np.afib.ivwristm.pt_specific.binary.sas` | np | [`hv_nonparametric()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_nonparametric.md) | [Average curve: binary](#np-binary-avg) |
 | `tp.np.afib.mult.avrg_curv.binary.sas` | np | [`hv_nonparametric()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_nonparametric.md) | [Multi-group comparison](#np-multigroup) |
 | `tp.np.afib.mult.pt_spec.binary.sas` | np | [`hv_nonparametric()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_nonparametric.md) | [Multi-group comparison](#np-multigroup) |
 | `tp.np.avpkgrad_ozak_ind_mtwt.sas` | np | [`hv_nonparametric()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_nonparametric.md) | [Multi-group comparison](#np-multigroup) |
 | `tp.np.fev.double.univariate.continuous.sas` | np | [`hv_nonparametric()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_nonparametric.md) | [Continuous outcome](#np-continuous) |
 | `tp.np.fev.multivariate.continuous.sas` | np | [`hv_nonparametric()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_nonparametric.md) | [Multi-group comparison](#np-multigroup) |
 | `tp.np.fev.u.trend.continuous.sas` | np | [`hv_nonparametric()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_nonparametric.md) | [Continuous outcome](#np-continuous) |
-| `tp.np.tr.icdpr.avg_curv.sas` | np | [`hv_nonparametric()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_nonparametric.md) | [Average curve — binary](#np-binary-avg) |
+| `tp.np.tr.icdpr.avg_curv.sas` | np | [`hv_nonparametric()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_nonparametric.md) | [Average curve: binary](#np-binary-avg) |
 | `tp.np.tr.ivecho.average_curv.ordinal.sas` | np | [`hv_ordinal()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_ordinal.md) | [Ordinal outcomes](#np-ordinal) |
 | `tp.np.tr.ivecho.independence.sas` | np | [`hv_ordinal()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_ordinal.md) | [Ordinal independence](#np-ordinal-independence) |
 | `tp.np.tr.ivecho.u.phases.sas` | np | [`hv_ordinal()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_ordinal.md) | [Ordinal phases](#np-ordinal-phases) |
@@ -100,8 +100,8 @@ its survival plot.
 | `tp.lp.trends.polytomous.sas` | lp | [`hv_trends()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_trends.md) | [Trends over time](#dp-trends) |
 | `tp.dp.trends.R` | dp | [`hv_trends()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_trends.md) | [Trends over time](#dp-trends) |
 | `tp.dp.longitudinal_patients_measures.R` | dp | [`hv_longitudinal()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_longitudinal.md) | [Longitudinal counts](#dp-long-counts) |
-| `tp.lp.mirror-histogram_SAVR-TF-TAVR.R` | lp | [`hv_mirror_hist()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_mirror_hist.md) | [Mirror histogram — binary-match](#dp-mirror) |
-| `tp.lp.mirror_histo_before_after_wt.R` | lp | `hv_mirror_hist(weight_col = ...)` | [Mirror histogram — weighted IPTW](#dp-mirror) |
+| `tp.lp.mirror-histogram_SAVR-TF-TAVR.R` | lp | [`hv_mirror_hist()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_mirror_hist.md) | [Mirror histogram: binary-match](#dp-mirror) |
+| `tp.lp.mirror_histo_before_after_wt.R` | lp | `hv_mirror_hist(weight_col = ...)` | [Mirror histogram: weighted IPTW](#dp-mirror) |
 | Stacked histogram | dp | [`hv_stacked()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_stacked.md) | [Stacked histogram](#dp-stacked) |
 | `tp.hs.dead.setup.sas` | hs | [`hazard_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/hazard_plot.md) | [Parametric hazard/survival](#hs-dead) |
 | `tp.hs.dead_uses_setup.sas` | hs | [`hazard_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/hazard_plot.md) | [Parametric hazard/survival](#hs-dead) |
@@ -148,7 +148,7 @@ data_pts   <- read.csv("means.csv")       # optional binned data points
 | `mtime` / `mmtime` (means dataset)  | `dp_x_col`     | Binned point x        |
 | `mprev` / `mnprev` (means dataset)  | `dp_y_col`     | Binned point y        |
 
-### Average curve — binary outcome
+### Average curve: binary outcome
 
 **Ports:** `tp.np.afib.ivwristm.avrg_curv.binary.sas`,
 `tp.np.afib.ivwristm.pt_specific.binary.sas`,
@@ -385,8 +385,8 @@ plot(hv_nonparametric(
 **Port:** `tp.np.z0axdpo.continuous.bmi_xaxis.sas`
 
 When BMI or another continuous covariate (rather than time) is on the
-x-axis, the function signature is identical — simply pass the covariate
-column name to `x_col`.
+x-axis, the function signature is identical; pass the covariate column
+name to `x_col`.
 
 ``` r
 
@@ -632,13 +632,13 @@ plot(hv_ordinal(dat_ph, grade_col = "grade")) +
 [`hv_survival()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_survival.md)
 wraps `survfit()` from the **survival** package and returns an S3
 object. Call `plot(km, type = ...)` to render one of five panels. Four
-map onto the SAS `%kaplan` / `%nelsont` output flags — `"survival"`
-(`PLOTS`), `"cumhaz"` (`PLOTC`), `"hazard"` (`PLOTH`), `"life"`
-(`PLOTL`) — and `"loglog"` is the extra one, the log-log plot you read
-to check the proportional-hazards assumption. Because the estimates come
-from `survfit()`, the survival curve, confidence limits, and numbers at
-risk match what `%kaplan` reports — you are swapping the plotting step,
-not the estimator. Tidy data frames live in `km$tables`.
+map onto the SAS `%kaplan` / `%nelsont` output flags: `"survival"`
+(`PLOTS`), `"cumhaz"` (`PLOTC`), `"hazard"` (`PLOTH`) and `"life"`
+(`PLOTL`). The fifth, `"loglog"`, is the extra one, the log-log plot you
+read to check the proportional-hazards assumption. Because the estimates
+come from `survfit()`, the survival curve, confidence limits, and
+numbers at risk match what `%kaplan` reports; you are swapping the
+plotting step, not the estimator. Tidy data frames live in `km$tables`.
 
 One difference from SAS worth knowing. `survfit()` drops records with a
 missing time, event, or strata value, and
@@ -716,7 +716,7 @@ km$tables$report     # survival at report times
 **R equivalent:**
 [`hv_followup()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_followup.md)
 
-`tp.dp.gfup.R` renders the goodness-of-follow-up scatter – the kind of
+`tp.dp.gfup.R` renders the goodness-of-follow-up scatter, the kind of
 quality-check figure you run before committing to a temporal-prevalence
 analysis.
 [`hv_followup()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_followup.md)
@@ -728,7 +728,7 @@ step to port.
 Each patient becomes one point, positioned by operation date (x) and
 follow-up duration (y), and shaped and coloured by vital status. The
 dashed diagonal is the maximum potential follow-up implied by
-`study_start`, `study_end`, and `close_date` –
+`study_start`, `study_end`, and `close_date`.
 [`hv_followup()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_followup.md)
 draws it for you from those three arguments, so it is not a
 [`geom_hline()`](https://ggplot2.tidyverse.org/reference/geom_abline.html)
@@ -775,12 +775,12 @@ and pass `type = "event"` to
 **R equivalent:**
 [`hv_balance()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_balance.md)
 
-The SAS export arrives wide — one column per comparison (`Before match`,
-`After match`), one row per covariate. Reshape to long format before you
-call
+The SAS export arrives wide, with one column per comparison
+(`Before match`, `After match`) and one row per covariate. Reshape to
+long format before you call
 [`hv_balance()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_balance.md),
 so each row is one covariate in one comparison. Pass `var_levels` to
-control the bottom-to-top display order of covariates — this matches
+control the bottom-to-top display order of covariates; this matches
 `ylabel` in the original script.
 
 ``` r
@@ -948,7 +948,7 @@ plot(sk_grp) +
 [`hv_upset()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_upset.md)
 
 `tp.complexUpset.R` visualises how many patients fall into each
-combination of procedure categories (CABG, Valve, MAZE, Aorta, etc.) –
+combination of procedure categories (CABG, Valve, MAZE, Aorta, etc.),
 the combinatorial overlap question that Venn diagrams can’t answer
 cleanly past three sets. The SAS version used a custom `PROC TABULATE` /
 `SGPLOT` workaround; the R port replaces it with
@@ -960,7 +960,7 @@ and the `intersect` argument names the sets to include.
 
 Two things to know about the display.
 [`plot()`](https://rdrr.io/r/graphics/plot.default.html) shows the
-largest `n_intersections` combinations (default 10) — patients whose
+largest `n_intersections` combinations (default 10). Patients whose
 combination falls outside that set are not drawn, and ggplot2 reports
 them as removed rows. And by default the result is a **patchwork
 composite** (the intersection bars plus a set-size panel), so themes
@@ -996,7 +996,7 @@ sp     <- hv_spaghetti(dta)
 sp_col <- hv_spaghetti(dta, colour_col = "group")
 ```
 
-### Unstratified — AV mean gradient full range (plot_1)
+### Unstratified: AV mean gradient full range (plot_1)
 
 The SAS template `tp.dp.spaghetti.echo.R` sets
 `AXISY ORDER=(0 TO 80 BY 20)` for the full gradient range. Reproduce
@@ -1015,7 +1015,7 @@ plot(sp) +
   theme_hv_poster()
 ```
 
-### Unstratified — zoomed y-axis (plot_3)
+### Unstratified: zoomed y-axis (plot_3)
 
 Plot_3 in the SAS script tightens the y-axis to `ORDER=(0 TO 30 BY 10)`
 to reveal structure in the low-gradient patients that is invisible at
@@ -1023,8 +1023,8 @@ the 0-80 range. Only
 [`coord_cartesian()`](https://ggplot2.tidyverse.org/reference/coord_cartesian.html)
 changes; the constructor call and data are identical to plot_1. Look
 for: trajectories that were flat in plot_1 now showing meaningful
-within-patient variation – if none appear, the patient population may
-not have a low-gradient subgroup.
+within-patient variation. If none appear, the patient population may not
+have a low-gradient subgroup.
 
 ``` r
 
@@ -1085,7 +1085,7 @@ plot(sp_col) +
 Plot_7 (unstratified) and plot_8 (by sex) track the dimensionless
 velocity index (DVI), a unitless ratio bounded roughly 0-1.25. The SAS
 option is `AXISY ORDER=(0 TO 1.25 BY 0.25)`. This is the only spaghetti
-variant where a y-axis maximum above 1 is correct – do not treat values
+variant where a y-axis maximum above 1 is correct; do not treat values
 above 1 as outliers.
 
 ``` r
@@ -1102,7 +1102,7 @@ plot(sp_col) +
   theme_hv_poster()
 ```
 
-### Ordinal y-axis — MV regurgitation grade (plot_9)
+### Ordinal y-axis: MV regurgitation grade (plot_9)
 
 Plot_9 is the outlier in this template family: MV regurgitation grade is
 ordinal (None / Mild / Moderate / Severe = 0-3), not continuous. In SAS
@@ -1180,7 +1180,7 @@ intervals belong in the report.
 **R equivalent:**
 [`hv_trends()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_trends.md)
 
-### tp.rp.trends.sas — cases/year and age (1968–2000 by 4)
+### tp.rp.trends.sas: cases/year and age (1968–2000 by 4)
 
 `tp.rp.trends.sas` is the right-panel trends template: a single smoothed
 curve for cases-per-year and a second figure for median operative age,
@@ -1188,8 +1188,8 @@ both spanning 1968-2000. In SAS the two figures are separate `SGPLOT`
 calls sharing the same `axisx order=(1968 to 2000 by 4)` statement. In R
 you call the same
 [`hv_trends()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_trends.md)
-object twice with different y-axis scales – one for counts, one for age
-– so you only need to build the constructor once.
+object twice with different y-axis scales (one for counts, one for age),
+so you only need to build the constructor once.
 
 ``` r
 
@@ -1211,10 +1211,10 @@ plot(tr_one) +
   theme_hv_poster()
 ```
 
-### tp.lp.trends.sas — binary % outcomes (1970–2000 by 10, y 0–100 by 10)
+### tp.lp.trends.sas: binary % outcomes (1970–2000 by 10, y 0–100 by 10)
 
 `tp.lp.trends.sas` is the left-panel trends template for binary
-percentage outcomes plotted together on a single figure – shock rate,
+percentage outcomes plotted together on a single figure: shock rate,
 pre-op IABP use, inotrope use, etc. The SAS `SGPLOT` overlays multiple
 `SCATTER` / `REG` statement pairs, one per outcome, with
 `axisx order=(1970 to 2000 by 10)` and `axisy order=(0 to 100 by 20)`.
@@ -1246,7 +1246,7 @@ plot(tr_lp) +
   theme_hv_poster()
 ```
 
-### tp.lp.trends.age.sas — age on x-axis (25–85 by 10, y 0–100 by 20)
+### tp.lp.trends.age.sas: age on x-axis (25–85 by 10, y 0–100 by 20)
 
 `tp.lp.trends.age.sas` flips the x-axis from calendar year to patient
 age at operation, showing how the proportion receiving each procedure
@@ -1274,7 +1274,7 @@ plot(tr_age) +
   theme_hv_poster()
 ```
 
-### tp.lp.trends.polytomous.sas — repair types (1990–1999 by 1, y 0–100 by 10)
+### tp.lp.trends.polytomous.sas: repair types (1990–1999 by 1, y 0–100 by 10)
 
 `tp.lp.trends.polytomous.sas` extends the binary trends template to
 three or more mutually exclusive categorical outcomes (CE, Cosgrove,
@@ -1308,12 +1308,12 @@ plot(tr_poly) +
   theme_hv_poster()
 ```
 
-### tp.dp.trends.R — LV mass index (1995–2015 by 5, y 0–200 by 50)
+### tp.dp.trends.R: LV mass index (1995–2015 by 5, y 0–200 by 50)
 
 `tp.dp.trends.R` covers continuous-outcome trends, here LV mass index
 (g/m²) over a 20-year window. Unlike the SAS templates above this is an
 R script origin rather than a `.sas` file, so there is no `axisx` option
-to translate literally – the axis spec (`1995 to 2015 by 5`, y
+to translate literally; the axis spec (`1995 to 2015 by 5`, y
 `0 to 200 by 50`) comes from the `scale_*_continuous()` calls below.
 
 ``` r
@@ -1330,10 +1330,10 @@ plot(tr_lv) +
   theme_hv_poster()
 ```
 
-### tp.dp.trends.R — hospital LOS with annotation (1985–2015 by 5, y 0–20 by 5)
+### tp.dp.trends.R: hospital LOS with annotation (1985–2015 by 5, y 0–20 by 5)
 
 This variant of `tp.dp.trends.R` tracks hospital length of stay (days)
-and adds a text annotation inside the plot panel – the kind of label the
+and adds a text annotation inside the plot panel, the kind of label the
 SAS `SGPLOT` `INSET` statement would place. In R an
 `annotate("text", ...)` call places it at absolute data coordinates;
 adjust the `x` and `y` values to avoid overlapping the fitted curve.
@@ -1364,8 +1364,8 @@ plot(tr_los) +
 [`hv_longitudinal()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_longitudinal.md)
 
 `tp.dp.longitudinal_patients_measures.R` answers the question “how many
-patients have an echocardiogram measurement at each follow-up year?” – a
-companion to the goodness-of-follow-up chart above, but focused on
+patients have an echocardiogram measurement at each follow-up year?” It
+is a companion to the goodness-of-follow-up chart above, but focused on
 measurement availability rather than vital-status follow-up. The
 original R script used `PROC FREQ`-style counting over a long-format
 echo dataset.
@@ -1374,7 +1374,7 @@ echo dataset.
 picks up **after** that counting step: it takes the aggregated frame,
 one row per series per time point, with a discrete time label, a series
 name, and an integer count. It does not bin patient-level records for
-you — do that upstream
+you; do that upstream
 ([`sample_longitudinal_counts_data()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_longitudinal_counts_data.md)
 shows the pattern, binning
 [`sample_spaghetti_data()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_spaghetti_data.md)
@@ -1417,7 +1417,7 @@ distributions for SAVR and TF-TAVR patients before and after 1:1
 nearest-neighbour matching. Upper bars show pre-match counts; a darker
 overlaid bar shows the matched subset in each bin. Pass `match_col` to
 [`hv_mirror_hist()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_mirror_hist.md)
-to activate this mode – the four internal fill levels (`before_g0`,
+to activate this mode. The four internal fill levels (`before_g0`,
 `matched_g0`, `before_g1`, `matched_g1`) then map directly to the four
 [`scale_fill_manual()`](https://ggplot2.tidyverse.org/reference/scale_manual.html)
 values.
@@ -1445,7 +1445,7 @@ plot(mh) +
 ### Weighted IPTW mode (`tp.lp.mirror_histo_before_after_wt.R`)
 
 `tp.lp.mirror_histo_before_after_wt.R` replaces the matched-subset bars
-with IPTW weight sums per bin – the right display when you are weighting
+with IPTW weight sums per bin, the right display when you are weighting
 rather than matching. Pass `weight_col` instead of `match_col` to switch
 modes. The fill levels change to `before_g0`, `weighted_g0`,
 `before_g1`, `weighted_g1`, so update your
@@ -1483,7 +1483,7 @@ plot(mh_wt) +
 **R equivalent:**
 [`hv_stacked()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_stacked.md)
 
-This plot has no direct SAS template predecessor – it is a new addition
+This plot has no direct SAS template predecessor. It is a new addition
 designed for the annual case-volume figures that were previously
 hand-built with `PROC SGPLOT` `VBAR` / `VBARPARM` calls.
 [`hv_stacked()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_stacked.md)
@@ -1542,10 +1542,10 @@ p + theme_hv_poster(base_size = 24)   # larger text for A0 poster
 
 [`save_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/save_ppt.md)
 inserts ggplot objects into a PowerPoint file as **editable DrawingML
-vector graphics** via the `officer` and `rvg` packages — shapes, lines,
-and text remain individually selectable in PowerPoint after export. The
-first argument is `object` (not `plot`); the output path is `powerpoint`
-(not `file` or `filename`).
+vector graphics** via the `officer` and `rvg` packages, so shapes,
+lines, and text remain individually selectable in PowerPoint after
+export. The first argument is `object` (not `plot`); the output path is
+`powerpoint` (not `file` or `filename`).
 
 ``` r
 
@@ -1581,7 +1581,7 @@ save_ppt(
 replaces the SAS `device=eps` / `device=tiff` options. For most
 journals, 3.5 x 3.5 inches (single column) at 600 dpi satisfies TIFF
 submission requirements; check the target journal’s figure guidelines
-for the exact width – double-column figures typically need 7 inches. Use
+for the exact width; double-column figures typically need 7 inches. Use
 [`theme_hv_manuscript()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)
 rather than
 [`theme_hv_poster()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)
@@ -1716,7 +1716,7 @@ curves starting from the time of hospital discharge rather than the
 operation date. The conditional survival `S(t | discharge)` is
 `S(t) / S(t_discharge)` for each patient. In R, you use the same
 [`hazard_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/hazard_plot.md)
-call — only the x-axis label and data preparation change.
+call; only the x-axis label and data preparation change.
 
 ``` r
 

@@ -41,8 +41,8 @@ hv_atrisk(
 - report_times:
 
   Numeric time points for the columns. `NULL` (default) uses the table's
-  own points, or – on the raw-data path – an even spread derived from
-  the observed time range. On the object and precomputed-table paths a
+  own points or, on the raw-data path, an even spread derived from the
+  observed time range. On the object and precomputed-table paths a
   non-`NULL` value *selects* which of the table's existing times to
   show; the counts are not recomputed, and any requested time not in the
   table is ignored with a warning. To use arbitrary times for a

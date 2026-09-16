@@ -2,7 +2,7 @@
 
 Plots \\\log H(t) = \log(-\log S(t))\\ against \\\log t\\, which
 linearises a Weibull survival model and is used to assess the
-proportional-hazards assumption — parallel lines indicate proportional
+proportional-hazards assumption: parallel lines indicate proportional
 hazards. Corresponds to the SAS `LN_CUMHZ * LN_INT` plot produced when
 `PLOTC=1`.
 

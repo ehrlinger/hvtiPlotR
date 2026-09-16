@@ -17,7 +17,7 @@ hv_consort_start(data, patient_id, label = "Screened", pass_col = NULL)
 
 - data:
 
-  A data frame – one row per patient.
+  A data frame, one row per patient.
 
 - patient_id:
 
@@ -35,7 +35,7 @@ hv_consort_start(data, patient_id, label = "Screened", pass_col = NULL)
 
 ## Value
 
-An `hv_consort_tracker` object – a list with:
+An `hv_consort_tracker` object, a list with:
 
 - `$data`:
 

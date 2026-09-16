@@ -62,7 +62,7 @@ Add it to a ggplot object with `+`.
 ## Details
 
 The return value is a plain list, and ggplot2's `+` unrolls a list
-element by element, so it composes just like a theme:
+element by element, so it composes like a theme:
 
     ppt <- hv_ppt_series()
     p1  <- p1 + ppt

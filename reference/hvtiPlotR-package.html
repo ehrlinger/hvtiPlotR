@@ -90,7 +90,7 @@ companion <strong>HVTI ggplot graphics recipes</strong> book,
 <h3 id="two-step-workflow">Two-step workflow<a class="anchor" aria-label="anchor" href="#two-step-workflow"></a></h3>
 
 
-<p>Every plot constructor follows the same pattern:</p><ol><li><p>Call <code>hv_*()</code> to validate and prepare data — returns an <code>hv_data</code>
+<p>Every plot constructor follows the same pattern:</p><ol><li><p>Call <code>hv_*()</code> to validate and prepare data. It returns an <code>hv_data</code>
 S3 object that also stores diagnostics (group counts, SMDs, etc.)
 under <code>$tables</code>.</p></li>
 <li><p>Call <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code> on the object to obtain a bare <code><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot2::ggplot</a></code>
@@ -140,7 +140,7 @@ ggplot2's <code>half_line</code> convention.</p>
 <h3 id="saving-figures">Saving figures<a class="anchor" aria-label="anchor" href="#saving-figures"></a></h3>
 
 <ul><li><p><code><a href="save_manuscript.html">save_manuscript()</a></code>: Save a ggplot at the house manuscript size
-(6 x 4 in) in one call — the manuscript counterpart of <code><a href="save_ppt.html">save_ppt()</a></code>.
+(6 x 4 in) in one call; the manuscript counterpart of <code><a href="save_ppt.html">save_ppt()</a></code>.
 Pair with <code><a href="hvtiPlotR-themes.html">theme_hv_manuscript()</a></code> for 12 pt type.</p></li>
 <li><p><code><a href="save_ppt.html">save_ppt()</a></code>: Insert one or more ggplot objects into a PowerPoint
 file as editable DrawingML vector graphics via <code>officer</code> + <code>rvg</code>.</p></li>
@@ -152,12 +152,12 @@ analysis; omit for publication-ready output.</p></li>
 
 <p>When plots in a set have different axis-label widths (e.g. y-axis
 ranges from "1.0" to "4567.2"), the usual <code><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave()</a></code> and
-<code><a href="https://davidgohel.github.io/officer/reference/ph_location.html" class="external-link">officer::ph_location()</a></code> calls let the <strong>panel content area</strong> drift
-— which is visually jarring on PPT decks where the black or white
+<code><a href="https://davidgohel.github.io/officer/reference/ph_location.html" class="external-link">officer::ph_location()</a></code> calls let the panel content area drift,
+which is visually jarring on PPT decks where the black or white
 panel box should appear constant across slides. Two helpers solve
 this by making the panel size and slide position the <em>target</em>:</p><ul><li><p><code><a href="hv_ggsave_dims.html">hv_ggsave_dims()</a></code>: Given a target panel width and height,
 computes the <code><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave()</a></code> <code>width</code>/<code>height</code> that preserve that panel
-size. Returns a named list — splat into <code><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave()</a></code> via
+size. Returns a named list to splat into <code><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave()</a></code> via
 <code>do.call(ggplot2::ggsave, c(list(filename = ..., plot = p), dims))</code>.</p></li>
 <li><p><code><a href="hv_ph_location.html">hv_ph_location()</a></code>: Given a target panel rectangle on the slide,
 computes the <code><a href="https://davidgohel.github.io/officer/reference/ph_location.html" class="external-link">officer::ph_location()</a></code> <code>width</code>/<code>height</code>/<code>left</code>/<code>top</code>
@@ -280,11 +280,11 @@ intersection plot. Ports <code>tp.complexUpset.R</code>.</p></li>
 <p>These functions predate the constructor-and-<code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code> split and return
 a ggplot directly. They are retained for backward compatibility with
 scripts written before the <code>hv_*()</code> redesign. New code should prefer
-the constructor form.</p><ul><li><p><code><a href="hazard_plot.html">hazard_plot()</a></code>: Single-call parametric hazard/survival plot —
+the constructor form.</p><ul><li><p><code><a href="hazard_plot.html">hazard_plot()</a></code>: Single-call parametric hazard/survival plot,
 combine-step equivalent of <code><a href="hv_hazard.html">hv_hazard()</a></code> + <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code>.</p></li>
 <li><p><code><a href="survival_difference_plot.html">survival_difference_plot()</a></code>: Single-call mean-survival-difference
-plot — equivalent of <code><a href="hv_survival_difference.html">hv_survival_difference()</a></code> + <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code>.</p></li>
-<li><p><code><a href="nnt_plot.html">nnt_plot()</a></code>: Single-call NNT plot — equivalent of <code><a href="hv_nnt.html">hv_nnt()</a></code> +
+plot, equivalent of <code><a href="hv_survival_difference.html">hv_survival_difference()</a></code> + <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code>.</p></li>
+<li><p><code><a href="nnt_plot.html">nnt_plot()</a></code>: Single-call NNT plot, equivalent of <code><a href="hv_nnt.html">hv_nnt()</a></code> +
 <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code>.</p></li>
 </ul></div>
 
@@ -354,7 +354,7 @@ intersection analysis.</p></li>
 <h3 id="scope-and-versioning">Scope and versioning<a class="anchor" aria-label="anchor" href="#scope-and-versioning"></a></h3>
 
 
-<p><code>hvtiPlotR</code> targets <strong>internal HVTI / CORR use only</strong> — it will not
+<p><code>hvtiPlotR</code> targets internal HVTI / CORR use only; it will not
 be submitted to CRAN. GitHub-only dependencies are declared in
 <code>Remotes:</code> in DESCRIPTION and install cleanly. Install via:</p>
 <p></p><div class="sourceCode"><pre><code><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a>remotes<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">"ehrlinger/hvtiPlotR"</span>)</span></code></pre><p></p></div>

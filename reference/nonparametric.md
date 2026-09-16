@@ -1,55 +1,62 @@
 # Nonparametric survival estimates
 
-A dataset containing nonparametric empirical survival estimates used for
-examples in the package vignettes. The data represent follow-up outcomes
-for patients stratified by initial valve state (`iv_state`) from an
-aortic-valve surgery registry, originally exported from SAS via
-`tp.hp.dead.sas` / `tp.np.*.sas`.
+A dataset containing nonparametric competing-risk estimates used for
+examples in the package vignettes: the empirical companion to
+[parametric](https://ehrlinger.github.io/hvtiPlotR/reference/parametric.md),
+over the same three states (event-free, death, and stroke). Originally
+exported from SAS via `tp.hp.dead.sas` / `tp.np.*.sas`.
 
 ## Format
 
-A data frame with one row per patient and 10 columns:
+A data frame with 126 rows (one per event time) and 10 columns:
 
 - iv_state:
 
-  Initial valve state (character/factor); used as the x-axis grouping
-  variable in nonparametric plots.
+  Follow-up time in years (0 to about 4.9); the x-axis in the vignette
+  plots.
 
 - sginit:
 
-  Initial SG (St. Jude Medical Silzone) indicator (numeric).
+  Percent event-free (still in the initial state).
 
 - stlinit:
 
-  Initial STL indicator (numeric).
+  Lower confidence limit for `sginit`; all `NA` in this extract.
 
 - stuinit:
 
-  Initial STU indicator (numeric).
+  Upper confidence limit for `sginit`; all `NA` in this extract.
 
 - sgdead1:
 
-  Death indicator for SG group (logical/integer; 1 = event).
+  Cumulative percent dead; `NA` at times with no death.
 
 - sgstrk1:
 
-  Stroke indicator for SG group (logical/integer; 1 = event).
+  Cumulative percent with stroke; `NA` at times with no stroke.
 
 - stldead1:
 
-  Death indicator for STL group (logical/integer; 1 = event).
+  Lower confidence limit for `sgdead1` (6 time points).
 
 - studead1:
 
-  Death indicator for STU group (logical/integer; 1 = event).
+  Upper confidence limit for `sgdead1` (6 time points).
 
 - stlstrk1:
 
-  Stroke indicator for STL group (logical/integer; 1 = event).
+  Lower confidence limit for `sgstrk1` (3 time points).
 
 - stustrk1:
 
-  Stroke indicator for STU group (logical/integer; 1 = event).
+  Upper confidence limit for `sgstrk1` (3 time points).
+
+## Details
+
+Column prefixes follow the SAS naming: `sg*` is the estimate, `stl*` and
+`stu*` its lower and upper confidence limits. The limits are filled only
+at the handful of times where an error bar is drawn and are `NA`
+elsewhere, which is how `plot.sas` thins error bars.
 
 ## See also
 

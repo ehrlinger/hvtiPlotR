@@ -72,7 +72,7 @@ A data frame with 2001 rows (fine time grid) and 41 columns:
 
 - no1death:
 
-  Probability of entering the death state at exactly time t.
+  Identical to `nodeath` in this extract.
 
 - tx1death:
 
@@ -124,7 +124,7 @@ A data frame with 2001 rows (fine time grid) and 41 columns:
 
 - no1strk:
 
-  Probability of entering the stroke state at exactly time t.
+  Identical to `nostrk` in this extract.
 
 - tx1strk:
 
@@ -136,11 +136,11 @@ A data frame with 2001 rows (fine time grid) and 41 columns:
 
 - cestrk:
 
-  Complement: probability of surviving stroke-free to time t (percent).
+  Percent free of stroke, `100 - nostrk`.
 
 - noinit:
 
-  Parametric estimate of freedom from re-operation (percent).
+  Percent event-free (still in the initial state).
 
 - clinit:
 
@@ -152,7 +152,7 @@ A data frame with 2001 rows (fine time grid) and 41 columns:
 
 - no1init:
 
-  Probability of entering the re-operated state at exactly time t.
+  Identical to `noinit` in this extract.
 
 - z:
 
@@ -172,16 +172,16 @@ A data frame with 2001 rows (fine time grid) and 41 columns:
 
 - check:
 
-  Row sum of `noinit`, `nodeath`, `nostrk`, and `cestrk`; should equal
-  100.
+  Row sum of `noinit`, `nodeath` and `nostrk`; about 100.
 
 ## Details
 
-The three outcomes tracked are:
+The three states tracked are competing risks; at every time point the
+percentages in the three states sum to 100 (see `check`):
 
 - init:
 
-  Re-operation (re-initialisation)
+  Event-free (still in the initial state)
 
 - death:
 
@@ -196,9 +196,8 @@ lower / upper 95 % CI on the survival estimate; `he*` = hazard rate
 estimate; `hl*/hu*` = lower / upper 95 % CI on the hazard; `ve*` =
 variance of the survival estimate; `no*` = cumulative incidence
 (percent); `cl*/cu*` = lower / upper 95 % CI on the cumulative
-incidence; `no1*` = probability of entering the state at exactly time t;
-`tx*/tx1*` = cumulative hazard integral (Weibull model output, used
-internally).
+incidence; `no1*` = identical to `no*` in this extract; `tx*/tx1*` =
+cumulative hazard integral (Weibull model output, used internally).
 
 ## See also
 

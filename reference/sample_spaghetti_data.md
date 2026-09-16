@@ -43,13 +43,13 @@ sample_spaghetti_data(
 
 A data frame with columns:
 
-- `id` — patient identifier (integer)
+- `id`: patient identifier (integer)
 
-- `time` — years from index procedure (numeric)
+- `time`: years from index procedure (numeric)
 
-- `value` — continuous outcome (numeric; AV mean gradient in mmHg)
+- `value`: continuous outcome (numeric; AV mean gradient in mmHg)
 
-- `group` — group label (factor)
+- `group`: group label (factor)
 
 ## See also
 

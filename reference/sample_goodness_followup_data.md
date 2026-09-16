@@ -74,7 +74,7 @@ A data frame with columns:
 
 - `dead`:
 
-  Logical — all-source death indicator.
+  Logical all-source death indicator.
 
 - `iv_event`:
 
@@ -82,11 +82,11 @@ A data frame with columns:
 
 - `ev_event`:
 
-  Logical — non-fatal event indicator.
+  Logical non-fatal event indicator.
 
 - `deads`:
 
-  Logical — active/systematic death indicator (subset of `dead`).
+  Logical active/systematic death indicator (subset of `dead`).
 
 ## Details
 

@@ -54,7 +54,7 @@ hv_consort(
 
 ## Value
 
-An `hv_consort` object – a list with:
+An `hv_consort` object, a list with:
 
 - `$plot`:
 

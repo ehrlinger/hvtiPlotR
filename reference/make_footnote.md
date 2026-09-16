@@ -2,8 +2,8 @@
 
 Writes a small text annotation in the bottom-right corner of the
 **current** graphics device using grid. Call this *after* printing or
-displaying the plot. For publication-ready figures, simply omit the call
-— the plot is unchanged.
+displaying the plot. For publication-ready figures, omit the call; the
+plot is unchanged.
 
 ## Usage
 

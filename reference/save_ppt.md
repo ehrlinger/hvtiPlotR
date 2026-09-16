@@ -3,7 +3,7 @@
 Writes one ggplot per slide into a PowerPoint file using
 [`officer::ph_with()`](https://davidgohel.github.io/officer/reference/ph_with.html)
 and [`rvg::dml()`](https://davidgohel.github.io/rvg/reference/dml.html)
-so that every plot lands as an **editable DrawingML vector graphic** —
+so that every plot lands as an editable DrawingML vector graphic:
 shapes, lines, and text remain selectable in PowerPoint. Plots are
 placed via
 [`officer::ph_location()`](https://davidgohel.github.io/officer/reference/ph_location.html)
@@ -91,13 +91,13 @@ save_ppt(
 
 - panel_box:
 
-  Named list `list(width, height, left, top)` describing the **panel
-  content area** to anchor on every slide (in inches). Per-plot slide
+  Named list `list(width, height, left, top)` describing the panel
+  content area to anchor on every slide (in inches). Per-plot slide
   placement is computed via
   [`hv_ph_location()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_ph_location.md)
   so the panel lands at the same slide coordinates on every slide
   regardless of axis-label width. Defaults to
-  `list(width = 8.88, height = 4.51, left = 2.58, top = 1.63)` — the
+  `list(width = 8.88, height = 4.51, left = 2.58, top = 1.63)`, the
   standard CORR fixed-panel rectangle for AATS-style dark decks. Pass
   `panel_box = NULL` to fall back to the fixed `width`/`height`/`left`/
   `top` arguments for every slide (legacy behavior). Ignored for
@@ -268,7 +268,7 @@ save_ppt(
 )
 #> Warning: hv_ph_location(): plot chrome does not fit left/top of panel on slide (left=-0.427 in). Increase `panel_left`/`panel_top` to leave room for axis labels.
 
-# Sizing advice: panel_left and panel_top must be large enough for the
+# Sizing advice: panel_box$left and panel_box$top must be large enough for the
 # widest axis labels in the deck. If chrome extends past the left or top
 # slide edge, hv_ph_location() emits a warning naming that edge.
 # }

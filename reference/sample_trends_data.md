@@ -5,8 +5,8 @@ demonstrating
 [`hv_trends()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_trends.md).
 Each row is one patient with a surgery year, continuous outcome
 (`value`), and a grouping variable (`group`). Trend patterns are
-modelled so that group means diverge over time — matching the
-multi-group NYHA / LV-mass / LOS pattern in the SAS template.
+modelled so that group means diverge over time, matching the multi-group
+NYHA / LV-mass / LOS pattern in the SAS template.
 
 ## Usage
 
@@ -46,11 +46,11 @@ sample_trends_data(
 
 A data frame with columns:
 
-- `year` — x-axis value (integer; surgery year or patient age)
+- `year`: x-axis value (integer; surgery year or patient age)
 
-- `value` — continuous outcome (numeric)
+- `value`: continuous outcome (numeric)
 
-- `group` — group label (factor, ordered by `groups`); absent when
+- `group`: group label (factor, ordered by `groups`); absent when
   `groups = NULL`
 
 ## See also

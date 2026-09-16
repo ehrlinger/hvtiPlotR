@@ -55,7 +55,7 @@
 
 <div id="hvtiplotr" class="section level1">
 
-<p>Plot constructors and methods for the HVTI CORR group — the largest public surface in the family: <strong>79 exports and 47 registered S3 methods</strong>. Nearly everything downstream draws through it, so a change to a returned object’s class, element names or column names is a breaking change for other packages, not just for this one.</p>
+<p>Plot constructors and methods for the HVTI CORR group — the largest public surface in the family: <strong>81 exports and 48 registered S3 methods</strong>. Nearly everything downstream draws through it, so a change to a returned object’s class, element names or column names is a breaking change for other packages, not just for this one.</p>
 <p>This file is the operational contract and applies in full. It is tool neutral, so Codex and any other agent read the same rules. Claude Code affordances live in <code>CLAUDE.md</code>, which imports this file.</p>
 <p><strong>Two companion documents already exist and are not restated here.</strong> Read them:</p>
 <ul><li>
@@ -119,7 +119,7 @@
 <li>
 <strong>A plot test must prove the plot has data.</strong> <code>tests/testthat/helper-plot-data.R</code> drives ggplot2’s <code>ggplot_build()</code> so a plot that “renders” while every layer holds zero rows is caught — the same protection as a visual review without needing a graphics device. It keeps a <code>.decorator_geoms</code> list (<code>GeomHline</code>, <code>GeomVline</code>, <code>GeomAbline</code>) whose row count is decoration and therefore <em>not</em> evidence that the plotted dataset has rows: those layers are exempt from <code>min_rows</code> but must still draw at least one row, because a reference line can be mapped to the data — <code><a href="reference/plot.hv_sankey.html">plot.hv_sankey()</a></code> draws one — and so can collapse to zero. <code>GeomBlank</code> is listed separately in <code>.empty_geoms</code> and exempt outright, since drawing nothing is its purpose. <code>expect_s3_class(plot(obj), "ggplot")</code> alone is a smoke test, not coverage.</li>
 <li>
-<strong>Every exported object must be added to <code>_pkgdown.yml</code>.</strong> The <code>reference:</code> index is explicit — 15 titled sections against 79 exports — and pkgdown errors on a topic missing from it. ⚠️ <code>hvtiRtemplates</code> deliberately has <strong>no</strong> <code>reference:</code> section so pkgdown auto-indexes. Two conventions in one family.</li>
+<strong>Every exported object must be added to <code>_pkgdown.yml</code>.</strong> The <code>reference:</code> index is explicit — 15 titled sections against 81 exports — and pkgdown errors on a topic missing from it. ⚠️ <code>hvtiRtemplates</code> deliberately has <strong>no</strong> <code>reference:</code> section so pkgdown auto-indexes. Two conventions in one family.</li>
 <li>
 <strong>Changing a returned object’s class, element names or column names is a breaking change.</strong> This package is the family’s plotting layer; check who consumes the object before altering its shape.</li>
 <li>

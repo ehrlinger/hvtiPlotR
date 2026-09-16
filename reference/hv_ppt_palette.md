@@ -53,9 +53,9 @@ colour is a worse outcome than a stopped script.
 ## See also
 
 [`hv_ppt_series()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_ppt_series.md),
-which applies these to a plot. Note that annotation text is drawn in the
-theme's ink, matching the axis, rather than in a series colour, so these
-are not the values to label a curve with.
+which applies these to a plot. Annotation text is drawn in the theme's
+ink, matching the axis, rather than in a series colour, so these are not
+the values to label a curve with.
 
 ## Examples
 

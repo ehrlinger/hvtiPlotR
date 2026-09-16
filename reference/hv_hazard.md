@@ -1,7 +1,7 @@
 # Prepare parametric hazard / survival data for plotting
 
-Validates and stores pre-computed parametric curve data — and optional
-Kaplan-Meier empirical overlay and population life-table reference — as
+Validates and stores pre-computed parametric curve data (and optional
+Kaplan-Meier empirical overlay and population life-table reference) as
 an `hv_hazard` object. Pass the result to
 [`plot.hv_hazard()`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hv_hazard.md)
 to render the figure.
@@ -112,8 +112,8 @@ hv_hazard(
 
 An S3 object of class `c("hv_hazard", "hv_data")`; call
 [`plot()`](https://rdrr.io/r/graphics/plot.default.html) on the result
-to render — see
-[`plot.hv_hazard()`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hv_hazard.md).
+to render (see
+[`plot.hv_hazard()`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hv_hazard.md)).
 The object contains: `$data` (curve data frame), `$meta` (all
 column-name mappings), `$tables$empirical`, `$tables$reference`.
 

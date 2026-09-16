@@ -87,7 +87,7 @@ An object of class `c("hv_eda", "hv_data")`:
 
 - `$tables`:
 
-  For continuous variables: `rug_data` — rows where `y_col` is `NA`,
+  For continuous variables: `rug_data`, the rows where `y_col` is `NA`,
   used for the rug layer. Empty list for categorical variables.
 
 ## Details

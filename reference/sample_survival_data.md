@@ -35,8 +35,8 @@ sample_survival_data(
 
 - hazard_ratios:
 
-  Numeric vector of hazard multipliers — one per element of
-  `strata_levels` — relative to `hazard_rate`. Defaults to all 1 (equal
+  Numeric vector of hazard multipliers, one per element of
+  `strata_levels`, relative to `hazard_rate`. Defaults to all 1 (equal
   hazard across strata). Ignored when `strata_levels` is `NULL`.
 
 - study_years:
@@ -63,7 +63,7 @@ A data frame with columns:
 
 - `iv_opyrs`:
 
-  Operation year offset — uniform over `[1990, 1990 + study_years]`.
+  Operation year offset, uniform over `[1990, 1990 + study_years]`.
 
 - `age_at_op`:
 

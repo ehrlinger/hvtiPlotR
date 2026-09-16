@@ -129,17 +129,17 @@
 <span></span>
 <span><span class="co"># Build vignettes only</span></span>
 <span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/build_vignettes.html" class="external-link">build_vignettes</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p><code><a href="https://devtools.r-lib.org/reference/load_all.html" class="external-link">devtools::load_all()</a></code> re-sources all <code>R/*.R</code> files and makes every exported function available immediately — much faster than <code><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages()</a></code> during development.</p>
-<hr></section></section><section class="section level2"><h2 id="track-a">Track A — Porting a SAS template<a class="anchor" aria-label="anchor" href="#track-a"></a>
+<p><code><a href="https://devtools.r-lib.org/reference/load_all.html" class="external-link">devtools::load_all()</a></code> re-sources all <code>R/*.R</code> files and makes every exported function available immediately, much faster than <code><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages()</a></code> during development.</p>
+<hr></section></section><section class="section level2"><h2 id="track-a">Track A: Porting a SAS template<a class="anchor" aria-label="anchor" href="#track-a"></a>
 </h2>
-<p>This track walks through adding a brand-new plot function by porting an existing SAS template. We use a fictional template <code>tp.np.bmi.avrg_curv.binary.sas</code> as the running example.</p>
+<p>This track walks through adding a brand-new plot by porting an existing SAS template. We use a fictional template <code>tp.np.bmi.avrg_curv.binary.sas</code> as the running example, and port it the way every new plot family in the package is built (<code><a href="../reference/hazard_plot.html">hazard_plot()</a></code>, <code><a href="../reference/survival_difference_plot.html">survival_difference_plot()</a></code> and <code><a href="../reference/nnt_plot.html">nnt_plot()</a></code> are legacy single-call functions kept for compatibility, not a pattern to copy): a constructor, <code>hv_bmi_curve()</code>, that validates the data and returns an <code>hv_data</code> object, and a <code>plot.hv_bmi_curve()</code> method that turns that object into a bare ggplot. <code>R/spaghetti-plot.R</code> is the real file to keep open beside you; the example below follows it step for step.</p>
 <section class="level2"><h3 id="step-1-understand-the-sas-template-output">Step 1: Understand the SAS template output<a class="anchor" aria-label="anchor" href="#step-1-understand-the-sas-template-output"></a>
 </h3>
 <p>Before writing any R code, identify:</p>
 <ol type="1">
 <li><p><strong>What datasets does the template produce?</strong> Most <code>tp.np.*</code> templates export a <code>predict</code> dataset (the fitted curve) and a <code>means</code> dataset (binned patient-level summaries). Export these to CSV from SAS to use as your development data.</p></li>
 <li>
-<p><strong>What are the SAS column names?</strong> Document the mapping in the roxygen <code>@description</code> block. For example:</p>
+<p><strong>What are the SAS column names?</strong> Document the mapping in the constructor’s roxygen <code>@description</code> block. For example:</p>
 <table class="table caption-top">
 <thead><tr class="header">
 <th>SAS column</th>
@@ -170,162 +170,200 @@
 </tbody>
 </table>
 </li>
-<li><p><strong>Which existing R function is closest?</strong> Check <code>_pkgdown.yml</code> and the plot-functions vignette. You may only need to extend an existing function rather than create a new one.</p></li>
+<li><p><strong>Which existing R function is closest?</strong> Check <code>_pkgdown.yml</code> and the plot-functions vignette. You may only need to extend an existing function rather than create a new one. For this template, <code><a href="../reference/hv_nonparametric.html">hv_nonparametric()</a></code> already covers most of the ground, so in real life you would extend it. We build a new pair here only to show the pattern.</p></li>
 </ol></section><section class="level2"><h3 id="step-2-create-the-r-source-file">Step 2: Create the R source file<a class="anchor" aria-label="anchor" href="#step-2-create-the-r-source-file"></a>
 </h3>
-<p>Create <code>R/my-curve-plot.R</code> (use kebab-case for the filename). Every plot family lives in its own file — plot functions and their sample-data companions together.</p>
+<p>Create <code>R/bmi-curve-plot.R</code>. Filenames are kebab-case and end in <code>-plot.R</code> where the concept is a plot (<code>R/spaghetti-plot.R</code>, <code>R/nonparametric-curve-plot.R</code>). One concept lives in one file: the sample-data generator, the <code>hv_&lt;concept&gt;()</code> constructor, and its <code>print</code> and <code>plot</code> methods together.</p>
+<p>The work splits in two, and the split is the point. The constructor checks the data and records which columns play which role; it draws nothing. The plot method reads that record back and draws; it never re-validates column names. A caller can print the object, inspect <code>$data</code>, or plot it several ways without repeating the checks.</p>
+<section class="level3"><h4 id="the-constructor">The constructor<a class="anchor" aria-label="anchor" href="#the-constructor"></a>
+</h4>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># File: R/bmi-curve-plot.R</span></span>
 <span></span>
-<span><span class="co">#' Average BMI Curve Plot</span></span>
+<span><span class="co">#' Prepare average BMI curve data for plotting</span></span>
 <span><span class="co">#'</span></span>
-<span><span class="co">#' Plots a nonparametric average curve of a binary outcome against BMI</span></span>
-<span><span class="co">#' (or any continuous covariate), with an optional confidence ribbon and</span></span>
-<span><span class="co">#' binned data summary points. Ports</span></span>
-<span><span class="co">#' \code{tp.np.bmi.avrg_curv.binary.sas}.</span></span>
+<span><span class="co">#' Validates the fitted curve output from a nonparametric analysis of a</span></span>
+<span><span class="co">#' binary outcome against BMI (or any continuous covariate) and returns an</span></span>
+<span><span class="co">#' `hv_bmi_curve` object. Call [plot.hv_bmi_curve()] on the result to draw</span></span>
+<span><span class="co">#' it. Ports `tp.np.bmi.avrg_curv.binary.sas`.</span></span>
 <span><span class="co">#'</span></span>
-<span><span class="co">#' **SAS column mapping:**</span></span>
-<span><span class="co">#' - `time`     ← `iv_bmi` (BMI on the x-axis)</span></span>
-<span><span class="co">#' - `estimate` ← `mean_curv` (predicted probability)</span></span>
-<span><span class="co">#' - `lower`    ← `cll_p68`  (68 % CI lower)</span></span>
-<span><span class="co">#' - `upper`    ← `clu_p68`  (68 % CI upper)</span></span>
+<span><span class="co">#' SAS column mapping:</span></span>
+<span><span class="co">#' - `time` is `iv_bmi` (BMI on the x-axis)</span></span>
+<span><span class="co">#' - `estimate` is `mean_curv` (predicted probability)</span></span>
+<span><span class="co">#' - `lower` is `cll_p68` (68 % CI lower)</span></span>
+<span><span class="co">#' - `upper` is `clu_p68` (68 % CI upper)</span></span>
 <span><span class="co">#'</span></span>
-<span><span class="co">#' @param curve_data  Data frame of fitted curve output (one row per x value).</span></span>
-<span><span class="co">#' @param x_col       Name of the x-axis column. Default `"time"`.</span></span>
+<span><span class="co">#' @param data         Data frame of fitted curve output, one row per x value.</span></span>
+<span><span class="co">#' @param x_col        Name of the x-axis column. Default `"time"`.</span></span>
 <span><span class="co">#' @param estimate_col Name of the predicted value column. Default `"estimate"`.</span></span>
-<span><span class="co">#' @param lower_col   Name of the lower CI column, or `NULL` for no ribbon.</span></span>
+<span><span class="co">#' @param lower_col    Name of the lower CI column, or `NULL` for no ribbon.</span></span>
 <span><span class="co">#'   Default `NULL`.</span></span>
-<span><span class="co">#' @param upper_col   Name of the upper CI column, or `NULL`. Default `NULL`.</span></span>
-<span><span class="co">#' @param data_points Optional data frame of binned summary points.</span></span>
-<span><span class="co">#'   Must have columns `x_col` and `"value"`. Default `NULL`.</span></span>
-<span><span class="co">#' @param line_width  Width of the curve line. Default `1.0`.</span></span>
-<span><span class="co">#' @param point_size  Size of data summary points. Default `2.5`.</span></span>
+<span><span class="co">#' @param upper_col    Name of the upper CI column, or `NULL`. Default `NULL`.</span></span>
 <span><span class="co">#'</span></span>
-<span><span class="co">#' @return A bare [ggplot2::ggplot()] object.</span></span>
+<span><span class="co">#' @return An object of class `c("hv_bmi_curve", "hv_data")`; call `plot()`</span></span>
+<span><span class="co">#'   on it to draw the figure. The list contains:</span></span>
+<span><span class="co">#'   - `$data`: the validated input data frame.</span></span>
+<span><span class="co">#'   - `$meta`: named list of the column names above, plus `n_points` and</span></span>
+<span><span class="co">#'     `n_missing`.</span></span>
+<span><span class="co">#'   - `$tables`: empty list.</span></span>
 <span><span class="co">#'</span></span>
-<span><span class="co">#' @seealso [hv_nonparametric()], [sample_bmi_curve_data()]</span></span>
+<span><span class="co">#' @seealso [plot.hv_bmi_curve()] to draw the figure,</span></span>
+<span><span class="co">#'   [sample_bmi_curve_data()] for example data,</span></span>
+<span><span class="co">#'   [theme_hv_manuscript()] for the publication theme.</span></span>
 <span><span class="co">#'</span></span>
-<span><span class="co">#' @references SAS template: \code{tp.np.bmi.avrg_curv.binary.sas}.</span></span>
+<span><span class="co">#' @references SAS template: `tp.np.bmi.avrg_curv.binary.sas`.</span></span>
+<span><span class="co">#'</span></span>
+<span><span class="co">#' @family BMI curve</span></span>
 <span><span class="co">#'</span></span>
 <span><span class="co">#' @examples</span></span>
-<span><span class="co">#' library(ggplot2)</span></span>
 <span><span class="co">#' dat &lt;- sample_bmi_curve_data(n = 500)</span></span>
-<span><span class="co">#' bmi_curve_plot(dat, lower_col = "lower", upper_col = "upper") +</span></span>
-<span><span class="co">#'   scale_colour_manual(values = c("steelblue"), guide = "none") +</span></span>
-<span><span class="co">#'   scale_fill_manual(values   = c("steelblue"), guide = "none") +</span></span>
-<span><span class="co">#'   scale_x_continuous(limits = c(18, 45), breaks = seq(20, 45, 5)) +</span></span>
-<span><span class="co">#'   scale_y_continuous(limits = c(0, 0.5),</span></span>
-<span><span class="co">#'                      labels = scales::percent) +</span></span>
-<span><span class="co">#'   labs(x = "BMI (kg/m²)", y = "Prevalence of AF") +</span></span>
+<span><span class="co">#' bc  &lt;- hv_bmi_curve(dat, lower_col = "lower", upper_col = "upper")</span></span>
+<span><span class="co">#' bc  # prints the column mapping</span></span>
+<span><span class="co">#'</span></span>
+<span><span class="co">#' @export</span></span>
+<span><span class="va">hv_bmi_curve</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">data</span>,</span>
+<span>                         <span class="va">x_col</span>        <span class="op">=</span> <span class="st">"time"</span>,</span>
+<span>                         <span class="va">estimate_col</span> <span class="op">=</span> <span class="st">"estimate"</span>,</span>
+<span>                         <span class="va">lower_col</span>    <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>                         <span class="va">upper_col</span>    <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="fu">.check_df</span><span class="op">(</span><span class="va">data</span><span class="op">)</span></span>
+<span>  <span class="fu">.check_cols</span><span class="op">(</span><span class="va">data</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">x_col</span>, <span class="va">estimate_col</span>, <span class="va">lower_col</span>, <span class="va">upper_col</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="va">incomplete</span> <span class="op">&lt;-</span> <span class="fu">.count_incomplete</span><span class="op">(</span><span class="va">data</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">x_col</span>, <span class="va">estimate_col</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span>  <span class="fu"><a href="../reference/new_hv_data.html">new_hv_data</a></span><span class="op">(</span></span>
+<span>    data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span>,</span>
+<span>    meta <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>      x_col        <span class="op">=</span> <span class="va">x_col</span>,</span>
+<span>      estimate_col <span class="op">=</span> <span class="va">estimate_col</span>,</span>
+<span>      lower_col    <span class="op">=</span> <span class="va">lower_col</span>,</span>
+<span>      upper_col    <span class="op">=</span> <span class="va">upper_col</span>,</span>
+<span>      n_points     <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span>,</span>
+<span>      n_missing    <span class="op">=</span> <span class="va">incomplete</span><span class="op">$</span><span class="va">n_missing</span></span>
+<span>    <span class="op">)</span>,</span>
+<span>    tables   <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>    subclass <span class="op">=</span> <span class="st">"hv_bmi_curve"</span></span>
+<span>  <span class="op">)</span></span>
+<span><span class="op">}</span></span></code></pre></div>
+<p><code><a href="../reference/new_hv_data.html">new_hv_data()</a></code> in <code>R/hvti-data.R</code> is the only way to build the return value. It guarantees the three slots every <code>hv_data</code> object carries (<code>$data</code>, <code>$meta</code>, <code>$tables</code>) and sets the class to <code>c("hv_bmi_curve", "hv_data")</code>, so the base methods in that file act as the fallback for anything your subclass does not define. <code>.check_df()</code>, <code>.check_cols()</code> and <code>.count_incomplete()</code> live in <code>R/validators.R</code>; use them rather than writing your own <code><a href="https://rdrr.io/r/base/stop.html" class="external-link">stop()</a></code> calls, so the error messages match the rest of the package.</p>
+</section><section class="level3"><h4 id="the-print-and-plot-methods">The print and plot methods<a class="anchor" aria-label="anchor" href="#the-print-and-plot-methods"></a>
+</h4>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co">#' Print an hv_bmi_curve object</span></span>
+<span><span class="co">#'</span></span>
+<span><span class="co">#' @param x   An `hv_bmi_curve` object from [hv_bmi_curve()].</span></span>
+<span><span class="co">#' @param ... Ignored.</span></span>
+<span><span class="co">#' @return `x`, invisibly.</span></span>
+<span><span class="co">#' @export</span></span>
+<span><span class="va">print.hv_bmi_curve</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="va">m</span> <span class="op">&lt;-</span> <span class="va">x</span><span class="op">$</span><span class="va">meta</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">"&lt;hv_bmi_curve&gt;\n"</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sprintf.html" class="external-link">sprintf</a></span><span class="op">(</span><span class="st">"  N points    : %d\n"</span>, <span class="va">m</span><span class="op">$</span><span class="va">n_points</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sprintf.html" class="external-link">sprintf</a></span><span class="op">(</span><span class="st">"  x / estimate: %s / %s\n"</span>, <span class="va">m</span><span class="op">$</span><span class="va">x_col</span>, <span class="va">m</span><span class="op">$</span><span class="va">estimate_col</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NULL.html" class="external-link">is.null</a></span><span class="op">(</span><span class="va">m</span><span class="op">$</span><span class="va">lower_col</span><span class="op">)</span><span class="op">)</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sprintf.html" class="external-link">sprintf</a></span><span class="op">(</span><span class="st">"  CI columns  : %s / %s\n"</span>, <span class="va">m</span><span class="op">$</span><span class="va">lower_col</span>, <span class="va">m</span><span class="op">$</span><span class="va">upper_col</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/invisible.html" class="external-link">invisible</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
+<span><span class="op">}</span></span>
+<span></span>
+<span><span class="co">#' Plot an hv_bmi_curve object</span></span>
+<span><span class="co">#'</span></span>
+<span><span class="co">#' Draws the average curve, with a confidence ribbon when the constructor</span></span>
+<span><span class="co">#' was given CI columns.</span></span>
+<span><span class="co">#'</span></span>
+<span><span class="co">#' @param x          An `hv_bmi_curve` object.</span></span>
+<span><span class="co">#' @param line_width Width of the curve line. Default `1.0`.</span></span>
+<span><span class="co">#' @param alpha      Transparency of the ribbon in \eqn{[0,1]}. Default `0.2`.</span></span>
+<span><span class="co">#' @param ...        Ignored; present for S3 consistency.</span></span>
+<span><span class="co">#'</span></span>
+<span><span class="co">#' @return A bare [ggplot2::ggplot()] object; compose with `+` to add</span></span>
+<span><span class="co">#'   scales, labels, and [theme_hv_manuscript()].</span></span>
+<span><span class="co">#'</span></span>
+<span><span class="co">#' @seealso [hv_bmi_curve()] to build the data object.</span></span>
+<span><span class="co">#'</span></span>
+<span><span class="co">#' @family BMI curve</span></span>
+<span><span class="co">#'</span></span>
+<span><span class="co">#' @examples</span></span>
+<span><span class="co">#' dat &lt;- sample_bmi_curve_data(n = 500)</span></span>
+<span><span class="co">#' bc  &lt;- hv_bmi_curve(dat, lower_col = "lower", upper_col = "upper")</span></span>
+<span><span class="co">#' plot(bc) +</span></span>
+<span><span class="co">#'   ggplot2::scale_y_continuous(labels = scales::percent) +</span></span>
+<span><span class="co">#'   ggplot2::labs(x = "BMI (kg/m2)", y = "Prevalence of AF") +</span></span>
 <span><span class="co">#'   theme_hv_manuscript()</span></span>
 <span><span class="co">#'</span></span>
-<span><span class="co">#' @importFrom ggplot2 ggplot aes geom_line geom_ribbon geom_point</span></span>
+<span><span class="co">#' @importFrom ggplot2 ggplot aes geom_line geom_ribbon</span></span>
 <span><span class="co">#' @importFrom rlang .data</span></span>
 <span><span class="co">#' @export</span></span>
-<span><span class="va">bmi_curve_plot</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">curve_data</span>,</span>
-<span>                           <span class="va">x_col</span>        <span class="op">=</span> <span class="st">"time"</span>,</span>
-<span>                           <span class="va">estimate_col</span> <span class="op">=</span> <span class="st">"estimate"</span>,</span>
-<span>                           <span class="va">lower_col</span>    <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>                           <span class="va">upper_col</span>    <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>                           <span class="va">data_points</span>  <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>                           <span class="va">line_width</span>   <span class="op">=</span> <span class="fl">1.0</span>,</span>
-<span>                           <span class="va">point_size</span>   <span class="op">=</span> <span class="fl">2.5</span><span class="op">)</span> <span class="op">{</span></span>
+<span><span class="va">plot.hv_bmi_curve</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span>, <span class="va">line_width</span> <span class="op">=</span> <span class="fl">1.0</span>, <span class="va">alpha</span> <span class="op">=</span> <span class="fl">0.2</span>, <span class="va">...</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="fu">.check_alpha</span><span class="op">(</span><span class="va">alpha</span><span class="op">)</span></span>
+<span>  <span class="va">m</span> <span class="op">&lt;-</span> <span class="va">x</span><span class="op">$</span><span class="va">meta</span></span>
 <span></span>
-<span>  <span class="co"># ----- Input checks -------------------------------------------------------</span></span>
-<span>  <span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">is.data.frame</a></span><span class="op">(</span><span class="va">curve_data</span><span class="op">)</span><span class="op">)</span></span>
-<span>    <span class="kw"><a href="https://rdrr.io/r/base/stop.html" class="external-link">stop</a></span><span class="op">(</span><span class="st">"`curve_data` must be a data frame."</span><span class="op">)</span></span>
-<span>  <span class="kw">for</span> <span class="op">(</span><span class="va">col</span> <span class="kw">in</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">x_col</span>, <span class="va">estimate_col</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
-<span>    <span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="op">(</span><span class="va">col</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">curve_data</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span>      <span class="kw"><a href="https://rdrr.io/r/base/stop.html" class="external-link">stop</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sprintf.html" class="external-link">sprintf</a></span><span class="op">(</span><span class="st">"Column '%s' not found in `curve_data`."</span>, <span class="va">col</span><span class="op">)</span><span class="op">)</span></span>
-<span>  <span class="op">}</span></span>
-<span></span>
-<span>  <span class="co"># ----- Build base plot ----------------------------------------------------</span></span>
 <span>  <span class="va">p</span> <span class="op">&lt;-</span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span></span>
-<span>    <span class="va">curve_data</span>,</span>
-<span>    <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">.data</span><span class="op">[[</span><span class="va">x_col</span><span class="op">]</span><span class="op">]</span>, y <span class="op">=</span> <span class="va">.data</span><span class="op">[[</span><span class="va">estimate_col</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span>
+<span>    <span class="va">x</span><span class="op">$</span><span class="va">data</span>,</span>
+<span>    <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">.data</span><span class="op">[[</span><span class="va">m</span><span class="op">$</span><span class="va">x_col</span><span class="op">]</span><span class="op">]</span>, y <span class="op">=</span> <span class="va">.data</span><span class="op">[[</span><span class="va">m</span><span class="op">$</span><span class="va">estimate_col</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span>
 <span>  <span class="op">)</span></span>
 <span></span>
-<span>  <span class="co"># Optional CI ribbon</span></span>
-<span>  <span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NULL.html" class="external-link">is.null</a></span><span class="op">(</span><span class="va">lower_col</span><span class="op">)</span> <span class="op">&amp;&amp;</span> <span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NULL.html" class="external-link">is.null</a></span><span class="op">(</span><span class="va">upper_col</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NULL.html" class="external-link">is.null</a></span><span class="op">(</span><span class="va">m</span><span class="op">$</span><span class="va">lower_col</span><span class="op">)</span> <span class="op">&amp;&amp;</span> <span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NULL.html" class="external-link">is.null</a></span><span class="op">(</span><span class="va">m</span><span class="op">$</span><span class="va">upper_col</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
 <span>    <span class="va">p</span> <span class="op">&lt;-</span> <span class="va">p</span> <span class="op">+</span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_ribbon.html" class="external-link">geom_ribbon</a></span><span class="op">(</span></span>
-<span>      <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>ymin <span class="op">=</span> <span class="va">.data</span><span class="op">[[</span><span class="va">lower_col</span><span class="op">]</span><span class="op">]</span>, ymax <span class="op">=</span> <span class="va">.data</span><span class="op">[[</span><span class="va">upper_col</span><span class="op">]</span><span class="op">]</span>,</span>
-<span>                   fill <span class="op">=</span> <span class="st">"1"</span><span class="op">)</span>,</span>
-<span>      alpha <span class="op">=</span> <span class="fl">0.2</span></span>
+<span>      <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>ymin <span class="op">=</span> <span class="va">.data</span><span class="op">[[</span><span class="va">m</span><span class="op">$</span><span class="va">lower_col</span><span class="op">]</span><span class="op">]</span>, ymax <span class="op">=</span> <span class="va">.data</span><span class="op">[[</span><span class="va">m</span><span class="op">$</span><span class="va">upper_col</span><span class="op">]</span><span class="op">]</span><span class="op">)</span>,</span>
+<span>      alpha <span class="op">=</span> <span class="va">alpha</span></span>
 <span>    <span class="op">)</span></span>
 <span>  <span class="op">}</span></span>
 <span></span>
-<span>  <span class="co"># Main curve</span></span>
-<span>  <span class="va">p</span> <span class="op">&lt;-</span> <span class="va">p</span> <span class="op">+</span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">geom_line</a></span><span class="op">(</span></span>
-<span>    <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>colour <span class="op">=</span> <span class="st">"1"</span><span class="op">)</span>,</span>
-<span>    linewidth <span class="op">=</span> <span class="va">line_width</span></span>
-<span>  <span class="op">)</span></span>
-<span></span>
-<span>  <span class="co"># Optional data summary points</span></span>
-<span>  <span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NULL.html" class="external-link">is.null</a></span><span class="op">(</span><span class="va">data_points</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
-<span>    <span class="va">p</span> <span class="op">&lt;-</span> <span class="va">p</span> <span class="op">+</span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span></span>
-<span>      data <span class="op">=</span> <span class="va">data_points</span>,</span>
-<span>      <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">.data</span><span class="op">[[</span><span class="va">x_col</span><span class="op">]</span><span class="op">]</span>, y <span class="op">=</span> <span class="va">.data</span><span class="op">[[</span><span class="st">"value"</span><span class="op">]</span><span class="op">]</span>,</span>
-<span>                   colour <span class="op">=</span> <span class="st">"1"</span>, shape <span class="op">=</span> <span class="st">"1"</span><span class="op">)</span>,</span>
-<span>      size <span class="op">=</span> <span class="va">point_size</span></span>
-<span>    <span class="op">)</span></span>
-<span>  <span class="op">}</span></span>
-<span></span>
-<span>  <span class="va">p</span></span>
+<span>  <span class="va">p</span> <span class="op">+</span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">geom_line</a></span><span class="op">(</span>linewidth <span class="op">=</span> <span class="va">line_width</span><span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre></div>
-<p>A few conventions the function above follows:</p>
+<p>The conventions these two functions follow are the ones in the conventions table in <code>CONTRIBUTING.md</code>:</p>
 <ul>
 <li>
-<strong>Column names are strings</strong>, passed via <code>x_col =</code>, <code>estimate_col =</code>, etc. Never use <code><a href="https://rlang.r-lib.org/reference/enquo.html" class="external-link">enquo()</a></code> or <code><a href="https://rdrr.io/r/base/Paren.html" class="external-link">{ }</a></code> — it makes column names opaque to the caller.</li>
+<strong>Column names are strings</strong>, passed as <code>x_col = "time"</code>, and stored in <code>$meta</code> for the plot method to read back. Never use <code><a href="https://rlang.r-lib.org/reference/enquo.html" class="external-link">enquo()</a></code> or <code><a href="https://rdrr.io/r/base/Paren.html" class="external-link">{ }</a></code>; they make column names opaque to the caller.</li>
 <li>
-<strong>No colours or themes</strong> are applied inside the function. The caller adds <code>scale_colour_*()</code> and <code><a href="../reference/hvtiPlotR-themes.html">theme_hv_manuscript()</a></code> outside.</li>
+<strong><code>.data[[col]]</code></strong> does the tidy evaluation. It needs <code>@importFrom rlang .data</code>.</li>
 <li>
-<strong><code>.data[[col]]</code></strong> is used for tidy evaluation instead of bare variable names. This requires <code>@importFrom rlang .data</code>.</li>
-<li>The function returns <strong><code>p</code></strong>, not <code>print(p)</code> or <code>p + theme(...)</code>.</li>
-</ul></section><section class="level2"><h3 id="step-3-add-a-sample-data-generator">Step 3: Add a sample-data generator<a class="anchor" aria-label="anchor" href="#step-3-add-a-sample-data-generator"></a>
+<strong>No colours or themes</strong> are applied inside either function. The caller adds <code>scale_colour_*()</code>, <code><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs()</a></code> and <code><a href="../reference/hvtiPlotR-themes.html">theme_hv_manuscript()</a></code> afterwards, as the examples show.</li>
+<li>
+<strong>The plot method returns <code>p</code></strong>, not <code>print(p)</code> or <code>p + theme(...)</code>.</li>
+</ul>
+<p>S3 registration comes from the plain <code>@export</code> tag on <code>print.hv_bmi_curve()</code> and <code>plot.hv_bmi_curve()</code>. roxygen2 recognises the <code>generic.class</code> name and writes <code>S3method(plot,hv_bmi_curve)</code> into <code>NAMESPACE</code>, next to <code>S3method(plot,hv_spaghetti)</code>. You do not need <code>@method</code>.</p>
+</section></section><section class="level2"><h3 id="step-3-add-a-sample-data-generator">Step 3: Add a sample-data generator<a class="anchor" aria-label="anchor" href="#step-3-add-a-sample-data-generator"></a>
 </h3>
-<p>Add <code>sample_bmi_curve_data()</code> to the same file. The generator should:</p>
+<p>Add <code>sample_bmi_curve_data()</code> to the top of the same file, as <code><a href="../reference/sample_spaghetti_data.html">sample_spaghetti_data()</a></code> sits at the top of <code>R/spaghetti-plot.R</code>. The generator should:</p>
 <ul>
-<li>Accept <code>n</code> (patient count), <code>time_max</code> / range, and <code>seed</code>.</li>
-<li>Return a data frame whose column names <strong>match the R defaults</strong> (<code>time</code>, <code>estimate</code>, <code>lower</code>, <code>upper</code>) — not the SAS column names.</li>
+<li>Accept <code>n</code> (patient count), the x range, and <code>seed</code>.</li>
+<li>Return a data frame whose column names <strong>match the constructor defaults</strong> (<code>time</code>, <code>estimate</code>, <code>lower</code>, <code>upper</code>), not the SAS column names.</li>
 <li>Produce realistic-looking data at a plausible scale.</li>
 </ul>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#' Sample BMI Curve Data</span></span>
 <span><span class="co">#'</span></span>
 <span><span class="co">#' Simulates the fitted curve output from a nonparametric BMI analysis,</span></span>
-<span><span class="co">#' matching the column layout expected by [bmi_curve_plot()].</span></span>
+<span><span class="co">#' matching the column layout expected by [hv_bmi_curve()].</span></span>
 <span><span class="co">#'</span></span>
-<span><span class="co">#' @param n       Number of simulated patients (controls CI width).</span></span>
+<span><span class="co">#' @param n        Number of simulated patients (controls CI width).</span></span>
 <span><span class="co">#'   Default `500`.</span></span>
-<span><span class="co">#' @param bmi_min Lower end of the BMI range. Default `18`.</span></span>
-<span><span class="co">#' @param bmi_max Upper end of the BMI range. Default `50`.</span></span>
+<span><span class="co">#' @param bmi_min  Lower end of the BMI range. Default `18`.</span></span>
+<span><span class="co">#' @param bmi_max  Upper end of the BMI range. Default `50`.</span></span>
 <span><span class="co">#' @param n_points Number of points on the prediction grid. Default `200`.</span></span>
-<span><span class="co">#' @param seed    Random seed. Default `42`.</span></span>
+<span><span class="co">#' @param seed     Random seed. Default `42`.</span></span>
 <span><span class="co">#'</span></span>
 <span><span class="co">#' @return A data frame with columns `time` (BMI grid), `estimate`,</span></span>
 <span><span class="co">#'   `lower`, `upper`.</span></span>
 <span><span class="co">#'</span></span>
-<span><span class="co">#' @seealso [bmi_curve_plot()]</span></span>
+<span><span class="co">#' @seealso [hv_bmi_curve()]</span></span>
 <span><span class="co">#'</span></span>
 <span><span class="co">#' @examples</span></span>
 <span><span class="co">#' dat &lt;- sample_bmi_curve_data(n = 300)</span></span>
 <span><span class="co">#' head(dat)</span></span>
-<span><span class="co">#' range(dat$time)     # BMI range</span></span>
-<span><span class="co">#' range(dat$estimate) # probability range, 0-1</span></span>
 <span><span class="co">#'</span></span>
-<span><span class="co">#' @importFrom stats plogis runif qnorm</span></span>
+<span><span class="co">#' @importFrom stats plogis qnorm</span></span>
 <span><span class="co">#' @export</span></span>
-<span><span class="va">sample_bmi_curve_data</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">n</span>       <span class="op">=</span> <span class="fl">500</span>,</span>
-<span>                                  <span class="va">bmi_min</span> <span class="op">=</span> <span class="fl">18</span>,</span>
-<span>                                  <span class="va">bmi_max</span> <span class="op">=</span> <span class="fl">50</span>,</span>
+<span><span class="va">sample_bmi_curve_data</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">n</span>        <span class="op">=</span> <span class="fl">500</span>,</span>
+<span>                                  <span class="va">bmi_min</span>  <span class="op">=</span> <span class="fl">18</span>,</span>
+<span>                                  <span class="va">bmi_max</span>  <span class="op">=</span> <span class="fl">50</span>,</span>
 <span>                                  <span class="va">n_points</span> <span class="op">=</span> <span class="fl">200</span>,</span>
-<span>                                  <span class="va">seed</span>    <span class="op">=</span> <span class="fl">42L</span><span class="op">)</span> <span class="op">{</span></span>
+<span>                                  <span class="va">seed</span>     <span class="op">=</span> <span class="fl">42L</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="va">seed</span><span class="op">)</span></span>
-<span>  <span class="va">z</span>    <span class="op">&lt;-</span> <span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">qnorm</a></span><span class="op">(</span><span class="fl">0.84</span><span class="op">)</span>   <span class="co"># 68 % CI ≈ 1 SD</span></span>
-<span>  <span class="va">bmi</span>  <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="va">bmi_min</span>, <span class="va">bmi_max</span>, length.out <span class="op">=</span> <span class="va">n_points</span><span class="op">)</span></span>
-<span>  <span class="va">eta</span>  <span class="op">&lt;-</span> <span class="op">-</span><span class="fl">2</span> <span class="op">+</span> <span class="fl">0.05</span> <span class="op">*</span> <span class="op">(</span><span class="va">bmi</span> <span class="op">-</span> <span class="fl">30</span><span class="op">)</span>   <span class="co"># logistic link</span></span>
-<span>  <span class="va">est</span>  <span class="op">&lt;-</span> <span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/Logistic.html" class="external-link">plogis</a></span><span class="op">(</span><span class="va">eta</span><span class="op">)</span></span>
-<span>  <span class="va">se</span>   <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="va">est</span> <span class="op">*</span> <span class="op">(</span><span class="fl">1</span> <span class="op">-</span> <span class="va">est</span><span class="op">)</span> <span class="op">/</span> <span class="op">(</span><span class="va">n</span> <span class="op">*</span> <span class="fl">0.02</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="va">z</span>   <span class="op">&lt;-</span> <span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">qnorm</a></span><span class="op">(</span><span class="fl">0.84</span><span class="op">)</span>          <span class="co"># 68 % CI is about 1 SD</span></span>
+<span>  <span class="va">bmi</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="va">bmi_min</span>, <span class="va">bmi_max</span>, length.out <span class="op">=</span> <span class="va">n_points</span><span class="op">)</span></span>
+<span>  <span class="va">est</span> <span class="op">&lt;-</span> <span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/Logistic.html" class="external-link">plogis</a></span><span class="op">(</span><span class="op">-</span><span class="fl">2</span> <span class="op">+</span> <span class="fl">0.05</span> <span class="op">*</span> <span class="op">(</span><span class="va">bmi</span> <span class="op">-</span> <span class="fl">30</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="va">se</span>  <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="va">est</span> <span class="op">*</span> <span class="op">(</span><span class="fl">1</span> <span class="op">-</span> <span class="va">est</span><span class="op">)</span> <span class="op">/</span> <span class="op">(</span><span class="va">n</span> <span class="op">*</span> <span class="fl">0.02</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
 <span>    time     <span class="op">=</span> <span class="va">bmi</span>,</span>
@@ -336,149 +374,231 @@
 <span><span class="op">}</span></span></code></pre></div>
 </section><section class="level2"><h3 id="step-4-write-roxygen-documentation">Step 4: Write roxygen documentation<a class="anchor" aria-label="anchor" href="#step-4-write-roxygen-documentation"></a>
 </h3>
-<p>Your documentation block needs all of the following:</p>
+<p>Roxygen markdown is enabled in this package (<code>Roxygen: list(markdown = TRUE)</code> in <code>DESCRIPTION</code>), so backticks and <code>[fn()]</code> links render as written. Each exported function needs:</p>
 <table class="table caption-top">
 <colgroup>
-<col style="width: 33%">
-<col style="width: 33%">
-<col style="width: 33%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
 </colgroup>
 <thead><tr class="header">
 <th>Tag</th>
-<th>Required</th>
+<th>Constructor</th>
+<th>
+<code>plot</code> method</th>
 <th>Notes</th>
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td><code>@description</code></td>
+<td>Description</td>
 <td>Yes</td>
-<td>One paragraph; mention the SAS template name</td>
+<td>Yes</td>
+<td>Paragraph after the title, or <code>@description</code>; names the SAS template and column mapping</td>
 </tr>
 <tr class="even">
 <td><code>@param</code></td>
 <td>Yes</td>
-<td>One per argument; include default in description</td>
+<td>Yes</td>
+<td>One per argument; include the default</td>
 </tr>
 <tr class="odd">
 <td><code>@return</code></td>
 <td>Yes</td>
-<td>Describe the ggplot or data frame structure</td>
+<td>Yes</td>
+<td>Constructor: the class and its three slots. Method: a bare ggplot</td>
 </tr>
 <tr class="even">
 <td><code>@seealso</code></td>
 <td>Yes</td>
-<td>Link to the companion <code>sample_*()</code> and related functions</td>
+<td>Yes</td>
+<td>Link the pair to each other and to the <code>sample_*()</code> generator</td>
 </tr>
 <tr class="odd">
 <td><code>@references</code></td>
 <td>Yes</td>
+<td>No</td>
 <td>The exact SAS template filename(s)</td>
 </tr>
 <tr class="even">
-<td><code>@examples</code></td>
+<td><code>@family</code></td>
 <td>Yes</td>
-<td>Must be runnable (use <code>\dontrun{}</code> only for file I/O)</td>
+<td>Yes</td>
+<td>Same family name on both, so their help pages cross-link</td>
 </tr>
 <tr class="odd">
-<td><code>@importFrom</code></td>
+<td><code>@examples</code></td>
 <td>Yes</td>
-<td>Declare every function used from other packages</td>
+<td>Yes</td>
+<td>Must run; use <code>\donttest{}</code> for slow examples</td>
 </tr>
 <tr class="even">
+<td><code>@importFrom</code></td>
+<td>As needed</td>
+<td>As needed</td>
+<td>Declare every function used from other packages</td>
+</tr>
+<tr class="odd">
 <td><code>@export</code></td>
 <td>Yes</td>
-<td>Must be present for the function to be accessible</td>
+<td>Yes</td>
+<td>On the method it also registers the S3 method</td>
 </tr>
 </tbody>
 </table>
-<p>Run <code><a href="https://devtools.r-lib.org/reference/document.html" class="external-link">devtools::document()</a></code> after editing to check for parse errors.</p>
+<p>Then regenerate <code>NAMESPACE</code> and <code>man/</code>:</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/document.html" class="external-link">document</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<p>Check that <code>NAMESPACE</code> now carries <code>export(hv_bmi_curve)</code>, <code>export(sample_bmi_curve_data)</code>, <code>S3method(plot,hv_bmi_curve)</code> and <code>S3method(print,hv_bmi_curve)</code>. Commit <code>NAMESPACE</code> and <code>man/</code> with the source change.</p>
 </section><section class="level2"><h3 id="step-5-register-in-_pkgdown-yml">Step 5: Register in <code>_pkgdown.yml</code>
 <a class="anchor" aria-label="anchor" href="#step-5-register-in-_pkgdown-yml"></a>
 </h3>
-<p>Add the new functions to the appropriate section in <code>_pkgdown.yml</code>. If no existing section fits, add a new one:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">title</span><span class="kw">:</span><span class="at"> </span><span class="st">"Nonparametric Covariate Curves"</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">  desc</span><span class="kw">: </span><span class="ch">&gt;</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    Average curves plotted against a continuous covariate (BMI, age, etc.)</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    rather than against time.</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">contents</span><span class="kw">:</span></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> bmi_curve_plot</span></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> sample_bmi_curve_data</span></span></code></pre></div>
+<p>The <code>reference:</code> index is explicit, and pkgdown errors on an exported topic missing from it. List the constructor, both methods and the generator, in the same order the existing sections use:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">title</span><span class="kw">:</span><span class="at"> </span><span class="st">"Nonparametric Covariate Curves"</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">  desc</span><span class="kw">: </span><span class="ch">&gt;</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    Average curves plotted against a continuous covariate (BMI, age, etc.)</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    rather than against time. Ports `tp.np.bmi.avrg_curv.binary.sas`.</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">contents</span><span class="kw">:</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> hv_bmi_curve</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> plot.hv_bmi_curve</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> print.hv_bmi_curve</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> sample_bmi_curve_data</span></span></code></pre></div>
+<p>If an existing section fits, add the four lines there instead of starting a new one.</p>
 </section><section class="level2"><h3 id="step-6-add-a-worked-example-to-the-plot-functions-vignette">Step 6: Add a worked example to the plot-functions vignette<a class="anchor" aria-label="anchor" href="#step-6-add-a-worked-example-to-the-plot-functions-vignette"></a>
 </h3>
-<p>Open <code>vignettes/plot-functions.qmd</code> and add a new top-level section before the “Draft Footnotes” section:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu"># BMI Curve Plot</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="in">`bmi_curve_plot()`</span> plots a fitted nonparametric average curve of a binary</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>outcome against BMI ...</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>::: {.cell}</span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="in">```{.r .cell-code}</span></span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">sample_bmi_curve_data</span>(<span class="at">n =</span> <span class="dv">500</span>)</span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="fu">bmi_curve_plot</span>(dat, <span class="at">lower_col =</span> <span class="st">"lower"</span>, <span class="at">upper_col =</span> <span class="st">"upper"</span>) <span class="sc">+</span> ...</span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>:::</span></code></pre></div>
+<p>Open <code>vignettes/plot-functions.qmd</code> and add a new top-level section before the “Draft Footnotes” section. Show both steps, so a reader sees the object before the figure:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu"># BMI Curve Plot</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="in">`hv_bmi_curve()`</span> prepares a fitted nonparametric average curve of a binary</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>outcome against BMI; <span class="in">`plot()`</span> draws it ...</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>::: {.cell}</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="in">```{.r .cell-code}</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">sample_bmi_curve_data</span>(<span class="at">n =</span> <span class="dv">500</span>)</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>bc  <span class="ot">&lt;-</span> <span class="fu">hv_bmi_curve</span>(dat, <span class="at">lower_col =</span> <span class="st">"lower"</span>, <span class="at">upper_col =</span> <span class="st">"upper"</span>)</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>bc</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(bc) <span class="sc">+</span> ggplot2<span class="sc">::</span><span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"BMI (kg/m2)"</span>, <span class="at">y =</span> <span class="st">"Prevalence of AF"</span>) <span class="sc">+</span></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_hv_manuscript</span>()</span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>:::</span></code></pre></div>
 </section><section class="level2"><h3 id="step-7-add-a-row-to-the-sas-migration-guide">Step 7: Add a row to the SAS migration guide<a class="anchor" aria-label="anchor" href="#step-7-add-a-row-to-the-sas-migration-guide"></a>
 </h3>
-<p>In <code>vignettes/sas-migration-guide.qmd</code>, add a row to the lookup table at the top:</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> <span class="in">`tp.np.bmi.avrg_curv.binary.sas`</span> <span class="pp">|</span> np <span class="pp">|</span> <span class="in">`bmi_curve_plot()`</span> <span class="pp">|</span> <span class="co">[</span><span class="ot">BMI curve</span><span class="co">](#np-bmi)</span> <span class="pp">|</span></span></code></pre></div>
+<p>In <code>vignettes/sas-migration-guide.qmd</code>, add a row to the template lookup table. The third column names the constructor:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> <span class="in">`tp.np.bmi.avrg_curv.binary.sas`</span> <span class="pp">|</span> np <span class="pp">|</span> <span class="in">`hv_bmi_curve()`</span> <span class="pp">|</span> <span class="co">[</span><span class="ot">BMI curve</span><span class="co">](#np-bmi)</span> <span class="pp">|</span></span></code></pre></div>
 <p>Then add the corresponding section with a runnable example further down in the <code># Nonparametric temporal trends</code> family.</p>
-</section><section class="level2"><h3 id="step-8-write-tests">Step 8: Write tests<a class="anchor" aria-label="anchor" href="#step-8-write-tests"></a>
+</section><section class="level2"><h3 id="step-tests">Step 8: Write tests<a class="anchor" aria-label="anchor" href="#step-tests"></a>
 </h3>
-<p>Create <code>tests/testthat/test_bmi_curve_plot.R</code>:</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<p>Create <code>tests/testthat/test_bmi_curve_plot.R</code>. Test files use an underscore, <code>test_*.R</code>, and the name follows the source file.</p>
+<p>A plot test has to prove the plot carries data. A ggplot whose every layer holds zero rows still has class <code>"ggplot"</code> and still renders an empty panel, so <code>expect_s3_class(p, "ggplot")</code> on its own is a smoke test, not coverage. <code>tests/testthat/helper-plot-data.R</code> provides <code>expect_plot_has_data()</code>, which runs <code><a href="https://ggplot2.tidyverse.org/reference/ggplot_build.html" class="external-link">ggplot2::ggplot_build()</a></code> and fails when a data layer is empty. testthat loads <code>helper-*.R</code> files before the tests, so the helper is available without a <code><a href="https://rdrr.io/r/base/source.html" class="external-link">source()</a></code> call. Its arguments tighten the check:</p>
+<ul>
+<li>
+<code>min_rows</code>: every data layer must hold at least this many rows.</li>
+<li>
+<code>geoms</code>: each geom class named here must appear in the plot, for example <code>"GeomRibbon"</code>.</li>
+<li>
+<code>min_groups</code>: at least one data layer must split into this many groups, which catches a stratified plot that collapsed to one line.</li>
+</ul>
+<p>Reference lines (<code>GeomHline</code>, <code>GeomVline</code>, <code>GeomAbline</code>) do not count as data layers, though each must still draw at least one row.</p>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://testthat.r-lib.org" class="external-link">testthat</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/ehrlinger/hvtiPlotR" class="external-link">hvtiPlotR</a></span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://testthat.r-lib.org/reference/test_that.html" class="external-link">test_that</a></span><span class="op">(</span><span class="st">"sample_bmi_curve_data returns a data frame with required columns"</span>, <span class="op">{</span></span>
-<span>  <span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu">sample_bmi_curve_data</span><span class="op">(</span>n <span class="op">=</span> <span class="fl">100</span>, seed <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
-<span>  <span class="fu"><a href="https://testthat.r-lib.org/reference/logical-expectations.html" class="external-link">expect_true</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">is.data.frame</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span><span class="op">)</span></span>
-<span>  <span class="fu"><a href="https://testthat.r-lib.org/reference/logical-expectations.html" class="external-link">expect_true</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/all.html" class="external-link">all</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"time"</span>, <span class="st">"estimate"</span>, <span class="st">"lower"</span>, <span class="st">"upper"</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="op">}</span><span class="op">)</span></span>
+<span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu">sample_bmi_curve_data</span><span class="op">(</span>n <span class="op">=</span> <span class="fl">100</span>, n_points <span class="op">=</span> <span class="fl">50</span>, seed <span class="op">=</span> <span class="fl">1L</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://testthat.r-lib.org/reference/test_that.html" class="external-link">test_that</a></span><span class="op">(</span><span class="st">"sample_bmi_curve_data respects n_points"</span>, <span class="op">{</span></span>
-<span>  <span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu">sample_bmi_curve_data</span><span class="op">(</span>n_points <span class="op">=</span> <span class="fl">50</span>, seed <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://testthat.r-lib.org/reference/test_that.html" class="external-link">test_that</a></span><span class="op">(</span><span class="st">"sample_bmi_curve_data returns the constructor's default columns"</span>, <span class="op">{</span></span>
+<span>  <span class="fu"><a href="https://testthat.r-lib.org/reference/inheritance-expectations.html" class="external-link">expect_s3_class</a></span><span class="op">(</span><span class="va">dat</span>, <span class="st">"data.frame"</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://testthat.r-lib.org/reference/expect_named.html" class="external-link">expect_named</a></span><span class="op">(</span><span class="va">dat</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"time"</span>, <span class="st">"estimate"</span>, <span class="st">"lower"</span>, <span class="st">"upper"</span><span class="op">)</span><span class="op">)</span></span>
 <span>  <span class="fu"><a href="https://testthat.r-lib.org/reference/equality-expectations.html" class="external-link">expect_equal</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span>, <span class="fl">50</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://testthat.r-lib.org/reference/test_that.html" class="external-link">test_that</a></span><span class="op">(</span><span class="st">"bmi_curve_plot returns a ggplot"</span>, <span class="op">{</span></span>
-<span>  <span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu">sample_bmi_curve_data</span><span class="op">(</span>n <span class="op">=</span> <span class="fl">100</span>, seed <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
-<span>  <span class="va">p</span>   <span class="op">&lt;-</span> <span class="fu">bmi_curve_plot</span><span class="op">(</span><span class="va">dat</span><span class="op">)</span></span>
-<span>  <span class="fu"><a href="https://testthat.r-lib.org/reference/inheritance-expectations.html" class="external-link">expect_s3_class</a></span><span class="op">(</span><span class="va">p</span>, <span class="st">"ggplot"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://testthat.r-lib.org/reference/test_that.html" class="external-link">test_that</a></span><span class="op">(</span><span class="st">"hv_bmi_curve returns an hv_data object with the column mapping"</span>, <span class="op">{</span></span>
+<span>  <span class="va">bc</span> <span class="op">&lt;-</span> <span class="fu">hv_bmi_curve</span><span class="op">(</span><span class="va">dat</span>, lower_col <span class="op">=</span> <span class="st">"lower"</span>, upper_col <span class="op">=</span> <span class="st">"upper"</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://testthat.r-lib.org/reference/inheritance-expectations.html" class="external-link">expect_s3_class</a></span><span class="op">(</span><span class="va">bc</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"hv_bmi_curve"</span>, <span class="st">"hv_data"</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://testthat.r-lib.org/reference/equality-expectations.html" class="external-link">expect_equal</a></span><span class="op">(</span><span class="va">bc</span><span class="op">$</span><span class="va">meta</span><span class="op">$</span><span class="va">estimate_col</span>, <span class="st">"estimate"</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://testthat.r-lib.org/reference/equality-expectations.html" class="external-link">expect_identical</a></span><span class="op">(</span><span class="va">bc</span><span class="op">$</span><span class="va">tables</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://testthat.r-lib.org/reference/test_that.html" class="external-link">test_that</a></span><span class="op">(</span><span class="st">"bmi_curve_plot adds ribbon when CI columns are supplied"</span>, <span class="op">{</span></span>
-<span>  <span class="va">dat</span>    <span class="op">&lt;-</span> <span class="fu">sample_bmi_curve_data</span><span class="op">(</span>n <span class="op">=</span> <span class="fl">100</span>, seed <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
-<span>  <span class="va">p_ci</span>   <span class="op">&lt;-</span> <span class="fu">bmi_curve_plot</span><span class="op">(</span><span class="va">dat</span>, lower_col <span class="op">=</span> <span class="st">"lower"</span>, upper_col <span class="op">=</span> <span class="st">"upper"</span><span class="op">)</span></span>
-<span>  <span class="va">layers</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">sapply</a></span><span class="op">(</span><span class="va">p_ci</span><span class="op">$</span><span class="va">layers</span>, <span class="kw">function</span><span class="op">(</span><span class="va">l</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="va">l</span><span class="op">$</span><span class="va">geom</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span></span>
-<span>  <span class="fu"><a href="https://testthat.r-lib.org/reference/logical-expectations.html" class="external-link">expect_true</a></span><span class="op">(</span><span class="st">"GeomRibbon"</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">layers</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://testthat.r-lib.org/reference/test_that.html" class="external-link">test_that</a></span><span class="op">(</span><span class="st">"hv_bmi_curve errors on a missing column"</span>, <span class="op">{</span></span>
+<span>  <span class="fu"><a href="https://testthat.r-lib.org/reference/expect_error.html" class="external-link">expect_error</a></span><span class="op">(</span><span class="fu">hv_bmi_curve</span><span class="op">(</span><span class="va">dat</span>, x_col <span class="op">=</span> <span class="st">"no_such_col"</span><span class="op">)</span>, <span class="st">"column"</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://testthat.r-lib.org/reference/test_that.html" class="external-link">test_that</a></span><span class="op">(</span><span class="st">"bmi_curve_plot errors on missing column"</span>, <span class="op">{</span></span>
-<span>  <span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu">sample_bmi_curve_data</span><span class="op">(</span>n <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span>
-<span>  <span class="fu"><a href="https://testthat.r-lib.org/reference/expect_error.html" class="external-link">expect_error</a></span><span class="op">(</span><span class="fu">bmi_curve_plot</span><span class="op">(</span><span class="va">dat</span>, x_col <span class="op">=</span> <span class="st">"no_such_col"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://testthat.r-lib.org/reference/test_that.html" class="external-link">test_that</a></span><span class="op">(</span><span class="st">"plot.hv_bmi_curve draws the curve from every data row"</span>, <span class="op">{</span></span>
+<span>  <span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu">hv_bmi_curve</span><span class="op">(</span><span class="va">dat</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="fu">expect_plot_has_data</span><span class="op">(</span><span class="va">p</span>, min_rows <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span>, geoms <span class="op">=</span> <span class="st">"GeomLine"</span><span class="op">)</span></span>
+<span><span class="op">}</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://testthat.r-lib.org/reference/test_that.html" class="external-link">test_that</a></span><span class="op">(</span><span class="st">"plot.hv_bmi_curve adds a ribbon carrying data when CI columns are given"</span>, <span class="op">{</span></span>
+<span>  <span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu">hv_bmi_curve</span><span class="op">(</span><span class="va">dat</span>, lower_col <span class="op">=</span> <span class="st">"lower"</span>, upper_col <span class="op">=</span> <span class="st">"upper"</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="fu">expect_plot_has_data</span><span class="op">(</span><span class="va">p</span>, min_rows <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span>,</span>
+<span>                       geoms <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"GeomRibbon"</span>, <span class="st">"GeomLine"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="op">}</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://testthat.r-lib.org/reference/test_that.html" class="external-link">test_that</a></span><span class="op">(</span><span class="st">"print.hv_bmi_curve output is stable"</span>, <span class="op">{</span></span>
+<span>  <span class="fu"><a href="https://testthat.r-lib.org/reference/expect_snapshot.html" class="external-link">expect_snapshot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu">hv_bmi_curve</span><span class="op">(</span><span class="va">dat</span>, lower_col <span class="op">=</span> <span class="st">"lower"</span>, upper_col <span class="op">=</span> <span class="st">"upper"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span></code></pre></div>
-<p>Run with <code>devtools::test(filter = "bmi")</code>.</p>
+<p>At minimum, a new plot needs these tests:</p>
+<table class="table caption-top">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead><tr class="header">
+<th>Test</th>
+<th>What to check</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td>Sample data shape</td>
+<td>Class, column names, and number of rows</td>
+</tr>
+<tr class="even">
+<td>Constructor object</td>
+<td>
+<code>expect_s3_class(obj, "hv_data")</code> and the <code>$meta</code> entries the plot method reads</td>
+</tr>
+<tr class="odd">
+<td>Error on bad input</td>
+<td><code>expect_error(hv_&lt;concept&gt;(dat, x_col = "no_such_col"))</code></td>
+</tr>
+<tr class="even">
+<td>Plot carries data</td>
+<td>
+<code>expect_plot_has_data(plot(obj), min_rows = ...)</code>; a bare class check does not count</td>
+</tr>
+<tr class="odd">
+<td>Optional layers</td>
+<td>
+<code>expect_plot_has_data(..., geoms = "GeomRibbon")</code> for each layer an argument switches on</td>
+</tr>
+</tbody>
+</table>
+<p>The package uses testthat edition 3. The first <code><a href="https://devtools.r-lib.org/reference/test.html" class="external-link">devtools::test()</a></code> run writes the <code><a href="https://testthat.r-lib.org/reference/expect_snapshot.html" class="external-link">expect_snapshot()</a></code> baseline to <code>tests/testthat/_snaps/bmi_curve_plot.md</code>; commit that file with the test. When a later change alters the output on purpose, review and accept the new snapshot rather than deleting the file:</p>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/test.html" class="external-link">test</a></span><span class="op">(</span>filter <span class="op">=</span> <span class="st">"bmi_curve"</span><span class="op">)</span></span>
+<span><span class="fu">testthat</span><span class="fu">::</span><span class="fu"><a href="https://testthat.r-lib.org/reference/snapshot_accept.html" class="external-link">snapshot_review</a></span><span class="op">(</span><span class="op">)</span>   <span class="co"># inspect the diff</span></span>
+<span><span class="fu">testthat</span><span class="fu">::</span><span class="fu"><a href="https://testthat.r-lib.org/reference/snapshot_accept.html" class="external-link">snapshot_accept</a></span><span class="op">(</span><span class="op">)</span>   <span class="co"># accept the intended change</span></span></code></pre></div>
 </section><section class="level2"><h3 id="step-9-update-news-md">Step 9: Update NEWS.md<a class="anchor" aria-label="anchor" href="#step-9-update-news-md"></a>
 </h3>
-<p>Add a bullet to the current dev version at the top of <code>NEWS.md</code>:</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>Added <span class="in">`bmi_curve_plot()`</span> and <span class="in">`sample_bmi_curve_data()`</span> — nonparametric</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  average curve of a binary outcome against a continuous covariate (BMI).</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  Ports <span class="in">`tp.np.bmi.avrg_curv.binary.sas`</span>.</span></code></pre></div>
+<p>Add a bullet under the <code># hvtiPlotR (unreleased)</code> heading at the top of <code>NEWS.md</code>, adding that heading if it is not already there:</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>Added <span class="in">`hv_bmi_curve()`</span>, its <span class="in">`plot()`</span> and <span class="in">`print()`</span> methods, and</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="in">`sample_bmi_curve_data()`</span>: a nonparametric average curve of a binary</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  outcome against a continuous covariate (BMI).</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  Ports <span class="in">`tp.np.bmi.avrg_curv.binary.sas`</span>.</span></code></pre></div>
 </section><section class="level2"><h3 id="step-10-final-checklist-before-opening-a-pr">Step 10: Final checklist before opening a PR<a class="anchor" aria-label="anchor" href="#step-10-final-checklist-before-opening-a-pr"></a>
 </h3>
-<p>Run these three commands in order before pushing your branch. All three must complete cleanly – zero errors, zero warnings, and ideally zero notes from <code>check()</code>. Then open a pull request against <code>main</code> on GitHub.</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/document.html" class="external-link">document</a></span><span class="op">(</span><span class="op">)</span>   <span class="co"># regenerate NAMESPACE + .Rd — must complete without errors</span></span>
+<p>Run these commands in order before pushing your branch. All must complete cleanly: every test passing, and zero errors, zero warnings and zero notes from <code>check()</code>. Then open a pull request against <code>main</code> on GitHub.</p>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/document.html" class="external-link">document</a></span><span class="op">(</span><span class="op">)</span>   <span class="co"># regenerate NAMESPACE + .Rd without errors</span></span>
 <span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/test.html" class="external-link">test</a></span><span class="op">(</span><span class="op">)</span>       <span class="co"># all tests pass</span></span>
-<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/check.html" class="external-link">check</a></span><span class="op">(</span><span class="op">)</span>      <span class="co"># 0 errors, 0 warnings, 0 notes (ideally)</span></span></code></pre></div>
-<hr></section></section><section class="section level2"><h2 id="track-b">Track B — Package infrastructure<a class="anchor" aria-label="anchor" href="#track-b"></a>
+<span><span class="fu">lintr</span><span class="fu">::</span><span class="fu"><a href="https://lintr.r-lib.org/reference/lint.html" class="external-link">lint_package</a></span><span class="op">(</span><span class="op">)</span>  <span class="co"># zero lints; CI fails on any</span></span>
+<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/check.html" class="external-link">check</a></span><span class="op">(</span><span class="op">)</span>      <span class="co"># 0 errors, 0 warnings, 0 notes</span></span></code></pre></div>
+<hr></section></section><section class="section level2"><h2 id="track-b">Track B: Package infrastructure<a class="anchor" aria-label="anchor" href="#track-b"></a>
 </h2>
 <section class="level2"><h3 id="package-structure-overview">Package structure overview<a class="anchor" aria-label="anchor" href="#package-structure-overview"></a>
 </h3>
-<p>The tree below shows where each piece of the package lives. The two directories you will touch most are <code>R/</code> (one file per plot family) and <code>tests/testthat/</code> (one test file per source file). Everything under <code>man/</code> and <code>NAMESPACE</code> is auto-generated – do not edit those by hand.</p>
+<p>The tree below shows where each piece of the package lives. The two directories you will touch most are <code>R/</code> (one file per plot family) and <code>tests/testthat/</code> (one test file per source file). Everything under <code>man/</code> and <code>NAMESPACE</code> is auto-generated; do not edit those by hand.</p>
 <pre><code>hvtiPlotR/
 ├── R/                    # Source: one file per plot family
 ├── man/                  # Auto-generated .Rd files — do not edit manually
@@ -499,7 +619,7 @@
 <li>
 <strong>Vignette/test only</strong>: add to <code>Suggests</code>. Wrap any code that uses it in <code>if (requireNamespace("pkg", quietly = TRUE)) { ... }</code> or use <code>#| eval: false</code> in the vignette chunk.</li>
 </ul>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Check before adding — is it already available in base R or an existing Import?</span></span>
 <span><span class="co"># Keep Imports lean; every new dependency adds installation weight.</span></span></code></pre></div>
 </section><section class="level2"><h3 id="conventions">Code style and conventions<a class="anchor" aria-label="anchor" href="#conventions"></a>
@@ -519,17 +639,22 @@
 <td><code>bmi-curve-plot.R</code></td>
 </tr>
 <tr class="even">
-<td>Plot functions</td>
-<td><code>snake_case()</code></td>
-<td><code>bmi_curve_plot()</code></td>
+<td>Constructors</td>
+<td><code>hv_&lt;concept&gt;()</code></td>
+<td><code>hv_bmi_curve()</code></td>
 </tr>
 <tr class="odd">
+<td>Plot methods</td>
+<td><code>plot.hv_&lt;concept&gt;()</code></td>
+<td><code>plot.hv_bmi_curve()</code></td>
+</tr>
+<tr class="even">
 <td>Sample generators</td>
 <td>
 <code>sample_</code> prefix</td>
 <td><code>sample_bmi_curve_data()</code></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td>Internal helpers</td>
 <td>
 <code>.</code> prefix</td>
@@ -537,22 +662,22 @@
 </tr>
 </tbody>
 </table>
-<p>Internal helpers (prefixed with <code>.</code>) should have <code>@keywords internal</code> and <strong>no</strong> <code>@export</code> — they will not appear in <code>NAMESPACE</code> or generate <code>.Rd</code> files.</p>
+<p>Internal helpers (prefixed with <code>.</code>) should have <code>@keywords internal</code> and no <code>@export</code>, so they will not appear in <code>NAMESPACE</code> or generate <code>.Rd</code> files.</p>
 </section><section class="level3"><h4 id="the-bare-ggplot-pattern">The bare-ggplot pattern<a class="anchor" aria-label="anchor" href="#the-bare-ggplot-pattern"></a>
 </h4>
-<p>Every plot function in hvtiPlotR follows five rules:</p>
+<p>Every <code>plot.hv_&lt;concept&gt;()</code> method follows five rules:</p>
 <ol type="1">
-<li>Accept model-output data frames (not raw patient data).</li>
-<li>Map all column references through string arguments (<code>x_col =</code>, etc.).</li>
+<li>Draw model-output data held in the <code>hv_data</code> object (not raw patient data).</li>
+<li>Take every column reference from a string argument (<code>x_col =</code>, etc.) stored in <code>$meta</code>.</li>
 <li>Use <code>.data[[col]]</code> for tidy evaluation inside <code><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes()</a></code>.</li>
-<li>Return an unstyled ggplot — no <code>scale_*()</code>, no <code><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs()</a></code>, no theme.</li>
+<li>Return an unstyled ggplot: no <code>scale_*()</code>, no <code><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs()</a></code>, no theme.</li>
 <li>Not call <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code> or <code><a href="https://rdrr.io/r/base/invisible.html" class="external-link">invisible()</a></code>.</li>
 </ol>
-<p>Return the bare ggplot and callers can layer scales, labels, and a theme on top — that’s the <code>+</code> composition grammar covered in <code>vignettes/plot-decorators.qmd</code>.</p>
+<p>Return the bare ggplot and callers can layer scales, labels, and a theme on top with the <code>+</code> composition grammar covered in <code>vignettes/plot-decorators.qmd</code>.</p>
 </section><section class="level3"><h4 id="tidy-evaluation">Tidy evaluation<a class="anchor" aria-label="anchor" href="#tidy-evaluation"></a>
 </h4>
 <p>We pass column names as strings (e.g., <code>x_col = "time"</code>) and reference them inside <code><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes()</a></code> with <code>.data[[col]]</code>. This keeps the caller’s interface explicit and avoids the non-standard evaluation pitfalls that come with <code><a href="https://rlang.r-lib.org/reference/enquo.html" class="external-link">enquo()</a></code> or bare symbols. The <code>.data</code> pronoun must be declared in the roxygen block with <code>@importFrom rlang .data</code>.</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Correct — column name is a string; .data masks the data frame</span></span>
 <span><span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">.data</span><span class="op">[[</span><span class="va">x_col</span><span class="op">]</span><span class="op">]</span>, y <span class="op">=</span> <span class="va">.data</span><span class="op">[[</span><span class="va">estimate_col</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span>
 <span></span>
@@ -562,54 +687,23 @@
 <span><span class="co"># Wrong — enquo; column name is opaque to the caller</span></span>
 <span><span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="op">!</span><span class="op">!</span><span class="fu">rlang</span><span class="fu">::</span><span class="fu"><a href="https://rlang.r-lib.org/reference/enquo.html" class="external-link">enquo</a></span><span class="op">(</span><span class="va">x_col</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>Always declare <code>.data</code> in the roxygen block:</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#' @importFrom rlang .data</span></span></code></pre></div>
 </section></section><section class="level2"><h3 id="testing">Testing<a class="anchor" aria-label="anchor" href="#testing"></a>
 </h3>
 <section class="level3"><h4 id="test-file-layout">Test file layout<a class="anchor" aria-label="anchor" href="#test-file-layout"></a>
 </h4>
-<p>Each source file <code>R/my-plot.R</code> should have a corresponding <code>tests/testthat/test_my_plot.R</code>. At minimum, a new plot function needs five tests:</p>
-<table class="table caption-top">
-<colgroup>
-<col style="width: 50%">
-<col style="width: 50%">
-</colgroup>
-<thead><tr class="header">
-<th>Test</th>
-<th>What to check</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td>Sample data shape</td>
-<td>Correct class, column names, and number of rows</td>
-</tr>
-<tr class="even">
-<td>Sample data types</td>
-<td>Numeric / logical / factor columns are the right type</td>
-</tr>
-<tr class="odd">
-<td>Plot return class</td>
-<td><code>expect_s3_class(p, "ggplot")</code></td>
-</tr>
-<tr class="even">
-<td>Layer presence</td>
-<td>CI ribbon added when <code>lower_col</code> is provided</td>
-</tr>
-<tr class="odd">
-<td>Error on bad input</td>
-<td><code>expect_error(fn(dat, x_col = "no_such_col"))</code></td>
-</tr>
-</tbody>
-</table></section><section class="level3"><h4 id="snapshot-tests">Snapshot tests<a class="anchor" aria-label="anchor" href="#snapshot-tests"></a>
+<p>Each source file <code>R/my-plot.R</code> should have a corresponding <code>tests/testthat/test_my_plot.R</code>. The minimum set of tests for a new plot is the table in <a href="#step-tests">Step 8 of Track A</a>; the one that matters most is a data-carrying assertion. <code>expect_plot_has_data()</code> in <code>tests/testthat/helper-plot-data.R</code> builds the plot with <code><a href="https://ggplot2.tidyverse.org/reference/ggplot_build.html" class="external-link">ggplot_build()</a></code> and fails when a layer holds no rows, which <code>expect_s3_class(p, "ggplot")</code> cannot catch.</p>
+</section><section class="level3"><h4 id="snapshot-tests">Snapshot tests<a class="anchor" aria-label="anchor" href="#snapshot-tests"></a>
 </h4>
 <p>The <code>tests/testthat/_snaps/</code> directory stores snapshot outputs for <code><a href="https://testthat.r-lib.org/reference/expect_snapshot.html" class="external-link">expect_snapshot()</a></code> tests. To update snapshots after an intentional change:</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">testthat</span><span class="fu">::</span><span class="fu"><a href="https://testthat.r-lib.org/reference/snapshot_accept.html" class="external-link">snapshot_review</a></span><span class="op">(</span><span class="op">)</span>   <span class="co"># review diffs interactively</span></span>
 <span><span class="fu">testthat</span><span class="fu">::</span><span class="fu"><a href="https://testthat.r-lib.org/reference/snapshot_accept.html" class="external-link">snapshot_accept</a></span><span class="op">(</span><span class="op">)</span>   <span class="co"># accept all pending diffs</span></span></code></pre></div>
 </section><section class="level3"><h4 id="running-checks">Running checks<a class="anchor" aria-label="anchor" href="#running-checks"></a>
 </h4>
-<p>Use <code><a href="https://devtools.r-lib.org/reference/test.html" class="external-link">devtools::test()</a></code> for fast, interactive feedback during development. Switch to <code><a href="https://devtools.r-lib.org/reference/check.html" class="external-link">devtools::check()</a></code> – or the more verbose <code><a href="http://r-lib.github.io/rcmdcheck/reference/rcmdcheck.html" class="external-link">rcmdcheck::rcmdcheck()</a></code> – when you want the full <code>R CMD CHECK</code> sweep, including example execution and vignette builds.</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<p>Use <code><a href="https://devtools.r-lib.org/reference/test.html" class="external-link">devtools::test()</a></code> for fast, interactive feedback during development. Switch to <code><a href="https://devtools.r-lib.org/reference/check.html" class="external-link">devtools::check()</a></code> (or the more verbose <code><a href="http://r-lib.github.io/rcmdcheck/reference/rcmdcheck.html" class="external-link">rcmdcheck::rcmdcheck()</a></code>) when you want the full <code>R CMD CHECK</code> sweep, including example execution and vignette builds.</p>
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/test.html" class="external-link">test</a></span><span class="op">(</span><span class="op">)</span>               <span class="co"># run all tests</span></span>
 <span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/test.html" class="external-link">test</a></span><span class="op">(</span>filter <span class="op">=</span> <span class="st">"bmi"</span><span class="op">)</span> <span class="co"># run tests matching "bmi"</span></span>
 <span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/check.html" class="external-link">check</a></span><span class="op">(</span><span class="op">)</span>              <span class="co"># full R CMD CHECK</span></span>
@@ -632,22 +726,22 @@
 <ul>
 <li>All code chunks that read files, write files, or access a network must have <code>#| eval: false</code>.</li>
 <li>Use <code><a href="https://here.r-lib.org/reference/here.html" class="external-link">here::here()</a></code> for file paths in eval-false chunks (not hard-coded absolute paths).</li>
-<li>Use <code>system.file("extdata", "hv_ppt_template.pptx", package = "hvtiPlotR")</code> for the bundled PPT template — never a hard-coded path.</li>
+<li>Use <code>system.file("extdata", "hv_ppt_template.pptx", package = "hvtiPlotR")</code> for the bundled PPT template, never a hard-coded path.</li>
 <li>After adding a new vignette, register it in <code>_pkgdown.yml</code> under <code>articles</code>.</li>
 </ul></section><section class="level2"><h3 id="releasing">Releasing a new version<a class="anchor" aria-label="anchor" href="#releasing"></a>
 </h3>
 <ol type="1">
 <li>Update the version in <code>DESCRIPTION</code> (follow <a href="https://semver.org/" class="external-link">semantic versioning</a>: <code>MAJOR.MINOR.PATCH</code>).</li>
-<li>Move the dev entries in <code>NEWS.md</code> to a new <code># hvtiPlotR X.Y.Z</code> heading.</li>
-<li>Run <code><a href="https://devtools.r-lib.org/reference/check.html" class="external-link">devtools::check()</a></code> — you need zero errors and zero warnings before tagging.</li>
+<li>Rename the <code># hvtiPlotR (unreleased)</code> heading in <code>NEWS.md</code> to <code># hvtiPlotR X.Y.Z</code>.</li>
+<li>Run <code><a href="https://devtools.r-lib.org/reference/check.html" class="external-link">devtools::check()</a></code>; you need zero errors, zero warnings, and zero notes before tagging.</li>
 <li>Tag the release commit: <code>git tag -a vX.Y.Z -m "Release X.Y.Z"</code>.</li>
 <li>Push the tag: <code>git push origin vX.Y.Z</code>.</li>
-<li>The pkgdown GitHub Action picks up the tag and rebuilds the documentation site — nothing else to do.</li>
+<li>The pkgdown GitHub Action picks up the tag and rebuilds the documentation site.</li>
 </ol>
 <hr></section></section><section class="section level2"><h2 id="session-info">Session info<a class="anchor" aria-label="anchor" href="#session-info"></a>
 </h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb17"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>R version 4.6.1 (2026-06-24)

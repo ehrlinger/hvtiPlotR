@@ -57,7 +57,7 @@ hv_nonparametric(
 
 An object of class `c("hv_nonparametric", "hv_data")`; call
 [`plot()`](https://rdrr.io/r/graphics/plot.default.html) on the result
-to render the figure — see
+to render the figure; see
 [`plot.hv_nonparametric`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hv_nonparametric.md).
 The list contains:
 

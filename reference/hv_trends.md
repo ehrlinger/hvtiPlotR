@@ -49,8 +49,8 @@ hv_trends(
 
 An object of class `c("hv_trends", "hv_data")`; call
 [`plot()`](https://rdrr.io/r/graphics/plot.default.html) on the result
-to render the figure — see
-[`plot.hv_trends`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hv_trends.md).
+to render the figure (see
+[`plot.hv_trends`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hv_trends.md)).
 The list contains:
 
 - `$data`:
@@ -64,7 +64,7 @@ The list contains:
 
 - `$tables`:
 
-  List with one element: `summary` — a data frame of per-x (per-group)
+  List with one element: `summary`, a data frame of per-x (per-group)
   summary statistics used for the point overlay.
 
 ## See also

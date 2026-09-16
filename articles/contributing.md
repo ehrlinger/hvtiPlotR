@@ -60,17 +60,28 @@ devtools::build_vignettes()
 
 [`devtools::load_all()`](https://devtools.r-lib.org/reference/load_all.html)
 re-sources all `R/*.R` files and makes every exported function available
-immediately — much faster than
+immediately, much faster than
 [`install.packages()`](https://rdrr.io/r/utils/install.packages.html)
 during development.
 
 ------------------------------------------------------------------------
 
-## Track A — Porting a SAS template
+## Track A: Porting a SAS template
 
-This track walks through adding a brand-new plot function by porting an
-existing SAS template. We use a fictional template
-`tp.np.bmi.avrg_curv.binary.sas` as the running example.
+This track walks through adding a brand-new plot by porting an existing
+SAS template. We use a fictional template
+`tp.np.bmi.avrg_curv.binary.sas` as the running example, and port it the
+way every new plot family in the package is built
+([`hazard_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/hazard_plot.md),
+[`survival_difference_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/survival_difference_plot.md)
+and
+[`nnt_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/nnt_plot.md)
+are legacy single-call functions kept for compatibility, not a pattern
+to copy): a constructor, `hv_bmi_curve()`, that validates the data and
+returns an `hv_data` object, and a `plot.hv_bmi_curve()` method that
+turns that object into a bare ggplot. `R/spaghetti-plot.R` is the real
+file to keep open beside you; the example below follows it step for
+step.
 
 ### Step 1: Understand the SAS template output
 
@@ -82,7 +93,7 @@ Before writing any R code, identify:
     CSV from SAS to use as your development data.
 
 2.  **What are the SAS column names?** Document the mapping in the
-    roxygen `@description` block. For example:
+    constructor’s roxygen `@description` block. For example:
 
     | SAS column  | R column   | Meaning               |
     |-------------|------------|-----------------------|
@@ -93,137 +104,209 @@ Before writing any R code, identify:
 
 3.  **Which existing R function is closest?** Check `_pkgdown.yml` and
     the plot-functions vignette. You may only need to extend an existing
-    function rather than create a new one.
+    function rather than create a new one. For this template,
+    [`hv_nonparametric()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_nonparametric.md)
+    already covers most of the ground, so in real life you would extend
+    it. We build a new pair here only to show the pattern.
 
 ### Step 2: Create the R source file
 
-Create `R/my-curve-plot.R` (use kebab-case for the filename). Every plot
-family lives in its own file — plot functions and their sample-data
-companions together.
+Create `R/bmi-curve-plot.R`. Filenames are kebab-case and end in
+`-plot.R` where the concept is a plot (`R/spaghetti-plot.R`,
+`R/nonparametric-curve-plot.R`). One concept lives in one file: the
+sample-data generator, the `hv_<concept>()` constructor, and its `print`
+and `plot` methods together.
+
+The work splits in two, and the split is the point. The constructor
+checks the data and records which columns play which role; it draws
+nothing. The plot method reads that record back and draws; it never
+re-validates column names. A caller can print the object, inspect
+`$data`, or plot it several ways without repeating the checks.
+
+#### The constructor
 
 ``` r
 
 # File: R/bmi-curve-plot.R
 
-#' Average BMI Curve Plot
+#' Prepare average BMI curve data for plotting
 #'
-#' Plots a nonparametric average curve of a binary outcome against BMI
-#' (or any continuous covariate), with an optional confidence ribbon and
-#' binned data summary points. Ports
-#' \code{tp.np.bmi.avrg_curv.binary.sas}.
+#' Validates the fitted curve output from a nonparametric analysis of a
+#' binary outcome against BMI (or any continuous covariate) and returns an
+#' `hv_bmi_curve` object. Call [plot.hv_bmi_curve()] on the result to draw
+#' it. Ports `tp.np.bmi.avrg_curv.binary.sas`.
 #'
-#' **SAS column mapping:**
-#' - `time`     ← `iv_bmi` (BMI on the x-axis)
-#' - `estimate` ← `mean_curv` (predicted probability)
-#' - `lower`    ← `cll_p68`  (68 % CI lower)
-#' - `upper`    ← `clu_p68`  (68 % CI upper)
+#' SAS column mapping:
+#' - `time` is `iv_bmi` (BMI on the x-axis)
+#' - `estimate` is `mean_curv` (predicted probability)
+#' - `lower` is `cll_p68` (68 % CI lower)
+#' - `upper` is `clu_p68` (68 % CI upper)
 #'
-#' @param curve_data  Data frame of fitted curve output (one row per x value).
-#' @param x_col       Name of the x-axis column. Default `"time"`.
+#' @param data         Data frame of fitted curve output, one row per x value.
+#' @param x_col        Name of the x-axis column. Default `"time"`.
 #' @param estimate_col Name of the predicted value column. Default `"estimate"`.
-#' @param lower_col   Name of the lower CI column, or `NULL` for no ribbon.
+#' @param lower_col    Name of the lower CI column, or `NULL` for no ribbon.
 #'   Default `NULL`.
-#' @param upper_col   Name of the upper CI column, or `NULL`. Default `NULL`.
-#' @param data_points Optional data frame of binned summary points.
-#'   Must have columns `x_col` and `"value"`. Default `NULL`.
-#' @param line_width  Width of the curve line. Default `1.0`.
-#' @param point_size  Size of data summary points. Default `2.5`.
+#' @param upper_col    Name of the upper CI column, or `NULL`. Default `NULL`.
 #'
-#' @return A bare [ggplot2::ggplot()] object.
+#' @return An object of class `c("hv_bmi_curve", "hv_data")`; call `plot()`
+#'   on it to draw the figure. The list contains:
+#'   - `$data`: the validated input data frame.
+#'   - `$meta`: named list of the column names above, plus `n_points` and
+#'     `n_missing`.
+#'   - `$tables`: empty list.
 #'
-#' @seealso [hv_nonparametric()], [sample_bmi_curve_data()]
+#' @seealso [plot.hv_bmi_curve()] to draw the figure,
+#'   [sample_bmi_curve_data()] for example data,
+#'   [theme_hv_manuscript()] for the publication theme.
 #'
-#' @references SAS template: \code{tp.np.bmi.avrg_curv.binary.sas}.
+#' @references SAS template: `tp.np.bmi.avrg_curv.binary.sas`.
+#'
+#' @family BMI curve
 #'
 #' @examples
-#' library(ggplot2)
 #' dat <- sample_bmi_curve_data(n = 500)
-#' bmi_curve_plot(dat, lower_col = "lower", upper_col = "upper") +
-#'   scale_colour_manual(values = c("steelblue"), guide = "none") +
-#'   scale_fill_manual(values   = c("steelblue"), guide = "none") +
-#'   scale_x_continuous(limits = c(18, 45), breaks = seq(20, 45, 5)) +
-#'   scale_y_continuous(limits = c(0, 0.5),
-#'                      labels = scales::percent) +
-#'   labs(x = "BMI (kg/m²)", y = "Prevalence of AF") +
-#'   theme_hv_manuscript()
+#' bc  <- hv_bmi_curve(dat, lower_col = "lower", upper_col = "upper")
+#' bc  # prints the column mapping
 #'
-#' @importFrom ggplot2 ggplot aes geom_line geom_ribbon geom_point
-#' @importFrom rlang .data
 #' @export
-bmi_curve_plot <- function(curve_data,
-                           x_col        = "time",
-                           estimate_col = "estimate",
-                           lower_col    = NULL,
-                           upper_col    = NULL,
-                           data_points  = NULL,
-                           line_width   = 1.0,
-                           point_size   = 2.5) {
+hv_bmi_curve <- function(data,
+                         x_col        = "time",
+                         estimate_col = "estimate",
+                         lower_col    = NULL,
+                         upper_col    = NULL) {
+  .check_df(data)
+  .check_cols(data, c(x_col, estimate_col, lower_col, upper_col))
+  incomplete <- .count_incomplete(data, c(x_col, estimate_col))
 
-  # ----- Input checks -------------------------------------------------------
-  if (!is.data.frame(curve_data))
-    stop("`curve_data` must be a data frame.")
-  for (col in c(x_col, estimate_col)) {
-    if (!(col %in% names(curve_data)))
-      stop(sprintf("Column '%s' not found in `curve_data`.", col))
-  }
-
-  # ----- Build base plot ----------------------------------------------------
-  p <- ggplot2::ggplot(
-    curve_data,
-    ggplot2::aes(x = .data[[x_col]], y = .data[[estimate_col]])
+  new_hv_data(
+    data = as.data.frame(data),
+    meta = list(
+      x_col        = x_col,
+      estimate_col = estimate_col,
+      lower_col    = lower_col,
+      upper_col    = upper_col,
+      n_points     = nrow(data),
+      n_missing    = incomplete$n_missing
+    ),
+    tables   = list(),
+    subclass = "hv_bmi_curve"
   )
-
-  # Optional CI ribbon
-  if (!is.null(lower_col) && !is.null(upper_col)) {
-    p <- p + ggplot2::geom_ribbon(
-      ggplot2::aes(ymin = .data[[lower_col]], ymax = .data[[upper_col]],
-                   fill = "1"),
-      alpha = 0.2
-    )
-  }
-
-  # Main curve
-  p <- p + ggplot2::geom_line(
-    ggplot2::aes(colour = "1"),
-    linewidth = line_width
-  )
-
-  # Optional data summary points
-  if (!is.null(data_points)) {
-    p <- p + ggplot2::geom_point(
-      data = data_points,
-      ggplot2::aes(x = .data[[x_col]], y = .data[["value"]],
-                   colour = "1", shape = "1"),
-      size = point_size
-    )
-  }
-
-  p
 }
 ```
 
-A few conventions the function above follows:
+[`new_hv_data()`](https://ehrlinger.github.io/hvtiPlotR/reference/new_hv_data.md)
+in `R/hvti-data.R` is the only way to build the return value. It
+guarantees the three slots every `hv_data` object carries (`$data`,
+`$meta`, `$tables`) and sets the class to
+`c("hv_bmi_curve", "hv_data")`, so the base methods in that file act as
+the fallback for anything your subclass does not define. `.check_df()`,
+`.check_cols()` and `.count_incomplete()` live in `R/validators.R`; use
+them rather than writing your own
+[`stop()`](https://rdrr.io/r/base/stop.html) calls, so the error
+messages match the rest of the package.
 
-- **Column names are strings**, passed via `x_col =`, `estimate_col =`,
-  etc. Never use
+#### The print and plot methods
+
+``` r
+
+#' Print an hv_bmi_curve object
+#'
+#' @param x   An `hv_bmi_curve` object from [hv_bmi_curve()].
+#' @param ... Ignored.
+#' @return `x`, invisibly.
+#' @export
+print.hv_bmi_curve <- function(x, ...) {
+  m <- x$meta
+  cat("<hv_bmi_curve>\n")
+  cat(sprintf("  N points    : %d\n", m$n_points))
+  cat(sprintf("  x / estimate: %s / %s\n", m$x_col, m$estimate_col))
+  if (!is.null(m$lower_col))
+    cat(sprintf("  CI columns  : %s / %s\n", m$lower_col, m$upper_col))
+  invisible(x)
+}
+
+#' Plot an hv_bmi_curve object
+#'
+#' Draws the average curve, with a confidence ribbon when the constructor
+#' was given CI columns.
+#'
+#' @param x          An `hv_bmi_curve` object.
+#' @param line_width Width of the curve line. Default `1.0`.
+#' @param alpha      Transparency of the ribbon in \eqn{[0,1]}. Default `0.2`.
+#' @param ...        Ignored; present for S3 consistency.
+#'
+#' @return A bare [ggplot2::ggplot()] object; compose with `+` to add
+#'   scales, labels, and [theme_hv_manuscript()].
+#'
+#' @seealso [hv_bmi_curve()] to build the data object.
+#'
+#' @family BMI curve
+#'
+#' @examples
+#' dat <- sample_bmi_curve_data(n = 500)
+#' bc  <- hv_bmi_curve(dat, lower_col = "lower", upper_col = "upper")
+#' plot(bc) +
+#'   ggplot2::scale_y_continuous(labels = scales::percent) +
+#'   ggplot2::labs(x = "BMI (kg/m2)", y = "Prevalence of AF") +
+#'   theme_hv_manuscript()
+#'
+#' @importFrom ggplot2 ggplot aes geom_line geom_ribbon
+#' @importFrom rlang .data
+#' @export
+plot.hv_bmi_curve <- function(x, line_width = 1.0, alpha = 0.2, ...) {
+  .check_alpha(alpha)
+  m <- x$meta
+
+  p <- ggplot2::ggplot(
+    x$data,
+    ggplot2::aes(x = .data[[m$x_col]], y = .data[[m$estimate_col]])
+  )
+
+  if (!is.null(m$lower_col) && !is.null(m$upper_col)) {
+    p <- p + ggplot2::geom_ribbon(
+      ggplot2::aes(ymin = .data[[m$lower_col]], ymax = .data[[m$upper_col]]),
+      alpha = alpha
+    )
+  }
+
+  p + ggplot2::geom_line(linewidth = line_width)
+}
+```
+
+The conventions these two functions follow are the ones in the
+conventions table in `CONTRIBUTING.md`:
+
+- **Column names are strings**, passed as `x_col = "time"`, and stored
+  in `$meta` for the plot method to read back. Never use
   [`enquo()`](https://rlang.r-lib.org/reference/enquo.html) or
-  [`{ }`](https://rdrr.io/r/base/Paren.html) — it makes column names
+  [`{ }`](https://rdrr.io/r/base/Paren.html); they make column names
   opaque to the caller.
-- **No colours or themes** are applied inside the function. The caller
-  adds `scale_colour_*()` and
+- **`.data[[col]]`** does the tidy evaluation. It needs
+  `@importFrom rlang .data`.
+- **No colours or themes** are applied inside either function. The
+  caller adds `scale_colour_*()`,
+  [`labs()`](https://ggplot2.tidyverse.org/reference/labs.html) and
   [`theme_hv_manuscript()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)
-  outside.
-- **`.data[[col]]`** is used for tidy evaluation instead of bare
-  variable names. This requires `@importFrom rlang .data`.
-- The function returns **`p`**, not `print(p)` or `p + theme(...)`.
+  afterwards, as the examples show.
+- **The plot method returns `p`**, not `print(p)` or `p + theme(...)`.
+
+S3 registration comes from the plain `@export` tag on
+`print.hv_bmi_curve()` and `plot.hv_bmi_curve()`. roxygen2 recognises
+the `generic.class` name and writes `S3method(plot,hv_bmi_curve)` into
+`NAMESPACE`, next to `S3method(plot,hv_spaghetti)`. You do not need
+`@method`.
 
 ### Step 3: Add a sample-data generator
 
-Add `sample_bmi_curve_data()` to the same file. The generator should:
+Add `sample_bmi_curve_data()` to the top of the same file, as
+[`sample_spaghetti_data()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_spaghetti_data.md)
+sits at the top of `R/spaghetti-plot.R`. The generator should:
 
-- Accept `n` (patient count), `time_max` / range, and `seed`.
-- Return a data frame whose column names **match the R defaults**
-  (`time`, `estimate`, `lower`, `upper`) — not the SAS column names.
+- Accept `n` (patient count), the x range, and `seed`.
+- Return a data frame whose column names **match the constructor
+  defaults** (`time`, `estimate`, `lower`, `upper`), not the SAS column
+  names.
 - Produce realistic-looking data at a plausible scale.
 
 ``` r
@@ -231,39 +314,36 @@ Add `sample_bmi_curve_data()` to the same file. The generator should:
 #' Sample BMI Curve Data
 #'
 #' Simulates the fitted curve output from a nonparametric BMI analysis,
-#' matching the column layout expected by [bmi_curve_plot()].
+#' matching the column layout expected by [hv_bmi_curve()].
 #'
-#' @param n       Number of simulated patients (controls CI width).
+#' @param n        Number of simulated patients (controls CI width).
 #'   Default `500`.
-#' @param bmi_min Lower end of the BMI range. Default `18`.
-#' @param bmi_max Upper end of the BMI range. Default `50`.
+#' @param bmi_min  Lower end of the BMI range. Default `18`.
+#' @param bmi_max  Upper end of the BMI range. Default `50`.
 #' @param n_points Number of points on the prediction grid. Default `200`.
-#' @param seed    Random seed. Default `42`.
+#' @param seed     Random seed. Default `42`.
 #'
 #' @return A data frame with columns `time` (BMI grid), `estimate`,
 #'   `lower`, `upper`.
 #'
-#' @seealso [bmi_curve_plot()]
+#' @seealso [hv_bmi_curve()]
 #'
 #' @examples
 #' dat <- sample_bmi_curve_data(n = 300)
 #' head(dat)
-#' range(dat$time)     # BMI range
-#' range(dat$estimate) # probability range, 0-1
 #'
-#' @importFrom stats plogis runif qnorm
+#' @importFrom stats plogis qnorm
 #' @export
-sample_bmi_curve_data <- function(n       = 500,
-                                  bmi_min = 18,
-                                  bmi_max = 50,
+sample_bmi_curve_data <- function(n        = 500,
+                                  bmi_min  = 18,
+                                  bmi_max  = 50,
                                   n_points = 200,
-                                  seed    = 42L) {
+                                  seed     = 42L) {
   set.seed(seed)
-  z    <- stats::qnorm(0.84)   # 68 % CI ≈ 1 SD
-  bmi  <- seq(bmi_min, bmi_max, length.out = n_points)
-  eta  <- -2 + 0.05 * (bmi - 30)   # logistic link
-  est  <- stats::plogis(eta)
-  se   <- sqrt(est * (1 - est) / (n * 0.02))
+  z   <- stats::qnorm(0.84)          # 68 % CI is about 1 SD
+  bmi <- seq(bmi_min, bmi_max, length.out = n_points)
+  est <- stats::plogis(-2 + 0.05 * (bmi - 30))
+  se  <- sqrt(est * (1 - est) / (n * 0.02))
 
   data.frame(
     time     = bmi,
@@ -276,67 +356,87 @@ sample_bmi_curve_data <- function(n       = 500,
 
 ### Step 4: Write roxygen documentation
 
-Your documentation block needs all of the following:
+Roxygen markdown is enabled in this package
+(`Roxygen: list(markdown = TRUE)` in `DESCRIPTION`), so backticks and
+`[fn()]` links render as written. Each exported function needs:
 
-| Tag | Required | Notes |
-|----|----|----|
-| `@description` | Yes | One paragraph; mention the SAS template name |
-| `@param` | Yes | One per argument; include default in description |
-| `@return` | Yes | Describe the ggplot or data frame structure |
-| `@seealso` | Yes | Link to the companion `sample_*()` and related functions |
-| `@references` | Yes | The exact SAS template filename(s) |
-| `@examples` | Yes | Must be runnable (use `\dontrun{}` only for file I/O) |
-| `@importFrom` | Yes | Declare every function used from other packages |
-| `@export` | Yes | Must be present for the function to be accessible |
+| Tag | Constructor | `plot` method | Notes |
+|----|----|----|----|
+| Description | Yes | Yes | Paragraph after the title, or `@description`; names the SAS template and column mapping |
+| `@param` | Yes | Yes | One per argument; include the default |
+| `@return` | Yes | Yes | Constructor: the class and its three slots. Method: a bare ggplot |
+| `@seealso` | Yes | Yes | Link the pair to each other and to the `sample_*()` generator |
+| `@references` | Yes | No | The exact SAS template filename(s) |
+| `@family` | Yes | Yes | Same family name on both, so their help pages cross-link |
+| `@examples` | Yes | Yes | Must run; use `\donttest{}` for slow examples |
+| `@importFrom` | As needed | As needed | Declare every function used from other packages |
+| `@export` | Yes | Yes | On the method it also registers the S3 method |
 
-Run
-[`devtools::document()`](https://devtools.r-lib.org/reference/document.html)
-after editing to check for parse errors.
+Then regenerate `NAMESPACE` and `man/`:
+
+``` r
+
+devtools::document()
+```
+
+Check that `NAMESPACE` now carries `export(hv_bmi_curve)`,
+`export(sample_bmi_curve_data)`, `S3method(plot,hv_bmi_curve)` and
+`S3method(print,hv_bmi_curve)`. Commit `NAMESPACE` and `man/` with the
+source change.
 
 ### Step 5: Register in `_pkgdown.yml`
 
-Add the new functions to the appropriate section in `_pkgdown.yml`. If
-no existing section fits, add a new one:
+The `reference:` index is explicit, and pkgdown errors on an exported
+topic missing from it. List the constructor, both methods and the
+generator, in the same order the existing sections use:
 
 ``` yaml
 - title: "Nonparametric Covariate Curves"
   desc: >
     Average curves plotted against a continuous covariate (BMI, age, etc.)
-    rather than against time.
+    rather than against time. Ports `tp.np.bmi.avrg_curv.binary.sas`.
   contents:
-  - bmi_curve_plot
+  - hv_bmi_curve
+  - plot.hv_bmi_curve
+  - print.hv_bmi_curve
   - sample_bmi_curve_data
 ```
+
+If an existing section fits, add the four lines there instead of
+starting a new one.
 
 ### Step 6: Add a worked example to the plot-functions vignette
 
 Open `vignettes/plot-functions.qmd` and add a new top-level section
-before the “Draft Footnotes” section:
+before the “Draft Footnotes” section. Show both steps, so a reader sees
+the object before the figure:
 
 ```` markdown
 # BMI Curve Plot
 
-`bmi_curve_plot()` plots a fitted nonparametric average curve of a binary
-outcome against BMI ...
+`hv_bmi_curve()` prepares a fitted nonparametric average curve of a binary
+outcome against BMI; `plot()` draws it ...
 
 
 ::: {.cell}
 
 ```{.r .cell-code}
-library(ggplot2)
 dat <- sample_bmi_curve_data(n = 500)
-bmi_curve_plot(dat, lower_col = "lower", upper_col = "upper") + ...
+bc  <- hv_bmi_curve(dat, lower_col = "lower", upper_col = "upper")
+bc
+plot(bc) + ggplot2::labs(x = "BMI (kg/m2)", y = "Prevalence of AF") +
+  theme_hv_manuscript()
 ```
 :::
 ````
 
 ### Step 7: Add a row to the SAS migration guide
 
-In `vignettes/sas-migration-guide.qmd`, add a row to the lookup table at
-the top:
+In `vignettes/sas-migration-guide.qmd`, add a row to the template lookup
+table. The third column names the constructor:
 
 ``` markdown
-| `tp.np.bmi.avrg_curv.binary.sas` | np | `bmi_curve_plot()` | [BMI curve](#np-bmi) |
+| `tp.np.bmi.avrg_curv.binary.sas` | np | `hv_bmi_curve()` | [BMI curve](#np-bmi) |
 ```
 
 Then add the corresponding section with a runnable example further down
@@ -344,78 +444,131 @@ in the `# Nonparametric temporal trends` family.
 
 ### Step 8: Write tests
 
-Create `tests/testthat/test_bmi_curve_plot.R`:
+Create `tests/testthat/test_bmi_curve_plot.R`. Test files use an
+underscore, `test_*.R`, and the name follows the source file.
+
+A plot test has to prove the plot carries data. A ggplot whose every
+layer holds zero rows still has class `"ggplot"` and still renders an
+empty panel, so `expect_s3_class(p, "ggplot")` on its own is a smoke
+test, not coverage. `tests/testthat/helper-plot-data.R` provides
+`expect_plot_has_data()`, which runs
+[`ggplot2::ggplot_build()`](https://ggplot2.tidyverse.org/reference/ggplot_build.html)
+and fails when a data layer is empty. testthat loads `helper-*.R` files
+before the tests, so the helper is available without a
+[`source()`](https://rdrr.io/r/base/source.html) call. Its arguments
+tighten the check:
+
+- `min_rows`: every data layer must hold at least this many rows.
+- `geoms`: each geom class named here must appear in the plot, for
+  example `"GeomRibbon"`.
+- `min_groups`: at least one data layer must split into this many
+  groups, which catches a stratified plot that collapsed to one line.
+
+Reference lines (`GeomHline`, `GeomVline`, `GeomAbline`) do not count as
+data layers, though each must still draw at least one row.
 
 ``` r
 
 library(testthat)
-library(ggplot2)
+library(hvtiPlotR)
 
-test_that("sample_bmi_curve_data returns a data frame with required columns", {
-  dat <- sample_bmi_curve_data(n = 100, seed = 1)
-  expect_true(is.data.frame(dat))
-  expect_true(all(c("time", "estimate", "lower", "upper") %in% names(dat)))
-})
+dat <- sample_bmi_curve_data(n = 100, n_points = 50, seed = 1L)
 
-test_that("sample_bmi_curve_data respects n_points", {
-  dat <- sample_bmi_curve_data(n_points = 50, seed = 1)
+test_that("sample_bmi_curve_data returns the constructor's default columns", {
+  expect_s3_class(dat, "data.frame")
+  expect_named(dat, c("time", "estimate", "lower", "upper"))
   expect_equal(nrow(dat), 50)
 })
 
-test_that("bmi_curve_plot returns a ggplot", {
-  dat <- sample_bmi_curve_data(n = 100, seed = 1)
-  p   <- bmi_curve_plot(dat)
-  expect_s3_class(p, "ggplot")
+test_that("hv_bmi_curve returns an hv_data object with the column mapping", {
+  bc <- hv_bmi_curve(dat, lower_col = "lower", upper_col = "upper")
+  expect_s3_class(bc, c("hv_bmi_curve", "hv_data"))
+  expect_equal(bc$meta$estimate_col, "estimate")
+  expect_identical(bc$tables, list())
 })
 
-test_that("bmi_curve_plot adds ribbon when CI columns are supplied", {
-  dat    <- sample_bmi_curve_data(n = 100, seed = 1)
-  p_ci   <- bmi_curve_plot(dat, lower_col = "lower", upper_col = "upper")
-  layers <- sapply(p_ci$layers, function(l) class(l$geom)[1])
-  expect_true("GeomRibbon" %in% layers)
+test_that("hv_bmi_curve errors on a missing column", {
+  expect_error(hv_bmi_curve(dat, x_col = "no_such_col"), "column")
 })
 
-test_that("bmi_curve_plot errors on missing column", {
-  dat <- sample_bmi_curve_data(n = 100)
-  expect_error(bmi_curve_plot(dat, x_col = "no_such_col"))
+test_that("plot.hv_bmi_curve draws the curve from every data row", {
+  p <- plot(hv_bmi_curve(dat))
+  expect_plot_has_data(p, min_rows = nrow(dat), geoms = "GeomLine")
+})
+
+test_that("plot.hv_bmi_curve adds a ribbon carrying data when CI columns are given", {
+  p <- plot(hv_bmi_curve(dat, lower_col = "lower", upper_col = "upper"))
+  expect_plot_has_data(p, min_rows = nrow(dat),
+                       geoms = c("GeomRibbon", "GeomLine"))
+})
+
+test_that("print.hv_bmi_curve output is stable", {
+  expect_snapshot(print(hv_bmi_curve(dat, lower_col = "lower", upper_col = "upper")))
 })
 ```
 
-Run with `devtools::test(filter = "bmi")`.
+At minimum, a new plot needs these tests:
+
+| Test | What to check |
+|----|----|
+| Sample data shape | Class, column names, and number of rows |
+| Constructor object | `expect_s3_class(obj, "hv_data")` and the `$meta` entries the plot method reads |
+| Error on bad input | `expect_error(hv_<concept>(dat, x_col = "no_such_col"))` |
+| Plot carries data | `expect_plot_has_data(plot(obj), min_rows = ...)`; a bare class check does not count |
+| Optional layers | `expect_plot_has_data(..., geoms = "GeomRibbon")` for each layer an argument switches on |
+
+The package uses testthat edition 3. The first
+[`devtools::test()`](https://devtools.r-lib.org/reference/test.html) run
+writes the
+[`expect_snapshot()`](https://testthat.r-lib.org/reference/expect_snapshot.html)
+baseline to `tests/testthat/_snaps/bmi_curve_plot.md`; commit that file
+with the test. When a later change alters the output on purpose, review
+and accept the new snapshot rather than deleting the file:
+
+``` r
+
+devtools::test(filter = "bmi_curve")
+testthat::snapshot_review()   # inspect the diff
+testthat::snapshot_accept()   # accept the intended change
+```
 
 ### Step 9: Update NEWS.md
 
-Add a bullet to the current dev version at the top of `NEWS.md`:
+Add a bullet under the `# hvtiPlotR (unreleased)` heading at the top of
+`NEWS.md`, adding that heading if it is not already there:
 
 ``` markdown
-* Added `bmi_curve_plot()` and `sample_bmi_curve_data()` — nonparametric
-  average curve of a binary outcome against a continuous covariate (BMI).
+* Added `hv_bmi_curve()`, its `plot()` and `print()` methods, and
+  `sample_bmi_curve_data()`: a nonparametric average curve of a binary
+  outcome against a continuous covariate (BMI).
   Ports `tp.np.bmi.avrg_curv.binary.sas`.
 ```
 
 ### Step 10: Final checklist before opening a PR
 
-Run these three commands in order before pushing your branch. All three
-must complete cleanly – zero errors, zero warnings, and ideally zero
-notes from `check()`. Then open a pull request against `main` on GitHub.
+Run these commands in order before pushing your branch. All must
+complete cleanly: every test passing, and zero errors, zero warnings and
+zero notes from `check()`. Then open a pull request against `main` on
+GitHub.
 
 ``` r
 
-devtools::document()   # regenerate NAMESPACE + .Rd — must complete without errors
+devtools::document()   # regenerate NAMESPACE + .Rd without errors
 devtools::test()       # all tests pass
-devtools::check()      # 0 errors, 0 warnings, 0 notes (ideally)
+lintr::lint_package()  # zero lints; CI fails on any
+devtools::check()      # 0 errors, 0 warnings, 0 notes
 ```
 
 ------------------------------------------------------------------------
 
-## Track B — Package infrastructure
+## Track B: Package infrastructure
 
 ### Package structure overview
 
 The tree below shows where each piece of the package lives. The two
 directories you will touch most are `R/` (one file per plot family) and
 `tests/testthat/` (one test file per source file). Everything under
-`man/` and `NAMESPACE` is auto-generated – do not edit those by hand.
+`man/` and `NAMESPACE` is auto-generated; do not edit those by hand.
 
     hvtiPlotR/
     ├── R/                    # Source: one file per plot family
@@ -453,34 +606,36 @@ hand.**
 
 #### File and function naming
 
-| Item              | Convention       | Example                   |
-|-------------------|------------------|---------------------------|
-| Source files      | `kebab-case.R`   | `bmi-curve-plot.R`        |
-| Plot functions    | `snake_case()`   | `bmi_curve_plot()`        |
-| Sample generators | `sample_` prefix | `sample_bmi_curve_data()` |
-| Internal helpers  | `.` prefix       | `.bmi_compute_ci()`       |
+| Item              | Convention            | Example                   |
+|-------------------|-----------------------|---------------------------|
+| Source files      | `kebab-case.R`        | `bmi-curve-plot.R`        |
+| Constructors      | `hv_<concept>()`      | `hv_bmi_curve()`          |
+| Plot methods      | `plot.hv_<concept>()` | `plot.hv_bmi_curve()`     |
+| Sample generators | `sample_` prefix      | `sample_bmi_curve_data()` |
+| Internal helpers  | `.` prefix            | `.bmi_compute_ci()`       |
 
 Internal helpers (prefixed with `.`) should have `@keywords internal`
-and **no** `@export` — they will not appear in `NAMESPACE` or generate
+and no `@export`, so they will not appear in `NAMESPACE` or generate
 `.Rd` files.
 
 #### The bare-ggplot pattern
 
-Every plot function in hvtiPlotR follows five rules:
+Every `plot.hv_<concept>()` method follows five rules:
 
-1.  Accept model-output data frames (not raw patient data).
-2.  Map all column references through string arguments (`x_col =`,
-    etc.).
+1.  Draw model-output data held in the `hv_data` object (not raw patient
+    data).
+2.  Take every column reference from a string argument (`x_col =`, etc.)
+    stored in `$meta`.
 3.  Use `.data[[col]]` for tidy evaluation inside
     [`aes()`](https://ggplot2.tidyverse.org/reference/aes.html).
-4.  Return an unstyled ggplot — no `scale_*()`, no
+4.  Return an unstyled ggplot: no `scale_*()`, no
     [`labs()`](https://ggplot2.tidyverse.org/reference/labs.html), no
     theme.
 5.  Not call [`print()`](https://rdrr.io/r/base/print.html) or
     [`invisible()`](https://rdrr.io/r/base/invisible.html).
 
 Return the bare ggplot and callers can layer scales, labels, and a theme
-on top — that’s the `+` composition grammar covered in
+on top with the `+` composition grammar covered in
 `vignettes/plot-decorators.qmd`.
 
 #### Tidy evaluation
@@ -517,16 +672,13 @@ Always declare `.data` in the roxygen block:
 #### Test file layout
 
 Each source file `R/my-plot.R` should have a corresponding
-`tests/testthat/test_my_plot.R`. At minimum, a new plot function needs
-five tests:
-
-| Test               | What to check                                         |
-|--------------------|-------------------------------------------------------|
-| Sample data shape  | Correct class, column names, and number of rows       |
-| Sample data types  | Numeric / logical / factor columns are the right type |
-| Plot return class  | `expect_s3_class(p, "ggplot")`                        |
-| Layer presence     | CI ribbon added when `lower_col` is provided          |
-| Error on bad input | `expect_error(fn(dat, x_col = "no_such_col"))`        |
+`tests/testthat/test_my_plot.R`. The minimum set of tests for a new plot
+is the table in [Step 8 of Track A](#step-tests); the one that matters
+most is a data-carrying assertion. `expect_plot_has_data()` in
+`tests/testthat/helper-plot-data.R` builds the plot with
+[`ggplot_build()`](https://ggplot2.tidyverse.org/reference/ggplot_build.html)
+and fails when a layer holds no rows, which
+`expect_s3_class(p, "ggplot")` cannot catch.
 
 #### Snapshot tests
 
@@ -544,11 +696,11 @@ testthat::snapshot_accept()   # accept all pending diffs
 
 Use [`devtools::test()`](https://devtools.r-lib.org/reference/test.html)
 for fast, interactive feedback during development. Switch to
-[`devtools::check()`](https://devtools.r-lib.org/reference/check.html) –
-or the more verbose
-[`rcmdcheck::rcmdcheck()`](http://r-lib.github.io/rcmdcheck/reference/rcmdcheck.md)
-– when you want the full `R CMD CHECK` sweep, including example
-execution and vignette builds.
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+(or the more verbose
+[`rcmdcheck::rcmdcheck()`](http://r-lib.github.io/rcmdcheck/reference/rcmdcheck.md))
+when you want the full `R CMD CHECK` sweep, including example execution
+and vignette builds.
 
 ``` r
 
@@ -580,7 +732,7 @@ Vignettes live in `vignettes/` as `.qmd` files; Quarto builds them
   file paths in eval-false chunks (not hard-coded absolute paths).
 - Use
   `system.file("extdata", "hv_ppt_template.pptx", package = "hvtiPlotR")`
-  for the bundled PPT template — never a hard-coded path.
+  for the bundled PPT template, never a hard-coded path.
 - After adding a new vignette, register it in `_pkgdown.yml` under
   `articles`.
 
@@ -588,15 +740,15 @@ Vignettes live in `vignettes/` as `.qmd` files; Quarto builds them
 
 1.  Update the version in `DESCRIPTION` (follow [semantic
     versioning](https://semver.org/): `MAJOR.MINOR.PATCH`).
-2.  Move the dev entries in `NEWS.md` to a new `# hvtiPlotR X.Y.Z`
-    heading.
+2.  Rename the `# hvtiPlotR (unreleased)` heading in `NEWS.md` to
+    `# hvtiPlotR X.Y.Z`.
 3.  Run
-    [`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
-    — you need zero errors and zero warnings before tagging.
+    [`devtools::check()`](https://devtools.r-lib.org/reference/check.html);
+    you need zero errors, zero warnings, and zero notes before tagging.
 4.  Tag the release commit: `git tag -a vX.Y.Z -m "Release X.Y.Z"`.
 5.  Push the tag: `git push origin vX.Y.Z`.
 6.  The pkgdown GitHub Action picks up the tag and rebuilds the
-    documentation site — nothing else to do.
+    documentation site.
 
 ------------------------------------------------------------------------
 

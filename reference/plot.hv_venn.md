@@ -57,10 +57,9 @@ plot(
 ## Value
 
 A [`ggplot`](https://ggplot2.tidyverse.org/reference/ggplot.html)
-object, already styled by ggvenn and **coordinate-free** (no axes). Tune
-it through this method's arguments (`fill`, `text_size`,
-`set_name_size`, `...`). Do *not* add an axis-bearing house theme such
-as
+object, already styled by ggvenn and coordinate-free (no axes). Tune it
+through this method's arguments (`fill`, `text_size`, `set_name_size`,
+`...`). Do *not* add an axis-bearing house theme such as
 [`theme_hv_manuscript()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md):
 a Venn has no meaningful x/y, and the theme would paste spurious axes
 onto it.

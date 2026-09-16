@@ -20,7 +20,7 @@ Every hvtiPlotR plot is built in two steps: a constructor (`hv_*()`)
 that shapes the data, followed by
 [`plot()`](https://rdrr.io/r/graphics/plot.default.html) that renders a
 bare `ggplot` object. No colour scales, axis labels, or theme are
-applied by either step — you add those by chaining layers with `+`:
+applied by either step. You add those by chaining layers with `+`:
 
     plot(hv_*(...)) +
       scale_colour_*() +   # data colours
@@ -30,7 +30,7 @@ applied by either step — you add those by chaining layers with `+`:
       coord_cartesian() +  # viewport cropping
       theme_hv_manuscript()         # non-data formatting
 
-This vignette demonstrates each decorator in turn, using
+This vignette walks through each decorator in turn, using
 [`hv_trends()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_trends.md)
 and
 [`hv_survival()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_survival.md)
@@ -49,20 +49,19 @@ km     <- hv_survival(dta_km)
 
 ## Themes
 
-The **hvtiPlotR** package provides four themes via `theme_hv_*()`. The
-`style` argument selects the output target.
+The **hvtiPlotR** package provides four themes, one per output target.
 
-| Style          | Target                                  |
-|----------------|-----------------------------------------|
-| `"manuscript"` | Journal PDF, black-on-white             |
-| `"poster"`     | Conference poster, slightly larger text |
-| `"light_ppt"`  | PowerPoint on white/light background    |
-| `"dark_ppt"`   | PowerPoint on dark/blue background      |
+| Theme | Target |
+|----|----|
+| [`theme_hv_manuscript()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md) | Journal PDF, black-on-white |
+| [`theme_hv_poster()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md) | Conference poster, slightly larger text |
+| [`theme_hv_ppt_light()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md) | PowerPoint on white/light background |
+| [`theme_hv_ppt_dark()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md) | PowerPoint on dark/blue background |
 
 ### Manuscript
 
 [`theme_hv_manuscript()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)
-is the default for journal submissions – white background, black text,
+is the default for journal submissions: white background, black text,
 minimal chrome. Font sizes are tuned for 8.5 x 11 inch letter-size PDFs
 where the figure may be reduced to a column width. Use this whenever the
 figure ends up in a Word or PDF document sent to a journal.
@@ -89,8 +88,8 @@ p_ms
 [`theme_hv_poster()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)
 bumps the axis text and tick weights up from the manuscript baseline and
 removes the panel grid, so the figure reads clearly at arm’s length on a
-36 x 48 inch foam board. It is also the go-to theme for in-room slide
-presentations when you are not using the PowerPoint themes – the larger
+36 x 48 inch foam board. It is also the theme for in-room slide
+presentations when you are not using the PowerPoint themes; the larger
 tick labels and the boxed panel hold up on a projector better than the
 manuscript variant. Pass `base_family = "sans"` (or another family) to
 switch the font face.
@@ -115,7 +114,7 @@ p_poster
 ### Light PowerPoint
 
 [`theme_hv_ppt_light()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)
-matches slides with a white or light-grey background – the Cleveland
+matches slides with a white or light-grey background: the Cleveland
 Clinic standard template, most default Office themes, and any deck where
 the content area is light. Text and lines are dark, so the figure reads
 without modification when placed on the light slide. Pair with
@@ -140,7 +139,7 @@ p_base +
 ### Dark PowerPoint
 
 [`theme_hv_ppt_dark()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)
-flips the palette for dark-background slides – navy or dark-blue
+flips the palette for dark-background slides, the navy or dark-blue
 gradient decks where white-on-dark text is the convention. The theme
 sets a transparent plot background, so the slide’s background shows
 through behind the panel. The `plot.background` override in the chunk
@@ -168,12 +167,11 @@ p_base +
 The two dark-slide chunks above show the shape of the problem. Every
 plot in a deck wants the same theme, the same colours and the same
 shapes, and copying those lines figure by figure is how one slide
-quietly drifts out of step with the rest. Note also that a theme cannot
-carry any of it.
-[`theme()`](https://ggplot2.tidyverse.org/reference/theme.html) governs
-the non-data ink, the text, panel, grid and ticks, and nothing that
-draws from the data, so no theme element sets a series colour. Passing
-the layer to the theme instead does not rescue it:
+quietly drifts out of step with the rest. A theme cannot carry any of
+it. [`theme()`](https://ggplot2.tidyverse.org/reference/theme.html)
+governs the non-data ink, the text, panel, grid and ticks, and nothing
+that draws from the data, so no theme element sets a series colour.
+Passing the layer to the theme instead does not rescue it:
 `theme_hv_ppt_dark(geom_point(colour = "yellow"))` forwards its `...` to
 [`theme()`](https://ggplot2.tidyverse.org/reference/theme.html), which
 errors on anything that is not a theme element. Colours and shapes
@@ -256,7 +254,7 @@ rather than stacking two.
 
 `scale_colour_*` controls line and point colours; `scale_fill_*`
 controls filled areas (ribbons, bars). Both take the same `name` (legend
-title) and `guide` (legend display) arguments — set them once and both
+title) and `guide` (legend display) arguments; set them once and both
 scales update.
 
 ### Manual colours
@@ -283,8 +281,8 @@ plot(km) +
 ### ColorBrewer palettes
 
 [`scale_colour_brewer()`](https://ggplot2.tidyverse.org/reference/scale_brewer.html)
-applies a ColorBrewer palette — perceptually uniform and print-safe,
-which matters when figures go to black-and-white PDF. Use
+applies a ColorBrewer palette. These are perceptually uniform and
+print-safe, so they survive a black-and-white PDF. Use
 `palette = "Set1"` for categorical data, `"RdYlGn"` for diverging,
 `"Blues"` for sequential.
 
@@ -307,7 +305,7 @@ p_base +
 
 Pass `guide = "none"` to any scale and that aesthetic drops out of the
 legend. You’d do this when the axis labels or an annotation already name
-the group — a redundant legend only takes up panel space.
+the group; a redundant legend only takes up panel space.
 
 ``` r
 
@@ -356,8 +354,8 @@ plot(km) +
 ### annotate()
 
 [`annotate()`](https://ggplot2.tidyverse.org/reference/annotate.html)
-places text, segments, rectangles, or arrows at fixed data coordinates —
-useful for a sample-size callout in the corner or a label pointing to an
+places text, segments, rectangles, or arrows at fixed data coordinates,
+such as a sample-size callout in the corner or a label pointing to an
 event of interest.
 
 ``` r
@@ -443,14 +441,14 @@ ggsave(
 
 [`save_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/save_ppt.md)
 inserts ggplot objects into a PowerPoint file as **editable DrawingML
-vector graphics** via the `officer` and `rvg` packages — shapes, lines,
+vector graphics** via the `officer` and `rvg` packages. Shapes, lines,
 and text remain selectable in PowerPoint after export.
 
 Key arguments:
 
 | Argument | Default | Notes |
 |----|----|----|
-| `object` | — | A single ggplot **or** a named/unnamed list of ggplots |
+| `object` | (required) | A single ggplot **or** a named/unnamed list of ggplots |
 | `template` | `"../graphs/RD.pptx"` | Existing `.pptx` used as the slide template |
 | `powerpoint` | `"../graphs/pptExample.pptx"` | Output file path |
 | `slide_titles` | `"Plot"` | Character vector recycled to the number of plots |
@@ -466,13 +464,13 @@ before saving to match the slide background.
 
 #### Single slide
 
-Build a fully themed plot –
+Build a fully themed plot with
 [`theme_hv_ppt_dark()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)
 or
-[`theme_hv_ppt_light()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)
-– then pass it as `object`. The `template` argument points to an
-existing `.pptx` file whose slide master and layouts carry the brand
-fonts and background;
+[`theme_hv_ppt_light()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md),
+then pass it as `object`. The `template` argument points to an existing
+`.pptx` file whose slide master and layouts carry the brand fonts and
+background;
 [`save_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/save_ppt.md)
 appends a new slide rather than overwriting the template.
 
@@ -502,9 +500,9 @@ save_ppt(
 
 Pass a named list of plots and a matching vector of titles to produce
 one slide per plot in a single call. This is the pattern we use for
-batch-report decks where each outcome gets its own slide – the list
-keeps plots in order and the names serve as a paper trail. Every plot in
-the list should carry the same theme so the deck looks consistent.
+batch-report decks where each outcome gets its own slide. The list keeps
+plots in order and the names serve as a paper trail. Every plot in the
+list should carry the same theme so the deck looks consistent.
 
 ``` r
 
@@ -534,8 +532,8 @@ save_ppt(
 When plots have different y-axis ranges (“0-1” vs “0-10000”), the
 axis-label widths differ, which shifts the plot panel inside a fixed
 `ph_location()`. On dark PPT themes with a visible panel background
-(black panel on a blue-gradient slide), that shift is visually jarring —
-the box appears to move between slides.
+(black panel on a blue-gradient slide), the box appears to jump between
+slides.
 
 Pass `panel_box = list(width, height, left, top)` to anchor the **panel
 content area** at the same slide coordinates on every slide.
@@ -558,8 +556,8 @@ save_ppt(
 )
 ```
 
-Make `panel_left` / `panel_top` large enough to leave room for the
-widest axis labels in the deck — otherwise
+Make the `left` and `top` entries of `panel_box` large enough to leave
+room for the widest axis labels in the deck, or
 [`hv_ph_location()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_ph_location.md)
 warns that the plot chrome spills off the slide edge.
 
@@ -570,7 +568,7 @@ When generating multiple plots in a loop,
 arranges them into a grid and
 [`ggsave()`](https://ggplot2.tidyverse.org/reference/ggsave.html) writes
 each page. This is typical for EDA batches where you have a dozen or
-more outcomes to inspect – you build the list with
+more outcomes to inspect. You build the list with
 [`lapply()`](https://rdrr.io/r/base/lapply.html), chunk it into pages of
 9, and let the loop handle pagination. The `per_page` constant is easy
 to adjust if you want a 2x2 or 4x4 grid instead.
@@ -607,8 +605,8 @@ for (pg in seq(1, length(plot_list), by = per_page)) {
 ## Legend Positioning
 
 ggplot2 places the legend outside the panel by default. For publication
-figures we usually move it inside or drop it — the axis labels often do
-the identification work already.
+figures we usually move it inside or drop it, because the axis labels
+often do the identification work already.
 
 ### Inside the panel
 
@@ -668,8 +666,8 @@ p_base +
 Two ways to suppress legends, with slightly different scope.
 `theme(legend.position = "none")` hides every legend for the plot in one
 shot. `guide = "none"` on a `scale_*()` call drops only that aesthetic’s
-legend — handy when you want a colour legend but no shape legend (or
-vice versa). Both reclaim the panel width either way.
+legend, for when you want a colour legend but no shape legend (or vice
+versa). Both reclaim the panel width.
 
 ``` r
 
@@ -729,7 +727,7 @@ after it to adjust individual elements without touching the rest.
 
 Override `axis.text` to resize tick labels and `axis.title` for the axis
 title, independent of the rest of the theme. This is useful when a
-figure is being resized for a different output target – for example,
+figure is being resized for a different output target, for example
 scaling down for a two-column journal layout where the default
 poster-sized text would be too large.
 
@@ -755,7 +753,7 @@ p_base +
 ### Removing minor grid lines
 
 Minor grid lines (`panel.grid.minor`) add density without adding
-precision – they can make a busy figure look cluttered, especially when
+precision; they can make a busy figure look cluttered, especially when
 there are many data series. Setting
 [`element_blank()`](https://ggplot2.tidyverse.org/reference/element.html)
 removes them while keeping the major grid intact.
@@ -834,9 +832,9 @@ plot(km) +
 
 ### Expanding plot margins
 
-Add breathing room around the panel – useful when a figure is placed
-directly on a poster without a surrounding text frame, or when axis
-labels clip against a tight device boundary. The
+Add breathing room around the panel when a figure is placed directly on
+a poster without a surrounding text frame, or when axis labels clip
+against a tight device boundary. The
 [`margin()`](https://ggplot2.tidyverse.org/reference/element.html)
 arguments follow top / right / bottom / left order, matching CSS
 convention.
@@ -869,7 +867,7 @@ and a main plot stacked above a companion table or risk panel.
 
 The `|` operator from patchwork places two plots next to each other in
 the same row, sharing the figure height. This is the typical layout for
-comparing two outcomes – trends and survival, for example – on a single
+comparing two outcomes (trends and survival, for example) on a single
 manuscript figure. Both panels are built independently and composed at
 the last step, so you can adjust each one without touching the other.
 
@@ -906,10 +904,10 @@ p_ms | p_km_ms
 
 ### Controlling relative widths and heights
 
-`plot_layout(widths = ...)` sets relative widths as a numeric vector –
+`plot_layout(widths = ...)` sets relative widths as a numeric vector:
 `c(2, 1)` makes the left panel twice as wide as the right. Use `heights`
-the same way for stacked layouts. This is the right tool when one panel
-has a wide y-axis label or a tall legend that throws off a 50/50 split.
+the same way for stacked layouts. Use it when one panel has a wide
+y-axis label or a tall legend that throws off a 50/50 split.
 
 ``` r
 
@@ -924,7 +922,7 @@ has a wide y-axis label or a tall legend that throws off a 50/50 split.
 A common pattern with survival curves is to pair the plot with a
 numbers-at-risk panel.
 [`hv_survival()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_survival.md)
-stores the risk table as a data frame at `km$tables$risk` — columns
+stores the risk table as a data frame at `km$tables$risk`, with columns
 `strata`, `report_time`, `n.risk`. Build a ggplot text panel from it,
 then stack with `/`.
 
@@ -955,7 +953,7 @@ p_km_ms / rt_panel +
 [`plot_annotation()`](https://patchwork.data-imaginist.com/reference/plot_annotation.html)
 adds a shared title or panel tags (A, B, C…) across all panels. Tags are
 required by most journals for multi-panel figures and are referenced in
-the caption as “Panel A shows…” – setting `tag_levels = "A"` generates
+the caption as “Panel A shows…”; setting `tag_levels = "A"` generates
 them automatically. The `&` operator applies a shared
 [`theme()`](https://ggplot2.tidyverse.org/reference/theme.html) call to
 every panel at once, so you only need to set `plot.tag` formatting in
@@ -978,9 +976,9 @@ one place.
 Assign the composed object to a variable and pass it to
 [`ggsave()`](https://ggplot2.tidyverse.org/reference/ggsave.html). For
 PowerPoint, save each panel individually with
-[`save_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/save_ppt.md)
-— patchwork flattens everything into a single raster, so the shapes and
-text are no longer editable in PowerPoint.
+[`save_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/save_ppt.md),
+because patchwork flattens everything into a single raster, so the
+shapes and text are no longer editable in PowerPoint.
 
 ``` r
 

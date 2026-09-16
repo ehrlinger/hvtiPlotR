@@ -3,8 +3,8 @@
 Builds a bare `ggplot2` object from an
 [`hv_survival`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_survival.md)
 data object. The plot contains the correct aesthetics and geometries but
-no scale, label, or theme modifications — add those with `+` as you
-would with any `ggplot2` object.
+no scale, label, or theme modifications; add those with `+` as you would
+with any `ggplot2` object.
 
 ## Usage
 

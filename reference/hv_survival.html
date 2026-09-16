@@ -111,9 +111,9 @@ estimate labelled <code>"All"</code>.</p></dd>
 
 
 <dt id="arg-method">method<a class="anchor" aria-label="anchor" href="#arg-method"></a></dt>
-<dd><p>Estimator: <code>"kaplan-meier"</code> (default, logit CI —
+<dd><p>Estimator: <code>"kaplan-meier"</code> (default, logit CI;
 mirrors SAS <code>%kaplan</code>) or <code>"nelson-aalen"</code> (Fleming-Harrington
-cumulative hazard with log CI — mirrors SAS <code>%nelsont</code>, preferred
+cumulative hazard with log CI; mirrors SAS <code>%nelsont</code>, preferred
 when \(S(t)\) approaches zero).</p></dd>
 
 
@@ -130,7 +130,7 @@ Default <code>c(1, 5, 10, 15, 20, 25)</code>.</p></dd>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>An object of class <code>c("hv_survival", "hv_data")</code> (a list);
-call <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code> on the result to render the figure — see
+call <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code> on the result to render the figure; see
 <code><a href="plot.hv_survival.html">plot.hv_survival</a></code>. The list has three elements:</p><dl><dt><code>$data</code></dt>
 <dd><p>Tidy data frame with one row per (time, strata) pair.
 Columns: <code>time</code>, <code>surv</code>, <code>lower</code>, <code>upper</code>,

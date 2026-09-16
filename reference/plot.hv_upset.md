@@ -89,7 +89,7 @@ A `ggplot` when `set_size = FALSE` (themes apply with `+`); a
 
 When `set_size = TRUE` (the default) the function composes a patchwork
 of two plots: a horizontal set-size sidebar and the intersection bar
-chart. Apply themes to **all panels** with patchwork's `&` operator:
+chart. Apply themes to all panels with patchwork's `&` operator:
 
     plot(up) & theme_hv_poster()
 

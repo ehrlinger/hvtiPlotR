@@ -76,8 +76,8 @@ hv_mirror_hist(
 
 An object of class `c("hv_mirror_hist", "hv_data")`; call
 [`plot()`](https://rdrr.io/r/graphics/plot.default.html) on the result
-to render the figure — see
-[`plot.hv_mirror_hist`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hv_mirror_hist.md).
+to render the figure (see
+[`plot.hv_mirror_hist`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hv_mirror_hist.md)).
 The list contains:
 
 - `$data`:

@@ -34,11 +34,11 @@ sample_longitudinal_counts_data(n_patients = 300, max_obs = 6, seed = 42L)
 
 A data frame in long format with columns:
 
-- `time_label` — ordered factor of follow-up windows
+- `time_label`: ordered factor of follow-up windows
 
-- `series` — `"Patients"` or `"Measurements"`
+- `series`: `"Patients"` or `"Measurements"`
 
-- `count` — integer count
+- `count`: integer count
 
 ## See also
 

@@ -133,8 +133,8 @@ times are Weibull, censoring is uniform on <code>[0.2, 1.5] * time_max</code>, a
 follow-up is administratively truncated at <code>1.2 * time_max</code>. When <code>groups</code> is
 supplied each level is an independent draw of <code>n</code> subjects, matching
 <code><a href="sample_hazard_empirical.html">sample_hazard_empirical()</a></code>'s balanced-arms convention.</p>
-<p>Note that <code><a href="sample_hazard_data.html">sample_hazard_data()</a></code> is an <em>analytic</em> Weibull curve evaluated at
-the same parameters — it is not fitted to this cohort. The two share a
+<p><code><a href="sample_hazard_data.html">sample_hazard_data()</a></code> is an <em>analytic</em> Weibull curve evaluated at
+the same parameters; it is not fitted to this cohort. The two share a
 generative model, not an estimation step, so a figure combining them should
 not be captioned as a model fit to these subjects.</p>
     </div>

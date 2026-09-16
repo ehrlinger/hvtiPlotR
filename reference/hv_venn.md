@@ -24,7 +24,7 @@ hv_venn(data, sets)
 
 - sets:
 
-  Character vector of **2 to 3** column names to draw as sets.
+  Character vector of 2 to 3 column names to draw as sets.
 
 ## Value
 

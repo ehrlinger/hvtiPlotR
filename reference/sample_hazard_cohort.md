@@ -79,9 +79,8 @@ draw of `n` subjects, matching
 [`sample_hazard_empirical()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_hazard_empirical.md)'s
 balanced-arms convention.
 
-Note that
 [`sample_hazard_data()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_hazard_data.md)
-is an *analytic* Weibull curve evaluated at the same parameters — it is
+is an *analytic* Weibull curve evaluated at the same parameters; it is
 not fitted to this cohort. The two share a generative model, not an
 estimation step, so a figure combining them should not be captioned as a
 model fit to these subjects.

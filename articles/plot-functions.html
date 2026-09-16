@@ -102,10 +102,10 @@
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/ehrlinger/hvtiPlotR" class="external-link">hvtiPlotR</a></span><span class="op">)</span></span></code></pre></div>
 </div>
-<p>All hvtiPlotR plot functions follow a two-step workflow. Call the constructor (<code>hv_*()</code>) to validate and prepare data — it returns an S3 object of class <code>c("hv_&lt;concept&gt;", "hv_data")</code> — then call <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code> on the result to get a bare <code>ggplot</code> with no colour scales, axis labels, or theme applied yet. You add those with the usual <code>+</code> operator. See the companion vignette “Decorating and Saving hvtiPlotR Plots” for full coverage of <code>scale_()</code>, <code><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs()</a></code>, <code><a href="https://ggplot2.tidyverse.org/reference/annotate.html" class="external-link">annotate()</a></code>, themes, and <code><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave()</a></code> patterns.</p>
+<p>All hvtiPlotR plot functions follow a two-step workflow. Call the constructor (<code>hv_*()</code>) to validate and prepare data (it returns an S3 object of class <code>c("hv_&lt;concept&gt;", "hv_data")</code>), then call <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code> on the result to get a bare <code>ggplot</code> with no colour scales, axis labels, or theme applied yet. You add those with the usual <code>+</code> operator. See the companion vignette “Decorating and Saving hvtiPlotR Plots” for full coverage of <code>scale_()</code>, <code><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs()</a></code>, <code><a href="https://ggplot2.tidyverse.org/reference/annotate.html" class="external-link">annotate()</a></code>, themes, and <code><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave()</a></code> patterns.</p>
 <section class="section level2"><h2 id="template-reference-map">Template Reference Map<a class="anchor" aria-label="anchor" href="#template-reference-map"></a>
 </h2>
-<p>The table below maps each hvtiPlotR constructor to the original SAS and R templates it ports. Functions marked with — have no direct predecessor and were designed specifically for this package. All functions have worked examples in the sections below.</p>
+<p>The table below maps each hvtiPlotR constructor to the original SAS and R templates it ports. A cell reads “none” where no template exists; functions with none in both columns have no direct predecessor and were designed for this package. All functions have worked examples in the sections below.</p>
 <table class="table caption-top">
 <colgroup>
 <col style="width: 33%">
@@ -120,19 +120,19 @@
 <tbody>
 <tr class="odd">
 <td><code><a href="../reference/hv_mirror_hist.html">hv_mirror_hist()</a></code></td>
-<td>—</td>
+<td>none</td>
 <td>
 <code>tp.lp.mirror-histogram_SAVR-TF-TAVR.R</code>, <code>tp.lp.mirror_histo_before_after_wt.R</code>
 </td>
 </tr>
 <tr class="even">
 <td><code><a href="../reference/hv_stacked.html">hv_stacked()</a></code></td>
-<td>—</td>
-<td>—</td>
+<td>none</td>
+<td>none</td>
 </tr>
 <tr class="odd">
 <td><code><a href="../reference/hv_balance.html">hv_balance()</a></code></td>
-<td>—</td>
+<td>none</td>
 <td><code>tp.lp.propen.cov_balance.R</code></td>
 </tr>
 <tr class="even">
@@ -140,7 +140,7 @@
 <td>
 <code>tp.dp.goodness_followup.*</code>, <code>tp.dp.goodness_event.*</code>
 </td>
-<td>—</td>
+<td>none</td>
 </tr>
 <tr class="odd">
 <td><code><a href="../reference/hv_survival.html">hv_survival()</a></code></td>
@@ -167,51 +167,53 @@
 <td>
 <code>tp.hp.dead.life-gained.sas</code>, <code>tp.hp.numtreat.survdiff.matched.sas</code>, <code>tp.hs.dead.compare_benefit.setup.sas</code>
 </td>
-<td>—</td>
+<td>none</td>
 </tr>
 <tr class="odd">
 <td><code><a href="../reference/hv_survival_difference.html">hv_survival_difference()</a></code></td>
 <td>
 <code>tp.hp.dead.life-gained.sas</code>, <code>tp.hp.numtreat.survdiff.matched.sas</code>, <code>tp.hs.dead.compare_benefit.setup.sas</code>
 </td>
-<td>—</td>
+<td>none</td>
 </tr>
 <tr class="even">
 <td><code><a href="../reference/nnt_plot.html">nnt_plot()</a></code></td>
 <td><code>tp.hp.numtreat.survdiff.matched.sas</code></td>
-<td>—</td>
+<td>none</td>
 </tr>
 <tr class="odd">
 <td><code><a href="../reference/hv_nnt.html">hv_nnt()</a></code></td>
 <td><code>tp.hp.numtreat.survdiff.matched.sas</code></td>
-<td>—</td>
+<td>none</td>
 </tr>
 <tr class="even">
 <td><code><a href="../reference/hv_nonparametric.html">hv_nonparametric()</a></code></td>
 <td>
 <code>tp.np.*.avrg_curv.*</code>, <code>tp.np.*.u.trend.*</code>, <code>tp.np.*.double.*</code>, <code>tp.np.*.mult.*</code>, <code>tp.np.*.phases.*</code>, <code>tp.np.z0axdpo.*</code>
 </td>
-<td>—</td>
+<td>none</td>
 </tr>
 <tr class="odd">
 <td><code><a href="../reference/hv_ordinal.html">hv_ordinal()</a></code></td>
 <td><code>tp.np.*.ordinal.*</code></td>
-<td>—</td>
+<td>none</td>
 </tr>
 <tr class="even">
 <td><code><a href="../reference/hv_correlation_matrix.html">hv_correlation_matrix()</a></code></td>
 <td>
 <code>descriptive/dc.tables.ods.sas</code> (<code>PROC CORR PLOTS=MATRIX</code>)</td>
-<td>—</td>
+<td>none</td>
 </tr>
 <tr class="odd">
 <td><code><a href="../reference/hv_eda.html">hv_eda()</a></code></td>
-<td>—</td>
-<td>—</td>
+<td>none</td>
+<td>
+<code>tp.dp.EDA_barplots_scatterplots.R</code>, <code>tp.dp.EDA_barplots_scatterplots_varnames.R</code>
+</td>
 </tr>
 <tr class="even">
 <td><code><a href="../reference/hv_spaghetti.html">hv_spaghetti()</a></code></td>
-<td>—</td>
+<td>none</td>
 <td><code>tp.dp.spaghetti.echo.R</code></td>
 </tr>
 <tr class="odd">
@@ -224,27 +226,27 @@
 <tr class="even">
 <td><code><a href="../reference/hv_longitudinal.html">hv_longitudinal()</a></code></td>
 <td><code>tp.dp.longitudinal_patients_measures.*</code></td>
-<td>—</td>
+<td>none</td>
 </tr>
 <tr class="odd">
 <td><code><a href="../reference/hv_alluvial.html">hv_alluvial()</a></code></td>
-<td>—</td>
-<td>—</td>
+<td>none</td>
+<td><code>tp.dp.female_bicus_preAR_sankey.R</code></td>
 </tr>
 <tr class="even">
 <td><code><a href="../reference/hv_sankey.html">hv_sankey()</a></code></td>
-<td>—</td>
+<td>none</td>
 <td>PAM cluster stability analysis</td>
 </tr>
 <tr class="odd">
 <td><code><a href="../reference/hv_consort.html">hv_consort()</a></code></td>
-<td>—</td>
-<td>—</td>
+<td>none</td>
+<td>none</td>
 </tr>
 <tr class="even">
 <td><code><a href="../reference/hv_upset.html">hv_upset()</a></code></td>
-<td>—</td>
-<td>—</td>
+<td>none</td>
+<td>none</td>
 </tr>
 </tbody>
 </table>
@@ -253,7 +255,7 @@
 </section><section class="section level2"><h2 id="mirrored-propensity-score-histogram">Mirrored Propensity Score Histogram<a class="anchor" aria-label="anchor" href="#mirrored-propensity-score-histogram"></a>
 </h2>
 <p>In propensity-matched analyses, we routinely produce a mirrored histogram to show how well matching compressed the overlap between two treatment groups. <code><a href="../reference/hv_mirror_hist.html">hv_mirror_hist()</a></code> prepares the data; <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code> hands you a bare ggplot to dress with colour and labels.</p>
-<p>The constructor accepts a data frame with columns for the propensity score, group indicator, and match indicator. The <code><a href="../reference/sample_mirror_histogram_data.html">sample_mirror_histogram_data()</a></code> function generates example data suitable for testing.</p>
+<p>The constructor accepts a data frame with columns for the propensity score, group indicator, and match indicator. <code><a href="../reference/sample_mirror_histogram_data.html">sample_mirror_histogram_data()</a></code> generates example data for testing.</p>
 <p>Two display modes are selected by the arguments supplied to the constructor. <strong>Binary-match mode</strong> (<code>match_col</code>) reproduces <code>tp.lp.mirror-histogram_SAVR-TF-TAVR.R</code>: upper bars show all observations before matching; overlaid bars show the matched subset. <strong>Weighted IPTW mode</strong> (<code>weight_col</code>) reproduces <code>tp.lp.mirror_histo_before_after_wt.R</code>: upper bars show raw counts; overlaid bars show per-bin IPTW weight sums.</p>
 <section class="level2"><h3 id="binary-match-mode-savr-vs--tf-tavr">Binary-match mode (SAVR vs. TF-TAVR)<a class="anchor" aria-label="anchor" href="#binary-match-mode-savr-vs--tf-tavr"></a>
 </h3>
@@ -276,7 +278,7 @@
 </div>
 </section><section class="level2"><h3 id="bare-plot">Bare plot<a class="anchor" aria-label="anchor" href="#bare-plot"></a>
 </h3>
-<p>The bare panel shows two mirrored bar charts – upper bars for the first group, lower for the second – with white fill and no scale or labels yet. Look for: upper and lower bars that are roughly symmetric before matching, with the matched (darker) overlay narrowing the distribution; if both panels look identical, <code>match_col</code> may not be mapping correctly.</p>
+<p>The bare panel shows two mirrored bar charts (upper bars for the first group, lower for the second) with white fill and no scale or labels yet. Look for: upper and lower bars that are roughly symmetric before matching, with the matched (darker) overlay narrowing the distribution; if both panels look identical, <code>match_col</code> may not be mapping correctly.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">mh</span>, alpha <span class="op">=</span> <span class="fl">0.8</span><span class="op">)</span></span>
@@ -319,7 +321,7 @@
 </div>
 </div>
 </div>
-<p>The lighter bars show the full (pre-match) distribution for each group; the darker overlaid bars show the matched subset. Upper panel = first group label; lower panel = second group label. <code>scale_y_continuous(labels = abs)</code> converts the internal negative counts to positive labels. <code>y = Inf</code>/<code>-Inf</code> with <code>vjust</code> anchors each annotation near the panel edge regardless of data scale, so the positions adapt automatically to different dataset sizes.</p>
+<p>The lighter bars show the full (pre-match) distribution for each group; the darker overlaid bars show the matched subset. Upper panel = first group label; lower panel = second group label. <code>scale_y_continuous(labels = abs)</code> converts the internal negative counts to positive labels. <code>y = Inf</code>/<code>-Inf</code> with <code>vjust</code> anchors each annotation near the panel edge regardless of data scale, so the positions adapt to different dataset sizes.</p>
 <p>The constructor stores group counts and standardized mean differences (SMD) before and after matching in <code>$tables$diagnostics</code>. You can read those out directly:</p>
 <div class="cell" data-caption="Mirrored Histogram Diagnostics">
 <div class="sourceCode cell-code" id="cb5"><pre class="downlit sourceCode r">
@@ -369,7 +371,7 @@
 </div>
 </section><section class="level2"><h3 id="mirror-iptw-bare">Bare plot<a class="anchor" aria-label="anchor" href="#mirror-iptw-bare"></a>
 </h3>
-<p>The bare weighted panel looks the same as the binary-match bare plot – white bars with an overlay – but the overlay encodes IPTW weight sums, not counts. Look for: upper and lower overlay bars that are visually balanced, indicating good weighting; bars that remain heavily one-sided suggest extreme weights.</p>
+<p>The bare weighted panel looks the same as the binary-match bare plot (white bars with an overlay), but the overlay encodes IPTW weight sums, not counts. Look for: upper and lower overlay bars that are visually balanced, indicating good weighting; bars that remain heavily one-sided suggest extreme weights.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p_wt</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">mh_wt</span>, alpha <span class="op">=</span> <span class="fl">0.8</span><span class="op">)</span></span>
@@ -514,7 +516,7 @@
 </div>
 </section></section><section class="section level2"><h2 id="goodness-of-follow-up-plot">Goodness-of-Follow-Up Plot<a class="anchor" aria-label="anchor" href="#goodness-of-follow-up-plot"></a>
 </h2>
-<p>The goodness-of-follow-up plot is a standard quality-control figure in longitudinal outcome analyses. Each patient appears as a point at their operation date (x-axis) and follow-up duration (y-axis). A dashed diagonal line marks the maximum potential follow-up given the study start, study end, and follow-up closing date — points above the line have longer follow-up than that window alone explains, typically because passive surveillance supplemented active cross-sectional follow-up.</p>
+<p>The goodness-of-follow-up plot is a standard quality-control figure in longitudinal outcome analyses. Each patient appears as a point at their operation date (x-axis) and follow-up duration (y-axis). A dashed diagonal line marks the maximum potential follow-up given the study start, study end, and follow-up closing date. Points above the line have longer follow-up than that window alone explains, typically because passive surveillance supplemented active cross-sectional follow-up.</p>
 <p><code><a href="../reference/hv_followup.html">hv_followup()</a></code> prepares the data; <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code> hands you a bare ggplot with no colour, shape, axis, or label scales applied. Add those with the usual <code>+</code> operator. The <code>type</code> argument selects the panel: <code>"followup"</code> (default, the death/censoring scatter) or <code>"event"</code> (competing non-fatal event panel).</p>
 <section class="level2"><h3 id="sample-data">Sample data<a class="anchor" aria-label="anchor" href="#sample-data"></a>
 </h3>
@@ -613,7 +615,7 @@
 </div>
 </section><section class="level2"><h3 id="saving-1">Saving<a class="anchor" aria-label="anchor" href="#saving-1"></a>
 </h3>
-<p><code><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave()</a></code> writes the figure at 6 x 6 inches – square dimensions suit the scatter’s equal x–y scale. For a PowerPoint version, see <a href="plot-decorators.html">Decorating and Saving</a>.</p>
+<p><code><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave()</a></code> writes the figure at 6 x 6 inches; square dimensions suit the scatter’s equal x–y scale. For a PowerPoint version, see <a href="plot-decorators.html">Decorating and Saving</a>.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave</a></span><span class="op">(</span></span>
@@ -742,7 +744,7 @@ Age.After match                    Age  After match      3.5</code></pre>
 </div>
 </section><section class="level2"><h3 id="adding-colour-shape-and-axis-scales">Adding colour, shape, and axis scales<a class="anchor" aria-label="anchor" href="#adding-colour-shape-and-axis-scales"></a>
 </h3>
-<p>We map <code>"Before match"</code> to red triangles and <code>"After match"</code> to blue squares – the same colour convention as <code>tp.lp.propen.cov_balance.R</code>. Set the x-axis limits wide enough to include your largest pre-match SMD; the symmetric breaks make the ±10 % threshold visually obvious.</p>
+<p>We map <code>"Before match"</code> to red triangles and <code>"After match"</code> to blue squares, the same colour convention as <code>tp.lp.propen.cov_balance.R</code>. Set the x-axis limits wide enough to include your largest pre-match SMD; the symmetric breaks make the ±10 % threshold easy to read.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb39"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">cb</span>, alpha <span class="op">=</span> <span class="fl">0.8</span><span class="op">)</span> <span class="op">+</span></span>
@@ -831,7 +833,7 @@ Age.After match                    Age  After match      3.5</code></pre>
 </div>
 </section><section class="level2"><h3 id="saving-2">Saving<a class="anchor" aria-label="anchor" href="#saving-2"></a>
 </h3>
-<p><code><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave()</a></code> writes the figure at 8 x 7 inches – the extra width accommodates long covariate labels on the y-axis. For a PowerPoint version, see <a href="plot-decorators.html">Decorating and Saving</a>.</p>
+<p><code><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave()</a></code> writes the figure at 8 x 7 inches; the extra width accommodates long covariate labels on the y-axis. For a PowerPoint version, see <a href="plot-decorators.html">Decorating and Saving</a>.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb42"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave</a></span><span class="op">(</span></span>
@@ -846,7 +848,7 @@ Age.After match                    Age  After match      3.5</code></pre>
 <p><code><a href="../reference/hv_survival.html">hv_survival()</a></code> estimates the Kaplan-Meier product-limit survival function and stores all five companion plots’ data (matching the SAS <code>%kaplan</code> macro output <code>PLOTS</code>, <code>PLOTC</code>, <code>PLOTH</code>, <code>PLOTL</code>) plus tidy summary tables in <code>$tables</code>. Call <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code> with the <code>type</code> argument to render a bare ggplot for the selected panel (default <code>"survival"</code>). Confidence intervals use the logit transform at 0.95 by default.</p>
 <section class="level2"><h3 id="sample-data-2">Sample data<a class="anchor" aria-label="anchor" href="#sample-data-2"></a>
 </h3>
-<p>We work from a simulated cohort of 500 patients with a single follow-up window and right-censoring. <code><a href="../reference/sample_survival_data.html">sample_survival_data()</a></code> builds the data frame in the long format <code><a href="../reference/hv_survival.html">hv_survival()</a></code> expects — one row per patient with a <code>time</code> and an <code>event</code> column. Build the S3 object once and reuse it across the survival, hazard, log-log, and report panels below.</p>
+<p>We work from a simulated cohort of 500 patients with a single follow-up window and right-censoring. <code><a href="../reference/sample_survival_data.html">sample_survival_data()</a></code> builds the data frame in the long format <code><a href="../reference/hv_survival.html">hv_survival()</a></code> expects: one row per patient with a <code>time</code> and an <code>event</code> column. Build the S3 object once and reuse it across the survival, hazard, log-log, and report panels below.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb43"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">dta_km</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sample_survival_data.html">sample_survival_data</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">500</span>, seed <span class="op">=</span> <span class="fl">42</span><span class="op">)</span></span>
@@ -866,7 +868,7 @@ Age.After match                    Age  After match      3.5</code></pre>
 </div>
 </section><section class="level2"><h3 id="survival-curve-plots1">Survival curve (PLOTS=1)<a class="anchor" aria-label="anchor" href="#survival-curve-plots1"></a>
 </h3>
-<p>The bare <code>plot(km)</code> panel is what <code>PLOTS=1</code> produces from the SAS <code>%kaplan</code> macro — the survival curve with the logit-transform 95% CI ribbon. No colour scale, axis labels, or theme yet; you add those in the next subsection. Look for: a curve that starts at 100% and is monotonically non-increasing, with the ribbon widening as the at-risk population thins.</p>
+<p>The bare <code>plot(km)</code> panel is what <code>PLOTS=1</code> produces from the SAS <code>%kaplan</code> macro: the survival curve with the logit-transform 95% CI ribbon. No colour scale, axis labels, or theme yet; you add those in the next subsection. Look for: a curve that starts at 100% and is monotonically non-increasing, with the ribbon widening as the at-risk population thins.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb46"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Bare plot — no scales or labels yet</span></span>
@@ -939,7 +941,7 @@ Age.After match                    Age  After match      3.5</code></pre>
 </div>
 </section><section class="level2"><h3 id="saving-3">Saving<a class="anchor" aria-label="anchor" href="#saving-3"></a>
 </h3>
-<p><code><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave()</a></code> writes the composed figure to disk — the <code>width</code>/<code>height</code> here are tuned for manuscript aspect ratios. For an editable PowerPoint slide use <code><a href="../reference/save_ppt.html">save_ppt()</a></code> instead; see the companion <a href="plot-decorators.html">Decorating and Saving</a> vignette.</p>
+<p><code><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave()</a></code> writes the composed figure to disk; the <code>width</code>/<code>height</code> here are tuned for manuscript aspect ratios. For an editable PowerPoint slide use <code><a href="../reference/save_ppt.html">save_ppt()</a></code> instead; see the companion <a href="plot-decorators.html">Decorating and Saving</a> vignette.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb52"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave</a></span><span class="op">(</span><span class="st">"../graphs/km_survival.pdf"</span>, <span class="va">km_final</span>, width <span class="op">=</span> <span class="fl">8</span>, height <span class="op">=</span> <span class="fl">6</span><span class="op">)</span></span></code></pre></div>
@@ -1070,7 +1072,7 @@ Figure 1
 </div>
 </section><section class="level2"><h3 id="integrated-survivorship-restricted-mean-survival-plotl1">Integrated survivorship / restricted mean survival (PLOTL=1)<a class="anchor" aria-label="anchor" href="#integrated-survivorship-restricted-mean-survival-plotl1"></a>
 </h3>
-<p><code>PLOTL=1</code> is the integrated survivorship — the area under the survival curve up to time <code>t</code>, equivalent to restricted mean survival time (RMST) at that horizon. Useful when the proportional-hazards assumption fails and a single hazard ratio summary would mislead. Look for: a curve that rises linearly while S(t) ≈ 1 and bends as event accumulation pulls the mean down.</p>
+<p><code>PLOTL=1</code> is the integrated survivorship, the area under the survival curve up to time <code>t</code>, equivalent to restricted mean survival time (RMST) at that horizon. Useful when the proportional-hazards assumption fails and a single hazard ratio summary would mislead. Look for: a curve that rises linearly while S(t) ≈ 1 and bends as event accumulation pulls the mean down.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb58"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">km</span>, type <span class="op">=</span> <span class="st">"life"</span><span class="op">)</span> <span class="op">+</span></span>
@@ -1120,7 +1122,7 @@ Albumin    -0.2499998 -0.1813117  0.05984457  1.00000000</code></pre>
 <p>Missing observations are removed separately within each panel, matching <code>PROC CORR</code> pairwise deletion. A warning identifies variables or pairs with too little overlap to support a stable coefficient; the panel remains present so the missing-data pattern is visible rather than silently disappearing.</p>
 </section><section class="section level2"><h2 id="eda-barplots-and-scatterplots">EDA Barplots and Scatterplots<a class="anchor" aria-label="anchor" href="#eda-barplots-and-scatterplots"></a>
 </h2>
-<p>The <strong>hvtiPlotR</strong> package provides <code><a href="../reference/hv_eda.html">hv_eda()</a></code> for exploratory data analysis of all variables in a dataset against a reference time axis. It replicates the <code>Function_DataPlotting()</code> workflow from <code>tp.dp.EDA_barplots_scatterplots.R</code> and <code>tp.dp.EDA_barplots_scatterplots_varnames.R</code>, replacing base-R graphics with composable <code>ggplot2</code> objects.</p>
+<p><code><a href="../reference/hv_eda.html">hv_eda()</a></code> runs exploratory data analysis of all variables in a dataset against a reference time axis. It replicates the <code>Function_DataPlotting()</code> workflow from <code>tp.dp.EDA_barplots_scatterplots.R</code> and <code>tp.dp.EDA_barplots_scatterplots_varnames.R</code>, replacing base-R graphics with composable <code>ggplot2</code> objects.</p>
 <p>Three helpers support the workflow: <code><a href="../reference/eda_classify_var.html">eda_classify_var()</a></code> detects whether a column is continuous (<code>"Cont"</code>), numeric-categorical (<code>"Cat_Num"</code>), or character-categorical (<code>"Cat_Char"</code>) (matching the <code>UniqueLimit</code> logic from the template); <code><a href="../reference/eda_select_vars.html">eda_select_vars()</a></code> subsets and reorders columns by name or space-separated string, replacing the <code>Order_Variables()</code> / <code>Mod_Data &lt;- dta[, Order_Var]</code> pattern from the varnames template; and <code><a href="../reference/sample_eda_data.html">sample_eda_data()</a></code> generates a reproducible mixed-type dataset for demonstration.</p>
 <p><code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code> on an <code>hv_eda</code> object returns a bare <code>ggplot</code>. Add colour scales, axis labels, annotations, and <code><a href="../reference/hvtiPlotR-themes.html">theme_hv_manuscript()</a></code>.</p>
 <section class="level2"><h3 id="sample-data-3">Sample data<a class="anchor" aria-label="anchor" href="#sample-data-3"></a>
@@ -1219,7 +1221,7 @@ Albumin    -0.2499998 -0.1813117  0.05984457  1.00000000</code></pre>
 </div>
 </section><section class="level2"><h3 id="character-categorical">Character categorical<a class="anchor" aria-label="anchor" href="#character-categorical"></a>
 </h3>
-<p>String columns are classified as <code>"Cat_Char"</code> and produce stacked count bars with one level per fill colour. Unlike <code>"Cat_Num"</code> columns, the levels are ordered alphabetically by default – use <code><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_fill_manual()</a></code> to assign colours that carry clinical meaning (here, morphology type).</p>
+<p>String columns are classified as <code>"Cat_Char"</code> and produce stacked count bars with one level per fill colour. Unlike <code>"Cat_Num"</code> columns, the levels are ordered alphabetically by default; use <code><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_fill_manual()</a></code> to assign colours that carry clinical meaning (here, morphology type).</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb69"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="../reference/hv_eda.html">hv_eda</a></span><span class="op">(</span><span class="va">dta_eda</span>, x_col <span class="op">=</span> <span class="st">"year"</span>, y_col <span class="op">=</span> <span class="st">"valve_morph"</span>,</span>
@@ -1487,7 +1489,7 @@ Albumin    -0.2499998 -0.1813117  0.05984457  1.00000000</code></pre>
 </div>
 </section><section class="level2"><h3 id="saving-4">Saving<a class="anchor" aria-label="anchor" href="#saving-4"></a>
 </h3>
-<p><code><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave()</a></code> writes the alluvial figure at 8 x 6 inches – wider than tall to give the horizontal flow diagram room. For a PowerPoint version, see <a href="plot-decorators.html">Decorating and Saving</a>.</p>
+<p><code><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave()</a></code> writes the alluvial figure at 8 x 6 inches, wider than tall, to give the horizontal flow diagram room. For a PowerPoint version, see <a href="plot-decorators.html">Decorating and Saving</a>.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb84"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p_al</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">al_filled</span><span class="op">)</span> <span class="op">+</span></span>
@@ -1500,7 +1502,7 @@ Albumin    -0.2499998 -0.1813117  0.05984457  1.00000000</code></pre>
 </div>
 </section></section><section class="section level2"><h2 id="cluster-stability-sankey-plot">Cluster Stability Sankey Plot<a class="anchor" aria-label="anchor" href="#cluster-stability-sankey-plot"></a>
 </h2>
-<p><code><a href="../reference/hv_sankey.html">hv_sankey()</a></code> prepares a Sankey diagram that lets you watch how patient cluster assignments shift as you increase K — a visual test of cluster stability. Where the bands stay wide and orderly, the solution holds; where they cross and fragment, K has grown past what the data supports. It ports the PAM cluster stability figure from the HVTI clustering analysis pipeline. Each column represents one value of K (default K = 2 to 9); each band shows the fraction of patients whose assignment changes between consecutive K values. Node labels show the cluster letter and count.</p>
+<p><code><a href="../reference/hv_sankey.html">hv_sankey()</a></code> prepares a Sankey diagram that lets you watch how patient cluster assignments shift as you increase K, a visual test of cluster stability. Where the bands stay wide and orderly, the solution holds; where they cross and fragment, K has grown past what the data supports. It ports the PAM cluster stability figure from the HVTI clustering analysis pipeline. Each column represents one value of K (default K = 2 to 9); each band shows the fraction of patients whose assignment changes between consecutive K values. Node labels show the cluster letter and count.</p>
 <p><strong>Requires <code>ggsankey</code></strong> (not on CRAN):</p>
 <div class="sourceCode" id="cb85"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"davidsjoberg/ggsankey"</span><span class="op">)</span></span></code></pre></div>
@@ -1583,7 +1585,7 @@ Albumin    -0.2499998 -0.1813117  0.05984457  1.00000000</code></pre>
 </div>
 </section><section class="level2"><h3 id="saving-5">Saving<a class="anchor" aria-label="anchor" href="#saving-5"></a>
 </h3>
-<p><code><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave()</a></code> writes the figure at 8 x 5 inches – wide enough to spread K = 2 through K = 9 across the panel. For a PowerPoint version, see <a href="plot-decorators.html">Decorating and Saving</a>.</p>
+<p><code><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave()</a></code> writes the figure at 8 x 5 inches, wide enough to spread K = 2 through K = 9 across the panel. For a PowerPoint version, see <a href="plot-decorators.html">Decorating and Saving</a>.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb93"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p_san</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sk</span><span class="op">)</span> <span class="op">+</span></span>
@@ -1616,7 +1618,7 @@ Albumin    -0.2499998 -0.1813117  0.05984457  1.00000000</code></pre>
 </div>
 </section><section class="level2"><h3 id="building-a-tracker-from-your-own-data">Building a tracker from your own data<a class="anchor" aria-label="anchor" href="#building-a-tracker-from-your-own-data"></a>
 </h3>
-<p>Start from a data frame with one row per patient. <code><a href="../reference/hv_consort_start.html">hv_consort_start()</a></code> records the patient identifier and marks every patient as screened; each <code><a href="../reference/hv_consort_exclude.html">hv_consort_exclude()</a></code> call adds an exclusion stage. Exclusion rules are two-sided formulas — <code>&lt;condition&gt; ~ "&lt;reason&gt;"</code> — evaluated against the data. The first matching rule wins, and patients dropped in an earlier stage are automatically skipped in later ones, so each stage operates only on the survivors of the last.</p>
+<p>Start from a data frame with one row per patient. <code><a href="../reference/hv_consort_start.html">hv_consort_start()</a></code> records the patient identifier and marks every patient as screened; each <code><a href="../reference/hv_consort_exclude.html">hv_consort_exclude()</a></code> call adds an exclusion stage. Exclusion rules are two-sided formulas (<code>&lt;condition&gt; ~ "&lt;reason&gt;"</code>) evaluated against the data. The first matching rule wins, and patients dropped in an earlier stage are automatically skipped in later ones, so each stage operates only on the survivors of the last.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb96"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">42</span><span class="op">)</span></span>
@@ -1654,7 +1656,7 @@ Albumin    -0.2499998 -0.1813117  0.05984457  1.00000000</code></pre>
 </div>
 </section><section class="level2"><h3 id="the-diagram">The diagram<a class="anchor" aria-label="anchor" href="#the-diagram"></a>
 </h3>
-<p><code><a href="../reference/hv_consort.html">hv_consort()</a></code> derives the box layout from the tracker’s stage metadata and renders the diagram; <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code> draws it. By default every exclusion column is shown as a side box — pass a character vector to <code>side_box</code> to select specific ones.</p>
+<p><code><a href="../reference/hv_consort.html">hv_consort()</a></code> derives the box layout from the tracker’s stage metadata and renders the diagram; <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code> draws it. By default every exclusion column is shown as a side box; pass a character vector to <code>side_box</code> to select specific ones.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb98"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fig</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hv_consort.html">hv_consort</a></span><span class="op">(</span><span class="va">tracker</span><span class="op">)</span></span>
@@ -1708,7 +1710,7 @@ Albumin    -0.2499998 -0.1813117  0.05984457  1.00000000</code></pre>
 </div>
 </section></section><section class="section level2"><h2 id="hazard-plot">Hazard Plot<a class="anchor" aria-label="anchor" href="#hazard-plot"></a>
 </h2>
-<p><code><a href="../reference/hazard_plot.html">hazard_plot()</a></code> plots pre-computed parametric curves — survival, hazard, or cumulative hazard — from a fitted Weibull or other parametric model, with optional Kaplan-Meier empirical overlay and population life-table reference. It ports the entire <code>tp.hp.dead.*</code> SAS template family.</p>
+<p><code><a href="../reference/hazard_plot.html">hazard_plot()</a></code> plots pre-computed parametric curves (survival, hazard, or cumulative hazard) from a fitted Weibull or other parametric model, with optional Kaplan-Meier empirical overlay and population life-table reference. It ports the entire <code>tp.hp.dead.*</code> SAS template family.</p>
 <p>The input data comes from two sources that map directly to the SAS output:</p>
 <table class="table caption-top">
 <colgroup>
@@ -1743,7 +1745,7 @@ Albumin    -0.2499998 -0.1813117  0.05984457  1.00000000</code></pre>
 </table>
 <section class="level2"><h3 id="sample-data-7">Sample data<a class="anchor" aria-label="anchor" href="#sample-data-7"></a>
 </h3>
-<p><code><a href="../reference/sample_hazard_data.html">sample_hazard_data()</a></code> generates the parametric prediction grid (one row per time point) with <code>survival</code>, <code>hazard</code>, and <code>cumhaz</code> columns plus their CI bounds – the same shape as the SAS <code>predict</code> dataset. <code><a href="../reference/sample_hazard_empirical.html">sample_hazard_empirical()</a></code> generates the KM empirical overlay with 6 binned time intervals, matching the <code>plout</code> dataset. Both use the same cohort size so the overlay aligns.</p>
+<p><code><a href="../reference/sample_hazard_data.html">sample_hazard_data()</a></code> generates the parametric prediction grid (one row per time point) with <code>survival</code>, <code>hazard</code>, and <code>cumhaz</code> columns plus their CI bounds, the same shape as the SAS <code>predict</code> dataset. <code><a href="../reference/sample_hazard_empirical.html">sample_hazard_empirical()</a></code> generates the KM empirical overlay with 6 binned time intervals, matching the <code>plout</code> dataset. Both use the same cohort size so the overlay aligns.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb106"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">dat_hp</span>  <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sample_hazard_data.html">sample_hazard_data</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">500</span>, time_max <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
@@ -1943,7 +1945,7 @@ Albumin    -0.2499998 -0.1813117  0.05984457  1.00000000</code></pre>
 </div>
 </section><section class="level2"><h3 id="the-hv_hazard-object-interface">The <code>hv_hazard()</code> object interface<a class="anchor" aria-label="anchor" href="#the-hv_hazard-object-interface"></a>
 </h3>
-<p>Every <code><a href="../reference/hazard_plot.html">hazard_plot()</a></code> call above re-validates and re-passes <code>curve_data</code>, <code>empirical</code>, and <code>reference</code> from scratch. <code><a href="../reference/hv_hazard.html">hv_hazard()</a></code> does that validation once and stores the result as an S3 object – the same build-once, <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code>-as-needed pattern <code><a href="../reference/hv_survival.html">hv_survival()</a></code> uses for the KM curve. Reach for it when a hazard fit feeds more than one figure, or when downstream code already dispatches on <code>hv_data</code> subclasses and you want the hazard curve to fit that pattern too.</p>
+<p>Every <code><a href="../reference/hazard_plot.html">hazard_plot()</a></code> call above re-validates and re-passes <code>curve_data</code>, <code>empirical</code>, and <code>reference</code> from scratch. <code><a href="../reference/hv_hazard.html">hv_hazard()</a></code> does that validation once and stores the result as an S3 object: the same build-once, <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code>-as-needed pattern <code><a href="../reference/hv_survival.html">hv_survival()</a></code> uses for the KM curve. Reach for it when a hazard fit feeds more than one figure, or when downstream code already dispatches on <code>hv_data</code> subclasses and you want the hazard curve to fit that pattern too.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb113"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">hz</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hv_hazard.html">hv_hazard</a></span><span class="op">(</span></span>
@@ -1979,7 +1981,7 @@ Albumin    -0.2499998 -0.1813117  0.05984457  1.00000000</code></pre>
 </div>
 </div>
 </div>
-<p><code>hz$tables</code> carries the <code>empirical</code> and <code>reference</code> data frames you passed in, nothing more – unlike <code><a href="../reference/hv_survival.html">hv_survival()</a></code>, <code><a href="../reference/hv_hazard.html">hv_hazard()</a></code> never fits a risk table. If you want a numbers-at-risk strip under a parametric curve, hand <code><a href="../reference/hv_atrisk.html">hv_atrisk()</a></code> the subject-level <code>time</code>/<code>status</code>/<code>group</code> columns directly, as noted in the numbers-at-risk section above.</p>
+<p><code>hz$tables</code> carries the <code>empirical</code> and <code>reference</code> data frames you passed in, nothing more. Unlike <code><a href="../reference/hv_survival.html">hv_survival()</a></code>, <code><a href="../reference/hv_hazard.html">hv_hazard()</a></code> never fits a risk table. If you want a numbers-at-risk strip under a parametric curve, hand <code><a href="../reference/hv_atrisk.html">hv_atrisk()</a></code> the subject-level <code>time</code>/<code>status</code>/<code>group</code> columns directly, as noted in the numbers-at-risk section above.</p>
 </section></section><section class="section level2"><h2 id="survival-difference-life-gained-plot">Survival Difference (Life-Gained) Plot<a class="anchor" aria-label="anchor" href="#survival-difference-life-gained-plot"></a>
 </h2>
 <p><code><a href="../reference/survival_difference_plot.html">survival_difference_plot()</a></code> plots the difference <code>S_2(t) - S_1(t)</code> between two groups over time, with an optional confidence band. This ports <code>tp.hp.dead.life-gained.sas</code> (HAZDIFL macro output).</p>
@@ -2005,7 +2007,7 @@ Albumin    -0.2499998 -0.1813117  0.05984457  1.00000000</code></pre>
 </div>
 </section><section class="level2"><h3 id="survival-difference-curve">Survival difference curve<a class="anchor" aria-label="anchor" href="#survival-difference-curve"></a>
 </h3>
-<p><code><a href="../reference/survival_difference_plot.html">survival_difference_plot()</a></code> takes the pre-computed difference and CI columns directly – no grouping argument needed for the two-group case. The dashed horizontal line at zero makes the no-benefit baseline immediately visible; a positive difference means the treatment group has higher survival.</p>
+<p><code><a href="../reference/survival_difference_plot.html">survival_difference_plot()</a></code> takes the pre-computed difference and CI columns directly; the two-group case needs no grouping argument. The dashed horizontal line at zero marks the no-benefit baseline; a positive difference means the treatment group has higher survival.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb118"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/survival_difference_plot.html">survival_difference_plot</a></span><span class="op">(</span></span>
@@ -2067,7 +2069,7 @@ Albumin    -0.2499998 -0.1813117  0.05984457  1.00000000</code></pre>
 </div>
 </section><section class="level2"><h3 id="the-hv_survival_difference-object-interface">The <code>hv_survival_difference()</code> object interface<a class="anchor" aria-label="anchor" href="#the-hv_survival_difference-object-interface"></a>
 </h3>
-<p><code><a href="../reference/survival_difference_plot.html">survival_difference_plot()</a></code> renders straight from <code>diff_dat</code>. <code><a href="../reference/hv_survival_difference.html">hv_survival_difference()</a></code> stores the same estimate and CI columns as an S3 object first, so <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code> confirms which columns it picked up before you spend time styling the plot – worth doing when you’re scripting several comparisons and want a mis-named CI column to fail loudly instead of quietly plotting a flat line.</p>
+<p><code><a href="../reference/survival_difference_plot.html">survival_difference_plot()</a></code> renders straight from <code>diff_dat</code>. <code><a href="../reference/hv_survival_difference.html">hv_survival_difference()</a></code> stores the same estimate and CI columns as an S3 object first, so <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code> confirms which columns it picked up before you spend time styling the plot. That is worth doing when you’re scripting several comparisons and want a mis-named CI column to fail loudly instead of quietly plotting a flat line.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb120"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">sd</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hv_survival_difference.html">hv_survival_difference</a></span><span class="op">(</span></span>
@@ -2128,7 +2130,7 @@ Albumin    -0.2499998 -0.1813117  0.05984457  1.00000000</code></pre>
 </div>
 </section><section class="level2"><h3 id="nnt-curve">NNT curve<a class="anchor" aria-label="anchor" href="#nnt-curve"></a>
 </h3>
-<p>NNT decreases over time as the treatment benefit accumulates — early in follow-up you need to treat many patients to prevent one event; by later years the survival gap has widened enough that fewer do.</p>
+<p>NNT decreases over time as the treatment benefit accumulates. Early in follow-up you need to treat many patients to prevent one event; by later years the survival gap has widened enough that fewer do.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb125"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/nnt_plot.html">nnt_plot</a></span><span class="op">(</span></span>
@@ -2176,7 +2178,7 @@ Albumin    -0.2499998 -0.1813117  0.05984457  1.00000000</code></pre>
 </div>
 </section><section class="level2"><h3 id="the-hv_nnt-object-interface">The <code>hv_nnt()</code> object interface<a class="anchor" aria-label="anchor" href="#the-hv_nnt-object-interface"></a>
 </h3>
-<p><code><a href="../reference/nnt_plot.html">nnt_plot()</a></code> takes <code>nnt_dat</code> as-is. <code><a href="../reference/hv_nnt.html">hv_nnt()</a></code> wraps it as an object and, by default, drops rows where <code>estimate_col</code> is <code>NA</code> – for NNT that’s every time point where the absolute risk reduction is near zero and “number needed to treat” is undefined. Set <code>na_rm = FALSE</code> if you want those rows kept in <code>$data</code>, for example to see exactly where the curve would have broken.</p>
+<p><code><a href="../reference/nnt_plot.html">nnt_plot()</a></code> takes <code>nnt_dat</code> as-is. <code><a href="../reference/hv_nnt.html">hv_nnt()</a></code> wraps it as an object and, by default, drops rows where <code>estimate_col</code> is <code>NA</code>. For NNT that’s every time point where the absolute risk reduction is near zero and “number needed to treat” is undefined. Set <code>na_rm = FALSE</code> if you want those rows kept in <code>$data</code>, for example to see exactly where the curve would have broken.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb127"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">nn</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hv_nnt.html">hv_nnt</a></span><span class="op">(</span><span class="va">nnt_dat</span>, lower_col <span class="op">=</span> <span class="st">"nnt_lower"</span>, upper_col <span class="op">=</span> <span class="st">"nnt_upper"</span><span class="op">)</span></span>
@@ -2373,7 +2375,7 @@ Albumin    -0.2499998 -0.1813117  0.05984457  1.00000000</code></pre>
 </div>
 </section><section class="level2"><h3 id="median-summary-manual-colours-nyha-style">Median summary + manual colours (NYHA style)<a class="anchor" aria-label="anchor" href="#median-summary-manual-colours-nyha-style"></a>
 </h3>
-<p>Pass <code>summary_fn = "median"</code> when the outcome distribution is skewed and the median is more interpretable than the mean – typical for NYHA class percentage trends. Manual colours let you assign clinically meaningful hues (here, one colour per NYHA class).</p>
+<p>Pass <code>summary_fn = "median"</code> when the outcome distribution is skewed and the median is more interpretable than the mean, typical for NYHA class percentage trends. Manual colours let you assign clinically meaningful hues (here, one colour per NYHA class).</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb138"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">tr_med</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hv_trends.html">hv_trends</a></span><span class="op">(</span><span class="va">dta_tr</span>, summary_fn <span class="op">=</span> <span class="st">"median"</span><span class="op">)</span></span>
@@ -2407,7 +2409,7 @@ Albumin    -0.2499998 -0.1813117  0.05984457  1.00000000</code></pre>
 </div>
 </section><section class="level2"><h3 id="with-confidence-ribbon">With confidence ribbon<a class="anchor" aria-label="anchor" href="#with-confidence-ribbon"></a>
 </h3>
-<p>Pass <code>se = TRUE</code> to <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code> to add a <code><a href="https://ggplot2.tidyverse.org/reference/geom_ribbon.html" class="external-link">geom_ribbon()</a></code> around the mean line. The <code>alpha</code> argument controls the ribbon opacity – 0.2 keeps the band visible without obscuring the line itself.</p>
+<p>Pass <code>se = TRUE</code> to <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code> to add a <code><a href="https://ggplot2.tidyverse.org/reference/geom_ribbon.html" class="external-link">geom_ribbon()</a></code> around the mean line. The <code>alpha</code> argument controls the ribbon opacity; 0.2 keeps the band visible without obscuring the line itself.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb139"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">tr1</span>, se <span class="op">=</span> <span class="cn">TRUE</span>, alpha <span class="op">=</span> <span class="fl">0.2</span><span class="op">)</span> <span class="op">+</span></span>
@@ -2490,7 +2492,7 @@ Albumin    -0.2499998 -0.1813117  0.05984457  1.00000000</code></pre>
 </div>
 </div>
 </div>
-</section><section class="level2"><h3 id="polytomous-groups-repair-types-tp-lp-trends-polytomous-sas">Polytomous groups — repair types (tp.lp.trends.polytomous.sas)<a class="anchor" aria-label="anchor" href="#polytomous-groups-repair-types-tp-lp-trends-polytomous-sas"></a>
+</section><section class="level2"><h3 id="polytomous-groups-repair-types-tp-lp-trends-polytomous-sas">Polytomous groups: repair types (tp.lp.trends.polytomous.sas)<a class="anchor" aria-label="anchor" href="#polytomous-groups-repair-types-tp-lp-trends-polytomous-sas"></a>
 </h3>
 <p>Four repair categories over a short study period (1990–1999): the SAS template uses <code>axisx order=(1990 to 1999 by 1)</code> for fine year breaks.</p>
 <div class="cell">
@@ -2526,7 +2528,7 @@ Albumin    -0.2499998 -0.1813117  0.05984457  1.00000000</code></pre>
 </div>
 </div>
 </div>
-</section><section class="level2"><h3 id="lv-mass-index-tp-dp-trends-r-plot2">LV mass index (tp.dp.trends.R — plot2)<a class="anchor" aria-label="anchor" href="#lv-mass-index-tp-dp-trends-r-plot2"></a>
+</section><section class="level2"><h3 id="lv-mass-index-tp-dp-trends-r-plot2">LV mass index (tp.dp.trends.R, plot2)<a class="anchor" aria-label="anchor" href="#lv-mass-index-tp-dp-trends-r-plot2"></a>
 </h3>
 <p>Continuous outcome with a larger y range: <code>scale_y_continuous(breaks=seq(0, 200, 50))</code>, <code>coord_cartesian(xlim = c(1995, 2016), ylim = c(0, 200))</code>.</p>
 <div class="cell">
@@ -2551,7 +2553,7 @@ Albumin    -0.2499998 -0.1813117  0.05984457  1.00000000</code></pre>
 </div>
 </div>
 </div>
-</section><section class="level2"><h3 id="case-volume-total-surgeries-per-year-tp-dp-trends-r-plot4">Case volume / total surgeries per year (tp.dp.trends.R — plot4)<a class="anchor" aria-label="anchor" href="#case-volume-total-surgeries-per-year-tp-dp-trends-r-plot4"></a>
+</section><section class="level2"><h3 id="case-volume-total-surgeries-per-year-tp-dp-trends-r-plot4">Case volume / total surgeries per year (tp.dp.trends.R, plot4)<a class="anchor" aria-label="anchor" href="#case-volume-total-surgeries-per-year-tp-dp-trends-r-plot4"></a>
 </h3>
 <p>The annual case-volume figure uses a y-axis that runs 0–400 by 50, matching the mitral degeneration study’s scale from <code>tp.dp.trends.R</code>. A single <code>group_col = NULL</code> call collapses all patients into one series.</p>
 <div class="cell">
@@ -2576,7 +2578,7 @@ Albumin    -0.2499998 -0.1813117  0.05984457  1.00000000</code></pre>
 </div>
 </div>
 </div>
-</section><section class="level2"><h3 id="annotated-trend-hospital-los-tp-dp-trends-r-plot5">Annotated trend — hospital LOS (tp.dp.trends.R — plot5)<a class="anchor" aria-label="anchor" href="#annotated-trend-hospital-los-tp-dp-trends-r-plot5"></a>
+</section><section class="level2"><h3 id="annotated-trend-hospital-los-tp-dp-trends-r-plot5">Annotated trend: hospital LOS (tp.dp.trends.R, plot5)<a class="anchor" aria-label="anchor" href="#annotated-trend-hospital-los-tp-dp-trends-r-plot5"></a>
 </h3>
 <p>Template: <code>coord_cartesian(ylim = c(0, 20))</code>, <code>annotate("text", 1995, 18, label="Trend: Hospital Length of Stay", size=4.5)</code>.</p>
 <div class="cell">
@@ -2623,7 +2625,7 @@ Albumin    -0.2499998 -0.1813117  0.05984457  1.00000000</code></pre>
 </div>
 </section></section><section class="section level2"><h2 id="spaghetti-profile-plot">Spaghetti / Profile Plot<a class="anchor" aria-label="anchor" href="#spaghetti-profile-plot"></a>
 </h2>
-<p><code><a href="../reference/hv_spaghetti.html">hv_spaghetti()</a></code> ports the pattern from <code>tp.dp.spaghetti.echo.R</code>: one trajectory line per subject over time, with optional stratification by a grouping variable. <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code> accepts <code>add_smooth = TRUE</code> for an optional LOESS overlay and returns a bare ggplot you can dress with <code><a href="../reference/hvtiPlotR-themes.html">theme_hv_manuscript()</a></code>. The original template covers nine figures — unstratified and sex-stratified variants of three echo outcomes (AV mean gradient, AV area, DVI) plus an ordinal MV regurgitation grade plot.</p>
+<p><code><a href="../reference/hv_spaghetti.html">hv_spaghetti()</a></code> ports the pattern from <code>tp.dp.spaghetti.echo.R</code>: one trajectory line per subject over time, with optional stratification by a grouping variable. <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code> accepts <code>add_smooth = TRUE</code> for an optional LOESS overlay and returns a bare ggplot you can dress with <code><a href="../reference/hvtiPlotR-themes.html">theme_hv_manuscript()</a></code>. The original template covers nine figures: unstratified and sex-stratified variants of three echo outcomes (AV mean gradient, AV area, DVI) plus an ordinal MV regurgitation grade plot.</p>
 <section class="level2"><h3 id="sample-data-11">Sample data<a class="anchor" aria-label="anchor" href="#sample-data-11"></a>
 </h3>
 <p><code><a href="../reference/sample_spaghetti_data.html">sample_spaghetti_data()</a></code> generates 150 patients with up to 6 observations each, stratified by a named proportion vector that mirrors the Female/Male <code>MALE</code> column in the original template. Build both the unstratified and colour-stratified S3 objects here for reuse across the variants below.</p>
@@ -2665,7 +2667,7 @@ Albumin    -0.2499998 -0.1813117  0.05984457  1.00000000</code></pre>
 </div>
 </div>
 </div>
-</section><section class="level2"><h3 id="unstratified-av-mean-gradient-full-range-plot_1">Unstratified — AV mean gradient, full range (plot_1)<a class="anchor" aria-label="anchor" href="#unstratified-av-mean-gradient-full-range-plot_1"></a>
+</section><section class="level2"><h3 id="unstratified-av-mean-gradient-full-range-plot_1">Unstratified: AV mean gradient, full range (plot_1)<a class="anchor" aria-label="anchor" href="#unstratified-av-mean-gradient-full-range-plot_1"></a>
 </h3>
 <p>Template: <code>scale_y_continuous(breaks=seq(0, 80, 20))</code>, <code>coord_cartesian(xlim = c(0, 5), ylim = c(0, 80))</code>.</p>
 <div class="cell">
@@ -2683,7 +2685,7 @@ Albumin    -0.2499998 -0.1813117  0.05984457  1.00000000</code></pre>
 </div>
 </div>
 </div>
-</section><section class="level2"><h3 id="unstratified-zoomed-y-axis-plot_3">Unstratified — zoomed y-axis (plot_3)<a class="anchor" aria-label="anchor" href="#unstratified-zoomed-y-axis-plot_3"></a>
+</section><section class="level2"><h3 id="unstratified-zoomed-y-axis-plot_3">Unstratified: zoomed y-axis (plot_3)<a class="anchor" aria-label="anchor" href="#unstratified-zoomed-y-axis-plot_3"></a>
 </h3>
 <p>Template: <code>scale_y_continuous(breaks=seq(0, 30, 10))</code>, <code>coord_cartesian(ylim = c(0, 30))</code>.</p>
 <div class="cell">
@@ -2701,7 +2703,7 @@ Albumin    -0.2499998 -0.1813117  0.05984457  1.00000000</code></pre>
 </div>
 </div>
 </div>
-</section><section class="level2"><h3 id="stratified-by-sex-av-mean-gradient-plot_2-plot_4">Stratified by sex — AV mean gradient (plot_2 / plot_4)<a class="anchor" aria-label="anchor" href="#stratified-by-sex-av-mean-gradient-plot_2-plot_4"></a>
+</section><section class="level2"><h3 id="stratified-by-sex-av-mean-gradient-plot_2-plot_4">Stratified by sex: AV mean gradient (plot_2 / plot_4)<a class="anchor" aria-label="anchor" href="#stratified-by-sex-av-mean-gradient-plot_2-plot_4"></a>
 </h3>
 <p>Template: <code>scale_color_manual(breaks = c("0", "1"), values=c("red", "blue"))</code>. The quick-start in the template header uses the modernised <code>"firebrick"</code> / <code>"steelblue"</code> equivalents.</p>
 <div class="cell">
@@ -2769,7 +2771,7 @@ Albumin    -0.2499998 -0.1813117  0.05984457  1.00000000</code></pre>
 </div>
 </div>
 </div>
-</section><section class="level2"><h3 id="ordinal-y-axis-mv-regurgitation-grade-plot_9">Ordinal y-axis — MV regurgitation grade (plot_9)<a class="anchor" aria-label="anchor" href="#ordinal-y-axis-mv-regurgitation-grade-plot_9"></a>
+</section><section class="level2"><h3 id="ordinal-y-axis-mv-regurgitation-grade-plot_9">Ordinal y-axis: MV regurgitation grade (plot_9)<a class="anchor" aria-label="anchor" href="#ordinal-y-axis-mv-regurgitation-grade-plot_9"></a>
 </h3>
 <p>Template: <code>scale_y_continuous(labels=c("None", "Mild", "Moderate", "Severe"))</code>, <code>coord_cartesian(xlim = c(0, 6), ylim = c(0, 3))</code>, two colour groups for early (blue) and late (red2) cohorts.</p>
 <div class="cell">
@@ -2828,7 +2830,7 @@ Albumin    -0.2499998 -0.1813117  0.05984457  1.00000000</code></pre>
 </div>
 </section></section><section class="section level2"><h2 id="nonparametric-temporal-trend-curve">Nonparametric Temporal Trend Curve<a class="anchor" aria-label="anchor" href="#nonparametric-temporal-trend-curve"></a>
 </h2>
-<p><code><a href="../reference/hv_nonparametric.html">hv_nonparametric()</a></code> prepares pre-computed average curves from a two-phase nonparametric temporal trend model — the R equivalent of the SAS <code>tp.np.*.avrg_curv.*</code> and <code>tp.np.*.u.trend.*</code> template family.</p>
+<p><code><a href="../reference/hv_nonparametric.html">hv_nonparametric()</a></code> prepares pre-computed average curves from a two-phase nonparametric temporal trend model, the R equivalent of the SAS <code>tp.np.*.avrg_curv.*</code> and <code>tp.np.*.u.trend.*</code> template family.</p>
 <p>Pass the SAS <code>mean_curv</code> and <code>boots_ci</code> datasets (read in with <code><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv()</a></code>) and call <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code> for a bare ggplot you can dress with colour, labels, and <code><a href="../reference/hvtiPlotR-themes.html">theme_hv_manuscript()</a></code>.</p>
 <section class="level2"><h3 id="sample-data-12">Sample data<a class="anchor" aria-label="anchor" href="#sample-data-12"></a>
 </h3>
@@ -2855,7 +2857,7 @@ Albumin    -0.2499998 -0.1813117  0.05984457  1.00000000</code></pre>
 </div>
 </section><section class="level2"><h3 id="single-average-curve-with-68-ci-ribbon">Single average curve with 68 % CI ribbon<a class="anchor" aria-label="anchor" href="#single-average-curve-with-68-ci-ribbon"></a>
 </h3>
-<p>Build the S3 object once – pass <code>lower_col</code>/<code>upper_col</code> that match the CI columns in your data, and optionally <code>data_points</code> for the summary overlay. The bare plot and the decorated plot share the same object.</p>
+<p>Build the S3 object once. Pass <code>lower_col</code>/<code>upper_col</code> that match the CI columns in your data, and optionally <code>data_points</code> for the summary overlay. The bare plot and the decorated plot share the same object.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb161"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">np</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hv_nonparametric.html">hv_nonparametric</a></span><span class="op">(</span></span>
@@ -2974,7 +2976,7 @@ Albumin    -0.2499998 -0.1813117  0.05984457  1.00000000</code></pre>
 </div>
 </section></section><section class="section level2"><h2 id="nonparametric-ordinal-outcome-curve">Nonparametric Ordinal Outcome Curve<a class="anchor" aria-label="anchor" href="#nonparametric-ordinal-outcome-curve"></a>
 </h2>
-<p><code><a href="../reference/hv_ordinal.html">hv_ordinal()</a></code> prepares pre-computed grade-specific probability curves from a cumulative proportional-odds model — the R equivalent of <code>tp.np.*.ordinal.*</code> SAS templates (e.g. TR grade prevalence, AR severity).</p>
+<p><code><a href="../reference/hv_ordinal.html">hv_ordinal()</a></code> prepares pre-computed grade-specific probability curves from a cumulative proportional-odds model, the R equivalent of <code>tp.np.*.ordinal.*</code> SAS templates (e.g. TR grade prevalence, AR severity).</p>
 <p>The SAS <code>predict</code> dataset stores one column per grade (<code>p0</code>, <code>p1</code>, <code>p2</code>, <code>p3</code>). You’ll need to reshape it to long format before passing it to the constructor:</p>
 <div class="sourceCode" id="cb166"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyr.tidyverse.org" class="external-link">tidyr</a></span><span class="op">)</span></span>
@@ -3188,7 +3190,7 @@ Albumin    -0.2499998 -0.1813117  0.05984457  1.00000000</code></pre>
 </div>
 </section><section class="level2"><h3 id="numeric-table-panel">Numeric table panel<a class="anchor" aria-label="anchor" href="#numeric-table-panel"></a>
 </h3>
-<p>Call <code>plot(lc, type = "table")</code> to get the numeric summary panel – the same counts the bar chart shows, rendered as coloured text below the x-axis labels. This panel is intended to be composed with <code>patchwork</code> below the bar chart, so keep the theme consistent.</p>
+<p>Call <code>plot(lc, type = "table")</code> to get the numeric summary panel: the same counts the bar chart shows, rendered as coloured text below the x-axis labels. This panel is intended to be composed with <code>patchwork</code> below the bar chart, so keep the theme consistent.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb179"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p_lc_tbl</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">lc</span>, type <span class="op">=</span> <span class="st">"table"</span><span class="op">)</span> <span class="op">+</span></span>
@@ -3224,7 +3226,7 @@ Albumin    -0.2499998 -0.1813117  0.05984457  1.00000000</code></pre>
 </div>
 </section><section class="level2"><h3 id="saving-the-combined-figure">Saving the combined figure<a class="anchor" aria-label="anchor" href="#saving-the-combined-figure"></a>
 </h3>
-<p><code><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave()</a></code> writes the patchwork composite at 11 x 6 inches. <code><a href="../reference/save_ppt.html">save_ppt()</a></code> takes the bar chart alone – patchwork composites may need <code><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave()</a></code> first – and writes it to a PowerPoint slide. See <a href="plot-decorators.html">Decorating and Saving</a> for details.</p>
+<p><code><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave()</a></code> writes the patchwork composite at 11 x 6 inches. <code><a href="../reference/save_ppt.html">save_ppt()</a></code> takes the bar chart alone (patchwork composites may need <code><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave()</a></code> first) and writes it to a PowerPoint slide. See <a href="plot-decorators.html">Decorating and Saving</a> for details.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb181"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">combined</span> <span class="op">&lt;-</span> <span class="va">p_lc_bar</span> <span class="op">/</span> <span class="va">p_lc_tbl</span> <span class="op">+</span></span>
@@ -3291,7 +3293,7 @@ Albumin    -0.2499998 -0.1813117  0.05984457  1.00000000</code></pre>
 </div>
 </section><section class="level2"><h3 id="custom-intersection-bar-colour">Custom intersection bar colour<a class="anchor" aria-label="anchor" href="#custom-intersection-bar-colour"></a>
 </h3>
-<p>The intersection bars are a standard <code><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html" class="external-link">geom_bar()</a></code> — change the colour via the <code>bar_fill</code> argument (or set <code>set_size = FALSE</code> to return just the intersection-bar ggplot for full customisation).</p>
+<p>The intersection bars are a standard <code><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html" class="external-link">geom_bar()</a></code>; change the colour via the <code>bar_fill</code> argument (or set <code>set_size = FALSE</code> to return just the intersection-bar ggplot for full customisation).</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb189"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">hu</span>, bar_fill <span class="op">=</span> <span class="st">"steelblue"</span>, set_size <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">+</span></span>
@@ -3348,7 +3350,7 @@ Figure 2
 </div>
 </section></section><section class="level2"><h3 id="saving-12">Saving<a class="anchor" aria-label="anchor" href="#saving-12"></a>
 </h3>
-<p><code><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave()</a></code> handles a patchwork composite the same as a bare ggplot – write it at 11 x 6 inches, wide enough for the intersection bars plus the set-size sidebar. For a PowerPoint version, see <a href="plot-decorators.html">Decorating and Saving</a>.</p>
+<p><code><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave()</a></code> handles a patchwork composite the same as a bare ggplot; write it at 11 x 6 inches, wide enough for the intersection bars plus the set-size sidebar. For a PowerPoint version, see <a href="plot-decorators.html">Decorating and Saving</a>.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb192"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p_upset</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">hu</span><span class="op">)</span> <span class="op">&amp;</span> <span class="fu"><a href="../reference/hvtiPlotR-themes.html">theme_hv_poster</a></span><span class="op">(</span><span class="op">)</span></span>
@@ -3360,13 +3362,13 @@ Figure 2
 </div>
 </section></section><section class="section level2"><h2 id="draft-footnotes">Draft Footnotes<a class="anchor" aria-label="anchor" href="#draft-footnotes"></a>
 </h2>
-<p><code><a href="../reference/make_footnote.html">make_footnote()</a></code> writes a small annotation to the <strong>bottom-right corner</strong> of the current graphics device using grid. Call it <em>after</em> printing a plot to mark the figure as a work-in-progress during analysis. When you’re ready for final output, omit the call — the plot object itself is untouched.</p>
+<p><code><a href="../reference/make_footnote.html">make_footnote()</a></code> writes a small annotation to the <strong>bottom-right corner</strong> of the current graphics device using grid. Call it <em>after</em> printing a plot to mark the figure as a work-in-progress during analysis. When you’re ready for final output, omit the call. The plot object itself is untouched.</p>
 <pre><code># During analysis                   # For publication
 print(p)                             ggsave("fig1.pdf", p, ...)
 make_footnote("R/analysis.R")        # &lt;- no footnote call</code></pre>
 <section class="level2"><h3 id="draft-annotation-pattern">Draft annotation pattern<a class="anchor" aria-label="anchor" href="#draft-annotation-pattern"></a>
 </h3>
-<p>Build any hvtiPlotR figure as usual, then call <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code> followed by <code><a href="../reference/make_footnote.html">make_footnote()</a></code> to stamp the bottom-right corner with the source file path and a timestamp. The ggplot object itself is unchanged – only the rendered device gets the annotation.</p>
+<p>Build any hvtiPlotR figure as usual, then call <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code> followed by <code><a href="../reference/make_footnote.html">make_footnote()</a></code> to stamp the bottom-right corner with the source file path and a timestamp. The ggplot object itself is unchanged; only the rendered device gets the annotation.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb194"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">dta_fn</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sample_hazard_data.html">sample_hazard_data</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">300</span>, time_max <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
@@ -3418,7 +3420,7 @@ make_footnote("R/analysis.R")        # &lt;- no footnote call</code></pre>
 </div>
 </section><section class="level2"><h3 id="saving-without-the-footnote">Saving without the footnote<a class="anchor" aria-label="anchor" href="#saving-without-the-footnote"></a>
 </h3>
-<p>The <code><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave()</a></code> call writes the ggplot object directly — <code><a href="../reference/make_footnote.html">make_footnote()</a></code> is never called, so the saved file is clean.</p>
+<p>The <code><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave()</a></code> call writes the ggplot object directly; <code><a href="../reference/make_footnote.html">make_footnote()</a></code> is never called, so the saved file is clean.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb196"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave</a></span><span class="op">(</span><span class="st">"../graphs/fig1_survival.pdf"</span>, <span class="va">p_draft</span>, width <span class="op">=</span> <span class="fl">11</span>, height <span class="op">=</span> <span class="fl">8.5</span><span class="op">)</span></span></code></pre></div>
