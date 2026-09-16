@@ -65,11 +65,11 @@ the sections below.
 | `hv_nonparametric()` | `tp.np.*.avrg_curv.*`, `tp.np.*.u.trend.*`, `tp.np.*.double.*`, `tp.np.*.mult.*`, `tp.np.*.phases.*`, `tp.np.z0axdpo.*` | none |
 | `hv_ordinal()` | `tp.np.*.ordinal.*` | none |
 | `hv_correlation_matrix()` | `descriptive/dc.tables.ods.sas` (`PROC CORR PLOTS=MATRIX`) | none |
-| `hv_eda()` | none | none |
+| `hv_eda()` | none | `tp.dp.EDA_barplots_scatterplots.R`, `tp.dp.EDA_barplots_scatterplots_varnames.R` |
 | `hv_spaghetti()` | none | `tp.dp.spaghetti.echo.R` |
 | `hv_trends()` | `tp.lp.trends.sas`, `tp.lp.trends.age.sas`, `tp.lp.trends.polytomous.sas`, `tp.rp.trends.sas` | `tp.dp.trends.R` |
 | `hv_longitudinal()` | `tp.dp.longitudinal_patients_measures.*` | none |
-| `hv_alluvial()` | none | none |
+| `hv_alluvial()` | none | `tp.dp.female_bicus_preAR_sankey.R` |
 | `hv_sankey()` | none | PAM cluster stability analysis |
 | `hv_consort()` | none | none |
 | `hv_upset()` | none | none |

@@ -1,4 +1,18 @@
-# hvtiPlotR 2.7.15
+# hvtiPlotR (unreleased)
+
+## Documentation pass across vignettes, reference pages and README
+
+Prose is tightened throughout, and stale references are corrected:
+`plot-decorators` no longer documents a `style` argument no theme has, and
+names `panel_box` rather than `panel_left`/`panel_top`; the `hvtiPlotR`
+vignette's quick reference points to `hv_nonparametric()`, its section and
+figure references resolve, and the template map lists the R templates behind
+`hv_eda()` and `hv_alluvial()`. The contributing guide's Track A now teaches the
+`hv_<concept>()` constructor and `plot.hv_<concept>()` method pair, with tests
+that prove the plot carries data. The `parametric` and `nonparametric`
+dataset pages now describe `init` as the event-free state, not re-operation,
+and match the columns actually shipped. `DESCRIPTION` has a title-case `Title`
+and a `Description` that starts with a capital letter.
 
 ## Updates to `eda_classify_var()`, `hv_eda()`, and `plot.hv_eda()`
 

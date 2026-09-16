@@ -165,7 +165,7 @@ equivalent. Use it as a look-up when converting an existing SAS script.
 
 | `plot.sas` option | R / ggplot2 equivalent | Notes |
 |---|---|---|
-| `tuple set=..., x=t, y=est, cll=lo, clu=hi` | `hv_nonparametric(curve_data, lower_col="lo", upper_col="hi")` | Preferred hvtiPlotR function |
+| `tuple set=..., x=t, y=est, cll=lo, clu=hi` | `hv_nonparametric(curve_data, x_col="t", estimate_col="est", lower_col="lo", upper_col="hi")` | Preferred hvtiPlotR function |
 | `symbol=dot` | `geom_point(shape = 20)` | Filled circle |
 | `symbol=circle` | `geom_point(shape = 1)` | Open circle |
 | `symbol=square` | `geom_point(shape = 15)` | Filled square |
