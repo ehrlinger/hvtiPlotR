@@ -123,7 +123,11 @@ for the publication theme,
 for example data.
 
 Other Propensity Score & Matching:
+[`hv_rmst_contrast()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_rmst_contrast.md),
+[`hv_rmst_curves()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_rmst_curves.md),
 [`plot.hv_mirror_hist()`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hv_mirror_hist.md),
+[`plot.hv_rmst_contrast()`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hv_rmst_contrast.md),
+[`plot.hv_rmst_curves()`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hv_rmst_curves.md),
 [`sample_covariate_balance_data()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_covariate_balance_data.md)
 
 ## Examples

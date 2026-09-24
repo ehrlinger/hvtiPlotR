@@ -46,6 +46,8 @@
 <url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/hv_ph_location.html</loc></url>
 <url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/hv_ppt_palette.html</loc></url>
 <url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/hv_ppt_series.html</loc></url>
+<url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/hv_rmst_contrast.html</loc></url>
+<url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/hv_rmst_curves.html</loc></url>
 <url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/hv_sankey.html</loc></url>
 <url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/hv_spaghetti.html</loc></url>
 <url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/hv_stacked.html</loc></url>
@@ -85,6 +87,8 @@
 <url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/plot.hv_nnt.html</loc></url>
 <url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/plot.hv_nonparametric.html</loc></url>
 <url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/plot.hv_ordinal.html</loc></url>
+<url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/plot.hv_rmst_contrast.html</loc></url>
+<url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/plot.hv_rmst_curves.html</loc></url>
 <url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/plot.hv_sankey.html</loc></url>
 <url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/plot.hv_spaghetti.html</loc></url>
 <url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/plot.hv_stacked.html</loc></url>
@@ -106,6 +110,8 @@
 <url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/print.hv_nnt.html</loc></url>
 <url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/print.hv_nonparametric.html</loc></url>
 <url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/print.hv_ordinal.html</loc></url>
+<url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/print.hv_rmst_contrast.html</loc></url>
+<url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/print.hv_rmst_curves.html</loc></url>
 <url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/print.hv_sankey.html</loc></url>
 <url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/print.hv_spaghetti.html</loc></url>
 <url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/print.hv_stacked.html</loc></url>

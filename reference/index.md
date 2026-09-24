@@ -166,6 +166,18 @@ and after propensity matching or IPTW weighting.
   : Plot an hv_balance object
 - [`print(`*`<hv_balance>`*`)`](https://ehrlinger.github.io/hvtiPlotR/reference/print.hv_balance.md)
   : Print an hv_balance object
+- [`hv_rmst_contrast()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_rmst_contrast.md)
+  : Prepare RMST contrast data for plotting
+- [`plot(`*`<hv_rmst_contrast>`*`)`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hv_rmst_contrast.md)
+  : Plot an hv_rmst_contrast object
+- [`print(`*`<hv_rmst_contrast>`*`)`](https://ehrlinger.github.io/hvtiPlotR/reference/print.hv_rmst_contrast.md)
+  : Print an hv_rmst_contrast object
+- [`hv_rmst_curves()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_rmst_curves.md)
+  : Prepare weighted Kaplan-Meier curves for an RMST figure
+- [`plot(`*`<hv_rmst_curves>`*`)`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hv_rmst_curves.md)
+  : Plot an hv_rmst_curves object
+- [`print(`*`<hv_rmst_curves>`*`)`](https://ehrlinger.github.io/hvtiPlotR/reference/print.hv_rmst_curves.md)
+  : Print an hv_rmst_curves object
 - [`sample_mirror_histogram_data()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_mirror_histogram_data.md)
   : Generate Sample Data for Mirrored Histogram
 - [`sample_covariate_balance_data()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_covariate_balance_data.md)

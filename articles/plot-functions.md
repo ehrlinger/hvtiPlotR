@@ -59,6 +59,8 @@ sections below.
 | [`hv_alluvial()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_alluvial.md) | none | `tp.dp.female_bicus_preAR_sankey.R` |
 | [`hv_sankey()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_sankey.md) | none | PAM cluster stability analysis |
 | [`hv_consort()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_consort.md) | none | none |
+| [`hv_rmst_contrast()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_rmst_contrast.md) | none | none |
+| [`hv_rmst_curves()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_rmst_curves.md) | none | none |
 | [`hv_upset()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_upset.md) | none | none |
 
 Note:
@@ -1127,6 +1129,54 @@ plot(km, type = "life") +
 ```
 
 ![](plot-functions_files/figure-html/km_life-1.png)
+
+## RMST Contrast and Curves
+
+[`hv_rmst_contrast()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_rmst_contrast.md)
+and
+[`hv_rmst_curves()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_rmst_curves.md)
+plot the output of a weighted restricted-mean-survival analysis, for
+example `hvtiRpropensity::ps_rmst()$tables`. Both also accept plain data
+frames, so hvtiRpropensity is not required. Positive differences favour
+the treated group.
+
+``` r
+
+est <- data.frame(
+  estimator = c("Crude", "Overlap", "ATT"),
+  diff_days = c(97, -19, -115),
+  lo_days   = c(-10, -172, -343),
+  hi_days   = c(215, 173, 141)
+)
+tt <- seq(0, 5, by = 0.5)
+curves <- expand.grid(time = tt, arm = c("treated", "control"),
+                      estimator = est$estimator, stringsAsFactors = FALSE)
+curves$surv <- exp(-ifelse(curves$arm == "treated", 0.05, 0.08) * curves$time)
+```
+
+### Differences by estimator
+
+``` r
+
+plot(hv_rmst_contrast(est), x_label = "RMST difference at 4 years (days)") +
+  theme_hv_manuscript()
+```
+
+![](plot-functions_files/figure-html/rmst_contrast-1.png)
+
+### Weighted curves with the RMST area
+
+With `tau` the area under each arm’s curve up to the horizon is shaded,
+and with `estimates` each facet is labelled with its difference and
+interval.
+
+``` r
+
+plot(hv_rmst_curves(curves, estimates = est, tau = 4)) +
+  theme_hv_manuscript()
+```
+
+![](plot-functions_files/figure-html/rmst_curves-1.png)
 
 ## Correlation Matrix
 
