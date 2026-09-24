@@ -110,7 +110,11 @@ Worked recipe with rendered output:
 \code{\link{sample_mirror_histogram_data}} for example data.
 
 Other Propensity Score & Matching:
+\code{\link[=hv_rmst_contrast]{hv_rmst_contrast()}},
+\code{\link[=hv_rmst_curves]{hv_rmst_curves()}},
 \code{\link[=plot.hv_mirror_hist]{plot.hv_mirror_hist()}},
+\code{\link[=plot.hv_rmst_contrast]{plot.hv_rmst_contrast()}},
+\code{\link[=plot.hv_rmst_curves]{plot.hv_rmst_curves()}},
 \code{\link[=sample_covariate_balance_data]{sample_covariate_balance_data()}}
 }
 \concept{Propensity Score & Matching}

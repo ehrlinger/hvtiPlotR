@@ -72,6 +72,8 @@ the sections below.
 | `hv_alluvial()` | none | `tp.dp.female_bicus_preAR_sankey.R` |
 | `hv_sankey()` | none | PAM cluster stability analysis |
 | `hv_consort()` | none | none |
+| `hv_rmst_contrast()` | none | none |
+| `hv_rmst_curves()` | none | none |
 | `hv_upset()` | none | none |
 
 Note: `hazard_plot()`, `survival_difference_plot()`, and `nnt_plot()` retain
@@ -923,6 +925,46 @@ plot(km, type = "life") +
        y = "Restricted Mean Survival (years)",
        title = "Integral of Survivorship") +
   theme_hv_poster()
+```
+
+# RMST Contrast and Curves
+
+`hv_rmst_contrast()` and `hv_rmst_curves()` plot the output of a weighted
+restricted-mean-survival analysis, for example
+`hvtiRpropensity::ps_rmst()$tables`. Both also accept plain data frames, so
+hvtiRpropensity is not required. Positive differences favour the treated group.
+
+```{r}
+#| label: rmst_data
+est <- data.frame(
+  estimator = c("Crude", "Overlap", "ATT"),
+  diff_days = c(97, -19, -115),
+  lo_days   = c(-10, -172, -343),
+  hi_days   = c(215, 173, 141)
+)
+tt <- seq(0, 5, by = 0.5)
+curves <- expand.grid(time = tt, arm = c("treated", "control"),
+                      estimator = est$estimator, stringsAsFactors = FALSE)
+curves$surv <- exp(-ifelse(curves$arm == "treated", 0.05, 0.08) * curves$time)
+```
+
+## Differences by estimator
+
+```{r}
+#| label: rmst_contrast
+plot(hv_rmst_contrast(est), x_label = "RMST difference at 4 years (days)") +
+  theme_hv_manuscript()
+```
+
+## Weighted curves with the RMST area
+
+With `tau` the area under each arm's curve up to the horizon is shaded, and with
+`estimates` each facet is labelled with its difference and interval.
+
+```{r}
+#| label: rmst_curves
+plot(hv_rmst_curves(curves, estimates = est, tau = 4)) +
+  theme_hv_manuscript()
 ```
 
 # Correlation Matrix
