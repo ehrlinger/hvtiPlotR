@@ -142,6 +142,12 @@ reference:
   - hv_balance
   - plot.hv_balance
   - print.hv_balance
+  - hv_rmst_contrast
+  - plot.hv_rmst_contrast
+  - print.hv_rmst_contrast
+  - hv_rmst_curves
+  - plot.hv_rmst_curves
+  - print.hv_rmst_curves
   - sample_mirror_histogram_data
   - sample_covariate_balance_data
 

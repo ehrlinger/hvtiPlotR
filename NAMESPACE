@@ -17,6 +17,8 @@ S3method(plot,hv_mirror_hist)
 S3method(plot,hv_nnt)
 S3method(plot,hv_nonparametric)
 S3method(plot,hv_ordinal)
+S3method(plot,hv_rmst_contrast)
+S3method(plot,hv_rmst_curves)
 S3method(plot,hv_sankey)
 S3method(plot,hv_spaghetti)
 S3method(plot,hv_stacked)
@@ -39,6 +41,8 @@ S3method(print,hv_nnt)
 S3method(print,hv_nonparametric)
 S3method(print,hv_ordinal)
 S3method(print,hv_ppt_plot)
+S3method(print,hv_rmst_contrast)
+S3method(print,hv_rmst_curves)
 S3method(print,hv_sankey)
 S3method(print,hv_spaghetti)
 S3method(print,hv_stacked)
@@ -75,6 +79,8 @@ export(hv_ordinal)
 export(hv_ph_location)
 export(hv_ppt_palette)
 export(hv_ppt_series)
+export(hv_rmst_contrast)
+export(hv_rmst_curves)
 export(hv_sankey)
 export(hv_spaghetti)
 export(hv_stacked)
@@ -143,6 +149,7 @@ importFrom(ggplot2,
   autoplot,
   coord_cartesian,
   element_blank,
+  facet_wrap,
   geom_bar,
   geom_col,
   geom_errorbar,
@@ -150,6 +157,7 @@ importFrom(ggplot2,
   geom_hline,
   geom_line,
   geom_point,
+  geom_pointrange,
   geom_ribbon,
   geom_rug,
   geom_segment,

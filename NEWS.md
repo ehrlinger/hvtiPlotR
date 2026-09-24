@@ -1,3 +1,18 @@
+# hvtiPlotR (unreleased)
+
+## New: RMST contrast and curve plots
+
+`hv_rmst_contrast()` and `plot.hv_rmst_contrast()` draw restricted mean survival
+time differences as a dot-and-whisker plot, one row per estimator in the order
+supplied (factor levels respected), with a reference line at zero.
+`hv_rmst_curves()` and `plot.hv_rmst_curves()` draw weighted Kaplan-Meier step
+curves, one facet per estimator and colour by arm. With `tau` the area under
+each curve up to `tau` is shaded and a `tau` line is drawn; with `estimates`
+each facet is annotated with its RMST difference and interval.
+
+Both read the `tables` of `hvtiRpropensity::ps_rmst()`, as plain data frames or
+as the `ps_rmst` object itself, and add no dependency on that package.
+
 # hvtiPlotR 2.7.15
 
 ## Documentation pass across vignettes, reference pages and README

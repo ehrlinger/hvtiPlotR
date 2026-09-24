@@ -67,6 +67,10 @@ dta2 <- sample_covariate_balance_data(
 \seealso{
 Other Propensity Score & Matching:
 \code{\link[=hv_mirror_hist]{hv_mirror_hist()}},
-\code{\link[=plot.hv_mirror_hist]{plot.hv_mirror_hist()}}
+\code{\link[=hv_rmst_contrast]{hv_rmst_contrast()}},
+\code{\link[=hv_rmst_curves]{hv_rmst_curves()}},
+\code{\link[=plot.hv_mirror_hist]{plot.hv_mirror_hist()}},
+\code{\link[=plot.hv_rmst_contrast]{plot.hv_rmst_contrast()}},
+\code{\link[=plot.hv_rmst_curves]{plot.hv_rmst_curves()}}
 }
 \concept{Propensity Score & Matching}
