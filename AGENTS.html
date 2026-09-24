@@ -87,7 +87,7 @@
 <td>PR + push to <code>main</code>
 </td>
 <td>
-<strong>any lint under <code>.lintr</code>.</strong> <code>LINTR_ERROR_ON_LINT: true</code> since 2.7.9, when the 98 pre-existing lints were cleared (<a href="https://github.com/ehrlinger/hvtiPlotR/issues/89" class="external-link">#89</a>). Run <code><a href="https://lintr.r-lib.org/reference/lint.html" class="external-link">lintr::lint_package()</a></code> before pushing; it must return zero. The <code>house-style</code> job in the same workflow gates separately, on house-style artifact drift.</td>
+<strong>any lint under <code>.lintr</code>.</strong> <code>LINTR_ERROR_ON_LINT: true</code> since 2.7.9, when the 98 pre-existing lints were cleared (<a href="https://github.com/ehrlinger/hvtiPlotR/issues/89" class="external-link">#89</a>). Run <code>lintr::lint_package()</code> before pushing; it must return zero. The <code>house-style</code> job in the same workflow gates separately, on house-style artifact drift.</td>
 </tr><tr><td><code>pkgdown.yaml</code></td>
 <td>PR + push to <code>main</code>, manual</td>
 <td>the site build</td>

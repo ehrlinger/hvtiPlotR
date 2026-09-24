@@ -45,7 +45,7 @@ Read them:
 | workflow | runs on | fails on |
 |----|----|----|
 | `R-CMD-check.yaml` | PR + push to `main` | `R CMD check` across platforms |
-| `lint.yaml` | PR + push to `main` | **any lint under `.lintr`.** `LINTR_ERROR_ON_LINT: true` since 2.7.9, when the 98 pre-existing lints were cleared ([\#89](https://github.com/ehrlinger/hvtiPlotR/issues/89)). Run [`lintr::lint_package()`](https://lintr.r-lib.org/reference/lint.html) before pushing; it must return zero. The `house-style` job in the same workflow gates separately, on house-style artifact drift. |
+| `lint.yaml` | PR + push to `main` | **any lint under `.lintr`.** `LINTR_ERROR_ON_LINT: true` since 2.7.9, when the 98 pre-existing lints were cleared ([\#89](https://github.com/ehrlinger/hvtiPlotR/issues/89)). Run `lintr::lint_package()` before pushing; it must return zero. The `house-style` job in the same workflow gates separately, on house-style artifact drift. |
 | `pkgdown.yaml` | PR + push to `main`, manual | the site build |
 | `test-coverage.yaml` | PR + push to `main` | coverage upload; snapshots upload via `upload-snapshots: true` |
 | `check-manual.yaml` | **push to `main` only — never a PR** | the PDF manual build — catches raw Unicode in `.Rd` that `--no-manual` skips |
