@@ -340,15 +340,22 @@ hv_rmst_curves <- function(curves,
   shade <- if (is.null(tau)) {
     working[0L, c(facet, arm, time, surv), drop = FALSE]
   } else {
-    rmst_shade_table(working[stats::complete.cases(working[, c(time, surv)]), , drop = FALSE],
-                     facet, arm, time, surv, tau)
+    # A group with a missing knot is not shaded: dropping the row first would
+    # bridge the gap and report an RMST area the curve does not have.
+    bad_group <- interaction(working[[facet]], working[[arm]], drop = TRUE)
+    bad_group <- levels(bad_group)[unique(as.integer(
+      bad_group[!stats::complete.cases(working[, c(time, surv)])]))]
+    grp <- as.character(interaction(working[[facet]], working[[arm]]))
+    rmst_shade_table(working[!grp %in% bad_group, , drop = FALSE], facet, arm, time, surv, tau)
   }
 
   labels <- NULL
   if (!is.null(estimates)) {
     estimates <- rmst_pull_table(estimates, "estimates", "estimates")
     .check_cols(estimates, c("estimator", "diff_days", "lo_days", "hi_days"), data_arg = "estimates")
+    for (cl in c("diff_days", "lo_days", "hi_days")) .check_numeric_col(estimates, cl)
     est <- as.data.frame(estimates)
+    est <- est[stats::complete.cases(est[, c("diff_days", "lo_days", "hi_days")]), , drop = FALSE]
     est <- est[as.character(est$estimator) %in% facet_levels, , drop = FALSE]
     labels <- data.frame(
       est$estimator,

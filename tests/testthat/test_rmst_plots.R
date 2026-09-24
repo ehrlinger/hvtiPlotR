@@ -194,3 +194,22 @@ test_that("tau before every step shades nothing and does not error", {
   expect_equal(nrow(rc$tables$shade), 0L)
   expect_s3_class(plot(rc), "ggplot")
 })
+
+test_that("hv_rmst_curves() does not shade a group with a missing knot", {
+  cv <- expand.grid(time = c(0, 1, 2, 3), arm = c("treated", "control"),
+                    estimator = "A", stringsAsFactors = FALSE)
+  cv$surv <- rep(c(1, 0.8, 0.6, 0.5), 2)
+  cv$surv[cv$arm == "control" & cv$time == 2] <- NA
+  p <- plot(suppressWarnings(hv_rmst_curves(cv, tau = 3)))
+  is_area <- vapply(p$layers, function(l) inherits(l$geom, c("GeomPolygon", "GeomRibbon")), logical(1))
+  expect_true(any(is_area))
+  shaded <- unlist(lapply(p$layers[is_area], function(l) as.character(l$data$arm)))
+  expect_setequal(unique(shaded), "treated")
+})
+
+test_that("hv_rmst_curves() validates the estimates table", {
+  cv <- data.frame(estimator = "A", arm = rep(c("treated", "control"), each = 2),
+                   time = c(0, 1), surv = c(1, 0.8, 1, 0.7))
+  bad <- data.frame(estimator = "A", diff_days = "x", lo_days = 1, hi_days = 2)
+  expect_error(hv_rmst_curves(cv, estimates = bad), "numeric")
+})
