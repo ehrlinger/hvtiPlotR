@@ -224,6 +224,28 @@ test_that("hv_survival preserves strata order in exact at-risk counts", {
   expect_equal(km$tables$risk$n.risk, c(3, 3, 2, 3, 2, 2))
 })
 
+# The failure mode that dominated the bug: with no survfit summary row after
+# the last observation, every later report time inherited the final row for
+# ever. Here follow-up ends at 4 and year 6 is still asked for.
+test_that("hv_survival reports no one at risk past the end of follow-up", {
+  dta <- data.frame(
+    follow_up = c(1, 2, 3, 4),
+    event     = c(1, 0, 1, 0)
+  )
+
+  km <- hv_survival(
+    dta,
+    time_col  = "follow_up",
+    event_col = "event",
+    report_times = c(3, 4, 6)
+  )
+
+  # Year 6 is past the last follow-up: nobody is at risk, and the row is
+  # still emitted so the table keeps one row per requested report time.
+  expect_equal(km$tables$risk$report_time, c(3, 4, 6))
+  expect_equal(km$tables$risk$n.risk, c(2, 1, 0))
+})
+
 test_that("plot(hv_survival) returns a ggplot", {
   dta <- sample_survival_data(n = 100, seed = 1)
   km  <- hv_survival(dta)

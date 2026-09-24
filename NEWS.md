@@ -13,6 +13,12 @@ each facet is annotated with its RMST difference and interval.
 Both read the `tables` of `hvtiRpropensity::ps_rmst()`, as plain data frames or
 as the `ps_rmst` object itself, and add no dependency on that package.
 
+## Regression test for at-risk counts past the end of follow-up
+
+A test now covers the failure mode behind the at-risk fix in 2.7.13: a report
+time after the last observation must show nobody at risk, not repeat the final
+count. It was written with that fix but did not reach `main`.
+
 # hvtiPlotR 2.7.15
 
 ## Documentation pass across vignettes, reference pages and README
