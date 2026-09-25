@@ -107,9 +107,38 @@ test_that("grid dimensions are validated", {
   x <- hv_eda_pages(dta, section = "continuous")
   expect_error(plot(x, ncol = 0), "positive whole")
   expect_error(plot(x, nrow = 1.5), "positive whole")
+  expect_error(plot(x, ncol = Inf), "positive whole")
+  expect_error(plot(x, nrow = NA_real_), "positive whole")
 })
 
 test_that("print summarises the section", {
   expect_output(print(hv_eda_pages(dta, x_col = "op_years", section = "count")),
                 "binned by whole year")
+})
+
+# Structural snapshots rather than SVG ones: this package snapshots values with
+# expect_snapshot(), and rendered SVGs differ across the CI platforms' fonts.
+# Titles, layers, row counts, x bins and fill levels are what a change to the
+# report figure would move.
+page_structure <- function(page) {
+  for (i in seq_along(attr(page, "variables"))) {
+    p <- page[[i]]
+    built <- ggplot2::ggplot_build(p)
+    cat(sprintf("[%s] %s\n", attr(page, "variables")[i], p$labels$title))
+    cat("  geoms:", paste(vapply(p$layers, function(l) class(l$geom)[1], ""), collapse = ", "), "\n")
+    cat("  rows :", paste(vapply(built$data, nrow, 1L), collapse = ", "), "\n")
+    if (is.factor(p$data$x)) cat("  x    :", paste(levels(p$data$x), collapse = " "), "\n")
+    if (!is.null(p$data$fill)) cat("  fill :", paste(levels(p$data$fill), collapse = " "), "\n")
+    cat("  y    :", p$labels$y, "\n")
+  }
+}
+
+test_that("page structure is stable for each section", {
+  small <- sample_eda_data(n = 60, seed = 1)
+  for (section in c("continuous", "percent", "count")) {
+    pages <- plot(hv_eda_pages(small, x_col = "year", section = section,
+                               vars = c("ef", "peak_grad", "male", "nyha")),
+                  ncol = 2, nrow = 1)
+    expect_snapshot(for (page in pages) page_structure(page))
+  }
 })

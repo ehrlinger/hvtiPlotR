@@ -188,7 +188,7 @@ print.hv_eda_pages <- function(x, ...) {
 #' @export
 plot.hv_eda_pages <- function(x, ncol = 4L, nrow = 4L, alpha = 0.5, ...) {
   for (value in list(ncol, nrow)) {
-    if (!is.numeric(value) || length(value) != 1L || is.na(value) || value < 1 || value != floor(value)) {
+    if (!is.numeric(value) || length(value) != 1L || !is.finite(value) || value < 1 || value != floor(value)) {
       stop("`ncol` and `nrow` must be positive whole numbers.", call. = FALSE)
     }
   }
