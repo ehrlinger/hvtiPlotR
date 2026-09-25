@@ -101,16 +101,29 @@ hv_followup_panels <- function(data,
     stop("`panels` and `events` names must be distinct across both lists: ",
          paste(dup, collapse = ", "), " is used twice.", call. = FALSE)
   }
+  # An entry must be a list before its fields are read: `NULL[c("event", ...)]`
+  # is NULL, and all() of nothing is TRUE, so a NULL entry would pass a field
+  # check and fail later inside hv_followup().
+  is_text <- function(x) is.null(x) || is_name(x)
   for (nm in names(panels)) {
-    if (!is_name(panels[[nm]]$status) || !is_name(panels[[nm]]$time)) {
+    p <- panels[[nm]]
+    if (!is.list(p) || !is_name(p$status) || !is_name(p$time)) {
       stop("`panels` entry `", nm, "` needs one `status` and one `time` column.", call. = FALSE)
     }
+    if (!is_text(p$title)) stop("`panels` entry `", nm, "`: `title` must be one non-empty string.", call. = FALSE)
   }
   for (nm in names(events)) {
     e <- events[[nm]]
-    if (!all(vapply(e[c("event", "time", "death", "death_time")], is_name, logical(1L)))) {
+    if (!is.list(e) || !all(vapply(c("event", "time", "death", "death_time"), function(k) is_name(e[[k]]),
+                                   logical(1L)))) {
       stop("`events` entry `", nm, "` needs one `event`, `time`, `death` and `death_time` column.",
            call. = FALSE)
+    }
+    # The label becomes the middle of three state levels, so it must not repeat
+    # either of the other two.
+    if (!is_text(e$label) || (!is.null(e$label) && e$label %in% c("No event", "Death"))) {
+      stop("`events` entry `", nm, "`: `label` must be one non-empty string other than ",
+           "\"No event\" and \"Death\".", call. = FALSE)
     }
   }
 

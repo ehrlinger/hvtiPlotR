@@ -91,3 +91,21 @@ test_that("print summarises the window and the close date", {
   fp <- hv_followup_panels(dta, origin_year = 1990, panels = all_deaths)
   expect_output(print(fp), "Close date  : .*estimated")
 })
+
+test_that("a NULL or non-list entry is refused before any panel is built", {
+  expect_error(hv_followup_panels(dta, origin_year = 1990, panels = all_deaths, events = list(ev = NULL)),
+               "needs one `event`")
+  expect_error(hv_followup_panels(dta, origin_year = 1990, panels = list(all = "dead")),
+               "needs one `status` and one `time`")
+})
+
+test_that("an event label must be one string, distinct from the other two states", {
+  for (bad in list("Death", "No event", "", NA_character_, c("a", "b"), 1)) {
+    e <- list(ev = modifyList(ev$ev, list(label = bad)))
+    expect_error(hv_followup_panels(dta, origin_year = 1990, panels = all_deaths, events = e), "`label`",
+                 info = deparse(bad))
+  }
+  expect_error(hv_followup_panels(dta, origin_year = 1990,
+                                  panels = list(all = list(status = "dead", time = "iv_dead", title = c("a", "b")))),
+               "`title`")
+})
