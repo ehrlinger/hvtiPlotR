@@ -225,8 +225,8 @@ test_that("hv_survival preserves strata order in exact at-risk counts", {
 })
 
 # The failure mode that dominated the bug: with no survfit summary row after
-# the last observation, every later report time inherited the final row for
-# ever. Here follow-up ends at 4 and year 6 is still asked for.
+# the last observation, every later report time inherited the final row
+# forever. Here follow-up ends at 4 and year 6 is still asked for.
 test_that("hv_survival reports no one at risk past the end of follow-up", {
   dta <- data.frame(
     follow_up = c(1, 2, 3, 4),
