@@ -505,11 +505,13 @@ plot.hv_eda <- function(x,
   # colour. Put NA on top by giving it the first group, not by reordering the
   # levels. Reversing the levels to do that (5d7ba1a) inverted the legend
   # against the stack and flipped positional palettes (#155).
-  fill_chr   <- as.character(data$fill)
-  data$stack <- factor(
-    ifelse(is.na(fill_chr), ".hv_na", fill_chr),
-    levels = c(".hv_na", levels(factor(data$fill)))
-  )
+  # Group on integer level codes, 0 for missing, so no data value can share
+  # the missing group (a string sentinel could collide with a real level).
+  fill_lv    <- if (is.factor(data$fill)) levels(data$fill) else
+    sort(unique(stats::na.omit(as.character(data$fill))))
+  fill_code  <- match(as.character(data$fill), fill_lv)
+  fill_code[is.na(fill_code)] <- 0L
+  data$stack <- factor(fill_code, levels = 0:length(fill_lv))
 
   p <- ggplot2::ggplot(
     data,

@@ -318,12 +318,28 @@ test_that("plot(hv_eda) stacked bars run top-down in legend order, NA on top", {
   for (v in c("male", "valve_morph", "nyha")) {
     df[[v]][df$year == min(df$year)][1:2] <- NA
     one <- df[df$year == min(df$year), ]
-    p   <- plot(hv_eda(one, x_col = "year", y_col = v))
-    lvl <- levels(p$data$fill)
-    got <- stack_top_down(p)
-    expect_equal(got[1], "NA", info = v)
-    expect_equal(got[-1], lvl[lvl %in% got[-1]], info = v)
+    for (pct in c(FALSE, TRUE)) {
+      p   <- plot(hv_eda(one, x_col = "year", y_col = v), show_percent = pct)
+      lvl <- levels(p$data$fill)
+      got <- stack_top_down(p)
+      what <- paste(v, if (pct) "percent" else "count")
+      expect_equal(got[1], "NA", info = what)
+      expect_equal(got[-1], lvl[lvl %in% got[-1]], info = what)
+    }
   }
+})
+
+test_that("plot(hv_eda) keeps a level named like a sentinel apart from NA", {
+  df  <- sample_eda_data(n = 300, seed = 42)
+  one <- df[df$year == min(df$year), ]
+  one$valve_morph[1:3] <- ".hv_na"
+  one$valve_morph[4:5] <- NA
+  p   <- plot(hv_eda(one, x_col = "year", y_col = "valve_morph"))
+  d   <- ggplot2::ggplot_build(p)$data[[1]]
+  n_obs <- length(unique(stats::na.omit(one$valve_morph)))
+  expect_equal(nrow(d), n_obs + 1)
+  expect_equal(sum(d$count), nrow(one))
+  expect_equal(stack_top_down(p)[1], "NA")
 })
 
 test_that("plot(hv_eda) grouped bars run left to right in legend order, NA first", {
