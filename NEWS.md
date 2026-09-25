@@ -1,3 +1,21 @@
+# hvtiPlotR (unreleased)
+
+## Vignettes: installed tarball halved, 17.1 MB to 8.9 MB
+
+The installed vignettes embed every figure as a PNG, and `plot-functions`
+alone was 15.7 MB of the 17.1 MB tarball. Figures now render at 1x instead of
+retina 2 when the vignettes are built for the package, which quarters their
+pixels. The pkgdown site sets `IN_PKGDOWN` and keeps retina 2. Nothing is
+removed; figures look slightly softer on a high-density screen when read
+through `vignette()`.
+
+## Vignettes: unused bibliography removed
+
+`vignettes/hviPlotR.bib` is gone. No vignette declared it as a bibliography or
+cited any of its seven entries, and seven of its URLs had moved or died, which
+`urlchecker::url_check()` reported at every release gate since at least 2.7.15.
+It now reports none.
+
 # hvtiPlotR 2.7.17
 
 ## New: a set of goodness-of-follow-up panels
