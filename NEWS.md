@@ -1,4 +1,4 @@
-# hvtiPlotR (unreleased)
+# hvtiPlotR 2.7.17
 
 ## New: a set of goodness-of-follow-up panels
 
