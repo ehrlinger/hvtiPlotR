@@ -5,8 +5,10 @@
 `hv_eda_pages()` now has a worked example in the "Plot Functions" vignette,
 "Several variables to a page", and a row in its constructor table. The SAS
 migration guide gains an "EDA postage stamps" section and lookup rows mapping
-`tp.dp.EDA_barplots_scatterplots.R` and its varnames variant to it. Both were
-required by CONTRIBUTING.md when the function was added in 2.7.16.
+`tp.dp.EDA_barplots_scatterplots.R` and its varnames variant to it, and their
+single-panel `Function_DataPlotting()` to `hv_eda()`, which the guide had never
+mapped. Both were required by CONTRIBUTING.md when the function was added in
+2.7.16.
 
 # hvtiPlotR 2.7.16
 
