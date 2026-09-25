@@ -1,5 +1,63 @@
 # Changelog
 
+## hvtiPlotR 2.7.16
+
+### New: paginated EDA sections
+
+[`hv_eda_pages()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_eda_pages.md)
+prepares one section of an EDA report: the continuous variables, or the
+categorical variables as percentages or as counts, one
+[`hv_eda()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_eda.md)
+panel each.
+[`plot.hv_eda_pages()`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hv_eda_pages.md)
+lays them out as patchwork pages of `ncol` by `nrow` panels and returns
+the list, each page naming its variables in `attr(page, "variables")`
+for a caption. The percent and count sections share one binning of the x
+column, whole years when it is fractional, so their bars line up.
+Continuous points default to alpha 0.5. `vars = NULL` takes every
+column, and a list with missing names reports all of them in one error.
+Pagination moves here from the `dp-postage` template in hvtiRtemplates,
+whose EDA report and postage-stamp jobs both draw through it.
+
+[`plot.hv_eda()`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hv_eda.md)
+gains an `alpha` argument for its points. The default stays 0.4, so
+existing figures do not change.
+
+### `hv_atrisk_compose()` no longer clips multi-strata tables
+
+The composed table kept the curve’s x-range by adding
+`coord_cartesian(expand = FALSE)`, which also removed the y padding, so
+with two or more strata the first and last rows sat on the panel edge
+and printed half cut off. Only the x sides now skip padding.
+Single-stratum tables were unaffected.
+
+### New: RMST contrast and curve plots
+
+[`hv_rmst_contrast()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_rmst_contrast.md)
+and
+[`plot.hv_rmst_contrast()`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hv_rmst_contrast.md)
+draw restricted mean survival time differences as a dot-and-whisker
+plot, one row per estimator in the order supplied (factor levels
+respected), with a reference line at zero.
+[`hv_rmst_curves()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_rmst_curves.md)
+and
+[`plot.hv_rmst_curves()`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hv_rmst_curves.md)
+draw weighted Kaplan-Meier step curves, one facet per estimator and
+colour by arm. With `tau` the area under each curve up to `tau` is
+shaded and a `tau` line is drawn; with `estimates` each facet is
+annotated with its RMST difference and interval.
+
+Both read the `tables` of `hvtiRpropensity::ps_rmst()`, as plain data
+frames or as the `ps_rmst` object itself, and add no dependency on that
+package.
+
+### Regression test for at-risk counts past the end of follow-up
+
+A test now covers the failure mode behind the at-risk fix in 2.7.13: a
+report time after the last observation must show nobody at risk, not
+repeat the final count. It was written with that fix but did not reach
+`main`.
+
 ## hvtiPlotR 2.7.15
 
 ### Documentation pass across vignettes, reference pages and README

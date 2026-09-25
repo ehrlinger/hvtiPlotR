@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">hvtiPlotR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.7.15</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.7.16</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -53,6 +53,28 @@
       <small>Source: <a href="https://github.com/ehrlinger/hvtiPlotR/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="2.7.16" id="hvtiplotr-2716">hvtiPlotR 2.7.16<a class="anchor" aria-label="anchor" href="#hvtiplotr-2716"></a></h2>
+<div class="section level3">
+<h3 id="new-paginated-eda-sections-2-7-16">New: paginated EDA sections<a class="anchor" aria-label="anchor" href="#new-paginated-eda-sections-2-7-16"></a></h3>
+<p><code><a href="../reference/hv_eda_pages.html">hv_eda_pages()</a></code> prepares one section of an EDA report: the continuous variables, or the categorical variables as percentages or as counts, one <code><a href="../reference/hv_eda.html">hv_eda()</a></code> panel each. <code><a href="../reference/plot.hv_eda_pages.html">plot.hv_eda_pages()</a></code> lays them out as patchwork pages of <code>ncol</code> by <code>nrow</code> panels and returns the list, each page naming its variables in <code>attr(page, "variables")</code> for a caption. The percent and count sections share one binning of the x column, whole years when it is fractional, so their bars line up. Continuous points default to alpha 0.5. <code>vars = NULL</code> takes every column, and a list with missing names reports all of them in one error. Pagination moves here from the <code>dp-postage</code> template in hvtiRtemplates, whose EDA report and postage-stamp jobs both draw through it.</p>
+<p><code><a href="../reference/plot.hv_eda.html">plot.hv_eda()</a></code> gains an <code>alpha</code> argument for its points. The default stays 0.4, so existing figures do not change.</p>
+</div>
+<div class="section level3">
+<h3 id="hv_atrisk_compose-no-longer-clips-multi-strata-tables-2-7-16">
+<code>hv_atrisk_compose()</code> no longer clips multi-strata tables<a class="anchor" aria-label="anchor" href="#hv_atrisk_compose-no-longer-clips-multi-strata-tables-2-7-16"></a></h3>
+<p>The composed table kept the curve’s x-range by adding <code>coord_cartesian(expand = FALSE)</code>, which also removed the y padding, so with two or more strata the first and last rows sat on the panel edge and printed half cut off. Only the x sides now skip padding. Single-stratum tables were unaffected.</p>
+</div>
+<div class="section level3">
+<h3 id="new-rmst-contrast-and-curve-plots-2-7-16">New: RMST contrast and curve plots<a class="anchor" aria-label="anchor" href="#new-rmst-contrast-and-curve-plots-2-7-16"></a></h3>
+<p><code><a href="../reference/hv_rmst_contrast.html">hv_rmst_contrast()</a></code> and <code><a href="../reference/plot.hv_rmst_contrast.html">plot.hv_rmst_contrast()</a></code> draw restricted mean survival time differences as a dot-and-whisker plot, one row per estimator in the order supplied (factor levels respected), with a reference line at zero. <code><a href="../reference/hv_rmst_curves.html">hv_rmst_curves()</a></code> and <code><a href="../reference/plot.hv_rmst_curves.html">plot.hv_rmst_curves()</a></code> draw weighted Kaplan-Meier step curves, one facet per estimator and colour by arm. With <code>tau</code> the area under each curve up to <code>tau</code> is shaded and a <code>tau</code> line is drawn; with <code>estimates</code> each facet is annotated with its RMST difference and interval.</p>
+<p>Both read the <code>tables</code> of <code>hvtiRpropensity::ps_rmst()</code>, as plain data frames or as the <code>ps_rmst</code> object itself, and add no dependency on that package.</p>
+</div>
+<div class="section level3">
+<h3 id="regression-test-for-at-risk-counts-past-the-end-of-follow-up-2-7-16">Regression test for at-risk counts past the end of follow-up<a class="anchor" aria-label="anchor" href="#regression-test-for-at-risk-counts-past-the-end-of-follow-up-2-7-16"></a></h3>
+<p>A test now covers the failure mode behind the at-risk fix in 2.7.13: a report time after the last observation must show nobody at risk, not repeat the final count. It was written with that fix but did not reach <code>main</code>.</p>
+</div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="2.7.15" id="hvtiplotr-2715">hvtiPlotR 2.7.15<a class="anchor" aria-label="anchor" href="#hvtiplotr-2715"></a></h2>
 <div class="section level3">
