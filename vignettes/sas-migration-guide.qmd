@@ -114,6 +114,7 @@ prints beneath its survival plot.
 | `tp.ac.dead.sas` (via `%kaplan` / `%nelsont`) | ac | `hv_survival()` | [Kaplan–Meier survival](#ac-dead) |
 | `tp.cp.dead.sas` | cp | `hv_survival()` | [Kaplan–Meier survival](#ac-dead) |
 | `tp.dp.gfup.R` | dp | `hv_followup()` | [Goodness of follow-up](#dp-gfup) |
+| `tp.dp.gfup.R` (several panels, one window) | dp | `hv_followup_panels()` | [Goodness of follow-up](#dp-gfup) |
 | `descriptive/dc.tables.ods.sas` (`PROC CORR PLOTS=MATRIX`) | dc | `hv_correlation_matrix()` | [Correlation matrix](#dc-correlation) |
 | `tp.lp.propen.cov_balance.R` | lp | `hv_balance()` | [Covariate balance](#lp-covbal) |
 | `tp.dp.female_bicus_preAR_sankey.R` | dp | `hv_alluvial()` | [Alluvial](#dp-sankey) |
@@ -740,6 +741,11 @@ plot(gf) +
 
 For the competing non-fatal event panel, supply `event_col` and
 `event_time_col` to `hv_followup()` and pass `type = "event"` to `plot()`.
+
+`tp.dp.gfup.R` usually draws several of these, all deaths, systematic deaths
+and an event, over the same window. `hv_followup_panels()` takes them as named
+lists, checks every column at once, derives the shared window and close date,
+and `plot()` returns one figure per panel.
 
 ---
 

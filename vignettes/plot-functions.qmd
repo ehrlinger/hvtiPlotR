@@ -55,6 +55,7 @@ the sections below.
 | `hv_stacked()` | none | none |
 | `hv_balance()` | none | `tp.lp.propen.cov_balance.R` |
 | `hv_followup()` | `tp.dp.goodness_followup.*`, `tp.dp.goodness_event.*` | none |
+| `hv_followup_panels()` | `tp.dp.goodness_followup.*`, `tp.dp.goodness_event.*` | `tp.dp.gfup.R` |
 | `hv_survival()` | `tp.hp.dead.sas` (basic) | `tp.hp.dead.number_risk.R` |
 | `hazard_plot()` | `tp.hp.dead.*`, `tp.hp.event.weighted.sas`, `tp.hp.repeated*.sas`, `tp.hp.numtreat.survdiff.matched.sas`, `tp.hs.dead.*`, `tp.hs.uslife_*` | `tp.hp.dead.number_risk.R` |
 | `hv_hazard()` | `tp.hp.dead.*`, `tp.hp.event.weighted.sas`, `tp.hp.repeated*.sas`, `tp.hp.numtreat.survdiff.matched.sas`, `tp.hs.dead.*`, `tp.hs.uslife_*` | `tp.hp.dead.number_risk.R` |
@@ -517,6 +518,41 @@ plot(gf2, type = "event", alpha = 0.8) +
   annotate("text", x = 1993, y = 31,
            label = "Systematic follow-up", hjust = 0, size = 3.5) +
   theme(legend.position = c(0.85, 0.15)) +
+  theme_hv_poster()
+```
+
+## Several panels over one window
+
+A study that ascertains deaths two ways, or tracks a non-fatal event as well,
+draws several follow-up panels that must share one origin, one study window
+and one close date. `hv_followup_panels()` checks every panel's columns at
+once, works out that window, and prepares one `hv_followup()` per panel. The
+window starts on 1 January of `origin_year`, and the close date is estimated
+from the data when you do not give one; `meta$close_source` says which.
+`plot()` returns one bare ggplot per panel, named as the panels are.
+
+```{r}
+#| label: gfup_panels
+fp <- hv_followup_panels(
+  gfup_event_dta,
+  origin_year = 1990,
+  panels = list(
+    all        = list(status = "dead",  time = "iv_dead", title = "All deaths"),
+    systematic = list(status = "deads", time = "iv_dead", title = "Systematic deaths")
+  ),
+  events = list(
+    relapse = list(event = "ev_event", time = "iv_event", death = "deads",
+                   death_time = "iv_dead", label = "Relapse")
+  )
+)
+fp$data
+fp$meta$close_source
+
+plots <- plot(fp)
+plots$systematic +
+  scale_color_manual(values = c(Alive = "blue", Dead = "red"), name = NULL) +
+  scale_shape_manual(values = c(Alive = 1L, Dead = 4L), name = NULL) +
+  labs(x = "Operation Date", y = "Follow-up (years)") +
   theme_hv_poster()
 ```
 

@@ -1,5 +1,18 @@
 # hvtiPlotR (unreleased)
 
+## New: a set of goodness-of-follow-up panels
+
+`hv_followup_panels()` prepares one `hv_followup()` per death indicator and per
+non-fatal event over one shared study window: the window starts on 1 January
+of `origin_year`, where `hv_followup()` draws its diagonal, and ends at the
+last operation. The close date is given, or estimated from the data, and
+`meta$close_source` says which. Every check runs first: every missing column
+named in one error, a panel name used twice, indicators that are not 1/0,
+and an origin that puts operations before it or outside 1900 to next year.
+`plot.hv_followup_panels()` returns one bare ggplot per panel, points at
+alpha 0.5. The checks and the window move here from the `dp-gfup` template in
+hvtiRtemplates, whose EDA report draws the same panels through this.
+
 ## Documentation
 
 `hv_eda_pages()` now has a worked example in the "Plot Functions" vignette,
