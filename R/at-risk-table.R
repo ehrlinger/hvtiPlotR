@@ -245,12 +245,17 @@ hv_atrisk_compose <- function(curve, table, heights = c(3, 1)) {
     stop("`heights` must be a length-2 numeric vector.", call. = FALSE)
 
   # Use the curve's already-expanded x-range as the table's hard range so the
-  # two panels share identical x limits (expand = FALSE avoids re-padding).
+  # two panels share identical x limits. Only the x sides skip re-padding: the
+  # y sides keep theirs, or the first and last strata rows sit on the panel
+  # edge and are clipped in half.
   xr    <- ggplot2::ggplot_build(curve)$layout$panel_params[[1]]$x.range
   if (is.null(xr) || length(xr) != 2L)
     stop("Could not read an x-range from `curve`; is it a rendered ggplot ",
          "with a continuous x-axis?", call. = FALSE)
-  table <- table + ggplot2::coord_cartesian(xlim = xr, expand = FALSE)
+  table <- table + ggplot2::coord_cartesian(
+    xlim   = xr,
+    expand = c(top = TRUE, right = FALSE, bottom = TRUE, left = FALSE)
+  )
 
   patchwork::wrap_plots(curve, table, ncol = 1) +
     patchwork::plot_layout(heights = heights)
