@@ -12,7 +12,7 @@ through `vignette()`.
 ## Vignettes: unused bibliography removed
 
 `vignettes/hviPlotR.bib` is gone. No vignette declared it as a bibliography or
-cited any of its five entries, and seven of its URLs had moved or died, which
+cited any of its seven entries, and seven of its URLs had moved or died, which
 `urlchecker::url_check()` reported at every release gate since at least 2.7.15.
 It now reports none.
 
