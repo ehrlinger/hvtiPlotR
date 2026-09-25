@@ -326,6 +326,25 @@ test_that("plot(hv_eda) stacked bars run top-down in legend order, NA on top", {
   }
 })
 
+test_that("plot(hv_eda) grouped bars run left to right in legend order, NA first", {
+  df <- sample_eda_data(n = 300, seed = 42)
+  for (v in c("male", "valve_morph", "nyha")) {
+    df[[v]][df$year == min(df$year)][1:2] <- NA
+    one <- df[df$year == min(df$year), ]
+    p   <- plot(hv_eda(one, x_col = "year", y_col = v), group_bars = TRUE)
+    b   <- ggplot2::ggplot_build(p)
+    sc  <- b$plot$scales$get_scales("fill")
+    lim <- sc$get_limits()
+    pal <- stats::setNames(c(sc$map(lim[!is.na(lim)]), sc$na.value),
+                           c(lim[!is.na(lim)], "NA"))
+    d   <- b$data[[1]]
+    got <- names(pal)[match(d$fill[order(d$xmin)], pal)]
+    lvl <- levels(p$data$fill)
+    expect_equal(got[1], "NA", info = v)
+    expect_equal(got[-1], lvl[lvl %in% got[-1]], info = v)
+  }
+})
+
 test_that("plot(hv_eda) positional fill palette maps the first level first", {
   df <- sample_eda_data(n = 300, seed = 42)
   p  <- plot(hv_eda(df, x_col = "year", y_col = "nyha")) +
