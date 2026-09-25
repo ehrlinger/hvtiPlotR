@@ -1,4 +1,4 @@
-# hvtiPlotR (unreleased)
+# hvtiPlotR 2.7.16
 
 ## New: paginated EDA sections
 
