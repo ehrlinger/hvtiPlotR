@@ -11,6 +11,7 @@
   smooth_se = FALSE,
   loess_cutoff = 10,
   group_bars = FALSE,
+  alpha = 0.4,
   ...
 )
 }
@@ -30,6 +31,9 @@ the smooth line will not be plotted.  Default \code{10}.}
 
 \item{group_bars}{Logical; Plot as grouped bars instead of stacked?
 Default \code{FALSE}.}
+
+\item{alpha}{Point transparency for continuous plots.
+Default \code{0.4}.}
 
 \item{...}{Ignored; present for S3 consistency.}
 }
