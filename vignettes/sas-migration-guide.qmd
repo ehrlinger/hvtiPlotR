@@ -126,6 +126,8 @@ prints beneath its survival plot.
 | `tp.lp.trends.polytomous.sas` | lp | `hv_trends()` | [Trends over time](#dp-trends) |
 | `tp.dp.trends.R` | dp | `hv_trends()` | [Trends over time](#dp-trends) |
 | `tp.dp.longitudinal_patients_measures.R` | dp | `hv_longitudinal()` | [Longitudinal counts](#dp-long-counts) |
+| `tp.dp.EDA_barplots_scatterplots.R` | dp | `hv_eda_pages()` | [EDA postage stamps](#dp-eda) |
+| `tp.dp.EDA_barplots_scatterplots_varnames.R` | dp | `hv_eda_pages(vars = , labels = )` | [EDA postage stamps](#dp-eda) |
 | `tp.lp.mirror-histogram_SAVR-TF-TAVR.R` | lp | `hv_mirror_hist()` | [Mirror histogram: binary-match](#dp-mirror) |
 | `tp.lp.mirror_histo_before_after_wt.R` | lp | `hv_mirror_hist(weight_col = ...)` | [Mirror histogram: weighted IPTW](#dp-mirror) |
 | Stacked histogram | dp | `hv_stacked()` | [Stacked histogram](#dp-stacked) |
@@ -1301,6 +1303,19 @@ plot(lc) +
   ) +
   theme_hv_poster()
 ```
+
+---
+
+# EDA postage stamps (`tp.dp.EDA_barplots_scatterplots*.R`) {#dp-eda}
+
+The EDA templates loop `Function_DataPlotting()` over every variable and print
+the panels as pages of postage stamps: continuous variables as scatter plots,
+categorical ones as bars by percentage and again by count. `hv_eda_pages()`
+builds one of those sections and `plot()` returns its pages as a list of
+patchwork layouts, `ncol` by `nrow`, each naming its variables in
+`attr(page, "variables")`. The varnames template's `Var_CatList` and
+`Order_Variables()` become the `vars` and `labels` arguments. A single panel is
+`hv_eda()`; both are worked through in the "Plot Functions" vignette.
 
 ---
 
