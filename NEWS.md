@@ -1,3 +1,12 @@
+# hvtiPlotR (unreleased)
+
+## Vignettes: unused bibliography removed
+
+`vignettes/hviPlotR.bib` is gone. No vignette declared it as a bibliography or
+cited any of its five entries, and seven of its URLs had moved or died, which
+`urlchecker::url_check()` reported at every release gate since at least 2.7.15.
+It now reports none.
+
 # hvtiPlotR 2.7.17
 
 ## New: a set of goodness-of-follow-up panels
