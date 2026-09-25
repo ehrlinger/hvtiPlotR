@@ -488,15 +488,6 @@ plot.hv_eda <- function(x,
   # --- Categorical bar chart ------------------------------------------------
   y_lab <- if (show_percent) "Proportion" else "Count"
 
-  # Preserve original visible order when using reverse=TRUE
-  # in order to plot NA on top
-  if (is.factor(data$fill)) {
-    data$fill <- factor(
-      data$fill,
-      levels = rev(levels(data$fill))
-    )
-  }
-
   # Making sure binary 0/1 behave as desired even when only one level
   # is present in a variable
   vals <- sort(unique(stats::na.omit(as.character(data$fill))))
@@ -504,15 +495,28 @@ plot.hv_eda <- function(x,
   if (identical(vals, c("0", "1"))) {
     data$fill <- factor(
       as.character(data$fill),
-      levels = c("1", "0")
+      levels = c("0", "1")
     )
   }
+
+  # Stacking follows `group`, colours and legend follow `fill`. Keep the fill
+  # levels in their natural order, so the default stack reads top-down in the
+  # same order as the legend and a positional palette maps level 1 to its first
+  # colour. Put NA on top by giving it the first group, not by reordering the
+  # levels. Reversing the levels to do that (5d7ba1a) inverted the legend
+  # against the stack and flipped positional palettes (#155).
+  fill_chr   <- as.character(data$fill)
+  data$stack <- factor(
+    ifelse(is.na(fill_chr), ".hv_na", fill_chr),
+    levels = c(".hv_na", levels(factor(data$fill)))
+  )
 
   p <- ggplot2::ggplot(
     data,
     ggplot2::aes(
       x = .data[["x"]],
-      fill = .data[["fill"]]
+      fill = .data[["fill"]],
+      group = .data[["stack"]]
     )
   ) +
     ggplot2::labs(
@@ -526,7 +530,7 @@ plot.hv_eda <- function(x,
 
     p <- p +
       ggplot2::geom_bar(
-        position = ggplot2::position_fill(reverse = TRUE)
+        position = ggplot2::position_fill()
       ) +
       ggplot2::scale_y_continuous(
         labels = if (requireNamespace("scales", quietly = TRUE))
@@ -537,14 +541,14 @@ plot.hv_eda <- function(x,
 
     p <- p +
       ggplot2::geom_bar(
-        position = ggplot2::position_dodge(preserve = "single", reverse = TRUE)
+        position = ggplot2::position_dodge(preserve = "single")
       )
 
   } else {
 
     p <- p +
       ggplot2::geom_bar(
-        position = ggplot2::position_stack(reverse = TRUE)
+        position = ggplot2::position_stack()
       )
 
   }

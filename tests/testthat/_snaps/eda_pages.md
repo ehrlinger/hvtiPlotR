@@ -21,13 +21,13 @@
         geoms: GeomBar 
         rows : 25 
         x    : 2005 2006 2007 2008 2009 2010 2011 2012 2013 2014 2015 2016 2017 2018 2019 
-        fill : 1 0 
+        fill : 0 1 
         y    : Proportion 
       [nyha] nyha
         geoms: GeomBar 
         rows : 31 
         x    : 2005 2006 2007 2008 2009 2010 2011 2012 2013 2014 2015 2016 2017 2018 2019 
-        fill : 4 3 2 1 
+        fill : 1 2 3 4 
         y    : Proportion 
 
 ---
@@ -39,12 +39,12 @@
         geoms: GeomBar 
         rows : 25 
         x    : 2005 2006 2007 2008 2009 2010 2011 2012 2013 2014 2015 2016 2017 2018 2019 
-        fill : 1 0 
+        fill : 0 1 
         y    : Count 
       [nyha] nyha
         geoms: GeomBar 
         rows : 31 
         x    : 2005 2006 2007 2008 2009 2010 2011 2012 2013 2014 2015 2016 2017 2018 2019 
-        fill : 4 3 2 1 
+        fill : 1 2 3 4 
         y    : Count 
 
