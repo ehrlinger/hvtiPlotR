@@ -15,6 +15,12 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
+```{r setup, include=FALSE}
+# Installed vignettes embed every figure, so 1x resolution halves the tarball
+# (17 MB to 9 MB). The pkgdown site links its figures and keeps retina 2.
+knitr::opts_chunk$set(fig.retina = if (identical(Sys.getenv("IN_PKGDOWN"), "true")) 2 else 1)
+```
+
 # Abstract
 
 We introduce the R package **hvtiPlotR**, tools for creating publication quality graphics in R for the Heart & Vascular Institute Cardiovascular Outcomes Registries and Research (CORR) statistics group at the Cleveland Clinic. The **hvtiPlotR** package contains a tutorial for generating figures (this vignette) and small set of functions for formatting and saving those figures. We use these tools to generate figures in R as a replacement for the `plot.sas` macro.

@@ -17,12 +17,15 @@ vignette: >
 ---
 
 ```{r setup, include=FALSE}
+# Installed vignettes embed every figure, so 1x resolution halves the tarball
+# (17 MB to 9 MB). The pkgdown site links its figures and keeps retina 2.
 knitr::opts_chunk$set(
   echo    = TRUE,
   message = FALSE,
   warning = FALSE,
   fig.width  = 7,
-  fig.height = 5
+  fig.height = 5,
+  fig.retina = if (identical(Sys.getenv("IN_PKGDOWN"), "true")) 2 else 1
 )
 # On Windows, R CMD check sets R_LIBS but Quarto subprocesses may not inherit
 # the full library path. Explicitly add it before loading the package.

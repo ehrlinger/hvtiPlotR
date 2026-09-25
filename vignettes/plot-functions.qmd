@@ -17,7 +17,10 @@ vignette: >
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+# Installed vignettes embed every figure, so 1x resolution halves the tarball
+# (17 MB to 9 MB). The pkgdown site links its figures and keeps retina 2.
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE,
+                      fig.retina = if (identical(Sys.getenv("IN_PKGDOWN"), "true")) 2 else 1)
 ```
 
 ```{r libraries}
