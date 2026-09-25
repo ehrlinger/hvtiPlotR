@@ -140,6 +140,12 @@ test_that("hv_atrisk_compose stacks curve over table with shared x-range", {
   xr_curve <- ggplot2::ggplot_build(curve)$layout$panel_params[[1]]$x.range
   xr_table <- ggplot2::ggplot_build(comp[[2]])$layout$panel_params[[1]]$x.range
   expect_equal(xr_table, xr_curve, tolerance = 1e-6)
+
+  # the y sides keep their padding, so the first and last strata rows are not
+  # drawn on the panel edge (where they clip in half)
+  yr_table <- ggplot2::ggplot_build(comp[[2]])$layout$panel_params[[1]]$y.range
+  expect_lt(yr_table[1], 1)
+  expect_gt(yr_table[2], 2)
 })
 
 test_that("hv_atrisk_compose validates its inputs", {

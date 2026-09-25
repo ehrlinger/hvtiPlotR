@@ -1,5 +1,13 @@
 # hvtiPlotR (unreleased)
 
+## `hv_atrisk_compose()` no longer clips multi-strata tables
+
+The composed table kept the curve's x-range by adding
+`coord_cartesian(expand = FALSE)`, which also removed the y padding, so with
+two or more strata the first and last rows sat on the panel edge and printed
+half cut off. Only the x sides now skip padding. Single-stratum tables were
+unaffected.
+
 ## New: RMST contrast and curve plots
 
 `hv_rmst_contrast()` and `plot.hv_rmst_contrast()` draw restricted mean survival
