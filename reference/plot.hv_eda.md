@@ -15,6 +15,7 @@ plot(
   smooth_se = FALSE,
   loess_cutoff = 10,
   group_bars = FALSE,
+  alpha = 0.4,
   ...
 )
 ```
@@ -47,6 +48,10 @@ plot(
 - group_bars:
 
   Logical; Plot as grouped bars instead of stacked? Default `FALSE`.
+
+- alpha:
+
+  Point transparency for continuous plots. Default `0.4`.
 
 - ...:
 

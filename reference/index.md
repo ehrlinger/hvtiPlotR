@@ -298,6 +298,12 @@ summaries, and set-membership visualisation.
   : Plot an hv_eda object
 - [`print(`*`<hv_eda>`*`)`](https://ehrlinger.github.io/hvtiPlotR/reference/print.hv_eda.md)
   : Print an hv_eda object
+- [`hv_eda_pages()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_eda_pages.md)
+  : Prepare a paginated EDA section
+- [`plot(`*`<hv_eda_pages>`*`)`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hv_eda_pages.md)
+  : Plot an hv_eda_pages object
+- [`print(`*`<hv_eda_pages>`*`)`](https://ehrlinger.github.io/hvtiPlotR/reference/print.hv_eda_pages.md)
+  : Print an hv_eda_pages object
 - [`hv_correlation_matrix()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_correlation_matrix.md)
   : Prepare a scatter-plot matrix
 - [`plot(`*`<hv_correlation_matrix>`*`)`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hv_correlation_matrix.md)
