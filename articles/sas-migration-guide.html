@@ -308,66 +308,85 @@
 <td><a href="#dp-long-counts">Longitudinal counts</a></td>
 </tr>
 <tr class="even">
+<td>
+<code>Function_DataPlotting()</code> in <code>tp.dp.EDA_barplots_scatterplots*.R</code> (one panel)</td>
+<td>dp</td>
+<td><code><a href="../reference/hv_eda.html">hv_eda()</a></code></td>
+<td><a href="#dp-eda">EDA postage stamps</a></td>
+</tr>
+<tr class="odd">
+<td><code>tp.dp.EDA_barplots_scatterplots.R</code></td>
+<td>dp</td>
+<td><code><a href="../reference/hv_eda_pages.html">hv_eda_pages()</a></code></td>
+<td><a href="#dp-eda">EDA postage stamps</a></td>
+</tr>
+<tr class="even">
+<td><code>tp.dp.EDA_barplots_scatterplots_varnames.R</code></td>
+<td>dp</td>
+<td><code>hv_eda_pages(vars = ..., labels = ...)</code></td>
+<td><a href="#dp-eda">EDA postage stamps</a></td>
+</tr>
+<tr class="odd">
 <td><code>tp.lp.mirror-histogram_SAVR-TF-TAVR.R</code></td>
 <td>lp</td>
 <td><code><a href="../reference/hv_mirror_hist.html">hv_mirror_hist()</a></code></td>
 <td><a href="#dp-mirror">Mirror histogram: binary-match</a></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>tp.lp.mirror_histo_before_after_wt.R</code></td>
 <td>lp</td>
 <td><code>hv_mirror_hist(weight_col = ...)</code></td>
 <td><a href="#dp-mirror">Mirror histogram: weighted IPTW</a></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td>Stacked histogram</td>
 <td>dp</td>
 <td><code><a href="../reference/hv_stacked.html">hv_stacked()</a></code></td>
 <td><a href="#dp-stacked">Stacked histogram</a></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>tp.hs.dead.setup.sas</code></td>
 <td>hs</td>
 <td><code><a href="../reference/hazard_plot.html">hazard_plot()</a></code></td>
 <td><a href="#hs-dead">Parametric hazard/survival</a></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><code>tp.hs.dead_uses_setup.sas</code></td>
 <td>hs</td>
 <td><code><a href="../reference/hazard_plot.html">hazard_plot()</a></code></td>
 <td><a href="#hs-dead">Parametric hazard/survival</a></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>tp.hs.dead.procedure.tdepth.sas</code></td>
 <td>hs</td>
 <td><code><a href="../reference/hazard_plot.html">hazard_plot()</a></code></td>
 <td><a href="#hs-dead">Parametric hazard/survival</a></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><code>tp.hs.dead.conditional.setup.sas</code></td>
 <td>hs</td>
 <td><code><a href="../reference/hazard_plot.html">hazard_plot()</a></code></td>
 <td><a href="#hs-dead">Conditional survival</a></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>tp.hs.dead.conditional.uses_setup.sas</code></td>
 <td>hs</td>
 <td><code><a href="../reference/hazard_plot.html">hazard_plot()</a></code></td>
 <td><a href="#hs-dead">Conditional survival</a></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><code>tp.hs.dead.compare_benefit.setup.sas</code></td>
 <td>hs</td>
 <td><code><a href="../reference/survival_difference_plot.html">survival_difference_plot()</a></code></td>
 <td><a href="#hs-dead">Treatment benefit distribution</a></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>tp.hs.uslife_estimates_generate_stratify_.age.sas</code></td>
 <td>hs</td>
 <td><code><a href="../reference/hazard_plot.html">hazard_plot()</a></code></td>
 <td><a href="#hs-dead">US life-table overlay</a></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><code>tp.hs.uslife_generates_matched_estimates.sas</code></td>
 <td>hs</td>
 <td><code><a href="../reference/hazard_plot.html">hazard_plot()</a></code></td>
@@ -1417,6 +1436,9 @@ run;</code></pre>
 <span>    title <span class="op">=</span> <span class="st">"Follow-Up Echocardiogram Availability"</span></span>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/hvtiPlotR-themes.html">theme_hv_poster</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<hr></section><section class="section level2"><h2 id="dp-eda">EDA postage stamps (<code>tp.dp.EDA_barplots_scatterplots*.R</code>)<a class="anchor" aria-label="anchor" href="#dp-eda"></a>
+</h2>
+<p>The EDA templates loop <code>Function_DataPlotting()</code> over every variable and print the panels as pages of postage stamps: continuous variables as scatter plots, categorical ones as bars by percentage and again by count. <code><a href="../reference/hv_eda_pages.html">hv_eda_pages()</a></code> builds one of those sections and <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code> returns its pages as a list of patchwork layouts, <code>ncol</code> by <code>nrow</code>, each naming its variables in <code>attr(page, "variables")</code>. In the varnames template, <code>Var_CatList</code>, <code>Var_ContList</code> and <code>Order_Variables()</code> choose the variables and their order; that becomes <code>vars</code>, whose order is the page order. The <code>var_labels</code> / <code>var.names</code> override becomes <code>labels</code>, a named vector keyed by column. A single panel is <code><a href="../reference/hv_eda.html">hv_eda()</a></code>; both are worked through in the “Plot Functions” vignette.</p>
 <hr></section><section class="section level2"><h2 id="dp-mirror">Mirror histogram (propensity score)<a class="anchor" aria-label="anchor" href="#dp-mirror"></a>
 </h2>
 <p><strong>R equivalents:</strong> <code>tp.lp.mirror-histogram_SAVR-TF-TAVR.R</code> (binary-match), <code>tp.lp.mirror_histo_before_after_wt.R</code> (weighted IPTW)</p>

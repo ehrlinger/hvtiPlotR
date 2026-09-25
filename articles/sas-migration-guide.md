@@ -101,6 +101,9 @@ its survival plot.
 | `tp.lp.trends.polytomous.sas` | lp | [`hv_trends()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_trends.md) | [Trends over time](#dp-trends) |
 | `tp.dp.trends.R` | dp | [`hv_trends()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_trends.md) | [Trends over time](#dp-trends) |
 | `tp.dp.longitudinal_patients_measures.R` | dp | [`hv_longitudinal()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_longitudinal.md) | [Longitudinal counts](#dp-long-counts) |
+| `Function_DataPlotting()` in `tp.dp.EDA_barplots_scatterplots*.R` (one panel) | dp | [`hv_eda()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_eda.md) | [EDA postage stamps](#dp-eda) |
+| `tp.dp.EDA_barplots_scatterplots.R` | dp | [`hv_eda_pages()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_eda_pages.md) | [EDA postage stamps](#dp-eda) |
+| `tp.dp.EDA_barplots_scatterplots_varnames.R` | dp | `hv_eda_pages(vars = ..., labels = ...)` | [EDA postage stamps](#dp-eda) |
 | `tp.lp.mirror-histogram_SAVR-TF-TAVR.R` | lp | [`hv_mirror_hist()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_mirror_hist.md) | [Mirror histogram: binary-match](#dp-mirror) |
 | `tp.lp.mirror_histo_before_after_wt.R` | lp | `hv_mirror_hist(weight_col = ...)` | [Mirror histogram: weighted IPTW](#dp-mirror) |
 | Stacked histogram | dp | [`hv_stacked()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_stacked.md) | [Stacked histogram](#dp-stacked) |
@@ -1406,6 +1409,26 @@ plot(lc) +
   ) +
   theme_hv_poster()
 ```
+
+------------------------------------------------------------------------
+
+## EDA postage stamps (`tp.dp.EDA_barplots_scatterplots*.R`)
+
+The EDA templates loop `Function_DataPlotting()` over every variable and
+print the panels as pages of postage stamps: continuous variables as
+scatter plots, categorical ones as bars by percentage and again by
+count.
+[`hv_eda_pages()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_eda_pages.md)
+builds one of those sections and
+[`plot()`](https://rdrr.io/r/graphics/plot.default.html) returns its
+pages as a list of patchwork layouts, `ncol` by `nrow`, each naming its
+variables in `attr(page, "variables")`. In the varnames template,
+`Var_CatList`, `Var_ContList` and `Order_Variables()` choose the
+variables and their order; that becomes `vars`, whose order is the page
+order. The `var_labels` / `var.names` override becomes `labels`, a named
+vector keyed by column. A single panel is
+[`hv_eda()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_eda.md);
+both are worked through in the “Plot Functions” vignette.
 
 ------------------------------------------------------------------------
 

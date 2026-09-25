@@ -54,6 +54,7 @@ sections below.
 | [`hv_ordinal()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_ordinal.md) | `tp.np.*.ordinal.*` | none |
 | [`hv_correlation_matrix()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_correlation_matrix.md) | `descriptive/dc.tables.ods.sas` (`PROC CORR PLOTS=MATRIX`) | none |
 | [`hv_eda()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_eda.md) | none | `tp.dp.EDA_barplots_scatterplots.R`, `tp.dp.EDA_barplots_scatterplots_varnames.R` |
+| [`hv_eda_pages()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_eda_pages.md) | none | `tp.dp.EDA_barplots_scatterplots.R`, `tp.dp.EDA_barplots_scatterplots_varnames.R` |
 | [`hv_spaghetti()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_spaghetti.md) | none | `tp.dp.spaghetti.echo.R` |
 | [`hv_trends()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_trends.md) | `tp.lp.trends.sas`, `tp.lp.trends.age.sas`, `tp.lp.trends.polytomous.sas`, `tp.rp.trends.sas` | `tp.dp.trends.R` |
 | [`hv_longitudinal()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_longitudinal.md) | `tp.dp.longitudinal_patients_measures.*` | none |
@@ -1545,6 +1546,83 @@ p_cont[[3]]
 ```
 
 ![](plot-functions_files/figure-html/eda_varnames_continuous-3.png)
+
+### Several variables to a page
+
+The EDA templates do not draw one variable at a time. They lay every
+variable out as postage stamps, a page of continuous scatter plots and
+pages of categorical bars, both as percentages and as counts.
+[`hv_eda_pages()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_eda_pages.md)
+prepares one of those sections, `"continuous"`, `"percent"` or
+`"count"`, as one
+[`hv_eda()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_eda.md)
+panel per variable, and
+[`plot()`](https://rdrr.io/r/graphics/plot.default.html) lays the panels
+out `ncol` by `nrow` to a page. It returns a list of patchwork pages,
+and each page names its variables in `attr(page, "variables")`, ready
+for a caption.
+
+The percent and count sections share one binning of `x_col`. A
+whole-valued column such as `year` is used as it is; a fractional one
+such as `op_years` is floored to whole years, so each bar is one year
+and the two sections line up. `meta$x_binned` records which happened.
+Continuous panels always use `x_col` unbinned.
+
+``` r
+
+eda_vars <- c("ef", "lv_mass", "peak_grad", "male", "cabg", "nyha", "valve_morph")
+sections <- lapply(
+  c(continuous = "continuous", percent = "percent", count = "count"),
+  function(s) {
+    hv_eda_pages(dta_eda, x_col = "op_years", section = s, vars = eda_vars,
+                 labels = c(ef = "Ejection Fraction (%)", male = "Male",
+                            nyha = "NYHA Class", valve_morph = "Valve Morphology"))
+  }
+)
+sections$percent$data
+```
+
+         variable            label var_type
+    1        male             Male  Cat_Num
+    2        cabg             cabg  Cat_Num
+    3        nyha       NYHA Class  Cat_Num
+    4 valve_morph Valve Morphology Cat_Char
+
+``` r
+
+sections$percent$meta$x_binned
+```
+
+    [1] TRUE
+
+``` r
+
+pages <- plot(sections$percent, ncol = 2, nrow = 2)
+length(pages)
+```
+
+    [1] 1
+
+``` r
+
+attr(pages[[1]], "variables")
+```
+
+    [1] "male"        "cabg"        "nyha"        "valve_morph"
+
+Each page is bare, like every other
+[`plot()`](https://rdrr.io/r/graphics/plot.default.html) in the package.
+Decorate it with patchwork’s `&`, which reaches every panel on the page
+where `+` would reach only the last.
+
+``` r
+
+pages[[1]] &
+  labs(x = "Years from First Surgery Year") &
+  theme_hv_manuscript(base_size = 8)
+```
+
+![](plot-functions_files/figure-html/eda_pages_decorated-1.png)
 
 ### Saving EDA plots
 
