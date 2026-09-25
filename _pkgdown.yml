@@ -177,6 +177,9 @@ reference:
   - hv_followup
   - plot.hv_followup
   - print.hv_followup
+  - hv_followup_panels
+  - plot.hv_followup_panels
+  - print.hv_followup_panels
   - sample_goodness_followup_data
 
 - title: "Stacked Histogram"
