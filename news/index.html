@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">hvtiPlotR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.7.16</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.7.17</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -53,6 +53,22 @@
       <small>Source: <a href="https://github.com/ehrlinger/hvtiPlotR/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="2.7.17" id="hvtiplotr-2717">hvtiPlotR 2.7.17<a class="anchor" aria-label="anchor" href="#hvtiplotr-2717"></a></h2>
+<div class="section level3">
+<h3 id="new-a-set-of-goodness-of-follow-up-panels-2-7-17">New: a set of goodness-of-follow-up panels<a class="anchor" aria-label="anchor" href="#new-a-set-of-goodness-of-follow-up-panels-2-7-17"></a></h3>
+<p><code><a href="../reference/hv_followup_panels.html">hv_followup_panels()</a></code> prepares one <code><a href="../reference/hv_followup.html">hv_followup()</a></code> per death indicator and per non-fatal event over one shared study window: the window starts on 1 January of <code>origin_year</code>, where <code><a href="../reference/hv_followup.html">hv_followup()</a></code> draws its diagonal, and ends at the last operation. The close date is given, or estimated from the data, and <code>meta$close_source</code> says which. Every check runs first: every missing column named in one error, a panel name used twice, indicators that are not 1/0, and an origin that puts operations before it or outside 1900 to next year. <code><a href="../reference/plot.hv_followup_panels.html">plot.hv_followup_panels()</a></code> returns one bare ggplot per panel, points at alpha 0.5. The checks and the window move here from the <code>dp-gfup</code> template in hvtiRtemplates, whose EDA report draws the same panels through this.</p>
+</div>
+<div class="section level3">
+<h3 id="stacked-plothv_eda-bars-the-legend-matches-the-stack-again-2-7-17">Stacked <code>plot.hv_eda()</code> bars: the legend matches the stack again (<a href="https://github.com/ehrlinger/hvtiPlotR/issues/155" class="external-link">#155</a>)<a class="anchor" aria-label="anchor" href="#stacked-plothv_eda-bars-the-legend-matches-the-stack-again-2-7-17"></a></h3>
+<p>Since 2.7.15 a stacked categorical <code><a href="../reference/plot.hv_eda.html">plot.hv_eda()</a></code> reversed its fill levels and stacked with <code>reverse = TRUE</code>, to draw missing values on top. The bars landed where they had before, but the legend read upside down against them, and any positional fill scale (<code><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_fill_brewer()</a></code>, an unnamed <code>scale_fill_manual(values = )</code>) mapped onto the reversed levels. An ordinal severity palette such as <code>RdYlGn</code> with <code>direction = -1</code> drew NYHA class IV green and class I red, with no error or warning.</p>
+<p>The fill levels now keep their natural order (sorted, with a binary column’s <code>"0"</code> before <code>"1"</code>), and missing values go on top through the <code>group</code> aesthetic instead, so the legend and the stack read top-down in the same order and a positional palette maps level 1 to its first colour, as in 2.7.13. The segments themselves draw where they did in 2.7.15 and 2.7.16. The one exception is the <code>NA</code> key: ggplot2 always lists it last in the legend, while the missing segment stacks on top. Callers who reordered a palette to suit 2.7.15’s reversed levels will see those colours swap back.</p>
+</div>
+<div class="section level3">
+<h3 id="documentation-2-7-17">Documentation<a class="anchor" aria-label="anchor" href="#documentation-2-7-17"></a></h3>
+<p><code><a href="../reference/hv_eda_pages.html">hv_eda_pages()</a></code> now has a worked example in the “Plot Functions” vignette, “Several variables to a page”, and a row in its constructor table. The SAS migration guide gains an “EDA postage stamps” section and lookup rows mapping <code>tp.dp.EDA_barplots_scatterplots.R</code> and its varnames variant to it, and their single-panel <code>Function_DataPlotting()</code> to <code><a href="../reference/hv_eda.html">hv_eda()</a></code>, which the guide had never mapped. Both were required by CONTRIBUTING.md when the function was added in 2.7.16.</p>
+</div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="2.7.16" id="hvtiplotr-2716">hvtiPlotR 2.7.16<a class="anchor" aria-label="anchor" href="#hvtiplotr-2716"></a></h2>
 <div class="section level3">

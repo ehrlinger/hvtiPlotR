@@ -1,5 +1,60 @@
 # Changelog
 
+## hvtiPlotR 2.7.17
+
+### New: a set of goodness-of-follow-up panels
+
+[`hv_followup_panels()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_followup_panels.md)
+prepares one
+[`hv_followup()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_followup.md)
+per death indicator and per non-fatal event over one shared study
+window: the window starts on 1 January of `origin_year`, where
+[`hv_followup()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_followup.md)
+draws its diagonal, and ends at the last operation. The close date is
+given, or estimated from the data, and `meta$close_source` says which.
+Every check runs first: every missing column named in one error, a panel
+name used twice, indicators that are not 1/0, and an origin that puts
+operations before it or outside 1900 to next year.
+[`plot.hv_followup_panels()`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hv_followup_panels.md)
+returns one bare ggplot per panel, points at alpha 0.5. The checks and
+the window move here from the `dp-gfup` template in hvtiRtemplates,
+whose EDA report draws the same panels through this.
+
+### Stacked `plot.hv_eda()` bars: the legend matches the stack again ([\#155](https://github.com/ehrlinger/hvtiPlotR/issues/155))
+
+Since 2.7.15 a stacked categorical
+[`plot.hv_eda()`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hv_eda.md)
+reversed its fill levels and stacked with `reverse = TRUE`, to draw
+missing values on top. The bars landed where they had before, but the
+legend read upside down against them, and any positional fill scale
+([`scale_fill_brewer()`](https://ggplot2.tidyverse.org/reference/scale_brewer.html),
+an unnamed `scale_fill_manual(values = )`) mapped onto the reversed
+levels. An ordinal severity palette such as `RdYlGn` with
+`direction = -1` drew NYHA class IV green and class I red, with no error
+or warning.
+
+The fill levels now keep their natural order (sorted, with a binary
+column’s `"0"` before `"1"`), and missing values go on top through the
+`group` aesthetic instead, so the legend and the stack read top-down in
+the same order and a positional palette maps level 1 to its first
+colour, as in 2.7.13. The segments themselves draw where they did in
+2.7.15 and 2.7.16. The one exception is the `NA` key: ggplot2 always
+lists it last in the legend, while the missing segment stacks on top.
+Callers who reordered a palette to suit 2.7.15’s reversed levels will
+see those colours swap back.
+
+### Documentation
+
+[`hv_eda_pages()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_eda_pages.md)
+now has a worked example in the “Plot Functions” vignette, “Several
+variables to a page”, and a row in its constructor table. The SAS
+migration guide gains an “EDA postage stamps” section and lookup rows
+mapping `tp.dp.EDA_barplots_scatterplots.R` and its varnames variant to
+it, and their single-panel `Function_DataPlotting()` to
+[`hv_eda()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_eda.md),
+which the guide had never mapped. Both were required by CONTRIBUTING.md
+when the function was added in 2.7.16.
+
 ## hvtiPlotR 2.7.16
 
 ### New: paginated EDA sections
