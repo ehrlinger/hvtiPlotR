@@ -1,5 +1,21 @@
 # hvtiPlotR (unreleased)
 
+## New: paginated EDA sections
+
+`hv_eda_pages()` prepares one section of an EDA report: the continuous
+variables, or the categorical variables as percentages or as counts, one
+`hv_eda()` panel each. `plot.hv_eda_pages()` lays them out as patchwork pages
+of `ncol` by `nrow` panels and returns the list, each page naming its
+variables in `attr(page, "variables")` for a caption. The percent and count
+sections share one binning of the x column, whole years when it is
+fractional, so their bars line up. Continuous points default to alpha 0.5.
+`vars = NULL` takes every column, and a list with missing names reports all
+of them in one error. Pagination moves here from the `dp-postage` template in
+hvtiRtemplates, whose EDA report and postage-stamp jobs both draw through it.
+
+`plot.hv_eda()` gains an `alpha` argument for its points. The default stays
+0.4, so existing figures do not change.
+
 ## `hv_atrisk_compose()` no longer clips multi-strata tables
 
 The composed table kept the curve's x-range by adding

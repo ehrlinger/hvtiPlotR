@@ -398,6 +398,8 @@ print.hv_eda <- function(x, ...) {
 #'   the smooth line will not be plotted.  Default \code{10}.
 #' @param group_bars    Logical; Plot as grouped bars instead of stacked?
 #'   Default \code{FALSE}.
+#' @param alpha         Point transparency for continuous plots.
+#'   Default \code{0.4}.
 #' @param ...           Ignored; present for S3 consistency.
 #'
 #' @return A bare \code{\link[ggplot2]{ggplot}} object.
@@ -440,7 +442,9 @@ plot.hv_eda <- function(x,
                            smooth_se     = FALSE,
                            loess_cutoff = 10,
                            group_bars = FALSE,
+                           alpha = 0.4,
                            ...) {
+  .check_alpha(alpha)
   data         <- x$data
   meta         <- x$meta
   var_type     <- meta$var_type
@@ -453,7 +457,7 @@ plot.hv_eda <- function(x,
 
     p <- ggplot2::ggplot(data, ggplot2::aes(x = .data[["x"]],
                                             y = .data[["y"]])) +
-      ggplot2::geom_point(na.rm = TRUE, size = 0.9, alpha = 0.4) +
+      ggplot2::geom_point(na.rm = TRUE, size = 0.9, alpha = alpha) +
       ggplot2::labs(x = x_col_name, y = label, title = label)
 
     if (length(unique(na.omit(x$data[[2]]))) >= loess_cutoff) {
