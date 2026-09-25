@@ -42,6 +42,7 @@ sections below.
 | [`hv_stacked()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_stacked.md) | none | none |
 | [`hv_balance()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_balance.md) | none | `tp.lp.propen.cov_balance.R` |
 | [`hv_followup()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_followup.md) | `tp.dp.goodness_followup.*`, `tp.dp.goodness_event.*` | none |
+| [`hv_followup_panels()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_followup_panels.md) | `tp.dp.goodness_followup.*`, `tp.dp.goodness_event.*` | `tp.dp.gfup.R` |
 | [`hv_survival()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_survival.md) | `tp.hp.dead.sas` (basic) | `tp.hp.dead.number_risk.R` |
 | [`hazard_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/hazard_plot.md) | `tp.hp.dead.*`, `tp.hp.event.weighted.sas`, `tp.hp.repeated*.sas`, `tp.hp.numtreat.survdiff.matched.sas`, `tp.hs.dead.*`, `tp.hs.uslife_*` | `tp.hp.dead.number_risk.R` |
 | [`hv_hazard()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_hazard.md) | `tp.hp.dead.*`, `tp.hp.event.weighted.sas`, `tp.hp.repeated*.sas`, `tp.hp.numtreat.survdiff.matched.sas`, `tp.hs.dead.*`, `tp.hs.uslife_*` | `tp.hp.dead.number_risk.R` |
@@ -621,6 +622,62 @@ plot(gf2, type = "event", alpha = 0.8) +
 ```
 
 ![](plot-functions_files/figure-html/gfup_event_panel-1.png)
+
+### Several panels over one window
+
+A study that ascertains deaths two ways, or tracks a non-fatal event as
+well, draws several follow-up panels that must share one origin, one
+study window and one close date.
+[`hv_followup_panels()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_followup_panels.md)
+checks every panel’s columns at once, works out that window, and
+prepares one
+[`hv_followup()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_followup.md)
+per panel. The window starts on 1 January of `origin_year`, and the
+close date is estimated from the data when you do not give one;
+`meta$close_source` says which.
+[`plot()`](https://rdrr.io/r/graphics/plot.default.html) returns one
+bare ggplot per panel, named as the panels are.
+
+``` r
+
+fp <- hv_followup_panels(
+  gfup_event_dta,
+  origin_year = 1990,
+  panels = list(
+    all        = list(status = "dead",  time = "iv_dead", title = "All deaths"),
+    systematic = list(status = "deads", time = "iv_dead", title = "Systematic deaths")
+  ),
+  events = list(
+    relapse = list(event = "ev_event", time = "iv_event", death = "deads",
+                   death_time = "iv_dead", label = "Relapse")
+  )
+)
+fp$data
+```
+
+           panel     type             title n_drawn n_excluded
+    1        all followup        All deaths     300          0
+    2 systematic followup Systematic deaths     300          0
+    3    relapse    event           Relapse     300          0
+
+``` r
+
+fp$meta$close_source
+```
+
+    [1] "estimated: the latest operation plus follow-up in the data"
+
+``` r
+
+plots <- plot(fp)
+plots$systematic +
+  scale_color_manual(values = c(Alive = "blue", Dead = "red"), name = NULL) +
+  scale_shape_manual(values = c(Alive = 1L, Dead = 4L), name = NULL) +
+  labs(x = "Operation Date", y = "Follow-up (years)") +
+  theme_hv_poster()
+```
+
+![](plot-functions_files/figure-html/gfup_panels-1.png)
 
 The default follow-up panel (`plot(gf)`) and the event panel
 (`plot(gf2, type = "event")`) share the same diagonal reference line and

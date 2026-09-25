@@ -88,6 +88,7 @@ its survival plot.
 | `tp.ac.dead.sas` (via `%kaplan` / `%nelsont`) | ac | [`hv_survival()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_survival.md) | [Kaplan–Meier survival](#ac-dead) |
 | `tp.cp.dead.sas` | cp | [`hv_survival()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_survival.md) | [Kaplan–Meier survival](#ac-dead) |
 | `tp.dp.gfup.R` | dp | [`hv_followup()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_followup.md) | [Goodness of follow-up](#dp-gfup) |
+| `tp.dp.gfup.R` (several panels, one window) | dp | [`hv_followup_panels()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_followup_panels.md) | [Goodness of follow-up](#dp-gfup) |
 | `descriptive/dc.tables.ods.sas` (`PROC CORR PLOTS=MATRIX`) | dc | [`hv_correlation_matrix()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_correlation_matrix.md) | [Correlation matrix](#dc-correlation) |
 | `tp.lp.propen.cov_balance.R` | lp | [`hv_balance()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_balance.md) | [Covariate balance](#lp-covbal) |
 | `tp.dp.female_bicus_preAR_sankey.R` | dp | [`hv_alluvial()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_alluvial.md) | [Alluvial](#dp-sankey) |
@@ -765,6 +766,14 @@ For the competing non-fatal event panel, supply `event_col` and
 [`hv_followup()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_followup.md)
 and pass `type = "event"` to
 [`plot()`](https://rdrr.io/r/graphics/plot.default.html).
+
+`tp.dp.gfup.R` usually draws several of these, all deaths, systematic
+deaths and an event, over the same window.
+[`hv_followup_panels()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_followup_panels.md)
+takes them as named lists, checks every column at once, derives the
+shared window and close date, and
+[`plot()`](https://rdrr.io/r/graphics/plot.default.html) returns one
+figure per panel.
 
 ------------------------------------------------------------------------
 

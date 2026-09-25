@@ -497,6 +497,12 @@ Visualise follow-up completeness. Ports `tp.dp.gfup.R`.
   : Plot an hv_followup object
 - [`print(`*`<hv_followup>`*`)`](https://ehrlinger.github.io/hvtiPlotR/reference/print.hv_followup.md)
   : Print an hv_followup object
+- [`hv_followup_panels()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_followup_panels.md)
+  : Prepare a set of goodness-of-follow-up panels
+- [`plot(`*`<hv_followup_panels>`*`)`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hv_followup_panels.md)
+  : Plot an hv_followup_panels object
+- [`print(`*`<hv_followup_panels>`*`)`](https://ehrlinger.github.io/hvtiPlotR/reference/print.hv_followup_panels.md)
+  : Print an hv_followup_panels object
 - [`sample_goodness_followup_data()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_goodness_followup_data.md)
   : Generate Sample Goodness-of-Follow-Up Data
 
