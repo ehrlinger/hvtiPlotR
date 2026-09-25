@@ -13,6 +13,25 @@ and an origin that puts operations before it or outside 1900 to next year.
 alpha 0.5. The checks and the window move here from the `dp-gfup` template in
 hvtiRtemplates, whose EDA report draws the same panels through this.
 
+## Stacked `plot.hv_eda()` bars: the legend matches the stack again (#155)
+
+Since 2.7.15 a stacked categorical `plot.hv_eda()` reversed its fill levels
+and stacked with `reverse = TRUE`, to draw missing values on top. The bars
+landed where they had before, but the legend read upside down against them,
+and any positional fill scale (`scale_fill_brewer()`, an unnamed
+`scale_fill_manual(values = )`) mapped onto the reversed levels. An ordinal
+severity palette such as `RdYlGn` with `direction = -1` drew NYHA class IV
+green and class I red, with no error or warning.
+
+The fill levels now keep their natural order (sorted, with a binary column's
+`"0"` before `"1"`), and missing values go on top through the `group`
+aesthetic instead, so the legend and the stack read top-down in the same order
+and a positional palette maps level 1 to its first colour, as in 2.7.13. The
+segments themselves draw where they did in 2.7.15 and 2.7.16. The one
+exception is the `NA` key: ggplot2 always lists it last in the legend, while
+the missing segment stacks on top. Callers who reordered a palette to suit
+2.7.15's reversed levels will see those colours swap back.
+
 # hvtiPlotR 2.7.16
 
 ## New: paginated EDA sections

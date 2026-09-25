@@ -266,13 +266,11 @@ test_that("plot(hv_eda) Cat_Num y_label sets fill legend name", {
   expect_equal(p$labels$fill, "Sex")
 })
 
-test_that("plot(hv_eda) Cat_Num factor levels include 0 last", {
+test_that("plot(hv_eda) Cat_Num binary levels keep 0 before 1", {
   df            <- sample_eda_data(n = 300, seed = 42)
   df$male[1:10] <- NA
   p             <- plot(hv_eda(df, x_col = "year", y_col = "male"))
-  levs          <- levels(p$data$fill)
-  #expect_equal(tail(levs, 1), "(Missing)")
-  expect_equal(tail(levs, 1), "0")
+  expect_equal(levels(p$data$fill), c("0", "1"))
 })
 
 # ============================================================================
@@ -298,8 +296,78 @@ test_that("plot(hv_eda) Cat_Char factor levels preserve alphabetical level order
   df   <- sample_eda_data(n = 300, seed = 42)
   p    <- plot(hv_eda(df, x_col = "year", y_col = "valve_morph"))
   levs <- levels(p$data$fill)
-  expect_equal(tail(levs, 1), head(sort(levs), 1))
-  expect_equal(head(levs, 1), tail(sort(levs), 1))
+  expect_equal(levs, sort(levs))
+})
+
+# Legend order, stack order and positional palettes (#155): the legend lists
+# fill levels top-down, so the stack must run top-down in the same order, with
+# NA stacked on top via `group`, and a positional palette must map level 1 to
+# its first colour.
+stack_top_down <- function(p) {
+  b   <- ggplot2::ggplot_build(p)
+  sc  <- b$plot$scales$get_scales("fill")
+  lim <- sc$get_limits()
+  pal <- stats::setNames(c(sc$map(lim[!is.na(lim)]), sc$na.value),
+                         c(lim[!is.na(lim)], "NA"))
+  d   <- b$data[[1]]  # one x value: callers pass a single year
+  names(pal)[match(d$fill[order(-d$ymax)], pal)]
+}
+
+test_that("plot(hv_eda) stacked bars run top-down in legend order, NA on top", {
+  df <- sample_eda_data(n = 300, seed = 42)
+  for (v in c("male", "valve_morph", "nyha")) {
+    df[[v]][df$year == min(df$year)][1:2] <- NA
+    one <- df[df$year == min(df$year), ]
+    for (pct in c(FALSE, TRUE)) {
+      p   <- plot(hv_eda(one, x_col = "year", y_col = v), show_percent = pct)
+      lvl <- levels(p$data$fill)
+      got <- stack_top_down(p)
+      what <- paste(v, if (pct) "percent" else "count")
+      expect_equal(got[1], "NA", info = what)
+      expect_equal(got[-1], lvl[lvl %in% got[-1]], info = what)
+    }
+  }
+})
+
+test_that("plot(hv_eda) keeps a level named like a sentinel apart from NA", {
+  df  <- sample_eda_data(n = 300, seed = 42)
+  one <- df[df$year == min(df$year), ]
+  one$valve_morph[1:3] <- ".hv_na"
+  one$valve_morph[4:5] <- NA
+  p   <- plot(hv_eda(one, x_col = "year", y_col = "valve_morph"))
+  d   <- ggplot2::ggplot_build(p)$data[[1]]
+  n_obs <- length(unique(stats::na.omit(one$valve_morph)))
+  expect_equal(nrow(d), n_obs + 1)
+  expect_equal(sum(d$count), nrow(one))
+  expect_equal(stack_top_down(p)[1], "NA")
+})
+
+test_that("plot(hv_eda) grouped bars run left to right in legend order, NA first", {
+  df <- sample_eda_data(n = 300, seed = 42)
+  for (v in c("male", "valve_morph", "nyha")) {
+    df[[v]][df$year == min(df$year)][1:2] <- NA
+    one <- df[df$year == min(df$year), ]
+    p   <- plot(hv_eda(one, x_col = "year", y_col = v), group_bars = TRUE)
+    b   <- ggplot2::ggplot_build(p)
+    sc  <- b$plot$scales$get_scales("fill")
+    lim <- sc$get_limits()
+    pal <- stats::setNames(c(sc$map(lim[!is.na(lim)]), sc$na.value),
+                           c(lim[!is.na(lim)], "NA"))
+    d   <- b$data[[1]]
+    got <- names(pal)[match(d$fill[order(d$xmin)], pal)]
+    lvl <- levels(p$data$fill)
+    expect_equal(got[1], "NA", info = v)
+    expect_equal(got[-1], lvl[lvl %in% got[-1]], info = v)
+  }
+})
+
+test_that("plot(hv_eda) positional fill palette maps the first level first", {
+  df <- sample_eda_data(n = 300, seed = 42)
+  p  <- plot(hv_eda(df, x_col = "year", y_col = "nyha")) +
+    ggplot2::scale_fill_brewer(palette = "RdYlGn", direction = -1)
+  sc <- ggplot2::ggplot_build(p)$plot$scales$get_scales("fill")
+  expect_equal(sc$get_limits(), c("1", "2", "3", "4"))
+  expect_equal(unname(sc$map("4")), "#D7191C")
 })
 
 test_that("plot(hv_eda) Cat_Char y_label sets fill legend name", {
