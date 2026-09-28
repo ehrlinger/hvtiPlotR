@@ -1,5 +1,23 @@
 # hvtiPlotR (unreleased)
 
+## New: `hv_role_palette()`, `scale_fill_hv()` and `scale_colour_hv()`
+
+The house colour rule for EDA and follow-up figures, as an opt-in scale. An
+event is vermillion `#D55E00`, censored is blue `#0072B2`, missing is light
+grey `#CCCCCC`, and every other level takes a colourblind-safe colour in order:
+the light series of `hv_ppt_palette()` (Okabe-Ito without yellow and sky blue),
+then Paul Tol's muted palette without its sand and cyan. Every colour but the
+missing grey clears 2:1 against white. When a panel carries the event or
+censored level, blue and vermillion leave the rotation so nothing else is
+mistaken for them.
+
+The scales colour each panel from its own levels, so one
+`page & scale_fill_hv(event = "Dead")` suits a page where only some panels
+carry the event. A real `NA` takes the missing grey (`na.value`). A panel with
+more levels than the colourblind-safe palettes hold is drawn in ggplot2's
+default hue with a warning; `hv_role_palette()` called directly stops instead.
+Design: `dev/specs/2026-09-27-hv-palette-design.md`.
+
 ## Vignettes: installed tarball halved, 17.1 MB to 8.9 MB
 
 The installed vignettes embed every figure as a PNG, and `plot-functions`

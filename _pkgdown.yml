@@ -83,6 +83,8 @@ reference:
   - theme_hv_ppt_light
   - hv_ppt_series
   - hv_ppt_palette
+  - hv_role_palette
+  - scale_fill_hv
 
 - title: "Survival & Hazard"
   desc: >
