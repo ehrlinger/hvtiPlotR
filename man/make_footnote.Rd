@@ -10,18 +10,19 @@ make_footnote(
   timestamp = TRUE,
   prefix = "DRAFT — ",
   size = 0.7,
-  colour = grey(0.5),
+  colour = gray(0.5),
   x = 1,
   y = 0,
   hjust = "right",
   vjust = "bottom",
-  margin_mm = 2
+  margin_mm = 2,
+  color = colour
 )
 
 makeFootnote(
   footnoteText = getwd(),
   size = 0.7,
-  color = grey(0.5),
+  color = gray(0.5),
   timestamp = TRUE
 )
 }
@@ -38,27 +39,28 @@ Set to \code{FALSE} for reproducible output.}
 \item{size}{Font size as a multiplier relative to the device default
 (passed to \code{\link[grid:gpar]{grid::gpar()}} as \code{cex}). Default \code{0.7}.}
 
-\item{colour}{Font colour. Default \code{grey(0.5)} (medium grey), which is
-visually unobtrusive on both screen and print.}
+\item{colour}{The same as \code{color}: an alias kept for existing code. Give
+one or the other; both with different values is an error.}
 
-\item{x}{Horizontal position in normalised parent coordinates
+\item{x}{Horizontal position in normalized parent coordinates
 (\code{"npc"}). Default \code{1} (right edge). Decrease to move left.}
 
 \item{y}{Vertical position in \code{"npc"}. Default \code{0} (bottom). Increase
 to move up.}
 
 \item{hjust}{Horizontal justification: \code{"right"} (default), \code{"left"},
-or \code{"centre"}.}
+or \code{"center"}.}
 
 \item{vjust}{Vertical justification: \code{"bottom"} (default), \code{"top"},
-or \code{"centre"}.}
+or \code{"center"}.}
 
 \item{margin_mm}{Margin in mm pulled back from the \code{x}/\code{y} position.
 Default \code{2}.}
 
-\item{footnoteText}{Equivalent to \code{text} in \code{\link[=make_footnote]{make_footnote()}}.}
+\item{color}{Font color. Default \code{gray(0.5)} (medium gray), which is
+visually unobtrusive on both screen and print.}
 
-\item{color}{Equivalent to \code{colour} in \code{\link[=make_footnote]{make_footnote()}}.}
+\item{footnoteText}{Equivalent to \code{text} in \code{\link[=make_footnote]{make_footnote()}}.}
 }
 \value{
 Called for its side effect (draws text on the current device).

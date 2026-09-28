@@ -11,9 +11,9 @@
 #  - Variable type auto-detected by eda_classify_var(); callable independently
 #  - eda_select_vars() replaces Order_Variables() + Mod_Data <- dta[, Order_Var]
 #  - y_label parameter replaces the var_labels / var.names override pattern
-#  - No hard-coded colours: examples use scale_fill_manual() / scale_fill_brewer()
+#  - No hard-coded colors: examples use scale_fill_manual() / scale_fill_brewer()
 #  - No explicit theme: examples apply theme_hv_poster()
-#  - NA values shown as an explicit bar segment; colour set by scale_fill_*
+#  - NA values shown as an explicit bar segment; color set by scale_fill_*
 #  - Continuous: geom_smooth() + geom_rug() replace base-R loess + rug()
 # ---------------------------------------------------------------------------
 
@@ -202,7 +202,7 @@ eda_select_vars <- function(data, vars) {
 #' categorical levels (adding an explicit \code{"(Missing)"} level), and
 #' returns an \code{hv_eda} object.  Call \code{\link{plot.hv_eda}} on the
 #' result to obtain a bare \code{ggplot2} barplot or scatter plot that you can
-#' decorate with colour scales and \code{\link{theme_hv_manuscript}}.
+#' decorate with color scales and \code{\link{theme_hv_manuscript}}.
 #'
 #' Iterate over variables with \code{lapply()} after selecting columns with
 #' \code{\link{eda_select_vars}}.
@@ -261,7 +261,7 @@ eda_select_vars <- function(data, vars) {
 #' # 3. Decorate: fill palette, x-axis breaks, labels, theme
 #' p +
 #'   ggplot2::scale_fill_manual(
-#'     values = c("0" = "steelblue", "1" = "firebrick", "(Missing)" = "grey80"),
+#'     values = c("0" = "steelblue", "1" = "firebrick", "(Missing)" = "gray80"),
 #'     labels = c("0" = "Female", "1" = "Male", "(Missing)" = "Missing"),
 #'     name   = NULL
 #'   ) +
@@ -273,7 +273,7 @@ eda_select_vars <- function(data, vars) {
 #' ed2 <- hv_eda(dta, x_col = "op_years", y_col = "ef",
 #'                 y_label = "Ejection Fraction (%)")
 #' plot(ed2) +
-#'   ggplot2::scale_colour_manual(values = c("firebrick"), guide = "none") +
+#'   ggplot2::scale_color_manual(values = c("firebrick"), guide = "none") +
 #'   ggplot2::scale_x_continuous(breaks = seq(0, 15, 5)) +
 #'   ggplot2::labs(x = "Years from First Surgery Year") +
 #'   theme_hv_poster()
@@ -286,7 +286,7 @@ eda_select_vars <- function(data, vars) {
 #' p_cont <- lapply(names(cont_vars), function(cn) {
 #'   plot(hv_eda(sub_cont, x_col = "op_years", y_col = cn,
 #'                y_label = cont_vars[[cn]])) +
-#'     ggplot2::scale_colour_manual(values = c("steelblue"), guide = "none") +
+#'     ggplot2::scale_color_manual(values = c("steelblue"), guide = "none") +
 #'     ggplot2::scale_x_continuous(breaks = seq(0, 15, 5)) +
 #'     ggplot2::labs(x = "Years from First Surgery Year") +
 #'     theme_hv_poster()
@@ -385,7 +385,7 @@ print.hv_eda <- function(x, ...) {
 #'   \item{\strong{Numeric categorical} (\code{"Cat_Num"})}{Stacked (or filled)
 #'     bar chart with counts (or proportions) per x level.}
 #'   \item{\strong{Character categorical} (\code{"Cat_Char"})}{Same stacked bar,
-#'     colouring each string level separately.}
+#'     coloring each string level separately.}
 #' }
 #'
 #' @param x             An \code{hv_eda} object.
@@ -425,12 +425,12 @@ print.hv_eda <- function(x, ...) {
 #' # --- Continuous: annotated -----------------------------------------------
 #' plot(hv_eda(dta, x_col = "op_years", y_col = "peak_grad",
 #'               y_label = "Peak Gradient (mmHg)")) +
-#'   ggplot2::scale_colour_manual(values = c("steelblue"), guide = "none") +
+#'   ggplot2::scale_color_manual(values = c("steelblue"), guide = "none") +
 #'   ggplot2::scale_x_continuous(breaks = seq(0, 15, 5)) +
 #'   ggplot2::labs(x = "Years from First Surgery Year") +
 #'   ggplot2::annotate("text", x = 12, y = 70,
 #'                     label = "LOESS span = 0.8",
-#'                     size = 3, colour = "grey40", fontface = "italic") +
+#'                     size = 3, color = "gray40", fontface = "italic") +
 #'   theme_hv_poster()
 #'
 #' @importFrom ggplot2 ggplot aes geom_point geom_smooth geom_rug geom_bar scale_y_continuous labs
@@ -477,7 +477,7 @@ plot.hv_eda <- function(x,
         data        = rug_data,
         mapping     = ggplot2::aes(x = .data[["x"]]),
         sides       = "b",
-        colour      = "grey50",
+        color      = "gray50",
         inherit.aes = FALSE
       )
     }
@@ -499,10 +499,10 @@ plot.hv_eda <- function(x,
     )
   }
 
-  # Stacking follows `group`, colours and legend follow `fill`. Keep the fill
+  # Stacking follows `group`, colors and legend follow `fill`. Keep the fill
   # levels in their natural order, so the default stack reads top-down in the
   # same order as the legend and a positional palette maps level 1 to its first
-  # colour. Put NA on top by giving it the first group, not by reordering the
+  # color. Put NA on top by giving it the first group, not by reordering the
   # levels. Reversing the levels to do that (5d7ba1a) inverted the legend
   # against the stack and flipped positional palettes (#155).
   # Group on integer level codes, 0 for missing, so no data value can share

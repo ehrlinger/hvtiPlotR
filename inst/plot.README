@@ -161,11 +161,11 @@ OPTIONS NOSOURCE; %INC PLT; OPTIONS SOURCE ;
 quit;
 
 example #3
-To save your plot file to a catalogue for editing at some later date you can
+To save your plot file to a catalog for editing at some later date you can
 try somthing like the following.
 
 Run the first piece of code in batch. It will create, print and then store 
-the plot in a catalogue.
+the plot in a catalog.
 
 Run the second piece of code run interactively from the SAS editor and then
 click on GLOBALS-> ACCESS-> LIBRARIES .....   Your plot will appear so you 

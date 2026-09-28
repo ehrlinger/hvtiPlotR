@@ -2,7 +2,7 @@
 % Please edit documentation in R/palette-hv.R
 \name{hv_role_palette}
 \alias{hv_role_palette}
-\title{Colours for a figure's levels, by role}
+\title{Colors for a figure's levels, by role}
 \usage{
 hv_role_palette(levels, event = NULL, censored = NULL, missing = "(Missing)")
 }
@@ -10,29 +10,29 @@ hv_role_palette(levels, event = NULL, censored = NULL, missing = "(Missing)")
 \item{levels}{Character vector of distinct level names, in drawing order.}
 
 \item{event, censored}{Level names that take the event or the censored
-colour, or \code{NULL} for none. Names not in \code{levels} are ignored.}
+color, or \code{NULL} for none. Names not in \code{levels} are ignored.}
 
 \item{missing}{Level name that stands for missing values. \code{"(Missing)"} is
 the explicit level \code{\link[=hv_eda]{hv_eda()}} adds.}
 }
 \value{
-A character vector of hex colours, named by \code{levels} and in the
+A character vector of hex colors, named by \code{levels} and in the
 same order.
 }
 \description{
-The house colour rule for EDA and follow-up figures, as a named vector you
+The house color rule for EDA and follow-up figures, as a named vector you
 can check or reuse: an event is vermillion, censored is blue, missing is
-light grey, and every other level takes a colourblind-safe colour in order.
-To apply the rule to a plot, use \code{\link[=scale_fill_hv]{scale_fill_hv()}} or \code{\link[=scale_colour_hv]{scale_colour_hv()}},
+light gray, and every other level takes a colorblind-safe color in order.
+To apply the rule to a plot, use \code{\link[=scale_fill_hv]{scale_fill_hv()}} or \code{\link[=scale_color_hv]{scale_color_hv()}},
 which call this for each panel.
 }
 \details{
-Every colour is decided from \code{levels} alone:
+Every color is decided from \code{levels} alone:
 \enumerate{
 \item A level named in \code{event} is \verb{#D55E00}, in \code{censored} \verb{#0072B2}, and in
 \code{missing} \verb{#CCCCCC}. These hold even when the level is the only one.
 \item Every other level, in \code{levels} order, takes the light series of
-\code{\link[=hv_ppt_palette]{hv_ppt_palette()}}: the Okabe-Ito colours without yellow and sky blue,
+\code{\link[=hv_ppt_palette]{hv_ppt_palette()}}: the Okabe-Ito colors without yellow and sky blue,
 starting at blue, so a sole level with no role is blue.
 \item When any of \code{levels} is named in \code{event} or \code{censored}, blue and
 vermillion leave that series, so no other level can be mistaken for the
@@ -40,13 +40,13 @@ event or for censored. A role name absent from \code{levels} changes nothing,
 so one call can serve panels that do and do not carry the event.
 \item When the other levels outnumber the series, all of them switch to Paul
 Tol's muted palette, without its sand and cyan, and without its rose when
-a role is present. Beyond that there are no more colourblind-safe
-colours, and the function stops with an error of class
+a role is present. Beyond that there are no more colorblind-safe
+colors, and the function stops with an error of class
 \code{hv_role_palette_capacity}.
 }
 
-Every colour except the missing grey is at least 2:1 against white. The
-grey is fainter on purpose: missing is the one level meant to recede.
+Every color except the missing gray is at least 2:1 against white. The
+gray is fainter on purpose: missing is the one level meant to recede.
 }
 \examples{
 hv_role_palette(c("No event", "Reoperation", "Death"),
@@ -54,6 +54,6 @@ hv_role_palette(c("No event", "Reoperation", "Death"),
 hv_role_palette(c("Female", "Male", "(Missing)"))
 }
 \seealso{
-\code{\link[=scale_fill_hv]{scale_fill_hv()}} and \code{\link[=scale_colour_hv]{scale_colour_hv()}} to apply the rule to a
-plot; \code{\link[=hv_ppt_palette]{hv_ppt_palette()}} for series colours with no role attached.
+\code{\link[=scale_fill_hv]{scale_fill_hv()}} and \code{\link[=scale_color_hv]{scale_color_hv()}} to apply the rule to a
+plot; \code{\link[=hv_ppt_palette]{hv_ppt_palette()}} for series colors with no role attached.
 }

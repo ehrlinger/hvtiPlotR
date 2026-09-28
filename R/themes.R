@@ -29,9 +29,9 @@
 #' @param base_line_size Line size used for axis lines and borders.
 #'   Default `base_size / 22`.
 #' @param base_rect_size Rectangle border size. Default `base_size / 22`.
-#' @param ink            Foreground (text and line) colour.
-#' @param paper          Background colour.
-#' @param accent         Accent colour used by some `theme_grey()` elements.
+#' @param ink            Foreground (text and line) color.
+#' @param paper          Background color.
+#' @param accent         Accent color used by some `theme_gray()` elements.
 #'   Default `"#3366FF"`.
 #' @param ...            Additional named theme elements forwarded to a final
 #'   [ggplot2::theme()] call. Use this to override any theme element from the
@@ -46,12 +46,12 @@
 #' @import ggplot2
 NULL
 
-# Internal: build the theme_grey() base shared by all four public themes.
-# The arg signature matches modern ggplot2's theme_grey().
+# Internal: build the theme_gray() base shared by all four public themes.
+# The arg signature matches modern ggplot2's theme_gray().
 .hv_base <- function(base_size, base_family, header_family,
                      base_line_size, base_rect_size,
                      ink, paper, accent) {
-  theme_grey(
+  theme_gray(
     base_size      = base_size,
     base_family    = base_family,
     header_family  = header_family,
@@ -90,9 +90,9 @@ theme_hv_manuscript <- function(base_size      = 12,
       legend.title     = element_blank(),
       panel.background = element_blank(),
       panel.border     = element_blank(),
-      axis.line.x      = element_line(colour = "black", linewidth = 0.8),
-      axis.line.y      = element_line(colour = "black", linewidth = 0.8),
-      axis.text        = element_text(size = base_size, colour = "black"),
+      axis.line.x      = element_line(color = "black", linewidth = 0.8),
+      axis.line.y      = element_line(color = "black", linewidth = 0.8),
+      axis.text        = element_text(size = base_size, color = "black"),
       plot.margin      = unit(c(0.65, 0.65, 0.25, 0.25), "cm"),
       axis.title       = element_text(size = base_size)
     )
@@ -120,17 +120,17 @@ theme_hv_poster <- function(base_size      = 16,
                    ink, paper, accent) %+replace%
     theme(
       plot.background    = element_rect(fill = paper,
-                                        colour = "transparent",
+                                        color = "transparent",
                                         linewidth = 2),
-      axis.text          = element_text(size = base_size, colour = "black"),
-      axis.line          = element_line(colour = "black", linewidth = 1),
+      axis.text          = element_text(size = base_size, color = "black"),
+      axis.line          = element_line(color = "black", linewidth = 1),
       strip.text         = element_text(size = 8),
       legend.position    = "none",
       panel.border       = element_blank(),
       panel.background   = element_rect(fill = "white",
-                                        colour = "black",
+                                        color = "black",
                                         linewidth = 1),
-      axis.ticks         = element_line(colour = "black", linewidth = 1),
+      axis.ticks         = element_line(color = "black", linewidth = 1),
       panel.grid.major.x = element_blank(),
       panel.grid.major.y = element_blank(),
       panel.grid.minor   = element_blank()
@@ -181,9 +181,9 @@ theme_hv_ppt_dark <- function(base_size      = 32,
                    ink, paper, accent) %+replace%
     theme(
       plot.background    = element_rect(fill = paper,
-                                        colour = "transparent",
+                                        color = "transparent",
                                         linewidth = 2),
-      axis.text          = element_text(size = base_size, colour = "white",
+      axis.text          = element_text(size = base_size, color = "white",
                                          face = "bold"),
       axis.title         = element_text(size = base_size * 1.25,
                                         face = "bold"),
@@ -193,13 +193,13 @@ theme_hv_ppt_dark <- function(base_size      = 32,
       axis.title.x       = element_text(margin = margin(t = 1.5 * half_line)),
       axis.title.y       = element_text(angle  = 90,
                                         margin = margin(r = 1.5 * half_line)),
-      axis.line          = element_line(colour = "white", linewidth = 1),
+      axis.line          = element_line(color = "white", linewidth = 1),
       strip.text         = element_text(size = base_size / 2),
       panel.border       = element_blank(),
       panel.background   = element_rect(fill = "black",
-                                        colour = "white",
+                                        color = "white",
                                         linewidth = 1),
-      axis.ticks         = element_line(colour = "white", linewidth = 1),
+      axis.ticks         = element_line(color = "white", linewidth = 1),
       axis.ticks.length  = unit(-half_line / 2, "pt"),
       panel.grid.major.x = element_blank(),
       panel.grid.major.y = element_blank(),
@@ -232,9 +232,9 @@ theme_hv_ppt_light <- function(base_size      = 32,
                    ink, paper, accent) %+replace%
     theme(
       plot.background    = element_rect(fill = paper,
-                                        colour = "transparent",
+                                        color = "transparent",
                                         linewidth = 2),
-      axis.text          = element_text(size = base_size, colour = "black",
+      axis.text          = element_text(size = base_size, color = "black",
                                          face = "bold"),
       axis.title         = element_text(size = base_size * 1.25,
                                         face = "bold"),
@@ -244,7 +244,7 @@ theme_hv_ppt_light <- function(base_size      = 32,
       axis.title.x       = element_text(margin = margin(t = 1.5 * half_line)),
       axis.title.y       = element_text(angle  = 90,
                                         margin = margin(r = 1.5 * half_line)),
-      axis.line          = element_line(colour = "black", linewidth = 1),
+      axis.line          = element_line(color = "black", linewidth = 1),
       strip.text         = element_text(size = base_size / 2),
       panel.border       = element_blank(),
       # Transparent panel fill so the PPT slide template background shows
@@ -254,9 +254,9 @@ theme_hv_ppt_light <- function(base_size      = 32,
       # `+ theme(panel.background = element_rect(fill = "white"))` to restore
       # an opaque white panel for templates that need it.
       panel.background   = element_rect(fill = "transparent",
-                                        colour = "black",
+                                        color = "black",
                                         linewidth = 1),
-      axis.ticks         = element_line(colour = "black", linewidth = 1),
+      axis.ticks         = element_line(color = "black", linewidth = 1),
       axis.ticks.length  = unit(-half_line / 2, "pt"),
       panel.grid.major.x = element_blank(),
       panel.grid.major.y = element_blank(),

@@ -9,7 +9,7 @@
   n_intersections = 10L,
   sort_by = c("freq", "degree"),
   fill_col = NULL,
-  bar_fill = "grey40",
+  bar_fill = "gray40",
   set_size = TRUE,
   set_size_position = c("right", "left"),
   set_size_sort = c("descending", "ascending", "none"),
@@ -32,10 +32,10 @@ by frequency) or \code{"degree"} (by number of sets in each combination).}
 
 \item{fill_col}{Optional column name in \code{x$data} to fill the
 intersection bars by (stacks bars by group). Default \code{NULL} (single
-colour, supplied via \code{bar_fill}).}
+color, supplied via \code{bar_fill}).}
 
-\item{bar_fill}{Single fill colour for the intersection bars
-when \code{fill_col} is \code{NULL}. Default \code{"grey40"}.}
+\item{bar_fill}{Single fill color for the intersection bars
+when \code{fill_col} is \code{NULL}. Default \code{"gray40"}.}
 
 \item{set_size}{Logical; if \code{TRUE} (default), compose a
 set-size sidebar as a patchwork. If \code{FALSE}, return only the
@@ -46,7 +46,7 @@ intersection-bar ggplot.}
 \item{set_size_sort}{Sort order for the sidebar: \code{"descending"}
 (default), \code{"ascending"}, or \code{"none"} (preserve \code{intersect} order).}
 
-\item{set_size_fill}{Fill colour for the sidebar bars. Default
+\item{set_size_fill}{Fill color for the sidebar bars. Default
 \code{"steelblue"}.}
 
 \item{width_ratio}{Fraction of horizontal space given to the
@@ -70,7 +70,7 @@ operator:
 \preformatted{plot(up) & theme_hv_poster()}
 
 Pass \code{set_size = FALSE} to get a single intersection-bar ggplot
-for full customisation; themes then apply via \code{+}:
+for full customization; themes then apply via \code{+}:
 \preformatted{plot(up, set_size = FALSE) + theme_hv_poster()}
 }
 \examples{
@@ -92,7 +92,7 @@ dta$era <- ifelse(seq_len(nrow(dta)) <= 150, "Early", "Recent")
 up_era  <- hv_upset(dta, intersect = sets)
 plot(up_era, fill_col = "era", set_size = FALSE) +
   ggplot2::scale_fill_manual(
-    values = c(Early = "grey60", Recent = "steelblue"),
+    values = c(Early = "gray60", Recent = "steelblue"),
     name   = "Era"
   ) +
   theme_hv_poster()

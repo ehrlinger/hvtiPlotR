@@ -54,7 +54,7 @@ Default \code{1990}.}
 \item{study_start}{Start of study period.  Default
 \code{as.Date("1990-01-01")}.}
 
-\item{study_end}{End of study enrolment.  Default
+\item{study_end}{End of study enrollment.  Default
 \code{as.Date("2019-12-31")}.}
 
 \item{close_date}{Data close date.  Must be \eqn{\geq}
@@ -63,7 +63,7 @@ Default \code{1990}.}
 \item{tolower_names}{Logical; if TRUE, column names are lower-cased when
 materialising the data.  Default \code{TRUE}.}
 
-\item{death_levels}{Length-2 character vector labelling the two death
+\item{death_levels}{Length-2 character vector labeling the two death
 states (alive first).  Default \code{c("Alive", "Dead")}.}
 
 \item{event_levels}{Length-3 character vector for the event panel
@@ -80,7 +80,7 @@ An object of class \code{c("hv_followup", "hv_data")}:
 \item{\code{$data}}{Per-patient data frame for the death panel.}
 \item{\code{$meta}}{Column names, date parameters, state levels,
 \code{has_event} flag, and the cohort counts \code{n_patients}
-(analysed), \code{n_input}, and \code{n_excluded}.}
+(analyzed), \code{n_input}, and \code{n_excluded}.}
 \item{\code{$tables}}{Named list with \code{diagonal} (the study-period
 reference diagonal) and, when event columns are supplied,
 \code{event_data}.}
@@ -97,7 +97,7 @@ result to obtain a bare \code{ggplot2} object.
 
 Patients with a missing value in any required column are excluded, with a
 warning naming the columns responsible.  \code{$meta$n_patients} reports
-the \emph{analysed} cohort, alongside \code{$meta$n_input} and
+the \emph{analyzed} cohort, alongside \code{$meta$n_input} and
 \code{$meta$n_excluded}, so the reported N always describes the plotted
 points.
 
@@ -119,7 +119,7 @@ gf  # prints follow-up summary
 # 2. Bare plot -- undecorated ggplot returned by plot.hv_followup
 p <- plot(gf)
 
-# 3. Decorate: colour palette, axis labels, theme
+# 3. Decorate: color palette, axis labels, theme
 p +
   ggplot2::scale_color_manual(
     values = c("Alive" = "steelblue", "Dead" = "firebrick"),

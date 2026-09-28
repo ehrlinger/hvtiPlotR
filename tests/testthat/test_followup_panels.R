@@ -87,7 +87,7 @@ test_that("plot returns one named, bare ggplot per panel, each with data", {
   expect_error(plot(fp, alpha = 2))
 })
 
-test_that("print summarises the window and the close date", {
+test_that("print summarizes the window and the close date", {
   fp <- hv_followup_panels(dta, origin_year = 1990, panels = all_deaths)
   expect_output(print(fp), "Close date  : .*estimated")
 })

@@ -26,7 +26,7 @@ ordered by the hierarchical cluster labels.
 }
 \description{
 Generates a synthetic dataset with one row per patient and columns
-\code{C2}–\code{C9} holding letter-labelled cluster assignments at successive values
+\code{C2}–\code{C9} holding letter-labeled cluster assignments at successive values
 of K (number of clusters). The hierarchical merge structure follows the
 pattern from the HVTI PAM clustering analysis:
 }

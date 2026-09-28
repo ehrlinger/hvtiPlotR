@@ -41,9 +41,9 @@ A bare \code{\link[ggplot2]{ggplot}} object.
 \description{
 Builds a bare covariate balance \code{ggplot2} object from an
 \code{\link{hv_balance}} data object.  Each covariate appears as a
-labelled row; points show the standardized mean difference per group.
+labeled row; points show the standardized mean difference per group.
 A solid line marks zero; dotted lines mark \eqn{\pm}\code{threshold}.
-Add colour, shape, axis scales, and a theme with \code{+}.
+Add color, shape, axis scales, and a theme with \code{+}.
 }
 \examples{
 dta <- sample_covariate_balance_data()

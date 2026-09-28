@@ -41,7 +41,7 @@ An object of class \code{c("hv_stacked", "hv_data")}:
 Validates a patient-level or observation-level data frame and returns an
 \code{hv_stacked} object.  Call \code{\link{plot.hv_stacked}} on the
 result to obtain a bare \code{ggplot2} stacked (or proportional) histogram
-that you can decorate with colour scales, axis labels, and
+that you can decorate with color scales, axis labels, and
 \code{\link{theme_hv_manuscript}}.
 }
 \examples{
@@ -54,7 +54,7 @@ sh  # prints obs / group count
 # 2. Bare plot -- undecorated ggplot returned by plot.hv_stacked
 p <- plot(sh)
 
-# 3. Decorate: fill/colour brewer palette, axis labels, theme
+# 3. Decorate: fill/color brewer palette, axis labels, theme
 p +
   ggplot2::scale_fill_brewer(palette = "Set1", name = "Category") +
   ggplot2::scale_color_brewer(palette = "Set1", name = "Category") +

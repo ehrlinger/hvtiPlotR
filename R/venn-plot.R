@@ -112,7 +112,7 @@ hv_venn <- function(data, sets) {
 #' @param show_percentage Logical; show each region's percentage. Default
 #'   \code{TRUE}.
 #' @param show_counts Logical; show each region's count. Default \code{TRUE}.
-#' @param fill Optional vector of fill colours, one per set. \code{NULL}
+#' @param fill Optional vector of fill colors, one per set. \code{NULL}
 #'   (default) uses \pkg{ggvenn}'s palette.
 #' @param text_size Region label text size. Default \code{4}.
 #' @param set_name_size Set name text size. Default \code{6}.
@@ -145,9 +145,9 @@ plot.hv_venn <- function(x, show_percentage = TRUE, show_counts = TRUE,
          " supplied from the hv_venn object.", call. = FALSE)
   if (!is.null(fill)) {
     if ("fill_color" %in% names(dots))
-      stop("Pass fill colours via `fill`, not `fill_color`.", call. = FALSE)
+      stop("Pass fill colors via `fill`, not `fill_color`.", call. = FALSE)
     if (length(fill) != length(x$meta$sets))
-      stop("`fill` must give one colour per set (", length(x$meta$sets),
+      stop("`fill` must give one color per set (", length(x$meta$sets),
            ").", call. = FALSE)
   }
   args <- c(

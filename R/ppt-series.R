@@ -9,16 +9,16 @@
 # resulting plot.
 # ---------------------------------------------------------------------------
 
-#' Series colours for a slide or a manuscript figure
+#' Series colors for a slide or a manuscript figure
 #'
 #' @description
-#' The colours [hv_ppt_series()] assigns, handed back as a plain character
-#' vector. This is the single definition of the series colours, so reach for it
+#' The colors [hv_ppt_series()] assigns, handed back as a plain character
+#' vector. This is the single definition of the series colors, so reach for it
 #' when a figure needs them outside the decorator rather than pasting hex codes
 #' into a script, where they drift the first time the palette changes.
 #'
 #' @details
-#' The colours are the Okabe-Ito colourblind-safe palette, reordered for the
+#' The colors are the Okabe-Ito colorblind-safe palette, reordered for the
 #' background: high-luminance hues first on a dark slide, darker ones first on
 #' a light slide. Each ordering leads with its highest-contrast hue, 15.9:1 on
 #' a black panel and 5.2:1 on a white one, but past that first entry the order
@@ -27,22 +27,22 @@
 #' highest ratio of anything here (21:1 on white): house style draws annotation
 #' in the theme's ink, so a black series would be confusable with the label
 #' naming it. On a dark panel black is invisible, which is why that ordering
-#' omits it. These are not CORR brand colours.
+#' omits it. These are not CORR brand colors.
 #'
-#' Six colours are supplied. Ask for more than that and you get an error rather
-#' than a silently recycled palette, because two series sharing a colour is a
+#' Six colors are supplied. Ask for more than that and you get an error rather
+#' than a silently recycled palette, because two series sharing a color is a
 #' worse outcome than a stopped script.
 #'
 #' @param mode Slide or figure background. `"dark"` pairs with
 #'   [theme_hv_ppt_dark()], `"light"` with [theme_hv_ppt_light()] and
 #'   [theme_hv_manuscript()].
-#' @param n    Number of colours to return, or `NULL` (default) for all six.
+#' @param n    Number of colors to return, or `NULL` (default) for all six.
 #'
-#' @return A character vector of hex colours, in series order.
+#' @return A character vector of hex colors, in series order.
 #'
 #' @seealso [hv_ppt_series()], which applies these to a plot.
 #'   Annotation text is drawn in the theme's ink, matching the axis, rather
-#'   than in a series colour, so these are not the values to label a curve
+#'   than in a series color, so these are not the values to label a curve
 #'   with.
 #'
 #' @examples
@@ -59,7 +59,7 @@ hv_ppt_palette <- function(mode = c("dark", "light"), n = NULL) {
   if (is.null(n)) return(pal)
   .check_scalar_positive(n, "n")
   if (n > length(pal))
-    stop(sprintf("`n` must be at most %d; the palette holds %d colours.",
+    stop(sprintf("`n` must be at most %d; the palette holds %d colors.",
                  length(pal), length(pal)),
          call. = FALSE)
   pal[seq_len(n)]
@@ -79,7 +79,7 @@ hv_ppt_palette <- function(mode = c("dark", "light"), n = NULL) {
 #' drifts out of step with the rest.
 #'
 #' `hv_ppt_series()` bundles the finishing step into a single object you add
-#' once per plot. It carries the PowerPoint theme, a colour scale and a
+#' once per plot. It carries the PowerPoint theme, a color scale and a
 #' matching shape scale, so a whole deck takes its look from one definition.
 #'
 #' @details
@@ -94,27 +94,27 @@ hv_ppt_palette <- function(mode = c("dark", "light"), n = NULL) {
 #'
 #' A theme cannot do this job alone. [ggplot2::theme()] governs the non-data
 #' ink, the text, panel, grid and ticks, and nothing that draws from the data,
-#' so no theme element sets a series colour. Nor can a layer be smuggled in
+#' so no theme element sets a series color. Nor can a layer be smuggled in
 #' through the theme's `...`, which is forwarded to [ggplot2::theme()] and
-#' errors on anything that is not a theme element. Series colour and shape
+#' errors on anything that is not a theme element. Series color and shape
 #' live in the scales, and those are what this function adds alongside the
 #' theme.
 #'
-#' ## Colour and shape carry the same variable
+#' ## Color and shape carry the same variable
 #'
 #' Both scales map the grouping column, so each series is told apart twice.
-#' That redundancy is the point. A projector in a dark room flattens colour
+#' That redundancy is the point. A projector in a dark room flattens color
 #' differences that read cleanly on your monitor, and a black and white
 #' handout drops them entirely, but the shapes survive both. The two scales
 #' share `name`, so on the rare draft that does draw a legend, ggplot2 merges
 #' them into one instead of stacking two.
 #'
-#' The default colours are the Okabe-Ito colourblind-safe palette, ordered for
+#' The default colors are the Okabe-Ito colorblind-safe palette, ordered for
 #' the background: high-luminance hues first on a dark slide, darker ones
-#' first on a light slide. These are not CORR brand colours. Pass `colours`
+#' first on a light slide. These are not CORR brand colors. Pass `colors`
 #' when a deck calls for a specific set.
 #'
-#' Six colours and six shapes are supplied, which covers a grouping variable
+#' Six colors and six shapes are supplied, which covers a grouping variable
 #' of up to six levels. A discrete scale errors when it runs out of values, so
 #' pass longer vectors for a wider variable.
 #'
@@ -125,7 +125,7 @@ hv_ppt_palette <- function(mode = c("dark", "light"), n = NULL) {
 #' slide, on a poster and in a manuscript alike, so the reader's eye never
 #' travels out to a key and back.
 #'
-#' Annotation is drawn in the theme's ink, not in the colour of the series it
+#' Annotation is drawn in the theme's ink, not in the color of the series it
 #' names: white on a dark slide, black on a light slide and in a manuscript.
 #' That is the `ink` the theme already gives the axis text and axis lines, so
 #' one ink for every label makes the annotation read as part of the figure's
@@ -135,7 +135,7 @@ hv_ppt_palette <- function(mode = c("dark", "light"), n = NULL) {
 #' plot(trends) +
 #'   hv_ppt_series("dark") +
 #'   ggplot2::annotate("text", x = 2015, y = 60, label = "Group I",
-#'                     colour = "white", size = 8)
+#'                     color = "white", size = 8)
 #' ```
 #'
 #' The shape scale still earns its place with no legend drawn. Where two curves
@@ -147,17 +147,19 @@ hv_ppt_palette <- function(mode = c("dark", "light"), n = NULL) {
 #'
 #' ## Grouped plots only
 #'
-#' The scales take effect on a plot that maps colour to a grouping column,
+#' The scales take effect on a plot that maps color to a grouping column,
 #' which means a constructor called with `group_col`. On an ungrouped plot
 #' they sit unused and only the theme applies. There is nothing to fix in that
-#' case; a single series needs no palette. To colour the raw observations on an
+#' case; a single series needs no palette. To color the raw observations on an
 #' ungrouped plot, add your own layer after the decorator, for example
-#' `+ ggplot2::geom_point(colour = "yellow")`.
+#' `+ ggplot2::geom_point(color = "yellow")`.
 #'
 #' @param mode    Slide background the plot will sit on. `"dark"` pairs with
 #'   [theme_hv_ppt_dark()], `"light"` with [theme_hv_ppt_light()].
-#' @param colours Character vector of colours, one per group in order. Default
+#' @param colors  Character vector of colors, one per group in order. Default
 #'   `NULL` uses the Okabe-Ito ordering for `mode`.
+#' @param colours The same as `colors`: an alias kept for existing code. Give
+#'   one or the other; both with different values is an error.
 #' @param shapes  Numeric vector of ggplot2 point shapes, one per group in
 #'   order. Default `NULL` uses solid glyphs first.
 #' @param name    Title used by both scales, so a drawn legend merges into one.
@@ -166,10 +168,10 @@ hv_ppt_palette <- function(mode = c("dark", "light"), n = NULL) {
 #'   `theme_hv_ppt_*()` call, e.g. `base_size = 28` or
 #'   `legend.position = "top"`.
 #'
-#' @return A list of ggplot2 components: a theme, a colour scale and a shape
+#' @return A list of ggplot2 components: a theme, a color scale and a shape
 #'   scale. Add it to a ggplot object with `+`.
 #'
-#' @seealso [hv_ppt_palette()] for the colours themselves;
+#' @seealso [hv_ppt_palette()] for the colors themselves;
 #'   [theme_hv_ppt_dark()] and [theme_hv_ppt_light()] for the themes
 #'   this wraps; [hv_legend_inside()] when a draft does want a key;
 #'   [save_ppt()] to export the finished plots to editable PowerPoint slides.
@@ -188,28 +190,30 @@ hv_ppt_palette <- function(mode = c("dark", "light"), n = NULL) {
 #' # light one.
 #' plot(trends) + ppt +
 #'   ggplot2::annotate("text", x = 2015, y = 60, label = "Group I",
-#'                     colour = "white", size = 8)
+#'                     color = "white", size = 8)
 #'
-#' # A light template, larger type, and your own colours.
+#' # A light template, larger type, and your own colors.
 #' plot(trends) +
 #'   hv_ppt_series(
 #'     mode      = "light",
-#'     colours   = c("#0072B2", "#D55E00", "#009E73", "#CC79A7"),
+#'     colors    = c("#0072B2", "#D55E00", "#009E73", "#CC79A7"),
 #'     base_size = 24
 #'   )
 #'
-#' @importFrom ggplot2 scale_colour_manual scale_shape_manual
+#' @importFrom ggplot2 scale_color_manual scale_shape_manual
 #' @export
 hv_ppt_series <- function(mode    = c("dark", "light"),
                           colours = NULL,
                           shapes  = NULL,
                           name    = NULL,
-                          ...) {
+                          ...,
+                          colors  = colours) {
+  .check_spelling_pair("colors", "colours", !missing(colors), !missing(colours), colors, colours)
   mode <- match.arg(mode)
 
-  if (is.null(colours)) colours <- hv_ppt_palette(mode)
-  if (!is.character(colours) || length(colours) < 1L || anyNA(colours))
-    stop("`colours` must be a character vector with no missing values.",
+  if (is.null(colors)) colors <- hv_ppt_palette(mode)
+  if (!is.character(colors) || length(colors) < 1L || anyNA(colors))
+    stop("`colors` must be a character vector with no missing values.",
          call. = FALSE)
 
   if (is.null(shapes)) shapes <- .hv_ppt_shapes()
@@ -224,7 +228,7 @@ hv_ppt_series <- function(mode    = c("dark", "light"),
 
   list(
     theme_fn(...),
-    ggplot2::scale_colour_manual(values = colours, name = name),
+    ggplot2::scale_color_manual(values = colors, name = name),
     ggplot2::scale_shape_manual(values = shapes, name = name)
   )
 }

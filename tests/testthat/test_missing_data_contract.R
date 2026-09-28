@@ -80,7 +80,7 @@ test_that("hv_spaghetti rejects a missing subject id", {
   expect_error(hv_spaghetti(d), "must not contain missing values")
 })
 
-test_that("hv_spaghetti rejects a missing colour label", {
+test_that("hv_spaghetti rejects a missing color label", {
   d <- data.frame(time = c(0, 1), value = c(1, 2), id = c("p1", "p1"),
                   grp = c("A", NA))
   expect_error(hv_spaghetti(d, colour_col = "grp"),

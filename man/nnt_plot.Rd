@@ -68,7 +68,7 @@ nnt_plot(
   lower_col = "nnt_lower",
   upper_col = "nnt_upper"
 ) +
-  scale_colour_manual(values = c("steelblue"), guide = "none") +
+  scale_color_manual(values = c("steelblue"), guide = "none") +
   scale_fill_manual(values = c("steelblue"), guide = "none") +
   scale_x_continuous(limits = c(0, 20), breaks = seq(0, 20, 5)) +
   scale_y_continuous(limits = c(0, 50), breaks = seq(0, 50, 10)) +
@@ -83,7 +83,7 @@ nnt_plot(
   lower_col    = "arr_lower",
   upper_col    = "arr_upper"
 ) +
-  scale_colour_manual(values = c("firebrick"), guide = "none") +
+  scale_color_manual(values = c("firebrick"), guide = "none") +
   scale_fill_manual(values = c("firebrick"), guide = "none") +
   scale_x_continuous(limits = c(0, 20), breaks = seq(0, 20, 5)) +
   scale_y_continuous(limits = c(0, 50),

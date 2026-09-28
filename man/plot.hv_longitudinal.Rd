@@ -53,7 +53,7 @@ plot(lc, type = "plot") +
 
 # Text table panel
 plot(lc, type = "table") +
-  scale_colour_manual(
+  scale_color_manual(
     values = c(Patients = "steelblue", Measurements = "firebrick"),
     guide  = "none"
   ) +

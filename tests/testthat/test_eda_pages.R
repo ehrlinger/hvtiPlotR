@@ -126,7 +126,7 @@ test_that("grid dimensions are validated", {
   expect_error(plot(x, nrow = NA_real_), "positive whole")
 })
 
-test_that("print summarises the section", {
+test_that("print summarizes the section", {
   expect_output(print(hv_eda_pages(dta, x_col = "op_years", section = "count")),
                 "binned by whole year")
 })

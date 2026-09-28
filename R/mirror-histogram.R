@@ -517,7 +517,7 @@ print.hv_mirror_hist <- function(x, ...) {
 #' \code{\link{hv_mirror_hist}} data object.  Bars for the treated group
 #' appear above the x-axis; bars for the control group appear below.  Matched
 #' or weighted patients are shown in a contrasting shade.  Compose with
-#' \code{+} to add colour scales, axis labels, and \code{\link{theme_hv_manuscript}}.
+#' \code{+} to add color scales, axis labels, and \code{\link{theme_hv_manuscript}}.
 #'
 #' @param x     An \code{hv_mirror_hist} object from
 #'   \code{\link{hv_mirror_hist}}.
@@ -525,7 +525,7 @@ print.hv_mirror_hist <- function(x, ...) {
 #' @param ...   Ignored; present for S3 consistency.
 #'
 #' @return A bare \code{\link[ggplot2]{ggplot}} object; compose with \code{+}
-#'   to add colour scales, axis limits, labels, and
+#'   to add color scales, axis limits, labels, and
 #'   \code{\link{theme_hv_manuscript}}.
 #'
 #' @seealso \code{\link{hv_mirror_hist}} to build the data object,
@@ -568,7 +568,7 @@ plot.hv_mirror_hist <- function(x, alpha = 0.8, ...) {
 #' simulated via a logistic model: control subjects draw their linear predictor
 #' from \eqn{N(-\text{sep}/2, 1)} and treated subjects from
 #' \eqn{N(+\text{sep}/2, 1)}, so the two score distributions overlap in the
-#' centre while accumulating mass at opposite extremes.  Patients at those
+#' center while accumulating mass at opposite extremes.  Patients at those
 #' extremes cannot find a matching partner within the caliper, which naturally
 #' reproduces the "many unmatched at the tails" pattern seen in real studies.
 #'
@@ -583,16 +583,16 @@ plot.hv_mirror_hist <- function(x, alpha = 0.8, ...) {
 #' @param seed Integer random seed for reproducibility (default 42L).
 #' @param add_weights Logical. When `TRUE` an `mt_wt` column of
 #'   ATE-style IPTW weights derived from the simulated propensity scores is
-#'   appended and normalised to mean 1 within each group (default `FALSE`).
+#'   appended and normalized to mean 1 within each group (default `FALSE`).
 #'
 #' @return Data frame with columns:
 #'   \describe{
 #'     \item{`prob_t`}{Propensity score on the 0–1 scale.}
 #'     \item{`tavr`}{Group indicator (0 = control, 1 = treated).}
 #'     \item{`match`}{Binary match indicator produced by greedy
-#'       nearest-neighbour matching within `caliper` (1 = matched).}
+#'       nearest-neighbor matching within `caliper` (1 = matched).}
 #'     \item{`mt_wt`}{(Only when `add_weights = TRUE`) ATE IPTW
-#'       weights normalised to mean 1 within each group.}
+#'       weights normalized to mean 1 within each group.}
 #'   }
 #'
 #' @seealso [hv_mirror_hist()]
@@ -638,7 +638,7 @@ sample_mirror_histogram_data <- function(n          = 500,
   prob_t <- c(ps_ctrl, ps_trt)
   group  <- c(rep(0L, n), rep(1L, n))
 
-  # Greedy 1:1 nearest-neighbour matching within caliper.
+  # Greedy 1:1 nearest-neighbor matching within caliper.
   # Treated patients are visited in random order; each control can match once.
   match_flag <- rep(0L, 2L * n)
   used_ctrl  <- rep(FALSE, n)
@@ -658,7 +658,7 @@ sample_mirror_histogram_data <- function(n          = 500,
 
   if (add_weights) {
     # ATE IPTW: w = 1/PS (treated) or 1/(1-PS) (control).
-    # Trim extreme scores to avoid runaway weights, then normalise within group.
+    # Trim extreme scores to avoid runaway weights, then normalize within group.
     ps_trim <- pmax(pmin(prob_t, 0.99), 0.01)
     wts     <- ifelse(group == 1L, 1 / ps_trim, 1 / (1 - ps_trim))
     wts[group == 0L] <- wts[group == 0L] / mean(wts[group == 0L])

@@ -123,7 +123,7 @@ test_that("plot(hv_stacked) maps x_col to the x aesthetic", {
   expect_match(rlang::as_label(p$mapping$x), "year")
 })
 
-test_that("plot(hv_stacked) maps group_col to fill and colour aesthetics", {
+test_that("plot(hv_stacked) maps group_col to fill and color aesthetics", {
   df <- sample_stacked_histogram_data()
   p  <- plot(hv_stacked(df, x_col = "year", group_col = "category"))
   expect_match(rlang::as_label(p$mapping$fill),   "category")

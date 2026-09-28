@@ -42,7 +42,7 @@ Produces a reproducible long-format data frame suitable for testing and
 demonstrating \code{\link[=hv_balance]{hv_balance()}}.  Rather than drawing SMDs from
 independent normals, this generator simulates patient-level covariates
 through a logistic propensity score model, computes group standardized mean
-differences before matching, then performs greedy 1:1 nearest-neighbour
+differences before matching, then performs greedy 1:1 nearest-neighbor
 caliper matching and computes residual differences in the matched cohort.
 }
 \details{

@@ -38,7 +38,7 @@ A data frame with columns:
 Generates a realistic patient-level longitudinal data set for demonstrating
 \code{\link[=hv_trends]{hv_trends()}}. Each row is one patient with a surgery year, continuous
 outcome (\code{value}), and a grouping variable (\code{group}). Trend patterns are
-modelled so that group means diverge over time, matching the multi-group
+modeled so that group means diverge over time, matching the multi-group
 NYHA / LV-mass / LOS pattern in the SAS template.
 }
 \examples{

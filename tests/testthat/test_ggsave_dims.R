@@ -26,7 +26,7 @@ test_that("hv_ggsave_dims rejects invalid units", {
 })
 
 # ============================================================================
-# Core behaviour
+# Core behavior
 # ============================================================================
 
 test_that("theme_void yields zero chrome overhead", {
@@ -37,7 +37,7 @@ test_that("theme_void yields zero chrome overhead", {
   expect_identical(dims$units, "in")
 })
 
-test_that("labelled plot has positive chrome overhead", {
+test_that("labeled plot has positive chrome overhead", {
   p <- ggplot(mtcars, aes(hp, mpg)) + geom_point() +
     labs(title = "T", x = "X label", y = "Y label")
   dims <- hv_ggsave_dims(p, 4, 3)

@@ -37,7 +37,7 @@
 #' tr  <- hv_trends(dta)
 #'
 #' plot(tr) +
-#'   scale_colour_brewer(palette = "Set1", name = "Group") +
+#'   scale_color_brewer(palette = "Set1", name = "Group") +
 #'   labs(x = "Year", y = "Outcome") +
 #'   theme_hv_manuscript()
 #' ```
@@ -109,7 +109,7 @@
 #'   mirrored histogram comparing binary-matched or IPTW-weighted
 #'   cohorts. Ports the `tp.lp.mirror-histogram_*` and
 #'   `tp.lp.mirror_histo_before_after_wt` SAS scripts.
-#' * [hv_balance()]: Prepare standardised mean difference data for a
+#' * [hv_balance()]: Prepare standardized mean difference data for a
 #'   covariate balance dot-plot before and after propensity-score
 #'   matching or weighting. Ports `tp.lp.propen.cov_balance.R`.
 #' * [hv_stacked()]: Prepare grouped count or proportion data for a
@@ -217,7 +217,7 @@
 #'
 #' * [sample_mirror_histogram_data()]: Propensity scores via a logistic
 #'   model with greedy 1:1 caliper matching and optional IPTW weights.
-#' * [sample_covariate_balance_data()]: Standardised mean differences
+#' * [sample_covariate_balance_data()]: Standardized mean differences
 #'   before and after propensity matching.
 #' * [sample_stacked_histogram_data()]: Year-by-category count data.
 #' * [sample_survival_data()]: Exponential survival times with

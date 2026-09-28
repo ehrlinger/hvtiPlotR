@@ -2,7 +2,7 @@
 % Please edit documentation in R/hvti-data.R
 \name{summary.hv_data}
 \alias{summary.hv_data}
-\title{Summarise an hv_data object}
+\title{Summarize an hv_data object}
 \usage{
 \method{summary}{hv_data}(object, ...)
 }

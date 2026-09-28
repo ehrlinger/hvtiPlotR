@@ -19,8 +19,8 @@
 #  - Annual summary statistic (mean or median) computed in hv_trends()
 #    constructor and stored in $tables$summary; plot() retrieves it
 #  - groups = NULL supported in sample_trends_data() for single-group figures
-#  - No hard-coded colours; examples demonstrate scale_colour_manual() and
-#    scale_colour_brewer()
+#  - No hard-coded colors; examples demonstrate scale_color_manual() and
+#    scale_color_brewer()
 #  - Theme applied via + theme_hv_poster() in examples
 # ---------------------------------------------------------------------------
 
@@ -29,7 +29,7 @@
 #' Generates a realistic patient-level longitudinal data set for demonstrating
 #' [hv_trends()]. Each row is one patient with a surgery year, continuous
 #' outcome (`value`), and a grouping variable (`group`). Trend patterns are
-#' modelled so that group means diverge over time, matching the multi-group
+#' modeled so that group means diverge over time, matching the multi-group
 #' NYHA / LV-mass / LOS pattern in the SAS template.
 #'
 #' @param n          Total number of patients. Default `600`.
@@ -100,7 +100,7 @@ sample_trends_data <- function(n          = 600,
 #' statistics (mean or median), and returns an \code{hv_trends} object.
 #' Call \code{\link{plot.hv_trends}} on the result to obtain a bare
 #' \code{ggplot2} trend plot (LOESS smooth + annual summary points) that you
-#' can decorate with colour scales, axis limits, and \code{\link{theme_hv_manuscript}}.
+#' can decorate with color scales, axis limits, and \code{\link{theme_hv_manuscript}}.
 #'
 #' @param data        Patient-level data frame (one row per patient).
 #' @param x_col       Name of the numeric/integer time column (e.g. surgery
@@ -143,9 +143,9 @@ sample_trends_data <- function(n          = 600,
 #' # 2. Bare plot -- undecorated ggplot returned by plot.hv_trends
 #' p <- plot(tr)
 #'
-#' # 3. Decorate: colour palette, axis scales, labels, theme
+#' # 3. Decorate: color palette, axis scales, labels, theme
 #' p +
-#'   ggplot2::scale_colour_manual(
+#'   ggplot2::scale_color_manual(
 #'     values = c(I = "steelblue", II = "firebrick",
 #'                III = "forestgreen", IV = "goldenrod3"),
 #'     name = "NYHA Class"
@@ -292,7 +292,7 @@ print.hv_trends <- function(x, ...) {
 #'   n = 800, year_range = c(1970L, 2000L),
 #'   groups = c("Shock %", "Pre-op IABP %", "Inotropes %"))
 #' plot(hv_trends(dta_lp)) +
-#'   ggplot2::scale_colour_manual(
+#'   ggplot2::scale_color_manual(
 #'     values = c("Shock %" = "steelblue", "Pre-op IABP %" = "firebrick",
 #'                "Inotropes %" = "forestgreen"), name = NULL) +
 #'   ggplot2::scale_x_continuous(limits = c(1970, 2000),
@@ -321,7 +321,7 @@ print.hv_trends <- function(x, ...) {
 #'   n = 800, year_range = c(1990L, 1999L),
 #'   groups = c("CE", "Cosgrove", "Periguard", "DeVega"), seed = 5L)
 #' plot(hv_trends(dta_poly)) +
-#'   ggplot2::scale_colour_manual(
+#'   ggplot2::scale_color_manual(
 #'     values = c(CE = "steelblue", Cosgrove = "firebrick",
 #'                Periguard = "forestgreen", DeVega = "goldenrod3"),
 #'     name = "Repair type") +
@@ -341,7 +341,7 @@ print.hv_trends <- function(x, ...) {
 #'   summary_fn = "median"
 #' )
 #' p <- plot(tr) +
-#'   ggplot2::scale_colour_brewer(palette = "Set1", name = "NYHA Class") +
+#'   ggplot2::scale_color_brewer(palette = "Set1", name = "NYHA Class") +
 #'   ggplot2::scale_x_continuous(limits = c(1985, 2015),
 #'                               breaks = seq(1985, 2015, 5)) +
 #'   ggplot2::labs(x = "Years", y = "%") +
@@ -354,12 +354,12 @@ print.hv_trends <- function(x, ...) {
 #' \donttest{
 #' old <- ggplot2::theme_set(theme_hv_manuscript())
 #' plot(hv_trends(dta_poly)) +
-#'   ggplot2::scale_colour_brewer(palette = "Dark2", name = "Repair type")
+#'   ggplot2::scale_color_brewer(palette = "Dark2", name = "Repair type")
 #' ggplot2::theme_set(old)
 #' }
 #'
 #' # See vignette("plot-decorators", package = "hvtiPlotR") for theming,
-#' # colour scales, annotation labels, and saving plots.
+#' # color scales, annotation labels, and saving plots.
 #'
 #' @importFrom ggplot2 ggplot aes geom_smooth geom_point
 #' @importFrom rlang .data
@@ -382,7 +382,7 @@ plot.hv_trends <- function(x,
     p <- ggplot2::ggplot(data,
            ggplot2::aes(x      = .data[[x_col]],
                         y      = .data[[y_col]],
-                        colour = .data[[group_col]],
+                        color = .data[[group_col]],
                         group  = .data[[group_col]])) +
       ggplot2::geom_smooth(
         method    = smoother,
@@ -397,7 +397,7 @@ plot.hv_trends <- function(x,
         mapping = ggplot2::aes(
           x      = .data[[x_col]],
           y      = .data[[y_col]],
-          colour = .data[[group_col]],
+          color = .data[[group_col]],
           shape  = .data[[group_col]]
         ),
         size        = point_size,

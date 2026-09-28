@@ -69,12 +69,12 @@ reference:
     any element inline (e.g.
     `theme_hv_manuscript(legend.position = "right")`). The previous
     `hv_theme_*()` and `theme_*` names remain as deprecated aliases.
-    `hv_ppt_series()` bundles a theme with matching colour and shape scales
+    `hv_ppt_series()` bundles a theme with matching color and shape scales
     into one object you add to every plot in a deck, and `hv_ppt_palette()`
-    hands back those colours for a figure that needs them outside the
+    hands back those colors for a figure that needs them outside the
     decorator. House-style figures carry no legend; series are named by
     annotation drawn in the theme's ink to match the axis, not in a series
-    colour.
+    color.
   contents:
   - hvtiPlotR-themes
   - theme_hv_manuscript
@@ -85,7 +85,7 @@ reference:
   - hv_ppt_palette
   - hv_role_palette
   - scale_fill_hv
-  - scale_colour_hv
+  - scale_color_hv
 
 - title: "Survival & Hazard"
   desc: >
@@ -136,7 +136,7 @@ reference:
 
 - title: "Propensity Score & Matching"
   desc: >
-    Visualise propensity score distributions and covariate balance
+    Visualize propensity score distributions and covariate balance
     before and after propensity matching or IPTW weighting.
   contents:
   - hv_mirror_hist
@@ -175,7 +175,7 @@ reference:
 
 - title: "Study Design & Goodness of Follow-Up"
   desc: >
-    Visualise follow-up completeness. Ports `tp.dp.gfup.R`.
+    Visualize follow-up completeness. Ports `tp.dp.gfup.R`.
   contents:
   - hv_followup
   - plot.hv_followup
@@ -227,7 +227,7 @@ reference:
 - title: "Exploratory Data Analysis"
   desc: >
     Rapid bar charts and scatter plots for variable screening, univariate
-    summaries, and set-membership visualisation.
+    summaries, and set-membership visualization.
   contents:
   - hv_eda
   - plot.hv_eda

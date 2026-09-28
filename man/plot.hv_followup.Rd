@@ -24,7 +24,7 @@ have been supplied to \code{\link{hv_followup}}).}
 \item{alpha}{Point/segment transparency in \eqn{[0,1]}.
 Default \code{0.8}.}
 
-\item{diagonal_color}{Colour of the diagonal reference line.
+\item{diagonal_color}{Color of the diagonal reference line.
 Default \code{"orange"}.}
 
 \item{diagonal_linetype}{Linetype for the diagonal.  Default
@@ -41,7 +41,7 @@ A bare \code{\link[ggplot2]{ggplot}} object.
 Builds a bare goodness-of-follow-up \code{ggplot2} object from an
 \code{\link{hv_followup}} data object.  Each patient appears as a point
 at their operation year (x) and total follow-up time (y), shaped and
-coloured by their state.  An orange diagonal reference line shows the
+colored by their state.  An orange diagonal reference line shows the
 maximum possible follow-up for patients enrolled at each year.  A vertical
 stem below each point is drawn only when \code{hv_followup()} was called
 with a positive \code{segment_drop}.

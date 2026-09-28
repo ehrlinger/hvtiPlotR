@@ -647,7 +647,7 @@ test_that("hv_survival print shows the exclusion when rows are dropped", {
   dta <- sample_survival_data(n = 20, seed = 3)
   dta$iv_dead[1:2] <- NA
   km <- suppressWarnings(hv_survival(dta))
-  expect_output(print(km), "18 analysed of 20 input")
+  expect_output(print(km), "18 analyzed of 20 input")
 })
 
 test_that("hv_survival is silent and reports input count when data is complete", {

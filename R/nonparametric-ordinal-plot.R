@@ -205,7 +205,7 @@ sample_nonparametric_ordinal_points <- function(
 #' binned data summary points) and returns an \code{hv_ordinal} object.
 #' Call \code{\link{plot.hv_ordinal}} on the result to obtain a bare
 #' \code{ggplot2} multi-grade line plot that you can decorate with
-#' colour scales and \code{\link{theme_hv_manuscript}}.
+#' color scales and \code{\link{theme_hv_manuscript}}.
 #'
 #' **SAS column mapping (\code{predict} dataset after averaging):**
 #' - \code{time} <- \code{iv_echo} (or \code{iv_wristm})
@@ -259,9 +259,9 @@ sample_nonparametric_ordinal_points <- function(
 #' # 2. Bare plot -- undecorated ggplot returned by plot.hv_ordinal
 #' p <- plot(ord)
 #'
-#' # 3. Decorate: colour palette, axis scales, labels, theme
+#' # 3. Decorate: color palette, axis scales, labels, theme
 #' p +
-#'   ggplot2::scale_colour_manual(
+#'   ggplot2::scale_color_manual(
 #'     values = c(None     = "steelblue",
 #'                Mild     = "firebrick",
 #'                Moderate = "forestgreen",
@@ -350,7 +350,7 @@ print.hv_ordinal <- function(x, ...) {
 #'
 #' # Curves only, with RColorBrewer palette
 #' plot(hv_ordinal(dat)) +
-#'   ggplot2::scale_colour_brewer(palette = "RdYlGn", direction = -1,
+#'   ggplot2::scale_color_brewer(palette = "RdYlGn", direction = -1,
 #'                                name = "AR Grade") +
 #'   ggplot2::scale_x_continuous(breaks = 0:5) +
 #'   ggplot2::scale_y_continuous(labels = scales::percent) +
@@ -359,7 +359,7 @@ print.hv_ordinal <- function(x, ...) {
 #'
 #' # Subset: show only severe grade
 #' plot(hv_ordinal(dat[dat$grade == "Severe", ])) +
-#'   ggplot2::scale_colour_manual(values = c(Severe = "firebrick"),
+#'   ggplot2::scale_color_manual(values = c(Severe = "firebrick"),
 #'                                guide  = "none") +
 #'   ggplot2::scale_y_continuous(limits = c(0, 0.25),
 #'                               labels = scales::percent) +
@@ -384,7 +384,7 @@ plot.hv_ordinal <- function(x,
     curve_data,
     ggplot2::aes(x      = .data[[x_col]],
                  y      = .data[[estimate_col]],
-                 colour = .data[[grade_col]],
+                 color = .data[[grade_col]],
                  group  = .data[[grade_col]])
   ) +
     ggplot2::geom_line(linewidth = line_width)
@@ -395,7 +395,7 @@ plot.hv_ordinal <- function(x,
       data        = data_points,
       mapping     = ggplot2::aes(x      = .data[[x_col]],
                                  y      = .data[["value"]],
-                                 colour = .data[[grade_col]]),
+                                 color = .data[[grade_col]]),
       size        = point_size,
       shape       = point_shape,
       inherit.aes = FALSE

@@ -51,7 +51,7 @@ added for y-axis positioning.}
 Validates and orders a long-format standardized-mean-difference data frame
 for a covariate balance plot, and returns an \code{hv_balance} object.
 Call \code{\link{plot.hv_balance}} on the result to obtain a bare
-\code{ggplot2} object that you can decorate with colour, shape, axis scales,
+\code{ggplot2} object that you can decorate with color, shape, axis scales,
 and \code{\link{theme_hv_manuscript}}.
 }
 \examples{
@@ -65,7 +65,7 @@ cb  # prints variable count, group count, threshold
 # 2. Bare plot -- undecorated ggplot returned by plot.hv_balance
 p <- plot(cb)
 
-# 3. Decorate: colour/shape palettes, x-axis range, labels, theme
+# 3. Decorate: color/shape palettes, x-axis range, labels, theme
 p +
   scale_color_manual(
     values = c("Before match" = "red4", "After match" = "blue3"),

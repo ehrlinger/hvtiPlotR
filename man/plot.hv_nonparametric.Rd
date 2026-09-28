@@ -50,7 +50,7 @@ np <- hv_nonparametric(dat_two, group_col = "group",
                           lower_col = "lower", upper_col = "upper",
                           data_points = dat_two_pts)
 plot(np) +
-  ggplot2::scale_colour_manual(
+  ggplot2::scale_color_manual(
     values = c("Ozaki" = "steelblue", "CE-Pericardial" = "firebrick"),
     name = "Procedure"
   ) +

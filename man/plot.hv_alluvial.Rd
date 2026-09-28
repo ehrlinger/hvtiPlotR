@@ -6,7 +6,7 @@
 \usage{
 \method{plot}{hv_alluvial}(
   x,
-  stratum_fill = "grey80",
+  stratum_fill = "gray80",
   stratum_width = 1/4,
   flow_width = 1/6,
   alpha = 0.8,
@@ -19,7 +19,7 @@
 \arguments{
 \item{x}{An \code{hv_alluvial} object.}
 
-\item{stratum_fill}{Fill colour for the stratum bars. Default \code{"grey80"}.}
+\item{stratum_fill}{Fill color for the stratum bars. Default \code{"gray80"}.}
 
 \item{stratum_width}{Width of the stratum bars as a fraction of axis
 spacing. Default \code{1/4}.}
@@ -30,7 +30,7 @@ spacing. Default \code{1/4}.}
 
 \item{knot_pos}{Curvature of the flow ribbons, \eqn{[0,1]}. Default \code{0.4}.}
 
-\item{show_labels}{Logical; if TRUE, each stratum is labelled. Default \code{TRUE}.}
+\item{show_labels}{Logical; if TRUE, each stratum is labeled. Default \code{TRUE}.}
 
 \item{show_yaxis}{Logical; if FALSE, the y-axis title, text, ticks, and
 line are blanked for a clean milestone patient-flow look (the
@@ -58,7 +58,7 @@ axes <- c("pre_ar", "procedure", "post_ar")
 plot(hv_alluvial(dta, axes = axes, y_col = "freq",
                    fill_col = "procedure")) +
   ggplot2::scale_fill_brewer(palette = "Set2", name = "Procedure") +
-  ggplot2::scale_colour_brewer(palette = "Set2", guide = "none") +
+  ggplot2::scale_color_brewer(palette = "Set2", guide = "none") +
   ggplot2::labs(y = "Patients (n)") +
   theme_hv_poster()
 
@@ -70,7 +70,7 @@ plot(hv_alluvial(
 )) +
   ggplot2::scale_fill_brewer(palette = "RdYlGn", direction = -1,
                              name = "AR Grade") +
-  ggplot2::scale_colour_brewer(palette = "RdYlGn", direction = -1,
+  ggplot2::scale_color_brewer(palette = "RdYlGn", direction = -1,
                                guide = "none") +
   ggplot2::labs(y = "Patients (n)") +
   theme_hv_poster()

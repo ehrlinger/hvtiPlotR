@@ -28,7 +28,7 @@ within this distance are left unmatched.}
 
 \item{add_weights}{Logical. When \code{TRUE} an \code{mt_wt} column of
 ATE-style IPTW weights derived from the simulated propensity scores is
-appended and normalised to mean 1 within each group (default \code{FALSE}).}
+appended and normalized to mean 1 within each group (default \code{FALSE}).}
 }
 \value{
 Data frame with columns:
@@ -36,9 +36,9 @@ Data frame with columns:
 \item{\code{prob_t}}{Propensity score on the 0–1 scale.}
 \item{\code{tavr}}{Group indicator (0 = control, 1 = treated).}
 \item{\code{match}}{Binary match indicator produced by greedy
-nearest-neighbour matching within \code{caliper} (1 = matched).}
+nearest-neighbor matching within \code{caliper} (1 = matched).}
 \item{\code{mt_wt}}{(Only when \code{add_weights = TRUE}) ATE IPTW
-weights normalised to mean 1 within each group.}
+weights normalized to mean 1 within each group.}
 }
 }
 \description{
@@ -47,7 +47,7 @@ in either binary-match or weighted IPTW mode.  Propensity scores are
 simulated via a logistic model: control subjects draw their linear predictor
 from \eqn{N(-\text{sep}/2, 1)} and treated subjects from
 \eqn{N(+\text{sep}/2, 1)}, so the two score distributions overlap in the
-centre while accumulating mass at opposite extremes.  Patients at those
+center while accumulating mass at opposite extremes.  Patients at those
 extremes cannot find a matching partner within the caliper, which naturally
 reproduces the "many unmatched at the tails" pattern seen in real studies.
 }

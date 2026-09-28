@@ -131,6 +131,7 @@ export(sample_trends_data)
 export(sample_upset_data)
 export(save_manuscript)
 export(save_ppt)
+export(scale_color_hv)
 export(scale_colour_hv)
 export(scale_fill_hv)
 export(survival_difference_plot)
@@ -179,8 +180,8 @@ importFrom(ggplot2,
   ggplot_build,
   ggsave,
   labs,
-  scale_colour_identity,
-  scale_colour_manual,
+  scale_color_identity,
+  scale_color_manual,
   scale_fill_manual,
   scale_shape_manual,
   scale_x_continuous,
@@ -194,7 +195,7 @@ importFrom(ggplot2,
 importFrom(ggupset,scale_x_upset)
 importFrom(grDevices,
   dev.off,
-  grey,
+  gray,
   pdf
 )
 importFrom(graphics,hist)
