@@ -45,6 +45,17 @@ for journal figures, and
 [`theme_hv_poster()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)
 for conference posters.
 
+**Colours are a scale you add, not an option you set.** The SAS
+templates coloured an event red and the censored blue through `color=`
+options. In R,
+[`scale_colour_hv()`](https://ehrlinger.github.io/hvtiPlotR/reference/scale_fill_hv.md)
+and
+[`scale_fill_hv()`](https://ehrlinger.github.io/hvtiPlotR/reference/scale_fill_hv.md)
+apply that convention, in colourblind-safe colours: name the event and
+censored levels, and every other level takes the next colour in order.
+[`hv_role_palette()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_role_palette.md)
+returns the same colours as a named vector.
+
 **Functions return a ggplot object; they do not display it.** Call the
 plot object at the top level (or use
 [`print()`](https://rdrr.io/r/base/print.html)) to render it, or save

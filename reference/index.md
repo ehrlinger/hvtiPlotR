@@ -63,6 +63,11 @@ colour.
   : Slide styling for a grouped plot, in one reusable object
 - [`hv_ppt_palette()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_ppt_palette.md)
   : Series colours for a slide or a manuscript figure
+- [`hv_role_palette()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_role_palette.md)
+  : Colours for a figure's levels, by role
+- [`scale_fill_hv()`](https://ehrlinger.github.io/hvtiPlotR/reference/scale_fill_hv.md)
+  [`scale_colour_hv()`](https://ehrlinger.github.io/hvtiPlotR/reference/scale_fill_hv.md)
+  : Colour and fill scales that apply the role rule to each panel
 
 ## Survival & Hazard
 

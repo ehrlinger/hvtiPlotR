@@ -685,6 +685,41 @@ The default follow-up panel (`plot(gf)`) and the event panel
 can be saved individually with
 [`ggsave()`](https://ggplot2.tidyverse.org/reference/ggsave.html).
 
+### Role colours across panels
+
+The colours above are chosen by hand in each call.
+[`scale_colour_hv()`](https://ehrlinger.github.io/hvtiPlotR/reference/scale_fill_hv.md)
+applies the house rule instead: an event is vermillion, censored is
+blue, missing is light grey, and anything else takes a colourblind-safe
+colour in order. Add it to a patchwork with `&` and each panel is
+coloured from its own levels, so a role can name every spelling the
+panels use. `Dead` and `Death` are both the event; `Alive` and
+`No event` are both censored. The event panel’s non-fatal event then
+takes green, the first colour left once blue and vermillion are spoken
+for.
+[`hv_role_palette()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_role_palette.md)
+returns the same colours as a named vector, for a table or a legend
+drawn by hand.
+
+``` r
+
+(plots$all | plots$relapse) &
+  scale_colour_hv(event = c("Dead", "Death"), censored = c("Alive", "No event"), name = NULL) &
+  labs(x = "Operation Date", y = "Follow-up (years)") &
+  theme_hv_poster()
+```
+
+![](plot-functions_files/figure-html/gfup_role_colours-1.png)
+
+``` r
+
+hv_role_palette(c("No event", "Non-fatal event", "Death"),
+                event = "Death", censored = "No event")
+```
+
+           No event Non-fatal event           Death
+          "#0072B2"       "#009E73"       "#D55E00" 
+
 ## Covariate Balance Plot
 
 The covariate balance plot is the standard quality-control figure for
