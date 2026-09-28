@@ -421,7 +421,8 @@ test_that("save_ppt takes its default template from hvtiPlotR.ppt_template", {
   master <- tempfile(fileext = ".pptx")
   file.copy(tpl, master)
   old <- options(hvtiPlotR.ppt_template = master)
-  on.exit({ options(old); unlink(master) }, add = TRUE)
+  on.exit(options(old), add = TRUE)
+  on.exit(unlink(master), add = TRUE)
 
   expect_identical(eval(formals(save_ppt)$template), master)
 
