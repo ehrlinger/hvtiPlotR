@@ -1,5 +1,105 @@
 # Changelog
 
+## hvtiPlotR 2.8.0
+
+- hvtiPlotR now needs ggplot2 4.0.0 or later. The four themes pass
+  `ink`, `paper`, `accent` and `header_family` to
+  [`theme_gray()`](https://ggplot2.tidyverse.org/reference/ggtheme.html),
+  and ggplot2 added all four arguments in 4.0.0. `DESCRIPTION`
+  previously allowed 3.5.0, where every theme failed with an “unused
+  argument” error.
+
+- Five arguments take a US spelling beside the British one: `color_col`
+  in
+  [`hv_spaghetti()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_spaghetti.md),
+  `line_color` in
+  [`plot.hv_spaghetti()`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hv_spaghetti.md),
+  `node_colors` in
+  [`hv_sankey()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_sankey.md),
+  `colors` in
+  [`hv_ppt_series()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_ppt_series.md)
+  and `color` in
+  [`make_footnote()`](https://ehrlinger.github.io/hvtiPlotR/reference/make_footnote.md).
+  The US name is the documented one; `colour_col`, `line_colour`,
+  `node_colours`, `colours` and `colour` keep working as aliases, and
+  giving both spellings two different values is an error. Every existing
+  positional call binds as before, since the new names come last (or
+  after `...`). An abbreviated name that now matches both spellings is
+  an error, so `make_footnote(col = )`, `hv_spaghetti(col = )` and
+  `hv_sankey(node_col = )` must spell the argument out. `meta` carries
+  `color_col` and `node_colors` beside the British elements, which keep
+  the same value.
+
+- [`scale_color_hv()`](https://ehrlinger.github.io/hvtiPlotR/reference/scale_fill_hv.md)
+  is now the primary name of the role-color scale added in 2.7.18, and
+  [`scale_colour_hv()`](https://ehrlinger.github.io/hvtiPlotR/reference/scale_fill_hv.md)
+  stays as an alias of it, the way ggplot2 pairs `scale_color_*()` and
+  `scale_colour_*()`. Existing calls keep working.
+
+- Documentation, messages and comments now use US spelling (“color”,
+  “gray”, “analyzed”). Exported argument names are unchanged. Output
+  changes where it carried a British word:
+  [`print()`](https://rdrr.io/r/base/print.html) of an `hv_survival` or
+  `hv_followup` reads “analyzed”, of an `hv_spaghetti` “Color col”, and
+  the missing-values warning “analyzing”. Gray defaults such as
+  `"grey80"` are now spelled `"gray80"`, which R draws identically.
+  `tools/check-us-spelling.sh` holds the line in CI.
+
+- [`theme_hv_ppt_dark()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)
+  and
+  [`theme_hv_ppt_light()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)
+  now fall back from Arial to Helvetica when a plot is printed with no
+  graphics device open and the default device is
+  [`pdf()`](https://rdrr.io/r/grDevices/pdf.html) or
+  [`postscript()`](https://rdrr.io/r/grDevices/postscript.html), as
+  under `Rscript` and `R CMD check`. The check trusted Arial whenever no
+  device was open, then [`print()`](https://rdrr.io/r/base/print.html)
+  opened [`pdf()`](https://rdrr.io/r/grDevices/pdf.html), which stopped
+  with “invalid font type”. This broke the
+  [`save_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/save_ppt.md)
+  example on the server.
+
+- [`hv_eda_pages()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_eda_pages.md)
+  leaves out patient identifiers when `vars = NULL`. A column named
+  `ccfid`, `patid`, `patientid`, `studyid`, `subjectid`, `recordid` or
+  `caseid` (each also with `_`, `num` or `no`), or any name holding
+  `mrn` (`mrn_num`, `pt_mrn`), was drawn like a study variable: a
+  numeric one as a scatter of row numbers, a text one as bars with one
+  level per patient. `meta$ignored` lists what was left out, and naming
+  a column in `vars` still draws it. A bare trailing `id` is not taken,
+  so `carotid` and `steroid` stay. The stems match the hvtiRtemplates
+  EDA identifier rule.
+
+### `save_ppt()` no longer depends on the study folder
+
+`template` now defaults to the template shipped in `inst/extdata`
+(`hv_ppt_template.pptx`) instead of the study-relative
+`"../graphs/RD.pptx"`. That path pointed at each study’s copy of the
+legacy `tp.RD-R-ppt-template.pptx`, which went out of date the day it
+was copied, and a call without `template` failed wherever the copy was
+missing. The legacy 4:3 slide (10 in wide) also could not hold the
+default `panel_box`, which ends at 11.46 in; the bundled 16:9 template
+fits it and is updated with the package.
+
+The master template is the blue deck in the Analysis Team SharePoint
+library (`Templates/sl.template_hvti_blue.current.pptx`). The bundled
+`hv_ppt_template.pptx` is refreshed from it, example slides removed,
+which adds its `Title and Table` and `Title and Chart` layouts. To use
+the master directly, set
+`options(hvtiPlotR.ppt_template = "<synced path>")`, for example in
+`.Rprofile`; an explicit `template` argument still wins, and without the
+option the bundled copy is used.
+
+A light-room template, `hv_ppt_template_light.pptx`, is now bundled
+beside it for use with
+[`theme_hv_ppt_light()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md).
+Unlike the existing `Yahoo slide template LIGHT ROOM.pptx`, it carries
+no example slides, so they do not lead every deck it produces.
+
+**Breaking:** `powerpoint` has no default. It was
+`"../graphs/pptExample.pptx"`, which wrote into whatever `graphs/` sat
+beside the working directory. Name the output file in every call.
+
 ## hvtiPlotR 2.7.18
 
 ### New: `hv_role_palette()`, `scale_fill_hv()` and `scale_colour_hv()`
