@@ -41,8 +41,14 @@ hv_eda_pages(
 - vars:
 
   Character vector of the variables to consider, in page order. `NULL`
-  (the default) means every column except `x_col`. Every name is checked
-  at once, and the error lists all that are missing.
+  (the default) means every column except `x_col` and any whose name
+  marks a patient identifier: `ccfid`, `patid`, `patientid`, `studyid`,
+  `subjectid`, `recordid` or `caseid` (each also with `_`, `num` or
+  `no`), or any name holding `mrn`. Such a column is not a study
+  variable: drawn, it is a scatter of row numbers or a bar chart with
+  one level per patient. `meta$ignored` lists what was left out; name a
+  column here to draw it. Every name is checked at once, and the error
+  lists all that are missing.
 
 - labels:
 
@@ -65,9 +71,10 @@ An object of class `c("hv_eda_pages", "hv_data")`:
 
 - `$meta`:
 
-  Named list: `x_col`, `section`, `x_binned`, `n_vars`, `n_obs`, and
+  Named list: `x_col`, `section`, `x_binned`, `n_vars`, `n_obs`,
   `n_other`, the number of considered variables that belong to other
-  sections.
+  sections, and `ignored`, the identifier columns `vars = NULL` left
+  out.
 
 - `$tables`:
 

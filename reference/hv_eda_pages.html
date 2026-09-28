@@ -97,8 +97,13 @@ Default <code>"year"</code>.</p></dd>
 
 <dt id="arg-vars">vars<a class="anchor" aria-label="anchor" href="#arg-vars"></a></dt>
 <dd><p>Character vector of the variables to consider, in page order.
-<code>NULL</code> (the default) means every column except <code>x_col</code>. Every name is
-checked at once, and the error lists all that are missing.</p></dd>
+<code>NULL</code> (the default) means every column except <code>x_col</code> and any whose name
+marks a patient identifier: <code>ccfid</code>, <code>patid</code>, <code>patientid</code>, <code>studyid</code>,
+<code>subjectid</code>, <code>recordid</code> or <code>caseid</code> (each also with <code>_</code>, <code>num</code> or <code>no</code>),
+or any name holding <code>mrn</code>. Such a column is not a study variable: drawn,
+it is a scatter of row numbers or a bar chart with one level per patient.
+<code>meta$ignored</code> lists what was left out; name a column here to draw it.
+Every name is checked at once, and the error lists all that are missing.</p></dd>
 
 
 <dt id="arg-labels">labels<a class="anchor" aria-label="anchor" href="#arg-labels"></a></dt>
@@ -119,8 +124,9 @@ being column names. A variable without a label is shown by its name.</p></dd>
 
 <dt><code>$meta</code></dt>
 <dd><p>Named list: <code>x_col</code>, <code>section</code>, <code>x_binned</code>, <code>n_vars</code>,
-<code>n_obs</code>, and <code>n_other</code>, the number of considered variables that belong
-to other sections.</p></dd>
+<code>n_obs</code>, <code>n_other</code>, the number of considered variables that belong
+to other sections, and <code>ignored</code>, the identifier columns <code>vars = NULL</code>
+left out.</p></dd>
 
 <dt><code>$tables</code></dt>
 <dd><p><code>panels</code>, a named list of <code><a href="hv_eda.html">hv_eda()</a></code> objects, one per
