@@ -1,8 +1,7 @@
 # Design: `hv_role_palette()` and `scale_colour_hv()` / `scale_fill_hv()`
 
 **Date:** 2026-09-27
-**Status:** Proposed, revised the same day with John Ehrlinger's decisions (§7).
-One question remains open for him, §7.4.
+**Status:** Decided 2026-09-27 (§7); implemented in `R/palette-hv.R`.
 **Repo:** hvtiPlotR, release 2.7.18. The templates adopt it in hvtiRtemplates 1.2.3
 (release plan phase 3b, `dev/specs/2026-09-25-release-eda-complete-plan.md` there).
 
@@ -189,8 +188,6 @@ Decided by John Ehrlinger, 2026-09-27:
    colour-vision confusion, Set1's yellow is 1.07:1 on white, and Set3's pastels
    mostly fall under 2:1.
 
-Still open:
-
 4. **More levels than the palette holds.** `hv_ppt_palette()` errors rather than
    recycling, because two levels sharing a colour is worse than a stopped script.
    That is right for `hv_role_palette()` called directly. Inside an EDA page,
@@ -199,6 +196,10 @@ Still open:
    panel in ggplot's default hue palette**, naming the variable and its level
    count, so the report renders and says which panel is not colourblind safe.
    The alternative is to error in both.
+   **Decided 2026-09-27: warn and draw**, as recommended. As built, the warning
+   names the level count and the first four levels rather than the variable: a
+   scale's `map()` receives only the values and the limits, never the column
+   they came from. It warns once per plot built, not once per layer.
 
 ## 8. Testing strategy
 
