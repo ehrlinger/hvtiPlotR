@@ -1,5 +1,47 @@
 # Changelog
 
+## hvtiPlotR 2.7.18
+
+### New: `hv_role_palette()`, `scale_fill_hv()` and `scale_colour_hv()`
+
+The house colour rule for EDA and follow-up figures, as an opt-in scale.
+An event is vermillion `#D55E00`, censored is blue `#0072B2`, missing is
+light grey `#CCCCCC`, and every other level takes a colourblind-safe
+colour in order: the light series of
+[`hv_ppt_palette()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_ppt_palette.md)
+(Okabe-Ito without yellow and sky blue), then Paul Tol’s muted palette
+without its sand and cyan. Every colour but the missing grey clears 2:1
+against white. When a panel carries the event or censored level, blue
+and vermillion leave the rotation so nothing else is mistaken for them.
+
+The scales colour each panel from its own levels, so one
+`page & scale_fill_hv(event = "Dead")` suits a page where only some
+panels carry the event. A real `NA` takes the missing grey (`na.value`).
+A panel with more levels than the colourblind-safe palettes hold is
+drawn in ggplot2’s default hue with a warning;
+[`hv_role_palette()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_role_palette.md)
+called directly stops instead. Design:
+`dev/specs/2026-09-27-hv-palette-design.md`.
+
+### Vignettes: installed tarball halved, 17.1 MB to 8.9 MB
+
+The installed vignettes embed every figure as a PNG, and
+`plot-functions` alone was 15.7 MB of the 17.1 MB tarball. Figures now
+render at 1x instead of retina 2 when the vignettes are built for the
+package, which quarters their pixels. The pkgdown site sets `IN_PKGDOWN`
+and keeps retina 2. Nothing is removed; figures look slightly softer on
+a high-density screen when read through
+[`vignette()`](https://rdrr.io/r/utils/vignette.html).
+
+### Vignettes: unused bibliography removed
+
+`vignettes/hviPlotR.bib` is gone. No vignette declared it as a
+bibliography or cited any of its seven entries, and seven of its URLs
+had moved or died, which
+[`urlchecker::url_check()`](https://urlchecker.r-lib.org/reference/url_check.html)
+reported at every release gate since at least 2.7.15. It now reports
+none.
+
 ## hvtiPlotR 2.7.17
 
 ### New: a set of goodness-of-follow-up panels

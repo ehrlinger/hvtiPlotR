@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">hvtiPlotR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.7.17</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.7.18</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -53,6 +53,23 @@
       <small>Source: <a href="https://github.com/ehrlinger/hvtiPlotR/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="2.7.18" id="hvtiplotr-2718">hvtiPlotR 2.7.18<a class="anchor" aria-label="anchor" href="#hvtiplotr-2718"></a></h2>
+<div class="section level3">
+<h3 id="new-hv_role_palette-scale_fill_hv-and-scale_colour_hv-2-7-18">New: <code>hv_role_palette()</code>, <code>scale_fill_hv()</code> and <code>scale_colour_hv()</code>
+<a class="anchor" aria-label="anchor" href="#new-hv_role_palette-scale_fill_hv-and-scale_colour_hv-2-7-18"></a></h3>
+<p>The house colour rule for EDA and follow-up figures, as an opt-in scale. An event is vermillion <code>#D55E00</code>, censored is blue <code>#0072B2</code>, missing is light grey <code>#CCCCCC</code>, and every other level takes a colourblind-safe colour in order: the light series of <code><a href="../reference/hv_ppt_palette.html">hv_ppt_palette()</a></code> (Okabe-Ito without yellow and sky blue), then Paul Tol’s muted palette without its sand and cyan. Every colour but the missing grey clears 2:1 against white. When a panel carries the event or censored level, blue and vermillion leave the rotation so nothing else is mistaken for them.</p>
+<p>The scales colour each panel from its own levels, so one <code>page &amp; scale_fill_hv(event = "Dead")</code> suits a page where only some panels carry the event. A real <code>NA</code> takes the missing grey (<code>na.value</code>). A panel with more levels than the colourblind-safe palettes hold is drawn in ggplot2’s default hue with a warning; <code><a href="../reference/hv_role_palette.html">hv_role_palette()</a></code> called directly stops instead. Design: <code>dev/specs/2026-09-27-hv-palette-design.md</code>.</p>
+</div>
+<div class="section level3">
+<h3 id="vignettes-installed-tarball-halved-mb-to-mb-2-7-18">Vignettes: installed tarball halved, 17.1 MB to 8.9 MB<a class="anchor" aria-label="anchor" href="#vignettes-installed-tarball-halved-mb-to-mb-2-7-18"></a></h3>
+<p>The installed vignettes embed every figure as a PNG, and <code>plot-functions</code> alone was 15.7 MB of the 17.1 MB tarball. Figures now render at 1x instead of retina 2 when the vignettes are built for the package, which quarters their pixels. The pkgdown site sets <code>IN_PKGDOWN</code> and keeps retina 2. Nothing is removed; figures look slightly softer on a high-density screen when read through <code><a href="https://rdrr.io/r/utils/vignette.html" class="external-link">vignette()</a></code>.</p>
+</div>
+<div class="section level3">
+<h3 id="vignettes-unused-bibliography-removed-2-7-18">Vignettes: unused bibliography removed<a class="anchor" aria-label="anchor" href="#vignettes-unused-bibliography-removed-2-7-18"></a></h3>
+<p><code>vignettes/hviPlotR.bib</code> is gone. No vignette declared it as a bibliography or cited any of its seven entries, and seven of its URLs had moved or died, which <code><a href="https://urlchecker.r-lib.org/reference/url_check.html" class="external-link">urlchecker::url_check()</a></code> reported at every release gate since at least 2.7.15. It now reports none.</p>
+</div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="2.7.17" id="hvtiplotr-2717">hvtiPlotR 2.7.17<a class="anchor" aria-label="anchor" href="#hvtiplotr-2717"></a></h2>
 <div class="section level3">
