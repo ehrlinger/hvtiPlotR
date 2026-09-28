@@ -72,7 +72,7 @@ sd <- hv_survival_difference(diff_dat,
   lower_col = "diff_lower", upper_col = "diff_upper"
 )
 plot(sd) +
-  geom_hline(yintercept = 0, linetype = "dashed", colour = "grey50") +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "gray50") +
   scale_x_continuous(limits = c(0, 10), breaks = 0:10) +
   scale_y_continuous(limits = c(-5, 30),
                      labels = function(x) paste0(x, "%")) +

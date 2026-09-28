@@ -4,7 +4,7 @@ Validates a patient-level data frame, computes per-x-value summary
 statistics (mean or median), and returns an `hv_trends` object. Call
 [`plot.hv_trends`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hv_trends.md)
 on the result to obtain a bare `ggplot2` trend plot (LOESS smooth +
-annual summary points) that you can decorate with colour scales, axis
+annual summary points) that you can decorate with color scales, axis
 limits, and
 [`theme_hv_manuscript`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md).
 
@@ -100,9 +100,9 @@ tr  # prints observation and group counts
 # 2. Bare plot -- undecorated ggplot returned by plot.hv_trends
 p <- plot(tr)
 
-# 3. Decorate: colour palette, axis scales, labels, theme
+# 3. Decorate: color palette, axis scales, labels, theme
 p +
-  ggplot2::scale_colour_manual(
+  ggplot2::scale_color_manual(
     values = c(I = "steelblue", II = "firebrick",
                III = "forestgreen", IV = "goldenrod3"),
     name = "NYHA Class"

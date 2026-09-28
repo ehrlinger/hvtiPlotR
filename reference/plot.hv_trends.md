@@ -98,7 +98,7 @@ dta_lp <- sample_trends_data(
   n = 800, year_range = c(1970L, 2000L),
   groups = c("Shock %", "Pre-op IABP %", "Inotropes %"))
 plot(hv_trends(dta_lp)) +
-  ggplot2::scale_colour_manual(
+  ggplot2::scale_color_manual(
     values = c("Shock %" = "steelblue", "Pre-op IABP %" = "firebrick",
                "Inotropes %" = "forestgreen"), name = NULL) +
   ggplot2::scale_x_continuous(limits = c(1970, 2000),
@@ -130,7 +130,7 @@ dta_poly <- sample_trends_data(
   n = 800, year_range = c(1990L, 1999L),
   groups = c("CE", "Cosgrove", "Periguard", "DeVega"), seed = 5L)
 plot(hv_trends(dta_poly)) +
-  ggplot2::scale_colour_manual(
+  ggplot2::scale_color_manual(
     values = c(CE = "steelblue", Cosgrove = "firebrick",
                Periguard = "forestgreen", DeVega = "goldenrod3"),
     name = "Repair type") +
@@ -151,7 +151,7 @@ tr <- hv_trends(
   summary_fn = "median"
 )
 p <- plot(tr) +
-  ggplot2::scale_colour_brewer(palette = "Set1", name = "NYHA Class") +
+  ggplot2::scale_color_brewer(palette = "Set1", name = "NYHA Class") +
   ggplot2::scale_x_continuous(limits = c(1985, 2015),
                               breaks = seq(1985, 2015, 5)) +
   ggplot2::labs(x = "Years", y = "%") +
@@ -164,11 +164,11 @@ ggplot2::ggsave(file.path(tempdir(), "trends.pdf"), p,
 # \donttest{
 old <- ggplot2::theme_set(theme_hv_manuscript())
 plot(hv_trends(dta_poly)) +
-  ggplot2::scale_colour_brewer(palette = "Dark2", name = "Repair type")
+  ggplot2::scale_color_brewer(palette = "Dark2", name = "Repair type")
 
 ggplot2::theme_set(old)
 # }
 
 # See vignette("plot-decorators", package = "hvtiPlotR") for theming,
-# colour scales, annotation labels, and saving plots.
+# color scales, annotation labels, and saving plots.
 ```

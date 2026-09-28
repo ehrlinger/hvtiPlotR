@@ -4,7 +4,7 @@ Builds a bare dot-and-whisker `ggplot2` object from an
 [`hv_rmst_contrast()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_rmst_contrast.md)
 object. Estimators run down the y axis with the first level at the top,
 so the plot reads in the order supplied. A solid vertical line marks
-zero (no difference). Add colours, scales and a theme with `+`.
+zero (no difference). Add colors, scales and a theme with `+`.
 
 ## Usage
 

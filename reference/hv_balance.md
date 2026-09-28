@@ -5,7 +5,7 @@ frame for a covariate balance plot, and returns an `hv_balance` object.
 Call
 [`plot.hv_balance`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hv_balance.md)
 on the result to obtain a bare `ggplot2` object that you can decorate
-with colour, shape, axis scales, and
+with color, shape, axis scales, and
 [`theme_hv_manuscript`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md).
 
 ## Usage
@@ -99,7 +99,7 @@ cb  # prints variable count, group count, threshold
 # 2. Bare plot -- undecorated ggplot returned by plot.hv_balance
 p <- plot(cb)
 
-# 3. Decorate: colour/shape palettes, x-axis range, labels, theme
+# 3. Decorate: color/shape palettes, x-axis range, labels, theme
 p +
   scale_color_manual(
     values = c("Before match" = "red4", "After match" = "blue3"),

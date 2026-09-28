@@ -41,7 +41,7 @@ hv_survival(
 - group_col:
 
   Optional name of a character or factor column used to stratify the
-  analysis. `NULL` (default) produces an unstratified estimate labelled
+  analysis. `NULL` (default) produces an unstratified estimate labeled
   `"All"`.
 
 - method:
@@ -77,13 +77,13 @@ The list has three elements:
 - `$meta`:
 
   Named list: `time_col`, `event_col`, `group_col`, `method`,
-  `conf_level`, `report_times`, `n_obs` (the *analysed* cohort),
+  `conf_level`, `report_times`, `n_obs` (the *analyzed* cohort),
   `n_input`, `n_excluded`, `n_events`.
 
 - `$tables`:
 
   Named list with two data frames: `risk` (`strata`, `report_time`,
-  `n.risk`), where `n.risk` counts analysed subjects with follow-up
+  `n.risk`), where `n.risk` counts analyzed subjects with follow-up
   greater than or equal to the exact report time, and `report`
   (`strata`, `report_time`, `surv`, `lower`, `upper`, `n.risk`,
   `n.event`).
@@ -92,7 +92,7 @@ The list has three elements:
 
 Rows with a missing time, event, or grouping value are excluded before
 fitting, with a warning naming the columns responsible. `$meta$n_obs`
-and [`print()`](https://rdrr.io/r/base/print.html) report the *analysed*
+and [`print()`](https://rdrr.io/r/base/print.html) report the *analyzed*
 cohort, alongside `n_input` and `n_excluded`, so the reported N always
 matches the cohort the estimates describe.
 
@@ -166,7 +166,7 @@ p +
 #> Adding another scale for y, which will replace the existing scale.
 
 
-# Stratified: colour scale adds clinical meaning
+# Stratified: color scale adds clinical meaning
 dta_s <- sample_survival_data(
   n = 500, strata_levels = c("Type A", "Type B"),
   hazard_ratios = c(1, 1.4), seed = 42
@@ -197,12 +197,12 @@ plot(km, type = "loglog") +
 # \donttest{
 old <- ggplot2::theme_set(theme_hv_manuscript())
 plot(km_s) +
-  ggplot2::scale_colour_brewer(palette = "Set1", name = "Valve Type") +
+  ggplot2::scale_color_brewer(palette = "Set1", name = "Valve Type") +
   ggplot2::labs(x = "Years after Operation", y = "Survival (%)")
 
 ggplot2::theme_set(old)
 # }
 
 # See vignette("plot-decorators", package = "hvtiPlotR") for theming,
-# colour scales, annotation labels, and saving plots.
+# color scales, annotation labels, and saving plots.
 ```

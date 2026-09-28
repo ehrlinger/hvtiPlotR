@@ -2,7 +2,7 @@
 
 Generates a realistic cardiac-surgery procedure data set where each row
 is a patient and each column is a logical indicator of a specific
-procedure. Co-occurrence rates are modelled from a latent
+procedure. Co-occurrence rates are modeled from a latent
 primary-procedure type so that the UpSet plot shows meaningful overlap
 patterns (e.g. aortic valve patients frequently have concomitant aorta
 work; mitral valve patients frequently have concomitant TV repair).

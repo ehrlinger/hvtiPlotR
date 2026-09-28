@@ -2,9 +2,9 @@
 
 Builds a bare covariate balance `ggplot2` object from an
 [`hv_balance`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_balance.md)
-data object. Each covariate appears as a labelled row; points show the
+data object. Each covariate appears as a labeled row; points show the
 standardized mean difference per group. A solid line marks zero; dotted
-lines mark \\\pm\\`threshold`. Add colour, shape, axis scales, and a
+lines mark \\\pm\\`threshold`. Add color, shape, axis scales, and a
 theme with `+`.
 
 ## Usage

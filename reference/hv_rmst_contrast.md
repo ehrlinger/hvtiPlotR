@@ -71,7 +71,7 @@ The input follows the `tables$estimates` contract of
 `hvtiRpropensity::ps_rmst()`: columns `estimator`, `subset`,
 `weighting`, `n`, `ess_treated`, `ess_control`, `rmst_treated`,
 `rmst_control`, `diff`, `diff_days`, `lo_days`, `hi_days` and
-`n_failed`, where a positive `diff` favours the treated arm. Only the
+`n_failed`, where a positive `diff` favors the treated arm. Only the
 estimator, difference and interval columns are used here.
 hvtiRpropensity is not required: pass a plain data frame, or the
 `ps_rmst` object itself and its `$tables$estimates` is read.

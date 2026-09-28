@@ -77,7 +77,7 @@ hv_followup(
 
 - study_end:
 
-  End of study enrolment. Default `as.Date("2019-12-31")`.
+  End of study enrollment. Default `as.Date("2019-12-31")`.
 
 - close_date:
 
@@ -91,8 +91,8 @@ hv_followup(
 
 - death_levels:
 
-  Length-2 character vector labelling the two death states (alive
-  first). Default `c("Alive", "Dead")`.
+  Length-2 character vector labeling the two death states (alive first).
+  Default `c("Alive", "Dead")`.
 
 - event_levels:
 
@@ -116,7 +116,7 @@ An object of class `c("hv_followup", "hv_data")`:
 - `$meta`:
 
   Column names, date parameters, state levels, `has_event` flag, and the
-  cohort counts `n_patients` (analysed), `n_input`, and `n_excluded`.
+  cohort counts `n_patients` (analyzed), `n_input`, and `n_excluded`.
 
 - `$tables`:
 
@@ -127,7 +127,7 @@ An object of class `c("hv_followup", "hv_data")`:
 
 Patients with a missing value in any required column are excluded, with
 a warning naming the columns responsible. `$meta$n_patients` reports the
-*analysed* cohort, alongside `$meta$n_input` and `$meta$n_excluded`, so
+*analyzed* cohort, alongside `$meta$n_input` and `$meta$n_excluded`, so
 the reported N always describes the plotted points.
 
 The event panel requires more columns than the death panel, so the two
@@ -162,7 +162,7 @@ gf  # prints follow-up summary
 # 2. Bare plot -- undecorated ggplot returned by plot.hv_followup
 p <- plot(gf)
 
-# 3. Decorate: colour palette, axis labels, theme
+# 3. Decorate: color palette, axis labels, theme
 p +
   ggplot2::scale_color_manual(
     values = c("Alive" = "steelblue", "Dead" = "firebrick"),

@@ -3,7 +3,7 @@
 Builds a bare goodness-of-follow-up `ggplot2` object from an
 [`hv_followup`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_followup.md)
 data object. Each patient appears as a point at their operation year (x)
-and total follow-up time (y), shaped and coloured by their state. An
+and total follow-up time (y), shaped and colored by their state. An
 orange diagonal reference line shows the maximum possible follow-up for
 patients enrolled at each year. A vertical stem below each point is
 drawn only when
@@ -43,7 +43,7 @@ plot(
 
 - diagonal_color:
 
-  Colour of the diagonal reference line. Default `"orange"`.
+  Color of the diagonal reference line. Default `"orange"`.
 
 - diagonal_linetype:
 

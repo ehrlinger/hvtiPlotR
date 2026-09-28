@@ -18,7 +18,7 @@ All hvtiPlotR plot functions follow a two-step workflow. Call the
 constructor (`hv_*()`) to validate and prepare data (it returns an S3
 object of class `c("hv_<concept>", "hv_data")`), then call
 [`plot()`](https://rdrr.io/r/graphics/plot.default.html) on the result
-to get a bare `ggplot` with no colour scales, axis labels, or theme
+to get a bare `ggplot` with no color scales, axis labels, or theme
 applied yet. You add those with the usual `+` operator. See the
 companion vignette “Decorating and Saving hvtiPlotR Plots” for full
 coverage of `scale_()`,
@@ -89,7 +89,7 @@ treatment groups.
 [`hv_mirror_hist()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_mirror_hist.md)
 prepares the data;
 [`plot()`](https://rdrr.io/r/graphics/plot.default.html) hands you a
-bare ggplot to dress with colour and labels.
+bare ggplot to dress with color and labels.
 
 The constructor accepts a data frame with columns for the propensity
 score, group indicator, and match indicator.
@@ -269,7 +269,7 @@ p_wt
 ### Adding scales, labels, and theme
 
 The IPTW variant uses blue/red for the Limited/Extended groups, with the
-group labels coloured to match. The axis and annotation pattern is the
+group labels colored to match. The axis and annotation pattern is the
 same as the binary-match version; swap
 [`theme_hv_poster()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)
 for
@@ -325,7 +325,7 @@ shifts over time or across a grouping dimension.
 [`hv_stacked()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_stacked.md)
 prepares the data;
 [`plot()`](https://rdrr.io/r/graphics/plot.default.html) hands you a
-bare ggplot to dress with colour and labels.
+bare ggplot to dress with color and labels.
 
 The
 [`sample_stacked_histogram_data()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_stacked_histogram_data.md)
@@ -355,7 +355,7 @@ equivalent to the `plot.sas` frequency histogram. Build the S3 object
 with
 [`hv_stacked()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_stacked.md),
 then call [`plot()`](https://rdrr.io/r/graphics/plot.default.html) to
-get a bare ggplot you dress with colour scales and a theme in one
+get a bare ggplot you dress with color scales and a theme in one
 pipeline.
 
 ``` r
@@ -364,7 +364,7 @@ pipeline.
 sh <- hv_stacked(hist_dta, x_col = "year", group_col = "category")
 p_count <- plot(sh)
 
-# Layer on colour scales, labels, and a theme
+# Layer on color scales, labels, and a theme
 p_count +
   scale_fill_brewer(palette = "Set1", name = "Category") +
   scale_color_brewer(palette = "Set1", name = "Category") +
@@ -380,7 +380,7 @@ Setting `position = "fill"` rescales each bin so the bars sum to 1,
 making it easy to compare the relative composition across years without
 count differences obscuring the trend. Pass the composition variant to
 [`hv_stacked()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_stacked.md)
-at construction time, then layer in manual colour and axis labels.
+at construction time, then layer in manual color and axis labels.
 
 ``` r
 
@@ -389,7 +389,7 @@ sh2   <- hv_stacked(hist_dta, x_col = "year", group_col = "category",
                        position = "fill")
 p_fill <- plot(sh2)
 
-# Use manual colours and custom legend labels
+# Use manual colors and custom legend labels
 p_final <- p_fill +
   scale_fill_manual(
     values = c("1" = "pink", "2" = "cyan", "3" = "orangered"),
@@ -441,7 +441,7 @@ passive surveillance supplemented active cross-sectional follow-up.
 [`hv_followup()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_followup.md)
 prepares the data;
 [`plot()`](https://rdrr.io/r/graphics/plot.default.html) hands you a
-bare ggplot with no colour, shape, axis, or label scales applied. Add
+bare ggplot with no color, shape, axis, or label scales applied. Add
 those with the usual `+` operator. The `type` argument selects the
 panel: `"followup"` (default, the death/censoring scatter) or `"event"`
 (competing non-fatal event panel).
@@ -512,14 +512,14 @@ operator.
 [`scale_color_manual()`](https://ggplot2.tidyverse.org/reference/scale_manual.html)
 and
 [`scale_shape_manual()`](https://ggplot2.tidyverse.org/reference/scale_manual.html)
-map the binary alive/dead state to colours and point shapes.
+map the binary alive/dead state to colors and point shapes.
 [`annotate()`](https://ggplot2.tidyverse.org/reference/annotate.html)
 places group-identifying text directly on the panel.
 
 ``` r
 
 gfup_final <- plot(gf, alpha = 0.8) +
-  # Colour alive = blue, dead = red (Set1 palette positions 2 and 1)
+  # Color alive = blue, dead = red (Set1 palette positions 2 and 1)
   scale_color_manual(
     values   = c("#377EB8", "#E41A1C"),
     labels   = c("Alive", "Dead"),
@@ -685,26 +685,25 @@ The default follow-up panel (`plot(gf)`) and the event panel
 can be saved individually with
 [`ggsave()`](https://ggplot2.tidyverse.org/reference/ggsave.html).
 
-### Role colours across panels
+### Role colors across panels
 
-The colours above are chosen by hand in each call.
-[`scale_colour_hv()`](https://ehrlinger.github.io/hvtiPlotR/reference/scale_fill_hv.md)
+The colors above are chosen by hand in each call.
+[`scale_color_hv()`](https://ehrlinger.github.io/hvtiPlotR/reference/scale_fill_hv.md)
 applies the house rule instead: an event is vermillion, censored is
-blue, missing is light grey, and anything else takes a colourblind-safe
-colour in order. Add it to a patchwork with `&` and each panel is
-coloured from its own levels, so a role can name every spelling the
-panels use. `Dead` and `Death` are both the event; `Alive` and
-`No event` are both censored. The event panel’s non-fatal event then
-takes green, the first colour left once blue and vermillion are spoken
-for.
+blue, missing is light gray, and anything else takes a colorblind-safe
+color in order. Add it to a patchwork with `&` and each panel is colored
+from its own levels, so a role can name every spelling the panels use.
+`Dead` and `Death` are both the event; `Alive` and `No event` are both
+censored. The event panel’s non-fatal event then takes green, the first
+color left once blue and vermillion are spoken for.
 [`hv_role_palette()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_role_palette.md)
-returns the same colours as a named vector, for a table or a legend
-drawn by hand.
+returns the same colors as a named vector, for a table or a legend drawn
+by hand.
 
 ``` r
 
 (plots$all | plots$relapse) &
-  scale_colour_hv(event = c("Dead", "Death"), censored = c("Alive", "No event"), name = NULL) &
+  scale_color_hv(event = c("Dead", "Death"), censored = c("Alive", "No event"), name = NULL) &
   labs(x = "Operation Date", y = "Follow-up (years)") &
   theme_hv_poster()
 ```
@@ -724,10 +723,10 @@ hv_role_palette(c("No event", "Non-fatal event", "Death"),
 
 The covariate balance plot is the standard quality-control figure for
 propensity score matching and IPTW analyses. Each covariate occupies a
-labelled row; points show the standardized mean difference (SMD) for
-each comparison group (e.g. before and after matching). A solid vertical
-line marks zero balance; the dotted lines at ±10% give you a quick
-visual threshold for acceptable balance.
+labeled row; points show the standardized mean difference (SMD) for each
+comparison group (e.g. before and after matching). A solid vertical line
+marks zero balance; the dotted lines at ±10% give you a quick visual
+threshold for acceptable balance.
 [`hv_balance()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_balance.md)
 prepares the data, superseding `tp.lp.propen.cov_balance.R`;
 [`plot()`](https://rdrr.io/r/graphics/plot.default.html) hands you a
@@ -800,9 +799,9 @@ cb <- hv_balance(dta_cb)
 ### Bare plot
 
 The bare panel lays out one covariate per row with points at their SMD
-values, but no colour, shape, axis limits, or theme yet. Look for:
-points clustered near zero for the matched/weighted group and scattered
-wider for the unmatched group; if both groups look identical, check that
+values, but no color, shape, axis limits, or theme yet. Look for: points
+clustered near zero for the matched/weighted group and scattered wider
+for the unmatched group; if both groups look identical, check that
 `group` levels are distinct.
 
 ``` r
@@ -812,10 +811,10 @@ plot(cb, alpha = 0.8)
 
 ![](plot-functions_files/figure-html/cov_balance_bare-1.png)
 
-### Adding colour, shape, and axis scales
+### Adding color, shape, and axis scales
 
 We map `"Before match"` to red triangles and `"After match"` to blue
-squares, the same colour convention as `tp.lp.propen.cov_balance.R`. Set
+squares, the same color convention as `tp.lp.propen.cov_balance.R`. Set
 the x-axis limits wide enough to include your largest pre-match SMD; the
 symmetric breaks make the ±10 % threshold easy to read.
 
@@ -847,7 +846,7 @@ plot(cb, alpha = 0.8) +
 
 [`annotate()`](https://ggplot2.tidyverse.org/reference/annotate.html)
 places explanatory text directly on the panel to indicate which
-direction of imbalance favours each group. The example below uses the
+direction of imbalance favors each group. The example below uses the
 exact labels, x-scale, annotation positions, and legend placement from
 `tp.lp.propen.cov_balance.R` (SAVR vs. TF-TAVR study).
 
@@ -968,7 +967,7 @@ km <- hv_survival(dta_km)
 
 The bare `plot(km)` panel is what `PLOTS=1` produces from the SAS
 `%kaplan` macro: the survival curve with the logit-transform 95% CI
-ribbon. No colour scale, axis labels, or theme yet; you add those in the
+ribbon. No color scale, axis labels, or theme yet; you add those in the
 next subsection. Look for: a curve that starts at 100% and is
 monotonically non-increasing, with the ribbon widening as the at-risk
 population thins.
@@ -1119,7 +1118,7 @@ turns the `$tables$risk` that an `hv_survival` object already carries
 into a bare table panel, and
 [`hv_atrisk_compose()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_atrisk_compose.md)
 stacks the curve over it with the time axes aligned. The non-KM curves
-(`hv_nonparametric`, `hv_ordinal`, `hv_hazard`) take pre-summarised
+(`hv_nonparametric`, `hv_ordinal`, `hv_hazard`) take pre-summarized
 curve data and carry no risk table, so for those you hand
 [`hv_atrisk()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_atrisk.md)
 the subject-level `time`/`status`/`group` columns instead.
@@ -1230,7 +1229,7 @@ and
 [`hv_rmst_curves()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_rmst_curves.md)
 plot the output of a weighted restricted-mean-survival analysis, for
 example `hvtiRpropensity::ps_rmst()$tables`. Both also accept plain data
-frames, so hvtiRpropensity is not required. Positive differences favour
+frames, so hvtiRpropensity is not required. Positive differences favor
 the treated group.
 
 ``` r
@@ -1260,7 +1259,7 @@ plot(hv_rmst_contrast(est), x_label = "RMST difference at 4 years (days)") +
 ### Weighted curves with the RMST area
 
 With `tau` the area under each arm’s curve up to the horizon is shaded,
-and with `estimates` each facet is labelled with its difference and
+and with `estimates` each facet is labeled with its difference and
 interval.
 
 ``` r
@@ -1334,7 +1333,7 @@ pattern from the varnames template; and
 generates a reproducible mixed-type dataset for demonstration.
 
 [`plot()`](https://rdrr.io/r/graphics/plot.default.html) on an `hv_eda`
-object returns a bare `ggplot`. Add colour scales, axis labels,
+object returns a bare `ggplot`. Add color scales, axis labels,
 annotations, and
 [`theme_hv_manuscript()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md).
 
@@ -1375,7 +1374,7 @@ sapply(dta_eda, eda_classify_var)
 ### Binary categorical: count barplot
 
 Numeric 0/1 columns are classified as `"Cat_Num"`. `NA` values appear as
-an explicit `"(Missing)"` fill level so they can be coloured with
+an explicit `"(Missing)"` fill level so they can be colored with
 [`scale_fill_manual()`](https://ggplot2.tidyverse.org/reference/scale_manual.html).
 The `y_label` argument sets the plot title and fill-legend name in place
 of the raw column name.
@@ -1385,7 +1384,7 @@ of the raw column name.
 plot(hv_eda(dta_eda, x_col = "year", y_col = "male",
               y_label = "Sex")) +
   scale_fill_manual(
-    values = c("0" = "steelblue", "1" = "firebrick", "(Missing)" = "grey80"),
+    values = c("0" = "steelblue", "1" = "firebrick", "(Missing)" = "gray80"),
     labels = c("0" = "Female", "1" = "Male", "(Missing)" = "Missing"),
     name   = NULL
   ) +
@@ -1407,7 +1406,7 @@ Setting `show_percent = TRUE` switches
 plot(hv_eda(dta_eda, x_col = "year", y_col = "cabg",
               y_label = "Concomitant CABG", show_percent = TRUE)) +
   scale_fill_manual(
-    values = c("0" = "grey70", "1" = "steelblue", "(Missing)" = "grey90"),
+    values = c("0" = "gray70", "1" = "steelblue", "(Missing)" = "gray90"),
     labels = c("0" = "No CABG", "1" = "CABG", "(Missing)" = "Missing"),
     name   = NULL
   ) +
@@ -1422,7 +1421,7 @@ plot(hv_eda(dta_eda, x_col = "year", y_col = "cabg",
 ### Ordinal and multi-level categorical
 
 Columns with more than two numeric levels are classified as `"Cat_Num"`
-and rendered as stacked count bars, one level per fill colour. Use
+and rendered as stacked count bars, one level per fill color. Use
 [`scale_fill_brewer()`](https://ggplot2.tidyverse.org/reference/scale_brewer.html)
 with a diverging palette (here `"RdYlGn"`, reversed) to signal grade
 severity from green (low) through yellow to red (high).
@@ -1447,10 +1446,10 @@ plot(hv_eda(dta_eda, x_col = "year", y_col = "nyha",
 ### Character categorical
 
 String columns are classified as `"Cat_Char"` and produce stacked count
-bars with one level per fill colour. Unlike `"Cat_Num"` columns, the
+bars with one level per fill color. Unlike `"Cat_Num"` columns, the
 levels are ordered alphabetically by default; use
 [`scale_fill_manual()`](https://ggplot2.tidyverse.org/reference/scale_manual.html)
-to assign colours that carry clinical meaning (here, morphology type).
+to assign colors that carry clinical meaning (here, morphology type).
 
 ``` r
 
@@ -1460,7 +1459,7 @@ plot(hv_eda(dta_eda, x_col = "year", y_col = "valve_morph",
     values = c(Bicuspid   = "steelblue",
                Tricuspid  = "firebrick",
                Unicuspid  = "goldenrod3",
-               "(Missing)" = "grey80"),
+               "(Missing)" = "gray80"),
     name = "Morphology"
   ) +
   scale_x_discrete(breaks = seq(2005, 2020, 5)) +
@@ -1479,7 +1478,7 @@ Where `y_col` is `NA`, a rug mark is drawn on the x-axis.
 
 plot(hv_eda(dta_eda, x_col = "op_years", y_col = "ef",
               y_label = "Ejection Fraction (%)")) +
-  scale_colour_manual(values = c("firebrick"), guide = "none") +
+  scale_color_manual(values = c("firebrick"), guide = "none") +
   scale_x_continuous(breaks = seq(0, 15, 5)) +
   scale_y_continuous(limits = c(20, 80), breaks = seq(20, 80, 20)) +
   labs(x = "Years from First Surgery Year",
@@ -1558,7 +1557,7 @@ sub_cont <- eda_select_vars(dta_eda, c("op_years", names(cont_vars)))
 p_cont <- lapply(names(cont_vars), function(cn) {
   plot(hv_eda(sub_cont, x_col = "op_years", y_col = cn,
                 y_label = cont_vars[[cn]])) +
-    scale_colour_manual(values = c("steelblue"), guide = "none") +
+    scale_color_manual(values = c("steelblue"), guide = "none") +
     scale_x_continuous(breaks = seq(0, 15, 5)) +
     labs(x = "Years from First Surgery Year") +
     theme_hv_poster()
@@ -1719,7 +1718,7 @@ head(dta_al)
 ### Bare plot
 
 The bare panel shows flows between the three axis stages with uniform
-fill and no colour, labels, or theme. Look for: bands that connect every
+fill and no color, labels, or theme. Look for: bands that connect every
 level of `pre_ar` through `procedure` to every level of `post_ar`, with
 band widths proportional to the `freq` column; missing bands indicate a
 combination that does not occur in the data.
@@ -1734,9 +1733,9 @@ plot(al)
 
 ### Fill flows by pre-operative grade
 
-Pass `fill_col` to the constructor to colour each flow band by the value
-of a categorical column. Here pre-operative AR grade colours the bands
-so you can trace how each grade distributes across procedure types and
+Pass `fill_col` to the constructor to color each flow band by the value
+of a categorical column. Here pre-operative AR grade colors the bands so
+you can trace how each grade distributes across procedure types and
 post-operative outcomes. Swap
 [`scale_fill_manual()`](https://ggplot2.tidyverse.org/reference/scale_manual.html)
 for
@@ -1756,7 +1755,7 @@ plot(al_filled) +
                Severe   = "firebrick"),
     name = "Pre-op AR"
   ) +
-  scale_colour_manual(
+  scale_color_manual(
     values = c(None     = "steelblue",
                Mild     = "goldenrod",
                Moderate = "darkorange",
@@ -1797,7 +1796,7 @@ al2 <- hv_alluvial(
 plot(al2) +
   scale_fill_brewer(palette = "RdYlGn", direction = -1,
                     name = "AR Grade") +
-  scale_colour_brewer(palette = "RdYlGn", direction = -1,
+  scale_color_brewer(palette = "RdYlGn", direction = -1,
                       guide = "none") +
   annotate("text", x = 1.5, y = 250,
            label = "Improvement after surgery",
@@ -1821,7 +1820,7 @@ Saving](https://ehrlinger.github.io/hvtiPlotR/articles/plot-decorators.md).
 
 p_al <- plot(al_filled) +
   scale_fill_brewer(palette = "RdYlGn", direction = -1) +
-  scale_colour_brewer(palette = "RdYlGn", direction = -1, guide = "none") +
+  scale_color_brewer(palette = "RdYlGn", direction = -1, guide = "none") +
   labs(y = "Patients (n)") +
   theme_hv_poster()
 
@@ -1885,7 +1884,7 @@ table(dta_san$C9)
 reads the nine cluster-assignment columns (`C2` through `C9`) and builds
 the Sankey data automatically. Call
 [`plot()`](https://rdrr.io/r/graphics/plot.default.html) and add a title
-and theme; the default Set1 palette assigns one colour per cluster
+and theme; the default Set1 palette assigns one color per cluster
 letter. Look for: wide bands that stay intact across K values,
 indicating a stable partition; heavy crossing and fragmentation signal
 that K has grown past what the data supports.
@@ -1900,9 +1899,9 @@ plot(sk) +
 
 ![](plot-functions_files/figure-html/sankey_default-1.png)
 
-### Custom colour palette
+### Custom color palette
 
-Replace the default Set1 colours with a fully custom named vector. Names
+Replace the default Set1 colors with a fully custom named vector. Names
 must match the node labels in the data.
 
 ``` r
@@ -1912,7 +1911,7 @@ my_cols <- c(
   E = "#9467bd", F = "#8c564b", G = "#e377c2", H = "#7f7f7f",
   I = "#bcbd22"
 )
-sk_custom <- hv_sankey(dta_san, node_colours = my_cols)
+sk_custom <- hv_sankey(dta_san, node_colors = my_cols)
 plot(sk_custom) +
   labs(title = "Cluster Stability: K = 2 to 9") +
   theme_hv_poster()
@@ -2074,7 +2073,7 @@ specific reason:
 
 ``` r
 
-# IDs still in the analysed cohort
+# IDs still in the analyzed cohort
 head(hv_consort_patients(tracker, "Analyzed"))
 ```
 
@@ -2172,7 +2171,7 @@ hazard_plot(
   emp_lower_col = "lower",
   emp_upper_col = "upper"
 ) +
-  scale_colour_manual(values = c("steelblue"), guide = "none") +
+  scale_color_manual(values = c("steelblue"), guide = "none") +
   scale_fill_manual(values = c("steelblue"), guide = "none") +
   scale_x_continuous(limits = c(0, 10), breaks = 0:10) +
   scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, 20),
@@ -2196,7 +2195,7 @@ hazard_plot(
   lower_col    = "haz_lower",
   upper_col    = "haz_upper"
 ) +
-  scale_colour_manual(values = c("firebrick"), guide = "none") +
+  scale_color_manual(values = c("firebrick"), guide = "none") +
   scale_fill_manual(values = c("firebrick"), guide = "none") +
   scale_x_continuous(limits = c(0, 10), breaks = 0:10) +
   scale_y_continuous(limits = c(0, 30),
@@ -2221,7 +2220,7 @@ hazard_plot(
   lower_col     = "cumhaz_lower",
   upper_col     = "cumhaz_upper"
 ) +
-  scale_colour_manual(values = c("darkorange"), guide = "none") +
+  scale_color_manual(values = c("darkorange"), guide = "none") +
   scale_fill_manual(values = c("darkorange"), guide = "none") +
   scale_x_continuous(limits = c(0, 10), breaks = 0:10) +
   labs(x = "Years", y = "Cumulative Hazard (%)") +
@@ -2256,7 +2255,7 @@ hazard_plot(
   emp_lower_col = "lower",
   emp_upper_col = "upper"
 ) +
-  scale_colour_manual(
+  scale_color_manual(
     values = c("No Takedown" = "steelblue", "Takedown" = "firebrick"),
     name   = NULL
   ) +
@@ -2310,7 +2309,7 @@ hazard_plot(
   ref_estimate_col = "survival",
   ref_group_col    = "group"
 ) +
-  scale_colour_manual(
+  scale_color_manual(
     values = c("<65" = "steelblue", "65\u201380" = "forestgreen",
                "\u226580" = "firebrick"),
     name   = "Age group"
@@ -2369,7 +2368,7 @@ hz
 ``` r
 
 plot(hz) +
-  scale_colour_manual(values = c("steelblue"), guide = "none") +
+  scale_color_manual(values = c("steelblue"), guide = "none") +
   scale_fill_manual(values = c("steelblue"), guide = "none") +
   scale_x_continuous(limits = c(0, 10), breaks = 0:10) +
   scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, 20),
@@ -2437,10 +2436,10 @@ survival_difference_plot(
   lower_col = "diff_lower",
   upper_col = "diff_upper"
 ) +
-  scale_colour_manual(values = c("steelblue"), guide = "none") +
+  scale_color_manual(values = c("steelblue"), guide = "none") +
   scale_fill_manual(values = c("steelblue"), guide = "none") +
   ggplot2::geom_hline(yintercept = 0, linetype = "dashed",
-                      colour = "grey50") +
+                      color = "gray50") +
   scale_x_continuous(limits = c(0, 10), breaks = 0:10) +
   scale_y_continuous(limits = c(-5, 40),
                      labels = function(x) paste0(x, "%")) +
@@ -2474,10 +2473,10 @@ d3$comparison <- "TF-TAVR vs AVR"
 
 survival_difference_plot(rbind(d1, d2, d3),
                          group_col = "comparison") +
-  scale_colour_brewer(palette = "Set1", name = NULL) +
+  scale_color_brewer(palette = "Set1", name = NULL) +
   scale_fill_brewer(palette = "Set1", guide = "none") +
   ggplot2::geom_hline(yintercept = 0, linetype = "dashed",
-                      colour = "grey50") +
+                      color = "gray50") +
   scale_x_continuous(limits = c(0, 10), breaks = 0:10) +
   labs(x = "Years", y = "Survival Difference (%)") +
   theme_hv_poster()
@@ -2515,10 +2514,10 @@ sd
 ``` r
 
 plot(sd) +
-  scale_colour_manual(values = c("steelblue"), guide = "none") +
+  scale_color_manual(values = c("steelblue"), guide = "none") +
   scale_fill_manual(values = c("steelblue"), guide = "none") +
   ggplot2::geom_hline(yintercept = 0, linetype = "dashed",
-                      colour = "grey50") +
+                      color = "gray50") +
   scale_x_continuous(limits = c(0, 10), breaks = 0:10) +
   scale_y_continuous(limits = c(-5, 40),
                      labels = function(x) paste0(x, "%")) +
@@ -2576,7 +2575,7 @@ nnt_plot(
   lower_col = "nnt_lower",
   upper_col = "nnt_upper"
 ) +
-  scale_colour_manual(values = c("steelblue"), guide = "none") +
+  scale_color_manual(values = c("steelblue"), guide = "none") +
   scale_fill_manual(values = c("steelblue"), guide = "none") +
   scale_x_continuous(limits = c(0, 20), breaks = seq(0, 20, 5)) +
   scale_y_continuous(limits = c(0, 50), breaks = seq(0, 50, 10)) +
@@ -2598,7 +2597,7 @@ nnt_plot(
   lower_col    = "arr_lower",
   upper_col    = "arr_upper"
 ) +
-  scale_colour_manual(values = c("firebrick"), guide = "none") +
+  scale_color_manual(values = c("firebrick"), guide = "none") +
   scale_fill_manual(values = c("firebrick"), guide = "none") +
   scale_x_continuous(limits = c(0, 20), breaks = seq(0, 20, 5)) +
   scale_y_continuous(limits = c(0, 50),
@@ -2636,7 +2635,7 @@ nn
 ``` r
 
 plot(nn) +
-  scale_colour_manual(values = c("steelblue"), guide = "none") +
+  scale_color_manual(values = c("steelblue"), guide = "none") +
   scale_fill_manual(values = c("steelblue"), guide = "none") +
   scale_x_continuous(limits = c(0, 20), breaks = seq(0, 20, 5)) +
   scale_y_continuous(limits = c(0, 50), breaks = seq(0, 50, 10)) +
@@ -2665,7 +2664,7 @@ p_hp <- hazard_plot(
   emp_lower_col = "lower",
   emp_upper_col = "upper"
 ) +
-  scale_colour_manual(values = c("steelblue"), guide = "none") +
+  scale_color_manual(values = c("steelblue"), guide = "none") +
   scale_fill_manual(values = c("steelblue"), guide = "none") +
   labs(x = "Years", y = "Survival (%)") +
   theme_hv_poster()
@@ -2735,7 +2734,7 @@ tr1 <- hv_trends(one_grp, group_col = NULL)
 #### Bare plot
 
 The bare `plot(tr1)` panel shows the annual mean with connecting
-segments and no colour, axis limits, or theme. Look for: a line that
+segments and no color, axis limits, or theme. Look for: a line that
 traces the operation year on the x-axis against the summary statistic on
 the y-axis; if the line is flat, the `group_col = NULL` single-group
 path may be grouping incorrectly.
@@ -2783,22 +2782,22 @@ plot(tr1) +
 
 ![](plot-functions_files/figure-html/trends_age-1.png)
 
-### Multiple groups with `scale_colour_brewer`
+### Multiple groups with `scale_color_brewer`
 
 When `group_col` is set, the constructor computes per-group annual means
 and [`plot()`](https://rdrr.io/r/graphics/plot.default.html) draws one
 line per group.
-[`scale_colour_brewer()`](https://ggplot2.tidyverse.org/reference/scale_brewer.html)
+[`scale_color_brewer()`](https://ggplot2.tidyverse.org/reference/scale_brewer.html)
 and
 [`scale_shape_manual()`](https://ggplot2.tidyverse.org/reference/scale_manual.html)
-together give each group a distinct colour and marker shape, which keeps
-the figure readable in greyscale print.
+together give each group a distinct color and marker shape, which keeps
+the figure readable in grayscale print.
 
 ``` r
 
 tr <- hv_trends(dta_tr)
 plot(tr) +
-  scale_colour_brewer(palette = "Set1", name = "Group") +
+  scale_color_brewer(palette = "Set1", name = "Group") +
   scale_shape_manual(
     values = c("Group I" = 15L, "Group II" = 19L,
                "Group III" = 17L, "Group IV" = 18L),
@@ -2811,18 +2810,18 @@ plot(tr) +
 
 ![](plot-functions_files/figure-html/trends_multi_brewer-1.png)
 
-### Median summary + manual colours (NYHA style)
+### Median summary + manual colors (NYHA style)
 
 Pass `summary_fn = "median"` when the outcome distribution is skewed and
 the median is more interpretable than the mean, typical for NYHA class
-percentage trends. Manual colours let you assign clinically meaningful
-hues (here, one colour per NYHA class).
+percentage trends. Manual colors let you assign clinically meaningful
+hues (here, one color per NYHA class).
 
 ``` r
 
 tr_med <- hv_trends(dta_tr, summary_fn = "median")
 plot(tr_med) +
-  scale_colour_manual(
+  scale_color_manual(
     values = c(
       "Group I"   = "steelblue",
       "Group II"  = "firebrick",
@@ -2880,7 +2879,7 @@ dta_lp <- sample_trends_data(
 )
 
 plot(hv_trends(dta_lp)) +
-  scale_colour_manual(
+  scale_color_manual(
     values = c("Shock %"       = "steelblue",
                "Pre-op IABP %" = "firebrick",
                "Inotropes %"   = "forestgreen"),
@@ -2904,7 +2903,7 @@ plot(hv_trends(dta_lp)) +
 The mitral valve template uses patient age (not year) on the x-axis:
 `axisx order=(25 to 85 by 10)`, `axisy order=(0 to 100 by 20)`. Pass
 real data with an `age` column and set `x_col = "age"`. The example
-below uses the sample data’s `year` column relabelled for illustration.
+below uses the sample data’s `year` column relabeled for illustration.
 
 ``` r
 
@@ -2918,7 +2917,7 @@ dta_age <- sample_trends_data(
 )
 
 plot(hv_trends(dta_age)) +
-  scale_colour_manual(
+  scale_color_manual(
     values = c("Repair %" = "steelblue", "Bioprosthesis %" = "firebrick"),
     name   = NULL
   ) +
@@ -2950,7 +2949,7 @@ dta_poly <- sample_trends_data(
 )
 
 plot(hv_trends(dta_poly)) +
-  scale_colour_manual(
+  scale_color_manual(
     values = c(CE        = "steelblue",
                Cosgrove  = "firebrick",
                Periguard = "forestgreen",
@@ -3056,7 +3055,7 @@ Saving](https://ehrlinger.github.io/hvtiPlotR/articles/plot-decorators.md).
 ``` r
 
 p_tr <- plot(tr) +
-  scale_colour_brewer(palette = "Set1", name = "Group") +
+  scale_color_brewer(palette = "Set1", name = "Group") +
   scale_shape_manual(
     values = c("Group I" = 15L, "Group II" = 19L,
                "Group III" = 17L, "Group IV" = 18L),
@@ -3087,7 +3086,7 @@ area, DVI) plus an ordinal MV regurgitation grade plot.
 [`sample_spaghetti_data()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_spaghetti_data.md)
 generates 150 patients with up to 6 observations each, stratified by a
 named proportion vector that mirrors the Female/Male `MALE` column in
-the original template. Build both the unstratified and colour-stratified
+the original template. Build both the unstratified and color-stratified
 S3 objects here for reuse across the variants below.
 
 ``` r
@@ -3114,13 +3113,13 @@ head(dta_sp)
 
 # Build S3 objects for reuse below
 sp     <- hv_spaghetti(dta_sp)
-sp_col <- hv_spaghetti(dta_sp, colour_col = "group")
+sp_col <- hv_spaghetti(dta_sp, color_col = "group")
 ```
 
 ### Bare plot
 
 The bare `plot(sp)` panel draws one thin trajectory per patient over
-time with no colour, axis limits, or theme. Look for: a dense bundle of
+time with no color, axis limits, or theme. Look for: a dense bundle of
 lines that gives a visual impression of the distribution’s shape; if
 lines are missing or the x-axis is wrong, check that the `time_col` and
 `id_col` arguments match the data structure.
@@ -3177,7 +3176,7 @@ quick-start in the template header uses the modernised `"firebrick"` /
 ``` r
 
 p_sp <- plot(sp_col) +
-  scale_colour_manual(
+  scale_color_manual(
     values = c(Female = "firebrick", Male = "steelblue"),
     name   = NULL
   ) +
@@ -3200,7 +3199,7 @@ Template: `scale_y_continuous(breaks=seq(0, 5, 1))`,
 ``` r
 
 plot(sp_col) +
-  scale_colour_manual(
+  scale_color_manual(
     values = c(Female = "firebrick", Male = "steelblue"),
     name   = NULL
   ) +
@@ -3221,7 +3220,7 @@ Template: `scale_y_continuous(breaks=seq(0, 1.25, 0.25))`,
 ``` r
 
 plot(sp_col) +
-  scale_colour_manual(
+  scale_color_manual(
     values = c(Female = "firebrick", Male = "steelblue"),
     name   = NULL
   ) +
@@ -3238,7 +3237,7 @@ plot(sp_col) +
 
 Template:
 `scale_y_continuous(labels=c("None", "Mild", "Moderate", "Severe"))`,
-`coord_cartesian(xlim = c(0, 6), ylim = c(0, 3))`, two colour groups for
+`coord_cartesian(xlim = c(0, 6), ylim = c(0, 3))`, two color groups for
 early (blue) and late (red2) cohorts.
 
 ``` r
@@ -3247,10 +3246,10 @@ dta_ord        <- dta_sp
 dta_ord$value  <- round(pmin(3, pmax(0, dta_sp$value / 12)))
 levels(dta_ord$group) <- c("Early", "Late")
 
-sp_ord <- hv_spaghetti(dta_ord, colour_col = "group")
+sp_ord <- hv_spaghetti(dta_ord, color_col = "group")
 
 plot(sp_ord, y_labels = c(None = 0, Mild = 1, Moderate = 2, Severe = 3)) +
-  scale_colour_manual(
+  scale_color_manual(
     values = c(Early = "steelblue", Late = "red2"),
     name   = NULL
   ) +
@@ -3274,7 +3273,7 @@ trajectory opacity so the trend line stands out.
 ``` r
 
 plot(sp_col, add_smooth = TRUE) +
-  scale_colour_manual(
+  scale_color_manual(
     values = c(Female = "firebrick", Male = "steelblue"),
     name   = NULL
   ) +
@@ -3308,7 +3307,7 @@ and `tp.np.*.u.trend.*` template family.
 Pass the SAS `mean_curv` and `boots_ci` datasets (read in with
 [`read.csv()`](https://rdrr.io/r/utils/read.table.html)) and call
 [`plot()`](https://rdrr.io/r/graphics/plot.default.html) for a bare
-ggplot you can dress with colour, labels, and
+ggplot you can dress with color, labels, and
 [`theme_hv_manuscript()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md).
 
 ### Sample data
@@ -3359,7 +3358,7 @@ np <- hv_nonparametric(
 #### Bare plot
 
 The bare panel shows the average curve with its CI ribbon and the binned
-summary points in default colours and no axis formatting. Look for: a
+summary points in default colors and no axis formatting. Look for: a
 smooth curve passing through the binned points, with the ribbon widening
 at the extremes where the bootstrap sample thins; a flat curve suggests
 the `outcome_type` or CI columns may be misspecified.
@@ -3374,7 +3373,7 @@ p_np_bare
 
 #### Adding scales, labels, and theme
 
-Layer on colour scales that match your analysis context, then set axis
+Layer on color scales that match your analysis context, then set axis
 limits and labels to match the SAS template breaks. The example uses
 percent labels on the y-axis via
 [`scales::percent`](https://scales.r-lib.org/reference/percent_format.html);
@@ -3383,7 +3382,7 @@ swap to raw units for a continuous outcome.
 ``` r
 
 p_np <- p_np_bare +
-  ggplot2::scale_colour_manual(values = c("steelblue"), guide = "none") +
+  ggplot2::scale_color_manual(values = c("steelblue"), guide = "none") +
   ggplot2::scale_fill_manual(values   = c("steelblue"), guide = "none") +
   ggplot2::scale_x_continuous(
     limits = c(0, 12),
@@ -3414,10 +3413,10 @@ for 95 % CI bands.
 Pass `group_col` to the constructor to compare two average curves in a
 single panel, one per valve type (Ozaki vs. CE-Pericardial). Each group
 gets its own CI ribbon;
-[`scale_colour_manual()`](https://ggplot2.tidyverse.org/reference/scale_manual.html)
+[`scale_color_manual()`](https://ggplot2.tidyverse.org/reference/scale_manual.html)
 and
 [`scale_fill_manual()`](https://ggplot2.tidyverse.org/reference/scale_manual.html)
-assign the colours consistently between the line and the ribbon.
+assign the colors consistently between the line and the ribbon.
 
 ``` r
 
@@ -3443,7 +3442,7 @@ np_grp <- hv_nonparametric(
 )
 
 plot(np_grp) +
-  ggplot2::scale_colour_manual(
+  ggplot2::scale_color_manual(
     values = c("Ozaki" = "steelblue", "CE-Pericardial" = "firebrick"),
     name   = NULL
   ) +
@@ -3556,7 +3555,7 @@ np_ord <- hv_ordinal(curve_data = ord_dat, data_points = ord_pts)
 #### Bare plot
 
 The bare panel draws one line per grade with overlaid summary points and
-no colour, axis formatting, or theme. Look for: four lines that sum to
+no color, axis formatting, or theme. Look for: four lines that sum to
 approximately 1.0 at every time point, with the `"None"` line starting
 high and declining; if lines cross or drift above 1.0, check that the
 grade probability columns were correctly reshaped to long format.
@@ -3571,17 +3570,17 @@ p_ord_bare
 
 #### Adding scales, labels, and theme
 
-Assign clinically meaningful colours (grey for None, graduated colours
-for increasing severity) and format the y-axis as a percentage. Use
+Assign clinically meaningful colors (gray for None, graduated colors for
+increasing severity) and format the y-axis as a percentage. Use
 `theme(legend.position = c(...))` to anchor the legend inside the panel
 where white space permits.
 
 ``` r
 
 p_ord <- p_ord_bare +
-  ggplot2::scale_colour_manual(
+  ggplot2::scale_color_manual(
     values = c(
-      "None"     = "grey40",
+      "None"     = "gray40",
       "Mild"     = "steelblue",
       "Moderate" = "darkorange",
       "Severe"   = "firebrick"
@@ -3624,7 +3623,7 @@ ord_collapsed <- subset(ord_collapsed, grade %in% c("None", "Mild", "Moderate/Se
 # library(dplyr)
 # ord_collapsed <- ord_dat |>
 #   dplyr::filter(grade %in% c("Moderate", "Severe")) |>
-#   dplyr::summarise(estimate = sum(estimate), .by = time) |>
+#   dplyr::summarize(estimate = sum(estimate), .by = time) |>
 #   dplyr::mutate(grade = "Moderate/Severe") |>
 #   dplyr::bind_rows(dplyr::filter(ord_dat, grade %in% c("None", "Mild")))
 
@@ -3632,7 +3631,7 @@ ord_collapsed <- subset(ord_collapsed, grade %in% c("None", "Mild", "Moderate/Se
 ord_two <- subset(ord_dat, grade %in% c("None", "Severe"))
 
 plot(hv_ordinal(curve_data = ord_two)) +
-  ggplot2::scale_colour_manual(
+  ggplot2::scale_color_manual(
     values = c("None" = "steelblue", "Severe" = "firebrick"),
     name   = NULL
   ) +
@@ -3712,7 +3711,7 @@ lc <- hv_longitudinal(lc_dat)
 ### Bare plot
 
 The bare `plot(lc)` panel shows grouped bars at each follow-up window
-with no fill colour, axis scale, or theme. Look for: paired bars at each
+with no fill color, axis scale, or theme. Look for: paired bars at each
 time window with Patients always \>= Measurements; if the two series are
 equal, check that the `series_col` argument maps to the right column.
 
@@ -3726,7 +3725,7 @@ p_lc_bare
 
 ### Bar chart
 
-Layer fill colours onto the bare plot to distinguish Patients from
+Layer fill colors onto the bare plot to distinguish Patients from
 Measurements, then expand the y-axis with
 [`ggplot2::coord_cartesian()`](https://ggplot2.tidyverse.org/reference/coord_cartesian.html)
 to leave room for labels above the tallest bar.
@@ -3755,14 +3754,14 @@ p_lc_bar
 ### Numeric table panel
 
 Call `plot(lc, type = "table")` to get the numeric summary panel: the
-same counts the bar chart shows, rendered as coloured text below the
+same counts the bar chart shows, rendered as colored text below the
 x-axis labels. This panel is intended to be composed with `patchwork`
 below the bar chart, so keep the theme consistent.
 
 ``` r
 
 p_lc_tbl <- plot(lc, type = "table") +
-  ggplot2::scale_colour_manual(
+  ggplot2::scale_color_manual(
     values = c(Patients = "steelblue", Measurements = "firebrick"),
     guide  = "none"
   ) +
@@ -3820,7 +3819,7 @@ save_ppt(p_lc_bar,
 [`hv_upset()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_upset.md)
 builds an UpSet diagram via
 [`ggupset::scale_x_upset()`](https://rdrr.io/pkg/ggupset/man/scale_x_upset.html)
-to visualise surgical procedure co-occurrences or any set membership
+to visualize surgical procedure co-occurrences or any set membership
 data. Where a Venn diagram breaks down past three or four sets, UpSet
 scales cleanly to seven or more.
 
@@ -3892,12 +3891,12 @@ plot(hu) &
 
 ![](plot-functions_files/figure-html/upset_basic-1.png)
 
-### Custom intersection bar colour
+### Custom intersection bar color
 
 The intersection bars are a standard
 [`geom_bar()`](https://ggplot2.tidyverse.org/reference/geom_bar.html);
-change the colour via the `bar_fill` argument (or set `set_size = FALSE`
-to return just the intersection-bar ggplot for full customisation).
+change the color via the `bar_fill` argument (or set `set_size = FALSE`
+to return just the intersection-bar ggplot for full customization).
 
 ``` r
 
@@ -3908,12 +3907,12 @@ plot(hu, bar_fill = "steelblue", set_size = FALSE) +
 
 ![](plot-functions_files/figure-html/upset_fill-1.png)
 
-### Colour bars by era
+### Color bars by era
 
 Pass `fill_col` to fill the intersection bars by a grouping column on
 the input data. Combine with
 [`scale_fill_manual()`](https://ggplot2.tidyverse.org/reference/scale_manual.html)
-for explicit colour assignment.
+for explicit color assignment.
 
 ``` r
 
@@ -3922,7 +3921,7 @@ hu_era <- hv_upset(upset_dta, intersect = sets)
 
 plot(hu_era, fill_col = "era", set_size = FALSE) +
   ggplot2::scale_fill_manual(
-    values = c("Early" = "grey60", "Recent" = "steelblue"),
+    values = c("Early" = "gray60", "Recent" = "steelblue"),
     name   = "Era"
   ) +
   ggplot2::labs(y = "Patients (n)") +
@@ -4008,7 +4007,7 @@ p_draft <- hazard_plot(
   emp_lower_col = "lower",
   emp_upper_col = "upper"
 ) +
-  scale_colour_manual(values = c("steelblue"), guide = "none") +
+  scale_color_manual(values = c("steelblue"), guide = "none") +
   scale_fill_manual(values = c("steelblue"), guide = "none") +
   scale_x_continuous(limits = c(0, 10), breaks = 0:10) +
   scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, 20),

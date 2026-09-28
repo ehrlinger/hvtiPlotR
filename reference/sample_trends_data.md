@@ -4,9 +4,9 @@ Generates a realistic patient-level longitudinal data set for
 demonstrating
 [`hv_trends()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_trends.md).
 Each row is one patient with a surgery year, continuous outcome
-(`value`), and a grouping variable (`group`). Trend patterns are
-modelled so that group means diverge over time, matching the multi-group
-NYHA / LV-mass / LOS pattern in the SAS template.
+(`value`), and a grouping variable (`group`). Trend patterns are modeled
+so that group means diverge over time, matching the multi-group NYHA /
+LV-mass / LOS pattern in the SAS template.
 
 ## Usage
 

@@ -317,11 +317,11 @@
 <li>
 <strong><code>.data[[col]]</code></strong> does the tidy evaluation. It needs <code>@importFrom rlang .data</code>.</li>
 <li>
-<strong>No colours or themes</strong> are applied inside either function. The caller adds <code>scale_colour_*()</code>, <code><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs()</a></code> and <code><a href="../reference/hvtiPlotR-themes.html">theme_hv_manuscript()</a></code> afterwards, as the examples show.</li>
+<strong>No colors or themes</strong> are applied inside either function. The caller adds <code>scale_color_*()</code>, <code><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs()</a></code> and <code><a href="../reference/hvtiPlotR-themes.html">theme_hv_manuscript()</a></code> afterwards, as the examples show.</li>
 <li>
 <strong>The plot method returns <code>p</code></strong>, not <code>print(p)</code> or <code>p + theme(...)</code>.</li>
 </ul>
-<p>S3 registration comes from the plain <code>@export</code> tag on <code>print.hv_bmi_curve()</code> and <code>plot.hv_bmi_curve()</code>. roxygen2 recognises the <code>generic.class</code> name and writes <code>S3method(plot,hv_bmi_curve)</code> into <code>NAMESPACE</code>, next to <code>S3method(plot,hv_spaghetti)</code>. You do not need <code>@method</code>.</p>
+<p>S3 registration comes from the plain <code>@export</code> tag on <code>print.hv_bmi_curve()</code> and <code>plot.hv_bmi_curve()</code>. roxygen2 recognizes the <code>generic.class</code> name and writes <code>S3method(plot,hv_bmi_curve)</code> into <code>NAMESPACE</code>, next to <code>S3method(plot,hv_spaghetti)</code>. You do not need <code>@method</code>.</p>
 </section></section><section class="level2"><h3 id="step-3-add-a-sample-data-generator">Step 3: Add a sample-data generator<a class="anchor" aria-label="anchor" href="#step-3-add-a-sample-data-generator"></a>
 </h3>
 <p>Add <code>sample_bmi_curve_data()</code> to the top of the same file, as <code><a href="../reference/sample_spaghetti_data.html">sample_spaghetti_data()</a></code> sits at the top of <code>R/spaghetti-plot.R</code>. The generator should:</p>

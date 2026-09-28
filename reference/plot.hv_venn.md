@@ -35,7 +35,7 @@ plot(
 
 - fill:
 
-  Optional vector of fill colours, one per set. `NULL` (default) uses
+  Optional vector of fill colors, one per set. `NULL` (default) uses
   ggvenn's palette.
 
 - text_size:

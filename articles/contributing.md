@@ -284,15 +284,15 @@ conventions table in `CONTRIBUTING.md`:
   opaque to the caller.
 - **`.data[[col]]`** does the tidy evaluation. It needs
   `@importFrom rlang .data`.
-- **No colours or themes** are applied inside either function. The
-  caller adds `scale_colour_*()`,
+- **No colors or themes** are applied inside either function. The caller
+  adds `scale_color_*()`,
   [`labs()`](https://ggplot2.tidyverse.org/reference/labs.html) and
   [`theme_hv_manuscript()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)
   afterwards, as the examples show.
 - **The plot method returns `p`**, not `print(p)` or `p + theme(...)`.
 
 S3 registration comes from the plain `@export` tag on
-`print.hv_bmi_curve()` and `plot.hv_bmi_curve()`. roxygen2 recognises
+`print.hv_bmi_curve()` and `plot.hv_bmi_curve()`. roxygen2 recognizes
 the `generic.class` name and writes `S3method(plot,hv_bmi_curve)` into
 `NAMESPACE`, next to `S3method(plot,hv_spaghetti)`. You do not need
 `@method`.

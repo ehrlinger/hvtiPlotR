@@ -3,13 +3,13 @@
 Builds a bare `ggplot2` object from an
 [`hv_rmst_curves()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_rmst_curves.md)
 object: weighted Kaplan-Meier step curves, one facet per estimator,
-coloured by arm. When `tau` was supplied, the area under each curve up
-to `tau` is shaded
+colored by arm. When `tau` was supplied, the area under each curve up to
+`tau` is shaded
 ([`geom_ribbon()`](https://ggplot2.tidyverse.org/reference/geom_ribbon.html)
 over a staircase polygon, so the shading follows the steps exactly) and
 a vertical line marks `tau`. When `estimates` was supplied, the top
-right of each facet carries the RMST difference and interval. Colour and
-fill both map to arm: set them together with `scale_colour_*()` and
+right of each facet carries the RMST difference and interval. Color and
+fill both map to arm: set them together with `scale_color_*()` and
 `scale_fill_*()`.
 
 ## Usage

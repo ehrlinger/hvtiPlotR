@@ -19,12 +19,12 @@ library(hvtiPlotR)
 Every hvtiPlotR plot is built in two steps: a constructor (`hv_*()`)
 that shapes the data, followed by
 [`plot()`](https://rdrr.io/r/graphics/plot.default.html) that renders a
-bare `ggplot` object. No colour scales, axis labels, or theme are
-applied by either step. You add those by chaining layers with `+`:
+bare `ggplot` object. No color scales, axis labels, or theme are applied
+by either step. You add those by chaining layers with `+`:
 
     plot(hv_*(...)) +
-      scale_colour_*() +   # data colours
-      scale_fill_*()   +   # fill colours
+      scale_color_*() +   # data colors
+      scale_fill_*()   +   # fill colors
       labs()           +   # axis labels, title, caption
       annotate()       +   # text/arrows placed on the panel
       coord_cartesian() +  # viewport cropping
@@ -69,7 +69,7 @@ figure ends up in a Word or PDF document sent to a journal.
 ``` r
 
 p_ms <- p_base +
-  scale_colour_brewer(palette = "Set1", name = "Group") +
+  scale_color_brewer(palette = "Set1", name = "Group") +
   scale_shape_manual(
     values = c("Group I" = 15, "Group II" = 19,
                "Group III" = 17, "Group IV" = 18),
@@ -97,7 +97,7 @@ switch the font face.
 ``` r
 
 p_poster <- p_base +
-  scale_colour_brewer(palette = "Set1", name = "Group") +
+  scale_color_brewer(palette = "Set1", name = "Group") +
   scale_shape_manual(
     values = c("Group I" = 15, "Group II" = 19,
                "Group III" = 17, "Group IV" = 18),
@@ -114,7 +114,7 @@ p_poster
 ### Light PowerPoint
 
 [`theme_hv_ppt_light()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)
-matches slides with a white or light-grey background: the Cleveland
+matches slides with a white or light-gray background: the Cleveland
 Clinic standard template, most default Office themes, and any deck where
 the content area is light. Text and lines are dark, so the figure reads
 without modification when placed on the light slide. Pair with
@@ -124,7 +124,7 @@ to insert it as editable DrawingML.
 ``` r
 
 p_base +
-  scale_colour_brewer(palette = "Set1", name = "Group") +
+  scale_color_brewer(palette = "Set1", name = "Group") +
   scale_shape_manual(
     values = c("Group I" = 15, "Group II" = 19,
                "Group III" = 17, "Group IV" = 18),
@@ -149,7 +149,7 @@ omit it when saving to an actual `.pptx` file.
 ``` r
 
 p_base +
-  scale_colour_brewer(palette = "Set1", name = "Group") +
+  scale_color_brewer(palette = "Set1", name = "Group") +
   scale_shape_manual(
     values = c("Group I" = 15, "Group II" = 19,
                "Group III" = 17, "Group IV" = 18),
@@ -157,7 +157,7 @@ p_base +
   ) +
   labs(x = "Surgery Year", y = "Outcome") +
   theme_hv_ppt_dark() +
-  theme(plot.background = element_rect(fill = "navy", colour = "navy"))
+  theme(plot.background = element_rect(fill = "navy", color = "navy"))
 ```
 
 ![](plot-decorators_files/figure-html/theme_hv_ppt_dark-1.png)
@@ -165,17 +165,17 @@ p_base +
 ### One decorator for a whole deck
 
 The two dark-slide chunks above show the shape of the problem. Every
-plot in a deck wants the same theme, the same colours and the same
+plot in a deck wants the same theme, the same colors and the same
 shapes, and copying those lines figure by figure is how one slide
 quietly drifts out of step with the rest. A theme cannot carry any of
 it. [`theme()`](https://ggplot2.tidyverse.org/reference/theme.html)
 governs the non-data ink, the text, panel, grid and ticks, and nothing
-that draws from the data, so no theme element sets a series colour.
+that draws from the data, so no theme element sets a series color.
 Passing the layer to the theme instead does not rescue it:
-`theme_hv_ppt_dark(geom_point(colour = "yellow"))` forwards its `...` to
+`theme_hv_ppt_dark(geom_point(color = "yellow"))` forwards its `...` to
 [`theme()`](https://ggplot2.tidyverse.org/reference/theme.html), which
-errors on anything that is not a theme element. Colours and shapes
-belong to the scales, added with `+`.
+errors on anything that is not a theme element. Colors and shapes belong
+to the scales, added with `+`.
 
 [`hv_ppt_series()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_ppt_series.md)
 returns the theme and both scales as a single object. ggplot2’s `+`
@@ -189,18 +189,18 @@ ppt <- hv_ppt_series(mode = "dark")
 p_base +
   labs(x = "Surgery Year", y = "Outcome") +
   ppt +
-  theme(plot.background = element_rect(fill = "navy", colour = "navy"))
+  theme(plot.background = element_rect(fill = "navy", color = "navy"))
 ```
 
 ![](plot-decorators_files/figure-html/hv_ppt_series-1.png)
 
-The colours are the Okabe-Ito colourblind-safe palette, reordered so the
+The colors are the Okabe-Ito colorblind-safe palette, reordered so the
 highest-luminance hues come first on a dark slide and the darker ones
-first on a light slide. Colour and shape both map the grouping column,
+first on a light slide. Color and shape both map the grouping column,
 which is worth keeping even though it looks redundant on your monitor: a
-projector in a dark room flattens colour differences that read cleanly
-on screen, and the shapes survive where the hues do not. Pass `colours`
-or `shapes` when a deck calls for a specific set.
+projector in a dark room flattens color differences that read cleanly on
+screen, and the shapes survive where the hues do not. Pass `colors` or
+`shapes` when a deck calls for a specific set.
 
 ### Naming the series without a legend
 
@@ -211,8 +211,8 @@ leaves that alone, because a CORR figure names the series where the
 series sits rather than sending the reader out to a key and back.
 
 The label takes the same ink as the axis, white on a dark slide and
-black on a light slide or in a manuscript, not the colour of the curve
-it names:
+black on a light slide or in a manuscript, not the color of the curve it
+names:
 
 ``` r
 
@@ -220,14 +220,14 @@ p_base +
   labs(x = "Surgery Year", y = "Outcome") +
   ppt +
   annotate("text", x = 2012, y = 56, label = "Group I",
-           colour = "white", size = 5, hjust = 0) +
-  theme(plot.background = element_rect(fill = "navy", colour = "navy"))
+           color = "white", size = 5, hjust = 0) +
+  theme(plot.background = element_rect(fill = "navy", color = "navy"))
 ```
 
 ![](plot-decorators_files/figure-html/hv_ppt_series_annotate-1.png)
 
 [`hv_ppt_palette()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_ppt_palette.md)
-hands back the colours themselves when a figure needs them outside the
+hands back the colors themselves when a figure needs them outside the
 decorator, so a script reaches for the one definition instead of pasted
 hex codes:
 
@@ -246,22 +246,22 @@ hv_ppt_palette("light", n = 4)
     [1] "#0072B2" "#D55E00" "#009E73" "#CC79A7"
 
 If a working draft does want a key, pass `legend.position` straight
-through: `hv_ppt_series(legend.position = "top", name = "Group")`.
-Colour and shape share `name`, so ggplot2 merges them into one legend
-rather than stacking two.
+through: `hv_ppt_series(legend.position = "top", name = "Group")`. Color
+and shape share `name`, so ggplot2 merges them into one legend rather
+than stacking two.
 
-## Colour Scales
+## Color Scales
 
-`scale_colour_*` controls line and point colours; `scale_fill_*`
-controls filled areas (ribbons, bars). Both take the same `name` (legend
-title) and `guide` (legend display) arguments; set them once and both
-scales update.
+`scale_color_*` controls line and point colors; `scale_fill_*` controls
+filled areas (ribbons, bars). Both take the same `name` (legend title)
+and `guide` (legend display) arguments; set them once and both scales
+update.
 
-### Manual colours
+### Manual colors
 
 Use
-[`scale_colour_manual()`](https://ggplot2.tidyverse.org/reference/scale_manual.html)
-when assigning specific brand or convention colours to known levels.
+[`scale_color_manual()`](https://ggplot2.tidyverse.org/reference/scale_manual.html)
+when assigning specific brand or convention colors to known levels.
 
 ``` r
 
@@ -276,11 +276,11 @@ plot(km) +
   theme_hv_poster()
 ```
 
-![](plot-decorators_files/figure-html/scale_colour_manual-1.png)
+![](plot-decorators_files/figure-html/scale_color_manual-1.png)
 
 ### ColorBrewer palettes
 
-[`scale_colour_brewer()`](https://ggplot2.tidyverse.org/reference/scale_brewer.html)
+[`scale_color_brewer()`](https://ggplot2.tidyverse.org/reference/scale_brewer.html)
 applies a ColorBrewer palette. These are perceptually uniform and
 print-safe, so they survive a black-and-white PDF. Use
 `palette = "Set1"` for categorical data, `"RdYlGn"` for diverging,
@@ -289,7 +289,7 @@ print-safe, so they survive a black-and-white PDF. Use
 ``` r
 
 p_base +
-  scale_colour_brewer(palette = "Set1", name = "Group") +
+  scale_color_brewer(palette = "Set1", name = "Group") +
   scale_shape_manual(
     values = c("Group I" = 15, "Group II" = 19,
                "Group III" = 17, "Group IV" = 18),
@@ -299,7 +299,7 @@ p_base +
   theme_hv_poster()
 ```
 
-![](plot-decorators_files/figure-html/scale_colour_brewer-1.png)
+![](plot-decorators_files/figure-html/scale_color_brewer-1.png)
 
 ### Suppressing legends
 
@@ -310,7 +310,7 @@ the group; a redundant legend only takes up panel space.
 ``` r
 
 p_base +
-  scale_colour_brewer(palette = "Dark2", guide = "none") +
+  scale_color_brewer(palette = "Dark2", guide = "none") +
   scale_shape_manual(
     values = c("Group I" = 15, "Group II" = 19,
                "Group III" = 17, "Group IV" = 18),
@@ -372,9 +372,9 @@ plot(km) +
            label = paste0("n = ", nrow(dta_km)),
            hjust = 0, size = 3.5) +
   annotate("segment", x = 10, xend = 10, y = 30, yend = 50,
-           arrow = arrow(length = unit(0.2, "cm")), colour = "grey40") +
+           arrow = arrow(length = unit(0.2, "cm")), color = "gray40") +
   annotate("text",    x = 10.3, y = 40,
-           label = "Median survival", hjust = 0, size = 3, colour = "grey40") +
+           label = "Median survival", hjust = 0, size = 3, color = "gray40") +
   theme_hv_poster()
 ```
 
@@ -389,7 +389,7 @@ on the full range.
 ``` r
 
 p_base +
-  scale_colour_brewer(palette = "Set1", name = "Group") +
+  scale_color_brewer(palette = "Set1", name = "Group") +
   scale_shape_manual(
     values = c("Group I" = 15, "Group II" = 19,
                "Group III" = 17, "Group IV" = 18),
@@ -479,7 +479,7 @@ appends a new slide rather than overwriting the template.
 template <- system.file("extdata", "hv_ppt_template.pptx", package = "hvtiPlotR")
 
 p_ppt <- p_base +
-  scale_colour_brewer(palette = "Set1", name = "Group") +
+  scale_color_brewer(palette = "Set1", name = "Group") +
   scale_shape_manual(
     values = c("Group I" = 15, "Group II" = 19,
                "Group III" = 17, "Group IV" = 18),
@@ -582,7 +582,7 @@ plot_list <- lapply(
     dta_eda <- sample_eda_data()
     plot(hv_eda(dta_eda, x_col = "op_years", y_col = yv,
                  y_label = yv)) +
-      scale_colour_manual(values = c("steelblue"), guide = "none") +
+      scale_color_manual(values = c("steelblue"), guide = "none") +
       labs(x = "Years") +
       theme_hv_poster()
   }
@@ -617,7 +617,7 @@ Pass fractional coordinates `c(x, y)` to `legend.position` inside
 ``` r
 
 p_base +
-  scale_colour_brewer(palette = "Set1", name = NULL) +
+  scale_color_brewer(palette = "Set1", name = NULL) +
   scale_shape_manual(
     values = c("Group I" = 15, "Group II" = 19,
                "Group III" = 17, "Group IV" = 18),
@@ -627,7 +627,7 @@ p_base +
   theme_hv_poster() +
   theme(
     legend.position  = c(0.15, 0.2),        # bottom-left of panel
-    legend.background = element_rect(fill = "white", colour = "grey80",
+    legend.background = element_rect(fill = "white", color = "gray80",
                                      linewidth = 0.3)
   )
 ```
@@ -645,7 +645,7 @@ panel.
 ``` r
 
 p_base +
-  scale_colour_brewer(palette = "Set1", name = "Group") +
+  scale_color_brewer(palette = "Set1", name = "Group") +
   scale_shape_manual(
     values = c("Group I" = 15, "Group II" = 19,
                "Group III" = 17, "Group IV" = 18),
@@ -666,7 +666,7 @@ p_base +
 Two ways to suppress legends, with slightly different scope.
 `theme(legend.position = "none")` hides every legend for the plot in one
 shot. `guide = "none"` on a `scale_*()` call drops only that aesthetic’s
-legend, for when you want a colour legend but no shape legend (or vice
+legend, for when you want a color legend but no shape legend (or vice
 versa). Both reclaim the panel width.
 
 ``` r
@@ -693,14 +693,14 @@ aesthetics have legends and others do not.
 The legend inherits font size from the active theme, which is often
 slightly larger than needed when the legend sits inside a crowded panel.
 `legend.text` controls the label font; `legend.key.size` shrinks the
-colour/shape swatch. Both accept any
+color/shape swatch. Both accept any
 [`element_text()`](https://ggplot2.tidyverse.org/reference/element.html)
 or [`unit()`](https://rdrr.io/r/grid/unit.html) value.
 
 ``` r
 
 p_base +
-  scale_colour_brewer(palette = "Set1", name = "Group") +
+  scale_color_brewer(palette = "Set1", name = "Group") +
   scale_shape_manual(
     values = c("Group I" = 15, "Group II" = 19,
                "Group III" = 17, "Group IV" = 18),
@@ -734,7 +734,7 @@ poster-sized text would be too large.
 ``` r
 
 p_base +
-  scale_colour_brewer(palette = "Set1", name = "Group") +
+  scale_color_brewer(palette = "Set1", name = "Group") +
   scale_shape_manual(
     values = c("Group I" = 15, "Group II" = 19,
                "Group III" = 17, "Group IV" = 18),
@@ -761,7 +761,7 @@ removes them while keeping the major grid intact.
 ``` r
 
 p_base +
-  scale_colour_brewer(palette = "Set1", name = "Group") +
+  scale_color_brewer(palette = "Set1", name = "Group") +
   scale_shape_manual(
     values = c("Group I" = 15, "Group II" = 19,
                "Group III" = 17, "Group IV" = 18),
@@ -786,7 +786,7 @@ the labels will float off-center.
 ``` r
 
 p_base +
-  scale_colour_brewer(palette = "Set1", name = "Group") +
+  scale_color_brewer(palette = "Set1", name = "Group") +
   scale_shape_manual(
     values = c("Group I" = 15, "Group II" = 19,
                "Group III" = 17, "Group IV" = 18),
@@ -824,7 +824,7 @@ plot(km) +
   theme_hv_poster() +
   theme(
     plot.title    = element_text(size = 14, face = "bold", hjust = 0),
-    plot.subtitle = element_text(size = 11, colour = "grey40", hjust = 0)
+    plot.subtitle = element_text(size = 11, color = "gray40", hjust = 0)
   )
 ```
 
@@ -842,7 +842,7 @@ convention.
 ``` r
 
 p_base +
-  scale_colour_brewer(palette = "Set1", name = "Group") +
+  scale_color_brewer(palette = "Set1", name = "Group") +
   scale_shape_manual(
     values = c("Group I" = 15, "Group II" = 19,
                "Group III" = 17, "Group IV" = 18),
@@ -876,7 +876,7 @@ the last step, so you can adjust each one without touching the other.
 library(patchwork)
 
 p_ms <- p_base +
-  scale_colour_brewer(palette = "Set1", name = "Group") +
+  scale_color_brewer(palette = "Set1", name = "Group") +
   scale_shape_manual(
     values = c("Group I" = 15, "Group II" = 19,
                "Group III" = 17, "Group IV" = 18),

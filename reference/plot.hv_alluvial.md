@@ -11,7 +11,7 @@ and
 # S3 method for class 'hv_alluvial'
 plot(
   x,
-  stratum_fill = "grey80",
+  stratum_fill = "gray80",
   stratum_width = 1/4,
   flow_width = 1/6,
   alpha = 0.8,
@@ -30,7 +30,7 @@ plot(
 
 - stratum_fill:
 
-  Fill colour for the stratum bars. Default `"grey80"`.
+  Fill color for the stratum bars. Default `"gray80"`.
 
 - stratum_width:
 
@@ -51,7 +51,7 @@ plot(
 
 - show_labels:
 
-  Logical; if TRUE, each stratum is labelled. Default `TRUE`.
+  Logical; if TRUE, each stratum is labeled. Default `TRUE`.
 
 - show_yaxis:
 
@@ -89,7 +89,7 @@ axes <- c("pre_ar", "procedure", "post_ar")
 plot(hv_alluvial(dta, axes = axes, y_col = "freq",
                    fill_col = "procedure")) +
   ggplot2::scale_fill_brewer(palette = "Set2", name = "Procedure") +
-  ggplot2::scale_colour_brewer(palette = "Set2", guide = "none") +
+  ggplot2::scale_color_brewer(palette = "Set2", guide = "none") +
   ggplot2::labs(y = "Patients (n)") +
   theme_hv_poster()
 #> Warning: Some strata appear at multiple axes.
@@ -105,7 +105,7 @@ plot(hv_alluvial(
 )) +
   ggplot2::scale_fill_brewer(palette = "RdYlGn", direction = -1,
                              name = "AR Grade") +
-  ggplot2::scale_colour_brewer(palette = "RdYlGn", direction = -1,
+  ggplot2::scale_color_brewer(palette = "RdYlGn", direction = -1,
                                guide = "none") +
   ggplot2::labs(y = "Patients (n)") +
   theme_hv_poster()

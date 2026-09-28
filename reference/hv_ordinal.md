@@ -4,7 +4,7 @@ Validates pre-computed grade-specific probability curves (and optional
 binned data summary points) and returns an `hv_ordinal` object. Call
 [`plot.hv_ordinal`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hv_ordinal.md)
 on the result to obtain a bare `ggplot2` multi-grade line plot that you
-can decorate with colour scales and
+can decorate with color scales and
 [`theme_hv_manuscript`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md).
 
 ## Usage
@@ -109,9 +109,9 @@ ord  # prints grade count and data-point flag
 # 2. Bare plot -- undecorated ggplot returned by plot.hv_ordinal
 p <- plot(ord)
 
-# 3. Decorate: colour palette, axis scales, labels, theme
+# 3. Decorate: color palette, axis scales, labels, theme
 p +
-  ggplot2::scale_colour_manual(
+  ggplot2::scale_color_manual(
     values = c(None     = "steelblue",
                Mild     = "firebrick",
                Moderate = "forestgreen",

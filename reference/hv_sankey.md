@@ -1,8 +1,8 @@
 # Prepare cluster stability Sankey data for plotting
 
 Validates a wide cluster-assignment data frame, resolves node level
-ordering, computes default node colours if not supplied, and
-pre-computes the long-format Sankey data. Call
+ordering, computes default node colors if not supplied, and pre-computes
+the long-format Sankey data. Call
 [`plot.hv_sankey`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hv_sankey.md)
 on the result to obtain a bare `ggplot2` Sankey diagram using ggsankey
 geoms.
@@ -14,7 +14,8 @@ hv_sankey(
   data,
   cluster_cols = paste0("C", 2:9),
   node_levels = NULL,
-  node_colours = NULL
+  node_colours = NULL,
+  node_colors = node_colours
 )
 ```
 
@@ -40,11 +41,16 @@ hv_sankey(
 
 - node_colours:
 
-  Named character vector mapping node labels to fill colours. If `NULL`
+  The same as `node_colors`: an alias kept for existing code. Give one
+  or the other; both with different values is an error.
+
+- node_colors:
+
+  Named character vector mapping node labels to fill colors. If `NULL`
   (default), labels are mapped to an inline ColorBrewer `Set1` hex
   palette in `node_levels` order (no dependency on RColorBrewer). When
-  there are more labels than palette colours the palette is recycled
-  with a warning.
+  there are more labels than palette colors the palette is recycled with
+  a warning.
 
 ## Value
 
@@ -57,8 +63,8 @@ An object of class `c("hv_sankey", "hv_data")`:
 
 - `$meta`:
 
-  Named list: `cluster_cols`, `node_levels`, `node_colours`,
-  `n_patients`, `n_k`.
+  Named list: `cluster_cols`, `node_levels`, `node_colors` (also as
+  `node_colours`, for existing code), `n_patients`, `n_k`.
 
 - `$tables`:
 

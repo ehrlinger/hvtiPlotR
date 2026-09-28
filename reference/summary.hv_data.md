@@ -1,4 +1,4 @@
-# Summarise an hv_data object
+# Summarize an hv_data object
 
 Prints the standard one-screen header (via
 [`print.hv_data()`](https://ehrlinger.github.io/hvtiPlotR/reference/print.hv_data.md)

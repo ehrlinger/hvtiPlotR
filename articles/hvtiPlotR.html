@@ -354,13 +354,13 @@ Figure 1: Manuscript figure (SAS version).
 <tr class="even">
 <td><code>color=black</code></td>
 <td>
-<code>colour = "black"</code> or <code>scale_colour_manual(values = ...)</code>
+<code>color = "black"</code> or <code>scale_color_manual(values = ...)</code>
 </td>
-<td>Explicit colour</td>
+<td>Explicit color</td>
 </tr>
 <tr class="odd">
 <td><code>color=blue</code></td>
-<td><code>colour = "steelblue"</code></td>
+<td><code>color = "steelblue"</code></td>
 <td>Use ColorBrewer for multi-group</td>
 </tr>
 <tr class="even">
@@ -379,7 +379,7 @@ Figure 1: Manuscript figure (SAS version).
 <td></td>
 </tr>
 </tbody>
-</table></section><section class="level2"><h3 id="symbols-and-colours-reference">Symbols and colours reference<a class="anchor" aria-label="anchor" href="#symbols-and-colours-reference"></a>
+</table></section><section class="level2"><h3 id="symbols-and-colors-reference">Symbols and colors reference<a class="anchor" aria-label="anchor" href="#symbols-and-colors-reference"></a>
 </h3>
 <table class="table caption-top">
 <thead><tr class="header">
@@ -465,7 +465,7 @@ Figure 1: Manuscript figure (SAS version).
 </table></section></section><section class="section level2"><h2 id="sec-ggplot">Generating ggplot2 graphics<a class="anchor" aria-label="anchor" href="#sec-ggplot"></a>
 </h2>
 <p>To create figures comparable to <code>plot.sas</code> output, we rely heavily on <code>ggplot2</code>. This requires translating from the graphics language of <code>plot.sas</code> to the graphics language of <code>ggplot2</code>.</p>
-<p>For the remainder of this document, R code will be highlighted in grey boxes, as shown below. We will refer to these blocks as code chunks. You can run each code chunk individually, using copy/paste into an interactive R session, or within a stand alone R script. This tutorial requires the <strong>hvtiPlotR</strong> package to load the data and themes we will be discussing.</p>
+<p>For the remainder of this document, R code will be highlighted in gray boxes, as shown below. We will refer to these blocks as code chunks. You can run each code chunk individually, using copy/paste into an interactive R session, or within a stand alone R script. This tutorial requires the <strong>hvtiPlotR</strong> package to load the data and themes we will be discussing.</p>
 <pre class="sas"><code>*_____________________________________________________________________;
 * C G M F I L E S F O R P O W E R P O I N T S L I D E S *_____________________________________________________________________
 * Competing risks , parametric only ;
@@ -761,7 +761,7 @@ Figure 4: Lines with confidence limits.
 </h3>
 <p>You can specify colors in R by numeric index, name (as we have done), hexadecimal, or RGB specification. For example <code>col=1</code> and <code>col="white"</code> are equivalent. Glynn (2005) publishes an R Color Chart with all the details you would ever need about using colors in R.</p>
 <p>ColorBrewer (Harrower and Brewer 2003) is an online tool (https://colorbrewer2.org/) designed to help people select good color schemes for maps and other graphics. We recommend it as a practical starting point for choosing colors.</p>
-<p>The ColorBrewer palette catalogue (Harrower and Brewer 2003) is built into <code>ggplot2</code> via <code><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_colour_brewer()</a></code> / <code><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_fill_brewer()</a></code>; hvtiPlotR does not import the optional <code>RColorBrewer</code> package. We have made extensive use of the <code>palette = "Set1"</code> colour palette in the figures we have generated. ggplot2 also ships other <code>scale_colour_*</code> functions for many different settings. Consult <a href="https://colorbrewer2.org/" class="external-link uri">https://colorbrewer2.org/</a> for an interactive palette browser.</p>
+<p>The ColorBrewer palette catalog (Harrower and Brewer 2003) is built into <code>ggplot2</code> via <code><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_color_brewer()</a></code> / <code><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_fill_brewer()</a></code>; hvtiPlotR does not import the optional <code>RColorBrewer</code> package. We have made extensive use of the <code>palette = "Set1"</code> color palette in the figures we have generated. ggplot2 also ships other <code>scale_color_*</code> functions for many different settings. Consult <a href="https://colorbrewer2.org/" class="external-link uri">https://colorbrewer2.org/</a> for an interactive palette browser.</p>
 </section><section class="level2"><h3 id="sec-viewport">Global Figure Commands<a class="anchor" aria-label="anchor" href="#sec-viewport"></a>
 </h3>
 <p>By default, the ggplot2 package adds space to the figures around the data. We often want to remove this space, or focus in on a smaller window of the figure. This is accomplished with the coord_cartesian function. By specifying the xlim and/or ylim coordinates, we can crop the figure into whatever viewport we are interested in without manipulating the original dataset. <a href="#fig-viewport" class="quarto-xref">Figure 5</a> sets the origin to (0,0) and clips the x axis at 5.1, and the y axis at 101. We have added the .1 and 1 to each axis for aesthetic reasons to avoid chopping off the tick labels when they occur at the end of the viewport.</p>
@@ -809,7 +809,7 @@ Figure 5: Adjusting the viewport.
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">geom_line</a></span><span class="op">(</span></span>
 <span>    data <span class="op">=</span> <span class="va">parametric</span>,</span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">years</span>, y <span class="op">=</span> <span class="va">noinit</span><span class="op">)</span>,</span>
-<span>    color <span class="op">=</span> <span class="st">"grey"</span>,</span>
+<span>    color <span class="op">=</span> <span class="st">"gray"</span>,</span>
 <span>    linewidth <span class="op">=</span> <span class="fl">1.5</span></span>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">geom_line</a></span><span class="op">(</span></span>
@@ -897,7 +897,7 @@ Figure 6: The PowerPoint figure recreated in R.
 </h3>
 <ul>
 <li>
-<strong>Use <code><a href="../reference/hvtiPlotR-themes.html">theme_hv_manuscript()</a></code></strong>: black text, white background, no decorative fill. Never use coloured backgrounds in figures destined for journals.</li>
+<strong>Use <code><a href="../reference/hvtiPlotR-themes.html">theme_hv_manuscript()</a></code></strong>: black text, white background, no decorative fill. Never use colored backgrounds in figures destined for journals.</li>
 <li>
 <strong>No chart titles</strong>: the figure caption in the manuscript text carries the title. Do not add a <code>labs(title = ...)</code> layer.</li>
 <li>
@@ -905,7 +905,7 @@ Figure 6: The PowerPoint figure recreated in R.
 <li>
 <strong>Percent axes</strong>: format y-axis tick labels as <code>"0%"</code>, <code>"20%"</code>, …, <code>"100%"</code> using <code>scale_y_continuous(labels = function(x) paste0(x, "%"))</code>. Do not write the <code>%</code> symbol inside the axis title.</li>
 <li>
-<strong>No minor grid lines</strong>: major grid lines are optional and should be light grey if used. Minor grid lines are never used.</li>
+<strong>No minor grid lines</strong>: major grid lines are optional and should be light gray if used. Minor grid lines are never used.</li>
 <li>
 <strong>Confidence intervals as ribbons or error bars</strong>: always show CIs where they are available. Use <code>alpha = 0.2</code> for ribbons so they do not obscure the curve.</li>
 <li>
@@ -916,7 +916,7 @@ Figure 6: The PowerPoint figure recreated in R.
 </h3>
 <ul>
 <li>
-<strong>Use <code><a href="../reference/hvtiPlotR-themes.html">theme_hv_ppt_dark()</a></code> or <code><a href="../reference/hvtiPlotR-themes.html">theme_hv_ppt_light()</a></code></strong>: the dark theme is the default for Cleveland Clinic presentation templates. Match the theme to the slide background colour.</li>
+<strong>Use <code><a href="../reference/hvtiPlotR-themes.html">theme_hv_ppt_dark()</a></code> or <code><a href="../reference/hvtiPlotR-themes.html">theme_hv_ppt_light()</a></code></strong>: the dark theme is the default for Cleveland Clinic presentation templates. Match the theme to the slide background color.</li>
 <li>
 <strong>No points on parametric curves</strong>: presentation figures show lines only. Points are reserved for nonparametric data summaries.</li>
 <li>
@@ -927,17 +927,17 @@ Figure 6: The PowerPoint figure recreated in R.
 <strong>No captions</strong>: slide titles carry the figure description. Do not add <code>labs(caption = ...)</code> to presentation figures.</li>
 <li>
 <strong>Export as editable vector</strong>: use <code><a href="../reference/save_ppt.html">save_ppt()</a></code> rather than <code><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave()</a></code> so that lines, shapes, and text remain selectable in PowerPoint for last-minute edits.</li>
-</ul></section><section class="level2"><h3 id="colour">Colour<a class="anchor" aria-label="anchor" href="#colour"></a>
+</ul></section><section class="level2"><h3 id="color">Color<a class="anchor" aria-label="anchor" href="#color"></a>
 </h3>
 <ul>
 <li>
-<strong>Multi-group figures</strong>: use <code>scale_colour_brewer(palette = "Set1")</code> for up to five groups. For more groups, either pass an explicit vector of hex codes via <code><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_colour_manual()</a></code> or browse the ColorBrewer palette catalogue at <a href="https://colorbrewer2.org/" class="external-link uri">https://colorbrewer2.org/</a>. (ggplot2 ships the Brewer palette table internally; hvtiPlotR does not depend on the optional <code>RColorBrewer</code> package.)</li>
+<strong>Multi-group figures</strong>: use <code>scale_color_brewer(palette = "Set1")</code> for up to five groups. For more groups, either pass an explicit vector of hex codes via <code><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_color_manual()</a></code> or browse the ColorBrewer palette catalog at <a href="https://colorbrewer2.org/" class="external-link uri">https://colorbrewer2.org/</a>. (ggplot2 ships the Brewer palette table internally; hvtiPlotR does not depend on the optional <code>RColorBrewer</code> package.)</li>
 <li>
 <strong>Single-group survival/hazard figures</strong>: <code>"steelblue"</code> for manuscript, <code>"white"</code> for dark PPT.</li>
 <li>
-<strong>Avoid red/green combinations</strong>: approximately 8% of men have red–green colour blindness. Use shape (<code><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_shape_manual()</a></code>) and linetype (<code><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_linetype_manual()</a></code>) in addition to colour so figures remain readable in greyscale print.</li>
+<strong>Avoid red/green combinations</strong>: approximately 8% of men have red–green color blindness. Use shape (<code><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_shape_manual()</a></code>) and linetype (<code><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_linetype_manual()</a></code>) in addition to color so figures remain readable in grayscale print.</li>
 <li>
-<strong>Fills vs colours</strong>: <code>scale_colour_*()</code> controls lines and points; <code>scale_fill_*()</code> controls ribbons and bars. Both must be set consistently when a legend is shown.</li>
+<strong>Fills vs colors</strong>: <code>scale_color_*()</code> controls lines and points; <code>scale_fill_*()</code> controls ribbons and bars. Both must be set consistently when a legend is shown.</li>
 </ul></section><section class="level2"><h3 id="what-not-to-include">What not to include<a class="anchor" aria-label="anchor" href="#what-not-to-include"></a>
 </h3>
 <ul>
@@ -950,7 +950,7 @@ Figure 6: The PowerPoint figure recreated in R.
 </section><section class="section level2"><h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
 </h2>
 <p>Gohel D, Skintzos P (2024). officer: Manipulation of Microsoft Word and PowerPoint Documents. R package version 0.6.5, URL https://CRAN.R-project.org/package=officer.</p>
-<p>Harrower M, Brewer CA (2003). “ColorBrewer.org: An Online Tool for Selecting Colour Schemes for Maps.” The Cartographic Journal, pp. 27–37. doi:10.1179/000870403235002042. URL https://colorbrewer2.org/.</p>
+<p>Harrower M, Brewer CA (2003). “ColorBrewer.org: An Online Tool for Selecting Color Schemes for Maps.” The Cartographic Journal, pp. 27–37. doi:10.1179/000870403235002042. URL https://colorbrewer2.org/.</p>
 <p>Wickham H (2009). ggplot2: elegant graphics for data analysis. Springer New York. ISBN 978-0-387-98140-6.</p>
 <p>Wilkinson L (2005). The Grammar of Graphics (Statistics and Computing). Springer-Verlag New York, Inc., Secaucus, NJ, USA. ISBN 0387245448.</p>
 </section><section class="section level2"><h2 id="affiliation">Affiliation:<a class="anchor" aria-label="anchor" href="#affiliation"></a>

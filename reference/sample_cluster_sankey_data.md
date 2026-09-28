@@ -1,7 +1,7 @@
 # Sample Cluster Stability Sankey Data
 
 Generates a synthetic dataset with one row per patient and columns
-`C2`–`C9` holding letter-labelled cluster assignments at successive
+`C2`–`C9` holding letter-labeled cluster assignments at successive
 values of K (number of clusters). The hierarchical merge structure
 follows the pattern from the HVTI PAM clustering analysis:
 

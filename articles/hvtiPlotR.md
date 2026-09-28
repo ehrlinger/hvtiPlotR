@@ -269,12 +269,12 @@ SAS script.
 | `tuple set=..., x=t, y=est, cll=lo, clu=hi` | `geom_line() + geom_ribbon(aes(ymin=lo, ymax=hi), alpha=0.2)` | Line + CI ribbon |
 | `width=3` (thick line) | `linewidth = 1.2` in [`geom_line()`](https://ggplot2.tidyverse.org/reference/geom_path.html) | ggplot2 uses a different scale |
 | `width=0.5` (thin line) | `linewidth = 0.5` |  |
-| `color=black` | `colour = "black"` or `scale_colour_manual(values = ...)` | Explicit colour |
-| `color=blue` | `colour = "steelblue"` | Use ColorBrewer for multi-group |
+| `color=black` | `color = "black"` or `scale_color_manual(values = ...)` | Explicit color |
+| `color=blue` | `color = "steelblue"` | Use ColorBrewer for multi-group |
 | `linecl=2` (dashed) | `linetype = "dashed"` or `scale_linetype_manual(values = ...)` | Line type |
 | `linecl=0` (solid) | `linetype = "solid"` (default) |  |
 
-### Symbols and colours reference
+### Symbols and colors reference
 
 | `plot.sas` `symbol=` value | ggplot2 `shape =` integer       |
 |----------------------------|---------------------------------|
@@ -305,7 +305,7 @@ To create figures comparable to `plot.sas` output, we rely heavily on
 `ggplot2`. This requires translating from the graphics language of
 `plot.sas` to the graphics language of `ggplot2`.
 
-For the remainder of this document, R code will be highlighted in grey
+For the remainder of this document, R code will be highlighted in gray
 boxes, as shown below. We will refer to these blocks as code chunks. You
 can run each code chunk individually, using copy/paste into an
 interactive R session, or within a stand alone R script. This tutorial
@@ -775,14 +775,14 @@ ColorBrewer (Harrower and Brewer 2003) is an online tool
 schemes for maps and other graphics. We recommend it as a practical
 starting point for choosing colors.
 
-The ColorBrewer palette catalogue (Harrower and Brewer 2003) is built
-into `ggplot2` via
-[`scale_colour_brewer()`](https://ggplot2.tidyverse.org/reference/scale_brewer.html)
+The ColorBrewer palette catalog (Harrower and Brewer 2003) is built into
+`ggplot2` via
+[`scale_color_brewer()`](https://ggplot2.tidyverse.org/reference/scale_brewer.html)
 /
 [`scale_fill_brewer()`](https://ggplot2.tidyverse.org/reference/scale_brewer.html);
 hvtiPlotR does not import the optional `RColorBrewer` package. We have
-made extensive use of the `palette = "Set1"` colour palette in the
-figures we have generated. ggplot2 also ships other `scale_colour_*`
+made extensive use of the `palette = "Set1"` color palette in the
+figures we have generated. ggplot2 also ships other `scale_color_*`
 functions for many different settings. Consult
 <https://colorbrewer2.org/> for an interactive palette browser.
 
@@ -840,7 +840,7 @@ ccf_ppt_plot <- ggplot() +
   geom_line(
     data = parametric,
     aes(x = years, y = noinit),
-    color = "grey",
+    color = "gray",
     linewidth = 1.5
   ) +
   geom_line(
@@ -968,7 +968,7 @@ mind when composing figures.
 
 - **Use
   [`theme_hv_manuscript()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)**:
-  black text, white background, no decorative fill. Never use coloured
+  black text, white background, no decorative fill. Never use colored
   backgrounds in figures destined for journals.
 - **No chart titles**: the figure caption in the manuscript text carries
   the title. Do not add a `labs(title = ...)` layer.
@@ -980,7 +980,7 @@ mind when composing figures.
   `scale_y_continuous(labels = function(x) paste0(x, "%"))`. Do not
   write the `%` symbol inside the axis title.
 - **No minor grid lines**: major grid lines are optional and should be
-  light grey if used. Minor grid lines are never used.
+  light gray if used. Minor grid lines are never used.
 - **Confidence intervals as ribbons or error bars**: always show CIs
   where they are available. Use `alpha = 0.2` for ribbons so they do not
   obscure the curve.
@@ -999,7 +999,7 @@ mind when composing figures.
   or
   [`theme_hv_ppt_light()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)**:
   the dark theme is the default for Cleveland Clinic presentation
-  templates. Match the theme to the slide background colour.
+  templates. Match the theme to the slide background color.
 - **No points on parametric curves**: presentation figures show lines
   only. Points are reserved for nonparametric data summaries.
 - **Larger line widths**: use `linewidth = 1.5` or higher so lines are
@@ -1017,25 +1017,25 @@ mind when composing figures.
   that lines, shapes, and text remain selectable in PowerPoint for
   last-minute edits.
 
-### Colour
+### Color
 
-- **Multi-group figures**: use `scale_colour_brewer(palette = "Set1")`
+- **Multi-group figures**: use `scale_color_brewer(palette = "Set1")`
   for up to five groups. For more groups, either pass an explicit vector
   of hex codes via
-  [`scale_colour_manual()`](https://ggplot2.tidyverse.org/reference/scale_manual.html)
-  or browse the ColorBrewer palette catalogue at
+  [`scale_color_manual()`](https://ggplot2.tidyverse.org/reference/scale_manual.html)
+  or browse the ColorBrewer palette catalog at
   <https://colorbrewer2.org/>. (ggplot2 ships the Brewer palette table
   internally; hvtiPlotR does not depend on the optional `RColorBrewer`
   package.)
 - **Single-group survival/hazard figures**: `"steelblue"` for
   manuscript, `"white"` for dark PPT.
 - **Avoid red/green combinations**: approximately 8% of men have
-  red–green colour blindness. Use shape
+  red–green color blindness. Use shape
   ([`scale_shape_manual()`](https://ggplot2.tidyverse.org/reference/scale_manual.html))
   and linetype
   ([`scale_linetype_manual()`](https://ggplot2.tidyverse.org/reference/scale_manual.html))
-  in addition to colour so figures remain readable in greyscale print.
-- **Fills vs colours**: `scale_colour_*()` controls lines and points;
+  in addition to color so figures remain readable in grayscale print.
+- **Fills vs colors**: `scale_color_*()` controls lines and points;
   `scale_fill_*()` controls ribbons and bars. Both must be set
   consistently when a legend is shown.
 
@@ -1063,7 +1063,7 @@ PowerPoint Documents. R package version 0.6.5, URL
 https://CRAN.R-project.org/package=officer.
 
 Harrower M, Brewer CA (2003). “ColorBrewer.org: An Online Tool for
-Selecting Colour Schemes for Maps.” The Cartographic Journal, pp. 27–37.
+Selecting Color Schemes for Maps.” The Cartographic Journal, pp. 27–37.
 doi:10.1179/000870403235002042. URL https://colorbrewer2.org/.
 
 Wickham H (2009). ggplot2: elegant graphics for data analysis. Springer

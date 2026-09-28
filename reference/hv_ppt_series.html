@@ -5,14 +5,14 @@ finish it with +. Across a deck that finishing step is the same few lines
 on every slide, and copying them plot by plot is how one figure quietly
 drifts out of step with the rest.
 hv_ppt_series() bundles the finishing step into a single object you add
-once per plot. It carries the PowerPoint theme, a colour scale and a
+once per plot. It carries the PowerPoint theme, a color scale and a
 matching shape scale, so a whole deck takes its look from one definition."><meta property="og:description" content="You already know the two-step shape of a hvtiPlotR figure: a constructor
 prepares and validates the data, plot() hands back a bare ggplot, and you
 finish it with +. Across a deck that finishing step is the same few lines
 on every slide, and copying them plot by plot is how one figure quietly
 drifts out of step with the rest.
 hv_ppt_series() bundles the finishing step into a single object you add
-once per plot. It carries the PowerPoint theme, a colour scale and a
+once per plot. It carries the PowerPoint theme, a color scale and a
 matching shape scale, so a whole deck takes its look from one definition."></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
@@ -75,7 +75,7 @@ finish it with <code>+</code>. Across a deck that finishing step is the same few
 on every slide, and copying them plot by plot is how one figure quietly
 drifts out of step with the rest.</p>
 <p><code>hv_ppt_series()</code> bundles the finishing step into a single object you add
-once per plot. It carries the PowerPoint theme, a colour scale and a
+once per plot. It carries the PowerPoint theme, a color scale and a
 matching shape scale, so a whole deck takes its look from one definition.</p>
     </div>
 
@@ -86,7 +86,8 @@ matching shape scale, so a whole deck takes its look from one definition.</p>
 <span>  colours <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  shapes <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  name <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  <span class="va">...</span></span>
+<span>  <span class="va">...</span>,</span>
+<span>  colors <span class="op">=</span> <span class="va">colours</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -100,8 +101,8 @@ matching shape scale, so a whole deck takes its look from one definition.</p>
 
 
 <dt id="arg-colours">colours<a class="anchor" aria-label="anchor" href="#arg-colours"></a></dt>
-<dd><p>Character vector of colours, one per group in order. Default
-<code>NULL</code> uses the Okabe-Ito ordering for <code>mode</code>.</p></dd>
+<dd><p>The same as <code>colors</code>: an alias kept for existing code. Give
+one or the other; both with different values is an error.</p></dd>
 
 
 <dt id="arg-shapes">shapes<a class="anchor" aria-label="anchor" href="#arg-shapes"></a></dt>
@@ -119,10 +120,15 @@ Default <code>NULL</code> draws no title. Unused while the legend is off.</p></d
 <code>theme_hv_ppt_*()</code> call, e.g. <code>base_size = 28</code> or
 <code>legend.position = "top"</code>.</p></dd>
 
+
+<dt id="arg-colors">colors<a class="anchor" aria-label="anchor" href="#arg-colors"></a></dt>
+<dd><p>Character vector of colors, one per group in order. Default
+<code>NULL</code> uses the Okabe-Ito ordering for <code>mode</code>.</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>A list of ggplot2 components: a theme, a colour scale and a shape
+    <p>A list of ggplot2 components: a theme, a color scale and a shape
 scale. Add it to a ggplot object with <code>+</code>.</p>
     </div>
     <div class="section level2">
@@ -134,25 +140,25 @@ by element, so it composes like a theme:</p>
 <span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a>p2  <span class="ot">&lt;-</span> p2 <span class="sc">+</span> ppt</span></code></pre><p></p></div>
 <p>A theme cannot do this job alone. <code><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">ggplot2::theme()</a></code> governs the non-data
 ink, the text, panel, grid and ticks, and nothing that draws from the data,
-so no theme element sets a series colour. Nor can a layer be smuggled in
+so no theme element sets a series color. Nor can a layer be smuggled in
 through the theme's <code>...</code>, which is forwarded to <code><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">ggplot2::theme()</a></code> and
-errors on anything that is not a theme element. Series colour and shape
+errors on anything that is not a theme element. Series color and shape
 live in the scales, and those are what this function adds alongside the
 theme.</p><div class="section">
-<h3 id="colour-and-shape-carry-the-same-variable">Colour and shape carry the same variable<a class="anchor" aria-label="anchor" href="#colour-and-shape-carry-the-same-variable"></a></h3>
+<h3 id="color-and-shape-carry-the-same-variable">Color and shape carry the same variable<a class="anchor" aria-label="anchor" href="#color-and-shape-carry-the-same-variable"></a></h3>
 
 
 <p>Both scales map the grouping column, so each series is told apart twice.
-That redundancy is the point. A projector in a dark room flattens colour
+That redundancy is the point. A projector in a dark room flattens color
 differences that read cleanly on your monitor, and a black and white
 handout drops them entirely, but the shapes survive both. The two scales
 share <code>name</code>, so on the rare draft that does draw a legend, ggplot2 merges
 them into one instead of stacking two.</p>
-<p>The default colours are the Okabe-Ito colourblind-safe palette, ordered for
+<p>The default colors are the Okabe-Ito colorblind-safe palette, ordered for
 the background: high-luminance hues first on a dark slide, darker ones
-first on a light slide. These are not CORR brand colours. Pass <code>colours</code>
+first on a light slide. These are not CORR brand colors. Pass <code>colors</code>
 when a deck calls for a specific set.</p>
-<p>Six colours and six shapes are supplied, which covers a grouping variable
+<p>Six colors and six shapes are supplied, which covers a grouping variable
 of up to six levels. A discrete scale errors when it runs out of values, so
 pass longer vectors for a wider variable.</p>
 </div>
@@ -165,7 +171,7 @@ pass longer vectors for a wider variable.</p>
 leaves that alone. CORR figures name the series where the series sits, on a
 slide, on a poster and in a manuscript alike, so the reader's eye never
 travels out to a key and back.</p>
-<p>Annotation is drawn in the theme's ink, not in the colour of the series it
+<p>Annotation is drawn in the theme's ink, not in the color of the series it
 names: white on a dark slide, black on a light slide and in a manuscript.
 That is the <code>ink</code> the theme already gives the axis text and axis lines, so
 one ink for every label makes the annotation read as part of the figure's
@@ -173,7 +179,7 @@ frame rather than as one more series.</p>
 <p></p><div class="sourceCode"><pre><code><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">plot</span>(trends) <span class="sc">+</span></span>
 <span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>  <span class="fu">hv_ppt_series</span>(<span class="st">"dark"</span>) <span class="sc">+</span></span>
 <span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">annotate</span>(<span class="st">"text"</span>, <span class="at">x =</span> <span class="dv">2015</span>, <span class="at">y =</span> <span class="dv">60</span>, <span class="at">label =</span> <span class="st">"Group I"</span>,</span>
-<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a>                    <span class="at">colour =</span> <span class="st">"white"</span>, <span class="at">size =</span> <span class="dv">8</span>)</span></code></pre><p></p></div>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a>                    <span class="at">color =</span> <span class="st">"white"</span>, <span class="at">size =</span> <span class="dv">8</span>)</span></code></pre><p></p></div>
 <p>The shape scale still earns its place with no legend drawn. Where two curves
 cross, the plotted summary points are what tells them apart.</p>
 <p>Pass <code>legend.position = "top"</code> through <code>...</code> when a working draft wants a
@@ -185,18 +191,18 @@ into an empty corner of the panel.</p>
 <h3 id="grouped-plots-only">Grouped plots only<a class="anchor" aria-label="anchor" href="#grouped-plots-only"></a></h3>
 
 
-<p>The scales take effect on a plot that maps colour to a grouping column,
+<p>The scales take effect on a plot that maps color to a grouping column,
 which means a constructor called with <code>group_col</code>. On an ungrouped plot
 they sit unused and only the theme applies. There is nothing to fix in that
-case; a single series needs no palette. To colour the raw observations on an
+case; a single series needs no palette. To color the raw observations on an
 ungrouped plot, add your own layer after the decorator, for example
-<code>+ ggplot2::geom_point(colour = "yellow")</code>.</p>
+<code>+ ggplot2::geom_point(color = "yellow")</code>.</p>
 </div>
 
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
-    <div class="dont-index"><p><code><a href="hv_ppt_palette.html">hv_ppt_palette()</a></code> for the colours themselves;
+    <div class="dont-index"><p><code><a href="hv_ppt_palette.html">hv_ppt_palette()</a></code> for the colors themselves;
 <code><a href="hvtiPlotR-themes.html">theme_hv_ppt_dark()</a></code> and <code><a href="hvtiPlotR-themes.html">theme_hv_ppt_light()</a></code> for the themes
 this wraps; <code><a href="hv_legend_inside.html">hv_legend_inside()</a></code> when a draft does want a key;
 <code><a href="save_ppt.html">save_ppt()</a></code> to export the finished plots to editable PowerPoint slides.</p></div>
@@ -218,14 +224,14 @@ this wraps; <code><a href="hv_legend_inside.html">hv_legend_inside()</a></code> 
 <span class="r-in"><span><span class="co"># light one.</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">trends</span><span class="op">)</span> <span class="op">+</span> <span class="va">ppt</span> <span class="op">+</span></span></span>
 <span class="r-in"><span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/annotate.html" class="external-link">annotate</a></span><span class="op">(</span><span class="st">"text"</span>, x <span class="op">=</span> <span class="fl">2015</span>, y <span class="op">=</span> <span class="fl">60</span>, label <span class="op">=</span> <span class="st">"Group I"</span>,</span></span>
-<span class="r-in"><span>                    colour <span class="op">=</span> <span class="st">"white"</span>, size <span class="op">=</span> <span class="fl">8</span><span class="op">)</span></span></span>
+<span class="r-in"><span>                    color <span class="op">=</span> <span class="st">"white"</span>, size <span class="op">=</span> <span class="fl">8</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="hv_ppt_series-2.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># A light template, larger type, and your own colours.</span></span></span>
+<span class="r-in"><span><span class="co"># A light template, larger type, and your own colors.</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">trends</span><span class="op">)</span> <span class="op">+</span></span></span>
 <span class="r-in"><span>  <span class="fu">hv_ppt_series</span><span class="op">(</span></span></span>
 <span class="r-in"><span>    mode      <span class="op">=</span> <span class="st">"light"</span>,</span></span>
-<span class="r-in"><span>    colours   <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"#0072B2"</span>, <span class="st">"#D55E00"</span>, <span class="st">"#009E73"</span>, <span class="st">"#CC79A7"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>    colors    <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"#0072B2"</span>, <span class="st">"#D55E00"</span>, <span class="st">"#009E73"</span>, <span class="st">"#CC79A7"</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>    base_size <span class="op">=</span> <span class="fl">24</span></span></span>
 <span class="r-in"><span>  <span class="op">)</span></span></span>
 <span class="r-plt img"><img src="hv_ppt_series-3.png" alt="" width="700" height="433"></span>

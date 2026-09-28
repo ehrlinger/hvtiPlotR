@@ -12,7 +12,7 @@ plot(
   n_intersections = 10L,
   sort_by = c("freq", "degree"),
   fill_col = NULL,
-  bar_fill = "grey40",
+  bar_fill = "gray40",
   set_size = TRUE,
   set_size_position = c("right", "left"),
   set_size_sort = c("descending", "ascending", "none"),
@@ -44,13 +44,13 @@ plot(
 - fill_col:
 
   Optional column name in `x$data` to fill the intersection bars by
-  (stacks bars by group). Default `NULL` (single colour, supplied via
+  (stacks bars by group). Default `NULL` (single color, supplied via
   `bar_fill`).
 
 - bar_fill:
 
-  Single fill colour for the intersection bars when `fill_col` is
-  `NULL`. Default `"grey40"`.
+  Single fill color for the intersection bars when `fill_col` is `NULL`.
+  Default `"gray40"`.
 
 - set_size:
 
@@ -68,7 +68,7 @@ plot(
 
 - set_size_fill:
 
-  Fill colour for the sidebar bars. Default `"steelblue"`.
+  Fill color for the sidebar bars. Default `"steelblue"`.
 
 - width_ratio:
 
@@ -94,7 +94,7 @@ chart. Apply themes to all panels with patchwork's `&` operator:
     plot(up) & theme_hv_poster()
 
 Pass `set_size = FALSE` to get a single intersection-bar ggplot for full
-customisation; themes then apply via `+`:
+customization; themes then apply via `+`:
 
     plot(up, set_size = FALSE) + theme_hv_poster()
 
@@ -128,7 +128,7 @@ dta$era <- ifelse(seq_len(nrow(dta)) <= 150, "Early", "Recent")
 up_era  <- hv_upset(dta, intersect = sets)
 plot(up_era, fill_col = "era", set_size = FALSE) +
   ggplot2::scale_fill_manual(
-    values = c(Early = "grey60", Recent = "steelblue"),
+    values = c(Early = "gray60", Recent = "steelblue"),
     name   = "Era"
   ) +
   theme_hv_poster()

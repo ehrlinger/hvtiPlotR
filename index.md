@@ -49,7 +49,7 @@ Apply an HVTI theme to a ggplot2 figure in one line:
 library(ggplot2)
 library(hvtiPlotR)
 
-ggplot(mtcars, aes(wt, mpg, colour = factor(cyl))) +
+ggplot(mtcars, aes(wt, mpg, color = factor(cyl))) +
   geom_point() +
   theme_hv_manuscript()
 ```
@@ -127,7 +127,7 @@ km$tables$risk                         # risk-table data frame
 |----|----|
 | [`hv_mirror_hist()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_mirror_hist.md) | Mirrored histograms showing propensity score distributions for two groups, before and after matching or IPTW weighting |
 | [`hv_stacked()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_stacked.md) | Stacked or proportional-fill histogram of a numeric variable by group |
-| [`hv_balance()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_balance.md) | Standardised mean difference dot-plot for assessing propensity matching or weighting quality |
+| [`hv_balance()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_balance.md) | Standardized mean difference dot-plot for assessing propensity matching or weighting quality |
 
 ``` r
 
@@ -163,7 +163,7 @@ plot(mh) + theme_hv_manuscript()
 |----|----|
 | [`hv_eda()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_eda.md) | Exploratory plot for a single variable. Auto-detects type: scatter + LOESS for continuous, stacked bar for categorical. Missing values shown as `"(Missing)"` |
 | [`hv_correlation_matrix()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_correlation_matrix.md) | Lower-triangle scatter-plot matrix for numeric variables, with pairwise deletion per panel and the coefficient matrix in `$tables$coefficients` |
-| [`hv_upset()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_upset.md) | UpSet diagram for visualising procedure co-occurrences or set memberships |
+| [`hv_upset()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_upset.md) | UpSet diagram for visualizing procedure co-occurrences or set memberships |
 | [`hv_venn()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_venn.md) | Venn diagram of 2-3 overlapping set memberships, with a region-count table; the small-set-count companion to [`hv_upset()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_upset.md) |
 | [`hv_alluvial()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_alluvial.md) | Sankey/alluvial diagram for patient flow across categorical stages |
 | [`hv_sankey()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_sankey.md) | Cluster stability Sankey showing patient transitions across cluster solutions |

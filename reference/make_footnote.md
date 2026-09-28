@@ -13,18 +13,19 @@ make_footnote(
   timestamp = TRUE,
   prefix = "DRAFT — ",
   size = 0.7,
-  colour = grey(0.5),
+  colour = gray(0.5),
   x = 1,
   y = 0,
   hjust = "right",
   vjust = "bottom",
-  margin_mm = 2
+  margin_mm = 2,
+  color = colour
 )
 
 makeFootnote(
   footnoteText = getwd(),
   size = 0.7,
-  color = grey(0.5),
+  color = gray(0.5),
   timestamp = TRUE
 )
 ```
@@ -56,12 +57,12 @@ makeFootnote(
 
 - colour:
 
-  Font colour. Default `grey(0.5)` (medium grey), which is visually
-  unobtrusive on both screen and print.
+  The same as `color`: an alias kept for existing code. Give one or the
+  other; both with different values is an error.
 
 - x:
 
-  Horizontal position in normalised parent coordinates (`"npc"`).
+  Horizontal position in normalized parent coordinates (`"npc"`).
   Default `1` (right edge). Decrease to move left.
 
 - y:
@@ -72,23 +73,24 @@ makeFootnote(
 - hjust:
 
   Horizontal justification: `"right"` (default), `"left"`, or
-  `"centre"`.
+  `"center"`.
 
 - vjust:
 
-  Vertical justification: `"bottom"` (default), `"top"`, or `"centre"`.
+  Vertical justification: `"bottom"` (default), `"top"`, or `"center"`.
 
 - margin_mm:
 
   Margin in mm pulled back from the `x`/`y` position. Default `2`.
 
+- color:
+
+  Font color. Default `gray(0.5)` (medium gray), which is visually
+  unobtrusive on both screen and print.
+
 - footnoteText:
 
   Equivalent to `text` in `make_footnote()`.
-
-- color:
-
-  Equivalent to `colour` in `make_footnote()`.
 
 ## Value
 

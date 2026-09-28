@@ -91,7 +91,7 @@ package-level architecture:
 | File names | `kebab-case.R` (e.g. `nonparametric-curve-plot.R`) |
 | Function names | `hv_<concept>()` constructor + `plot.hv_<concept>()` method (e.g. [`hv_nonparametric()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_nonparametric.md), [`plot.hv_nonparametric()`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hv_nonparametric.md)) |
 | Column-name args | Always strings, never bare symbols (e.g. `x_col = "time"`) |
-| Colours | Never hard-coded — leave to `scale_colour_*()` / `scale_fill_*()` |
+| Colors | Never hard-coded — leave to `scale_color_*()` / `scale_fill_*()` |
 | Themes | Never applied inside the function — leave to the caller |
 | Tidy eval | Use `.data[[col]]` from `rlang`; import with `@importFrom rlang .data` |
 | Tests | `expect_s3_class(obj, "hv_data")` for constructor; `expect_plot_has_data(plot(obj))` for the plot method (a class check alone is a smoke test) |

@@ -145,7 +145,7 @@ Default <code>1990</code>.</p></dd>
 
 
 <dt id="arg-study-end">study_end<a class="anchor" aria-label="anchor" href="#arg-study-end"></a></dt>
-<dd><p>End of study enrolment.  Default
+<dd><p>End of study enrollment.  Default
 <code>as.Date("2019-12-31")</code>.</p></dd>
 
 
@@ -160,7 +160,7 @@ materialising the data.  Default <code>TRUE</code>.</p></dd>
 
 
 <dt id="arg-death-levels">death_levels<a class="anchor" aria-label="anchor" href="#arg-death-levels"></a></dt>
-<dd><p>Length-2 character vector labelling the two death
+<dd><p>Length-2 character vector labeling the two death
 states (alive first).  Default <code>c("Alive", "Dead")</code>.</p></dd>
 
 
@@ -184,7 +184,7 @@ Set to a positive value to restore the legacy stem below each point.</p></dd>
 <dt><code>$meta</code></dt>
 <dd><p>Column names, date parameters, state levels,
 <code>has_event</code> flag, and the cohort counts <code>n_patients</code>
-(analysed), <code>n_input</code>, and <code>n_excluded</code>.</p></dd>
+(analyzed), <code>n_input</code>, and <code>n_excluded</code>.</p></dd>
 
 <dt><code>$tables</code></dt>
 <dd><p>Named list with <code>diagonal</code> (the study-period
@@ -199,7 +199,7 @@ reference diagonal) and, when event columns are supplied,
 
 <p>Patients with a missing value in any required column are excluded, with a
 warning naming the columns responsible.  <code>$meta$n_patients</code> reports
-the <em>analysed</em> cohort, alongside <code>$meta$n_input</code> and
+the <em>analyzed</em> cohort, alongside <code>$meta$n_input</code> and
 <code>$meta$n_excluded</code>, so the reported N always describes the plotted
 points.</p>
 <p>The event panel requires more columns than the death panel, so the two can
@@ -233,7 +233,7 @@ counts are reported as <code>$meta$n_event_patients</code> and
 <span class="r-in"><span><span class="co"># 2. Bare plot -- undecorated ggplot returned by plot.hv_followup</span></span></span>
 <span class="r-in"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">gf</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># 3. Decorate: colour palette, axis labels, theme</span></span></span>
+<span class="r-in"><span><span class="co"># 3. Decorate: color palette, axis labels, theme</span></span></span>
 <span class="r-in"><span><span class="va">p</span> <span class="op">+</span></span></span>
 <span class="r-in"><span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_color_manual</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>    values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Alive"</span> <span class="op">=</span> <span class="st">"steelblue"</span>, <span class="st">"Dead"</span> <span class="op">=</span> <span class="st">"firebrick"</span><span class="op">)</span>,</span></span>

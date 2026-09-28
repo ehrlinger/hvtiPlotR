@@ -14,7 +14,7 @@ hvtiPlotR data objects.
   : Test whether an object is an hvtiPlotR data object
 
 - [`summary(`*`<hv_data>`*`)`](https://ehrlinger.github.io/hvtiPlotR/reference/summary.hv_data.md)
-  : Summarise an hv_data object
+  : Summarize an hv_data object
 
 - [`autoplot(`*`<hv_data>`*`)`](https://ehrlinger.github.io/hvtiPlotR/reference/autoplot.hv_data.md)
   :
@@ -35,13 +35,13 @@ callers can override any element inline
 (e.g. `theme_hv_manuscript(legend.position = "right")`). The previous
 `hv_theme_*()` and `theme_*` names remain as deprecated aliases.
 [`hv_ppt_series()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_ppt_series.md)
-bundles a theme with matching colour and shape scales into one object
-you add to every plot in a deck, and
+bundles a theme with matching color and shape scales into one object you
+add to every plot in a deck, and
 [`hv_ppt_palette()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_ppt_palette.md)
-hands back those colours for a figure that needs them outside the
+hands back those colors for a figure that needs them outside the
 decorator. House-style figures carry no legend; series are named by
 annotation drawn in the theme’s ink to match the axis, not in a series
-colour.
+color.
 
 - [`theme_hv_manuscript()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)
   [`theme_hv_poster()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)
@@ -62,12 +62,13 @@ colour.
 - [`hv_ppt_series()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_ppt_series.md)
   : Slide styling for a grouped plot, in one reusable object
 - [`hv_ppt_palette()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_ppt_palette.md)
-  : Series colours for a slide or a manuscript figure
+  : Series colors for a slide or a manuscript figure
 - [`hv_role_palette()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_role_palette.md)
-  : Colours for a figure's levels, by role
+  : Colors for a figure's levels, by role
 - [`scale_fill_hv()`](https://ehrlinger.github.io/hvtiPlotR/reference/scale_fill_hv.md)
+  [`scale_color_hv()`](https://ehrlinger.github.io/hvtiPlotR/reference/scale_fill_hv.md)
   [`scale_colour_hv()`](https://ehrlinger.github.io/hvtiPlotR/reference/scale_fill_hv.md)
-  : Colour and fill scales that apply the role rule to each panel
+  : Color and fill scales that apply the role rule to each panel
 
 ## Survival & Hazard
 
@@ -156,7 +157,7 @@ decomposition models (`tp.np.*` template family).
 
 ## Propensity Score & Matching
 
-Visualise propensity score distributions and covariate balance before
+Visualize propensity score distributions and covariate balance before
 and after propensity matching or IPTW weighting.
 
 - [`hv_mirror_hist()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_mirror_hist.md)
@@ -221,7 +222,7 @@ count summaries. Ports `tp.lp.trends.*`, `tp.rp.trends.*`,
 
 ## Study Design & Goodness of Follow-Up
 
-Visualise follow-up completeness. Ports `tp.dp.gfup.R`.
+Visualize follow-up completeness. Ports `tp.dp.gfup.R`.
 
 - [`hv_followup()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_followup.md)
   : Prepare goodness-of-follow-up data for plotting
@@ -280,7 +281,7 @@ formula-based exclusion stages, audit who was excluded and why, then
 render the diagram via the `consort` package.
 
 - [`hv_consort_start()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_consort_start.md)
-  : Initialise a CONSORT patient-flow tracker
+  : Initialize a CONSORT patient-flow tracker
 - [`hv_consort_exclude()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_consort_exclude.md)
   : Add an exclusion stage to a CONSORT tracker
 - [`hv_consort_summary()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_consort_summary.md)
@@ -301,7 +302,7 @@ render the diagram via the `consort` package.
 ## Exploratory Data Analysis
 
 Rapid bar charts and scatter plots for variable screening, univariate
-summaries, and set-membership visualisation.
+summaries, and set-membership visualization.
 
 - [`hv_eda()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_eda.md)
   : Prepare EDA data for a single variable

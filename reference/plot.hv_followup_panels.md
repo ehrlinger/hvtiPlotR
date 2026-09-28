@@ -2,7 +2,7 @@
 
 Draws one bare goodness-of-follow-up figure per panel, through
 [`plot.hv_followup()`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hv_followup.md).
-Colours, shapes, labels and themes are left to the caller, as everywhere
+Colors, shapes, labels and themes are left to the caller, as everywhere
 in this package; the state levels are `"Alive"` and `"Dead"` for a death
 panel, and `"No event"`, the event's label and `"Death"` for an event
 panel.
@@ -49,6 +49,6 @@ fp <- hv_followup_panels(dta, origin_year = 1990,
                          panels = list(all = list(status = "dead", time = "iv_dead")))
 plots <- plot(fp)
 plots$all +
-  ggplot2::scale_colour_manual(values = c(Alive = "#377EB8", Dead = "#E41A1C")) +
+  ggplot2::scale_color_manual(values = c(Alive = "#377EB8", Dead = "#E41A1C")) +
   ggplot2::labs(x = "Year of operation", y = "Follow-up (years)")
 ```

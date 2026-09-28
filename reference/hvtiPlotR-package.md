@@ -37,7 +37,7 @@ gives a concise console summary.
     tr  <- hv_trends(dta)
 
     plot(tr) +
-      scale_colour_brewer(palette = "Set1", name = "Group") +
+      scale_color_brewer(palette = "Set1", name = "Group") +
       labs(x = "Year", y = "Outcome") +
       theme_hv_manuscript()
 
@@ -139,7 +139,7 @@ position the *target*:
   SAS scripts.
 
 - [`hv_balance()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_balance.md):
-  Prepare standardised mean difference data for a covariate balance
+  Prepare standardized mean difference data for a covariate balance
   dot-plot before and after propensity-score matching or weighting.
   Ports `tp.lp.propen.cov_balance.R`.
 
@@ -285,7 +285,7 @@ with a concept-specific subclass (e.g. `hv_survival`, `hv_trends`).
   matching and optional IPTW weights.
 
 - [`sample_covariate_balance_data()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_covariate_balance_data.md):
-  Standardised mean differences before and after propensity matching.
+  Standardized mean differences before and after propensity matching.
 
 - [`sample_stacked_histogram_data()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_stacked_histogram_data.md):
   Year-by-category count data.

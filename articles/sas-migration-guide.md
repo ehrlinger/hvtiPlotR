@@ -28,7 +28,7 @@ facts.
 
 np <- hv_nonparametric(dat, ...)
 plot(np) +
-  scale_colour_manual(values = c("black", "gray40")) +
+  scale_color_manual(values = c("black", "gray40")) +
   scale_x_continuous(breaks = 0:12) +
   labs(x = "Years after Operation", y = "Prevalence (%)") +
   theme_hv_poster()
@@ -45,16 +45,16 @@ for journal figures, and
 [`theme_hv_poster()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)
 for conference posters.
 
-**Colours are a scale you add, not an option you set.** The SAS
-templates coloured an event red and the censored blue through `color=`
-options. In R,
-[`scale_colour_hv()`](https://ehrlinger.github.io/hvtiPlotR/reference/scale_fill_hv.md)
+**Colors are a scale you add, not an option you set.** The SAS templates
+colored an event red and the censored blue through `color=` options. In
+R,
+[`scale_color_hv()`](https://ehrlinger.github.io/hvtiPlotR/reference/scale_fill_hv.md)
 and
 [`scale_fill_hv()`](https://ehrlinger.github.io/hvtiPlotR/reference/scale_fill_hv.md)
-apply that convention, in colourblind-safe colours: name the event and
-censored levels, and every other level takes the next colour in order.
+apply that convention, in colorblind-safe colors: name the event and
+censored levels, and every other level takes the next color in order.
 [`hv_role_palette()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_role_palette.md)
-returns the same colours as a named vector.
+returns the same colors as a named vector.
 
 **Functions return a ggplot object; they do not display it.** Call the
 plot object at the top level (or use
@@ -324,7 +324,7 @@ plot(hv_nonparametric(
   upper_col   = "upper",
   data_points = dat_grp_pts
 )) +
-  scale_colour_manual(
+  scale_color_manual(
     values = c("Ozaki" = "#003087", "CE-Pericardial" = "#CC0000", "Homograft" = "#666666")
   ) +
   scale_fill_manual(
@@ -339,7 +339,7 @@ plot(hv_nonparametric(
   labs(
     x      = "Years after operation",
     y      = "Prevalence (%)",
-    colour = "Valve type",
+    color = "Valve type",
     fill   = "Valve type",
     title  = "Atrial Fibrillation by Valve Type"
   ) +
@@ -368,7 +368,7 @@ plot(hv_nonparametric(
   dat_phase,
   group_col = "group"
 )) +
-  scale_colour_manual(
+  scale_color_manual(
     values = c("Early phase" = "#CC0000",
                "Late phase"  = "#003087",
                "Overall"     = "black")
@@ -387,7 +387,7 @@ plot(hv_nonparametric(
   labs(
     x      = "Years after operation",
     y      = "Prevalence (%)",
-    colour = NULL,
+    color = NULL,
     title  = "AF — Early and Late Phase Decomposition"
   ) +
   theme_hv_poster()
@@ -494,7 +494,7 @@ plot(hv_ordinal(
   grade_col   = "grade",
   data_points = dat_ord_pts
 )) +
-  scale_colour_manual(
+  scale_color_manual(
     values = c(
       "None"     = "#003087",
       "Mild"     = "#55A51C",
@@ -511,7 +511,7 @@ plot(hv_ordinal(
   labs(
     x      = "Years after operation",
     y      = "Grade probability",
-    colour = "TR Grade",
+    color = "TR Grade",
     title  = "Tricuspid Regurgitation Grade"
   ) +
   theme_hv_poster()
@@ -550,7 +550,7 @@ plot(hv_ordinal(combined, grade_col = "grade")) +
   labs(
     x      = "Years",
     y      = "Grade probability",
-    colour = "AR Grade",
+    color = "AR Grade",
     title  = "AR Grade — Before vs. After Repair"
   ) +
   theme_hv_poster()
@@ -577,7 +577,7 @@ plot(hv_ordinal(
   grade_col   = "grade",
   data_points = dp_grade_2
 )) +
-  scale_colour_manual(values = c("Grade 2" = "#CC0000")) +
+  scale_color_manual(values = c("Grade 2" = "#CC0000")) +
   scale_x_continuous(breaks = seq(0, 5, 1)) +
   scale_y_continuous(
     limits = c(0, 0.5),
@@ -597,7 +597,7 @@ plot(hv_ordinal(
 
 **Port:** `tp.np.tr.ivecho.u.phases.sas`
 
-Phase-decomposed ordinal plots combine phase labels with grade colours.
+Phase-decomposed ordinal plots combine phase labels with grade colors.
 Create the figure by plotting grade-specific curves and annotating early
 vs. late phase regions:
 
@@ -612,7 +612,7 @@ plot(hv_ordinal(dat_ph, grade_col = "grade")) +
   ) +
   annotate("text",
     x = 1, y = 0.95, label = "Early\nphase",
-    size = 3, colour = "steelblue", fontface = "italic"
+    size = 3, color = "steelblue", fontface = "italic"
   ) +
   annotate("rect",
     xmin = 2, xmax = 5, ymin = -Inf, ymax = Inf,
@@ -620,14 +620,14 @@ plot(hv_ordinal(dat_ph, grade_col = "grade")) +
   ) +
   annotate("text",
     x = 3.5, y = 0.95, label = "Late\nphase",
-    size = 3, colour = "tomato", fontface = "italic"
+    size = 3, color = "tomato", fontface = "italic"
   ) +
   scale_x_continuous(breaks = 0:5) +
   scale_y_continuous(labels = scales::percent) +
   labs(
     x      = "Years after operation",
     y      = "Grade probability",
-    colour = "TR Grade",
+    color = "TR Grade",
     title  = "TR Grade — Early and Late Phase"
   ) +
   theme_hv_poster()
@@ -659,7 +659,7 @@ One difference from SAS worth knowing. `survfit()` drops records with a
 missing time, event, or strata value, and
 [`hv_survival()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_survival.md)
 makes that visible rather than leaving you to infer it: it warns, naming
-the columns responsible, and `print(km)` reports the **analysed** cohort
+the columns responsible, and `print(km)` reports the **analyzed** cohort
 alongside the input count. So the N you see is always the N the curve
 describes. Check it the way you would read the SAS log for `NMISS`.
 
@@ -741,14 +741,14 @@ It does not want counts aggregated by year, so there is no `PROC FREQ`
 step to port.
 
 Each patient becomes one point, positioned by operation date (x) and
-follow-up duration (y), and shaped and coloured by vital status. The
+follow-up duration (y), and shaped and colored by vital status. The
 dashed diagonal is the maximum potential follow-up implied by
 `study_start`, `study_end`, and `close_date`.
 [`hv_followup()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_followup.md)
 draws it for you from those three arguments, so it is not a
 [`geom_hline()`](https://ggplot2.tidyverse.org/reference/geom_abline.html)
 you add by hand. Points sitting above the diagonal have longer follow-up
-than the enrolment window alone explains, typically because passive
+than the enrollment window alone explains, typically because passive
 surveillance supplemented active cross-sectional follow-up.
 
 Pass the three date arguments explicitly; the diagonal is only
@@ -874,7 +874,7 @@ which builds the `geom_alluvium()`/`geom_stratum()` layers and sets
 default fill aesthetics for you. You supply a data frame with one column
 per state, name those columns in `axes`, and let
 [`scale_fill_brewer()`](https://ggplot2.tidyverse.org/reference/scale_brewer.html)
-or a manual fill scale control the colours. See the [Alluvial section of
+or a manual fill scale control the colors. See the [Alluvial section of
 the plot-functions
 vignette](https://ehrlinger.github.io/hvtiPlotR/articles/plot-functions.html#dp-sankey)
 for a decorated worked example with labels.
@@ -900,7 +900,7 @@ plot(al) +
 [`hv_sankey()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_sankey.md)
 
 [`hv_sankey()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_sankey.md)
-draws a Sankey diagram showing how patients flow between letter-labelled
+draws a Sankey diagram showing how patients flow between letter-labeled
 clusters as the number of clusters K increases from 2 to 9. Each column
 is one K; flow bands show assignment changes between consecutive K
 values; node labels show cluster letter + patient count.
@@ -925,7 +925,7 @@ remotes::install_github("davidsjoberg/ggsankey")
 | `sid_dta$C2 <- factor(...)` with `gr2_names` ordering | Factor levels set by `node_levels` argument |
 | `make_long(C2, ..., C9)` | `.make_sankey_long()` (internal) |
 | `geom_sankey()` + `geom_sankey_label()` | [`hv_sankey()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_sankey.md) + [`plot()`](https://rdrr.io/r/graphics/plot.default.html) |
-| `brewer.pal(9, "Set1")[c(2,6,8,4,3,5,7,1,9)]` | Default `node_colours` |
+| `brewer.pal(9, "Set1")[c(2,6,8,4,3,5,7,1,9)]` | Default `node_colors` |
 
 ``` r
 
@@ -970,7 +970,7 @@ plot(sk_grp) +
 **R equivalent:**
 [`hv_upset()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_upset.md)
 
-`tp.complexUpset.R` visualises how many patients fall into each
+`tp.complexUpset.R` visualizes how many patients fall into each
 combination of procedure categories (CABG, Valve, MAZE, Aorta, etc.),
 the combinatorial overlap question that Venn diagrams can’t answer
 cleanly past three sets. The SAS version used a custom `PROC TABULATE` /
@@ -1016,7 +1016,7 @@ plus an ordinal MV regurgitation grade plot (plot_9).
 
 dta    <- sample_spaghetti_data(n_patients = 150, max_obs = 6)
 sp     <- hv_spaghetti(dta)
-sp_col <- hv_spaghetti(dta, colour_col = "group")
+sp_col <- hv_spaghetti(dta, color_col = "group")
 ```
 
 ### Unstratified: AV mean gradient full range (plot_1)
@@ -1025,7 +1025,7 @@ The SAS template `tp.dp.spaghetti.echo.R` sets
 `AXISY ORDER=(0 TO 80 BY 20)` for the full gradient range. Reproduce
 that scale with
 [`coord_cartesian()`](https://ggplot2.tidyverse.org/reference/coord_cartesian.html)
-so you keep the ggplot clipping behaviour rather than silently dropping
+so you keep the ggplot clipping behavior rather than silently dropping
 out-of-range trajectories.
 
 ``` r
@@ -1062,15 +1062,15 @@ plot(sp) +
 ### Stratified by sex (plot_2 / plot_4)
 
 Template uses `values=c("red", "blue")`; modernised equivalents below.
-Pass `colour_col = "group"` to
+Pass `color_col = "group"` to
 [`hv_spaghetti()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_spaghetti.md)
 when constructing `sp_col` so each patient trajectory inherits the group
-colour.
+color.
 
 ``` r
 
 plot(sp_col) +
-  scale_colour_manual(
+  scale_color_manual(
     values = c(Female = "firebrick", Male = "steelblue"),
     name   = NULL
   ) +
@@ -1086,13 +1086,12 @@ plot(sp_col) +
 Plot_5 (unstratified) and plot_6 (by sex) switch the outcome to
 effective orifice area (EOA, cm²) with `AXISY ORDER=(0 TO 5 BY 1)`. The
 only change from the gradient plots is the y-axis range and the label;
-the constructor object and colour scale reuse `sp` / `sp_col` from
-above.
+the constructor object and color scale reuse `sp` / `sp_col` from above.
 
 ``` r
 
 plot(sp_col) +
-  scale_colour_manual(
+  scale_color_manual(
     values = c(Female = "firebrick", Male = "steelblue"),
     name   = NULL
   ) +
@@ -1114,7 +1113,7 @@ above 1 as outliers.
 ``` r
 
 plot(sp_col) +
-  scale_colour_manual(
+  scale_color_manual(
     values = c(Female = "firebrick", Male = "steelblue"),
     name   = NULL
   ) +
@@ -1129,7 +1128,7 @@ plot(sp_col) +
 
 Plot_9 is the outlier in this template family: MV regurgitation grade is
 ordinal (None / Mild / Moderate / Severe = 0-3), not continuous. In SAS
-the y-axis was labelled with `AXISY ORDER=(0 TO 3 BY 1)` and annotated
+the y-axis was labeled with `AXISY ORDER=(0 TO 3 BY 1)` and annotated
 manually; here you pass `y_labels` to
 [`plot()`](https://rdrr.io/r/graphics/plot.default.html) to replace the
 numeric tick marks with grade names. The pre-processing step rounds the
@@ -1142,10 +1141,10 @@ dta_ord       <- dta
 dta_ord$value <- round(pmin(3, pmax(0, dta$value / 12)))
 levels(dta_ord$group) <- c("Early", "Late")
 
-sp_ord <- hv_spaghetti(dta_ord, colour_col = "group")
+sp_ord <- hv_spaghetti(dta_ord, color_col = "group")
 
 plot(sp_ord, y_labels = c(None = 0, Mild = 1, Moderate = 2, Severe = 3)) +
-  scale_colour_manual(
+  scale_color_manual(
     values = c(Early = "steelblue", Late = "red2"),
     name   = NULL
   ) +
@@ -1242,7 +1241,7 @@ pre-op IABP use, inotrope use, etc. The SAS `SGPLOT` overlays multiple
 `SCATTER` / `REG` statement pairs, one per outcome, with
 `axisx order=(1970 to 2000 by 10)` and `axisy order=(0 to 100 by 20)`.
 In R you encode the outcome identity as a group variable and use
-[`scale_colour_manual()`](https://ggplot2.tidyverse.org/reference/scale_manual.html)
+[`scale_color_manual()`](https://ggplot2.tidyverse.org/reference/scale_manual.html)
 /
 [`scale_shape_manual()`](https://ggplot2.tidyverse.org/reference/scale_manual.html)
 to assign the same per-outcome styling. CGM axis spec:
@@ -1256,7 +1255,7 @@ dta_lp <- sample_trends_data(
 tr_lp <- hv_trends(dta_lp)
 
 plot(tr_lp) +
-  scale_colour_manual(
+  scale_color_manual(
     values = c("Shock %" = "steelblue", "Pre-op IABP %" = "firebrick",
                "Inotropes %" = "forestgreen"), name = NULL) +
   scale_shape_manual(
@@ -1287,7 +1286,7 @@ dta_age <- sample_trends_data(
 tr_age <- hv_trends(dta_age)
 
 plot(tr_age) +
-  scale_colour_manual(
+  scale_color_manual(
     values = c("Repair %" = "steelblue", "Bioprosthesis %" = "firebrick"),
     name = NULL) +
   scale_x_continuous(limits = c(25, 85), breaks = seq(25, 85, 10)) +
@@ -1317,7 +1316,7 @@ dta_poly <- sample_trends_data(
 tr_poly <- hv_trends(dta_poly)
 
 plot(tr_poly) +
-  scale_colour_manual(
+  scale_color_manual(
     values = c(CE = "steelblue", Cosgrove = "firebrick",
                Periguard = "forestgreen", DeVega = "goldenrod3"),
     name = "Repair type") +
@@ -1457,7 +1456,7 @@ scales, annotations, and a theme the usual way.
 
 `tp.lp.mirror-histogram_SAVR-TF-TAVR.R` compares propensity score
 distributions for SAVR and TF-TAVR patients before and after 1:1
-nearest-neighbour matching. Upper bars show pre-match counts; a darker
+nearest-neighbor matching. Upper bars show pre-match counts; a darker
 overlaid bar shows the matched subset in each bin. Pass `match_col` to
 [`hv_mirror_hist()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_mirror_hist.md)
 to activate this mode. The four internal fill levels (`before_g0`,
@@ -1536,7 +1535,7 @@ bar chart with stacked fills; apply
 [`scale_fill_brewer()`](https://ggplot2.tidyverse.org/reference/scale_brewer.html)
 or
 [`scale_fill_manual()`](https://ggplot2.tidyverse.org/reference/scale_manual.html)
-to set colours consistent with your other figures in the same
+to set colors consistent with your other figures in the same
 presentation.
 
 ``` r
@@ -1597,7 +1596,7 @@ template <- system.file("extdata", "hv_ppt_template.pptx", package = "hvtiPlotR"
 
 # Single slide — apply a PPT theme before saving
 p_ppt <- p +
-  scale_colour_manual(values = c("steelblue"), guide = "none") +
+  scale_color_manual(values = c("steelblue"), guide = "none") +
   scale_fill_manual(values   = c("steelblue"), guide = "none") +
   labs(x = "Years", y = "Prevalence (%)") +
   theme_hv_ppt_dark()
@@ -1696,7 +1695,7 @@ hazard_plot(
   emp_lower_col = "lower",
   emp_upper_col = "upper"
 ) +
-  scale_colour_manual(values = c("steelblue"), guide = "none") +
+  scale_color_manual(values = c("steelblue"), guide = "none") +
   scale_fill_manual(values = c("steelblue"), guide = "none") +
   scale_x_continuous(limits = c(0, 10), breaks = 0:10) +
   scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, 10),
@@ -1737,7 +1736,7 @@ hazard_plot(
   emp_lower_col = "lower",
   emp_upper_col = "upper"
 ) +
-  scale_colour_manual(
+  scale_color_manual(
     values = c("pT1" = "steelblue", "pT2" = "forestgreen", "pT3" = "firebrick"),
     name   = NULL
   ) +
@@ -1775,7 +1774,7 @@ hazard_plot(
   emp_lower_col = "lower",
   emp_upper_col = "upper"
 ) +
-  scale_colour_manual(values = c("steelblue"), guide = "none") +
+  scale_color_manual(values = c("steelblue"), guide = "none") +
   scale_fill_manual(values = c("steelblue"), guide = "none") +
   scale_x_continuous(limits = c(0, 10), breaks = 0:10) +
   scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, 10),
@@ -1821,7 +1820,7 @@ hazard_plot(
   ref_estimate_col = "survival",
   ref_group_col    = "group"
 ) +
-  scale_colour_manual(
+  scale_color_manual(
     values = c("<60" = "steelblue", "60\u201385" = "forestgreen",
                "\u226585" = "firebrick"),
     name   = "Age group"
@@ -1860,10 +1859,10 @@ survival_difference_plot(
   lower_col = "diff_lower",
   upper_col = "diff_upper"
 ) +
-  scale_colour_manual(values = c("steelblue"), guide = "none") +
+  scale_color_manual(values = c("steelblue"), guide = "none") +
   scale_fill_manual(values = c("steelblue"), guide = "none") +
   ggplot2::geom_hline(yintercept = 0, linetype = "dashed",
-                      colour = "grey50") +
+                      color = "gray50") +
   scale_x_continuous(limits = c(0, 10), breaks = 0:10) +
   scale_y_continuous(limits = c(-5, 40),
                      labels = function(x) paste0(x, "%")) +

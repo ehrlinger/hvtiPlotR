@@ -4,7 +4,7 @@ Validates pre-computed curve data (and optional CI bounds and binned
 data summary points) and returns an `hv_nonparametric` object. Call
 [`plot.hv_nonparametric`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hv_nonparametric.md)
 to obtain a bare `ggplot2` curve plot that you can decorate with
-colour/fill scales, axis limits, and
+color/fill scales, axis limits, and
 [`theme_hv_manuscript`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md).
 
 ## Usage
@@ -131,9 +131,9 @@ np  # prints CI / data-point flags
 # 2. Bare plot -- undecorated ggplot returned by plot.hv_nonparametric
 p <- plot(np)
 
-# 3. Decorate: colour/fill palettes, axis scales, labels, theme
+# 3. Decorate: color/fill palettes, axis scales, labels, theme
 p +
-  ggplot2::scale_colour_manual(values = c("steelblue"), guide = "none") +
+  ggplot2::scale_color_manual(values = c("steelblue"), guide = "none") +
   ggplot2::scale_fill_manual(values   = c("steelblue"), guide = "none") +
   ggplot2::scale_x_continuous(limits = c(0, 12), breaks = 0:12) +
   ggplot2::scale_y_continuous(limits = c(0, 0.40),
@@ -153,16 +153,16 @@ p +
 # \donttest{
 old <- ggplot2::theme_set(theme_hv_manuscript())
 plot(np) +
-  ggplot2::scale_colour_manual(values = c("steelblue"), guide = "none") +
+  ggplot2::scale_color_manual(values = c("steelblue"), guide = "none") +
   ggplot2::scale_fill_manual(values   = c("steelblue"), guide = "none") +
   ggplot2::labs(x = "Months", y = "Prevalence of AF")
 
-# For multi-group curves swap scale_colour_manual with:
-#   ggplot2::scale_colour_brewer(palette = "Set1", name = NULL)
+# For multi-group curves swap scale_color_manual with:
+#   ggplot2::scale_color_brewer(palette = "Set1", name = NULL)
 #   ggplot2::scale_fill_brewer(palette = "Set1", guide = "none")
 ggplot2::theme_set(old)
 # }
 
 # See vignette("plot-decorators", package = "hvtiPlotR") for theming,
-# colour scales, annotation labels, and saving plots.
+# color scales, annotation labels, and saving plots.
 ```

@@ -28,7 +28,7 @@ empirical      &amp;lt;- the plout / acpdms KM output dataset
 reference      &amp;lt;- the smatched life-table dataset
 
 
-Returns a bare ggplot object; compose with scale_colour_*,
+Returns a bare ggplot object; compose with scale_color_*,
 scale_y_continuous(), labs(), theme_hv_manuscript().'><meta property="og:description" content='Superseded.
 hazard_plot() has been superseded by the S3 constructor hv_hazard()
 plus plot.hv_hazard().
@@ -58,7 +58,7 @@ empirical      &amp;lt;- the plout / acpdms KM output dataset
 reference      &amp;lt;- the smatched life-table dataset
 
 
-Returns a bare ggplot object; compose with scale_colour_*,
+Returns a bare ggplot object; compose with scale_color_*,
 scale_y_continuous(), labs(), theme_hv_manuscript().'></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
@@ -128,7 +128,7 @@ the full <code>tp.hp.dead.*</code> SAS template family.</p><table class="table t
 <li><p><code>group_col</code>      &lt;- treatment/group indicator variable</p></li>
 <li><p><code>empirical</code>      &lt;- the <code>plout</code> / <code>acpdms</code> KM output dataset</p></li>
 <li><p><code>reference</code>      &lt;- the <code>smatched</code> life-table dataset</p></li>
-</ul><p>Returns a <strong>bare ggplot object</strong>; compose with <code>scale_colour_*</code>,
+</ul><p>Returns a <strong>bare ggplot object</strong>; compose with <code>scale_color_*</code>,
 <code><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous()</a></code>, <code><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs()</a></code>, <code><a href="hvtiPlotR-themes.html">theme_hv_manuscript()</a></code>.</p>
     </div>
 
@@ -322,7 +322,7 @@ Default <code>0.25</code>.</p></dd>
 <span class="r-in"><span>  emp_lower_col <span class="op">=</span> <span class="st">"lower"</span>,</span></span>
 <span class="r-in"><span>  emp_upper_col <span class="op">=</span> <span class="st">"upper"</span></span></span>
 <span class="r-in"><span><span class="op">)</span> <span class="op">+</span></span></span>
-<span class="r-in"><span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_colour_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"steelblue"</span><span class="op">)</span>, guide <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span> <span class="op">+</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_color_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"steelblue"</span><span class="op">)</span>, guide <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span> <span class="op">+</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_fill_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"steelblue"</span><span class="op">)</span>, guide <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span> <span class="op">+</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_x_continuous</a></span><span class="op">(</span>limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">10</span><span class="op">)</span>, breaks <span class="op">=</span> <span class="fl">0</span><span class="op">:</span><span class="fl">10</span><span class="op">)</span> <span class="op">+</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous</a></span><span class="op">(</span>limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">100</span><span class="op">)</span>, breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">100</span>, <span class="fl">20</span><span class="op">)</span>,</span></span>
@@ -342,7 +342,7 @@ Default <code>0.25</code>.</p></dd>
 <span class="r-in"><span>  lower_col    <span class="op">=</span> <span class="st">"haz_lower"</span>,</span></span>
 <span class="r-in"><span>  upper_col    <span class="op">=</span> <span class="st">"haz_upper"</span></span></span>
 <span class="r-in"><span><span class="op">)</span> <span class="op">+</span></span></span>
-<span class="r-in"><span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_colour_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"firebrick"</span><span class="op">)</span>, guide <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span> <span class="op">+</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_color_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"firebrick"</span><span class="op">)</span>, guide <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span> <span class="op">+</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_fill_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"firebrick"</span><span class="op">)</span>, guide <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span> <span class="op">+</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_x_continuous</a></span><span class="op">(</span>limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">10</span><span class="op">)</span>, breaks <span class="op">=</span> <span class="fl">0</span><span class="op">:</span><span class="fl">10</span><span class="op">)</span> <span class="op">+</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous</a></span><span class="op">(</span>limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">30</span><span class="op">)</span>,</span></span>
@@ -362,7 +362,7 @@ Default <code>0.25</code>.</p></dd>
 <span class="r-in"><span>  lower_col     <span class="op">=</span> <span class="st">"cumhaz_lower"</span>,</span></span>
 <span class="r-in"><span>  upper_col     <span class="op">=</span> <span class="st">"cumhaz_upper"</span></span></span>
 <span class="r-in"><span><span class="op">)</span> <span class="op">+</span></span></span>
-<span class="r-in"><span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_colour_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"darkorange"</span><span class="op">)</span>, guide <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span> <span class="op">+</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_color_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"darkorange"</span><span class="op">)</span>, guide <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span> <span class="op">+</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_fill_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"darkorange"</span><span class="op">)</span>, guide <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span> <span class="op">+</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_x_continuous</a></span><span class="op">(</span>limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">10</span><span class="op">)</span>, breaks <span class="op">=</span> <span class="fl">0</span><span class="op">:</span><span class="fl">10</span><span class="op">)</span> <span class="op">+</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Years"</span>, y <span class="op">=</span> <span class="st">"Cumulative Hazard (%)"</span><span class="op">)</span> <span class="op">+</span></span></span>
@@ -370,8 +370,8 @@ Default <code>0.25</code>.</p></dd>
 <span class="r-plt img"><img src="hazard_plot-3.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># --- (4) Stratified survival (tp.hp.dead.tkdn.stratified.sas) ------------</span></span></span>
-<span class="r-in"><span><span class="co"># Two groups (e.g. Takedown vs No Takedown) with different colours and</span></span></span>
-<span class="r-in"><span><span class="co"># linetypes. KM empirical overlay uses matching colours.</span></span></span>
+<span class="r-in"><span><span class="co"># Two groups (e.g. Takedown vs No Takedown) with different colors and</span></span></span>
+<span class="r-in"><span><span class="co"># linetypes. KM empirical overlay uses matching colors.</span></span></span>
 <span class="r-in"><span><span class="va">dat2</span> <span class="op">&lt;-</span> <span class="fu"><a href="sample_hazard_data.html">sample_hazard_data</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>  n <span class="op">=</span> <span class="fl">400</span>, time_max <span class="op">=</span> <span class="fl">10</span>,</span></span>
 <span class="r-in"><span>  groups <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"No Takedown"</span> <span class="op">=</span> <span class="fl">1.0</span>, <span class="st">"Takedown"</span> <span class="op">=</span> <span class="fl">0.65</span><span class="op">)</span></span></span>
@@ -390,7 +390,7 @@ Default <code>0.25</code>.</p></dd>
 <span class="r-in"><span>  emp_lower_col <span class="op">=</span> <span class="st">"lower"</span>,</span></span>
 <span class="r-in"><span>  emp_upper_col <span class="op">=</span> <span class="st">"upper"</span></span></span>
 <span class="r-in"><span><span class="op">)</span> <span class="op">+</span></span></span>
-<span class="r-in"><span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_colour_manual</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_color_manual</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>    values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"No Takedown"</span> <span class="op">=</span> <span class="st">"steelblue"</span>, <span class="st">"Takedown"</span> <span class="op">=</span> <span class="st">"firebrick"</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>    name   <span class="op">=</span> <span class="cn">NULL</span></span></span>
 <span class="r-in"><span>  <span class="op">)</span> <span class="op">+</span></span></span>
@@ -431,7 +431,7 @@ Default <code>0.25</code>.</p></dd>
 <span class="r-in"><span>  ref_estimate_col <span class="op">=</span> <span class="st">"survival"</span>,</span></span>
 <span class="r-in"><span>  ref_group_col    <span class="op">=</span> <span class="st">"group"</span></span></span>
 <span class="r-in"><span><span class="op">)</span> <span class="op">+</span></span></span>
-<span class="r-in"><span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_colour_manual</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_color_manual</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>    values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"&lt;65"</span> <span class="op">=</span> <span class="st">"steelblue"</span>, <span class="st">"65-80"</span> <span class="op">=</span> <span class="st">"forestgreen"</span>,</span></span>
 <span class="r-in"><span>               <span class="st">"\u226580"</span> <span class="op">=</span> <span class="st">"firebrick"</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>    name <span class="op">=</span> <span class="st">"Age Group"</span></span></span>
@@ -463,7 +463,7 @@ Default <code>0.25</code>.</p></dd>
 <span class="r-in"><span>  upper_col    <span class="op">=</span> <span class="st">"surv_upper"</span>,</span></span>
 <span class="r-in"><span>  group_col    <span class="op">=</span> <span class="st">"group"</span></span></span>
 <span class="r-in"><span><span class="op">)</span> <span class="op">+</span></span></span>
-<span class="r-in"><span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_colour_manual</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_color_manual</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>    values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Ideal (young, stage IIIA)"</span>              <span class="op">=</span> <span class="st">"steelblue"</span>,</span></span>
 <span class="r-in"><span>               <span class="st">"Poor (elderly, stage IIIB, palliation)"</span> <span class="op">=</span> <span class="st">"firebrick"</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>    name   <span class="op">=</span> <span class="st">"Patient profile"</span></span></span>
@@ -503,7 +503,7 @@ Default <code>0.25</code>.</p></dd>
 <span class="r-in"><span>  emp_lower_col <span class="op">=</span> <span class="st">"lower"</span>,</span></span>
 <span class="r-in"><span>  emp_upper_col <span class="op">=</span> <span class="st">"upper"</span></span></span>
 <span class="r-in"><span><span class="op">)</span> <span class="op">+</span></span></span>
-<span class="r-in"><span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_colour_manual</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_color_manual</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>    values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Limited FET"</span> <span class="op">=</span> <span class="st">"steelblue"</span>, <span class="st">"Extended FET"</span> <span class="op">=</span> <span class="st">"#8B4513"</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>    name   <span class="op">=</span> <span class="cn">NULL</span></span></span>
 <span class="r-in"><span>  <span class="op">)</span> <span class="op">+</span></span></span>
@@ -534,7 +534,7 @@ Default <code>0.25</code>.</p></dd>
 <span class="r-in"><span>  estimate_col <span class="op">=</span> <span class="st">"survival"</span>,</span></span>
 <span class="r-in"><span>  group_col    <span class="op">=</span> <span class="st">"device"</span></span></span>
 <span class="r-in"><span><span class="op">)</span> <span class="op">+</span></span></span>
-<span class="r-in"><span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_colour_manual</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_color_manual</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>    values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Non-LVAD (first 2 weeks)"</span> <span class="op">=</span> <span class="st">"steelblue"</span>, <span class="st">"LVAD"</span> <span class="op">=</span> <span class="st">"firebrick"</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>    name   <span class="op">=</span> <span class="cn">NULL</span></span></span>
 <span class="r-in"><span>  <span class="op">)</span> <span class="op">+</span></span></span>
@@ -553,7 +553,7 @@ Default <code>0.25</code>.</p></dd>
 <span class="r-in"><span>                 lower_col <span class="op">=</span> <span class="st">"surv_lower"</span>, upper_col <span class="op">=</span> <span class="st">"surv_upper"</span>,</span></span>
 <span class="r-in"><span>                 empirical <span class="op">=</span> <span class="va">emp</span>,</span></span>
 <span class="r-in"><span>                 emp_lower_col <span class="op">=</span> <span class="st">"lower"</span>, emp_upper_col <span class="op">=</span> <span class="st">"upper"</span><span class="op">)</span> <span class="op">+</span></span></span>
-<span class="r-in"><span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_colour_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"steelblue"</span><span class="op">)</span>, guide <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span> <span class="op">+</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_color_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"steelblue"</span><span class="op">)</span>, guide <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span> <span class="op">+</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_fill_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"steelblue"</span><span class="op">)</span>, guide <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span> <span class="op">+</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Years"</span>, y <span class="op">=</span> <span class="st">"Survival (%)"</span><span class="op">)</span> <span class="op">+</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="hvtiPlotR-themes.html">theme_hv_poster</a></span><span class="op">(</span><span class="op">)</span></span></span>
@@ -574,7 +574,7 @@ Default <code>0.25</code>.</p></dd>
 <span class="r-in"><span>  emp_lower_col <span class="op">=</span> <span class="st">"lower"</span>,</span></span>
 <span class="r-in"><span>  emp_upper_col <span class="op">=</span> <span class="st">"upper"</span></span></span>
 <span class="r-in"><span><span class="op">)</span> <span class="op">+</span></span></span>
-<span class="r-in"><span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_colour_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Set1"</span>, name <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span> <span class="op">+</span></span></span>
+<span class="r-in"><span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_color_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Set1"</span>, name <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span> <span class="op">+</span></span></span>
 <span class="r-in"><span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_fill_brewer</a></span><span class="op">(</span>palette   <span class="op">=</span> <span class="st">"Set1"</span>, guide <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span> <span class="op">+</span></span></span>
 <span class="r-in"><span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_x_continuous</a></span><span class="op">(</span>limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">10</span><span class="op">)</span>, breaks <span class="op">=</span> <span class="fl">0</span><span class="op">:</span><span class="fl">10</span><span class="op">)</span> <span class="op">+</span></span></span>
 <span class="r-in"><span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous</a></span><span class="op">(</span>limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">100</span><span class="op">)</span>, breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">100</span>, <span class="fl">20</span><span class="op">)</span>,</span></span>
@@ -585,7 +585,7 @@ Default <code>0.25</code>.</p></dd>
 <span class="r-in"><span><span class="co"># }</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># See vignette("plot-decorators", package = "hvtiPlotR") for theming,</span></span></span>
-<span class="r-in"><span><span class="co"># colour scales, annotation labels, and saving plots.</span></span></span>
+<span class="r-in"><span><span class="co"># color scales, annotation labels, and saving plots.</span></span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

@@ -1,4 +1,4 @@
-# Initialise a CONSORT patient-flow tracker
+# Initialize a CONSORT patient-flow tracker
 
 Creates an `hv_consort_tracker` object with one row per patient and a
 boolean column indicating that every patient is in the initial

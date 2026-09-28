@@ -104,16 +104,16 @@ theme_light_ppt(...)
 
 - ink:
 
-  Foreground (text and line) colour.
+  Foreground (text and line) color.
 
 - paper:
 
-  Background colour.
+  Background color.
 
 - accent:
 
-  Accent colour used by some
-  [`theme_grey()`](https://ggplot2.tidyverse.org/reference/ggtheme.html)
+  Accent color used by some
+  [`theme_gray()`](https://ggplot2.tidyverse.org/reference/ggtheme.html)
   elements. Default `"#3366FF"`.
 
 - ...:

@@ -4,7 +4,7 @@ Validates a long-format repeated-measures data frame and returns an
 `hv_spaghetti` object. Call
 [`plot.hv_spaghetti`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hv_spaghetti.md)
 on the result to obtain a bare `ggplot2` trajectory plot that you can
-decorate with colour scales, axis labels, and
+decorate with color scales, axis labels, and
 [`theme_hv_manuscript`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md).
 
 ## Usage
@@ -15,7 +15,8 @@ hv_spaghetti(
   x_col = "time",
   y_col = "value",
   id_col = "id",
-  colour_col = NULL
+  colour_col = NULL,
+  color_col = colour_col
 )
 ```
 
@@ -40,8 +41,13 @@ hv_spaghetti(
 
 - colour_col:
 
-  Name of the column to map to line colour, or `NULL` for a single
-  uniform colour. Default `NULL`.
+  The same as `color_col`: an alias kept for existing code. Give one or
+  the other; both with different values is an error.
+
+- color_col:
+
+  Name of the column to map to line color, or `NULL` for a single
+  uniform color. Default `NULL`.
 
 ## Value
 
@@ -57,8 +63,8 @@ The list contains:
 
 - `$meta`:
 
-  Named list: `x_col`, `y_col`, `id_col`, `colour_col`, `n_subjects`,
-  `n_obs`.
+  Named list: `x_col`, `y_col`, `id_col`, `color_col` (also as
+  `colour_col`, for existing code), `n_subjects`, `n_obs`.
 
 - `$tables`:
 
@@ -85,19 +91,19 @@ Other Spaghetti plot:
 dta <- sample_spaghetti_data(n_patients = 150, seed = 42)
 
 # 1. Build data object
-sp <- hv_spaghetti(dta, colour_col = "group")
+sp <- hv_spaghetti(dta, color_col = "group")
 sp  # prints subject count, observation count, column mapping
 #> <hv_spaghetti>
 #>   N subjects  : 150  (594 observations)
 #>   x / y / id  : time / value / id
-#>   Colour col  : group
+#>   Color col  : group
 
 # 2. Bare plot -- undecorated ggplot returned by plot.hv_spaghetti
 p <- plot(sp)
 
-# 3. Decorate: colour palette, axis labels, theme
+# 3. Decorate: color palette, axis labels, theme
 p +
-  ggplot2::scale_colour_manual(
+  ggplot2::scale_color_manual(
     values = c(Female = "firebrick", Male = "steelblue"), name = NULL
   ) +
   ggplot2::labs(x = "Years after Operation",

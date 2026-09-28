@@ -4,14 +4,14 @@ in either binary-match or weighted IPTW mode.  Propensity scores are
 simulated via a logistic model: control subjects draw their linear predictor
 from \(N(-\text{sep}/2, 1)\) and treated subjects from
 \(N(+\text{sep}/2, 1)\), so the two score distributions overlap in the
-centre while accumulating mass at opposite extremes.  Patients at those
+center while accumulating mass at opposite extremes.  Patients at those
 extremes cannot find a matching partner within the caliper, which naturally
 reproduces the "many unmatched at the tails" pattern seen in real studies.'><meta property="og:description" content='Creates a reproducible data frame for testing hv_mirror_hist()
 in either binary-match or weighted IPTW mode.  Propensity scores are
 simulated via a logistic model: control subjects draw their linear predictor
 from \(N(-\text{sep}/2, 1)\) and treated subjects from
 \(N(+\text{sep}/2, 1)\), so the two score distributions overlap in the
-centre while accumulating mass at opposite extremes.  Patients at those
+center while accumulating mass at opposite extremes.  Patients at those
 extremes cannot find a matching partner within the caliper, which naturally
 reproduces the "many unmatched at the tails" pattern seen in real studies.'></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -74,7 +74,7 @@ in either binary-match or weighted IPTW mode.  Propensity scores are
 simulated via a logistic model: control subjects draw their linear predictor
 from \(N(-\text{sep}/2, 1)\) and treated subjects from
 \(N(+\text{sep}/2, 1)\), so the two score distributions overlap in the
-centre while accumulating mass at opposite extremes.  Patients at those
+center while accumulating mass at opposite extremes.  Patients at those
 extremes cannot find a matching partner within the caliper, which naturally
 reproduces the "many unmatched at the tails" pattern seen in real studies.</p>
     </div>
@@ -118,7 +118,7 @@ within this distance are left unmatched.</p></dd>
 <dt id="arg-add-weights">add_weights<a class="anchor" aria-label="anchor" href="#arg-add-weights"></a></dt>
 <dd><p>Logical. When <code>TRUE</code> an <code>mt_wt</code> column of
 ATE-style IPTW weights derived from the simulated propensity scores is
-appended and normalised to mean 1 within each group (default <code>FALSE</code>).</p></dd>
+appended and normalized to mean 1 within each group (default <code>FALSE</code>).</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -131,11 +131,11 @@ appended and normalised to mean 1 within each group (default <code>FALSE</code>)
 
 <dt><code>match</code></dt>
 <dd><p>Binary match indicator produced by greedy
-nearest-neighbour matching within <code>caliper</code> (1 = matched).</p></dd>
+nearest-neighbor matching within <code>caliper</code> (1 = matched).</p></dd>
 
 <dt><code>mt_wt</code></dt>
 <dd><p>(Only when <code>add_weights = TRUE</code>) ATE IPTW
-weights normalised to mean 1 within each group.</p></dd>
+weights normalized to mean 1 within each group.</p></dd>
 
 
 </dl></div>

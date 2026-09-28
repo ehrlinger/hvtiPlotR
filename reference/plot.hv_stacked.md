@@ -43,7 +43,7 @@ plot(hv_stacked(dta, x_col = "year", group_col = "category")) +
   theme_hv_poster()
 
 
-# Proportional (fill) histogram with manual colours
+# Proportional (fill) histogram with manual colors
 plot(hv_stacked(dta, x_col = "year", group_col = "category",
                   position = "fill")) +
   ggplot2::scale_fill_manual(

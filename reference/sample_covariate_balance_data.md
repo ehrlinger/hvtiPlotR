@@ -6,7 +6,7 @@ demonstrating
 Rather than drawing SMDs from independent normals, this generator
 simulates patient-level covariates through a logistic propensity score
 model, computes group standardized mean differences before matching,
-then performs greedy 1:1 nearest-neighbour caliper matching and computes
+then performs greedy 1:1 nearest-neighbor caliper matching and computes
 residual differences in the matched cohort.
 
 ## Usage

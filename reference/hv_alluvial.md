@@ -4,7 +4,7 @@ Validates a wide alluvial-format data frame and returns an `hv_alluvial`
 object. Call
 [`plot.hv_alluvial`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hv_alluvial.md)
 on the result to obtain a bare `ggplot2` alluvial diagram that you can
-decorate with colour scales, axis labels, and
+decorate with color scales, axis labels, and
 [`theme_hv_manuscript`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md).
 
 ## Usage
@@ -32,7 +32,7 @@ hv_alluvial(data, axes, y_col = "freq", fill_col = NULL, axis_labels = NULL)
 
 - fill_col:
 
-  Name of the column to map to the flow fill and colour aesthetics, or
+  Name of the column to map to the flow fill and color aesthetics, or
   `NULL` for a single fill. Default `NULL`.
 
 - axis_labels:
@@ -83,7 +83,7 @@ al  # prints axes and observation count
 # 2. Bare plot -- undecorated ggplot returned by plot.hv_alluvial
 p <- plot(al)
 
-# 3. Decorate: fill/colour palettes, axis labels, theme
+# 3. Decorate: fill/color palettes, axis labels, theme
 p +
   ggplot2::scale_fill_manual(
     values = c(None     = "steelblue",
@@ -92,7 +92,7 @@ p +
                Severe   = "firebrick"),
     name = "Pre-op AR"
   ) +
-  ggplot2::scale_colour_manual(
+  ggplot2::scale_color_manual(
     values = c(None     = "steelblue",
                Mild     = "goldenrod",
                Moderate = "darkorange",

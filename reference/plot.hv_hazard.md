@@ -4,7 +4,7 @@ Renders a bare
 [`ggplot2::ggplot()`](https://ggplot2.tidyverse.org/reference/ggplot.html)
 from an
 [`hv_hazard()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_hazard.md)
-object. Compose with `scale_colour_*`,
+object. Compose with `scale_color_*`,
 [`scale_y_continuous()`](https://ggplot2.tidyverse.org/reference/scale_continuous.html),
 [`labs()`](https://ggplot2.tidyverse.org/reference/labs.html), and
 [`theme_hv_manuscript()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)

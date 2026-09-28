@@ -4,21 +4,21 @@
 
 ### New: `hv_role_palette()`, `scale_fill_hv()` and `scale_colour_hv()`
 
-The house colour rule for EDA and follow-up figures, as an opt-in scale.
+The house color rule for EDA and follow-up figures, as an opt-in scale.
 An event is vermillion `#D55E00`, censored is blue `#0072B2`, missing is
-light grey `#CCCCCC`, and every other level takes a colourblind-safe
-colour in order: the light series of
+light gray `#CCCCCC`, and every other level takes a colorblind-safe
+color in order: the light series of
 [`hv_ppt_palette()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_ppt_palette.md)
 (Okabe-Ito without yellow and sky blue), then Paul Tol’s muted palette
-without its sand and cyan. Every colour but the missing grey clears 2:1
+without its sand and cyan. Every color but the missing gray clears 2:1
 against white. When a panel carries the event or censored level, blue
 and vermillion leave the rotation so nothing else is mistaken for them.
 
-The scales colour each panel from its own levels, so one
+The scales color each panel from its own levels, so one
 `page & scale_fill_hv(event = "Dead")` suits a page where only some
-panels carry the event. A real `NA` takes the missing grey (`na.value`).
-A panel with more levels than the colourblind-safe palettes hold is
-drawn in ggplot2’s default hue with a warning;
+panels carry the event. A real `NA` takes the missing gray (`na.value`).
+A panel with more levels than the colorblind-safe palettes hold is drawn
+in ggplot2’s default hue with a warning;
 [`hv_role_palette()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_role_palette.md)
 called directly stops instead. Design:
 `dev/specs/2026-09-27-hv-palette-design.md`.
@@ -78,12 +78,12 @@ or warning.
 The fill levels now keep their natural order (sorted, with a binary
 column’s `"0"` before `"1"`), and missing values go on top through the
 `group` aesthetic instead, so the legend and the stack read top-down in
-the same order and a positional palette maps level 1 to its first
-colour, as in 2.7.13. The segments themselves draw where they did in
-2.7.15 and 2.7.16. The one exception is the `NA` key: ggplot2 always
-lists it last in the legend, while the missing segment stacks on top.
-Callers who reordered a palette to suit 2.7.15’s reversed levels will
-see those colours swap back.
+the same order and a positional palette maps level 1 to its first color,
+as in 2.7.13. The segments themselves draw where they did in 2.7.15 and
+2.7.16. The one exception is the `NA` key: ggplot2 always lists it last
+in the legend, while the missing segment stacks on top. Callers who
+reordered a palette to suit 2.7.15’s reversed levels will see those
+colors swap back.
 
 ### Documentation
 
@@ -140,9 +140,9 @@ respected), with a reference line at zero.
 and
 [`plot.hv_rmst_curves()`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hv_rmst_curves.md)
 draw weighted Kaplan-Meier step curves, one facet per estimator and
-colour by arm. With `tau` the area under each curve up to `tau` is
-shaded and a `tau` line is drawn; with `estimates` each facet is
-annotated with its RMST difference and interval.
+color by arm. With `tau` the area under each curve up to `tau` is shaded
+and a `tau` line is drawn; with `estimates` each facet is annotated with
+its RMST difference and interval.
 
 Both read the `tables` of `hvtiRpropensity::ps_rmst()`, as plain data
 frames or as the `ps_rmst` object itself, and add no dependency on that
@@ -236,11 +236,11 @@ year 20, the default `report_times` asked for year 25 and the table
 answered 57 at risk; the correct answer is none. Between-time drift was
 an off-by-one or two per row, but this was the whole tail of the table.
 
-It now counts the analysed subjects whose observed follow-up is at least
+It now counts the analyzed subjects whose observed follow-up is at least
 the report time, delegating to the same `.atrisk_table()` helper that
 [`hv_atrisk()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_atrisk.md)
 draws from. The table and the panel beneath the curve can no longer
-disagree, and the count is taken over the analysed cohort – the one
+disagree, and the count is taken over the analyzed cohort – the one
 `meta$n_obs` reports, after incomplete rows are excluded – rather than
 over survfit’s rows.
 
@@ -299,10 +299,10 @@ passes its multiplier through [`log()`](https://rdrr.io/r/base/Log.html)
 rather than dividing a Weibull scale – the contract generalises, the
 name should too. Internal; no exported name changes.
 
-**Behaviour change.** Calls that previously returned NA-laden data now
+**Behavior change.** Calls that previously returned NA-laden data now
 error. No test, example or vignette in the package passed such a value,
 so nothing here changed, but downstream code relying on the old silent
-behaviour will now see an error – which is the intent.
+behavior will now see an error – which is the intent.
 
 `@param groups` on all six now states the contract: names present,
 non-empty and distinct; multipliers finite and greater than zero.
@@ -357,7 +357,7 @@ cohort. The two share a generative model, not an estimation step, so
 such a figure should not be captioned as a model fitted to these
 subjects.
 
-No behaviour changes. `.hp_km_binned()` was refactored onto the shared
+No behavior changes. `.hp_km_binned()` was refactored onto the shared
 `.hp_draw_cohort()` helper with the random-number draw order preserved,
 so
 [`sample_hazard_empirical()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_hazard_empirical.md)
@@ -443,7 +443,7 @@ Nothing here changes what any function does; the suite is unchanged at
 
 ## hvtiPlotR 2.7.8
 
-### Behaviour change
+### Behavior change
 
 - [`theme_hv_poster()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)
   now sets `legend.position = "none"`, matching
@@ -485,7 +485,7 @@ Nothing here changes what any function does; the suite is unchanged at
   [`theme_hv_poster()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)
   never set it and inherited ggplot2’s `"right"`. The docs were
   corrected first to describe that, and the theme has since been changed
-  to match the other three (see **Behaviour change** above), which makes
+  to match the other three (see **Behavior change** above), which makes
   the original “every `theme_hv_*()`” wording true rather than merely
   accurate about an inconsistency.
 
@@ -494,7 +494,7 @@ Nothing here changes what any function does; the suite is unchanged at
   the first entry in the dark ordering only. Measured against each
   ordering’s own background, neither ordering is monotonic in contrast
   ratio, and black is deliberately **last** in the light ordering while
-  carrying the highest ratio of any colour here (21:1 on white). The
+  carrying the highest ratio of any color here (21:1 on white). The
   `@details` now say what the ordering actually guarantees, which is
   that each ordering leads with its highest-contrast hue, and give the
   real reason black is last: house style draws annotation in the theme’s
@@ -505,26 +505,26 @@ Nothing here changes what any function does; the suite is unchanged at
 ### New features
 
 - [`hv_ppt_series()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_ppt_series.md)
-  bundles a PowerPoint theme with matching colour and shape scales into
+  bundles a PowerPoint theme with matching color and shape scales into
   one object you add to every plot in a deck, so the per-slide finishing
   step is defined once instead of copied per figure. A
   [`theme()`](https://ggplot2.tidyverse.org/reference/theme.html) cannot
   do this on its own: it governs the non-data ink and nothing that draws
-  from the data, so no theme element sets a series colour, and passing a
+  from the data, so no theme element sets a series color, and passing a
   layer to a `theme_hv_*()` call errors rather than styling anything,
   since that `...` is forwarded straight to
   [`theme()`](https://ggplot2.tidyverse.org/reference/theme.html).
-  Colours and shapes belong to the scales. The return value is a plain
+  Colors and shapes belong to the scales. The return value is a plain
   list, and ggplot2’s `+` unrolls it, so it composes exactly like a
-  theme. Colour and shape both map the grouping column, since a
-  projector flattens colour differences that read cleanly on a monitor.
-  The house-style `legend.position = "none"` is left alone; pass
+  theme. Color and shape both map the grouping column, since a projector
+  flattens color differences that read cleanly on a monitor. The
+  house-style `legend.position = "none"` is left alone; pass
   `legend.position` through `...` when a draft wants a key.
 
 - [`hv_ppt_palette()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_ppt_palette.md)
-  returns those colours as a character vector, so a figure that needs
+  returns those colors as a character vector, so a figure that needs
   them outside the decorator reaches for the one definition instead of
-  pasted hex codes. Six Okabe-Ito colourblind-safe hues, reordered per
+  pasted hex codes. Six Okabe-Ito colorblind-safe hues, reordered per
   background: high-luminance first on a dark slide, darker first on a
   light one. Annotation is not one of these uses; a label takes the
   theme’s ink to match the axis, white on a slide and black in a
@@ -559,7 +559,7 @@ Nothing here changes what any function does; the suite is unchanged at
   and
   [`hv_followup()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_followup.md)
   no longer report a cohort size that differs from the one actually
-  analysed. Both silently dropped incomplete rows – `survfit()` omits
+  analyzed. Both silently dropped incomplete rows – `survfit()` omits
   them, and
   [`hv_followup()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_followup.md)
   filtered with
@@ -568,7 +568,7 @@ Nothing here changes what any function does; the suite is unchanged at
   reporting `nrow(data)`. A 20-row input with two missing follow-up
   times fitted 18 patients but reported 20. Both now exclude incomplete
   rows explicitly, warn once naming the columns responsible, and report
-  `n_obs` / `n_patients` as the analysed cohort alongside `n_input` and
+  `n_obs` / `n_patients` as the analyzed cohort alongside `n_input` and
   `n_excluded`. [`print()`](https://rdrr.io/r/base/print.html) shows the
   split whenever anything was excluded. The event panel requires more
   columns than the death panel, so the two can hold different cohorts;
@@ -581,7 +581,7 @@ Nothing here changes what any function does; the suite is unchanged at
   event. The state was taken from the event flag alone, and
   `gf_build_event_frame()` never received the death time, so it
   structurally could not order the two: a patient dying at year 1 with
-  an event recorded at year 2 was labelled “Non-fatal event”,
+  an event recorded at year 2 was labeled “Non-fatal event”,
   contradicting the documented “death before non-fatal event” state. The
   event time is now compared against `death_time_col`, and a flagged
   event only counts as non-fatal when it strictly precedes death. Ties
@@ -736,7 +736,7 @@ Nothing here changes what any function does; the suite is unchanged at
 - Documentation now follows the composed house style. The package-level
   documentation moved from `R/help.R` to `R/hvtiPlotR-package.R`, and
   the stale root `writing-voice.md` was replaced by the generated
-  `.claude/house-style.md`. No user-facing behaviour changed.
+  `.claude/house-style.md`. No user-facing behavior changed.
 
 ## hvtiPlotR 2.7.3
 
@@ -816,7 +816,7 @@ Nothing here changes what any function does; the suite is unchanged at
   passing `paper` had no effect. The PPT themes still default to
   transparent (the slide background shows through);
   [`theme_hv_poster()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)
-  now honours its `"white"` default.
+  now honors its `"white"` default.
 
 ### Documentation
 
@@ -875,7 +875,7 @@ Nothing here changes what any function does; the suite is unchanged at
   from the data instead of the first column’s factor levels. It spans
   every label in any `cluster_cols` column and seats each child next to
   its parent (the coarser-K cluster holding most of its members), so
-  flows stay uncrossed and the spurious grey `NA` boxes are gone. An
+  flows stay uncrossed and the spurious gray `NA` boxes are gone. An
   explicit `node_levels` is still used as given but must cover every
   observed label.
 - [`plot.hv_sankey()`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hv_sankey.md):
@@ -889,7 +889,7 @@ Nothing here changes what any function does; the suite is unchanged at
   reads `"<col>\n<label>"`; unlisted columns stay bare.
 - [`plot.hv_sankey()`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hv_sankey.md):
   default `node_colours` map labels to Set1 in node order, recycling
-  with a warning when labels outnumber colours.
+  with a warning when labels outnumber colors.
 - [`plot.hv_alluvial()`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hv_alluvial.md):
   new `show_yaxis` (default `TRUE`). Set `FALSE` to blank the y-axis
   title, text, ticks, and line for a clean patient-flow look; the
@@ -992,7 +992,7 @@ Nothing here changes what any function does; the suite is unchanged at
 
 - Package-wide voice rewrite of every prose surface — README, vignettes,
   NEWS, slide deck, roxygen, DESCRIPTION `Title:` — against the
-  `writing-voice.md` spec. Prose only; no API or behavioural change.
+  `writing-voice.md` spec. Prose only; no API or behavioral change.
 - Fixed stale `hv_theme()` string-key references (`"dark_ppt"`, `"ppt"`,
   `"light_ppt"`, `"manuscript"`, `"poster"`) in the main tutorial and
   SAS-migration vignettes. That dispatcher was removed in 2.1.0; the
@@ -1013,7 +1013,7 @@ Two-class API for CONSORT flow diagrams built from patient-level data.
 
 **Tracker lifecycle:**
 
-- `hv_consort_start(data, patient_id, label, pass_col)` — initialises a
+- `hv_consort_start(data, patient_id, label, pass_col)` — initializes a
   tracker with one row per patient; all patients begin as screened.
 - `hv_consort_exclude(tracker, label, col, ..., excl_label, pass_col)` —
   adds an exclusion stage via formula rules
@@ -1096,11 +1096,11 @@ set-size sidebar is composed via `patchwork`.
 
 **Breaking changes:**
 
-- The `base_annotations` parameter has been removed. To recolour the
+- The `base_annotations` parameter has been removed. To recolor the
   intersection bars by an external grouping variable, pass
   `fill_col = "<column>"` to
   [`plot()`](https://rdrr.io/r/graphics/plot.default.html); for a single
-  fixed colour pass `bar_fill = "<colour>"`.
+  fixed color pass `bar_fill = "<colour>"`.
 - The `min_size` parameter has been replaced by `n_intersections` (top-N
   by frequency or degree — see `sort_by`). ComplexUpset’s size-threshold
   semantics are not preserved.
@@ -1230,7 +1230,7 @@ set-size sidebar is composed via `patchwork`.
   and a
   `scale_x_continuous(breaks = seq(0, 400, 100), expand = c(0, 0))`
   decorator.
-- `hvtiPlotR.qmd` colour-guidance section updated to reflect that
+- `hvtiPlotR.qmd` color-guidance section updated to reflect that
   ColorBrewer palettes are accessed via ggplot2’s built-in
   [`scale_colour_brewer()`](https://ggplot2.tidyverse.org/reference/scale_brewer.html)
   rather than a direct `RColorBrewer` dependency.
@@ -1281,7 +1281,7 @@ devices and across slides in a deck even when axis-label widths differ.
   `hv_theme_light_ppt(bold = TRUE)`: apply `face = "bold"` to axis text
   and axis titles.
 
-### Behaviour changes — PPT themes
+### Behavior changes — PPT themes
 
 - [`hv_theme_dark_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)
   and
@@ -1298,9 +1298,9 @@ devices and across slides in a deck even when axis-label widths differ.
     produced cramped labels at `base_size = 32`.
   - [`hv_theme_light_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)
     gains explicit `axis.text`, `axis.line`, `panel.background` (fill
-    `"white"`, colour `"black"`, linewidth 1), and `axis.ticks` elements
+    `"white"`, color `"black"`, linewidth 1), and `axis.ticks` elements
     so the light theme structurally mirrors the dark theme’s
-    explicit-chrome approach (just with inverted colours).
+    explicit-chrome approach (just with inverted colors).
 
 ### Build / infrastructure
 
@@ -1311,7 +1311,7 @@ devices and across slides in a deck even when axis-label widths differ.
   `_files/` output dirs actually get excluded from the build.
 - `vignettes/_quarto.yml` now tracked with `embed-resources: false` at
   the project level, making the small-HTML / separate `_files/`
-  rendering behaviour explicit and preventing accidental repo bloat.
+  rendering behavior explicit and preventing accidental repo bloat.
 
 ### Dependency trim (from the merged `trends_plots` branch)
 
@@ -1515,7 +1515,7 @@ devices and across slides in a deck even when axis-label widths differ.
   [`scale_colour_brewer()`](https://ggplot2.tidyverse.org/reference/scale_brewer.html)
   /
   [`scale_fill_brewer()`](https://ggplot2.tidyverse.org/reference/scale_brewer.html)
-  for multi-group colour palettes, and a pointer to
+  for multi-group color palettes, and a pointer to
   [`vignette("plot-decorators", package = "hvtiPlotR")`](https://ehrlinger.github.io/hvtiPlotR/articles/plot-decorators.md).
 
 ## hvtiPlotR 2.0.0.9001
@@ -1532,7 +1532,7 @@ obj <- hv_*(data, ...)          # returns c("hv_<concept>", "hv_data")
 
 # Step 2: render
 plot(obj, ...) +                  # bare ggplot — no scales, labels, or theme
-  scale_colour_manual(...) +
+  scale_color_manual(...) +
   labs(...) +
   hv_theme("manuscript")
 ```
@@ -1693,7 +1693,7 @@ argument on [`plot()`](https://rdrr.io/r/graphics/plot.default.html):
   `vignettes/plot-decorators.qmd`).
 - Rewrote package-level help page (`help.R` /
   [`?hvtiPlotR`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-package.md))
-  to document all 57 exported functions, organised by category.
+  to document all 57 exported functions, organized by category.
 - Expanded “Saving figures” section in
   `vignettes/sas-migration-guide.qmd` with correct
   [`save_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/save_ppt.md)
@@ -1737,7 +1737,7 @@ argument on [`plot()`](https://rdrr.io/r/graphics/plot.default.html):
 
 ### Bug fixes / API consistency
 
-- **Standardised `alpha` range to `[0, 1]`** across all plot functions.
+- **Standardized `alpha` range to `[0, 1]`** across all plot functions.
   Previously `survival_curve()`, `covariate_balance()`,
   `mirror_histogram()`, `spaghetti_plot()`, and
   `goodness_followup_death_plot()` / `goodness_followup_event_plot()`
@@ -1815,9 +1815,9 @@ argument on [`plot()`](https://rdrr.io/r/graphics/plot.default.html):
   character-categorical, and continuous variables) for demonstrating
   `eda_plot()` and
   [`eda_select_vars()`](https://ehrlinger.github.io/hvtiPlotR/reference/eda_select_vars.md).
-- Reorganised `inst/`: moved `par_cst.xpt` and `npar_cst.xpt` to
+- Reorganized `inst/`: moved `par_cst.xpt` and `npar_cst.xpt` to
   `inst/extdata/` (standard R package location for bundled data files);
-  removed unreferenced presentation and test artefacts (`*.pptx`,
+  removed unreferenced presentation and test artifacts (`*.pptx`,
   `*.pdf`, `*.sas` scratch files).
 - Extended `nonparametric_curve_plot()` examples: added dual-Y-axis
   example (Example 10, `\dontrun`) using
@@ -1852,7 +1852,7 @@ argument on [`plot()`](https://rdrr.io/r/graphics/plot.default.html):
   [`sample_goodness_followup_data()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_goodness_followup_data.md)
   — simulates an operative cohort with operation dates, follow-up times,
   competing events, and death.
-- Added `covariate_balance()` — standardised mean difference dot-plot
+- Added `covariate_balance()` — standardized mean difference dot-plot
   for propensity-score matching or weighting diagnostics.
 - Added
   [`sample_covariate_balance_data()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_covariate_balance_data.md)

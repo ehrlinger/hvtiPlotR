@@ -6,7 +6,7 @@ in either binary-match or weighted IPTW mode. Propensity scores are
 simulated via a logistic model: control subjects draw their linear
 predictor from \\N(-\text{sep}/2, 1)\\ and treated subjects from
 \\N(+\text{sep}/2, 1)\\, so the two score distributions overlap in the
-centre while accumulating mass at opposite extremes. Patients at those
+center while accumulating mass at opposite extremes. Patients at those
 extremes cannot find a matching partner within the caliper, which
 naturally reproduces the "many unmatched at the tails" pattern seen in
 real studies.
@@ -49,7 +49,7 @@ sample_mirror_histogram_data(
 
   Logical. When `TRUE` an `mt_wt` column of ATE-style IPTW weights
   derived from the simulated propensity scores is appended and
-  normalised to mean 1 within each group (default `FALSE`).
+  normalized to mean 1 within each group (default `FALSE`).
 
 ## Value
 
@@ -65,12 +65,12 @@ Data frame with columns:
 
 - `match`:
 
-  Binary match indicator produced by greedy nearest-neighbour matching
+  Binary match indicator produced by greedy nearest-neighbor matching
   within `caliper` (1 = matched).
 
 - `mt_wt`:
 
-  (Only when `add_weights = TRUE`) ATE IPTW weights normalised to mean 1
+  (Only when `add_weights = TRUE`) ATE IPTW weights normalized to mean 1
   within each group.
 
 ## See also

@@ -100,9 +100,9 @@ survival_difference_plot(
   lower_col = "diff_lower",
   upper_col = "diff_upper"
 ) +
-  scale_colour_manual(values = c("steelblue"), guide = "none") +
+  scale_color_manual(values = c("steelblue"), guide = "none") +
   scale_fill_manual(values = c("steelblue"), guide = "none") +
-  geom_hline(yintercept = 0, linetype = "dashed", colour = "grey50") +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "gray50") +
   scale_x_continuous(limits = c(0, 10), breaks = 0:10) +
   scale_y_continuous(limits = c(-5, 30),
                      labels = function(x) paste0(x, "%")) +
@@ -130,9 +130,9 @@ d3$comparison <- "TF-TAVR vs AVR"
 dall <- rbind(d1, d2, d3)
 
 survival_difference_plot(dall, group_col = "comparison") +
-  scale_colour_brewer(palette = "Set1", name = NULL) +
+  scale_color_brewer(palette = "Set1", name = NULL) +
   scale_fill_brewer(palette = "Set1", guide = "none") +
-  geom_hline(yintercept = 0, linetype = "dashed", colour = "grey50") +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "gray50") +
   scale_x_continuous(limits = c(0, 10), breaks = 0:10) +
   labs(x = "Years", y = "Survival Difference (%)") +
   theme_hv_poster()

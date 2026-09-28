@@ -40,9 +40,9 @@ caption it.
 
 ## Details
 
-Colours and themes are left to the caller, as everywhere in this
-package. Apply them to every panel of a page at once with patchwork's
-`&`: `page & theme_hv_manuscript(base_size = 8)`.
+Colors and themes are left to the caller, as everywhere in this package.
+Apply them to every panel of a page at once with patchwork's `&`:
+`page & theme_hv_manuscript(base_size = 8)`.
 
 ## See also
 

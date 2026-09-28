@@ -4,8 +4,8 @@ Builds a bare mirrored-histogram `ggplot2` object from an
 [`hv_mirror_hist`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_mirror_hist.md)
 data object. Bars for the treated group appear above the x-axis; bars
 for the control group appear below. Matched or weighted patients are
-shown in a contrasting shade. Compose with `+` to add colour scales,
-axis labels, and
+shown in a contrasting shade. Compose with `+` to add color scales, axis
+labels, and
 [`theme_hv_manuscript`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md).
 
 ## Usage
@@ -33,7 +33,7 @@ plot(x, alpha = 0.8, ...)
 ## Value
 
 A bare [`ggplot`](https://ggplot2.tidyverse.org/reference/ggplot.html)
-object; compose with `+` to add colour scales, axis limits, labels, and
+object; compose with `+` to add color scales, axis limits, labels, and
 [`theme_hv_manuscript`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md).
 
 ## See also

@@ -1,6 +1,6 @@
 # Build numbers-at-risk table
 
-For each stratum, counts analysed subjects whose observed follow-up time
+For each stratum, counts analyzed subjects whose observed follow-up time
 is greater than or equal to each report time.
 
 ## Usage
