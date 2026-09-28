@@ -85,6 +85,7 @@ reference:
   - hv_ppt_palette
   - hv_role_palette
   - scale_fill_hv
+  - scale_colour_hv
 
 - title: "Survival & Hazard"
   desc: >
