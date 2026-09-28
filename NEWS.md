@@ -1,3 +1,13 @@
+# hvtiPlotR (unreleased)
+
+* `hv_eda_pages()` leaves out patient identifiers when `vars = NULL`. A column
+  named `ccfid`, `patid`, `patientid`, `studyid`, `subjectid`, `recordid` or
+  `caseid` (each also with `_`, `num` or `no`), or any name holding `mrn`
+  (`mrn_num`, `pt_mrn`), was drawn like a study variable: a numeric one as a
+  scatter of row numbers, a text one as bars with one level per patient. `meta$ignored` lists what was left out, and naming a column in
+  `vars` still draws it. A bare trailing `id` is not taken, so `carotid` and
+  `steroid` stay. The stems match the hvtiRtemplates EDA identifier rule.
+
 # hvtiPlotR 2.7.18
 
 ## New: `hv_role_palette()`, `scale_fill_hv()` and `scale_colour_hv()`

@@ -24,8 +24,13 @@ Default \code{"year"}.}
 \item{section}{One of \code{"continuous"}, \code{"percent"} or \code{"count"}.}
 
 \item{vars}{Character vector of the variables to consider, in page order.
-\code{NULL} (the default) means every column except \code{x_col}. Every name is
-checked at once, and the error lists all that are missing.}
+\code{NULL} (the default) means every column except \code{x_col} and any whose name
+marks a patient identifier: \code{ccfid}, \code{patid}, \code{patientid}, \code{studyid},
+\code{subjectid}, \code{recordid} or \code{caseid} (each also with \verb{_}, \code{num} or \code{no}),
+or any name holding \code{mrn}. Such a column is not a study variable: drawn,
+it is a scatter of row numbers or a bar chart with one level per patient.
+\code{meta$ignored} lists what was left out; name a column here to draw it.
+Every name is checked at once, and the error lists all that are missing.}
 
 \item{labels}{Optional named character vector of display labels, names
 being column names. A variable without a label is shown by its name.}
@@ -39,8 +44,9 @@ An object of class \code{c("hv_eda_pages", "hv_data")}:
 \item{\verb{$data}}{One row per variable in the section, in page order:
 \code{variable}, \code{label}, \code{var_type}.}
 \item{\verb{$meta}}{Named list: \code{x_col}, \code{section}, \code{x_binned}, \code{n_vars},
-\code{n_obs}, and \code{n_other}, the number of considered variables that belong
-to other sections.}
+\code{n_obs}, \code{n_other}, the number of considered variables that belong
+to other sections, and \code{ignored}, the identifier columns \code{vars = NULL}
+left out.}
 \item{\verb{$tables}}{\code{panels}, a named list of \code{\link[=hv_eda]{hv_eda()}} objects, one per
 variable.}
 }
