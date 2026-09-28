@@ -65,10 +65,14 @@
 # RStudio's graphics device, rvg's PowerPoint recording device, ...)
 # resolves font families through the OS font manager directly and never
 # consults these tables, so the request is trusted as-is.
+#
+# With no device open, print() opens getOption("device") next, and under
+# Rscript and R CMD check that is pdf(). So the default device is judged
+# the same way; an open device of any other kind is still trusted.
 .hv_family_resolves <- function(family) {
-  dev_name <- names(grDevices::dev.cur())
+  dev_name <- .hv_active_device()
   if (is.null(dev_name) || identical(dev_name, "null device")) {
-    return(TRUE)
+    dev_name <- .hv_default_device()
   }
   if (identical(dev_name, "pdf")) {
     return(family %in% names(grDevices::pdfFonts()))
@@ -77,6 +81,25 @@
     return(family %in% names(grDevices::postscriptFonts()))
   }
   TRUE
+}
+
+# Name of the open device; a function of its own so tests can stand in a
+# device state without opening one.
+.hv_active_device <- function() names(grDevices::dev.cur())
+
+# "pdf" or "postscript" when the device print() would open is one of R's
+# registry-bound devices, otherwise NULL (the family is then trusted).
+# Only the devices themselves, or their names, are recognised: a custom
+# function that calls pdf() inside cannot be told apart without opening it,
+# so it is trusted, and printing through it can still stop on Arial.
+.hv_default_device <- function() {
+  default <- getOption("device")
+  if (is.character(default)) {
+    return(if (default %in% c("pdf", "postscript")) default else NULL)
+  }
+  if (identical(default, grDevices::pdf)) return("pdf")
+  if (identical(default, grDevices::postscript)) return("postscript")
+  NULL
 }
 
 # Tag `theme_obj` with which of its family arguments need a fallback check

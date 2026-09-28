@@ -172,22 +172,43 @@ add_plot_slide <- function(doc, plot, title, layout, master, width, height,
 #' designated title placeholder via [officer::ph_location_type()].
 #'
 #' @details
-#' The package ships a small dark-background test template derived from the
-#' canonical CORR deck (master, layouts, theme; no content slides). Use it to
-#' try `save_ppt()` without hunting for a template:
+#' The master HVTI slide template is the blue (dark-room) deck kept on the
+#' CORR Study Deliverables SharePoint site, in the Analysis Team library as
+#' `Templates/sl.template_hvti_blue.current.pptx`. The package bundles a copy
+#' with its example slides removed, refreshed from the master with each
+#' release; it is the default and pairs with [theme_hv_ppt_dark()].
+#'
+#' For a light room, a light template is bundled as well; pair it with
+#' [theme_hv_ppt_light()]:
 #'
 #' ```
-#' template <- system.file("extdata", "hv_ppt_template.pptx",
+#' template <- system.file("extdata", "hv_ppt_template_light.pptx",
 #'                         package = "hvtiPlotR")
 #' ```
+#'
+#' To use the live master instead of the bundled copy, point the
+#' `hvtiPlotR.ppt_template` option at your OneDrive-synced copy, for example
+#' in `.Rprofile`:
+#'
+#' ```
+#' options(hvtiPlotR.ppt_template = file.path(
+#'   "~/Library/CloudStorage/OneDrive-ClevelandClinic",
+#'   "CORR Study Deliverables - Analysis Team/Templates",
+#'   "sl.template_hvti_blue.current.pptx"
+#' ))
+#' ```
+#'
+#' Keep templates out of study folders: a copy made there stops receiving
+#' updates.
 #'
 #' @param object      A single ggplot object **or** a named/unnamed list of
 #'   ggplot objects. Each element produces one slide. May also be an
 #'   `hv_consort` object produced by [hv_consort()].
 #' @param template    Path to an existing `.pptx` file used as the slide
-#'   template. Default `"../graphs/RD.pptx"`.
-#' @param powerpoint  Output path for the new `.pptx` file.
-#'   Default `"../graphs/pptExample.pptx"`.
+#'   template. Defaults to the `hvtiPlotR.ppt_template` option when set,
+#'   otherwise to the template shipped in `inst/extdata`, whose 16:9 slide
+#'   fits the default `panel_box`. See Details.
+#' @param powerpoint  Output path for the new `.pptx` file. Required.
 #' @param slide_titles A character vector of slide titles. Recycled to the
 #'   number of plots: supply one string for all slides, or one per plot.
 #'   Default `"Plot"`.
@@ -231,8 +252,8 @@ add_plot_slide <- function(doc, plot, title, layout, master, width, height,
 #' \donttest{
 #' library(ggplot2)
 #'
-#' # The package ships a small dark-background template; use it directly
-#' # instead of hunting for a .pptx of your own.
+#' # The bundled copy of the HVTI blue master template (also the default);
+#' # no need to keep a .pptx of your own.
 #' template <- system.file("extdata", "hv_ppt_template.pptx",
 #'                         package = "hvtiPlotR")
 #'
@@ -374,8 +395,12 @@ add_plot_slide <- function(doc, plot, title, layout, master, width, height,
 #' @importFrom consort build_grid
 #' @export
 save_ppt <- function(object,
-                     template     = "../graphs/RD.pptx",
-                     powerpoint   = "../graphs/pptExample.pptx",
+                     template     = getOption(
+                       "hvtiPlotR.ppt_template",
+                       system.file("extdata", "hv_ppt_template.pptx",
+                                   package = "hvtiPlotR")
+                     ),
+                     powerpoint,
                      slide_titles = "Plot",
                      layout       = "Title and Content",
                      master       = NULL,
@@ -406,6 +431,9 @@ save_ppt <- function(object,
   }
   if (!(is.character(template) && length(template) == 1L && file.exists(template)))
     stop("`template` must be the path to an existing PowerPoint file.",
+         call. = FALSE)
+  if (missing(powerpoint))
+    stop("`powerpoint` is required: the output path for the new .pptx file.",
          call. = FALSE)
   if (!(is.character(powerpoint) && length(powerpoint) == 1L &&
         dir.exists(dirname(powerpoint))))

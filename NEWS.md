@@ -5,6 +5,13 @@
   all four arguments in 4.0.0. `DESCRIPTION` still allowed 3.5.0, where every
   theme failed with an "unused argument" error.
 
+* `theme_hv_ppt_dark()` and `theme_hv_ppt_light()` now fall back from Arial
+  to Helvetica when a plot is printed with no graphics device open and the
+  default device is `pdf()` or `postscript()`, as under `Rscript` and
+  `R CMD check`. The check trusted Arial whenever no device was open, then
+  `print()` opened `pdf()`, which stopped with "invalid font type". This broke
+  the `save_ppt()` example on the server.
+
 * `hv_eda_pages()` leaves out patient identifiers when `vars = NULL`. A column
   named `ccfid`, `patid`, `patientid`, `studyid`, `subjectid`, `recordid` or
   `caseid` (each also with `_`, `num` or `no`), or any name holding `mrn`
@@ -12,6 +19,33 @@
   scatter of row numbers, a text one as bars with one level per patient. `meta$ignored` lists what was left out, and naming a column in
   `vars` still draws it. A bare trailing `id` is not taken, so `carotid` and
   `steroid` stay. The stems match the hvtiRtemplates EDA identifier rule.
+
+## `save_ppt()` no longer depends on the study folder
+
+`template` now defaults to the template shipped in `inst/extdata`
+(`hv_ppt_template.pptx`) instead of the study-relative `"../graphs/RD.pptx"`.
+That path pointed at each study's copy of the legacy `tp.RD-R-ppt-template.pptx`,
+which went out of date the day it was copied, and a call without `template`
+failed wherever the copy was missing. The legacy 4:3 slide (10 in wide) also
+could not hold the default `panel_box`, which ends at 11.46 in; the bundled
+16:9 template fits it and is updated with the package.
+
+The master template is the blue deck in the Analysis Team SharePoint library
+(`Templates/sl.template_hvti_blue.current.pptx`). The bundled
+`hv_ppt_template.pptx` is refreshed from it, example slides removed, which
+adds its `Title and Table` and `Title and Chart` layouts. To use the master
+directly, set `options(hvtiPlotR.ppt_template = "<synced path>")`, for example
+in `.Rprofile`; an explicit `template` argument still wins, and without the
+option the bundled copy is used.
+
+A light-room template, `hv_ppt_template_light.pptx`, is now bundled beside it
+for use with `theme_hv_ppt_light()`. Unlike the existing
+`Yahoo slide template LIGHT ROOM.pptx`, it carries no example slides, so they
+do not lead every deck it produces.
+
+**Breaking:** `powerpoint` has no default. It was `"../graphs/pptExample.pptx"`,
+which wrote into whatever `graphs/` sat beside the working directory. Name the
+output file in every call.
 
 # hvtiPlotR 2.7.18
 
