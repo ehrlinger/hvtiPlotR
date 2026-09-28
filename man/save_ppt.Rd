@@ -113,8 +113,8 @@ updates.
 \donttest{
 library(ggplot2)
 
-# The package ships a small dark-background template; use it directly
-# instead of hunting for a .pptx of your own.
+# The bundled copy of the HVTI blue master template (also the default);
+# no need to keep a .pptx of your own.
 template <- system.file("extdata", "hv_ppt_template.pptx",
                         package = "hvtiPlotR")
 
