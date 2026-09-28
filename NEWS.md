@@ -10,10 +10,18 @@ failed wherever the copy was missing. The legacy 4:3 slide (10 in wide) also
 could not hold the default `panel_box`, which ends at 11.46 in; the bundled
 16:9 template fits it and is updated with the package.
 
-The master template is maintained on SharePoint. To use it directly, set
-`options(hvtiPlotR.ppt_template = "<synced path>")`, for example in
-`.Rprofile`; an explicit `template` argument still wins, and without the
+The master template is the blue deck in the Analysis Team SharePoint library
+(`Templates/sl.template_hvti_blue.current.pptx`). The bundled
+`hv_ppt_template.pptx` is refreshed from it, example slides removed, which
+adds its `Title and Table` and `Title and Chart` layouts. To use the master
+directly, set `options(hvtiPlotR.ppt_template = "<synced path>")`, for example
+in `.Rprofile`; an explicit `template` argument still wins, and without the
 option the bundled copy is used.
+
+A light-room template, `hv_ppt_template_light.pptx`, is now bundled beside it
+for use with `theme_hv_ppt_light()`. Unlike the existing
+`Yahoo slide template LIGHT ROOM.pptx`, it carries no example slides, so they
+do not lead every deck it produces.
 
 **Breaking:** `powerpoint` has no default. It was `"../graphs/pptExample.pptx"`,
 which wrote into whatever `graphs/` sat beside the working directory. Name the

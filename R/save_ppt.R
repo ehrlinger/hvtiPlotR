@@ -172,22 +172,30 @@ add_plot_slide <- function(doc, plot, title, layout, master, width, height,
 #' designated title placeholder via [officer::ph_location_type()].
 #'
 #' @details
-#' The package ships a small dark-background test template derived from the
-#' canonical CORR deck (master, layouts, theme; no content slides). Use it to
-#' try `save_ppt()` without hunting for a template:
+#' The master HVTI slide template is the blue (dark-room) deck kept on the
+#' CORR Study Deliverables SharePoint site, in the Analysis Team library as
+#' `Templates/sl.template_hvti_blue.current.pptx`. The package bundles a copy
+#' with its example slides removed, refreshed from the master with each
+#' release; it is the default and pairs with [theme_hv_ppt_dark()].
+#'
+#' For a light room, a light template is bundled as well; pair it with
+#' [theme_hv_ppt_light()]:
 #'
 #' ```
-#' template <- system.file("extdata", "hv_ppt_template.pptx",
+#' template <- system.file("extdata", "hv_ppt_template_light.pptx",
 #'                         package = "hvtiPlotR")
 #' ```
 #'
-#' The master HVTI slide template is maintained on SharePoint; the bundled
-#' copy is refreshed from it with each release. To use the live master
-#' instead, point the `hvtiPlotR.ppt_template` option at a synced copy, for
-#' example in `.Rprofile`:
+#' To use the live master instead of the bundled copy, point the
+#' `hvtiPlotR.ppt_template` option at your OneDrive-synced copy, for example
+#' in `.Rprofile`:
 #'
 #' ```
-#' options(hvtiPlotR.ppt_template = "~/OneDrive/HVTI/slide_template.pptx")
+#' options(hvtiPlotR.ppt_template = file.path(
+#'   "~/Library/CloudStorage/OneDrive-ClevelandClinic",
+#'   "CORR Study Deliverables - Analysis Team/Templates",
+#'   "sl.template_hvti_blue.current.pptx"
+#' ))
 #' ```
 #'
 #' Keep templates out of study folders: a copy made there stops receiving

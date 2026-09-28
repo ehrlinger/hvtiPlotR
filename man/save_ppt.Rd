@@ -82,20 +82,28 @@ selectable in PowerPoint. Plots are placed via
 designated title placeholder via \code{\link[officer:ph_location_type]{officer::ph_location_type()}}.
 }
 \details{
-The package ships a small dark-background test template derived from the
-canonical CORR deck (master, layouts, theme; no content slides). Use it to
-try \code{save_ppt()} without hunting for a template:
+The master HVTI slide template is the blue (dark-room) deck kept on the
+CORR Study Deliverables SharePoint site, in the Analysis Team library as
+\code{Templates/sl.template_hvti_blue.current.pptx}. The package bundles a copy
+with its example slides removed, refreshed from the master with each
+release; it is the default and pairs with \code{\link[=theme_hv_ppt_dark]{theme_hv_ppt_dark()}}.
 
-\if{html}{\out{<div class="sourceCode">}}\preformatted{template <- system.file("extdata", "hv_ppt_template.pptx",
+For a light room, a light template is bundled as well; pair it with
+\code{\link[=theme_hv_ppt_light]{theme_hv_ppt_light()}}:
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{template <- system.file("extdata", "hv_ppt_template_light.pptx",
                         package = "hvtiPlotR")
 }\if{html}{\out{</div>}}
 
-The master HVTI slide template is maintained on SharePoint; the bundled
-copy is refreshed from it with each release. To use the live master
-instead, point the \code{hvtiPlotR.ppt_template} option at a synced copy, for
-example in \code{.Rprofile}:
+To use the live master instead of the bundled copy, point the
+\code{hvtiPlotR.ppt_template} option at your OneDrive-synced copy, for example
+in \code{.Rprofile}:
 
-\if{html}{\out{<div class="sourceCode">}}\preformatted{options(hvtiPlotR.ppt_template = "~/OneDrive/HVTI/slide_template.pptx")
+\if{html}{\out{<div class="sourceCode">}}\preformatted{options(hvtiPlotR.ppt_template = file.path(
+  "~/Library/CloudStorage/OneDrive-ClevelandClinic",
+  "CORR Study Deliverables - Analysis Team/Templates",
+  "sl.template_hvti_blue.current.pptx"
+))
 }\if{html}{\out{</div>}}
 
 Keep templates out of study folders: a copy made there stops receiving

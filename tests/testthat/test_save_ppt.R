@@ -389,6 +389,29 @@ test_that("save_ppt defaults template to the bundled template", {
   expect_gte(length(officer::read_pptx(out)), 1L)
 })
 
+test_that("bundled dark and light templates carry layouts but no slides", {
+  skip_if_not_installed("officer")
+  skip_if_not_installed("rvg")
+
+  for (name in c("hv_ppt_template.pptx", "hv_ppt_template_light.pptx")) {
+    tpl <- system.file("extdata", name, package = "hvtiPlotR")
+    expect_true(nzchar(tpl) && file.exists(tpl), info = name)
+    doc <- officer::read_pptx(tpl)
+    # example slides in a template would lead every deck save_ppt() writes
+    expect_identical(length(doc), 0L, info = name)
+    expect_true("Title and Content" %in% officer::layout_summary(doc)$layout,
+                info = name)
+  }
+
+  out <- tempfile(fileext = ".pptx")
+  on.exit(unlink(out))
+  light <- system.file("extdata", "hv_ppt_template_light.pptx",
+                       package = "hvtiPlotR")
+  save_ppt(create_test_plot() + theme_hv_ppt_light(),
+           template = light, powerpoint = out)
+  expect_identical(length(officer::read_pptx(out)), 1L)
+})
+
 test_that("save_ppt takes its default template from hvtiPlotR.ppt_template", {
   skip_if_not_installed("officer")
   skip_if_not_installed("rvg")
