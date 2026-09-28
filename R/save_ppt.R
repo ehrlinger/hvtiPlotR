@@ -181,14 +181,26 @@ add_plot_slide <- function(doc, plot, title, layout, master, width, height,
 #'                         package = "hvtiPlotR")
 #' ```
 #'
+#' The master HVTI slide template is maintained on SharePoint; the bundled
+#' copy is refreshed from it with each release. To use the live master
+#' instead, point the `hvtiPlotR.ppt_template` option at a synced copy, for
+#' example in `.Rprofile`:
+#'
+#' ```
+#' options(hvtiPlotR.ppt_template = "~/OneDrive/HVTI/slide_template.pptx")
+#' ```
+#'
+#' Keep templates out of study folders: a copy made there stops receiving
+#' updates.
+#'
 #' @param object      A single ggplot object **or** a named/unnamed list of
 #'   ggplot objects. Each element produces one slide. May also be an
 #'   `hv_consort` object produced by [hv_consort()].
 #' @param template    Path to an existing `.pptx` file used as the slide
-#'   template. Defaults to the template shipped in `inst/extdata`, whose
-#'   16:9 slide fits the default `panel_box`.
-#' @param powerpoint  Output path for the new `.pptx` file.
-#'   Default `"../graphs/pptExample.pptx"`.
+#'   template. Defaults to the `hvtiPlotR.ppt_template` option when set,
+#'   otherwise to the template shipped in `inst/extdata`, whose 16:9 slide
+#'   fits the default `panel_box`. See Details.
+#' @param powerpoint  Output path for the new `.pptx` file. Required.
 #' @param slide_titles A character vector of slide titles. Recycled to the
 #'   number of plots: supply one string for all slides, or one per plot.
 #'   Default `"Plot"`.
@@ -375,9 +387,12 @@ add_plot_slide <- function(doc, plot, title, layout, master, width, height,
 #' @importFrom consort build_grid
 #' @export
 save_ppt <- function(object,
-                     template     = system.file("extdata", "hv_ppt_template.pptx",
-                                                package = "hvtiPlotR"),
-                     powerpoint   = "../graphs/pptExample.pptx",
+                     template     = getOption(
+                       "hvtiPlotR.ppt_template",
+                       system.file("extdata", "hv_ppt_template.pptx",
+                                   package = "hvtiPlotR")
+                     ),
+                     powerpoint,
                      slide_titles = "Plot",
                      layout       = "Title and Content",
                      master       = NULL,
@@ -408,6 +423,9 @@ save_ppt <- function(object,
   }
   if (!(is.character(template) && length(template) == 1L && file.exists(template)))
     stop("`template` must be the path to an existing PowerPoint file.",
+         call. = FALSE)
+  if (missing(powerpoint))
+    stop("`powerpoint` is required: the output path for the new .pptx file.",
          call. = FALSE)
   if (!(is.character(powerpoint) && length(powerpoint) == 1L &&
         dir.exists(dirname(powerpoint))))

@@ -378,13 +378,40 @@ test_that("save_ppt defaults template to the bundled template", {
 
   tpl <- system.file("extdata", "hv_ppt_template.pptx", package = "hvtiPlotR")
   skip_if(!nzchar(tpl) || !file.exists(tpl), "bundled template not found")
+  old <- options(hvtiPlotR.ppt_template = NULL)
+  on.exit(options(old), add = TRUE)
   expect_identical(eval(formals(save_ppt)$template), tpl)
 
   # no study-relative ../graphs/RD.pptx needed
   out <- tempfile(fileext = ".pptx")
-  on.exit(unlink(out))
+  on.exit(unlink(out), add = TRUE)
   expect_no_error(save_ppt(create_test_plot(), powerpoint = out))
   expect_gte(length(officer::read_pptx(out)), 1L)
+})
+
+test_that("save_ppt takes its default template from hvtiPlotR.ppt_template", {
+  skip_if_not_installed("officer")
+  skip_if_not_installed("rvg")
+
+  tpl <- system.file("extdata", "hv_ppt_template.pptx", package = "hvtiPlotR")
+  skip_if(!nzchar(tpl) || !file.exists(tpl), "bundled template not found")
+  master <- tempfile(fileext = ".pptx")
+  file.copy(tpl, master)
+  old <- options(hvtiPlotR.ppt_template = master)
+  on.exit({ options(old); unlink(master) }, add = TRUE)
+
+  expect_identical(eval(formals(save_ppt)$template), master)
+
+  # the option is read at call time; a missing master fails loudly
+  options(hvtiPlotR.ppt_template = tempfile(fileext = ".pptx"))
+  expect_error(
+    save_ppt(create_test_plot(), powerpoint = tempfile(fileext = ".pptx")),
+    "`template` must be the path to an existing PowerPoint file"
+  )
+})
+
+test_that("save_ppt requires an explicit powerpoint output path", {
+  expect_error(save_ppt(create_test_plot()), "`powerpoint` is required")
 })
 
 test_that("save_ppt defaults panel_box to the standard fixed-panel rectangle", {

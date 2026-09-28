@@ -6,8 +6,9 @@
 \usage{
 save_ppt(
   object,
-  template = system.file("extdata", "hv_ppt_template.pptx", package = "hvtiPlotR"),
-  powerpoint = "../graphs/pptExample.pptx",
+  template = getOption("hvtiPlotR.ppt_template", system.file("extdata",
+    "hv_ppt_template.pptx", package = "hvtiPlotR")),
+  powerpoint,
   slide_titles = "Plot",
   layout = "Title and Content",
   master = NULL,
@@ -24,11 +25,11 @@ ggplot objects. Each element produces one slide. May also be an
 \code{hv_consort} object produced by \code{\link[=hv_consort]{hv_consort()}}.}
 
 \item{template}{Path to an existing \code{.pptx} file used as the slide
-template. Defaults to the template shipped in \code{inst/extdata}, whose
-16:9 slide fits the default \code{panel_box}.}
+template. Defaults to the \code{hvtiPlotR.ppt_template} option when set,
+otherwise to the template shipped in \code{inst/extdata}, whose 16:9 slide
+fits the default \code{panel_box}. See Details.}
 
-\item{powerpoint}{Output path for the new \code{.pptx} file.
-Default \code{"../graphs/pptExample.pptx"}.}
+\item{powerpoint}{Output path for the new \code{.pptx} file. Required.}
 
 \item{slide_titles}{A character vector of slide titles. Recycled to the
 number of plots: supply one string for all slides, or one per plot.
@@ -88,6 +89,17 @@ try \code{save_ppt()} without hunting for a template:
 \if{html}{\out{<div class="sourceCode">}}\preformatted{template <- system.file("extdata", "hv_ppt_template.pptx",
                         package = "hvtiPlotR")
 }\if{html}{\out{</div>}}
+
+The master HVTI slide template is maintained on SharePoint; the bundled
+copy is refreshed from it with each release. To use the live master
+instead, point the \code{hvtiPlotR.ppt_template} option at a synced copy, for
+example in \code{.Rprofile}:
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{options(hvtiPlotR.ppt_template = "~/OneDrive/HVTI/slide_template.pptx")
+}\if{html}{\out{</div>}}
+
+Keep templates out of study folders: a copy made there stops receiving
+updates.
 }
 \examples{
 \donttest{
