@@ -1,5 +1,12 @@
 # hvtiPlotR (unreleased)
 
+* `theme_hv_ppt_dark()` and `theme_hv_ppt_light()` now fall back from Arial
+  to Helvetica when a plot is printed with no graphics device open and the
+  default device is `pdf()` or `postscript()`, as under `Rscript` and
+  `R CMD check`. The check trusted Arial whenever no device was open, then
+  `print()` opened `pdf()`, which stopped with "invalid font type". This broke
+  the `save_ppt()` example on the server.
+
 * `hv_eda_pages()` leaves out patient identifiers when `vars = NULL`. A column
   named `ccfid`, `patid`, `patientid`, `studyid`, `subjectid`, `recordid` or
   `caseid` (each also with `_`, `num` or `no`), or any name holding `mrn`
