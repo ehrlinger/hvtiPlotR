@@ -1,5 +1,10 @@
 # hvtiPlotR (unreleased)
 
+* hvtiPlotR now needs ggplot2 4.0.0 or later. The four themes pass `ink`,
+  `paper`, `accent` and `header_family` to `theme_grey()`, and ggplot2 added
+  all four arguments in 4.0.0. `DESCRIPTION` still allowed 3.5.0, where every
+  theme failed with an "unused argument" error.
+
 * `hv_eda_pages()` leaves out patient identifiers when `vars = NULL`. A column
   named `ccfid`, `patid`, `patientid`, `studyid`, `subjectid`, `recordid` or
   `caseid` (each also with `_`, `num` or `no`), or any name holding `mrn`

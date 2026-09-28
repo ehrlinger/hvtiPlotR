@@ -215,7 +215,6 @@ test_that("the fallback reaches text geoms, not just theme elements", {
   # Patching `text` alone left annotate("text", ...) asking for Arial, which
   # errors outright on pdf()/postscript(). House style labels series by
   # annotation, so this is the common case, not an edge one.
-  skip_if_not("element_geom" %in% getNamespaceExports("ggplot2"))
   p <- create_test_plot() + theme_hv_ppt_dark() +
     annotate("text", x = 5, y = 5, label = "Group I")
   f <- tempfile(fileext = ".pdf")
