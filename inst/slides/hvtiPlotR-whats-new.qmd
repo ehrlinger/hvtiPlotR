@@ -20,7 +20,7 @@ format:
     footer: "hvtiPlotR v2.3.0"  # persistent footer text
   pptx:
     # To apply your HVTI template, uncomment and set the path:
-    # reference-doc: graphs/RD.pptx
+    # reference-doc: path/to/your_template.pptx
     slide-level: 2
   beamer:
     slide-level: 2
@@ -257,7 +257,6 @@ p <- plot(hv_survival(my_data, "time", "event")) +
 
 save_ppt(
   object       = p,
-  template     = "graphs/RD.pptx",       # your HVTI slide template
   powerpoint   = "output/figure1.pptx",
   slide_titles = "Kaplan–Meier: All Patients"
 )
@@ -265,7 +264,6 @@ save_ppt(
 # List of plots → one slide per plot
 save_ppt(
   object       = list(p_km, p_balance, p_trends),
-  template     = "graphs/RD.pptx",
   powerpoint   = "output/full_deck.pptx",
   slide_titles = c("KM Curve", "Covariate Balance", "Annual Trends")
 )
