@@ -1,4 +1,4 @@
-# hvtiPlotR (unreleased)
+# hvtiPlotR 2.8.0
 
 * hvtiPlotR now needs ggplot2 4.0.0 or later. The four themes pass `ink`,
   `paper`, `accent` and `header_family` to `theme_gray()`, and ggplot2 added
@@ -11,8 +11,11 @@
   `line_colour`, `node_colours`, `colours` and `colour` keep working as
   aliases, and giving both spellings two different values is an error. Every
   existing positional call binds as before, since the new names come last (or
-  after `...`). `meta` carries `color_col` and `node_colors` beside the British
-  elements, which keep the same value.
+  after `...`). An abbreviated name that now matches both spellings is an
+  error, so `make_footnote(col = )`, `hv_spaghetti(col = )` and
+  `hv_sankey(node_col = )` must spell the argument out. `meta` carries
+  `color_col` and `node_colors` beside the British elements, which keep the
+  same value.
 * `scale_color_hv()` is now the primary name of the role-color scale added in
   2.7.18, and `scale_colour_hv()` stays as an alias of it, the way ggplot2
   pairs `scale_color_*()` and `scale_colour_*()`. Existing calls keep working.
