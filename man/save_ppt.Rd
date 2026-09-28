@@ -6,7 +6,7 @@
 \usage{
 save_ppt(
   object,
-  template = "../graphs/RD.pptx",
+  template = system.file("extdata", "hv_ppt_template.pptx", package = "hvtiPlotR"),
   powerpoint = "../graphs/pptExample.pptx",
   slide_titles = "Plot",
   layout = "Title and Content",
@@ -24,7 +24,8 @@ ggplot objects. Each element produces one slide. May also be an
 \code{hv_consort} object produced by \code{\link[=hv_consort]{hv_consort()}}.}
 
 \item{template}{Path to an existing \code{.pptx} file used as the slide
-template. Default \code{"../graphs/RD.pptx"}.}
+template. Defaults to the template shipped in \code{inst/extdata}, whose
+16:9 slide fits the default \code{panel_box}.}
 
 \item{powerpoint}{Output path for the new \code{.pptx} file.
 Default \code{"../graphs/pptExample.pptx"}.}

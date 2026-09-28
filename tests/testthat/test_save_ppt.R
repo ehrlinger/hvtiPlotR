@@ -372,6 +372,21 @@ test_that("save_ppt works against the bundled CORR test template", {
   expect_true("Title and Content" %in% officer::layout_summary(doc)$layout)
 })
 
+test_that("save_ppt defaults template to the bundled template", {
+  skip_if_not_installed("officer")
+  skip_if_not_installed("rvg")
+
+  tpl <- system.file("extdata", "hv_ppt_template.pptx", package = "hvtiPlotR")
+  skip_if(!nzchar(tpl) || !file.exists(tpl), "bundled template not found")
+  expect_identical(eval(formals(save_ppt)$template), tpl)
+
+  # no study-relative ../graphs/RD.pptx needed
+  out <- tempfile(fileext = ".pptx")
+  on.exit(unlink(out))
+  expect_no_error(save_ppt(create_test_plot(), powerpoint = out))
+  expect_gte(length(officer::read_pptx(out)), 1L)
+})
+
 test_that("save_ppt defaults panel_box to the standard fixed-panel rectangle", {
   default_box <- eval(formals(save_ppt)$panel_box)
   expect_equal(

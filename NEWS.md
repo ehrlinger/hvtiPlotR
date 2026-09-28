@@ -1,3 +1,15 @@
+# hvtiPlotR 2.7.19
+
+## `save_ppt()` defaults to the bundled slide template
+
+`template` now defaults to the template shipped in `inst/extdata`
+(`hv_ppt_template.pptx`) instead of the study-relative `"../graphs/RD.pptx"`.
+That path pointed at each study's copy of the legacy `tp.RD-R-ppt-template.pptx`,
+so a call without `template` failed wherever the copy was missing, and the
+legacy 4:3 slide (10 in wide) could not hold the default `panel_box`, which
+ends at 11.46 in. The bundled 16:9 template fits it. Pass
+`template = "../graphs/RD.pptx"` to keep using a study's own deck.
+
 # hvtiPlotR 2.7.18
 
 ## New: `hv_role_palette()`, `scale_fill_hv()` and `scale_colour_hv()`

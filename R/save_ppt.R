@@ -185,7 +185,8 @@ add_plot_slide <- function(doc, plot, title, layout, master, width, height,
 #'   ggplot objects. Each element produces one slide. May also be an
 #'   `hv_consort` object produced by [hv_consort()].
 #' @param template    Path to an existing `.pptx` file used as the slide
-#'   template. Default `"../graphs/RD.pptx"`.
+#'   template. Defaults to the template shipped in `inst/extdata`, whose
+#'   16:9 slide fits the default `panel_box`.
 #' @param powerpoint  Output path for the new `.pptx` file.
 #'   Default `"../graphs/pptExample.pptx"`.
 #' @param slide_titles A character vector of slide titles. Recycled to the
@@ -374,7 +375,8 @@ add_plot_slide <- function(doc, plot, title, layout, master, width, height,
 #' @importFrom consort build_grid
 #' @export
 save_ppt <- function(object,
-                     template     = "../graphs/RD.pptx",
+                     template     = system.file("extdata", "hv_ppt_template.pptx",
+                                                package = "hvtiPlotR"),
                      powerpoint   = "../graphs/pptExample.pptx",
                      slide_titles = "Plot",
                      layout       = "Title and Content",
