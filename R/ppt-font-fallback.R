@@ -145,10 +145,8 @@
   # annotate("text", ...) still asking the device for Arial, and on
   # postscript()/pdf() that is fatal ("invalid font type"), not merely ugly.
   # House style labels series by annotation rather than by a legend, so a
-  # PPT-themed plot usually carries a text geom. Guarded on the symbol
-  # because DESCRIPTION still admits ggplot2 3.5, where it does not exist.
-  if ("text" %in% fallback_roots &&
-      "element_geom" %in% getNamespaceExports("ggplot2"))
+  # PPT-themed plot usually carries a text geom.
+  if ("text" %in% fallback_roots)
     overrides[["geom"]] <- ggplot2::element_geom(family = "Helvetica")
 
   x + do.call(ggplot2::theme, overrides)

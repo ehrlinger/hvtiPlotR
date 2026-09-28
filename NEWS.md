@@ -1,5 +1,9 @@
 # hvtiPlotR (unreleased)
 
+* hvtiPlotR now needs ggplot2 4.0.0 or later. The four themes pass `ink`,
+  `paper`, `accent` and `header_family` to `theme_gray()`, and ggplot2 added
+  all four arguments in 4.0.0. `DESCRIPTION` previously allowed 3.5.0, where
+  every theme failed with an "unused argument" error.
 * Five arguments take a US spelling beside the British one: `color_col` in
   `hv_spaghetti()`, `line_color` in `plot.hv_spaghetti()`, `node_colors` in
   `hv_sankey()`, `colors` in `hv_ppt_series()` and `color` in
