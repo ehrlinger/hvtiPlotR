@@ -111,7 +111,7 @@ hv_ppt_palette <- function(mode = c("dark", "light"), n = NULL) {
 #'
 #' The default colors are the Okabe-Ito colorblind-safe palette, ordered for
 #' the background: high-luminance hues first on a dark slide, darker ones
-#' first on a light slide. These are not CORR brand colors. Pass `colours`
+#' first on a light slide. These are not CORR brand colors. Pass `colors`
 #' when a deck calls for a specific set.
 #'
 #' Six colors and six shapes are supplied, which covers a grouping variable
@@ -156,8 +156,10 @@ hv_ppt_palette <- function(mode = c("dark", "light"), n = NULL) {
 #'
 #' @param mode    Slide background the plot will sit on. `"dark"` pairs with
 #'   [theme_hv_ppt_dark()], `"light"` with [theme_hv_ppt_light()].
-#' @param colours Character vector of colors, one per group in order. Default
+#' @param colors  Character vector of colors, one per group in order. Default
 #'   `NULL` uses the Okabe-Ito ordering for `mode`.
+#' @param colours The same as `colors`: an alias kept for existing code. Give
+#'   one or the other; both with different values is an error.
 #' @param shapes  Numeric vector of ggplot2 point shapes, one per group in
 #'   order. Default `NULL` uses solid glyphs first.
 #' @param name    Title used by both scales, so a drawn legend merges into one.
@@ -194,7 +196,7 @@ hv_ppt_palette <- function(mode = c("dark", "light"), n = NULL) {
 #' plot(trends) +
 #'   hv_ppt_series(
 #'     mode      = "light",
-#'     colours   = c("#0072B2", "#D55E00", "#009E73", "#CC79A7"),
+#'     colors    = c("#0072B2", "#D55E00", "#009E73", "#CC79A7"),
 #'     base_size = 24
 #'   )
 #'
@@ -204,12 +206,14 @@ hv_ppt_series <- function(mode    = c("dark", "light"),
                           colours = NULL,
                           shapes  = NULL,
                           name    = NULL,
-                          ...) {
+                          ...,
+                          colors  = colours) {
+  .check_spelling_pair("colors", "colours", !missing(colors), !missing(colours), colors, colours)
   mode <- match.arg(mode)
 
-  if (is.null(colours)) colours <- hv_ppt_palette(mode)
-  if (!is.character(colours) || length(colours) < 1L || anyNA(colours))
-    stop("`colours` must be a character vector with no missing values.",
+  if (is.null(colors)) colors <- hv_ppt_palette(mode)
+  if (!is.character(colors) || length(colors) < 1L || anyNA(colors))
+    stop("`colors` must be a character vector with no missing values.",
          call. = FALSE)
 
   if (is.null(shapes)) shapes <- .hv_ppt_shapes()
@@ -224,7 +228,7 @@ hv_ppt_series <- function(mode    = c("dark", "light"),
 
   list(
     theme_fn(...),
-    ggplot2::scale_color_manual(values = colours, name = name),
+    ggplot2::scale_color_manual(values = colors, name = name),
     ggplot2::scale_shape_manual(values = shapes, name = name)
   )
 }

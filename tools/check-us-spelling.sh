@@ -45,11 +45,14 @@ remaining=$(printf '%s\n' "$hits" | WORDS="$words" perl -ne '
   # of a theme element or mapping.
   s/"colour"//g;
   s/\$colour\b//g;
-  # Exported arguments: make_footnote(colour =) and hv_ppt_series(colours =).
-  # Renaming either breaks callers, so they are left for the maintainer.
-  s/`colours?`|\\(code|item)\{colours?\}|\@param colours?\b//g;
-  if ($path =~ m{^(R/pdf_footnote\.R|R/ppt-series\.R|man/make_footnote\.Rd|man/hv_ppt_series\.Rd|tests/testthat/test_ppt_series\.R)$}) {
-    s/\bcolours?\b(?=\s*(=|<-|\)|,|\]))//g;
+  # make_footnote(colour =) and hv_ppt_series(colours =) are aliases of
+  # color and colors, kept so existing calls work. Only the files that define,
+  # document or test them may name them, and only as an argument. The other
+  # three aliases (colour_col, line_colour, node_colours) are snake_case, which
+  # the word boundary above never matches.
+  if ($path =~ m{^(R/pdf_footnote\.R|R/ppt-series\.R|man/make_footnote\.Rd|man/hv_ppt_series\.Rd|tests/testthat/test_ppt_series\.R|tests/testthat/test_argument_spellings\.R)$}) {
+    s/"colours?"|`colours?`|\\item\{colours?\}|\@param colours?\b//g;
+    s/\bcolours?\b(?=\s*(=|<-|\)|,|\]|$))//g;
   }
   # NEWS.md is a record: a released entry names the identifiers of its day.
   s/`[^`]*`//g if $path eq "NEWS.md";

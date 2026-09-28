@@ -1518,7 +1518,7 @@ my_cols <- c(
   E = "#9467bd", F = "#8c564b", G = "#e377c2", H = "#7f7f7f",
   I = "#bcbd22"
 )
-sk_custom <- hv_sankey(dta_san, node_colours = my_cols)
+sk_custom <- hv_sankey(dta_san, node_colors = my_cols)
 plot(sk_custom) +
   labs(title = "Cluster Stability: K = 2 to 9") +
   theme_hv_poster()
@@ -2497,7 +2497,7 @@ head(dta_sp)
 
 # Build S3 objects for reuse below
 sp     <- hv_spaghetti(dta_sp)
-sp_col <- hv_spaghetti(dta_sp, colour_col = "group")
+sp_col <- hv_spaghetti(dta_sp, color_col = "group")
 ```
 
 ## Bare plot
@@ -2616,7 +2616,7 @@ dta_ord        <- dta_sp
 dta_ord$value  <- round(pmin(3, pmax(0, dta_sp$value / 12)))
 levels(dta_ord$group) <- c("Early", "Late")
 
-sp_ord <- hv_spaghetti(dta_ord, colour_col = "group")
+sp_ord <- hv_spaghetti(dta_ord, color_col = "group")
 
 plot(sp_ord, y_labels = c(None = 0, Mild = 1, Moderate = 2, Severe = 3)) +
   scale_color_manual(

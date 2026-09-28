@@ -34,8 +34,10 @@
 #'   `"DRAFT \u2014 "`. Set to `""` to suppress the prefix.
 #' @param size     Font size as a multiplier relative to the device default
 #'   (passed to [grid::gpar()] as `cex`). Default `0.7`.
-#' @param colour   Font color. Default `gray(0.5)` (medium gray), which is
+#' @param color    Font color. Default `gray(0.5)` (medium gray), which is
 #'   visually unobtrusive on both screen and print.
+#' @param colour   The same as `color`: an alias kept for existing code. Give
+#'   one or the other; both with different values is an error.
 #' @param x        Horizontal position in normalized parent coordinates
 #'   (`"npc"`). Default `1` (right edge). Decrease to move left.
 #' @param y        Vertical position in `"npc"`. Default `0` (bottom). Increase
@@ -97,14 +99,16 @@ make_footnote <- function(text       = getwd(),
                           y          = 0,
                           hjust      = "right",
                           vjust      = "bottom",
-                          margin_mm  = 2) {
+                          margin_mm  = 2,
+                          color      = colour) {
+  .check_spelling_pair("color", "colour", !missing(color), !missing(colour), color, colour)
 
   if (!is.character(text) || length(text) != 1L)
     stop("`text` must be a single string.", call. = FALSE)
   if (!is.numeric(size) || size <= 0)
     stop("`size` must be a positive number.", call. = FALSE)
-  if (length(colour) != 1L)
-    stop("`colour` must be a length-1 value.", call. = FALSE)
+  if (length(color) != 1L)
+    stop("`color` must be a length-1 value.", call. = FALSE)
   if (!is.logical(timestamp) || length(timestamp) != 1L)
     stop("`timestamp` must be TRUE or FALSE.", call. = FALSE)
 
@@ -130,7 +134,7 @@ make_footnote <- function(text       = getwd(),
     x     = x_unit,
     y     = y_unit,
     just  = c(hjust, vjust),
-    gp    = gpar(cex = size, col = colour)
+    gp    = gpar(cex = size, col = color)
   )
   popViewport()
   invisible(NULL)
@@ -138,7 +142,6 @@ make_footnote <- function(text       = getwd(),
 
 #' @rdname make_footnote
 #' @param footnoteText Equivalent to `text` in [make_footnote()].
-#' @param color        Equivalent to `colour` in [make_footnote()].
 #' @export
 # camelCase on purpose: makeFootnote() and footnoteText are the names this
 # package exported before the rename to make_footnote(), and an export is
@@ -150,7 +153,7 @@ makeFootnote <- function(footnoteText = getwd(), # nolint: object_name_linter.
   make_footnote(
     text      = footnoteText,
     size      = size,
-    colour    = color,
+    color     = color,
     timestamp = timestamp,
     prefix    = "DRAFT \u2014 "
   )

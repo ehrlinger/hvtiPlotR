@@ -880,7 +880,7 @@ remotes::install_github("davidsjoberg/ggsankey")
 | `sid_dta$C2 <- factor(...)` with `gr2_names` ordering | Factor levels set by `node_levels` argument |
 | `make_long(C2, ..., C9)` | `.make_sankey_long()` (internal) |
 | `geom_sankey()` + `geom_sankey_label()` | `hv_sankey()` + `plot()` |
-| `brewer.pal(9, "Set1")[c(2,6,8,4,3,5,7,1,9)]` | Default `node_colours` |
+| `brewer.pal(9, "Set1")[c(2,6,8,4,3,5,7,1,9)]` | Default `node_colors` |
 
 ```r
 dta_san <- sample_cluster_sankey_data(n = 300, seed = 42)
@@ -959,7 +959,7 @@ regurgitation grade plot (plot_9).
 ```r
 dta    <- sample_spaghetti_data(n_patients = 150, max_obs = 6)
 sp     <- hv_spaghetti(dta)
-sp_col <- hv_spaghetti(dta, colour_col = "group")
+sp_col <- hv_spaghetti(dta, color_col = "group")
 ```
 
 ## Unstratified: AV mean gradient full range (plot_1)
@@ -999,7 +999,7 @@ plot(sp) +
 ## Stratified by sex (plot_2 / plot_4)
 
 Template uses `values=c("red", "blue")`; modernised equivalents below. Pass
-`colour_col = "group"` to `hv_spaghetti()` when constructing `sp_col` so each
+`color_col = "group"` to `hv_spaghetti()` when constructing `sp_col` so each
 patient trajectory inherits the group color.
 
 ```r
@@ -1070,7 +1070,7 @@ dta_ord       <- dta
 dta_ord$value <- round(pmin(3, pmax(0, dta$value / 12)))
 levels(dta_ord$group) <- c("Early", "Late")
 
-sp_ord <- hv_spaghetti(dta_ord, colour_col = "group")
+sp_ord <- hv_spaghetti(dta_ord, color_col = "group")
 
 plot(sp_ord, y_labels = c(None = 0, Mild = 1, Moderate = 2, Severe = 3)) +
   scale_color_manual(

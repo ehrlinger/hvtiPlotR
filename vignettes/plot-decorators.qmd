@@ -194,7 +194,7 @@ highest-luminance hues come first on a dark slide and the darker ones first on
 a light slide. Color and shape both map the grouping column, which is worth
 keeping even though it looks redundant on your monitor: a projector in a dark
 room flattens color differences that read cleanly on screen, and the shapes
-survive where the hues do not. Pass `colours` or `shapes` when a deck calls for
+survive where the hues do not. Pass `colors` or `shapes` when a deck calls for
 a specific set.
 
 ## Naming the series without a legend

@@ -9,15 +9,16 @@ hv_ppt_series(
   colours = NULL,
   shapes = NULL,
   name = NULL,
-  ...
+  ...,
+  colors = colours
 )
 }
 \arguments{
 \item{mode}{Slide background the plot will sit on. \code{"dark"} pairs with
 \code{\link[=theme_hv_ppt_dark]{theme_hv_ppt_dark()}}, \code{"light"} with \code{\link[=theme_hv_ppt_light]{theme_hv_ppt_light()}}.}
 
-\item{colours}{Character vector of colors, one per group in order. Default
-\code{NULL} uses the Okabe-Ito ordering for \code{mode}.}
+\item{colours}{The same as \code{colors}: an alias kept for existing code. Give
+one or the other; both with different values is an error.}
 
 \item{shapes}{Numeric vector of ggplot2 point shapes, one per group in
 order. Default \code{NULL} uses solid glyphs first.}
@@ -28,6 +29,9 @@ Default \code{NULL} draws no title. Unused while the legend is off.}
 \item{...}{Additional named arguments forwarded to the underlying
 \verb{theme_hv_ppt_*()} call, e.g. \code{base_size = 28} or
 \code{legend.position = "top"}.}
+
+\item{colors}{Character vector of colors, one per group in order. Default
+\code{NULL} uses the Okabe-Ito ordering for \code{mode}.}
 }
 \value{
 A list of ggplot2 components: a theme, a color scale and a shape
@@ -71,7 +75,7 @@ them into one instead of stacking two.
 
 The default colors are the Okabe-Ito colorblind-safe palette, ordered for
 the background: high-luminance hues first on a dark slide, darker ones
-first on a light slide. These are not CORR brand colors. Pass \code{colours}
+first on a light slide. These are not CORR brand colors. Pass \code{colors}
 when a deck calls for a specific set.
 
 Six colors and six shapes are supplied, which covers a grouping variable
@@ -136,7 +140,7 @@ plot(trends) + ppt +
 plot(trends) +
   hv_ppt_series(
     mode      = "light",
-    colours   = c("#0072B2", "#D55E00", "#009E73", "#CC79A7"),
+    colors    = c("#0072B2", "#D55E00", "#009E73", "#CC79A7"),
     base_size = 24
   )
 

@@ -1,5 +1,14 @@
 # hvtiPlotR (unreleased)
 
+* Five arguments take a US spelling beside the British one: `color_col` in
+  `hv_spaghetti()`, `line_color` in `plot.hv_spaghetti()`, `node_colors` in
+  `hv_sankey()`, `colors` in `hv_ppt_series()` and `color` in
+  `make_footnote()`. The US name is the documented one; `colour_col`,
+  `line_colour`, `node_colours`, `colours` and `colour` keep working as
+  aliases, and giving both spellings two different values is an error. Every
+  existing positional call binds as before, since the new names come last (or
+  after `...`). `meta` carries `color_col` and `node_colors` beside the British
+  elements, which keep the same value.
 * `scale_color_hv()` is now the primary name of the role-color scale added in
   2.7.18, and `scale_colour_hv()` stays as an alias of it, the way ggplot2
   pairs `scale_color_*()` and `scale_colour_*()`. Existing calls keep working.

@@ -14,14 +14,16 @@
   smooth_se = FALSE,
   smooth_width = 1.2,
   y_labels = NULL,
-  ...
+  ...,
+  line_color = line_colour
 )
 }
 \arguments{
 \item{x}{An \code{hv_spaghetti} object.}
 
-\item{line_colour}{Fixed line color used when \code{colour_col = NULL}.
-Default \code{"gray50"}.}
+\item{line_colour}{The same as \code{line_color}: an alias kept for
+existing code. Give one or the other; both with different values is an
+error.}
 
 \item{line_width}{Line width for individual trajectories. Default \code{0.2}.}
 
@@ -43,6 +45,9 @@ Default \code{FALSE}.}
 Default \code{NULL} (standard numeric axis).}
 
 \item{...}{Ignored; present for S3 consistency.}
+
+\item{line_color}{Fixed line color used when the object has no
+\code{color_col}. Default \code{"gray50"}.}
 }
 \value{
 A bare \code{\link[ggplot2]{ggplot}} object; compose with \code{+}
@@ -54,7 +59,7 @@ color and with a LOESS (or other) smooth overlay.
 }
 \examples{
 dta <- sample_spaghetti_data(n_patients = 150, seed = 42)
-sp  <- hv_spaghetti(dta, colour_col = "group")
+sp  <- hv_spaghetti(dta, color_col = "group")
 
 # With LOESS smooth overlay
 plot(sp, add_smooth = TRUE) +
@@ -65,7 +70,7 @@ plot(sp, add_smooth = TRUE) +
 # Ordinal y-axis
 dta_ord <- dta
 dta_ord$value <- round(pmin(3, pmax(0, dta$value / 12)))
-plot(hv_spaghetti(dta_ord, colour_col = "group"),
+plot(hv_spaghetti(dta_ord, color_col = "group"),
      y_labels = c(None = 0, Mild = 1, Moderate = 2, Severe = 3)) +
   ggplot2::labs(x = "Years", y = "MR Grade") +
   theme_hv_poster()

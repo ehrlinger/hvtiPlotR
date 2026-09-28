@@ -8,7 +8,8 @@ hv_sankey(
   data,
   cluster_cols = paste0("C", 2:9),
   node_levels = NULL,
-  node_colours = NULL
+  node_colours = NULL,
+  node_colors = node_colours
 )
 }
 \arguments{
@@ -26,7 +27,11 @@ sits next to its parent and flows stay uncrossed (see Details). If
 supplied, it is used verbatim but must cover every observed cluster
 label.}
 
-\item{node_colours}{Named character vector mapping node labels to fill
+\item{node_colours}{The same as \code{node_colors}: an alias kept for
+existing code. Give one or the other; both with different values is an
+error.}
+
+\item{node_colors}{Named character vector mapping node labels to fill
 colors. If \code{NULL} (default), labels are mapped to an inline
 ColorBrewer \code{Set1} hex palette in \code{node_levels} order (no
 dependency on \pkg{RColorBrewer}). When there are more labels than
@@ -38,7 +43,8 @@ An object of class \code{c("hv_sankey", "hv_data")}:
 \item{\code{$data}}{The long-format Sankey data frame (four columns:
 \code{x}, \code{node}, \code{next_x}, \code{next_node}).}
 \item{\code{$meta}}{Named list: \code{cluster_cols}, \code{node_levels},
-\code{node_colours}, \code{n_patients}, \code{n_k}.}
+\code{node_colors} (also as \code{node_colours}, for existing code),
+\code{n_patients}, \code{n_k}.}
 \item{\code{$tables}}{Empty list.}
 }
 }
