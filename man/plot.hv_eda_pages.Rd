@@ -26,7 +26,7 @@ Lays the section's panels out as pages of \code{ncol} by \code{nrow} panels. Not
 is printed or saved; the caller prints, saves or captions each page.
 }
 \details{
-Colours and themes are left to the caller, as everywhere in this package.
+Colors and themes are left to the caller, as everywhere in this package.
 Apply them to every panel of a page at once with patchwork's \code{&}:
 \code{page & theme_hv_manuscript(base_size = 8)}.
 }

@@ -37,7 +37,7 @@ A bare \code{\link[ggplot2:ggplot]{ggplot2::ggplot()}} object.
 Builds a bare dot-and-whisker \code{ggplot2} object from an
 \code{\link[=hv_rmst_contrast]{hv_rmst_contrast()}} object. Estimators run down the y axis with the first
 level at the top, so the plot reads in the order supplied. A solid vertical
-line marks zero (no difference). Add colours, scales and a theme with \code{+}.
+line marks zero (no difference). Add colors, scales and a theme with \code{+}.
 }
 \examples{
 est <- data.frame(

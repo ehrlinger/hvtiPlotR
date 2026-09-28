@@ -478,7 +478,7 @@ save_ppt <- function(object,
       top         = top
     )
   } else {
-    # --- Normalise to list ---------------------------------------------------
+    # --- Normalize to list ---------------------------------------------------
     plots  <- if (is_plot_list) object else list(object)
     titles <- rep_len(slide_titles, length(plots))
 

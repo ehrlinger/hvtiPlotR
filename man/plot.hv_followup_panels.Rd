@@ -20,7 +20,7 @@ of \code{x$data}.
 }
 \description{
 Draws one bare goodness-of-follow-up figure per panel, through
-\code{\link[=plot.hv_followup]{plot.hv_followup()}}. Colours, shapes, labels and themes are left to the
+\code{\link[=plot.hv_followup]{plot.hv_followup()}}. Colors, shapes, labels and themes are left to the
 caller, as everywhere in this package; the state levels are \code{"Alive"} and
 \code{"Dead"} for a death panel, and \code{"No event"}, the event's label and
 \code{"Death"} for an event panel.
@@ -31,7 +31,7 @@ fp <- hv_followup_panels(dta, origin_year = 1990,
                          panels = list(all = list(status = "dead", time = "iv_dead")))
 plots <- plot(fp)
 plots$all +
-  ggplot2::scale_colour_manual(values = c(Alive = "#377EB8", Dead = "#E41A1C")) +
+  ggplot2::scale_color_manual(values = c(Alive = "#377EB8", Dead = "#E41A1C")) +
   ggplot2::labs(x = "Year of operation", y = "Follow-up (years)")
 }
 \seealso{

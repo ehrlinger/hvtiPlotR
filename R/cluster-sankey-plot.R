@@ -5,13 +5,13 @@ utils::globalVariables(c("node", "freq"))
 #
 # Cluster stability Sankey diagram.
 # Ports the cluster assignment flow chart from the PAM clustering analysis,
-# showing how patients move between labelled clusters as the number of
+# showing how patients move between labeled clusters as the number of
 # clusters K increases from 2 to 9.
 #
 # Key differences from the original script:
 #  - No hard-coded column names or ordering vectors; caller supplies
 #    cluster_cols and node_levels
-#  - Colour palette is passed via node_colours (default: inline Set1 hex)
+#  - Color palette is passed via node_colors (default: inline Set1 hex)
 #  - NSE-free internal reshape (.make_sankey_long) avoids ggsankey::make_long()
 #    non-standard evaluation
 # ---------------------------------------------------------------------------
@@ -20,7 +20,7 @@ utils::globalVariables(c("node", "freq"))
 #' Sample Cluster Stability Sankey Data
 #'
 #' Generates a synthetic dataset with one row per patient and columns
-#' `C2`–`C9` holding letter-labelled cluster assignments at successive values
+#' `C2`–`C9` holding letter-labeled cluster assignments at successive values
 #' of K (number of clusters). The hierarchical merge structure follows the
 #' pattern from the HVTI PAM clustering analysis:
 #'
@@ -86,7 +86,7 @@ sample_cluster_sankey_data <- function(
     C9 = c("B", "F", "H", "D", "I", "C", "E", "G", "A")
   )
 
-  # Normalise probs
+  # Normalize probs
   probs <- probs[names(probs) %in% names(merge_tree)]
   probs <- probs / sum(probs)
 
@@ -207,7 +207,7 @@ sample_cluster_sankey_data <- function(
 #' Prepare cluster stability Sankey data for plotting
 #'
 #' Validates a wide cluster-assignment data frame, resolves node level
-#' ordering, computes default node colours if not supplied, and pre-computes
+#' ordering, computes default node colors if not supplied, and pre-computes
 #' the long-format Sankey data.  Call \code{\link{plot.hv_sankey}} on the
 #' result to obtain a bare \code{ggplot2} Sankey diagram using
 #' \pkg{ggsankey} geoms.
@@ -233,18 +233,22 @@ sample_cluster_sankey_data <- function(
 #'   sits next to its parent and flows stay uncrossed (see Details). If
 #'   supplied, it is used verbatim but must cover every observed cluster
 #'   label.
-#' @param node_colours  Named character vector mapping node labels to fill
-#'   colours. If \code{NULL} (default), labels are mapped to an inline
+#' @param node_colors   Named character vector mapping node labels to fill
+#'   colors. If \code{NULL} (default), labels are mapped to an inline
 #'   ColorBrewer \code{Set1} hex palette in \code{node_levels} order (no
 #'   dependency on \pkg{RColorBrewer}). When there are more labels than
-#'   palette colours the palette is recycled with a warning.
+#'   palette colors the palette is recycled with a warning.
+#' @param node_colours  The same as \code{node_colors}: an alias kept for
+#'   existing code. Give one or the other; both with different values is an
+#'   error.
 #'
 #' @return An object of class \code{c("hv_sankey", "hv_data")}:
 #' \describe{
 #'   \item{\code{$data}}{The long-format Sankey data frame (four columns:
 #'     \code{x}, \code{node}, \code{next_x}, \code{next_node}).}
 #'   \item{\code{$meta}}{Named list: \code{cluster_cols}, \code{node_levels},
-#'     \code{node_colours}, \code{n_patients}, \code{n_k}.}
+#'     \code{node_colors} (also as \code{node_colours}, for existing code),
+#'     \code{n_patients}, \code{n_k}.}
 #'   \item{\code{$tables}}{Empty list.}
 #' }
 #'
@@ -275,7 +279,10 @@ sample_cluster_sankey_data <- function(
 hv_sankey <- function(data,
                          cluster_cols = paste0("C", 2:9),
                          node_levels  = NULL,
-                         node_colours = NULL) {
+                         node_colours = NULL,
+                         node_colors  = node_colours) {
+  .check_spelling_pair("node_colors", "node_colours", !missing(node_colors), !missing(node_colours),
+                       node_colors, node_colours)
   if (!is.data.frame(data))
     stop("`data` must be a data frame.", call. = FALSE)
   missing_cols <- setdiff(cluster_cols, names(data))
@@ -303,17 +310,17 @@ hv_sankey <- function(data,
            paste(missing_lab, collapse = ", "), call. = FALSE)
   }
 
-  # Default colours: Set1 in node_levels order, recycled (with warning) when
-  # there are more labels than palette colours.
-  if (is.null(node_colours)) {
+  # Default colors: Set1 in node_levels order, recycled (with warning) when
+  # there are more labels than palette colors.
+  if (is.null(node_colors)) {
     n_nodes <- length(node_levels)
     set1    <- c("#E41A1C", "#377EB8", "#4DAF4A", "#984EA3", "#FF7F00",
                  "#FFFF33", "#A65628", "#F781BF", "#999999")
     if (n_nodes > length(set1))
-      warning("More node labels (", n_nodes, ") than Set1 colours (",
-              length(set1), "); colours will repeat.", call. = FALSE)
+      warning("More node labels (", n_nodes, ") than Set1 colors (",
+              length(set1), "); colors will repeat.", call. = FALSE)
     pal          <- rep_len(set1, n_nodes)
-    node_colours <- stats::setNames(pal, node_levels)
+    node_colors  <- stats::setNames(pal, node_levels)
   }
 
   # Reshape to long format
@@ -326,7 +333,8 @@ hv_sankey <- function(data,
     meta = list(
       cluster_cols = cluster_cols,
       node_levels  = node_levels,
-      node_colours = node_colours,
+      node_colors  = node_colors,
+      node_colours = node_colors,
       n_patients   = nrow(data),
       n_k          = length(cluster_cols)
     ),
@@ -437,7 +445,8 @@ plot.hv_sankey <- function(x,
   }
 
   san_dta      <- x$data
-  node_colours <- x$meta$node_colours
+  # An hv_sankey built before node_colors existed carries only node_colours.
+  node_colors <- x$meta[[if ("node_colors" %in% names(x$meta)) "node_colors" else "node_colours"]]
 
   # x-axis tick labels: milestone annotation for listed columns, bare name else
   cluster_cols <- x$meta$cluster_cols
@@ -473,16 +482,16 @@ plot.hv_sankey <- function(x,
       alpha  = label_alpha,
       hjust  = label_hjust,
       size   = label_size / ggplot2::.pt,
-      colour = "black"
+      color = "black"
     ) +
     # ggsankey::theme_sankey() calls element_rect(size = ), deprecated in
-    # ggplot2 3.4.0 in favour of linewidth. The warning is raised inside
+    # ggplot2 3.4.0 in favor of linewidth. The warning is raised inside
     # ggsankey and there is nothing to fix on our side, so it is muffled
     # here rather than left to fire on every hv_sankey() call. Scoped to
     # this one call and to lifecycle warnings only -- any other warning
     # ggsankey raises still surfaces.
     .suppress_deprecation(ggsankey::theme_sankey(base_size = 12)) +
-    ggplot2::scale_fill_manual(values = node_colours) +
+    ggplot2::scale_fill_manual(values = node_colors) +
     ggplot2::scale_x_discrete(labels = x_labels) +
     ggplot2::theme(legend.position = "none") +
     ggplot2::labs(x = NULL)

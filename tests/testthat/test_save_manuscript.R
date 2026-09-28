@@ -29,7 +29,7 @@ test_that("save_manuscript validates its inputs", {
                "directory does not exist")
 })
 
-test_that("save_manuscript honours a custom size and non-pdf format", {
+test_that("save_manuscript honors a custom size and non-pdf format", {
   p <- mk_plot()
   f <- tempfile(fileext = ".png")
   on.exit(unlink(f), add = TRUE)
@@ -47,7 +47,7 @@ test_that("save_manuscript writes an optional draft_file alongside file", {
   expect_true(file.exists(d))
 })
 
-test_that("save_manuscript draft_file honours an explicit draft_dpi", {
+test_that("save_manuscript draft_file honors an explicit draft_dpi", {
   p <- mk_plot()
   f <- tempfile(fileext = ".pdf")
   d <- tempfile(fileext = ".png")

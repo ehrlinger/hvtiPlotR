@@ -16,7 +16,7 @@ left-to-right display order. Minimum two columns.}
 \item{y_col}{Name of the numeric weight column (counts or
 proportions). Default \code{"freq"}.}
 
-\item{fill_col}{Name of the column to map to the flow fill and colour
+\item{fill_col}{Name of the column to map to the flow fill and color
 aesthetics, or \code{NULL} for a single fill. Default \code{NULL}.}
 
 \item{axis_labels}{Character vector of axis labels for the x-axis, the
@@ -35,7 +35,7 @@ An object of class \code{c("hv_alluvial", "hv_data")}:
 Validates a wide alluvial-format data frame and returns an
 \code{hv_alluvial} object.  Call \code{\link{plot.hv_alluvial}} on the
 result to obtain a bare \code{ggplot2} alluvial diagram that you can
-decorate with colour scales, axis labels, and \code{\link{theme_hv_manuscript}}.
+decorate with color scales, axis labels, and \code{\link{theme_hv_manuscript}}.
 }
 \examples{
 dta  <- sample_alluvial_data(n = 300, seed = 42)
@@ -48,7 +48,7 @@ al  # prints axes and observation count
 # 2. Bare plot -- undecorated ggplot returned by plot.hv_alluvial
 p <- plot(al)
 
-# 3. Decorate: fill/colour palettes, axis labels, theme
+# 3. Decorate: fill/color palettes, axis labels, theme
 p +
   ggplot2::scale_fill_manual(
     values = c(None     = "steelblue",
@@ -57,7 +57,7 @@ p +
                Severe   = "firebrick"),
     name = "Pre-op AR"
   ) +
-  ggplot2::scale_colour_manual(
+  ggplot2::scale_color_manual(
     values = c(None     = "steelblue",
                Mild     = "goldenrod",
                Moderate = "darkorange",

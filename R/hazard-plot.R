@@ -606,7 +606,7 @@ sample_nnt_data <- function(n        = 500,
 #' - `empirical`      <- the `plout` / `acpdms` KM output dataset
 #' - `reference`      <- the `smatched` life-table dataset
 #'
-#' Returns a **bare ggplot object**; compose with `scale_colour_*`,
+#' Returns a **bare ggplot object**; compose with `scale_color_*`,
 #' `scale_y_continuous()`, `labs()`, [theme_hv_manuscript()].
 #'
 #' @param curve_data   Data frame of parametric predictions (fine grid).
@@ -694,7 +694,7 @@ sample_nnt_data <- function(n        = 500,
 #'   emp_lower_col = "lower",
 #'   emp_upper_col = "upper"
 #' ) +
-#'   scale_colour_manual(values = c("steelblue"), guide = "none") +
+#'   scale_color_manual(values = c("steelblue"), guide = "none") +
 #'   scale_fill_manual(values = c("steelblue"), guide = "none") +
 #'   scale_x_continuous(limits = c(0, 10), breaks = 0:10) +
 #'   scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, 20),
@@ -713,7 +713,7 @@ sample_nnt_data <- function(n        = 500,
 #'   lower_col    = "haz_lower",
 #'   upper_col    = "haz_upper"
 #' ) +
-#'   scale_colour_manual(values = c("firebrick"), guide = "none") +
+#'   scale_color_manual(values = c("firebrick"), guide = "none") +
 #'   scale_fill_manual(values = c("firebrick"), guide = "none") +
 #'   scale_x_continuous(limits = c(0, 10), breaks = 0:10) +
 #'   scale_y_continuous(limits = c(0, 30),
@@ -730,15 +730,15 @@ sample_nnt_data <- function(n        = 500,
 #'   lower_col     = "cumhaz_lower",
 #'   upper_col     = "cumhaz_upper"
 #' ) +
-#'   scale_colour_manual(values = c("darkorange"), guide = "none") +
+#'   scale_color_manual(values = c("darkorange"), guide = "none") +
 #'   scale_fill_manual(values = c("darkorange"), guide = "none") +
 #'   scale_x_continuous(limits = c(0, 10), breaks = 0:10) +
 #'   labs(x = "Years", y = "Cumulative Hazard (%)") +
 #'   theme_hv_poster()
 #'
 #' # --- (4) Stratified survival (tp.hp.dead.tkdn.stratified.sas) ------------
-#' # Two groups (e.g. Takedown vs No Takedown) with different colours and
-#' # linetypes. KM empirical overlay uses matching colours.
+#' # Two groups (e.g. Takedown vs No Takedown) with different colors and
+#' # linetypes. KM empirical overlay uses matching colors.
 #' dat2 <- sample_hazard_data(
 #'   n = 400, time_max = 10,
 #'   groups = c("No Takedown" = 1.0, "Takedown" = 0.65)
@@ -757,7 +757,7 @@ sample_nnt_data <- function(n        = 500,
 #'   emp_lower_col = "lower",
 #'   emp_upper_col = "upper"
 #' ) +
-#'   scale_colour_manual(
+#'   scale_color_manual(
 #'     values = c("No Takedown" = "steelblue", "Takedown" = "firebrick"),
 #'     name   = NULL
 #'   ) +
@@ -797,7 +797,7 @@ sample_nnt_data <- function(n        = 500,
 #'   ref_estimate_col = "survival",
 #'   ref_group_col    = "group"
 #' ) +
-#'   scale_colour_manual(
+#'   scale_color_manual(
 #'     values = c("<65" = "steelblue", "65-80" = "forestgreen",
 #'                "\u226580" = "firebrick"),
 #'     name = "Age Group"
@@ -828,7 +828,7 @@ sample_nnt_data <- function(n        = 500,
 #'   upper_col    = "surv_upper",
 #'   group_col    = "group"
 #' ) +
-#'   scale_colour_manual(
+#'   scale_color_manual(
 #'     values = c("Ideal (young, stage IIIA)"              = "steelblue",
 #'                "Poor (elderly, stage IIIB, palliation)" = "firebrick"),
 #'     name   = "Patient profile"
@@ -867,7 +867,7 @@ sample_nnt_data <- function(n        = 500,
 #'   emp_lower_col = "lower",
 #'   emp_upper_col = "upper"
 #' ) +
-#'   scale_colour_manual(
+#'   scale_color_manual(
 #'     values = c("Limited FET" = "steelblue", "Extended FET" = "#8B4513"),
 #'     name   = NULL
 #'   ) +
@@ -897,7 +897,7 @@ sample_nnt_data <- function(n        = 500,
 #'   estimate_col = "survival",
 #'   group_col    = "device"
 #' ) +
-#'   scale_colour_manual(
+#'   scale_color_manual(
 #'     values = c("Non-LVAD (first 2 weeks)" = "steelblue", "LVAD" = "firebrick"),
 #'     name   = NULL
 #'   ) +
@@ -915,7 +915,7 @@ sample_nnt_data <- function(n        = 500,
 #'                  lower_col = "surv_lower", upper_col = "surv_upper",
 #'                  empirical = emp,
 #'                  emp_lower_col = "lower", emp_upper_col = "upper") +
-#'   scale_colour_manual(values = c("steelblue"), guide = "none") +
+#'   scale_color_manual(values = c("steelblue"), guide = "none") +
 #'   scale_fill_manual(values = c("steelblue"), guide = "none") +
 #'   labs(x = "Years", y = "Survival (%)") +
 #'   theme_hv_poster()
@@ -936,7 +936,7 @@ sample_nnt_data <- function(n        = 500,
 #'   emp_lower_col = "lower",
 #'   emp_upper_col = "upper"
 #' ) +
-#'   ggplot2::scale_colour_brewer(palette = "Set1", name = NULL) +
+#'   ggplot2::scale_color_brewer(palette = "Set1", name = NULL) +
 #'   ggplot2::scale_fill_brewer(palette   = "Set1", guide = "none") +
 #'   ggplot2::scale_x_continuous(limits = c(0, 10), breaks = 0:10) +
 #'   ggplot2::scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, 20),
@@ -946,7 +946,7 @@ sample_nnt_data <- function(n        = 500,
 #' }
 #'
 #' # See vignette("plot-decorators", package = "hvtiPlotR") for theming,
-#' # colour scales, annotation labels, and saving plots.
+#' # color scales, annotation labels, and saving plots.
 #'
 #' @importFrom ggplot2 ggplot aes geom_line geom_ribbon geom_point geom_errorbar
 #' @importFrom rlang .data
@@ -1003,7 +1003,7 @@ hazard_plot <- function(curve_data,
   if (!is.null(group_col)) {
     base_aes <- ggplot2::aes(x      = .data[[x_col]],
                              y      = .data[[estimate_col]],
-                             colour = .data[[group_col]],
+                             color = .data[[group_col]],
                              group  = .data[[group_col]])
   } else {
     base_aes <- ggplot2::aes(x = .data[[x_col]],
@@ -1028,7 +1028,7 @@ hazard_plot <- function(curve_data,
     p <- p + ggplot2::geom_ribbon(mapping     = rib_aes,
                                   data        = curve_data,
                                   alpha       = ci_alpha,
-                                  colour      = NA,
+                                  color      = NA,
                                   inherit.aes = FALSE)
   }
 
@@ -1062,7 +1062,7 @@ hazard_plot <- function(curve_data,
     if (!is.null(emp_group_col)) {
       emp_aes <- ggplot2::aes(x      = .data[[emp_x_col]],
                               y      = .data[[emp_estimate_col]],
-                              colour = .data[[emp_group_col]])
+                              color = .data[[emp_group_col]])
     } else {
       emp_aes <- ggplot2::aes(x = .data[[emp_x_col]],
                               y = .data[[emp_estimate_col]])
@@ -1089,7 +1089,7 @@ hazard_plot <- function(curve_data,
                                 y      = .data[[emp_estimate_col]],
                                 ymin   = .data[[emp_lower_col]],
                                 ymax   = .data[[emp_upper_col]],
-                                colour = .data[[emp_group_col]])
+                                color = .data[[emp_group_col]])
       } else {
         err_aes <- ggplot2::aes(x    = .data[[emp_x_col]],
                                 y    = .data[[emp_estimate_col]],
@@ -1157,9 +1157,9 @@ hazard_plot <- function(curve_data,
 #'   lower_col = "diff_lower",
 #'   upper_col = "diff_upper"
 #' ) +
-#'   scale_colour_manual(values = c("steelblue"), guide = "none") +
+#'   scale_color_manual(values = c("steelblue"), guide = "none") +
 #'   scale_fill_manual(values = c("steelblue"), guide = "none") +
-#'   geom_hline(yintercept = 0, linetype = "dashed", colour = "grey50") +
+#'   geom_hline(yintercept = 0, linetype = "dashed", color = "gray50") +
 #'   scale_x_continuous(limits = c(0, 10), breaks = 0:10) +
 #'   scale_y_continuous(limits = c(-5, 30),
 #'                      labels = function(x) paste0(x, "%")) +
@@ -1186,9 +1186,9 @@ hazard_plot <- function(curve_data,
 #' dall <- rbind(d1, d2, d3)
 #'
 #' survival_difference_plot(dall, group_col = "comparison") +
-#'   scale_colour_brewer(palette = "Set1", name = NULL) +
+#'   scale_color_brewer(palette = "Set1", name = NULL) +
 #'   scale_fill_brewer(palette = "Set1", guide = "none") +
-#'   geom_hline(yintercept = 0, linetype = "dashed", colour = "grey50") +
+#'   geom_hline(yintercept = 0, linetype = "dashed", color = "gray50") +
 #'   scale_x_continuous(limits = c(0, 10), breaks = 0:10) +
 #'   labs(x = "Years", y = "Survival Difference (%)") +
 #'   theme_hv_poster()
@@ -1212,7 +1212,7 @@ survival_difference_plot <- function(diff_data,
   if (!is.null(group_col)) {
     base_aes <- ggplot2::aes(x      = .data[[x_col]],
                              y      = .data[[estimate_col]],
-                             colour = .data[[group_col]],
+                             color = .data[[group_col]],
                              group  = .data[[group_col]])
   } else {
     base_aes <- ggplot2::aes(x = .data[[x_col]],
@@ -1236,7 +1236,7 @@ survival_difference_plot <- function(diff_data,
     p <- p + ggplot2::geom_ribbon(mapping     = rib_aes,
                                   data        = diff_data,
                                   alpha       = ci_alpha,
-                                  colour      = NA,
+                                  color      = NA,
                                   inherit.aes = FALSE)
   }
 
@@ -1295,7 +1295,7 @@ survival_difference_plot <- function(diff_data,
 #'   lower_col = "nnt_lower",
 #'   upper_col = "nnt_upper"
 #' ) +
-#'   scale_colour_manual(values = c("steelblue"), guide = "none") +
+#'   scale_color_manual(values = c("steelblue"), guide = "none") +
 #'   scale_fill_manual(values = c("steelblue"), guide = "none") +
 #'   scale_x_continuous(limits = c(0, 20), breaks = seq(0, 20, 5)) +
 #'   scale_y_continuous(limits = c(0, 50), breaks = seq(0, 50, 10)) +
@@ -1310,7 +1310,7 @@ survival_difference_plot <- function(diff_data,
 #'   lower_col    = "arr_lower",
 #'   upper_col    = "arr_upper"
 #' ) +
-#'   scale_colour_manual(values = c("firebrick"), guide = "none") +
+#'   scale_color_manual(values = c("firebrick"), guide = "none") +
 #'   scale_fill_manual(values = c("firebrick"), guide = "none") +
 #'   scale_x_continuous(limits = c(0, 20), breaks = seq(0, 20, 5)) +
 #'   scale_y_continuous(limits = c(0, 50),
@@ -1346,7 +1346,7 @@ nnt_plot <- function(nnt_data,
     p <- p + ggplot2::geom_ribbon(
       ggplot2::aes(ymin = .data[[lower_col]], ymax = .data[[upper_col]]),
       alpha  = ci_alpha,
-      colour = NA
+      color = NA
     )
   }
 
@@ -1435,9 +1435,9 @@ nnt_plot <- function(nnt_data,
 #' # 2. Bare plot -- undecorated ggplot returned by plot.hv_hazard
 #' p <- plot(hp)
 #'
-#' # 3. Decorate: colour/fill palettes, axis scales, labels, theme
+#' # 3. Decorate: color/fill palettes, axis scales, labels, theme
 #' p +
-#'   scale_colour_manual(values = c("steelblue"), guide = "none") +
+#'   scale_color_manual(values = c("steelblue"), guide = "none") +
 #'   scale_fill_manual(values   = c("steelblue"), guide = "none") +
 #'   scale_x_continuous(limits = c(0, 10), breaks = 0:10) +
 #'   scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, 20),
@@ -1445,7 +1445,7 @@ nnt_plot <- function(nnt_data,
 #'   labs(x = "Years", y = "Survival (%)") +
 #'   theme_hv_poster()
 #'
-#' # Stratified groups -- colour scale adds clinical meaning
+#' # Stratified groups -- color scale adds clinical meaning
 #' dat2 <- sample_hazard_data(
 #'   n = 400, groups = c("No Takedown" = 1.0, "Takedown" = 0.65)
 #' )
@@ -1454,7 +1454,7 @@ nnt_plot <- function(nnt_data,
 #'   group_col = "group"
 #' )
 #' plot(hp2) +
-#'   scale_colour_manual(
+#'   scale_color_manual(
 #'     values = c("No Takedown" = "steelblue", "Takedown" = "firebrick"),
 #'     name   = NULL
 #'   ) +
@@ -1465,7 +1465,7 @@ nnt_plot <- function(nnt_data,
 #' \donttest{
 #' old <- ggplot2::theme_set(theme_hv_manuscript())
 #' plot(hp2) +
-#'   scale_colour_brewer(palette = "Set1", name = NULL) +
+#'   scale_color_brewer(palette = "Set1", name = NULL) +
 #'   scale_fill_brewer(palette   = "Set1", guide = "none") +
 #'   scale_x_continuous(limits = c(0, 10), breaks = 0:10) +
 #'   scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, 20),
@@ -1475,7 +1475,7 @@ nnt_plot <- function(nnt_data,
 #' }
 #'
 #' # See vignette("plot-decorators", package = "hvtiPlotR") for theming,
-#' # colour scales, annotation labels, and saving plots.
+#' # color scales, annotation labels, and saving plots.
 #'
 #' @importFrom rlang .data
 #' @export
@@ -1578,7 +1578,7 @@ print.hv_hazard <- function(x, ...) {
 #' Plot an hv_hazard object
 #'
 #' Renders a bare [ggplot2::ggplot()] from an [hv_hazard()] object.  Compose
-#' with `scale_colour_*`, `scale_y_continuous()`, `labs()`, and [theme_hv_manuscript()]
+#' with `scale_color_*`, `scale_y_continuous()`, `labs()`, and [theme_hv_manuscript()]
 #' to complete the figure.
 #'
 #' @param x             An `hv_hazard` object from [hv_hazard()].
@@ -1626,7 +1626,7 @@ plot.hv_hazard <- function(x,
   if (!is.null(group_col)) {
     base_aes <- ggplot2::aes(x      = .data[[x_col]],
                              y      = .data[[estimate_col]],
-                             colour = .data[[group_col]],
+                             color = .data[[group_col]],
                              group  = .data[[group_col]])
   } else {
     base_aes <- ggplot2::aes(x = .data[[x_col]],
@@ -1651,7 +1651,7 @@ plot.hv_hazard <- function(x,
     p <- p + ggplot2::geom_ribbon(mapping     = rib_aes,
                                   data        = curve_data,
                                   alpha       = ci_alpha,
-                                  colour      = NA,
+                                  color      = NA,
                                   inherit.aes = FALSE)
   }
 
@@ -1696,7 +1696,7 @@ plot.hv_hazard <- function(x,
     if (!is.null(emp_group_col)) {
       emp_aes <- ggplot2::aes(x      = .data[[emp_x_col]],
                               y      = .data[[emp_estimate_col]],
-                              colour = .data[[emp_group_col]])
+                              color = .data[[emp_group_col]])
     } else {
       emp_aes <- ggplot2::aes(x = .data[[emp_x_col]],
                               y = .data[[emp_estimate_col]])
@@ -1723,7 +1723,7 @@ plot.hv_hazard <- function(x,
                                 y      = .data[[emp_estimate_col]],
                                 ymin   = .data[[emp_lower_col]],
                                 ymax   = .data[[emp_upper_col]],
-                                colour = .data[[emp_group_col]])
+                                color = .data[[emp_group_col]])
       } else {
         err_aes <- ggplot2::aes(x    = .data[[emp_x_col]],
                                 y    = .data[[emp_estimate_col]],
@@ -1780,7 +1780,7 @@ plot.hv_hazard <- function(x,
 #'   lower_col = "diff_lower", upper_col = "diff_upper"
 #' )
 #' plot(sd) +
-#'   geom_hline(yintercept = 0, linetype = "dashed", colour = "grey50") +
+#'   geom_hline(yintercept = 0, linetype = "dashed", color = "gray50") +
 #'   scale_x_continuous(limits = c(0, 10), breaks = 0:10) +
 #'   scale_y_continuous(limits = c(-5, 30),
 #'                      labels = function(x) paste0(x, "%")) +
@@ -1852,7 +1852,7 @@ print.hv_survival_difference <- function(x, ...) {
   if (!is.null(group_col)) {
     base_aes <- ggplot2::aes(x      = .data[[x_col]],
                              y      = .data[[estimate_col]],
-                             colour = .data[[group_col]],
+                             color = .data[[group_col]],
                              group  = .data[[group_col]])
   } else {
     base_aes <- ggplot2::aes(x = .data[[x_col]],
@@ -1876,7 +1876,7 @@ print.hv_survival_difference <- function(x, ...) {
     p <- p + ggplot2::geom_ribbon(mapping     = rib_aes,
                                   data        = plot_data,
                                   alpha       = ci_alpha,
-                                  colour      = NA,
+                                  color      = NA,
                                   inherit.aes = FALSE)
   }
 

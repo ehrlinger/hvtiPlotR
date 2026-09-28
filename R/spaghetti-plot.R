@@ -2,16 +2,16 @@
 #
 # Profile / spaghetti plot of repeated measurements per subject.
 # Ports the pattern from tp.dp.spaghetti.echo.R (template graph library) to
-# hvtiPlotR, replacing hard-coded colours with scale_ composition and
+# hvtiPlotR, replacing hard-coded colors with scale_ composition and
 # explicit theme calls with hvtiPlotR themes.
 #
 # Key differences from the template:
-#  - id_col / colour_col parameters replace hard-coded group = CCFID and
-#    colour = factor(MALE) in every geom_line() call
-#  - No hard-coded colour values; examples demonstrate scale_colour_manual()
-#    and scale_colour_brewer()
+#  - id_col / color_col parameters replace hard-coded group = CCFID and
+#    color = factor(MALE) in every geom_line() call
+#  - No hard-coded color values; examples demonstrate scale_color_manual()
+#    and scale_color_brewer()
 #  - Optional LOESS/mean smooth overlay replaces a separate geom_smooth() call
-#  - Ordinal y-axis labelling (plot_9 pattern) supported via y_labels parameter
+#  - Ordinal y-axis labeling (plot_9 pattern) supported via y_labels parameter
 #  - Theme applied via + theme_hv_poster() in examples
 # ---------------------------------------------------------------------------
 
@@ -90,15 +90,17 @@ sample_spaghetti_data <- function(n_patients = 150,
 #' Validates a long-format repeated-measures data frame and returns an
 #' \code{hv_spaghetti} object.  Call \code{\link{plot.hv_spaghetti}} on
 #' the result to obtain a bare \code{ggplot2} trajectory plot that you can
-#' decorate with colour scales, axis labels, and \code{\link{theme_hv_manuscript}}.
+#' decorate with color scales, axis labels, and \code{\link{theme_hv_manuscript}}.
 #'
 #' @param data       Data frame; one row per observation per subject.
 #' @param x_col      Name of the time column. Default \code{"time"}.
 #' @param y_col      Name of the outcome column. Default \code{"value"}.
 #' @param id_col     Name of the subject-identifier column (used as the
 #'   \code{group} aesthetic for line continuity). Default \code{"id"}.
-#' @param colour_col Name of the column to map to line colour, or \code{NULL}
-#'   for a single uniform colour. Default \code{NULL}.
+#' @param color_col Name of the column to map to line color, or \code{NULL}
+#'   for a single uniform color. Default \code{NULL}.
+#' @param colour_col The same as \code{color_col}: an alias kept for existing
+#'   code. Give one or the other; both with different values is an error.
 #'
 #' @return An object of class \code{c("hv_spaghetti", "hv_data")}; call
 #'   \code{plot()} on the result to render the figure; see
@@ -106,7 +108,8 @@ sample_spaghetti_data <- function(n_patients = 150,
 #' \describe{
 #'   \item{\code{$data}}{The validated input data frame.}
 #'   \item{\code{$meta}}{Named list: \code{x_col}, \code{y_col},
-#'     \code{id_col}, \code{colour_col}, \code{n_subjects},
+#'     \code{id_col}, \code{color_col} (also as \code{colour_col}, for
+#'     existing code), \code{n_subjects},
 #'     \code{n_obs}.}
 #'   \item{\code{$tables}}{Empty list.}
 #' }
@@ -123,15 +126,15 @@ sample_spaghetti_data <- function(n_patients = 150,
 #' dta <- sample_spaghetti_data(n_patients = 150, seed = 42)
 #'
 #' # 1. Build data object
-#' sp <- hv_spaghetti(dta, colour_col = "group")
+#' sp <- hv_spaghetti(dta, color_col = "group")
 #' sp  # prints subject count, observation count, column mapping
 #'
 #' # 2. Bare plot -- undecorated ggplot returned by plot.hv_spaghetti
 #' p <- plot(sp)
 #'
-#' # 3. Decorate: colour palette, axis labels, theme
+#' # 3. Decorate: color palette, axis labels, theme
 #' p +
-#'   ggplot2::scale_colour_manual(
+#'   ggplot2::scale_color_manual(
 #'     values = c(Female = "firebrick", Male = "steelblue"), name = NULL
 #'   ) +
 #'   ggplot2::labs(x = "Years after Operation",
@@ -144,12 +147,15 @@ hv_spaghetti <- function(data,
                            x_col      = "time",
                            y_col      = "value",
                            id_col     = "id",
-                           colour_col = NULL) {
+                           colour_col = NULL,
+                           color_col  = colour_col) {
+  .check_spelling_pair("color_col", "colour_col", !missing(color_col), !missing(colour_col),
+                       color_col, colour_col)
   .check_df(data)
   .check_cols(data, c(x_col, y_col, id_col))
-  if (!is.null(colour_col))
-    .check_col(data, colour_col)
-  .check_complete_labels(data, c(id_col, colour_col))
+  if (!is.null(color_col))
+    .check_col(data, color_col)
+  .check_complete_labels(data, c(id_col, color_col))
   incomplete <- .count_incomplete(data, c(x_col, y_col))
 
   new_hv_data(
@@ -158,7 +164,8 @@ hv_spaghetti <- function(data,
       x_col      = x_col,
       y_col      = y_col,
       id_col     = id_col,
-      colour_col = colour_col,
+      color_col  = color_col,
+      colour_col = color_col,
       n_subjects = length(unique(data[[id_col]])),
       n_obs      = nrow(data),
       n_missing  = incomplete$n_missing
@@ -185,8 +192,10 @@ print.hv_spaghetti <- function(x, ...) {
               else ""))
   cat(sprintf("  x / y / id  : %s / %s / %s\n",
               m$x_col, m$y_col, m$id_col))
-  if (!is.null(m$colour_col))
-    cat(sprintf("  Colour col  : %s\n", m$colour_col))
+  # An hv_spaghetti built before color_col existed carries only colour_col.
+  color_col <- m[[if ("color_col" %in% names(m)) "color_col" else "colour_col"]]
+  if (!is.null(color_col))
+    cat(sprintf("  Color col  : %s\n", color_col))
   invisible(x)
 }
 
@@ -194,11 +203,14 @@ print.hv_spaghetti <- function(x, ...) {
 #' Plot an hv_spaghetti object
 #'
 #' Draws one trajectory line per subject over time, optionally stratified by
-#' colour and with a LOESS (or other) smooth overlay.
+#' color and with a LOESS (or other) smooth overlay.
 #'
 #' @param x             An \code{hv_spaghetti} object.
-#' @param line_colour   Fixed line colour used when \code{colour_col = NULL}.
-#'   Default \code{"grey50"}.
+#' @param line_color    Fixed line color used when the object has no
+#'   \code{color_col}. Default \code{"gray50"}.
+#' @param line_colour   The same as \code{line_color}: an alias kept for
+#'   existing code. Give one or the other; both with different values is an
+#'   error.
 #' @param line_width    Line width for individual trajectories. Default \code{0.2}.
 #' @param alpha         Transparency of plot elements in \eqn{[0,1]}.
 #'   Default \code{0.8}.
@@ -223,18 +235,18 @@ print.hv_spaghetti <- function(x, ...) {
 #'
 #' @examples
 #' dta <- sample_spaghetti_data(n_patients = 150, seed = 42)
-#' sp  <- hv_spaghetti(dta, colour_col = "group")
+#' sp  <- hv_spaghetti(dta, color_col = "group")
 #'
 #' # With LOESS smooth overlay
 #' plot(sp, add_smooth = TRUE) +
-#'   ggplot2::scale_colour_brewer(palette = "Set1", name = NULL) +
+#'   ggplot2::scale_color_brewer(palette = "Set1", name = NULL) +
 #'   ggplot2::labs(x = "Years", y = "AV Mean Gradient (mmHg)") +
 #'   theme_hv_poster()
 #'
 #' # Ordinal y-axis
 #' dta_ord <- dta
 #' dta_ord$value <- round(pmin(3, pmax(0, dta$value / 12)))
-#' plot(hv_spaghetti(dta_ord, colour_col = "group"),
+#' plot(hv_spaghetti(dta_ord, color_col = "group"),
 #'      y_labels = c(None = 0, Mild = 1, Moderate = 2, Severe = 3)) +
 #'   ggplot2::labs(x = "Years", y = "MR Grade") +
 #'   theme_hv_poster()
@@ -243,19 +255,19 @@ print.hv_spaghetti <- function(x, ...) {
 #' \donttest{
 #' old <- ggplot2::theme_set(theme_hv_manuscript())
 #' plot(sp, add_smooth = TRUE) +
-#'   ggplot2::scale_colour_brewer(palette = "Set1", name = NULL) +
+#'   ggplot2::scale_color_brewer(palette = "Set1", name = NULL) +
 #'   ggplot2::labs(x = "Years", y = "AV Mean Gradient (mmHg)")
 #' ggplot2::theme_set(old)
 #' }
 #'
 #' # See vignette("plot-decorators", package = "hvtiPlotR") for theming,
-#' # colour scales, annotation labels, and saving plots.
+#' # color scales, annotation labels, and saving plots.
 #'
-#' @importFrom ggplot2 ggplot aes geom_line geom_smooth scale_colour_identity scale_y_continuous
+#' @importFrom ggplot2 ggplot aes geom_line geom_smooth scale_color_identity scale_y_continuous
 #' @importFrom rlang .data
 #' @export
 plot.hv_spaghetti <- function(x,
-                                line_colour   = "grey50",
+                                line_colour   = "gray50",
                                 line_width    = 0.2,
                                 alpha         = 0.8,
                                 add_smooth    = FALSE,
@@ -263,7 +275,10 @@ plot.hv_spaghetti <- function(x,
                                 smooth_se     = FALSE,
                                 smooth_width  = 1.2,
                                 y_labels      = NULL,
-                                ...) {
+                                ...,
+                                line_color    = line_colour) {
+  .check_spelling_pair("line_color", "line_colour", !missing(line_color), !missing(line_colour),
+                       line_color, line_colour)
   .check_alpha(alpha)
   if (!(is.null(y_labels) ||
           (is.numeric(y_labels) && !is.null(names(y_labels)))))
@@ -275,15 +290,16 @@ plot.hv_spaghetti <- function(x,
   x_col      <- x$meta$x_col
   y_col      <- x$meta$y_col
   id_col     <- x$meta$id_col
-  colour_col <- x$meta$colour_col
+  # An hv_spaghetti built before color_col existed carries only colour_col.
+  color_col  <- x$meta[[if ("color_col" %in% names(x$meta)) "color_col" else "colour_col"]]
 
   # --- Line layer -----------------------------------------------------------
-  if (!is.null(colour_col)) {
+  if (!is.null(color_col)) {
     line_aes <- ggplot2::aes(
       x      = .data[[x_col]],
       y      = .data[[y_col]],
       group  = .data[[id_col]],
-      colour = .data[[colour_col]]
+      color = .data[[color_col]]
     )
   } else {
     line_aes <- ggplot2::aes(
@@ -298,18 +314,18 @@ plot.hv_spaghetti <- function(x,
       mapping   = line_aes,
       linewidth = line_width,
       alpha     = alpha,
-      colour    = if (is.null(colour_col)) line_colour else NULL
+      color    = if (is.null(color_col)) line_color else NULL
     )
 
   # --- Optional smooth overlay ----------------------------------------------
   if (add_smooth) {
-    if (!is.null(colour_col)) {
+    if (!is.null(color_col)) {
       smooth_aes <- ggplot2::aes(
         x      = .data[[x_col]],
         y      = .data[[y_col]],
-        colour = .data[[colour_col]],
-        fill   = .data[[colour_col]],
-        group  = .data[[colour_col]]
+        color = .data[[color_col]],
+        fill   = .data[[color_col]],
+        group  = .data[[color_col]]
       )
     } else {
       smooth_aes <- ggplot2::aes(x = .data[[x_col]], y = .data[[y_col]])
@@ -332,9 +348,9 @@ plot.hv_spaghetti <- function(x,
     )
   }
 
-  # When unstratified, suppress the spurious colour legend
-  if (is.null(colour_col)) {
-    p <- p + ggplot2::scale_colour_identity()
+  # When unstratified, suppress the spurious color legend
+  if (is.null(color_col)) {
+    p <- p + ggplot2::scale_color_identity()
   }
 
   p

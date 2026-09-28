@@ -101,6 +101,16 @@
   invisible(x)
 }
 
+# An argument taking both spellings (color_col and colour_col, say) must not be
+# given two different values: which one wins would be a guess. The US name is
+# the primary and defaults to the British one, so either alone works.
+.check_spelling_pair <- function(us_name, uk_name, us_given, uk_given, us, uk) {
+  if (us_given && uk_given && !identical(us, uk))
+    stop(sprintf("`%s` and `%s` are one argument spelled two ways; give one, or both with the same value.",
+                 us_name, uk_name), call. = FALSE)
+  invisible(NULL)
+}
+
 #' @noRd
 # Shared missing-data contract. Incomplete rows are excluded from the
 # analysis, so the object must report the *analyzed* cohort rather than the
@@ -117,7 +127,7 @@
                                logical(1))]
     warning(
       sprintf(
-        "%d of %d row(s) excluded%s for missing values in %s; analysing %d.",
+        "%d of %d row(s) excluded%s for missing values in %s; analyzing %d.",
         n_excluded, n_input,
         if (is.null(context)) "" else paste0(" from the ", context),
         paste(sprintf("`%s`", culprits), collapse = ", "),

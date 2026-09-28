@@ -16,7 +16,7 @@
 }
 \value{
 A bare \code{\link[ggplot2]{ggplot}} object; compose with \code{+}
-to add colour scales, axis limits, labels, and
+to add color scales, axis limits, labels, and
 \code{\link{theme_hv_manuscript}}.
 }
 \description{
@@ -24,7 +24,7 @@ Builds a bare mirrored-histogram \code{ggplot2} object from an
 \code{\link{hv_mirror_hist}} data object.  Bars for the treated group
 appear above the x-axis; bars for the control group appear below.  Matched
 or weighted patients are shown in a contrasting shade.  Compose with
-\code{+} to add colour scales, axis labels, and \code{\link{theme_hv_manuscript}}.
+\code{+} to add color scales, axis labels, and \code{\link{theme_hv_manuscript}}.
 }
 \examples{
 dta <- sample_mirror_histogram_data(n = 500)

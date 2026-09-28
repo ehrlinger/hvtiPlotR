@@ -107,7 +107,7 @@ test_that("plot(hv_venn) accepts show_percentage and a fill override", {
 test_that("plot(hv_venn) errors on a wrong-length fill", {
   dta <- sample_upset_data(n = 100, seed = 1)
   v   <- hv_venn(dta, sets = c("AV_Replacement", "MV_Replacement", "CABG"))
-  expect_error(plot(v, fill = c("red", "blue")), "one colour per set")
+  expect_error(plot(v, fill = c("red", "blue")), "one color per set")
 })
 
 test_that("plot(hv_venn) errors when fill and fill_color are both given", {

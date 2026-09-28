@@ -250,7 +250,7 @@ print.hv_followup_panels <- function(x, ...) {
 #' Plot an hv_followup_panels object
 #'
 #' Draws one bare goodness-of-follow-up figure per panel, through
-#' [plot.hv_followup()]. Colours, shapes, labels and themes are left to the
+#' [plot.hv_followup()]. Colors, shapes, labels and themes are left to the
 #' caller, as everywhere in this package; the state levels are `"Alive"` and
 #' `"Dead"` for a death panel, and `"No event"`, the event's label and
 #' `"Death"` for an event panel.
@@ -271,7 +271,7 @@ print.hv_followup_panels <- function(x, ...) {
 #'                          panels = list(all = list(status = "dead", time = "iv_dead")))
 #' plots <- plot(fp)
 #' plots$all +
-#'   ggplot2::scale_colour_manual(values = c(Alive = "#377EB8", Dead = "#E41A1C")) +
+#'   ggplot2::scale_color_manual(values = c(Alive = "#377EB8", Dead = "#E41A1C")) +
 #'   ggplot2::labs(x = "Year of operation", y = "Follow-up (years)")
 #' @export
 plot.hv_followup_panels <- function(x, alpha = 0.5, ...) {

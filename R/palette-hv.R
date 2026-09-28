@@ -1,5 +1,5 @@
-# Role colours for EDA and follow-up figures: hv_role_palette() and the
-# scale_colour_hv() / scale_fill_hv() scales that apply it panel by panel.
+# Role colors for EDA and follow-up figures: hv_role_palette() and the
+# scale_color_hv() / scale_fill_hv() scales that apply it panel by panel.
 # The rule and its reasoning: dev/specs/2026-09-27-hv-palette-design.md.
 
 .HV_ROLE_EVENT <- "#D55E00"
@@ -10,22 +10,22 @@
 # role is present: it reads as the event.
 .HV_TOL_MUTED <- c("#CC6677", "#332288", "#117733", "#882255", "#44AA99", "#999933", "#AA4499")
 
-#' Colours for a figure's levels, by role
+#' Colors for a figure's levels, by role
 #'
 #' @description
-#' The house colour rule for EDA and follow-up figures, as a named vector you
+#' The house color rule for EDA and follow-up figures, as a named vector you
 #' can check or reuse: an event is vermillion, censored is blue, missing is
-#' light grey, and every other level takes a colourblind-safe colour in order.
-#' To apply the rule to a plot, use [scale_fill_hv()] or [scale_colour_hv()],
+#' light gray, and every other level takes a colorblind-safe color in order.
+#' To apply the rule to a plot, use [scale_fill_hv()] or [scale_color_hv()],
 #' which call this for each panel.
 #'
 #' @details
-#' Every colour is decided from `levels` alone:
+#' Every color is decided from `levels` alone:
 #'
 #' 1. A level named in `event` is `#D55E00`, in `censored` `#0072B2`, and in
 #'    `missing` `#CCCCCC`. These hold even when the level is the only one.
 #' 2. Every other level, in `levels` order, takes the light series of
-#'    [hv_ppt_palette()]: the Okabe-Ito colours without yellow and sky blue,
+#'    [hv_ppt_palette()]: the Okabe-Ito colors without yellow and sky blue,
 #'    starting at blue, so a sole level with no role is blue.
 #' 3. When any of `levels` is named in `event` or `censored`, blue and
 #'    vermillion leave that series, so no other level can be mistaken for the
@@ -33,24 +33,24 @@
 #'    so one call can serve panels that do and do not carry the event.
 #' 4. When the other levels outnumber the series, all of them switch to Paul
 #'    Tol's muted palette, without its sand and cyan, and without its rose when
-#'    a role is present. Beyond that there are no more colourblind-safe
-#'    colours, and the function stops with an error of class
+#'    a role is present. Beyond that there are no more colorblind-safe
+#'    colors, and the function stops with an error of class
 #'    `hv_role_palette_capacity`.
 #'
-#' Every colour except the missing grey is at least 2:1 against white. The
-#' grey is fainter on purpose: missing is the one level meant to recede.
+#' Every color except the missing gray is at least 2:1 against white. The
+#' gray is fainter on purpose: missing is the one level meant to recede.
 #'
 #' @param levels Character vector of distinct level names, in drawing order.
 #' @param event,censored Level names that take the event or the censored
-#'   colour, or `NULL` for none. Names not in `levels` are ignored.
+#'   color, or `NULL` for none. Names not in `levels` are ignored.
 #' @param missing Level name that stands for missing values. `"(Missing)"` is
 #'   the explicit level [hv_eda()] adds.
 #'
-#' @return A character vector of hex colours, named by `levels` and in the
+#' @return A character vector of hex colors, named by `levels` and in the
 #'   same order.
 #'
-#' @seealso [scale_fill_hv()] and [scale_colour_hv()] to apply the rule to a
-#'   plot; [hv_ppt_palette()] for series colours with no role attached.
+#' @seealso [scale_fill_hv()] and [scale_color_hv()] to apply the rule to a
+#'   plot; [hv_ppt_palette()] for series colors with no role attached.
 #'
 #' @examples
 #' hv_role_palette(c("No event", "Reoperation", "Death"),
@@ -88,7 +88,7 @@ hv_role_palette <- function(levels, event = NULL, censored = NULL, missing = "(M
   n <- sum(others)
   if (n > length(fallback)) {
     stop(errorCondition(
-      sprintf("%d levels need a colour, and the colourblind-safe palettes hold %d%s.",
+      sprintf("%d levels need a color, and the colorblind-safe palettes hold %d%s.",
               n, length(fallback), if (any(is_event | is_censored)) " beside the event and censored levels" else ""),
       class = "hv_role_palette_capacity"
     ))
@@ -97,31 +97,34 @@ hv_role_palette <- function(levels, event = NULL, censored = NULL, missing = "(M
   out
 }
 
-#' Colour and fill scales that apply the role rule to each panel
+#' Color and fill scales that apply the role rule to each panel
 #'
 #' @description
-#' Discrete scales that colour each panel by [hv_role_palette()]: event
-#' vermillion, censored blue, missing light grey, and colourblind-safe colours
+#' Discrete scales that color each panel by [hv_role_palette()]: event
+#' vermillion, censored blue, missing light gray, and colorblind-safe colors
 #' for everything else. Add one to a page of panels with `&` and every panel
-#' is coloured from its own levels, so a panel without the event still draws
+#' is colored from its own levels, so a panel without the event still draws
 #' its levels from blue.
 #'
 #' @details
-#' Colours stay the caller's choice: no constructor or `plot()` method in this
+#' `scale_colour_hv()` is an alias of `scale_color_hv()`, the same pairing of
+#' British and US names that ggplot2 gives its own color scales.
+#'
+#' Colors stay the caller's choice: no constructor or `plot()` method in this
 #' package applies these scales for you.
 #'
-#' A panel with more levels than the colourblind-safe palettes hold is drawn in
+#' A panel with more levels than the colorblind-safe palettes hold is drawn in
 #' ggplot2's default hue palette instead, with a warning naming its level
 #' count, so one variable with many levels does not stop a report. Call
 #' [hv_role_palette()] directly to get an error in that case.
 #'
 #' @inheritParams hv_role_palette
-#' @param na.value Colour for a real `NA`. The default is the missing grey, so
+#' @param na.value Color for a real `NA`. The default is the missing gray, so
 #'   an `NA` and a `"(Missing)"` level look the same.
 #' @param ... Passed to [ggplot2::discrete_scale()]: `name`, `labels`,
 #'   `guide` and so on.
 #'
-#' @return A discrete ggplot2 scale for the `colour` or `fill` aesthetic.
+#' @return A discrete ggplot2 scale for the `color` or `fill` aesthetic.
 #'
 #' @seealso [hv_role_palette()] for the rule itself.
 #'
@@ -139,10 +142,15 @@ scale_fill_hv <- function(event = NULL, censored = NULL, missing = "(Missing)",
 
 #' @rdname scale_fill_hv
 #' @export
-scale_colour_hv <- function(event = NULL, censored = NULL, missing = "(Missing)",
-                             na.value = .HV_ROLE_MISSING, ...) { # nolint: object_name_linter.
+scale_color_hv <- function(event = NULL, censored = NULL, missing = "(Missing)",
+                            na.value = .HV_ROLE_MISSING, ...) { # nolint: object_name_linter.
+  # "colour" is ggplot2's internal aesthetic name; its own scale_color_*() pass it too.
   .hv_role_scale("colour", event, censored, missing, na.value, ...)
 }
+
+#' @rdname scale_fill_hv
+#' @export
+scale_colour_hv <- scale_color_hv
 
 # ggplot2's default discrete hue, which is scales::hue_pal()(n); scales is only
 # in Suggests, so it is written out here.
@@ -150,7 +158,7 @@ scale_colour_hv <- function(event = NULL, censored = NULL, missing = "(Missing)"
   grDevices::hcl(h = seq(15, 375, length.out = n + 1L)[seq_len(n)], c = 100, l = 65)
 }
 
-# A discrete scale whose map() colours from the limits it is given. palette(n)
+# A discrete scale whose map() colors from the limits it is given. palette(n)
 # sees only a count, so the rule, which depends on level names, lives in map().
 # map(self, x, limits) is ggplot2's extension surface, the same in 3.5.0 and
 # 4.0.3; test_role_palette.R builds a two-panel page to catch a change.
@@ -167,7 +175,7 @@ scale_colour_hv <- function(event = NULL, censored = NULL, missing = "(Missing)"
         hv_role_palette_capacity = function(e) {
           if (!self$capacity_warned) {
             self$capacity_warned <- TRUE
-            warning(sprintf("A panel with %d levels (%s) has more than the colourblind-safe palettes hold; ",
+            warning(sprintf("A panel with %d levels (%s) has more than the colorblind-safe palettes hold; ",
                             length(limits), paste(utils::head(limits, 4L), collapse = ", ")),
                     "drawing it in ggplot2's default hue.", call. = FALSE)
           }

@@ -193,7 +193,7 @@ km_extract_tidy <- function(fit, group_col) {
 
 ##' Build numbers-at-risk table
 ##'
-##' For each stratum, counts analysed subjects whose observed follow-up time is
+##' For each stratum, counts analyzed subjects whose observed follow-up time is
 ##' greater than or equal to each report time.
 ##'
 ##' @param time         Numeric vector of observed follow-up times.
@@ -409,7 +409,7 @@ km_build_life_plot <- function(km_df, alpha) {
 #'   Default \code{"dead"}.
 #' @param group_col    Optional name of a character or factor column used to
 #'   stratify the analysis.  \code{NULL} (default) produces an unstratified
-#'   estimate labelled \code{"All"}.
+#'   estimate labeled \code{"All"}.
 #' @param method       Estimator: \code{"kaplan-meier"} (default, logit CI;
 #'   mirrors SAS \code{\%kaplan}) or \code{"nelson-aalen"} (Fleming-Harrington
 #'   cumulative hazard with log CI; mirrors SAS \code{\%nelsont}, preferred
@@ -430,11 +430,11 @@ km_build_life_plot <- function(km_df, alpha) {
 #'     \code{life}, \code{proplife}, \code{log_cumhaz}, \code{log_time}.}
 #'   \item{\code{$meta}}{Named list: \code{time_col}, \code{event_col},
 #'     \code{group_col}, \code{method}, \code{conf_level},
-#'     \code{report_times}, \code{n_obs} (the \emph{analysed} cohort),
+#'     \code{report_times}, \code{n_obs} (the \emph{analyzed} cohort),
 #'     \code{n_input}, \code{n_excluded}, \code{n_events}.}
 #'   \item{\code{$tables}}{Named list with two data frames:
 #'     \code{risk} (\code{strata}, \code{report_time}, \code{n.risk}), where
-#'     \code{n.risk} counts analysed subjects with follow-up greater than or
+#'     \code{n.risk} counts analyzed subjects with follow-up greater than or
 #'     equal to the exact report time, and
 #'     \code{report} (\code{strata}, \code{report_time}, \code{surv},
 #'     \code{lower}, \code{upper}, \code{n.risk}, \code{n.event}).}
@@ -443,7 +443,7 @@ km_build_life_plot <- function(km_df, alpha) {
 #' @section Missing data:
 #' Rows with a missing time, event, or grouping value are excluded before
 #' fitting, with a warning naming the columns responsible.  \code{$meta$n_obs}
-#' and \code{print()} report the \emph{analysed} cohort, alongside
+#' and \code{print()} report the \emph{analyzed} cohort, alongside
 #' \code{n_input} and \code{n_excluded}, so the reported N always matches the
 #' cohort the estimates describe.
 #'
@@ -480,7 +480,7 @@ km_build_life_plot <- function(km_df, alpha) {
 #'                 title = "Freedom from Death") +
 #'   theme_hv_poster()
 #'
-#' # Stratified: colour scale adds clinical meaning
+#' # Stratified: color scale adds clinical meaning
 #' dta_s <- sample_survival_data(
 #'   n = 500, strata_levels = c("Type A", "Type B"),
 #'   hazard_ratios = c(1, 1.4), seed = 42
@@ -508,13 +508,13 @@ km_build_life_plot <- function(km_df, alpha) {
 #' \donttest{
 #' old <- ggplot2::theme_set(theme_hv_manuscript())
 #' plot(km_s) +
-#'   ggplot2::scale_colour_brewer(palette = "Set1", name = "Valve Type") +
+#'   ggplot2::scale_color_brewer(palette = "Set1", name = "Valve Type") +
 #'   ggplot2::labs(x = "Years after Operation", y = "Survival (%)")
 #' ggplot2::theme_set(old)
 #' }
 #'
 #' # See vignette("plot-decorators", package = "hvtiPlotR") for theming,
-#' # colour scales, annotation labels, and saving plots.
+#' # color scales, annotation labels, and saving plots.
 #'
 #' @importFrom survival Surv survfit
 #' @importFrom rlang .data
@@ -612,7 +612,7 @@ print.hv_survival <- function(x, ...) {
               100 * m$n_events / max(m$n_obs, 1L)))
   if (isTRUE(m$n_excluded > 0L))
     cat(sprintf(
-      "                %d analysed of %d input; %d excluded for missing values\n",
+      "                %d analyzed of %d input; %d excluded for missing values\n",
       m$n_obs, m$n_input, m$n_excluded))
   cat(sprintf("  Conf level  : %.0f%%\n", m$conf_level * 100))
   cat(sprintf("  Report times: %s\n",

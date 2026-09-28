@@ -45,7 +45,7 @@ Validates a patient-level data frame, computes per-x-value summary
 statistics (mean or median), and returns an \code{hv_trends} object.
 Call \code{\link{plot.hv_trends}} on the result to obtain a bare
 \code{ggplot2} trend plot (LOESS smooth + annual summary points) that you
-can decorate with colour scales, axis limits, and \code{\link{theme_hv_manuscript}}.
+can decorate with color scales, axis limits, and \code{\link{theme_hv_manuscript}}.
 }
 \examples{
 dta <- sample_trends_data(n = 600, year_range = c(1985L, 2015L),
@@ -58,9 +58,9 @@ tr  # prints observation and group counts
 # 2. Bare plot -- undecorated ggplot returned by plot.hv_trends
 p <- plot(tr)
 
-# 3. Decorate: colour palette, axis scales, labels, theme
+# 3. Decorate: color palette, axis scales, labels, theme
 p +
-  ggplot2::scale_colour_manual(
+  ggplot2::scale_color_manual(
     values = c(I = "steelblue", II = "firebrick",
                III = "forestgreen", IV = "goldenrod3"),
     name = "NYHA Class"

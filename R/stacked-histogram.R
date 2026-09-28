@@ -27,7 +27,7 @@
 #' Validates a patient-level or observation-level data frame and returns an
 #' \code{hv_stacked} object.  Call \code{\link{plot.hv_stacked}} on the
 #' result to obtain a bare \code{ggplot2} stacked (or proportional) histogram
-#' that you can decorate with colour scales, axis labels, and
+#' that you can decorate with color scales, axis labels, and
 #' \code{\link{theme_hv_manuscript}}.
 #'
 #' @param data      A data frame.
@@ -64,7 +64,7 @@
 #' # 2. Bare plot -- undecorated ggplot returned by plot.hv_stacked
 #' p <- plot(sh)
 #'
-#' # 3. Decorate: fill/colour brewer palette, axis labels, theme
+#' # 3. Decorate: fill/color brewer palette, axis labels, theme
 #' p +
 #'   ggplot2::scale_fill_brewer(palette = "Set1", name = "Category") +
 #'   ggplot2::scale_color_brewer(palette = "Set1", name = "Category") +
@@ -149,7 +149,7 @@ print.hv_stacked <- function(x, ...) {
 #'   ggplot2::labs(x = "Year", y = "Count") +
 #'   theme_hv_poster()
 #'
-#' # Proportional (fill) histogram with manual colours
+#' # Proportional (fill) histogram with manual colors
 #' plot(hv_stacked(dta, x_col = "year", group_col = "category",
 #'                   position = "fill")) +
 #'   ggplot2::scale_fill_manual(
@@ -172,7 +172,7 @@ plot.hv_stacked <- function(x, ...) {
   ggplot2::ggplot(x$data, ggplot2::aes(
     x      = .data[[m$x_col]],
     fill   = factor(.data[[m$group_col]]),
-    colour = factor(.data[[m$group_col]])
+    color = factor(.data[[m$group_col]])
   )) +
     ggplot2::geom_histogram(binwidth = m$binwidth,
                             position = m$position)

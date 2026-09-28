@@ -13,7 +13,7 @@
 #   2. Export boots_ci   -> read.csv("boots_ci.csv")   -> same curve_data, lower/upper cols
 #   3. Export means      -> read.csv("means.csv")      -> data_points
 #   4. Call hv_nonparametric(curve_data, ..., data_points = ...)
-#   5. Compose with scale_colour_*, labs(), theme_hv_manuscript() using + operator
+#   5. Compose with scale_color_*, labs(), theme_hv_manuscript() using + operator
 #      (replaces the `color=` and axis options inside %plot())
 #
 # Internal two-phase helper (not exported):
@@ -34,7 +34,7 @@
 # Simulation tuning constants — single source of truth for all np-curve
 # simulation functions.  Change here to update every code path.
 .NP_SIM <- list(
-  eta_intercept = -0.5,   # log-odds shift; centres baseline P(event) ~ 18 %
+  eta_intercept = -0.5,   # log-odds shift; centers baseline P(event) ~ 18 %
   logit_shift   = -1.2,   # additional logit shift; P(event) ~ 12 % at t = 0
   cont_baseline =  40,    # continuous outcome baseline (e.g. AV gradient, mmHg)
   cont_scale    =   8,    # eta -> mmHg scaling factor
@@ -270,7 +270,7 @@ sample_nonparametric_curve_points <- function(n            = 500,
 #' Validates pre-computed curve data (and optional CI bounds and binned data
 #' summary points) and returns an \code{hv_nonparametric} object.  Call
 #' \code{\link{plot.hv_nonparametric}} to obtain a bare \code{ggplot2}
-#' curve plot that you can decorate with colour/fill scales, axis limits, and
+#' curve plot that you can decorate with color/fill scales, axis limits, and
 #' \code{\link{theme_hv_manuscript}}.
 #'
 #' Covers the full range of \code{tp.np.*} SAS templates:
@@ -336,9 +336,9 @@ sample_nonparametric_curve_points <- function(n            = 500,
 #' # 2. Bare plot -- undecorated ggplot returned by plot.hv_nonparametric
 #' p <- plot(np)
 #'
-#' # 3. Decorate: colour/fill palettes, axis scales, labels, theme
+#' # 3. Decorate: color/fill palettes, axis scales, labels, theme
 #' p +
-#'   ggplot2::scale_colour_manual(values = c("steelblue"), guide = "none") +
+#'   ggplot2::scale_color_manual(values = c("steelblue"), guide = "none") +
 #'   ggplot2::scale_fill_manual(values   = c("steelblue"), guide = "none") +
 #'   ggplot2::scale_x_continuous(limits = c(0, 12), breaks = 0:12) +
 #'   ggplot2::scale_y_continuous(limits = c(0, 0.40),
@@ -351,17 +351,17 @@ sample_nonparametric_curve_points <- function(n            = 500,
 #' \donttest{
 #' old <- ggplot2::theme_set(theme_hv_manuscript())
 #' plot(np) +
-#'   ggplot2::scale_colour_manual(values = c("steelblue"), guide = "none") +
+#'   ggplot2::scale_color_manual(values = c("steelblue"), guide = "none") +
 #'   ggplot2::scale_fill_manual(values   = c("steelblue"), guide = "none") +
 #'   ggplot2::labs(x = "Months", y = "Prevalence of AF")
-#' # For multi-group curves swap scale_colour_manual with:
-#' #   ggplot2::scale_colour_brewer(palette = "Set1", name = NULL)
+#' # For multi-group curves swap scale_color_manual with:
+#' #   ggplot2::scale_color_brewer(palette = "Set1", name = NULL)
 #' #   ggplot2::scale_fill_brewer(palette = "Set1", guide = "none")
 #' ggplot2::theme_set(old)
 #' }
 #'
 #' # See vignette("plot-decorators", package = "hvtiPlotR") for theming,
-#' # colour scales, annotation labels, and saving plots.
+#' # color scales, annotation labels, and saving plots.
 #'
 #' @importFrom rlang .data
 #' @export
@@ -464,7 +464,7 @@ print.hv_nonparametric <- function(x, ...) {
 #'                           lower_col = "lower", upper_col = "upper",
 #'                           data_points = dat_two_pts)
 #' plot(np) +
-#'   ggplot2::scale_colour_manual(
+#'   ggplot2::scale_color_manual(
 #'     values = c("Ozaki" = "steelblue", "CE-Pericardial" = "firebrick"),
 #'     name = "Procedure"
 #'   ) +
@@ -495,7 +495,7 @@ plot.hv_nonparametric <- function(x,
   if (!is.null(group_col)) {
     base_aes <- ggplot2::aes(x      = .data[[x_col]],
                              y      = .data[[estimate_col]],
-                             colour = .data[[group_col]],
+                             color = .data[[group_col]],
                              group  = .data[[group_col]])
   } else {
     base_aes <- ggplot2::aes(x = .data[[x_col]], y = .data[[estimate_col]])
@@ -517,7 +517,7 @@ plot.hv_nonparametric <- function(x,
     }
     p <- p + ggplot2::geom_ribbon(mapping     = ribbon_aes,
                                   alpha       = ci_alpha,
-                                  colour      = NA,
+                                  color      = NA,
                                   inherit.aes = FALSE,
                                   data        = curve_data)
   }
@@ -529,7 +529,7 @@ plot.hv_nonparametric <- function(x,
     if (!is.null(group_col)) {
       dp_aes <- ggplot2::aes(x      = .data[[x_col]],
                              y      = .data[["value"]],
-                             colour = .data[[group_col]])
+                             color = .data[[group_col]])
     } else {
       dp_aes <- ggplot2::aes(x = .data[[x_col]], y = .data[["value"]])
     }

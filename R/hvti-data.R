@@ -117,7 +117,7 @@ plot.hv_data <- function(x, ...) {
 }
 
 
-#' Summarise an hv_data object
+#' Summarize an hv_data object
 #'
 #' Prints the standard one-screen header (via [print.hv_data()] or the
 #' subclass override) and then walks the object's `$tables` slot, printing

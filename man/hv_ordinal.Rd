@@ -42,7 +42,7 @@ Validates pre-computed grade-specific probability curves (and optional
 binned data summary points) and returns an \code{hv_ordinal} object.
 Call \code{\link{plot.hv_ordinal}} on the result to obtain a bare
 \code{ggplot2} multi-grade line plot that you can decorate with
-colour scales and \code{\link{theme_hv_manuscript}}.
+color scales and \code{\link{theme_hv_manuscript}}.
 }
 \details{
 \strong{SAS column mapping (\code{predict} dataset after averaging):}
@@ -70,9 +70,9 @@ ord  # prints grade count and data-point flag
 # 2. Bare plot -- undecorated ggplot returned by plot.hv_ordinal
 p <- plot(ord)
 
-# 3. Decorate: colour palette, axis scales, labels, theme
+# 3. Decorate: color palette, axis scales, labels, theme
 p +
-  ggplot2::scale_colour_manual(
+  ggplot2::scale_color_manual(
     values = c(None     = "steelblue",
                Mild     = "firebrick",
                Moderate = "forestgreen",

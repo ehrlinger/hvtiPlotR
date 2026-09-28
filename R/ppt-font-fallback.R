@@ -89,7 +89,7 @@
 
 # "pdf" or "postscript" when the device print() would open is one of R's
 # registry-bound devices, otherwise NULL (the family is then trusted).
-# Only the devices themselves, or their names, are recognised: a custom
+# Only the devices themselves, or their names, are recognized: a custom
 # function that calls pdf() inside cannot be told apart without opening it,
 # so it is trusted, and printing through it can still stop on Arial.
 .hv_default_device <- function() {
@@ -140,7 +140,7 @@
   names(overrides) <- fallback_roots
 
   # ggplot2 >= 4.0 resolves a text geom's `family` through the theme's `geom`
-  # element (element_geom()), which theme_grey() seeds from base_family
+  # element (element_geom()), which theme_gray() seeds from base_family
   # alongside `text`. Patching `text` alone leaves geom_text() and
   # annotate("text", ...) still asking the device for Arial, and on
   # postscript()/pdf() that is fatal ("invalid font type"), not merely ugly.

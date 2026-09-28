@@ -60,7 +60,7 @@ Classifies \code{y_col} using \code{\link{eda_classify_var}}, pre-processes
 categorical levels (adding an explicit \code{"(Missing)"} level), and
 returns an \code{hv_eda} object.  Call \code{\link{plot.hv_eda}} on the
 result to obtain a bare \code{ggplot2} barplot or scatter plot that you can
-decorate with colour scales and \code{\link{theme_hv_manuscript}}.
+decorate with color scales and \code{\link{theme_hv_manuscript}}.
 }
 \details{
 Iterate over variables with \code{lapply()} after selecting columns with
@@ -79,7 +79,7 @@ p <- plot(ed)
 # 3. Decorate: fill palette, x-axis breaks, labels, theme
 p +
   ggplot2::scale_fill_manual(
-    values = c("0" = "steelblue", "1" = "firebrick", "(Missing)" = "grey80"),
+    values = c("0" = "steelblue", "1" = "firebrick", "(Missing)" = "gray80"),
     labels = c("0" = "Female", "1" = "Male", "(Missing)" = "Missing"),
     name   = NULL
   ) +
@@ -91,7 +91,7 @@ p +
 ed2 <- hv_eda(dta, x_col = "op_years", y_col = "ef",
                 y_label = "Ejection Fraction (\%)")
 plot(ed2) +
-  ggplot2::scale_colour_manual(values = c("firebrick"), guide = "none") +
+  ggplot2::scale_color_manual(values = c("firebrick"), guide = "none") +
   ggplot2::scale_x_continuous(breaks = seq(0, 15, 5)) +
   ggplot2::labs(x = "Years from First Surgery Year") +
   theme_hv_poster()
@@ -104,7 +104,7 @@ sub_cont <- eda_select_vars(dta, c("op_years", names(cont_vars)))
 p_cont <- lapply(names(cont_vars), function(cn) {
   plot(hv_eda(sub_cont, x_col = "op_years", y_col = cn,
                y_label = cont_vars[[cn]])) +
-    ggplot2::scale_colour_manual(values = c("steelblue"), guide = "none") +
+    ggplot2::scale_color_manual(values = c("steelblue"), guide = "none") +
     ggplot2::scale_x_continuous(breaks = seq(0, 15, 5)) +
     ggplot2::labs(x = "Years from First Surgery Year") +
     theme_hv_poster()

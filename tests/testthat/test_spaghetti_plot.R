@@ -13,7 +13,7 @@ library(hvtiPlotR)
 # ---------------------------------------------------------------------------
 
 dta_grp <- sample_spaghetti_data(n_patients = 80, seed = 1L)
-dta_one <- sample_spaghetti_data(n_patients = 60, seed = 2L)  # used without colour
+dta_one <- sample_spaghetti_data(n_patients = 60, seed = 2L)  # used without color
 
 # ---------------------------------------------------------------------------
 # hv_spaghetti — $meta slot
@@ -22,8 +22,8 @@ dta_one <- sample_spaghetti_data(n_patients = 60, seed = 2L)  # used without col
 test_that("hv_spaghetti $meta contains all expected keys", {
   sp <- hv_spaghetti(dta_grp, colour_col = "group")
   expect_named(sp$meta,
-    c("x_col", "y_col", "id_col", "colour_col", "n_subjects", "n_obs",
-      "n_missing"),
+    c("x_col", "y_col", "id_col", "color_col", "colour_col", "n_subjects",
+      "n_obs", "n_missing"),
     ignore.order = TRUE
   )
 })
@@ -107,16 +107,16 @@ test_that("print.hv_spaghetti shows x_col / y_col / id_col", {
   expect_output(print(sp), "id")
 })
 
-test_that("print.hv_spaghetti shows Colour col line when colour_col is set", {
+test_that("print.hv_spaghetti shows Color col line when colour_col is set", {
   sp <- hv_spaghetti(dta_grp, colour_col = "group")
-  expect_output(print(sp), "Colour col")
+  expect_output(print(sp), "Color col")
   expect_output(print(sp), "group")
 })
 
-test_that("print.hv_spaghetti does NOT show Colour col line when colour_col is NULL", {
+test_that("print.hv_spaghetti does NOT show Color col line when colour_col is NULL", {
   sp  <- hv_spaghetti(dta_one)
   out <- capture.output(print(sp))
-  expect_false(any(grepl("Colour col", out)))
+  expect_false(any(grepl("Color col", out)))
 })
 
 test_that("print.hv_spaghetti returns x invisibly", {

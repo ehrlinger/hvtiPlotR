@@ -177,13 +177,13 @@ sample_goodness_followup_data <- function(
 #'   Default \code{1990}.
 #' @param study_start        Start of study period.  Default
 #'   \code{as.Date("1990-01-01")}.
-#' @param study_end          End of study enrolment.  Default
+#' @param study_end          End of study enrollment.  Default
 #'   \code{as.Date("2019-12-31")}.
 #' @param close_date         Data close date.  Must be \eqn{\geq}
 #'   \code{study_end}.  Default \code{as.Date("2021-08-06")}.
 #' @param tolower_names      Logical; if TRUE, column names are lower-cased when
 #'   materialising the data.  Default \code{TRUE}.
-#' @param death_levels       Length-2 character vector labelling the two death
+#' @param death_levels       Length-2 character vector labeling the two death
 #'   states (alive first).  Default \code{c("Alive", "Dead")}.
 #' @param event_levels       Length-3 character vector for the event panel
 #'   (event-free, non-fatal event, death).
@@ -195,7 +195,7 @@ sample_goodness_followup_data <- function(
 #' @section Missing data:
 #' Patients with a missing value in any required column are excluded, with a
 #' warning naming the columns responsible.  \code{$meta$n_patients} reports
-#' the \emph{analysed} cohort, alongside \code{$meta$n_input} and
+#' the \emph{analyzed} cohort, alongside \code{$meta$n_input} and
 #' \code{$meta$n_excluded}, so the reported N always describes the plotted
 #' points.
 #'
@@ -211,7 +211,7 @@ sample_goodness_followup_data <- function(
 #'   \item{\code{$data}}{Per-patient data frame for the death panel.}
 #'   \item{\code{$meta}}{Column names, date parameters, state levels,
 #'     \code{has_event} flag, and the cohort counts \code{n_patients}
-#'     (analysed), \code{n_input}, and \code{n_excluded}.}
+#'     (analyzed), \code{n_input}, and \code{n_excluded}.}
 #'   \item{\code{$tables}}{Named list with \code{diagonal} (the study-period
 #'     reference diagonal) and, when event columns are supplied,
 #'     \code{event_data}.}
@@ -232,7 +232,7 @@ sample_goodness_followup_data <- function(
 #' # 2. Bare plot -- undecorated ggplot returned by plot.hv_followup
 #' p <- plot(gf)
 #'
-#' # 3. Decorate: colour palette, axis labels, theme
+#' # 3. Decorate: color palette, axis labels, theme
 #' p +
 #'   ggplot2::scale_color_manual(
 #'     values = c("Alive" = "steelblue", "Dead" = "firebrick"),
@@ -378,11 +378,11 @@ print.hv_followup <- function(x, ...) {
   cat(sprintf("  N patients  : %d\n", m$n_patients))
   if (isTRUE(m$n_excluded > 0L))
     cat(sprintf(
-      "                %d analysed of %d input; %d excluded for missing values\n",
+      "                %d analyzed of %d input; %d excluded for missing values\n",
       m$n_patients, m$n_input, m$n_excluded))
   if (isTRUE(m$n_event_excluded > 0L))
     cat(sprintf(
-      "  Event panel : %d analysed; %d excluded for missing values\n",
+      "  Event panel : %d analyzed; %d excluded for missing values\n",
       m$n_event_patients, m$n_event_excluded))
   cat(sprintf("  Study period: %s \u2013 %s (close: %s)\n",
               format(m$study_start), format(m$study_end),
@@ -402,7 +402,7 @@ print.hv_followup <- function(x, ...) {
 #' Builds a bare goodness-of-follow-up \code{ggplot2} object from an
 #' \code{\link{hv_followup}} data object.  Each patient appears as a point
 #' at their operation year (x) and total follow-up time (y), shaped and
-#' coloured by their state.  An orange diagonal reference line shows the
+#' colored by their state.  An orange diagonal reference line shows the
 #' maximum possible follow-up for patients enrolled at each year.  A vertical
 #' stem below each point is drawn only when \code{hv_followup()} was called
 #' with a positive \code{segment_drop}.
@@ -413,7 +413,7 @@ print.hv_followup <- function(x, ...) {
 #'   have been supplied to \code{\link{hv_followup}}).
 #' @param alpha              Point/segment transparency in \eqn{[0,1]}.
 #'   Default \code{0.8}.
-#' @param diagonal_color     Colour of the diagonal reference line.
+#' @param diagonal_color     Color of the diagonal reference line.
 #'   Default \code{"orange"}.
 #' @param diagonal_linetype  Linetype for the diagonal.  Default
 #'   \code{"dashed"}.
@@ -567,7 +567,7 @@ gf_build_death_frame <- function(df, iv_col, follow_col, flag_col,
 # This mirrors the ev_evnt coding in the legacy tp.dp.gfup.R template.
 #
 # The event flag alone cannot distinguish levels[2] from levels[3]: a patient
-# who died at year 1 with an event recorded at year 2 would be labelled
+# who died at year 1 with an event recorded at year 2 would be labeled
 # "non-fatal event", contradicting the state definitions above. The event time
 # is therefore compared against the death time, and the event only wins when
 # it strictly precedes death. Ties go to death, since an event recorded at the

@@ -75,7 +75,7 @@
 #' pct <- hv_eda_pages(dta, x_col = "year", section = "percent",
 #'                     labels = c(male = "Male", nyha = "NYHA class"))
 #' plot(pct)[[1]] &
-#'   ggplot2::scale_fill_brewer(palette = "Set1", na.value = "grey80") &
+#'   ggplot2::scale_fill_brewer(palette = "Set1", na.value = "gray80") &
 #'   theme_hv_manuscript(base_size = 8)
 #' @export
 hv_eda_pages <- function(data,
@@ -183,7 +183,7 @@ print.hv_eda_pages <- function(x, ...) {
 #' Lays the section's panels out as pages of `ncol` by `nrow` panels. Nothing
 #' is printed or saved; the caller prints, saves or captions each page.
 #'
-#' Colours and themes are left to the caller, as everywhere in this package.
+#' Colors and themes are left to the caller, as everywhere in this package.
 #' Apply them to every panel of a page at once with patchwork's `&`:
 #' `page & theme_hv_manuscript(base_size = 8)`.
 #'
