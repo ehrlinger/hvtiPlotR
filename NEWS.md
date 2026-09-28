@@ -18,13 +18,20 @@
   "analyzed", of an `hv_spaghetti` "Color col", and the missing-values warning
   "analyzing". Gray defaults such as `"grey80"` are now spelled `"gray80"`,
   which R draws identically. `tools/check-us-spelling.sh` holds the line in CI.
+* `theme_hv_ppt_dark()` and `theme_hv_ppt_light()` now fall back from Arial
+  to Helvetica when a plot is printed with no graphics device open and the
+  default device is `pdf()` or `postscript()`, as under `Rscript` and
+  `R CMD check`. The check trusted Arial whenever no device was open, then
+  `print()` opened `pdf()`, which stopped with "invalid font type". This broke
+  the `save_ppt()` example on the server.
 
 * `hv_eda_pages()` leaves out patient identifiers when `vars = NULL`. A column
   named `ccfid`, `patid`, `patientid`, `studyid`, `subjectid`, `recordid` or
   `caseid` (each also with `_`, `num` or `no`), or any name holding `mrn`
   (`mrn_num`, `pt_mrn`), was drawn like a study variable: a numeric one as a
-  scatter of row numbers, a text one as bars with one level per patient. `meta$ignored` lists what was left out, and naming a column in
-  `vars` still draws it. A bare trailing `id` is not taken, so `carotid` and
+  scatter of row numbers, a text one as bars with one level per patient.
+  `meta$ignored` lists what was left out, and naming a column in `vars` still
+  draws it. A bare trailing `id` is not taken, so `carotid` and
   `steroid` stay. The stems match the hvtiRtemplates EDA identifier rule.
 
 ## `save_ppt()` no longer depends on the study folder

@@ -228,6 +228,42 @@ test_that("the fallback reaches text geoms, not just theme elements", {
   expect_error(suppressMessages(suppressWarnings(print(p))), NA)
 })
 
+test_that("with no device open, the default device decides whether Arial resolves", {
+  # print() opens getOption("device") when nothing is open. Under Rscript and
+  # R CMD check that is pdf(), which cannot draw Arial, so trusting the
+  # request here let the save_ppt() example error with "invalid font type".
+  testthat::local_mocked_bindings(.hv_active_device = function() "null device")
+  old <- options(device = grDevices::pdf)
+  on.exit(options(old), add = TRUE)
+  expect_false(.hv_family_resolves("Arial"))
+  expect_true(.hv_family_resolves("Helvetica"))
+
+  options(device = "pdf")
+  expect_false(.hv_family_resolves("Arial"))
+  options(device = grDevices::postscript)
+  expect_false(.hv_family_resolves("Arial"))
+  options(device = "postscript")
+  expect_false(.hv_family_resolves("Arial"))
+
+  # a default that resolves fonts through the OS (cairo, quartz, ragg,
+  # RStudio) is trusted
+  options(device = grDevices::cairo_pdf)
+  expect_true(.hv_family_resolves("Arial"))
+})
+
+test_that("printing with no device open falls back when the default is pdf()", {
+  grDevices::graphics.off() # earlier tests may leave Rplots.pdf open
+  old_wd <- setwd(tempdir())
+  old <- options(device = grDevices::pdf)
+  on.exit({
+    if (grDevices::dev.cur() > 1L) grDevices::dev.off()
+    options(old)
+    setwd(old_wd)
+  }, add = TRUE)
+  p <- create_test_plot() + theme_hv_ppt_light()
+  expect_error(suppressMessages(print(p)), NA)
+})
+
 test_that("an explicitly resolvable family is preserved (no fallback) at draw time", {
   p <- create_test_plot() + theme_hv_ppt_dark()
   f <- tempfile(fileext = ".pdf")
