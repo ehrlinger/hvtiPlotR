@@ -372,6 +372,72 @@ test_that("save_ppt works against the bundled CORR test template", {
   expect_true("Title and Content" %in% officer::layout_summary(doc)$layout)
 })
 
+test_that("save_ppt defaults template to the bundled template", {
+  skip_if_not_installed("officer")
+  skip_if_not_installed("rvg")
+
+  tpl <- system.file("extdata", "hv_ppt_template.pptx", package = "hvtiPlotR")
+  skip_if(!nzchar(tpl) || !file.exists(tpl), "bundled template not found")
+  old <- options(hvtiPlotR.ppt_template = NULL)
+  on.exit(options(old), add = TRUE)
+  expect_identical(eval(formals(save_ppt)$template), tpl)
+
+  # no study-relative ../graphs/RD.pptx needed
+  out <- tempfile(fileext = ".pptx")
+  on.exit(unlink(out), add = TRUE)
+  expect_no_error(save_ppt(create_test_plot(), powerpoint = out))
+  expect_gte(length(officer::read_pptx(out)), 1L)
+})
+
+test_that("bundled dark and light templates carry layouts but no slides", {
+  skip_if_not_installed("officer")
+  skip_if_not_installed("rvg")
+
+  for (name in c("hv_ppt_template.pptx", "hv_ppt_template_light.pptx")) {
+    tpl <- system.file("extdata", name, package = "hvtiPlotR")
+    expect_true(nzchar(tpl) && file.exists(tpl), info = name)
+    doc <- officer::read_pptx(tpl)
+    # example slides in a template would lead every deck save_ppt() writes
+    expect_identical(length(doc), 0L, info = name)
+    expect_true("Title and Content" %in% officer::layout_summary(doc)$layout,
+                info = name)
+  }
+
+  out <- tempfile(fileext = ".pptx")
+  on.exit(unlink(out))
+  light <- system.file("extdata", "hv_ppt_template_light.pptx",
+                       package = "hvtiPlotR")
+  save_ppt(create_test_plot() + theme_hv_ppt_light(),
+           template = light, powerpoint = out)
+  expect_identical(length(officer::read_pptx(out)), 1L)
+})
+
+test_that("save_ppt takes its default template from hvtiPlotR.ppt_template", {
+  skip_if_not_installed("officer")
+  skip_if_not_installed("rvg")
+
+  tpl <- system.file("extdata", "hv_ppt_template.pptx", package = "hvtiPlotR")
+  skip_if(!nzchar(tpl) || !file.exists(tpl), "bundled template not found")
+  master <- tempfile(fileext = ".pptx")
+  file.copy(tpl, master)
+  old <- options(hvtiPlotR.ppt_template = master)
+  on.exit(options(old), add = TRUE)
+  on.exit(unlink(master), add = TRUE)
+
+  expect_identical(eval(formals(save_ppt)$template), master)
+
+  # the option is read at call time; a missing master fails loudly
+  options(hvtiPlotR.ppt_template = tempfile(fileext = ".pptx"))
+  expect_error(
+    save_ppt(create_test_plot(), powerpoint = tempfile(fileext = ".pptx")),
+    "`template` must be the path to an existing PowerPoint file"
+  )
+})
+
+test_that("save_ppt requires an explicit powerpoint output path", {
+  expect_error(save_ppt(create_test_plot()), "`powerpoint` is required")
+})
+
 test_that("save_ppt defaults panel_box to the standard fixed-panel rectangle", {
   default_box <- eval(formals(save_ppt)$panel_box)
   expect_equal(

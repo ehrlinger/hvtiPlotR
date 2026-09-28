@@ -6,8 +6,9 @@
 \usage{
 save_ppt(
   object,
-  template = "../graphs/RD.pptx",
-  powerpoint = "../graphs/pptExample.pptx",
+  template = getOption("hvtiPlotR.ppt_template", system.file("extdata",
+    "hv_ppt_template.pptx", package = "hvtiPlotR")),
+  powerpoint,
   slide_titles = "Plot",
   layout = "Title and Content",
   master = NULL,
@@ -24,10 +25,11 @@ ggplot objects. Each element produces one slide. May also be an
 \code{hv_consort} object produced by \code{\link[=hv_consort]{hv_consort()}}.}
 
 \item{template}{Path to an existing \code{.pptx} file used as the slide
-template. Default \code{"../graphs/RD.pptx"}.}
+template. Defaults to the \code{hvtiPlotR.ppt_template} option when set,
+otherwise to the template shipped in \code{inst/extdata}, whose 16:9 slide
+fits the default \code{panel_box}. See Details.}
 
-\item{powerpoint}{Output path for the new \code{.pptx} file.
-Default \code{"../graphs/pptExample.pptx"}.}
+\item{powerpoint}{Output path for the new \code{.pptx} file. Required.}
 
 \item{slide_titles}{A character vector of slide titles. Recycled to the
 number of plots: supply one string for all slides, or one per plot.
@@ -80,20 +82,39 @@ selectable in PowerPoint. Plots are placed via
 designated title placeholder via \code{\link[officer:ph_location_type]{officer::ph_location_type()}}.
 }
 \details{
-The package ships a small dark-background test template derived from the
-canonical CORR deck (master, layouts, theme; no content slides). Use it to
-try \code{save_ppt()} without hunting for a template:
+The master HVTI slide template is the blue (dark-room) deck kept on the
+CORR Study Deliverables SharePoint site, in the Analysis Team library as
+\code{Templates/sl.template_hvti_blue.current.pptx}. The package bundles a copy
+with its example slides removed, refreshed from the master with each
+release; it is the default and pairs with \code{\link[=theme_hv_ppt_dark]{theme_hv_ppt_dark()}}.
 
-\if{html}{\out{<div class="sourceCode">}}\preformatted{template <- system.file("extdata", "hv_ppt_template.pptx",
+For a light room, a light template is bundled as well; pair it with
+\code{\link[=theme_hv_ppt_light]{theme_hv_ppt_light()}}:
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{template <- system.file("extdata", "hv_ppt_template_light.pptx",
                         package = "hvtiPlotR")
 }\if{html}{\out{</div>}}
+
+To use the live master instead of the bundled copy, point the
+\code{hvtiPlotR.ppt_template} option at your OneDrive-synced copy, for example
+in \code{.Rprofile}:
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{options(hvtiPlotR.ppt_template = file.path(
+  "~/Library/CloudStorage/OneDrive-ClevelandClinic",
+  "CORR Study Deliverables - Analysis Team/Templates",
+  "sl.template_hvti_blue.current.pptx"
+))
+}\if{html}{\out{</div>}}
+
+Keep templates out of study folders: a copy made there stops receiving
+updates.
 }
 \examples{
 \donttest{
 library(ggplot2)
 
-# The package ships a small dark-background template; use it directly
-# instead of hunting for a .pptx of your own.
+# The bundled copy of the HVTI blue master template (also the default);
+# no need to keep a .pptx of your own.
 template <- system.file("extdata", "hv_ppt_template.pptx",
                         package = "hvtiPlotR")
 
