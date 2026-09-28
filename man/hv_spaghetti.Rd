@@ -22,8 +22,8 @@ hv_spaghetti(
 \item{id_col}{Name of the subject-identifier column (used as the
 \code{group} aesthetic for line continuity). Default \code{"id"}.}
 
-\item{colour_col}{Name of the column to map to line colour, or \code{NULL}
-for a single uniform colour. Default \code{NULL}.}
+\item{colour_col}{Name of the column to map to line color, or \code{NULL}
+for a single uniform color. Default \code{NULL}.}
 }
 \value{
 An object of class \code{c("hv_spaghetti", "hv_data")}; call
@@ -41,7 +41,7 @@ An object of class \code{c("hv_spaghetti", "hv_data")}; call
 Validates a long-format repeated-measures data frame and returns an
 \code{hv_spaghetti} object.  Call \code{\link{plot.hv_spaghetti}} on
 the result to obtain a bare \code{ggplot2} trajectory plot that you can
-decorate with colour scales, axis labels, and \code{\link{theme_hv_manuscript}}.
+decorate with color scales, axis labels, and \code{\link{theme_hv_manuscript}}.
 }
 \examples{
 dta <- sample_spaghetti_data(n_patients = 150, seed = 42)
@@ -53,9 +53,9 @@ sp  # prints subject count, observation count, column mapping
 # 2. Bare plot -- undecorated ggplot returned by plot.hv_spaghetti
 p <- plot(sp)
 
-# 3. Decorate: colour palette, axis labels, theme
+# 3. Decorate: color palette, axis labels, theme
 p +
-  ggplot2::scale_colour_manual(
+  ggplot2::scale_color_manual(
     values = c(Female = "firebrick", Male = "steelblue"), name = NULL
   ) +
   ggplot2::labs(x = "Years after Operation",

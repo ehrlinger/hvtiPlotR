@@ -109,7 +109,7 @@ utils::globalVariables(c("n.risk", "report_time", "strata"))
                          report_times = rt))
   }
 
-  # Mode 2: precomputed risk data frame. Normalise column aliases.
+  # Mode 2: precomputed risk data frame. Normalize column aliases.
   nm <- names(x)
   time_col <- if ("report_time" %in% nm) "report_time" else
     if ("time" %in% nm) "time" else NULL

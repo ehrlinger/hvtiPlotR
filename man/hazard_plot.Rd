@@ -136,7 +136,7 @@ the full \verb{tp.hp.dead.*} SAS template family.\tabular{ll}{
 \item \code{reference}      <- the \code{smatched} life-table dataset
 }
 
-Returns a \strong{bare ggplot object}; compose with \verb{scale_colour_*},
+Returns a \strong{bare ggplot object}; compose with \verb{scale_color_*},
 \code{scale_y_continuous()}, \code{labs()}, \code{\link[=theme_hv_manuscript]{theme_hv_manuscript()}}.
 }
 \examples{
@@ -157,7 +157,7 @@ hazard_plot(
   emp_lower_col = "lower",
   emp_upper_col = "upper"
 ) +
-  scale_colour_manual(values = c("steelblue"), guide = "none") +
+  scale_color_manual(values = c("steelblue"), guide = "none") +
   scale_fill_manual(values = c("steelblue"), guide = "none") +
   scale_x_continuous(limits = c(0, 10), breaks = 0:10) +
   scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, 20),
@@ -176,7 +176,7 @@ hazard_plot(
   lower_col    = "haz_lower",
   upper_col    = "haz_upper"
 ) +
-  scale_colour_manual(values = c("firebrick"), guide = "none") +
+  scale_color_manual(values = c("firebrick"), guide = "none") +
   scale_fill_manual(values = c("firebrick"), guide = "none") +
   scale_x_continuous(limits = c(0, 10), breaks = 0:10) +
   scale_y_continuous(limits = c(0, 30),
@@ -193,15 +193,15 @@ hazard_plot(
   lower_col     = "cumhaz_lower",
   upper_col     = "cumhaz_upper"
 ) +
-  scale_colour_manual(values = c("darkorange"), guide = "none") +
+  scale_color_manual(values = c("darkorange"), guide = "none") +
   scale_fill_manual(values = c("darkorange"), guide = "none") +
   scale_x_continuous(limits = c(0, 10), breaks = 0:10) +
   labs(x = "Years", y = "Cumulative Hazard (\%)") +
   theme_hv_poster()
 
 # --- (4) Stratified survival (tp.hp.dead.tkdn.stratified.sas) ------------
-# Two groups (e.g. Takedown vs No Takedown) with different colours and
-# linetypes. KM empirical overlay uses matching colours.
+# Two groups (e.g. Takedown vs No Takedown) with different colors and
+# linetypes. KM empirical overlay uses matching colors.
 dat2 <- sample_hazard_data(
   n = 400, time_max = 10,
   groups = c("No Takedown" = 1.0, "Takedown" = 0.65)
@@ -220,7 +220,7 @@ hazard_plot(
   emp_lower_col = "lower",
   emp_upper_col = "upper"
 ) +
-  scale_colour_manual(
+  scale_color_manual(
     values = c("No Takedown" = "steelblue", "Takedown" = "firebrick"),
     name   = NULL
   ) +
@@ -260,7 +260,7 @@ hazard_plot(
   ref_estimate_col = "survival",
   ref_group_col    = "group"
 ) +
-  scale_colour_manual(
+  scale_color_manual(
     values = c("<65" = "steelblue", "65-80" = "forestgreen",
                "\u226580" = "firebrick"),
     name = "Age Group"
@@ -291,7 +291,7 @@ hazard_plot(
   upper_col    = "surv_upper",
   group_col    = "group"
 ) +
-  scale_colour_manual(
+  scale_color_manual(
     values = c("Ideal (young, stage IIIA)"              = "steelblue",
                "Poor (elderly, stage IIIB, palliation)" = "firebrick"),
     name   = "Patient profile"
@@ -330,7 +330,7 @@ hazard_plot(
   emp_lower_col = "lower",
   emp_upper_col = "upper"
 ) +
-  scale_colour_manual(
+  scale_color_manual(
     values = c("Limited FET" = "steelblue", "Extended FET" = "#8B4513"),
     name   = NULL
   ) +
@@ -360,7 +360,7 @@ hazard_plot(
   estimate_col = "survival",
   group_col    = "device"
 ) +
-  scale_colour_manual(
+  scale_color_manual(
     values = c("Non-LVAD (first 2 weeks)" = "steelblue", "LVAD" = "firebrick"),
     name   = NULL
   ) +
@@ -378,7 +378,7 @@ p <- hazard_plot(dat, estimate_col = "survival",
                  lower_col = "surv_lower", upper_col = "surv_upper",
                  empirical = emp,
                  emp_lower_col = "lower", emp_upper_col = "upper") +
-  scale_colour_manual(values = c("steelblue"), guide = "none") +
+  scale_color_manual(values = c("steelblue"), guide = "none") +
   scale_fill_manual(values = c("steelblue"), guide = "none") +
   labs(x = "Years", y = "Survival (\%)") +
   theme_hv_poster()
@@ -399,7 +399,7 @@ hazard_plot(
   emp_lower_col = "lower",
   emp_upper_col = "upper"
 ) +
-  ggplot2::scale_colour_brewer(palette = "Set1", name = NULL) +
+  ggplot2::scale_color_brewer(palette = "Set1", name = NULL) +
   ggplot2::scale_fill_brewer(palette   = "Set1", guide = "none") +
   ggplot2::scale_x_continuous(limits = c(0, 10), breaks = 0:10) +
   ggplot2::scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, 20),
@@ -409,7 +409,7 @@ ggplot2::theme_set(old)
 }
 
 # See vignette("plot-decorators", package = "hvtiPlotR") for theming,
-# colour scales, annotation labels, and saving plots.
+# color scales, annotation labels, and saving plots.
 
 }
 \references{

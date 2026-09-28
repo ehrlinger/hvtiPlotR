@@ -33,7 +33,7 @@ cb_build_plot <- function(data, std_diff_col, group_col, var_levels,
   y_padding <- 1.75
 
   ggplot2::ggplot(data) +
-    # Solid centre reference at zero
+    # Solid center reference at zero
     ggplot2::geom_vline(
       xintercept = 0,
       linewidth = vline_linewidth, color = "black"
@@ -54,18 +54,18 @@ cb_build_plot <- function(data, std_diff_col, group_col, var_levels,
       linewidth  = hline_linewidth,
       color      = "black"
     ) +
-    # Points — shape and colour mapped to group; no defaults applied
+    # Points — shape and color mapped to group; no defaults applied
     ggplot2::geom_point(
       ggplot2::aes(
         x      = .data[[std_diff_col]],
         y      = .data[["cb_index"]],
         shape  = .data[[group_col]],
-        colour = .data[[group_col]]
+        color = .data[[group_col]]
       ),
       size  = point_size,
       alpha = alpha
     ) +
-    # Y-axis: integer positions labelled with covariate names
+    # Y-axis: integer positions labeled with covariate names
     ggplot2::scale_y_continuous(
       limits = c(0, n_vars + y_padding),
       breaks = seq_len(n_vars),
@@ -82,7 +82,7 @@ cb_build_plot <- function(data, std_diff_col, group_col, var_levels,
 #' Validates and orders a long-format standardized-mean-difference data frame
 #' for a covariate balance plot, and returns an \code{hv_balance} object.
 #' Call \code{\link{plot.hv_balance}} on the result to obtain a bare
-#' \code{ggplot2} object that you can decorate with colour, shape, axis scales,
+#' \code{ggplot2} object that you can decorate with color, shape, axis scales,
 #' and \code{\link{theme_hv_manuscript}}.
 #'
 #' @param data         A data frame in \strong{long format} with one row per
@@ -128,7 +128,7 @@ cb_build_plot <- function(data, std_diff_col, group_col, var_levels,
 #' # 2. Bare plot -- undecorated ggplot returned by plot.hv_balance
 #' p <- plot(cb)
 #'
-#' # 3. Decorate: colour/shape palettes, x-axis range, labels, theme
+#' # 3. Decorate: color/shape palettes, x-axis range, labels, theme
 #' p +
 #'   scale_color_manual(
 #'     values = c("Before match" = "red4", "After match" = "blue3"),
@@ -209,9 +209,9 @@ print.hv_balance <- function(x, ...) {
 #'
 #' Builds a bare covariate balance \code{ggplot2} object from an
 #' \code{\link{hv_balance}} data object.  Each covariate appears as a
-#' labelled row; points show the standardized mean difference per group.
+#' labeled row; points show the standardized mean difference per group.
 #' A solid line marks zero; dotted lines mark \eqn{\pm}\code{threshold}.
-#' Add colour, shape, axis scales, and a theme with \code{+}.
+#' Add color, shape, axis scales, and a theme with \code{+}.
 #'
 #' @param x                  An \code{hv_balance} object.
 #' @param point_size         Passed to \code{geom_point()}. Default \code{3}.
@@ -279,7 +279,7 @@ plot.hv_balance <- function(x,
 #' demonstrating [hv_balance()].  Rather than drawing SMDs from
 #' independent normals, this generator simulates patient-level covariates
 #' through a logistic propensity score model, computes group standardized mean
-#' differences before matching, then performs greedy 1:1 nearest-neighbour
+#' differences before matching, then performs greedy 1:1 nearest-neighbor
 #' caliper matching and computes residual differences in the matched cohort.
 #'
 #' The result captures the pattern seen in real studies: covariates that drive
@@ -362,7 +362,7 @@ sample_covariate_balance_data <- function(
   x_mat <- matrix(stats::rnorm(n * n_vars), nrow = n, ncol = n_vars)
   betas <- stats::rnorm(n_vars, mean = 0, sd = separation / sqrt(n_vars))
 
-  # Centre the linear predictor so ~50% of patients are treated.
+  # Center the linear predictor so ~50% of patients are treated.
   lp    <- drop(x_mat %*% betas)
   lp    <- lp - stats::median(lp)
   ps    <- stats::plogis(lp)
@@ -378,7 +378,7 @@ sample_covariate_balance_data <- function(
     (mean(x1) - mean(x0)) / pooled_sd * 100
   }, numeric(1))
 
-  # --- Greedy 1:1 nearest-neighbour caliper matching -------------------------
+  # --- Greedy 1:1 nearest-neighbor caliper matching -------------------------
   # Patients with extreme PSs (far from 0.5) cannot find a partner within the
   # caliper, so they are excluded from the matched cohort.  This leaves
   # residual imbalance on the covariates most responsible for their extremity.

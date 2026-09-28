@@ -25,7 +25,7 @@ grouped_trends <- function(n = 400) {
 # hv_ppt_palette
 # ============================================================================
 
-test_that("hv_ppt_palette returns six hex colours per mode", {
+test_that("hv_ppt_palette returns six hex colors per mode", {
   for (mode in c("dark", "light")) {
     pal <- hv_ppt_palette(mode)
     expect_type(pal, "character")
@@ -48,7 +48,7 @@ test_that("hv_ppt_palette n takes a prefix, in order", {
   expect_length(hv_ppt_palette("light", n = 1), 1L)
 })
 
-test_that("hv_ppt_palette rejects more colours than it holds", {
+test_that("hv_ppt_palette rejects more colors than it holds", {
   expect_error(hv_ppt_palette("dark", n = 7), "at most 6")
   expect_error(hv_ppt_palette("dark", n = 0), "positive")
   expect_error(hv_ppt_palette("sepia"), "should be one of")
@@ -82,7 +82,7 @@ test_that("hv_ppt_series wraps the theme matching its mode", {
   expect_identical(hv_ppt_series("light")[[1]]$axis.text$colour, "black")
 })
 
-test_that("hv_ppt_series validates colours and shapes", {
+test_that("hv_ppt_series validates colors and shapes", {
   expect_error(hv_ppt_series(colours = 1:3), "character vector")
   expect_error(hv_ppt_series(colours = c("red", NA)), "missing values")
   expect_error(hv_ppt_series(colours = character(0)), "character vector")
@@ -99,14 +99,14 @@ test_that("a decorated trends plot still carries its data and its groups", {
   expect_plot_has_data(p, geoms = c("GeomSmooth", "GeomPoint"), min_groups = 4L)
 })
 
-test_that("the decorator applies its colours and shapes to the built layers", {
+test_that("the decorator applies its colors and shapes to the built layers", {
   p   <- plot(grouped_trends()) + hv_ppt_series("dark")
   bld <- ggplot_build(p)
   expect_setequal(unique(bld$data[[1]]$colour), hv_ppt_palette("dark", n = 4))
   expect_setequal(unique(bld$data[[2]]$shape), c(16L, 17L, 15L, 18L))
 })
 
-test_that("caller colours and shapes override the defaults", {
+test_that("caller colors and shapes override the defaults", {
   p <- plot(grouped_trends()) +
     hv_ppt_series(colours = c("red", "blue", "green", "orange"),
                   shapes  = c(1, 2, 5, 6))
@@ -147,7 +147,7 @@ test_that("a caller can ask for a legend back through ...", {
   grob  <- grob_quietly(p)
   boxes <- grob$grobs[grepl("guide-box", grob$layout$name)]
   drawn <- sum(!vapply(boxes, inherits, logical(1), "zeroGrob"))
-  # Colour and shape share `name`, so they merge into a single legend.
+  # Color and shape share `name`, so they merge into a single legend.
   expect_identical(drawn, 1L)
 })
 

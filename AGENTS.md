@@ -12,7 +12,7 @@ imports this file.
 **Two companion documents already exist and are not restated here.** Read them:
 
 - `CONTRIBUTING.md` — the code conventions table (file naming, the `hv_<concept>()` +
-  `plot.hv_<concept>()` pair, column-name arguments as strings, colours and themes left to
+  `plot.hv_<concept>()` pair, column-name arguments as strings, colors and themes left to
   the caller, tidy eval via `.data[[col]]`, snapshot workflow) and the quick-start commands.
 - `testing-strategy.md` — the test inventory, the named coverage gaps and the priority plan.
   Consult it before claiming a coverage gap is new.

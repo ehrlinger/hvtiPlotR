@@ -2,7 +2,7 @@
 % Please edit documentation in R/ppt-series.R
 \name{hv_ppt_palette}
 \alias{hv_ppt_palette}
-\title{Series colours for a slide or a manuscript figure}
+\title{Series colors for a slide or a manuscript figure}
 \usage{
 hv_ppt_palette(mode = c("dark", "light"), n = NULL)
 }
@@ -11,19 +11,19 @@ hv_ppt_palette(mode = c("dark", "light"), n = NULL)
 \code{\link[=theme_hv_ppt_dark]{theme_hv_ppt_dark()}}, \code{"light"} with \code{\link[=theme_hv_ppt_light]{theme_hv_ppt_light()}} and
 \code{\link[=theme_hv_manuscript]{theme_hv_manuscript()}}.}
 
-\item{n}{Number of colours to return, or \code{NULL} (default) for all six.}
+\item{n}{Number of colors to return, or \code{NULL} (default) for all six.}
 }
 \value{
-A character vector of hex colours, in series order.
+A character vector of hex colors, in series order.
 }
 \description{
-The colours \code{\link[=hv_ppt_series]{hv_ppt_series()}} assigns, handed back as a plain character
-vector. This is the single definition of the series colours, so reach for it
+The colors \code{\link[=hv_ppt_series]{hv_ppt_series()}} assigns, handed back as a plain character
+vector. This is the single definition of the series colors, so reach for it
 when a figure needs them outside the decorator rather than pasting hex codes
 into a script, where they drift the first time the palette changes.
 }
 \details{
-The colours are the Okabe-Ito colourblind-safe palette, reordered for the
+The colors are the Okabe-Ito colorblind-safe palette, reordered for the
 background: high-luminance hues first on a dark slide, darker ones first on
 a light slide. Each ordering leads with its highest-contrast hue, 15.9:1 on
 a black panel and 5.2:1 on a white one, but past that first entry the order
@@ -32,10 +32,10 @@ in the light ordering, and it sits \strong{last} there despite carrying the
 highest ratio of anything here (21:1 on white): house style draws annotation
 in the theme's ink, so a black series would be confusable with the label
 naming it. On a dark panel black is invisible, which is why that ordering
-omits it. These are not CORR brand colours.
+omits it. These are not CORR brand colors.
 
-Six colours are supplied. Ask for more than that and you get an error rather
-than a silently recycled palette, because two series sharing a colour is a
+Six colors are supplied. Ask for more than that and you get an error rather
+than a silently recycled palette, because two series sharing a color is a
 worse outcome than a stopped script.
 }
 \examples{
@@ -45,6 +45,6 @@ hv_ppt_palette("light", n = 4)
 \seealso{
 \code{\link[=hv_ppt_series]{hv_ppt_series()}}, which applies these to a plot.
 Annotation text is drawn in the theme's ink, matching the axis, rather
-than in a series colour, so these are not the values to label a curve
+than in a series color, so these are not the values to label a curve
 with.
 }

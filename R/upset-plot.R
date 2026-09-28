@@ -16,7 +16,7 @@
 #'
 #' Generates a realistic cardiac-surgery procedure data set where each row is
 #' a patient and each column is a logical indicator of a specific procedure.
-#' Co-occurrence rates are modelled from a latent primary-procedure type so
+#' Co-occurrence rates are modeled from a latent primary-procedure type so
 #' that the UpSet plot shows meaningful overlap patterns (e.g. aortic valve
 #' patients frequently have concomitant aorta work; mitral valve patients
 #' frequently have concomitant TV repair).
@@ -196,7 +196,7 @@ print.hv_upset <- function(x, ...) {
 #' \preformatted{plot(up) & theme_hv_poster()}
 #'
 #' Pass \code{set_size = FALSE} to get a single intersection-bar ggplot
-#' for full customisation; themes then apply via \code{+}:
+#' for full customization; themes then apply via \code{+}:
 #' \preformatted{plot(up, set_size = FALSE) + theme_hv_poster()}
 #'
 #' @param x                   An \code{hv_upset} object.
@@ -209,16 +209,16 @@ print.hv_upset <- function(x, ...) {
 #'   by frequency) or `"degree"` (by number of sets in each combination).
 #' @param fill_col            Optional column name in `x$data` to fill the
 #'   intersection bars by (stacks bars by group). Default `NULL` (single
-#'   colour, supplied via `bar_fill`).
-#' @param bar_fill            Single fill colour for the intersection bars
-#'   when `fill_col` is `NULL`. Default `"grey40"`.
+#'   color, supplied via `bar_fill`).
+#' @param bar_fill            Single fill color for the intersection bars
+#'   when `fill_col` is `NULL`. Default `"gray40"`.
 #' @param set_size            Logical; if `TRUE` (default), compose a
 #'   set-size sidebar as a patchwork. If `FALSE`, return only the
 #'   intersection-bar ggplot.
 #' @param set_size_position   `"right"` (default) or `"left"`.
 #' @param set_size_sort       Sort order for the sidebar: `"descending"`
 #'   (default), `"ascending"`, or `"none"` (preserve `intersect` order).
-#' @param set_size_fill       Fill colour for the sidebar bars. Default
+#' @param set_size_fill       Fill color for the sidebar bars. Default
 #'   `"steelblue"`.
 #' @param width_ratio         Fraction of horizontal space given to the
 #'   set-size sidebar (only used when `set_size = TRUE`). Default `0.3`.
@@ -249,7 +249,7 @@ print.hv_upset <- function(x, ...) {
 #' up_era  <- hv_upset(dta, intersect = sets)
 #' plot(up_era, fill_col = "era", set_size = FALSE) +
 #'   ggplot2::scale_fill_manual(
-#'     values = c(Early = "grey60", Recent = "steelblue"),
+#'     values = c(Early = "gray60", Recent = "steelblue"),
 #'     name   = "Era"
 #'   ) +
 #'   theme_hv_poster()
@@ -262,7 +262,7 @@ plot.hv_upset <- function(x,
                           n_intersections   = 10L,
                           sort_by           = c("freq", "degree"),
                           fill_col          = NULL,
-                          bar_fill          = "grey40",
+                          bar_fill          = "gray40",
                           set_size          = TRUE,
                           set_size_position = c("right", "left"),
                           set_size_sort     = c("descending", "ascending",

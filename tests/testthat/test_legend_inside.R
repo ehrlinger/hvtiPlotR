@@ -2,7 +2,7 @@
 library(testthat)
 library(ggplot2)
 
-mk <- function(df) ggplot(df, aes(.data$x, .data$y, colour = .data$g)) + geom_point()
+mk <- function(df) ggplot(df, aes(.data$x, .data$y, color = .data$g)) + geom_point()
 # a plot whose points fill all four corners (no clear empty corner)
 full_df <- data.frame(
   x = c(0, 0, 1, 1, 0.05, 0.95, 0.05, 0.95),
@@ -50,7 +50,7 @@ test_that("hv_legend_inside places the legend in the empty corner", {
   for (corner in names(cases)) {
     df <- fixtures[[corner]]
     df$g <- "a"
-    p <- hv_legend_inside(ggplot(df, aes(x, y, colour = g)) + geom_point())
+    p <- hv_legend_inside(ggplot(df, aes(x, y, color = g)) + geom_point())
     expect_identical(p$theme$legend.position, "inside", info = paste("corner", corner))
     expect_equal(inside_pos(p), cases[[corner]], info = paste("corner", corner))
   }
@@ -62,23 +62,23 @@ test_that("hv_legend_inside respects a custom fallback when the panel is full", 
 })
 
 test_that("hv_legend_inside falls back when there are no usable points", {
-  p <- hv_legend_inside(ggplot() + theme_grey())
+  p <- hv_legend_inside(ggplot() + theme_gray())
   expect_identical(p$theme$legend.position, "right")
 })
 
 test_that("hv_legend_inside reads coordinates in built (post-flip) space", {
   df <- data.frame(x = c(0, 0, 1, 0.5, 0.1), y = c(0, 1, 0, 0.5, 0.1), g = "a")
   p <- hv_legend_inside(
-    ggplot(df, aes(x, y, colour = g)) + geom_point() + coord_flip()
+    ggplot(df, aes(x, y, color = g)) + geom_point() + coord_flip()
   )
   expect_identical(p$theme$legend.position, "inside")
 })
 
-test_that("hv_legend_inside honours `prefer` when that corner is clear", {
-  # Both top corners empty (points along the bottom + one centre-top); the
+test_that("hv_legend_inside honors `prefer` when that corner is clear", {
+  # Both top corners empty (points along the bottom + one center-top); the
   # default picks top-right (tie -> tr first), `prefer` overrides to top-left.
   df <- data.frame(x = c(0, 0.5, 1, 0.5), y = c(0, 0, 0, 1), g = "a")
-  p  <- ggplot(df, aes(x, y, colour = g)) + geom_point()
+  p  <- ggplot(df, aes(x, y, color = g)) + geom_point()
   expect_equal(hv_legend_inside(p)$theme$legend.position.inside,
                c(1 - 0.02, 1 - 0.02))                       # default: top-right
   p2 <- hv_legend_inside(p, prefer = "topleft")
@@ -95,7 +95,7 @@ test_that("hv_legend_inside falls through to the emptiest corner when `prefer` i
   # Top-right occupied but top-left clear: prefer = "topright" is skipped and the
   # legend lands in the emptiest corner (top-left), NOT the outside fallback.
   df <- data.frame(x = c(0, 1, 1, 0.5, 0.9), y = c(0, 0, 1, 0.5, 0.1), g = "a")
-  p  <- hv_legend_inside(ggplot(df, aes(x, y, colour = g)) + geom_point(),
+  p  <- hv_legend_inside(ggplot(df, aes(x, y, color = g)) + geom_point(),
                          prefer = "topright")
   expect_identical(p$theme$legend.position, "inside")
   expect_equal(p$theme$legend.position.inside, c(0.02, 1 - 0.02))  # top-left

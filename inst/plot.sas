@@ -144,7 +144,7 @@
 %* include the flag NODASH in the goptions statement.  Seems to correct this           ;
 %*                                                                                     ;
 %* 09/09/1997 Changed default FTEXT = SWISSB. SAS6.12 changed font weight so we change ;
-%* the default behaviour, life goes on......                                           ;
+%* the default behavior, life goes on......                                           ;
 %* 03/22/2002 Changed default FTEXT = SWISS. SAS8.2 changed font weight so we change;
 %*                                                                                     ;
 %* ----------------------------------------------------------------------------------- ;

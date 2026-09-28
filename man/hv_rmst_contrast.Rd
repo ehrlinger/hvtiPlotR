@@ -51,7 +51,7 @@ The input follows the \code{tables$estimates} contract of
 \code{hvtiRpropensity::ps_rmst()}: columns \code{estimator}, \code{subset}, \code{weighting},
 \code{n}, \code{ess_treated}, \code{ess_control}, \code{rmst_treated}, \code{rmst_control}, \code{diff},
 \code{diff_days}, \code{lo_days}, \code{hi_days} and \code{n_failed}, where a positive \code{diff}
-favours the treated arm. Only the estimator, difference and interval
+favors the treated arm. Only the estimator, difference and interval
 columns are used here. hvtiRpropensity is not required: pass a plain data
 frame, or the \code{ps_rmst} object itself and its \verb{$tables$estimates} is read.
 }

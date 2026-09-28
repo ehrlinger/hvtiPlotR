@@ -302,7 +302,7 @@ test_that("plot(hv_eda) Cat_Char factor levels preserve alphabetical level order
 # Legend order, stack order and positional palettes (#155): the legend lists
 # fill levels top-down, so the stack must run top-down in the same order, with
 # NA stacked on top via `group`, and a positional palette must map level 1 to
-# its first colour.
+# its first color.
 stack_top_down <- function(p) {
   b   <- ggplot2::ggplot_build(p)
   sc  <- b$plot$scales$get_scales("fill")

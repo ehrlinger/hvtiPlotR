@@ -8,7 +8,7 @@
 ##   hv_consort          -- rendered grid diagram (from consort::consort_plot())
 ##
 ## Public API:
-##   hv_consort_start()      -- initialise tracker
+##   hv_consort_start()      -- initialize tracker
 ##   hv_consort_exclude()    -- add exclusion stage (pipe-friendly)
 ##   hv_consort_summary()    -- stage-level summary tibble
 ##   hv_consort_patients()   -- audit: patient IDs at a stage or by reason
@@ -55,7 +55,7 @@ ct_validate_tracker <- function(x, arg = "tracker") {
 # hv_consort_tracker constructor
 # ---------------------------------------------------------------------------
 
-#' Initialise a CONSORT patient-flow tracker
+#' Initialize a CONSORT patient-flow tracker
 #'
 #' Creates an `hv_consort_tracker` object with one row per patient and a
 #' boolean column indicating that every patient is in the initial (screened)
@@ -207,7 +207,7 @@ hv_consort_exclude <- function(tracker, label, col, ...,
 
   for (f in formulas) {
     condition <- rlang::eval_tidy(rlang::f_lhs(f), data = data_env)
-    # Normalise to strict TRUE/FALSE: a patient with a missing value for the
+    # Normalize to strict TRUE/FALSE: a patient with a missing value for the
     # exclusion criterion is treated as not matching the rule.
     condition <- !is.na(condition) & condition
     reason    <- rlang::f_rhs(f)

@@ -16,7 +16,7 @@ hv_ppt_series(
 \item{mode}{Slide background the plot will sit on. \code{"dark"} pairs with
 \code{\link[=theme_hv_ppt_dark]{theme_hv_ppt_dark()}}, \code{"light"} with \code{\link[=theme_hv_ppt_light]{theme_hv_ppt_light()}}.}
 
-\item{colours}{Character vector of colours, one per group in order. Default
+\item{colours}{Character vector of colors, one per group in order. Default
 \code{NULL} uses the Okabe-Ito ordering for \code{mode}.}
 
 \item{shapes}{Numeric vector of ggplot2 point shapes, one per group in
@@ -30,7 +30,7 @@ Default \code{NULL} draws no title. Unused while the legend is off.}
 \code{legend.position = "top"}.}
 }
 \value{
-A list of ggplot2 components: a theme, a colour scale and a shape
+A list of ggplot2 components: a theme, a color scale and a shape
 scale. Add it to a ggplot object with \code{+}.
 }
 \description{
@@ -41,7 +41,7 @@ on every slide, and copying them plot by plot is how one figure quietly
 drifts out of step with the rest.
 
 \code{hv_ppt_series()} bundles the finishing step into a single object you add
-once per plot. It carries the PowerPoint theme, a colour scale and a
+once per plot. It carries the PowerPoint theme, a color scale and a
 matching shape scale, so a whole deck takes its look from one definition.
 }
 \details{
@@ -55,26 +55,26 @@ p2  <- p2 + ppt
 
 A theme cannot do this job alone. \code{\link[ggplot2:theme]{ggplot2::theme()}} governs the non-data
 ink, the text, panel, grid and ticks, and nothing that draws from the data,
-so no theme element sets a series colour. Nor can a layer be smuggled in
+so no theme element sets a series color. Nor can a layer be smuggled in
 through the theme's \code{...}, which is forwarded to \code{\link[ggplot2:theme]{ggplot2::theme()}} and
-errors on anything that is not a theme element. Series colour and shape
+errors on anything that is not a theme element. Series color and shape
 live in the scales, and those are what this function adds alongside the
 theme.
-\subsection{Colour and shape carry the same variable}{
+\subsection{Color and shape carry the same variable}{
 
 Both scales map the grouping column, so each series is told apart twice.
-That redundancy is the point. A projector in a dark room flattens colour
+That redundancy is the point. A projector in a dark room flattens color
 differences that read cleanly on your monitor, and a black and white
 handout drops them entirely, but the shapes survive both. The two scales
 share \code{name}, so on the rare draft that does draw a legend, ggplot2 merges
 them into one instead of stacking two.
 
-The default colours are the Okabe-Ito colourblind-safe palette, ordered for
+The default colors are the Okabe-Ito colorblind-safe palette, ordered for
 the background: high-luminance hues first on a dark slide, darker ones
-first on a light slide. These are not CORR brand colours. Pass \code{colours}
+first on a light slide. These are not CORR brand colors. Pass \code{colours}
 when a deck calls for a specific set.
 
-Six colours and six shapes are supplied, which covers a grouping variable
+Six colors and six shapes are supplied, which covers a grouping variable
 of up to six levels. A discrete scale errors when it runs out of values, so
 pass longer vectors for a wider variable.
 }
@@ -86,7 +86,7 @@ leaves that alone. CORR figures name the series where the series sits, on a
 slide, on a poster and in a manuscript alike, so the reader's eye never
 travels out to a key and back.
 
-Annotation is drawn in the theme's ink, not in the colour of the series it
+Annotation is drawn in the theme's ink, not in the color of the series it
 names: white on a dark slide, black on a light slide and in a manuscript.
 That is the \code{ink} the theme already gives the axis text and axis lines, so
 one ink for every label makes the annotation read as part of the figure's
@@ -95,7 +95,7 @@ frame rather than as one more series.
 \if{html}{\out{<div class="sourceCode">}}\preformatted{plot(trends) +
   hv_ppt_series("dark") +
   ggplot2::annotate("text", x = 2015, y = 60, label = "Group I",
-                    colour = "white", size = 8)
+                    color = "white", size = 8)
 }\if{html}{\out{</div>}}
 
 The shape scale still earns its place with no legend drawn. Where two curves
@@ -108,12 +108,12 @@ into an empty corner of the panel.
 
 \subsection{Grouped plots only}{
 
-The scales take effect on a plot that maps colour to a grouping column,
+The scales take effect on a plot that maps color to a grouping column,
 which means a constructor called with \code{group_col}. On an ungrouped plot
 they sit unused and only the theme applies. There is nothing to fix in that
-case; a single series needs no palette. To colour the raw observations on an
+case; a single series needs no palette. To color the raw observations on an
 ungrouped plot, add your own layer after the decorator, for example
-\code{+ ggplot2::geom_point(colour = "yellow")}.
+\code{+ ggplot2::geom_point(color = "yellow")}.
 }
 }
 \examples{
@@ -130,9 +130,9 @@ plot(trends) + ppt
 # light one.
 plot(trends) + ppt +
   ggplot2::annotate("text", x = 2015, y = 60, label = "Group I",
-                    colour = "white", size = 8)
+                    color = "white", size = 8)
 
-# A light template, larger type, and your own colours.
+# A light template, larger type, and your own colors.
 plot(trends) +
   hv_ppt_series(
     mode      = "light",
@@ -142,7 +142,7 @@ plot(trends) +
 
 }
 \seealso{
-\code{\link[=hv_ppt_palette]{hv_ppt_palette()}} for the colours themselves;
+\code{\link[=hv_ppt_palette]{hv_ppt_palette()}} for the colors themselves;
 \code{\link[=theme_hv_ppt_dark]{theme_hv_ppt_dark()}} and \code{\link[=theme_hv_ppt_light]{theme_hv_ppt_light()}} for the themes
 this wraps; \code{\link[=hv_legend_inside]{hv_legend_inside()}} when a draft does want a key;
 \code{\link[=save_ppt]{save_ppt()}} to export the finished plots to editable PowerPoint slides.

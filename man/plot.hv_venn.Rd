@@ -22,7 +22,7 @@
 
 \item{show_counts}{Logical; show each region's count. Default \code{TRUE}.}
 
-\item{fill}{Optional vector of fill colours, one per set. \code{NULL}
+\item{fill}{Optional vector of fill colors, one per set. \code{NULL}
 (default) uses \pkg{ggvenn}'s palette.}
 
 \item{text_size}{Region label text size. Default \code{4}.}

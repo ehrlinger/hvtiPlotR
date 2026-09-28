@@ -99,7 +99,7 @@
 #' @examples
 #' if (requireNamespace("ggplot2", quietly = TRUE)) {
 #'   library(ggplot2)
-#'   p <- ggplot(mtcars, aes(wt, mpg, colour = factor(cyl))) + geom_point()
+#'   p <- ggplot(mtcars, aes(wt, mpg, color = factor(cyl))) + geom_point()
 #'   hv_legend_inside(p)
 #' }
 #'

@@ -2,7 +2,7 @@
 % Please edit documentation in R/consort-plot.R
 \name{hv_consort_start}
 \alias{hv_consort_start}
-\title{Initialise a CONSORT patient-flow tracker}
+\title{Initialize a CONSORT patient-flow tracker}
 \usage{
 hv_consort_start(data, patient_id, label = "Screened", pass_col = NULL)
 }

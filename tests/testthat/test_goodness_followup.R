@@ -388,7 +388,7 @@ test_that("hv_followup warns and reports the analyzed cohort", {
   expect_equal(gf$meta$n_input, 3L)
   expect_equal(gf$meta$n_excluded, 1L)
   expect_equal(nrow(gf$data), gf$meta$n_patients)
-  expect_output(print(gf), "2 analysed of 3 input")
+  expect_output(print(gf), "2 analyzed of 3 input")
 })
 
 test_that("hv_followup is silent when no rows are dropped", {
@@ -421,7 +421,7 @@ test_that("event panel reports its own cohort when only event columns are missin
   expect_equal(gf$meta$n_event_patients, 2L)
   expect_equal(gf$meta$n_event_excluded, 1L)
   expect_equal(nrow(gf$tables$event_data), gf$meta$n_event_patients)
-  expect_output(print(gf), "Event panel : 2 analysed; 1 excluded")
+  expect_output(print(gf), "Event panel : 2 analyzed; 1 excluded")
 })
 
 test_that("each panel's exclusion warning names its own panel", {

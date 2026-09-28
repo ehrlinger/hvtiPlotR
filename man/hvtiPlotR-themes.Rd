@@ -102,11 +102,11 @@ Default \code{base_size / 22}.}
 
 \item{base_rect_size}{Rectangle border size. Default \code{base_size / 22}.}
 
-\item{ink}{Foreground (text and line) colour.}
+\item{ink}{Foreground (text and line) color.}
 
-\item{paper}{Background colour.}
+\item{paper}{Background color.}
 
-\item{accent}{Accent colour used by some \code{theme_grey()} elements.
+\item{accent}{Accent color used by some \code{theme_gray()} elements.
 Default \code{"#3366FF"}.}
 
 \item{...}{Additional named theme elements forwarded to a final

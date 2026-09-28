@@ -117,7 +117,7 @@
                                logical(1))]
     warning(
       sprintf(
-        "%d of %d row(s) excluded%s for missing values in %s; analysing %d.",
+        "%d of %d row(s) excluded%s for missing values in %s; analyzing %d.",
         n_excluded, n_input,
         if (is.null(context)) "" else paste0(" from the ", context),
         paste(sprintf("`%s`", culprits), collapse = ", "),

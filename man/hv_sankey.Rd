@@ -27,10 +27,10 @@ supplied, it is used verbatim but must cover every observed cluster
 label.}
 
 \item{node_colours}{Named character vector mapping node labels to fill
-colours. If \code{NULL} (default), labels are mapped to an inline
+colors. If \code{NULL} (default), labels are mapped to an inline
 ColorBrewer \code{Set1} hex palette in \code{node_levels} order (no
 dependency on \pkg{RColorBrewer}). When there are more labels than
-palette colours the palette is recycled with a warning.}
+palette colors the palette is recycled with a warning.}
 }
 \value{
 An object of class \code{c("hv_sankey", "hv_data")}:
@@ -44,7 +44,7 @@ An object of class \code{c("hv_sankey", "hv_data")}:
 }
 \description{
 Validates a wide cluster-assignment data frame, resolves node level
-ordering, computes default node colours if not supplied, and pre-computes
+ordering, computes default node colors if not supplied, and pre-computes
 the long-format Sankey data.  Call \code{\link{plot.hv_sankey}} on the
 result to obtain a bare \code{ggplot2} Sankey diagram using
 \pkg{ggsankey} geoms.

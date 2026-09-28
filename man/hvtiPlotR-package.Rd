@@ -38,7 +38,7 @@ dta <- sample_trends_data(n = 600, seed = 42)
 tr  <- hv_trends(dta)
 
 plot(tr) +
-  scale_colour_brewer(palette = "Set1", name = "Group") +
+  scale_color_brewer(palette = "Set1", name = "Group") +
   labs(x = "Year", y = "Outcome") +
   theme_hv_manuscript()
 }\if{html}{\out{</div>}}
@@ -116,7 +116,7 @@ to apply \code{\link[=hv_ph_location]{hv_ph_location()}} per slide automatically
 mirrored histogram comparing binary-matched or IPTW-weighted
 cohorts. Ports the \verb{tp.lp.mirror-histogram_*} and
 \code{tp.lp.mirror_histo_before_after_wt} SAS scripts.
-\item \code{\link[=hv_balance]{hv_balance()}}: Prepare standardised mean difference data for a
+\item \code{\link[=hv_balance]{hv_balance()}}: Prepare standardized mean difference data for a
 covariate balance dot-plot before and after propensity-score
 matching or weighting. Ports \code{tp.lp.propen.cov_balance.R}.
 \item \code{\link[=hv_stacked]{hv_stacked()}}: Prepare grouped count or proportion data for a
@@ -244,7 +244,7 @@ risk tables, group counts, etc.).
 \itemize{
 \item \code{\link[=sample_mirror_histogram_data]{sample_mirror_histogram_data()}}: Propensity scores via a logistic
 model with greedy 1:1 caliper matching and optional IPTW weights.
-\item \code{\link[=sample_covariate_balance_data]{sample_covariate_balance_data()}}: Standardised mean differences
+\item \code{\link[=sample_covariate_balance_data]{sample_covariate_balance_data()}}: Standardized mean differences
 before and after propensity matching.
 \item \code{\link[=sample_stacked_histogram_data]{sample_stacked_histogram_data()}}: Year-by-category count data.
 \item \code{\link[=sample_survival_data]{sample_survival_data()}}: Exponential survival times with

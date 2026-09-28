@@ -53,7 +53,7 @@ is missing.}
 \item{\strong{Numeric categorical} (\code{"Cat_Num"})}{Stacked (or filled)
 bar chart with counts (or proportions) per x level.}
 \item{\strong{Character categorical} (\code{"Cat_Char"})}{Same stacked bar,
-colouring each string level separately.}
+coloring each string level separately.}
 }
 }
 \examples{
@@ -75,12 +75,12 @@ plot(hv_eda(dta, x_col = "year", y_col = "nyha",
 # --- Continuous: annotated -----------------------------------------------
 plot(hv_eda(dta, x_col = "op_years", y_col = "peak_grad",
               y_label = "Peak Gradient (mmHg)")) +
-  ggplot2::scale_colour_manual(values = c("steelblue"), guide = "none") +
+  ggplot2::scale_color_manual(values = c("steelblue"), guide = "none") +
   ggplot2::scale_x_continuous(breaks = seq(0, 15, 5)) +
   ggplot2::labs(x = "Years from First Surgery Year") +
   ggplot2::annotate("text", x = 12, y = 70,
                     label = "LOESS span = 0.8",
-                    size = 3, colour = "grey40", fontface = "italic") +
+                    size = 3, color = "gray40", fontface = "italic") +
   theme_hv_poster()
 
 }

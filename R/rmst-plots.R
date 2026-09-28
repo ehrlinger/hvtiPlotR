@@ -79,7 +79,7 @@ rmst_shade_table <- function(curves, facet_col, arm_col, time_col, surv_col, tau
 #' `hvtiRpropensity::ps_rmst()`: columns `estimator`, `subset`, `weighting`,
 #' `n`, `ess_treated`, `ess_control`, `rmst_treated`, `rmst_control`, `diff`,
 #' `diff_days`, `lo_days`, `hi_days` and `n_failed`, where a positive `diff`
-#' favours the treated arm. Only the estimator, difference and interval
+#' favors the treated arm. Only the estimator, difference and interval
 #' columns are used here. hvtiRpropensity is not required: pass a plain data
 #' frame, or the `ps_rmst` object itself and its `$tables$estimates` is read.
 #'
@@ -177,7 +177,7 @@ print.hv_rmst_contrast <- function(x, ...) {
 #' Builds a bare dot-and-whisker `ggplot2` object from an
 #' [hv_rmst_contrast()] object. Estimators run down the y axis with the first
 #' level at the top, so the plot reads in the order supplied. A solid vertical
-#' line marks zero (no difference). Add colours, scales and a theme with `+`.
+#' line marks zero (no difference). Add colors, scales and a theme with `+`.
 #'
 #' @param x              An `hv_rmst_contrast` object.
 #' @param point_size     Point size passed to `geom_pointrange()`. Default `3`.
@@ -408,12 +408,12 @@ print.hv_rmst_curves <- function(x, ...) {
 #' Plot an hv_rmst_curves object
 #'
 #' Builds a bare `ggplot2` object from an [hv_rmst_curves()] object: weighted
-#' Kaplan-Meier step curves, one facet per estimator, coloured by arm. When
+#' Kaplan-Meier step curves, one facet per estimator, colored by arm. When
 #' `tau` was supplied, the area under each curve up to `tau` is shaded
 #' (`geom_ribbon()` over a staircase polygon, so the shading follows the steps
 #' exactly) and a vertical line marks `tau`. When `estimates` was supplied, the
-#' top right of each facet carries the RMST difference and interval. Colour and
-#' fill both map to arm: set them together with `scale_colour_*()` and
+#' top right of each facet carries the RMST difference and interval. Color and
+#' fill both map to arm: set them together with `scale_color_*()` and
 #' `scale_fill_*()`.
 #'
 #' @param x          An `hv_rmst_curves` object.
@@ -468,7 +468,7 @@ plot.hv_rmst_curves <- function(x,
   }
   p <- p + ggplot2::geom_step(
     data = x$data,
-    ggplot2::aes(x = .data[[m$time]], y = .data[[m$surv]], colour = .data[[m$arm]]),
+    ggplot2::aes(x = .data[[m$time]], y = .data[[m$surv]], color = .data[[m$arm]]),
     linewidth = linewidth
   )
   if (!is.null(m$tau)) {

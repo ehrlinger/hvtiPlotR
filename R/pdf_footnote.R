@@ -34,16 +34,16 @@
 #'   `"DRAFT \u2014 "`. Set to `""` to suppress the prefix.
 #' @param size     Font size as a multiplier relative to the device default
 #'   (passed to [grid::gpar()] as `cex`). Default `0.7`.
-#' @param colour   Font colour. Default `grey(0.5)` (medium grey), which is
+#' @param colour   Font color. Default `gray(0.5)` (medium gray), which is
 #'   visually unobtrusive on both screen and print.
-#' @param x        Horizontal position in normalised parent coordinates
+#' @param x        Horizontal position in normalized parent coordinates
 #'   (`"npc"`). Default `1` (right edge). Decrease to move left.
 #' @param y        Vertical position in `"npc"`. Default `0` (bottom). Increase
 #'   to move up.
 #' @param hjust    Horizontal justification: `"right"` (default), `"left"`,
-#'   or `"centre"`.
+#'   or `"center"`.
 #' @param vjust    Vertical justification: `"bottom"` (default), `"top"`,
-#'   or `"centre"`.
+#'   or `"center"`.
 #' @param margin_mm Margin in mm pulled back from the `x`/`y` position.
 #'   Default `2`.
 #'
@@ -86,13 +86,13 @@
 #' )
 #'
 #' @importFrom grid pushViewport viewport popViewport gpar grid.text unit
-#' @importFrom grDevices grey
+#' @importFrom grDevices gray
 #' @export
 make_footnote <- function(text       = getwd(),
                           timestamp  = TRUE,
                           prefix     = "DRAFT \u2014 ",
                           size       = 0.7,
-                          colour     = grey(0.5),
+                          colour     = gray(0.5),
                           x          = 1,
                           y          = 0,
                           hjust      = "right",
@@ -145,7 +145,7 @@ make_footnote <- function(text       = getwd(),
 # part of the contract with every package that draws through this one.
 makeFootnote <- function(footnoteText = getwd(), # nolint: object_name_linter.
                          size         = 0.7,
-                         color        = grey(0.5),
+                         color        = gray(0.5),
                          timestamp    = TRUE) {
   make_footnote(
     text      = footnoteText,

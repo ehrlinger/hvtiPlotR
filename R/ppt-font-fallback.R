@@ -117,7 +117,7 @@
   names(overrides) <- fallback_roots
 
   # ggplot2 >= 4.0 resolves a text geom's `family` through the theme's `geom`
-  # element (element_geom()), which theme_grey() seeds from base_family
+  # element (element_geom()), which theme_gray() seeds from base_family
   # alongside `text`. Patching `text` alone leaves geom_text() and
   # annotate("text", ...) still asking the device for Arial, and on
   # postscript()/pdf() that is fatal ("invalid font type"), not merely ugly.

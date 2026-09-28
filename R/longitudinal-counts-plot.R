@@ -7,8 +7,8 @@
 #
 # Key differences from the template:
 #  - Accepts pre-aggregated long-format data — no reshape2::melt() needed
-#  - Hard-coded colours ("blue", "red", "black") replaced by scale_fill_*
-#    and scale_colour_* on the returned ggplot objects
+#  - Hard-coded colors ("blue", "red", "black") replaced by scale_fill_*
+#    and scale_color_* on the returned ggplot objects
 #  - Hard-coded theme() calls replaced by theme_hv_poster()
 #  - Bar chart and table returned via plot(x, type=) dispatch; patchwork
 #    composes them (replaces the manual grid.layout / mmplot() pattern)
@@ -231,7 +231,7 @@ print.hv_longitudinal <- function(x, ...) {
 #'
 #' # Text table panel
 #' plot(lc, type = "table") +
-#'   scale_colour_manual(
+#'   scale_color_manual(
 #'     values = c(Patients = "steelblue", Measurements = "firebrick"),
 #'     guide  = "none"
 #'   ) +
@@ -290,7 +290,7 @@ plot.hv_longitudinal <- function(x,
         x      = .data[[x_col]],
         y      = .data[[group_col]],
         label  = .data$.label,
-        colour = .data[[group_col]]
+        color = .data[[group_col]]
       )
     ) +
       ggplot2::geom_text(size = 4) +

@@ -33,7 +33,7 @@ Apply an HVTI theme to a ggplot2 figure in one line:
 library(ggplot2)
 library(hvtiPlotR)
 
-ggplot(mtcars, aes(wt, mpg, colour = factor(cyl))) +
+ggplot(mtcars, aes(wt, mpg, color = factor(cyl))) +
   geom_point() +
   theme_hv_manuscript()
 ```
@@ -97,7 +97,7 @@ km$tables$risk                         # risk-table data frame
 |---|---|
 | `hv_mirror_hist()` | Mirrored histograms showing propensity score distributions for two groups, before and after matching or IPTW weighting |
 | `hv_stacked()` | Stacked or proportional-fill histogram of a numeric variable by group |
-| `hv_balance()` | Standardised mean difference dot-plot for assessing propensity matching or weighting quality |
+| `hv_balance()` | Standardized mean difference dot-plot for assessing propensity matching or weighting quality |
 
 ```r
 mh <- hv_mirror_hist(sample_mirror_histogram_data(n = 2000),
@@ -132,7 +132,7 @@ plot(mh) + theme_hv_manuscript()
 |---|---|
 | `hv_eda()` | Exploratory plot for a single variable. Auto-detects type: scatter + LOESS for continuous, stacked bar for categorical. Missing values shown as `"(Missing)"` |
 | `hv_correlation_matrix()` | Lower-triangle scatter-plot matrix for numeric variables, with pairwise deletion per panel and the coefficient matrix in `$tables$coefficients` |
-| `hv_upset()` | UpSet diagram for visualising procedure co-occurrences or set memberships |
+| `hv_upset()` | UpSet diagram for visualizing procedure co-occurrences or set memberships |
 | `hv_venn()` | Venn diagram of 2-3 overlapping set memberships, with a region-count table; the small-set-count companion to `hv_upset()` |
 | `hv_alluvial()` | Sankey/alluvial diagram for patient flow across categorical stages |
 | `hv_sankey()` | Cluster stability Sankey showing patient transitions across cluster solutions |

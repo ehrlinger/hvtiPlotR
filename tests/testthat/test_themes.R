@@ -73,7 +73,7 @@ test_that("theme_hv_poster hides the legend by default", {
 
 # House style names a series by annotation rather than by a key, on every
 # output target. The docs stated this as a property of all four themes while
-# only three carried it -- theme_hv_poster() silently inherited theme_grey()'s
+# only three carried it -- theme_hv_poster() silently inherited theme_gray()'s
 # "right" until 2.7.8.
 #
 # The theme list is DISCOVERED rather than written out. A hard-coded list reads
@@ -118,7 +118,7 @@ test_that("PPT themes match the canonical Arial deck (32 bold ticks, 40 bold tit
   # Canonical reference: sl.rd26.stephens.1316.driveline_infections deck,
   # slide 6 -- axis tick labels render Arial 32 Bold, axis titles Arial 40 Bold.
   for (th in list(theme_hv_ppt_dark(), theme_hv_ppt_light())) {
-    # base_family flows to all text (incl. axis text/titles) via theme_grey().
+    # base_family flows to all text (incl. axis text/titles) via theme_gray().
     expect_identical(th$text$family, "Arial")
     # axis tick labels: Arial 32 Bold.
     expect_equal(th$axis.text$size, 32)
@@ -211,7 +211,7 @@ test_that("Arial falls back to Helvetica when the active device can't resolve it
 
 test_that("the fallback reaches text geoms, not just theme elements", {
   # ggplot2 >= 4.0 resolves a text geom's family through the theme's `geom`
-  # element, which theme_grey() seeds from base_family alongside `text`.
+  # element, which theme_gray() seeds from base_family alongside `text`.
   # Patching `text` alone left annotate("text", ...) asking for Arial, which
   # errors outright on pdf()/postscript(). House style labels series by
   # annotation, so this is the common case, not an edge one.
@@ -234,7 +234,7 @@ test_that("an explicitly resolvable family is preserved (no fallback) at draw ti
   grDevices::pdf(f)
   on.exit(grDevices::dev.off(), add = TRUE)
   # Simulate a device (e.g. quartz) that genuinely resolves "Arial" -- the
-  # explicit/default base_family must be honoured, not silently swapped.
+  # explicit/default base_family must be honored, not silently swapped.
   testthat::local_mocked_bindings(.hv_family_resolves = function(family) TRUE)
   resolved <- .hv_resolve_ppt_family(p)
   expect_identical(resolved$theme$text$family, "Arial")
@@ -339,7 +339,7 @@ test_that("hv_theme dispatcher has been removed", {
 # ============================================================================
 
 test_that("paper sets plot.background fill in ppt and poster themes", {
-  expect_identical(theme_hv_ppt_dark(paper  = "grey15")$plot.background$fill, "grey15")
+  expect_identical(theme_hv_ppt_dark(paper  = "gray15")$plot.background$fill, "gray15")
   expect_identical(theme_hv_ppt_light(paper = "ivory")$plot.background$fill,  "ivory")
   expect_identical(theme_hv_poster(paper    = "navy")$plot.background$fill,   "navy")
 })

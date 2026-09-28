@@ -2,16 +2,16 @@
 #
 # Alluvial diagram wrapper (formerly sankey-plot.R).
 # Ports the pattern from tp.dp.female_bicus_preAR_sankey.R (template graph
-# library) to hvtiPlotR, replacing hard-coded colours with scale_ composition
+# library) to hvtiPlotR, replacing hard-coded colors with scale_ composition
 # and explicit theme calls with hvtiPlotR themes.
 #
 # Key differences from raw ggalluvial::geom_alluvium():
 #  - Dynamic axis aes() constructed from a character vector — no need to
 #    hard-code axis1 = col1, axis2 = col2, etc.
-#  - No hard-coded fill/colour values; examples demonstrate scale_fill_manual()
+#  - No hard-coded fill/color values; examples demonstrate scale_fill_manual()
 #    and scale_fill_brewer()
-#  - stratum_fill exposed as a parameter (default "grey80") for the vertical
-#    bars, keeping flow colours independent of stratum bars
+#  - stratum_fill exposed as a parameter (default "gray80") for the vertical
+#    bars, keeping flow colors independent of stratum bars
 #  - Theme applied via + theme_hv_poster() in examples
 # ---------------------------------------------------------------------------
 
@@ -60,7 +60,7 @@ sample_alluvial_data <- function(n = 300, seed = 42L) {
     sample(proc_levels, n, replace = TRUE, prob = c(0.25, 0.40, 0.35))
   )
 
-  # Post-AR: improvement modelled as ordinal reduction
+  # Post-AR: improvement modeled as ordinal reduction
   pre_num      <- match(pre_ar, grade_levels)
   improvement  <- stats::rbinom(n, size = 2, prob = 0.70)
   post_num     <- pmax(1L, pre_num - improvement)
@@ -87,7 +87,7 @@ sample_alluvial_data <- function(n = 300, seed = 42L) {
 #' Validates a wide alluvial-format data frame and returns an
 #' \code{hv_alluvial} object.  Call \code{\link{plot.hv_alluvial}} on the
 #' result to obtain a bare \code{ggplot2} alluvial diagram that you can
-#' decorate with colour scales, axis labels, and \code{\link{theme_hv_manuscript}}.
+#' decorate with color scales, axis labels, and \code{\link{theme_hv_manuscript}}.
 #'
 #' @param data        A data frame in wide alluvial format: one row per
 #'   axis-value combination, a numeric weight column, and one column per axis.
@@ -95,7 +95,7 @@ sample_alluvial_data <- function(n = 300, seed = 42L) {
 #'   left-to-right display order. Minimum two columns.
 #' @param y_col       Name of the numeric weight column (counts or
 #'   proportions). Default \code{"freq"}.
-#' @param fill_col    Name of the column to map to the flow fill and colour
+#' @param fill_col    Name of the column to map to the flow fill and color
 #'   aesthetics, or \code{NULL} for a single fill. Default \code{NULL}.
 #' @param axis_labels Character vector of axis labels for the x-axis, the
 #'   same length as \code{axes}. Defaults to \code{axes} (column names).
@@ -123,7 +123,7 @@ sample_alluvial_data <- function(n = 300, seed = 42L) {
 #' # 2. Bare plot -- undecorated ggplot returned by plot.hv_alluvial
 #' p <- plot(al)
 #'
-#' # 3. Decorate: fill/colour palettes, axis labels, theme
+#' # 3. Decorate: fill/color palettes, axis labels, theme
 #' p +
 #'   ggplot2::scale_fill_manual(
 #'     values = c(None     = "steelblue",
@@ -132,7 +132,7 @@ sample_alluvial_data <- function(n = 300, seed = 42L) {
 #'                Severe   = "firebrick"),
 #'     name = "Pre-op AR"
 #'   ) +
-#'   ggplot2::scale_colour_manual(
+#'   ggplot2::scale_color_manual(
 #'     values = c(None     = "steelblue",
 #'                Mild     = "goldenrod",
 #'                Moderate = "darkorange",
@@ -206,13 +206,13 @@ print.hv_alluvial <- function(x, ...) {
 #' \code{\link[ggalluvial]{geom_stratum}}.
 #'
 #' @param x             An \code{hv_alluvial} object.
-#' @param stratum_fill  Fill colour for the stratum bars. Default \code{"grey80"}.
+#' @param stratum_fill  Fill color for the stratum bars. Default \code{"gray80"}.
 #' @param stratum_width Width of the stratum bars as a fraction of axis
 #'   spacing. Default \code{1/4}.
 #' @param flow_width    Width of the alluvium flows. Default \code{1/6}.
 #' @param alpha         Transparency of the flows, \eqn{[0,1]}. Default \code{0.8}.
 #' @param knot_pos      Curvature of the flow ribbons, \eqn{[0,1]}. Default \code{0.4}.
-#' @param show_labels   Logical; if TRUE, each stratum is labelled. Default \code{TRUE}.
+#' @param show_labels   Logical; if TRUE, each stratum is labeled. Default \code{TRUE}.
 #' @param show_yaxis    Logical; if FALSE, the y-axis title, text, ticks, and
 #'   line are blanked for a clean milestone patient-flow look (the
 #'   alluvium/stratum geometry is untouched). Default \code{TRUE} (counts shown).
@@ -234,7 +234,7 @@ print.hv_alluvial <- function(x, ...) {
 #' plot(hv_alluvial(dta, axes = axes, y_col = "freq",
 #'                    fill_col = "procedure")) +
 #'   ggplot2::scale_fill_brewer(palette = "Set2", name = "Procedure") +
-#'   ggplot2::scale_colour_brewer(palette = "Set2", guide = "none") +
+#'   ggplot2::scale_color_brewer(palette = "Set2", guide = "none") +
 #'   ggplot2::labs(y = "Patients (n)") +
 #'   theme_hv_poster()
 #'
@@ -246,7 +246,7 @@ print.hv_alluvial <- function(x, ...) {
 #' )) +
 #'   ggplot2::scale_fill_brewer(palette = "RdYlGn", direction = -1,
 #'                              name = "AR Grade") +
-#'   ggplot2::scale_colour_brewer(palette = "RdYlGn", direction = -1,
+#'   ggplot2::scale_color_brewer(palette = "RdYlGn", direction = -1,
 #'                                guide = "none") +
 #'   ggplot2::labs(y = "Patients (n)") +
 #'   theme_hv_poster()
@@ -256,7 +256,7 @@ print.hv_alluvial <- function(x, ...) {
 #' @importFrom rlang sym syms inject
 #' @export
 plot.hv_alluvial <- function(x,
-                                stratum_fill  = "grey80",
+                                stratum_fill  = "gray80",
                                 stratum_width = 1 / 4,
                                 flow_width    = 1 / 6,
                                 alpha         = 0.8,
@@ -282,7 +282,7 @@ plot.hv_alluvial <- function(x,
   if (!is.null(fill_col)) {
     fill_sym     <- rlang::sym(fill_col)
     flow_mapping <- rlang::inject(
-      ggplot2::aes(fill = !!fill_sym, colour = !!fill_sym)
+      ggplot2::aes(fill = !!fill_sym, color = !!fill_sym)
     )
   } else {
     flow_mapping <- ggplot2::aes()

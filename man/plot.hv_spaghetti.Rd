@@ -6,7 +6,7 @@
 \usage{
 \method{plot}{hv_spaghetti}(
   x,
-  line_colour = "grey50",
+  line_colour = "gray50",
   line_width = 0.2,
   alpha = 0.8,
   add_smooth = FALSE,
@@ -20,8 +20,8 @@
 \arguments{
 \item{x}{An \code{hv_spaghetti} object.}
 
-\item{line_colour}{Fixed line colour used when \code{colour_col = NULL}.
-Default \code{"grey50"}.}
+\item{line_colour}{Fixed line color used when \code{colour_col = NULL}.
+Default \code{"gray50"}.}
 
 \item{line_width}{Line width for individual trajectories. Default \code{0.2}.}
 
@@ -50,7 +50,7 @@ to add scales, axis limits, labels, and \code{\link{theme_hv_manuscript}}.
 }
 \description{
 Draws one trajectory line per subject over time, optionally stratified by
-colour and with a LOESS (or other) smooth overlay.
+color and with a LOESS (or other) smooth overlay.
 }
 \examples{
 dta <- sample_spaghetti_data(n_patients = 150, seed = 42)
@@ -58,7 +58,7 @@ sp  <- hv_spaghetti(dta, colour_col = "group")
 
 # With LOESS smooth overlay
 plot(sp, add_smooth = TRUE) +
-  ggplot2::scale_colour_brewer(palette = "Set1", name = NULL) +
+  ggplot2::scale_color_brewer(palette = "Set1", name = NULL) +
   ggplot2::labs(x = "Years", y = "AV Mean Gradient (mmHg)") +
   theme_hv_poster()
 
@@ -74,13 +74,13 @@ plot(hv_spaghetti(dta_ord, colour_col = "group"),
 \donttest{
 old <- ggplot2::theme_set(theme_hv_manuscript())
 plot(sp, add_smooth = TRUE) +
-  ggplot2::scale_colour_brewer(palette = "Set1", name = NULL) +
+  ggplot2::scale_color_brewer(palette = "Set1", name = NULL) +
   ggplot2::labs(x = "Years", y = "AV Mean Gradient (mmHg)")
 ggplot2::theme_set(old)
 }
 
 # See vignette("plot-decorators", package = "hvtiPlotR") for theming,
-# colour scales, annotation labels, and saving plots.
+# color scales, annotation labels, and saving plots.
 
 }
 \seealso{

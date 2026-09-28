@@ -38,7 +38,7 @@ format:
    `hv_*()` constructor + `plot()` workflow
 
 2. **Theme functions** — renamed to `theme_hv_*()`, following ggplot2's
-   own `theme_bw()` / `theme_grey()` naming convention
+   own `theme_bw()` / `theme_gray()` naming convention
 
 3. **PowerPoint export** — `save_ppt()` gains `panel_box`, which anchors
    the plot panel to a fixed slide rectangle across all slides
@@ -66,7 +66,7 @@ km$tables$report   # summary statistics
 
 # Step 2: render a bare ggplot, then decorate with +
 plot(km) +
-  scale_colour_brewer(palette = "Set1") +
+  scale_color_brewer(palette = "Set1") +
   labs(x = "Years", y = "Survival Probability") +
   theme_hv_manuscript()
 ```

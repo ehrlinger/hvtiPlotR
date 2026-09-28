@@ -18,7 +18,7 @@ A data frame with columns \code{strata}, \code{report_time},
 \code{n.risk}.
 }
 \description{
-For each stratum, counts analysed subjects whose observed follow-up time is
+For each stratum, counts analyzed subjects whose observed follow-up time is
 greater than or equal to each report time.
 }
 \keyword{internal}

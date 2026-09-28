@@ -106,9 +106,9 @@ hp  # prints CI and empirical flags
 # 2. Bare plot -- undecorated ggplot returned by plot.hv_hazard
 p <- plot(hp)
 
-# 3. Decorate: colour/fill palettes, axis scales, labels, theme
+# 3. Decorate: color/fill palettes, axis scales, labels, theme
 p +
-  scale_colour_manual(values = c("steelblue"), guide = "none") +
+  scale_color_manual(values = c("steelblue"), guide = "none") +
   scale_fill_manual(values   = c("steelblue"), guide = "none") +
   scale_x_continuous(limits = c(0, 10), breaks = 0:10) +
   scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, 20),
@@ -116,7 +116,7 @@ p +
   labs(x = "Years", y = "Survival (\%)") +
   theme_hv_poster()
 
-# Stratified groups -- colour scale adds clinical meaning
+# Stratified groups -- color scale adds clinical meaning
 dat2 <- sample_hazard_data(
   n = 400, groups = c("No Takedown" = 1.0, "Takedown" = 0.65)
 )
@@ -125,7 +125,7 @@ hp2 <- hv_hazard(dat2,
   group_col = "group"
 )
 plot(hp2) +
-  scale_colour_manual(
+  scale_color_manual(
     values = c("No Takedown" = "steelblue", "Takedown" = "firebrick"),
     name   = NULL
   ) +
@@ -136,7 +136,7 @@ plot(hp2) +
 \donttest{
 old <- ggplot2::theme_set(theme_hv_manuscript())
 plot(hp2) +
-  scale_colour_brewer(palette = "Set1", name = NULL) +
+  scale_color_brewer(palette = "Set1", name = NULL) +
   scale_fill_brewer(palette   = "Set1", guide = "none") +
   scale_x_continuous(limits = c(0, 10), breaks = 0:10) +
   scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, 20),
@@ -146,7 +146,7 @@ ggplot2::theme_set(old)
 }
 
 # See vignette("plot-decorators", package = "hvtiPlotR") for theming,
-# colour scales, annotation labels, and saving plots.
+# color scales, annotation labels, and saving plots.
 
 }
 \seealso{

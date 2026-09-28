@@ -5,13 +5,13 @@ utils::globalVariables(c("node", "freq"))
 #
 # Cluster stability Sankey diagram.
 # Ports the cluster assignment flow chart from the PAM clustering analysis,
-# showing how patients move between labelled clusters as the number of
+# showing how patients move between labeled clusters as the number of
 # clusters K increases from 2 to 9.
 #
 # Key differences from the original script:
 #  - No hard-coded column names or ordering vectors; caller supplies
 #    cluster_cols and node_levels
-#  - Colour palette is passed via node_colours (default: inline Set1 hex)
+#  - Color palette is passed via node_colours (default: inline Set1 hex)
 #  - NSE-free internal reshape (.make_sankey_long) avoids ggsankey::make_long()
 #    non-standard evaluation
 # ---------------------------------------------------------------------------
@@ -20,7 +20,7 @@ utils::globalVariables(c("node", "freq"))
 #' Sample Cluster Stability Sankey Data
 #'
 #' Generates a synthetic dataset with one row per patient and columns
-#' `C2`–`C9` holding letter-labelled cluster assignments at successive values
+#' `C2`–`C9` holding letter-labeled cluster assignments at successive values
 #' of K (number of clusters). The hierarchical merge structure follows the
 #' pattern from the HVTI PAM clustering analysis:
 #'
@@ -86,7 +86,7 @@ sample_cluster_sankey_data <- function(
     C9 = c("B", "F", "H", "D", "I", "C", "E", "G", "A")
   )
 
-  # Normalise probs
+  # Normalize probs
   probs <- probs[names(probs) %in% names(merge_tree)]
   probs <- probs / sum(probs)
 
@@ -207,7 +207,7 @@ sample_cluster_sankey_data <- function(
 #' Prepare cluster stability Sankey data for plotting
 #'
 #' Validates a wide cluster-assignment data frame, resolves node level
-#' ordering, computes default node colours if not supplied, and pre-computes
+#' ordering, computes default node colors if not supplied, and pre-computes
 #' the long-format Sankey data.  Call \code{\link{plot.hv_sankey}} on the
 #' result to obtain a bare \code{ggplot2} Sankey diagram using
 #' \pkg{ggsankey} geoms.
@@ -234,10 +234,10 @@ sample_cluster_sankey_data <- function(
 #'   supplied, it is used verbatim but must cover every observed cluster
 #'   label.
 #' @param node_colours  Named character vector mapping node labels to fill
-#'   colours. If \code{NULL} (default), labels are mapped to an inline
+#'   colors. If \code{NULL} (default), labels are mapped to an inline
 #'   ColorBrewer \code{Set1} hex palette in \code{node_levels} order (no
 #'   dependency on \pkg{RColorBrewer}). When there are more labels than
-#'   palette colours the palette is recycled with a warning.
+#'   palette colors the palette is recycled with a warning.
 #'
 #' @return An object of class \code{c("hv_sankey", "hv_data")}:
 #' \describe{
@@ -303,15 +303,15 @@ hv_sankey <- function(data,
            paste(missing_lab, collapse = ", "), call. = FALSE)
   }
 
-  # Default colours: Set1 in node_levels order, recycled (with warning) when
-  # there are more labels than palette colours.
+  # Default colors: Set1 in node_levels order, recycled (with warning) when
+  # there are more labels than palette colors.
   if (is.null(node_colours)) {
     n_nodes <- length(node_levels)
     set1    <- c("#E41A1C", "#377EB8", "#4DAF4A", "#984EA3", "#FF7F00",
                  "#FFFF33", "#A65628", "#F781BF", "#999999")
     if (n_nodes > length(set1))
-      warning("More node labels (", n_nodes, ") than Set1 colours (",
-              length(set1), "); colours will repeat.", call. = FALSE)
+      warning("More node labels (", n_nodes, ") than Set1 colors (",
+              length(set1), "); colors will repeat.", call. = FALSE)
     pal          <- rep_len(set1, n_nodes)
     node_colours <- stats::setNames(pal, node_levels)
   }
@@ -473,10 +473,10 @@ plot.hv_sankey <- function(x,
       alpha  = label_alpha,
       hjust  = label_hjust,
       size   = label_size / ggplot2::.pt,
-      colour = "black"
+      color = "black"
     ) +
     # ggsankey::theme_sankey() calls element_rect(size = ), deprecated in
-    # ggplot2 3.4.0 in favour of linewidth. The warning is raised inside
+    # ggplot2 3.4.0 in favor of linewidth. The warning is raised inside
     # ggsankey and there is nothing to fix on our side, so it is muffled
     # here rather than left to fire on every hv_sankey() call. Scoped to
     # this one call and to lifecycle warnings only -- any other warning

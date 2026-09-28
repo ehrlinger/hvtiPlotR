@@ -57,7 +57,7 @@ test_that("makeFootnote accepts custom color parameter", {
 
   expect_error(makeFootnote(color = "red"), NA)
   expect_error(makeFootnote(color = "blue"), NA)
-  expect_error(makeFootnote(color = grey(0.8)), NA)
+  expect_error(makeFootnote(color = gray(0.8)), NA)
   expect_error(makeFootnote(color = "#FF0000"), NA)
 
   dev.off()
@@ -115,7 +115,7 @@ test_that("makeFootnote default size is 0.7", {
   dev.off()
 })
 
-test_that("makeFootnote default color is grey(0.5)", {
+test_that("makeFootnote default color is gray(0.5)", {
   pdf(NULL)
   plot(1:10)
 
@@ -225,8 +225,8 @@ test_that("makeFootnote handles unusual color values", {
   plot(1:10)
 
   expect_error(makeFootnote(color = "transparent"), NA)
-  expect_error(makeFootnote(color = grey(0)), NA)
-  expect_error(makeFootnote(color = grey(1)), NA)
+  expect_error(makeFootnote(color = gray(0)), NA)
+  expect_error(makeFootnote(color = gray(1)), NA)
 
   dev.off()
 })

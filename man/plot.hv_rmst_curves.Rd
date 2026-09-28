@@ -32,12 +32,12 @@ A bare \code{\link[ggplot2:ggplot]{ggplot2::ggplot()}} object.
 }
 \description{
 Builds a bare \code{ggplot2} object from an \code{\link[=hv_rmst_curves]{hv_rmst_curves()}} object: weighted
-Kaplan-Meier step curves, one facet per estimator, coloured by arm. When
+Kaplan-Meier step curves, one facet per estimator, colored by arm. When
 \code{tau} was supplied, the area under each curve up to \code{tau} is shaded
 (\code{geom_ribbon()} over a staircase polygon, so the shading follows the steps
 exactly) and a vertical line marks \code{tau}. When \code{estimates} was supplied, the
-top right of each facet carries the RMST difference and interval. Colour and
-fill both map to arm: set them together with \verb{scale_colour_*()} and
+top right of each facet carries the RMST difference and interval. Color and
+fill both map to arm: set them together with \verb{scale_color_*()} and
 \verb{scale_fill_*()}.
 }
 \examples{
