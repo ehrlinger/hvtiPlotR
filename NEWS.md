@@ -1,4 +1,4 @@
-# hvtiPlotR (unreleased)
+# hvtiPlotR 2.7.18
 
 ## New: `hv_role_palette()`, `scale_fill_hv()` and `scale_colour_hv()`
 
