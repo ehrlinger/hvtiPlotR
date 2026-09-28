@@ -2101,8 +2101,7 @@ time), so `width`/`height` are not needed here.
 
 save_ppt(
   object       = hv_consort(tracker),
-  template     = "../graphs/RD.pptx",
-  powerpoint   = "../graphs/consort.pptx",
+  powerpoint   = here::here("graphs", "consort.pptx"),
   slide_titles = "CONSORT Patient Flow"
 )
 ```

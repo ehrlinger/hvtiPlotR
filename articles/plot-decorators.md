@@ -449,8 +449,8 @@ Key arguments:
 | Argument | Default | Notes |
 |----|----|----|
 | `object` | (required) | A single ggplot **or** a named/unnamed list of ggplots |
-| `template` | `"../graphs/RD.pptx"` | Existing `.pptx` used as the slide template |
-| `powerpoint` | `"../graphs/pptExample.pptx"` | Output file path |
+| `template` | shipped `hv_ppt_template.pptx` | Existing `.pptx` used as the slide template |
+| `powerpoint` | (required) | Output file path |
 | `slide_titles` | `"Plot"` | Character vector recycled to the number of plots |
 | `layout` | `"Title and Content"` | Slide layout from the template |
 | `width` / `height` | `10.1` / `5.8` | Plot area in inches |
