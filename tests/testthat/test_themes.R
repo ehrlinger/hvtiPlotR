@@ -238,11 +238,16 @@ test_that("with no device open, the default device decides whether Arial resolve
   expect_false(.hv_family_resolves("Arial"))
   expect_true(.hv_family_resolves("Helvetica"))
 
+  options(device = "pdf")
+  expect_false(.hv_family_resolves("Arial"))
+  options(device = grDevices::postscript)
+  expect_false(.hv_family_resolves("Arial"))
   options(device = "postscript")
   expect_false(.hv_family_resolves("Arial"))
 
-  # any other default (quartz, RStudio, ragg, ...) resolves fonts itself
-  options(device = function(...) grDevices::pdf(tempfile(fileext = ".pdf")))
+  # a default that resolves fonts through the OS (cairo, quartz, ragg,
+  # RStudio) is trusted
+  options(device = grDevices::cairo_pdf)
   expect_true(.hv_family_resolves("Arial"))
 })
 

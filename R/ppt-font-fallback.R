@@ -89,6 +89,9 @@
 
 # "pdf" or "postscript" when the device print() would open is one of R's
 # registry-bound devices, otherwise NULL (the family is then trusted).
+# Only the devices themselves, or their names, are recognised: a custom
+# function that calls pdf() inside cannot be told apart without opening it,
+# so it is trusted, and printing through it can still stop on Arial.
 .hv_default_device <- function() {
   default <- getOption("device")
   if (is.character(default)) {
