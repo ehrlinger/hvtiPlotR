@@ -35,8 +35,12 @@
 #'   Default `"year"`.
 #' @param section One of `"continuous"`, `"percent"` or `"count"`.
 #' @param vars Character vector of the variables to consider, in page order.
-#'   `NULL` (the default) means every column except `x_col`. Every name is
-#'   checked at once, and the error lists all that are missing.
+#'   `NULL` (the default) means every column except `x_col` and any whose name
+#'   marks a patient identifier: `ccfid`, `patid`, `patientid`, `studyid`,
+#'   `subjectid`, `recordid` or `caseid` (each also with `_`, `num` or `no`),
+#'   or any name holding `mrn`. Those would be drawn as one bar per patient.
+#'   `meta$ignored` lists what was left out; name a column here to draw it.
+#'   Every name is checked at once, and the error lists all that are missing.
 #' @param labels Optional named character vector of display labels, names
 #'   being column names. A variable without a label is shown by its name.
 #' @param unique_limit,unique_bound,type_overrides Passed to
@@ -47,8 +51,9 @@
 #'   \item{`$data`}{One row per variable in the section, in page order:
 #'     `variable`, `label`, `var_type`.}
 #'   \item{`$meta`}{Named list: `x_col`, `section`, `x_binned`, `n_vars`,
-#'     `n_obs`, and `n_other`, the number of considered variables that belong
-#'     to other sections.}
+#'     `n_obs`, `n_other`, the number of considered variables that belong
+#'     to other sections, and `ignored`, the identifier columns `vars = NULL`
+#'     left out.}
 #'   \item{`$tables`}{`panels`, a named list of [hv_eda()] objects, one per
 #'     variable.}
 #' }
@@ -83,8 +88,11 @@ hv_eda_pages <- function(data,
   .check_df(data)
   section <- match.arg(section)
   .check_cols(data, x_col)
+  ignored <- character(0)
   if (is.null(vars)) {
     vars <- setdiff(names(data), x_col)
+    ignored <- vars[.eda_identifier_name(vars)]
+    vars <- setdiff(vars, ignored)
   } else if (!is.character(vars) || anyNA(vars) || anyDuplicated(vars)) {
     stop("`vars` must be NULL or a character vector of distinct column names.", call. = FALSE)
   }
@@ -135,11 +143,20 @@ hv_eda_pages <- function(data,
       x_binned = x_binned,
       n_vars   = length(section_vars),
       n_obs    = nrow(data),
-      n_other  = sum(!keep)
+      n_other  = sum(!keep),
+      ignored  = ignored
     ),
     tables   = list(panels = panels),
     subclass = "hv_eda_pages"
   )
+}
+
+
+# Names that mark a patient identifier: the same stems as the hvtiRtemplates
+# EDA rule. A bare trailing "id" is not one, because it takes carotid and
+# steroid; "mrn" anywhere is, because no study variable spells it.
+.eda_identifier_name <- function(v) {
+  grepl("^(ccf|pat|patient|study|subject|record|case)_?(id|num|no)$|mrn", v, ignore.case = TRUE)
 }
 
 

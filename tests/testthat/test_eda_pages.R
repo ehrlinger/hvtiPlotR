@@ -31,6 +31,21 @@ test_that("vars sets the order and the subset", {
   expect_identical(x$meta$n_other, 1L)
 })
 
+test_that("vars = NULL leaves out identifier columns, and naming one draws it", {
+  n <- nrow(dta)
+  ids <- transform(dta, ccfid = seq_len(n), PatientID = seq_len(n), mrn = seq_len(n),
+                   pt_mrn_num = seq_len(n), carotid = dta$male, steroid = dta$male)
+  pct <- hv_eda_pages(ids, x_col = "year", section = "percent")
+  expect_identical(pct$meta$ignored, c("ccfid", "PatientID", "mrn", "pt_mrn_num"))
+  # carotid and steroid end in "id" and are study variables.
+  expect_identical(pct$data$variable, c(cat_vars, "carotid", "steroid"))
+  cont <- hv_eda_pages(ids, x_col = "year", section = "continuous")
+  expect_false(any(c("ccfid", "PatientID", "mrn", "pt_mrn_num") %in% cont$data$variable))
+  named <- hv_eda_pages(ids, x_col = "year", section = "continuous", vars = c("ef", "ccfid"))
+  expect_identical(named$data$variable, c("ef", "ccfid"))
+  expect_identical(named$meta$ignored, character(0))
+})
+
 test_that("every missing variable is named in one error", {
   expect_error(
     hv_eda_pages(dta, section = "continuous", vars = c("ef", "nope1", "nope2")),
