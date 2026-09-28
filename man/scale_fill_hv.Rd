@@ -2,10 +2,19 @@
 % Please edit documentation in R/palette-hv.R
 \name{scale_fill_hv}
 \alias{scale_fill_hv}
+\alias{scale_color_hv}
 \alias{scale_colour_hv}
-\title{Colour and fill scales that apply the role rule to each panel}
+\title{Color and fill scales that apply the role rule to each panel}
 \usage{
 scale_fill_hv(
+  event = NULL,
+  censored = NULL,
+  missing = "(Missing)",
+  na.value = .HV_ROLE_MISSING,
+  ...
+)
+
+scale_color_hv(
   event = NULL,
   censored = NULL,
   missing = "(Missing)",
@@ -23,32 +32,35 @@ scale_colour_hv(
 }
 \arguments{
 \item{event, censored}{Level names that take the event or the censored
-colour, or \code{NULL} for none. Names not in \code{levels} are ignored.}
+color, or \code{NULL} for none. Names not in \code{levels} are ignored.}
 
 \item{missing}{Level name that stands for missing values. \code{"(Missing)"} is
 the explicit level \code{\link[=hv_eda]{hv_eda()}} adds.}
 
-\item{na.value}{Colour for a real \code{NA}. The default is the missing grey, so
+\item{na.value}{Color for a real \code{NA}. The default is the missing gray, so
 an \code{NA} and a \code{"(Missing)"} level look the same.}
 
 \item{...}{Passed to \code{\link[ggplot2:discrete_scale]{ggplot2::discrete_scale()}}: \code{name}, \code{labels},
 \code{guide} and so on.}
 }
 \value{
-A discrete ggplot2 scale for the \code{colour} or \code{fill} aesthetic.
+A discrete ggplot2 scale for the \code{color} or \code{fill} aesthetic.
 }
 \description{
-Discrete scales that colour each panel by \code{\link[=hv_role_palette]{hv_role_palette()}}: event
-vermillion, censored blue, missing light grey, and colourblind-safe colours
+Discrete scales that color each panel by \code{\link[=hv_role_palette]{hv_role_palette()}}: event
+vermillion, censored blue, missing light gray, and colorblind-safe colors
 for everything else. Add one to a page of panels with \code{&} and every panel
-is coloured from its own levels, so a panel without the event still draws
+is colored from its own levels, so a panel without the event still draws
 its levels from blue.
 }
 \details{
-Colours stay the caller's choice: no constructor or \code{plot()} method in this
+\code{scale_colour_hv()} is an alias of \code{scale_color_hv()}, the same pairing of
+British and US names that ggplot2 gives its own color scales.
+
+Colors stay the caller's choice: no constructor or \code{plot()} method in this
 package applies these scales for you.
 
-A panel with more levels than the colourblind-safe palettes hold is drawn in
+A panel with more levels than the colorblind-safe palettes hold is drawn in
 ggplot2's default hue palette instead, with a warning naming its level
 count, so one variable with many levels does not stop a report. Call
 \code{\link[=hv_role_palette]{hv_role_palette()}} directly to get an error in that case.

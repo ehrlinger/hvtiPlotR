@@ -1,5 +1,8 @@
 # hvtiPlotR (unreleased)
 
+* `scale_color_hv()` is now the primary name of the role-color scale added in
+  2.7.18, and `scale_colour_hv()` stays as an alias of it, the way ggplot2
+  pairs `scale_color_*()` and `scale_colour_*()`. Existing calls keep working.
 * `hv_eda_pages()` leaves out patient identifiers when `vars = NULL`. A column
   named `ccfid`, `patid`, `patientid`, `studyid`, `subjectid`, `recordid` or
   `caseid` (each also with `_`, `num` or `no`), or any name holding `mrn`

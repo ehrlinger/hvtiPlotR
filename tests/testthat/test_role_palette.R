@@ -1,4 +1,4 @@
-# Tests for hv_role_palette() and scale_colour_hv() / scale_fill_hv().
+# Tests for hv_role_palette() and scale_color_hv() / scale_fill_hv().
 # The rule is dev/specs/2026-09-27-hv-palette-design.md section 3.
 library(testthat)
 library(ggplot2)
@@ -7,7 +7,7 @@ event_col <- "#D55E00"
 censored_col <- "#0072B2"
 missing_col <- "#CCCCCC"
 
-# WCAG contrast of a colour against white.
+# WCAG contrast of a color against white.
 contrast_on_white <- function(hex) {
   rgb <- grDevices::col2rgb(hex)[, 1] / 255
   lin <- ifelse(rgb <= 0.04045, rgb / 12.92, ((rgb + 0.055) / 1.055)^2.4)
@@ -18,7 +18,7 @@ contrast_on_white <- function(hex) {
 # hv_role_palette
 # ============================================================================
 
-test_that("roles take their colours wherever they sit in levels", {
+test_that("roles take their colors wherever they sit in levels", {
   pal <- hv_role_palette(c("a", "Dead", "(Missing)", "Alive"), event = "Dead", censored = "Alive")
   expect_identical(names(pal), c("a", "Dead", "(Missing)", "Alive"))
   expect_identical(unname(pal[c("Dead", "Alive", "(Missing)")]), c(event_col, censored_col, missing_col))
@@ -38,7 +38,7 @@ test_that("a role in the levels takes blue and vermillion out of the rotation", 
   }
 })
 
-test_that("a sole level is blue with no role, and keeps its role colour otherwise", {
+test_that("a sole level is blue with no role, and keeps its role color otherwise", {
   expect_identical(unname(hv_role_palette("only")), censored_col)
   expect_identical(unname(hv_role_palette("d", event = "d")), event_col)
   expect_identical(unname(hv_role_palette("a", censored = "a")), censored_col)
@@ -69,7 +69,7 @@ test_that("more levels than any palette holds is a classed error", {
   expect_error(hv_role_palette(letters[1:8]), "8 levels")
 })
 
-test_that("every colour but missing clears 2:1 against white", {
+test_that("every color but missing clears 2:1 against white", {
   cols <- unique(c(hv_role_palette(letters[1:6]), hv_role_palette(letters[1:7]),
                    hv_role_palette(c("ev", "ce", letters[1:4]), event = "ev", censored = "ce"),
                    hv_role_palette(c("ev", letters[1:6]), event = "ev")))
@@ -87,7 +87,7 @@ test_that("bad arguments stop with a message naming them", {
 })
 
 # ============================================================================
-# scale_fill_hv / scale_colour_hv
+# scale_fill_hv / scale_color_hv
 # ============================================================================
 
 bars <- function(levels, n = rep(3L, length(levels))) {
@@ -99,7 +99,7 @@ built_fill <- function(p) {
   stats::setNames(d$fill, levels(p$data$g)[d$x])
 }
 
-test_that("one page scale colours each panel from that panel's own levels", {
+test_that("one page scale colors each panel from that panel's own levels", {
   # The event is in the first panel only: the second must get the full rotation.
   page <- (bars(c("Alive", "Dead", "x")) | bars(c("p", "q"))) &
     scale_fill_hv(event = "Dead", censored = "Alive")
@@ -109,22 +109,26 @@ test_that("one page scale colours each panel from that panel's own levels", {
   expect_identical(built_fill(page[[2]]), c(p = censored_col, q = event_col))
 })
 
-test_that("the legend shows the panel's colours", {
+test_that("the legend shows the panel's colors", {
   p <- bars(c("Alive", "Dead")) + scale_fill_hv(event = "Dead", censored = "Alive")
   key <- ggplot2::get_guide_data(p, "fill")
   expect_identical(stats::setNames(key$fill, key$.label), c(Alive = censored_col, Dead = event_col))
 })
 
-test_that("a real NA takes the missing grey, and na.value can override it", {
+test_that("a real NA takes the missing gray, and na.value can override it", {
   df <- data.frame(x = 1:4, y = 1:4, g = c("a", "b", NA, "a"))
-  p <- ggplot(df, aes(x, y, colour = g)) + geom_point()
-  pts <- ggplot_build(p + scale_colour_hv())$data[[1]]
-  expect_plot_has_data(p + scale_colour_hv())
+  p <- ggplot(df, aes(x, y, color = g)) + geom_point()
+  pts <- ggplot_build(p + scale_color_hv())$data[[1]]
+  expect_plot_has_data(p + scale_color_hv())
   expect_identical(pts$colour[3], missing_col)
   expect_identical(pts$colour[c(1, 2)], hv_ppt_palette("light", n = 2))
-  expect_identical(ggplot_build(p + scale_colour_hv(na.value = "black"))$data[[1]]$colour[3], "black")
+  expect_identical(ggplot_build(p + scale_color_hv(na.value = "black"))$data[[1]]$colour[3], "black")
   # na.translate = FALSE drops the NA point, as it does on any ggplot2 scale.
-  expect_true(is.na(ggplot_build(p + scale_colour_hv(na.translate = FALSE))$data[[1]]$colour[3]))
+  expect_true(is.na(ggplot_build(p + scale_color_hv(na.translate = FALSE))$data[[1]]$colour[3]))
+})
+
+test_that("scale_colour_hv() is the same function as scale_color_hv()", {
+  expect_identical(scale_colour_hv, scale_color_hv)
 })
 
 test_that("a panel with too many levels warns once and draws ggplot's default hue", {
