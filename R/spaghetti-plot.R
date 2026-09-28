@@ -192,8 +192,10 @@ print.hv_spaghetti <- function(x, ...) {
               else ""))
   cat(sprintf("  x / y / id  : %s / %s / %s\n",
               m$x_col, m$y_col, m$id_col))
-  if (!is.null(m$colour_col))  # every hv_spaghetti carries colour_col, old ones only that
-    cat(sprintf("  Color col  : %s\n", m$colour_col))
+  # An hv_spaghetti built before color_col existed carries only colour_col.
+  color_col <- m[[if ("color_col" %in% names(m)) "color_col" else "colour_col"]]
+  if (!is.null(color_col))
+    cat(sprintf("  Color col  : %s\n", color_col))
   invisible(x)
 }
 
@@ -288,7 +290,8 @@ plot.hv_spaghetti <- function(x,
   x_col      <- x$meta$x_col
   y_col      <- x$meta$y_col
   id_col     <- x$meta$id_col
-  color_col  <- x$meta$colour_col  # present in every hv_spaghetti, old ones too
+  # An hv_spaghetti built before color_col existed carries only colour_col.
+  color_col  <- x$meta[[if ("color_col" %in% names(x$meta)) "color_col" else "colour_col"]]
 
   # --- Line layer -----------------------------------------------------------
   if (!is.null(color_col)) {

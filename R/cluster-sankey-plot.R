@@ -445,7 +445,8 @@ plot.hv_sankey <- function(x,
   }
 
   san_dta      <- x$data
-  node_colors <- x$meta$node_colours  # present in every hv_sankey, old ones too
+  # An hv_sankey built before node_colors existed carries only node_colours.
+  node_colors <- x$meta[[if ("node_colors" %in% names(x$meta)) "node_colors" else "node_colours"]]
 
   # x-axis tick labels: milestone annotation for listed columns, bare name else
   cluster_cols <- x$meta$cluster_cols
