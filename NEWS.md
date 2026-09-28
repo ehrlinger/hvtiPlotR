@@ -1,4 +1,4 @@
-# hvtiPlotR (unreleased)
+# hvtiPlotR 2.8.0
 
 * hvtiPlotR now needs ggplot2 4.0.0 or later. The four themes pass `ink`,
   `paper`, `accent` and `header_family` to `theme_gray()`, and ggplot2 added
