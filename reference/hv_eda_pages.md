@@ -44,11 +44,12 @@ hv_eda_pages(
   (the default) means every column except `x_col` and any whose name
   marks a patient identifier: `ccfid`, `patid`, `patientid`, `studyid`,
   `subjectid`, `recordid` or `caseid` (each also with `_`, `num` or
-  `no`), or any name holding `mrn`. Such a column is not a study
-  variable: drawn, it is a scatter of row numbers or a bar chart with
-  one level per patient. `meta$ignored` lists what was left out; name a
-  column here to draw it. Every name is checked at once, and the error
-  lists all that are missing.
+  `no`), or `mrn` as a word of the name (`mrn`, `mrn_num`, `pt_mrn`, but
+  not `bnp_mrna`). Such a column is not a study variable: drawn, it is a
+  scatter of row numbers or a bar chart with one level per patient.
+  `meta$ignored` lists what was left out; name a column here to draw it.
+  Every name is checked at once, and the error lists all that are
+  missing.
 
 - labels:
 
