@@ -139,6 +139,14 @@ test_that("plot.hv_spaghetti add_smooth=TRUE with colour_col adds a smooth layer
   expect_true("GeomSmooth" %in% geoms)
 })
 
+test_that("plot.hv_spaghetti with color_col passes geom_line() no empty color", {
+  # A NULL color parameter warns "Ignoring empty aesthetic" on ggplot2 4.0.0 (#177).
+  sp <- hv_spaghetti(dta_grp, color_col = "group")
+  expect_no_warning(p <- plot(sp))
+  expect_false("colour" %in% names(p$layers[[1]]$aes_params))
+  expect_plot_has_data(p)
+})
+
 test_that("plot.hv_spaghetti smooth_se=TRUE is accepted without error", {
   sp <- hv_spaghetti(dta_grp)
   expect_s3_class(plot(sp, add_smooth = TRUE, smooth_se = TRUE), "ggplot")

@@ -309,13 +309,11 @@ plot.hv_spaghetti <- function(x,
     )
   }
 
-  p <- ggplot2::ggplot(data) +
-    ggplot2::geom_line(
-      mapping   = line_aes,
-      linewidth = line_width,
-      alpha     = alpha,
-      color    = if (is.null(color_col)) line_color else NULL
-    )
+  # A fixed color only when none is mapped: a NULL one warns on ggplot2 4.0.0.
+  line_params <- list(mapping = line_aes, linewidth = line_width, alpha = alpha)
+  if (is.null(color_col))
+    line_params$color <- line_color
+  p <- ggplot2::ggplot(data) + do.call(ggplot2::geom_line, line_params)
 
   # --- Optional smooth overlay ----------------------------------------------
   if (add_smooth) {
