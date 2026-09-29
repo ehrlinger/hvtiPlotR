@@ -418,31 +418,11 @@ test_that("bundled dark and light templates carry layouts but no slides", {
     parts <- xml2::xml_find_all(props, ".//d1:TitlesOfParts//vt:lpstr", ns)
     expect_false("Slide Titles" %in% heads, info = name)
     expect_identical(sum(count), length(parts), info = name)
-    # every part is reached by some relationship and has a content type, or
+    # every part is reachable from the package root and has a content type, or
     # save_ppt() copies dead weight, or an invalid package, into every deck (#188)
-    files   <- utils::unzip(tpl, list = TRUE)$Name
-    files   <- files[!endsWith(files, "/")]
-    types   <- xml2::read_xml(unz(tpl, "[Content_Types].xml"))
-    ext     <- tolower(xml2::xml_attr(xml2::xml_find_all(types, "//*[local-name()='Default']"), "Extension"))
-    over    <- sub("^/", "", xml2::xml_attr(xml2::xml_find_all(types, "//*[local-name()='Override']"), "PartName"))
-    targets <- unlist(lapply(files[endsWith(files, ".rels")], function(rels) {
-      rel  <- xml2::xml_find_all(xml2::read_xml(unz(tpl, rels)), "//*[local-name()='Relationship']")
-      rel  <- rel[!(xml2::xml_attr(rel, "TargetMode") %in% "External")]
-      base <- dirname(dirname(rels))
-      vapply(xml2::xml_attr(rel, "Target"), function(t) {
-        if (startsWith(t, "/")) return(sub("^/", "", t))
-        path <- strsplit(if (base == ".") t else file.path(base, t), "/")[[1]]
-        out  <- character()
-        for (seg in path) out <- if (seg == "..") utils::head(out, -1L) else c(out, seg)
-        paste(out, collapse = "/")
-      }, character(1L), USE.NAMES = FALSE)
-    }))
-    content <- setdiff(files[!endsWith(files, ".rels")], "[Content_Types].xml")
-    expect_identical(setdiff(content, targets), character(0), info = name)
-    expect_identical(setdiff(targets, files), character(0), info = name)
-    # tools::file_ext() gives "" for "_rels/.rels", so take the text after the last dot
-    untyped <- files[!(files %in% over) & !(tolower(sub("^.*[.]", "", basename(files))) %in% ext)]
-    expect_identical(untyped, character(0), info = name)
+    audit <- pptx_audit(tpl)
+    for (check in names(audit))
+      expect_identical(audit[[check]], character(0), info = paste(name, check))
   }
 
   out <- tempfile(fileext = ".pptx")
@@ -452,6 +432,67 @@ test_that("bundled dark and light templates carry layouts but no slides", {
   save_ppt(create_test_plot() + theme_hv_ppt_light(),
            template = light, powerpoint = out)
   expect_identical(length(officer::read_pptx(out)), 1L)
+  # and the deck save_ppt() writes from it is as sound as the template
+  audit <- pptx_audit(out)
+  for (check in names(audit))
+    expect_identical(audit[[check]], character(0), info = paste("saved deck", check))
+})
+
+test_that("pptx_audit() reports the broken packages the template test exists to catch", {
+  # Every check above is seen only in its empty state, so a detector that
+  # always returned nothing would pass there. Break a copy of the template in
+  # the two ways the old any-.rels check missed, and one it must not flag (#191).
+  skip_if(!nzchar(Sys.getenv("R_ZIPCMD", Sys.which("zip"))), "no zip program to build test packages")
+  tpl <- system.file("extdata", "hv_ppt_template.pptx", package = "hvtiPlotR")
+  skip_if(!nzchar(tpl) || !file.exists(tpl), "bundled template not found")
+
+  rels <- function(...) {
+    paste0(
+      '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>',
+      '<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">',
+      paste0('<Relationship Id="rId', seq_along(c(...)), '" Type="http://example.org/x" Target="', c(...), '"/>',
+             collapse = ""),
+      "</Relationships>")
+  }
+  # a copy of the template with extra parts, zipped from inside its own folder
+  broken <- function(extra) {
+    dir <- tempfile("pptx")
+    utils::unzip(tpl, exdir = dir)
+    for (part in names(extra)) {
+      dir.create(file.path(dir, dirname(part)), recursive = TRUE, showWarnings = FALSE)
+      writeLines(extra[[part]], file.path(dir, part))
+    }
+    out <- tempfile(fileext = ".pptx")
+    old <- setwd(dir)
+    on.exit(setwd(old))
+    utils::zip(out, list.files(".", recursive = TRUE, all.files = TRUE), flags = "-q")
+    out
+  }
+  layout <- basename(grep("^ppt/slideLayouts/slideLayout[0-9]+[.]xml$",
+                          utils::unzip(tpl, list = TRUE)$Name, value = TRUE)[1L])
+
+  # a .rels left by a removed slide: its target exists, its source does not
+  leftover <- pptx_audit(broken(list(
+    "ppt/slides/_rels/slide9.xml.rels" = rels(paste0("../slideLayouts/", layout)))))
+  expect_identical(leftover$orphan_rels, "ppt/slides/_rels/slide9.xml.rels")
+  expect_identical(leftover$unreached, character(0))
+
+  # two parts that point only at each other
+  pair <- pptx_audit(broken(list(
+    "ppt/extra/a.xml"            = "<a/>",
+    "ppt/extra/b.xml"            = "<b/>",
+    "ppt/extra/_rels/a.xml.rels" = rels("b.xml"),
+    "ppt/extra/_rels/b.xml.rels" = rels("a.xml"))))
+  expect_setequal(pair$unreached, c("ppt/extra/a.xml", "ppt/extra/b.xml"))
+  expect_identical(pair$orphan_rels, character(0))
+
+  # an absolute target with a ".." in it resolves, rather than reading as
+  # dangling; it has to hang off a reached part, here the package root
+  root <- paste(readLines(unz(tpl, "_rels/.rels"), warn = FALSE), collapse = "")
+  root <- sub("</Relationships>", paste0('<Relationship Id="rIdAbs" Type="http://example.org/x" ',
+                                         'Target="/ppt/../docProps/app.xml"/></Relationships>'), root)
+  absolute <- pptx_audit(broken(list("_rels/.rels" = root)))
+  expect_identical(absolute$dangling, character(0))
 })
 
 test_that("save_ppt takes its default template from hvtiPlotR.ppt_template", {
