@@ -109,8 +109,5 @@ p +
   ggplot2::labs(x = "Years after Operation",
                 y = "AV Mean Gradient (mmHg)") +
   theme_hv_poster()
-#> Warning: No shared levels found between `names(values)` of the manual scale and the
-#> data's colour values.
-#> Warning: Ignoring empty aesthetic: `colour`.
 
 ```

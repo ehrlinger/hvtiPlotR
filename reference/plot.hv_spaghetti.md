@@ -101,7 +101,6 @@ plot(sp, add_smooth = TRUE) +
   ggplot2::scale_color_brewer(palette = "Set1", name = NULL) +
   ggplot2::labs(x = "Years", y = "AV Mean Gradient (mmHg)") +
   theme_hv_poster()
-#> Warning: Ignoring empty aesthetic: `colour`.
 
 
 # Ordinal y-axis
@@ -111,7 +110,6 @@ plot(hv_spaghetti(dta_ord, color_col = "group"),
      y_labels = c(None = 0, Mild = 1, Moderate = 2, Severe = 3)) +
   ggplot2::labs(x = "Years", y = "MR Grade") +
   theme_hv_poster()
-#> Warning: Ignoring empty aesthetic: `colour`.
 
 
 # --- Global theme (set once per session) ----------------------------------
@@ -120,7 +118,6 @@ old <- ggplot2::theme_set(theme_hv_manuscript())
 plot(sp, add_smooth = TRUE) +
   ggplot2::scale_color_brewer(palette = "Set1", name = NULL) +
   ggplot2::labs(x = "Years", y = "AV Mean Gradient (mmHg)")
-#> Warning: Ignoring empty aesthetic: `colour`.
 
 ggplot2::theme_set(old)
 # }
