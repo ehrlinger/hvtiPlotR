@@ -7,6 +7,11 @@
   describes. A test now checks that an `hv_survival()` object and the data it
   was built from give the same counts. `status` was documented as unused;
   without it, nothing changes.
+* The bundled-template test audits each `.pptx` by following relationships
+  from the package root, and now also audits a deck `save_ppt()` writes. It
+  counted any part named by any `.rels` file as used, so two leftover parts
+  pointing at each other, or a `.rels` whose part was gone, would have passed
+  (#191).
 
 # hvtiPlotR 2.8.1
 
