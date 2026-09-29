@@ -27,7 +27,7 @@ Default \code{"year"}.}
 \code{NULL} (the default) means every column except \code{x_col} and any whose name
 marks a patient identifier: \code{ccfid}, \code{patid}, \code{patientid}, \code{studyid},
 \code{subjectid}, \code{recordid} or \code{caseid} (each also with \verb{_}, \code{num} or \code{no}),
-or \code{mrn} as a word of the name (\code{mrn}, \code{mrn_num}, \code{pt_mrn}, but not
+or the exact name \code{MRN} or \code{eMRN}, ignoring case (so not \code{mrn_num} or
 \code{bnp_mrna}). Such a column is not a study variable: drawn, it is a
 scatter of row numbers or a bar chart with one level per patient.
 \code{meta$ignored} lists what was left out; name a column here to draw it.

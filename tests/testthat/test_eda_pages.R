@@ -34,16 +34,18 @@ test_that("vars sets the order and the subset", {
 test_that("vars = NULL leaves out identifier columns, and naming one draws it", {
   n <- nrow(dta)
   ids <- transform(dta, ccfid = seq_len(n), PatientID = seq_len(n), mrn = seq_len(n),
-                   pt_mrn_num = seq_len(n), carotid = dta$male, steroid = dta$male,
+                   eMRN = seq_len(n), pt_mrn_num = seq_len(n), carotid = dta$male, steroid = dta$male,
                    bnp_mrna = dta$male, mrna_expr = dta$male)
   pct <- hv_eda_pages(ids, x_col = "year", section = "percent")
-  expect_identical(pct$meta$ignored, c("ccfid", "PatientID", "mrn", "pt_mrn_num"))
+  expect_identical(pct$meta$ignored, c("ccfid", "PatientID", "mrn", "eMRN"))
   # carotid and steroid end in "id", and bnp_mrna and mrna_expr hold "mrn",
-  # but all four are study variables (#172).
+  # but all four are study variables. Only the exact names MRN and eMRN are
+  # record numbers (#172).
   expect_identical(pct$data$variable, c(cat_vars, "carotid", "steroid", "bnp_mrna", "mrna_expr"))
-  expect_output(print(pct), "Ignored     : ccfid, PatientID, mrn, pt_mrn_num", fixed = TRUE)
+  expect_output(print(pct), "Ignored     : ccfid, PatientID, mrn, eMRN", fixed = TRUE)
   cont <- hv_eda_pages(ids, x_col = "year", section = "continuous")
-  expect_false(any(c("ccfid", "PatientID", "mrn", "pt_mrn_num") %in% cont$data$variable))
+  expect_false(any(c("ccfid", "PatientID", "mrn", "eMRN") %in% cont$data$variable))
+  expect_true("pt_mrn_num" %in% cont$data$variable)
   named <- hv_eda_pages(ids, x_col = "year", section = "continuous", vars = c("ef", "ccfid"))
   expect_identical(named$data$variable, c("ef", "ccfid"))
   expect_identical(named$meta$ignored, character(0))

@@ -38,7 +38,7 @@
 #'   `NULL` (the default) means every column except `x_col` and any whose name
 #'   marks a patient identifier: `ccfid`, `patid`, `patientid`, `studyid`,
 #'   `subjectid`, `recordid` or `caseid` (each also with `_`, `num` or `no`),
-#'   or `mrn` as a word of the name (`mrn`, `mrn_num`, `pt_mrn`, but not
+#'   or the exact name `MRN` or `eMRN`, ignoring case (so not `mrn_num` or
 #'   `bnp_mrna`). Such a column is not a study variable: drawn, it is a
 #'   scatter of row numbers or a bar chart with one level per patient.
 #'   `meta$ignored` lists what was left out; name a column here to draw it.
@@ -156,10 +156,10 @@ hv_eda_pages <- function(data,
 
 # Names that mark a patient identifier: the same stems as the hvtiRtemplates
 # EDA rule. A bare trailing "id" is not one, because it takes carotid and
-# steroid. "mrn" counts as its own word, alone or before num or no, so
-# mrn_num and pt_mrn are identifiers and bnp_mrna is not (#172).
+# steroid. The medical record number counts only as the exact names MRN and
+# eMRN, so mrn_num, pt_mrn and bnp_mrna are study variables (#172).
 .eda_identifier_name <- function(v) {
-  grepl("^(ccf|pat|patient|study|subject|record|case)_?(id|num|no)$|(^|_)mrn(_|$|num|no)", v,
+  grepl("^(ccf|pat|patient|study|subject|record|case)_?(id|num|no)$|^e?mrn$", v,
         ignore.case = TRUE)
 }
 
