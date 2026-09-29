@@ -23,6 +23,12 @@
   option, not a `template` argument, points at a missing file. A path set in
   `.Rprofile` appears nowhere in the call, so the old message gave no pointer
   to it (#174).
+* The bundled templates, `hv_ppt_template.pptx` and
+  `hv_ppt_template_light.pptx`, no longer carry the speaker-notes pages of the
+  example slides removed in 2.8.0. `save_ppt()` copied them into every deck,
+  each still linked to a slide that no longer existed. Their document
+  properties no longer count 15 and 8 slides or list the old slide titles
+  (#173).
 
 # hvtiPlotR 2.8.0
 
