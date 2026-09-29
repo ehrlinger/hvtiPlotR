@@ -401,6 +401,23 @@ test_that("bundled dark and light templates carry layouts but no slides", {
     expect_identical(length(doc), 0L, info = name)
     expect_true("Title and Content" %in% officer::layout_summary(doc)$layout,
                 info = name)
+    # nor the notes pages of removed slides, which every deck would copy (#173)
+    parts <- utils::unzip(tpl, list = TRUE)$Name
+    expect_false(any(startsWith(parts, "ppt/notesSlides/")), info = name)
+    types <- readLines(unz(tpl, "[Content_Types].xml"), warn = FALSE)
+    expect_false(any(grepl("notesSlide[0-9]", types)), info = name)
+    app <- paste(readLines(unz(tpl, "docProps/app.xml"), warn = FALSE), collapse = "")
+    expect_match(app, "<Slides>0</Slides>", fixed = TRUE, info = name)
+    expect_match(app, "<Notes>0</Notes>", fixed = TRUE, info = name)
+    # nor the removed slides' titles: no "Slide Titles" heading, and the
+    # remaining headings count exactly the titles listed
+    props <- xml2::read_xml(app)
+    ns    <- xml2::xml_ns(props)
+    heads <- xml2::xml_text(xml2::xml_find_all(props, ".//d1:HeadingPairs//vt:lpstr", ns))
+    count <- as.integer(xml2::xml_text(xml2::xml_find_all(props, ".//d1:HeadingPairs//vt:i4", ns)))
+    parts <- xml2::xml_find_all(props, ".//d1:TitlesOfParts//vt:lpstr", ns)
+    expect_false("Slide Titles" %in% heads, info = name)
+    expect_identical(sum(count), length(parts), info = name)
   }
 
   out <- tempfile(fileext = ".pptx")
