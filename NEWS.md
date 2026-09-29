@@ -30,6 +30,11 @@
   each still linked to a slide that no longer existed. Their document
   properties no longer count 15 and 8 slides or list the old slide titles
   (#173).
+* The bundled dark template, `hv_ppt_template.pptx`, no longer carries four
+  images, two embedded objects and three `[trash]` files that nothing in it
+  used. `save_ppt()` copied them into every deck, and the `[trash]` files
+  had no content type, which the PowerPoint file format requires. The
+  template shrinks from 105 KB to 36 KB (#188).
 
 # hvtiPlotR 2.8.0
 
