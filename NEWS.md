@@ -1,3 +1,13 @@
+# hvtiPlotR (unreleased)
+
+* `hv_atrisk()` given subject-level data leaves out rows whose `status` is
+  missing, with the package's usual warning, when `status` is named. Those
+  rows were counted at risk, although `hv_survival()` leaves them out of the
+  fit, so a table under the curve could overstate the cohort the curve
+  describes. A test now checks that an `hv_survival()` object and the data it
+  was built from give the same counts. `status` was documented as unused;
+  without it, nothing changes.
+
 # hvtiPlotR 2.8.1
 
 * `hv_eda_pages()` leaves out `ccfid`, `MRN` and `eMRN` (ignoring case) under

@@ -113,6 +113,33 @@ test_that("hv_atrisk computes from subject-level data via time/status/group", {
   expect_equal(sort(as.numeric(as.character(got$label))), sort(ref$n.risk))
 })
 
+test_that("an hv_survival object and its subject-level data give the same counts", {
+  # Mode 1 (the object's $tables$risk) and Mode 3 (counted from the data) must
+  # agree, or a table under a curve can overstate the cohort the curve fitted.
+  # The ungrouped stratum is "All" in one and "Overall" in the other, so only
+  # the counts and times are compared.
+  dta <- sample_survival_data(n = 300, strata_levels = c("A", "B"), seed = 2)
+  rt  <- c(1, 5, 10)
+  counts <- function(d, group) {
+    km <- suppressWarnings(hv_survival(d, group_col = group, report_times = rt))
+    m1 <- hv_atrisk(km)$data
+    m3 <- suppressWarnings(hv_atrisk(d, time = "iv_dead", status = "dead",
+                                     group = group, report_times = rt))$data
+    list(m1 = m1[c("report_time", "n.risk")], m3 = m3[c("report_time", "n.risk")])
+  }
+  for (g in list(NULL, "valve_type")) {
+    got <- counts(dta, g)
+    expect_equal(got$m1, got$m3, ignore_attr = TRUE, info = paste(g))
+  }
+  # A missing event leaves a row out of the fit, so it is not at risk either.
+  miss <- dta
+  miss$dead[seq(1, 60, by = 3)] <- NA
+  got <- counts(miss, "valve_type")
+  expect_equal(got$m1, got$m3, ignore_attr = TRUE)
+  expect_warning(hv_atrisk(miss, time = "iv_dead", status = "dead", report_times = rt),
+                 "20 of 300 row\\(s\\) excluded.*`dead`")
+})
+
 test_that("hv_atrisk derives report_times from the time range when NULL", {
   dta <- sample_survival_data(n = 100, seed = 1)
   p   <- hv_atrisk(dta, time = "iv_dead")
