@@ -37,15 +37,15 @@ test_that("vars = NULL leaves out identifier columns, and naming one draws it", 
                    eMRN = seq_len(n), pt_mrn_num = seq_len(n), carotid = dta$male, steroid = dta$male,
                    bnp_mrna = dta$male, mrna_expr = dta$male)
   pct <- hv_eda_pages(ids, x_col = "year", section = "percent")
-  expect_identical(pct$meta$ignored, c("ccfid", "PatientID", "mrn", "eMRN"))
-  # carotid and steroid end in "id", and bnp_mrna and mrna_expr hold "mrn",
-  # but all four are study variables. Only the exact names MRN and eMRN are
-  # record numbers (#172).
+  expect_identical(pct$meta$ignored, c("ccfid", "mrn", "eMRN"))
+  # Only ccfid, MRN and eMRN are identifiers, matching hvtiRtemplates' data
+  # contract: carotid, steroid, bnp_mrna and mrna_expr are study variables, and
+  # so are PatientID and pt_mrn_num, which no longer get guessed at (#172).
   expect_identical(pct$data$variable, c(cat_vars, "carotid", "steroid", "bnp_mrna", "mrna_expr"))
-  expect_output(print(pct), "Ignored     : ccfid, PatientID, mrn, eMRN", fixed = TRUE)
+  expect_output(print(pct), "Ignored     : ccfid, mrn, eMRN", fixed = TRUE)
   cont <- hv_eda_pages(ids, x_col = "year", section = "continuous")
-  expect_false(any(c("ccfid", "PatientID", "mrn", "eMRN") %in% cont$data$variable))
-  expect_true("pt_mrn_num" %in% cont$data$variable)
+  expect_false(any(c("ccfid", "mrn", "eMRN") %in% cont$data$variable))
+  expect_true(all(c("PatientID", "pt_mrn_num") %in% cont$data$variable))
   named <- hv_eda_pages(ids, x_col = "year", section = "continuous", vars = c("ef", "ccfid"))
   expect_identical(named$data$variable, c("ef", "ccfid"))
   expect_identical(named$meta$ignored, character(0))

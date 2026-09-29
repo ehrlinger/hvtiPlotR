@@ -1,10 +1,11 @@
 # hvtiPlotR (unreleased)
 
-* `hv_eda_pages()` takes a medical record number as an identifier only under
-  the exact names `MRN` and `eMRN` (ignoring case), the rule the
-  hvtiRtemplates EDA templates use. It matched `mrn` anywhere, so with
-  `vars = NULL` an mRNA variable such as `bnp_mrna` was silently left out;
-  `mrn_num` and `pt_mrn` are now drawn as study variables too. `print()` now
+* `hv_eda_pages()` leaves out `ccfid`, `MRN` and `eMRN` (ignoring case) under
+  `vars = NULL`, and no longer guesses at other identifier names, matching
+  hvtiRtemplates' data contract. The 2.8.0 rule matched `mrn` anywhere, so an
+  mRNA variable such as `bnp_mrna` was silently left out; `PatientID`,
+  `studyid`, `mrn_num` and the other names it guessed at are now drawn. Name
+  a column in `vars` to draw it, or leave it out of the data. `print()` now
   lists the columns it left out as identifiers (#172).
 * A test now checks that `scale_colour_hv()` stays exported, not only that it
   is the same function as `scale_color_hv()`. Code written before 2.8.0 calls

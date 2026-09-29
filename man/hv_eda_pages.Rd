@@ -24,12 +24,12 @@ Default \code{"year"}.}
 \item{section}{One of \code{"continuous"}, \code{"percent"} or \code{"count"}.}
 
 \item{vars}{Character vector of the variables to consider, in page order.
-\code{NULL} (the default) means every column except \code{x_col} and any whose name
-marks a patient identifier: \code{ccfid}, \code{patid}, \code{patientid}, \code{studyid},
-\code{subjectid}, \code{recordid} or \code{caseid} (each also with \verb{_}, \code{num} or \code{no}),
-or the exact name \code{MRN} or \code{eMRN}, ignoring case (so not \code{mrn_num} or
-\code{bnp_mrna}). Such a column is not a study variable: drawn, it is a
-scatter of row numbers or a bar chart with one level per patient.
+\code{NULL} (the default) means every column except \code{x_col} and the patient
+identifiers \code{ccfid}, \code{MRN} and \code{eMRN} (ignoring case), the names
+hvtiRtemplates' data contract uses. No other name is guessed at, so
+\code{PatientID} or \code{mrn_num} is drawn. An identifier is not a study variable:
+drawn, it is a scatter of row numbers or a bar chart with one level per
+patient.
 \code{meta$ignored} lists what was left out; name a column here to draw it.
 Every name is checked at once, and the error lists all that are missing.}
 
