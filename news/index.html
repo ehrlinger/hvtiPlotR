@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">hvtiPlotR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.8.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.8.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -53,6 +53,20 @@
       <small>Source: <a href="https://github.com/ehrlinger/hvtiPlotR/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="2.8.1" id="hvtiplotr-281">hvtiPlotR 2.8.1<a class="anchor" aria-label="anchor" href="#hvtiplotr-281"></a></h2>
+<ul><li>
+<code><a href="../reference/hv_eda_pages.html">hv_eda_pages()</a></code> leaves out <code>ccfid</code>, <code>MRN</code> and <code>eMRN</code> (ignoring case) under <code>vars = NULL</code>, and no longer guesses at other identifier names, matching hvtiRtemplates’ data contract. The 2.8.0 rule matched <code>mrn</code> anywhere, so an mRNA variable such as <code>bnp_mrna</code> was silently left out; <code>PatientID</code>, <code>studyid</code>, <code>mrn_num</code> and the other names it guessed at are now drawn. Name a column in <code>vars</code> to draw it, or leave it out of the data. <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code> now lists the columns it left out as identifiers (<a href="https://github.com/ehrlinger/hvtiPlotR/issues/172" class="external-link">#172</a>).</li>
+<li>A test now checks that <code><a href="../reference/scale_fill_hv.html">scale_colour_hv()</a></code> stays exported, not only that it is the same function as <code><a href="../reference/scale_fill_hv.html">scale_color_hv()</a></code>. Code written before 2.8.0 calls it by the British name (<a href="https://github.com/ehrlinger/hvtiPlotR/issues/176" class="external-link">#176</a>).</li>
+<li>
+<code><a href="../reference/plot.hv_spaghetti.html">plot.hv_spaghetti()</a></code> no longer warns “Ignoring empty aesthetic: <code>colour</code>” on ggplot2 4.0.0 when <code>color_col</code> is set. It passed <code><a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">geom_line()</a></code> a <code>NULL</code> color beside the mapped one; it now passes a fixed color only when no column is mapped (<a href="https://github.com/ehrlinger/hvtiPlotR/issues/177" class="external-link">#177</a>).</li>
+<li>
+<code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code> of an <code>hv_spaghetti</code> or <code>hv_sankey</code>, and <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code> of an <code>hv_spaghetti</code>, stop when <code>meta$color_col</code> and <code>meta$colour_col</code> (or <code>meta$node_colors</code> and <code>meta$node_colours</code>) hold different values. Both sit in <code>meta</code> since 2.8.0, and the methods read the US one, so editing only the British element was silently ignored. Edit both, or rebuild the object (<a href="https://github.com/ehrlinger/hvtiPlotR/issues/175" class="external-link">#175</a>).</li>
+<li>
+<code><a href="../reference/save_ppt.html">save_ppt()</a></code> names <code>options(hvtiPlotR.ppt_template)</code> in its error when that option, not a <code>template</code> argument, points at a missing file. A path set in <code>.Rprofile</code> appears nowhere in the call, so the old message gave no pointer to it (<a href="https://github.com/ehrlinger/hvtiPlotR/issues/174" class="external-link">#174</a>).</li>
+<li>The bundled templates, <code>hv_ppt_template.pptx</code> and <code>hv_ppt_template_light.pptx</code>, no longer carry the speaker-notes pages of the example slides removed in 2.8.0. <code><a href="../reference/save_ppt.html">save_ppt()</a></code> copied them into every deck, each still linked to a slide that no longer existed. Their document properties no longer count 15 and 8 slides or list the old slide titles (<a href="https://github.com/ehrlinger/hvtiPlotR/issues/173" class="external-link">#173</a>).</li>
+<li>The bundled dark template, <code>hv_ppt_template.pptx</code>, no longer carries four images, two embedded objects and three <code>[trash]</code> files that nothing in it used. <code><a href="../reference/save_ppt.html">save_ppt()</a></code> copied them into every deck, and the <code>[trash]</code> files had no content type, which the PowerPoint file format requires. The template shrinks from 105 KB to 36 KB (<a href="https://github.com/ehrlinger/hvtiPlotR/issues/188" class="external-link">#188</a>).</li>
+</ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="2.8.0" id="hvtiplotr-280">hvtiPlotR 2.8.0<a class="anchor" aria-label="anchor" href="#hvtiplotr-280"></a></h2>
 <ul><li><p>hvtiPlotR now needs ggplot2 4.0.0 or later. The four themes pass <code>ink</code>, <code>paper</code>, <code>accent</code> and <code>header_family</code> to <code><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_gray()</a></code>, and ggplot2 added all four arguments in 4.0.0. <code>DESCRIPTION</code> previously allowed 3.5.0, where every theme failed with an “unused argument” error.</p></li>

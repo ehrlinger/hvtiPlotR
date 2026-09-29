@@ -1,5 +1,62 @@
 # Changelog
 
+## hvtiPlotR 2.8.1
+
+- [`hv_eda_pages()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_eda_pages.md)
+  leaves out `ccfid`, `MRN` and `eMRN` (ignoring case) under
+  `vars = NULL`, and no longer guesses at other identifier names,
+  matching hvtiRtemplates’ data contract. The 2.8.0 rule matched `mrn`
+  anywhere, so an mRNA variable such as `bnp_mrna` was silently left
+  out; `PatientID`, `studyid`, `mrn_num` and the other names it guessed
+  at are now drawn. Name a column in `vars` to draw it, or leave it out
+  of the data. [`print()`](https://rdrr.io/r/base/print.html) now lists
+  the columns it left out as identifiers
+  ([\#172](https://github.com/ehrlinger/hvtiPlotR/issues/172)).
+- A test now checks that
+  [`scale_colour_hv()`](https://ehrlinger.github.io/hvtiPlotR/reference/scale_fill_hv.md)
+  stays exported, not only that it is the same function as
+  [`scale_color_hv()`](https://ehrlinger.github.io/hvtiPlotR/reference/scale_fill_hv.md).
+  Code written before 2.8.0 calls it by the British name
+  ([\#176](https://github.com/ehrlinger/hvtiPlotR/issues/176)).
+- [`plot.hv_spaghetti()`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hv_spaghetti.md)
+  no longer warns “Ignoring empty aesthetic: `colour`” on ggplot2 4.0.0
+  when `color_col` is set. It passed
+  [`geom_line()`](https://ggplot2.tidyverse.org/reference/geom_path.html)
+  a `NULL` color beside the mapped one; it now passes a fixed color only
+  when no column is mapped
+  ([\#177](https://github.com/ehrlinger/hvtiPlotR/issues/177)).
+- [`plot()`](https://rdrr.io/r/graphics/plot.default.html) of an
+  `hv_spaghetti` or `hv_sankey`, and
+  [`print()`](https://rdrr.io/r/base/print.html) of an `hv_spaghetti`,
+  stop when `meta$color_col` and `meta$colour_col` (or
+  `meta$node_colors` and `meta$node_colours`) hold different values.
+  Both sit in `meta` since 2.8.0, and the methods read the US one, so
+  editing only the British element was silently ignored. Edit both, or
+  rebuild the object
+  ([\#175](https://github.com/ehrlinger/hvtiPlotR/issues/175)).
+- [`save_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/save_ppt.md)
+  names `options(hvtiPlotR.ppt_template)` in its error when that option,
+  not a `template` argument, points at a missing file. A path set in
+  `.Rprofile` appears nowhere in the call, so the old message gave no
+  pointer to it
+  ([\#174](https://github.com/ehrlinger/hvtiPlotR/issues/174)).
+- The bundled templates, `hv_ppt_template.pptx` and
+  `hv_ppt_template_light.pptx`, no longer carry the speaker-notes pages
+  of the example slides removed in 2.8.0.
+  [`save_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/save_ppt.md)
+  copied them into every deck, each still linked to a slide that no
+  longer existed. Their document properties no longer count 15 and 8
+  slides or list the old slide titles
+  ([\#173](https://github.com/ehrlinger/hvtiPlotR/issues/173)).
+- The bundled dark template, `hv_ppt_template.pptx`, no longer carries
+  four images, two embedded objects and three `[trash]` files that
+  nothing in it used.
+  [`save_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/save_ppt.md)
+  copied them into every deck, and the `[trash]` files had no content
+  type, which the PowerPoint file format requires. The template shrinks
+  from 105 KB to 36 KB
+  ([\#188](https://github.com/ehrlinger/hvtiPlotR/issues/188)).
+
 ## hvtiPlotR 2.8.0
 
 - hvtiPlotR now needs ggplot2 4.0.0 or later. The four themes pass
