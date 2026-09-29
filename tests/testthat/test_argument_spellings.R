@@ -56,6 +56,21 @@ test_that("objects built before the US names existed still print and plot", {
   expect_identical(ggplot2::ggplot_build(plot(old_sk))$data, ggplot2::ggplot_build(plot(sk))$data)
 })
 
+test_that("meta elements edited to disagree stop print and plot rather than pick one", {
+  # Both spellings sit in meta, so an edit to one alone would otherwise be ignored (#175).
+  sp <- hv_spaghetti(dta_sp, color_col = "group")
+  sp$meta$colour_col <- "id"
+  expect_error(plot(sp), "`meta$color_col` and `meta$colour_col`", fixed = TRUE)
+  expect_error(print(sp), "`meta$color_col` and `meta$colour_col`", fixed = TRUE)
+  # editing both together still works
+  sp$meta$color_col <- "id"
+  expect_plot_has_data(plot(sp))
+  dta <- sample_cluster_sankey_data(n = 200, seed = 1)
+  sk <- hv_sankey(dta)
+  sk$meta$node_colours <- rev(sk$meta$node_colours)
+  expect_error(plot(sk), "`meta$node_colors` and `meta$node_colours`", fixed = TRUE)
+})
+
 test_that("hv_ppt_series() takes `colors` and `colours` alike", {
   pal <- c("red", "blue", "green", "orange")
   us <- hv_ppt_series(colors = pal)

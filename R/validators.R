@@ -111,6 +111,18 @@
   invisible(NULL)
 }
 
+# The same pair as a meta element. An object built before the US name existed
+# carries only the British one. When both are present and differ, one was
+# edited after construction, and reading either would silently drop the edit.
+.meta_spelling <- function(meta, us_name, uk_name) {
+  if (!us_name %in% names(meta))
+    return(meta[[uk_name]])
+  if (uk_name %in% names(meta) && !identical(meta[[us_name]], meta[[uk_name]]))
+    stop(sprintf("`meta$%s` and `meta$%s` are one element spelled two ways and now differ; set both to one value.",
+                 us_name, uk_name), call. = FALSE)
+  meta[[us_name]]
+}
+
 #' @noRd
 # Shared missing-data contract. Incomplete rows are excluded from the
 # analysis, so the object must report the *analyzed* cohort rather than the
