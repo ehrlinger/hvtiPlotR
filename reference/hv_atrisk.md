@@ -33,10 +33,13 @@ hv_atrisk(
 - time, status, group:
 
   Column names in `x` when `x` is a subject-level data frame. `time`
-  triggers the raw-data path; `status` is reserved and currently unused;
-  `group` splits the table into strata. Pass `group` as a factor to
-  control the stratum row order (its levels set the order); a character
-  column orders rows alphabetically. Default `NULL`.
+  triggers the raw-data path; `status`, when named, leaves out rows
+  whose status is missing (with a warning), as
+  [`hv_survival`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_survival.md)
+  does, so the two tables agree; `group` splits the table into strata.
+  Pass `group` as a factor to control the stratum row order (its levels
+  set the order); a character column orders rows alphabetically. Default
+  `NULL`.
 
 - report_times:
 

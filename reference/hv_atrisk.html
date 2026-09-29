@@ -91,7 +91,9 @@ names, from which counts are computed.</p></dd>
 <dt id="arg-time-status-group">time, status, group<a class="anchor" aria-label="anchor" href="#arg-time-status-group"></a></dt>
 <dd><p>Column names in <code>x</code> when <code>x</code> is a
 subject-level data frame. <code>time</code> triggers the raw-data path;
-<code>status</code> is reserved and currently unused; <code>group</code> splits the
+<code>status</code>, when named, leaves out rows whose status is missing (with
+a warning), as <code><a href="hv_survival.html">hv_survival</a></code> does, so the two tables agree;
+<code>group</code> splits the
 table into strata. Pass <code>group</code> as a factor to control the stratum
 row order (its levels set the order); a character column orders rows
 alphabetically. Default <code>NULL</code>.</p></dd>
