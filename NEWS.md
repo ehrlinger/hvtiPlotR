@@ -1,4 +1,4 @@
-# hvtiPlotR (unreleased)
+# hvtiPlotR 2.8.1
 
 * `hv_eda_pages()` takes a medical record number as an identifier only under
   the exact names `MRN` and `eMRN` (ignoring case), the rule the
