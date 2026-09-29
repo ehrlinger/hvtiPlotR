@@ -38,8 +38,9 @@
 #'   `NULL` (the default) means every column except `x_col` and any whose name
 #'   marks a patient identifier: `ccfid`, `patid`, `patientid`, `studyid`,
 #'   `subjectid`, `recordid` or `caseid` (each also with `_`, `num` or `no`),
-#'   or any name holding `mrn`. Such a column is not a study variable: drawn,
-#'   it is a scatter of row numbers or a bar chart with one level per patient.
+#'   or `mrn` as a word of the name (`mrn`, `mrn_num`, `pt_mrn`, but not
+#'   `bnp_mrna`). Such a column is not a study variable: drawn, it is a
+#'   scatter of row numbers or a bar chart with one level per patient.
 #'   `meta$ignored` lists what was left out; name a column here to draw it.
 #'   Every name is checked at once, and the error lists all that are missing.
 #' @param labels Optional named character vector of display labels, names
@@ -155,9 +156,11 @@ hv_eda_pages <- function(data,
 
 # Names that mark a patient identifier: the same stems as the hvtiRtemplates
 # EDA rule. A bare trailing "id" is not one, because it takes carotid and
-# steroid; "mrn" anywhere is, because no study variable spells it.
+# steroid. "mrn" counts as its own word, alone or before num or no, so
+# mrn_num and pt_mrn are identifiers and bnp_mrna is not (#172).
 .eda_identifier_name <- function(v) {
-  grepl("^(ccf|pat|patient|study|subject|record|case)_?(id|num|no)$|mrn", v, ignore.case = TRUE)
+  grepl("^(ccf|pat|patient|study|subject|record|case)_?(id|num|no)$|(^|_)mrn(_|$|num|no)", v,
+        ignore.case = TRUE)
 }
 
 
@@ -174,6 +177,9 @@ print.hv_eda_pages <- function(x, ...) {
   cat(sprintf("  Variables   : %d (%d in other sections)\n", m$n_vars, m$n_other))
   cat(sprintf("  x col       : %s%s\n", m$x_col, if (m$x_binned) " (binned by whole year)" else ""))
   cat(sprintf("  N obs       : %d\n", m$n_obs))
+  # Left out without a warning, so say so here: a mistaken match is visible.
+  if (length(m$ignored) > 0L)
+    cat(sprintf("  Ignored     : %s\n", paste(m$ignored, collapse = ", ")))
   invisible(x)
 }
 
