@@ -418,6 +418,31 @@ test_that("bundled dark and light templates carry layouts but no slides", {
     parts <- xml2::xml_find_all(props, ".//d1:TitlesOfParts//vt:lpstr", ns)
     expect_false("Slide Titles" %in% heads, info = name)
     expect_identical(sum(count), length(parts), info = name)
+    # every part is reached by some relationship and has a content type, or
+    # save_ppt() copies dead weight, or an invalid package, into every deck (#188)
+    files   <- utils::unzip(tpl, list = TRUE)$Name
+    files   <- files[!endsWith(files, "/")]
+    types   <- xml2::read_xml(unz(tpl, "[Content_Types].xml"))
+    ext     <- tolower(xml2::xml_attr(xml2::xml_find_all(types, "//*[local-name()='Default']"), "Extension"))
+    over    <- sub("^/", "", xml2::xml_attr(xml2::xml_find_all(types, "//*[local-name()='Override']"), "PartName"))
+    targets <- unlist(lapply(files[endsWith(files, ".rels")], function(rels) {
+      rel  <- xml2::xml_find_all(xml2::read_xml(unz(tpl, rels)), "//*[local-name()='Relationship']")
+      rel  <- rel[!(xml2::xml_attr(rel, "TargetMode") %in% "External")]
+      base <- dirname(dirname(rels))
+      vapply(xml2::xml_attr(rel, "Target"), function(t) {
+        if (startsWith(t, "/")) return(sub("^/", "", t))
+        path <- strsplit(if (base == ".") t else file.path(base, t), "/")[[1]]
+        out  <- character()
+        for (seg in path) out <- if (seg == "..") utils::head(out, -1L) else c(out, seg)
+        paste(out, collapse = "/")
+      }, character(1L), USE.NAMES = FALSE)
+    }))
+    content <- setdiff(files[!endsWith(files, ".rels")], "[Content_Types].xml")
+    expect_identical(setdiff(content, targets), character(0), info = name)
+    expect_identical(setdiff(targets, files), character(0), info = name)
+    # tools::file_ext() gives "" for "_rels/.rels", so take the text after the last dot
+    untyped <- files[!(files %in% over) & !(tolower(sub("^.*[.]", "", basename(files))) %in% ext)]
+    expect_identical(untyped, character(0), info = name)
   }
 
   out <- tempfile(fileext = ".pptx")
