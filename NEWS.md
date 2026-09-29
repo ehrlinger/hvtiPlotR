@@ -19,6 +19,10 @@
   in `meta` since 2.8.0, and the methods read the US one, so editing only the
   British element was silently ignored. Edit both, or rebuild the object
   (#175).
+* `save_ppt()` names `options(hvtiPlotR.ppt_template)` in its error when that
+  option, not a `template` argument, points at a missing file. A path set in
+  `.Rprofile` appears nowhere in the call, so the old message gave no pointer
+  to it (#174).
 
 # hvtiPlotR 2.8.0
 

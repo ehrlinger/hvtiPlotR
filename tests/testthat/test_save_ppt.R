@@ -426,10 +426,17 @@ test_that("save_ppt takes its default template from hvtiPlotR.ppt_template", {
 
   expect_identical(eval(formals(save_ppt)$template), master)
 
-  # the option is read at call time; a missing master fails loudly
+  # the option is read at call time; a missing master fails loudly, naming the
+  # option, since a path set in .Rprofile is nowhere in the call (#174)
   options(hvtiPlotR.ppt_template = tempfile(fileext = ".pptx"))
   expect_error(
     save_ppt(create_test_plot(), powerpoint = tempfile(fileext = ".pptx")),
+    "`options(hvtiPlotR.ppt_template)`", fixed = TRUE
+  )
+  # an explicit template argument is blamed, not the option
+  expect_error(
+    save_ppt(create_test_plot(), template = tempfile(fileext = ".pptx"),
+             powerpoint = tempfile(fileext = ".pptx")),
     "`template` must be the path to an existing PowerPoint file"
   )
 })

@@ -429,9 +429,14 @@ save_ppt <- function(object,
     if (!all(vapply(object, inherits, logical(1L), what = "ggplot")))
       stop("All elements of `object` must be ggplot objects.", call. = FALSE)
   }
-  if (!(is.character(template) && length(template) == 1L && file.exists(template)))
+  if (!(is.character(template) && length(template) == 1L && file.exists(template))) {
+    # A path set in .Rprofile appears nowhere in the call, so name its source.
+    if (missing(template) && !is.null(getOption("hvtiPlotR.ppt_template")))
+      stop("`options(hvtiPlotR.ppt_template)` must be the path to an existing ",
+           "PowerPoint file; it is ", deparse1(template), ".", call. = FALSE)
     stop("`template` must be the path to an existing PowerPoint file.",
          call. = FALSE)
+  }
   if (missing(powerpoint))
     stop("`powerpoint` is required: the output path for the new .pptx file.",
          call. = FALSE)
