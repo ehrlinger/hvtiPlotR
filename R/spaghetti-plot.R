@@ -160,7 +160,7 @@ hv_spaghetti <- function(data,
 
   new_hv_data(
     data = as.data.frame(data),
-    meta = list(
+    meta = .mark_spelling_pairs(list(
       x_col      = x_col,
       y_col      = y_col,
       id_col     = id_col,
@@ -169,7 +169,7 @@ hv_spaghetti <- function(data,
       n_subjects = length(unique(data[[id_col]])),
       n_obs      = nrow(data),
       n_missing  = incomplete$n_missing
-    ),
+    )),
     tables   = list(),
     subclass = "hv_spaghetti"
   )
