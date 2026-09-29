@@ -1,5 +1,25 @@
 # Changelog
 
+## hvtiPlotR 2.8.2
+
+- [`hv_atrisk()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_atrisk.md)
+  given subject-level data leaves out rows whose `status` is missing,
+  with the package’s usual warning, when `status` is named. Those rows
+  were counted at risk, although
+  [`hv_survival()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_survival.md)
+  leaves them out of the fit, so a table under the curve could overstate
+  the cohort the curve describes. A test now checks that an
+  [`hv_survival()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_survival.md)
+  object and the data it was built from give the same counts. `status`
+  was documented as unused; without it, nothing changes.
+- The bundled-template test audits each `.pptx` by following
+  relationships from the package root, and now also audits a deck
+  [`save_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/save_ppt.md)
+  writes. It counted any part named by any `.rels` file as used, so two
+  leftover parts pointing at each other, or a `.rels` whose part was
+  gone, would have passed
+  ([\#191](https://github.com/ehrlinger/hvtiPlotR/issues/191)).
+
 ## hvtiPlotR 2.8.1
 
 - [`hv_eda_pages()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_eda_pages.md)

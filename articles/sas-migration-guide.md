@@ -1925,7 +1925,7 @@ sessionInfo()
     [1] stats     graphics  grDevices utils     datasets  methods   base
 
     other attached packages:
-    [1] ggplot2_4.0.3   hvtiPlotR_2.8.1
+    [1] ggplot2_4.0.3   hvtiPlotR_2.8.2
 
     loaded via a namespace (and not attached):
      [1] generics_0.1.4          tidyr_1.3.2             fontLiberation_0.1.0

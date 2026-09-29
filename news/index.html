@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">hvtiPlotR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.8.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.8.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -53,6 +53,12 @@
       <small>Source: <a href="https://github.com/ehrlinger/hvtiPlotR/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="2.8.2" id="hvtiplotr-282">hvtiPlotR 2.8.2<a class="anchor" aria-label="anchor" href="#hvtiplotr-282"></a></h2>
+<ul><li>
+<code><a href="../reference/hv_atrisk.html">hv_atrisk()</a></code> given subject-level data leaves out rows whose <code>status</code> is missing, with the package’s usual warning, when <code>status</code> is named. Those rows were counted at risk, although <code><a href="../reference/hv_survival.html">hv_survival()</a></code> leaves them out of the fit, so a table under the curve could overstate the cohort the curve describes. A test now checks that an <code><a href="../reference/hv_survival.html">hv_survival()</a></code> object and the data it was built from give the same counts. <code>status</code> was documented as unused; without it, nothing changes.</li>
+<li>The bundled-template test audits each <code>.pptx</code> by following relationships from the package root, and now also audits a deck <code><a href="../reference/save_ppt.html">save_ppt()</a></code> writes. It counted any part named by any <code>.rels</code> file as used, so two leftover parts pointing at each other, or a <code>.rels</code> whose part was gone, would have passed (<a href="https://github.com/ehrlinger/hvtiPlotR/issues/191" class="external-link">#191</a>).</li>
+</ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="2.8.1" id="hvtiplotr-281">hvtiPlotR 2.8.1<a class="anchor" aria-label="anchor" href="#hvtiplotr-281"></a></h2>
 <ul><li>
