@@ -1,4 +1,4 @@
-# hvtiPlotR (unreleased)
+# hvtiPlotR 2.8.2
 
 * `hv_atrisk()` given subject-level data leaves out rows whose `status` is
   missing, with the package's usual warning, when `status` is named. Those
