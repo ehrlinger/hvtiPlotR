@@ -1,3 +1,10 @@
+# hvtiPlotR (unreleased)
+
+* `hv_eda_pages()` takes `mrn` as an identifier only as a word of the name
+  (`mrn`, `mrn_num`, `pt_mrn`, `mrnno`). It matched `mrn` anywhere, so with
+  `vars = NULL` an mRNA variable such as `bnp_mrna` was silently left out.
+  `print()` now lists the columns it left out as identifiers (#172).
+
 # hvtiPlotR 2.8.0
 
 * hvtiPlotR now needs ggplot2 4.0.0 or later. The four themes pass `ink`,
