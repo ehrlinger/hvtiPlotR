@@ -1,4 +1,4 @@
-# hvtiPlotR (unreleased)
+# hvtiPlotR 2.8.1
 
 * `hv_eda_pages()` leaves out `ccfid`, `MRN` and `eMRN` (ignoring case) under
   `vars = NULL`, and no longer guesses at other identifier names, matching
