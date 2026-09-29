@@ -9,6 +9,10 @@
 * A test now checks that `scale_colour_hv()` stays exported, not only that it
   is the same function as `scale_color_hv()`. Code written before 2.8.0 calls
   it by the British name (#176).
+* `plot.hv_spaghetti()` no longer warns "Ignoring empty aesthetic: `colour`"
+  on ggplot2 4.0.0 when `color_col` is set. It passed `geom_line()` a `NULL`
+  color beside the mapped one; it now passes a fixed color only when no
+  column is mapped (#177).
 
 # hvtiPlotR 2.8.0
 
