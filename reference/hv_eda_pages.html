@@ -97,12 +97,12 @@ Default <code>"year"</code>.</p></dd>
 
 <dt id="arg-vars">vars<a class="anchor" aria-label="anchor" href="#arg-vars"></a></dt>
 <dd><p>Character vector of the variables to consider, in page order.
-<code>NULL</code> (the default) means every column except <code>x_col</code> and any whose name
-marks a patient identifier: <code>ccfid</code>, <code>patid</code>, <code>patientid</code>, <code>studyid</code>,
-<code>subjectid</code>, <code>recordid</code> or <code>caseid</code> (each also with <code>_</code>, <code>num</code> or <code>no</code>),
-or the exact name <code>MRN</code> or <code>eMRN</code>, ignoring case (so not <code>mrn_num</code> or
-<code>bnp_mrna</code>). Such a column is not a study variable: drawn, it is a
-scatter of row numbers or a bar chart with one level per patient.
+<code>NULL</code> (the default) means every column except <code>x_col</code> and the patient
+identifiers <code>ccfid</code>, <code>MRN</code> and <code>eMRN</code> (ignoring case), the names
+hvtiRtemplates' data contract uses. No other name is guessed at, so
+<code>PatientID</code> or <code>mrn_num</code> is drawn. An identifier is not a study variable:
+drawn, it is a scatter of row numbers or a bar chart with one level per
+patient.
 <code>meta$ignored</code> lists what was left out; name a column here to draw it.
 Every name is checked at once, and the error lists all that are missing.</p></dd>
 

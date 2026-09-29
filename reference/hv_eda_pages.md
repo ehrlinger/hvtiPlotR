@@ -41,15 +41,14 @@ hv_eda_pages(
 - vars:
 
   Character vector of the variables to consider, in page order. `NULL`
-  (the default) means every column except `x_col` and any whose name
-  marks a patient identifier: `ccfid`, `patid`, `patientid`, `studyid`,
-  `subjectid`, `recordid` or `caseid` (each also with `_`, `num` or
-  `no`), or the exact name `MRN` or `eMRN`, ignoring case (so not
-  `mrn_num` or `bnp_mrna`). Such a column is not a study variable:
-  drawn, it is a scatter of row numbers or a bar chart with one level
-  per patient. `meta$ignored` lists what was left out; name a column
-  here to draw it. Every name is checked at once, and the error lists
-  all that are missing.
+  (the default) means every column except `x_col` and the patient
+  identifiers `ccfid`, `MRN` and `eMRN` (ignoring case), the names
+  hvtiRtemplates' data contract uses. No other name is guessed at, so
+  `PatientID` or `mrn_num` is drawn. An identifier is not a study
+  variable: drawn, it is a scatter of row numbers or a bar chart with
+  one level per patient. `meta$ignored` lists what was left out; name a
+  column here to draw it. Every name is checked at once, and the error
+  lists all that are missing.
 
 - labels:
 
