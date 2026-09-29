@@ -13,6 +13,12 @@
   on ggplot2 4.0.0 when `color_col` is set. It passed `geom_line()` a `NULL`
   color beside the mapped one; it now passes a fixed color only when no
   column is mapped (#177).
+* `plot()` of an `hv_spaghetti` or `hv_sankey`, and `print()` of an
+  `hv_spaghetti`, stop when `meta$color_col` and `meta$colour_col` (or
+  `meta$node_colors` and `meta$node_colours`) hold different values. Both sit
+  in `meta` since 2.8.0, and the methods read the US one, so editing only the
+  British element was silently ignored. Edit both, or rebuild the object
+  (#175).
 
 # hvtiPlotR 2.8.0
 
