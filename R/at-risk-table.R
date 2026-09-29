@@ -92,6 +92,10 @@ utils::globalVariables(c("n.risk", "report_time", "strata"))
       stop("`group` column \"", group, "\" not found in `x`.", call. = FALSE)
     if (!is.null(status) && !(status %in% names(x)))
       stop("`status` column \"", status, "\" not found in `x`.", call. = FALSE)
+    # A row with no event status is left out of the fit hv_survival() makes,
+    # so it is not at risk either; otherwise this table overstates that one.
+    if (!is.null(status))
+      x <- .exclude_incomplete(x, status, context = "at-risk table")$data
     tv <- x[[time]]
     if (!is.numeric(tv) || !any(is.finite(tv)))
       stop("`time` column \"", time, "\" has no finite values.", call. = FALSE)
@@ -141,7 +145,9 @@ utils::globalVariables(c("n.risk", "report_time", "strata"))
 #'   names, from which counts are computed.
 #' @param time,status,group Column names in \code{x} when \code{x} is a
 #'   subject-level data frame. \code{time} triggers the raw-data path;
-#'   \code{status} is reserved and currently unused; \code{group} splits the
+#'   \code{status}, when named, leaves out rows whose status is missing (with
+#'   a warning), as \code{\link{hv_survival}} does, so the two tables agree;
+#'   \code{group} splits the
 #'   table into strata. Pass \code{group} as a factor to control the stratum
 #'   row order (its levels set the order); a character column orders rows
 #'   alphabetically. Default \code{NULL}.
