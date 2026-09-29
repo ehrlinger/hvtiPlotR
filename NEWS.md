@@ -35,6 +35,13 @@
   used. `save_ppt()` copied them into every deck, and the `[trash]` files
   had no content type, which the PowerPoint file format requires. The
   template shrinks from 105 KB to 36 KB (#188).
+* Deleting either spelling of a meta element from an `hv_spaghetti` or
+  `hv_sankey`, as in `sp$meta$color_col <- NULL`, now removes it: the plot is
+  drawn with no color column, or with ggplot2's default fills in place of the
+  node palette. The methods kept drawing the value of the spelling left
+  behind. Objects built before 2.8.1 cannot tell a deleted element from one
+  never written, so they keep that fallback; rebuild the object to edit it
+  this way (#187).
 
 # hvtiPlotR 2.8.0
 

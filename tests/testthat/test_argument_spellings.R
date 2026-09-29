@@ -42,17 +42,18 @@ test_that("hv_sankey() takes node_colors and node_colours alike", {
 })
 
 test_that("objects built before the US names existed still print and plot", {
-  # meta then carried only the British element; methods fall back to it.
+  # meta then carried only the British element, and no mark; methods fall back
+  # to it. Subsetting with [ rebuilds meta the way an old object has it.
   sp <- hv_spaghetti(dta_sp, color_col = "group")
   old_sp <- sp
-  old_sp$meta$color_col <- NULL
+  old_sp$meta <- sp$meta[setdiff(names(sp$meta), "color_col")]
   expect_identical(ggplot2::ggplot_build(plot(old_sp))$data, ggplot2::ggplot_build(plot(sp))$data)
   expect_identical(capture.output(print(old_sp)), capture.output(print(sp)))
   dta <- sample_cluster_sankey_data(n = 200, seed = 1)
   cols <- stats::setNames(rep_len(c("#111111", "#222222", "#333333"), 9), LETTERS[1:9])
   sk <- hv_sankey(dta, node_colors = cols)
   old_sk <- sk
-  old_sk$meta$node_colors <- NULL
+  old_sk$meta <- sk$meta[setdiff(names(sk$meta), "node_colors")]
   expect_identical(ggplot2::ggplot_build(plot(old_sk))$data, ggplot2::ggplot_build(plot(sk))$data)
 })
 
@@ -69,6 +70,27 @@ test_that("meta elements edited to disagree stop print and plot rather than pick
   sk <- hv_sankey(dta)
   sk$meta$node_colours <- rev(sk$meta$node_colours)
   expect_error(plot(sk), "`meta$node_colors` and `meta$node_colours`", fixed = TRUE)
+})
+
+test_that("deleting either spelling of a meta element removes it", {
+  # A user's sp$meta$color_col <- NULL left the plot colored: the method fell
+  # back to colour_col, as it must for an object built before 2.8.0 (#187).
+  sp <- hv_spaghetti(dta_sp, color_col = "group")
+  for (drop in c("color_col", "colour_col")) {
+    edited <- sp
+    edited$meta[[drop]] <- NULL
+    p <- plot(edited)
+    expect_null(p$layers[[1]]$mapping$colour, info = drop)
+    expect_plot_has_data(p)
+    expect_no_match(paste(capture.output(print(edited)), collapse = "\n"), "Color col", info = drop)
+  }
+  dta <- sample_cluster_sankey_data(n = 200, seed = 1)
+  cols <- stats::setNames(rep_len(c("#111111", "#222222", "#333333"), 9), LETTERS[1:9])
+  sk <- hv_sankey(dta, node_colors = cols)
+  sk$meta$node_colors <- NULL
+  fills <- unique(ggplot2::ggplot_build(plot(sk))$data[[2]]$fill)
+  expect_false(any(fills %in% cols))
+  expect_plot_has_data(plot(sk))
 })
 
 test_that("hv_ppt_series() takes `colors` and `colours` alike", {

@@ -114,14 +114,23 @@
 # The same pair as a meta element. An object built before the US name existed
 # carries only the British one. When both are present and differ, one was
 # edited after construction, and reading either would silently drop the edit.
+# A constructor that writes both marks meta (.mark_spelling_pairs()), so on a
+# marked object a missing spelling was deleted, and the deletion is the edit:
+# the element is gone (#187). An unmarked one, built before 2.8.1, cannot say
+# whether it was deleted or never written, so it keeps the British fallback.
 .meta_spelling <- function(meta, us_name, uk_name) {
-  if (!us_name %in% names(meta))
+  both <- c(us_name, uk_name) %in% names(meta)
+  if (isTRUE(attr(meta, "hv_both_spellings")) && !all(both))
+    return(NULL)
+  if (!both[1L])
     return(meta[[uk_name]])
   if (uk_name %in% names(meta) && !identical(meta[[us_name]], meta[[uk_name]]))
     stop(sprintf("`meta$%s` and `meta$%s` are one element spelled two ways and now differ; set both to one value.",
                  us_name, uk_name), call. = FALSE)
   meta[[us_name]]
 }
+
+.mark_spelling_pairs <- function(meta) structure(meta, hv_both_spellings = TRUE)
 
 #' @noRd
 # Shared missing-data contract. Incomplete rows are excluded from the

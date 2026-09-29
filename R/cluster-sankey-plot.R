@@ -330,14 +330,14 @@ hv_sankey <- function(data,
 
   new_hv_data(
     data = san_dta,
-    meta = list(
+    meta = .mark_spelling_pairs(list(
       cluster_cols = cluster_cols,
       node_levels  = node_levels,
       node_colors  = node_colors,
       node_colours = node_colors,
       n_patients   = nrow(data),
       n_k          = length(cluster_cols)
-    ),
+    )),
     tables   = list(),
     subclass = "hv_sankey"
   )
@@ -490,7 +490,8 @@ plot.hv_sankey <- function(x,
     # this one call and to lifecycle warnings only -- any other warning
     # ggsankey raises still surfaces.
     .suppress_deprecation(ggsankey::theme_sankey(base_size = 12)) +
-    ggplot2::scale_fill_manual(values = node_colors) +
+    # a palette deleted from meta leaves ggplot2's default fills (#187)
+    (if (!is.null(node_colors)) ggplot2::scale_fill_manual(values = node_colors)) +
     ggplot2::scale_x_discrete(labels = x_labels) +
     ggplot2::theme(legend.position = "none") +
     ggplot2::labs(x = NULL)
