@@ -4,6 +4,9 @@
   (`mrn`, `mrn_num`, `pt_mrn`, `mrnno`). It matched `mrn` anywhere, so with
   `vars = NULL` an mRNA variable such as `bnp_mrna` was silently left out.
   `print()` now lists the columns it left out as identifiers (#172).
+* A test now checks that `scale_colour_hv()` stays exported, not only that it
+  is the same function as `scale_color_hv()`. hvtiRtemplates calls it by the
+  British name (#176).
 
 # hvtiPlotR 2.8.0
 

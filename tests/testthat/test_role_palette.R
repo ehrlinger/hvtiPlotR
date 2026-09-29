@@ -129,6 +129,8 @@ test_that("a real NA takes the missing gray, and na.value can override it", {
 
 test_that("scale_colour_hv() is the same function as scale_color_hv()", {
   expect_identical(scale_colour_hv, scale_color_hv)
+  # load_all() sees unexported objects, so check the export itself: hvtiRtemplates calls it.
+  expect_true("scale_colour_hv" %in% getNamespaceExports("hvtiPlotR"))
 })
 
 test_that("a panel with too many levels warns once and draws ggplot's default hue", {
