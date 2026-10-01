@@ -252,14 +252,16 @@ or squints at it.
   series at a time, set the limits once with `coord_cartesian()` and reuse
   them, so the frame stays still and only the data changes.
 - **Hold the contrast floor.** Every color in `hv_ppt_palette()` clears 3:1
-  against its panel, white for the light ordering and black for the dark one,
-  which is the contrast WCAG 2.2 success criterion 1.4.11 asks of a chart's
-  graphical objects. The colors are Okabe-Ito's, except that on a light slide
+  against its background, black for the dark ordering and a white slide for
+  the light one, which is the contrast WCAG 2.2 success criterion 1.4.11 asks
+  of a chart's graphical objects. `theme_hv_ppt_light()` leaves its panel
+  transparent so the slide shows through, so the light guarantee assumes a
+  white template, as the house light template is. The colors are Okabe-Ito's, except that on a light slide
   a darkened yellow replaces their orange, which is too faint on white. If
   you pass your own `colors`, check them against the same floor.
 
-The recipes book works these habits through on a full deck in its
-[slide design chapter](https://ehrlinger.github.io/hvtiGraphics/slide_design.html).
+The [hvtiGraphics recipes book](https://ehrlinger.github.io/hvtiGraphics/)
+carries the house guidance on slide design, worked through on full decks.
 
 # Color Scales
 

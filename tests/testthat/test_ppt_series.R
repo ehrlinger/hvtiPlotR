@@ -62,7 +62,9 @@ test_that("the contrast helper reproduces the WCAG reference values", {
   expect_lt(wcag_contrast("#E69F00", "#FFFFFF"), 3)
 })
 
-test_that("every light color is at least 3:1 on the white light panel", {
+test_that("every light color is at least 3:1 on a white slide background", {
+  # theme_hv_ppt_light() leaves its panel transparent, so the series sit on the
+  # slide itself; the guarantee is for the house light template, which is white.
   pal <- hv_ppt_palette("light")
   ratios <- vapply(pal, wcag_contrast, numeric(1), bg = "#FFFFFF")
   expect_true(all(ratios >= 3), info = paste(pal[ratios < 3], collapse = ", "))

@@ -21,7 +21,7 @@
 #' The colors are the Okabe-Ito colorblind-safe palette, reordered for the
 #' background: high-luminance hues first on a dark slide, darker ones first on
 #' a light slide. Each ordering leads with its highest-contrast hue, 15.9:1 on
-#' a black panel and 5.2:1 on a white one, but past that first entry the order
+#' a black panel and 5.2:1 on a white slide, but past that first entry the order
 #' is not a contrast ranking and should not be read as one. Black appears only
 #' in the light ordering, and it sits **last** there despite carrying the
 #' highest ratio of anything here (21:1 on white): house style draws annotation
@@ -29,9 +29,13 @@
 #' naming it. On a dark panel black is invisible, which is why that ordering
 #' omits it. These are not CORR brand colors.
 #'
-#' Every color clears 3:1 against its panel, white for the light ordering and
-#' black for the dark one, which is the contrast WCAG 2.2 (success criterion
-#' 1.4.11) asks of a graphical object a reader needs to read the chart. One
+#' Every dark color clears 3:1 against the black panel [theme_hv_ppt_dark()]
+#' draws, and every light color clears 3:1 on a white slide background, which
+#' is the contrast WCAG 2.2 (success criterion 1.4.11) asks of a graphical
+#' object a reader needs to read the chart. [theme_hv_ppt_light()] leaves its
+#' panel transparent so the slide shows through, so the light guarantee holds
+#' on a white template, which is what the house light template is. Check the
+#' colors again before using them on a tinted slide. One
 #' color in the light ordering is not Okabe-Ito's own. Their orange, `#E69F00`,
 #' reaches only 2.3:1 on white, so the light ordering uses `#9D952B` in its
 #' place, Okabe-Ito yellow darkened at the same hue until it clears 3:1. An
