@@ -32,8 +32,9 @@ Every color is decided from \code{levels} alone:
 \item A level named in \code{event} is \verb{#D55E00}, in \code{censored} \verb{#0072B2}, and in
 \code{missing} \verb{#CCCCCC}. These hold even when the level is the only one.
 \item Every other level, in \code{levels} order, takes the light series of
-\code{\link[=hv_ppt_palette]{hv_ppt_palette()}}: the Okabe-Ito colors without yellow and sky blue,
-starting at blue, so a sole level with no role is blue.
+\code{\link[=hv_ppt_palette]{hv_ppt_palette()}}: Okabe-Ito blue, vermilion, bluish green and reddish
+purple, then a darkened yellow and black, so a sole level with no role
+is blue.
 \item When any of \code{levels} is named in \code{event} or \code{censored}, blue and
 vermillion leave that series, so no other level can be mistaken for the
 event or for censored. A role name absent from \code{levels} changes nothing,

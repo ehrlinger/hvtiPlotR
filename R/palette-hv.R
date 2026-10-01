@@ -25,8 +25,9 @@
 #' 1. A level named in `event` is `#D55E00`, in `censored` `#0072B2`, and in
 #'    `missing` `#CCCCCC`. These hold even when the level is the only one.
 #' 2. Every other level, in `levels` order, takes the light series of
-#'    [hv_ppt_palette()]: the Okabe-Ito colors without yellow and sky blue,
-#'    starting at blue, so a sole level with no role is blue.
+#'    [hv_ppt_palette()]: Okabe-Ito blue, vermilion, bluish green and reddish
+#'    purple, then a darkened yellow and black, so a sole level with no role
+#'    is blue.
 #' 3. When any of `levels` is named in `event` or `censored`, blue and
 #'    vermillion leave that series, so no other level can be mistaken for the
 #'    event or for censored. A role name absent from `levels` changes nothing,

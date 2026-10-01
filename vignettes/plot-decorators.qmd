@@ -229,6 +229,40 @@ If a working draft does want a key, pass `legend.position` straight through:
 `hv_ppt_series(legend.position = "top", name = "Group")`. Color and shape
 share `name`, so ggplot2 merges them into one legend rather than stacking two.
 
+## Designing the slide around the figure
+
+`hv_ppt_series()` settles how the plot looks. What the slide around it says is
+still your call, and a few habits decide whether the audience reads the figure
+or squints at it.
+
+- **Make the headline a sentence.** Put a one-sentence assertion over the
+  figure, the finding the plot is evidence for, in place of a topic label.
+  "Survival after repair is higher in Group I" tells the room what to look
+  for; "Survival by group" leaves them to work it out. This is the
+  assertion-evidence structure of Garner and Alley (2013).
+- **Label the series on the plot.** A name placed beside its curve keeps the
+  word and the line together, Mayer's spatial contiguity principle, and it is
+  why the house themes draw no legend (see above).
+- **Highlight the series that carries the message.** When one group is the
+  point of the slide, give it the strong color and let the others recede to
+  gray. That is Mayer's signaling principle, and his coherence principle
+  argues for dropping anything on the slide that does not serve the
+  assertion.
+- **Keep the axes fixed across a build-up.** When a slide sequence adds one
+  series at a time, set the limits once with `coord_cartesian()` and reuse
+  them, so the frame stays still and only the data changes.
+- **Hold the contrast floor.** Every color in `hv_ppt_palette()` clears 3:1
+  against its background, black for the dark ordering and a white slide for
+  the light one, which is the contrast WCAG 2.2 success criterion 1.4.11 asks
+  of a chart's graphical objects. `theme_hv_ppt_light()` leaves its panel
+  transparent so the slide shows through, so the light guarantee assumes a
+  white template, as the house light template is. The colors are Okabe-Ito's, except that on a light slide
+  a darkened yellow replaces their orange, which is too faint on white. If
+  you pass your own `colors`, check them against the same floor.
+
+The [hvtiGraphics recipes book](https://ehrlinger.github.io/hvtiGraphics/)
+carries the house guidance on slide design, worked through on full decks.
+
 # Color Scales
 
 `scale_color_*` controls line and point colors; `scale_fill_*` controls filled areas (ribbons, bars). Both take the same `name` (legend title) and `guide` (legend display) arguments; set them once and both scales update.

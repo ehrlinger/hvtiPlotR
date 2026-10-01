@@ -21,13 +21,26 @@
 #' The colors are the Okabe-Ito colorblind-safe palette, reordered for the
 #' background: high-luminance hues first on a dark slide, darker ones first on
 #' a light slide. Each ordering leads with its highest-contrast hue, 15.9:1 on
-#' a black panel and 5.2:1 on a white one, but past that first entry the order
+#' a black panel and 5.2:1 on a white slide, but past that first entry the order
 #' is not a contrast ranking and should not be read as one. Black appears only
 #' in the light ordering, and it sits **last** there despite carrying the
 #' highest ratio of anything here (21:1 on white): house style draws annotation
 #' in the theme's ink, so a black series would be confusable with the label
 #' naming it. On a dark panel black is invisible, which is why that ordering
 #' omits it. These are not CORR brand colors.
+#'
+#' Every dark color clears 3:1 against the black panel [theme_hv_ppt_dark()]
+#' draws, and every light color clears 3:1 on a white slide background, which
+#' is the contrast WCAG 2.2 (success criterion 1.4.11) asks of a graphical
+#' object a reader needs to read the chart. [theme_hv_ppt_light()] leaves its
+#' panel transparent so the slide shows through, so the light guarantee holds
+#' on a white template, which is what the house light template is. Check the
+#' colors again before using them on a tinted slide. One
+#' color in the light ordering is not Okabe-Ito's own. Their orange, `#E69F00`,
+#' reaches only 2.3:1 on white, so the light ordering uses `#9D952B` in its
+#' place, Okabe-Ito yellow darkened at the same hue until it clears 3:1. An
+#' orange darkened that far would sit too close to vermilion for a reader with
+#' red-green color-vision deficiency.
 #'
 #' Six colors are supplied. Ask for more than that and you get an error rather
 #' than a silently recycled palette, because two series sharing a color is a
@@ -54,7 +67,15 @@ hv_ppt_palette <- function(mode = c("dark", "light"), n = NULL) {
   pal <- switch(
     mode,
     dark  = c("#F0E442", "#56B4E9", "#E69F00", "#009E73", "#CC79A7", "#D55E00"),
-    light = c("#0072B2", "#D55E00", "#009E73", "#CC79A7", "#E69F00", "#000000")
+    # #9D952B replaces Okabe-Ito orange #E69F00, which is 2.3:1 on white and
+    # under the WCAG 2.2 SC 1.4.11 floor of 3:1. It is Okabe-Ito yellow
+    # #F0E442 with HSV value lowered, hue and saturation kept, to 3.1:1. The
+    # obvious fix, orange darkened to 3:1 (#C68900), was rejected: under a
+    # simulated deuteranopia (colorspace::deutan) its CIELAB distance from
+    # vermilion #D55E00 falls from 18 to 6, where the dark yellow keeps 11.
+    # Every dark color already clears 3:1 on the black panel of
+    # theme_hv_ppt_dark(), the lowest being vermilion at 5.4:1.
+    light = c("#0072B2", "#D55E00", "#009E73", "#CC79A7", "#9D952B", "#000000")
   )
   if (is.null(n)) return(pal)
   .check_scalar_positive(n, "n")
@@ -111,7 +132,9 @@ hv_ppt_palette <- function(mode = c("dark", "light"), n = NULL) {
 #'
 #' The default colors are the Okabe-Ito colorblind-safe palette, ordered for
 #' the background: high-luminance hues first on a dark slide, darker ones
-#' first on a light slide. These are not CORR brand colors. Pass `colors`
+#' first on a light slide. On a light slide a darkened yellow stands in for
+#' Okabe-Ito orange, which is too faint against white; [hv_ppt_palette()]
+#' gives the reasoning. These are not CORR brand colors. Pass `colors`
 #' when a deck calls for a specific set.
 #'
 #' Six colors and six shapes are supplied, which covers a grouping variable

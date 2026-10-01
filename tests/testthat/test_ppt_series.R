@@ -42,6 +42,42 @@ test_that("hv_ppt_palette orders for the background", {
   expect_false(identical(hv_ppt_palette("dark")[1], hv_ppt_palette("light")[1]))
 })
 
+# WCAG 2.2 relative luminance and contrast ratio, for SC 1.4.11 (3:1 for a
+# graphical object needed to read the chart).
+wcag_luminance <- function(hex) {
+  rgb <- grDevices::col2rgb(hex) / 255
+  lin <- ifelse(rgb <= 0.04045, rgb / 12.92, ((rgb + 0.055) / 1.055)^2.4)
+  drop(c(0.2126, 0.7152, 0.0722) %*% lin)
+}
+wcag_contrast <- function(fg, bg) {
+  l_fg <- wcag_luminance(fg)
+  l_bg <- wcag_luminance(bg)
+  (pmax(l_fg, l_bg) + 0.05) / (pmin(l_fg, l_bg) + 0.05)
+}
+
+test_that("the contrast helper reproduces the WCAG reference values", {
+  expect_equal(wcag_contrast("#000000", "#FFFFFF"), 21)
+  expect_equal(wcag_contrast("#FFFFFF", "#FFFFFF"), 1)
+  # Okabe-Ito orange, the color the light ordering dropped for falling short.
+  expect_lt(wcag_contrast("#E69F00", "#FFFFFF"), 3)
+})
+
+test_that("every light color is at least 3:1 on a white slide background", {
+  # theme_hv_ppt_light() leaves its panel transparent, so the series sit on the
+  # slide itself; the guarantee is for the house light template, which is white.
+  pal <- hv_ppt_palette("light")
+  ratios <- vapply(pal, wcag_contrast, numeric(1), bg = "#FFFFFF")
+  expect_true(all(ratios >= 3), info = paste(pal[ratios < 3], collapse = ", "))
+})
+
+test_that("every dark color is at least 3:1 on the black dark panel", {
+  # theme_hv_ppt_dark() fills panel.background with black.
+  expect_identical(theme_hv_ppt_dark()$panel.background$fill, "black")
+  pal <- hv_ppt_palette("dark")
+  ratios <- vapply(pal, wcag_contrast, numeric(1), bg = "#000000")
+  expect_true(all(ratios >= 3), info = paste(pal[ratios < 3], collapse = ", "))
+})
+
 test_that("hv_ppt_palette n takes a prefix, in order", {
   expect_identical(hv_ppt_palette("dark", n = 4),
                    hv_ppt_palette("dark")[1:4])

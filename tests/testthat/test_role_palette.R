@@ -60,7 +60,7 @@ test_that("past the rotation every other level switches to Tol muted", {
   expect_false(any(five[letters[1:5]] %in% hv_ppt_palette("light")))
   expect_false("#CC6677" %in% five)
   expect_identical(unname(hv_role_palette(c("ev", letters[1:4]), event = "ev")[letters[1:4]]),
-                   c("#009E73", "#CC79A7", "#E69F00", "#000000"))
+                   c("#009E73", "#CC79A7", "#9D952B", "#000000"))
 })
 
 test_that("more levels than any palette holds is a classed error", {
