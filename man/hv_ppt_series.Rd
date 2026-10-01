@@ -75,7 +75,9 @@ them into one instead of stacking two.
 
 The default colors are the Okabe-Ito colorblind-safe palette, ordered for
 the background: high-luminance hues first on a dark slide, darker ones
-first on a light slide. These are not CORR brand colors. Pass \code{colors}
+first on a light slide. On a light slide a darkened yellow stands in for
+Okabe-Ito orange, which is too faint against white; \code{\link[=hv_ppt_palette]{hv_ppt_palette()}}
+gives the reasoning. These are not CORR brand colors. Pass \code{colors}
 when a deck calls for a specific set.
 
 Six colors and six shapes are supplied, which covers a grouping variable

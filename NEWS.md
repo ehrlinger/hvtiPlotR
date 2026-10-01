@@ -1,3 +1,24 @@
+# hvtiPlotR (unreleased)
+
+* The fifth color of `hv_ppt_palette("light")` is now `#9D952B`, a dark
+  yellow, in place of Okabe-Ito orange `#E69F00`. The orange reached only
+  2.3:1 against white, under the 3:1 that WCAG 2.2 success criterion 1.4.11
+  asks of a graphical object needed to read a chart. The new color is
+  Okabe-Ito yellow darkened at the same hue to 3.1:1. Orange darkened to 3:1
+  was the closer match, but under simulated deuteranopia it sits too near
+  vermilion `#D55E00`, and the dark yellow keeps them apart. A figure with
+  five or more series on a light slide draws its fifth series in the new
+  color. `hv_role_palette()`, `scale_color_hv()` and `scale_fill_hv()` take
+  their rotation from the light series, so the new color reaches them too: as
+  the fifth level, or the third besides an event or censored level. The
+  dark ordering is unchanged: every color already clears 3:1 on the black
+  panel of `theme_hv_ppt_dark()`. Tests now check both orderings against the
+  floor.
+* "Decorating and Saving Plots" gains a section on designing the slide around
+  the figure: an assertion headline, series labeled on the plot, one series
+  highlighted, fixed axes across a build-up, and the contrast floor. It links
+  to the slide design chapter of the recipes book.
+
 # hvtiPlotR 2.8.2
 
 * `hv_atrisk()` given subject-level data leaves out rows whose `status` is

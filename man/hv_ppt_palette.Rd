@@ -34,6 +34,15 @@ in the theme's ink, so a black series would be confusable with the label
 naming it. On a dark panel black is invisible, which is why that ordering
 omits it. These are not CORR brand colors.
 
+Every color clears 3:1 against its panel, white for the light ordering and
+black for the dark one, which is the contrast WCAG 2.2 (success criterion
+1.4.11) asks of a graphical object a reader needs to read the chart. One
+color in the light ordering is not Okabe-Ito's own. Their orange, \verb{#E69F00},
+reaches only 2.3:1 on white, so the light ordering uses \verb{#9D952B} in its
+place, Okabe-Ito yellow darkened at the same hue until it clears 3:1. An
+orange darkened that far would sit too close to vermilion for a reader with
+red-green color-vision deficiency.
+
 Six colors are supplied. Ask for more than that and you get an error rather
 than a silently recycled palette, because two series sharing a color is a
 worse outcome than a stopped script.
