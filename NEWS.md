@@ -1,4 +1,4 @@
-# hvtiPlotR (unreleased)
+# hvtiPlotR 2.8.3
 
 * The fifth color of `hv_ppt_palette("light")` is now `#9D952B`, a dark
   yellow, in place of Okabe-Ito orange `#E69F00`. The orange reached only
