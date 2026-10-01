@@ -24,7 +24,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">hvtiPlotR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.8.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.8.3</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -78,7 +78,7 @@
       <h1>Decorating and Saving hvtiPlotR Plots</h1>
 
       <p class="author">John Ehrlinger <a href="mailto:ehrlinj@ccf.org" class="email">ehrlinj@ccf.org</a></p>
-      <p class="date">2026-09-30</p>
+      <p class="date">2026-10-01</p>
 
       <small class="dont-index">Source: <a href="https://github.com/ehrlinger/hvtiPlotR/blob/main/vignettes/plot-decorators.qmd" class="external-link"><code>vignettes/plot-decorators.qmd</code></a></small>
       <div class="d-none name"><code></code></div>
@@ -292,6 +292,22 @@
 </div>
 </div>
 <p>If a working draft does want a key, pass <code>legend.position</code> straight through: <code>hv_ppt_series(legend.position = "top", name = "Group")</code>. Color and shape share <code>name</code>, so ggplot2 merges them into one legend rather than stacking two.</p>
+</section><section class="level2"><h3 id="designing-the-slide-around-the-figure">Designing the slide around the figure<a class="anchor" aria-label="anchor" href="#designing-the-slide-around-the-figure"></a>
+</h3>
+<p><code><a href="../reference/hv_ppt_series.html">hv_ppt_series()</a></code> settles how the plot looks. What the slide around it says is still your call, and a few habits decide whether the audience reads the figure or squints at it.</p>
+<ul>
+<li>
+<strong>Make the headline a sentence.</strong> Put a one-sentence assertion over the figure, the finding the plot is evidence for, in place of a topic label. “Survival after repair is higher in Group I” tells the room what to look for; “Survival by group” leaves them to work it out. This is the assertion-evidence structure of Garner and Alley (2013).</li>
+<li>
+<strong>Label the series on the plot.</strong> A name placed beside its curve keeps the word and the line together, Mayer’s spatial contiguity principle, and it is why the house themes draw no legend (see above).</li>
+<li>
+<strong>Highlight the series that carries the message.</strong> When one group is the point of the slide, give it the strong color and let the others recede to gray. That is Mayer’s signaling principle, and his coherence principle argues for dropping anything on the slide that does not serve the assertion.</li>
+<li>
+<strong>Keep the axes fixed across a build-up.</strong> When a slide sequence adds one series at a time, set the limits once with <code><a href="https://ggplot2.tidyverse.org/reference/coord_cartesian.html" class="external-link">coord_cartesian()</a></code> and reuse them, so the frame stays still and only the data changes.</li>
+<li>
+<strong>Hold the contrast floor.</strong> Every color in <code><a href="../reference/hv_ppt_palette.html">hv_ppt_palette()</a></code> clears 3:1 against its background, black for the dark ordering and a white slide for the light one, which is the contrast WCAG 2.2 success criterion 1.4.11 asks of a chart’s graphical objects. <code><a href="../reference/hvtiPlotR-themes.html">theme_hv_ppt_light()</a></code> leaves its panel transparent so the slide shows through, so the light guarantee assumes a white template, as the house light template is. The colors are Okabe-Ito’s, except that on a light slide a darkened yellow replaces their orange, which is too faint on white. If you pass your own <code>colors</code>, check them against the same floor.</li>
+</ul>
+<p>The <a href="https://ehrlinger.github.io/hvtiGraphics/" class="external-link">hvtiGraphics recipes book</a> carries the house guidance on slide design, worked through on full decks.</p>
 </section></section><section class="section level2"><h2 id="color-scales">Color Scales<a class="anchor" aria-label="anchor" href="#color-scales"></a>
 </h2>
 <p><code>scale_color_*</code> controls line and point colors; <code>scale_fill_*</code> controls filled areas (ribbons, bars). Both take the same <code>name</code> (legend title) and <code>guide</code> (legend display) arguments; set them once and both scales update.</p>

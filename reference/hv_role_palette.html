@@ -15,7 +15,7 @@ which call this for each panel."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">hvtiPlotR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.8.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.8.3</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -103,8 +103,9 @@ same order.</p>
     <p>Every color is decided from <code>levels</code> alone:</p><ol><li><p>A level named in <code>event</code> is <code>#D55E00</code>, in <code>censored</code> <code>#0072B2</code>, and in
 <code>missing</code> <code>#CCCCCC</code>. These hold even when the level is the only one.</p></li>
 <li><p>Every other level, in <code>levels</code> order, takes the light series of
-<code><a href="hv_ppt_palette.html">hv_ppt_palette()</a></code>: the Okabe-Ito colors without yellow and sky blue,
-starting at blue, so a sole level with no role is blue.</p></li>
+<code><a href="hv_ppt_palette.html">hv_ppt_palette()</a></code>: Okabe-Ito blue, vermilion, bluish green and reddish
+purple, then a darkened yellow and black, so a sole level with no role
+is blue.</p></li>
 <li><p>When any of <code>levels</code> is named in <code>event</code> or <code>censored</code>, blue and
 vermillion leave that series, so no other level can be mistaken for the
 event or for censored. A role name absent from <code>levels</code> changes nothing,

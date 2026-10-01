@@ -96,8 +96,11 @@ merges them into one instead of stacking two.
 
 The default colors are the Okabe-Ito colorblind-safe palette, ordered
 for the background: high-luminance hues first on a dark slide, darker
-ones first on a light slide. These are not CORR brand colors. Pass
-`colors` when a deck calls for a specific set.
+ones first on a light slide. On a light slide a darkened yellow stands
+in for Okabe-Ito orange, which is too faint against white;
+[`hv_ppt_palette()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_ppt_palette.md)
+gives the reasoning. These are not CORR brand colors. Pass `colors` when
+a deck calls for a specific set.
 
 Six colors and six shapes are supplied, which covers a grouping variable
 of up to six levels. A discrete scale errors when it runs out of values,

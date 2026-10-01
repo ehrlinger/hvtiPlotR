@@ -21,7 +21,7 @@ matching shape scale, so a whole deck takes its look from one definition."></hea
 
     <a class="navbar-brand me-2" href="../index.html">hvtiPlotR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.8.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.8.3</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -156,7 +156,9 @@ share <code>name</code>, so on the rare draft that does draw a legend, ggplot2 m
 them into one instead of stacking two.</p>
 <p>The default colors are the Okabe-Ito colorblind-safe palette, ordered for
 the background: high-luminance hues first on a dark slide, darker ones
-first on a light slide. These are not CORR brand colors. Pass <code>colors</code>
+first on a light slide. On a light slide a darkened yellow stands in for
+Okabe-Ito orange, which is too faint against white; <code><a href="hv_ppt_palette.html">hv_ppt_palette()</a></code>
+gives the reasoning. These are not CORR brand colors. Pass <code>colors</code>
 when a deck calls for a specific set.</p>
 <p>Six colors and six shapes are supplied, which covers a grouping variable
 of up to six levels. A discrete scale errors when it runs out of values, so

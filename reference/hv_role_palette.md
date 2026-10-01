@@ -48,8 +48,8 @@ Every color is decided from `levels` alone:
 
 2.  Every other level, in `levels` order, takes the light series of
     [`hv_ppt_palette()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_ppt_palette.md):
-    the Okabe-Ito colors without yellow and sky blue, starting at blue,
-    so a sole level with no role is blue.
+    Okabe-Ito blue, vermilion, bluish green and reddish purple, then a
+    darkened yellow and black, so a sole level with no role is blue.
 
 3.  When any of `levels` is named in `event` or `censored`, blue and
     vermillion leave that series, so no other level can be mistaken for
