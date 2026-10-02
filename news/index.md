@@ -1,5 +1,22 @@
 # Changelog
 
+## hvtiPlotR 2.8.4
+
+- “Decorating and Saving Plots” links its slide-design section to the
+  published [slide design
+  chapter](https://ehrlinger.github.io/hvtiGraphics/slide_design.html)
+  of the hvtiGraphics recipes book, in place of the book’s home page.
+  The section gains four figure-level points from the house slide
+  guidance: say which color is which group before any result; set labels
+  inside the figure at the 32 pt house floor, with `size = 32 / .pt` for
+  [`annotate()`](https://ggplot2.tidyverse.org/reference/annotate.html)
+  and
+  [`geom_text()`](https://ggplot2.tidyverse.org/reference/geom_text.html);
+  keep the panel fixed across a build-up through
+  [`save_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/save_ppt.md)’s
+  `panel_box` as well as the axes; and order a pie’s slices the way you
+  will discuss them.
+
 ## hvtiPlotR 2.8.3
 
 - The fifth color of `hv_ppt_palette("light")` is now `#9D952B`, a dark

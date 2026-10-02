@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">hvtiPlotR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.8.3</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.8.4</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -53,6 +53,10 @@
       <small>Source: <a href="https://github.com/ehrlinger/hvtiPlotR/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="2.8.4" id="hvtiplotr-284">hvtiPlotR 2.8.4<a class="anchor" aria-label="anchor" href="#hvtiplotr-284"></a></h2>
+<ul><li>“Decorating and Saving Plots” links its slide-design section to the published <a href="https://ehrlinger.github.io/hvtiGraphics/slide_design.html" class="external-link">slide design chapter</a> of the hvtiGraphics recipes book, in place of the book’s home page. The section gains four figure-level points from the house slide guidance: say which color is which group before any result; set labels inside the figure at the 32 pt house floor, with <code>size = 32 / .pt</code> for <code><a href="https://ggplot2.tidyverse.org/reference/annotate.html" class="external-link">annotate()</a></code> and <code><a href="https://ggplot2.tidyverse.org/reference/geom_text.html" class="external-link">geom_text()</a></code>; keep the panel fixed across a build-up through <code><a href="../reference/save_ppt.html">save_ppt()</a></code>’s <code>panel_box</code> as well as the axes; and order a pie’s slices the way you will discuss them.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="2.8.3" id="hvtiplotr-283">hvtiPlotR 2.8.3<a class="anchor" aria-label="anchor" href="#hvtiplotr-283"></a></h2>
 <ul><li>The fifth color of <code>hv_ppt_palette("light")</code> is now <code>#9D952B</code>, a dark yellow, in place of Okabe-Ito orange <code>#E69F00</code>. The orange reached only 2.3:1 on a white slide background, under the 3:1 that WCAG 2.2 success criterion 1.4.11 asks of a graphical object needed to read a chart. The new color is Okabe-Ito yellow darkened at the same hue to 3.1:1 on white, the house light template; <code><a href="../reference/hvtiPlotR-themes.html">theme_hv_ppt_light()</a></code> leaves its panel transparent, so the slide background is what the series sit on. Orange darkened to 3:1 was the closer match, but under simulated deuteranopia it sits too near vermilion <code>#D55E00</code>, and the dark yellow keeps them apart. A figure with five or more series on a light slide draws its fifth series in the new color. <code><a href="../reference/hv_role_palette.html">hv_role_palette()</a></code>, <code><a href="../reference/scale_fill_hv.html">scale_color_hv()</a></code> and <code><a href="../reference/scale_fill_hv.html">scale_fill_hv()</a></code> take their rotation from the light series, so the new color reaches them too: as the fifth level, or the third besides an event or censored level. The dark ordering is unchanged: every color already clears 3:1 on the black panel of <code><a href="../reference/hvtiPlotR-themes.html">theme_hv_ppt_dark()</a></code>. Tests now check both orderings against the floor.</li>
