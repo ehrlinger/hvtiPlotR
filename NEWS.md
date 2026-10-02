@@ -1,4 +1,4 @@
-# hvtiPlotR (unreleased)
+# hvtiPlotR 2.8.4
 
 * "Decorating and Saving Plots" links its slide-design section to the
   published [slide design chapter](https://ehrlinger.github.io/hvtiGraphics/slide_design.html)
