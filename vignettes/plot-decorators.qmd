@@ -235,6 +235,9 @@ share `name`, so ggplot2 merges them into one legend rather than stacking two.
 still your call, and a few habits decide whether the audience reads the figure
 or squints at it.
 
+- **Orient the room first.** Before any result, say which color is which
+  group: "Group I is blue, Group II is vermilion." The audience cannot read
+  the finding until they know the key.
 - **Make the headline a sentence.** Put a one-sentence assertion over the
   figure, the finding the plot is evidence for, in place of a topic label.
   "Survival after repair is higher in Group I" tells the room what to look
@@ -243,14 +246,26 @@ or squints at it.
 - **Label the series on the plot.** A name placed beside its curve keeps the
   word and the line together, Mayer's spatial contiguity principle, and it is
   why the house themes draw no legend (see above).
+- **Set labels inside the figure at 32 pt.** The group's house rule is a
+  32 pt floor for slide text, and it covers the words on the plot too: series
+  names, region labels such as RCA and LCA, annotations. The PowerPoint themes
+  default to `base_size = 32` for axis text; text you add with `annotate()` or
+  `geom_text()` takes its size in millimeters, so pass `size = 32 / .pt`.
+  This is a house rule, not a tested threshold.
 - **Highlight the series that carries the message.** When one group is the
   point of the slide, give it the strong color and let the others recede to
   gray. That is Mayer's signaling principle, and his coherence principle
   argues for dropping anything on the slide that does not serve the
   assertion.
-- **Keep the axes fixed across a build-up.** When a slide sequence adds one
-  series at a time, set the limits once with `coord_cartesian()` and reuse
-  them, so the frame stays still and only the data changes.
+- **Keep the axes and the panel fixed across a build-up.** When a slide
+  sequence adds one series at a time, set the limits once with
+  `coord_cartesian()` and reuse them. `save_ppt()` already anchors the panel
+  at the same slide coordinates on every slide through its `panel_box`
+  argument; keep that one box for the whole sequence. The frame stays still
+  and only the data changes.
+- **If a pie chart is unavoidable, order the slices as you will discuss
+  them**, not from largest to smallest. A sorted bar or dot chart is still the
+  better choice.
 - **Hold the contrast floor.** Every color in `hv_ppt_palette()` clears 3:1
   against its background, black for the dark ordering and a white slide for
   the light one, which is the contrast WCAG 2.2 success criterion 1.4.11 asks
@@ -260,8 +275,9 @@ or squints at it.
   a darkened yellow replaces their orange, which is too faint on white. If
   you pass your own `colors`, check them against the same floor.
 
-The [hvtiGraphics recipes book](https://ehrlinger.github.io/hvtiGraphics/)
-carries the house guidance on slide design, worked through on full decks.
+The [slide design chapter](https://ehrlinger.github.io/hvtiGraphics/slide_design.html)
+of the hvtiGraphics recipes book carries the rest of the house guidance,
+worked through on full decks.
 
 # Color Scales
 
