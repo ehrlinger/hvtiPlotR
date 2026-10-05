@@ -1,4 +1,4 @@
-# hvtiPlotR (unreleased)
+# hvtiPlotR 2.8.5
 
 * `hv_sankey()` colors nodes with Paul Tol's muted palette by default, nine
   colorblind-safe colors, in place of ColorBrewer `"Set1"`, whose red against
