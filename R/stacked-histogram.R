@@ -12,8 +12,8 @@
 ##                       position = "fill")
 ##
 ##   plot(sh) +
-##     ggplot2::scale_fill_manual(values = hv_ppt_palette("light"), name = "Category") +
-##     ggplot2::scale_color_manual(values = hv_ppt_palette("light"), name = "Category") +
+##     ggplot2::scale_fill_manual(values = hv_palette(), name = "Category") +
+##     ggplot2::scale_color_manual(values = hv_palette(), name = "Category") +
 ##     theme_hv_poster()
 ##
 ###############################################################################
@@ -66,8 +66,8 @@
 #'
 #' # 3. Decorate: fill/color brewer palette, axis labels, theme
 #' p +
-#'   ggplot2::scale_fill_manual(values = hv_ppt_palette("light"), name = "Category") +
-#'   ggplot2::scale_color_manual(values = hv_ppt_palette("light"), name = "Category") +
+#'   ggplot2::scale_fill_manual(values = hv_palette(), name = "Category") +
+#'   ggplot2::scale_color_manual(values = hv_palette(), name = "Category") +
 #'   ggplot2::labs(x = "Year", y = "Count") +
 #'   theme_hv_poster()
 #'
@@ -144,8 +144,8 @@ print.hv_stacked <- function(x, ...) {
 #'
 #' # Count histogram
 #' plot(hv_stacked(dta, x_col = "year", group_col = "category")) +
-#'   ggplot2::scale_fill_manual(values = hv_ppt_palette("light"), name = "Category") +
-#'   ggplot2::scale_color_manual(values = hv_ppt_palette("light"), name = "Category") +
+#'   ggplot2::scale_fill_manual(values = hv_palette(), name = "Category") +
+#'   ggplot2::scale_color_manual(values = hv_palette(), name = "Category") +
 #'   ggplot2::labs(x = "Year", y = "Count") +
 #'   theme_hv_poster()
 #'

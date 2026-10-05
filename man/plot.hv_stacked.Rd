@@ -24,8 +24,8 @@ dta <- sample_stacked_histogram_data()
 
 # Count histogram
 plot(hv_stacked(dta, x_col = "year", group_col = "category")) +
-  ggplot2::scale_fill_manual(values = hv_ppt_palette("light"), name = "Category") +
-  ggplot2::scale_color_manual(values = hv_ppt_palette("light"), name = "Category") +
+  ggplot2::scale_fill_manual(values = hv_palette(), name = "Category") +
+  ggplot2::scale_color_manual(values = hv_palette(), name = "Category") +
   ggplot2::labs(x = "Year", y = "Count") +
   theme_hv_poster()
 

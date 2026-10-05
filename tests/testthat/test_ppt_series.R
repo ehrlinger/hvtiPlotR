@@ -202,3 +202,22 @@ test_that("an ungrouped plot keeps its data when the scales go unused", {
                         group_col = NULL)) + hv_ppt_series()
   expect_plot_has_data(p, geoms = c("GeomSmooth", "GeomPoint"))
 })
+
+# ----------------------------------------------------------------------------
+# hv_palette
+# ----------------------------------------------------------------------------
+
+test_that("hv_palette is the light ordering under a house name", {
+  expect_identical(hv_palette(), hv_ppt_palette("light"))
+  expect_identical(hv_palette(n = 3), hv_ppt_palette("light", n = 3))
+  expect_error(hv_palette(n = 7), "at most 6")
+})
+
+test_that("hv_palette fills a manual scale with data-carrying layers", {
+  df <- data.frame(x = 1:3, y = 1:3, g = c("a", "b", "c"))
+  p  <- ggplot2::ggplot(df, ggplot2::aes(x, y, color = g)) +
+    ggplot2::geom_point() +
+    ggplot2::scale_color_manual(values = hv_palette())
+  expect_plot_has_data(p)
+  expect_setequal(ggplot2::ggplot_build(p)$data[[1]]$colour, hv_palette(n = 3))
+})

@@ -508,7 +508,7 @@ km_build_life_plot <- function(km_df, alpha) {
 #' \donttest{
 #' old <- ggplot2::theme_set(theme_hv_manuscript())
 #' plot(km_s) +
-#'   ggplot2::scale_color_manual(values = hv_ppt_palette("light"), name = "Valve Type") +
+#'   ggplot2::scale_color_manual(values = hv_palette(), name = "Valve Type") +
 #'   ggplot2::labs(x = "Years after Operation", y = "Survival (%)")
 #' ggplot2::theme_set(old)
 #' }

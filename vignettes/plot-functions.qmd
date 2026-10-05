@@ -297,8 +297,8 @@ p_count <- plot(sh)
 
 # Layer on color scales, labels, and a theme
 p_count +
-  scale_fill_manual(values = hv_ppt_palette("light"), name = "Category") +
-  scale_color_manual(values = hv_ppt_palette("light"), name = "Category") +
+  scale_fill_manual(values = hv_palette(), name = "Category") +
+  scale_color_manual(values = hv_palette(), name = "Category") +
   labs(x = "Year", y = "Count") +
   theme_hv_poster()
 ```
@@ -426,7 +426,7 @@ directly on the panel.
 gfup_final <- plot(gf, alpha = 0.8) +
   # Color alive = blue, dead = vermillion (house palette positions 1 and 2)
   scale_color_manual(
-    values   = hv_ppt_palette("light", n = 2),
+    values   = hv_palette(n = 2),
     labels   = c("Alive", "Dead"),
     na.value = "black",
     drop     = FALSE
@@ -1213,7 +1213,7 @@ sub_bin  <- eda_select_vars(dta_eda, c("year", names(bin_vars)))
 p_bin <- lapply(names(bin_vars), function(cn) {
   plot(hv_eda(sub_bin, x_col = "year", y_col = cn,
                 y_label = bin_vars[[cn]])) +
-    scale_fill_manual(values = hv_ppt_palette("light"), name = NULL) +
+    scale_fill_manual(values = hv_palette(), name = NULL) +
     scale_x_discrete(breaks = seq(2005, 2020, 5)) +
     labs(x = "Surgery Year", y = "Count") +
     theme_hv_poster()
@@ -1231,7 +1231,7 @@ sub_cat <- eda_select_vars(dta_eda, c("year", names(cat_vars)))
 p_cat <- lapply(names(cat_vars), function(cn) {
   plot(hv_eda(sub_cat, x_col = "year", y_col = cn,
                 y_label = cat_vars[[cn]])) +
-    scale_fill_manual(values = hv_ppt_palette("light"), name = NULL) +
+    scale_fill_manual(values = hv_palette(), name = NULL) +
     scale_x_discrete(breaks = seq(2005, 2020, 5)) +
     labs(x = "Surgery Year", y = "Count") +
     theme_hv_poster()
@@ -1965,8 +1965,8 @@ d3$comparison <- "TF-TAVR vs AVR"
 
 survival_difference_plot(rbind(d1, d2, d3),
                          group_col = "comparison") +
-  scale_color_manual(values = hv_ppt_palette("light"), name = NULL) +
-  scale_fill_manual(values = hv_ppt_palette("light"), guide = "none") +
+  scale_color_manual(values = hv_palette(), name = NULL) +
+  scale_fill_manual(values = hv_palette(), guide = "none") +
   ggplot2::geom_hline(yintercept = 0, linetype = "dashed",
                       color = "gray50") +
   scale_x_continuous(limits = c(0, 10), breaks = 0:10) +
@@ -2218,7 +2218,7 @@ shape, which keeps the figure readable in grayscale print.
 #| label: trends_multi_brewer
 tr <- hv_trends(dta_tr)
 plot(tr) +
-  scale_color_manual(values = hv_ppt_palette("light"), name = "Group") +
+  scale_color_manual(values = hv_palette(), name = "Group") +
   scale_shape_manual(
     values = c("Group I" = 15L, "Group II" = 19L,
                "Group III" = 17L, "Group IV" = 18L),
@@ -2453,7 +2453,7 @@ version, see [Decorating and Saving](plot-decorators.html).
 #| label: trends_save
 #| eval: false
 p_tr <- plot(tr) +
-  scale_color_manual(values = hv_ppt_palette("light"), name = "Group") +
+  scale_color_manual(values = hv_palette(), name = "Group") +
   scale_shape_manual(
     values = c("Group I" = 15L, "Group II" = 19L,
                "Group III" = 17L, "Group IV" = 18L),

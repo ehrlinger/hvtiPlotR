@@ -206,7 +206,7 @@ test_that("default node_colours map Tol muted in node_levels order", {
   dta <- sample_cluster_sankey_data(n = 200, seed = 1)
   sn  <- hv_sankey(dta)
   expect_identical(names(sn$meta$node_colours), sn$meta$node_levels)
-  expect_equal(unname(sn$meta$node_colours[1]), "#CC6677")  # Tol muted rose
+  expect_equal(unname(sn$meta$node_colours[1]), "#AA4499")  # Tol muted purple
 })
 
 test_that("a partial named node_colors overrides only the labels it names", {

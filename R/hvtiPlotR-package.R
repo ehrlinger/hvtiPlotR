@@ -37,7 +37,7 @@
 #' tr  <- hv_trends(dta)
 #'
 #' plot(tr) +
-#'   scale_color_manual(values = hv_ppt_palette("light"), name = "Group") +
+#'   scale_color_manual(values = hv_palette(), name = "Group") +
 #'   labs(x = "Year", y = "Outcome") +
 #'   theme_hv_manuscript()
 #' ```

@@ -233,8 +233,8 @@ print.hv_alluvial <- function(x, ...) {
 #' # Fill flows by procedure
 #' plot(hv_alluvial(dta, axes = axes, y_col = "freq",
 #'                    fill_col = "procedure")) +
-#'   ggplot2::scale_fill_manual(values = hv_ppt_palette("light"), name = "Procedure") +
-#'   ggplot2::scale_color_manual(values = hv_ppt_palette("light"), guide = "none") +
+#'   ggplot2::scale_fill_manual(values = hv_palette(), name = "Procedure") +
+#'   ggplot2::scale_color_manual(values = hv_palette(), guide = "none") +
 #'   ggplot2::labs(y = "Patients (n)") +
 #'   theme_hv_poster()
 #'
