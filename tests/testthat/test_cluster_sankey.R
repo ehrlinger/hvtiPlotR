@@ -220,7 +220,7 @@ test_that("a partial named node_colors overrides only the labels it names", {
   keep <- setdiff(names(cols), c("G", "F"))
   expect_identical(cols[keep], base[keep])
   fills <- unlist(lapply(ggplot2::ggplot_build(plot(sn))$data, function(l) l$fill))
-  expect_false(any(fills == "grey50", na.rm = TRUE))
+  expect_true(all(stats::na.omit(fills) %in% cols))  # no unmapped (NA-fill) nodes
 })
 
 test_that("a full named node_colors past nine labels does not warn", {
