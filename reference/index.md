@@ -39,7 +39,10 @@ bundles a theme with matching color and shape scales into one object you
 add to every plot in a deck, and
 [`hv_ppt_palette()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_ppt_palette.md)
 hands back those colors for a figure that needs them outside the
-decorator. House-style figures carry no legend; series are named by
+decorator.
+[`hv_palette()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_palette.md)
+is the house palette for categorical groups in any light-background
+figure. House-style figures carry no legend; series are named by
 annotation drawn in the theme’s ink to match the axis, not in a series
 color.
 
@@ -61,6 +64,8 @@ color.
   : hvtiPlotR ggplot2 themes
 - [`hv_ppt_series()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_ppt_series.md)
   : Slide styling for a grouped plot, in one reusable object
+- [`hv_palette()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_palette.md)
+  : The house palette for categorical groups
 - [`hv_ppt_palette()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_ppt_palette.md)
   : Series colors for a slide or a manuscript figure
 - [`hv_role_palette()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_role_palette.md)

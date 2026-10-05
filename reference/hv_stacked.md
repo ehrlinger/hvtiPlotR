@@ -89,8 +89,8 @@ p <- plot(sh)
 
 # 3. Decorate: fill/color brewer palette, axis labels, theme
 p +
-  ggplot2::scale_fill_brewer(palette = "Set1", name = "Category") +
-  ggplot2::scale_color_brewer(palette = "Set1", name = "Category") +
+  ggplot2::scale_fill_manual(values = hv_palette(), name = "Category") +
+  ggplot2::scale_color_manual(values = hv_palette(), name = "Category") +
   ggplot2::labs(x = "Year", y = "Count") +
   theme_hv_poster()
 

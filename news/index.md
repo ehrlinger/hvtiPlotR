@@ -1,5 +1,30 @@
 # Changelog
 
+## hvtiPlotR 2.8.5
+
+- New
+  [`hv_palette()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_palette.md)
+  returns the house palette for categorical groups, the six Okabe-Ito
+  colors of `hv_ppt_palette("light")` under a name that does not tie a
+  manuscript figure to slides:
+  `scale_color_manual(values = hv_palette())`.
+- [`hv_sankey()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_sankey.md)
+  colors nodes with Paul Tol’s muted palette by default, nine
+  colorblind-safe colors, in place of ColorBrewer `"Set1"`, whose red
+  against green fails for readers with deuteranopia. The nine are
+  ordered so that nodes up to three places apart stay distinct under
+  color-vision deficiency. Every default Sankey changes color. A
+  `node_colors` vector that names only some nodes now recolors those and
+  leaves the rest at their default; before, every node it did not name
+  fell to gray. Name every node to replace the palette outright, as
+  before.
+- Examples and vignettes follow the house color rule of the hvtiGraphics
+  recipes book: categorical groups take
+  [`hv_palette()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_palette.md)
+  through `scale_*_manual()`, ordered and diverging scales take `"RdBu"`
+  (reversed, so the mildest level is blue), and nothing teaches
+  `"Set1"`, `"Set2"`, `"Dark2"` or `"RdYlGn"` any longer.
+
 ## hvtiPlotR 2.8.4
 
 - “Decorating and Saving Plots” links its slide-design section to the

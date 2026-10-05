@@ -885,7 +885,7 @@ dta <- sample_alluvial_data(n = 200)
 al  <- hv_alluvial(dta)
 
 plot(al) +
-  scale_fill_brewer(palette = "Set2") +
+  scale_fill_manual(values = hv_palette()) +
   labs(title = "Patient Flow Between States") +
   theme_hv_poster()
 ```
@@ -925,7 +925,7 @@ remotes::install_github("davidsjoberg/ggsankey")
 | `sid_dta$C2 <- factor(...)` with `gr2_names` ordering | Factor levels set by `node_levels` argument |
 | `make_long(C2, ..., C9)` | `.make_sankey_long()` (internal) |
 | `geom_sankey()` + `geom_sankey_label()` | [`hv_sankey()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_sankey.md) + [`plot()`](https://rdrr.io/r/graphics/plot.default.html) |
-| `brewer.pal(9, "Set1")[c(2,6,8,4,3,5,7,1,9)]` | Default `node_colors` |
+| `brewer.pal(9, "Set1")[c(2,6,8,4,3,5,7,1,9)]` | Default `node_colors` (Paul Tol’s muted nine; name a few nodes to override just those) |
 
 ``` r
 
@@ -1544,7 +1544,7 @@ dta <- sample_stacked_histogram_data()
 sh  <- hv_stacked(dta)
 
 plot(sh) +
-  scale_fill_brewer(palette = "Set1") +
+  scale_fill_manual(values = hv_palette()) +
   labs(
     x     = "Operation year",
     y     = "Count",
@@ -1925,7 +1925,7 @@ sessionInfo()
     [1] stats     graphics  grDevices utils     datasets  methods   base
 
     other attached packages:
-    [1] ggplot2_4.0.3   hvtiPlotR_2.8.4
+    [1] ggplot2_4.0.3   hvtiPlotR_2.8.5
 
     loaded via a namespace (and not attached):
      [1] generics_0.1.4          tidyr_1.3.2             fontLiberation_0.1.0

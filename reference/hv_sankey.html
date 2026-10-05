@@ -15,7 +15,7 @@ ggsankey geoms."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">hvtiPlotR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.8.4</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.8.5</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -113,10 +113,12 @@ error.</p></dd>
 
 <dt id="arg-node-colors">node_colors<a class="anchor" aria-label="anchor" href="#arg-node-colors"></a></dt>
 <dd><p>Named character vector mapping node labels to fill
-colors. If <code>NULL</code> (default), labels are mapped to an inline
-ColorBrewer <code>Set1</code> hex palette in <code>node_levels</code> order (no
-dependency on <span class="pkg">RColorBrewer</span>). When there are more labels than
-palette colors the palette is recycled with a warning.</p></dd>
+colors. If <code>NULL</code> (default), labels take Paul Tol's muted palette,
+nine colorblind-safe colors, in <code>node_levels</code> order. When there are
+more labels than palette colors the palette is recycled with a warning.
+A named vector that covers only some labels overrides those and leaves
+the rest at their default color, so <code>c(G = "#CC79A7")</code> recolors
+one node. An unnamed vector is used as given.</p></dd>
 
 </dl></div>
     <div class="section level2">

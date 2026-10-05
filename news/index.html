@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">hvtiPlotR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.8.4</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.8.5</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -53,6 +53,13 @@
       <small>Source: <a href="https://github.com/ehrlinger/hvtiPlotR/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="2.8.5" id="hvtiplotr-285">hvtiPlotR 2.8.5<a class="anchor" aria-label="anchor" href="#hvtiplotr-285"></a></h2>
+<ul><li>New <code><a href="../reference/hv_palette.html">hv_palette()</a></code> returns the house palette for categorical groups, the six Okabe-Ito colors of <code>hv_ppt_palette("light")</code> under a name that does not tie a manuscript figure to slides: <code>scale_color_manual(values = hv_palette())</code>.</li>
+<li>
+<code><a href="../reference/hv_sankey.html">hv_sankey()</a></code> colors nodes with Paul Tol’s muted palette by default, nine colorblind-safe colors, in place of ColorBrewer <code>"Set1"</code>, whose red against green fails for readers with deuteranopia. The nine are ordered so that nodes up to three places apart stay distinct under color-vision deficiency. Every default Sankey changes color. A <code>node_colors</code> vector that names only some nodes now recolors those and leaves the rest at their default; before, every node it did not name fell to gray. Name every node to replace the palette outright, as before.</li>
+<li>Examples and vignettes follow the house color rule of the hvtiGraphics recipes book: categorical groups take <code><a href="../reference/hv_palette.html">hv_palette()</a></code> through <code>scale_*_manual()</code>, ordered and diverging scales take <code>"RdBu"</code> (reversed, so the mildest level is blue), and nothing teaches <code>"Set1"</code>, <code>"Set2"</code>, <code>"Dark2"</code> or <code>"RdYlGn"</code> any longer.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="2.8.4" id="hvtiplotr-284">hvtiPlotR 2.8.4<a class="anchor" aria-label="anchor" href="#hvtiplotr-284"></a></h2>
 <ul><li>“Decorating and Saving Plots” links its slide-design section to the published <a href="https://ehrlinger.github.io/hvtiGraphics/slide_design.html" class="external-link">slide design chapter</a> of the hvtiGraphics recipes book, in place of the book’s home page. The section gains four figure-level points from the house slide guidance: say which color is which group before any result; set labels inside the figure at the 32 pt house floor, with <code>size = 32 / .pt</code> for <code><a href="https://ggplot2.tidyverse.org/reference/annotate.html" class="external-link">annotate()</a></code> and <code><a href="https://ggplot2.tidyverse.org/reference/geom_text.html" class="external-link">geom_text()</a></code>; keep the panel fixed across a build-up through <code><a href="../reference/save_ppt.html">save_ppt()</a></code>’s <code>panel_box</code> as well as the axes; and order a pie’s slices the way you will discuss them.</li>

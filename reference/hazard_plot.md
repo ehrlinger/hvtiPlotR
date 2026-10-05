@@ -482,8 +482,8 @@ hazard_plot(
   emp_lower_col = "lower",
   emp_upper_col = "upper"
 ) +
-  ggplot2::scale_color_brewer(palette = "Set1", name = NULL) +
-  ggplot2::scale_fill_brewer(palette   = "Set1", guide = "none") +
+  ggplot2::scale_color_manual(values = hv_palette(), name = NULL) +
+  ggplot2::scale_fill_manual(values = hv_palette(), guide = "none") +
   ggplot2::scale_x_continuous(limits = c(0, 10), breaks = 0:10) +
   ggplot2::scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, 20),
                               labels = function(x) paste0(x, "%")) +

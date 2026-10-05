@@ -11,7 +11,7 @@ plot.hv_eda_pages() on the result to lay the panels out as pages."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">hvtiPlotR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.8.4</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.8.5</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -176,7 +176,7 @@ Continuous panels always use <code>x_col</code> unbinned.</p>
 <span class="r-in"><span><span class="va">pct</span> <span class="op">&lt;-</span> <span class="fu">hv_eda_pages</span><span class="op">(</span><span class="va">dta</span>, x_col <span class="op">=</span> <span class="st">"year"</span>, section <span class="op">=</span> <span class="st">"percent"</span>,</span></span>
 <span class="r-in"><span>                    labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>male <span class="op">=</span> <span class="st">"Male"</span>, nyha <span class="op">=</span> <span class="st">"NYHA class"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">pct</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span> <span class="op">&amp;</span></span></span>
-<span class="r-in"><span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_fill_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Set1"</span>, na.value <span class="op">=</span> <span class="st">"gray80"</span><span class="op">)</span> <span class="op">&amp;</span></span></span>
+<span class="r-in"><span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_fill_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="hv_palette.html">hv_palette</a></span><span class="op">(</span><span class="op">)</span>, na.value <span class="op">=</span> <span class="st">"gray80"</span><span class="op">)</span> <span class="op">&amp;</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="hvtiPlotR-themes.html">theme_hv_manuscript</a></span><span class="op">(</span>base_size <span class="op">=</span> <span class="fl">8</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="hv_eda_pages-1.png" alt="" width="700" height="433"></span>
 </code></pre></div>

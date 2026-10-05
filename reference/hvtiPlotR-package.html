@@ -23,7 +23,7 @@ https://ehrlinger.github.io/hvtiGraphics/."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">hvtiPlotR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.8.4</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.8.5</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -104,7 +104,7 @@ without restriction.</p></li>
 <span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a>tr  <span class="ot">&lt;-</span> <span class="fu">hv_trends</span>(dta)</span>
 <span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a></span>
 <span id="cb1-7"><a href="#cb1-7" tabindex="-1"></a><span class="fu">plot</span>(tr) <span class="sc">+</span></span>
-<span id="cb1-8"><a href="#cb1-8" tabindex="-1"></a>  <span class="fu">scale_color_brewer</span>(<span class="at">palette =</span> <span class="st">"Set1"</span>, <span class="at">name =</span> <span class="st">"Group"</span>) <span class="sc">+</span></span>
+<span id="cb1-8"><a href="#cb1-8" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">hv_palette</span>(), <span class="at">name =</span> <span class="st">"Group"</span>) <span class="sc">+</span></span>
 <span id="cb1-9"><a href="#cb1-9" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Year"</span>, <span class="at">y =</span> <span class="st">"Outcome"</span>) <span class="sc">+</span></span>
 <span id="cb1-10"><a href="#cb1-10" tabindex="-1"></a>  <span class="fu">theme_hv_manuscript</span>()</span></code></pre><p></p></div>
 <p>Every constructor ships with a <code>sample_*()</code> companion that generates

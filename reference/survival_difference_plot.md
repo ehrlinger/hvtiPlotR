@@ -130,8 +130,8 @@ d3$comparison <- "TF-TAVR vs AVR"
 dall <- rbind(d1, d2, d3)
 
 survival_difference_plot(dall, group_col = "comparison") +
-  scale_color_brewer(palette = "Set1", name = NULL) +
-  scale_fill_brewer(palette = "Set1", guide = "none") +
+  scale_color_manual(values = hv_palette(), name = NULL) +
+  scale_fill_manual(values = hv_palette(), guide = "none") +
   geom_hline(yintercept = 0, linetype = "dashed", color = "gray50") +
   scale_x_continuous(limits = c(0, 10), breaks = 0:10) +
   labs(x = "Years", y = "Survival Difference (%)") +

@@ -47,10 +47,12 @@ hv_sankey(
 - node_colors:
 
   Named character vector mapping node labels to fill colors. If `NULL`
-  (default), labels are mapped to an inline ColorBrewer `Set1` hex
-  palette in `node_levels` order (no dependency on RColorBrewer). When
-  there are more labels than palette colors the palette is recycled with
-  a warning.
+  (default), labels take Paul Tol's muted palette, nine colorblind-safe
+  colors, in `node_levels` order. When there are more labels than
+  palette colors the palette is recycled with a warning. A named vector
+  that covers only some labels overrides those and leaves the rest at
+  their default color, so `c(G = "#CC79A7")` recolors one node. An
+  unnamed vector is used as given.
 
 ## Value
 

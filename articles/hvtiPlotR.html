@@ -24,7 +24,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">hvtiPlotR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.8.4</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.8.5</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -78,7 +78,7 @@
       <h1>The <strong>hvtiPlotR</strong> package: Generating plot.sas style in R</h1>
 
       <p class="author">John Ehrlinger <a href="mailto:ehrlinj@ccf.org" class="email">ehrlinj@ccf.org</a></p>
-      <p class="date">2026-10-02</p>
+      <p class="date">2026-10-05</p>
 
       <small class="dont-index">Source: <a href="https://github.com/ehrlinger/hvtiPlotR/blob/main/vignettes/hvtiPlotR.qmd" class="external-link"><code>vignettes/hvtiPlotR.qmd</code></a></small>
       <div class="d-none name"><code></code></div>
@@ -761,7 +761,7 @@ Figure 4: Lines with confidence limits.
 </h3>
 <p>You can specify colors in R by numeric index, name (as we have done), hexadecimal, or RGB specification. For example <code>col=1</code> and <code>col="white"</code> are equivalent. Glynn (2005) publishes an R Color Chart with all the details you would ever need about using colors in R.</p>
 <p>ColorBrewer (Harrower and Brewer 2003) is an online tool (https://colorbrewer2.org/) designed to help people select good color schemes for maps and other graphics. We recommend it as a practical starting point for choosing colors.</p>
-<p>The ColorBrewer palette catalog (Harrower and Brewer 2003) is built into <code>ggplot2</code> via <code><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_color_brewer()</a></code> / <code><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_fill_brewer()</a></code>; hvtiPlotR does not import the optional <code>RColorBrewer</code> package. We have made extensive use of the <code>palette = "Set1"</code> color palette in the figures we have generated. ggplot2 also ships other <code>scale_color_*</code> functions for many different settings. Consult <a href="https://colorbrewer2.org/" class="external-link uri">https://colorbrewer2.org/</a> for an interactive palette browser.</p>
+<p>The ColorBrewer palette catalog (Harrower and Brewer 2003) is built into <code>ggplot2</code> via <code><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_color_brewer()</a></code> / <code><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_fill_brewer()</a></code>; hvtiPlotR does not import the optional <code>RColorBrewer</code> package. For categorical groups we use <code><a href="../reference/hv_palette.html">hv_palette()</a></code>, the Okabe-Ito colors ordered for a white background; for ordered or diverging scales, <code>"RdBu"</code> or <code>"PuOr"</code>; for sequential, <code>"Blues"</code>. We avoid <code>"Set1"</code> and <code>"RdYlGn"</code>, whose red against green fails for readers with deuteranopia. ggplot2 also ships other <code>scale_color_*</code> functions for many different settings. Consult <a href="https://colorbrewer2.org/" class="external-link uri">https://colorbrewer2.org/</a> for an interactive palette browser.</p>
 </section><section class="level2"><h3 id="sec-viewport">Global Figure Commands<a class="anchor" aria-label="anchor" href="#sec-viewport"></a>
 </h3>
 <p>By default, the ggplot2 package adds space to the figures around the data. We often want to remove this space, or focus in on a smaller window of the figure. This is accomplished with the coord_cartesian function. By specifying the xlim and/or ylim coordinates, we can crop the figure into whatever viewport we are interested in without manipulating the original dataset. <a href="#fig-viewport" class="quarto-xref">Figure 5</a> sets the origin to (0,0) and clips the x axis at 5.1, and the y axis at 101. We have added the .1 and 1 to each axis for aesthetic reasons to avoid chopping off the tick labels when they occur at the end of the viewport.</p>
@@ -931,7 +931,7 @@ Figure 6: The PowerPoint figure recreated in R.
 </h3>
 <ul>
 <li>
-<strong>Multi-group figures</strong>: use <code>scale_color_brewer(palette = "Set1")</code> for up to five groups. For more groups, either pass an explicit vector of hex codes via <code><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_color_manual()</a></code> or browse the ColorBrewer palette catalog at <a href="https://colorbrewer2.org/" class="external-link uri">https://colorbrewer2.org/</a>. (ggplot2 ships the Brewer palette table internally; hvtiPlotR does not depend on the optional <code>RColorBrewer</code> package.)</li>
+<strong>Multi-group figures</strong>: use <code>scale_color_manual(values = hv_palette())</code> for up to six groups. For more groups, either pass an explicit vector of hex codes via <code><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_color_manual()</a></code> or browse the ColorBrewer palette catalog at <a href="https://colorbrewer2.org/" class="external-link uri">https://colorbrewer2.org/</a>. (ggplot2 ships the Brewer palette table internally; hvtiPlotR does not depend on the optional <code>RColorBrewer</code> package.)</li>
 <li>
 <strong>Single-group survival/hazard figures</strong>: <code>"steelblue"</code> for manuscript, <code>"white"</code> for dark PPT.</li>
 <li>

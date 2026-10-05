@@ -69,7 +69,7 @@ figure ends up in a Word or PDF document sent to a journal.
 ``` r
 
 p_ms <- p_base +
-  scale_color_brewer(palette = "Set1", name = "Group") +
+  scale_color_manual(values = hv_palette(), name = "Group") +
   scale_shape_manual(
     values = c("Group I" = 15, "Group II" = 19,
                "Group III" = 17, "Group IV" = 18),
@@ -97,7 +97,7 @@ switch the font face.
 ``` r
 
 p_poster <- p_base +
-  scale_color_brewer(palette = "Set1", name = "Group") +
+  scale_color_manual(values = hv_palette(), name = "Group") +
   scale_shape_manual(
     values = c("Group I" = 15, "Group II" = 19,
                "Group III" = 17, "Group IV" = 18),
@@ -124,7 +124,7 @@ to insert it as editable DrawingML.
 ``` r
 
 p_base +
-  scale_color_brewer(palette = "Set1", name = "Group") +
+  scale_color_manual(values = hv_palette(), name = "Group") +
   scale_shape_manual(
     values = c("Group I" = 15, "Group II" = 19,
                "Group III" = 17, "Group IV" = 18),
@@ -149,7 +149,7 @@ omit it when saving to an actual `.pptx` file.
 ``` r
 
 p_base +
-  scale_color_brewer(palette = "Set1", name = "Group") +
+  scale_color_manual(values = hv_palette(), name = "Group") +
   scale_shape_manual(
     values = c("Group I" = 15, "Group II" = 19,
                "Group III" = 17, "Group IV" = 18),
@@ -343,14 +343,16 @@ plot(km) +
 
 [`scale_color_brewer()`](https://ggplot2.tidyverse.org/reference/scale_brewer.html)
 applies a ColorBrewer palette. These are perceptually uniform and
-print-safe, so they survive a black-and-white PDF. Use
-`palette = "Set1"` for categorical data, `"RdYlGn"` for diverging,
-`"Blues"` for sequential.
+print-safe, so they survive a black-and-white PDF. Use `"RdBu"` or
+`"PuOr"` for ordered or diverging data, `"Blues"` for sequential. For
+categorical groups use `scale_color_manual(values = hv_palette())`
+instead, as below: six colorblind-safe colors. Avoid `"Set1"` and
+`"RdYlGn"`, whose red against green fails for readers with deuteranopia.
 
 ``` r
 
 p_base +
-  scale_color_brewer(palette = "Set1", name = "Group") +
+  scale_color_manual(values = hv_palette(), name = "Group") +
   scale_shape_manual(
     values = c("Group I" = 15, "Group II" = 19,
                "Group III" = 17, "Group IV" = 18),
@@ -371,7 +373,7 @@ the group; a redundant legend only takes up panel space.
 ``` r
 
 p_base +
-  scale_color_brewer(palette = "Dark2", guide = "none") +
+  scale_color_manual(values = hv_palette(), guide = "none") +
   scale_shape_manual(
     values = c("Group I" = 15, "Group II" = 19,
                "Group III" = 17, "Group IV" = 18),
@@ -450,7 +452,7 @@ on the full range.
 ``` r
 
 p_base +
-  scale_color_brewer(palette = "Set1", name = "Group") +
+  scale_color_manual(values = hv_palette(), name = "Group") +
   scale_shape_manual(
     values = c("Group I" = 15, "Group II" = 19,
                "Group III" = 17, "Group IV" = 18),
@@ -540,7 +542,7 @@ appends a new slide rather than overwriting the template.
 template <- system.file("extdata", "hv_ppt_template.pptx", package = "hvtiPlotR")
 
 p_ppt <- p_base +
-  scale_color_brewer(palette = "Set1", name = "Group") +
+  scale_color_manual(values = hv_palette(), name = "Group") +
   scale_shape_manual(
     values = c("Group I" = 15, "Group II" = 19,
                "Group III" = 17, "Group IV" = 18),
@@ -678,7 +680,7 @@ Pass fractional coordinates `c(x, y)` to `legend.position` inside
 ``` r
 
 p_base +
-  scale_color_brewer(palette = "Set1", name = NULL) +
+  scale_color_manual(values = hv_palette(), name = NULL) +
   scale_shape_manual(
     values = c("Group I" = 15, "Group II" = 19,
                "Group III" = 17, "Group IV" = 18),
@@ -706,7 +708,7 @@ panel.
 ``` r
 
 p_base +
-  scale_color_brewer(palette = "Set1", name = "Group") +
+  scale_color_manual(values = hv_palette(), name = "Group") +
   scale_shape_manual(
     values = c("Group I" = 15, "Group II" = 19,
                "Group III" = 17, "Group IV" = 18),
@@ -761,7 +763,7 @@ or [`unit()`](https://rdrr.io/r/grid/unit.html) value.
 ``` r
 
 p_base +
-  scale_color_brewer(palette = "Set1", name = "Group") +
+  scale_color_manual(values = hv_palette(), name = "Group") +
   scale_shape_manual(
     values = c("Group I" = 15, "Group II" = 19,
                "Group III" = 17, "Group IV" = 18),
@@ -795,7 +797,7 @@ poster-sized text would be too large.
 ``` r
 
 p_base +
-  scale_color_brewer(palette = "Set1", name = "Group") +
+  scale_color_manual(values = hv_palette(), name = "Group") +
   scale_shape_manual(
     values = c("Group I" = 15, "Group II" = 19,
                "Group III" = 17, "Group IV" = 18),
@@ -822,7 +824,7 @@ removes them while keeping the major grid intact.
 ``` r
 
 p_base +
-  scale_color_brewer(palette = "Set1", name = "Group") +
+  scale_color_manual(values = hv_palette(), name = "Group") +
   scale_shape_manual(
     values = c("Group I" = 15, "Group II" = 19,
                "Group III" = 17, "Group IV" = 18),
@@ -847,7 +849,7 @@ the labels will float off-center.
 ``` r
 
 p_base +
-  scale_color_brewer(palette = "Set1", name = "Group") +
+  scale_color_manual(values = hv_palette(), name = "Group") +
   scale_shape_manual(
     values = c("Group I" = 15, "Group II" = 19,
                "Group III" = 17, "Group IV" = 18),
@@ -903,7 +905,7 @@ convention.
 ``` r
 
 p_base +
-  scale_color_brewer(palette = "Set1", name = "Group") +
+  scale_color_manual(values = hv_palette(), name = "Group") +
   scale_shape_manual(
     values = c("Group I" = 15, "Group II" = 19,
                "Group III" = 17, "Group IV" = 18),
@@ -937,7 +939,7 @@ the last step, so you can adjust each one without touching the other.
 library(patchwork)
 
 p_ms <- p_base +
-  scale_color_brewer(palette = "Set1", name = "Group") +
+  scale_color_manual(values = hv_palette(), name = "Group") +
   scale_shape_manual(
     values = c("Group I" = 15, "Group II" = 19,
                "Group III" = 17, "Group IV" = 18),

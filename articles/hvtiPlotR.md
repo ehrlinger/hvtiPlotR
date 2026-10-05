@@ -780,11 +780,15 @@ The ColorBrewer palette catalog (Harrower and Brewer 2003) is built into
 [`scale_color_brewer()`](https://ggplot2.tidyverse.org/reference/scale_brewer.html)
 /
 [`scale_fill_brewer()`](https://ggplot2.tidyverse.org/reference/scale_brewer.html);
-hvtiPlotR does not import the optional `RColorBrewer` package. We have
-made extensive use of the `palette = "Set1"` color palette in the
-figures we have generated. ggplot2 also ships other `scale_color_*`
-functions for many different settings. Consult
-<https://colorbrewer2.org/> for an interactive palette browser.
+hvtiPlotR does not import the optional `RColorBrewer` package. For
+categorical groups we use
+[`hv_palette()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_palette.md),
+the Okabe-Ito colors ordered for a white background; for ordered or
+diverging scales, `"RdBu"` or `"PuOr"`; for sequential, `"Blues"`. We
+avoid `"Set1"` and `"RdYlGn"`, whose red against green fails for readers
+with deuteranopia. ggplot2 also ships other `scale_color_*` functions
+for many different settings. Consult <https://colorbrewer2.org/> for an
+interactive palette browser.
 
 ### Global Figure Commands
 
@@ -1019,9 +1023,9 @@ mind when composing figures.
 
 ### Color
 
-- **Multi-group figures**: use `scale_color_brewer(palette = "Set1")`
-  for up to five groups. For more groups, either pass an explicit vector
-  of hex codes via
+- **Multi-group figures**: use
+  `scale_color_manual(values = hv_palette())` for up to six groups. For
+  more groups, either pass an explicit vector of hex codes via
   [`scale_color_manual()`](https://ggplot2.tidyverse.org/reference/scale_manual.html)
   or browse the ColorBrewer palette catalog at
   <https://colorbrewer2.org/>. (ggplot2 ships the Brewer palette table

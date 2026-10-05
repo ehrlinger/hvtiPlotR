@@ -24,7 +24,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">hvtiPlotR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.8.4</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.8.5</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -78,7 +78,7 @@
       <h1>Decorating and Saving hvtiPlotR Plots</h1>
 
       <p class="author">John Ehrlinger <a href="mailto:ehrlinj@ccf.org" class="email">ehrlinj@ccf.org</a></p>
-      <p class="date">2026-10-02</p>
+      <p class="date">2026-10-05</p>
 
       <small class="dont-index">Source: <a href="https://github.com/ehrlinger/hvtiPlotR/blob/main/vignettes/plot-decorators.qmd" class="external-link"><code>vignettes/plot-decorators.qmd</code></a></small>
       <div class="d-none name"><code></code></div>
@@ -156,7 +156,7 @@
 <div class="cell">
 <div class="sourceCode cell-code" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p_ms</span> <span class="op">&lt;-</span> <span class="va">p_base</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_color_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Set1"</span>, name <span class="op">=</span> <span class="st">"Group"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_color_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="../reference/hv_palette.html">hv_palette</a></span><span class="op">(</span><span class="op">)</span>, name <span class="op">=</span> <span class="st">"Group"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_shape_manual</a></span><span class="op">(</span></span>
 <span>    values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Group I"</span> <span class="op">=</span> <span class="fl">15</span>, <span class="st">"Group II"</span> <span class="op">=</span> <span class="fl">19</span>,</span>
 <span>               <span class="st">"Group III"</span> <span class="op">=</span> <span class="fl">17</span>, <span class="st">"Group IV"</span> <span class="op">=</span> <span class="fl">18</span><span class="op">)</span>,</span>
@@ -179,7 +179,7 @@
 <div class="cell">
 <div class="sourceCode cell-code" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p_poster</span> <span class="op">&lt;-</span> <span class="va">p_base</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_color_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Set1"</span>, name <span class="op">=</span> <span class="st">"Group"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_color_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="../reference/hv_palette.html">hv_palette</a></span><span class="op">(</span><span class="op">)</span>, name <span class="op">=</span> <span class="st">"Group"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_shape_manual</a></span><span class="op">(</span></span>
 <span>    values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Group I"</span> <span class="op">=</span> <span class="fl">15</span>, <span class="st">"Group II"</span> <span class="op">=</span> <span class="fl">19</span>,</span>
 <span>               <span class="st">"Group III"</span> <span class="op">=</span> <span class="fl">17</span>, <span class="st">"Group IV"</span> <span class="op">=</span> <span class="fl">18</span><span class="op">)</span>,</span>
@@ -202,7 +202,7 @@
 <div class="cell">
 <div class="sourceCode cell-code" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p_base</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_color_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Set1"</span>, name <span class="op">=</span> <span class="st">"Group"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_color_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="../reference/hv_palette.html">hv_palette</a></span><span class="op">(</span><span class="op">)</span>, name <span class="op">=</span> <span class="st">"Group"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_shape_manual</a></span><span class="op">(</span></span>
 <span>    values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Group I"</span> <span class="op">=</span> <span class="fl">15</span>, <span class="st">"Group II"</span> <span class="op">=</span> <span class="fl">19</span>,</span>
 <span>               <span class="st">"Group III"</span> <span class="op">=</span> <span class="fl">17</span>, <span class="st">"Group IV"</span> <span class="op">=</span> <span class="fl">18</span><span class="op">)</span>,</span>
@@ -223,7 +223,7 @@
 <div class="cell">
 <div class="sourceCode cell-code" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p_base</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_color_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Set1"</span>, name <span class="op">=</span> <span class="st">"Group"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_color_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="../reference/hv_palette.html">hv_palette</a></span><span class="op">(</span><span class="op">)</span>, name <span class="op">=</span> <span class="st">"Group"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_shape_manual</a></span><span class="op">(</span></span>
 <span>    values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Group I"</span> <span class="op">=</span> <span class="fl">15</span>, <span class="st">"Group II"</span> <span class="op">=</span> <span class="fl">19</span>,</span>
 <span>               <span class="st">"Group III"</span> <span class="op">=</span> <span class="fl">17</span>, <span class="st">"Group IV"</span> <span class="op">=</span> <span class="fl">18</span><span class="op">)</span>,</span>
@@ -340,11 +340,11 @@
 </div>
 </section><section class="level2"><h3 id="colorbrewer-palettes">ColorBrewer palettes<a class="anchor" aria-label="anchor" href="#colorbrewer-palettes"></a>
 </h3>
-<p><code><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_color_brewer()</a></code> applies a ColorBrewer palette. These are perceptually uniform and print-safe, so they survive a black-and-white PDF. Use <code>palette = "Set1"</code> for categorical data, <code>"RdYlGn"</code> for diverging, <code>"Blues"</code> for sequential.</p>
+<p><code><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_color_brewer()</a></code> applies a ColorBrewer palette. These are perceptually uniform and print-safe, so they survive a black-and-white PDF. Use <code>"RdBu"</code> or <code>"PuOr"</code> for ordered or diverging data, <code>"Blues"</code> for sequential. For categorical groups use <code>scale_color_manual(values = hv_palette())</code> instead, as below: six colorblind-safe colors. Avoid <code>"Set1"</code> and <code>"RdYlGn"</code>, whose red against green fails for readers with deuteranopia.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p_base</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_color_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Set1"</span>, name <span class="op">=</span> <span class="st">"Group"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_color_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="../reference/hv_palette.html">hv_palette</a></span><span class="op">(</span><span class="op">)</span>, name <span class="op">=</span> <span class="st">"Group"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_shape_manual</a></span><span class="op">(</span></span>
 <span>    values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Group I"</span> <span class="op">=</span> <span class="fl">15</span>, <span class="st">"Group II"</span> <span class="op">=</span> <span class="fl">19</span>,</span>
 <span>               <span class="st">"Group III"</span> <span class="op">=</span> <span class="fl">17</span>, <span class="st">"Group IV"</span> <span class="op">=</span> <span class="fl">18</span><span class="op">)</span>,</span>
@@ -365,7 +365,7 @@
 <div class="cell">
 <div class="sourceCode cell-code" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p_base</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_color_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Dark2"</span>, guide <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_color_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="../reference/hv_palette.html">hv_palette</a></span><span class="op">(</span><span class="op">)</span>, guide <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_shape_manual</a></span><span class="op">(</span></span>
 <span>    values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Group I"</span> <span class="op">=</span> <span class="fl">15</span>, <span class="st">"Group II"</span> <span class="op">=</span> <span class="fl">19</span>,</span>
 <span>               <span class="st">"Group III"</span> <span class="op">=</span> <span class="fl">17</span>, <span class="st">"Group IV"</span> <span class="op">=</span> <span class="fl">18</span><span class="op">)</span>,</span>
@@ -442,7 +442,7 @@
 <div class="cell">
 <div class="sourceCode cell-code" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p_base</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_color_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Set1"</span>, name <span class="op">=</span> <span class="st">"Group"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_color_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="../reference/hv_palette.html">hv_palette</a></span><span class="op">(</span><span class="op">)</span>, name <span class="op">=</span> <span class="st">"Group"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_shape_manual</a></span><span class="op">(</span></span>
 <span>    values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Group I"</span> <span class="op">=</span> <span class="fl">15</span>, <span class="st">"Group II"</span> <span class="op">=</span> <span class="fl">19</span>,</span>
 <span>               <span class="st">"Group III"</span> <span class="op">=</span> <span class="fl">17</span>, <span class="st">"Group IV"</span> <span class="op">=</span> <span class="fl">18</span><span class="op">)</span>,</span>
@@ -555,7 +555,7 @@
 <code class="sourceCode R"><span><span class="va">template</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"hv_ppt_template.pptx"</span>, package <span class="op">=</span> <span class="st">"hvtiPlotR"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">p_ppt</span> <span class="op">&lt;-</span> <span class="va">p_base</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_color_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Set1"</span>, name <span class="op">=</span> <span class="st">"Group"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_color_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="../reference/hv_palette.html">hv_palette</a></span><span class="op">(</span><span class="op">)</span>, name <span class="op">=</span> <span class="st">"Group"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_shape_manual</a></span><span class="op">(</span></span>
 <span>    values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Group I"</span> <span class="op">=</span> <span class="fl">15</span>, <span class="st">"Group II"</span> <span class="op">=</span> <span class="fl">19</span>,</span>
 <span>               <span class="st">"Group III"</span> <span class="op">=</span> <span class="fl">17</span>, <span class="st">"Group IV"</span> <span class="op">=</span> <span class="fl">18</span><span class="op">)</span>,</span>
@@ -651,7 +651,7 @@
 <div class="cell">
 <div class="sourceCode cell-code" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p_base</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_color_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Set1"</span>, name <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_color_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="../reference/hv_palette.html">hv_palette</a></span><span class="op">(</span><span class="op">)</span>, name <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_shape_manual</a></span><span class="op">(</span></span>
 <span>    values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Group I"</span> <span class="op">=</span> <span class="fl">15</span>, <span class="st">"Group II"</span> <span class="op">=</span> <span class="fl">19</span>,</span>
 <span>               <span class="st">"Group III"</span> <span class="op">=</span> <span class="fl">17</span>, <span class="st">"Group IV"</span> <span class="op">=</span> <span class="fl">18</span><span class="op">)</span>,</span>
@@ -677,7 +677,7 @@
 <div class="cell">
 <div class="sourceCode cell-code" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p_base</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_color_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Set1"</span>, name <span class="op">=</span> <span class="st">"Group"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_color_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="../reference/hv_palette.html">hv_palette</a></span><span class="op">(</span><span class="op">)</span>, name <span class="op">=</span> <span class="st">"Group"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_shape_manual</a></span><span class="op">(</span></span>
 <span>    values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Group I"</span> <span class="op">=</span> <span class="fl">15</span>, <span class="st">"Group II"</span> <span class="op">=</span> <span class="fl">19</span>,</span>
 <span>               <span class="st">"Group III"</span> <span class="op">=</span> <span class="fl">17</span>, <span class="st">"Group IV"</span> <span class="op">=</span> <span class="fl">18</span><span class="op">)</span>,</span>
@@ -724,7 +724,7 @@
 <div class="cell">
 <div class="sourceCode cell-code" id="cb29"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p_base</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_color_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Set1"</span>, name <span class="op">=</span> <span class="st">"Group"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_color_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="../reference/hv_palette.html">hv_palette</a></span><span class="op">(</span><span class="op">)</span>, name <span class="op">=</span> <span class="st">"Group"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_shape_manual</a></span><span class="op">(</span></span>
 <span>    values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Group I"</span> <span class="op">=</span> <span class="fl">15</span>, <span class="st">"Group II"</span> <span class="op">=</span> <span class="fl">19</span>,</span>
 <span>               <span class="st">"Group III"</span> <span class="op">=</span> <span class="fl">17</span>, <span class="st">"Group IV"</span> <span class="op">=</span> <span class="fl">18</span><span class="op">)</span>,</span>
@@ -752,7 +752,7 @@
 <div class="cell">
 <div class="sourceCode cell-code" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p_base</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_color_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Set1"</span>, name <span class="op">=</span> <span class="st">"Group"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_color_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="../reference/hv_palette.html">hv_palette</a></span><span class="op">(</span><span class="op">)</span>, name <span class="op">=</span> <span class="st">"Group"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_shape_manual</a></span><span class="op">(</span></span>
 <span>    values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Group I"</span> <span class="op">=</span> <span class="fl">15</span>, <span class="st">"Group II"</span> <span class="op">=</span> <span class="fl">19</span>,</span>
 <span>               <span class="st">"Group III"</span> <span class="op">=</span> <span class="fl">17</span>, <span class="st">"Group IV"</span> <span class="op">=</span> <span class="fl">18</span><span class="op">)</span>,</span>
@@ -777,7 +777,7 @@
 <div class="cell">
 <div class="sourceCode cell-code" id="cb31"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p_base</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_color_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Set1"</span>, name <span class="op">=</span> <span class="st">"Group"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_color_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="../reference/hv_palette.html">hv_palette</a></span><span class="op">(</span><span class="op">)</span>, name <span class="op">=</span> <span class="st">"Group"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_shape_manual</a></span><span class="op">(</span></span>
 <span>    values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Group I"</span> <span class="op">=</span> <span class="fl">15</span>, <span class="st">"Group II"</span> <span class="op">=</span> <span class="fl">19</span>,</span>
 <span>               <span class="st">"Group III"</span> <span class="op">=</span> <span class="fl">17</span>, <span class="st">"Group IV"</span> <span class="op">=</span> <span class="fl">18</span><span class="op">)</span>,</span>
@@ -801,7 +801,7 @@
 <div class="cell">
 <div class="sourceCode cell-code" id="cb32"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p_base</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_color_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Set1"</span>, name <span class="op">=</span> <span class="st">"Group"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_color_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="../reference/hv_palette.html">hv_palette</a></span><span class="op">(</span><span class="op">)</span>, name <span class="op">=</span> <span class="st">"Group"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_shape_manual</a></span><span class="op">(</span></span>
 <span>    values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Group I"</span> <span class="op">=</span> <span class="fl">15</span>, <span class="st">"Group II"</span> <span class="op">=</span> <span class="fl">19</span>,</span>
 <span>               <span class="st">"Group III"</span> <span class="op">=</span> <span class="fl">17</span>, <span class="st">"Group IV"</span> <span class="op">=</span> <span class="fl">18</span><span class="op">)</span>,</span>
@@ -855,7 +855,7 @@
 <div class="cell">
 <div class="sourceCode cell-code" id="cb34"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p_base</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_color_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Set1"</span>, name <span class="op">=</span> <span class="st">"Group"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_color_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="../reference/hv_palette.html">hv_palette</a></span><span class="op">(</span><span class="op">)</span>, name <span class="op">=</span> <span class="st">"Group"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_shape_manual</a></span><span class="op">(</span></span>
 <span>    values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Group I"</span> <span class="op">=</span> <span class="fl">15</span>, <span class="st">"Group II"</span> <span class="op">=</span> <span class="fl">19</span>,</span>
 <span>               <span class="st">"Group III"</span> <span class="op">=</span> <span class="fl">17</span>, <span class="st">"Group IV"</span> <span class="op">=</span> <span class="fl">18</span><span class="op">)</span>,</span>
@@ -884,7 +884,7 @@
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://patchwork.data-imaginist.com" class="external-link">patchwork</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">p_ms</span> <span class="op">&lt;-</span> <span class="va">p_base</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_color_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Set1"</span>, name <span class="op">=</span> <span class="st">"Group"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_color_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="../reference/hv_palette.html">hv_palette</a></span><span class="op">(</span><span class="op">)</span>, name <span class="op">=</span> <span class="st">"Group"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_shape_manual</a></span><span class="op">(</span></span>
 <span>    values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Group I"</span> <span class="op">=</span> <span class="fl">15</span>, <span class="st">"Group II"</span> <span class="op">=</span> <span class="fl">19</span>,</span>
 <span>               <span class="st">"Group III"</span> <span class="op">=</span> <span class="fl">17</span>, <span class="st">"Group IV"</span> <span class="op">=</span> <span class="fl">18</span><span class="op">)</span>,</span>

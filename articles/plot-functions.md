@@ -366,8 +366,8 @@ p_count <- plot(sh)
 
 # Layer on color scales, labels, and a theme
 p_count +
-  scale_fill_brewer(palette = "Set1", name = "Category") +
-  scale_color_brewer(palette = "Set1", name = "Category") +
+  scale_fill_manual(values = hv_palette(), name = "Category") +
+  scale_color_manual(values = hv_palette(), name = "Category") +
   labs(x = "Year", y = "Count") +
   theme_hv_poster()
 ```
@@ -519,9 +519,9 @@ places group-identifying text directly on the panel.
 ``` r
 
 gfup_final <- plot(gf, alpha = 0.8) +
-  # Color alive = blue, dead = red (Set1 palette positions 2 and 1)
+  # Color alive = blue, dead = vermillion (house palette positions 1 and 2)
   scale_color_manual(
-    values   = c("#377EB8", "#E41A1C"),
+    values   = hv_palette(n = 2),
     labels   = c("Alive", "Dead"),
     na.value = "black",
     drop     = FALSE
@@ -1423,15 +1423,16 @@ plot(hv_eda(dta_eda, x_col = "year", y_col = "cabg",
 Columns with more than two numeric levels are classified as `"Cat_Num"`
 and rendered as stacked count bars, one level per fill color. Use
 [`scale_fill_brewer()`](https://ggplot2.tidyverse.org/reference/scale_brewer.html)
-with a diverging palette (here `"RdYlGn"`, reversed) to signal grade
-severity from green (low) through yellow to red (high).
+with a diverging palette (here `"RdBu"`, reversed) to signal grade
+severity from blue (low) to red (high). Red against green (`"RdYlGn"`)
+fails for readers with deuteranopia; red against blue does not.
 
 ``` r
 
 plot(hv_eda(dta_eda, x_col = "year", y_col = "nyha",
               y_label = "Preoperative NYHA Class")) +
   scale_fill_brewer(
-    palette = "RdYlGn", direction = -1,
+    palette = "RdBu", direction = -1,
     labels  = c("1" = "I", "2" = "II", "3" = "III", "4" = "IV",
                 "(Missing)" = "Missing"),
     name    = "NYHA"
@@ -1504,7 +1505,7 @@ sub_bin  <- eda_select_vars(dta_eda, c("year", names(bin_vars)))
 p_bin <- lapply(names(bin_vars), function(cn) {
   plot(hv_eda(sub_bin, x_col = "year", y_col = cn,
                 y_label = bin_vars[[cn]])) +
-    scale_fill_brewer(palette = "Set1", direction = -1, name = NULL) +
+    scale_fill_manual(values = hv_palette(), name = NULL) +
     scale_x_discrete(breaks = seq(2005, 2020, 5)) +
     labs(x = "Surgery Year", y = "Count") +
     theme_hv_poster()
@@ -1530,7 +1531,7 @@ sub_cat <- eda_select_vars(dta_eda, c("year", names(cat_vars)))
 p_cat <- lapply(names(cat_vars), function(cn) {
   plot(hv_eda(sub_cat, x_col = "year", y_col = cn,
                 y_label = cat_vars[[cn]])) +
-    scale_fill_brewer(palette = "Set2", name = NULL) +
+    scale_fill_manual(values = hv_palette(), name = NULL) +
     scale_x_discrete(breaks = seq(2005, 2020, 5)) +
     labs(x = "Surgery Year", y = "Count") +
     theme_hv_poster()
@@ -1794,9 +1795,9 @@ al2 <- hv_alluvial(
 )
 
 plot(al2) +
-  scale_fill_brewer(palette = "RdYlGn", direction = -1,
+  scale_fill_brewer(palette = "RdBu", direction = -1,
                     name = "AR Grade") +
-  scale_color_brewer(palette = "RdYlGn", direction = -1,
+  scale_color_brewer(palette = "RdBu", direction = -1,
                       guide = "none") +
   annotate("text", x = 1.5, y = 250,
            label = "Improvement after surgery",
@@ -1819,8 +1820,8 @@ Saving](https://ehrlinger.github.io/hvtiPlotR/articles/plot-decorators.md).
 ``` r
 
 p_al <- plot(al_filled) +
-  scale_fill_brewer(palette = "RdYlGn", direction = -1) +
-  scale_color_brewer(palette = "RdYlGn", direction = -1, guide = "none") +
+  scale_fill_brewer(palette = "RdBu", direction = -1) +
+  scale_color_brewer(palette = "RdBu", direction = -1, guide = "none") +
   labs(y = "Patients (n)") +
   theme_hv_poster()
 
@@ -1884,10 +1885,10 @@ table(dta_san$C9)
 reads the nine cluster-assignment columns (`C2` through `C9`) and builds
 the Sankey data automatically. Call
 [`plot()`](https://rdrr.io/r/graphics/plot.default.html) and add a title
-and theme; the default Set1 palette assigns one color per cluster
-letter. Look for: wide bands that stay intact across K values,
-indicating a stable partition; heavy crossing and fragmentation signal
-that K has grown past what the data supports.
+and theme; the default palette (Paul Tol’s muted nine, colorblind-safe)
+assigns one color per cluster letter. Look for: wide bands that stay
+intact across K values, indicating a stable partition; heavy crossing
+and fragmentation signal that K has grown past what the data supports.
 
 ``` r
 
@@ -1901,16 +1902,14 @@ plot(sk) +
 
 ### Custom color palette
 
-Replace the default Set1 colors with a fully custom named vector. Names
-must match the node labels in the data.
+Pass `node_colors` as a vector named by node label. Name only the nodes
+you want to recolor, and the rest keep their default color; name every
+node to replace the palette outright. Here two clusters the paper
+discusses are pulled out in pink and orange.
 
 ``` r
 
-my_cols <- c(
-  A = "#1f77b4", B = "#ff7f0e", C = "#2ca02c", D = "#d62728",
-  E = "#9467bd", F = "#8c564b", G = "#e377c2", H = "#7f7f7f",
-  I = "#bcbd22"
-)
+my_cols <- c(G = "#CC79A7", F = "#E69F00")
 sk_custom <- hv_sankey(dta_san, node_colors = my_cols)
 plot(sk_custom) +
   labs(title = "Cluster Stability: K = 2 to 9") +
@@ -2473,8 +2472,8 @@ d3$comparison <- "TF-TAVR vs AVR"
 
 survival_difference_plot(rbind(d1, d2, d3),
                          group_col = "comparison") +
-  scale_color_brewer(palette = "Set1", name = NULL) +
-  scale_fill_brewer(palette = "Set1", guide = "none") +
+  scale_color_manual(values = hv_palette(), name = NULL) +
+  scale_fill_manual(values = hv_palette(), guide = "none") +
   ggplot2::geom_hline(yintercept = 0, linetype = "dashed",
                       color = "gray50") +
   scale_x_continuous(limits = c(0, 10), breaks = 0:10) +
@@ -2797,7 +2796,7 @@ the figure readable in grayscale print.
 
 tr <- hv_trends(dta_tr)
 plot(tr) +
-  scale_color_brewer(palette = "Set1", name = "Group") +
+  scale_color_manual(values = hv_palette(), name = "Group") +
   scale_shape_manual(
     values = c("Group I" = 15L, "Group II" = 19L,
                "Group III" = 17L, "Group IV" = 18L),
@@ -3055,7 +3054,7 @@ Saving](https://ehrlinger.github.io/hvtiPlotR/articles/plot-decorators.md).
 ``` r
 
 p_tr <- plot(tr) +
-  scale_color_brewer(palette = "Set1", name = "Group") +
+  scale_color_manual(values = hv_palette(), name = "Group") +
   scale_shape_manual(
     values = c("Group I" = 15L, "Group II" = 19L,
                "Group III" = 17L, "Group IV" = 18L),
