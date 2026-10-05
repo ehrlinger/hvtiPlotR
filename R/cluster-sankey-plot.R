@@ -314,11 +314,13 @@ hv_sankey <- function(data,
 
   # Default colors: Tol muted in node_levels order, recycled (with warning)
   # when there are more labels than palette colors. A named node_colors
-  # overrides the default only for the labels it names.
-  if (is.null(node_colors) || !is.null(names(node_colors))) {
+  # overrides the default only for the labels it names; one that names every
+  # label, or an unnamed one, is used as given.
+  if (is.null(node_colors) ||
+      (!is.null(names(node_colors)) && !all(node_levels %in% names(node_colors)))) {
     n_nodes <- length(node_levels)
     given   <- intersect(names(node_colors), node_levels)
-    if (n_nodes > length(.HV_TOL_MUTED_9) && length(given) < n_nodes)
+    if (n_nodes > length(.HV_TOL_MUTED_9))
       warning("More node labels (", n_nodes, ") than default colors (",
               length(.HV_TOL_MUTED_9), "); colors will repeat.", call. = FALSE)
     defaults        <- stats::setNames(rep_len(.HV_TOL_MUTED_9, n_nodes), node_levels)
