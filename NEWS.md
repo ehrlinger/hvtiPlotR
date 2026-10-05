@@ -1,3 +1,9 @@
+# hvtiPlotR (unreleased)
+
+* A test of `plot.hv_eda()`'s fill order uses `"RdBu"` in place of
+  `"RdYlGn"`, so no file in the package names the red-green palette as an
+  example any longer.
+
 # hvtiPlotR 2.8.5
 
 * New `hv_palette()` returns the house palette for categorical groups, the
@@ -8,9 +14,10 @@
   colorblind-safe colors, in place of ColorBrewer `"Set1"`, whose red against
   green fails for readers with deuteranopia. The nine are ordered so that
   nodes up to three places apart stay distinct under color-vision deficiency.
-  Every default Sankey changes color. A `node_colors` vector that names only some nodes now recolors those
-  and leaves the rest at their default; before, every node it did not name
-  fell to gray. Name every node to replace the palette outright, as before.
+  Every default Sankey changes color. A `node_colors` vector that names only
+  some nodes now recolors those and leaves the rest at their default; before,
+  every node it did not name fell to gray. Name every node to replace the
+  palette outright, as before.
 * Examples and vignettes follow the house color rule of the hvtiGraphics
   recipes book: categorical groups take `hv_palette()` through
   `scale_*_manual()`, ordered and diverging scales take `"RdBu"` (reversed, so

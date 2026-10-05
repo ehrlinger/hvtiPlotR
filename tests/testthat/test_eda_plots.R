@@ -364,10 +364,10 @@ test_that("plot(hv_eda) grouped bars run left to right in legend order, NA first
 test_that("plot(hv_eda) positional fill palette maps the first level first", {
   df <- sample_eda_data(n = 300, seed = 42)
   p  <- plot(hv_eda(df, x_col = "year", y_col = "nyha")) +
-    ggplot2::scale_fill_brewer(palette = "RdYlGn", direction = -1)
+    ggplot2::scale_fill_brewer(palette = "RdBu", direction = -1)
   sc <- ggplot2::ggplot_build(p)$plot$scales$get_scales("fill")
   expect_equal(sc$get_limits(), c("1", "2", "3", "4"))
-  expect_equal(unname(sc$map("4")), "#D7191C")
+  expect_equal(unname(sc$map("4")), "#CA0020")
 })
 
 test_that("plot(hv_eda) Cat_Char y_label sets fill legend name", {
