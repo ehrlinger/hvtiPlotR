@@ -1,10 +1,10 @@
 # hvtiPlotR
 
 Plot constructors and methods for the HVTI CORR group — the largest
-public surface in the family: **81 exports and 48 registered S3
-methods**. Nearly everything downstream draws through it, so a change to
-a returned object’s class, element names or column names is a breaking
-change for other packages, not just for this one.
+public surface in the family: **90 exports and 56 registered S3
+methods** (counted at 2.8.5). Nearly everything downstream draws through
+it, so a change to a returned object’s class, element names or column
+names is a breaking change for other packages, not just for this one.
 
 This file is the operational contract and applies in full. It is tool
 neutral, so Codex and any other agent read the same rules. Claude Code
@@ -148,7 +148,7 @@ precisely what checks that artifact.
   nothing is its purpose. `expect_s3_class(plot(obj), "ggplot")` alone
   is a smoke test, not coverage.
 - **Every exported object must be added to `_pkgdown.yml`.** The
-  `reference:` index is explicit — 15 titled sections against 81 exports
+  `reference:` index is explicit — 15 titled sections against 90 exports
   — and pkgdown errors on a topic missing from it. ⚠️ `hvtiRtemplates`
   deliberately has **no** `reference:` section so pkgdown auto-indexes.
   Two conventions in one family.
