@@ -58,9 +58,28 @@ test_that("a name used twice across panels and events is an error", {
 test_that("the wrong-origin mistake stops rather than sliding the axis", {
   expect_error(hv_followup_panels(dta, origin_year = 85, panels = all_deaths), "Check `origin_year`")
   expect_error(hv_followup_panels(dta, origin_year = 2020, panels = all_deaths), "Check `origin_year`")
-  neg <- transform(dta, iv_opyrs = iv_opyrs - 1)
-  expect_error(hv_followup_panels(neg, origin_year = 1990, panels = all_deaths), "negative")
+  # An origin that puts operations before 1900 is still the wrong-origin mistake.
+  expect_error(hv_followup_panels(transform(dta, iv_opyrs = iv_opyrs - 95), origin_year = 1990,
+                                  panels = all_deaths), "Check `origin_year`")
   expect_error(hv_followup_panels(dta, origin_year = 1990.5, panels = all_deaths), "whole calendar year")
+})
+
+test_that("an operation before the origin is drawn, counted and warned about", {
+  neg <- transform(dta, iv_opyrs = iv_opyrs - 1)
+  n_neg <- sum(neg$iv_opyrs < 0)
+  expect_gt(n_neg, 0L)
+  expect_warning(fp <- hv_followup_panels(neg, origin_year = 1990, panels = all_deaths),
+                 paste(n_neg, "patient\\(s\\) have a negative `iv_opyrs`"))
+  expect_identical(fp$meta$n_opyrs_negative, n_neg)
+  expect_lt(fp$meta$first_operation, fp$meta$study_start)
+  # The patients are in the figure's data, before the origin, not dropped.
+  expect_identical(fp$data$n_drawn, nrow(neg))
+  built <- ggplot2::ggplot_build(plot(fp)$all)
+  xs <- unlist(lapply(built$data, `[[`, "x"))
+  expect_true(any(xs < 1990))
+  # Data without one counts zero, silently.
+  expect_no_warning(fp0 <- hv_followup_panels(dta, origin_year = 1990, panels = all_deaths))
+  expect_identical(fp0$meta$n_opyrs_negative, 0L)
 })
 
 test_that("panel and event entries and column types are validated", {

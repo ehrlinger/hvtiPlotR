@@ -43,7 +43,7 @@ An object of class \code{c("hv_followup_panels", "hv_data")}:
 \code{n_excluded}.}
 \item{\verb{$meta}}{Named list: \code{opyrs_col}, \code{origin_year}, \code{study_start},
 \code{study_end}, \code{first_operation}, \code{close_date}, \code{close_source},
-\code{n_obs} and \code{n_opyrs_missing}.}
+\code{n_obs}, \code{n_opyrs_missing} and \code{n_opyrs_negative}.}
 \item{\verb{$tables}}{\code{panels}, a named list of \code{\link[=hv_followup]{hv_followup()}} objects.}
 }
 }
@@ -66,9 +66,16 @@ Every check runs before any panel is built. Every column named anywhere is
 checked at once, and the error lists all that are missing. A panel name is
 also its figure's name, so a name used twice, within \code{panels} or across
 \code{panels} and \code{events}, is an error. The origin is checked for plausibility:
-an operation before the origin, or operation years outside 1900 to next
-year, is the wrong-origin mistake, which otherwise slides every point
-along the x-axis without any other symptom.
+operation years outside 1900 to next year are the wrong-origin mistake,
+which otherwise slides every point along the x-axis without any other
+symptom, and stop.
+
+\strong{An operation before the origin}, a negative \code{opyrs_col}, is drawn where
+it falls, to the left of where the diagonal starts, with a warning, and
+counted in \code{meta$n_opyrs_negative}. It usually means the build counted
+\code{opyrs_col} from a later origin than \code{origin_year}, and a figure that shows
+the affected patients makes that a problem a reader can see, where a refusal
+would hide the figure and the patients with it.
 }
 \examples{
 dta <- sample_goodness_followup_data()
