@@ -238,7 +238,7 @@ print.hv_spaghetti <- function(x, ...) {
 #'
 #' # With LOESS smooth overlay
 #' plot(sp, add_smooth = TRUE) +
-#'   ggplot2::scale_color_brewer(palette = "Set1", name = NULL) +
+#'   ggplot2::scale_color_manual(values = hv_ppt_palette("light"), name = NULL) +
 #'   ggplot2::labs(x = "Years", y = "AV Mean Gradient (mmHg)") +
 #'   theme_hv_poster()
 #'
@@ -254,7 +254,7 @@ print.hv_spaghetti <- function(x, ...) {
 #' \donttest{
 #' old <- ggplot2::theme_set(theme_hv_manuscript())
 #' plot(sp, add_smooth = TRUE) +
-#'   ggplot2::scale_color_brewer(palette = "Set1", name = NULL) +
+#'   ggplot2::scale_color_manual(values = hv_ppt_palette("light"), name = NULL) +
 #'   ggplot2::labs(x = "Years", y = "AV Mean Gradient (mmHg)")
 #' ggplot2::theme_set(old)
 #' }

@@ -32,10 +32,12 @@ existing code. Give one or the other; both with different values is an
 error.}
 
 \item{node_colors}{Named character vector mapping node labels to fill
-colors. If \code{NULL} (default), labels are mapped to an inline
-ColorBrewer \code{Set1} hex palette in \code{node_levels} order (no
-dependency on \pkg{RColorBrewer}). When there are more labels than
-palette colors the palette is recycled with a warning.}
+colors. If \code{NULL} (default), labels take Paul Tol's muted palette,
+nine colorblind-safe colors, in \code{node_levels} order. When there are
+more labels than palette colors the palette is recycled with a warning.
+A named vector that covers only some labels overrides those and leaves
+the rest at their default color, so \code{c(G = "#CC79A7")} recolors
+one node. An unnamed vector is used as given.}
 }
 \value{
 An object of class \code{c("hv_sankey", "hv_data")}:

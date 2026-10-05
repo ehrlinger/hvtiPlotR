@@ -136,8 +136,8 @@ plot(hp2) +
 \donttest{
 old <- ggplot2::theme_set(theme_hv_manuscript())
 plot(hp2) +
-  scale_color_brewer(palette = "Set1", name = NULL) +
-  scale_fill_brewer(palette   = "Set1", guide = "none") +
+  scale_color_manual(values = hv_ppt_palette("light"), name = NULL) +
+  scale_fill_manual(values = hv_ppt_palette("light"), guide = "none") +
   scale_x_continuous(limits = c(0, 10), breaks = 0:10) +
   scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, 20),
                      labels = function(x) paste0(x, "\%")) +

@@ -111,7 +111,7 @@ tr <- hv_trends(
   summary_fn = "median"
 )
 p <- plot(tr) +
-  ggplot2::scale_color_brewer(palette = "Set1", name = "NYHA Class") +
+  ggplot2::scale_color_manual(values = hv_ppt_palette("light"), name = "NYHA Class") +
   ggplot2::scale_x_continuous(limits = c(1985, 2015),
                               breaks = seq(1985, 2015, 5)) +
   ggplot2::labs(x = "Years", y = "\%") +
@@ -124,7 +124,7 @@ ggplot2::ggsave(file.path(tempdir(), "trends.pdf"), p,
 \donttest{
 old <- ggplot2::theme_set(theme_hv_manuscript())
 plot(hv_trends(dta_poly)) +
-  ggplot2::scale_color_brewer(palette = "Dark2", name = "Repair type")
+  ggplot2::scale_color_manual(values = hv_ppt_palette("light"), name = "Repair type")
 ggplot2::theme_set(old)
 }
 

@@ -233,8 +233,8 @@ print.hv_alluvial <- function(x, ...) {
 #' # Fill flows by procedure
 #' plot(hv_alluvial(dta, axes = axes, y_col = "freq",
 #'                    fill_col = "procedure")) +
-#'   ggplot2::scale_fill_brewer(palette = "Set2", name = "Procedure") +
-#'   ggplot2::scale_color_brewer(palette = "Set2", guide = "none") +
+#'   ggplot2::scale_fill_manual(values = hv_ppt_palette("light"), name = "Procedure") +
+#'   ggplot2::scale_color_manual(values = hv_ppt_palette("light"), guide = "none") +
 #'   ggplot2::labs(y = "Patients (n)") +
 #'   theme_hv_poster()
 #'
@@ -244,9 +244,9 @@ print.hv_alluvial <- function(x, ...) {
 #'   fill_col = "pre_ar",
 #'   axis_labels = c("Pre-operative", "Post-operative")
 #' )) +
-#'   ggplot2::scale_fill_brewer(palette = "RdYlGn", direction = -1,
+#'   ggplot2::scale_fill_brewer(palette = "RdBu", direction = -1,
 #'                              name = "AR Grade") +
-#'   ggplot2::scale_color_brewer(palette = "RdYlGn", direction = -1,
+#'   ggplot2::scale_color_brewer(palette = "RdBu", direction = -1,
 #'                                guide = "none") +
 #'   ggplot2::labs(y = "Patients (n)") +
 #'   theme_hv_poster()

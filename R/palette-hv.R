@@ -9,6 +9,11 @@
 # under 2:1 against white. Rose comes first so it is the one to drop when a
 # role is present: it reads as the event.
 .HV_TOL_MUTED <- c("#CC6677", "#332288", "#117733", "#882255", "#44AA99", "#999933", "#AA4499")
+# The full nine, in Tol's order, for filled areas such as Sankey nodes, where
+# sand and cyan carry no thin line and their low contrast against white is no
+# bar. hv_sankey() uses it as the default node fill.
+.HV_TOL_MUTED_9 <- c("#CC6677", "#332288", "#DDCC77", "#117733", "#88CCEE",
+                     "#882255", "#44AA99", "#999933", "#AA4499")
 
 #' Colors for a figure's levels, by role
 #'

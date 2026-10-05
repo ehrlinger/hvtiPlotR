@@ -32,7 +32,7 @@ dat <- sample_nonparametric_ordinal_data(
 
 # Curves only, with RColorBrewer palette
 plot(hv_ordinal(dat)) +
-  ggplot2::scale_color_brewer(palette = "RdYlGn", direction = -1,
+  ggplot2::scale_color_brewer(palette = "RdBu", direction = -1,
                                name = "AR Grade") +
   ggplot2::scale_x_continuous(breaks = 0:5) +
   ggplot2::scale_y_continuous(labels = scales::percent) +
