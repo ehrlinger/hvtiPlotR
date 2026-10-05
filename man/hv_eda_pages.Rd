@@ -88,7 +88,7 @@ attr(pages[[1]], "variables")
 pct <- hv_eda_pages(dta, x_col = "year", section = "percent",
                     labels = c(male = "Male", nyha = "NYHA class"))
 plot(pct)[[1]] &
-  ggplot2::scale_fill_brewer(palette = "Set1", na.value = "gray80") &
+  ggplot2::scale_fill_manual(values = hv_palette(), na.value = "gray80") &
   theme_hv_manuscript(base_size = 8)
 }
 \seealso{

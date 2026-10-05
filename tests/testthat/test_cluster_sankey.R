@@ -201,12 +201,37 @@ test_that("complete explicit node_levels is used verbatim", {
   expect_identical(sn$meta$node_levels, lev)
 })
 
-test_that("default node_colours map Set1 in node_levels order", {
+test_that("default node_colours map Tol muted in node_levels order", {
   skip_if_not_installed("ggsankey")
   dta <- sample_cluster_sankey_data(n = 200, seed = 1)
   sn  <- hv_sankey(dta)
   expect_identical(names(sn$meta$node_colours), sn$meta$node_levels)
-  expect_equal(unname(sn$meta$node_colours[1]), "#E41A1C")  # Set1[1]
+  expect_equal(unname(sn$meta$node_colours[1]), "#AA4499")  # Tol muted purple
+})
+
+test_that("a partial named node_colors overrides only the labels it names", {
+  skip_if_not_installed("ggsankey")
+  dta <- sample_cluster_sankey_data(n = 200, seed = 1)
+  base <- hv_sankey(dta)$meta$node_colors
+  sn   <- hv_sankey(dta, node_colors = c(G = "#CC79A7", F = "#E69F00"))
+  cols <- sn$meta$node_colors
+  expect_identical(names(cols), sn$meta$node_levels)
+  expect_equal(unname(cols[c("G", "F")]), c("#CC79A7", "#E69F00"))
+  keep <- setdiff(names(cols), c("G", "F"))
+  expect_identical(cols[keep], base[keep])
+  fills <- unlist(lapply(ggplot2::ggplot_build(plot(sn))$data, function(l) l$fill))
+  expect_true(all(stats::na.omit(fills) %in% cols))  # no unmapped (NA-fill) nodes
+})
+
+test_that("a full named node_colors past nine labels does not warn", {
+  skip_if_not_installed("ggsankey")
+  dta <- sample_cluster_sankey_data(n = 200, seed = 1)
+  dta$C9    <- as.character(dta$C9)
+  dta$C9[1] <- "J"  # a tenth label, one past the default palette
+  lev  <- sort(unique(unlist(lapply(dta[paste0("C", 2:9)], as.character))))
+  expect_length(lev, 10L)
+  full <- stats::setNames(rep("#999999", length(lev)), lev)
+  expect_no_warning(hv_sankey(dta, node_colors = full))
 })
 
 # ============================================================================

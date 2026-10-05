@@ -38,7 +38,7 @@ dta <- sample_trends_data(n = 600, seed = 42)
 tr  <- hv_trends(dta)
 
 plot(tr) +
-  scale_color_brewer(palette = "Set1", name = "Group") +
+  scale_color_manual(values = hv_palette(), name = "Group") +
   labs(x = "Year", y = "Outcome") +
   theme_hv_manuscript()
 }\if{html}{\out{</div>}}

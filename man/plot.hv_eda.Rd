@@ -63,7 +63,7 @@ dta <- sample_eda_data(n = 300, seed = 42)
 plot(hv_eda(dta, x_col = "year", y_col = "nyha",
               y_label = "Preoperative NYHA Class")) +
   ggplot2::scale_fill_brewer(
-    palette = "RdYlGn", direction = -1,
+    palette = "RdBu", direction = -1,
     labels  = c("1" = "I", "2" = "II", "3" = "III", "4" = "IV",
                 "(Missing)" = "Missing"),
     name    = "NYHA"

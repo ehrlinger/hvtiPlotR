@@ -11,7 +11,7 @@ utils::globalVariables(c("node", "freq"))
 # Key differences from the original script:
 #  - No hard-coded column names or ordering vectors; caller supplies
 #    cluster_cols and node_levels
-#  - Color palette is passed via node_colors (default: inline Set1 hex)
+#  - Color palette is passed via node_colors (default: Paul Tol's muted nine)
 #  - NSE-free internal reshape (.make_sankey_long) avoids ggsankey::make_long()
 #    non-standard evaluation
 # ---------------------------------------------------------------------------
@@ -234,10 +234,12 @@ sample_cluster_sankey_data <- function(
 #'   supplied, it is used verbatim but must cover every observed cluster
 #'   label.
 #' @param node_colors   Named character vector mapping node labels to fill
-#'   colors. If \code{NULL} (default), labels are mapped to an inline
-#'   ColorBrewer \code{Set1} hex palette in \code{node_levels} order (no
-#'   dependency on \pkg{RColorBrewer}). When there are more labels than
-#'   palette colors the palette is recycled with a warning.
+#'   colors. If \code{NULL} (default), labels take Paul Tol's muted palette,
+#'   nine colorblind-safe colors, in \code{node_levels} order. When there are
+#'   more labels than palette colors the palette is recycled with a warning.
+#'   A named vector that covers only some labels overrides those and leaves
+#'   the rest at their default color, so \code{c(G = "#CC79A7")} recolors
+#'   one node. An unnamed vector is used as given.
 #' @param node_colours  The same as \code{node_colors}: an alias kept for
 #'   existing code. Give one or the other; both with different values is an
 #'   error.
@@ -310,17 +312,20 @@ hv_sankey <- function(data,
            paste(missing_lab, collapse = ", "), call. = FALSE)
   }
 
-  # Default colors: Set1 in node_levels order, recycled (with warning) when
-  # there are more labels than palette colors.
-  if (is.null(node_colors)) {
+  # Default colors: Tol muted in node_levels order, recycled (with warning)
+  # when there are more labels than palette colors. A named node_colors
+  # overrides the default only for the labels it names; one that names every
+  # label, or an unnamed one, is used as given.
+  if (is.null(node_colors) ||
+      (!is.null(names(node_colors)) && !all(node_levels %in% names(node_colors)))) {
     n_nodes <- length(node_levels)
-    set1    <- c("#E41A1C", "#377EB8", "#4DAF4A", "#984EA3", "#FF7F00",
-                 "#FFFF33", "#A65628", "#F781BF", "#999999")
-    if (n_nodes > length(set1))
-      warning("More node labels (", n_nodes, ") than Set1 colors (",
-              length(set1), "); colors will repeat.", call. = FALSE)
-    pal          <- rep_len(set1, n_nodes)
-    node_colors  <- stats::setNames(pal, node_levels)
+    given   <- intersect(names(node_colors), node_levels)
+    if (n_nodes > length(.HV_TOL_MUTED_9))
+      warning("More node labels (", n_nodes, ") than default colors (",
+              length(.HV_TOL_MUTED_9), "); colors will repeat.", call. = FALSE)
+    defaults        <- stats::setNames(rep_len(.HV_TOL_MUTED_9, n_nodes), node_levels)
+    defaults[given] <- node_colors[given]
+    node_colors     <- c(defaults, node_colors[setdiff(names(node_colors), node_levels)])
   }
 
   # Reshape to long format

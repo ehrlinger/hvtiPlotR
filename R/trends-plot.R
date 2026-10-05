@@ -341,7 +341,7 @@ print.hv_trends <- function(x, ...) {
 #'   summary_fn = "median"
 #' )
 #' p <- plot(tr) +
-#'   ggplot2::scale_color_brewer(palette = "Set1", name = "NYHA Class") +
+#'   ggplot2::scale_color_manual(values = hv_palette(), name = "NYHA Class") +
 #'   ggplot2::scale_x_continuous(limits = c(1985, 2015),
 #'                               breaks = seq(1985, 2015, 5)) +
 #'   ggplot2::labs(x = "Years", y = "%") +
@@ -354,7 +354,7 @@ print.hv_trends <- function(x, ...) {
 #' \donttest{
 #' old <- ggplot2::theme_set(theme_hv_manuscript())
 #' plot(hv_trends(dta_poly)) +
-#'   ggplot2::scale_color_brewer(palette = "Dark2", name = "Repair type")
+#'   ggplot2::scale_color_manual(values = hv_palette(), name = "Repair type")
 #' ggplot2::theme_set(old)
 #' }
 #'

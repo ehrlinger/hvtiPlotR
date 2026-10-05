@@ -9,6 +9,51 @@
 # under 2:1 against white. Rose comes first so it is the one to drop when a
 # role is present: it reads as the event.
 .HV_TOL_MUTED <- c("#CC6677", "#332288", "#117733", "#882255", "#44AA99", "#999933", "#AA4499")
+# The full nine for filled areas such as Sankey nodes, where sand and cyan
+# carry no thin line and their low contrast against white is no bar.
+# hv_sankey() uses it as the default node fill. The order is not Tol's: it was
+# searched to keep the colors any three positions apart as distinct as
+# possible under normal, deuteranopic and protanopic vision (CIELAB distance,
+# colorspace::deutan()/protan()), because neighboring Sankey nodes sit near
+# one another. Tol's own order put purple three places after wine, and the two
+# read as one under the flows' transparency.
+.HV_TOL_MUTED_9 <- c("#AA4499", "#CC6677", "#999933", "#88CCEE", "#882255",
+                     "#332288", "#DDCC77", "#117733", "#44AA99")
+
+#' The house palette for categorical groups
+#'
+#' @description
+#' Colors for categorical groups in a manuscript, poster or light-background
+#' slide figure: the Okabe-Ito colors, ordered for a white background, with
+#' every one clearing 3:1 contrast against white. Hand it to a manual scale,
+#' `scale_color_manual(values = hv_palette())`.
+#'
+#' @details
+#' This is the categorical half of the house color rule. Ordered and diverging
+#' scales take ColorBrewer `"RdBu"` or `"PuOr"` through
+#' [ggplot2::scale_color_brewer()], and sequential scales take `"Blues"`.
+#' Avoid `"Set1"` and `"RdYlGn"`: their red against green fails for a reader
+#' with deuteranopia.
+#'
+#' The colors are those of `hv_ppt_palette("light")`, under a name that does
+#' not tie a manuscript figure to slides. For a dark slide, use
+#' `hv_ppt_palette("dark")`. Six colors are supplied, and asking for more is an
+#' error rather than a silently recycled palette.
+#'
+#' @param n Number of colors to return, or `NULL` (default) for all six.
+#'
+#' @return A character vector of hex colors, in group order.
+#'
+#' @seealso [hv_ppt_palette()] for the slide orderings,
+#'   [hv_role_palette()] when levels carry a role such as event or censored.
+#'
+#' @examples
+#' hv_palette()
+#' hv_palette(n = 3)
+#' @export
+hv_palette <- function(n = NULL) {
+  hv_ppt_palette("light", n = n)
+}
 
 #' Colors for a figure's levels, by role
 #'

@@ -355,8 +355,8 @@ sample_nonparametric_curve_points <- function(n            = 500,
 #'   ggplot2::scale_fill_manual(values   = c("steelblue"), guide = "none") +
 #'   ggplot2::labs(x = "Months", y = "Prevalence of AF")
 #' # For multi-group curves swap scale_color_manual with:
-#' #   ggplot2::scale_color_brewer(palette = "Set1", name = NULL)
-#' #   ggplot2::scale_fill_brewer(palette = "Set1", guide = "none")
+#' #   ggplot2::scale_color_manual(values = hv_palette(), name = NULL)
+#' #   ggplot2::scale_fill_manual(values = hv_palette(), guide = "none")
 #' ggplot2::theme_set(old)
 #' }
 #'

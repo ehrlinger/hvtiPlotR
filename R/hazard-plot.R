@@ -936,8 +936,8 @@ sample_nnt_data <- function(n        = 500,
 #'   emp_lower_col = "lower",
 #'   emp_upper_col = "upper"
 #' ) +
-#'   ggplot2::scale_color_brewer(palette = "Set1", name = NULL) +
-#'   ggplot2::scale_fill_brewer(palette   = "Set1", guide = "none") +
+#'   ggplot2::scale_color_manual(values = hv_palette(), name = NULL) +
+#'   ggplot2::scale_fill_manual(values = hv_palette(), guide = "none") +
 #'   ggplot2::scale_x_continuous(limits = c(0, 10), breaks = 0:10) +
 #'   ggplot2::scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, 20),
 #'                               labels = function(x) paste0(x, "%")) +
@@ -1186,8 +1186,8 @@ hazard_plot <- function(curve_data,
 #' dall <- rbind(d1, d2, d3)
 #'
 #' survival_difference_plot(dall, group_col = "comparison") +
-#'   scale_color_brewer(palette = "Set1", name = NULL) +
-#'   scale_fill_brewer(palette = "Set1", guide = "none") +
+#'   scale_color_manual(values = hv_palette(), name = NULL) +
+#'   scale_fill_manual(values = hv_palette(), guide = "none") +
 #'   geom_hline(yintercept = 0, linetype = "dashed", color = "gray50") +
 #'   scale_x_continuous(limits = c(0, 10), breaks = 0:10) +
 #'   labs(x = "Years", y = "Survival Difference (%)") +
@@ -1465,8 +1465,8 @@ nnt_plot <- function(nnt_data,
 #' \donttest{
 #' old <- ggplot2::theme_set(theme_hv_manuscript())
 #' plot(hp2) +
-#'   scale_color_brewer(palette = "Set1", name = NULL) +
-#'   scale_fill_brewer(palette   = "Set1", guide = "none") +
+#'   scale_color_manual(values = hv_palette(), name = NULL) +
+#'   scale_fill_manual(values = hv_palette(), guide = "none") +
 #'   scale_x_continuous(limits = c(0, 10), breaks = 0:10) +
 #'   scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, 20),
 #'                      labels = function(x) paste0(x, "%")) +
