@@ -1,5 +1,10 @@
 # hvtiPlotR (unreleased)
 
+* Now requires R 4.4.0 or newer, up from 4.1.0, to match the rest of the
+  HVTI family. `hvtiR::install()` installs the members together, and several
+  already required 4.4.0, so on an older R the install failed whatever this
+  package declared.
+
 * `hv_followup_panels()` draws an operation before `origin_year`, a negative
   `iv_opyrs`, where it falls instead of refusing the whole figure. It warns with
   the count and records it as `meta$n_opyrs_negative`, so a report can show it.
