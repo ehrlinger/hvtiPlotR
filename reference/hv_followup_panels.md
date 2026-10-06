@@ -66,8 +66,8 @@ An object of class `c("hv_followup_panels", "hv_data")`:
 - `$meta`:
 
   Named list: `opyrs_col`, `origin_year`, `study_start`, `study_end`,
-  `first_operation`, `close_date`, `close_source`, `n_obs` and
-  `n_opyrs_missing`.
+  `first_operation`, `close_date`, `close_source`, `n_obs`,
+  `n_opyrs_missing` and `n_opyrs_negative`.
 
 - `$tables`:
 
@@ -91,9 +91,18 @@ Every check runs before any panel is built. Every column named anywhere
 is checked at once, and the error lists all that are missing. A panel
 name is also its figure's name, so a name used twice, within `panels` or
 across `panels` and `events`, is an error. The origin is checked for
-plausibility: an operation before the origin, or operation years outside
-1900 to next year, is the wrong-origin mistake, which otherwise slides
-every point along the x-axis without any other symptom.
+plausibility: operation years outside 1900 to next year are the
+wrong-origin mistake, which otherwise slides every point along the
+x-axis without any other symptom, and stop.
+
+**An operation before the origin**, a negative `opyrs_col`, is drawn
+where it falls, to the left of where the diagonal starts, with a
+warning, and counted in `meta$n_opyrs_negative`. It usually means the
+build counted `opyrs_col` from a later origin than `origin_year`, and a
+figure that shows the affected patients makes that a problem a reader
+can see, where a refusal would hide the figure and the patients with it.
+When **every** operation is before the origin, the origin is wrong for
+the whole cohort and there is no window to draw, so that stops.
 
 ## See also
 

@@ -123,7 +123,7 @@ death.</p></dd>
 <dt><code>$meta</code></dt>
 <dd><p>Named list: <code>opyrs_col</code>, <code>origin_year</code>, <code>study_start</code>,
 <code>study_end</code>, <code>first_operation</code>, <code>close_date</code>, <code>close_source</code>,
-<code>n_obs</code> and <code>n_opyrs_missing</code>.</p></dd>
+<code>n_obs</code>, <code>n_opyrs_missing</code> and <code>n_opyrs_negative</code>.</p></dd>
 
 <dt><code>$tables</code></dt>
 <dd><p><code>panels</code>, a named list of <code><a href="hv_followup.html">hv_followup()</a></code> objects.</p></dd>
@@ -143,9 +143,17 @@ known to reach, which is not necessarily the date it was closed.
 checked at once, and the error lists all that are missing. A panel name is
 also its figure's name, so a name used twice, within <code>panels</code> or across
 <code>panels</code> and <code>events</code>, is an error. The origin is checked for plausibility:
-an operation before the origin, or operation years outside 1900 to next
-year, is the wrong-origin mistake, which otherwise slides every point
-along the x-axis without any other symptom.</p>
+operation years outside 1900 to next year are the wrong-origin mistake,
+which otherwise slides every point along the x-axis without any other
+symptom, and stop.</p>
+<p><strong>An operation before the origin</strong>, a negative <code>opyrs_col</code>, is drawn where
+it falls, to the left of where the diagonal starts, with a warning, and
+counted in <code>meta$n_opyrs_negative</code>. It usually means the build counted
+<code>opyrs_col</code> from a later origin than <code>origin_year</code>, and a figure that shows
+the affected patients makes that a problem a reader can see, where a refusal
+would hide the figure and the patients with it. When <strong>every</strong> operation is
+before the origin, the origin is wrong for the whole cohort and there is no
+window to draw, so that stops.</p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
