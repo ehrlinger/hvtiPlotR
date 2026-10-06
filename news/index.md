@@ -1286,7 +1286,7 @@ Two-class API for CONSORT flow diagrams built from patient-level data.
 
 - `hv_consort(tracker, side_box, cex, width, height)` — auto-derives
   `orders` and `side_box` from tracker metadata and calls
-  [`consort::consort_plot()`](https://rdrr.io/pkg/consort/man/consort_plot.html).
+  [`consort::consort_plot()`](https://adayim.github.io/consort/reference/consort_plot.html).
   `side_box = "all"` (default) includes every exclusion column; pass a
   character vector to select specific columns.
 - `plot.hv_consort(x)` — renders the diagram via the `consort` plot

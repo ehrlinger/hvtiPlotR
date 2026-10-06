@@ -2,7 +2,7 @@
 
 Reads the stage metadata stored in an `hv_consort_tracker`, auto-derives
 the `orders` and `side_box` arguments for
-[`consort::consort_plot()`](https://rdrr.io/pkg/consort/man/consort_plot.html),
+[`consort::consort_plot()`](https://adayim.github.io/consort/reference/consort_plot.html),
 and returns an `hv_consort` object wrapping the grid diagram.
 
 ## Usage
@@ -35,7 +35,7 @@ hv_consort(
 - cex:
 
   Numeric; text size scaling passed to
-  [`consort::consort_plot()`](https://rdrr.io/pkg/consort/man/consort_plot.html).
+  [`consort::consort_plot()`](https://adayim.github.io/consort/reference/consort_plot.html).
   Default `0.9`.
 
 - width:
@@ -50,7 +50,7 @@ hv_consort(
 - ...:
 
   Additional arguments forwarded to
-  [`consort::consort_plot()`](https://rdrr.io/pkg/consort/man/consort_plot.html).
+  [`consort::consort_plot()`](https://adayim.github.io/consort/reference/consort_plot.html).
 
 ## Value
 
@@ -59,7 +59,7 @@ An `hv_consort` object, a list with:
 - `$plot`:
 
   The grid object returned by
-  [`consort::consort_plot()`](https://rdrr.io/pkg/consort/man/consort_plot.html).
+  [`consort::consort_plot()`](https://adayim.github.io/consort/reference/consort_plot.html).
 
 - `$meta`:
 

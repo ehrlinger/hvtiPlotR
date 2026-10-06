@@ -1932,7 +1932,7 @@ sessionInfo()
      [4] xml2_1.6.0              lattice_0.22-9          digest_0.6.39
      [7] magrittr_2.0.5          evaluate_1.0.5          grid_4.6.1
     [10] RColorBrewer_1.1-3      fastmap_1.2.0           Matrix_1.7-5
-    [13] jsonlite_2.0.0          zip_3.0.2               consort_1.2.3
+    [13] jsonlite_2.0.0          zip_3.0.2               consort_1.2.4
     [16] survival_3.8-6          purrr_1.2.2             scales_1.4.0
     [19] fontBitstreamVera_0.1.1 textshaping_1.0.5       cli_3.6.6
     [22] rlang_1.3.0             fontquiver_0.2.1        ggupset_0.4.1
