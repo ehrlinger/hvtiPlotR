@@ -30,9 +30,18 @@
 #' checked at once, and the error lists all that are missing. A panel name is
 #' also its figure's name, so a name used twice, within `panels` or across
 #' `panels` and `events`, is an error. The origin is checked for plausibility:
-#' an operation before the origin, or operation years outside 1900 to next
-#' year, is the wrong-origin mistake, which otherwise slides every point
-#' along the x-axis without any other symptom.
+#' operation years outside 1900 to next year are the wrong-origin mistake,
+#' which otherwise slides every point along the x-axis without any other
+#' symptom, and stop.
+#'
+#' **An operation before the origin**, a negative `opyrs_col`, is drawn where
+#' it falls, to the left of where the diagonal starts, with a warning, and
+#' counted in `meta$n_opyrs_negative`. It usually means the build counted
+#' `opyrs_col` from a later origin than `origin_year`, and a figure that shows
+#' the affected patients makes that a problem a reader can see, where a refusal
+#' would hide the figure and the patients with it. When **every** operation is
+#' before the origin, the origin is wrong for the whole cohort and there is no
+#' window to draw, so that stops.
 #'
 #' @param data Data frame; one row per patient.
 #' @param opyrs_col Name of the years-since-origin interval to the operation.
@@ -57,7 +66,7 @@
 #'     `n_excluded`.}
 #'   \item{`$meta`}{Named list: `opyrs_col`, `origin_year`, `study_start`,
 #'     `study_end`, `first_operation`, `close_date`, `close_source`,
-#'     `n_obs` and `n_opyrs_missing`.}
+#'     `n_obs`, `n_opyrs_missing` and `n_opyrs_negative`.}
 #'   \item{`$tables`}{`panels`, a named list of [hv_followup()] objects.}
 #' }
 #'
@@ -153,17 +162,31 @@ hv_followup_panels <- function(data,
 
   opyrs <- data[[opyrs_col]]
   if (all(is.na(opyrs))) stop("`", opyrs_col, "` is missing for every patient.", call. = FALSE)
-  if (any(opyrs < 0, na.rm = TRUE)) {
-    stop(sum(opyrs < 0, na.rm = TRUE), " patient(s) have a negative `", opyrs_col, "`, an ",
-         "operation before origin_year = ", origin_year, ". Check `origin_year`.", call. = FALSE)
-  }
   # A plausible window, not a precise one: it catches the wrong-origin mistake,
-  # which lands decades out.
+  # which lands decades out. It is checked on the operation years themselves, so
+  # an operation before the origin still has to fall after 1900.
   this_year <- as.integer(format(Sys.Date(), "%Y"))
   op_year <- origin_year + opyrs
-  if (origin_year < 1900 || any(op_year > this_year + 1, na.rm = TRUE)) {
+  if (origin_year < 1900 || any(op_year < 1900 | op_year > this_year + 1, na.rm = TRUE)) {
     stop("Operations fall outside 1900 to ", this_year + 1, " (", floor(min(op_year, na.rm = TRUE)),
          " to ", floor(max(op_year, na.rm = TRUE)), "). Check `origin_year`.", call. = FALSE)
+  }
+  # An operation before the origin is drawn, not refused: the figure is how a
+  # reader finds it. hvtiRtemplates#240 records the request, from the
+  # 2026-10-05 walkthrough, where a build counting from the cohort's start year
+  # blocked the follow-up figure for the whole study.
+  n_negative <- sum(opyrs < 0, na.rm = TRUE)
+  # Every operation before the origin is not a stray patient but an origin that
+  # is wrong for the whole cohort, and it leaves no window: the last operation
+  # would precede the window's start. Raised in review on #201.
+  if (n_negative == sum(!is.na(opyrs))) {
+    stop("Every operation is before origin_year = ", origin_year, " (", floor(min(op_year, na.rm = TRUE)),
+         " to ", floor(max(op_year, na.rm = TRUE)), "). Check `origin_year`.", call. = FALSE)
+  }
+  if (n_negative) {
+    warning(n_negative, " patient(s) have a negative `", opyrs_col, "`, an operation before ",
+            "origin_year = ", origin_year, ". They are drawn where they fall, left of the diagonal; ",
+            "check the origin the data build used.", call. = FALSE)
   }
 
   year_days <- 365.2425
@@ -221,7 +244,8 @@ hv_followup_panels <- function(data,
       close_date      = close,
       close_source    = close_source,
       n_obs           = nrow(data),
-      n_opyrs_missing = sum(is.na(opyrs))
+      n_opyrs_missing = sum(is.na(opyrs)),
+      n_opyrs_negative = n_negative
     ),
     tables   = list(panels = built),
     subclass = "hv_followup_panels"

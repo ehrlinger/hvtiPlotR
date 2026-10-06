@@ -1,5 +1,13 @@
 # hvtiPlotR (unreleased)
 
+* `hv_followup_panels()` draws an operation before `origin_year`, a negative
+  `iv_opyrs`, where it falls instead of refusing the whole figure. It warns with
+  the count and records it as `meta$n_opyrs_negative`, so a report can show it.
+  The patients appear left of where the diagonal starts, which is how a reader
+  finds a build that counted operation years from a later origin. Operation
+  years before 1900 or after next year still stop, as the wrong-origin mistake.
+  Asked for in the 2026-10-05 template walkthrough, where one such build
+  blocked a study's follow-up figure.
 * A test of `plot.hv_eda()`'s fill order uses `"RdBu"` in place of
   `"RdYlGn"`, so no file in the package names the red-green palette as an
   example any longer.
