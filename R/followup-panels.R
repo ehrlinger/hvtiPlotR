@@ -39,7 +39,9 @@
 #' counted in `meta$n_opyrs_negative`. It usually means the build counted
 #' `opyrs_col` from a later origin than `origin_year`, and a figure that shows
 #' the affected patients makes that a problem a reader can see, where a refusal
-#' would hide the figure and the patients with it.
+#' would hide the figure and the patients with it. When **every** operation is
+#' before the origin, the origin is wrong for the whole cohort and there is no
+#' window to draw, so that stops.
 #'
 #' @param data Data frame; one row per patient.
 #' @param opyrs_col Name of the years-since-origin interval to the operation.
@@ -174,6 +176,13 @@ hv_followup_panels <- function(data,
   # 2026-10-05 walkthrough, where a build counting from the cohort's start year
   # blocked the follow-up figure for the whole study.
   n_negative <- sum(opyrs < 0, na.rm = TRUE)
+  # Every operation before the origin is not a stray patient but an origin that
+  # is wrong for the whole cohort, and it leaves no window: the last operation
+  # would precede the window's start. Raised in review on #201.
+  if (n_negative == sum(!is.na(opyrs))) {
+    stop("Every operation is before origin_year = ", origin_year, " (", floor(min(op_year, na.rm = TRUE)),
+         " to ", floor(max(op_year, na.rm = TRUE)), "). Check `origin_year`.", call. = FALSE)
+  }
   if (n_negative) {
     warning(n_negative, " patient(s) have a negative `", opyrs_col, "`, an operation before ",
             "origin_year = ", origin_year, ". They are drawn where they fall, left of the diagonal; ",

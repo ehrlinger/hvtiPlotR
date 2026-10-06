@@ -75,7 +75,9 @@ it falls, to the left of where the diagonal starts, with a warning, and
 counted in \code{meta$n_opyrs_negative}. It usually means the build counted
 \code{opyrs_col} from a later origin than \code{origin_year}, and a figure that shows
 the affected patients makes that a problem a reader can see, where a refusal
-would hide the figure and the patients with it.
+would hide the figure and the patients with it. When \strong{every} operation is
+before the origin, the origin is wrong for the whole cohort and there is no
+window to draw, so that stops.
 }
 \examples{
 dta <- sample_goodness_followup_data()

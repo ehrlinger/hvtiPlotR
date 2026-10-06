@@ -77,6 +77,10 @@ test_that("an operation before the origin is drawn, counted and warned about", {
   built <- ggplot2::ggplot_build(plot(fp)$all)
   xs <- unlist(lapply(built$data, `[[`, "x"))
   expect_true(any(xs < 1990))
+  # Every operation before the origin is a wrong origin, and stops clearly
+  # rather than inside hv_followup() on an inverted window.
+  expect_error(hv_followup_panels(transform(dta, iv_opyrs = -iv_opyrs - 0.1), origin_year = 1990,
+                                  panels = all_deaths), "Every operation is before origin_year = 1990")
   # Data without one counts zero, silently.
   expect_no_warning(fp0 <- hv_followup_panels(dta, origin_year = 1990, panels = all_deaths))
   expect_identical(fp0$meta$n_opyrs_negative, 0L)
