@@ -20,7 +20,7 @@ Description: Themes, clinical plot constructors and methods for creating
     Outcomes Registries and Research (CORR) within The Heart \& Vascular Institute at the
     Cleveland Clinic.
 Depends:
-    R (>= 4.1.0)
+    R (>= 4.4.0)
 Imports:
     consort (>= 0.2.0),
     ggalluvial (>= 0.12.3),
