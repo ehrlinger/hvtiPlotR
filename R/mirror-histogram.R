@@ -626,7 +626,7 @@ sample_mirror_histogram_data <- function(n          = 500,
   if (!is.logical(add_weights) || length(add_weights) != 1L)
     stop("`add_weights` must be TRUE or FALSE.", call. = FALSE)
 
-  set.seed(seed)
+  withr::local_seed(seed)
 
   # Logistic propensity score model.
   # Control LP ~ N(-sep/2, 1) -> scores cluster below 0.5.

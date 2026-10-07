@@ -102,7 +102,7 @@ sample_nonparametric_curve_data <- function(n            = 500,
                                             n_bins       = 10,
                                             seed         = 42L) {
   outcome_type <- match.arg(outcome_type)
-  set.seed(seed)
+  withr::local_seed(seed)
 
   z_score <- stats::qnorm(1 - (1 - ci_level) / 2)
 
@@ -212,7 +212,7 @@ sample_nonparametric_curve_points <- function(n            = 500,
                                               n_bins       = 10,
                                               seed         = 42L) {
   outcome_type <- match.arg(outcome_type)
-  set.seed(seed)
+  withr::local_seed(seed)
 
   thalf1 <- time_max * 0.15
   thalf2 <- time_max * 0.55

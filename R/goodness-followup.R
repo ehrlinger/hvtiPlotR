@@ -105,7 +105,7 @@ sample_goodness_followup_data <- function(
   if (close_date < study_end)
     stop("`close_date` must be on or after `study_end`.", call. = FALSE)
 
-  set.seed(seed)
+  withr::local_seed(seed)
 
   # Operation dates: uniform over the study period
   study_span <- as.integer(study_end - study_start)

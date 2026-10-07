@@ -540,7 +540,7 @@ sample_consort_data <- function(n = 300L, seed = 42L) {
   if (!is.numeric(n) || length(n) != 1L || n < 10L || n %% 1 != 0)
     stop("`n` must be a positive integer >= 10.", call. = FALSE)
 
-  set.seed(seed)
+  withr::local_seed(seed)
   n <- as.integer(n)
 
   data <- data.frame(

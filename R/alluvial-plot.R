@@ -42,7 +42,7 @@
 #' with(dta, tapply(freq, list(pre_ar, post_ar), sum, default = 0))
 #' @export
 sample_alluvial_data <- function(n = 300, seed = 42L) {
-  set.seed(seed)
+  withr::local_seed(seed)
 
   grade_levels <- c("None", "Mild", "Moderate", "Severe")
   proc_levels  <- c("TAVR", "Repair", "Replacement")
