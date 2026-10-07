@@ -13,6 +13,15 @@
   years before 1900 or after next year still stop, as the wrong-origin mistake.
   Asked for in the 2026-10-05 template walkthrough, where one such build
   blocked a study's follow-up figure.
+
+* The `sample_*()` data generators no longer reset your random number stream.
+  Each one seeded the global generator with `set.seed()` and left it there, so a
+  script that called `set.seed()` once at the top lost that seed at its first
+  `sample_*()` call, and every draw after it came from the generator's seed
+  instead. They now seed through `withr::local_seed()`, which puts your stream
+  back on return. Their output for a given `seed` is unchanged. `withr` joins
+  `Imports`; `ggplot2` already depends on it.
+
 * A test of `plot.hv_eda()`'s fill order uses `"RdBu"` in place of
   `"RdYlGn"`, so no file in the package names the red-green palette as an
   example any longer.

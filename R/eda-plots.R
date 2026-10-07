@@ -119,7 +119,7 @@ eda_classify_var <- function(x, unique_limit = 6L, unique_bound = 100,
 sample_eda_data <- function(n          = 300L,
                             year_range = c(2005L, 2020L),
                             seed       = 42L) {
-  set.seed(seed)
+  withr::local_seed(seed)
   years    <- seq(year_range[1L], year_range[2L])
   year     <- sample(years, n, replace = TRUE)
   op_years <- year - year_range[1L] + stats::runif(n, 0, 0.99)

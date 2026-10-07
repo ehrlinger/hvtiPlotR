@@ -35,7 +35,7 @@
 #' colSums(dta)
 #' @export
 sample_upset_data <- function(n = 500, seed = 42L) {
-  set.seed(seed)
+  withr::local_seed(seed)
 
   # Latent primary procedure drives realistic co-occurrence
   primary <- sample(

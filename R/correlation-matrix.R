@@ -11,7 +11,7 @@
 #' head(sample_correlation_data(n = 10))
 #' @export
 sample_correlation_data <- function(n = 300, seed = 42) {
-  set.seed(seed)
+  withr::local_seed(seed)
   a1c <- round(stats::rnorm(n, 6.5, 1.2), 1)
   data.frame(
     a1c        = a1c,

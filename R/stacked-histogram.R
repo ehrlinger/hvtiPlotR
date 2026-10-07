@@ -218,7 +218,7 @@ sample_stacked_histogram_data <- function(n_years      = 20,
       !is.finite(start_year) || start_year %% 1 != 0)
     stop("`start_year` must be a finite integer-valued number.", call. = FALSE)
 
-  set.seed(seed)
+  withr::local_seed(seed)
   years <- start_year + seq_len(n_years) - 1L
 
   rows <- lapply(years, function(yr) {

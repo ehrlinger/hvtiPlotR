@@ -59,7 +59,7 @@ sample_cluster_sankey_data <- function(
               C = 0.14, E = 0.11, G = 0.08, A = 0.15),
     seed  = 42L) {
 
-  set.seed(seed)
+  withr::local_seed(seed)
 
   # Hierarchical merge table: each row is C2:C3:C4:C5:C6:C7:C8:C9
   merge_tree <- list(

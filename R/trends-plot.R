@@ -60,7 +60,7 @@ sample_trends_data <- function(n          = 600,
                                groups     = c("Group I", "Group II",
                                               "Group III", "Group IV"),
                                seed       = 42L) {
-  set.seed(seed)
+  withr::local_seed(seed)
 
   single_group <- is.null(groups)
   if (single_group) groups <- "Group I"

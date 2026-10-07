@@ -48,7 +48,7 @@ sample_spaghetti_data <- function(n_patients = 150,
                                   max_obs    = 6,
                                   groups     = c(Female = 0.45, Male = 0.55),
                                   seed       = 42L) {
-  set.seed(seed)
+  withr::local_seed(seed)
 
   group_labels <- names(groups)
   group_probs  <- unname(groups)

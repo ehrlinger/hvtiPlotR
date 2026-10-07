@@ -70,7 +70,7 @@
 # sample_hazard_cohort() so the KM overlay and the at-risk counts describe the
 # same subjects for a given seed.
 .hp_draw_cohort <- function(n, shape, scale, time_max, seed) {
-  set.seed(seed)
+  withr::local_seed(seed)
   u        <- stats::runif(n)
   t_event  <- scale * (-log(pmax(u, 1e-9)))^(1 / shape)
   t_censor <- stats::runif(n, time_max * 0.2, time_max * 1.5)

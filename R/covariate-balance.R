@@ -354,7 +354,7 @@ sample_covariate_balance_data <- function(
       paste("Covariate", seq_len(n_vars - length(default_vars))))
   }
 
-  set.seed(seed)
+  withr::local_seed(seed)
 
   # --- Patient-level simulation ----------------------------------------------
   # Covariate matrix: each column ~ N(0,1).

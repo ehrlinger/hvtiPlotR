@@ -85,7 +85,7 @@ sample_nonparametric_ordinal_data <- function(n            = 1000,
                                                                "Grade 3"),
                                               n_bins       = 10,
                                               seed         = 42L) {
-  set.seed(seed)
+  withr::local_seed(seed)
   n_grades <- length(grade_labels)
 
   a_first       <- 0.5
@@ -157,7 +157,7 @@ sample_nonparametric_ordinal_points <- function(
   n_bins       = 10,
   seed         = 42L
 ) {
-  set.seed(seed)
+  withr::local_seed(seed)
   n_grades <- length(grade_labels)
 
   a_first       <- 0.5

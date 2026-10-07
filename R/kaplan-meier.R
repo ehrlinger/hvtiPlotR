@@ -792,7 +792,7 @@ sample_survival_data <- function(n             = 500,
   }
 
   # --- Simulation -----------------------------------------------------------
-  set.seed(seed)
+  withr::local_seed(seed)
 
   simulate_group <- function(n_grp, rate) {
     surv_times  <- stats::rexp(n_grp, rate = rate)
