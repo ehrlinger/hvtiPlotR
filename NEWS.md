@@ -32,6 +32,10 @@
   `"RdYlGn"`, so no file in the package names the red-green palette as an
   example any longer.
 
+* `DESCRIPTION` now declares the Quarto command line tool in
+  `SystemRequirements`. The vignettes have always needed it to build; the
+  field makes that visible to installers and to `R CMD check`.
+
 # hvtiPlotR 2.8.5
 
 * New `hv_palette()` returns the house palette for categorical groups, the

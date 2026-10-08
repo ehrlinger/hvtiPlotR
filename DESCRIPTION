@@ -50,5 +50,7 @@ Suggests:
 Remotes:
     davidsjoberg/ggsankey
 VignetteBuilder: quarto
+SystemRequirements: Quarto command line tool
+    (<https://github.com/quarto-dev/quarto-cli>)
 Roxygen: list(markdown = TRUE)
 Config/roxygen2/version: 8.1.0
