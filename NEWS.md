@@ -1,4 +1,4 @@
-# hvtiPlotR (unreleased)
+# hvtiPlotR 2.8.6
 
 * Articles on the pkgdown site put the table of contents on the left and use
   the full width of the window, through `pkgdown/extra.css`. The installed
