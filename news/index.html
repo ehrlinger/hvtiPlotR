@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">hvtiPlotR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.8.5</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.8.6</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -53,6 +53,15 @@
       <small>Source: <a href="https://github.com/ehrlinger/hvtiPlotR/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="2.8.6" id="hvtiplotr-286">hvtiPlotR 2.8.6<a class="anchor" aria-label="anchor" href="#hvtiplotr-286"></a></h2>
+<ul><li><p>Articles on the pkgdown site put the table of contents on the left and use the full width of the window, through <code>pkgdown/extra.css</code>. The installed vignettes are unchanged: the Quarto vignette engine renders them in its own minimal format, which has no sidebar layout.</p></li>
+<li><p>Now requires R 4.4.0 or newer, up from 4.1.0, to match the rest of the HVTI family. <code>hvtiR::install()</code> installs the members together, and several already required 4.4.0, so on an older R the install failed whatever this package declared.</p></li>
+<li><p><code><a href="../reference/hv_followup_panels.html">hv_followup_panels()</a></code> draws an operation before <code>origin_year</code>, a negative <code>iv_opyrs</code>, where it falls instead of refusing the whole figure. It warns with the count and records it as <code>meta$n_opyrs_negative</code>, so a report can show it. The patients appear left of where the diagonal starts, which is how a reader finds a build that counted operation years from a later origin. Operation years before 1900 or after next year still stop, as the wrong-origin mistake. Asked for in the 2026-10-05 template walkthrough, where one such build blocked a study’s follow-up figure.</p></li>
+<li><p>The <code>sample_*()</code> data generators no longer reset your random number stream. Each one seeded the global generator with <code><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed()</a></code> and left it there, so a script that called <code><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed()</a></code> once at the top lost that seed at its first <code>sample_*()</code> call, and every draw after it came from the generator’s seed instead. They now seed through <code><a href="https://withr.r-lib.org/reference/with_seed.html" class="external-link">withr::local_seed()</a></code>, which puts your stream back on return. Their output for a given <code>seed</code> is unchanged. <code>withr</code> joins <code>Imports</code>; <code>ggplot2</code> already depends on it.</p></li>
+<li><p>A test of <code><a href="../reference/plot.hv_eda.html">plot.hv_eda()</a></code>’s fill order uses <code>"RdBu"</code> in place of <code>"RdYlGn"</code>, so no file in the package names the red-green palette as an example any longer.</p></li>
+<li><p><code>DESCRIPTION</code> now declares the Quarto command line tool in <code>SystemRequirements</code>. The vignettes have always needed it to build; the field makes that visible to installers and to <code>R CMD check</code>.</p></li>
+</ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="2.8.5" id="hvtiplotr-285">hvtiPlotR 2.8.5<a class="anchor" aria-label="anchor" href="#hvtiplotr-285"></a></h2>
 <ul><li>New <code><a href="../reference/hv_palette.html">hv_palette()</a></code> returns the house palette for categorical groups, the six Okabe-Ito colors of <code>hv_ppt_palette("light")</code> under a name that does not tie a manuscript figure to slides: <code>scale_color_manual(values = hv_palette())</code>.</li>

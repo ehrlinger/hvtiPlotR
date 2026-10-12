@@ -1,5 +1,48 @@
 # Changelog
 
+## hvtiPlotR 2.8.6
+
+- Articles on the pkgdown site put the table of contents on the left and
+  use the full width of the window, through `pkgdown/extra.css`. The
+  installed vignettes are unchanged: the Quarto vignette engine renders
+  them in its own minimal format, which has no sidebar layout.
+
+- Now requires R 4.4.0 or newer, up from 4.1.0, to match the rest of the
+  HVTI family. `hvtiR::install()` installs the members together, and
+  several already required 4.4.0, so on an older R the install failed
+  whatever this package declared.
+
+- [`hv_followup_panels()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_followup_panels.md)
+  draws an operation before `origin_year`, a negative `iv_opyrs`, where
+  it falls instead of refusing the whole figure. It warns with the count
+  and records it as `meta$n_opyrs_negative`, so a report can show it.
+  The patients appear left of where the diagonal starts, which is how a
+  reader finds a build that counted operation years from a later origin.
+  Operation years before 1900 or after next year still stop, as the
+  wrong-origin mistake. Asked for in the 2026-10-05 template
+  walkthrough, where one such build blocked a study’s follow-up figure.
+
+- The `sample_*()` data generators no longer reset your random number
+  stream. Each one seeded the global generator with
+  [`set.seed()`](https://rdrr.io/r/base/Random.html) and left it there,
+  so a script that called
+  [`set.seed()`](https://rdrr.io/r/base/Random.html) once at the top
+  lost that seed at its first `sample_*()` call, and every draw after it
+  came from the generator’s seed instead. They now seed through
+  [`withr::local_seed()`](https://withr.r-lib.org/reference/with_seed.html),
+  which puts your stream back on return. Their output for a given `seed`
+  is unchanged. `withr` joins `Imports`; `ggplot2` already depends on
+  it.
+
+- A test of
+  [`plot.hv_eda()`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hv_eda.md)’s
+  fill order uses `"RdBu"` in place of `"RdYlGn"`, so no file in the
+  package names the red-green palette as an example any longer.
+
+- `DESCRIPTION` now declares the Quarto command line tool in
+  `SystemRequirements`. The vignettes have always needed it to build;
+  the field makes that visible to installers and to `R CMD check`.
+
 ## hvtiPlotR 2.8.5
 
 - New
