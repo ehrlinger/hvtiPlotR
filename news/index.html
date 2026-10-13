@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">hvtiPlotR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.8.6</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.8.7</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -53,6 +53,10 @@
       <small>Source: <a href="https://github.com/ehrlinger/hvtiPlotR/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="2.8.7" id="hvtiplotr-287">hvtiPlotR 2.8.7<a class="anchor" aria-label="anchor" href="#hvtiplotr-287"></a></h2>
+<ul><li>New <code><a href="../reference/hv_panel_size.html">hv_panel_size()</a></code> chooses figure dimensions from a plot’s facet layout. A single panel gets the CORR standard 6 by 4 inch figure; a faceted plot gets 3 by 2 inch panels plus the axes, strips, titles and legend around them, measured by <code><a href="../reference/hv_ggsave_dims.html">hv_ggsave_dims()</a></code>. Panels shrink together, keeping their 3:2 shape, to fit a 6 by 9 inch page, and below 1.75 inches wide the function stops and points to <code><a href="https://ggforce.data-imaginist.com/reference/facet_wrap_paginate.html" class="external-link">ggforce::facet_wrap_paginate()</a></code>. Gutters and interior strips between panels are taken out of the room first, a paginated facet is sized by the page it draws, and omitted limits are 6 by 9 inches in any <code>units</code>.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="2.8.6" id="hvtiplotr-286">hvtiPlotR 2.8.6<a class="anchor" aria-label="anchor" href="#hvtiplotr-286"></a></h2>
 <ul><li><p>Articles on the pkgdown site put the table of contents on the left and use the full width of the window, through <code>pkgdown/extra.css</code>. The installed vignettes are unchanged: the Quarto vignette engine renders them in its own minimal format, which has no sidebar layout.</p></li>
