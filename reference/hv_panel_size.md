@@ -28,7 +28,8 @@ hv_panel_size(
   [`ggplot2::facet_wrap()`](https://ggplot2.tidyverse.org/reference/facet_wrap.html)
   or
   [`ggplot2::facet_grid()`](https://ggplot2.tidyverse.org/reference/facet_grid.html),
-  or not faceted at all.
+  or not faceted at all. A patchwork is refused: its panels sit in
+  nested tables the function cannot count.
 
 - max_width:
 
