@@ -13,7 +13,8 @@ hv_panel_size(
 }
 \arguments{
 \item{plot}{A ggplot object. Faceted with \code{\link[ggplot2:facet_wrap]{ggplot2::facet_wrap()}} or
-\code{\link[ggplot2:facet_grid]{ggplot2::facet_grid()}}, or not faceted at all.}
+\code{\link[ggplot2:facet_grid]{ggplot2::facet_grid()}}, or not faceted at all. A patchwork is refused:
+its panels sit in nested tables the function cannot count.}
 
 \item{max_width}{The widest figure allowed, in \code{units}. \code{NULL}, the default,
 is 6 inches, converted to \code{units}.}

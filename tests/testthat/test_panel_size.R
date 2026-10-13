@@ -77,3 +77,9 @@ test_that("omitted limits are 6 by 9 inches whatever the units", {
   expect_equal(hv_panel_size(p, units = "cm")$width, inches$width * 2.54, tolerance = 1e-6)
   expect_equal(hv_panel_size(p, units = "mm")$height, inches$height * 25.4, tolerance = 1e-6)
 })
+
+test_that("a patchwork stops rather than passing as one panel", {
+  skip_if_not_installed("patchwork")
+  stacked <- patchwork::wrap_plots(p0, p0, p0, ncol = 1)
+  expect_error(hv_panel_size(stacked), "patchwork")
+})

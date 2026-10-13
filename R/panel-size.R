@@ -30,7 +30,8 @@
 #' come out of every panel.
 #'
 #' @param plot       A ggplot object. Faceted with [ggplot2::facet_wrap()] or
-#'   [ggplot2::facet_grid()], or not faceted at all.
+#'   [ggplot2::facet_grid()], or not faceted at all. A patchwork is refused:
+#'   its panels sit in nested tables the function cannot count.
 #' @param max_width  The widest figure allowed, in `units`. `NULL`, the default,
 #'   is 6 inches, converted to `units`.
 #' @param max_height The tallest figure allowed, in `units`. `NULL`, the default,
@@ -58,6 +59,11 @@
 hv_panel_size <- function(plot, max_width = NULL, max_height = NULL, units = c("in", "cm", "mm")) {
   if (!inherits(plot, "ggplot"))
     stop("`plot` must be a ggplot object.", call. = FALSE)
+  # A patchwork nests each plot's panels inside its own table, so the drawn
+  # grob shows no facet grid and would pass as one 6 by 4 panel. Say so.
+  if (inherits(plot, "patchwork"))
+    stop(paste0("`plot` is a patchwork, whose panels hv_panel_size() cannot count. ",
+                "Size it by hand, or draw the panels as facets of one plot."), call. = FALSE)
   units <- match.arg(units)
   per_inch <- c(`in` = 1, cm = 2.54, mm = 25.4)[[units]]
   # An omitted limit is the page, 6 by 9 inches, in whatever `units` asks for.
