@@ -1,17 +1,17 @@
 // JOB hp.dead.sas
 sas8.2 hp.dead.sas
 //cp  hp.dead.l*\
-//   /studies/cardiac/valves/size/aortic/metasize/graphs/.
+//   /studies/<study>/graphs/.
 //spool cont printer 'lptxt -l115 -s6 -f LetterGothic-Bold'
 spool cont to email
 splfile hp.dead.l*
 // FILE hp.dead.sas
 *______________________________________________________________________________;
 *                                                                              ;
-* /studies/cardiac/valves/aortic/size/metasize/distributions/ac.dead.sas
+* /studies/<study>/distributions/ac.dead.sas
 *______________________________________________________________________________;
 *                                                                              ;
-  %let STUDY=/studies/cardiac/valves/aortic/size/metasize;
+  %let STUDY=/studies/<study>;
 *______________________________________________________________________________;
 *                                                                              ;
 * Aortic Valve Replacement
