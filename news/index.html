@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">hvtiPlotR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.8.8</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.8.9</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -53,6 +53,11 @@
       <small>Source: <a href="https://github.com/ehrlinger/hvtiPlotR/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="2.8.9" id="hvtiplotr-289">hvtiPlotR 2.8.9<a class="anchor" aria-label="anchor" href="#hvtiplotr-289"></a></h2>
+<ul><li>
+<code><a href="../reference/hv_panel_size.html">hv_panel_size()</a></code> and <code><a href="../reference/hv_ggsave_dims.html">hv_ggsave_dims()</a></code> no longer leave a graphics device open. <code><a href="https://ggplot2.tidyverse.org/reference/ggplotGrob.html" class="external-link">ggplotGrob()</a></code> opens R’s default device when none is open, and both called it before opening their own null device, so each call outside a plotting session left a <code>pdf</code> device behind; with a device already open, it stays the current one.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="2.8.8" id="hvtiplotr-288">hvtiPlotR 2.8.8<a class="anchor" aria-label="anchor" href="#hvtiplotr-288"></a></h2>
 <ul><li>

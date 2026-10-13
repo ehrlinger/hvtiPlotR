@@ -1,5 +1,17 @@
 # Changelog
 
+## hvtiPlotR 2.8.9
+
+- [`hv_panel_size()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_panel_size.md)
+  and
+  [`hv_ggsave_dims()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_ggsave_dims.md)
+  no longer leave a graphics device open.
+  [`ggplotGrob()`](https://ggplot2.tidyverse.org/reference/ggplotGrob.html)
+  opens R’s default device when none is open, and both called it before
+  opening their own null device, so each call outside a plotting session
+  left a `pdf` device behind; with a device already open, it stays the
+  current one.
+
 ## hvtiPlotR 2.8.8
 
 - [`hv_panel_size()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_panel_size.md)’s
