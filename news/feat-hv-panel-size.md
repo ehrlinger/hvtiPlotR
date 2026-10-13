@@ -3,4 +3,7 @@
   3 by 2 inch panels plus the axes, strips, titles and legend around them,
   measured by `hv_ggsave_dims()`. Panels shrink together, keeping their 3:2
   shape, to fit a 6 by 9 inch page, and below 1.75 inches wide the function
-  stops and points to `ggforce::facet_wrap_paginate()`.
+  stops and points to `ggforce::facet_wrap_paginate()`. Gutters and interior
+  strips between panels are taken out of the room first, a paginated facet is
+  sized by the page it draws, and omitted limits are 6 by 9 inches in any
+  `units`.

@@ -17,11 +17,13 @@
 #' space its axes, titles, strips and legend need, measured by
 #' [hv_ggsave_dims()].
 #'
-#' When those panels would make the figure wider than `max_width` or taller
-#' than `max_height`, every panel shrinks by the same factor, so each keeps its
-#' 3:2 shape. A panel narrower than 1.75 inches leaves no room for 12 pt tick
-#' labels, so below that the function stops: the facets do not fit on one
-#' page, and `ggforce::facet_wrap_paginate()` splits them across several.
+#' When those panels, with the gutters and interior strips between them, would
+#' make the figure wider than `max_width` or taller than `max_height`, every
+#' panel shrinks by the same factor, so each keeps its 3:2 shape. A panel
+#' narrower than 1.75 inches leaves no room for 12 pt tick labels, so below
+#' that the function stops: the facets do not fit on one page, and
+#' `ggforce::facet_wrap_paginate()` splits them across several. A paginated
+#' plot is sized by the one page it draws.
 #'
 #' The panel block is measured, not the whole figure, because the chrome
 #' around it varies: a long axis title or a legend at the top would otherwise
@@ -29,9 +31,10 @@
 #'
 #' @param plot       A ggplot object. Faceted with [ggplot2::facet_wrap()] or
 #'   [ggplot2::facet_grid()], or not faceted at all.
-#' @param max_width  The widest figure allowed, in `units`. Default 6 inches.
-#' @param max_height The tallest figure allowed, in `units`. Default 9 inches,
-#'   which with the 6 inch width fits a page.
+#' @param max_width  The widest figure allowed, in `units`. `NULL`, the default,
+#'   is 6 inches, converted to `units`.
+#' @param max_height The tallest figure allowed, in `units`. `NULL`, the default,
+#'   is 9 inches, converted to `units`; with the 6 inch width it fits a page.
 #' @param units      One of `"in"`, `"cm"`, `"mm"`. Default `"in"`.
 #'
 #' @return A named list with elements `width`, `height` and `units`, shaped to
@@ -52,33 +55,57 @@
 #' )
 #' }
 #' @export
-hv_panel_size <- function(plot, max_width = 6, max_height = 9, units = c("in", "cm", "mm")) {
+hv_panel_size <- function(plot, max_width = NULL, max_height = NULL, units = c("in", "cm", "mm")) {
   if (!inherits(plot, "ggplot"))
     stop("`plot` must be a ggplot object.", call. = FALSE)
-  .check_scalar_positive(max_width, "max_width")
-  .check_scalar_positive(max_height, "max_height")
   units <- match.arg(units)
   per_inch <- c(`in` = 1, cm = 2.54, mm = 25.4)[[units]]
+  # An omitted limit is the page, 6 by 9 inches, in whatever `units` asks for.
+  if (is.null(max_width)) max_width <- 6 * per_inch
+  if (is.null(max_height)) max_height <- 9 * per_inch
+  .check_scalar_positive(max_width, "max_width")
+  .check_scalar_positive(max_height, "max_height")
 
-  layout <- ggplot2::ggplot_build(plot)$layout$layout
-  nrow <- max(layout$ROW)
-  ncol <- max(layout$COL)
-  if (nrow == 1L && ncol == 1L)
+  # The drawn grob, not ggplot_build()'s layout: a paginated facet builds every
+  # page's panels but draws one page, and the page is what gets sized.
+  g <- ggplot2::ggplotGrob(plot)
+  panels <- g$layout[grepl("^panel", g$layout$name), , drop = FALSE]
+  nrow <- length(unique(panels$t))
+  ncol <- length(unique(panels$l))
+  if (nrow <= 1L && ncol <= 1L)
     return(list(width = 6 * per_inch, height = 4 * per_inch, units = units))
 
-  # The chrome is the same whatever the panel block measures, so measure it
-  # once, against a 1 by 1 inch block, and give the panels what is left.
+  # hv_ggsave_dims() counts the gutters and interior strips between panels as
+  # part of the panel block, so take them out of the room before the panels
+  # are sized; otherwise a wide panel.spacing passes the floor with narrow panels.
+  gutter <- .panel_gutters(g, panels)
   chrome <- hv_ggsave_dims(plot, width = 1, height = 1, units = "in")
-  room <- c(width = max_width / per_inch - (chrome$width - 1),
-            height = max_height / per_inch - (chrome$height - 1))
-  block <- .panel_block(nrow, ncol, room)
+  room <- c(width = max_width / per_inch - (chrome$width - 1) - gutter[["width"]],
+            height = max_height / per_inch - (chrome$height - 1) - gutter[["height"]])
+  block <- .panel_block(nrow, ncol, room) + gutter
   hv_ggsave_dims(plot, width = block[["width"]] * per_inch,
                  height = block[["height"]] * per_inch, units = units)
 }
 
+# The space, in inches, between the panels of a drawn plot: the columns and rows
+# inside the panel block that hold no panel (gutters, and the strips and axes of
+# interior facet rows). Returns c(width = , height = ).
+.panel_gutters <- function(g, panels) {
+  inside <- function(lo, hi) seq.int(min(lo), max(hi))
+  held <- function(lo, hi) unique(unlist(Map(seq.int, lo, hi)))
+  cols <- setdiff(inside(panels$l, panels$r), held(panels$l, panels$r))
+  rows <- setdiff(inside(panels$t, panels$b), held(panels$t, panels$b))
+  grDevices::pdf(NULL)
+  on.exit(grDevices::dev.off(), add = TRUE, after = FALSE)
+  # One row or one column of panels has nothing between them to measure.
+  c(width = if (length(cols)) sum(grid::convertWidth(g$widths[cols], "in", valueOnly = TRUE)) else 0,
+    height = if (length(rows)) sum(grid::convertHeight(g$heights[rows], "in", valueOnly = TRUE)) else 0)
+}
+
 # The panel block, in inches, for `nrow` rows and `ncol` columns of panels:
 # 3 by 2 inch panels, shrunk together to fit `room` (c(width =, height =), the
-# space left once the chrome is placed), and never narrower than 1.75 inches.
+# space left once the chrome and the gutters are placed), and never narrower than
+# 1.75 inches. The result is the panels alone, without the gutters between them.
 .panel_block <- function(nrow, ncol, room) {
   cell <- c(width = 3, height = 2)
   shrink <- min(1, room[["width"]] / (ncol * cell[["width"]]), room[["height"]] / (nrow * cell[["height"]]))

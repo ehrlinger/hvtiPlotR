@@ -4,16 +4,22 @@
 \alias{hv_panel_size}
 \title{Figure dimensions for a faceted plot}
 \usage{
-hv_panel_size(plot, max_width = 6, max_height = 9, units = c("in", "cm", "mm"))
+hv_panel_size(
+  plot,
+  max_width = NULL,
+  max_height = NULL,
+  units = c("in", "cm", "mm")
+)
 }
 \arguments{
 \item{plot}{A ggplot object. Faceted with \code{\link[ggplot2:facet_wrap]{ggplot2::facet_wrap()}} or
 \code{\link[ggplot2:facet_grid]{ggplot2::facet_grid()}}, or not faceted at all.}
 
-\item{max_width}{The widest figure allowed, in \code{units}. Default 6 inches.}
+\item{max_width}{The widest figure allowed, in \code{units}. \code{NULL}, the default,
+is 6 inches, converted to \code{units}.}
 
-\item{max_height}{The tallest figure allowed, in \code{units}. Default 9 inches,
-which with the 6 inch width fits a page.}
+\item{max_height}{The tallest figure allowed, in \code{units}. \code{NULL}, the default,
+is 9 inches, converted to \code{units}; with the 6 inch width it fits a page.}
 
 \item{units}{One of \code{"in"}, \code{"cm"}, \code{"mm"}. Default \code{"in"}.}
 }
@@ -31,11 +37,13 @@ space its axes, titles, strips and legend need, measured by
 \code{\link[=hv_ggsave_dims]{hv_ggsave_dims()}}.
 }
 \details{
-When those panels would make the figure wider than \code{max_width} or taller
-than \code{max_height}, every panel shrinks by the same factor, so each keeps its
-3:2 shape. A panel narrower than 1.75 inches leaves no room for 12 pt tick
-labels, so below that the function stops: the facets do not fit on one
-page, and \code{ggforce::facet_wrap_paginate()} splits them across several.
+When those panels, with the gutters and interior strips between them, would
+make the figure wider than \code{max_width} or taller than \code{max_height}, every
+panel shrinks by the same factor, so each keeps its 3:2 shape. A panel
+narrower than 1.75 inches leaves no room for 12 pt tick labels, so below
+that the function stops: the facets do not fit on one page, and
+\code{ggforce::facet_wrap_paginate()} splits them across several. A paginated
+plot is sized by the one page it draws.
 
 The panel block is measured, not the whole figure, because the chrome
 around it varies: a long axis title or a legend at the top would otherwise

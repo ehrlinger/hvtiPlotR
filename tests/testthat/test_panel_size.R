@@ -52,3 +52,28 @@ test_that("a facet grid too wide for the page stops", {
   wide <- p0 + facet_grid(~carb)
   expect_error(hv_panel_size(wide), "facet_wrap_paginate")
 })
+
+test_that("gutters between panels do not count as panel width", {
+  # Three columns with half-inch gutters leave 1.5 in panels inside 6 in: below the floor.
+  wide_gutters <- p0 + facet_wrap(~cyl) + theme(panel.spacing = grid::unit(0.5, "in"))
+  expect_error(hv_panel_size(wide_gutters), "facet_wrap_paginate")
+  expect_no_error(hv_panel_size(p0 + facet_wrap(~cyl)))
+})
+
+test_that("a paginated facet is sized by the page it draws, not every page", {
+  skip_if_not_installed("ggforce")
+  # 40 facets, two to a page: counting every page would ask for 20 rows of 2.
+  many <- data.frame(x = rep(1:2, 40), y = rep(1:2, 40), g = rep(seq_len(40), each = 2))
+  paged <- ggplot(many, aes(x, y)) + geom_point() +
+    ggforce::facet_wrap_paginate(~g, nrow = 1, ncol = 2, page = 1)
+  dims <- hv_panel_size(paged)
+  expect_lte(dims$width, 6 + 1e-8)
+  expect_lte(dims$height, 9 + 1e-8)
+})
+
+test_that("omitted limits are 6 by 9 inches whatever the units", {
+  p <- p0 + facet_wrap(~cyl)
+  inches <- hv_panel_size(p)
+  expect_equal(hv_panel_size(p, units = "cm")$width, inches$width * 2.54, tolerance = 1e-6)
+  expect_equal(hv_panel_size(p, units = "mm")$height, inches$height * 25.4, tolerance = 1e-6)
+})
