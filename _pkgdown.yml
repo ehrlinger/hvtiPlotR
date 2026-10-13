@@ -259,6 +259,7 @@ reference:
   - save_manuscript
   - save_ppt
   - hv_ggsave_dims
+  - hv_panel_size
   - hv_legend_inside
   - hv_ph_location
   - make_footnote
