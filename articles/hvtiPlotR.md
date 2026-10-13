@@ -88,7 +88,7 @@ GML (Graphics Machine Language) to control between 4 and and 8 colored
 pens for generating color line and point figures.
 
 ``` sas
-%let STUDY=/studies/cardiac/valves/aortic/replacement/partner_publication_office/partner1b/mortality_5y
+%let STUDY=/studies/<study>
 *****************************************************************************;
 * Bring in PostScript plot macro ;
 filename plt "! MACROS /plot.sas "; %inc plt;

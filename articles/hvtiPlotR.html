@@ -112,7 +112,7 @@
 <p>In an effort to alleviate these version issues, and to standardize the generation of figures within R, we have developed the <strong>hvtiPlotR</strong> R package. The goal of the package, and this vignette, is to simplify the creation of publication quality graphics in R. We are specifically encoding the best practices of the HVTI Clinical Outcomes Research and Registries (CORR) formatting, so that our statisticians can generate publication-ready graphics without fighting the tooling.</p>
 <p>The <strong>hvtiPlotR</strong> package builds on <code>ggplot2</code> (Wickham 2009) to implement best practices for R graphics. The <code>ggplot2</code> package is an implementation of the Grammar of Graphics (Wilkinson 2005), which is a formalization of graphical concepts, and the building of graphical objects from a sequence of independent components. These components can be combined in many different ways.</p>
 <p>The <code>plot.sas</code> macro is also an implementation of a graphics grammar. The grammar <code>plot.sas</code> is derived from the ZETA pen plotters, which used GML (Graphics Machine Language) to control between 4 and and 8 colored pens for generating color line and point figures.</p>
-<pre class="sas"><code>%let STUDY=/studies/cardiac/valves/aortic/replacement/partner_publication_office/partner1b/mortality_5y
+<pre class="sas"><code>%let STUDY=/studies/&lt;study&gt;
 *****************************************************************************;
 * Bring in PostScript plot macro ;
 filename plt "! MACROS /plot.sas "; %inc plt;
