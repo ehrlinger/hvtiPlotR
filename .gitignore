@@ -51,3 +51,6 @@ inst/slides/*.pptx
 # hv_ppt_template.pptx in the same directory IS tracked, and a *.pptx rule
 # would leave it ignored-but-tracked.
 inst/extdata/Yahoo slide template LIGHT ROOM.pptx
+
+# testthat writes a failing test's reproduction here; never commit it.
+tests/testthat/_problems/
