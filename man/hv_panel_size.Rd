@@ -17,10 +17,10 @@ hv_panel_size(
 its panels sit in nested tables the function cannot count.}
 
 \item{max_width}{The widest figure allowed, in \code{units}. \code{NULL}, the default,
-is 6 inches, converted to \code{units}.}
+is 6.5 inches, a journal's text width, converted to \code{units}.}
 
 \item{max_height}{The tallest figure allowed, in \code{units}. \code{NULL}, the default,
-is 9 inches, converted to \code{units}; with the 6 inch width it fits a page.}
+is 9 inches, converted to \code{units}; with the 6.5 inch width it fits a page.}
 
 \item{units}{One of \code{"in"}, \code{"cm"}, \code{"mm"}. Default \code{"in"}.}
 }
@@ -41,7 +41,7 @@ space its axes, titles, strips and legend need, measured by
 When those panels, with the gutters and interior strips between them, would
 make the figure wider than \code{max_width} or taller than \code{max_height}, every
 panel shrinks by the same factor, so each keeps its 3:2 shape. A panel
-narrower than 1.75 inches leaves no room for 12 pt tick labels, so below
+narrower than 1.6 inches leaves no room for 12 pt tick labels, so below
 that the function stops: the facets do not fit on one page, and
 \code{ggforce::facet_wrap_paginate()} splits them across several. A paginated
 plot is sized by the one page it draws.

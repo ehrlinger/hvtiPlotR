@@ -20,7 +20,7 @@
 #' When those panels, with the gutters and interior strips between them, would
 #' make the figure wider than `max_width` or taller than `max_height`, every
 #' panel shrinks by the same factor, so each keeps its 3:2 shape. A panel
-#' narrower than 1.75 inches leaves no room for 12 pt tick labels, so below
+#' narrower than 1.6 inches leaves no room for 12 pt tick labels, so below
 #' that the function stops: the facets do not fit on one page, and
 #' `ggforce::facet_wrap_paginate()` splits them across several. A paginated
 #' plot is sized by the one page it draws.
@@ -33,9 +33,9 @@
 #'   [ggplot2::facet_grid()], or not faceted at all. A patchwork is refused:
 #'   its panels sit in nested tables the function cannot count.
 #' @param max_width  The widest figure allowed, in `units`. `NULL`, the default,
-#'   is 6 inches, converted to `units`.
+#'   is 6.5 inches, a journal's text width, converted to `units`.
 #' @param max_height The tallest figure allowed, in `units`. `NULL`, the default,
-#'   is 9 inches, converted to `units`; with the 6 inch width it fits a page.
+#'   is 9 inches, converted to `units`; with the 6.5 inch width it fits a page.
 #' @param units      One of `"in"`, `"cm"`, `"mm"`. Default `"in"`.
 #'
 #' @return A named list with elements `width`, `height` and `units`, shaped to
@@ -66,8 +66,8 @@ hv_panel_size <- function(plot, max_width = NULL, max_height = NULL, units = c("
                 "Size it by hand, or draw the panels as facets of one plot."), call. = FALSE)
   units <- match.arg(units)
   per_inch <- c(`in` = 1, cm = 2.54, mm = 25.4)[[units]]
-  # An omitted limit is the page, 6 by 9 inches, in whatever `units` asks for.
-  if (is.null(max_width)) max_width <- 6 * per_inch
+  # An omitted limit is the page, 6.5 by 9 inches, in whatever `units` asks for.
+  if (is.null(max_width)) max_width <- 6.5 * per_inch
   if (is.null(max_height)) max_height <- 9 * per_inch
   .check_scalar_positive(max_width, "max_width")
   .check_scalar_positive(max_height, "max_height")
@@ -111,12 +111,12 @@ hv_panel_size <- function(plot, max_width = NULL, max_height = NULL, units = c("
 # The panel block, in inches, for `nrow` rows and `ncol` columns of panels:
 # 3 by 2 inch panels, shrunk together to fit `room` (c(width =, height =), the
 # space left once the chrome and the gutters are placed), and never narrower than
-# 1.75 inches. The result is the panels alone, without the gutters between them.
+# 1.6 inches. The result is the panels alone, without the gutters between them.
 .panel_block <- function(nrow, ncol, room) {
   cell <- c(width = 3, height = 2)
   shrink <- min(1, room[["width"]] / (ncol * cell[["width"]]), room[["height"]] / (nrow * cell[["height"]]))
-  if (cell[["width"]] * shrink < 1.75) {
-    stop(sprintf(paste0("%d by %d panels do not fit the page: each would be %.2f in wide, under the 1.75 in ",
+  if (cell[["width"]] * shrink < 1.6) {
+    stop(sprintf(paste0("%d by %d panels do not fit the page: each would be %.2f in wide, under the 1.6 in ",
                         "a panel needs. Split them across pages with ggforce::facet_wrap_paginate()."),
                  nrow, ncol, cell[["width"]] * shrink), call. = FALSE)
   }
