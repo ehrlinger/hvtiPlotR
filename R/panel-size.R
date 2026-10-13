@@ -73,7 +73,10 @@ hv_panel_size <- function(plot, max_width = NULL, max_height = NULL, units = c("
   .check_scalar_positive(max_height, "max_height")
 
   # The drawn grob, not ggplot_build()'s layout: a paginated facet builds every
-  # page's panels but draws one page, and the page is what gets sized.
+  # page's panels but draws one page, and the page is what gets sized. The null
+  # device comes first, because ggplotGrob() otherwise opens and leaves one.
+  close_device <- .null_device()
+  on.exit(close_device(), add = TRUE)
   g <- ggplot2::ggplotGrob(plot)
   panels <- g$layout[grepl("^panel", g$layout$name), , drop = FALSE]
   nrow <- length(unique(panels$t))
@@ -101,8 +104,7 @@ hv_panel_size <- function(plot, max_width = NULL, max_height = NULL, units = c("
   held <- function(lo, hi) unique(unlist(Map(seq.int, lo, hi)))
   cols <- setdiff(inside(panels$l, panels$r), held(panels$l, panels$r))
   rows <- setdiff(inside(panels$t, panels$b), held(panels$t, panels$b))
-  grDevices::pdf(NULL)
-  on.exit(grDevices::dev.off(), add = TRUE, after = FALSE)
+  # The caller has a null device open, so the conversions resolve against it.
   # One row or one column of panels has nothing between them to measure.
   c(width = if (length(cols)) sum(grid::convertWidth(g$widths[cols], "in", valueOnly = TRUE)) else 0,
     height = if (length(rows)) sum(grid::convertHeight(g$heights[rows], "in", valueOnly = TRUE)) else 0)

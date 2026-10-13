@@ -89,3 +89,17 @@ test_that("three columns fit the default page and four do not", {
   expect_lte(three$width, 6.5 + 1e-8)
   expect_error(hv_panel_size(p0 + facet_wrap(~carb, nrow = 1)), "facet_wrap_paginate")
 })
+
+test_that("measuring a plot leaves the graphics devices as it found them", {
+  p <- p0 + facet_wrap(~cyl)
+  before <- grDevices::dev.list()
+  invisible(hv_panel_size(p))
+  invisible(hv_ggsave_dims(p, 1, 1))
+  expect_identical(grDevices::dev.list(), before)
+  # With a device already open, it stays the current one.
+  grDevices::pdf(NULL)
+  mine <- grDevices::dev.cur()
+  invisible(hv_panel_size(p))
+  expect_identical(grDevices::dev.cur(), mine)
+  grDevices::dev.off()
+})

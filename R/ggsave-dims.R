@@ -60,6 +60,10 @@ hv_ggsave_dims <- function(plot, width, height, units = c("in", "cm", "mm")) {
   .check_scalar_positive(height, "height")
   units <- match.arg(units)
 
+  # ggplotGrob() opens R's default device when none is open and leaves it open,
+  # so the null device that the unit conversions need is opened first.
+  close_device <- .null_device()
+  on.exit(close_device(), add = TRUE)
   g <- ggplot2::ggplotGrob(plot)
 
   panel <- g$layout[grepl("^panel", g$layout$name), , drop = FALSE]
@@ -68,10 +72,6 @@ hv_ggsave_dims <- function(plot, width, height, units = c("in", "cm", "mm")) {
 
   panel_rows <- seq.int(min(panel$t), max(panel$b))
   panel_cols <- seq.int(min(panel$l), max(panel$r))
-
-  # Null PDF device so grid unit conversions resolve against a real device
-  grDevices::pdf(NULL)
-  on.exit(grDevices::dev.off(), add = TRUE, after = FALSE)
 
   outside_w <- sum(grid::convertWidth(
     g$widths[-panel_cols], units, valueOnly = TRUE
@@ -85,4 +85,18 @@ hv_ggsave_dims <- function(plot, width, height, units = c("in", "cm", "mm")) {
     height = height + outside_h,
     units  = units
   )
+}
+
+# Opens a null PDF device for measuring a plot, and returns the function that
+# closes it and makes current again whatever device was current before, so a
+# caller's own device is neither closed nor switched away from.
+.null_device <- function() {
+  before <- grDevices::dev.cur()
+  grDevices::pdf(NULL)
+  mine <- grDevices::dev.cur()
+  function() {
+    grDevices::dev.off(mine)
+    if (before > 1L) grDevices::dev.set(before)
+    invisible(NULL)
+  }
 }
