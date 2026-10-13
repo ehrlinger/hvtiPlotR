@@ -30,7 +30,7 @@ test_that(".panel_block shrinks every panel by one factor, keeping 3:2", {
   expect_equal(.panel_block(6, 1, c(width = 6, height = 9)), c(width = 2.25, height = 9))
 })
 
-test_that(".panel_block stops below 1.75 inch panels and names pagination", {
+test_that(".panel_block stops below 1.6 inch panels and names pagination", {
   # Four columns in 6 in would be 1.5 in each.
   expect_error(.panel_block(1, 4, c(width = 6, height = 9)), "facet_wrap_paginate")
   expect_silent(.panel_block(1, 3, c(width = 5.25, height = 9)))
@@ -39,9 +39,9 @@ test_that(".panel_block stops below 1.75 inch panels and names pagination", {
 test_that("a faceted plot stays inside the page, chrome included", {
   p <- p0 + facet_wrap(~cyl)
   dims <- hv_panel_size(p)
-  expect_lte(dims$width, 6 + 1e-8)
+  expect_lte(dims$width, 6.5 + 1e-8)
   expect_lte(dims$height, 9 + 1e-8)
-  # One row of three is 9 in of panels, so every panel shrinks to fit 6 in.
+  # One row of three is 9 in of panels, so every panel shrinks to fit 6.5 in.
   expect_lt(dims$height, 4)
   # Two rows of two: taller than one row of three.
   tall <- hv_panel_size(p0 + facet_wrap(~gear + am, ncol = 2))
@@ -54,8 +54,8 @@ test_that("a facet grid too wide for the page stops", {
 })
 
 test_that("gutters between panels do not count as panel width", {
-  # Three columns with half-inch gutters leave 1.5 in panels inside 6 in: below the floor.
-  wide_gutters <- p0 + facet_wrap(~cyl) + theme(panel.spacing = grid::unit(0.5, "in"))
+  # Three columns with 0.75 in gutters leave about 1.5 in panels inside 6.5 in: below the floor.
+  wide_gutters <- p0 + facet_wrap(~cyl) + theme(panel.spacing = grid::unit(0.75, "in"))
   expect_error(hv_panel_size(wide_gutters), "facet_wrap_paginate")
   expect_no_error(hv_panel_size(p0 + facet_wrap(~cyl)))
 })
@@ -67,11 +67,11 @@ test_that("a paginated facet is sized by the page it draws, not every page", {
   paged <- ggplot(many, aes(x, y)) + geom_point() +
     ggforce::facet_wrap_paginate(~g, nrow = 1, ncol = 2, page = 1)
   dims <- hv_panel_size(paged)
-  expect_lte(dims$width, 6 + 1e-8)
+  expect_lte(dims$width, 6.5 + 1e-8)
   expect_lte(dims$height, 9 + 1e-8)
 })
 
-test_that("omitted limits are 6 by 9 inches whatever the units", {
+test_that("omitted limits are 6.5 by 9 inches whatever the units", {
   p <- p0 + facet_wrap(~cyl)
   inches <- hv_panel_size(p)
   expect_equal(hv_panel_size(p, units = "cm")$width, inches$width * 2.54, tolerance = 1e-6)
@@ -82,4 +82,10 @@ test_that("a patchwork stops rather than passing as one panel", {
   skip_if_not_installed("patchwork")
   stacked <- patchwork::wrap_plots(p0, p0, p0, ncol = 1)
   expect_error(hv_panel_size(stacked), "patchwork")
+})
+
+test_that("three columns fit the default page and four do not", {
+  three <- hv_panel_size(p0 + facet_wrap(~cyl))
+  expect_lte(three$width, 6.5 + 1e-8)
+  expect_error(hv_panel_size(p0 + facet_wrap(~carb, nrow = 1)), "facet_wrap_paginate")
 })
