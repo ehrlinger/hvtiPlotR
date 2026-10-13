@@ -17,7 +17,7 @@ hv_ggsave_dims()."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">hvtiPlotR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.8.7</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.8.8</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -95,12 +95,12 @@ its panels sit in nested tables the function cannot count.</p></dd>
 
 <dt id="arg-max-width">max_width<a class="anchor" aria-label="anchor" href="#arg-max-width"></a></dt>
 <dd><p>The widest figure allowed, in <code>units</code>. <code>NULL</code>, the default,
-is 6 inches, converted to <code>units</code>.</p></dd>
+is 6.5 inches, a journal's text width, converted to <code>units</code>.</p></dd>
 
 
 <dt id="arg-max-height">max_height<a class="anchor" aria-label="anchor" href="#arg-max-height"></a></dt>
 <dd><p>The tallest figure allowed, in <code>units</code>. <code>NULL</code>, the default,
-is 9 inches, converted to <code>units</code>; with the 6 inch width it fits a page.</p></dd>
+is 9 inches, converted to <code>units</code>; with the 6.5 inch width it fits a page.</p></dd>
 
 
 <dt id="arg-units">units<a class="anchor" aria-label="anchor" href="#arg-units"></a></dt>
@@ -118,7 +118,7 @@ returns.</p>
     <p>When those panels, with the gutters and interior strips between them, would
 make the figure wider than <code>max_width</code> or taller than <code>max_height</code>, every
 panel shrinks by the same factor, so each keeps its 3:2 shape. A panel
-narrower than 1.75 inches leaves no room for 12 pt tick labels, so below
+narrower than 1.6 inches leaves no room for 12 pt tick labels, so below
 that the function stops: the facets do not fit on one page, and
 <code><a href="https://ggforce.data-imaginist.com/reference/facet_wrap_paginate.html" class="external-link">ggforce::facet_wrap_paginate()</a></code> splits them across several. A paginated
 plot is sized by the one page it draws.</p>

@@ -33,13 +33,13 @@ hv_panel_size(
 
 - max_width:
 
-  The widest figure allowed, in `units`. `NULL`, the default, is 6
-  inches, converted to `units`.
+  The widest figure allowed, in `units`. `NULL`, the default, is 6.5
+  inches, a journal's text width, converted to `units`.
 
 - max_height:
 
   The tallest figure allowed, in `units`. `NULL`, the default, is 9
-  inches, converted to `units`; with the 6 inch width it fits a page.
+  inches, converted to `units`; with the 6.5 inch width it fits a page.
 
 - units:
 
@@ -59,7 +59,7 @@ returns.
 When those panels, with the gutters and interior strips between them,
 would make the figure wider than `max_width` or taller than
 `max_height`, every panel shrinks by the same factor, so each keeps its
-3:2 shape. A panel narrower than 1.75 inches leaves no room for 12 pt
+3:2 shape. A panel narrower than 1.6 inches leaves no room for 12 pt
 tick labels, so below that the function stops: the facets do not fit on
 one page, and
 [`ggforce::facet_wrap_paginate()`](https://ggforce.data-imaginist.com/reference/facet_wrap_paginate.html)
