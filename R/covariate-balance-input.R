@@ -59,10 +59,43 @@
   do.call(rbind, out)
 }
 
+# SMD tables written by ps_match() and ps_weight(): before/after pairs.
+.cb_ps_tables <- list(c("smd_before", "smd_after"), c("smd_unweighted", "smd_weighted"))
+
+.cb_from_ps <- function(x, stats, group_labels) {
+  extra <- setdiff(stats, "smd")
+  if (length(extra))
+    stop(sprintf(paste(
+      "A `%s` object carries standardized differences only, not %s. Build the",
+      "balance table with cobalt::bal.tab(..., binary = \"std\",",
+      "stats = c(\"m\", \"v\", \"ks\")) and pass that instead."),
+      class(x)[1], paste(cb_stat_labels[extra], collapse = " or ")), call. = FALSE)
+
+  hit <- Filter(function(nm) all(nm %in% names(x$tables)), .cb_ps_tables)
+  if (!length(hit))
+    stop(sprintf(paste(
+      "The `%s` object has no SMD tables (expected smd_before/smd_after or",
+      "smd_unweighted/smd_weighted in `$tables`)."), class(x)[1]), call. = FALSE)
+
+  nm <- hit[[1]]
+  do.call(rbind, lapply(1:2, function(i) {
+    t <- x$tables[[nm[i]]]
+    data.frame(
+      variable = as.character(t$variable),
+      group    = group_labels[i],
+      stat     = "smd",
+      pair     = NA_character_,
+      std_diff = t$smd * 100,
+      stringsAsFactors = FALSE
+    )
+  }))
+}
+
 .cb_is_source <- function(x) inherits(x, "bal.tab") || inherits(x, "ps_data")
 
 .cb_one <- function(x, stats, group_labels) {
-  .cb_from_baltab(x, stats, group_labels)
+  if (inherits(x, "bal.tab")) .cb_from_baltab(x, stats, group_labels)
+  else .cb_from_ps(x, stats, group_labels)
 }
 
 # NULL when `x` is not an adapter input, so the data-frame path (and its

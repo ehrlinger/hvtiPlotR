@@ -458,3 +458,34 @@ test_that("the KS panel shows what exact mean balance hides", {
   expect_gt(max(pts$x[pts$PANEL == 2]), 0.2)
   expect_lt(max(abs(pts$x[pts$PANEL == 1])), 1e-6)
 })
+
+# ---------------------------------------------------------------------------
+# hv_balance: hvtiRpropensity ps_* input
+# ---------------------------------------------------------------------------
+
+ps_cov <- c("age", "female", "ef", "diabetes", "hypertension")
+
+test_that("hv_balance reads ps_match SMDs x 100 as Before / After", {
+  skip_if_not_installed("hvtiRpropensity")
+  m  <- hvtiRpropensity::ps_match(hvtiRpropensity::sample_ps_data(),
+                                  covariates = ps_cov, caliper = 0.05, seed = 1)
+  cb <- hv_balance(m)
+  after <- cb$data[cb$data$group == "After", ]
+  expect_equal(after$std_diff, m$tables$smd_after$smd * 100)
+  expect_equal(after$variable, as.character(m$tables$smd_after$variable))
+  expect_plot_has_data(plot(cb), min_groups = 2)
+})
+
+test_that("hv_balance reads ps_weight unweighted / weighted SMDs", {
+  skip_if_not_installed("hvtiRpropensity")
+  w  <- hvtiRpropensity::ps_weight(hvtiRpropensity::sample_ps_data(), covariates = ps_cov)
+  cb <- hv_balance(w)
+  before <- cb$data[cb$data$group == "Before", ]
+  expect_equal(before$std_diff, w$tables$smd_unweighted$smd * 100)
+})
+
+test_that("hv_balance points ps_* callers to bal.tab for VR and KS", {
+  skip_if_not_installed("hvtiRpropensity")
+  w <- hvtiRpropensity::ps_weight(hvtiRpropensity::sample_ps_data(), covariates = ps_cov)
+  expect_error(hv_balance(w, stats = c("smd", "ks")), "bal.tab")
+})
