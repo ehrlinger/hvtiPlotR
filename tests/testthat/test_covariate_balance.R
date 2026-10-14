@@ -385,7 +385,7 @@ test_that("plain two-group plot keeps FacetNull and its reference lines", {
   expect_setequal(cb_vline_by_panel(p)$xintercept, c(0, -10, 10))
 })
 
-test_that("two stats facet by stat with free x and labelled strips", {
+test_that("two stats facet by stat with free x and labeled strips", {
   p <- plot(hv_balance(cb_long_df(), stat_col = "stat", stats = c("smd", "ks")))
   expect_s3_class(p$facet, "FacetGrid")
   expect_plot_has_data(p, min_groups = 2)

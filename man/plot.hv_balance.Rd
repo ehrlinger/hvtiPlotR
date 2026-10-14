@@ -47,7 +47,7 @@ Add color, shape, axis scales, and a theme with \code{+}.
 }
 \details{
 With more than one statistic, panels sit side by side (free x scales,
-labelled strips); with more than one pair, each pair gets a facet row. The
+labeled strips); with more than one pair, each pair gets a facet row. The
 variance ratio panel has a solid line at 1 and dotted lines at
 \code{vr_threshold}, and the KS panel has a solid line at 0 plus
 \code{ks_threshold} when given.
