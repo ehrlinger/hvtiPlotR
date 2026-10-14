@@ -72,8 +72,15 @@ validation path runs on it.
 - **`bal.tab.multi`**: each `Pair.Balance` element handled as above, `pair` = its name.
 - **`ps_data` (`ps_match` / `ps_weight`)**: `smd_before`/`smd_after` or `smd_unweighted`/`smd_weighted`
   × 100 → `smd`. Requesting `"variance_ratio"` or `"ks"` errors, naming `bal.tab()` as the source.
+- A `bal.tab` group whose `Diff` column is absent or entirely `NA` (no adjustment, or `un = FALSE`)
+  is skipped, not drawn empty. Variance-ratio rows for binary covariates are dropped by the adapter:
+  the ratio is undefined for them, not missing, so they do not trigger the missing-value warning.
+- Adapter input always yields the canonical columns `variable`, `group`, `stat`, `pair`, `std_diff`;
+  the `*_col` arguments apply to data-frame input only.
 - **List of any one of the above** (one element per imputation): build each, then take the
   **signed mean** per covariate × group × stat × pair. `n_imputations` = list length.
+- A list counts as an imputation list only when every element is a `bal.tab` or `ps_data` object;
+  a plain list such as `list(variable = ...)` still gets the existing "not a data.frame" error.
 - Anything else falls through to the data-frame path; the existing `.check_df()` message is unchanged.
 
 ## Plot
@@ -81,8 +88,9 @@ validation path runs on it.
 `plot.hv_balance()` returns one bare ggplot; existing arguments unchanged.
 
 - **Facets**: `facet_grid(rows = vars(pair), cols = vars(stat), scales = "free_x")`, each dimension
-  added only when it has more than one level. A two-group SMD-only object yields the same plot as
-  today, layer for layer (`FacetNull`).
+  added only when it has more than one level. A two-group SMD-only object keeps today's geoms
+  (`GeomVline`, `GeomHline`, `GeomPoint`), intercepts (0, ±threshold), y breaks and `FacetNull`; the
+  reference lines collapse from three `vline` layers to two (one solid, one dotted).
 - **Strip labels** via a labeller: "Standardized difference (%)", "Variance ratio", "KS statistic".
 - **Reference lines** as `geom_vline(data = <per-stat frame>)` so each lands only in its panel:
 
@@ -127,8 +135,8 @@ In `tests/testthat/test_covariate_balance.R`; fixtures in `tests/testthat/helper
 Every plot test uses the data-carrying helper in `helper-plot-data.R`. Tests needing `cobalt` or
 `hvtiRpropensity` are guarded by `skip_if_not_installed()`.
 
-1. Regression: the current two-group SMD call gives the same layers and `FacetNull`; existing
-   snapshot unchanged.
+1. Regression: the current two-group SMD call keeps its geoms, intercepts, y breaks and `FacetNull`;
+   all 30 existing tests in the file pass unchanged (there is no balance snapshot).
 2. Two-group matched, 38 terms, list of 5 imputations: pooled mean equals a hand computation,
    `n_imputations == 5`, SMD × 100.
 3. Three groups via `bal.tab.multi`: three facet rows, pair labels preserved, data in every panel.
