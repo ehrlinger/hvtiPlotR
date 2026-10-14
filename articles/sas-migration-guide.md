@@ -747,9 +747,8 @@ dashed diagonal is the maximum potential follow-up implied by
 [`hv_followup()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_followup.md)
 draws it for you from those three arguments, so it is not a
 [`geom_hline()`](https://ggplot2.tidyverse.org/reference/geom_abline.html)
-you add by hand. Points sitting above the diagonal have longer follow-up
-than the enrollment window alone explains, typically because passive
-surveillance supplemented active cross-sectional follow-up.
+you add by hand. Because `close_date` is when the dataset was frozen, no
+point can sit above the diagonal; one that does means a date is wrong.
 
 Pass the three date arguments explicitly; the diagonal is only
 meaningful if they match the study the data came from.

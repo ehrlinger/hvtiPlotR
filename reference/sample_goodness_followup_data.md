@@ -22,7 +22,8 @@ sample_goodness_followup_data(
   close_date = as.Date("2021-08-06"),
   death_rate = 0.05,
   event_rate = 0.08,
-  seed = 42L
+  seed = 42L,
+  loss_rate = 0.03
 )
 ```
 
@@ -60,6 +61,11 @@ sample_goodness_followup_data(
 
   Integer random seed for reproducibility. Default `42`.
 
+- loss_rate:
+
+  Annual hazard of loss to active follow-up (exponential model). Default
+  `0.03`. `0` means nobody is lost.
+
 ## Value
 
 A data frame with columns:
@@ -90,6 +96,13 @@ A data frame with columns:
 
 ## Details
 
+Follow-up is deliberately imperfect, so the plot shows what real data
+look like rather than the ideal. Patients lost to follow-up are censored
+before `close_date`, the date the dataset was frozen, and fall below the
+diagonal. No patient has follow-up past `close_date`. Set
+`loss_rate = 0` for complete follow-up, with every survivor censored at
+`close_date`.
+
 The column names match the defaults of
 [`hv_followup()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_followup.md):
 `iv_opyrs`, `iv_dead`, `dead`. The event-panel columns (`iv_event`,
@@ -108,10 +121,10 @@ head(dta)
 #>   iv_opyrs iv_dead  dead iv_event ev_event deads
 #> 1  29.5694  2.0261 FALSE   2.0261    FALSE FALSE
 #> 2   6.4834  6.9027  TRUE   4.0813     TRUE  TRUE
-#> 3  14.4342  5.4468  TRUE   5.4468    FALSE  TRUE
-#> 4  25.4324  6.1630 FALSE   0.6137     TRUE FALSE
+#> 3  14.4342  2.8045 FALSE   2.8045    FALSE FALSE
+#> 4  25.4324  4.2037 FALSE   0.6137     TRUE FALSE
 #> 5   3.4251 13.1369  TRUE   6.9232     TRUE  TRUE
-#> 6  24.1620  7.4334 FALSE   7.4334    FALSE FALSE
+#> 6  24.1620  0.2802 FALSE   0.2802    FALSE FALSE
 
 # Death panel
 gf <- hv_followup(dta)

@@ -89,7 +89,8 @@ mirroring the distinction between <code>dead</code> and <code>deads</code> in th
 <span>  close_date <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/as.Date.html" class="external-link">as.Date</a></span><span class="op">(</span><span class="st">"2021-08-06"</span><span class="op">)</span>,</span>
 <span>  death_rate <span class="op">=</span> <span class="fl">0.05</span>,</span>
 <span>  event_rate <span class="op">=</span> <span class="fl">0.08</span>,</span>
-<span>  seed <span class="op">=</span> <span class="fl">42L</span></span>
+<span>  seed <span class="op">=</span> <span class="fl">42L</span>,</span>
+<span>  loss_rate <span class="op">=</span> <span class="fl">0.03</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -129,6 +130,11 @@ model). Default <code>0.08</code> (median time-to-event ~9 years).</p></dd>
 <dt id="arg-seed">seed<a class="anchor" aria-label="anchor" href="#arg-seed"></a></dt>
 <dd><p>Integer random seed for reproducibility. Default <code>42</code>.</p></dd>
 
+
+<dt id="arg-loss-rate">loss_rate<a class="anchor" aria-label="anchor" href="#arg-loss-rate"></a></dt>
+<dd><p>Annual hazard of loss to active follow-up (exponential
+model). Default <code>0.03</code>. <code>0</code> means nobody is lost.</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
@@ -155,7 +161,12 @@ model). Default <code>0.08</code> (median time-to-event ~9 years).</p></dd>
 </dl></div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>The column names match the defaults of <code><a href="hv_followup.html">hv_followup()</a></code>:
+    <p>Follow-up is deliberately imperfect, so the plot shows what real data
+look like rather than the ideal. Patients lost to follow-up are censored
+before <code>close_date</code>, the date the dataset was frozen, and fall below the
+diagonal. No patient has follow-up past <code>close_date</code>. Set <code>loss_rate = 0</code>
+for complete follow-up, with every survivor censored at <code>close_date</code>.</p>
+<p>The column names match the defaults of <code><a href="hv_followup.html">hv_followup()</a></code>:
 <code>iv_opyrs</code>, <code>iv_dead</code>, <code>dead</code>. The event-panel columns (<code>iv_event</code>,
 <code>ev_event</code>, <code>deads</code>) are included so callers can pass <code>event_col</code>,
 <code>event_time_col</code>, and <code>death_for_event_col</code> directly.</p>
@@ -172,10 +183,10 @@ model). Default <code>0.08</code> (median time-to-event ~9 years).</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   iv_opyrs iv_dead  dead iv_event ev_event deads</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1  29.5694  2.0261 FALSE   2.0261    FALSE FALSE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2   6.4834  6.9027  TRUE   4.0813     TRUE  TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3  14.4342  5.4468  TRUE   5.4468    FALSE  TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4  25.4324  6.1630 FALSE   0.6137     TRUE FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3  14.4342  2.8045 FALSE   2.8045    FALSE FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4  25.4324  4.2037 FALSE   0.6137     TRUE FALSE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5   3.4251 13.1369  TRUE   6.9232     TRUE  TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6  24.1620  7.4334 FALSE   7.4334    FALSE FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6  24.1620  0.2802 FALSE   0.2802    FALSE FALSE</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Death panel</span></span></span>
 <span class="r-in"><span><span class="va">gf</span> <span class="op">&lt;-</span> <span class="fu"><a href="hv_followup.html">hv_followup</a></span><span class="op">(</span><span class="va">dta</span><span class="op">)</span></span></span>

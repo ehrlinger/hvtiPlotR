@@ -434,9 +434,9 @@ The goodness-of-follow-up plot is a standard quality-control figure in
 longitudinal outcome analyses. Each patient appears as a point at their
 operation date (x-axis) and follow-up duration (y-axis). A dashed
 diagonal line marks the maximum potential follow-up given the study
-start, study end, and follow-up closing date. Points above the line have
-longer follow-up than that window alone explains, typically because
-passive surveillance supplemented active cross-sectional follow-up.
+start, study end, and follow-up closing date. The closing date is when
+the dataset was frozen, so no point can sit above the line; one that
+does is a data error, usually a wrong date.
 
 [`hv_followup()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_followup.md)
 prepares the data;
@@ -463,18 +463,18 @@ head(gfup_dta)
       iv_opyrs iv_dead  dead iv_event ev_event deads
     1  29.5694  2.0261 FALSE   2.0261    FALSE FALSE
     2   6.4834  6.9027  TRUE   4.0813     TRUE  TRUE
-    3  14.4342  5.4468  TRUE   5.4468    FALSE  TRUE
-    4  25.4324  6.1630 FALSE   0.6137     TRUE FALSE
+    3  14.4342  2.8045 FALSE   2.8045    FALSE FALSE
+    4  25.4324  4.2037 FALSE   0.6137     TRUE FALSE
     5   3.4251 13.1369  TRUE   6.9232     TRUE  TRUE
-    6  24.1620  7.4334 FALSE   7.4334    FALSE FALSE
+    6  24.1620  0.2802 FALSE   0.2802    FALSE FALSE
 
 ### Death follow-up plot
 
 The bare `plot(gf)` panel shows each patient as a point without scales,
-labels, or theme. Look for: a cloud of points below the diagonal, with
-some above it (patients with longer follow-up than the window explains);
-if all points fall exactly on the diagonal, the close date may be set
-incorrectly.
+labels, or theme. Look for survivors on the diagonal, followed to the
+close date, and survivors below it, lost to follow-up early. Nothing
+should sit above it. If every survivor falls exactly on the diagonal,
+check that follow-up runs to last contact rather than to the close date.
 
 ``` r
 
