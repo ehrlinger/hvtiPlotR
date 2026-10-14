@@ -42,7 +42,18 @@
       "This `bal.tab` variant has no `$Balance` table. For multiply imputed",
       "data, pass a list of per-imputation `bal.tab()` results."), call. = FALSE)
 
-  groups <- c(Un = group_labels[1], Adj = group_labels[2])
+  # cobalt names each weight set's columns after it (Diff.iptw, Diff.att);
+  # only one unadjusted and one adjusted group map onto `group_labels`.
+  sets <- unique(sub("^(Diff|V\\.Ratio|KS)\\.", "",
+                     grep("^(Diff|V\\.Ratio|KS)\\.", names(bal), value = TRUE)))
+  extra <- setdiff(sets, c("Un", "Adj"))
+  if (length(extra))
+    stop(sprintf(paste(
+      "The `bal.tab()` result holds several weight sets (%s). Build one",
+      "`bal.tab()` per weight set and pass each to hv_balance()."),
+      paste(extra, collapse = ", ")), call. = FALSE)
+
+  groups <- c(Un = unname(group_labels[1]), Adj = unname(group_labels[2]))
   out <- list()
   no_un <- FALSE
   for (s in stats) {

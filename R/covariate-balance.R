@@ -45,7 +45,12 @@ cb_validate_stat_args <- function(vr_threshold, ks_threshold, group_labels) {
 # is not the source column, the canonical values go in `.cb_stat` / `.cb_pair`.
 # Returns the data plus the column names actually used.
 cb_add_stat_pair <- function(working, stat_col, pair_col, stats) {
-  own <- function(nm, src) if (nm %in% names(working) && !identical(src, nm)) paste0(".cb_", nm) else nm
+  # The fallback name must itself be unused, or it would overwrite a caller column.
+  own <- function(nm, src) {
+    if (!nm %in% names(working) || identical(src, nm)) return(nm)
+    taken <- make.unique(c(names(working), paste0(".cb_", nm)))
+    taken[length(taken)]
+  }
   stat_var <- own("stat", stat_col)
   pair_var <- own("pair", pair_col)
 

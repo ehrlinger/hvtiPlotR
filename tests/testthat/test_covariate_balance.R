@@ -681,3 +681,37 @@ test_that("an NA in any imputation makes the pooled value NA and counts it", {
   expect_true(is.na(cb$data$std_diff[cb$data$group == "After"][1]))
   expect_equal(cb$meta$n_missing, 1L)
 })
+
+# ---------------------------------------------------------------------------
+# hv_balance: external review of PR #221
+# ---------------------------------------------------------------------------
+
+test_that("hv_balance rejects a bal.tab with several weight sets", {
+  skip_if_not_installed("cobalt")
+  d  <- balance_cohort(n_terms = 4)
+  covs <- setdiff(names(d), "treat")
+  ps <- stats::fitted(stats::glm(treat ~ ., data = d, family = stats::binomial()))
+  w1 <- ifelse(d$treat == 1, 1 / ps, 1 / (1 - ps))
+  w2 <- ifelse(d$treat == 1, 1, ps / (1 - ps))
+  bt <- cobalt::bal.tab(d[covs], treat = d$treat, weights = list(iptw = w1, att = w2),
+                        binary = "std", s.d.denom = "pooled", un = TRUE)
+  expect_error(hv_balance(bt), "several weight sets \\(iptw, att\\)")
+})
+
+test_that("hv_balance never overwrites a caller's .cb_* column", {
+  d <- sample_covariate_balance_data(n_vars = 3)
+  names(d)[names(d) == "variable"] <- ".cb_pair"
+  d$pair <- "caller"
+  cb <- hv_balance(d, variable_col = ".cb_pair")
+  expect_equal(cb$data[[".cb_pair"]], d[[".cb_pair"]])
+  expect_equal(cb$data$pair, rep("caller", nrow(d)))
+  expect_false(cb$meta$pair_var %in% c("pair", ".cb_pair"))
+  expect_plot_has_data(plot(cb), min_rows = nrow(d))
+})
+
+test_that("hv_balance accepts named group_labels", {
+  skip_if_not_installed("cobalt")
+  cb <- hv_balance(balance_baltab(balance_cohort(n_terms = 4)),
+                   group_labels = c(before = "Unweighted", after = "Weighted"))
+  expect_setequal(unique(cb$data$group), c("Unweighted", "Weighted"))
+})
