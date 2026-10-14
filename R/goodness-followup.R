@@ -13,6 +13,12 @@
 #' mirroring the distinction between `dead` and `deads` in the legacy
 #' `tp.dp.gfup.R` template.
 #'
+#' Follow-up is deliberately imperfect, so the plot shows what real data
+#' look like rather than the ideal. Patients lost to follow-up are censored
+#' before `close_date`, the date the dataset was frozen, and fall below the
+#' diagonal. No patient has follow-up past `close_date`. Set `loss_rate = 0`
+#' for complete follow-up, with every survivor censored at `close_date`.
+#'
 #' The column names match the defaults of [hv_followup()]:
 #' `iv_opyrs`, `iv_dead`, `dead`. The event-panel columns (`iv_event`,
 #' `ev_event`, `deads`) are included so callers can pass `event_col`,
@@ -30,6 +36,8 @@
 #' @param event_rate Annual hazard for the non-fatal event (exponential
 #'   model). Default `0.08` (median time-to-event ~9 years).
 #' @param seed Integer random seed for reproducibility. Default `42`.
+#' @param loss_rate Annual hazard of loss to active follow-up (exponential
+#'   model). Default `0.03`. `0` means nobody is lost.
 #'
 #' @return A data frame with columns:
 #'   \describe{
@@ -80,7 +88,8 @@ sample_goodness_followup_data <- function(
   close_date  = as.Date("2021-08-06"),
   death_rate  = 0.05,
   event_rate  = 0.08,
-  seed        = 42L
+  seed        = 42L,
+  loss_rate   = 0.03
 ) {
   if (!(is.numeric(n) && length(n) == 1L && n >= 1L && n %% 1 == 0))
     stop("`n` must be a positive integer scalar.", call. = FALSE)
@@ -88,6 +97,8 @@ sample_goodness_followup_data <- function(
     stop("`death_rate` must be a positive number.", call. = FALSE)
   if (!is.numeric(event_rate) || event_rate <= 0)
     stop("`event_rate` must be a positive number.", call. = FALSE)
+  if (!(is.numeric(loss_rate) && length(loss_rate) == 1L && loss_rate >= 0))
+    stop("`loss_rate` must be a non-negative number.", call. = FALSE)
 
   study_start <- as.Date(study_start)
   study_end   <- as.Date(study_end)
@@ -118,24 +129,32 @@ sample_goodness_followup_data <- function(
   # Potential follow-up: years from operation to close_date
   pfup <- as.numeric(close_date - op_dates) / 365.2425
 
-  # Death: exponential, censored at potential follow-up
+  # Latent times. Drawn before loss to follow-up so a given seed keeps the
+  # same operation dates, death times and event times.
   death_time <- stats::rexp(n, rate = death_rate)
-  dead       <- death_time <= pfup
-  iv_dead    <- round(pmin(death_time, pfup), 4)
+  event_time <- stats::rexp(n, rate = event_rate)
+
+  # Follow-up ends at loss to follow-up or at close_date, whichever is first
+  loss_time <- if (loss_rate > 0) stats::rexp(n, rate = loss_rate) else
+    rep(Inf, n)
+  fup <- pmin(pfup, loss_time)
+
+  # Death: exponential, censored at follow-up
+  dead    <- death_time <= fup
+  iv_dead <- round(pmin(death_time, fup), 4)
 
   # Non-fatal event: exponential, competing with death and censored at
-  # potential follow-up. For the event panel, follow-up time is the minimum
-  # of event time, death time, and potential follow-up. An event is only
-  # recorded if it occurs before death and before censoring.
-  event_time    <- stats::rexp(n, rate = event_rate)
-  iv_event_time <- pmin(event_time, death_time, pfup)
-  ev_event      <- (event_time < death_time) & (event_time <= pfup)
+  # follow-up. For the event panel, follow-up time is the minimum of event
+  # time, death time, and follow-up. An event is only recorded if it occurs
+  # before death and before censoring.
+  iv_event_time <- pmin(event_time, death_time, fup)
+  ev_event      <- (event_time < death_time) & (event_time <= fup)
   iv_event      <- round(iv_event_time, 4)
 
   # Active/systematic death: restrict to 90% of potential follow-up.
   # This approximates the shorter active ascertainment window vs. passive
-  # surveillance — mirrors the dead/deads distinction in the template.
-  deads <- death_time <= (pfup * 0.90)
+  # surveillance; mirrors the dead/deads distinction in the template.
+  deads <- death_time <= pmin(pfup * 0.90, fup)
 
   data.frame(
     iv_opyrs = iv_opyrs,

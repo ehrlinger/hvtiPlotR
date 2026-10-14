@@ -359,9 +359,8 @@ longitudinal outcome analyses. Each patient appears as a point at their
 operation date (x-axis) and follow-up duration (y-axis). A dashed
 diagonal line marks the maximum potential
 follow-up given the study start, study end, and follow-up closing date.
-Points above the line have longer follow-up than that window alone
-explains, typically because passive surveillance supplemented active
-cross-sectional follow-up.
+The closing date is when the dataset was frozen, so no point can sit above
+the line; one that does is a data error, usually a wrong date.
 
 `hv_followup()` prepares the data; `plot()` hands you a bare ggplot with
 no color, shape, axis, or label scales applied. Add those with the usual
@@ -385,10 +384,10 @@ head(gfup_dta)
 ## Death follow-up plot
 
 The bare `plot(gf)` panel shows each patient as a point without
-scales, labels, or theme. Look for: a cloud of points below the diagonal,
-with some above it (patients with longer follow-up than the window explains);
-if all points fall exactly on the diagonal, the close date may be set
-incorrectly.
+scales, labels, or theme. Look for survivors on the diagonal, followed to
+the close date, and survivors below it, lost to follow-up early. Nothing
+should sit above it. If every survivor falls exactly on the diagonal,
+check that follow-up runs to last contact rather than to the close date.
 
 ```{r}
 #| label: gfup_basic

@@ -87,6 +87,34 @@ test_that("sample_goodness_followup_data errors when close_date < study_end", {
   )
 })
 
+# Potential follow-up (years to close_date) recovered from iv_opyrs
+gfup_pfup <- function(dta, origin_year = 1990, close_date = "2021-08-06") {
+  op <- as.Date(paste0(origin_year, "-01-01")) + round(dta$iv_opyrs * 365.2425)
+  as.numeric(as.Date(close_date) - op) / 365.2425
+}
+
+test_that("sample_goodness_followup_data has survivors lost below the diagonal", {
+  dta   <- sample_goodness_followup_data(n = 300, seed = 42)
+  alive <- !dta$dead
+  expect_gt(sum(dta$iv_dead[alive] < gfup_pfup(dta)[alive] - 0.01), 0)
+})
+
+test_that("sample_goodness_followup_data has no follow-up past close_date", {
+  dta <- sample_goodness_followup_data(n = 500)
+  expect_true(all(dta$iv_dead  <= gfup_pfup(dta) + 0.01))
+  expect_true(all(dta$iv_event <= gfup_pfup(dta) + 0.01))
+})
+
+test_that("sample_goodness_followup_data with no loss censors at close_date", {
+  dta   <- sample_goodness_followup_data(n = 300, loss_rate = 0)
+  alive <- !dta$dead
+  expect_equal(dta$iv_dead[alive], gfup_pfup(dta)[alive], tolerance = 0.01)
+})
+
+test_that("sample_goodness_followup_data errors on negative loss_rate", {
+  expect_error(sample_goodness_followup_data(loss_rate = -1), "non-negative")
+})
+
 # ---------------------------------------------------------------------------
 # Shared helper
 # ---------------------------------------------------------------------------

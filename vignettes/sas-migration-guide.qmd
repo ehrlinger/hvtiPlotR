@@ -721,10 +721,9 @@ Each patient becomes one point, positioned by operation date (x) and
 follow-up duration (y), and shaped and colored by vital status. The dashed
 diagonal is the maximum potential follow-up implied by `study_start`,
 `study_end`, and `close_date`. `hv_followup()` draws it for you from those
-three arguments, so it is not a `geom_hline()` you add by hand. Points
-sitting above the diagonal have longer follow-up than the enrollment window
-alone explains, typically because passive surveillance supplemented active
-cross-sectional follow-up.
+three arguments, so it is not a `geom_hline()` you add by hand. Because
+`close_date` is when the dataset was frozen, no point can sit above the
+diagonal; one that does means a date is wrong.
 
 Pass the three date arguments explicitly; the diagonal is only meaningful if
 they match the study the data came from.

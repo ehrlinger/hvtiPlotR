@@ -12,7 +12,8 @@ sample_goodness_followup_data(
   close_date = as.Date("2021-08-06"),
   death_rate = 0.05,
   event_rate = 0.08,
-  seed = 42L
+  seed = 42L,
+  loss_rate = 0.03
 )
 }
 \arguments{
@@ -34,6 +35,9 @@ date. Must be >= \code{study_end}.}
 model). Default \code{0.08} (median time-to-event ~9 years).}
 
 \item{seed}{Integer random seed for reproducibility. Default \code{42}.}
+
+\item{loss_rate}{Annual hazard of loss to active follow-up (exponential
+model). Default \code{0.03}. \code{0} means nobody is lost.}
 }
 \value{
 A data frame with columns:
@@ -58,6 +62,12 @@ mirroring the distinction between \code{dead} and \code{deads} in the legacy
 \code{tp.dp.gfup.R} template.
 }
 \details{
+Follow-up is deliberately imperfect, so the plot shows what real data
+look like rather than the ideal. Patients lost to follow-up are censored
+before \code{close_date}, the date the dataset was frozen, and fall below the
+diagonal. No patient has follow-up past \code{close_date}. Set \code{loss_rate = 0}
+for complete follow-up, with every survivor censored at \code{close_date}.
+
 The column names match the defaults of \code{\link[=hv_followup]{hv_followup()}}:
 \code{iv_opyrs}, \code{iv_dead}, \code{dead}. The event-panel columns (\code{iv_event},
 \code{ev_event}, \code{deads}) are included so callers can pass \code{event_col},
