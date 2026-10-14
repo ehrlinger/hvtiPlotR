@@ -32,12 +32,26 @@ at <https://ehrlinger.github.io/hvtiPlotR/>.
 
 ## Installation
 
-Install from GitHub using
-[remotes](https://CRAN.R-project.org/package=remotes):
+hvtiPlotR is part of the HVTI R family. Install it with the rest of the
+family through [hvtiR](https://github.com/ehrlinger/hvtiR):
 
 ``` r
 
-remotes::install_github("ehrlinger/hvtiPlotR")
+# install.packages("pak")
+pak::pak("ehrlinger/hvtiR")
+hvtiR::install()
+```
+
+`hvtiR::install()` installs every member in one call, so the versions
+the members require of one another resolve together. Update later with
+`hvtiR::update()`, from a fresh R session: it will not overwrite a
+package that is already loaded.
+
+To install hvtiPlotR on its own:
+
+``` r
+
+pak::pak("ehrlinger/hvtiPlotR")
 ```
 
 ## Quick Start

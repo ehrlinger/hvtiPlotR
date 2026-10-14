@@ -89,15 +89,21 @@
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
-<p>Install from GitHub using <a href="https://CRAN.R-project.org/package=remotes" class="external-link">remotes</a>:</p>
+<p>hvtiPlotR is part of the HVTI R family. Install it with the rest of the family through <a href="https://github.com/ehrlinger/hvtiR" class="external-link">hvtiR</a>:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"ehrlinger/hvtiPlotR"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># install.packages("pak")</span></span>
+<span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pak.html" class="external-link">pak</a></span><span class="op">(</span><span class="st">"ehrlinger/hvtiR"</span><span class="op">)</span></span>
+<span><span class="fu">hvtiR</span><span class="fu">::</span><span class="fu">install</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<p><code>hvtiR::install()</code> installs every member in one call, so the versions the members require of one another resolve together. Update later with <code>hvtiR::update()</code>, from a fresh R session: it will not overwrite a package that is already loaded.</p>
+<p>To install hvtiPlotR on its own:</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pak.html" class="external-link">pak</a></span><span class="op">(</span><span class="st">"ehrlinger/hvtiPlotR"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="quick-start">Quick Start<a class="anchor" aria-label="anchor" href="#quick-start"></a>
 </h2>
 <p>Apply an HVTI theme to a ggplot2 figure in one line:</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/ehrlinger/hvtiPlotR" class="external-link">hvtiPlotR</a></span><span class="op">)</span></span>
 <span></span>
@@ -105,7 +111,7 @@
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="reference/hvtiPlotR-themes.html">theme_hv_manuscript</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p>Export the result directly to an editable PowerPoint slide. A small dark CORR template ships with the package, so you can save without supplying your own:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">wt</span>, <span class="va">mpg</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="reference/hvtiPlotR-themes.html">theme_hv_ppt_dark</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="reference/save_ppt.html">save_ppt</a></span><span class="op">(</span></span>
@@ -146,7 +152,7 @@
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p</span> <span class="op">+</span> <span class="fu"><a href="reference/hvtiPlotR-themes.html">theme_hv_manuscript</a></span><span class="op">(</span><span class="op">)</span>   <span class="co"># journal figure</span></span>
 <span><span class="va">p</span> <span class="op">+</span> <span class="fu"><a href="reference/hvtiPlotR-themes.html">theme_hv_ppt_dark</a></span><span class="op">(</span><span class="op">)</span>     <span class="co"># dark PPT slide</span></span>
 <span><span class="va">p</span> <span class="op">+</span> <span class="fu"><a href="reference/hvtiPlotR-themes.html">theme_hv_ppt_light</a></span><span class="op">(</span><span class="op">)</span>    <span class="co"># light PPT slide</span></span>
@@ -160,7 +166,7 @@
 <h2 id="plot-function-gallery">Plot Function Gallery<a class="anchor" aria-label="anchor" href="#plot-function-gallery"></a>
 </h2>
 <p><strong>hvtiPlotR 2.0 uses a two-step API.</strong> A constructor (<code>hv_*()</code>) shapes the data and returns an S3 object; <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code> renders a bare <code>ggplot</code>. Add <code>scale_*</code>, <code><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs()</a></code>, <code><a href="https://ggplot2.tidyverse.org/reference/annotate.html" class="external-link">annotate()</a></code>, and a theme with the usual <code>+</code> operator.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">km</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/hv_survival.html">hv_survival</a></span><span class="op">(</span><span class="fu"><a href="reference/sample_survival_data.html">sample_survival_data</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">km</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="reference/hvtiPlotR-themes.html">theme_hv_manuscript</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">km</span><span class="op">$</span><span class="va">tables</span><span class="op">$</span><span class="va">risk</span>                         <span class="co"># risk-table data frame</span></span></code></pre></div>
@@ -191,7 +197,7 @@
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mh</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/hv_mirror_hist.html">hv_mirror_hist</a></span><span class="op">(</span><span class="fu"><a href="reference/sample_mirror_histogram_data.html">sample_mirror_histogram_data</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">2000</span><span class="op">)</span>,</span>
 <span>                  group_labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"SAVR"</span>, <span class="st">"TF-TAVR"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">mh</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="reference/hvtiPlotR-themes.html">theme_hv_manuscript</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
@@ -362,7 +368,7 @@
 <h2 id="vignettes">Vignettes<a class="anchor" aria-label="anchor" href="#vignettes"></a>
 </h2>
 <p>Five vignettes ship with the package. After installation, call any of them from the R console:</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/vignette.html" class="external-link">vignette</a></span><span class="op">(</span><span class="st">"hvtiPlotR"</span>,           package <span class="op">=</span> <span class="st">"hvtiPlotR"</span><span class="op">)</span>  <span class="co"># package tutorial: generating plot.sas-style figures in R</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/vignette.html" class="external-link">vignette</a></span><span class="op">(</span><span class="st">"sas-migration-guide"</span>, package <span class="op">=</span> <span class="st">"hvtiPlotR"</span><span class="op">)</span>  <span class="co"># SAS template -&gt; hvtiPlotR migration mapping</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/vignette.html" class="external-link">vignette</a></span><span class="op">(</span><span class="st">"plot-functions"</span>,      package <span class="op">=</span> <span class="st">"hvtiPlotR"</span><span class="op">)</span>  <span class="co"># per-function reference with worked examples</span></span>
@@ -373,7 +379,7 @@
 <h2 id="slides">Slides<a class="anchor" aria-label="anchor" href="#slides"></a>
 </h2>
 <p>A short PowerPoint presentation covering the v2.x redesign (the two-step S3 API, renamed theme functions, and <code>save_ppt(panel_box =)</code>) ships with the package as a Quarto source file:</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"slides/hvtiPlotR-whats-new.qmd"</span>, package <span class="op">=</span> <span class="st">"hvtiPlotR"</span><span class="op">)</span></span></code></pre></div>
 <p>Render it to <code>.pptx</code> with <code>quarto render</code> or <code><a href="https://quarto-dev.github.io/quarto-r/reference/quarto_render.html" class="external-link">quarto::quarto_render()</a></code>. The slides condense what you will find in <code><a href="articles/plot-decorators.html">vignette("plot-decorators")</a></code> and <code><a href="articles/hvtiPlotR.html">vignette("hvtiPlotR")</a></code>.</p>
 </div>
@@ -407,7 +413,7 @@
 <li>Track B: package infrastructure (for R developers working on dependencies, CI, testing, and CRAN compliance)</li>
 </ul>
 <p>Quick-start:</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/install_deps.html" class="external-link">install_deps</a></span><span class="op">(</span>dependencies <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/load_all.html" class="external-link">load_all</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/check.html" class="external-link">check</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
