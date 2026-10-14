@@ -165,9 +165,21 @@ cb_build_plot <- function(data, std_diff_col, group_col, var_levels,
 #' \code{ggplot2} object that you can decorate with color, shape, axis scales,
 #' and \code{\link{theme_hv_manuscript}}.
 #'
+#' Instead of a long data frame, \code{data} may be a \code{cobalt::bal.tab()}
+#' result built with \code{binary = "std"}, a multi-category \code{bal.tab}
+#' (one facet row per pair), an hvtiRpropensity \code{ps_match()} /
+#' \code{ps_weight()} object, or a list of any one of those, one per
+#' imputation, averaged. In those cases the SMD is multiplied by 100 and the
+#' \code{*_col} arguments are ignored.
+#'
 #' @param data         A data frame in \strong{long format} with one row per
 #'   covariate \eqn{\times} group combination.  Wide-format data must be
-#'   reshaped first (e.g. with \code{tidyr::pivot_longer()}).
+#'   reshaped first (e.g. with \code{tidyr::pivot_longer()}).  It may also be a
+#'   \code{cobalt::bal.tab()} result built with \code{binary = "std"}, a
+#'   multi-category \code{bal.tab}, an hvtiRpropensity \code{ps_match()} /
+#'   \code{ps_weight()} object, or a list of any one of those, one per
+#'   imputation, averaged; the SMD is then multiplied by 100 and the
+#'   \code{*_col} arguments are ignored.
 #' @param variable_col Name of the column containing covariate labels.
 #'   Default \code{"variable"}.
 #' @param group_col    Name of the column identifying the comparison group
@@ -241,6 +253,19 @@ cb_build_plot <- function(data, std_diff_col, group_col, var_levels,
 #'   labs(x = "Standardized difference (%)", y = "") +
 #'   theme_hv_poster()
 #'
+#' # 4. From a cobalt::bal.tab() result: SMD, variance ratio and KS panels
+#' if (requireNamespace("cobalt", quietly = TRUE)) {
+#'   lal <- cobalt::lalonde
+#'   ps  <- fitted(glm(treat ~ age + educ + race + married + nodegree + re74 + re75,
+#'                     data = lal, family = binomial()))
+#'   bt <- cobalt::bal.tab(
+#'     treat ~ age + educ + race + married + nodegree + re74 + re75,
+#'     data = lal, weights = ifelse(lal$treat == 1, 1 / ps, 1 / (1 - ps)),
+#'     binary = "std", s.d.denom = "pooled", stats = c("m", "v", "ks"), un = TRUE
+#'   )
+#'   plot(hv_balance(bt, stats = c("smd", "variance_ratio", "ks")))
+#' }
+#'
 #' @export
 hv_balance <- function(
   data,
@@ -260,7 +285,7 @@ hv_balance <- function(
   cb_validate_stat_args(vr_threshold, ks_threshold, group_labels)
 
   n_imputations <- 1L
-  long <- NULL
+  long <- .cb_as_long(data, stats, group_labels)
   if (!is.null(long)) {
     data          <- long$data
     n_imputations <- long$n_imputations

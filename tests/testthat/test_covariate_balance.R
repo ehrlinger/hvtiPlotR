@@ -383,3 +383,78 @@ test_that("pairs facet by row, one panel per pair, data in every panel", {
   pts <- built$data[[which(vapply(p$layers, function(l) inherits(l$geom, "GeomPoint"), logical(1)))]]
   expect_setequal(unique(as.integer(pts$PANEL)), 1:3)
 })
+
+# ---------------------------------------------------------------------------
+# hv_balance: bal.tab input
+# ---------------------------------------------------------------------------
+
+test_that("hv_balance reads a bal.tab: SMD x 100, VR and KS unscaled", {
+  skip_if_not_installed("cobalt")
+  bt <- balance_baltab(balance_cohort(n_terms = 6))
+  cb <- hv_balance(bt, stats = c("smd", "variance_ratio", "ks"))
+  b  <- bt$Balance
+  smd_after <- cb$data[cb$data$stat == "smd" & cb$data$group == "After", ]
+  expect_equal(smd_after$std_diff, b$Diff.Adj * 100)
+  ks_before <- cb$data[cb$data$stat == "ks" & cb$data$group == "Before", ]
+  expect_equal(ks_before$std_diff, b$KS.Un)
+  expect_equal(cb$meta$group_col, "group")
+  expect_setequal(unique(cb$data$group), c("Before", "After"))
+})
+
+test_that("hv_balance drops undefined variance ratios for binary covariates", {
+  skip_if_not_installed("cobalt")
+  bt <- balance_baltab(balance_cohort(n_terms = 6))
+  cb <- expect_no_warning(hv_balance(bt, stats = c("smd", "variance_ratio")))
+  vr <- cb$data[cb$data$stat == "variance_ratio", ]
+  expect_setequal(unique(vr$variable), rownames(bt$Balance)[bt$Balance$Type != "Binary"])
+  expect_equal(cb$meta$n_missing, 0L)
+})
+
+test_that("hv_balance applies group_labels to bal.tab input", {
+  skip_if_not_installed("cobalt")
+  cb <- hv_balance(balance_baltab(balance_cohort(n_terms = 4)),
+                   group_labels = c("Unweighted", "Weighted"))
+  expect_setequal(unique(cb$data$group), c("Unweighted", "Weighted"))
+})
+
+test_that("hv_balance refuses raw binary differences from bal.tab", {
+  skip_if_not_installed("cobalt")
+  bt <- balance_baltab(balance_cohort(n_terms = 4), binary = "raw")
+  expect_error(hv_balance(bt), 'binary = "std"')
+})
+
+test_that("hv_balance names the missing stat when bal.tab lacks it", {
+  skip_if_not_installed("cobalt")
+  d  <- balance_cohort(n_terms = 4)
+  bt <- cobalt::bal.tab(d[setdiff(names(d), "treat")], treat = d$treat,
+                        binary = "std", s.d.denom = "pooled")
+  expect_error(hv_balance(bt, stats = c("smd", "ks")), 'stats = c\\("m", "v", "ks"\\)')
+})
+
+test_that("hv_balance facets a three-group bal.tab.multi by pair", {
+  skip_if_not_installed("cobalt")
+  bm <- balance_baltab_multi()
+  cb <- hv_balance(bm)
+  expect_equal(cb$meta$pairs, names(bm$Pair.Balance))
+  p <- plot(cb)
+  built <- ggplot2::ggplot_build(p)
+  expect_equal(nrow(built$layout$layout), 3L)
+  expect_plot_has_data(p)
+  pts <- built$data[[which(vapply(p$layers, function(l) inherits(l$geom, "GeomPoint"), logical(1)))]]
+  expect_setequal(unique(as.integer(pts$PANEL)), 1:3)
+})
+
+test_that("the KS panel shows what exact mean balance hides", {
+  skip_if_not_installed("cobalt")
+  cb <- hv_balance(balance_exact_mean(), stats = c("smd", "ks"))
+  smd <- cb$data[cb$data$stat == "smd", "std_diff"]
+  ks  <- cb$data[cb$data$stat == "ks" & cb$data$variable == "year", "std_diff"]
+  expect_true(all(abs(smd) < 1e-6))
+  expect_gt(ks, 0.2)
+  p <- plot(cb)
+  expect_plot_has_data(p)
+  built <- ggplot2::ggplot_build(p)
+  pts <- built$data[[which(vapply(p$layers, function(l) inherits(l$geom, "GeomPoint"), logical(1)))]]
+  expect_gt(max(pts$x[pts$PANEL == 2]), 0.2)
+  expect_lt(max(abs(pts$x[pts$PANEL == 1])), 1e-6)
+})
