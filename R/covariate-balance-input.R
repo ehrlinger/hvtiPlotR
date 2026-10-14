@@ -137,6 +137,19 @@
 # Every imputation must carry the same rows; the first fixes the order.
 .cb_pool <- function(parts) {
   key  <- function(d) paste(d$variable, d$group, d$stat, d$pair, sep = "\r")
+
+  # cobalt types a covariate Binary in an imputation where it takes two values,
+  # and the adapter drops its undefined variance ratio there. Where the ratio is
+  # defined in other imputations, carry it as NA so the pooled value is NA.
+  vr_rows <- do.call(rbind, lapply(parts, function(d) d[d$stat == "variance_ratio", , drop = FALSE]))
+  vr_rows <- vr_rows[!duplicated(key(vr_rows)), , drop = FALSE]
+  parts <- lapply(parts, function(d) {
+    gap <- vr_rows[!key(vr_rows) %in% key(d), , drop = FALSE]
+    if (!nrow(gap)) return(d)
+    gap$std_diff <- NA_real_
+    rbind(d, gap)
+  })
+
   ref  <- sort(key(parts[[1]]))
   same <- vapply(parts, function(d) identical(sort(key(d)), ref), logical(1))
   if (!all(same))

@@ -715,3 +715,31 @@ test_that("hv_balance accepts named group_labels", {
                    group_labels = c(before = "Unweighted", after = "Weighted"))
   expect_setequal(unique(cb$data$group), c("Unweighted", "Weighted"))
 })
+
+test_that("a covariate binary in some imputations pools its variance ratio as NA", {
+  skip_if_not_installed("cobalt")
+  withr::local_seed(4)
+  n   <- 300
+  trt <- stats::rbinom(n, 1, 0.5)
+  age <- stats::rnorm(n)
+  mk  <- function(x) {
+    cobalt::bal.tab(data.frame(age, x), treat = trt, binary = "std",
+                    s.d.denom = "pooled", stats = c("m", "v", "ks"))
+  }
+  # Two distinct values: cobalt types x Binary, so its variance ratio is undefined.
+  b_bin  <- mk(stats::rbinom(n, 1, 0.3))
+  b_cont <- mk(sample(0:2, n, replace = TRUE))
+  expect_identical(b_bin$Balance["x", "Type"], "Binary")
+  expect_identical(b_cont$Balance["x", "Type"], "Contin.")
+
+  for (imps in list(list(b_bin, b_cont), list(b_cont, b_bin))) {
+    expect_warning(cb <- hv_balance(imps, stats = c("smd", "variance_ratio", "ks")),
+                   "1 of 6 row")
+    vr <- cb$data[cb$data$stat == "variance_ratio", ]
+    expect_true(is.na(vr$std_diff[vr$variable == "x"]))
+    expect_equal(vr$std_diff[vr$variable == "age"], b_bin$Balance["age", "V.Ratio.Un"])
+    smd <- cb$data[cb$data$stat == "smd" & cb$data$variable == "x", "std_diff"]
+    expect_equal(smd, mean(c(b_bin$Balance["x", "Diff.Un"], b_cont$Balance["x", "Diff.Un"])) * 100)
+    expect_equal(cb$meta$n_missing, 1L)
+  }
+})

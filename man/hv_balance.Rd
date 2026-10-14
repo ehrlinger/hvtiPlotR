@@ -112,7 +112,10 @@ carry standardized differences only.
 A list is pooled across imputations: SMD and KS statistic are averaged,
 the variance ratio takes the geometric mean, and an \code{NA} in any
 imputation makes the pooled value \code{NA} (counted in
-\code{$meta$n_missing}). Every imputation must have the same rows.
+\code{$meta$n_missing}). Every imputation must have the same rows, with
+one allowance: a covariate cobalt types as binary in some imputations
+(because it takes two values there) has no variance ratio in those, so its
+pooled variance ratio is \code{NA}.
 }
 \examples{
 library(ggplot2)
