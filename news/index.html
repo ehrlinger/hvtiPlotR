@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">hvtiPlotR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.8.9</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.8.10</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -53,6 +53,13 @@
       <small>Source: <a href="https://github.com/ehrlinger/hvtiPlotR/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="2.8.10" id="hvtiplotr-2810">hvtiPlotR 2.8.10<a class="anchor" aria-label="anchor" href="#hvtiplotr-2810"></a></h2>
+<ul><li><p>The SAS examples in <code>inst/plot.example.sas</code> and the introductory vignette use <code>/studies/&lt;study&gt;</code> in place of the production study they were taken from.</p></li>
+<li><p><code><a href="../reference/hv_balance.html">hv_balance()</a></code> now takes a <code><a href="https://ngreifer.github.io/cobalt/reference/bal.tab.html" class="external-link">cobalt::bal.tab()</a></code> result (built with <code>binary = "std"</code> and <code>continuous = "std"</code>), a multi-category <code>bal.tab</code> (one facet row per pairwise comparison), an hvtiRpropensity <code>ps_match()</code> or <code>ps_weight()</code> object, or a list of any one of those, one per imputation, averaged: SMD and KS take the arithmetic mean, the variance ratio the geometric mean. It multiplies SMDs by 100 itself. When a <code>bal.tab</code> was built with <code>un = FALSE</code> (cobalt’s default with weights), only the adjusted group is drawn and a message says to re-run with <code>un = TRUE</code>. A <code>bal.tab</code> holding several weight sets stops with a message to build one per weight set, and a named <code>group_labels</code> vector is accepted (<a href="https://github.com/ehrlinger/hvtiPlotR/issues/219" class="external-link">#219</a>).</p></li>
+<li><p><code>hv_balance(stats = c("smd", "variance_ratio", "ks"))</code> draws variance-ratio and KS panels beside the SMD panel, so distributional imbalance that exact mean balance hides is visible. Data frames select panels with <code>stat_col</code> and facet by comparison with <code>pair_col</code> (<a href="https://github.com/ehrlinger/hvtiPlotR/issues/219" class="external-link">#219</a>).</p></li>
+<li><p>New <code><a href="../reference/hv_balance_height.html">hv_balance_height()</a></code> suggests a figure height for the number of covariate rows; <code><a href="../reference/hv_balance.html">hv_balance()</a></code> stores it in <code>$meta$suggested_height</code> (<a href="https://github.com/ehrlinger/hvtiPlotR/issues/219" class="external-link">#219</a>).</p></li>
+</ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="2.8.9" id="hvtiplotr-289">hvtiPlotR 2.8.9<a class="anchor" aria-label="anchor" href="#hvtiplotr-289"></a></h2>
 <ul><li>
