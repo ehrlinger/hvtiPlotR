@@ -21,32 +21,109 @@ cb_validate_params <- function(threshold, point_size, hline_linewidth,
   .check_scalar_positive(vline_linewidth, "vline_linewidth")
 }
 
+cb_stat_labels <- c(
+  smd            = "Standardized difference (%)",
+  variance_ratio = "Variance ratio",
+  ks             = "KS statistic"
+)
+
+cb_validate_stat_args <- function(vr_threshold, ks_threshold, group_labels) {
+  if (!is.numeric(vr_threshold) || !length(vr_threshold) %in% 1:2 ||
+      anyNA(vr_threshold) || any(vr_threshold <= 0))
+    stop("`vr_threshold` must be one or two positive numbers.", call. = FALSE)
+  if (!is.null(ks_threshold) &&
+      (!is.numeric(ks_threshold) || length(ks_threshold) != 1L ||
+       is.na(ks_threshold) || ks_threshold < 0 || ks_threshold > 1))
+    stop("`ks_threshold` must be NULL or a single number in [0, 1].", call. = FALSE)
+  if (!is.character(group_labels) || length(group_labels) != 2L || anyNA(group_labels))
+    stop("`group_labels` must be a length-2 character vector.", call. = FALSE)
+}
+
+# Add the canonical statistic and pair columns, keep only the requested stats
+# and fix factor levels so facets follow `stats` and first-appearance order.
+# A caller's own `stat` / `pair` column is never touched: when one exists that
+# is not the source column, the canonical values go in `.cb_stat` / `.cb_pair`.
+# Returns the data plus the column names actually used.
+cb_add_stat_pair <- function(working, stat_col, pair_col, stats) {
+  # The fallback name must itself be unused, or it would overwrite a caller column.
+  own <- function(nm, src) {
+    if (!nm %in% names(working) || identical(src, nm)) return(nm)
+    taken <- make.unique(c(names(working), paste0(".cb_", nm)))
+    taken[length(taken)]
+  }
+  stat_var <- own("stat", stat_col)
+  pair_var <- own("pair", pair_col)
+
+  working[[stat_var]] <- if (is.null(stat_col)) "smd" else as.character(working[[stat_col]])
+  working[[pair_var]] <- if (is.null(pair_col)) NA_character_ else as.character(working[[pair_col]])
+
+  unknown <- setdiff(unique(working[[stat_var]]), names(cb_stat_labels))
+  if (length(unknown))
+    stop(sprintf(
+      "`stat_col` holds unknown statistic(s): %s. Expected smd, variance_ratio or ks.",
+      paste(unknown, collapse = ", ")), call. = FALSE)
+  absent <- setdiff(stats, working[[stat_var]])
+  if (length(absent))
+    stop(sprintf("`stats` asks for %s, but `data` has no rows for it.",
+                 paste(absent, collapse = " and ")), call. = FALSE)
+
+  working <- working[working[[stat_var]] %in% stats, , drop = FALSE]
+  working[[stat_var]] <- factor(working[[stat_var]], levels = stats)
+  if (!is.null(pair_col))
+    working[[pair_var]] <- factor(working[[pair_var]], levels = unique(working[[pair_var]]))
+  list(data = working, stat_var = stat_var, pair_var = pair_var)
+}
+
+# Solid and dotted reference lines, one row per line, tagged with the stat
+# column so each lands only in its own facet. With no stat facet the extra
+# column is ignored.
+cb_ref_lines <- function(stats, stat_var, threshold, vr_threshold, ks_threshold) {
+  solid_x <- c(smd = 0, variance_ratio = 1, ks = 0)
+  dotted  <- list(smd = c(-threshold, threshold), variance_ratio = vr_threshold,
+                  ks = ks_threshold)
+  lvl <- function(s) factor(s, levels = stats)
+  tag <- function(s, x) {
+    out <- data.frame(x = x)
+    out[[stat_var]] <- lvl(s)
+    out
+  }
+  list(
+    solid  = tag(stats, unname(solid_x[stats])),
+    dotted = do.call(rbind, lapply(stats, function(s) {
+      if (length(dotted[[s]])) tag(s, dotted[[s]])
+    }))
+  )
+}
+
 #' @importFrom rlang .data
 #' @importFrom ggplot2 ggplot aes geom_vline geom_hline geom_point scale_y_continuous
+#' @importFrom ggplot2 facet_grid vars labeller as_labeller
 cb_build_plot <- function(data, std_diff_col, group_col, var_levels,
-                          threshold, point_size, alpha,
+                          threshold, stats, pairs, stat_var, pair_var,
+                          vr_threshold, ks_threshold,
+                          point_size, alpha,
                           hline_linetype, hline_linewidth,
                           vline_linewidth, threshold_linetype) {
   n_vars <- length(var_levels)
   # Extra vertical space (in "covariate rows") above the top row to ensure
   # room for point glyphs and potential multi-line labels/annotations.
   y_padding <- 1.75
+  refs <- cb_ref_lines(stats, stat_var, threshold, vr_threshold, ks_threshold)
 
-  ggplot2::ggplot(data) +
-    # Solid center reference at zero
+  p <- ggplot2::ggplot(data) +
+    # Solid center reference: 0 for SMD and KS, 1 for the variance ratio
     ggplot2::geom_vline(
-      xintercept = 0,
+      data = refs$solid, ggplot2::aes(xintercept = .data[["x"]]),
       linewidth = vline_linewidth, color = "black"
-    ) +
+    )
+  if (!is.null(refs$dotted))
     # Dotted threshold reference lines
-    ggplot2::geom_vline(
-      xintercept = threshold,
+    p <- p + ggplot2::geom_vline(
+      data = refs$dotted, ggplot2::aes(xintercept = .data[["x"]]),
       linetype = threshold_linetype, color = "black"
-    ) +
-    ggplot2::geom_vline(
-      xintercept = -threshold,
-      linetype = threshold_linetype, color = "black"
-    ) +
+    )
+
+  p <- p +
     # Dashed horizontal guides, one per covariate row
     ggplot2::geom_hline(
       yintercept = seq_len(n_vars),
@@ -54,13 +131,13 @@ cb_build_plot <- function(data, std_diff_col, group_col, var_levels,
       linewidth  = hline_linewidth,
       color      = "black"
     ) +
-    # Points — shape and color mapped to group; no defaults applied
+    # Points: shape and color mapped to group; no defaults applied
     ggplot2::geom_point(
       ggplot2::aes(
         x      = .data[[std_diff_col]],
         y      = .data[["cb_index"]],
         shape  = .data[[group_col]],
-        color = .data[[group_col]]
+        color  = .data[[group_col]]
       ),
       size  = point_size,
       alpha = alpha
@@ -71,6 +148,19 @@ cb_build_plot <- function(data, std_diff_col, group_col, var_levels,
       breaks = seq_len(n_vars),
       labels = var_levels
     )
+
+  # Named vars() keep the facet variable called `stat`, which the labeller
+  # looks up by name, whatever column holds it.
+  facet_rows <- if (length(pairs) > 1L) ggplot2::vars(pair = .data[[pair_var]])
+  facet_cols <- if (length(stats) > 1L) ggplot2::vars(stat = .data[[stat_var]])
+  if (!is.null(facet_rows) || !is.null(facet_cols))
+    p <- p + ggplot2::facet_grid(
+      rows     = facet_rows,
+      cols     = facet_cols,
+      scales   = "free_x",
+      labeller = ggplot2::labeller(stat = ggplot2::as_labeller(cb_stat_labels))
+    )
+  p
 }
 
 # ---------------------------------------------------------------------------
@@ -85,9 +175,37 @@ cb_build_plot <- function(data, std_diff_col, group_col, var_levels,
 #' \code{ggplot2} object that you can decorate with color, shape, axis scales,
 #' and \code{\link{theme_hv_manuscript}}.
 #'
+#' Instead of a long data frame, \code{data} may be a \code{cobalt::bal.tab()}
+#' result, a multi-category \code{bal.tab} (one facet row per pair), an
+#' hvtiRpropensity \code{ps_match()} / \code{ps_weight()} object, or a list of
+#' any one of those, one per imputation. In those cases the SMD is multiplied
+#' by 100 and the \code{*_col} arguments are ignored.
+#'
+#' A \code{bal.tab()} result must be built with \code{binary = "std"} and
+#' \code{continuous = "std"} (the default), so every difference is
+#' standardized, and with \code{un = TRUE} to draw the Before group: cobalt
+#' leaves the unadjusted columns empty otherwise, and \code{hv_balance()} then
+#' says so in a message and draws the After group only. Ask for the variance
+#' ratio and KS statistic with \code{stats = c("m", "v", "ks")}; the variance
+#' ratio is undefined for binary covariates, so those rows are left out of its
+#' panel. A distance or \code{prop.score} row (\code{Type} "Distance") is drawn
+#' as a covariate row, as in \code{cobalt::love.plot()}. \code{ps_*} objects
+#' carry standardized differences only.
+#'
+#' A list is pooled across imputations: SMD and KS statistic are averaged,
+#' the variance ratio takes the geometric mean, and an \code{NA} in any
+#' imputation makes the pooled value \code{NA} (counted in
+#' \code{$meta$n_missing}). Every imputation must have the same rows, with
+#' one allowance: a covariate cobalt types as binary in some imputations
+#' (because it takes two values there) has no variance ratio in those, so its
+#' pooled variance ratio is \code{NA}.
+#'
 #' @param data         A data frame in \strong{long format} with one row per
 #'   covariate \eqn{\times} group combination.  Wide-format data must be
-#'   reshaped first (e.g. with \code{tidyr::pivot_longer()}).
+#'   reshaped first (e.g. with \code{tidyr::pivot_longer()}).  It may instead
+#'   be a \code{cobalt::bal.tab()} result (built with \code{un = TRUE} to draw
+#'   the Before group), an hvtiRpropensity \code{ps_*} object, or a list of
+#'   those, one per imputation; see Details.
 #' @param variable_col Name of the column containing covariate labels.
 #'   Default \code{"variable"}.
 #' @param group_col    Name of the column identifying the comparison group
@@ -100,15 +218,37 @@ cb_build_plot <- function(data, std_diff_col, group_col, var_levels,
 #'   Defaults to the order of first appearance in \code{data[[variable_col]]}.
 #' @param threshold    Numeric; absolute SMD value at which dotted reference
 #'   lines are drawn (\eqn{\pm}\code{threshold}).  Default \code{10}.
+#' @param stat_col     Optional name of a column holding the statistic each row
+#'   reports: \code{"smd"}, \code{"variance_ratio"} or \code{"ks"}.  When
+#'   \code{NULL} (default) every row is treated as \code{"smd"}.
+#' @param pair_col     Optional name of a column identifying the comparison
+#'   (e.g. \code{"B vs. A"}) when more than two groups were compared.  Default
+#'   \code{NULL} (a single comparison).
+#' @param stats        Character vector of statistics to keep, in panel order;
+#'   any of \code{"smd"}, \code{"variance_ratio"}, \code{"ks"}.  Default
+#'   \code{"smd"}.  An error is raised if a requested statistic has no rows.
+#' @param vr_threshold One or two positive numbers; reference lines for the
+#'   variance-ratio panel.  Default \code{c(0.5, 2)}.
+#' @param ks_threshold \code{NULL} (no line, default) or a single number in
+#'   \eqn{[0,1]}; reference line for the KS panel.
+#' @param group_labels Length-2 character vector naming the before and after
+#'   groups.  Default \code{c("Before", "After")}.
 #'
 #' @return An object of class \code{c("hv_balance", "hv_data")}: a list
 #'   with three elements:
 #' \describe{
 #'   \item{\code{$data}}{The input data frame with a \code{cb_index} column
-#'     added for y-axis positioning.}
+#'     added for y-axis positioning, a \code{stat} factor (levels =
+#'     \code{stats}) and a \code{pair} column (\code{NA} when there are no
+#'     comparisons, otherwise a factor in order of first appearance). If
+#'     \code{data} already has its own \code{stat} or \code{pair} column it is
+#'     left untouched and these values go in \code{.cb_stat} / \code{.cb_pair}.}
 #'   \item{\code{$meta}}{Named list: \code{variable_col}, \code{group_col},
 #'     \code{std_diff_col}, \code{var_levels}, \code{threshold},
-#'     \code{n_vars}, \code{n_groups}.}
+#'     \code{n_vars}, \code{n_groups}, \code{stats}, \code{pairs},
+#'     \code{stat_var} and \code{pair_var} (the names of the columns holding
+#'     the statistic and the comparison), \code{n_imputations},
+#'     \code{vr_threshold}, \code{ks_threshold}, \code{suggested_height}.}
 #'   \item{\code{$tables}}{Empty list (no accessory tables).}
 #' }
 #'
@@ -142,6 +282,19 @@ cb_build_plot <- function(data, std_diff_col, group_col, var_levels,
 #'   labs(x = "Standardized difference (%)", y = "") +
 #'   theme_hv_poster()
 #'
+#' # 4. From a cobalt::bal.tab() result: SMD, variance ratio and KS panels
+#' if (requireNamespace("cobalt", quietly = TRUE)) {
+#'   lal <- cobalt::lalonde
+#'   ps  <- fitted(glm(treat ~ age + educ + race + married + nodegree + re74 + re75,
+#'                     data = lal, family = binomial()))
+#'   bt <- cobalt::bal.tab(
+#'     treat ~ age + educ + race + married + nodegree + re74 + re75,
+#'     data = lal, weights = ifelse(lal$treat == 1, 1 / ps, 1 / (1 - ps)),
+#'     binary = "std", s.d.denom = "pooled", stats = c("m", "v", "ks"), un = TRUE
+#'   )
+#'   plot(hv_balance(bt, stats = c("smd", "variance_ratio", "ks")))
+#' }
+#'
 #' @export
 hv_balance <- function(
   data,
@@ -149,15 +302,44 @@ hv_balance <- function(
   group_col    = "group",
   std_diff_col = "std_diff",
   var_levels   = NULL,
-  threshold    = 10
+  threshold    = 10,
+  stat_col     = NULL,
+  pair_col     = NULL,
+  stats        = "smd",
+  vr_threshold = c(0.5, 2),
+  ks_threshold = NULL,
+  group_labels = c("Before", "After")
 ) {
+  stats <- unique(match.arg(stats, names(cb_stat_labels), several.ok = TRUE))
+  cb_validate_stat_args(vr_threshold, ks_threshold, group_labels)
+
+  n_imputations <- 1L
+  long <- .cb_as_long(data, stats, group_labels)
+  if (!is.null(long)) {
+    data          <- long$data
+    n_imputations <- long$n_imputations
+    variable_col  <- "variable"
+    group_col     <- "group"
+    std_diff_col  <- "std_diff"
+    stat_col      <- "stat"
+    pair_col      <- "pair"
+    # Two-group input has no comparisons: drop the all-NA column so the
+    # label-completeness check does not reject it.
+    if (all(is.na(data[["pair"]]))) {
+      data[["pair"]] <- NULL
+      pair_col <- NULL
+    }
+  }
+
   cb_validate_input(data, variable_col, group_col, std_diff_col)
+  .check_cols(data, c(stat_col, pair_col))
   cb_validate_params(threshold, point_size = 3, hline_linewidth = 0.25,
                      vline_linewidth = 0.2)
 
-  .check_complete_labels(data, c(variable_col, group_col))
-  incomplete <- .count_incomplete(data, std_diff_col)
-  working    <- as.data.frame(data)
+  .check_complete_labels(data, c(variable_col, group_col, stat_col, pair_col))
+  prepared <- cb_add_stat_pair(as.data.frame(data), stat_col, pair_col, stats)
+  working  <- prepared$data
+  incomplete <- .count_incomplete(working, std_diff_col)
 
   if (is.null(var_levels))
     var_levels <- unique(as.character(working[[variable_col]]))
@@ -166,17 +348,28 @@ hv_balance <- function(
     factor(working[[variable_col]], levels = var_levels)
   )
 
+  pairs <- if (is.null(pair_col)) character(0) else levels(working[[prepared$pair_var]])
+
   new_hv_data(
     data = working,
     meta = list(
-      variable_col = variable_col,
-      group_col    = group_col,
-      std_diff_col = std_diff_col,
-      var_levels   = var_levels,
-      threshold    = threshold,
-      n_vars       = length(var_levels),
-      n_missing    = incomplete$n_missing,
-      n_groups     = length(unique(working[[group_col]]))
+      variable_col     = variable_col,
+      group_col        = group_col,
+      std_diff_col     = std_diff_col,
+      var_levels       = var_levels,
+      threshold        = threshold,
+      n_vars           = length(var_levels),
+      n_missing        = incomplete$n_missing,
+      n_groups         = length(unique(working[[group_col]])),
+      stats            = stats,
+      pairs            = pairs,
+      stat_var         = prepared$stat_var,
+      pair_var         = prepared$pair_var,
+      n_imputations    = n_imputations,
+      vr_threshold     = vr_threshold,
+      ks_threshold     = ks_threshold,
+      suggested_height = hv_balance_height(length(var_levels),
+                                           n_pairs = max(1L, length(pairs)))
     ),
     tables   = list(),
     subclass = "hv_balance"
@@ -199,8 +392,15 @@ print.hv_balance <- function(x, ...) {
               else ""))
   cat(sprintf("  Groups      : %d (%s)\n", m$n_groups,
               paste(unique(x$data[[m$group_col]]), collapse = ", ")))
-  cat(sprintf("  SMD col     : %s\n", m$std_diff_col))
+  cat(sprintf("  Value col   : %s\n", m$std_diff_col))
   cat(sprintf("  Threshold   : \u00b1%g\n", m$threshold))
+  cat(sprintf("  Stats       : %s\n", paste(m$stats, collapse = ", ")))
+  if (length(m$pairs))
+    cat(sprintf("  Pairs       : %s\n", paste(m$pairs, collapse = ", ")))
+  if (isTRUE(m$n_imputations > 1L))
+    cat(sprintf("  Imputations : %d (mean)\n", m$n_imputations))
+  cat(sprintf("  Height      : %.1f in at 12 pt (see hv_balance_height())\n",
+              m$suggested_height))
   invisible(x)
 }
 
@@ -212,6 +412,12 @@ print.hv_balance <- function(x, ...) {
 #' labeled row; points show the standardized mean difference per group.
 #' A solid line marks zero; dotted lines mark \eqn{\pm}\code{threshold}.
 #' Add color, shape, axis scales, and a theme with \code{+}.
+#'
+#' With more than one statistic, panels sit side by side (free x scales,
+#' labeled strips); with more than one pair, each pair gets a facet row. The
+#' variance ratio panel has a solid line at 1 and dotted lines at
+#' \code{vr_threshold}, and the KS panel has a solid line at 0 plus
+#' \code{ks_threshold} when given.
 #'
 #' @param x                  An \code{hv_balance} object.
 #' @param point_size         Passed to \code{geom_point()}. Default \code{3}.
@@ -260,6 +466,12 @@ plot.hv_balance <- function(x,
     group_col          = x$meta$group_col,
     var_levels         = x$meta$var_levels,
     threshold          = x$meta$threshold,
+    stats              = x$meta$stats,
+    pairs              = x$meta$pairs,
+    stat_var           = x$meta$stat_var,
+    pair_var           = x$meta$pair_var,
+    vr_threshold       = x$meta$vr_threshold,
+    ks_threshold       = x$meta$ks_threshold,
     point_size         = point_size,
     alpha              = alpha,
     hline_linetype     = hline_linetype,
@@ -267,6 +479,35 @@ plot.hv_balance <- function(x,
     vline_linewidth    = vline_linewidth,
     threshold_linetype = threshold_linetype
   )
+}
+
+#' Suggested figure height for a covariate balance plot
+#'
+#' Covariate labels overprint when a balance plot is drawn too short. This
+#' returns a height that leaves about 0.17 in per covariate row at 12 pt,
+#' plus room for the x axis, its title and a legend, scaled by `base_size`.
+#'
+#' @param n_rows    Number of covariate rows (`length(var_levels)`).
+#' @param base_size Theme base font size in points. Default `12`.
+#' @param n_pairs   Number of pairwise-comparison facet rows. Default `1`.
+#'
+#' @return Height in inches, a numeric scalar.
+#'
+#' @seealso [hv_balance()], whose `$meta$suggested_height` holds this value
+#'   at `base_size = 12`.
+#'
+#' @examples
+#' hv_balance_height(38)                 # about 8 in
+#' hv_balance_height(38, base_size = 16)
+#' hv_balance_height(12, n_pairs = 3)    # three-group design
+#'
+#' @export
+hv_balance_height <- function(n_rows, base_size = 12, n_pairs = 1) {
+  .check_scalar_positive(n_rows,    "n_rows")
+  .check_scalar_positive(base_size, "base_size")
+  .check_scalar_positive(n_pairs,   "n_pairs")
+  s <- base_size / 12
+  s * (0.17 * n_rows * n_pairs + 0.3 * (n_pairs - 1) + 1.5)
 }
 
 # ---------------------------------------------------------------------------

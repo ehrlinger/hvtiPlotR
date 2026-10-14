@@ -64,6 +64,7 @@ export(hv_alluvial)
 export(hv_atrisk)
 export(hv_atrisk_compose)
 export(hv_balance)
+export(hv_balance_height)
 export(hv_consort)
 export(hv_consort_exclude)
 export(hv_consort_patients)
@@ -158,9 +159,11 @@ importFrom(ggplot2,
   aes,
   after_stat,
   annotate,
+  as_labeller,
   autoplot,
   coord_cartesian,
   element_blank,
+  facet_grid,
   facet_wrap,
   geom_bar,
   geom_col,
@@ -181,6 +184,7 @@ importFrom(ggplot2,
   ggplotGrob,
   ggplot_build,
   ggsave,
+  labeller,
   labs,
   scale_color_identity,
   scale_color_manual,
@@ -192,7 +196,8 @@ importFrom(ggplot2,
   scale_y_continuous,
   scale_y_discrete,
   theme,
-  theme_minimal
+  theme_minimal,
+  vars
 )
 importFrom(ggupset,scale_x_upset)
 importFrom(grDevices,

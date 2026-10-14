@@ -10,13 +10,22 @@ hv_balance(
   group_col = "group",
   std_diff_col = "std_diff",
   var_levels = NULL,
-  threshold = 10
+  threshold = 10,
+  stat_col = NULL,
+  pair_col = NULL,
+  stats = "smd",
+  vr_threshold = c(0.5, 2),
+  ks_threshold = NULL,
+  group_labels = c("Before", "After")
 )
 }
 \arguments{
 \item{data}{A data frame in \strong{long format} with one row per
 covariate \eqn{\times} group combination.  Wide-format data must be
-reshaped first (e.g. with \code{tidyr::pivot_longer()}).}
+reshaped first (e.g. with \code{tidyr::pivot_longer()}).  It may instead
+be a \code{cobalt::bal.tab()} result (built with \code{un = TRUE} to draw
+the Before group), an hvtiRpropensity \code{ps_*} object, or a list of
+those, one per imputation; see Details.}
 
 \item{variable_col}{Name of the column containing covariate labels.
 Default \code{"variable"}.}
@@ -34,16 +43,44 @@ Defaults to the order of first appearance in \code{data[[variable_col]]}.}
 
 \item{threshold}{Numeric; absolute SMD value at which dotted reference
 lines are drawn (\eqn{\pm}\code{threshold}).  Default \code{10}.}
+
+\item{stat_col}{Optional name of a column holding the statistic each row
+reports: \code{"smd"}, \code{"variance_ratio"} or \code{"ks"}.  When
+\code{NULL} (default) every row is treated as \code{"smd"}.}
+
+\item{pair_col}{Optional name of a column identifying the comparison
+(e.g. \code{"B vs. A"}) when more than two groups were compared.  Default
+\code{NULL} (a single comparison).}
+
+\item{stats}{Character vector of statistics to keep, in panel order;
+any of \code{"smd"}, \code{"variance_ratio"}, \code{"ks"}.  Default
+\code{"smd"}.  An error is raised if a requested statistic has no rows.}
+
+\item{vr_threshold}{One or two positive numbers; reference lines for the
+variance-ratio panel.  Default \code{c(0.5, 2)}.}
+
+\item{ks_threshold}{\code{NULL} (no line, default) or a single number in
+\eqn{[0,1]}; reference line for the KS panel.}
+
+\item{group_labels}{Length-2 character vector naming the before and after
+groups.  Default \code{c("Before", "After")}.}
 }
 \value{
 An object of class \code{c("hv_balance", "hv_data")}: a list
 with three elements:
 \describe{
 \item{\code{$data}}{The input data frame with a \code{cb_index} column
-added for y-axis positioning.}
+added for y-axis positioning, a \code{stat} factor (levels =
+\code{stats}) and a \code{pair} column (\code{NA} when there are no
+comparisons, otherwise a factor in order of first appearance). If
+\code{data} already has its own \code{stat} or \code{pair} column it is
+left untouched and these values go in \code{.cb_stat} / \code{.cb_pair}.}
 \item{\code{$meta}}{Named list: \code{variable_col}, \code{group_col},
 \code{std_diff_col}, \code{var_levels}, \code{threshold},
-\code{n_vars}, \code{n_groups}.}
+\code{n_vars}, \code{n_groups}, \code{stats}, \code{pairs},
+\code{stat_var} and \code{pair_var} (the names of the columns holding
+the statistic and the comparison), \code{n_imputations},
+\code{vr_threshold}, \code{ks_threshold}, \code{suggested_height}.}
 \item{\code{$tables}}{Empty list (no accessory tables).}
 }
 }
@@ -53,6 +90,32 @@ for a covariate balance plot, and returns an \code{hv_balance} object.
 Call \code{\link{plot.hv_balance}} on the result to obtain a bare
 \code{ggplot2} object that you can decorate with color, shape, axis scales,
 and \code{\link{theme_hv_manuscript}}.
+}
+\details{
+Instead of a long data frame, \code{data} may be a \code{cobalt::bal.tab()}
+result, a multi-category \code{bal.tab} (one facet row per pair), an
+hvtiRpropensity \code{ps_match()} / \code{ps_weight()} object, or a list of
+any one of those, one per imputation. In those cases the SMD is multiplied
+by 100 and the \code{*_col} arguments are ignored.
+
+A \code{bal.tab()} result must be built with \code{binary = "std"} and
+\code{continuous = "std"} (the default), so every difference is
+standardized, and with \code{un = TRUE} to draw the Before group: cobalt
+leaves the unadjusted columns empty otherwise, and \code{hv_balance()} then
+says so in a message and draws the After group only. Ask for the variance
+ratio and KS statistic with \code{stats = c("m", "v", "ks")}; the variance
+ratio is undefined for binary covariates, so those rows are left out of its
+panel. A distance or \code{prop.score} row (\code{Type} "Distance") is drawn
+as a covariate row, as in \code{cobalt::love.plot()}. \code{ps_*} objects
+carry standardized differences only.
+
+A list is pooled across imputations: SMD and KS statistic are averaged,
+the variance ratio takes the geometric mean, and an \code{NA} in any
+imputation makes the pooled value \code{NA} (counted in
+\code{$meta$n_missing}). Every imputation must have the same rows, with
+one allowance: a covariate cobalt types as binary in some imputations
+(because it takes two values there) has no variance ratio in those, so its
+pooled variance ratio is \code{NA}.
 }
 \examples{
 library(ggplot2)
@@ -78,6 +141,19 @@ p +
   scale_x_continuous(limits = c(-45, 35), breaks = seq(-40, 30, 10)) +
   labs(x = "Standardized difference (\%)", y = "") +
   theme_hv_poster()
+
+# 4. From a cobalt::bal.tab() result: SMD, variance ratio and KS panels
+if (requireNamespace("cobalt", quietly = TRUE)) {
+  lal <- cobalt::lalonde
+  ps  <- fitted(glm(treat ~ age + educ + race + married + nodegree + re74 + re75,
+                    data = lal, family = binomial()))
+  bt <- cobalt::bal.tab(
+    treat ~ age + educ + race + married + nodegree + re74 + re75,
+    data = lal, weights = ifelse(lal$treat == 1, 1 / ps, 1 / (1 - ps)),
+    binary = "std", s.d.denom = "pooled", stats = c("m", "v", "ks"), un = TRUE
+  )
+  plot(hv_balance(bt, stats = c("smd", "variance_ratio", "ks")))
+}
 
 }
 \seealso{
