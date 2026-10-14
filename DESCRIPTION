@@ -48,7 +48,7 @@ Suggests:
     pkgload,
     here,
     xml2,
-    cobalt (>= 4.5.0),
+    cobalt (>= 5.0.0),
     hvtiRpropensity
 Remotes:
     davidsjoberg/ggsankey,

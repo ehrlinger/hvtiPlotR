@@ -250,6 +250,12 @@ test_that("hv_balance_height rejects non-positive input", {
 # hv_balance: stat / pair data model
 # ---------------------------------------------------------------------------
 
+cb_vline_by_panel <- function(p) {
+  built <- ggplot2::ggplot_build(p)
+  idx   <- which(vapply(p$layers, function(l) inherits(l$geom, "GeomVline"), logical(1)))
+  do.call(rbind, lapply(idx, function(i) built$data[[i]][, c("PANEL", "xintercept")]))
+}
+
 cb_long_df <- function() {
   base <- sample_covariate_balance_data(n_vars = 4)
   ks <- transform(base, stat = "ks")
@@ -296,6 +302,12 @@ test_that("hv_balance errors when stats names a stat with no rows", {
   )
 })
 
+test_that("hv_balance de-duplicates repeated stats", {
+  cb <- hv_balance(sample_covariate_balance_data(), stats = c("smd", "smd"))
+  expect_equal(cb$meta$stats, "smd")
+  expect_equal(levels(cb$data$stat), "smd")
+})
+
 test_that("hv_balance errors on an unknown stats value", {
   expect_error(hv_balance(sample_covariate_balance_data(), stats = "mean"), "should be one of")
 })
@@ -305,9 +317,42 @@ test_that("hv_balance errors on unknown values in stat_col", {
   expect_error(hv_balance(d, stat_col = "stat"), "unknown statistic")
 })
 
-test_that("hv_balance refuses to overwrite an unnamed stat or pair column", {
-  d <- transform(sample_covariate_balance_data(), stat = "x")
-  expect_error(hv_balance(d), "already has a column named `stat`")
+test_that("a caller's own `pair` column is left alone and the plot is unfaceted", {
+  d <- sample_covariate_balance_data(n_vars = 3)
+  d$pair <- rep(c("junk1", "junk2"), length.out = nrow(d))
+  cb <- hv_balance(d)
+  expect_identical(cb$data$pair, d$pair)
+  expect_equal(cb$meta$pair_var, ".cb_pair")
+  expect_identical(cb$meta$pairs, character(0))
+  p <- plot(cb)
+  expect_s3_class(p$facet, "FacetNull")
+  expect_plot_has_data(p, geoms = c("GeomPoint", "GeomVline", "GeomHline"))
+})
+
+test_that("a caller's own `stat` column is left alone and the plot is unfaceted", {
+  d <- sample_covariate_balance_data(n_vars = 3)
+  d$stat <- rep(c("junk1", "junk2"), length.out = nrow(d))
+  cb <- hv_balance(d)
+  expect_identical(cb$data$stat, d$stat)
+  expect_equal(cb$meta$stat_var, ".cb_stat")
+  expect_true(all(cb$data$.cb_stat == "smd"))
+  p <- plot(cb)
+  expect_s3_class(p$facet, "FacetNull")
+  expect_plot_has_data(p, geoms = c("GeomPoint", "GeomVline", "GeomHline"))
+})
+
+test_that("a clashing `stat` column still facets by stat through stat_col", {
+  d <- cb_long_df()
+  names(d)[names(d) == "stat"] <- "kind"
+  d$stat <- "junk"
+  cb <- hv_balance(d, stat_col = "kind", stats = c("smd", "ks"))
+  expect_equal(cb$meta$stat_var, ".cb_stat")
+  expect_identical(unique(cb$data$stat), "junk")
+  p <- plot(cb)
+  expect_s3_class(p$facet, "FacetGrid")
+  expect_equal(as.character(ggplot2::ggplot_build(p)$layout$layout$stat), c("smd", "ks"))
+  v <- cb_vline_by_panel(p)
+  expect_setequal(v$xintercept[v$PANEL == 2], 0)
 })
 
 test_that("hv_balance validates vr_threshold, ks_threshold and group_labels", {
@@ -325,17 +370,13 @@ test_that("print.hv_balance reports stats, pairs and height", {
   expect_true(any(grepl("Stats", out)))
   expect_true(any(grepl("B vs. A, C vs. A", out)))
   expect_true(any(grepl("Height", out)))
+  expect_true(any(grepl("Value col", out)))
+  expect_false(any(grepl("SMD col", out)))
 })
 
 # ---------------------------------------------------------------------------
 # plot(hv_balance): facets and reference lines
 # ---------------------------------------------------------------------------
-
-cb_vline_by_panel <- function(p) {
-  built <- ggplot2::ggplot_build(p)
-  idx   <- which(vapply(p$layers, function(l) inherits(l$geom, "GeomVline"), logical(1)))
-  do.call(rbind, lapply(idx, function(i) built$data[[i]][, c("PANEL", "xintercept")]))
-}
 
 test_that("plain two-group plot keeps FacetNull and its reference lines", {
   p <- plot(hv_balance(sample_covariate_balance_data()))
@@ -378,6 +419,7 @@ test_that("pairs facet by row, one panel per pair, data in every panel", {
   d <- rbind(transform(d, cmp = "B vs. A"), transform(d, cmp = "C vs. A"),
              transform(d, cmp = "C vs. B"))
   p <- plot(hv_balance(d, pair_col = "cmp"))
+  expect_plot_has_data(p)
   built <- ggplot2::ggplot_build(p)
   expect_equal(nrow(built$layout$layout), 3L)
   pts <- built$data[[which(vapply(p$layers, function(l) inherits(l$geom, "GeomPoint"), logical(1)))]]
@@ -487,7 +529,7 @@ test_that("hv_balance reads ps_weight unweighted / weighted SMDs", {
 test_that("hv_balance points ps_* callers to bal.tab for VR and KS", {
   skip_if_not_installed("hvtiRpropensity")
   w <- hvtiRpropensity::ps_weight(hvtiRpropensity::sample_ps_data(), covariates = ps_cov)
-  expect_error(hv_balance(w, stats = c("smd", "ks")), "bal.tab")
+  expect_error(hv_balance(w, stats = c("smd", "ks")), "standardized differences only")
 })
 
 # ---------------------------------------------------------------------------

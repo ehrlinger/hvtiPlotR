@@ -74,12 +74,15 @@ with three elements:
 \item{\code{$data}}{The input data frame with a \code{cb_index} column
 added for y-axis positioning, a \code{stat} factor (levels =
 \code{stats}) and a \code{pair} column (\code{NA} when there are no
-comparisons, otherwise a factor in order of first appearance).}
+comparisons, otherwise a factor in order of first appearance). If
+\code{data} already has its own \code{stat} or \code{pair} column it is
+left untouched and these values go in \code{.cb_stat} / \code{.cb_pair}.}
 \item{\code{$meta}}{Named list: \code{variable_col}, \code{group_col},
 \code{std_diff_col}, \code{var_levels}, \code{threshold},
 \code{n_vars}, \code{n_groups}, \code{stats}, \code{pairs},
-\code{n_imputations}, \code{vr_threshold}, \code{ks_threshold},
-\code{suggested_height}.}
+\code{stat_var} and \code{pair_var} (the names of the columns holding
+the statistic and the comparison), \code{n_imputations},
+\code{vr_threshold}, \code{ks_threshold}, \code{suggested_height}.}
 \item{\code{$tables}}{Empty list (no accessory tables).}
 }
 }

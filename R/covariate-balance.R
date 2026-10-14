@@ -39,48 +39,53 @@ cb_validate_stat_args <- function(vr_threshold, ks_threshold, group_labels) {
     stop("`group_labels` must be a length-2 character vector.", call. = FALSE)
 }
 
-# Add the canonical `stat` and `pair` columns, keep only the requested stats
+# Add the canonical statistic and pair columns, keep only the requested stats
 # and fix factor levels so facets follow `stats` and first-appearance order.
+# A caller's own `stat` / `pair` column is never touched: when one exists that
+# is not the source column, the canonical values go in `.cb_stat` / `.cb_pair`.
+# Returns the data plus the column names actually used.
 cb_add_stat_pair <- function(working, stat_col, pair_col, stats) {
-  for (nm in c("stat", "pair")) {
-    src <- if (nm == "stat") stat_col else pair_col
-    if (nm %in% names(working) && !identical(src, nm))
-      stop(sprintf(
-        "`data` already has a column named `%s`; pass %s_col = \"%s\" to use it.",
-        nm, nm, nm), call. = FALSE)
-  }
-  working[["stat"]] <- if (is.null(stat_col)) "smd" else as.character(working[[stat_col]])
-  working[["pair"]] <- if (is.null(pair_col)) NA_character_ else as.character(working[[pair_col]])
+  own <- function(nm, src) if (nm %in% names(working) && !identical(src, nm)) paste0(".cb_", nm) else nm
+  stat_var <- own("stat", stat_col)
+  pair_var <- own("pair", pair_col)
 
-  unknown <- setdiff(unique(working[["stat"]]), names(cb_stat_labels))
+  working[[stat_var]] <- if (is.null(stat_col)) "smd" else as.character(working[[stat_col]])
+  working[[pair_var]] <- if (is.null(pair_col)) NA_character_ else as.character(working[[pair_col]])
+
+  unknown <- setdiff(unique(working[[stat_var]]), names(cb_stat_labels))
   if (length(unknown))
     stop(sprintf(
       "`stat_col` holds unknown statistic(s): %s. Expected smd, variance_ratio or ks.",
       paste(unknown, collapse = ", ")), call. = FALSE)
-  absent <- setdiff(stats, working[["stat"]])
+  absent <- setdiff(stats, working[[stat_var]])
   if (length(absent))
     stop(sprintf("`stats` asks for %s, but `data` has no rows for it.",
                  paste(absent, collapse = " and ")), call. = FALSE)
 
-  working <- working[working[["stat"]] %in% stats, , drop = FALSE]
-  working[["stat"]] <- factor(working[["stat"]], levels = stats)
+  working <- working[working[[stat_var]] %in% stats, , drop = FALSE]
+  working[[stat_var]] <- factor(working[[stat_var]], levels = stats)
   if (!is.null(pair_col))
-    working[["pair"]] <- factor(working[["pair"]], levels = unique(working[["pair"]]))
-  working
+    working[[pair_var]] <- factor(working[[pair_var]], levels = unique(working[[pair_var]]))
+  list(data = working, stat_var = stat_var, pair_var = pair_var)
 }
 
-# Solid and dotted reference lines, one row per line, tagged with `stat` so
-# each lands only in its own facet. With no stat facet the extra column is
-# ignored.
-cb_ref_lines <- function(stats, threshold, vr_threshold, ks_threshold) {
+# Solid and dotted reference lines, one row per line, tagged with the stat
+# column so each lands only in its own facet. With no stat facet the extra
+# column is ignored.
+cb_ref_lines <- function(stats, stat_var, threshold, vr_threshold, ks_threshold) {
   solid_x <- c(smd = 0, variance_ratio = 1, ks = 0)
   dotted  <- list(smd = c(-threshold, threshold), variance_ratio = vr_threshold,
                   ks = ks_threshold)
   lvl <- function(s) factor(s, levels = stats)
+  tag <- function(s, x) {
+    out <- data.frame(x = x)
+    out[[stat_var]] <- lvl(s)
+    out
+  }
   list(
-    solid  = data.frame(stat = lvl(stats), x = unname(solid_x[stats])),
+    solid  = tag(stats, unname(solid_x[stats])),
     dotted = do.call(rbind, lapply(stats, function(s) {
-      if (length(dotted[[s]])) data.frame(stat = lvl(s), x = dotted[[s]])
+      if (length(dotted[[s]])) tag(s, dotted[[s]])
     }))
   )
 }
@@ -89,7 +94,8 @@ cb_ref_lines <- function(stats, threshold, vr_threshold, ks_threshold) {
 #' @importFrom ggplot2 ggplot aes geom_vline geom_hline geom_point scale_y_continuous
 #' @importFrom ggplot2 facet_grid vars labeller as_labeller
 cb_build_plot <- function(data, std_diff_col, group_col, var_levels,
-                          threshold, stats, pairs, vr_threshold, ks_threshold,
+                          threshold, stats, pairs, stat_var, pair_var,
+                          vr_threshold, ks_threshold,
                           point_size, alpha,
                           hline_linetype, hline_linewidth,
                           vline_linewidth, threshold_linetype) {
@@ -97,7 +103,7 @@ cb_build_plot <- function(data, std_diff_col, group_col, var_levels,
   # Extra vertical space (in "covariate rows") above the top row to ensure
   # room for point glyphs and potential multi-line labels/annotations.
   y_padding <- 1.75
-  refs <- cb_ref_lines(stats, threshold, vr_threshold, ks_threshold)
+  refs <- cb_ref_lines(stats, stat_var, threshold, vr_threshold, ks_threshold)
 
   p <- ggplot2::ggplot(data) +
     # Solid center reference: 0 for SMD and KS, 1 for the variance ratio
@@ -139,9 +145,9 @@ cb_build_plot <- function(data, std_diff_col, group_col, var_levels,
     )
 
   # Named vars() keep the facet variable called `stat`, which the labeller
-  # looks up by name.
-  facet_rows <- if (length(pairs) > 1L) ggplot2::vars(pair = .data[["pair"]])
-  facet_cols <- if (length(stats) > 1L) ggplot2::vars(stat = .data[["stat"]])
+  # looks up by name, whatever column holds it.
+  facet_rows <- if (length(pairs) > 1L) ggplot2::vars(pair = .data[[pair_var]])
+  facet_cols <- if (length(stats) > 1L) ggplot2::vars(stat = .data[[stat_var]])
   if (!is.null(facet_rows) || !is.null(facet_cols))
     p <- p + ggplot2::facet_grid(
       rows     = facet_rows,
@@ -151,7 +157,6 @@ cb_build_plot <- function(data, std_diff_col, group_col, var_levels,
     )
   p
 }
-
 
 # ---------------------------------------------------------------------------
 # Public API
@@ -214,12 +219,15 @@ cb_build_plot <- function(data, std_diff_col, group_col, var_levels,
 #'   \item{\code{$data}}{The input data frame with a \code{cb_index} column
 #'     added for y-axis positioning, a \code{stat} factor (levels =
 #'     \code{stats}) and a \code{pair} column (\code{NA} when there are no
-#'     comparisons, otherwise a factor in order of first appearance).}
+#'     comparisons, otherwise a factor in order of first appearance). If
+#'     \code{data} already has its own \code{stat} or \code{pair} column it is
+#'     left untouched and these values go in \code{.cb_stat} / \code{.cb_pair}.}
 #'   \item{\code{$meta}}{Named list: \code{variable_col}, \code{group_col},
 #'     \code{std_diff_col}, \code{var_levels}, \code{threshold},
 #'     \code{n_vars}, \code{n_groups}, \code{stats}, \code{pairs},
-#'     \code{n_imputations}, \code{vr_threshold}, \code{ks_threshold},
-#'     \code{suggested_height}.}
+#'     \code{stat_var} and \code{pair_var} (the names of the columns holding
+#'     the statistic and the comparison), \code{n_imputations},
+#'     \code{vr_threshold}, \code{ks_threshold}, \code{suggested_height}.}
 #'   \item{\code{$tables}}{Empty list (no accessory tables).}
 #' }
 #'
@@ -281,7 +289,7 @@ hv_balance <- function(
   ks_threshold = NULL,
   group_labels = c("Before", "After")
 ) {
-  stats <- match.arg(stats, names(cb_stat_labels), several.ok = TRUE)
+  stats <- unique(match.arg(stats, names(cb_stat_labels), several.ok = TRUE))
   cb_validate_stat_args(vr_threshold, ks_threshold, group_labels)
 
   n_imputations <- 1L
@@ -308,7 +316,8 @@ hv_balance <- function(
                      vline_linewidth = 0.2)
 
   .check_complete_labels(data, c(variable_col, group_col, stat_col, pair_col))
-  working <- cb_add_stat_pair(as.data.frame(data), stat_col, pair_col, stats)
+  prepared <- cb_add_stat_pair(as.data.frame(data), stat_col, pair_col, stats)
+  working  <- prepared$data
   incomplete <- .count_incomplete(working, std_diff_col)
 
   if (is.null(var_levels))
@@ -318,7 +327,7 @@ hv_balance <- function(
     factor(working[[variable_col]], levels = var_levels)
   )
 
-  pairs <- if (is.null(pair_col)) character(0) else levels(working[["pair"]])
+  pairs <- if (is.null(pair_col)) character(0) else levels(working[[prepared$pair_var]])
 
   new_hv_data(
     data = working,
@@ -333,6 +342,8 @@ hv_balance <- function(
       n_groups         = length(unique(working[[group_col]])),
       stats            = stats,
       pairs            = pairs,
+      stat_var         = prepared$stat_var,
+      pair_var         = prepared$pair_var,
       n_imputations    = n_imputations,
       vr_threshold     = vr_threshold,
       ks_threshold     = ks_threshold,
@@ -360,7 +371,7 @@ print.hv_balance <- function(x, ...) {
               else ""))
   cat(sprintf("  Groups      : %d (%s)\n", m$n_groups,
               paste(unique(x$data[[m$group_col]]), collapse = ", ")))
-  cat(sprintf("  SMD col     : %s\n", m$std_diff_col))
+  cat(sprintf("  Value col   : %s\n", m$std_diff_col))
   cat(sprintf("  Threshold   : \u00b1%g\n", m$threshold))
   cat(sprintf("  Stats       : %s\n", paste(m$stats, collapse = ", ")))
   if (length(m$pairs))
@@ -436,6 +447,8 @@ plot.hv_balance <- function(x,
     threshold          = x$meta$threshold,
     stats              = x$meta$stats,
     pairs              = x$meta$pairs,
+    stat_var           = x$meta$stat_var,
+    pair_var           = x$meta$pair_var,
     vr_threshold       = x$meta$vr_threshold,
     ks_threshold       = x$meta$ks_threshold,
     point_size         = point_size,
