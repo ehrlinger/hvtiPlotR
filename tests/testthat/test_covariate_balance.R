@@ -222,3 +222,26 @@ test_that("print.hv_balance returns x invisibly", {
   expect_false(ret$visible)
   expect_identical(ret$value, bal)
 })
+
+# ---------------------------------------------------------------------------
+# hv_balance_height
+# ---------------------------------------------------------------------------
+
+test_that("hv_balance_height gives about 8 in for 38 rows at 12 pt", {
+  expect_equal(hv_balance_height(38), 0.17 * 38 + 1.5)
+  expect_equal(round(hv_balance_height(38), 2), 7.96)
+})
+
+test_that("hv_balance_height scales with base_size", {
+  expect_equal(hv_balance_height(38, base_size = 18), 1.5 * hv_balance_height(38))
+})
+
+test_that("hv_balance_height adds rows and strip space per pair", {
+  expect_equal(hv_balance_height(10, n_pairs = 3), 0.17 * 30 + 0.3 * 2 + 1.5)
+})
+
+test_that("hv_balance_height rejects non-positive input", {
+  expect_error(hv_balance_height(0), "n_rows")
+  expect_error(hv_balance_height(10, base_size = -1), "base_size")
+  expect_error(hv_balance_height(10, n_pairs = 0), "n_pairs")
+})

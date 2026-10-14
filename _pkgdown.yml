@@ -147,6 +147,7 @@ reference:
   - hv_balance
   - plot.hv_balance
   - print.hv_balance
+  - hv_balance_height
   - hv_rmst_contrast
   - plot.hv_rmst_contrast
   - print.hv_rmst_contrast
