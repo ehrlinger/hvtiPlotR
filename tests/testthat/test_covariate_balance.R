@@ -326,3 +326,60 @@ test_that("print.hv_balance reports stats, pairs and height", {
   expect_true(any(grepl("B vs. A, C vs. A", out)))
   expect_true(any(grepl("Height", out)))
 })
+
+# ---------------------------------------------------------------------------
+# plot(hv_balance): facets and reference lines
+# ---------------------------------------------------------------------------
+
+cb_vline_by_panel <- function(p) {
+  built <- ggplot2::ggplot_build(p)
+  idx   <- which(vapply(p$layers, function(l) inherits(l$geom, "GeomVline"), logical(1)))
+  do.call(rbind, lapply(idx, function(i) built$data[[i]][, c("PANEL", "xintercept")]))
+}
+
+test_that("plain two-group plot keeps FacetNull and its reference lines", {
+  p <- plot(hv_balance(sample_covariate_balance_data()))
+  expect_s3_class(p$facet, "FacetNull")
+  expect_plot_has_data(p, geoms = c("GeomPoint", "GeomVline", "GeomHline"))
+  expect_setequal(cb_vline_by_panel(p)$xintercept, c(0, -10, 10))
+})
+
+test_that("two stats facet by stat with free x and labelled strips", {
+  p <- plot(hv_balance(cb_long_df(), stat_col = "stat", stats = c("smd", "ks")))
+  expect_s3_class(p$facet, "FacetGrid")
+  expect_plot_has_data(p, min_groups = 2)
+  layout <- ggplot2::ggplot_build(p)$layout$layout
+  expect_equal(nrow(layout), 2L)
+  expect_equal(as.character(layout$stat), c("smd", "ks"))
+  lab <- p$facet$params$labeller(data.frame(stat = c("smd", "ks")))[[1]]
+  expect_equal(lab, c("Standardized difference (%)", "KS statistic"))
+})
+
+test_that("reference lines land only in their own stat panel", {
+  d <- rbind(cb_long_df(),
+             transform(sample_covariate_balance_data(n_vars = 4), stat = "variance_ratio",
+                       std_diff = 1))
+  p <- plot(hv_balance(d, stat_col = "stat", stats = c("smd", "variance_ratio", "ks"),
+                       ks_threshold = 0.1))
+  v <- cb_vline_by_panel(p)
+  expect_setequal(v$xintercept[v$PANEL == 1], c(0, -10, 10))
+  expect_setequal(v$xintercept[v$PANEL == 2], c(1, 0.5, 2))
+  expect_setequal(v$xintercept[v$PANEL == 3], c(0, 0.1))
+})
+
+test_that("no dotted KS line is drawn when ks_threshold is NULL", {
+  p <- plot(hv_balance(cb_long_df(), stat_col = "stat", stats = c("smd", "ks")))
+  v <- cb_vline_by_panel(p)
+  expect_setequal(v$xintercept[v$PANEL == 2], 0)
+})
+
+test_that("pairs facet by row, one panel per pair, data in every panel", {
+  d <- sample_covariate_balance_data(n_vars = 3)
+  d <- rbind(transform(d, cmp = "B vs. A"), transform(d, cmp = "C vs. A"),
+             transform(d, cmp = "C vs. B"))
+  p <- plot(hv_balance(d, pair_col = "cmp"))
+  built <- ggplot2::ggplot_build(p)
+  expect_equal(nrow(built$layout$layout), 3L)
+  pts <- built$data[[which(vapply(p$layers, function(l) inherits(l$geom, "GeomPoint"), logical(1)))]]
+  expect_setequal(unique(as.integer(pts$PANEL)), 1:3)
+})

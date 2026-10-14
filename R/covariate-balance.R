@@ -69,32 +69,50 @@ cb_add_stat_pair <- function(working, stat_col, pair_col, stats) {
   working
 }
 
+# Solid and dotted reference lines, one row per line, tagged with `stat` so
+# each lands only in its own facet. With no stat facet the extra column is
+# ignored.
+cb_ref_lines <- function(stats, threshold, vr_threshold, ks_threshold) {
+  solid_x <- c(smd = 0, variance_ratio = 1, ks = 0)
+  dotted  <- list(smd = c(-threshold, threshold), variance_ratio = vr_threshold,
+                  ks = ks_threshold)
+  lvl <- function(s) factor(s, levels = stats)
+  list(
+    solid  = data.frame(stat = lvl(stats), x = unname(solid_x[stats])),
+    dotted = do.call(rbind, lapply(stats, function(s) {
+      if (length(dotted[[s]])) data.frame(stat = lvl(s), x = dotted[[s]])
+    }))
+  )
+}
+
 #' @importFrom rlang .data
 #' @importFrom ggplot2 ggplot aes geom_vline geom_hline geom_point scale_y_continuous
+#' @importFrom ggplot2 facet_grid vars labeller as_labeller
 cb_build_plot <- function(data, std_diff_col, group_col, var_levels,
-                          threshold, point_size, alpha,
+                          threshold, stats, pairs, vr_threshold, ks_threshold,
+                          point_size, alpha,
                           hline_linetype, hline_linewidth,
                           vline_linewidth, threshold_linetype) {
   n_vars <- length(var_levels)
   # Extra vertical space (in "covariate rows") above the top row to ensure
   # room for point glyphs and potential multi-line labels/annotations.
   y_padding <- 1.75
+  refs <- cb_ref_lines(stats, threshold, vr_threshold, ks_threshold)
 
-  ggplot2::ggplot(data) +
-    # Solid center reference at zero
+  p <- ggplot2::ggplot(data) +
+    # Solid center reference: 0 for SMD and KS, 1 for the variance ratio
     ggplot2::geom_vline(
-      xintercept = 0,
+      data = refs$solid, ggplot2::aes(xintercept = .data[["x"]]),
       linewidth = vline_linewidth, color = "black"
-    ) +
+    )
+  if (!is.null(refs$dotted))
     # Dotted threshold reference lines
-    ggplot2::geom_vline(
-      xintercept = threshold,
+    p <- p + ggplot2::geom_vline(
+      data = refs$dotted, ggplot2::aes(xintercept = .data[["x"]]),
       linetype = threshold_linetype, color = "black"
-    ) +
-    ggplot2::geom_vline(
-      xintercept = -threshold,
-      linetype = threshold_linetype, color = "black"
-    ) +
+    )
+
+  p <- p +
     # Dashed horizontal guides, one per covariate row
     ggplot2::geom_hline(
       yintercept = seq_len(n_vars),
@@ -102,13 +120,13 @@ cb_build_plot <- function(data, std_diff_col, group_col, var_levels,
       linewidth  = hline_linewidth,
       color      = "black"
     ) +
-    # Points — shape and color mapped to group; no defaults applied
+    # Points: shape and color mapped to group; no defaults applied
     ggplot2::geom_point(
       ggplot2::aes(
         x      = .data[[std_diff_col]],
         y      = .data[["cb_index"]],
         shape  = .data[[group_col]],
-        color = .data[[group_col]]
+        color  = .data[[group_col]]
       ),
       size  = point_size,
       alpha = alpha
@@ -119,7 +137,21 @@ cb_build_plot <- function(data, std_diff_col, group_col, var_levels,
       breaks = seq_len(n_vars),
       labels = var_levels
     )
+
+  # Named vars() keep the facet variable called `stat`, which the labeller
+  # looks up by name.
+  facet_rows <- if (length(pairs) > 1L) ggplot2::vars(pair = .data[["pair"]])
+  facet_cols <- if (length(stats) > 1L) ggplot2::vars(stat = .data[["stat"]])
+  if (!is.null(facet_rows) || !is.null(facet_cols))
+    p <- p + ggplot2::facet_grid(
+      rows     = facet_rows,
+      cols     = facet_cols,
+      scales   = "free_x",
+      labeller = ggplot2::labeller(stat = ggplot2::as_labeller(cb_stat_labels))
+    )
+  p
 }
+
 
 # ---------------------------------------------------------------------------
 # Public API
@@ -324,6 +356,12 @@ print.hv_balance <- function(x, ...) {
 #' A solid line marks zero; dotted lines mark \eqn{\pm}\code{threshold}.
 #' Add color, shape, axis scales, and a theme with \code{+}.
 #'
+#' With more than one statistic, panels sit side by side (free x scales,
+#' labelled strips); with more than one pair, each pair gets a facet row. The
+#' variance ratio panel has a solid line at 1 and dotted lines at
+#' \code{vr_threshold}, and the KS panel has a solid line at 0 plus
+#' \code{ks_threshold} when given.
+#'
 #' @param x                  An \code{hv_balance} object.
 #' @param point_size         Passed to \code{geom_point()}. Default \code{3}.
 #' @param alpha              Point transparency in \eqn{[0,1]}. Default \code{0.8}.
@@ -371,6 +409,10 @@ plot.hv_balance <- function(x,
     group_col          = x$meta$group_col,
     var_levels         = x$meta$var_levels,
     threshold          = x$meta$threshold,
+    stats              = x$meta$stats,
+    pairs              = x$meta$pairs,
+    vr_threshold       = x$meta$vr_threshold,
+    ks_threshold       = x$meta$ks_threshold,
     point_size         = point_size,
     alpha              = alpha,
     hline_linetype     = hline_linetype,
