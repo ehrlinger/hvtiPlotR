@@ -450,6 +450,8 @@ and after propensity matching or IPTW weighting.
   : Plot an hv_balance object
 - [`print(`*`<hv_balance>`*`)`](https://ehrlinger.github.io/hvtiPlotR/reference/print.hv_balance.md)
   : Print an hv_balance object
+- [`hv_balance_height()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_balance_height.md)
+  : Suggested figure height for a covariate balance plot
 - [`hv_rmst_contrast()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_rmst_contrast.md)
   : Prepare RMST contrast data for plotting
 - [`plot(`*`<hv_rmst_contrast>`*`)`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hv_rmst_contrast.md)

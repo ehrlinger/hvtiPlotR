@@ -64,6 +64,14 @@ plot(
 A bare [`ggplot`](https://ggplot2.tidyverse.org/reference/ggplot.html)
 object.
 
+## Details
+
+With more than one statistic, panels sit side by side (free x scales,
+labeled strips); with more than one pair, each pair gets a facet row.
+The variance ratio panel has a solid line at 1 and dotted lines at
+`vr_threshold`, and the KS panel has a solid line at 0 plus
+`ks_threshold` when given.
+
 ## See also
 
 [`hv_balance`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_balance.md),

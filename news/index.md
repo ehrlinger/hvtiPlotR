@@ -486,9 +486,10 @@ color by arm. With `tau` the area under each curve up to `tau` is shaded
 and a `tau` line is drawn; with `estimates` each facet is annotated with
 its RMST difference and interval.
 
-Both read the `tables` of `hvtiRpropensity::ps_rmst()`, as plain data
-frames or as the `ps_rmst` object itself, and add no dependency on that
-package.
+Both read the `tables` of
+[`hvtiRpropensity::ps_rmst()`](https://ehrlinger.github.io/hvtiRpropensity/reference/ps_rmst.html),
+as plain data frames or as the `ps_rmst` object itself, and add no
+dependency on that package.
 
 ### Regression test for at-risk counts past the end of follow-up
 

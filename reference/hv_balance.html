@@ -78,7 +78,13 @@ and <code><a href="hvtiPlotR-themes.html">theme_hv_manuscript</a></code>.</p>
 <span>  group_col <span class="op">=</span> <span class="st">"group"</span>,</span>
 <span>  std_diff_col <span class="op">=</span> <span class="st">"std_diff"</span>,</span>
 <span>  var_levels <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  threshold <span class="op">=</span> <span class="fl">10</span></span>
+<span>  threshold <span class="op">=</span> <span class="fl">10</span>,</span>
+<span>  stat_col <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  pair_col <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  stats <span class="op">=</span> <span class="st">"smd"</span>,</span>
+<span>  vr_threshold <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.5</span>, <span class="fl">2</span><span class="op">)</span>,</span>
+<span>  ks_threshold <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  group_labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Before"</span>, <span class="st">"After"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -89,7 +95,10 @@ and <code><a href="hvtiPlotR-themes.html">theme_hv_manuscript</a></code>.</p>
 <dl><dt id="arg-data">data<a class="anchor" aria-label="anchor" href="#arg-data"></a></dt>
 <dd><p>A data frame in <strong>long format</strong> with one row per
 covariate \(\times\) group combination.  Wide-format data must be
-reshaped first (e.g. with <code><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html" class="external-link">tidyr::pivot_longer()</a></code>).</p></dd>
+reshaped first (e.g. with <code><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html" class="external-link">tidyr::pivot_longer()</a></code>).  It may instead
+be a <code><a href="https://ngreifer.github.io/cobalt/reference/bal.tab.html" class="external-link">cobalt::bal.tab()</a></code> result (built with <code>un = TRUE</code> to draw
+the Before group), an hvtiRpropensity <code>ps_*</code> object, or a list of
+those, one per imputation; see Details.</p></dd>
 
 
 <dt id="arg-variable-col">variable_col<a class="anchor" aria-label="anchor" href="#arg-variable-col"></a></dt>
@@ -118,24 +127,89 @@ Defaults to the order of first appearance in <code>data[[variable_col]]</code>.<
 <dd><p>Numeric; absolute SMD value at which dotted reference
 lines are drawn (\(\pm\)<code>threshold</code>).  Default <code>10</code>.</p></dd>
 
+
+<dt id="arg-stat-col">stat_col<a class="anchor" aria-label="anchor" href="#arg-stat-col"></a></dt>
+<dd><p>Optional name of a column holding the statistic each row
+reports: <code>"smd"</code>, <code>"variance_ratio"</code> or <code>"ks"</code>.  When
+<code>NULL</code> (default) every row is treated as <code>"smd"</code>.</p></dd>
+
+
+<dt id="arg-pair-col">pair_col<a class="anchor" aria-label="anchor" href="#arg-pair-col"></a></dt>
+<dd><p>Optional name of a column identifying the comparison
+(e.g. <code>"B vs. A"</code>) when more than two groups were compared.  Default
+<code>NULL</code> (a single comparison).</p></dd>
+
+
+<dt id="arg-stats">stats<a class="anchor" aria-label="anchor" href="#arg-stats"></a></dt>
+<dd><p>Character vector of statistics to keep, in panel order;
+any of <code>"smd"</code>, <code>"variance_ratio"</code>, <code>"ks"</code>.  Default
+<code>"smd"</code>.  An error is raised if a requested statistic has no rows.</p></dd>
+
+
+<dt id="arg-vr-threshold">vr_threshold<a class="anchor" aria-label="anchor" href="#arg-vr-threshold"></a></dt>
+<dd><p>One or two positive numbers; reference lines for the
+variance-ratio panel.  Default <code>c(0.5, 2)</code>.</p></dd>
+
+
+<dt id="arg-ks-threshold">ks_threshold<a class="anchor" aria-label="anchor" href="#arg-ks-threshold"></a></dt>
+<dd><p><code>NULL</code> (no line, default) or a single number in
+\([0,1]\); reference line for the KS panel.</p></dd>
+
+
+<dt id="arg-group-labels">group_labels<a class="anchor" aria-label="anchor" href="#arg-group-labels"></a></dt>
+<dd><p>Length-2 character vector naming the before and after
+groups.  Default <code>c("Before", "After")</code>.</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>An object of class <code>c("hv_balance", "hv_data")</code>: a list
 with three elements:</p><dl><dt><code>$data</code></dt>
 <dd><p>The input data frame with a <code>cb_index</code> column
-added for y-axis positioning.</p></dd>
+added for y-axis positioning, a <code>stat</code> factor (levels =
+<code>stats</code>) and a <code>pair</code> column (<code>NA</code> when there are no
+comparisons, otherwise a factor in order of first appearance). If
+<code>data</code> already has its own <code>stat</code> or <code>pair</code> column it is
+left untouched and these values go in <code>.cb_stat</code> / <code>.cb_pair</code>.</p></dd>
 
 <dt><code>$meta</code></dt>
 <dd><p>Named list: <code>variable_col</code>, <code>group_col</code>,
 <code>std_diff_col</code>, <code>var_levels</code>, <code>threshold</code>,
-<code>n_vars</code>, <code>n_groups</code>.</p></dd>
+<code>n_vars</code>, <code>n_groups</code>, <code>stats</code>, <code>pairs</code>,
+<code>stat_var</code> and <code>pair_var</code> (the names of the columns holding
+the statistic and the comparison), <code>n_imputations</code>,
+<code>vr_threshold</code>, <code>ks_threshold</code>, <code>suggested_height</code>.</p></dd>
 
 <dt><code>$tables</code></dt>
 <dd><p>Empty list (no accessory tables).</p></dd>
 
 
 </dl></div>
+    <div class="section level2">
+    <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
+    <p>Instead of a long data frame, <code>data</code> may be a <code><a href="https://ngreifer.github.io/cobalt/reference/bal.tab.html" class="external-link">cobalt::bal.tab()</a></code>
+result, a multi-category <code>bal.tab</code> (one facet row per pair), an
+hvtiRpropensity <code>ps_match()</code> / <code>ps_weight()</code> object, or a list of
+any one of those, one per imputation. In those cases the SMD is multiplied
+by 100 and the <code>*_col</code> arguments are ignored.</p>
+<p>A <code>bal.tab()</code> result must be built with <code>binary = "std"</code> and
+<code>continuous = "std"</code> (the default), so every difference is
+standardized, and with <code>un = TRUE</code> to draw the Before group: cobalt
+leaves the unadjusted columns empty otherwise, and <code>hv_balance()</code> then
+says so in a message and draws the After group only. Ask for the variance
+ratio and KS statistic with <code>stats = c("m", "v", "ks")</code>; the variance
+ratio is undefined for binary covariates, so those rows are left out of its
+panel. A distance or <code>prop.score</code> row (<code>Type</code> "Distance") is drawn
+as a covariate row, as in <code><a href="https://ngreifer.github.io/cobalt/reference/love.plot.html" class="external-link">cobalt::love.plot()</a></code>. <code>ps_*</code> objects
+carry standardized differences only.</p>
+<p>A list is pooled across imputations: SMD and KS statistic are averaged,
+the variance ratio takes the geometric mean, and an <code>NA</code> in any
+imputation makes the pooled value <code>NA</code> (counted in
+<code>$meta$n_missing</code>). Every imputation must have the same rows, with
+one allowance: a covariate cobalt types as binary in some imputations
+(because it takes two values there) has no variance ratio in those, so its
+pooled variance ratio is <code>NA</code>.</p>
+    </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
     <div class="dont-index"><p>Worked recipe with rendered output:
@@ -155,8 +229,10 @@ added for y-axis positioning.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;hv_balance&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Variables   : 12</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Groups      : 2 (Before match, After match)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   SMD col     : std_diff</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Value col   : std_diff</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Threshold   : ±10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Stats       : smd</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Height      : 3.5 in at 12 pt (see hv_balance_height())</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># 2. Bare plot -- undecorated ggplot returned by plot.hv_balance</span></span></span>
 <span class="r-in"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">cb</span><span class="op">)</span></span></span>
@@ -177,6 +253,20 @@ added for y-axis positioning.</p></dd>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Removed 1 row containing missing values or values outside the scale range</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> (`geom_point()`).</span>
 <span class="r-plt img"><img src="hv_balance-1.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># 4. From a cobalt::bal.tab() result: SMD, variance ratio and KS panels</span></span></span>
+<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"cobalt"</span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span>  <span class="va">lal</span> <span class="op">&lt;-</span> <span class="fu">cobalt</span><span class="fu">::</span><span class="va"><a href="https://ngreifer.github.io/cobalt/reference/lalonde.html" class="external-link">lalonde</a></span></span></span>
+<span class="r-in"><span>  <span class="va">ps</span>  <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/fitted.values.html" class="external-link">fitted</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/glm.html" class="external-link">glm</a></span><span class="op">(</span><span class="va">treat</span> <span class="op">~</span> <span class="va">age</span> <span class="op">+</span> <span class="va">educ</span> <span class="op">+</span> <span class="va">race</span> <span class="op">+</span> <span class="va">married</span> <span class="op">+</span> <span class="va">nodegree</span> <span class="op">+</span> <span class="va">re74</span> <span class="op">+</span> <span class="va">re75</span>,</span></span>
+<span class="r-in"><span>                    data <span class="op">=</span> <span class="va">lal</span>, family <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/family.html" class="external-link">binomial</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="va">bt</span> <span class="op">&lt;-</span> <span class="fu">cobalt</span><span class="fu">::</span><span class="fu"><a href="https://ngreifer.github.io/cobalt/reference/bal.tab.html" class="external-link">bal.tab</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>    <span class="va">treat</span> <span class="op">~</span> <span class="va">age</span> <span class="op">+</span> <span class="va">educ</span> <span class="op">+</span> <span class="va">race</span> <span class="op">+</span> <span class="va">married</span> <span class="op">+</span> <span class="va">nodegree</span> <span class="op">+</span> <span class="va">re74</span> <span class="op">+</span> <span class="va">re75</span>,</span></span>
+<span class="r-in"><span>    data <span class="op">=</span> <span class="va">lal</span>, weights <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">lal</span><span class="op">$</span><span class="va">treat</span> <span class="op">==</span> <span class="fl">1</span>, <span class="fl">1</span> <span class="op">/</span> <span class="va">ps</span>, <span class="fl">1</span> <span class="op">/</span> <span class="op">(</span><span class="fl">1</span> <span class="op">-</span> <span class="va">ps</span><span class="op">)</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>    binary <span class="op">=</span> <span class="st">"std"</span>, s.d.denom <span class="op">=</span> <span class="st">"pooled"</span>, stats <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"m"</span>, <span class="st">"v"</span>, <span class="st">"ks"</span><span class="op">)</span>, un <span class="op">=</span> <span class="cn">TRUE</span></span></span>
+<span class="r-in"><span>  <span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu">hv_balance</span><span class="op">(</span><span class="va">bt</span>, stats <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"smd"</span>, <span class="st">"variance_ratio"</span>, <span class="st">"ks"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
+<span class="r-plt img"><img src="hv_balance-2.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

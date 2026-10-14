@@ -85,12 +85,12 @@ An object of class `c("hv_rmst_curves", "hv_data")`: a list with
 ## Details
 
 The input follows the `tables$curves` contract of
-`hvtiRpropensity::ps_rmst()`: columns `estimator`, `arm` (`"treated"` or
-`"control"`), `time` and `surv`, as right-continuous steps that start at
-time 0 with `surv` 1. hvtiRpropensity is not required: pass plain data
-frames, or the `ps_rmst` object itself as `curves` and its
-`$tables$curves` (and, when `estimates` is `NULL`, `$tables$estimates`)
-are read.
+[`hvtiRpropensity::ps_rmst()`](https://ehrlinger.github.io/hvtiRpropensity/reference/ps_rmst.html):
+columns `estimator`, `arm` (`"treated"` or `"control"`), `time` and
+`surv`, as right-continuous steps that start at time 0 with `surv` 1.
+hvtiRpropensity is not required: pass plain data frames, or the
+`ps_rmst` object itself as `curves` and its `$tables$curves` (and, when
+`estimates` is `NULL`, `$tables$estimates`) are read.
 
 ## See also
 
