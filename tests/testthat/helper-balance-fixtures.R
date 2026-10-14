@@ -35,6 +35,26 @@ balance_baltab_multi <- function(n = 600, seed = 2) {
                   s.d.denom = "pooled", stats = c("m", "v", "ks"))
 }
 
+# Weighted variant of the above: three groups with arbitrary positive weights,
+# so every pair carries Un and Adj columns for SMD, variance ratio and KS.
+balance_baltab_multi_weighted <- function(n = 600, seed = 2) {
+  withr::local_seed(seed)
+  d <- data.frame(age = stats::rnorm(n, 70, 8), female = stats::rbinom(n, 1, 0.4))
+  d$grp <- sample(c("A", "B", "C"), n, replace = TRUE)
+  cobalt::bal.tab(d[c("age", "female")], treat = d$grp, weights = stats::runif(n, 0.5, 2),
+                  binary = "std", s.d.denom = "pooled", stats = c("m", "v", "ks"), un = TRUE)
+}
+
+# bal.tab over binary covariates only: every variance ratio is undefined.
+balance_baltab_binary <- function(n = 400, seed = 4) {
+  withr::local_seed(seed)
+  d <- as.data.frame(lapply(1:4, function(j) stats::rbinom(n, 1, 0.4)))
+  names(d) <- sprintf("b%02d", 1:4)
+  d$treat <- stats::rbinom(n, 1, 0.5)
+  cobalt::bal.tab(d[1:4], treat = d$treat, binary = "std", s.d.denom = "pooled",
+                  stats = c("m", "v"), un = TRUE)
+}
+
 # Exact mean balance with a distributional gap: both groups have mean 0
 # exactly, but treated values sit at +/-1.5 while controls are normal. Every
 # SMD is 0; the KS statistic is large.

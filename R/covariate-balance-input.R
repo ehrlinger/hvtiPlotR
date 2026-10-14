@@ -10,21 +10,30 @@
 .cb_baltab_flag <- c(smd = "m", variance_ratio = "v", ks = "ks")
 
 .cb_from_baltab <- function(x, stats, group_labels) {
-  if (!identical(attr(x, "print.options")$binary, "std"))
+  opts <- attr(x, "print.options")
+  if (!identical(opts$binary, "std"))
     stop(paste(
       "`bal.tab()` reported raw differences for binary covariates, which cannot",
       "share an axis with standardized differences. Re-run `bal.tab()` with",
       "binary = \"std\"."), call. = FALSE)
+  if (!is.null(opts$continuous) && !identical(opts$continuous, "std"))
+    stop(paste(
+      "`bal.tab()` reported raw differences for continuous covariates, which cannot",
+      "share an axis with standardized differences. Re-run `bal.tab()` with",
+      "continuous = \"std\"."), call. = FALSE)
 
   if (inherits(x, "bal.tab.multi")) {
     parts <- lapply(names(x$Pair.Balance), function(nm) {
       el <- x$Pair.Balance[[nm]]
-      attr(el, "print.options") <- attr(x, "print.options")
+      attr(el, "print.options") <- opts
       d <- .cb_from_baltab(el, stats, group_labels)
       d$pair <- nm
       d
     })
-    return(do.call(rbind, parts))
+    out <- do.call(rbind, parts)
+    attr(out, "no_unadjusted") <- any(vapply(parts, function(d) isTRUE(attr(d, "no_unadjusted")),
+                                             logical(1)))
+    return(out)
   }
 
   bal <- x$Balance
@@ -35,28 +44,43 @@
 
   groups <- c(Un = group_labels[1], Adj = group_labels[2])
   out <- list()
+  no_un <- FALSE
   for (s in stats) {
+    # The variance ratio is undefined for binary covariates, not missing.
+    keep <- if (s == "variance_ratio") !(bal$Type %in% "Binary") else rep(TRUE, nrow(bal))
+    col_seen <- FALSE
+    drawn <- character(0)
     for (sfx in names(groups)) {
       cn <- paste0(.cb_baltab_cols[[s]], ".", sfx)
-      if (!cn %in% names(bal) || all(is.na(bal[[cn]]))) next
-      # The variance ratio is undefined for binary covariates, not missing.
-      keep <- if (s == "variance_ratio") bal$Type != "Binary" else rep(TRUE, nrow(bal))
+      if (!cn %in% names(bal)) next
+      col_seen <- TRUE
+      val <- bal[[cn]][keep]
+      if (!length(val) || all(is.na(val))) next
+      drawn <- c(drawn, sfx)
       out[[length(out) + 1L]] <- data.frame(
         variable = rownames(bal)[keep],
         group    = groups[[sfx]],
         stat     = s,
         pair     = NA_character_,
-        std_diff = bal[[cn]][keep] * if (s == "smd") 100 else 1,
+        std_diff = val * if (s == "smd") 100 else 1,
         stringsAsFactors = FALSE
       )
     }
-    if (!any(vapply(out, function(d) identical(d$stat[1], s), logical(1))))
+    if (!length(drawn)) {
+      if (col_seen && !any(keep))
+        stop(sprintf(paste(
+          "The variance ratio is undefined for binary covariates, and every covariate",
+          "here is binary; drop \"%s\" from `stats`."), s), call. = FALSE)
       stop(sprintf(paste(
         "The `bal.tab()` result carries no %s. Re-run it with",
         "stats = c(\"m\", \"v\", \"ks\") (needs \"%s\")."),
         cb_stat_labels[[s]], .cb_baltab_flag[[s]]), call. = FALSE)
+    }
+    if (identical(drawn, "Adj")) no_un <- TRUE
   }
-  do.call(rbind, out)
+  out <- do.call(rbind, out)
+  attr(out, "no_unadjusted") <- no_un
+  out
 }
 
 # SMD tables written by ps_match() and ps_weight(): before/after pairs.
@@ -110,10 +134,23 @@
       "statistics; every imputation must have the same balance table rows."),
       paste(which(!same), collapse = ", ")), call. = FALSE)
 
+  # Arithmetic mean for differences and KS; geometric mean for variance ratios
+  # (the mean of their logs), so a ratio of 0.5 and one of 2 pool to 1. An NA in
+  # any imputation makes the pooled value NA.
+  fwd   <- function(d) {
+    v <- d$std_diff
+    i <- d$stat == "variance_ratio"
+    v[i] <- log(v[i])
+    v
+  }
   all   <- do.call(rbind, parts)
-  means <- tapply(all$std_diff, key(all), mean)
+  means <- tapply(fwd(all), key(all), mean)
   out   <- parts[[1]]
-  out$std_diff <- as.vector(means[key(out)])
+  pooled <- as.vector(means[key(out)])
+  vr     <- out$stat == "variance_ratio"
+  pooled[vr] <- exp(pooled[vr])
+  out$std_diff <- pooled
+  attr(out, "no_unadjusted") <- NULL
   out
 }
 
@@ -121,8 +158,12 @@
 # existing error messages) handles it unchanged. A plain list such as
 # list(variable = "x") is not an adapter input.
 .cb_as_long <- function(x, stats, group_labels) {
-  if (.cb_is_source(x))
-    return(list(data = .cb_one(x, stats, group_labels), n_imputations = 1L))
+  if (.cb_is_source(x)) {
+    d <- .cb_one(x, stats, group_labels)
+    .cb_note_no_unadjusted(isTRUE(attr(d, "no_unadjusted")))
+    attr(d, "no_unadjusted") <- NULL
+    return(list(data = d, n_imputations = 1L))
+  }
   if (!is.list(x) || is.data.frame(x)) return(NULL)
   if (!length(x))
     stop("`data` is an empty list; pass one balance object per imputation.", call. = FALSE)
@@ -139,5 +180,14 @@
                  paste(kinds, collapse = ", ")), call. = FALSE)
 
   parts <- lapply(x, .cb_one, stats = stats, group_labels = group_labels)
+  .cb_note_no_unadjusted(any(vapply(parts, function(d) isTRUE(attr(d, "no_unadjusted")),
+                                    logical(1))))
   list(data = .cb_pool(parts), n_imputations = length(x))
+}
+
+# One message per hv_balance() call when a bal.tab skipped its unadjusted group.
+.cb_note_no_unadjusted <- function(flag) {
+  if (flag)
+    message("`bal.tab()` result has no unadjusted balance; re-run it with un = TRUE ",
+            "to draw the Before group.")
 }

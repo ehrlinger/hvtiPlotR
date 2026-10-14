@@ -465,6 +465,60 @@ test_that("hv_balance refuses raw binary differences from bal.tab", {
   expect_error(hv_balance(bt), 'binary = "std"')
 })
 
+test_that("hv_balance refuses raw continuous differences from bal.tab", {
+  skip_if_not_installed("cobalt")
+  d  <- balance_cohort(n_terms = 4)
+  bt <- cobalt::bal.tab(d[setdiff(names(d), "treat")], treat = d$treat, binary = "std",
+                        continuous = "raw", s.d.denom = "pooled", un = TRUE)
+  expect_error(hv_balance(bt), 'continuous = "std"')
+})
+
+test_that("hv_balance explains an all-binary bal.tab asked for variance ratios", {
+  skip_if_not_installed("cobalt")
+  bt <- balance_baltab_binary()
+  expect_error(hv_balance(bt, stats = c("smd", "variance_ratio")),
+               "undefined for binary covariates, and every covariate here is binary")
+  expect_equal(nrow(hv_balance(bt)$data), 4L)
+})
+
+test_that("hv_balance says to re-run with un = TRUE when the unadjusted group is empty", {
+  skip_if_not_installed("cobalt")
+  d    <- balance_cohort(n_terms = 4)
+  covs <- setdiff(names(d), "treat")
+  w    <- stats::runif(nrow(d), 0.5, 2)
+  bt   <- cobalt::bal.tab(d[covs], treat = d$treat, weights = w, binary = "std", s.d.denom = "pooled")
+  expect_message(cb <- hv_balance(bt), "un = TRUE")
+  expect_setequal(unique(cb$data$group), "After")
+  expect_null(attr(cb$data, "no_unadjusted"))
+
+  bt_un <- cobalt::bal.tab(d[covs], treat = d$treat, weights = w, binary = "std",
+                           s.d.denom = "pooled", un = TRUE)
+  expect_no_message(hv_balance(bt_un))
+})
+
+test_that("the un = TRUE message is emitted once per call, not per imputation or pair", {
+  skip_if_not_installed("cobalt")
+  d    <- balance_cohort(n_terms = 4)
+  covs <- setdiff(names(d), "treat")
+  bt   <- cobalt::bal.tab(d[covs], treat = d$treat, weights = stats::runif(nrow(d), 0.5, 2),
+                          binary = "std", s.d.denom = "pooled")
+  n_msg <- function(expr) {
+    n <- 0L
+    withCallingHandlers(expr, message = function(m) {
+      n <<- n + 1L
+      invokeRestart("muffleMessage")
+    })
+    n
+  }
+  expect_equal(n_msg(hv_balance(list(bt, bt, bt))), 1L)
+
+  set.seed(5)
+  g  <- sample(c("A", "B", "C"), nrow(d), replace = TRUE)
+  bm <- cobalt::bal.tab(d[covs], treat = g, weights = stats::runif(nrow(d), 0.5, 2),
+                        binary = "std", s.d.denom = "pooled")
+  expect_equal(n_msg(hv_balance(bm)), 1L)
+})
+
 test_that("hv_balance names the missing stat when bal.tab lacks it", {
   skip_if_not_installed("cobalt")
   d  <- balance_cohort(n_terms = 4)
@@ -484,6 +538,19 @@ test_that("hv_balance facets a three-group bal.tab.multi by pair", {
   expect_plot_has_data(p)
   pts <- built$data[[which(vapply(p$layers, function(l) inherits(l$geom, "GeomPoint"), logical(1)))]]
   expect_setequal(unique(as.integer(pts$PANEL)), 1:3)
+})
+
+test_that("a weighted bal.tab.multi gives a 3 x 3 grid of panels, each with points", {
+  skip_if_not_installed("cobalt")
+  bm <- balance_baltab_multi_weighted()
+  cb <- hv_balance(bm, stats = c("smd", "variance_ratio", "ks"))
+  p  <- plot(cb)
+  expect_s3_class(p$facet, "FacetGrid")
+  expect_plot_has_data(p, min_groups = 2)
+  built <- ggplot2::ggplot_build(p)
+  expect_equal(nrow(built$layout$layout), 9L)
+  pts <- built$data[[which(vapply(p$layers, function(l) inherits(l$geom, "GeomPoint"), logical(1)))]]
+  expect_setequal(unique(as.integer(pts$PANEL)), 1:9)
 })
 
 test_that("the KS panel shows what exact mean balance hides", {
@@ -580,4 +647,37 @@ test_that("hv_balance rejects an empty list and a partly-adapter list", {
   expect_error(hv_balance(list()), "empty")
   bt <- balance_baltab(balance_cohort(n_terms = 4))
   expect_error(hv_balance(list(bt, data.frame())), "every element")
+})
+
+# A copy of `bt` whose adjusted variance ratios are `vr` and SMDs are `smd`.
+pooled_variant <- function(bt, vr, smd) {
+  cont <- bt$Balance$Type != "Binary"
+  bt$Balance$V.Ratio.Adj[cont] <- vr
+  bt$Balance$Diff.Adj[cont]    <- smd
+  bt
+}
+
+test_that("imputation pooling takes the geometric mean of variance ratios", {
+  skip_if_not_installed("cobalt")
+  bt <- balance_baltab(balance_cohort(n_terms = 4))
+  n_cont <- sum(bt$Balance$Type != "Binary")
+  a <- pooled_variant(bt, vr = rep(0.5, n_cont), smd = rep(0.1, n_cont))
+  b <- pooled_variant(bt, vr = rep(2, n_cont), smd = rep(0.3, n_cont))
+  cb <- hv_balance(list(a, b), stats = c("smd", "variance_ratio"))
+  vr  <- cb$data[cb$data$stat == "variance_ratio" & cb$data$group == "After", "std_diff"]
+  smd <- cb$data[cb$data$stat == "smd" & cb$data$group == "After" &
+                   cb$data$variable %in% rownames(bt$Balance)[bt$Balance$Type != "Binary"], "std_diff"]
+  expect_equal(vr, rep(1, n_cont))
+  expect_equal(smd, rep(20, n_cont))
+})
+
+test_that("an NA in any imputation makes the pooled value NA and counts it", {
+  skip_if_not_installed("cobalt")
+  bt <- balance_baltab(balance_cohort(n_terms = 4))
+  a <- bt
+  b <- bt
+  b$Balance$Diff.Adj[1] <- NA_real_
+  expect_warning(cb <- hv_balance(list(a, b)), "missing values")
+  expect_true(is.na(cb$data$std_diff[cb$data$group == "After"][1]))
+  expect_equal(cb$meta$n_missing, 1L)
 })

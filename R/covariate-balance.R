@@ -171,20 +171,33 @@ cb_build_plot <- function(data, std_diff_col, group_col, var_levels,
 #' and \code{\link{theme_hv_manuscript}}.
 #'
 #' Instead of a long data frame, \code{data} may be a \code{cobalt::bal.tab()}
-#' result built with \code{binary = "std"}, a multi-category \code{bal.tab}
-#' (one facet row per pair), an hvtiRpropensity \code{ps_match()} /
-#' \code{ps_weight()} object, or a list of any one of those, one per
-#' imputation, averaged. In those cases the SMD is multiplied by 100 and the
-#' \code{*_col} arguments are ignored.
+#' result, a multi-category \code{bal.tab} (one facet row per pair), an
+#' hvtiRpropensity \code{ps_match()} / \code{ps_weight()} object, or a list of
+#' any one of those, one per imputation. In those cases the SMD is multiplied
+#' by 100 and the \code{*_col} arguments are ignored.
+#'
+#' A \code{bal.tab()} result must be built with \code{binary = "std"} and
+#' \code{continuous = "std"} (the default), so every difference is
+#' standardized, and with \code{un = TRUE} to draw the Before group: cobalt
+#' leaves the unadjusted columns empty otherwise, and \code{hv_balance()} then
+#' says so in a message and draws the After group only. Ask for the variance
+#' ratio and KS statistic with \code{stats = c("m", "v", "ks")}; the variance
+#' ratio is undefined for binary covariates, so those rows are left out of its
+#' panel. A distance or \code{prop.score} row (\code{Type} "Distance") is drawn
+#' as a covariate row, as in \code{cobalt::love.plot()}. \code{ps_*} objects
+#' carry standardized differences only.
+#'
+#' A list is pooled across imputations: SMD and KS statistic are averaged,
+#' the variance ratio takes the geometric mean, and an \code{NA} in any
+#' imputation makes the pooled value \code{NA} (counted in
+#' \code{$meta$n_missing}). Every imputation must have the same rows.
 #'
 #' @param data         A data frame in \strong{long format} with one row per
 #'   covariate \eqn{\times} group combination.  Wide-format data must be
-#'   reshaped first (e.g. with \code{tidyr::pivot_longer()}).  It may also be a
-#'   \code{cobalt::bal.tab()} result built with \code{binary = "std"}, a
-#'   multi-category \code{bal.tab}, an hvtiRpropensity \code{ps_match()} /
-#'   \code{ps_weight()} object, or a list of any one of those, one per
-#'   imputation, averaged; the SMD is then multiplied by 100 and the
-#'   \code{*_col} arguments are ignored.
+#'   reshaped first (e.g. with \code{tidyr::pivot_longer()}).  It may instead
+#'   be a \code{cobalt::bal.tab()} result (built with \code{un = TRUE} to draw
+#'   the Before group), an hvtiRpropensity \code{ps_*} object, or a list of
+#'   those, one per imputation; see Details.
 #' @param variable_col Name of the column containing covariate labels.
 #'   Default \code{"variable"}.
 #' @param group_col    Name of the column identifying the comparison group
