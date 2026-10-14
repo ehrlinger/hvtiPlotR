@@ -245,3 +245,84 @@ test_that("hv_balance_height rejects non-positive input", {
   expect_error(hv_balance_height(10, base_size = -1), "base_size")
   expect_error(hv_balance_height(10, n_pairs = 0), "n_pairs")
 })
+
+# ---------------------------------------------------------------------------
+# hv_balance: stat / pair data model
+# ---------------------------------------------------------------------------
+
+cb_long_df <- function() {
+  base <- sample_covariate_balance_data(n_vars = 4)
+  ks <- transform(base, stat = "ks")
+  ks$std_diff <- abs(ks$std_diff) / 100
+  rbind(transform(base, stat = "smd"), ks)
+}
+
+test_that("hv_balance adds stat = smd and pair = NA for plain input", {
+  cb <- hv_balance(sample_covariate_balance_data())
+  expect_true(all(cb$data$stat == "smd"))
+  expect_true(all(is.na(cb$data$pair)))
+  expect_equal(cb$meta$stats, "smd")
+  expect_identical(cb$meta$pairs, character(0))
+  expect_equal(cb$meta$n_imputations, 1L)
+})
+
+test_that("hv_balance stores suggested_height from hv_balance_height", {
+  cb <- hv_balance(sample_covariate_balance_data(n_vars = 12))
+  expect_equal(cb$meta$suggested_height, hv_balance_height(12))
+})
+
+test_that("hv_balance keeps only the requested stats from stat_col", {
+  cb <- hv_balance(cb_long_df(), stat_col = "stat")
+  expect_equal(levels(cb$data$stat), "smd")
+  expect_equal(nrow(cb$data), 8L)
+  cb2 <- hv_balance(cb_long_df(), stat_col = "stat", stats = c("smd", "ks"))
+  expect_equal(levels(cb2$data$stat), c("smd", "ks"))
+  expect_equal(nrow(cb2$data), 16L)
+})
+
+test_that("hv_balance reads pair_col and records pairs in order", {
+  d <- sample_covariate_balance_data(n_vars = 3)
+  d <- rbind(transform(d, cmp = "B vs. A"), transform(d, cmp = "C vs. A"))
+  cb <- hv_balance(d, pair_col = "cmp")
+  expect_equal(cb$meta$pairs, c("B vs. A", "C vs. A"))
+  expect_equal(levels(cb$data$pair), c("B vs. A", "C vs. A"))
+  expect_equal(cb$meta$suggested_height, hv_balance_height(3, n_pairs = 2))
+})
+
+test_that("hv_balance errors when stats names a stat with no rows", {
+  expect_error(
+    hv_balance(sample_covariate_balance_data(), stats = c("smd", "ks")),
+    "no rows"
+  )
+})
+
+test_that("hv_balance errors on an unknown stats value", {
+  expect_error(hv_balance(sample_covariate_balance_data(), stats = "mean"), "should be one of")
+})
+
+test_that("hv_balance errors on unknown values in stat_col", {
+  d <- transform(sample_covariate_balance_data(), stat = "ovl")
+  expect_error(hv_balance(d, stat_col = "stat"), "unknown statistic")
+})
+
+test_that("hv_balance refuses to overwrite an unnamed stat or pair column", {
+  d <- transform(sample_covariate_balance_data(), stat = "x")
+  expect_error(hv_balance(d), "already has a column named `stat`")
+})
+
+test_that("hv_balance validates vr_threshold, ks_threshold and group_labels", {
+  d <- sample_covariate_balance_data()
+  expect_error(hv_balance(d, vr_threshold = c(0.5, 2, 3)), "vr_threshold")
+  expect_error(hv_balance(d, vr_threshold = -1), "vr_threshold")
+  expect_error(hv_balance(d, ks_threshold = 1.5), "ks_threshold")
+  expect_error(hv_balance(d, group_labels = "x"), "group_labels")
+})
+
+test_that("print.hv_balance reports stats, pairs and height", {
+  d <- sample_covariate_balance_data(n_vars = 3)
+  d <- rbind(transform(d, cmp = "B vs. A"), transform(d, cmp = "C vs. A"))
+  out <- capture.output(print(hv_balance(d, pair_col = "cmp")))
+  expect_true(any(grepl("Stats", out)))
+  expect_true(any(grepl("B vs. A, C vs. A", out)))
+  expect_true(any(grepl("Height", out)))
+})

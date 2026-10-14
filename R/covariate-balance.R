@@ -21,6 +21,54 @@ cb_validate_params <- function(threshold, point_size, hline_linewidth,
   .check_scalar_positive(vline_linewidth, "vline_linewidth")
 }
 
+cb_stat_labels <- c(
+  smd            = "Standardized difference (%)",
+  variance_ratio = "Variance ratio",
+  ks             = "KS statistic"
+)
+
+cb_validate_stat_args <- function(vr_threshold, ks_threshold, group_labels) {
+  if (!is.numeric(vr_threshold) || !length(vr_threshold) %in% 1:2 ||
+      anyNA(vr_threshold) || any(vr_threshold <= 0))
+    stop("`vr_threshold` must be one or two positive numbers.", call. = FALSE)
+  if (!is.null(ks_threshold) &&
+      (!is.numeric(ks_threshold) || length(ks_threshold) != 1L ||
+       is.na(ks_threshold) || ks_threshold < 0 || ks_threshold > 1))
+    stop("`ks_threshold` must be NULL or a single number in [0, 1].", call. = FALSE)
+  if (!is.character(group_labels) || length(group_labels) != 2L || anyNA(group_labels))
+    stop("`group_labels` must be a length-2 character vector.", call. = FALSE)
+}
+
+# Add the canonical `stat` and `pair` columns, keep only the requested stats
+# and fix factor levels so facets follow `stats` and first-appearance order.
+cb_add_stat_pair <- function(working, stat_col, pair_col, stats) {
+  for (nm in c("stat", "pair")) {
+    src <- if (nm == "stat") stat_col else pair_col
+    if (nm %in% names(working) && !identical(src, nm))
+      stop(sprintf(
+        "`data` already has a column named `%s`; pass %s_col = \"%s\" to use it.",
+        nm, nm, nm), call. = FALSE)
+  }
+  working[["stat"]] <- if (is.null(stat_col)) "smd" else as.character(working[[stat_col]])
+  working[["pair"]] <- if (is.null(pair_col)) NA_character_ else as.character(working[[pair_col]])
+
+  unknown <- setdiff(unique(working[["stat"]]), names(cb_stat_labels))
+  if (length(unknown))
+    stop(sprintf(
+      "`stat_col` holds unknown statistic(s): %s. Expected smd, variance_ratio or ks.",
+      paste(unknown, collapse = ", ")), call. = FALSE)
+  absent <- setdiff(stats, working[["stat"]])
+  if (length(absent))
+    stop(sprintf("`stats` asks for %s, but `data` has no rows for it.",
+                 paste(absent, collapse = " and ")), call. = FALSE)
+
+  working <- working[working[["stat"]] %in% stats, , drop = FALSE]
+  working[["stat"]] <- factor(working[["stat"]], levels = stats)
+  if (!is.null(pair_col))
+    working[["pair"]] <- factor(working[["pair"]], levels = unique(working[["pair"]]))
+  working
+}
+
 #' @importFrom rlang .data
 #' @importFrom ggplot2 ggplot aes geom_vline geom_hline geom_point scale_y_continuous
 cb_build_plot <- function(data, std_diff_col, group_col, var_levels,
@@ -100,15 +148,34 @@ cb_build_plot <- function(data, std_diff_col, group_col, var_levels,
 #'   Defaults to the order of first appearance in \code{data[[variable_col]]}.
 #' @param threshold    Numeric; absolute SMD value at which dotted reference
 #'   lines are drawn (\eqn{\pm}\code{threshold}).  Default \code{10}.
+#' @param stat_col     Optional name of a column holding the statistic each row
+#'   reports: \code{"smd"}, \code{"variance_ratio"} or \code{"ks"}.  When
+#'   \code{NULL} (default) every row is treated as \code{"smd"}.
+#' @param pair_col     Optional name of a column identifying the comparison
+#'   (e.g. \code{"B vs. A"}) when more than two groups were compared.  Default
+#'   \code{NULL} (a single comparison).
+#' @param stats        Character vector of statistics to keep, in panel order;
+#'   any of \code{"smd"}, \code{"variance_ratio"}, \code{"ks"}.  Default
+#'   \code{"smd"}.  An error is raised if a requested statistic has no rows.
+#' @param vr_threshold One or two positive numbers; reference lines for the
+#'   variance-ratio panel.  Default \code{c(0.5, 2)}.
+#' @param ks_threshold \code{NULL} (no line, default) or a single number in
+#'   \eqn{[0,1]}; reference line for the KS panel.
+#' @param group_labels Length-2 character vector naming the before and after
+#'   groups.  Default \code{c("Before", "After")}.
 #'
 #' @return An object of class \code{c("hv_balance", "hv_data")}: a list
 #'   with three elements:
 #' \describe{
 #'   \item{\code{$data}}{The input data frame with a \code{cb_index} column
-#'     added for y-axis positioning.}
+#'     added for y-axis positioning, a \code{stat} factor (levels =
+#'     \code{stats}) and a \code{pair} column (\code{NA} when there are no
+#'     comparisons, otherwise a factor in order of first appearance).}
 #'   \item{\code{$meta}}{Named list: \code{variable_col}, \code{group_col},
 #'     \code{std_diff_col}, \code{var_levels}, \code{threshold},
-#'     \code{n_vars}, \code{n_groups}.}
+#'     \code{n_vars}, \code{n_groups}, \code{stats}, \code{pairs},
+#'     \code{n_imputations}, \code{vr_threshold}, \code{ks_threshold},
+#'     \code{suggested_height}.}
 #'   \item{\code{$tables}}{Empty list (no accessory tables).}
 #' }
 #'
@@ -149,15 +216,43 @@ hv_balance <- function(
   group_col    = "group",
   std_diff_col = "std_diff",
   var_levels   = NULL,
-  threshold    = 10
+  threshold    = 10,
+  stat_col     = NULL,
+  pair_col     = NULL,
+  stats        = "smd",
+  vr_threshold = c(0.5, 2),
+  ks_threshold = NULL,
+  group_labels = c("Before", "After")
 ) {
+  stats <- match.arg(stats, names(cb_stat_labels), several.ok = TRUE)
+  cb_validate_stat_args(vr_threshold, ks_threshold, group_labels)
+
+  n_imputations <- 1L
+  long <- NULL
+  if (!is.null(long)) {
+    data          <- long$data
+    n_imputations <- long$n_imputations
+    variable_col  <- "variable"
+    group_col     <- "group"
+    std_diff_col  <- "std_diff"
+    stat_col      <- "stat"
+    pair_col      <- "pair"
+    # Two-group input has no comparisons: drop the all-NA column so the
+    # label-completeness check does not reject it.
+    if (all(is.na(data[["pair"]]))) {
+      data[["pair"]] <- NULL
+      pair_col <- NULL
+    }
+  }
+
   cb_validate_input(data, variable_col, group_col, std_diff_col)
+  .check_cols(data, c(stat_col, pair_col))
   cb_validate_params(threshold, point_size = 3, hline_linewidth = 0.25,
                      vline_linewidth = 0.2)
 
-  .check_complete_labels(data, c(variable_col, group_col))
-  incomplete <- .count_incomplete(data, std_diff_col)
-  working    <- as.data.frame(data)
+  .check_complete_labels(data, c(variable_col, group_col, stat_col, pair_col))
+  working <- cb_add_stat_pair(as.data.frame(data), stat_col, pair_col, stats)
+  incomplete <- .count_incomplete(working, std_diff_col)
 
   if (is.null(var_levels))
     var_levels <- unique(as.character(working[[variable_col]]))
@@ -166,17 +261,26 @@ hv_balance <- function(
     factor(working[[variable_col]], levels = var_levels)
   )
 
+  pairs <- if (is.null(pair_col)) character(0) else levels(working[["pair"]])
+
   new_hv_data(
     data = working,
     meta = list(
-      variable_col = variable_col,
-      group_col    = group_col,
-      std_diff_col = std_diff_col,
-      var_levels   = var_levels,
-      threshold    = threshold,
-      n_vars       = length(var_levels),
-      n_missing    = incomplete$n_missing,
-      n_groups     = length(unique(working[[group_col]]))
+      variable_col     = variable_col,
+      group_col        = group_col,
+      std_diff_col     = std_diff_col,
+      var_levels       = var_levels,
+      threshold        = threshold,
+      n_vars           = length(var_levels),
+      n_missing        = incomplete$n_missing,
+      n_groups         = length(unique(working[[group_col]])),
+      stats            = stats,
+      pairs            = pairs,
+      n_imputations    = n_imputations,
+      vr_threshold     = vr_threshold,
+      ks_threshold     = ks_threshold,
+      suggested_height = hv_balance_height(length(var_levels),
+                                           n_pairs = max(1L, length(pairs)))
     ),
     tables   = list(),
     subclass = "hv_balance"
@@ -201,6 +305,13 @@ print.hv_balance <- function(x, ...) {
               paste(unique(x$data[[m$group_col]]), collapse = ", ")))
   cat(sprintf("  SMD col     : %s\n", m$std_diff_col))
   cat(sprintf("  Threshold   : \u00b1%g\n", m$threshold))
+  cat(sprintf("  Stats       : %s\n", paste(m$stats, collapse = ", ")))
+  if (length(m$pairs))
+    cat(sprintf("  Pairs       : %s\n", paste(m$pairs, collapse = ", ")))
+  if (isTRUE(m$n_imputations > 1L))
+    cat(sprintf("  Imputations : %d (mean)\n", m$n_imputations))
+  cat(sprintf("  Height      : %.1f in at 12 pt (see hv_balance_height())\n",
+              m$suggested_height))
   invisible(x)
 }
 

@@ -10,7 +10,13 @@ hv_balance(
   group_col = "group",
   std_diff_col = "std_diff",
   var_levels = NULL,
-  threshold = 10
+  threshold = 10,
+  stat_col = NULL,
+  pair_col = NULL,
+  stats = "smd",
+  vr_threshold = c(0.5, 2),
+  ks_threshold = NULL,
+  group_labels = c("Before", "After")
 )
 }
 \arguments{
@@ -34,16 +40,41 @@ Defaults to the order of first appearance in \code{data[[variable_col]]}.}
 
 \item{threshold}{Numeric; absolute SMD value at which dotted reference
 lines are drawn (\eqn{\pm}\code{threshold}).  Default \code{10}.}
+
+\item{stat_col}{Optional name of a column holding the statistic each row
+reports: \code{"smd"}, \code{"variance_ratio"} or \code{"ks"}.  When
+\code{NULL} (default) every row is treated as \code{"smd"}.}
+
+\item{pair_col}{Optional name of a column identifying the comparison
+(e.g. \code{"B vs. A"}) when more than two groups were compared.  Default
+\code{NULL} (a single comparison).}
+
+\item{stats}{Character vector of statistics to keep, in panel order;
+any of \code{"smd"}, \code{"variance_ratio"}, \code{"ks"}.  Default
+\code{"smd"}.  An error is raised if a requested statistic has no rows.}
+
+\item{vr_threshold}{One or two positive numbers; reference lines for the
+variance-ratio panel.  Default \code{c(0.5, 2)}.}
+
+\item{ks_threshold}{\code{NULL} (no line, default) or a single number in
+\eqn{[0,1]}; reference line for the KS panel.}
+
+\item{group_labels}{Length-2 character vector naming the before and after
+groups.  Default \code{c("Before", "After")}.}
 }
 \value{
 An object of class \code{c("hv_balance", "hv_data")}: a list
 with three elements:
 \describe{
 \item{\code{$data}}{The input data frame with a \code{cb_index} column
-added for y-axis positioning.}
+added for y-axis positioning, a \code{stat} factor (levels =
+\code{stats}) and a \code{pair} column (\code{NA} when there are no
+comparisons, otherwise a factor in order of first appearance).}
 \item{\code{$meta}}{Named list: \code{variable_col}, \code{group_col},
 \code{std_diff_col}, \code{var_levels}, \code{threshold},
-\code{n_vars}, \code{n_groups}.}
+\code{n_vars}, \code{n_groups}, \code{stats}, \code{pairs},
+\code{n_imputations}, \code{vr_threshold}, \code{ks_threshold},
+\code{suggested_height}.}
 \item{\code{$tables}}{Empty list (no accessory tables).}
 }
 }
