@@ -1,3 +1,29 @@
+# hvtiPlotR 2.8.10
+
+* The SAS examples in `inst/plot.example.sas` and the introductory vignette
+  use `/studies/<study>` in place of the production study they were taken
+  from.
+
+* `hv_balance()` now takes a `cobalt::bal.tab()` result (built with
+  `binary = "std"` and `continuous = "std"`), a multi-category `bal.tab`
+  (one facet row per pairwise comparison), an hvtiRpropensity `ps_match()`
+  or `ps_weight()` object, or a list of any one of those, one per
+  imputation, averaged: SMD and KS take the arithmetic mean, the variance
+  ratio the geometric mean. It multiplies SMDs by 100 itself. When a
+  `bal.tab` was built with `un = FALSE` (cobalt's default with weights),
+  only the adjusted group is drawn and a message says to re-run with
+  `un = TRUE`. A `bal.tab` holding several weight sets stops with a message
+  to build one per weight set, and a named `group_labels` vector is accepted
+  (#219).
+
+* `hv_balance(stats = c("smd", "variance_ratio", "ks"))` draws variance-ratio
+  and KS panels beside the SMD panel, so distributional imbalance that exact
+  mean balance hides is visible. Data frames select panels with `stat_col`
+  and facet by comparison with `pair_col` (#219).
+
+* New `hv_balance_height()` suggests a figure height for the number of
+  covariate rows; `hv_balance()` stores it in `$meta$suggested_height` (#219).
+
 # hvtiPlotR 2.8.9
 
 * `hv_panel_size()` and `hv_ggsave_dims()` no longer leave a graphics device
