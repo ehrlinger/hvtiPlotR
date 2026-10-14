@@ -489,3 +489,53 @@ test_that("hv_balance points ps_* callers to bal.tab for VR and KS", {
   w <- hvtiRpropensity::ps_weight(hvtiRpropensity::sample_ps_data(), covariates = ps_cov)
   expect_error(hv_balance(w, stats = c("smd", "ks")), "bal.tab")
 })
+
+# ---------------------------------------------------------------------------
+# hv_balance: imputation lists
+# ---------------------------------------------------------------------------
+
+test_that("hv_balance averages 5 imputations of a 38-term bal.tab", {
+  skip_if_not_installed("cobalt")
+  imps <- lapply(1:5, function(i) balance_baltab(balance_cohort(n_terms = 38, seed = i)))
+  cb   <- hv_balance(imps)
+  expect_equal(cb$meta$n_imputations, 5L)
+  expect_equal(cb$meta$n_vars, 38L)
+  hand <- rowMeans(sapply(imps, function(b) b$Balance$Diff.Adj)) * 100
+  after <- cb$data[cb$data$group == "After", ]
+  expect_equal(after$std_diff, unname(hand))
+  expect_equal(round(cb$meta$suggested_height, 2), 7.96)
+  expect_output(print(cb), "Imputations : 5")
+})
+
+test_that("hv_balance averages a list of ps_match objects", {
+  skip_if_not_installed("hvtiRpropensity")
+  d <- hvtiRpropensity::sample_ps_data()
+  imps <- lapply(1:3, function(i) {
+    hvtiRpropensity::ps_match(d, covariates = c("age", "female", "ef"), caliper = 0.05, seed = i)
+  })
+  cb <- hv_balance(imps)
+  hand <- rowMeans(sapply(imps, function(m) m$tables$smd_after$smd)) * 100
+  expect_equal(cb$data[cb$data$group == "After", "std_diff"], unname(hand))
+})
+
+test_that("hv_balance rejects an imputation list mixing classes", {
+  skip_if_not_installed("cobalt")
+  skip_if_not_installed("hvtiRpropensity")
+  bt <- balance_baltab(balance_cohort(n_terms = 4))
+  w  <- hvtiRpropensity::ps_weight(hvtiRpropensity::sample_ps_data(), covariates = "age")
+  expect_error(hv_balance(list(bt, w)), "same kind")
+})
+
+test_that("hv_balance rejects imputations with different covariates", {
+  skip_if_not_installed("cobalt")
+  a <- balance_baltab(balance_cohort(n_terms = 4))
+  b <- balance_baltab(balance_cohort(n_terms = 6))
+  expect_error(hv_balance(list(a, b)), "differ")
+})
+
+test_that("hv_balance rejects an empty list and a partly-adapter list", {
+  skip_if_not_installed("cobalt")
+  expect_error(hv_balance(list()), "empty")
+  bt <- balance_baltab(balance_cohort(n_terms = 4))
+  expect_error(hv_balance(list(bt, data.frame())), "every element")
+})
