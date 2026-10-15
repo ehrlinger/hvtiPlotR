@@ -1,5 +1,94 @@
 # Changelog
 
+## hvtiPlotR 2.8.11
+
+- The README’s Installation section now leads with `hvtiR::install()`,
+  which installs the whole HVTI R family in one call, and then gives
+  `pak::pak("ehrlinger/hvtiPlotR")` for this package alone.
+
+- [`sample_goodness_followup_data()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_goodness_followup_data.md)
+  now simulates loss to follow-up (`loss_rate`, default `0.03` per
+  year), so the goodness-of-follow-up plot it feeds looks like real
+  data: lost patients are censored before `close_date` and fall below
+  the diagonal. Until now every survivor sat exactly on the diagonal,
+  the pattern of follow-up computed to the close date rather than to
+  last contact. `loss_rate = 0` gives the old complete follow-up. The
+  same seed now returns different `iv_dead`, `dead`, `iv_event`,
+  `ev_event` and `deads` values.
+
+- The goodness-of-follow-up passages in the vignettes no longer describe
+  points above the diagonal as passive surveillance. `close_date` is the
+  date the dataset was frozen, so follow-up past it is a data error, and
+  they now say so.
+
+- The theme help page
+  ([`theme_hv_manuscript()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)
+  and its siblings),
+  [`hv_consort_summary()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_consort_summary.md)
+  and
+  [`is_hv_data()`](https://ehrlinger.github.io/hvtiPlotR/reference/is_hv_data.md)
+  have help-page examples, and a
+  [`hazard_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/hazard_plot.md)
+  example comment no longer calls a `\donttest{}` block “dontrun”.
+
+- [`plot.hv_eda()`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hv_eda.md)
+  and
+  [`plot.hv_eda_pages()`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hv_eda_pages.md)
+  gain `interactive`, which gives the bars of a percent or count panel
+  hover labels: each bar’s tooltip names its category, its `x` bin, and
+  its count and percent of the bin. The default, `NULL`, turns them on
+  in knitr HTML output when ggiraph is installed. Printed or saved, a
+  plot is the same as before. The new
+  [`hv_girafe()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_girafe.md)
+  renders a plot or page as an HTML widget without embedding font files,
+  which kept an 8-panel page at 0.4 MB rather than 8.6 MB. ggiraph and
+  gdtools join Suggests.
+
+- [`save_manuscript()`](https://ehrlinger.github.io/hvtiPlotR/reference/save_manuscript.md)
+  writes TIFF as well as PNG, and TIFF is the default. A new `format`
+  argument, `"tiff"` (default) or `"png"`, supplies the extension for a
+  `file` or `draft_file` given without one, unless you pass a `device`,
+  in which case `file` is used as given. A TIFF is written by
+  [`ragg::agg_tiff()`](https://ragg.r-lib.org/reference/agg_tiff.html),
+  through ggplot2, with LZW compression at `dpi`, the same pixel
+  geometry as the PNG, so a 6 x 4 in figure at 300 dpi is 1800 x 1200
+  pixels and tens of kilobytes rather than the several megabytes of the
+  uncompressed TIFF
+  [`ggplot2::ggsave()`](https://ggplot2.tidyverse.org/reference/ggsave.html)
+  writes. An extension you write always wins, so a `.png` meant for an
+  HTML report stays a PNG; browsers do not display TIFF. `ragg` is now
+  imported.
+
+- [`?save_ppt`](https://ehrlinger.github.io/hvtiPlotR/reference/save_ppt.md)
+  now documents the `panel_box` default the code uses,
+  `list(width = 8.79, height = 4.422, left = 2.67, top = 1.29)`; it gave
+  other values before
+  ([\#229](https://github.com/ehrlinger/hvtiPlotR/issues/229)).
+
+- `ragg` is floored at 1.2.1. Earlier versions crash R when writing a
+  TIFF with a transparent background, which
+  [`save_manuscript()`](https://ehrlinger.github.io/hvtiPlotR/reference/save_manuscript.md)
+  now writes by default for an extension-less path.
+
+- [`save_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/save_ppt.md)
+  uses a shorter, lower panel rectangle with the bundled light template
+  (`hv_panel_box("light")`: 8.79 x 3.9 in at left 2.67, top 1.6), so
+  facet strips clear its taller title placeholder and the axis titles
+  stay above the bottom edge. The dark template keeps 8.79 x 4.422 at
+  1.29. New exported
+  [`hv_panel_box()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_panel_box.md)
+  returns either rectangle; pass `panel_box = hv_panel_box("light")` for
+  a copy of the light template kept elsewhere
+  ([\#229](https://github.com/ehrlinger/hvtiPlotR/issues/229)).
+
+- `ragg` is now imported explicitly (`agg_tiff`):
+  [`ggsave()`](https://ggplot2.tidyverse.org/reference/ggsave.html)
+  writes
+  [`save_manuscript()`](https://ehrlinger.github.io/hvtiPlotR/reference/save_manuscript.md)’s
+  TIFF and PNG through ragg only when it is installed, so the package
+  declares and imports it. Clears R CMD check’s “Namespace in Imports
+  field not imported from: ‘ragg’” NOTE.
+
 ## hvtiPlotR 2.8.10
 
 - The SAS examples in `inst/plot.example.sas` and the introductory
