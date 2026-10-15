@@ -79,6 +79,7 @@ out at a consistent size in one call. It is the manuscript counterpart of
 <span>  dpi <span class="op">=</span> <span class="fl">300</span>,</span>
 <span>  draft_file <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  draft_dpi <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  format <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"tiff"</span>, <span class="st">"png"</span><span class="op">)</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -93,8 +94,8 @@ out at a consistent size in one call. It is the manuscript counterpart of
 
 
 <dt id="arg-file">file<a class="anchor" aria-label="anchor" href="#arg-file"></a></dt>
-<dd><p>Output file path. Its extension sets the format (<code>.pdf</code>, <code>.png</code>,
-...).</p></dd>
+<dd><p>Output file path. Its extension sets the format (<code>.pdf</code>,
+<code>.tiff</code>, <code>.png</code>, ...). Without an extension, <code>format</code> supplies one.</p></dd>
 
 
 <dt id="arg-width-height-units">width, height, units<a class="anchor" aria-label="anchor" href="#arg-width-height-units"></a></dt>
@@ -104,7 +105,9 @@ manuscript default.</p></dd>
 
 <dt id="arg-device">device<a class="anchor" aria-label="anchor" href="#arg-device"></a></dt>
 <dd><p>Graphics device. <code>NULL</code> (default) lets <span class="pkg">ggplot2</span> pick from
-the file extension. For font embedding in a PDF, pass
+the file extension, and a TIFF is written LZW-compressed by
+<code><a href="https://ragg.r-lib.org/reference/agg_tiff.html" class="external-link">ragg::agg_tiff()</a></code>. When you pass a <code>device</code>, <code>file</code> is used as given and
+<code>format</code> adds no extension. For font embedding in a PDF, pass
 <code><a href="https://rdrr.io/r/grDevices/cairo.html" class="external-link">grDevices::cairo_pdf</a></code> (requires cairo/X11 support).</p></dd>
 
 
@@ -124,6 +127,13 @@ Default <code>NULL</code> (no draft copy written).</p></dd>
 back to <code>dpi</code>.</p></dd>
 
 
+<dt id="arg-format">format<a class="anchor" aria-label="anchor" href="#arg-format"></a></dt>
+<dd><p>Raster format, <code>"tiff"</code> (default) or <code>"png"</code>, for a <code>file</code> or
+<code>draft_file</code> given without an extension. A path that has an extension
+keeps it. Passing a <code>format</code> that contradicts a raster extension, such as
+<code>format = "png"</code> with a <code>.tiff</code> path, is an error.</p></dd>
+
+
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
 <dd><p>Further arguments passed to <code><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggplot2::ggsave()</a></code> for the primary
 <code>file</code>. Not applied to <code>draft_file</code>.</p></dd>
@@ -131,14 +141,23 @@ back to <code>dpi</code>.</p></dd>
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>Invisibly, the <code>file</code> path.</p>
+    <p>Invisibly, the <code>file</code> path, with the extension <code>format</code> added when
+it had none.</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>Pair it with <code><a href="hvtiPlotR-themes.html">theme_hv_manuscript()</a></code>, whose 12 pt <code>base_size</code> supplies the
 manuscript typography. Like <code><a href="save_ppt.html">save_ppt()</a></code>, <code>save_manuscript()</code> fixes the
 output geometry, not the theme; style the plot first, then save.</p>
-<p>The device is inferred from the file extension by default. For a <code>.pdf</code>
+<p>The device is inferred from the file extension by default. A <code>.tif</code> or
+<code>.tiff</code> file is written as an LZW-compressed TIFF at <code>dpi</code>, so a 6 x 4 in
+figure is 1800 x 1200 pixels, the same geometry as the PNG, without the
+tens of megabytes an uncompressed TIFF takes. A path with no extension takes
+one from <code>format</code>, which defaults to <code>"tiff"</code>, the raster format journals
+ask for. An extension you write is never overridden, so a <code>.png</code> path, such
+as one a Quarto or R Markdown report embeds, stays a PNG: browsers do not
+display TIFF.</p>
+<p>For a <code>.pdf</code>
 where you want fonts embedded (so 12 pt type renders exactly as designed),
 pass <code>device = grDevices::cairo_pdf</code> (on a system with cairo/X11 support).</p>
 <p>Publisher-accepted formats, vector (PDF, EPS) or TIFF (a raster format
@@ -164,6 +183,12 @@ in the HVTI ggplot graphics recipes book,
 <span class="r-in"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="hv_survival.html">hv_survival</a></span><span class="op">(</span><span class="fu"><a href="sample_survival_data.html">sample_survival_data</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">200</span>, seed <span class="op">=</span> <span class="fl">42</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="hvtiPlotR-themes.html">theme_hv_manuscript</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">save_manuscript</span><span class="op">(</span><span class="va">p</span>, <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"survival.pdf"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># no extension: a 300 dpi, LZW-compressed survival.tiff</span></span></span>
+<span class="r-in"><span><span class="fu">save_manuscript</span><span class="op">(</span><span class="va">p</span>, <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"survival"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># the same figure as a PNG</span></span></span>
+<span class="r-in"><span><span class="fu">save_manuscript</span><span class="op">(</span><span class="va">p</span>, <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"survival"</span><span class="op">)</span>, format <span class="op">=</span> <span class="st">"png"</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># also write a small draft PNG for dragging into Word</span></span></span>
 <span class="r-in"><span><span class="fu">save_manuscript</span><span class="op">(</span><span class="va">p</span>, <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"survival.pdf"</span><span class="op">)</span>,</span></span>

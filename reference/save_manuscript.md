@@ -21,6 +21,7 @@ save_manuscript(
   dpi = 300,
   draft_file = NULL,
   draft_dpi = NULL,
+  format = c("tiff", "png"),
   ...
 )
 ```
@@ -36,7 +37,8 @@ save_manuscript(
 
 - file:
 
-  Output file path. Its extension sets the format (`.pdf`, `.png`, ...).
+  Output file path. Its extension sets the format (`.pdf`, `.tiff`,
+  `.png`, ...). Without an extension, `format` supplies one.
 
 - width, height, units:
 
@@ -45,6 +47,9 @@ save_manuscript(
 - device:
 
   Graphics device. `NULL` (default) lets ggplot2 pick from the file
+  extension, and a TIFF is written LZW-compressed by
+  [`ragg::agg_tiff()`](https://ragg.r-lib.org/reference/agg_tiff.html).
+  When you pass a `device`, `file` is used as given and `format` adds no
   extension. For font embedding in a PDF, pass
   [`grDevices::cairo_pdf`](https://rdrr.io/r/grDevices/cairo.html)
   (requires cairo/X11 support).
@@ -65,6 +70,13 @@ save_manuscript(
   Resolution for `draft_file`. Default `NULL`, which falls back to
   `dpi`.
 
+- format:
+
+  Raster format, `"tiff"` (default) or `"png"`, for a `file` or
+  `draft_file` given without an extension. A path that has an extension
+  keeps it. Passing a `format` that contradicts a raster extension, such
+  as `format = "png"` with a `.tiff` path, is an error.
+
 - ...:
 
   Further arguments passed to
@@ -73,7 +85,8 @@ save_manuscript(
 
 ## Value
 
-Invisibly, the `file` path.
+Invisibly, the `file` path, with the extension `format` added when it
+had none.
 
 ## Details
 
@@ -84,10 +97,18 @@ whose 12 pt `base_size` supplies the manuscript typography. Like
 `save_manuscript()` fixes the output geometry, not the theme; style the
 plot first, then save.
 
-The device is inferred from the file extension by default. For a `.pdf`
-where you want fonts embedded (so 12 pt type renders exactly as
-designed), pass `device = grDevices::cairo_pdf` (on a system with
-cairo/X11 support).
+The device is inferred from the file extension by default. A `.tif` or
+`.tiff` file is written as an LZW-compressed TIFF at `dpi`, so a 6 x 4
+in figure is 1800 x 1200 pixels, the same geometry as the PNG, without
+the tens of megabytes an uncompressed TIFF takes. A path with no
+extension takes one from `format`, which defaults to `"tiff"`, the
+raster format journals ask for. An extension you write is never
+overridden, so a `.png` path, such as one a Quarto or R Markdown report
+embeds, stays a PNG: browsers do not display TIFF.
+
+For a `.pdf` where you want fonts embedded (so 12 pt type renders
+exactly as designed), pass `device = grDevices::cairo_pdf` (on a system
+with cairo/X11 support).
 
 Publisher-accepted formats, vector (PDF, EPS) or TIFF (a raster format
 also accepted by journals), often produce large or fragile files when
@@ -115,6 +136,12 @@ recipes book, <https://ehrlinger.github.io/hvtiGraphics/>.
 p <- plot(hv_survival(sample_survival_data(n = 200, seed = 42))) +
   theme_hv_manuscript()
 save_manuscript(p, file.path(tempdir(), "survival.pdf"))
+
+# no extension: a 300 dpi, LZW-compressed survival.tiff
+save_manuscript(p, file.path(tempdir(), "survival"))
+
+# the same figure as a PNG
+save_manuscript(p, file.path(tempdir(), "survival"), format = "png")
 
 # also write a small draft PNG for dragging into Word
 save_manuscript(p, file.path(tempdir(), "survival.pdf"),
