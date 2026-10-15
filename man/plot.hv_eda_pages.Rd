@@ -14,7 +14,9 @@
 \item{alpha}{Point transparency for continuous panels. Default \code{0.5},
 which keeps a dense cohort readable as a distribution.}
 
-\item{...}{Passed to \code{\link[=plot.hv_eda]{plot.hv_eda()}}, for example \code{smooth_span}.}
+\item{...}{Passed to \code{\link[=plot.hv_eda]{plot.hv_eda()}}, for example \code{smooth_span}, or
+\code{interactive} to give the bars of a percent or count page hover labels;
+render such a page with \code{\link[=hv_girafe]{hv_girafe()}}.}
 }
 \value{
 A list of patchwork pages, possibly empty. Each page carries the

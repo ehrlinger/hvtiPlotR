@@ -400,6 +400,13 @@ print.hv_eda <- function(x, ...) {
 #'   Default \code{FALSE}.
 #' @param alpha         Point transparency for continuous plots.
 #'   Default \code{0.4}.
+#' @param interactive   Give categorical bars hover labels? \code{NULL}
+#'   (the default) means yes in knitr HTML output when the ggiraph package is
+#'   installed, and no otherwise; \code{TRUE} or \code{FALSE} decide it.
+#'   With hover labels each bar carries a tooltip naming its category, its
+#'   \code{x} bin and its count and percent of the bin, shown once the plot is
+#'   rendered with \code{\link{hv_girafe}}. Printed or saved, the plot is the
+#'   same as without them. Continuous plots are unaffected.
 #' @param ...           Ignored; present for S3 consistency.
 #'
 #' @return A bare \code{\link[ggplot2]{ggplot}} object.
@@ -443,8 +450,10 @@ plot.hv_eda <- function(x,
                            loess_cutoff = 10,
                            group_bars = FALSE,
                            alpha = 0.4,
+                           interactive = NULL,
                            ...) {
   .check_alpha(alpha)
+  interactive  <- .eda_interactive(interactive)
   data         <- x$data
   meta         <- x$meta
   var_type     <- meta$var_type
@@ -513,6 +522,26 @@ plot.hv_eda <- function(x,
   fill_code[is.na(fill_code)] <- 0L
   data$stack <- factor(fill_code, levels = 0:length(fill_lv))
 
+  # Hover labels swap geom_bar() for ggiraph's, which draws the same bars.
+  bar <- ggplot2::geom_bar
+  if (interactive) {
+    # Group by category and bin, not category alone, so each bar keeps its
+    # own tooltip through the stat. Within a bin the groups keep the order of
+    # `stack`, so the bars stack and dodge as before.
+    data$hover_group <- interaction(data$stack, data$x, lex.order = TRUE, drop = TRUE)
+    data$hover_start <- .eda_tooltip_start(data$fill, data$x)
+    tip <- function(start, count, x, panel) .eda_tooltips(start, count, x, panel, show_percent)
+    bar <- function(...) {
+      ggiraph::geom_bar_interactive(
+        ggplot2::aes(
+          group   = .data[["hover_group"]],
+          tooltip = ggplot2::stage(.data[["hover_start"]],
+                                   after_stat = tip(tooltip, count, x, PANEL))
+        ), ...
+      )
+    }
+  }
+
   p <- ggplot2::ggplot(
     data,
     ggplot2::aes(
@@ -531,7 +560,7 @@ plot.hv_eda <- function(x,
   if (show_percent) {
 
     p <- p +
-      ggplot2::geom_bar(
+      bar(
         position = ggplot2::position_fill()
       ) +
       ggplot2::scale_y_continuous(
@@ -542,14 +571,14 @@ plot.hv_eda <- function(x,
   } else if (group_bars) {
 
     p <- p +
-      ggplot2::geom_bar(
+      bar(
         position = ggplot2::position_dodge(preserve = "single")
       )
 
   } else {
 
     p <- p +
-      ggplot2::geom_bar(
+      bar(
         position = ggplot2::position_stack()
       )
 
