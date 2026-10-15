@@ -15,6 +15,11 @@ is_hv_data(x)
 \description{
 Test whether an object is an hvtiPlotR data object
 }
+\examples{
+d <- sample_correlation_data(n = 50)
+is_hv_data(hv_correlation_matrix(d, c("a1c", "glucose")))
+is_hv_data(d)
+}
 \seealso{
 \code{\link[=summary.hv_data]{summary.hv_data()}}, \code{\link[=autoplot.hv_data]{autoplot.hv_data()}}, \code{\link[=as.data.frame.hv_data]{as.data.frame.hv_data()}}
 }

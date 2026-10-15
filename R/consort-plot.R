@@ -270,6 +270,9 @@ print.hv_consort_tracker <- function(x, ...) {
 #'   `excl_col`, `n_excluded`.  `n_excluded` and `excl_col` are `NA` for the
 #'   final stage (no downstream exclusion defined yet).
 #'
+#' @examples
+#' hv_consort_summary(sample_consort_data())
+#'
 #' @seealso [hv_consort_patients()]
 #' @export
 hv_consort_summary <- function(tracker) {
