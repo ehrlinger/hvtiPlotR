@@ -193,7 +193,9 @@ print.hv_eda_pages <- function(x, ...) {
 #' @param ncol,nrow Panels across and down each page. Default 4 by 4.
 #' @param alpha Point transparency for continuous panels. Default `0.5`,
 #'   which keeps a dense cohort readable as a distribution.
-#' @param ... Passed to [plot.hv_eda()], for example `smooth_span`.
+#' @param ... Passed to [plot.hv_eda()], for example `smooth_span`, or
+#'   `interactive` to give the bars of a percent or count page hover labels;
+#'   render such a page with [hv_girafe()].
 #'
 #' @return A list of patchwork pages, possibly empty. Each page carries the
 #'   names of the variables on it as `attr(page, "variables")`, so a report

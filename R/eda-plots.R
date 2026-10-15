@@ -400,6 +400,13 @@ print.hv_eda <- function(x, ...) {
 #'   Default \code{FALSE}.
 #' @param alpha         Point transparency for continuous plots.
 #'   Default \code{0.4}.
+#' @param interactive   Give categorical bars hover labels? \code{NULL}
+#'   (the default) means yes in knitr HTML output when the ggiraph package is
+#'   installed, and no otherwise; \code{TRUE} or \code{FALSE} decide it.
+#'   With hover labels each bar carries a tooltip naming its category, its
+#'   \code{x} bin and its count and percent of the bin, shown once the plot is
+#'   rendered with \code{\link{hv_girafe}}. Printed or saved, the plot is the
+#'   same as without them. Continuous plots are unaffected.
 #' @param ...           Ignored; present for S3 consistency.
 #'
 #' @return A bare \code{\link[ggplot2]{ggplot}} object.
@@ -443,8 +450,10 @@ plot.hv_eda <- function(x,
                            loess_cutoff = 10,
                            group_bars = FALSE,
                            alpha = 0.4,
+                           interactive = NULL,
                            ...) {
   .check_alpha(alpha)
+  interactive  <- .eda_interactive(interactive)
   data         <- x$data
   meta         <- x$meta
   var_type     <- meta$var_type
@@ -513,6 +522,18 @@ plot.hv_eda <- function(x,
   fill_code[is.na(fill_code)] <- 0L
   data$stack <- factor(fill_code, levels = 0:length(fill_lv))
 
+  # Hover labels swap geom_bar() for ggiraph's, which draws the same bars.
+  bar <- ggplot2::geom_bar
+  if (interactive) {
+    x_levels <- levels(data$x)
+    tip <- function(fill, x, count) .eda_tooltips(fill, x, count, x_levels, show_percent)
+    bar <- function(...) {
+      ggiraph::geom_bar_interactive(
+        ggplot2::aes(tooltip = ggplot2::after_stat(tip(fill, x, count))), ...
+      )
+    }
+  }
+
   p <- ggplot2::ggplot(
     data,
     ggplot2::aes(
@@ -531,7 +552,7 @@ plot.hv_eda <- function(x,
   if (show_percent) {
 
     p <- p +
-      ggplot2::geom_bar(
+      bar(
         position = ggplot2::position_fill()
       ) +
       ggplot2::scale_y_continuous(
@@ -542,14 +563,14 @@ plot.hv_eda <- function(x,
   } else if (group_bars) {
 
     p <- p +
-      ggplot2::geom_bar(
+      bar(
         position = ggplot2::position_dodge(preserve = "single")
       )
 
   } else {
 
     p <- p +
-      ggplot2::geom_bar(
+      bar(
         position = ggplot2::position_stack()
       )
 
