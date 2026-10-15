@@ -63,7 +63,7 @@ the panel content area to anchor on every slide (in inches).
 Per-plot slide placement is computed via \code{\link[=hv_ph_location]{hv_ph_location()}} so the panel
 lands at the same slide coordinates on every slide regardless of
 axis-label width. Defaults to
-\code{list(width = 8.88, height = 4.51, left = 2.58, top = 1.63)}, the
+\code{list(width = 8.79, height = 4.422, left = 2.67, top = 1.29)}, the
 standard CORR fixed-panel rectangle for AATS-style dark decks. Pass
 \code{panel_box = NULL} to fall back to the fixed \code{width}/\code{height}/\code{left}/
 \code{top} arguments for every slide (legacy behavior). Ignored for

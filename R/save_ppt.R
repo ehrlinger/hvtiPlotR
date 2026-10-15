@@ -234,7 +234,7 @@ add_plot_slide <- function(doc, plot, title, layout, master, width, height,
 #'   Per-plot slide placement is computed via [hv_ph_location()] so the panel
 #'   lands at the same slide coordinates on every slide regardless of
 #'   axis-label width. Defaults to
-#'   `list(width = 8.88, height = 4.51, left = 2.58, top = 1.63)`, the
+#'   `list(width = 8.79, height = 4.422, left = 2.67, top = 1.29)`, the
 #'   standard CORR fixed-panel rectangle for AATS-style dark decks. Pass
 #'   `panel_box = NULL` to fall back to the fixed `width`/`height`/`left`/
 #'   `top` arguments for every slide (legacy behavior). Ignored for
