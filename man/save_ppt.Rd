@@ -16,7 +16,7 @@ save_ppt(
   height = 5.8,
   left = 0,
   top = 1.2,
-  panel_box = list(width = 8.79, height = 4.422, left = 2.67, top = 1.29)
+  panel_box = hv_panel_box(.hv_template_mode(template))
 )
 }
 \arguments{
@@ -62,9 +62,12 @@ is supplied.}
 the panel content area to anchor on every slide (in inches).
 Per-plot slide placement is computed via \code{\link[=hv_ph_location]{hv_ph_location()}} so the panel
 lands at the same slide coordinates on every slide regardless of
-axis-label width. Defaults to
-\code{list(width = 8.79, height = 4.422, left = 2.67, top = 1.29)}, the
-standard CORR fixed-panel rectangle for AATS-style dark decks. Pass
+axis-label width. Defaults to \code{\link[=hv_panel_box]{hv_panel_box()}} for the template: the
+light rectangle when \code{template} is the bundled
+\code{hv_ppt_template_light.pptx}, otherwise the standard CORR dark
+rectangle \code{list(width = 8.79, height = 4.422, left = 2.67, top = 1.29)}.
+For a copy of the light template kept elsewhere, pass
+\code{panel_box = hv_panel_box("light")}. Pass
 \code{panel_box = NULL} to fall back to the fixed \code{width}/\code{height}/\code{left}/
 \code{top} arguments for every slide (legacy behavior). Ignored for
 \code{hv_consort} objects, which are always placed using their own metadata

@@ -137,3 +137,40 @@ hv_ph_location <- function(plot,
 
   loc
 }
+
+#' Standard slide panel rectangle for an HVTI template
+#'
+#' The fixed panel rectangle [save_ppt()] anchors every plot to, in inches,
+#' for the 13.33 by 7.5 inch HVTI templates. The dark (default) template's
+#' title bar ends above 1.29 in, so its panel starts there. The light
+#' template's title placeholder runs to 1.33 in, so its panel starts lower
+#' (1.6 in) and is shorter (3.9 in), leaving room for facet strips under the
+#' title and for the 32 pt axis text and 40 pt axis title of
+#' [theme_hv_ppt_light()] above the bottom edge. Width and left edge are the
+#' same in both, so a figure's panel sits at the same horizontal position in
+#' either deck.
+#'
+#' @param mode `"dark"` (the default template) or `"light"`
+#'   (`hv_ppt_template_light.pptx`).
+#' @return A named list `width`, `height`, `left`, `top`, ready for the
+#'   `panel_box` argument of [save_ppt()].
+#' @seealso [save_ppt()], [hv_ph_location()]
+#' @examples
+#' hv_panel_box("light")
+#' @export
+hv_panel_box <- function(mode = c("dark", "light")) {
+  mode <- match.arg(mode)
+  switch(mode,
+         dark  = list(width = 8.79, height = 4.422, left = 2.67, top = 1.29),
+         light = list(width = 8.79, height = 3.9,   left = 2.67, top = 1.6))
+}
+
+# "light" when `template` is the bundled light template, else "dark".
+.hv_template_mode <- function(template) {
+  light <- system.file("extdata", "hv_ppt_template_light.pptx",
+                       package = "hvtiPlotR")
+  same <- nzchar(light) && is.character(template) && length(template) == 1L &&
+    file.exists(template) &&
+    identical(normalizePath(template), normalizePath(light))
+  if (same) "light" else "dark"
+}

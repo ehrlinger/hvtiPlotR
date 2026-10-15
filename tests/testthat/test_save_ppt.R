@@ -529,11 +529,23 @@ test_that("save_ppt requires an explicit powerpoint output path", {
 })
 
 test_that("save_ppt defaults panel_box to the standard fixed-panel rectangle", {
-  default_box <- eval(formals(save_ppt)$panel_box)
   expect_equal(
-    default_box,
+    hv_panel_box(.hv_template_mode("not-a-template.pptx")),
     list(width = 8.79, height = 4.422, left = 2.67, top = 1.29)
   )
+})
+
+test_that("hv_panel_box gives a shorter, lower rectangle for the light template", {
+  light <- system.file("extdata", "hv_ppt_template_light.pptx",
+                       package = "hvtiPlotR")
+  dark  <- system.file("extdata", "hv_ppt_template.pptx", package = "hvtiPlotR")
+  expect_identical(.hv_template_mode(light), "light")
+  expect_identical(.hv_template_mode(dark), "dark")
+  box <- hv_panel_box("light")
+  expect_equal(box, list(width = 8.79, height = 3.9, left = 2.67, top = 1.6))
+  # Below the light template's title placeholder (0.083 + 1.25 in).
+  expect_gt(box$top, 0.083 + 1.25)
+  expect_error(hv_panel_box("blue"))
 })
 
 test_that("save_ppt uses the panel_box path by default (no explicit panel_box)", {
