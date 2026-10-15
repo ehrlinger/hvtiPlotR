@@ -109,3 +109,37 @@ test_that("a .pdf file ignores format", {
   expect_identical(save_manuscript(mk_plot(), f, format = "png"), f)
   expect_true(file.exists(f))
 })
+
+test_that("an explicit device leaves an extension-less path alone", {
+  d <- withr::local_tempdir()
+  f <- file.path(d, "figure")
+  expect_identical(save_manuscript(mk_plot(), f, device = "pdf"), f)
+  expect_true(file.exists(f))
+  expect_false(file.exists(paste0(f, ".tiff")))
+  expect_identical(rawToChar(readBin(f, "raw", 4L)), "%PDF")
+
+  g <- file.path(d, "figure_png")
+  expect_identical(save_manuscript(mk_plot(), g, device = "png"), g)
+  expect_identical(readBin(g, "raw", 4L)[2:4], charToRaw("PNG"))
+  expect_false(file.exists(paste0(g, ".tiff")))
+})
+
+test_that("grDevices TIFF options still render, with ggplot2's warning", {
+  f <- file.path(withr::local_tempdir(), "figure.tiff")
+  expect_warning(save_manuscript(mk_plot(), f, type = "cairo"),
+                 "Ignoring")
+  expect_identical(read_tiff_header(f)$compression, 5)
+  expect_warning(save_manuscript(mk_plot(), f, antialias = "none"),
+                 "Ignoring")
+  expect_identical(read_tiff_header(f)$compression, 5)
+})
+
+test_that("a caller's compression and device = \"tiff\" are honored", {
+  d <- withr::local_tempdir()
+  f <- file.path(d, "plain.tiff")
+  save_manuscript(mk_plot(), f, compression = "none")
+  expect_identical(read_tiff_header(f)$compression, 1)
+  g <- file.path(d, "figure")
+  expect_identical(save_manuscript(mk_plot(), g, device = "tiff"), g)
+  expect_identical(read_tiff_header(g)$compression, 5)
+})

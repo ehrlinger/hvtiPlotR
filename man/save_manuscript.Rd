@@ -29,8 +29,9 @@ save_manuscript(
 manuscript default.}
 
 \item{device}{Graphics device. \code{NULL} (default) lets \pkg{ggplot2} pick from
-the file extension, except that a TIFF is written LZW-compressed by
-\code{\link[ragg:agg_tiff]{ragg::agg_tiff()}}. For font embedding in a PDF, pass
+the file extension, and a TIFF is written LZW-compressed by
+\code{\link[ragg:agg_tiff]{ragg::agg_tiff()}}. When you pass a \code{device}, \code{file} is used as given and
+\code{format} adds no extension. For font embedding in a PDF, pass
 \code{grDevices::cairo_pdf} (requires cairo/X11 support).}
 
 \item{dpi}{Resolution for raster formats. Default \code{300}.}

@@ -38,8 +38,9 @@
 #' @param width,height,units Figure size. Default `6` x `4` `"in"`, the HVTI
 #'   manuscript default.
 #' @param device Graphics device. `NULL` (default) lets \pkg{ggplot2} pick from
-#'   the file extension, except that a TIFF is written LZW-compressed by
-#'   [ragg::agg_tiff()]. For font embedding in a PDF, pass
+#'   the file extension, and a TIFF is written LZW-compressed by
+#'   [ragg::agg_tiff()]. When you pass a `device`, `file` is used as given and
+#'   `format` adds no extension. For font embedding in a PDF, pass
 #'   `grDevices::cairo_pdf` (requires cairo/X11 support).
 #' @param dpi Resolution for raster formats. Default `300`.
 #' @param draft_file Optional second output file path (typically `.png`). When
@@ -96,7 +97,8 @@ save_manuscript <- function(plot, file, width = 6, height = 4, units = "in",
   units <- match.arg(units, c("in", "cm", "mm", "px"))
   format_given <- !missing(format)
   format <- match.arg(format)
-  file <- .raster_path(file, format, format_given)
+  # An explicit device names the format itself, so leave its path alone.
+  if (is.null(device)) file <- .raster_path(file, format, format_given)
   out_dir <- dirname(file)
   if (!dir.exists(out_dir))
     stop("Output directory does not exist: ", out_dir, call. = FALSE)
@@ -117,14 +119,19 @@ save_manuscript <- function(plot, file, width = 6, height = 4, units = "in",
     .check_scalar_positive(draft_dpi, "draft_dpi")
   }
 
-  if (is.null(device)) device <- .raster_device(file)
-  ggplot2::ggsave(filename = file, plot = plot, device = device,
-                  width = width, height = height, units = units, dpi = dpi, ...)
+  dots <- list(...)
+  if (.is_tiff(file, device) && is.null(dots$compression))
+    dots$compression <- "lzw"
+  do.call(ggplot2::ggsave,
+          c(list(filename = file, plot = plot, device = device, width = width,
+                 height = height, units = units, dpi = dpi), dots))
 
   if (!is.null(draft_file)) {
-    ggplot2::ggsave(filename = draft_file, plot = plot,
-                    device = .raster_device(draft_file),
-                    width = width, height = height, units = units, dpi = draft_dpi)
+    draft_dots <- if (.is_tiff(draft_file)) list(compression = "lzw")
+    do.call(ggplot2::ggsave,
+            c(list(filename = draft_file, plot = plot, device = NULL,
+                   width = width, height = height, units = units,
+                   dpi = draft_dpi), draft_dots))
   }
 
   invisible(file)
@@ -150,18 +157,12 @@ save_manuscript <- function(plot, file, width = 6, height = 4, units = "in",
   path
 }
 
-# ggsave() opens an uncompressed TIFF, about 6 MB for a 6 x 4 in figure at
-# 300 dpi; LZW is lossless and brings it under 100 KB. ragg rather than
-# grDevices::tiff(), which on macOS cannot compress: type = "quartz" ignores
-# `compression` and type = "cairo" fails without XQuartz. `res` and `units`
-# are formals so ggsave() passes its dpi and "in" through.
-.tiff_lzw <- function(filename, ..., units = "in", res = 300,
-                      compression = "lzw") {
-  ragg::agg_tiff(filename, ..., units = units, res = res,
-                 compression = compression)
-}
-
-# NULL lets ggsave() pick from the extension, as it always has, for all but TIFF.
-.raster_device <- function(path) {
-  if (.file_ext(path) %in% c("tif", "tiff")) .tiff_lzw else NULL
+# Whether ggsave() will open its TIFF device for this path and device. That
+# device is ragg::agg_tiff() behind ggplot2's adapter, which drops `type` and
+# `antialias` with a warning. It writes uncompressed, about 6 MB for a 6 x 4 in
+# figure at 300 dpi; the caller adds lossless LZW, which brings it under 100 KB.
+# A device function is the caller's own, so it is left as it is.
+.is_tiff <- function(path, device = NULL) {
+  if (is.null(device)) return(.file_ext(path) %in% c("tif", "tiff"))
+  is.character(device) && device %in% c("tif", "tiff")
 }
