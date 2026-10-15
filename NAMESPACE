@@ -229,6 +229,7 @@ importFrom(patchwork,
   plot_layout,
   wrap_plots
 )
+importFrom(ragg,agg_tiff)
 importFrom(rlang,
   .data,
   as_data_mask,

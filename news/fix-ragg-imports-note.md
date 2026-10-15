@@ -1,0 +1,1 @@
+* `ragg` is now imported explicitly (`agg_tiff`): `ggsave()` writes `save_manuscript()`'s TIFF and PNG through ragg only when it is installed, so the package declares and imports it. Clears R CMD check's "Namespace in Imports field not imported from: 'ragg'" NOTE
