@@ -233,9 +233,12 @@ add_plot_slide <- function(doc, plot, title, layout, master, width, height,
 #'   the panel content area to anchor on every slide (in inches).
 #'   Per-plot slide placement is computed via [hv_ph_location()] so the panel
 #'   lands at the same slide coordinates on every slide regardless of
-#'   axis-label width. Defaults to
-#'   `list(width = 8.79, height = 4.422, left = 2.67, top = 1.29)`, the
-#'   standard CORR fixed-panel rectangle for AATS-style dark decks. Pass
+#'   axis-label width. Defaults to [hv_panel_box()] for the template: the
+#'   light rectangle when `template` is the bundled
+#'   `hv_ppt_template_light.pptx`, otherwise the standard CORR dark
+#'   rectangle `list(width = 8.79, height = 4.422, left = 2.67, top = 1.29)`.
+#'   For a copy of the light template kept elsewhere, pass
+#'   `panel_box = hv_panel_box("light")`. Pass
 #'   `panel_box = NULL` to fall back to the fixed `width`/`height`/`left`/
 #'   `top` arguments for every slide (legacy behavior). Ignored for
 #'   `hv_consort` objects, which are always placed using their own metadata
@@ -408,10 +411,7 @@ save_ppt <- function(object,
                      height       = 5.8,
                      left         = 0.0,
                      top          = 1.2,
-                     panel_box    = list(width  = 8.79,
-                                         height = 4.422,
-                                         left   = 2.67,
-                                         top    = 1.29)) {
+                     panel_box    = hv_panel_box(.hv_template_mode(template))) {
 
   ensure_officer_available()
   ensure_rvg_available()

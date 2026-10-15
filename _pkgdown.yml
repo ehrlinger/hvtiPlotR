@@ -264,6 +264,7 @@ reference:
   - hv_panel_size
   - hv_legend_inside
   - hv_ph_location
+  - hv_panel_box
   - make_footnote
   - makeFootnote
 
