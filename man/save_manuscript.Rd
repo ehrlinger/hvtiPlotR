@@ -14,6 +14,7 @@ save_manuscript(
   dpi = 300,
   draft_file = NULL,
   draft_dpi = NULL,
+  format = c("tiff", "png"),
   ...
 )
 }
@@ -21,14 +22,16 @@ save_manuscript(
 \item{plot}{A \code{\link[ggplot2:ggplot]{ggplot2::ggplot()}} object, e.g. \verb{plot(hv_*())} finished with
 \code{theme_hv_manuscript()}.}
 
-\item{file}{Output file path. Its extension sets the format (\code{.pdf}, \code{.png},
-...).}
+\item{file}{Output file path. Its extension sets the format (\code{.pdf},
+\code{.tiff}, \code{.png}, ...). Without an extension, \code{format} supplies one.}
 
 \item{width, height, units}{Figure size. Default \code{6} x \code{4} \code{"in"}, the HVTI
 manuscript default.}
 
 \item{device}{Graphics device. \code{NULL} (default) lets \pkg{ggplot2} pick from
-the file extension. For font embedding in a PDF, pass
+the file extension, and a TIFF is written LZW-compressed by
+\code{\link[ragg:agg_tiff]{ragg::agg_tiff()}}. When you pass a \code{device}, \code{file} is used as given and
+\code{format} adds no extension. For font embedding in a PDF, pass
 \code{grDevices::cairo_pdf} (requires cairo/X11 support).}
 
 \item{dpi}{Resolution for raster formats. Default \code{300}.}
@@ -41,11 +44,17 @@ Default \code{NULL} (no draft copy written).}
 \item{draft_dpi}{Resolution for \code{draft_file}. Default \code{NULL}, which falls
 back to \code{dpi}.}
 
+\item{format}{Raster format, \code{"tiff"} (default) or \code{"png"}, for a \code{file} or
+\code{draft_file} given without an extension. A path that has an extension
+keeps it. Passing a \code{format} that contradicts a raster extension, such as
+\code{format = "png"} with a \code{.tiff} path, is an error.}
+
 \item{...}{Further arguments passed to \code{\link[ggplot2:ggsave]{ggplot2::ggsave()}} for the primary
 \code{file}. Not applied to \code{draft_file}.}
 }
 \value{
-Invisibly, the \code{file} path.
+Invisibly, the \code{file} path, with the extension \code{format} added when
+it had none.
 }
 \description{
 A thin wrapper around \code{\link[ggplot2:ggsave]{ggplot2::ggsave()}} that enforces the house manuscript
@@ -58,7 +67,16 @@ Pair it with \code{\link[=theme_hv_manuscript]{theme_hv_manuscript()}}, whose 12
 manuscript typography. Like \code{\link[=save_ppt]{save_ppt()}}, \code{save_manuscript()} fixes the
 output geometry, not the theme; style the plot first, then save.
 
-The device is inferred from the file extension by default. For a \code{.pdf}
+The device is inferred from the file extension by default. A \code{.tif} or
+\code{.tiff} file is written as an LZW-compressed TIFF at \code{dpi}, so a 6 x 4 in
+figure is 1800 x 1200 pixels, the same geometry as the PNG, without the
+tens of megabytes an uncompressed TIFF takes. A path with no extension takes
+one from \code{format}, which defaults to \code{"tiff"}, the raster format journals
+ask for. An extension you write is never overridden, so a \code{.png} path, such
+as one a Quarto or R Markdown report embeds, stays a PNG: browsers do not
+display TIFF.
+
+For a \code{.pdf}
 where you want fonts embedded (so 12 pt type renders exactly as designed),
 pass \code{device = grDevices::cairo_pdf} (on a system with cairo/X11 support).
 
@@ -76,6 +94,12 @@ draft instead.
 p <- plot(hv_survival(sample_survival_data(n = 200, seed = 42))) +
   theme_hv_manuscript()
 save_manuscript(p, file.path(tempdir(), "survival.pdf"))
+
+# no extension: a 300 dpi, LZW-compressed survival.tiff
+save_manuscript(p, file.path(tempdir(), "survival"))
+
+# the same figure as a PNG
+save_manuscript(p, file.path(tempdir(), "survival"), format = "png")
 
 # also write a small draft PNG for dragging into Word
 save_manuscript(p, file.path(tempdir(), "survival.pdf"),
