@@ -30,7 +30,9 @@ plot(x, ncol = 4L, nrow = 4L, alpha = 0.5, ...)
 
   Passed to
   [`plot.hv_eda()`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hv_eda.md),
-  for example `smooth_span`.
+  for example `smooth_span`, or `interactive` to give the bars of a
+  percent or count page hover labels; render such a page with
+  [`hv_girafe()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_girafe.md).
 
 ## Value
 

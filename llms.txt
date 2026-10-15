@@ -610,6 +610,8 @@ summaries, and set-membership visualization.
   : Plot an hv_eda_pages object
 - [`print(`*`<hv_eda_pages>`*`)`](https://ehrlinger.github.io/hvtiPlotR/reference/print.hv_eda_pages.md)
   : Print an hv_eda_pages object
+- [`hv_girafe()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_girafe.md)
+  : Render a plot or page as an interactive HTML widget
 - [`hv_correlation_matrix()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_correlation_matrix.md)
   : Prepare a scatter-plot matrix
 - [`plot(`*`<hv_correlation_matrix>`*`)`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hv_correlation_matrix.md)

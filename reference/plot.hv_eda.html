@@ -75,6 +75,7 @@ determines the chart:</p>
 <span>  loess_cutoff <span class="op">=</span> <span class="fl">10</span>,</span>
 <span>  group_bars <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  alpha <span class="op">=</span> <span class="fl">0.4</span>,</span>
+<span>  interactive <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -114,6 +115,16 @@ Default <code>FALSE</code>.</p></dd>
 <dt id="arg-alpha">alpha<a class="anchor" aria-label="anchor" href="#arg-alpha"></a></dt>
 <dd><p>Point transparency for continuous plots.
 Default <code>0.4</code>.</p></dd>
+
+
+<dt id="arg-interactive">interactive<a class="anchor" aria-label="anchor" href="#arg-interactive"></a></dt>
+<dd><p>Give categorical bars hover labels? <code>NULL</code>
+(the default) means yes in knitr HTML output when the ggiraph package is
+installed, and no otherwise; <code>TRUE</code> or <code>FALSE</code> decide it.
+With hover labels each bar carries a tooltip naming its category, its
+<code>x</code> bin and its count and percent of the bin, shown once the plot is
+rendered with <code><a href="hv_girafe.html">hv_girafe</a></code>. Printed or saved, the plot is the
+same as without them. Continuous plots are unaffected.</p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
