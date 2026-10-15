@@ -8,7 +8,7 @@
 # ---------------------------------------------------------------------------
 
 # Computed variables read inside after_stat() in plot.hv_eda().
-utils::globalVariables(c("fill", "count"))
+utils::globalVariables(c("count", "PANEL", "tooltip"))
 
 # Resolve `interactive`: NULL means "HTML output, and ggiraph is installed".
 .eda_interactive <- function(interactive) {
@@ -29,18 +29,28 @@ utils::globalVariables(c("fill", "count"))
 
 # Tooltips for the bars stat_count() made, one per (bin, category) bar:
 # "<category>\n<bin>: <percent> (<n> of <bin total>)" for a percent panel,
-# "<category>\n<bin>: <n> (<percent>)" for a count panel. Computed after the
-# stat, because bars are grouped by category across bins, so a per-row
-# tooltip would not be constant within a group and stat_count() would drop
-# it. `x` there is the bar's position, so `x_levels` names it.
-.eda_tooltips <- function(category, x, count, x_levels, show_percent) {
+# "<category>\n<bin>: <n> (<percent>)" for a count panel. Each row starts
+# with its own "<category>\n<bin>", which survives the stat because the
+# interactive bars are grouped by category and bin, so a later
+# scale_x_discrete(limits = ) that reorders or drops bins cannot mislabel
+# a bar. The count and the bin total are filled in after the stat, and the
+# total is taken within each panel, so a facet splitting a bin has its own.
+.eda_tooltip_start <- function(category, bin) {
   category <- ifelse(is.na(category), "(Missing)", as.character(category))
-  bin      <- x_levels[as.integer(x)]
-  n_bin    <- stats::ave(count, x, FUN = sum)
-  pct      <- sprintf("%.1f%%", 100 * count / n_bin)
-  value    <- if (show_percent) sprintf("%s (%d of %d)", pct, count, n_bin) else
+  paste0(category, "\n", as.character(bin))
+}
+
+.eda_tooltips <- function(start, count, x, panel, show_percent) {
+  n_bin <- stats::ave(count, panel, x, FUN = sum)
+  pct   <- sprintf("%.1f%%", 100 * count / n_bin)
+  value <- if (show_percent) sprintf("%s (%d of %d)", pct, count, n_bin) else
     sprintf("%d (%s)", count, pct)
-  paste0(category, "\n", bin, ": ", value)
+  paste0(start, ": ", value)
+}
+
+# girafe() takes `font_set` from ggiraph 0.9.5.
+.ggiraph_has_font_set <- function() {
+  utils::packageVersion("ggiraph") >= "0.9.5"
 }
 
 
@@ -78,7 +88,13 @@ hv_girafe <- function(x, width = 6.5, height = 9, ...) {
     stop("hv_girafe() needs the ggiraph package: install.packages(\"ggiraph\").",
          call. = FALSE)
   }
-  # ggiraph imports gdtools, so it is installed whenever ggiraph is.
+  if (!.ggiraph_has_font_set()) {
+    warning("ggiraph ", utils::packageVersion("ggiraph"), " embeds its fonts in the widget, ",
+            "adding several MB to the page; ggiraph 0.9.5 or later leaves them out.",
+            call. = FALSE)
+    return(ggiraph::girafe(ggobj = x, width_svg = width, height_svg = height, ...))
+  }
+  # ggiraph 0.9.5 imports gdtools (>= 0.5.0), so it is installed with it.
   fonts <- gdtools::font_set_auto()
   fonts$dependencies <- list()
   ggiraph::girafe(ggobj = x, width_svg = width, height_svg = height,

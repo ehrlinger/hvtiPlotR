@@ -27,7 +27,10 @@ test_that("interactive bars draw the same as static bars", {
     static <- ggplot2::layer_data(plot(ed, interactive = FALSE))
     hover  <- ggplot2::layer_data(plot(ed, interactive = TRUE))
     expect_true(inherits(plot(ed, interactive = TRUE)$layers[[1]]$geom, "GeomInteractiveBar"))
-    expect_equal(hover[names(static)], static)
+    # The drawing, not the bookkeeping: hover bars are grouped by category and
+    # bin, so `group` and `prop` differ while every rectangle is the same.
+    drawn <- c("fill", "x", "y", "xmin", "xmax", "ymin", "ymax", "count", "PANEL")
+    expect_equal(hover[drawn], static[drawn])
   }
 })
 
@@ -66,4 +69,46 @@ test_that("hv_girafe embeds no font files", {
   expect_s3_class(w, "girafe")
   expect_length(w$dependencies, 0L)
   expect_match(w$x$html, "2010: [0-9.]+% \\([0-9]+ of [0-9]+\\)")
+})
+
+# Two bins whose level order is the reverse of the order a scale might impose.
+two_bins <- data.frame(year = factor(c("early", "early", "early", "late"), levels = c("early", "late")),
+                       grp  = c("a", "a", "b", "b"))
+
+test_that("tooltips name the right bin when a scale reorders the bins", {
+  skip_if_not_installed("ggiraph")
+  p <- plot(hv_eda(two_bins, x_col = "year", y_col = "grp"), interactive = TRUE) +
+    ggplot2::scale_x_discrete(limits = c("late", "early"))
+  ld <- ggplot2::layer_data(p)
+  # "late" is drawn first now; its one bar must still say "late".
+  expect_identical(ld$tooltip[ld$x == 1], "b\nlate: 1 (100.0%)")
+  expect_setequal(ld$tooltip[ld$x == 2], c("a\nearly: 2 (66.7%)", "b\nearly: 1 (33.3%)"))
+})
+
+test_that("tooltips name the right bin when a scale drops a bin", {
+  skip_if_not_installed("ggiraph")
+  p <- plot(hv_eda(two_bins, x_col = "year", y_col = "grp"), interactive = TRUE) +
+    ggplot2::scale_x_discrete(limits = "late")
+  ld <- suppressWarnings(ggplot2::layer_data(p))
+  ld <- ld[!is.na(ld$x), ]
+  expect_identical(ld$tooltip, "b\nlate: 1 (100.0%)")
+})
+
+test_that("percent tooltips take the bin total within each facet panel", {
+  skip_if_not_installed("ggiraph")
+  d <- data.frame(year = 2001, grp = c("a", "a", "a", "b"))
+  p <- plot(hv_eda(d, x_col = "year", y_col = "grp", show_percent = TRUE), interactive = TRUE) +
+    ggplot2::facet_wrap(~fill)
+  ld <- ggplot2::layer_data(p)
+  # Each panel draws its bar at 100%, and its tooltip says so.
+  expect_equal(ld$ymax - ld$ymin, c(1, 1))
+  expect_setequal(ld$tooltip, c("a\n2001: 100.0% (3 of 3)", "b\n2001: 100.0% (1 of 1)"))
+})
+
+test_that("hv_girafe works with a ggiraph too old for font_set, and says what it costs", {
+  skip_if_not_installed("ggiraph")
+  local_mocked_bindings(.ggiraph_has_font_set = function() FALSE)
+  page <- plot(hv_eda(dta, x_col = "year", y_col = "nyha"), interactive = TRUE)
+  expect_warning(w <- hv_girafe(page, width = 4, height = 3), "embeds its fonts")
+  expect_s3_class(w, "girafe")
 })

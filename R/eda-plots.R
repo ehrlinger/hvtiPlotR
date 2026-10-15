@@ -525,11 +525,19 @@ plot.hv_eda <- function(x,
   # Hover labels swap geom_bar() for ggiraph's, which draws the same bars.
   bar <- ggplot2::geom_bar
   if (interactive) {
-    x_levels <- levels(data$x)
-    tip <- function(fill, x, count) .eda_tooltips(fill, x, count, x_levels, show_percent)
+    # Group by category and bin, not category alone, so each bar keeps its
+    # own tooltip through the stat. Within a bin the groups keep the order of
+    # `stack`, so the bars stack and dodge as before.
+    data$hover_group <- interaction(data$stack, data$x, lex.order = TRUE, drop = TRUE)
+    data$hover_start <- .eda_tooltip_start(data$fill, data$x)
+    tip <- function(start, count, x, panel) .eda_tooltips(start, count, x, panel, show_percent)
     bar <- function(...) {
       ggiraph::geom_bar_interactive(
-        ggplot2::aes(tooltip = ggplot2::after_stat(tip(fill, x, count))), ...
+        ggplot2::aes(
+          group   = .data[["hover_group"]],
+          tooltip = ggplot2::stage(.data[["hover_start"]],
+                                   after_stat = tip(tooltip, count, x, PANEL))
+        ), ...
       )
     }
   }
