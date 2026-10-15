@@ -455,7 +455,7 @@ hazard_plot(
   theme_hv_poster()
 
 
-# --- (9) Save (dontrun) --------------------------------------------------
+# --- (9) Save ------------------------------------------------------------
 # \donttest{
 p <- hazard_plot(dat, estimate_col = "survival",
                  lower_col = "surv_lower", upper_col = "surv_upper",

@@ -24,3 +24,13 @@ final stage (no downstream exclusion defined yet).
 ## See also
 
 [`hv_consort_patients()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_consort_patients.md)
+
+## Examples
+
+``` r
+hv_consort_summary(sample_consort_data())
+#>      label include_col n_included      excl_col n_excluded
+#> 1 Screened    screened        300   excl_screen         73
+#> 2 Eligible    eligible        227 excl_eligible         41
+#> 3 Analyzed    analyzed        186          <NA>         NA
+```

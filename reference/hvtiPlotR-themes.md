@@ -181,3 +181,23 @@ global font registry is modified. See `.hv_family_resolves()` in
 to export a themed plot to an editable PowerPoint slide;
 [`make_footnote()`](https://ehrlinger.github.io/hvtiPlotR/reference/make_footnote.md)
 to annotate a draft figure before publication.
+
+## Examples
+
+``` r
+p <- ggplot2::ggplot(mtcars, ggplot2::aes(wt, mpg)) +
+  ggplot2::geom_point() +
+  ggplot2::labs(x = "Weight (1000 lb)", y = "Miles per gallon")
+p + theme_hv_manuscript()
+
+p + theme_hv_poster()
+
+p + theme_hv_ppt_dark()
+
+p + theme_hv_ppt_light()
+
+
+# Extra named arguments go straight into a final theme() call.
+p + theme_hv_manuscript(base_size = 10, legend.position = "right")
+
+```

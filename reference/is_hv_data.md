@@ -23,3 +23,13 @@ is_hv_data(x)
 [`summary.hv_data()`](https://ehrlinger.github.io/hvtiPlotR/reference/summary.hv_data.md),
 [`autoplot.hv_data()`](https://ehrlinger.github.io/hvtiPlotR/reference/autoplot.hv_data.md),
 [`as.data.frame.hv_data()`](https://ehrlinger.github.io/hvtiPlotR/reference/as.data.frame.hv_data.md)
+
+## Examples
+
+``` r
+d <- sample_correlation_data(n = 50)
+is_hv_data(hv_correlation_matrix(d, c("a1c", "glucose")))
+#> [1] TRUE
+is_hv_data(d)
+#> [1] FALSE
+```
