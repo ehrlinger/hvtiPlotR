@@ -87,7 +87,7 @@ designated title placeholder via <code><a href="https://davidgohel.github.io/off
 <span>  height <span class="op">=</span> <span class="fl">5.8</span>,</span>
 <span>  left <span class="op">=</span> <span class="fl">0</span>,</span>
 <span>  top <span class="op">=</span> <span class="fl">1.2</span>,</span>
-<span>  panel_box <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>width <span class="op">=</span> <span class="fl">8.79</span>, height <span class="op">=</span> <span class="fl">4.422</span>, left <span class="op">=</span> <span class="fl">2.67</span>, top <span class="op">=</span> <span class="fl">1.29</span><span class="op">)</span></span>
+<span>  panel_box <span class="op">=</span> <span class="fu"><a href="hv_panel_box.html">hv_panel_box</a></span><span class="op">(</span><span class="fu">.hv_template_mode</span><span class="op">(</span><span class="va">template</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -158,9 +158,12 @@ is supplied.</p></dd>
 the panel content area to anchor on every slide (in inches).
 Per-plot slide placement is computed via <code><a href="hv_ph_location.html">hv_ph_location()</a></code> so the panel
 lands at the same slide coordinates on every slide regardless of
-axis-label width. Defaults to
-<code>list(width = 8.79, height = 4.422, left = 2.67, top = 1.29)</code>, the
-standard CORR fixed-panel rectangle for AATS-style dark decks. Pass
+axis-label width. Defaults to <code><a href="hv_panel_box.html">hv_panel_box()</a></code> for the template: the
+light rectangle when <code>template</code> is the bundled
+<code>hv_ppt_template_light.pptx</code>, otherwise the standard CORR dark
+rectangle <code>list(width = 8.79, height = 4.422, left = 2.67, top = 1.29)</code>.
+For a copy of the light template kept elsewhere, pass
+<code>panel_box = hv_panel_box("light")</code>. Pass
 <code>panel_box = NULL</code> to fall back to the fixed <code>width</code>/<code>height</code>/<code>left</code>/
 <code>top</code> arguments for every slide (legacy behavior). Ignored for
 <code>hv_consort</code> objects, which are always placed using their own metadata
