@@ -18,6 +18,10 @@ final stage (no downstream exclusion defined yet).
 Returns a data frame with one row per stage showing patient counts
 and the exclusion column name, suitable for a methods-section table.
 }
+\examples{
+hv_consort_summary(sample_consort_data())
+
+}
 \seealso{
 \code{\link[=hv_consort_patients]{hv_consort_patients()}}
 }

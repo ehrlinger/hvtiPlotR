@@ -206,5 +206,9 @@ as.data.frame.hv_data <- function(x, row.names = NULL, optional = FALSE, ...) { 
 #' @param x Any R object.
 #' @return `TRUE` if `x` inherits from `"hv_data"`, `FALSE` otherwise.
 #' @seealso [summary.hv_data()], [autoplot.hv_data()], [as.data.frame.hv_data()]
+#' @examples
+#' d <- sample_correlation_data(n = 50)
+#' is_hv_data(hv_correlation_matrix(d, c("a1c", "glucose")))
+#' is_hv_data(d)
 #' @export
 is_hv_data <- function(x) inherits(x, "hv_data")
