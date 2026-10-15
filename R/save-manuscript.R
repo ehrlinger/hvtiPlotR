@@ -82,6 +82,7 @@
 #' }
 #'
 #' @importFrom ggplot2 ggsave
+#' @importFrom ragg agg_tiff
 #' @export
 save_manuscript <- function(plot, file, width = 6, height = 4, units = "in",
                             device = NULL, dpi = 300,
@@ -158,7 +159,8 @@ save_manuscript <- function(plot, file, width = 6, height = 4, units = "in",
 }
 
 # Whether ggsave() will open its TIFF device for this path and device. That
-# device is ragg::agg_tiff() behind ggplot2's adapter, which drops `type` and
+# device is ragg::agg_tiff() behind ggplot2's adapter (ggsave() uses ragg only
+# when it is installed, hence ragg in Imports and the importFrom above), which drops `type` and
 # `antialias` with a warning. It writes uncompressed, about 6 MB for a 6 x 4 in
 # figure at 300 dpi; the caller adds lossless LZW, which brings it under 100 KB.
 # A device function is the caller's own, so it is left as it is.
