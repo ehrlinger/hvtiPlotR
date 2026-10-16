@@ -129,6 +129,15 @@ test_that("PPT themes match the canonical Arial deck (32 bold ticks, 40 bold tit
   }
 })
 
+test_that("PPT themes size facet titles at three quarters of base_size", {
+  # 16 pt (base_size / 2) read as too small on a 32 pt slide; 24 pt was
+  # chosen by eye on a faceted deck.
+  for (fn in list(theme_hv_ppt_dark, theme_hv_ppt_light)) {
+    expect_equal(fn()$strip.text$size, 24)
+    expect_equal(fn(base_size = 28)$strip.text$size, 21)
+  }
+})
+
 test_that("theme_hv_ppt_dark uses inside-facing ticks (negative length)", {
   th <- theme_hv_ppt_dark(base_size = 32)
   tlen <- grid::convertUnit(th$axis.ticks.length, "pt", valueOnly = TRUE)
