@@ -158,12 +158,9 @@ is supplied.</p></dd>
 the panel content area to anchor on every slide (in inches).
 Per-plot slide placement is computed via <code><a href="hv_ph_location.html">hv_ph_location()</a></code> so the panel
 lands at the same slide coordinates on every slide regardless of
-axis-label width. Defaults to <code><a href="hv_panel_box.html">hv_panel_box()</a></code> for the template: the
-light rectangle when <code>template</code> is the bundled
-<code>hv_ppt_template_light.pptx</code>, otherwise the standard CORR dark
-rectangle <code>list(width = 8.79, height = 4.422, left = 2.67, top = 1.29)</code>.
-For a copy of the light template kept elsewhere, pass
-<code>panel_box = hv_panel_box("light")</code>. Pass
+axis-label width. Defaults to <code><a href="hv_panel_box.html">hv_panel_box()</a></code>, the standard CORR
+rectangle <code>list(width = 8.79, height = 3.9, left = 2.67, top = 1.6)</code>,
+the same for the dark and light templates. Pass
 <code>panel_box = NULL</code> to fall back to the fixed <code>width</code>/<code>height</code>/<code>left</code>/
 <code>top</code> arguments for every slide (legacy behavior). Ignored for
 <code>hv_consort</code> objects, which are always placed using their own metadata
