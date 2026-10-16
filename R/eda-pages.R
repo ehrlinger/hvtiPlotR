@@ -229,7 +229,8 @@ plot.hv_eda_pages <- function(x, ncol = 4L, nrow = 4L, alpha = 0.5, ...) {
   axes <- if (identical(x$meta$section, "continuous")) "keep" else "collect_y"
   groups <- split(seq_along(plots), ceiling(seq_along(plots) / (ncol * nrow)))
   unname(lapply(groups, function(i) {
-    page <- patchwork::wrap_plots(plots[i], ncol = ncol, nrow = nrow, axes = axes)
+    page <- patchwork::wrap_plots(plots[i], ncol = ncol, nrow = nrow) +
+      patchwork::plot_layout(axes = axes)
     attr(page, "variables") <- names(panels)[i]
     page
   }))
