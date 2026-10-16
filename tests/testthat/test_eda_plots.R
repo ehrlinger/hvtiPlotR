@@ -233,6 +233,23 @@ test_that("plot(hv_eda) continuous falls back to y_col as title when y_label is 
   expect_equal(p$labels$title, "ef")
 })
 
+test_that("plot(hv_eda) continuous y-axis title is the label's units", {
+  df <- sample_eda_data(n = 100, seed = 1)
+  p  <- plot(hv_eda(df, y_col = "ef", x_col = "op_years",
+                    y_label = "Interval:Total Myocardial Ischemia (min)"))
+  expect_equal(p$labels$title, "Interval:Total Myocardial Ischemia (min)")
+  expect_equal(p$labels$y, "min")
+  expect_plot_has_data(p)
+})
+
+test_that("plot(hv_eda) continuous y-axis title is the column name when the label has no units", {
+  df <- sample_eda_data(n = 100, seed = 1)
+  p  <- plot(hv_eda(df, y_col = "ef", x_col = "op_years",
+                    y_label = "Ejection Fraction (pre) baseline"))
+  expect_equal(p$labels$title, "Ejection Fraction (pre) baseline")
+  expect_equal(p$labels$y, "ef")
+})
+
 # ============================================================================
 # hv_eda — Cat_Num (numeric categorical) path
 # ============================================================================

@@ -185,6 +185,10 @@ print.hv_eda_pages <- function(x, ...) {
 #' Lays the section's panels out as pages of `ncol` by `nrow` panels. Nothing
 #' is printed or saved; the caller prints, saves or captions each page.
 #'
+#' On a percent or count page the panels in a row share one y axis, drawn on
+#' the leftmost panel. Each continuous panel keeps its own y axis, titled with
+#' a short form of its label (see [plot.hv_eda()]).
+#'
 #' Colors and themes are left to the caller, as everywhere in this package.
 #' Apply them to every panel of a page at once with patchwork's `&`:
 #' `page & theme_hv_manuscript(base_size = 8)`.
@@ -219,9 +223,13 @@ plot.hv_eda_pages <- function(x, ncol = 4L, nrow = 4L, alpha = 0.5, ...) {
   if (!length(panels)) return(list())
 
   plots <- lapply(panels, plot, alpha = alpha, ...)
+  # Bar panels share one y scale, so a percent or count page draws one y axis
+  # per row. patchwork collects only axes that match, and continuous panels
+  # have scales of their own, so they keep theirs.
+  axes <- if (identical(x$meta$section, "continuous")) "keep" else "collect_y"
   groups <- split(seq_along(plots), ceiling(seq_along(plots) / (ncol * nrow)))
   unname(lapply(groups, function(i) {
-    page <- patchwork::wrap_plots(plots[i], ncol = ncol, nrow = nrow)
+    page <- patchwork::wrap_plots(plots[i], ncol = ncol, nrow = nrow, axes = axes)
     attr(page, "variables") <- names(panels)[i]
     page
   }))
