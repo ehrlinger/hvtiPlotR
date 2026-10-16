@@ -112,6 +112,24 @@ test_that("alpha reaches the points of continuous panels", {
   expect_error(plot(hv_eda_pages(dta, section = "continuous"), alpha = 2))
 })
 
+test_that("bar pages share one y axis per row; continuous panels keep their own", {
+  # Count the y axes and y titles patchwork actually draws in one row of two.
+  drawn_y <- function(page) {
+    g <- patchwork::patchworkGrob(page)
+    drawn <- !vapply(g$grobs, inherits, logical(1), "zeroGrob")
+    c(axes = sum(grepl("^axis-l", g$layout$name) & drawn),
+      titles = sum(grepl("^ylab-l", g$layout$name) & drawn))
+  }
+  for (section in c("percent", "count")) {
+    page <- plot(hv_eda_pages(dta, x_col = "year", section = section, vars = c("male", "nyha")),
+                 ncol = 2, nrow = 1)[[1]]
+    expect_identical(drawn_y(page), c(axes = 1L, titles = 1L), info = section)
+  }
+  page <- plot(hv_eda_pages(dta, x_col = "year", section = "continuous", vars = c("ef", "peak_grad")),
+               ncol = 2, nrow = 1)[[1]]
+  expect_identical(drawn_y(page), c(axes = 2L, titles = 2L))
+})
+
 test_that("plot.hv_eda keeps its 0.4 point alpha by default", {
   built <- ggplot2::ggplot_build(plot(hv_eda(dta, x_col = "year", y_col = "ef")))
   expect_true(all(built$data[[1]]$alpha == 0.4))

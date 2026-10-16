@@ -381,7 +381,10 @@ print.hv_eda <- function(x, ...) {
 #' \describe{
 #'   \item{\strong{Continuous} (\code{"Cont"})}{Scatter plot with a LOESS
 #'     smoother overlay and a rug on the x-axis for rows where the outcome
-#'     is missing.}
+#'     is missing. The label is the plot title; the y-axis title is a short
+#'     form of it, the label's trailing parenthesised units, such as
+#'     \code{"mmHg"} from \code{"Peak Gradient (mmHg)"}, or else the column
+#'     name.}
 #'   \item{\strong{Numeric categorical} (\code{"Cat_Num"})}{Stacked (or filled)
 #'     bar chart with counts (or proportions) per x level.}
 #'   \item{\strong{Character categorical} (\code{"Cat_Char"})}{Same stacked bar,
@@ -464,10 +467,19 @@ plot.hv_eda <- function(x,
   if (var_type == "Cont") {
     rug_data <- x$tables$rug_data
 
+    # The title names the variable. A y-axis title repeating it runs into the
+    # next panel on a crowded EDA page, so the axis gets a short form: the
+    # label's trailing parenthesised units, or else the column name.
+    y_short <- if (grepl("\\([^()]+\\)\\s*$", label)) {
+      sub("^.*\\(([^()]+)\\)\\s*$", "\\1", label)
+    } else {
+      meta$y_col
+    }
+
     p <- ggplot2::ggplot(data, ggplot2::aes(x = .data[["x"]],
                                             y = .data[["y"]])) +
       ggplot2::geom_point(na.rm = TRUE, size = 0.9, alpha = alpha) +
-      ggplot2::labs(x = x_col_name, y = label, title = label)
+      ggplot2::labs(x = x_col_name, y = y_short, title = label)
 
     if (length(unique(na.omit(x$data[[2]]))) >= loess_cutoff) {
       p <- p +

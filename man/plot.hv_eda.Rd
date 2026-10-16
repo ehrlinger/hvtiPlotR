@@ -58,7 +58,10 @@ determines the chart:
 \describe{
 \item{\strong{Continuous} (\code{"Cont"})}{Scatter plot with a LOESS
 smoother overlay and a rug on the x-axis for rows where the outcome
-is missing.}
+is missing. The label is the plot title; the y-axis title is a short
+form of it, the label's trailing parenthesised units, such as
+\code{"mmHg"} from \code{"Peak Gradient (mmHg)"}, or else the column
+name.}
 \item{\strong{Numeric categorical} (\code{"Cat_Num"})}{Stacked (or filled)
 bar chart with counts (or proportions) per x level.}
 \item{\strong{Character categorical} (\code{"Cat_Char"})}{Same stacked bar,

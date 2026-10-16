@@ -29,7 +29,7 @@ Imports:
     ggupset (>= 0.4.0),
     ggvenn,
     grid,
-    patchwork (>= 1.1.0),
+    patchwork (>= 1.3.1),
     rlang (>= 1.0.0),
     survival (>= 3.1-0),
     officer (>= 0.6.0),
