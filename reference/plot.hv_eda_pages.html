@@ -98,7 +98,10 @@ can caption it.</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>Colors and themes are left to the caller, as everywhere in this package.
+    <p>On a percent or count page the panels in a row share one y axis, drawn on
+the leftmost panel. Each continuous panel keeps its own y axis, titled with
+a short form of its label (see <code><a href="plot.hv_eda.html">plot.hv_eda()</a></code>).</p>
+<p>Colors and themes are left to the caller, as everywhere in this package.
 Apply them to every panel of a page at once with patchwork's <code>&amp;</code>:
 <code>page &amp; theme_hv_manuscript(base_size = 8)</code>.</p>
     </div>

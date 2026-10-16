@@ -79,7 +79,10 @@ object.
 - **Continuous** (`"Cont"`):
 
   Scatter plot with a LOESS smoother overlay and a rug on the x-axis for
-  rows where the outcome is missing.
+  rows where the outcome is missing. The label is the plot title; the
+  y-axis title is a short form of it, the label's trailing parenthesised
+  units, such as `"mmHg"` from `"Peak Gradient (mmHg)"`, or else the
+  column name.
 
 - **Numeric categorical** (`"Cat_Num"`):
 

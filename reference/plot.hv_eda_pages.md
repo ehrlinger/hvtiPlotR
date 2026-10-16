@@ -42,6 +42,11 @@ caption it.
 
 ## Details
 
+On a percent or count page the panels in a row share one y axis, drawn
+on the leftmost panel. Each continuous panel keeps its own y axis,
+titled with a short form of its label (see
+[`plot.hv_eda()`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hv_eda.md)).
+
 Colors and themes are left to the caller, as everywhere in this package.
 Apply them to every panel of a page at once with patchwork's `&`:
 `page & theme_hv_manuscript(base_size = 8)`.

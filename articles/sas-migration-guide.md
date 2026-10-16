@@ -1936,7 +1936,7 @@ sessionInfo()
     [19] fontBitstreamVera_0.1.1 textshaping_1.0.5       cli_3.6.6
     [22] rlang_1.3.0             fontquiver_0.2.1        ggupset_0.4.1
     [25] splines_4.6.1           withr_3.0.3             yaml_2.3.12
-    [28] otel_0.2.0              gdtools_0.5.1           tools_4.6.1
+    [28] otel_0.2.0              gdtools_0.5.2           tools_4.6.1
     [31] officer_0.7.7           uuid_1.2-2              dplyr_1.2.1
     [34] vctrs_0.7.3             R6_2.6.1                lifecycle_1.0.5
     [37] ragg_1.5.2              pkgconfig_2.0.3         pillar_1.11.1
