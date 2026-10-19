@@ -3,30 +3,32 @@
 The fixed panel rectangle
 [`save_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/save_ppt.md)
 anchors every plot to, in inches, for the 13.33 by 7.5 inch HVTI
-templates. The dark (default) and light templates share one master
-layout: the title placeholder runs from 0.08 to 1.33 in, at 48 pt. So
-both get the same rectangle, starting at 1.6 in and 3.9 in tall. That
-leaves room for facet strips under the title and for the 32 pt axis text
-and 40 pt axis title of
-[`theme_hv_ppt_dark()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)
-and
+templates. The dark (default), light and slate templates share one
+master layout: the title placeholder runs from 0.08 to 1.33 in, at 48
+pt. So all get the same rectangle, starting at 1.6 in and 3.9 in tall.
+That leaves room for facet strips under the title and for the 32 pt axis
+text and 40 pt axis title of
+[`theme_hv_ppt_dark()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md),
 [`theme_hv_ppt_light()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)
+and
+[`theme_hv_ppt_slate()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)
 above the bottom edge, and matches the CORR template's own chart and
 table slides, which start at 1.58 in.
 
 ## Usage
 
 ``` r
-hv_panel_box(mode = c("dark", "light"))
+hv_panel_box(mode = c("dark", "light", "slate"))
 ```
 
 ## Arguments
 
 - mode:
 
-  `"dark"` (the default template) or `"light"`
-  (`hv_ppt_template_light.pptx`). Both return the same rectangle; the
-  argument is kept so existing calls keep working.
+  `"dark"` (the default template), `"light"`
+  (`hv_ppt_template_light.pptx`) or `"slate"`
+  (`hv_ppt_template_slate.pptx`). All return the same rectangle; the
+  argument is kept so calls name the template they target.
 
 ## Value
 
@@ -51,7 +53,7 @@ to rebuild an old deck at its old geometry.
 ## Examples
 
 ``` r
-hv_panel_box("light")
+hv_panel_box("slate")
 #> $width
 #> [1] 8.79
 #> 

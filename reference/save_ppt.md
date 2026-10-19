@@ -58,7 +58,15 @@ save_ppt(
 - layout:
 
   PowerPoint slide layout name from the template. Default
-  `"Title and Content"`.
+  `"Title and Content"`. The bundled templates share six layouts by
+  name; name them by role with
+  [`hv_ppt_layout()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_ppt_layout.md);
+  `"figure"`, `"section"`, `"content"` and `"two"` work here, while
+  `"title"` and `"blank"` lack a title placeholder and are for
+  [`officer::add_slide()`](https://davidgohel.github.io/officer/reference/add_slide.html).
+  Layout names used through hvtiPlotR 2.8.11 (`"Custom Layout"`,
+  `"1_Custom Layout"`, `"1_Title Slide"`, `"1_Title Only"`) are mapped
+  to their new names, with a one-time message.
 
 - master:
 
@@ -125,6 +133,16 @@ For a light room, a light template is bundled as well; pair it with
 
     template <- system.file("extdata", "hv_ppt_template_light.pptx",
                             package = "hvtiPlotR")
+
+A slate template (solid `#384D60` background, centered white titles) is
+bundled too; pair it with
+[`theme_hv_ppt_slate()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md):
+
+    template <- system.file("extdata", "hv_ppt_template_slate.pptx",
+                            package = "hvtiPlotR")
+
+All bundled templates share six layouts by name; see
+[`hv_ppt_layout()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_ppt_layout.md).
 
 To use the live master instead of the bundled copy, point the
 `hvtiPlotR.ppt_template` option at your OneDrive-synced copy, for

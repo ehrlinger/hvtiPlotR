@@ -17,7 +17,7 @@ designated title placeholder via officer::ph_location_type()."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">hvtiPlotR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.8.11</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.8.12</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -120,7 +120,13 @@ Default <code>"Plot"</code>.</p></dd>
 
 <dt id="arg-layout">layout<a class="anchor" aria-label="anchor" href="#arg-layout"></a></dt>
 <dd><p>PowerPoint slide layout name from the template.
-Default <code>"Title and Content"</code>.</p></dd>
+Default <code>"Title and Content"</code>. The bundled templates share six layouts
+by name; name them by role with <code><a href="hv_ppt_layout.html">hv_ppt_layout()</a></code>; <code>"figure"</code>, <code>"section"</code>,
+<code>"content"</code> and <code>"two"</code> work here, while <code>"title"</code> and <code>"blank"</code> lack a
+title placeholder and are for <code><a href="https://davidgohel.github.io/officer/reference/add_slide.html" class="external-link">officer::add_slide()</a></code>. Layout names used
+through hvtiPlotR 2.8.11 (<code>"Custom Layout"</code>, <code>"1_Custom Layout"</code>,
+<code>"1_Title Slide"</code>, <code>"1_Title Only"</code>) are mapped to their new names, with
+a one-time message.</p></dd>
 
 
 <dt id="arg-master">master<a class="anchor" aria-label="anchor" href="#arg-master"></a></dt>
@@ -182,6 +188,11 @@ release; it is the default and pairs with <code><a href="hvtiPlotR-themes.html">
 <code><a href="hvtiPlotR-themes.html">theme_hv_ppt_light()</a></code>:</p>
 <p></p><div class="sourceCode"><pre><code><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a>template <span class="ot">&lt;-</span> <span class="fu">system.file</span>(<span class="st">"extdata"</span>, <span class="st">"hv_ppt_template_light.pptx"</span>,</span>
 <span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>                        <span class="at">package =</span> <span class="st">"hvtiPlotR"</span>)</span></code></pre><p></p></div>
+<p>A slate template (solid <code>#384D60</code> background, centered white titles) is
+bundled too; pair it with <code><a href="hvtiPlotR-themes.html">theme_hv_ppt_slate()</a></code>:</p>
+<p></p><div class="sourceCode"><pre><code><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a>template <span class="ot">&lt;-</span> <span class="fu">system.file</span>(<span class="st">"extdata"</span>, <span class="st">"hv_ppt_template_slate.pptx"</span>,</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>                        <span class="at">package =</span> <span class="st">"hvtiPlotR"</span>)</span></code></pre><p></p></div>
+<p>All bundled templates share six layouts by name; see <code><a href="hv_ppt_layout.html">hv_ppt_layout()</a></code>.</p>
 <p>To use the live master instead of the bundled copy, point the
 <code>hvtiPlotR.ppt_template</code> option at your OneDrive-synced copy, for example
 in <code>.Rprofile</code>:</p>

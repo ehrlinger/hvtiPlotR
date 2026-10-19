@@ -11,7 +11,7 @@ four publication contexts:"></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">hvtiPlotR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.8.11</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.8.12</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -91,6 +91,18 @@ four publication contexts:</p>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">theme_hv_ppt_dark</span><span class="op">(</span></span>
+<span>  base_size <span class="op">=</span> <span class="fl">32</span>,</span>
+<span>  base_family <span class="op">=</span> <span class="st">"Arial"</span>,</span>
+<span>  header_family <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  base_line_size <span class="op">=</span> <span class="va">base_size</span><span class="op">/</span><span class="fl">22</span>,</span>
+<span>  base_rect_size <span class="op">=</span> <span class="va">base_size</span><span class="op">/</span><span class="fl">22</span>,</span>
+<span>  ink <span class="op">=</span> <span class="st">"white"</span>,</span>
+<span>  paper <span class="op">=</span> <span class="st">"transparent"</span>,</span>
+<span>  accent <span class="op">=</span> <span class="st">"#3366FF"</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">theme_hv_ppt_slate</span><span class="op">(</span></span>
 <span>  base_size <span class="op">=</span> <span class="fl">32</span>,</span>
 <span>  base_family <span class="op">=</span> <span class="st">"Arial"</span>,</span>
 <span>  header_family <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -218,6 +230,13 @@ why; devices that resolve fonts via the OS (quartz, cairo, RStudio's
 graphics device) are unaffected and keep using real Arial. No global
 font registry is modified. See <code>.hv_family_resolves()</code> in
 <code>ppt-font-fallback.R</code> for the mechanism.</p>
+<p><code>theme_hv_ppt_slate()</code> pairs with the slate template
+(<code>hv_ppt_template_slate.pptx</code>): the dark theme's type and axes, white on
+the slate background, with a white plotting panel. Color the data inside
+the panel from <code>hv_ppt_palette("light")</code>, and give text drawn inside the
+panel (<code><a href="https://ggplot2.tidyverse.org/reference/geom_text.html" class="external-link">geom_text()</a></code>, <code><a href="https://ggplot2.tidyverse.org/reference/annotate.html" class="external-link">annotate()</a></code>) a dark color, since the theme's ink
+is white. Axis ticks point inward and are dark gray, so they show on the
+white panel.</p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
@@ -238,10 +257,12 @@ slide; <code><a href="make_footnote.html">make_footnote()</a></code> to annotate
 <span class="r-plt img"><img src="hvtiPlotR-themes-3.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span><span class="va">p</span> <span class="op">+</span> <span class="fu">theme_hv_ppt_light</span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="hvtiPlotR-themes-4.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span><span class="va">p</span> <span class="op">+</span> <span class="fu">theme_hv_ppt_slate</span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="hvtiPlotR-themes-5.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Extra named arguments go straight into a final theme() call.</span></span></span>
 <span class="r-in"><span><span class="va">p</span> <span class="op">+</span> <span class="fu">theme_hv_manuscript</span><span class="op">(</span>base_size <span class="op">=</span> <span class="fl">10</span>, legend.position <span class="op">=</span> <span class="st">"right"</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="hvtiPlotR-themes-5.png" alt="" width="700" height="433"></span>
+<span class="r-plt img"><img src="hvtiPlotR-themes-6.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

@@ -23,7 +23,7 @@ https://ehrlinger.github.io/hvtiGraphics/."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">hvtiPlotR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.8.11</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.8.12</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -131,7 +131,11 @@ blue-gradient or dark PowerPoint templates.</p></li>
 <code>+ theme(panel.background = element_rect(fill = "white"))</code> if you
 specifically need an opaque white panel on a non-white slide
 background.</p></li>
-</ul><p>Both PPT themes hide the legend by default, use inside-facing axis
+<li><p><code><a href="hvtiPlotR-themes.html">theme_hv_ppt_slate()</a></code>: Large-font theme with a white panel and white
+axes for the slate template (<code>hv_ppt_template_slate.pptx</code>).</p></li>
+<li><p><code><a href="hv_ppt_layout.html">hv_ppt_layout()</a></code>: The layout name for a slide role; the same six
+layouts exist in every bundled template.</p></li>
+</ul><p>All three PPT themes hide the legend by default, use inside-facing axis
 ticks, and scale axis-text / axis-title margins from <code>base_size</code> via
 ggplot2's <code>half_line</code> convention.</p>
 </div>

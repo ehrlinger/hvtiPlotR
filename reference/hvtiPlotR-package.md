@@ -71,7 +71,15 @@ forward any extra named theme element through `...` (e.g.
   specifically need an opaque white panel on a non-white slide
   background.
 
-Both PPT themes hide the legend by default, use inside-facing axis
+- [`theme_hv_ppt_slate()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md):
+  Large-font theme with a white panel and white axes for the slate
+  template (`hv_ppt_template_slate.pptx`).
+
+- [`hv_ppt_layout()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_ppt_layout.md):
+  The layout name for a slide role; the same six layouts exist in every
+  bundled template.
+
+All three PPT themes hide the legend by default, use inside-facing axis
 ticks, and scale axis-text / axis-title margins from `base_size` via
 ggplot2's `half_line` convention.
 

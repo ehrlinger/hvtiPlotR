@@ -44,6 +44,18 @@ theme_hv_ppt_dark(
   ...
 )
 
+theme_hv_ppt_slate(
+  base_size = 32,
+  base_family = "Arial",
+  header_family = NULL,
+  base_line_size = base_size/22,
+  base_rect_size = base_size/22,
+  ink = "white",
+  paper = "transparent",
+  accent = "#3366FF",
+  ...
+)
+
 theme_hv_ppt_light(
   base_size = 32,
   base_family = "Arial",
@@ -175,6 +187,16 @@ RStudio's graphics device) are unaffected and keep using real Arial. No
 global font registry is modified. See `.hv_family_resolves()` in
 `ppt-font-fallback.R` for the mechanism.
 
+`theme_hv_ppt_slate()` pairs with the slate template
+(`hv_ppt_template_slate.pptx`): the dark theme's type and axes, white on
+the slate background, with a white plotting panel. Color the data inside
+the panel from `hv_ppt_palette("light")`, and give text drawn inside the
+panel
+([`geom_text()`](https://ggplot2.tidyverse.org/reference/geom_text.html),
+[`annotate()`](https://ggplot2.tidyverse.org/reference/annotate.html)) a
+dark color, since the theme's ink is white. Axis ticks point inward and
+are dark gray, so they show on the white panel.
+
 ## See also
 
 [`save_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/save_ppt.md)
@@ -195,6 +217,8 @@ p + theme_hv_poster()
 p + theme_hv_ppt_dark()
 
 p + theme_hv_ppt_light()
+
+p + theme_hv_ppt_slate()
 
 
 # Extra named arguments go straight into a final theme() call.
