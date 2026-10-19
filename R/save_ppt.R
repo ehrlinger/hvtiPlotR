@@ -462,6 +462,7 @@ save_ppt <- function(object,
     officer::read_pptx(path = template),
     action = "open PowerPoint template"
   )
+  layout <- .hv_resolve_layout(layout, officer::layout_summary(doc)$layout)
 
   # --- Add slides ------------------------------------------------------------
   if (is_consort) {

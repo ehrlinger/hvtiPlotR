@@ -76,3 +76,60 @@ test_that("slate theme carries the Slate colour scheme", {
   expect_identical(val("accent1"), "0877BC")
   expect_identical(val("accent4"), "F8C946")
 })
+
+test_that("hv_ppt_layout returns the contract name for each role", {
+  expect_identical(hv_ppt_layout(), "Title Only")
+  expect_identical(hv_ppt_layout("figure"), "Title Only")
+  expect_identical(hv_ppt_layout("section"), "Section Header")
+  expect_identical(hv_ppt_layout("title"), "Title Slide")
+  expect_identical(hv_ppt_layout("content"), "Title and Content")
+  expect_identical(hv_ppt_layout("two"), "Two Content")
+  expect_identical(hv_ppt_layout("blank"), "Blank")
+  expect_error(hv_ppt_layout("chart"))
+})
+
+test_that(".hv_resolve_layout maps old names to new and back", {
+  new_set <- c("Title Slide", "Section Header", "Title Only", "Blank")
+  old_set <- c("1_Title Slide", "1_Custom Layout", "Custom Layout", "Blank")
+  rm(list = ls(.hv_layout_alias_env), envir = .hv_layout_alias_env)
+  expect_message(r <- .hv_resolve_layout("Custom Layout", new_set),
+                 "'Custom Layout' is now 'Title Only'")
+  expect_identical(r, "Title Only")
+  expect_silent(.hv_resolve_layout("Custom Layout", new_set))  # once per session
+  expect_identical(.hv_resolve_layout("Title Only", old_set), "Custom Layout")
+  expect_identical(.hv_resolve_layout("Section Header", old_set), "1_Custom Layout")
+  expect_identical(.hv_resolve_layout("Blank", new_set), "Blank")
+  expect_identical(.hv_resolve_layout("Nope", new_set), "Nope")
+})
+
+test_that("save_ppt accepts an old layout name on the renamed light template", {
+  skip_if_not_installed("officer")
+  skip_if_not_installed("rvg")
+  skip_if_not_installed("xml2")
+  rm(list = ls(.hv_layout_alias_env), envir = .hv_layout_alias_env)
+  out <- tempfile(fileext = ".pptx")
+  p <- ggplot2::ggplot(mtcars, ggplot2::aes(wt, mpg)) + ggplot2::geom_point()
+  expect_message(
+    save_ppt(p, template = tpl("hv_ppt_template_light.pptx"),
+             powerpoint = out, layout = "Custom Layout"),
+    "is now 'Title Only'")
+  d <- tempfile("chk-"); utils::unzip(out, exdir = d)
+  rel <- xml2::read_xml(file.path(d, "ppt/slides/_rels/slide1.xml.rels"))
+  lay <- xml2::xml_attr(xml2::xml_find_first(
+    rel, "//*[local-name()='Relationship'][contains(@Type,'slideLayout')]"), "Target")
+  lx <- xml2::read_xml(file.path(d, "ppt/slides", lay))
+  expect_identical(xml2::xml_attr(xml2::xml_find_first(lx, "//*[local-name()='cSld']"),
+                                  "name"), "Title Only")
+})
+
+test_that("save_ppt writes a figure slide on every bundled template", {
+  skip_if_not_installed("officer")
+  skip_if_not_installed("rvg")
+  p <- ggplot2::ggplot(mtcars, ggplot2::aes(wt, mpg)) + ggplot2::geom_point()
+  for (f in templates) {
+    out <- tempfile(fileext = ".pptx")
+    save_ppt(p, template = tpl(f), powerpoint = out,
+             layout = hv_ppt_layout("figure"))
+    expect_identical(length(officer::read_pptx(out)), 1L, info = f)
+  }
+})
