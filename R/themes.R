@@ -235,7 +235,8 @@ theme_hv_ppt_dark <- function(base_size      = 32,
 #' the slate background, with a white plotting panel. Colour the data inside
 #' the panel from `hv_ppt_palette("light")`, and give text drawn inside the
 #' panel (`geom_text()`, `annotate()`) a dark colour, since the theme's ink
-#' is white.
+#' is white. Axis ticks point inward and are dark grey, so they show on the
+#' white panel.
 #' @export
 theme_hv_ppt_slate <- function(base_size      = 32,
                                base_family    = "Arial",
@@ -257,6 +258,7 @@ theme_hv_ppt_slate <- function(base_size      = 32,
     theme(
       panel.background = element_rect(fill = "white", color = "white",
                                       linewidth = 1),
+      axis.ticks       = element_line(color = "grey20", linewidth = 1),
       strip.text       = element_text(size = base_size * 0.75, color = "white"),
       strip.background = element_rect(fill = "transparent", color = NA)
     )

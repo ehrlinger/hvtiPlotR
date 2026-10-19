@@ -179,7 +179,8 @@ font registry is modified. See \code{.hv_family_resolves()} in
 the slate background, with a white plotting panel. Colour the data inside
 the panel from \code{hv_ppt_palette("light")}, and give text drawn inside the
 panel (\code{geom_text()}, \code{annotate()}) a dark colour, since the theme's ink
-is white.
+is white. Axis ticks point inward and are dark grey, so they show on the
+white panel.
 }
 \examples{
 p <- ggplot2::ggplot(mtcars, ggplot2::aes(wt, mpg)) +
