@@ -224,7 +224,9 @@ add_plot_slide <- function(doc, plot, title, layout, master, width, height,
 #'   Default `"Plot"`.
 #' @param layout      PowerPoint slide layout name from the template.
 #'   Default `"Title and Content"`. The bundled templates share six layouts
-#'   by name; name them by role with [hv_ppt_layout()]. Layout names used
+#'   by name; name them by role with [hv_ppt_layout()]; `"figure"`, `"section"`,
+#'   `"content"` and `"two"` work here, while `"title"` and `"blank"` lack a
+#'   title placeholder and are for [officer::add_slide()]. Layout names used
 #'   through hvtiPlotR 2.8.11 (`"Custom Layout"`, `"1_Custom Layout"`,
 #'   `"1_Title Slide"`, `"1_Title Only"`) are mapped to their new names, with
 #'   a one-time message.

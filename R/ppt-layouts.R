@@ -20,8 +20,11 @@
 #'
 #' Every template bundled with hvtiPlotR (dark, light and slate) has the same
 #' six layouts by the same names, so a deck script runs on any of them. Name
-#' the role and pass the result to [save_ppt()]'s `layout` or to
-#' [officer::add_slide()].
+#' the role and pass the result to [officer::add_slide()]. [save_ppt()] sets a
+#' slide title, so its `layout` must have a title placeholder: it works with
+#' `"figure"`, `"section"`, `"content"` and `"two"`. `"title"` (Title Slide
+#' has ctrTitle and subTitle placeholders) and `"blank"` (no placeholders)
+#' are for [officer::add_slide()] only.
 #'
 #' Through hvtiPlotR 2.8.11 the light template named its figure layout
 #' "Custom Layout" and its section layout "1_Custom Layout", and the dark

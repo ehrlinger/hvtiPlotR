@@ -22,9 +22,9 @@ for the 13.33 by 7.5 inch HVTI templates. The dark (default), light and
 slate templates share one master layout: the title placeholder runs from
 0.08 to 1.33 in, at 48 pt. So all get the same rectangle, starting at
 1.6 in and 3.9 in tall. That leaves room for facet strips under the title
-and for the 32 pt axis text and 40 pt axis title of \code{\link[=theme_hv_ppt_dark]{theme_hv_ppt_dark()}}
-and \code{\link[=theme_hv_ppt_light]{theme_hv_ppt_light()}} above the bottom edge, and matches the CORR
-template's own chart and table slides, which start at 1.58 in.
+and for the 32 pt axis text and 40 pt axis title of \code{\link[=theme_hv_ppt_dark]{theme_hv_ppt_dark()}},
+\code{\link[=theme_hv_ppt_light]{theme_hv_ppt_light()}} and \code{\link[=theme_hv_ppt_slate]{theme_hv_ppt_slate()}} above the bottom edge,
+and matches the CORR template's own chart and table slides, which start at 1.58 in.
 }
 \details{
 Through hvtiPlotR 2.8.11 the dark rectangle started at 1.29 in and was

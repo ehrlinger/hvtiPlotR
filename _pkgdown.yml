@@ -82,6 +82,7 @@ reference:
   - theme_hv_poster
   - theme_hv_ppt_dark
   - theme_hv_ppt_light
+  - theme_hv_ppt_slate
   - hv_ppt_series
   - hv_palette
   - hv_ppt_palette
@@ -265,6 +266,7 @@ reference:
   - hv_legend_inside
   - hv_ph_location
   - hv_panel_box
+  - hv_ppt_layout
   - make_footnote
   - makeFootnote
 

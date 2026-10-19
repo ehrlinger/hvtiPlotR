@@ -20,8 +20,11 @@ template.
 \description{
 Every template bundled with hvtiPlotR (dark, light and slate) has the same
 six layouts by the same names, so a deck script runs on any of them. Name
-the role and pass the result to \code{\link[=save_ppt]{save_ppt()}}'s \code{layout} or to
-\code{\link[officer:add_slide]{officer::add_slide()}}.
+the role and pass the result to \code{\link[officer:add_slide]{officer::add_slide()}}. \code{\link[=save_ppt]{save_ppt()}} sets a
+slide title, so its \code{layout} must have a title placeholder: it works with
+\code{"figure"}, \code{"section"}, \code{"content"} and \code{"two"}. \code{"title"} (Title Slide
+has ctrTitle and subTitle placeholders) and \code{"blank"} (no placeholders)
+are for \code{\link[officer:add_slide]{officer::add_slide()}} only.
 }
 \details{
 Through hvtiPlotR 2.8.11 the light template named its figure layout

@@ -145,9 +145,9 @@ hv_ph_location <- function(plot,
 #' slate templates share one master layout: the title placeholder runs from
 #' 0.08 to 1.33 in, at 48 pt. So all get the same rectangle, starting at
 #' 1.6 in and 3.9 in tall. That leaves room for facet strips under the title
-#' and for the 32 pt axis text and 40 pt axis title of [theme_hv_ppt_dark()]
-#' and [theme_hv_ppt_light()] above the bottom edge, and matches the CORR
-#' template's own chart and table slides, which start at 1.58 in.
+#' and for the 32 pt axis text and 40 pt axis title of [theme_hv_ppt_dark()],
+#' [theme_hv_ppt_light()] and [theme_hv_ppt_slate()] above the bottom edge,
+#' and matches the CORR template's own chart and table slides, which start at 1.58 in.
 #'
 #' Through hvtiPlotR 2.8.11 the dark rectangle started at 1.29 in and was
 #' 4.422 in tall, which put facet strips inside the title placeholder. Pass

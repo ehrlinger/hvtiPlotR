@@ -37,7 +37,9 @@ Default \code{"Plot"}.}
 
 \item{layout}{PowerPoint slide layout name from the template.
 Default \code{"Title and Content"}. The bundled templates share six layouts
-by name; name them by role with \code{\link[=hv_ppt_layout]{hv_ppt_layout()}}. Layout names used
+by name; name them by role with \code{\link[=hv_ppt_layout]{hv_ppt_layout()}}; \code{"figure"}, \code{"section"},
+\code{"content"} and \code{"two"} work here, while \code{"title"} and \code{"blank"} lack a
+title placeholder and are for \code{\link[officer:add_slide]{officer::add_slide()}}. Layout names used
 through hvtiPlotR 2.8.11 (\code{"Custom Layout"}, \code{"1_Custom Layout"},
 \code{"1_Title Slide"}, \code{"1_Title Only"}) are mapped to their new names, with
 a one-time message.}
