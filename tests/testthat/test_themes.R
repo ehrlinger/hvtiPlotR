@@ -392,3 +392,31 @@ test_that("ppt themes still default plot.background to transparent", {
   expect_identical(theme_hv_ppt_dark()$plot.background$fill,  "transparent")
   expect_identical(theme_hv_ppt_light()$plot.background$fill, "transparent")
 })
+
+# ============================================================================
+# theme_hv_ppt_slate
+# ============================================================================
+
+test_that("theme_hv_ppt_slate has a white panel and white text on the slate", {
+  th <- theme_hv_ppt_slate()
+  expect_s3_class(th, "theme")
+  expect_identical(th$panel.background$fill, "white")
+  expect_identical(th$panel.background$colour, "white")
+  expect_identical(th$axis.text$colour, "white")
+  expect_identical(th$strip.text$colour, "white")
+  expect_identical(th$strip.background$fill, "transparent")
+  expect_identical(th$legend.position, "none")
+})
+
+test_that("theme_hv_ppt_slate keeps the dark theme's type sizes", {
+  slate <- theme_hv_ppt_slate()
+  dark  <- theme_hv_ppt_dark()
+  expect_identical(slate$axis.text$size, dark$axis.text$size)
+  expect_identical(slate$axis.title$size, dark$axis.title$size)
+  expect_identical(slate$strip.text$size, dark$strip.text$size)
+})
+
+test_that("theme_hv_ppt_slate ... overrides default elements", {
+  expect_identical(theme_hv_ppt_slate(legend.position = "right")$legend.position,
+                   "right")
+})
