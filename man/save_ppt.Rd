@@ -36,7 +36,13 @@ number of plots: supply one string for all slides, or one per plot.
 Default \code{"Plot"}.}
 
 \item{layout}{PowerPoint slide layout name from the template.
-Default \code{"Title and Content"}.}
+Default \code{"Title and Content"}. The bundled templates share six layouts
+by name; name them by role with \code{\link[=hv_ppt_layout]{hv_ppt_layout()}}; \code{"figure"}, \code{"section"},
+\code{"content"} and \code{"two"} work here, while \code{"title"} and \code{"blank"} lack a
+title placeholder and are for \code{\link[officer:add_slide]{officer::add_slide()}}. Layout names used
+through hvtiPlotR 2.8.11 (\code{"Custom Layout"}, \code{"1_Custom Layout"},
+\code{"1_Title Slide"}, \code{"1_Title Only"}) are mapped to their new names, with
+a one-time message.}
 
 \item{master}{PowerPoint master name from the template, or \code{NULL} to
 use the template's first available master. Default \code{NULL}.}
@@ -94,6 +100,15 @@ For a light room, a light template is bundled as well; pair it with
 \if{html}{\out{<div class="sourceCode">}}\preformatted{template <- system.file("extdata", "hv_ppt_template_light.pptx",
                         package = "hvtiPlotR")
 }\if{html}{\out{</div>}}
+
+A slate template (solid \verb{#384D60} background, centered white titles) is
+bundled too; pair it with \code{\link[=theme_hv_ppt_slate]{theme_hv_ppt_slate()}}:
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{template <- system.file("extdata", "hv_ppt_template_slate.pptx",
+                        package = "hvtiPlotR")
+}\if{html}{\out{</div>}}
+
+All bundled templates share six layouts by name; see \code{\link[=hv_ppt_layout]{hv_ppt_layout()}}.
 
 To use the live master instead of the bundled copy, point the
 \code{hvtiPlotR.ppt_template} option at your OneDrive-synced copy, for example

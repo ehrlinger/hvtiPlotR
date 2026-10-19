@@ -50,6 +50,7 @@
 #' p + theme_hv_poster()
 #' p + theme_hv_ppt_dark()
 #' p + theme_hv_ppt_light()
+#' p + theme_hv_ppt_slate()
 #'
 #' # Extra named arguments go straight into a final theme() call.
 #' p + theme_hv_manuscript(base_size = 10, legend.position = "right")
@@ -218,6 +219,48 @@ theme_hv_ppt_dark <- function(base_size      = 32,
       panel.grid.minor   = element_blank(),
       legend.position    = "none",
       plot.margin        = unit(c(0, 0, 0, 0), "inches")
+    )
+  if (...length() > 0L) base <- base %+replace% theme(...)
+  .hv_tag_ppt_font_requests(base, base_family, header_family)
+}
+
+# ----------------------------------------------------------------------------
+# theme_hv_ppt_slate
+# ----------------------------------------------------------------------------
+
+#' @rdname hvtiPlotR-themes
+#' @details
+#' `theme_hv_ppt_slate()` pairs with the slate template
+#' (`hv_ppt_template_slate.pptx`): the dark theme's type and axes, white on
+#' the slate background, with a white plotting panel. Color the data inside
+#' the panel from `hv_ppt_palette("light")`, and give text drawn inside the
+#' panel (`geom_text()`, `annotate()`) a dark color, since the theme's ink
+#' is white. Axis ticks point inward and are dark gray, so they show on the
+#' white panel.
+#' @export
+theme_hv_ppt_slate <- function(base_size      = 32,
+                               base_family    = "Arial",
+                               header_family  = NULL,
+                               base_line_size = base_size / 22,
+                               base_rect_size = base_size / 22,
+                               ink            = "white",
+                               paper          = "transparent",
+                               accent         = "#3366FF",
+                               ...) {
+  base <- theme_hv_ppt_dark(base_size      = base_size,
+                            base_family    = base_family,
+                            header_family  = header_family,
+                            base_line_size = base_line_size,
+                            base_rect_size = base_rect_size,
+                            ink            = ink,
+                            paper          = paper,
+                            accent         = accent) %+replace%
+    theme(
+      panel.background = element_rect(fill = "white", color = "white",
+                                      linewidth = 1),
+      axis.ticks       = element_line(color = "gray20", linewidth = 1),
+      strip.text       = element_text(size = base_size * 0.75, color = "white"),
+      strip.background = element_rect(fill = "transparent", color = NA)
     )
   if (...length() > 0L) base <- base %+replace% theme(...)
   .hv_tag_ppt_font_requests(base, base_family, header_family)

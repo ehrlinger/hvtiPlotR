@@ -1,5 +1,5 @@
 # ------------------------------------------------------------------------
-# Arial font fallback for theme_hv_ppt_dark() / theme_hv_ppt_light()
+# Arial font fallback for theme_hv_ppt_dark() / _light() / _slate()
 # ------------------------------------------------------------------------
 #
 # CORR house style calls for Arial on PPT slides, so both theme_hv_ppt_dark()
@@ -103,7 +103,7 @@
 }
 
 # Tag `theme_obj` with which of its family arguments need a fallback check
-# at draw time. Called only from theme_hv_ppt_dark()/theme_hv_ppt_light();
+# at draw time. Called only from theme_hv_ppt_dark()/_light()/_slate();
 # theme_hv_manuscript()/theme_hv_poster() default base_family to "" (device
 # default) and never call this.
 .hv_tag_ppt_font_requests <- function(theme_obj, base_family, header_family) {

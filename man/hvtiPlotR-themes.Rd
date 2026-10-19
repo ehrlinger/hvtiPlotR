@@ -5,6 +5,7 @@
 \alias{theme_hv_manuscript}
 \alias{theme_hv_poster}
 \alias{theme_hv_ppt_dark}
+\alias{theme_hv_ppt_slate}
 \alias{theme_hv_ppt_light}
 \alias{hv_theme_manuscript}
 \alias{theme_manuscript}
@@ -44,6 +45,18 @@ theme_hv_poster(
 )
 
 theme_hv_ppt_dark(
+  base_size = 32,
+  base_family = "Arial",
+  header_family = NULL,
+  base_line_size = base_size/22,
+  base_rect_size = base_size/22,
+  ink = "white",
+  paper = "transparent",
+  accent = "#3366FF",
+  ...
+)
+
+theme_hv_ppt_slate(
   base_size = 32,
   base_family = "Arial",
   header_family = NULL,
@@ -160,6 +173,14 @@ why; devices that resolve fonts via the OS (quartz, cairo, RStudio's
 graphics device) are unaffected and keep using real Arial. No global
 font registry is modified. See \code{.hv_family_resolves()} in
 \code{ppt-font-fallback.R} for the mechanism.
+
+\code{theme_hv_ppt_slate()} pairs with the slate template
+(\code{hv_ppt_template_slate.pptx}): the dark theme's type and axes, white on
+the slate background, with a white plotting panel. Color the data inside
+the panel from \code{hv_ppt_palette("light")}, and give text drawn inside the
+panel (\code{geom_text()}, \code{annotate()}) a dark color, since the theme's ink
+is white. Axis ticks point inward and are dark gray, so they show on the
+white panel.
 }
 \examples{
 p <- ggplot2::ggplot(mtcars, ggplot2::aes(wt, mpg)) +
@@ -169,6 +190,7 @@ p + theme_hv_manuscript()
 p + theme_hv_poster()
 p + theme_hv_ppt_dark()
 p + theme_hv_ppt_light()
+p + theme_hv_ppt_slate()
 
 # Extra named arguments go straight into a final theme() call.
 p + theme_hv_manuscript(base_size = 10, legend.position = "right")

@@ -67,9 +67,13 @@ blue-gradient or dark PowerPoint templates.
 \code{+ theme(panel.background = element_rect(fill = "white"))} if you
 specifically need an opaque white panel on a non-white slide
 background.
+\item \code{\link[=theme_hv_ppt_slate]{theme_hv_ppt_slate()}}: Large-font theme with a white panel and white
+axes for the slate template (\code{hv_ppt_template_slate.pptx}).
+\item \code{\link[=hv_ppt_layout]{hv_ppt_layout()}}: The layout name for a slide role; the same six
+layouts exist in every bundled template.
 }
 
-Both PPT themes hide the legend by default, use inside-facing axis
+All three PPT themes hide the legend by default, use inside-facing axis
 ticks, and scale axis-text / axis-title margins from \code{base_size} via
 ggplot2's \code{half_line} convention.
 }
