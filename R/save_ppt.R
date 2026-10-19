@@ -186,6 +186,16 @@ add_plot_slide <- function(doc, plot, title, layout, master, width, height,
 #'                         package = "hvtiPlotR")
 #' ```
 #'
+#' A slate template (solid `#384D60` background, centred white titles) is
+#' bundled too; pair it with [theme_hv_ppt_slate()]:
+#'
+#' ```
+#' template <- system.file("extdata", "hv_ppt_template_slate.pptx",
+#'                         package = "hvtiPlotR")
+#' ```
+#'
+#' All bundled templates share six layouts by name; see [hv_ppt_layout()].
+#'
 #' To use the live master instead of the bundled copy, point the
 #' `hvtiPlotR.ppt_template` option at your OneDrive-synced copy, for example
 #' in `.Rprofile`:
@@ -213,7 +223,11 @@ add_plot_slide <- function(doc, plot, title, layout, master, width, height,
 #'   number of plots: supply one string for all slides, or one per plot.
 #'   Default `"Plot"`.
 #' @param layout      PowerPoint slide layout name from the template.
-#'   Default `"Title and Content"`.
+#'   Default `"Title and Content"`. The bundled templates share six layouts
+#'   by name; name them by role with [hv_ppt_layout()]. Layout names used
+#'   through hvtiPlotR 2.8.11 (`"Custom Layout"`, `"1_Custom Layout"`,
+#'   `"1_Title Slide"`, `"1_Title Only"`) are mapped to their new names, with
+#'   a one-time message.
 #' @param master      PowerPoint master name from the template, or `NULL` to
 #'   use the template's first available master. Default `NULL`.
 #' @param width       Plot width in inches within the slide. Default `10.1`.
