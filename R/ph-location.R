@@ -141,12 +141,12 @@ hv_ph_location <- function(plot,
 #' Standard slide panel rectangle for an HVTI template
 #'
 #' The fixed panel rectangle [save_ppt()] anchors every plot to, in inches,
-#' for the 13.33 by 7.5 inch HVTI templates. The dark (default) and light
-#' templates share one master layout: the title placeholder runs from 0.08 to
-#' 1.33 in, at 48 pt. So both get the same rectangle, starting at 1.6 in and
-#' 3.9 in tall. That leaves room for facet strips under the title and for the
-#' 32 pt axis text and 40 pt axis title of [theme_hv_ppt_dark()] and
-#' [theme_hv_ppt_light()] above the bottom edge, and matches the CORR
+#' for the 13.33 by 7.5 inch HVTI templates. The dark (default), light and
+#' slate templates share one master layout: the title placeholder runs from
+#' 0.08 to 1.33 in, at 48 pt. So all get the same rectangle, starting at
+#' 1.6 in and 3.9 in tall. That leaves room for facet strips under the title
+#' and for the 32 pt axis text and 40 pt axis title of [theme_hv_ppt_dark()]
+#' and [theme_hv_ppt_light()] above the bottom edge, and matches the CORR
 #' template's own chart and table slides, which start at 1.58 in.
 #'
 #' Through hvtiPlotR 2.8.11 the dark rectangle started at 1.29 in and was
@@ -154,26 +154,35 @@ hv_ph_location <- function(plot,
 #' `panel_box = list(width = 8.79, height = 4.422, left = 2.67, top = 1.29)`
 #' to [save_ppt()] to rebuild an old deck at its old geometry.
 #'
-#' @param mode `"dark"` (the default template) or `"light"`
-#'   (`hv_ppt_template_light.pptx`). Both return the same rectangle; the
-#'   argument is kept so existing calls keep working.
+#' @param mode `"dark"` (the default template), `"light"`
+#'   (`hv_ppt_template_light.pptx`) or `"slate"`
+#'   (`hv_ppt_template_slate.pptx`). All return the same rectangle; the
+#'   argument is kept so calls name the template they target.
 #' @return A named list `width`, `height`, `left`, `top`, ready for the
 #'   `panel_box` argument of [save_ppt()].
 #' @seealso [save_ppt()], [hv_ph_location()]
 #' @examples
-#' hv_panel_box("light")
+#' hv_panel_box("slate")
 #' @export
-hv_panel_box <- function(mode = c("dark", "light")) {
+hv_panel_box <- function(mode = c("dark", "light", "slate")) {
   match.arg(mode)
   list(width = 8.79, height = 3.9, left = 2.67, top = 1.6)
 }
 
-# "light" when `template` is the bundled light template, else "dark".
+# "light" or "slate" when `template` is that bundled template, else "dark".
 .hv_template_mode <- function(template) {
-  light <- system.file("extdata", "hv_ppt_template_light.pptx",
-                       package = "hvtiPlotR")
-  same <- nzchar(light) && is.character(template) && length(template) == 1L &&
-    file.exists(template) &&
-    identical(normalizePath(template), normalizePath(light))
-  if (same) "light" else "dark"
+  if (!(is.character(template) && length(template) == 1L &&
+        file.exists(template))) {
+    return("dark")
+  }
+  bundled <- c(light = "hv_ppt_template_light.pptx",
+               slate = "hv_ppt_template_slate.pptx")
+  for (mode in names(bundled)) {
+    path <- system.file("extdata", bundled[[mode]], package = "hvtiPlotR")
+    if (nzchar(path) &&
+        identical(normalizePath(template), normalizePath(path))) {
+      return(mode)
+    }
+  }
+  "dark"
 }

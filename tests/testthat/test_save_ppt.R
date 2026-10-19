@@ -535,14 +535,18 @@ test_that("save_ppt defaults panel_box to the standard fixed-panel rectangle", {
   )
 })
 
-test_that("hv_panel_box gives both templates the same rectangle below the title", {
+test_that("hv_panel_box gives every template the same rectangle below the title", {
   light <- system.file("extdata", "hv_ppt_template_light.pptx",
                        package = "hvtiPlotR")
   dark  <- system.file("extdata", "hv_ppt_template.pptx", package = "hvtiPlotR")
+  slate <- system.file("extdata", "hv_ppt_template_slate.pptx",
+                       package = "hvtiPlotR")
   expect_identical(.hv_template_mode(light), "light")
   expect_identical(.hv_template_mode(dark), "dark")
+  expect_identical(.hv_template_mode(slate), "slate")
   expect_identical(hv_panel_box("dark"), hv_panel_box("light"))
-  # Below the title placeholder both templates share (0.083 + 1.25 in).
+  expect_identical(hv_panel_box("dark"), hv_panel_box("slate"))
+  # Below the title placeholder all templates share (0.083 + 1.25 in).
   expect_gt(hv_panel_box("dark")$top, 0.083 + 1.25)
   expect_error(hv_panel_box("blue"))
 })

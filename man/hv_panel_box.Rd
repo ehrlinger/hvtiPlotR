@@ -4,12 +4,13 @@
 \alias{hv_panel_box}
 \title{Standard slide panel rectangle for an HVTI template}
 \usage{
-hv_panel_box(mode = c("dark", "light"))
+hv_panel_box(mode = c("dark", "light", "slate"))
 }
 \arguments{
-\item{mode}{\code{"dark"} (the default template) or \code{"light"}
-(\code{hv_ppt_template_light.pptx}). Both return the same rectangle; the
-argument is kept so existing calls keep working.}
+\item{mode}{\code{"dark"} (the default template), \code{"light"}
+(\code{hv_ppt_template_light.pptx}) or \code{"slate"}
+(\code{hv_ppt_template_slate.pptx}). All return the same rectangle; the
+argument is kept so calls name the template they target.}
 }
 \value{
 A named list \code{width}, \code{height}, \code{left}, \code{top}, ready for the
@@ -17,12 +18,12 @@ A named list \code{width}, \code{height}, \code{left}, \code{top}, ready for the
 }
 \description{
 The fixed panel rectangle \code{\link[=save_ppt]{save_ppt()}} anchors every plot to, in inches,
-for the 13.33 by 7.5 inch HVTI templates. The dark (default) and light
-templates share one master layout: the title placeholder runs from 0.08 to
-1.33 in, at 48 pt. So both get the same rectangle, starting at 1.6 in and
-3.9 in tall. That leaves room for facet strips under the title and for the
-32 pt axis text and 40 pt axis title of \code{\link[=theme_hv_ppt_dark]{theme_hv_ppt_dark()}} and
-\code{\link[=theme_hv_ppt_light]{theme_hv_ppt_light()}} above the bottom edge, and matches the CORR
+for the 13.33 by 7.5 inch HVTI templates. The dark (default), light and
+slate templates share one master layout: the title placeholder runs from
+0.08 to 1.33 in, at 48 pt. So all get the same rectangle, starting at
+1.6 in and 3.9 in tall. That leaves room for facet strips under the title
+and for the 32 pt axis text and 40 pt axis title of \code{\link[=theme_hv_ppt_dark]{theme_hv_ppt_dark()}}
+and \code{\link[=theme_hv_ppt_light]{theme_hv_ppt_light()}} above the bottom edge, and matches the CORR
 template's own chart and table slides, which start at 1.58 in.
 }
 \details{
@@ -32,7 +33,7 @@ Through hvtiPlotR 2.8.11 the dark rectangle started at 1.29 in and was
 to \code{\link[=save_ppt]{save_ppt()}} to rebuild an old deck at its old geometry.
 }
 \examples{
-hv_panel_box("light")
+hv_panel_box("slate")
 }
 \seealso{
 \code{\link[=save_ppt]{save_ppt()}}, \code{\link[=hv_ph_location]{hv_ph_location()}}
