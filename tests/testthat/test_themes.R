@@ -406,7 +406,7 @@ test_that("theme_hv_ppt_slate has a white panel and white text on the slate", {
   expect_identical(th$strip.text$colour, "white")
   expect_identical(th$strip.background$fill, "transparent")
   expect_identical(th$legend.position, "none")
-  expect_identical(th$axis.ticks$colour, "grey20")
+  expect_identical(th$axis.ticks$colour, "gray20")
   expect_lt(as.numeric(th$axis.ticks.length), 0)   # still inward
 })
 

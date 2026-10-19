@@ -101,7 +101,7 @@ For a light room, a light template is bundled as well; pair it with
                         package = "hvtiPlotR")
 }\if{html}{\out{</div>}}
 
-A slate template (solid \verb{#384D60} background, centred white titles) is
+A slate template (solid \verb{#384D60} background, centered white titles) is
 bundled too; pair it with \code{\link[=theme_hv_ppt_slate]{theme_hv_ppt_slate()}}:
 
 \if{html}{\out{<div class="sourceCode">}}\preformatted{template <- system.file("extdata", "hv_ppt_template_slate.pptx",

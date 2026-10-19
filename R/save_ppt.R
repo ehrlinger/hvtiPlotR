@@ -186,7 +186,7 @@ add_plot_slide <- function(doc, plot, title, layout, master, width, height,
 #'                         package = "hvtiPlotR")
 #' ```
 #'
-#' A slate template (solid `#384D60` background, centred white titles) is
+#' A slate template (solid `#384D60` background, centered white titles) is
 #' bundled too; pair it with [theme_hv_ppt_slate()]:
 #'
 #' ```
@@ -478,7 +478,8 @@ save_ppt <- function(object,
     officer::read_pptx(path = template),
     action = "open PowerPoint template"
   )
-  layout <- .hv_resolve_layout(layout, officer::layout_summary(doc)$layout)
+  layout <- .hv_resolve_layout(
+    layout, .hv_available_layouts(officer::layout_summary(doc), master))
 
   # --- Add slides ------------------------------------------------------------
   if (is_consort) {

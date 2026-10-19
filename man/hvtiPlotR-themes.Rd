@@ -176,10 +176,10 @@ font registry is modified. See \code{.hv_family_resolves()} in
 
 \code{theme_hv_ppt_slate()} pairs with the slate template
 (\code{hv_ppt_template_slate.pptx}): the dark theme's type and axes, white on
-the slate background, with a white plotting panel. Colour the data inside
+the slate background, with a white plotting panel. Color the data inside
 the panel from \code{hv_ppt_palette("light")}, and give text drawn inside the
-panel (\code{geom_text()}, \code{annotate()}) a dark colour, since the theme's ink
-is white. Axis ticks point inward and are dark grey, so they show on the
+panel (\code{geom_text()}, \code{annotate()}) a dark color, since the theme's ink
+is white. Axis ticks point inward and are dark gray, so they show on the
 white panel.
 }
 \examples{
