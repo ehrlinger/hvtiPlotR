@@ -27,6 +27,13 @@ repack <- function(dir, pptx) {
   files <- c(ct, setdiff(files, ct))   # content types first, as PowerPoint writes it
   out <- file.path(normalizePath(dirname(pptx)), basename(pptx))
   unlink(out)
+  ## Fixed timestamps, read in UTC, so a rebuild of unchanged content is
+  ## byte-identical (ZIP stores each entry's local modification time).
+  old_tz <- Sys.getenv("TZ", unset = NA)
+  Sys.setenv(TZ = "UTC")
+  on.exit(if (is.na(old_tz)) Sys.unsetenv("TZ") else Sys.setenv(TZ = old_tz),
+          add = TRUE)
+  Sys.setFileTime(file.path(dir, files), as.POSIXct("2026-01-01", tz = "UTC"))
   zip::zip(out, files = files, root = dir, mode = "mirror")
   invisible(out)
 }
