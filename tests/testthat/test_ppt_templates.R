@@ -53,7 +53,7 @@ test_that("slate master has a solid slate background", {
   expect_identical(toupper(xml2::xml_attr(fill, "val")), "384D60")
 })
 
-test_that("slate master titles are white, regular, centred Arial", {
+test_that("slate master titles are white, regular, centered Arial", {
   skip_if_not_installed("xml2")
   m <- slate_xml("ppt/slideMasters/slideMaster1.xml")
   lvl <- xml2::xml_find_first(m, "//p:txStyles/p:titleStyle/a:lvl1pPr", ns)
@@ -66,15 +66,52 @@ test_that("slate master titles are white, regular, centred Arial", {
                                   "typeface"), "Arial")
 })
 
-test_that("slate theme carries the Slate colour scheme", {
+test_that("slate theme carries the Slate color scheme", {
   skip_if_not_installed("xml2")
   th <- slate_xml("ppt/theme/theme1.xml")
   cs <- xml2::xml_find_first(th, "//a:clrScheme", ns)
   expect_identical(xml2::xml_attr(cs, "name"), "Slate")
-  val <- function(k) toupper(xml2::xml_attr(
-    xml2::xml_find_first(cs, paste0("a:", k, "/a:srgbClr"), ns), "val"))
+  val <- function(k) {
+    node <- xml2::xml_find_first(cs, paste0("a:", k, "/a:srgbClr"), ns)
+    toupper(xml2::xml_attr(node, "val"))
+  }
   expect_identical(val("accent1"), "0877BC")
   expect_identical(val("accent4"), "F8C946")
+})
+
+test_that("slate master run properties keep DrawingML schema child order", {
+  skip_if_not_installed("xml2")
+  order <- c("ln", "noFill", "solidFill", "gradFill", "blipFill", "pattFill",
+             "grpFill", "effectLst", "effectDag", "highlight", "uLnTx", "uLn",
+             "uFillTx", "uFill", "latin", "ea", "cs", "sym", "hlinkClick",
+             "hlinkMouseOver", "rtl", "extLst")
+  rank <- c(ln = 1, noFill = 2, solidFill = 2, gradFill = 2, blipFill = 2,
+            pattFill = 2, grpFill = 2, effectLst = 3, effectDag = 3,
+            highlight = 4, uLnTx = 5, uLn = 5, uFillTx = 6, uFill = 6,
+            latin = 7, ea = 8, cs = 9, sym = 10, hlinkClick = 11,
+            hlinkMouseOver = 12, rtl = 13, extLst = 14)
+  expect_setequal(names(rank), order)
+  m <- slate_xml("ppt/slideMasters/slideMaster1.xml")
+  lvls <- xml2::xml_find_all(
+    m, paste0("//p:txStyles/p:titleStyle/a:lvl1pPr|",
+              "//p:txStyles/p:bodyStyle/*[starts-with(local-name(), 'lvl')]"), ns)
+  expect_gt(length(lvls), 1L)
+  for (lvl in lvls) {
+    rpr <- xml2::xml_find_first(lvl, "a:defRPr", ns)
+    kids <- xml2::xml_name(xml2::xml_children(rpr))
+    expect_true(all(kids %in% names(rank)), info = xml2::xml_name(lvl))
+    expect_false(is.unsorted(unname(rank[kids])),
+                 info = paste(xml2::xml_name(lvl), paste(kids, collapse = ",")))
+  }
+})
+
+test_that(".hv_available_layouts restricts to the requested master", {
+  ls <- data.frame(layout = c("Title Only", "Blank", "Title Only"),
+                   master = c("A", "A", "B"), stringsAsFactors = FALSE)
+  expect_identical(.hv_available_layouts(ls, NULL), ls$layout)
+  expect_identical(.hv_available_layouts(ls, "A"), c("Title Only", "Blank"))
+  expect_identical(.hv_available_layouts(ls, "B"), "Title Only")
+  expect_identical(.hv_available_layouts(ls, "C"), character())
 })
 
 test_that("hv_ppt_layout returns the contract name for each role", {
@@ -113,7 +150,8 @@ test_that("save_ppt accepts an old layout name on the renamed light template", {
     save_ppt(p, template = tpl("hv_ppt_template_light.pptx"),
              powerpoint = out, layout = "Custom Layout"),
     "is now 'Title Only'")
-  d <- tempfile("chk-"); utils::unzip(out, exdir = d)
+  d <- tempfile("chk-")
+  utils::unzip(out, exdir = d)
   rel <- xml2::read_xml(file.path(d, "ppt/slides/_rels/slide1.xml.rels"))
   lay <- xml2::xml_attr(xml2::xml_find_first(
     rel, "//*[local-name()='Relationship'][contains(@Type,'slideLayout')]"), "Target")

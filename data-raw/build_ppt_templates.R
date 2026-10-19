@@ -71,9 +71,24 @@ slate_scheme <- c(dk1 = "000000", lt1 = "FFFFFF", dk2 = "44546A",
 ## White Arial on a run-properties node; bold = "0" for titles.
 set_run_props <- function(rpr, bold = NULL) {
   xml_remove(xml_find_all(rpr, "a:solidFill|a:gradFill|a:noFill|a:latin", ns))
-  fill <- xml_add_child(rpr, "a:solidFill", .where = 0)
+  ## Schema order of a:defRPr children: a:ln, fill, effects, highlight,
+  ## underline, a:latin, a:ea, a:cs, a:sym, hyperlinks, a:rtl, a:extLst.
+  ln <- xml_find_first(rpr, "a:ln", ns)
+  fill <- if (inherits(ln, "xml_missing")) {
+    xml_add_child(rpr, "a:solidFill", .where = 0)
+  } else {
+    xml_add_sibling(ln, "a:solidFill", .where = "after")
+  }
   xml_add_child(fill, "a:srgbClr", val = "FFFFFF")
-  xml_add_child(rpr, "a:latin", typeface = "Arial", .where = 1)
+  after_latin <- xml_find_first(
+    rpr, paste0("a:ea|a:cs|a:sym|a:hlinkClick|a:hlinkMouseOver|a:rtl|",
+                "a:extLst"), ns)
+  if (inherits(after_latin, "xml_missing")) {
+    xml_add_child(rpr, "a:latin", typeface = "Arial")
+  } else {
+    xml_add_sibling(after_latin, "a:latin", typeface = "Arial",
+                    .where = "before")
+  }
   if (!is.null(bold)) xml_set_attr(rpr, "b", bold)
   invisible(rpr)
 }
@@ -106,7 +121,7 @@ for (lvl in xml_find_all(m, "//p:txStyles/p:bodyStyle/*", ns)) {
 write_xml(m, master_f)
 
 ## Layouts: drop any background of their own (the master's applies) and any
-## title colour, weight or font override, so the master title style shows.
+## title color, weight or font override, so the master title style shows.
 for (f in list.files(file.path(slate_dir, "ppt", "slideLayouts"), "\\.xml$",
                      full.names = TRUE)) {
   l <- read_xml(f)

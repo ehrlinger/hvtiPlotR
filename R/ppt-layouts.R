@@ -48,6 +48,13 @@ hv_ppt_layout <- function(role = c("figure", "section", "title", "content",
   unname(.hv_layout_roles[[role]])
 }
 
+# Layout names of a layout_summary() data frame, limited to one master when
+# `master` is given (NULL keeps every master's layouts).
+.hv_available_layouts <- function(summary, master = NULL) {
+  if (!is.null(master)) summary <- summary[summary$master == master, , drop = FALSE]
+  summary$layout
+}
+
 # The layout name to request from a template whose layouts are `available`:
 # maps an old name to its new one (with a one-time message) or a new name to
 # an old one (a live master that still has old names). See the plan's rule.
