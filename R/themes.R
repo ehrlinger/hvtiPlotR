@@ -236,7 +236,7 @@ theme_hv_ppt_dark <- function(base_size      = 32,
 #' the panel from `hv_ppt_palette("light")`, and give text drawn inside the
 #' panel (`geom_text()`, `annotate()`) a dark color, since the theme's ink
 #' is white. Axis ticks point inward and are dark gray, so they show on the
-#' white panel.
+#' white panel. Geoms without their own color draw in black on the white panel.
 #' @export
 theme_hv_ppt_slate <- function(base_size      = 32,
                                base_family    = "Arial",
@@ -261,7 +261,9 @@ theme_hv_ppt_slate <- function(base_size      = 32,
       axis.ticks       = element_line(color = "gray20", linewidth = 1),
       strip.text       = element_text(size = base_size * 0.75, color = "white"),
       strip.background = element_rect(fill = "transparent", color = NA)
-    )
+    ) +
+    # `+`, not `%+replace%`: merge, so the slide-sized linewidth and font stay.
+    theme(geom = element_geom(ink = "black", paper = "white"))
   if (...length() > 0L) base <- base %+replace% theme(...)
   .hv_tag_ppt_font_requests(base, base_family, header_family)
 }
