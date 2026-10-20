@@ -26,6 +26,12 @@
 #' Use with [save_ppt()] via `panel_box = list(width, height, left, top)` to
 #' apply this to every slide in a deck.
 #'
+#' For a patchwork, [ggplot2::ggplotGrob()] exposes one `panel` cell that
+#' covers the whole composed area, so the target rectangle holds every
+#' sub-plot together with its own axes and strips; only the composition's
+#' outer title, subtitle and caption count as chrome. The individual panels
+#' of the sub-plots are not anchored.
+#'
 #' @param plot         A ggplot (or patchwork) object.
 #' @param panel_width  Target panel width, in `units`.
 #' @param panel_height Target panel height, in `units`.
@@ -140,33 +146,51 @@ hv_ph_location <- function(plot,
 
 #' Standard slide panel rectangle for an HVTI template
 #'
-#' The fixed panel rectangle [save_ppt()] anchors every plot to, in inches,
-#' for the 13.33 by 7.5 inch HVTI templates. The dark (default), light and
-#' slate templates share one master layout: the title placeholder runs from
-#' 0.08 to 1.33 in, at 48 pt. So all get the same rectangle, starting at
-#' 1.6 in and 3.9 in tall. That leaves room for facet strips under the title
-#' and for the 32 pt axis text and 40 pt axis title of [theme_hv_ppt_dark()],
-#' [theme_hv_ppt_light()] and [theme_hv_ppt_slate()] above the bottom edge,
-#' and matches the CORR template's own chart and table slides, which start at 1.58 in.
+#' The one fixed panel rectangle every plot slide of a slide format anchors
+#' its plotting panel to, in inches, for the 13.33 by 7.5 inch HVTI
+#' templates. [save_ppt()] and [hv_add_plot()] use it by default. Axis text,
+#' axis titles, facet strips and plot titles flow outside the rectangle;
+#' [hv_fit_location()] keeps them on the slide and out of the slide title.
 #'
-#' Through hvtiPlotR 2.8.11 the dark rectangle started at 1.29 in and was
-#' 4.422 in tall, which put facet strips inside the title placeholder. Pass
-#' `panel_box = list(width = 8.79, height = 4.422, left = 2.67, top = 1.29)`
-#' to [save_ppt()] to rebuild an old deck at its old geometry.
+#' The dark (default), light and slate templates share one master layout,
+#' whose title placeholder ends at 1.33 in, so today all three formats get
+#' the same rectangle: 9.98 by 4.4 in, 2.9 in from the left edge and 1.85 in
+#' from the top. The numbers leave room for the chrome around the panel:
+#'
+#' * 2.9 in on the left for long y-axis labels and the rotated y-axis title;
+#' * about 0.45 in above the panel, below the title placeholder, for facet
+#'   strips and plot titles;
+#' * 1.25 in below the panel for the 32 pt x-axis text and 40 pt x-axis
+#'   title of [theme_hv_ppt_dark()], [theme_hv_ppt_light()] and
+#'   [theme_hv_ppt_slate()].
+#'
+#' The function keeps one entry per format so the formats can diverge later
+#' without changing any call.
+#'
+#' Through hvtiPlotR 2.8.13 the rectangle was 8.79 by 3.9 in at 2.67 in
+#' left, 1.6 in top. Pass
+#' `panel_box = list(width = 8.79, height = 3.9, left = 2.67, top = 1.6)`
+#' to [save_ppt()] or [hv_add_plot()] to rebuild an old deck at its old
+#' geometry.
 #'
 #' @param mode `"dark"` (the default template), `"light"`
 #'   (`hv_ppt_template_light.pptx`) or `"slate"`
-#'   (`hv_ppt_template_slate.pptx`). All return the same rectangle; the
-#'   argument is kept so calls name the template they target.
-#' @return A named list `width`, `height`, `left`, `top`, ready for the
-#'   `panel_box` argument of [save_ppt()].
-#' @seealso [save_ppt()], [hv_ph_location()]
+#'   (`hv_ppt_template_slate.pptx`).
+#' @return A named list `width`, `height`, `left`, `top`, in inches, ready for
+#'   the `panel_box` argument of [save_ppt()] and [hv_add_plot()].
+#' @seealso [save_ppt()], [hv_add_plot()], [hv_fit_location()],
+#'   [hv_ph_location()]
 #' @examples
 #' hv_panel_box("slate")
 #' @export
 hv_panel_box <- function(mode = c("dark", "light", "slate")) {
-  match.arg(mode)
-  list(width = 8.79, height = 3.9, left = 2.67, top = 1.6)
+  mode <- match.arg(mode)
+  standard <- list(width = 9.98, height = 4.4, left = 2.9, top = 1.85)
+  switch(mode,
+    dark  = standard,
+    light = standard,
+    slate = standard
+  )
 }
 
 # "light" or "slate" when `template` is that bundled template, else "dark".

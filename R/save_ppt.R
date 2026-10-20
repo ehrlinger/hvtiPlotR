@@ -160,6 +160,25 @@ add_plot_slide <- function(doc, plot, title, layout, master, width, height,
   doc
 }
 
+# Add one slide whose plot is fitted around a fixed panel --------------------
+
+add_fitted_plot_slide <- function(doc, plot, title, layout, master, panel_box,
+                                  fit) {
+  doc <- officer_safe_call(
+    officer::add_slide(doc, layout = layout, master = master),
+    action = "add slide"
+  )
+  doc <- officer_safe_call(
+    officer::ph_with(
+      doc,
+      value    = title,
+      location = officer::ph_location_type(type = "title")
+    ),
+    action = "set slide title"
+  )
+  hv_add_plot(doc, plot, panel_box = panel_box, fit = fit)
+}
+
 # Public function ------------------------------------------------------------
 
 #' Save ggplot Objects to an Editable PowerPoint Presentation
@@ -247,21 +266,28 @@ add_plot_slide <- function(doc, plot, title, layout, master, width, height,
 #'   is supplied.
 #' @param panel_box   Named list `list(width, height, left, top)` describing
 #'   the panel content area to anchor on every slide (in inches).
-#'   Per-plot slide placement is computed via [hv_ph_location()] so the panel
-#'   lands at the same slide coordinates on every slide regardless of
-#'   axis-label width. Defaults to [hv_panel_box()], the standard CORR
-#'   rectangle `list(width = 8.79, height = 3.9, left = 2.67, top = 1.6)`,
-#'   the same for the dark and light templates. Pass
+#'   Each plot is placed by [hv_add_plot()], so the panel lands at the same
+#'   slide coordinates on every slide regardless of axis-label width.
+#'   Defaults to [hv_panel_box()] for the template, the standard CORR
+#'   rectangle `list(width = 9.98, height = 4.4, left = 2.9, top = 1.85)`,
+#'   the same for the dark, light and slate templates. Pass
 #'   `panel_box = NULL` to fall back to the fixed `width`/`height`/`left`/
 #'   `top` arguments for every slide (legacy behavior). Ignored for
 #'   `hv_consort` objects, which are always placed using their own metadata
 #'   dimensions.
+#' @param fit `TRUE` (the default) to reduce a plot's text, 4 pt at a time
+#'   at the PPT themes' 32 pt base size, until its axis text, axis titles,
+#'   facet strips and plot title lie on the slide and below the slide title;
+#'   see [hv_fit_location()]. A message names each reduction, and a warning
+#'   names a plot that still does not fit at 12 pt. `FALSE` keeps the plot's
+#'   own sizes and warns when it runs off the slide. Used only with a
+#'   `panel_box`.
 #'
 #' @return Invisibly returns the path given by `powerpoint`.
 #'
 #' @seealso Worked recipe with rendered output:
 #'   \url{https://ehrlinger.github.io/hvtiGraphics/presentations.html}.
-#' @seealso [rvg::dml()], [officer::ph_with()], [officer::ph_location()],
+#' @seealso [hv_add_plot()], [rvg::dml()], [officer::ph_with()], [officer::ph_location()],
 #'   [theme_hv_manuscript()]
 #'
 #' @examples
@@ -400,9 +426,9 @@ add_plot_slide <- function(doc, plot, title, layout, master, width, height,
 #'   panel_box    = list(width = 8.88, height = 4.51, left = 2.58, top = 1.63)
 #' )
 #'
-#' # Sizing advice: panel_box$left and panel_box$top must be large enough for the
-#' # widest axis labels in the deck. If chrome extends past the left or top
-#' # slide edge, hv_ph_location() emits a warning naming that edge.
+#' # Sizing advice: with `fit = TRUE` (the default) a plot whose chrome
+#' # would leave the slide or cross the title has its text reduced until it
+#' # fits; save_ppt() warns only when even 12 pt text does not fit.
 #' }
 #'
 #' @importFrom officer read_pptx add_slide ph_with ph_location ph_location_type
@@ -424,7 +450,8 @@ save_ppt <- function(object,
                      height       = 5.8,
                      left         = 0.0,
                      top          = 1.2,
-                     panel_box    = hv_panel_box(.hv_template_mode(template))) {
+                     panel_box    = hv_panel_box(.hv_template_mode(template)),
+                     fit          = TRUE) {
 
   ensure_officer_available()
   ensure_rvg_available()
@@ -466,12 +493,9 @@ save_ppt <- function(object,
   if (!(is.numeric(left) && length(left) == 1L && left >= 0 &&
         is.numeric(top)  && length(top)  == 1L && top  >= 0))
     stop("`left` and `top` must be non-negative numbers.", call. = FALSE)
-  if (!is.null(panel_box)) {
-    expected <- c("width", "height", "left", "top")
-    if (!is.list(panel_box) || !all(expected %in% names(panel_box)))
-      stop("`panel_box` must be a list with elements `width`, `height`, `left`, `top`.",
-           call. = FALSE)
-  }
+  if (!is.null(panel_box)) .check_panel_box(panel_box)
+  if (!(isTRUE(fit) || isFALSE(fit)))
+    stop("`fit` must be TRUE or FALSE.", call. = FALSE)
 
   # --- Open template ---------------------------------------------------------
   doc <- officer_safe_call(
@@ -505,38 +529,28 @@ save_ppt <- function(object,
     # --- Add one slide per plot ----------------------------------------------
     for (i in seq_along(plots)) {
       if (is.null(panel_box)) {
-        slide_w <- width
-        slide_h <- height
-        slide_l <- left
-        slide_t <- top
-      } else {
-        loc <- suppress_font_db_warnings(
-          hv_ph_location(
-            plots[[i]],
-            panel_width  = panel_box$width,
-            panel_height = panel_box$height,
-            panel_left   = panel_box$left,
-            panel_top    = panel_box$top,
-            units        = "in"
-          )
+        doc <- add_plot_slide(
+          doc    = doc,
+          plot   = plots[[i]],
+          title  = titles[[i]],
+          layout = layout,
+          master = master,
+          width  = width,
+          height = height,
+          left   = left,
+          top    = top
         )
-        slide_w <- loc$width
-        slide_h <- loc$height
-        slide_l <- loc$left
-        slide_t <- loc$top
+      } else {
+        doc <- add_fitted_plot_slide(
+          doc       = doc,
+          plot      = plots[[i]],
+          title     = titles[[i]],
+          layout    = layout,
+          master    = master,
+          panel_box = panel_box,
+          fit       = fit
+        )
       }
-
-      doc <- add_plot_slide(
-        doc    = doc,
-        plot   = plots[[i]],
-        title  = titles[[i]],
-        layout = layout,
-        master = master,
-        width  = slide_w,
-        height = slide_h,
-        left   = slide_l,
-        top    = slide_t
-      )
     }
   }
 

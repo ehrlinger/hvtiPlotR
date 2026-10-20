@@ -9,32 +9,46 @@ hv_panel_box(mode = c("dark", "light", "slate"))
 \arguments{
 \item{mode}{\code{"dark"} (the default template), \code{"light"}
 (\code{hv_ppt_template_light.pptx}) or \code{"slate"}
-(\code{hv_ppt_template_slate.pptx}). All return the same rectangle; the
-argument is kept so calls name the template they target.}
+(\code{hv_ppt_template_slate.pptx}).}
 }
 \value{
-A named list \code{width}, \code{height}, \code{left}, \code{top}, ready for the
-\code{panel_box} argument of \code{\link[=save_ppt]{save_ppt()}}.
+A named list \code{width}, \code{height}, \code{left}, \code{top}, in inches, ready for
+the \code{panel_box} argument of \code{\link[=save_ppt]{save_ppt()}} and \code{\link[=hv_add_plot]{hv_add_plot()}}.
 }
 \description{
-The fixed panel rectangle \code{\link[=save_ppt]{save_ppt()}} anchors every plot to, in inches,
-for the 13.33 by 7.5 inch HVTI templates. The dark (default), light and
-slate templates share one master layout: the title placeholder runs from
-0.08 to 1.33 in, at 48 pt. So all get the same rectangle, starting at
-1.6 in and 3.9 in tall. That leaves room for facet strips under the title
-and for the 32 pt axis text and 40 pt axis title of \code{\link[=theme_hv_ppt_dark]{theme_hv_ppt_dark()}},
-\code{\link[=theme_hv_ppt_light]{theme_hv_ppt_light()}} and \code{\link[=theme_hv_ppt_slate]{theme_hv_ppt_slate()}} above the bottom edge,
-and matches the CORR template's own chart and table slides, which start at 1.58 in.
+The one fixed panel rectangle every plot slide of a slide format anchors
+its plotting panel to, in inches, for the 13.33 by 7.5 inch HVTI
+templates. \code{\link[=save_ppt]{save_ppt()}} and \code{\link[=hv_add_plot]{hv_add_plot()}} use it by default. Axis text,
+axis titles, facet strips and plot titles flow outside the rectangle;
+\code{\link[=hv_fit_location]{hv_fit_location()}} keeps them on the slide and out of the slide title.
 }
 \details{
-Through hvtiPlotR 2.8.11 the dark rectangle started at 1.29 in and was
-4.422 in tall, which put facet strips inside the title placeholder. Pass
-\code{panel_box = list(width = 8.79, height = 4.422, left = 2.67, top = 1.29)}
-to \code{\link[=save_ppt]{save_ppt()}} to rebuild an old deck at its old geometry.
+The dark (default), light and slate templates share one master layout,
+whose title placeholder ends at 1.33 in, so today all three formats get
+the same rectangle: 9.98 by 4.4 in, 2.9 in from the left edge and 1.85 in
+from the top. The numbers leave room for the chrome around the panel:
+\itemize{
+\item 2.9 in on the left for long y-axis labels and the rotated y-axis title;
+\item about 0.45 in above the panel, below the title placeholder, for facet
+strips and plot titles;
+\item 1.25 in below the panel for the 32 pt x-axis text and 40 pt x-axis
+title of \code{\link[=theme_hv_ppt_dark]{theme_hv_ppt_dark()}}, \code{\link[=theme_hv_ppt_light]{theme_hv_ppt_light()}} and
+\code{\link[=theme_hv_ppt_slate]{theme_hv_ppt_slate()}}.
+}
+
+The function keeps one entry per format so the formats can diverge later
+without changing any call.
+
+Through hvtiPlotR 2.8.13 the rectangle was 8.79 by 3.9 in at 2.67 in
+left, 1.6 in top. Pass
+\code{panel_box = list(width = 8.79, height = 3.9, left = 2.67, top = 1.6)}
+to \code{\link[=save_ppt]{save_ppt()}} or \code{\link[=hv_add_plot]{hv_add_plot()}} to rebuild an old deck at its old
+geometry.
 }
 \examples{
 hv_panel_box("slate")
 }
 \seealso{
-\code{\link[=save_ppt]{save_ppt()}}, \code{\link[=hv_ph_location]{hv_ph_location()}}
+\code{\link[=save_ppt]{save_ppt()}}, \code{\link[=hv_add_plot]{hv_add_plot()}}, \code{\link[=hv_fit_location]{hv_fit_location()}},
+\code{\link[=hv_ph_location]{hv_ph_location()}}
 }

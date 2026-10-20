@@ -16,7 +16,8 @@ save_ppt(
   height = 5.8,
   left = 0,
   top = 1.2,
-  panel_box = hv_panel_box(.hv_template_mode(template))
+  panel_box = hv_panel_box(.hv_template_mode(template)),
+  fit = TRUE
 )
 }
 \arguments{
@@ -66,15 +67,23 @@ is supplied.}
 
 \item{panel_box}{Named list \code{list(width, height, left, top)} describing
 the panel content area to anchor on every slide (in inches).
-Per-plot slide placement is computed via \code{\link[=hv_ph_location]{hv_ph_location()}} so the panel
-lands at the same slide coordinates on every slide regardless of
-axis-label width. Defaults to \code{\link[=hv_panel_box]{hv_panel_box()}}, the standard CORR
-rectangle \code{list(width = 8.79, height = 3.9, left = 2.67, top = 1.6)},
-the same for the dark and light templates. Pass
+Each plot is placed by \code{\link[=hv_add_plot]{hv_add_plot()}}, so the panel lands at the same
+slide coordinates on every slide regardless of axis-label width.
+Defaults to \code{\link[=hv_panel_box]{hv_panel_box()}} for the template, the standard CORR
+rectangle \code{list(width = 9.98, height = 4.4, left = 2.9, top = 1.85)},
+the same for the dark, light and slate templates. Pass
 \code{panel_box = NULL} to fall back to the fixed \code{width}/\code{height}/\code{left}/
 \code{top} arguments for every slide (legacy behavior). Ignored for
 \code{hv_consort} objects, which are always placed using their own metadata
 dimensions.}
+
+\item{fit}{\code{TRUE} (the default) to reduce a plot's text, 4 pt at a time
+at the PPT themes' 32 pt base size, until its axis text, axis titles,
+facet strips and plot title lie on the slide and below the slide title;
+see \code{\link[=hv_fit_location]{hv_fit_location()}}. A message names each reduction, and a warning
+names a plot that still does not fit at 12 pt. \code{FALSE} keeps the plot's
+own sizes and warns when it runs off the slide. Used only with a
+\code{panel_box}.}
 }
 \value{
 Invisibly returns the path given by \code{powerpoint}.
@@ -260,9 +269,9 @@ save_ppt(
   panel_box    = list(width = 8.88, height = 4.51, left = 2.58, top = 1.63)
 )
 
-# Sizing advice: panel_box$left and panel_box$top must be large enough for the
-# widest axis labels in the deck. If chrome extends past the left or top
-# slide edge, hv_ph_location() emits a warning naming that edge.
+# Sizing advice: with `fit = TRUE` (the default) a plot whose chrome
+# would leave the slide or cross the title has its text reduced until it
+# fits; save_ppt() warns only when even 12 pt text does not fit.
 }
 
 }
@@ -270,6 +279,6 @@ save_ppt(
 Worked recipe with rendered output:
 \url{https://ehrlinger.github.io/hvtiGraphics/presentations.html}.
 
-\code{\link[rvg:dml]{rvg::dml()}}, \code{\link[officer:ph_with]{officer::ph_with()}}, \code{\link[officer:ph_location]{officer::ph_location()}},
+\code{\link[=hv_add_plot]{hv_add_plot()}}, \code{\link[rvg:dml]{rvg::dml()}}, \code{\link[officer:ph_with]{officer::ph_with()}}, \code{\link[officer:ph_location]{officer::ph_location()}},
 \code{\link[=theme_hv_manuscript]{theme_hv_manuscript()}}
 }

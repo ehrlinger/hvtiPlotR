@@ -1,3 +1,37 @@
+# hvtiPlotR 2.8.14
+
+* `hv_panel_box()` returns a larger standard window for every slide format,
+  `list(width = 9.98, height = 4.4, left = 2.9, top = 1.85)`, up from
+  8.79 by 3.9 in at 2.67 in left, 1.6 in top. The dark, light and slate
+  templates share it. The 2.9 in on the left leaves room for long y labels,
+  the 0.45 in above the panel holds facet strips and plot titles below the
+  slide title, which ends at 1.33 in, and the 1.25 in below holds the x-axis
+  text and title. `save_ppt()` therefore places every figure larger. Pass
+  `panel_box = list(width = 8.79, height = 3.9, left = 2.67, top = 1.6)` to
+  rebuild an old deck at its old geometry.
+
+* `save_ppt()` now fits each plot to the slide. The panel stays on
+  `panel_box`; when the axis text, axis titles, facet strips or plot title
+  around it would leave the slide or cross the slide title, the plot's text
+  is reduced, 4 pt at a time at the PPT themes' 32 pt base size, down to
+  12 pt. A message names each reduction, and a warning replaces the old
+  "plot chrome does not fit" warning only when 12 pt text still does not
+  fit. At full size the PPT themes' x-axis text and title take about
+  1.43 in below the panel, more than the 1.2 in the standard window leaves,
+  so a typical PPT-themed slide is drawn at 20 pt. `fit = FALSE` keeps the
+  plot's own sizes.
+
+* New `hv_fit_location()` returns the fitted plot, its
+  `officer::ph_location()` placement, the text scale used and whether the
+  figure fits.
+
+* New `hv_add_plot()` places one plot on the current slide of an `officer`
+  deck, fitted around `panel_box`, as an editable vector. When the vector
+  insert fails, as a dense point cloud can make libxml2 do, it places a
+  transparent PNG rendered at exactly the fitted size at the same location,
+  so the panel still lands on `panel_box`. The returned deck carries the
+  scale, fit and PNG use in its `"hv_fit"` attribute.
+
 # hvtiPlotR 2.8.13
 
 * Pages from `plot.hv_eda_pages()` no longer crowd their panels' y axes.
