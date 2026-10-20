@@ -137,17 +137,12 @@ hv_ph_location <- function(plot,
   panel_row_lo <- min(panel$t)
   panel_row_hi <- max(panel$b)
 
-  # Absolute widths; a "null" (flexible) unit converts to 0. Inside the panel
-  # span the null columns share what the absolute ones leave of panel_width,
-  # in proportion to their null values, which places every column.
+  # Inside the panel span the null (flexible) columns share what the
+  # absolute ones leave of panel_width, which places every column.
   widths <- grid::convertWidth(g$widths, units, valueOnly = TRUE)
   heights <- grid::convertHeight(g$heights, units, valueOnly = TRUE)
   span <- seq.int(panel_col_lo, panel_col_hi)
-  nulls <- ifelse(grid::unitType(g$widths) == "null", as.numeric(g$widths), 0)
-  if (sum(nulls[span]) > 0) {
-    free <- max(panel_width - sum(widths[span]), 0)
-    widths[span] <- widths[span] + free * nulls[span] / sum(nulls[span])
-  }
+  widths[span] <- .hv_resolve_widths(g$widths[span], panel_width, units)
 
   before <- function(x, i) sum(x[seq_len(i - 1L)])
   after  <- function(x, i) if (i < length(x)) sum(x[seq.int(i + 1L, length(x))]) else 0
@@ -164,26 +159,61 @@ hv_ph_location <- function(plot,
     top    = panel_top    - top_chrome
   )
 
-  # Title, subtitle and caption text, of the plot or of any patchwork plot
-  # or annotation: a titleGrob draws its text at hjust across its cell.
-  text_left <- loc$left
-  text_right <- loc$left + loc$width
-  titles <- which(grepl("^(title|subtitle|caption)(-[0-9]+)?$", g$layout$name))
-  for (i in titles) {
+  extent <- .hv_title_extent(g, widths, loc$left, units)
+  text_left <- min(loc$left, extent[[1L]])
+  text_right <- max(loc$left + loc$width, extent[[2L]])
+
+  list(location = loc, text_left = text_left, text_right = text_right)
+}
+
+# Widths of `widths` in `units` when they fill `total`: absolute widths keep
+# their size (a null unit converts to 0) and the null columns share the rest
+# in proportion to their null values.
+.hv_resolve_widths <- function(widths, total, units) {
+  out <- grid::convertWidth(widths, units, valueOnly = TRUE)
+  nulls <- ifelse(grid::unitType(widths) == "null", as.numeric(widths), 0)
+  if (sum(nulls) > 0) {
+    out <- out + max(total - sum(out), 0) * nulls / sum(nulls)
+  }
+  out
+}
+
+# The leftmost start and rightmost end, in slide x-coordinates, of the title,
+# subtitle and caption text in gtable `g`, whose columns are `widths` wide
+# and whose left edge is at `x0`: of the plot, of any patchwork plot or
+# annotation, and, recursing into each nested gtable (a nested patchwork's
+# table) placed in its cell, of theirs. A titleGrob draws its text at hjust
+# across its cell. Legends are skipped. Returns c(Inf, -Inf) when there is
+# no such text.
+.hv_title_extent <- function(g, widths, x0, units) {
+  lo <- Inf
+  hi <- -Inf
+  for (i in seq_len(nrow(g$layout))) {
     grob <- g$grobs[[i]]
-    if (!inherits(grob, "titleGrob")) next
+    name <- g$layout$name[[i]]
+    l <- g$layout$l[[i]]
+    r <- g$layout$r[[i]]
+    cell_left <- x0 + sum(widths[seq_len(l - 1L)])
+    cell_width <- sum(widths[seq.int(l, r)])
+
+    if (inherits(grob, "gtable") && !startsWith(name, "guide-box")) {
+      inner <- .hv_title_extent(grob, .hv_resolve_widths(grob$widths, cell_width, units),
+                                cell_left, units)
+      lo <- min(lo, inner[[1L]])
+      hi <- max(hi, inner[[2L]])
+      next
+    }
+    if (!grepl("^(title|subtitle|caption)(-[0-9]+)?$", name) ||
+        !inherits(grob, "titleGrob")) next
     text <- Filter(function(k) inherits(k, "text"), grob$children)
     if (length(text) == 0L || !isTRUE(all(text[[1L]]$rot == 0))) next
     hjust <- if (is.numeric(text[[1L]]$hjust)) text[[1L]]$hjust[[1L]] else 0.5
     w <- grid::convertWidth(grid::grobWidth(grob), units, valueOnly = TRUE)
-    cell_left <- loc$left + before(widths, g$layout$l[[i]])
-    cell_width <- sum(widths[seq.int(g$layout$l[[i]], g$layout$r[[i]])])
     start <- cell_left + hjust * (cell_width - w)
-    text_left <- min(text_left, start)
-    text_right <- max(text_right, start + w)
+    lo <- min(lo, start)
+    hi <- max(hi, start + w)
   }
-
-  list(location = loc, text_left = text_left, text_right = text_right)
+  c(lo, hi)
 }
 
 #' Standard slide panel rectangle for a slide format

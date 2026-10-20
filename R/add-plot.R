@@ -20,11 +20,13 @@
 
   if (inherits(plot, "patchwork")) {
     plot$patches$plots <- lapply(plot$patches$plots, .hv_scale_text, f = f)
+    # patchwork draws the annotation with theme_get() + its own theme unless
+    # that theme is complete, which is what complete_theme() resolves, so
+    # inherited title, subtitle and caption sizes scale too.
     annotation_theme <- plot$patches$annotation$theme
-    if (length(annotation_theme) > 0L) {
-      plot$patches$annotation$theme <- annotation_theme +
-        .hv_scaled_text_theme(annotation_theme, f, complete = FALSE)
-    }
+    if (!inherits(annotation_theme, "theme")) annotation_theme <- ggplot2::theme()
+    plot$patches$annotation$theme <- annotation_theme +
+      .hv_scaled_text_theme(annotation_theme, f, complete = TRUE)
   }
   if (!inherits(plot, "ggplot")) return(plot)
 

@@ -197,6 +197,43 @@ test_that("a patchwork is measured whole, not as its last plot", {
   expect_gte(fit$location$left, 0.05)
 })
 
+test_that("a patchwork annotation with no theme of its own still scales", {
+  skip_if_not_installed("patchwork")
+  # patchwork draws such an annotation with the global theme.
+  old <- theme_set(theme_hv_ppt_dark())
+  withr::defer(theme_set(old))
+  p <- fit_plot() + theme_hv_ppt_dark()
+  pw <- (p | p) + patchwork::plot_annotation(title = "Fuel economy across the two engine families")
+  title_size <- function(x) {
+    th <- ggplot2::complete_theme(x$patches$annotation$theme)
+    th$text$size * as.numeric(th$plot.title$size)
+  }
+  expect_equal(title_size(.hv_scale_text(pw, 0.5)), 38.4 / 2)
+
+  fit <- suppress_font_db_warnings(hv_fit_location(pw, hv_panel_box()))
+  expect_true(fit$fits)
+  expect_lt(fit$scale, 1)
+})
+
+test_that("a title inside a nested patchwork counts in the fit check", {
+  skip_if_not_installed("patchwork")
+  box <- hv_panel_box()
+  big <- theme_gray(base_size = 32)
+  other <- fit_plot() + big
+  inner <- fit_plot() + big + theme(plot.title = element_text(margin = margin())) +
+    labs(title = "Thirty-day mortality after isolated mitral valve repair by era")
+  nested <- other | (inner / other)
+
+  m <- .hv_measure_placement(nested, box$width, box$height, box$left, box$top, "in")
+  # The inner title starts at the nested panel and runs past the slide.
+  expect_gt(m$text_right, 13.333)
+  expect_false(hv_fit_location(nested, box, min_scale = 1)$fits)
+
+  fit <- hv_fit_location(nested, box)
+  expect_lt(fit$scale, 1)
+  if (!fit$fits) expect_equal(fit$scale, 12 / 32)
+})
+
 test_that("a title wider than the slide fails the fit check", {
   box <- hv_panel_box()
   title <- "Thirty-day mortality after isolated mitral valve repair by era and surgeon"

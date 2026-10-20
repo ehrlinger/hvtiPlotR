@@ -37,7 +37,10 @@
   `officer::ph_location()` placement, the text scale used and whether the
   figure fits. The figure it checks includes the actual extent of title,
   subtitle and caption text placed by its `hjust`, so a title wider than the
-  slide fails the check even when its cell fits.
+  slide fails the check even when its cell fits. That includes the
+  titles of plots inside a nested patchwork, and a `plot_annotation()`
+  title, subtitle or caption with no theme of its own shrinks with the rest
+  of the text: patchwork draws it with the global theme.
 
 * `hv_ph_location()`, and so `save_ppt()`, now measures a patchwork whole,
   through `patchwork::patchworkGrob()`. `ggplotGrob()` of a patchwork built
