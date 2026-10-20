@@ -143,6 +143,55 @@ test_that("hv_fit_location shrinks long y labels until they fit; the panel stays
   expect_equal(fit$location$top, full$top)
 })
 
+test_that("a patchwork is measured whole, not as its last plot", {
+  skip_if_not_installed("patchwork")
+  box <- hv_panel_box()
+  first <- long_label_plot()
+  last <- fit_plot() + theme_gray(base_size = 32)
+  pw <- (first | last) + patchwork::plot_annotation(
+    title = "Composition title", theme = theme_gray(base_size = 32)
+  )
+  alone <- hv_ph_location(last, box$width, box$height, box$left, box$top)
+  whole <- suppressWarnings(hv_ph_location(pw, box$width, box$height, box$left, box$top))
+  # The first plot's long y labels widen the figure on the left, and the
+  # composition title adds height above the panels.
+  expect_lt(whole$left, alone$left - 1)
+  expect_lt(whole$top, alone$top)
+  expect_gt(whole$height, alone$height)
+
+  # At full size the first plot's labels leave the slide.
+  expect_false(hv_fit_location(pw, box, min_scale = 1)$fits)
+  fit <- hv_fit_location(pw, box)
+  expect_lt(fit$scale, 1)
+  expect_gte(fit$location$left, 0.05)
+})
+
+test_that("a title wider than the slide fails the fit check", {
+  box <- hv_panel_box()
+  title <- "Thirty-day mortality after isolated mitral valve repair by era and surgeon"
+  # No title margin, so only the title's width, not its height, is at stake.
+  p <- fit_plot() + labs(title = title) + theme_gray(base_size = 32) +
+    theme(plot.title = element_text(margin = margin()))
+  m <- .hv_measure_placement(p, box$width, box$height, box$left, box$top, "in")
+  # Drawn from the panel's left edge, the title is over 14 in wide.
+  expect_gt(m$text_right - box$left, 14)
+  expect_gt(m$text_right, 13.333)
+  # The allocated rectangle alone is on the slide, so only the text extent
+  # can fail the check.
+  expect_lte(m$location$left + m$location$width, 13.333 - 0.05)
+  expect_false(hv_fit_location(p, box, min_scale = 1)$fits)
+
+  fit <- hv_fit_location(p, box)
+  expect_lt(fit$scale, 1)
+  expect_true(fit$fits)
+
+  # Centered over the whole plot, it overflows on both sides.
+  centered <- p + theme(plot.title = element_text(hjust = 0.5), plot.title.position = "plot")
+  mc <- .hv_measure_placement(centered, box$width, box$height, box$left, box$top, "in")
+  expect_lt(mc$text_left, 0)
+  expect_gt(mc$text_right, 13.333)
+})
+
 test_that("hv_fit_location reports a plot that does not fit even at min_scale", {
   d <- data.frame(x = 1, y = strrep("a very long label ", 6))
   p <- ggplot(d, aes(.data$x, .data$y)) + geom_point() + theme_gray(base_size = 32)

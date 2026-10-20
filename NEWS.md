@@ -33,7 +33,16 @@
 
 * New `hv_fit_location()` returns the fitted plot, its
   `officer::ph_location()` placement, the text scale used and whether the
-  figure fits.
+  figure fits. The figure it checks includes the actual extent of title,
+  subtitle and caption text placed by its `hjust`, so a title wider than the
+  slide fails the check even when its cell fits.
+
+* `hv_ph_location()`, and so `save_ppt()`, now measures a patchwork whole,
+  through `patchwork::patchworkGrob()`. `ggplotGrob()` of a patchwork built
+  only its last plot, so the other plots' axis labels and the
+  `plot_annotation()` title, subtitle and caption were left out of the
+  placement. The panel rectangle now holds the union of every plot's
+  panels.
 
 * New `hv_add_plot()` places one plot on the current slide of an `officer`
   deck, fitted around `panel_box`, as an editable vector. When the vector

@@ -57,10 +57,15 @@
 #' At the PPT themes' 32 pt base size the defaults step the text down 4 pt
 #' at a time, to 28, 24, 20, 16 and finally 12 pt.
 #'
+#' The figure checked is the placement box plus the actual extent of the
+#' title, subtitle and caption text, placed by its `hjust` (and
+#' `plot.title.position`): a title wider than the slide fails the check even
+#' though its cell fits.
+#'
 #' Only sizes set in the theme are scaled. The size of text drawn by a geom
 #' (`geom_text()`, `geom_label()`) is an aesthetic, not part of the theme,
-#' and is left alone. For a patchwork, `panel_box` holds the whole
-#' composition; see [hv_ph_location()].
+#' and is left alone. For a patchwork, `panel_box` holds the union of its
+#' panels and the whole composition is measured; see [hv_ph_location()].
 #'
 #' @param plot A ggplot or patchwork object.
 #' @param panel_box Named list `list(width, height, left, top)`, in inches:
@@ -121,10 +126,13 @@ hv_fit_location <- function(plot,
   if (min_scale > 1)
     stop("`min_scale` must be at most 1.", call. = FALSE)
 
-  inside <- function(loc) {
+  # The figure is the location box widened by any title, subtitle or caption
+  # text wider than its cell.
+  inside <- function(m) {
     tol <- 1e-6
-    loc$left >= edge - tol &&
-      loc$left + loc$width <= slide_width - edge + tol &&
+    loc <- m$location
+    m$text_left >= edge - tol &&
+      m$text_right <= slide_width - edge + tol &&
       loc$top >= title_bottom - tol &&
       loc$top + loc$height <= slide_height - edge + tol
   }
@@ -133,22 +141,16 @@ hv_fit_location <- function(plot,
   scales <- scales[scales >= min_scale - 1e-9]
   for (f in scales) {
     scaled <- .hv_scale_text(plot, f)
-    # The fit test below replaces hv_ph_location()'s own off-slide warning.
-    loc <- withCallingHandlers(
-      hv_ph_location(
-        scaled,
-        panel_width  = panel_box$width,
-        panel_height = panel_box$height,
-        panel_left   = panel_box$left,
-        panel_top    = panel_box$top,
-        units        = "in"
-      ),
-      warning = function(w) {
-        if (grepl("plot chrome does not fit", conditionMessage(w), fixed = TRUE))
-          invokeRestart("muffleWarning")
-      }
+    measured <- .hv_measure_placement(
+      scaled,
+      panel_width  = panel_box$width,
+      panel_height = panel_box$height,
+      panel_left   = panel_box$left,
+      panel_top    = panel_box$top,
+      units        = "in"
     )
-    fits <- inside(loc)
+    loc <- measured$location
+    fits <- inside(measured)
     if (fits) break
   }
 

@@ -62,10 +62,15 @@ it does not, every text size in the plot's theme is reduced by \code{step}
 At the PPT themes' 32 pt base size the defaults step the text down 4 pt
 at a time, to 28, 24, 20, 16 and finally 12 pt.
 
+The figure checked is the placement box plus the actual extent of the
+title, subtitle and caption text, placed by its \code{hjust} (and
+\code{plot.title.position}): a title wider than the slide fails the check even
+though its cell fits.
+
 Only sizes set in the theme are scaled. The size of text drawn by a geom
 (\code{geom_text()}, \code{geom_label()}) is an aesthetic, not part of the theme,
-and is left alone. For a patchwork, \code{panel_box} holds the whole
-composition; see \code{\link[=hv_ph_location]{hv_ph_location()}}.
+and is left alone. For a patchwork, \code{panel_box} holds the union of its
+panels and the whole composition is measured; see \code{\link[=hv_ph_location]{hv_ph_location()}}.
 }
 \examples{
 \donttest{

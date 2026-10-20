@@ -26,11 +26,12 @@
 #' Use with [save_ppt()] via `panel_box = list(width, height, left, top)` to
 #' apply this to every slide in a deck.
 #'
-#' For a patchwork, [ggplot2::ggplotGrob()] exposes one `panel` cell that
-#' covers the whole composed area, so the target rectangle holds every
-#' sub-plot together with its own axes and strips; only the composition's
-#' outer title, subtitle and caption count as chrome. The individual panels
-#' of the sub-plots are not anchored.
+#' For a patchwork, the whole composition is measured, through
+#' [patchwork::patchworkGrob()]: the target rectangle holds the union of
+#' every plot's panels, with the axes and strips between them, and the
+#' outermost axes plus the [patchwork::plot_annotation()] title, subtitle and
+#' caption count as chrome. A nested patchwork counts as one panel, inner
+#' chrome included.
 #'
 #' @param plot         A ggplot (or patchwork) object.
 #' @param panel_width  Target panel width, in `units`.
@@ -85,48 +86,8 @@ hv_ph_location <- function(plot,
   .check_scalar_nonneg(panel_top,      "panel_top")
   units <- match.arg(units)
 
-  g <- ggplot2::ggplotGrob(plot)
-
-  panel <- g$layout[grepl("^panel", g$layout$name), , drop = FALSE]
-  if (nrow(panel) == 0L)
-    stop("Could not locate any panel cells in the ggplot grob.", call. = FALSE)
-
-  panel_col_lo <- min(panel$l)
-  panel_col_hi <- max(panel$r)
-  panel_row_lo <- min(panel$t)
-  panel_row_hi <- max(panel$b)
-
-  n_cols <- length(g$widths)
-  n_rows <- length(g$heights)
-
-  # Null PDF sizing device so grid unit conversions resolve against a real device
-  grDevices::pdf(NULL)
-  on.exit(grDevices::dev.off(), add = TRUE, after = FALSE)
-
-  sum_width <- function(idx) {
-    if (length(idx) == 0L) return(0)
-    sum(grid::convertWidth(g$widths[idx], units, valueOnly = TRUE))
-  }
-  sum_height <- function(idx) {
-    if (length(idx) == 0L) return(0)
-    sum(grid::convertHeight(g$heights[idx], units, valueOnly = TRUE))
-  }
-
-  left_chrome   <- sum_width(seq_len(panel_col_lo - 1L))
-  right_chrome  <- sum_width(
-    if (panel_col_hi < n_cols) seq.int(panel_col_hi + 1L, n_cols) else integer(0)
-  )
-  top_chrome    <- sum_height(seq_len(panel_row_lo - 1L))
-  bottom_chrome <- sum_height(
-    if (panel_row_hi < n_rows) seq.int(panel_row_hi + 1L, n_rows) else integer(0)
-  )
-
-  loc <- list(
-    width  = panel_width  + left_chrome + right_chrome,
-    height = panel_height + top_chrome  + bottom_chrome,
-    left   = panel_left   - left_chrome,
-    top    = panel_top    - top_chrome
-  )
+  loc <- .hv_measure_placement(plot, panel_width, panel_height, panel_left,
+                               panel_top, units)$location
 
   if (loc$left < 0 || loc$top < 0) {
     off <- c(
@@ -142,6 +103,87 @@ hv_ph_location <- function(plot,
   }
 
   loc
+}
+
+# The gtable of the whole figure. ggplotGrob() of a patchwork builds only its
+# last plot, so a patchwork goes through patchworkGrob(), which lays out
+# every plot and the plot_annotation() title, subtitle and caption.
+.hv_plot_gtable <- function(plot) {
+  if (inherits(plot, "patchwork")) patchwork::patchworkGrob(plot)
+  else ggplot2::ggplotGrob(plot)
+}
+
+# Place `plot` so the union of its panel cells lands on the panel rectangle.
+# Returns `location` (width, height, left, top in `units`, the
+# hv_ph_location() result) and `text_left`, `text_right`: the slide
+# x-coordinates where the plot, subtitle and caption text actually start and
+# end. A title wider than its cell runs past the location's edges, so the
+# fit check needs these as well as the location.
+.hv_measure_placement <- function(plot, panel_width, panel_height, panel_left,
+                                  panel_top, units) {
+  # Null PDF sizing device so grid unit conversions resolve against a real
+  # device, opened before the grob is built so nothing opens Rplots.pdf.
+  grDevices::pdf(NULL)
+  on.exit(grDevices::dev.off(), add = TRUE, after = FALSE)
+
+  g <- .hv_plot_gtable(plot)
+
+  panel <- g$layout[grepl("^panel", g$layout$name), , drop = FALSE]
+  if (nrow(panel) == 0L)
+    stop("Could not locate any panel cells in the ggplot grob.", call. = FALSE)
+
+  panel_col_lo <- min(panel$l)
+  panel_col_hi <- max(panel$r)
+  panel_row_lo <- min(panel$t)
+  panel_row_hi <- max(panel$b)
+
+  # Absolute widths; a "null" (flexible) unit converts to 0. Inside the panel
+  # span the null columns share what the absolute ones leave of panel_width,
+  # in proportion to their null values, which places every column.
+  widths <- grid::convertWidth(g$widths, units, valueOnly = TRUE)
+  heights <- grid::convertHeight(g$heights, units, valueOnly = TRUE)
+  span <- seq.int(panel_col_lo, panel_col_hi)
+  nulls <- ifelse(grid::unitType(g$widths) == "null", as.numeric(g$widths), 0)
+  if (sum(nulls[span]) > 0) {
+    free <- max(panel_width - sum(widths[span]), 0)
+    widths[span] <- widths[span] + free * nulls[span] / sum(nulls[span])
+  }
+
+  before <- function(x, i) sum(x[seq_len(i - 1L)])
+  after  <- function(x, i) if (i < length(x)) sum(x[seq.int(i + 1L, length(x))]) else 0
+
+  left_chrome   <- before(widths, panel_col_lo)
+  right_chrome  <- after(widths, panel_col_hi)
+  top_chrome    <- before(heights, panel_row_lo)
+  bottom_chrome <- after(heights, panel_row_hi)
+
+  loc <- list(
+    width  = panel_width  + left_chrome + right_chrome,
+    height = panel_height + top_chrome  + bottom_chrome,
+    left   = panel_left   - left_chrome,
+    top    = panel_top    - top_chrome
+  )
+
+  # Title, subtitle and caption text, of the plot or of any patchwork plot
+  # or annotation: a titleGrob draws its text at hjust across its cell.
+  text_left <- loc$left
+  text_right <- loc$left + loc$width
+  titles <- which(grepl("^(title|subtitle|caption)(-[0-9]+)?$", g$layout$name))
+  for (i in titles) {
+    grob <- g$grobs[[i]]
+    if (!inherits(grob, "titleGrob")) next
+    text <- Filter(function(k) inherits(k, "text"), grob$children)
+    if (length(text) == 0L || !isTRUE(all(text[[1L]]$rot == 0))) next
+    hjust <- if (is.numeric(text[[1L]]$hjust)) text[[1L]]$hjust[[1L]] else 0.5
+    w <- grid::convertWidth(grid::grobWidth(grob), units, valueOnly = TRUE)
+    cell_left <- loc$left + before(widths, g$layout$l[[i]])
+    cell_width <- sum(widths[seq.int(g$layout$l[[i]], g$layout$r[[i]])])
+    start <- cell_left + hjust * (cell_width - w)
+    text_left <- min(text_left, start)
+    text_right <- max(text_right, start + w)
+  }
+
+  list(location = loc, text_left = text_left, text_right = text_right)
 }
 
 #' Standard slide panel rectangle for a slide format
