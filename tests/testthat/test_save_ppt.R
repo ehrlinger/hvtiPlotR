@@ -8,12 +8,11 @@ create_test_plot <- function() {
   ggplot(data.frame(x = 1:10, y = 1:10), aes(.data$x, .data$y)) + geom_point()
 }
 
-# Helper: create a minimal in-memory pptx template and write to a temp file
+# Helper: copy the bundled 16:9 template to a temp file. officer's own
+# default deck is 4:3, 10 in wide, too narrow for the standard panel box.
 make_temp_template <- function() {
   tmp <- tempfile(fileext = ".pptx")
-  officer::read_pptx() |>
-    officer::add_slide(layout = "Title and Content") |>
-    print(target = tmp)
+  file.copy(system.file("extdata", "hv_ppt_template.pptx", package = "hvtiPlotR"), tmp)
   tmp
 }
 
@@ -531,7 +530,7 @@ test_that("save_ppt requires an explicit powerpoint output path", {
 test_that("save_ppt defaults panel_box to the standard fixed-panel rectangle", {
   expect_equal(
     hv_panel_box(.hv_template_mode("not-a-template.pptx")),
-    list(width = 8.79, height = 3.9, left = 2.67, top = 1.6)
+    list(width = 9.98, height = 4.15, left = 2.9, top = 1.85)
   )
 })
 

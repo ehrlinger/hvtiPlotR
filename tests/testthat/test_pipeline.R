@@ -17,11 +17,10 @@ library(ggplot2)
 
 make_temp_pptx <- function() {
   skip_if_not_installed("officer")
+  # The bundled 16:9 template: officer's own default deck is 4:3, 10 in
+  # wide, too narrow for the standard panel box.
   tmp <- tempfile(fileext = ".pptx")
-  officer::read_pptx() |>
-    officer::add_slide(layout = "Title and Content",
-                       master = "Office Theme") |>
-    print(target = tmp)
+  file.copy(system.file("extdata", "hv_ppt_template.pptx", package = "hvtiPlotR"), tmp)
   tmp
 }
 

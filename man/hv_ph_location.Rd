@@ -47,6 +47,13 @@ row above a single-row \code{facet_wrap}) are treated as chrome.
 
 Use with \code{\link[=save_ppt]{save_ppt()}} via \code{panel_box = list(width, height, left, top)} to
 apply this to every slide in a deck.
+
+For a patchwork, the whole composition is measured, through
+\code{\link[patchwork:patchworkGrob]{patchwork::patchworkGrob()}}: the target rectangle holds the union of
+every plot's panels, with the axes and strips between them, and the
+outermost axes plus the \code{\link[patchwork:plot_annotation]{patchwork::plot_annotation()}} title, subtitle and
+caption count as chrome. A nested patchwork counts as one panel, inner
+chrome included.
 }
 \examples{
 \donttest{

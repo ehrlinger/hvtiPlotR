@@ -266,6 +266,8 @@ reference:
   - hv_legend_inside
   - hv_ph_location
   - hv_panel_box
+  - hv_fit_location
+  - hv_add_plot
   - hv_ppt_layout
   - make_footnote
   - makeFootnote
