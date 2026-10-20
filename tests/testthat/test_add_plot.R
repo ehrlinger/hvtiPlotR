@@ -42,11 +42,32 @@ slide_graphics <- function(path, i) {
   )
 }
 
-test_that("hv_panel_box is the 9.98 x 4.4 standard for every format", {
-  standard <- list(width = 9.98, height = 4.4, left = 2.9, top = 1.85)
+test_that("hv_panel_box depends on the slide format, not the color template", {
+  wide <- list(width = 9.98, height = 4.4, left = 2.9, top = 1.85)
+  standard <- list(width = 7.25, height = 4.4, left = 2.3, top = 1.85)
   for (mode in c("dark", "light", "slate")) {
-    expect_identical(hv_panel_box(mode), standard)
+    expect_identical(hv_panel_box(mode), wide)
+    expect_identical(hv_panel_box(mode, format = "wide"), wide)
+    expect_identical(hv_panel_box(mode, format = "standard"), standard)
   }
+  expect_false(identical(hv_panel_box(format = "wide"), hv_panel_box(format = "standard")))
+  # The standard box fits a 10 in slide with 0.45 in on the right.
+  expect_equal(10 - standard$left - standard$width, 0.45)
+  expect_error(hv_panel_box(format = "square"))
+})
+
+test_that(".hv_template_format reads the slide format from the template", {
+  skip_if_not_installed("officer")
+  for (file in c("hv_ppt_template.pptx", "hv_ppt_template_light.pptx",
+                 "hv_ppt_template_slate.pptx")) {
+    template <- system.file("extdata", file, package = "hvtiPlotR")
+    expect_identical(.hv_template_format(template), "wide")
+  }
+  four_three <- withr::local_tempfile(fileext = ".pptx")
+  print(officer::read_pptx(), target = four_three) # officer's default deck is 4:3
+  expect_identical(.hv_template_format(four_three), "standard")
+  expect_identical(.hv_doc_format(officer::read_pptx(four_three)), "standard")
+  expect_error(.hv_slide_format(16, 9), "panel_box")
 })
 
 test_that(".hv_scale_text scales absolute sizes and leaves rel() alone", {

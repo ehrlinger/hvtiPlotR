@@ -155,6 +155,14 @@ hv_fit_location <- function(plot,
   list(plot = scaled, location = loc, scale = f, fits = fits)
 }
 
+# The slide format of an rpptx, from its slide size.
+.hv_doc_format <- function(doc) {
+  if (!inherits(doc, "rpptx"))
+    stop("`doc` must be an rpptx object from officer::read_pptx().", call. = FALSE)
+  size <- officer::slide_size(doc)
+  .hv_slide_format(size$width, size$height)
+}
+
 .check_panel_box <- function(panel_box) {
   expected <- c("width", "height", "left", "top")
   if (!is.list(panel_box) || !all(expected %in% names(panel_box)))
@@ -216,8 +224,9 @@ hv_fit_location <- function(plot,
 #'   slide receives the plot.
 #' @param plot A ggplot or patchwork object.
 #' @param panel_box Named list `list(width, height, left, top)`, in inches.
-#'   Defaults to [hv_panel_box()], the standard rectangle for the dark
-#'   template, which today the light and slate templates share.
+#'   Defaults to [hv_panel_box()] for the slide format of `doc`, read from
+#'   its slide size: 16:9 (every bundled template) or 4:3. A deck of any
+#'   other size needs an explicit `panel_box`.
 #' @param fit `TRUE` (the default) to reduce the plot's text until the
 #'   figure fits on the slide. `FALSE` places the plot at its own sizes and
 #'   warns if it runs off the slide or into the title.
@@ -255,7 +264,7 @@ hv_fit_location <- function(plot,
 #' @export
 hv_add_plot <- function(doc,
                         plot,
-                        panel_box    = hv_panel_box(),
+                        panel_box    = hv_panel_box(format = .hv_doc_format(doc)),
                         fit          = TRUE,
                         png_fallback = TRUE,
                         dpi          = 300,

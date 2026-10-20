@@ -7,7 +7,7 @@
 hv_add_plot(
   doc,
   plot,
-  panel_box = hv_panel_box(),
+  panel_box = hv_panel_box(format = .hv_doc_format(doc)),
   fit = TRUE,
   png_fallback = TRUE,
   dpi = 300,
@@ -21,8 +21,9 @@ slide receives the plot.}
 \item{plot}{A ggplot or patchwork object.}
 
 \item{panel_box}{Named list \code{list(width, height, left, top)}, in inches.
-Defaults to \code{\link[=hv_panel_box]{hv_panel_box()}}, the standard rectangle for the dark
-template, which today the light and slate templates share.}
+Defaults to \code{\link[=hv_panel_box]{hv_panel_box()}} for the slide format of \code{doc}, read from
+its slide size: 16:9 (every bundled template) or 4:3. A deck of any
+other size needs an explicit \code{panel_box}.}
 
 \item{fit}{\code{TRUE} (the default) to reduce the plot's text until the
 figure fits on the slide. \code{FALSE} places the plot at its own sizes and

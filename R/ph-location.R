@@ -144,28 +144,35 @@ hv_ph_location <- function(plot,
   loc
 }
 
-#' Standard slide panel rectangle for an HVTI template
+#' Standard slide panel rectangle for a slide format
 #'
 #' The one fixed panel rectangle every plot slide of a slide format anchors
-#' its plotting panel to, in inches, for the 13.33 by 7.5 inch HVTI
-#' templates. [save_ppt()] and [hv_add_plot()] use it by default. Axis text,
-#' axis titles, facet strips and plot titles flow outside the rectangle;
-#' [hv_fit_location()] keeps them on the slide and out of the slide title.
+#' its plotting panel to, in inches. The slide format is the slide's aspect
+#' ratio: `"wide"` is 16:9, 13.333 by 7.5 in, the size of every bundled HVTI
+#' template; `"standard"` is 4:3, 10 by 7.5 in. The color template does not
+#' matter: the dark, light and slate templates get the same rectangle.
+#' [save_ppt()] and [hv_add_plot()] read the format from the template's slide
+#' size and use this rectangle by default. Axis text, axis titles, facet
+#' strips and plot titles flow outside it; [hv_fit_location()] keeps them on
+#' the slide and out of the slide title.
 #'
-#' The dark (default), light and slate templates share one master layout,
-#' whose title placeholder ends at 1.33 in, so today all three formats get
-#' the same rectangle: 9.98 by 4.4 in, 2.9 in from the left edge and 1.85 in
-#' from the top. The numbers leave room for the chrome around the panel:
+#' The wide rectangle is 9.98 by 4.4 in, 2.9 in from the left edge and
+#' 1.85 in from the top. The numbers leave room for the chrome around the
+#' panel:
 #'
 #' * 2.9 in on the left for long y-axis labels and the rotated y-axis title;
-#' * about 0.45 in above the panel, below the title placeholder, for facet
-#'   strips and plot titles;
+#' * about 0.45 in above the panel, below the title placeholder that ends at
+#'   1.33 in, for facet strips and plot titles;
 #' * 1.25 in below the panel for the 32 pt x-axis text and 40 pt x-axis
 #'   title of [theme_hv_ppt_dark()], [theme_hv_ppt_light()] and
 #'   [theme_hv_ppt_slate()].
 #'
-#' The function keeps one entry per format so the formats can diverge later
-#' without changing any call.
+#' The standard (4:3) rectangle is **provisional**: no 4:3 template is
+#' bundled, and the rectangle has not yet been checked on a real 4:3 deck.
+#' It follows the same rules, assuming the 4:3 title placeholder also ends
+#' near 1.33 in: the same top (1.85 in) and height (4.4 in), 2.3 in on the
+#' left for y labels and 0.45 in on the right, so 7.25 by 4.4 in at 2.3 in
+#' left.
 #'
 #' Through hvtiPlotR 2.8.13 the rectangle was 8.79 by 3.9 in at 2.67 in
 #' left, 1.6 in top. Pass
@@ -173,24 +180,52 @@ hv_ph_location <- function(plot,
 #' to [save_ppt()] or [hv_add_plot()] to rebuild an old deck at its old
 #' geometry.
 #'
-#' @param mode `"dark"` (the default template), `"light"`
-#'   (`hv_ppt_template_light.pptx`) or `"slate"`
-#'   (`hv_ppt_template_slate.pptx`).
+#' @param mode `"dark"`, `"light"` or `"slate"`. Kept for backward
+#'   compatibility: every color template gets the same rectangle, so it has
+#'   no effect.
+#' @param format `"wide"` (16:9, the default) or `"standard"` (4:3,
+#'   provisional).
 #' @return A named list `width`, `height`, `left`, `top`, in inches, ready for
 #'   the `panel_box` argument of [save_ppt()] and [hv_add_plot()].
 #' @seealso [save_ppt()], [hv_add_plot()], [hv_fit_location()],
 #'   [hv_ph_location()]
 #' @examples
-#' hv_panel_box("slate")
+#' hv_panel_box()
+#' hv_panel_box(format = "standard")
 #' @export
-hv_panel_box <- function(mode = c("dark", "light", "slate")) {
-  mode <- match.arg(mode)
-  standard <- list(width = 9.98, height = 4.4, left = 2.9, top = 1.85)
-  switch(mode,
-    dark  = standard,
-    light = standard,
-    slate = standard
+hv_panel_box <- function(mode = c("dark", "light", "slate"),
+                         format = c("wide", "standard")) {
+  match.arg(mode)
+  format <- match.arg(format)
+  switch(format,
+    wide     = list(width = 9.98, height = 4.4, left = 2.9, top = 1.85),
+    standard = list(width = 7.25, height = 4.4, left = 2.3, top = 1.85)
   )
+}
+
+# The slide format of a slide size in inches: "wide" for 13.333 x 7.5,
+# "standard" for 10 x 7.5. Any other size has no standard panel box.
+.hv_slide_format <- function(width, height) {
+  near <- function(a, b) abs(a - b) < 0.01
+  if (near(width, 13.333) && near(height, 7.5)) return("wide")
+  if (near(width, 10) && near(height, 7.5)) return("standard")
+  stop(sprintf(
+    paste0("The slide is %.3f x %.3f in, which has no standard panel box ",
+           "(16:9 is 13.333 x 7.5 in, 4:3 is 10 x 7.5 in). ",
+           "Pass `panel_box = list(width, height, left, top)` explicitly."),
+    width, height
+  ), call. = FALSE)
+}
+
+# The slide format of a template file, from its slide size. A path that is
+# not a file gives "wide"; save_ppt() reports the bad path itself.
+.hv_template_format <- function(template) {
+  if (!(is.character(template) && length(template) == 1L &&
+        file.exists(template))) {
+    return("wide")
+  }
+  size <- officer::slide_size(officer::read_pptx(template))
+  .hv_slide_format(size$width, size$height)
 }
 
 # "light" or "slate" when `template` is that bundled template, else "dark".

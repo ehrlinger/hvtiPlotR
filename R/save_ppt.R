@@ -268,9 +268,12 @@ add_fitted_plot_slide <- function(doc, plot, title, layout, master, panel_box,
 #'   the panel content area to anchor on every slide (in inches).
 #'   Each plot is placed by [hv_add_plot()], so the panel lands at the same
 #'   slide coordinates on every slide regardless of axis-label width.
-#'   Defaults to [hv_panel_box()] for the template, the standard CORR
+#'   Defaults to [hv_panel_box()] for the template's slide format, read
+#'   from its slide size: for the 16:9 bundled templates the standard CORR
 #'   rectangle `list(width = 9.98, height = 4.4, left = 2.9, top = 1.85)`,
-#'   the same for the dark, light and slate templates. Pass
+#'   the same for the dark, light and slate templates; for a 4:3 template
+#'   the provisional standard rectangle. A template of any other size needs
+#'   an explicit `panel_box`. Pass
 #'   `panel_box = NULL` to fall back to the fixed `width`/`height`/`left`/
 #'   `top` arguments for every slide (legacy behavior). Ignored for
 #'   `hv_consort` objects, which are always placed using their own metadata
@@ -450,7 +453,7 @@ save_ppt <- function(object,
                      height       = 5.8,
                      left         = 0.0,
                      top          = 1.2,
-                     panel_box    = hv_panel_box(.hv_template_mode(template)),
+                     panel_box    = hv_panel_box(format = .hv_template_format(template)),
                      fit          = TRUE) {
 
   ensure_officer_available()

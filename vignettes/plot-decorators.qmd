@@ -548,7 +548,7 @@ save_ppt(
 ```
 
 Leave `panel_box` out and `save_ppt()` uses `hv_panel_box()`, the one standard
-rectangle for the template's slide format. When a plot's chrome would leave the
+rectangle for the template's slide format, 16:9 or 4:3, read from its slide size. When a plot's chrome would leave the
 slide or cross the slide title, `save_ppt()` reduces that plot's text, 4 pt at a
 time down to 12 pt, until it fits; the panel itself never moves. It warns only
 when 12 pt text still does not fit. To place a plot on a slide you built

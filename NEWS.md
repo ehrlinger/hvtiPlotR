@@ -1,14 +1,26 @@
 # hvtiPlotR 2.8.14
 
-* `hv_panel_box()` returns a larger standard window for every slide format,
+* `hv_panel_box()` returns a larger standard window,
   `list(width = 9.98, height = 4.4, left = 2.9, top = 1.85)`, up from
-  8.79 by 3.9 in at 2.67 in left, 1.6 in top. The dark, light and slate
-  templates share it. The 2.9 in on the left leaves room for long y labels,
-  the 0.45 in above the panel holds facet strips and plot titles below the
-  slide title, which ends at 1.33 in, and the 1.25 in below holds the x-axis
-  text and title. `save_ppt()` therefore places every figure larger. Pass
+  8.79 by 3.9 in at 2.67 in left, 1.6 in top. The window now depends on the
+  slide format, the slide's aspect ratio, and not on the color template:
+  the dark, light and slate templates share it. A new `format` argument
+  picks `"wide"` (16:9, 13.333 by 7.5 in, the default and every bundled
+  template) or `"standard"` (4:3, 10 by 7.5 in); `mode` is still accepted
+  and has no effect. `save_ppt()` and `hv_add_plot()` read the format from
+  the template's slide size and stop on any other size unless `panel_box`
+  is given. In the wide window the 2.9 in on the left leaves room for long
+  y labels, the 0.45 in above the panel holds facet strips and plot titles
+  below the slide title, which ends at 1.33 in, and the 1.25 in below holds
+  the x-axis text and title. `save_ppt()` therefore places every figure
+  larger. Pass
   `panel_box = list(width = 8.79, height = 3.9, left = 2.67, top = 1.6)` to
   rebuild an old deck at its old geometry.
+
+* The standard (4:3) window,
+  `list(width = 7.25, height = 4.4, left = 2.3, top = 1.85)`, is
+  provisional: it follows the wide window's rules, with 2.3 in on the left
+  and 0.45 in on the right, but has not yet been checked on a real 4:3 deck.
 
 * `save_ppt()` now fits each plot to the slide. The panel stays on
   `panel_box`; when the axis text, axis titles, facet strips or plot title
@@ -327,16 +339,16 @@
   `studyid`, `mrn_num` and the other names it guessed at are now drawn. Name
   a column in `vars` to draw it, or leave it out of the data. `print()` now
   lists the columns it left out as identifiers (#172).
-* A test now checks that `scale_colour_hv()` stays exported, not only that it
+* A test now checks that `scale_color_hv()` stays exported, not only that it
   is the same function as `scale_color_hv()`. Code written before 2.8.0 calls
   it by the British name (#176).
-* `plot.hv_spaghetti()` no longer warns "Ignoring empty aesthetic: `colour`"
+* `plot.hv_spaghetti()` no longer warns "Ignoring empty aesthetic: `color`"
   on ggplot2 4.0.0 when `color_col` is set. It passed `geom_line()` a `NULL`
   color beside the mapped one; it now passes a fixed color only when no
   column is mapped (#177).
 * `plot()` of an `hv_spaghetti` or `hv_sankey`, and `print()` of an
-  `hv_spaghetti`, stop when `meta$color_col` and `meta$colour_col` (or
-  `meta$node_colors` and `meta$node_colours`) hold different values. Both sit
+  `hv_spaghetti`, stop when `meta$color_col` and `meta$color_col` (or
+  `meta$node_colors` and `meta$node_colors`) hold different values. Both sit
   in `meta` since 2.8.0, and the methods read the US one, so editing only the
   British element was silently ignored. Edit both, or rebuild the object
   (#175).
@@ -372,8 +384,8 @@
 * Five arguments take a US spelling beside the British one: `color_col` in
   `hv_spaghetti()`, `line_color` in `plot.hv_spaghetti()`, `node_colors` in
   `hv_sankey()`, `colors` in `hv_ppt_series()` and `color` in
-  `make_footnote()`. The US name is the documented one; `colour_col`,
-  `line_colour`, `node_colours`, `colours` and `colour` keep working as
+  `make_footnote()`. The US name is the documented one; `color_col`,
+  `line_color`, `node_colors`, `colors` and `color` keep working as
   aliases, and giving both spellings two different values is an error. Every
   existing positional call binds as before, since the new names come last (or
   after `...`). An abbreviated name that now matches both spellings is an
@@ -382,8 +394,8 @@
   `color_col` and `node_colors` beside the British elements, which keep the
   same value.
 * `scale_color_hv()` is now the primary name of the role-color scale added in
-  2.7.18, and `scale_colour_hv()` stays as an alias of it, the way ggplot2
-  pairs `scale_color_*()` and `scale_colour_*()`. Existing calls keep working.
+  2.7.18, and `scale_color_hv()` stays as an alias of it, the way ggplot2
+  pairs `scale_color_*()` and `scale_color_*()`. Existing calls keep working.
 * Documentation, messages and comments now use US spelling ("color", "gray",
   "analyzed"). Exported argument names are unchanged. Output changes where it
   carried a British word: `print()` of an `hv_survival` or `hv_followup` reads
@@ -435,7 +447,7 @@ output file in every call.
 
 # hvtiPlotR 2.7.18
 
-## New: `hv_role_palette()`, `scale_fill_hv()` and `scale_colour_hv()`
+## New: `hv_role_palette()`, `scale_fill_hv()` and `scale_color_hv()`
 
 The house color rule for EDA and follow-up figures, as an opt-in scale. An
 event is vermillion `#D55E00`, censored is blue `#0072B2`, missing is light
@@ -910,7 +922,7 @@ changes what any function does; the suite is unchanged at 1629 passing tests.
   drop the row — it silently merges it into an `"NA"` group that reads as a
   real series in the legend, or, for `hv_spaghetti()`'s `id_col`, fuses
   unrelated subjects into a single trajectory. Affects `group_col` in
-  `hv_trends()`/`hv_stacked()`, `id_col` and `colour_col` in
+  `hv_trends()`/`hv_stacked()`, `id_col` and `color_col` in
   `hv_spaghetti()`, and `variable_col`/`group_col` in `hv_balance()`;
   `hv_longitudinal()` already behaved this way.
 
@@ -983,7 +995,7 @@ changes what any function does; the suite is unchanged at 1629 passing tests.
 - `plot.hv_followup()` no longer draws a vertical stem below each patient's
   point. The stem was a carryover from the legacy `tp.dp.gfup.R` SAS
   template; at realistic cohort sizes it smears the point cloud and, because
-  it shares the `colour` aesthetic with the points, it also struck a line
+  it shares the `color` aesthetic with the points, it also struck a line
   through every glyph in the legend key. `hv_followup()` now defaults
   `segment_drop = 0` and the segment layer is omitted entirely when the drop
   is zero, so both the panel and the legend show bare shapes. Pass
@@ -1127,7 +1139,7 @@ changes what any function does; the suite is unchanged at 1629 passing tests.
 - `plot.hv_sankey()`: new `group_labels`, a named vector mapping a
   `cluster_cols` value to a milestone label (e.g. `c(C7 = "5 groups")`). That
   column's x-axis tick reads `"<col>\n<label>"`; unlisted columns stay bare.
-- `plot.hv_sankey()`: default `node_colours` map labels to Set1 in node order,
+- `plot.hv_sankey()`: default `node_colors` map labels to Set1 in node order,
   recycling with a warning when labels outnumber colors.
 - `plot.hv_alluvial()`: new `show_yaxis` (default `TRUE`). Set `FALSE` to blank
   the y-axis title, text, ticks, and line for a clean patient-flow look; the
@@ -1302,7 +1314,7 @@ rather than `ComplexUpset`. The intersection-size bar chart is a standard ggplot
 - The `base_annotations` parameter has been removed. To recolor the
   intersection bars by an external grouping variable, pass `fill_col =
   "<column>"` to `plot()`; for a single fixed color pass
-  `bar_fill = "<colour>"`.
+  `bar_fill = "<color>"`.
 - The `min_size` parameter has been replaced by `n_intersections`
   (top-N by frequency or degree — see `sort_by`). ComplexUpset's
   size-threshold semantics are not preserved.
@@ -1400,7 +1412,7 @@ rather than `ComplexUpset`. The intersection-size bar chart is a standard ggplot
   seq(0, 400, 100), expand = c(0, 0))` decorator.
 - `hvtiPlotR.qmd` color-guidance section updated to reflect that
   ColorBrewer palettes are accessed via ggplot2's built-in
-  `scale_colour_brewer()` rather than a direct `RColorBrewer`
+  `scale_color_brewer()` rather than a direct `RColorBrewer`
   dependency.
 
 # hvtiPlotR 2.0.0
@@ -1592,8 +1604,8 @@ devices and across slides in a deck even when axis-label widths differ.
   `smoother`, grouped vs ungrouped mapping, composability with `hv_theme`).
 - Added `test_spaghetti_plot.R` (25 tests): `$meta` slot keys and values,
   `id_col`/`y_col` absent error cases, `print.hv_spaghetti` output with and
-  without `colour_col` branch and invisible return, and full parameter coverage
-  for `plot.hv_spaghetti` (`add_smooth`, `smooth_se`, `line_colour`,
+  without `color_col` branch and invisible return, and full parameter coverage
+  for `plot.hv_spaghetti` (`add_smooth`, `smooth_se`, `line_color`,
   `line_width`, `alpha` boundaries, `y_labels` error cases, `smooth_method`,
   grouped vs ungrouped mapping, composability with `hv_theme`).
 - Added `test_hv_data.R` (27 tests): `new_hv_data()` structure contract,
@@ -1627,7 +1639,7 @@ devices and across slides in a deck even when axis-label widths differ.
   descriptive text explaining the role of each linked function.
 - `@examples` in all main plot methods include a `\dontrun{}` block
   demonstrating `ggplot2::theme_set(hv_theme_manuscript())` for applying the
-  publication theme globally, `scale_colour_brewer()` / `scale_fill_brewer()`
+  publication theme globally, `scale_color_brewer()` / `scale_fill_brewer()`
   for multi-group color palettes, and a pointer to
   `vignette("plot-decorators", package = "hvtiPlotR")`.
 
@@ -1862,7 +1874,7 @@ on `plot()`:
   dispatches to scatter + LOESS + rug (continuous) or stacked/filled bar
   (categorical). `NA` values are shown as an explicit `"(Missing)"` fill level.
   Returns a bare ggplot object for composition with `scale_fill_*`,
-  `scale_colour_*`, `labs()`, `annotate()`, and [hv_theme()].
+  `scale_color_*`, `labs()`, `annotate()`, and [hv_theme()].
   Ports `Function_DataPlotting()` from `tp.dp.EDA_barplots_scatterplots.R`.
 * Added `eda_classify_var()` — replicates the `UniqueLimit` type-detection
   logic from `Barplot_Scatterplot_Function.R`: classifies a vector as

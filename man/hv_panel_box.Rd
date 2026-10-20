@@ -2,14 +2,20 @@
 % Please edit documentation in R/ph-location.R
 \name{hv_panel_box}
 \alias{hv_panel_box}
-\title{Standard slide panel rectangle for an HVTI template}
+\title{Standard slide panel rectangle for a slide format}
 \usage{
-hv_panel_box(mode = c("dark", "light", "slate"))
+hv_panel_box(
+  mode = c("dark", "light", "slate"),
+  format = c("wide", "standard")
+)
 }
 \arguments{
-\item{mode}{\code{"dark"} (the default template), \code{"light"}
-(\code{hv_ppt_template_light.pptx}) or \code{"slate"}
-(\code{hv_ppt_template_slate.pptx}).}
+\item{mode}{\code{"dark"}, \code{"light"} or \code{"slate"}. Kept for backward
+compatibility: every color template gets the same rectangle, so it has
+no effect.}
+
+\item{format}{\code{"wide"} (16:9, the default) or \code{"standard"} (4:3,
+provisional).}
 }
 \value{
 A named list \code{width}, \code{height}, \code{left}, \code{top}, in inches, ready for
@@ -17,27 +23,34 @@ the \code{panel_box} argument of \code{\link[=save_ppt]{save_ppt()}} and \code{\
 }
 \description{
 The one fixed panel rectangle every plot slide of a slide format anchors
-its plotting panel to, in inches, for the 13.33 by 7.5 inch HVTI
-templates. \code{\link[=save_ppt]{save_ppt()}} and \code{\link[=hv_add_plot]{hv_add_plot()}} use it by default. Axis text,
-axis titles, facet strips and plot titles flow outside the rectangle;
-\code{\link[=hv_fit_location]{hv_fit_location()}} keeps them on the slide and out of the slide title.
+its plotting panel to, in inches. The slide format is the slide's aspect
+ratio: \code{"wide"} is 16:9, 13.333 by 7.5 in, the size of every bundled HVTI
+template; \code{"standard"} is 4:3, 10 by 7.5 in. The color template does not
+matter: the dark, light and slate templates get the same rectangle.
+\code{\link[=save_ppt]{save_ppt()}} and \code{\link[=hv_add_plot]{hv_add_plot()}} read the format from the template's slide
+size and use this rectangle by default. Axis text, axis titles, facet
+strips and plot titles flow outside it; \code{\link[=hv_fit_location]{hv_fit_location()}} keeps them on
+the slide and out of the slide title.
 }
 \details{
-The dark (default), light and slate templates share one master layout,
-whose title placeholder ends at 1.33 in, so today all three formats get
-the same rectangle: 9.98 by 4.4 in, 2.9 in from the left edge and 1.85 in
-from the top. The numbers leave room for the chrome around the panel:
+The wide rectangle is 9.98 by 4.4 in, 2.9 in from the left edge and
+1.85 in from the top. The numbers leave room for the chrome around the
+panel:
 \itemize{
 \item 2.9 in on the left for long y-axis labels and the rotated y-axis title;
-\item about 0.45 in above the panel, below the title placeholder, for facet
-strips and plot titles;
+\item about 0.45 in above the panel, below the title placeholder that ends at
+1.33 in, for facet strips and plot titles;
 \item 1.25 in below the panel for the 32 pt x-axis text and 40 pt x-axis
 title of \code{\link[=theme_hv_ppt_dark]{theme_hv_ppt_dark()}}, \code{\link[=theme_hv_ppt_light]{theme_hv_ppt_light()}} and
 \code{\link[=theme_hv_ppt_slate]{theme_hv_ppt_slate()}}.
 }
 
-The function keeps one entry per format so the formats can diverge later
-without changing any call.
+The standard (4:3) rectangle is \strong{provisional}: no 4:3 template is
+bundled, and the rectangle has not yet been checked on a real 4:3 deck.
+It follows the same rules, assuming the 4:3 title placeholder also ends
+near 1.33 in: the same top (1.85 in) and height (4.4 in), 2.3 in on the
+left for y labels and 0.45 in on the right, so 7.25 by 4.4 in at 2.3 in
+left.
 
 Through hvtiPlotR 2.8.13 the rectangle was 8.79 by 3.9 in at 2.67 in
 left, 1.6 in top. Pass
@@ -46,7 +59,8 @@ to \code{\link[=save_ppt]{save_ppt()}} or \code{\link[=hv_add_plot]{hv_add_plot(
 geometry.
 }
 \examples{
-hv_panel_box("slate")
+hv_panel_box()
+hv_panel_box(format = "standard")
 }
 \seealso{
 \code{\link[=save_ppt]{save_ppt()}}, \code{\link[=hv_add_plot]{hv_add_plot()}}, \code{\link[=hv_fit_location]{hv_fit_location()}},
