@@ -1,8 +1,8 @@
 Package: hvtiPlotR
 Type: Package
 Title: HVTI 'ggplot2' Themes and Clinical Plot Functions for the Cleveland Clinic Heart & Vascular Institute
-Version: 2.8.12
-Date: 2026-10-19
+Version: 2.8.13
+Date: 2026-10-20
 Authors@R: c(
     person(
       "John", "Ehrlinger",
