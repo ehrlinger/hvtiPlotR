@@ -428,8 +428,8 @@ test_that("theme_hv_ppt_slate draws an uncolored geom_line in a dark color", {
     ggplot2::geom_line() +
     theme_hv_ppt_slate()
   expect_plot_has_data(p)
-  colour <- ggplot2::ggplot_build(p)$data[[1]]$colour
-  expect_false(any(tolower(colour) %in% c("white", "#ffffff", "#ffffffff")))
+  line_color <- ggplot2::ggplot_build(p)$data[[1]]$colour
+  expect_false(any(tolower(line_color) %in% c("white", "#ffffff", "#ffffffff")))
 })
 
 test_that("theme_hv_ppt_slate keeps the dark theme's type sizes", {
