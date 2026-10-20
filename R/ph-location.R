@@ -156,22 +156,24 @@ hv_ph_location <- function(plot,
 #' strips and plot titles flow outside it; [hv_fit_location()] keeps them on
 #' the slide and out of the slide title.
 #'
-#' The wide rectangle is 9.98 by 4.4 in, 2.9 in from the left edge and
+#' The wide rectangle is 9.98 by 4.15 in, 2.9 in from the left edge and
 #' 1.85 in from the top. The numbers leave room for the chrome around the
 #' panel:
 #'
 #' * 2.9 in on the left for long y-axis labels and the rotated y-axis title;
 #' * about 0.45 in above the panel, below the title placeholder that ends at
 #'   1.33 in, for facet strips and plot titles;
-#' * 1.25 in below the panel for the 32 pt x-axis text and 40 pt x-axis
-#'   title of [theme_hv_ppt_dark()], [theme_hv_ppt_light()] and
-#'   [theme_hv_ppt_slate()].
+#' * 1.5 in below the panel (7.5 - 1.85 - 4.15), or 1.45 in inside the
+#'   0.05 in slide edge, for the x-axis chrome of [theme_hv_ppt_dark()],
+#'   [theme_hv_ppt_light()] and [theme_hv_ppt_slate()]: their 32 pt x-axis
+#'   text and 40 pt x-axis title with its margin need about 1.43 in, so a
+#'   plot in these themes fits at full size.
 #'
 #' The standard (4:3) rectangle is **provisional**: no 4:3 template is
 #' bundled, and the rectangle has not yet been checked on a real 4:3 deck.
 #' It follows the same rules, assuming the 4:3 title placeholder also ends
-#' near 1.33 in: the same top (1.85 in) and height (4.4 in), 2.3 in on the
-#' left for y labels and 0.45 in on the right, so 7.25 by 4.4 in at 2.3 in
+#' near 1.33 in: the same top (1.85 in) and height (4.15 in), 2.3 in on the
+#' left for y labels and 0.45 in on the right, so 7.25 by 4.15 in at 2.3 in
 #' left.
 #'
 #' Through hvtiPlotR 2.8.13 the rectangle was 8.79 by 3.9 in at 2.67 in
@@ -198,8 +200,8 @@ hv_panel_box <- function(mode = c("dark", "light", "slate"),
   match.arg(mode)
   format <- match.arg(format)
   switch(format,
-    wide     = list(width = 9.98, height = 4.4, left = 2.9, top = 1.85),
-    standard = list(width = 7.25, height = 4.4, left = 2.3, top = 1.85)
+    wide     = list(width = 9.98, height = 4.15, left = 2.9, top = 1.85),
+    standard = list(width = 7.25, height = 4.15, left = 2.3, top = 1.85)
   )
 }
 

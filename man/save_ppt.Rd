@@ -71,7 +71,7 @@ Each plot is placed by \code{\link[=hv_add_plot]{hv_add_plot()}}, so the panel l
 slide coordinates on every slide regardless of axis-label width.
 Defaults to \code{\link[=hv_panel_box]{hv_panel_box()}} for the template's slide format, read
 from its slide size: for the 16:9 bundled templates the standard CORR
-rectangle \code{list(width = 9.98, height = 4.4, left = 2.9, top = 1.85)},
+rectangle \code{list(width = 9.98, height = 4.15, left = 2.9, top = 1.85)},
 the same for the dark, light and slate templates; for a 4:3 template
 the provisional standard rectangle. A template of any other size needs
 an explicit \code{panel_box}. Pass

@@ -43,8 +43,8 @@ slide_graphics <- function(path, i) {
 }
 
 test_that("hv_panel_box depends on the slide format, not the color template", {
-  wide <- list(width = 9.98, height = 4.4, left = 2.9, top = 1.85)
-  standard <- list(width = 7.25, height = 4.4, left = 2.3, top = 1.85)
+  wide <- list(width = 9.98, height = 4.15, left = 2.9, top = 1.85)
+  standard <- list(width = 7.25, height = 4.15, left = 2.3, top = 1.85)
   for (mode in c("dark", "light", "slate")) {
     expect_identical(hv_panel_box(mode), wide)
     expect_identical(hv_panel_box(mode, format = "wide"), wide)
@@ -104,6 +104,17 @@ test_that("hv_fit_location keeps scale 1 for a plot that fits", {
   expect_identical(fit$scale, 1)
   expect_true(fit$fits)
   expect_named(fit, c("plot", "location", "scale", "fits"))
+})
+
+test_that("a PPT-themed plot fits the wide window at full size", {
+  # 32 pt x text plus the 40 pt x title and its margin need about 1.43 in
+  # below the panel; the wide window leaves 1.45 in inside the slide edge.
+  p <- fit_plot() + theme_hv_ppt_dark()
+  # The pdf(NULL) measuring device lacks Arial; filter that benign warning
+  # as hv_add_plot() does.
+  fit <- suppress_font_db_warnings(hv_fit_location(p, hv_panel_box(format = "wide")))
+  expect_identical(fit$scale, 1)
+  expect_true(fit$fits)
 })
 
 test_that("hv_fit_location shrinks long y labels until they fit; the panel stays", {

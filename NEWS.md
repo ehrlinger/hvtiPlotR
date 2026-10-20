@@ -1,7 +1,7 @@
 # hvtiPlotR 2.8.14
 
 * `hv_panel_box()` returns a larger standard window,
-  `list(width = 9.98, height = 4.4, left = 2.9, top = 1.85)`, up from
+  `list(width = 9.98, height = 4.15, left = 2.9, top = 1.85)`, up from
   8.79 by 3.9 in at 2.67 in left, 1.6 in top. The window now depends on the
   slide format, the slide's aspect ratio, and not on the color template:
   the dark, light and slate templates share it. A new `format` argument
@@ -11,14 +11,15 @@
   the template's slide size and stop on any other size unless `panel_box`
   is given. In the wide window the 2.9 in on the left leaves room for long
   y labels, the 0.45 in above the panel holds facet strips and plot titles
-  below the slide title, which ends at 1.33 in, and the 1.25 in below holds
-  the x-axis text and title. `save_ppt()` therefore places every figure
-  larger. Pass
+  below the slide title, which ends at 1.33 in, and the 1.5 in below
+  (1.45 in inside the slide edge) holds the PPT themes' 32 pt x-axis text
+  and 40 pt x-axis title with its margin, about 1.43 in, so those themes fit
+  at full size. `save_ppt()` therefore places every figure larger. Pass
   `panel_box = list(width = 8.79, height = 3.9, left = 2.67, top = 1.6)` to
   rebuild an old deck at its old geometry.
 
 * The standard (4:3) window,
-  `list(width = 7.25, height = 4.4, left = 2.3, top = 1.85)`, is
+  `list(width = 7.25, height = 4.15, left = 2.3, top = 1.85)`, is
   provisional: it follows the wide window's rules, with 2.3 in on the left
   and 0.45 in on the right, but has not yet been checked on a real 4:3 deck.
 
@@ -28,10 +29,7 @@
   is reduced, 4 pt at a time at the PPT themes' 32 pt base size, down to
   12 pt. A message names each reduction, and a warning replaces the old
   "plot chrome does not fit" warning only when 12 pt text still does not
-  fit. At full size the PPT themes' x-axis text and title take about
-  1.43 in below the panel, more than the 1.2 in the standard window leaves,
-  so a typical PPT-themed slide is drawn at 20 pt. `fit = FALSE` keeps the
-  plot's own sizes.
+  fit. `fit = FALSE` keeps the plot's own sizes.
 
 * New `hv_fit_location()` returns the fitted plot, its
   `officer::ph_location()` placement, the text scale used and whether the
