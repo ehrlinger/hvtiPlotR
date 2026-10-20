@@ -195,7 +195,8 @@ panel
 ([`geom_text()`](https://ggplot2.tidyverse.org/reference/geom_text.html),
 [`annotate()`](https://ggplot2.tidyverse.org/reference/annotate.html)) a
 dark color, since the theme's ink is white. Axis ticks point inward and
-are dark gray, so they show on the white panel.
+are dark gray, so they show on the white panel. Geoms without their own
+color draw in black on the white panel.
 
 ## See also
 

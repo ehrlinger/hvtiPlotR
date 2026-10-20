@@ -1,5 +1,56 @@
 # Changelog
 
+## hvtiPlotR 2.8.13
+
+- Pages from
+  [`plot.hv_eda_pages()`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hv_eda_pages.md)
+  no longer crowd their panels’ y axes. On a percent or count page the
+  panels in a row share one y axis, drawn on the leftmost panel, with
+  one “Proportion” or “Count” title for the page. Requires patchwork
+  1.3.1, the first release that works with ggplot2 4.0; the old floor of
+  1.1.0 could not combine pages with a theme through `&`.
+
+- A continuous panel from
+  [`plot.hv_eda()`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hv_eda.md)
+  no longer repeats its label as the y-axis title. The label stays as
+  the panel title, and the axis takes a short form of it: the label’s
+  trailing parenthesised units, `min` from
+  `"Interval:Total Myocardial Ischemia (min)"`, or else the column name.
+  On a page of small panels the rotated label ran past its panel into
+  the next.
+
+- [`theme_hv_ppt_dark()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)
+  and
+  [`theme_hv_ppt_light()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)
+  now size facet titles (`strip.text`) at `base_size * 0.75`, 24 pt at
+  the default 32, up from `base_size / 2` (16 pt), which read as too
+  small on slides. Chain `+ theme(strip.text = element_text(size = 16))`
+  for the old size.
+
+- [`hv_panel_box()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_panel_box.md)
+  now returns the same rectangle for the dark and light templates,
+  `list(width = 8.79, height = 3.9, left = 2.67, top = 1.6)`, so
+  [`save_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/save_ppt.md)
+  places dark-template figures 0.31 in lower and 0.52 in shorter than
+  before. Both templates share one title placeholder (to 1.33 in), and
+  the old dark rectangle started at 1.29 in, inside it: the larger facet
+  titles touched the slide title. Pass
+  `panel_box = list(width = 8.79, height = 4.422, left = 2.67, top = 1.29)`
+  to rebuild an old dark deck at its old geometry.
+
+- [`theme_hv_ppt_slate()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)
+  now draws geoms that have no color of their own in black on its white
+  panel. It inherited the dark theme’s white ink, so under ggplot2 4.0
+  an uncolored
+  [`geom_line()`](https://ggplot2.tidyverse.org/reference/geom_path.html),
+  [`geom_point()`](https://ggplot2.tidyverse.org/reference/geom_point.html)
+  or
+  [`geom_hline()`](https://ggplot2.tidyverse.org/reference/geom_abline.html)
+  drew white on white and vanished. Text outside the panel stays white.
+  Decks that worked around this with
+  `+ theme(geom = element_geom(ink = "black", paper = "white"))` keep
+  working.
+
 ## hvtiPlotR 2.8.12
 
 - The bundled dark and light templates now share one set of layout
