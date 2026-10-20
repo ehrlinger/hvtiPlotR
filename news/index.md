@@ -1,5 +1,83 @@
 # Changelog
 
+## hvtiPlotR 2.8.14
+
+- [`hv_panel_box()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_panel_box.md)
+  returns a larger standard window,
+  `list(width = 9.98, height = 4.15, left = 2.9, top = 1.85)`, up from
+  8.79 by 3.9 in at 2.67 in left, 1.6 in top. The window now depends on
+  the slide format, the slide’s aspect ratio, and not on the color
+  template: the dark, light and slate templates share it. A new `format`
+  argument picks `"wide"` (16:9, 13.333 by 7.5 in, the default and every
+  bundled template) or `"standard"` (4:3, 10 by 7.5 in); `mode` is still
+  accepted and has no effect.
+  [`save_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/save_ppt.md)
+  and
+  [`hv_add_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_add_plot.md)
+  read the format from the template’s slide size and stop on any other
+  size unless `panel_box` is given. In the wide window the 2.9 in on the
+  left leaves room for long y labels, the 0.45 in above the panel holds
+  facet strips and plot titles below the slide title, which ends at 1.33
+  in, and the 1.5 in below (1.45 in inside the slide edge) holds the PPT
+  themes’ 32 pt x-axis text and 40 pt x-axis title with its margin,
+  about 1.43 in, so those themes fit at full size.
+  [`save_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/save_ppt.md)
+  therefore places every figure larger. Pass
+  `panel_box = list(width = 8.79, height = 3.9, left = 2.67, top = 1.6)`
+  to rebuild an old deck at its old geometry.
+
+- The standard (4:3) window,
+  `list(width = 7.25, height = 4.15, left = 2.3, top = 1.85)`, is
+  provisional: it follows the wide window’s rules, with 2.3 in on the
+  left and 0.45 in on the right, but has not yet been checked on a real
+  4:3 deck.
+
+- [`save_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/save_ppt.md)
+  now fits each plot to the slide. The panel stays on `panel_box`; when
+  the axis text, axis titles, facet strips or plot title around it would
+  leave the slide or cross the slide title, the plot’s text is reduced,
+  2 pt at a time at the PPT themes’ 32 pt base size, down to 12 pt. Text
+  margins set in absolute units shrink in step with the text, so a
+  reduced slide also gets back the room the margins took above and below
+  the panel; a plot with both facets and a plot title then fits. A
+  message names each reduction, and a warning replaces the old “plot
+  chrome does not fit” warning only when 12 pt text still does not fit.
+  `fit = FALSE` keeps the plot’s own sizes.
+
+- New
+  [`hv_fit_location()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_fit_location.md)
+  returns the fitted plot, its
+  [`officer::ph_location()`](https://davidgohel.github.io/officer/reference/ph_location.html)
+  placement, the text scale used and whether the figure fits. The figure
+  it checks includes the actual extent of title, subtitle and caption
+  text placed by its `hjust`, so a title wider than the slide fails the
+  check even when its cell fits. That includes the titles of plots
+  inside a nested patchwork, and a
+  [`plot_annotation()`](https://patchwork.data-imaginist.com/reference/plot_annotation.html)
+  title, subtitle or caption with no theme of its own shrinks with the
+  rest of the text: patchwork draws it with the global theme.
+
+- [`hv_ph_location()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_ph_location.md),
+  and so
+  [`save_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/save_ppt.md),
+  now measures a patchwork whole, through
+  [`patchwork::patchworkGrob()`](https://patchwork.data-imaginist.com/reference/patchworkGrob.html).
+  [`ggplotGrob()`](https://ggplot2.tidyverse.org/reference/ggplotGrob.html)
+  of a patchwork built only its last plot, so the other plots’ axis
+  labels and the
+  [`plot_annotation()`](https://patchwork.data-imaginist.com/reference/plot_annotation.html)
+  title, subtitle and caption were left out of the placement. The panel
+  rectangle now holds the union of every plot’s panels.
+
+- New
+  [`hv_add_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_add_plot.md)
+  places one plot on the current slide of an `officer` deck, fitted
+  around `panel_box`, as an editable vector. When the vector insert
+  fails, as a dense point cloud can make libxml2 do, it places a
+  transparent PNG rendered at exactly the fitted size at the same
+  location, so the panel still lands on `panel_box`. The returned deck
+  carries the scale, fit and PNG use in its `"hv_fit"` attribute.
+
 ## hvtiPlotR 2.8.13
 
 - Pages from
@@ -394,13 +472,13 @@
   the columns it left out as identifiers
   ([\#172](https://github.com/ehrlinger/hvtiPlotR/issues/172)).
 - A test now checks that
-  [`scale_colour_hv()`](https://ehrlinger.github.io/hvtiPlotR/reference/scale_fill_hv.md)
+  [`scale_color_hv()`](https://ehrlinger.github.io/hvtiPlotR/reference/scale_fill_hv.md)
   stays exported, not only that it is the same function as
   [`scale_color_hv()`](https://ehrlinger.github.io/hvtiPlotR/reference/scale_fill_hv.md).
   Code written before 2.8.0 calls it by the British name
   ([\#176](https://github.com/ehrlinger/hvtiPlotR/issues/176)).
 - [`plot.hv_spaghetti()`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hv_spaghetti.md)
-  no longer warns “Ignoring empty aesthetic: `colour`” on ggplot2 4.0.0
+  no longer warns “Ignoring empty aesthetic: `color`” on ggplot2 4.0.0
   when `color_col` is set. It passed
   [`geom_line()`](https://ggplot2.tidyverse.org/reference/geom_path.html)
   a `NULL` color beside the mapped one; it now passes a fixed color only
@@ -409,11 +487,10 @@
 - [`plot()`](https://rdrr.io/r/graphics/plot.default.html) of an
   `hv_spaghetti` or `hv_sankey`, and
   [`print()`](https://rdrr.io/r/base/print.html) of an `hv_spaghetti`,
-  stop when `meta$color_col` and `meta$colour_col` (or
-  `meta$node_colors` and `meta$node_colours`) hold different values.
-  Both sit in `meta` since 2.8.0, and the methods read the US one, so
-  editing only the British element was silently ignored. Edit both, or
-  rebuild the object
+  stop when `meta$color_col` and `meta$color_col` (or `meta$node_colors`
+  and `meta$node_colors`) hold different values. Both sit in `meta`
+  since 2.8.0, and the methods read the US one, so editing only the
+  British element was silently ignored. Edit both, or rebuild the object
   ([\#175](https://github.com/ehrlinger/hvtiPlotR/issues/175)).
 - [`save_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/save_ppt.md)
   names `options(hvtiPlotR.ppt_template)` in its error when that option,
@@ -466,8 +543,8 @@
   [`hv_ppt_series()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_ppt_series.md)
   and `color` in
   [`make_footnote()`](https://ehrlinger.github.io/hvtiPlotR/reference/make_footnote.md).
-  The US name is the documented one; `colour_col`, `line_colour`,
-  `node_colours`, `colours` and `colour` keep working as aliases, and
+  The US name is the documented one; `color_col`, `line_color`,
+  `node_colors`, `colors` and `color` keep working as aliases, and
   giving both spellings two different values is an error. Every existing
   positional call binds as before, since the new names come last (or
   after `...`). An abbreviated name that now matches both spellings is
@@ -478,9 +555,9 @@
 
 - [`scale_color_hv()`](https://ehrlinger.github.io/hvtiPlotR/reference/scale_fill_hv.md)
   is now the primary name of the role-color scale added in 2.7.18, and
-  [`scale_colour_hv()`](https://ehrlinger.github.io/hvtiPlotR/reference/scale_fill_hv.md)
+  [`scale_color_hv()`](https://ehrlinger.github.io/hvtiPlotR/reference/scale_fill_hv.md)
   stays as an alias of it, the way ggplot2 pairs `scale_color_*()` and
-  `scale_colour_*()`. Existing calls keep working.
+  `scale_color_*()`. Existing calls keep working.
 
 - Documentation, messages and comments now use US spelling (“color”,
   “gray”, “analyzed”). Exported argument names are unchanged. Output
@@ -548,7 +625,7 @@ beside the working directory. Name the output file in every call.
 
 ## hvtiPlotR 2.7.18
 
-### New: `hv_role_palette()`, `scale_fill_hv()` and `scale_colour_hv()`
+### New: `hv_role_palette()`, `scale_fill_hv()` and `scale_color_hv()`
 
 The house color rule for EDA and follow-up figures, as an opt-in scale.
 An event is vermillion `#D55E00`, censored is blue `#0072B2`, missing is
@@ -1163,7 +1240,7 @@ Nothing here changes what any function does; the suite is unchanged at
   `id_col`, fuses unrelated subjects into a single trajectory. Affects
   `group_col` in
   [`hv_trends()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_trends.md)/[`hv_stacked()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_stacked.md),
-  `id_col` and `colour_col` in
+  `id_col` and `color_col` in
   [`hv_spaghetti()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_spaghetti.md),
   and `variable_col`/`group_col` in
   [`hv_balance()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_balance.md);
@@ -1252,7 +1329,7 @@ Nothing here changes what any function does; the suite is unchanged at
   no longer draws a vertical stem below each patient’s point. The stem
   was a carryover from the legacy `tp.dp.gfup.R` SAS template; at
   realistic cohort sizes it smears the point cloud and, because it
-  shares the `colour` aesthetic with the points, it also struck a line
+  shares the `color` aesthetic with the points, it also struck a line
   through every glyph in the legend key.
   [`hv_followup()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_followup.md)
   now defaults `segment_drop = 0` and the segment layer is omitted
@@ -1436,8 +1513,8 @@ Nothing here changes what any function does; the suite is unchanged at
   milestone label (e.g. `c(C7 = "5 groups")`). That column’s x-axis tick
   reads `"<col>\n<label>"`; unlisted columns stay bare.
 - [`plot.hv_sankey()`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hv_sankey.md):
-  default `node_colours` map labels to Set1 in node order, recycling
-  with a warning when labels outnumber colors.
+  default `node_colors` map labels to Set1 in node order, recycling with
+  a warning when labels outnumber colors.
 - [`plot.hv_alluvial()`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hv_alluvial.md):
   new `show_yaxis` (default `TRUE`). Set `FALSE` to blank the y-axis
   title, text, ticks, and line for a clean patient-flow look; the
@@ -1648,7 +1725,7 @@ set-size sidebar is composed via `patchwork`.
   intersection bars by an external grouping variable, pass
   `fill_col = "<column>"` to
   [`plot()`](https://rdrr.io/r/graphics/plot.default.html); for a single
-  fixed color pass `bar_fill = "<colour>"`.
+  fixed color pass `bar_fill = "<color>"`.
 - The `min_size` parameter has been replaced by `n_intersections` (top-N
   by frequency or degree — see `sort_by`). ComplexUpset’s size-threshold
   semantics are not preserved.
@@ -1780,7 +1857,7 @@ set-size sidebar is composed via `patchwork`.
   decorator.
 - `hvtiPlotR.qmd` color-guidance section updated to reflect that
   ColorBrewer palettes are accessed via ggplot2’s built-in
-  [`scale_colour_brewer()`](https://ggplot2.tidyverse.org/reference/scale_brewer.html)
+  [`scale_color_brewer()`](https://ggplot2.tidyverse.org/reference/scale_brewer.html)
   rather than a direct `RColorBrewer` dependency.
 
 ## hvtiPlotR 2.0.0
@@ -2016,9 +2093,9 @@ devices and across slides in a deck even when axis-label widths differ.
   composability with `hv_theme`).
 - Added `test_spaghetti_plot.R` (25 tests): `$meta` slot keys and
   values, `id_col`/`y_col` absent error cases, `print.hv_spaghetti`
-  output with and without `colour_col` branch and invisible return, and
+  output with and without `color_col` branch and invisible return, and
   full parameter coverage for `plot.hv_spaghetti` (`add_smooth`,
-  `smooth_se`, `line_colour`, `line_width`, `alpha` boundaries,
+  `smooth_se`, `line_color`, `line_width`, `alpha` boundaries,
   `y_labels` error cases, `smooth_method`, grouped vs ungrouped mapping,
   composability with `hv_theme`).
 - Added `test_hv_data.R` (27 tests):
@@ -2060,7 +2137,7 @@ devices and across slides in a deck even when axis-label widths differ.
 - `@examples` in all main plot methods include a `\dontrun{}` block
   demonstrating `ggplot2::theme_set(hv_theme_manuscript())` for applying
   the publication theme globally,
-  [`scale_colour_brewer()`](https://ggplot2.tidyverse.org/reference/scale_brewer.html)
+  [`scale_color_brewer()`](https://ggplot2.tidyverse.org/reference/scale_brewer.html)
   /
   [`scale_fill_brewer()`](https://ggplot2.tidyverse.org/reference/scale_brewer.html)
   for multi-group color palettes, and a pointer to
@@ -2341,7 +2418,7 @@ argument on [`plot()`](https://rdrr.io/r/graphics/plot.default.html):
   `"Cat_Char"`) and dispatches to scatter + LOESS + rug (continuous) or
   stacked/filled bar (categorical). `NA` values are shown as an explicit
   `"(Missing)"` fill level. Returns a bare ggplot object for composition
-  with `scale_fill_*`, `scale_colour_*`,
+  with `scale_fill_*`, `scale_color_*`,
   [`labs()`](https://ggplot2.tidyverse.org/reference/labs.html),
   [`annotate()`](https://ggplot2.tidyverse.org/reference/annotate.html),
   and \[hv_theme()\]. Ports `Function_DataPlotting()` from

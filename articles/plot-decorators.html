@@ -25,7 +25,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">hvtiPlotR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.8.13</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.8.14</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -611,7 +611,7 @@
 <span>  panel_box    <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>width <span class="op">=</span> <span class="fl">10</span>, height <span class="op">=</span> <span class="fl">5</span>, left <span class="op">=</span> <span class="fl">1.5</span>, top <span class="op">=</span> <span class="fl">1.5</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 </div>
-<p>Make the <code>left</code> and <code>top</code> entries of <code>panel_box</code> large enough to leave room for the widest axis labels in the deck, or <code><a href="../reference/hv_ph_location.html">hv_ph_location()</a></code> warns that the plot chrome spills off the slide edge.</p>
+<p>Leave <code>panel_box</code> out and <code><a href="../reference/save_ppt.html">save_ppt()</a></code> uses <code><a href="../reference/hv_panel_box.html">hv_panel_box()</a></code>, the one standard rectangle for the template’s slide format, 16:9 or 4:3, read from its slide size. When a plot’s chrome would leave the slide or cross the slide title, <code><a href="../reference/save_ppt.html">save_ppt()</a></code> reduces that plot’s text, 2 pt at a time down to 12 pt, until it fits; the panel itself never moves. It warns only when 12 pt text still does not fit. To place a plot on a slide you built yourself with <code>officer</code>, call <code><a href="../reference/hv_add_plot.html">hv_add_plot()</a></code> on the current slide; it applies the same fit and falls back to a PNG at the same location when the vector insert fails.</p>
 </section></section><section class="level2"><h3 id="multi-panel-pdf-eda-batch-output">Multi-panel PDF (EDA batch output)<a class="anchor" aria-label="anchor" href="#multi-panel-pdf-eda-batch-output"></a>
 </h3>
 <p>When generating multiple plots in a loop, <code><a href="https://patchwork.data-imaginist.com/reference/wrap_plots.html" class="external-link">patchwork::wrap_plots()</a></code> arranges them into a grid and <code><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave()</a></code> writes each page. This is typical for EDA batches where you have a dozen or more outcomes to inspect. You build the list with <code><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply()</a></code>, chunk it into pages of 9, and let the loop handle pagination. The <code>per_page</code> constant is easy to adjust if you want a 2x2 or 4x4 grid instead.</p>

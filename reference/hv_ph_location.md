@@ -68,6 +68,14 @@ Use with
 via `panel_box = list(width, height, left, top)` to apply this to every
 slide in a deck.
 
+For a patchwork, the whole composition is measured, through
+[`patchwork::patchworkGrob()`](https://patchwork.data-imaginist.com/reference/patchworkGrob.html):
+the target rectangle holds the union of every plot's panels, with the
+axes and strips between them, and the outermost axes plus the
+[`patchwork::plot_annotation()`](https://patchwork.data-imaginist.com/reference/plot_annotation.html)
+title, subtitle and caption count as chrome. A nested patchwork counts
+as one panel, inner chrome included.
+
 ## See also
 
 [`hv_ggsave_dims()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_ggsave_dims.md)
@@ -93,7 +101,17 @@ loc <- hv_ph_location(
 #> Warning: font family 'Arial' not found in PostScript font database
 #> Warning: font family 'Arial' not found in PostScript font database
 #> Warning: font family 'Arial' not found in PostScript font database
-#> Warning: hv_ph_location(): plot chrome does not fit left/top of panel on slide (left=-1.148 in). Increase `panel_left`/`panel_top` to leave room for axis labels.
+#> Warning: font family 'Arial' not found in PostScript font database
+#> Warning: font family 'Arial' not found in PostScript font database
+#> Warning: font family 'Arial' not found in PostScript font database
+#> Warning: font family 'Arial' not found in PostScript font database
+#> Warning: font family 'Arial' not found in PostScript font database
+#> Warning: font family 'Arial' not found in PostScript font database
+#> Warning: font family 'Arial' not found in PostScript font database
+#> Warning: font family 'Arial' not found in PostScript font database
+#> Warning: font family 'Arial' not found in PostScript font database
+#> Warning: font family 'Arial' not found in PostScript font database
+#> Warning: hv_ph_location(): plot chrome does not fit left/top of panel on slide (left=-0.987 in). Increase `panel_left`/`panel_top` to leave room for axis labels.
 # doc <- officer::read_pptx(template)
 # doc <- officer::add_slide(doc, layout = "Title and Content")
 # doc <- officer::ph_with(

@@ -17,7 +17,7 @@ designated title placeholder via officer::ph_location_type()."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">hvtiPlotR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.8.13</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.8.14</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -87,7 +87,8 @@ designated title placeholder via <code><a href="https://davidgohel.github.io/off
 <span>  height <span class="op">=</span> <span class="fl">5.8</span>,</span>
 <span>  left <span class="op">=</span> <span class="fl">0</span>,</span>
 <span>  top <span class="op">=</span> <span class="fl">1.2</span>,</span>
-<span>  panel_box <span class="op">=</span> <span class="fu"><a href="hv_panel_box.html">hv_panel_box</a></span><span class="op">(</span><span class="fu">.hv_template_mode</span><span class="op">(</span><span class="va">template</span><span class="op">)</span><span class="op">)</span></span>
+<span>  panel_box <span class="op">=</span> <span class="fu"><a href="hv_panel_box.html">hv_panel_box</a></span><span class="op">(</span>format <span class="op">=</span> <span class="fu">.hv_template_format</span><span class="op">(</span><span class="va">template</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  fit <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -162,15 +163,28 @@ is supplied.</p></dd>
 <dt id="arg-panel-box">panel_box<a class="anchor" aria-label="anchor" href="#arg-panel-box"></a></dt>
 <dd><p>Named list <code>list(width, height, left, top)</code> describing
 the panel content area to anchor on every slide (in inches).
-Per-plot slide placement is computed via <code><a href="hv_ph_location.html">hv_ph_location()</a></code> so the panel
-lands at the same slide coordinates on every slide regardless of
-axis-label width. Defaults to <code><a href="hv_panel_box.html">hv_panel_box()</a></code>, the standard CORR
-rectangle <code>list(width = 8.79, height = 3.9, left = 2.67, top = 1.6)</code>,
-the same for the dark and light templates. Pass
+Each plot is placed by <code><a href="hv_add_plot.html">hv_add_plot()</a></code>, so the panel lands at the same
+slide coordinates on every slide regardless of axis-label width.
+Defaults to <code><a href="hv_panel_box.html">hv_panel_box()</a></code> for the template's slide format, read
+from its slide size: for the 16:9 bundled templates the standard CORR
+rectangle <code>list(width = 9.98, height = 4.15, left = 2.9, top = 1.85)</code>,
+the same for the dark, light and slate templates; for a 4:3 template
+the provisional standard rectangle. A template of any other size needs
+an explicit <code>panel_box</code>. Pass
 <code>panel_box = NULL</code> to fall back to the fixed <code>width</code>/<code>height</code>/<code>left</code>/
 <code>top</code> arguments for every slide (legacy behavior). Ignored for
 <code>hv_consort</code> objects, which are always placed using their own metadata
 dimensions.</p></dd>
+
+
+<dt id="arg-fit">fit<a class="anchor" aria-label="anchor" href="#arg-fit"></a></dt>
+<dd><p><code>TRUE</code> (the default) to reduce a plot's text, 2 pt at a time
+at the PPT themes' 32 pt base size, until its axis text, axis titles,
+facet strips and plot title lie on the slide and below the slide title;
+see <code><a href="hv_fit_location.html">hv_fit_location()</a></code>. A message names each reduction, and a warning
+names a plot that still does not fit at 12 pt. <code>FALSE</code> keeps the plot's
+own sizes and warns when it runs off the slide. Used only with a
+<code>panel_box</code>.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -208,7 +222,7 @@ updates.</p>
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
     <div class="dont-index"><p>Worked recipe with rendered output:
 <a href="https://ehrlinger.github.io/hvtiGraphics/presentations.html" class="external-link">https://ehrlinger.github.io/hvtiGraphics/presentations.html</a>.</p>
-<p><code><a href="https://davidgohel.github.io/rvg/reference/dml.html" class="external-link">rvg::dml()</a></code>, <code><a href="https://davidgohel.github.io/officer/reference/ph_with.html" class="external-link">officer::ph_with()</a></code>, <code><a href="https://davidgohel.github.io/officer/reference/ph_location.html" class="external-link">officer::ph_location()</a></code>,
+<p><code><a href="hv_add_plot.html">hv_add_plot()</a></code>, <code><a href="https://davidgohel.github.io/rvg/reference/dml.html" class="external-link">rvg::dml()</a></code>, <code><a href="https://davidgohel.github.io/officer/reference/ph_with.html" class="external-link">officer::ph_with()</a></code>, <code><a href="https://davidgohel.github.io/officer/reference/ph_location.html" class="external-link">officer::ph_location()</a></code>,
 <code><a href="hvtiPlotR-themes.html">theme_hv_manuscript()</a></code></p></div>
     </div>
 
@@ -244,6 +258,7 @@ updates.</p>
 <span class="r-in"><span>  powerpoint   <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"fuel_economy.pptx"</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>  slide_titles <span class="op">=</span> <span class="st">"Fuel Economy by Weight"</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> hv_add_plot(): text reduced to 69% so the figure fits on the slide.</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># List of plots — one slide per plot, individual titles</span></span></span>
 <span class="r-in"><span><span class="va">p2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">cyl</span><span class="op">)</span>, y <span class="op">=</span> <span class="va">mpg</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span></span>
@@ -257,6 +272,7 @@ updates.</p>
 <span class="r-in"><span>  powerpoint   <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"deck.pptx"</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>  slide_titles <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Scatter: fuel economy"</span>, <span class="st">"Box: mpg by cylinder count"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> hv_add_plot(): text reduced to 69% so the figure fits on the slide.</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># No y-axis label — let the slide title carry the meaning. `y = NULL`</span></span></span>
 <span class="r-in"><span><span class="co"># drops the axis title; the numeric tick labels remain.</span></span></span>
@@ -336,7 +352,6 @@ updates.</p>
 <span class="r-in"><span>  powerpoint   <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"drifting_deck.pptx"</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>  slide_titles <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Small y-axis"</span>, <span class="st">"Big y-axis"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>hv_ph_location(): plot chrome does not fit left/top of panel on slide (left=-0.337 in). Increase `panel_left`/`panel_top` to leave room for axis labels.</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># With panel_box: target is an 8.88" x 4.51" panel at slide coordinates</span></span></span>
 <span class="r-in"><span><span class="co"># (2.58", 1.63"). The panel content area lands at exactly that rectangle</span></span></span>
@@ -350,11 +365,12 @@ updates.</p>
 <span class="r-in"><span>  slide_titles <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Small y-axis"</span>, <span class="st">"Big y-axis"</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>  panel_box    <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>width <span class="op">=</span> <span class="fl">8.88</span>, height <span class="op">=</span> <span class="fl">4.51</span>, left <span class="op">=</span> <span class="fl">2.58</span>, top <span class="op">=</span> <span class="fl">1.63</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>hv_ph_location(): plot chrome does not fit left/top of panel on slide (left=-0.427 in). Increase `panel_left`/`panel_top` to leave room for axis labels.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> hv_add_plot(): text reduced to 88% so the figure fits on the slide.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> hv_add_plot(): text reduced to 88% so the figure fits on the slide.</span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># Sizing advice: panel_box$left and panel_box$top must be large enough for the</span></span></span>
-<span class="r-in"><span><span class="co"># widest axis labels in the deck. If chrome extends past the left or top</span></span></span>
-<span class="r-in"><span><span class="co"># slide edge, hv_ph_location() emits a warning naming that edge.</span></span></span>
+<span class="r-in"><span><span class="co"># Sizing advice: with `fit = TRUE` (the default) a plot whose chrome</span></span></span>
+<span class="r-in"><span><span class="co"># would leave the slide or cross the title has its text reduced until it</span></span></span>
+<span class="r-in"><span><span class="co"># fits; save_ppt() warns only when even 12 pt text does not fit.</span></span></span>
 <span class="r-in"><span><span class="co"># }</span></span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>

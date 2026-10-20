@@ -385,7 +385,14 @@ omit them for publication-ready output.
   args for a fixed-panel slide layout
 
 - [`hv_panel_box()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_panel_box.md)
-  : Standard slide panel rectangle for an HVTI template
+  : Standard slide panel rectangle for a slide format
+
+- [`hv_fit_location()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_fit_location.md)
+  : Fit a plot's chrome on the slide around a fixed panel
+
+- [`hv_add_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_add_plot.md)
+  : Place one plot on the current slide, fitted around the standard
+  panel
 
 - [`hv_ppt_layout()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_ppt_layout.md)
   : Slide layout name for a slide role

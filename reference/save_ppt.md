@@ -26,7 +26,8 @@ save_ppt(
   height = 5.8,
   left = 0,
   top = 1.2,
-  panel_box = hv_panel_box(.hv_template_mode(template))
+  panel_box = hv_panel_box(format = .hv_template_format(template)),
+  fit = TRUE
 )
 ```
 
@@ -102,18 +103,31 @@ save_ppt(
 - panel_box:
 
   Named list `list(width, height, left, top)` describing the panel
-  content area to anchor on every slide (in inches). Per-plot slide
-  placement is computed via
-  [`hv_ph_location()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_ph_location.md)
+  content area to anchor on every slide (in inches). Each plot is placed
+  by
+  [`hv_add_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_add_plot.md),
   so the panel lands at the same slide coordinates on every slide
   regardless of axis-label width. Defaults to
-  [`hv_panel_box()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_panel_box.md),
-  the standard CORR rectangle
-  `list(width = 8.79, height = 3.9, left = 2.67, top = 1.6)`, the same
-  for the dark and light templates. Pass `panel_box = NULL` to fall back
-  to the fixed `width`/`height`/`left`/ `top` arguments for every slide
-  (legacy behavior). Ignored for `hv_consort` objects, which are always
-  placed using their own metadata dimensions.
+  [`hv_panel_box()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_panel_box.md)
+  for the template's slide format, read from its slide size: for the
+  16:9 bundled templates the standard CORR rectangle
+  `list(width = 9.98, height = 4.15, left = 2.9, top = 1.85)`, the same
+  for the dark, light and slate templates; for a 4:3 template the
+  provisional standard rectangle. A template of any other size needs an
+  explicit `panel_box`. Pass `panel_box = NULL` to fall back to the
+  fixed `width`/`height`/`left`/ `top` arguments for every slide (legacy
+  behavior). Ignored for `hv_consort` objects, which are always placed
+  using their own metadata dimensions.
+
+- fit:
+
+  `TRUE` (the default) to reduce a plot's text, 2 pt at a time at the
+  PPT themes' 32 pt base size, until its axis text, axis titles, facet
+  strips and plot title lie on the slide and below the slide title; see
+  [`hv_fit_location()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_fit_location.md).
+  A message names each reduction, and a warning names a plot that still
+  does not fit at 12 pt. `FALSE` keeps the plot's own sizes and warns
+  when it runs off the slide. Used only with a `panel_box`.
 
 ## Value
 
@@ -162,6 +176,7 @@ updates.
 Worked recipe with rendered output:
 <https://ehrlinger.github.io/hvtiGraphics/presentations.html>.
 
+[`hv_add_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_add_plot.md),
 [`rvg::dml()`](https://davidgohel.github.io/rvg/reference/dml.html),
 [`officer::ph_with()`](https://davidgohel.github.io/officer/reference/ph_with.html),
 [`officer::ph_location()`](https://davidgohel.github.io/officer/reference/ph_location.html),
@@ -200,6 +215,7 @@ save_ppt(
   powerpoint   = file.path(tempdir(), "fuel_economy.pptx"),
   slide_titles = "Fuel Economy by Weight"
 )
+#> hv_add_plot(): text reduced to 69% so the figure fits on the slide.
 
 # List of plots — one slide per plot, individual titles
 p2 <- ggplot(mtcars, aes(x = factor(cyl), y = mpg)) +
@@ -213,6 +229,7 @@ save_ppt(
   powerpoint   = file.path(tempdir(), "deck.pptx"),
   slide_titles = c("Scatter: fuel economy", "Box: mpg by cylinder count")
 )
+#> hv_add_plot(): text reduced to 69% so the figure fits on the slide.
 
 # No y-axis label — let the slide title carry the meaning. `y = NULL`
 # drops the axis title; the numeric tick labels remain.
@@ -292,7 +309,6 @@ save_ppt(
   powerpoint   = file.path(tempdir(), "drifting_deck.pptx"),
   slide_titles = c("Small y-axis", "Big y-axis")
 )
-#> Warning: hv_ph_location(): plot chrome does not fit left/top of panel on slide (left=-0.337 in). Increase `panel_left`/`panel_top` to leave room for axis labels.
 
 # With panel_box: target is an 8.88" x 4.51" panel at slide coordinates
 # (2.58", 1.63"). The panel content area lands at exactly that rectangle
@@ -306,10 +322,11 @@ save_ppt(
   slide_titles = c("Small y-axis", "Big y-axis"),
   panel_box    = list(width = 8.88, height = 4.51, left = 2.58, top = 1.63)
 )
-#> Warning: hv_ph_location(): plot chrome does not fit left/top of panel on slide (left=-0.427 in). Increase `panel_left`/`panel_top` to leave room for axis labels.
+#> hv_add_plot(): text reduced to 88% so the figure fits on the slide.
+#> hv_add_plot(): text reduced to 88% so the figure fits on the slide.
 
-# Sizing advice: panel_box$left and panel_box$top must be large enough for the
-# widest axis labels in the deck. If chrome extends past the left or top
-# slide edge, hv_ph_location() emits a warning naming that edge.
+# Sizing advice: with `fit = TRUE` (the default) a plot whose chrome
+# would leave the slide or cross the title has its text reduced until it
+# fits; save_ppt() warns only when even 12 pt text does not fit.
 # }
 ```

@@ -24,6 +24,7 @@
 <url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/eda_classify_var.html</loc></url>
 <url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/eda_select_vars.html</loc></url>
 <url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/hazard_plot.html</loc></url>
+<url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/hv_add_plot.html</loc></url>
 <url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/hv_alluvial.html</loc></url>
 <url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/hv_atrisk.html</loc></url>
 <url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/hv_atrisk_compose.html</loc></url>
@@ -37,6 +38,7 @@
 <url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/hv_correlation_matrix.html</loc></url>
 <url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/hv_eda.html</loc></url>
 <url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/hv_eda_pages.html</loc></url>
+<url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/hv_fit_location.html</loc></url>
 <url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/hv_followup.html</loc></url>
 <url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/hv_followup_panels.html</loc></url>
 <url><loc>https://ehrlinger.github.io/hvtiPlotR/reference/hv_ggsave_dims.html</loc></url>

@@ -619,10 +619,21 @@ save_ppt(
 )
 ```
 
-Make the `left` and `top` entries of `panel_box` large enough to leave
-room for the widest axis labels in the deck, or
-[`hv_ph_location()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_ph_location.md)
-warns that the plot chrome spills off the slide edge.
+Leave `panel_box` out and
+[`save_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/save_ppt.md)
+uses
+[`hv_panel_box()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_panel_box.md),
+the one standard rectangle for the template’s slide format, 16:9 or 4:3,
+read from its slide size. When a plot’s chrome would leave the slide or
+cross the slide title,
+[`save_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/save_ppt.md)
+reduces that plot’s text, 2 pt at a time down to 12 pt, until it fits;
+the panel itself never moves. It warns only when 12 pt text still does
+not fit. To place a plot on a slide you built yourself with `officer`,
+call
+[`hv_add_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_add_plot.md)
+on the current slide; it applies the same fit and falls back to a PNG at
+the same location when the vector insert fails.
 
 ### Multi-panel PDF (EDA batch output)
 
