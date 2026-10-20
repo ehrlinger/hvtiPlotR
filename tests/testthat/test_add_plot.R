@@ -84,6 +84,22 @@ test_that(".hv_scale_text scales absolute sizes and leaves rel() alone", {
   expect_identical(.hv_scale_text(p, 1), p)
 })
 
+test_that(".hv_scale_text scales absolute text margins and leaves relative ones", {
+  p <- fit_plot() + theme_hv_ppt_dark() +
+    theme(axis.text.y = element_text(margin = margin(1, 1, 1, 1, "lines")))
+  half <- .hv_scale_text(p, 0.5)
+  before <- ggplot2::complete_theme(p$theme)
+  th <- ggplot2::complete_theme(half$theme)
+  in_pt <- function(m) grid::convertUnit(m, "pt", valueOnly = TRUE)
+  # theme_hv_ppt_dark(): 24 pt above the x title, 16 pt under the plot title.
+  expect_equal(in_pt(th$axis.title.x$margin), in_pt(before$axis.title.x$margin) / 2)
+  expect_equal(in_pt(th$axis.title.x$margin)[[1]], 12)
+  expect_equal(in_pt(th$plot.title$margin)[[3]], 8)
+  # A margin in lines follows the font size already, so it is not scaled.
+  expect_identical(format(th$axis.text.y$margin), format(before$axis.text.y$margin))
+  expect_identical(grid::unitType(th$axis.text.y$margin), rep("lines", 4))
+})
+
 test_that(".hv_scale_text scales a plot with no theme of its own", {
   half <- .hv_scale_text(fit_plot(), 0.5)
   expect_equal(ggplot2::complete_theme(half$theme)$text$size, 5.5)
@@ -115,6 +131,18 @@ test_that("a PPT-themed plot fits the wide window at full size", {
   fit <- suppress_font_db_warnings(hv_fit_location(p, hv_panel_box(format = "wide")))
   expect_identical(fit$scale, 1)
   expect_true(fit$fits)
+})
+
+test_that("facets and a plot title fit once sizes and margins scale together", {
+  # Above the panel, the 32 pt plot title, its 16 pt margin and the 24 pt
+  # strips take about 0.98 in; the window leaves 0.47 in under the slide
+  # title. Scaling the margins with the text frees that room as the text
+  # shrinks.
+  p <- fit_plot() + facet_wrap(~cyl) + labs(title = "Fuel economy") + theme_hv_ppt_dark()
+  fit <- suppress_font_db_warnings(hv_fit_location(p, hv_panel_box()))
+  expect_true(fit$fits)
+  expect_lt(fit$scale, 1)
+  expect_gte(fit$location$top, 1.38)
 })
 
 test_that("hv_fit_location shrinks long y labels until they fit; the panel stays", {

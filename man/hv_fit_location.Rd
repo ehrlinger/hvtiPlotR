@@ -41,7 +41,7 @@ size.}
 \value{
 A list with elements
 \itemize{
-\item \code{plot}: the plot, its text scaled by \code{scale};
+\item \code{plot}: the plot, its text sizes and margins scaled by \code{scale};
 \item \code{location}: the \code{\link[=hv_ph_location]{hv_ph_location()}} result for \code{panel_box}, a list
 \code{width}, \code{height}, \code{left}, \code{top} in inches, ready for
 \code{\link[officer:ph_location]{officer::ph_location()}};
@@ -55,8 +55,9 @@ Anchors the plot's panel to \code{panel_box} with \code{\link[=hv_ph_location]{h
 that the whole figure, panel plus the axis text, axis titles, facet strips
 and plot titles around it, lies on the slide and below the slide title. If
 it does not, every text size in the plot's theme is reduced by \code{step}
-(as a fraction of the original size) until it fits or reaches
-\code{min_scale}. The panel never moves; only the chrome shrinks.
+(as a fraction of the original size), together with every text margin
+set in absolute units, until it fits or reaches \code{min_scale}. The panel
+never moves; only the chrome shrinks.
 }
 \details{
 At the PPT themes' 32 pt base size the defaults step the text down 4 pt
@@ -67,7 +68,7 @@ title, subtitle and caption text, placed by its \code{hjust} (and
 \code{plot.title.position}): a title wider than the slide fails the check even
 though its cell fits.
 
-Only sizes set in the theme are scaled. The size of text drawn by a geom
+Only sizes and margins set in the theme are scaled. The size of text drawn by a geom
 (\code{geom_text()}, \code{geom_label()}) is an aesthetic, not part of the theme,
 and is left alone. For a patchwork, \code{panel_box} holds the union of its
 panels and the whole composition is measured; see \code{\link[=hv_ph_location]{hv_ph_location()}}.

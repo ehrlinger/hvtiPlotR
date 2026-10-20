@@ -9,9 +9,12 @@
 # vector or, when the vector insert fails, as a PNG at the same location.
 # ---------------------------------------------------------------------------
 
-# Multiply every absolute text size in a plot's theme by `f`. Sizes given as
-# rel() follow their parent and are left alone, so nothing is scaled twice.
-# A patchwork scales each of its plots and its annotation theme as well.
+# Multiply every absolute text size and text margin in a plot's theme by `f`.
+# Sizes given as rel() follow their parent and are left alone, so nothing is
+# scaled twice; margins in font-relative units ("lines", "char") already
+# follow the size. A patchwork scales each of its plots and its annotation
+# theme as well. Tick length is left alone: the PPT themes draw ticks inward,
+# so they add no chrome outside the panel.
 .hv_scale_text <- function(plot, f) {
   if (isTRUE(all.equal(f, 1))) return(plot)
 
@@ -28,21 +31,32 @@
   plot + .hv_scaled_text_theme(plot$theme, f, complete = TRUE)
 }
 
-# A theme() carrying `f` times every absolute element_text size in `theme`.
-# `complete = TRUE` resolves the theme against the default first, so a plot
-# that never set a size still has one to scale.
+.hv_absolute_units <- c("points", "bigpts", "picas", "inches", "cm", "mm",
+                        "dida", "cicero", "scaledpts")
+
+# A theme() carrying `f` times every absolute element_text size and margin in
+# `theme`. `complete = TRUE` resolves the theme against the default first, so
+# a plot that never set a size still has one to scale. A margin is scaled
+# only when all four sides are absolute; an NA side, from margin_part(),
+# stays NA.
 .hv_scaled_text_theme <- function(theme, f, complete) {
   if (complete) theme <- ggplot2::complete_theme(theme)
-  sizes <- list()
+  scaled <- list()
   for (name in names(theme)) {
     el <- theme[[name]]
     if (!inherits(el, "element_text")) next
+    args <- list()
     size <- el$size
     if (is.numeric(size) && length(size) == 1L && !inherits(size, "rel")) {
-      sizes[[name]] <- ggplot2::element_text(size = size * f)
+      args$size <- size * f
     }
+    margin <- el$margin
+    if (grid::is.unit(margin) && all(grid::unitType(margin) %in% .hv_absolute_units)) {
+      args$margin <- margin * f
+    }
+    if (length(args) > 0L) scaled[[name]] <- do.call(ggplot2::element_text, args)
   }
-  do.call(ggplot2::theme, sizes)
+  do.call(ggplot2::theme, scaled)
 }
 
 #' Fit a plot's chrome on the slide around a fixed panel
@@ -51,8 +65,9 @@
 #' that the whole figure, panel plus the axis text, axis titles, facet strips
 #' and plot titles around it, lies on the slide and below the slide title. If
 #' it does not, every text size in the plot's theme is reduced by `step`
-#' (as a fraction of the original size) until it fits or reaches
-#' `min_scale`. The panel never moves; only the chrome shrinks.
+#' (as a fraction of the original size), together with every text margin
+#' set in absolute units, until it fits or reaches `min_scale`. The panel
+#' never moves; only the chrome shrinks.
 #'
 #' At the PPT themes' 32 pt base size the defaults step the text down 4 pt
 #' at a time, to 28, 24, 20, 16 and finally 12 pt.
@@ -62,7 +77,7 @@
 #' `plot.title.position`): a title wider than the slide fails the check even
 #' though its cell fits.
 #'
-#' Only sizes set in the theme are scaled. The size of text drawn by a geom
+#' Only sizes and margins set in the theme are scaled. The size of text drawn by a geom
 #' (`geom_text()`, `geom_label()`) is an aesthetic, not part of the theme,
 #' and is left alone. For a patchwork, `panel_box` holds the union of its
 #' panels and the whole composition is measured; see [hv_ph_location()].
@@ -84,7 +99,7 @@
 #'   4 pt at the 32 pt PPT base size.
 #'
 #' @return A list with elements
-#'   * `plot`: the plot, its text scaled by `scale`;
+#'   * `plot`: the plot, its text sizes and margins scaled by `scale`;
 #'   * `location`: the [hv_ph_location()] result for `panel_box`, a list
 #'     `width`, `height`, `left`, `top` in inches, ready for
 #'     [officer::ph_location()];
@@ -209,9 +224,10 @@ hv_fit_location <- function(plot,
 #'
 #' Adds `plot` to the current slide of an officer presentation with its
 #' panel anchored to `panel_box`, so every plot slide of a slide format puts
-#' its panel in the same place. With `fit = TRUE` the plot's text is reduced
-#' by [hv_fit_location()] until axis text, axis titles, facet strips and plot
-#' titles lie on the slide and below its title.
+#' its panel in the same place. With `fit = TRUE` the plot's text sizes and
+#' text margins are reduced together by [hv_fit_location()] until axis text,
+#' axis titles, facet strips and plot titles lie on the slide and below its
+#' title.
 #'
 #' The plot goes in as an editable DrawingML vector graphic via
 #' [rvg::dml()]. A dense point cloud can overflow libxml2 and make that

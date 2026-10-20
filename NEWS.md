@@ -27,7 +27,9 @@
   `panel_box`; when the axis text, axis titles, facet strips or plot title
   around it would leave the slide or cross the slide title, the plot's text
   is reduced, 4 pt at a time at the PPT themes' 32 pt base size, down to
-  12 pt. A message names each reduction, and a warning replaces the old
+  12 pt. Text margins set in absolute units shrink in step with the text,
+  so a reduced slide also gets back the room the margins took above and
+  below the panel; a plot with both facets and a plot title then fits. A message names each reduction, and a warning replaces the old
   "plot chrome does not fit" warning only when 12 pt text still does not
   fit. `fit = FALSE` keeps the plot's own sizes.
 

@@ -47,9 +47,10 @@ a warning reports a figure that still does not fit.
 \description{
 Adds \code{plot} to the current slide of an officer presentation with its
 panel anchored to \code{panel_box}, so every plot slide of a slide format puts
-its panel in the same place. With \code{fit = TRUE} the plot's text is reduced
-by \code{\link[=hv_fit_location]{hv_fit_location()}} until axis text, axis titles, facet strips and plot
-titles lie on the slide and below its title.
+its panel in the same place. With \code{fit = TRUE} the plot's text sizes and
+text margins are reduced together by \code{\link[=hv_fit_location]{hv_fit_location()}} until axis text,
+axis titles, facet strips and plot titles lie on the slide and below its
+title.
 }
 \details{
 The plot goes in as an editable DrawingML vector graphic via
