@@ -410,6 +410,28 @@ test_that("theme_hv_ppt_slate has a white panel and white text on the slate", {
   expect_lt(as.numeric(th$axis.ticks.length), 0)   # still inward
 })
 
+test_that("theme_hv_ppt_slate gives geoms dark ink on the white panel", {
+  th <- theme_hv_ppt_slate()
+  expect_identical(th$geom$ink, "black")
+  expect_identical(th$geom$paper, "white")
+  expect_identical(th$geom$accent, "#3366FF")
+  expect_identical(th$axis.text$colour, "white")
+  # Only ink and paper change; the slide-sized geom defaults survive.
+  dark <- theme_hv_ppt_dark()
+  expect_identical(th$geom$linewidth, dark$geom$linewidth)
+  expect_identical(th$geom$pointsize, dark$geom$pointsize)
+  expect_identical(th$geom$family, dark$geom$family)
+})
+
+test_that("theme_hv_ppt_slate draws an uncolored geom_line in a dark color", {
+  p <- ggplot2::ggplot(data.frame(x = 1:3, y = 1:3), ggplot2::aes(x, y)) +
+    ggplot2::geom_line() +
+    theme_hv_ppt_slate()
+  expect_plot_has_data(p)
+  line_color <- ggplot2::ggplot_build(p)$data[[1]]$colour
+  expect_false(any(tolower(line_color) %in% c("white", "#ffffff", "#ffffffff")))
+})
+
 test_that("theme_hv_ppt_slate keeps the dark theme's type sizes", {
   slate <- theme_hv_ppt_slate()
   dark  <- theme_hv_ppt_dark()

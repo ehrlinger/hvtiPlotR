@@ -180,7 +180,7 @@ the slate background, with a white plotting panel. Color the data inside
 the panel from \code{hv_ppt_palette("light")}, and give text drawn inside the
 panel (\code{geom_text()}, \code{annotate()}) a dark color, since the theme's ink
 is white. Axis ticks point inward and are dark gray, so they show on the
-white panel.
+white panel. Geoms without their own color draw in black on the white panel.
 }
 \examples{
 p <- ggplot2::ggplot(mtcars, ggplot2::aes(wt, mpg)) +
