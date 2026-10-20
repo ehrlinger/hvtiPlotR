@@ -12,7 +12,7 @@ hv_fit_location(
   title_bottom = 1.38,
   edge = 0.05,
   min_scale = 12/32,
-  step = 4/32
+  step = 2/32
 )
 }
 \arguments{
@@ -35,8 +35,8 @@ in inches.}
 own sizes. The default, \code{12/32}, is 12 pt text at the 32 pt PPT base
 size.}
 
-\item{step}{Amount the scale drops at each try. The default, \code{4/32}, is
-4 pt at the 32 pt PPT base size.}
+\item{step}{Amount the scale drops at each try. The default, \code{2/32}, is
+2 pt at the 32 pt PPT base size.}
 }
 \value{
 A list with elements
@@ -60,8 +60,8 @@ set in absolute units, until it fits or reaches \code{min_scale}. The panel
 never moves; only the chrome shrinks.
 }
 \details{
-At the PPT themes' 32 pt base size the defaults step the text down 4 pt
-at a time, to 28, 24, 20, 16 and finally 12 pt.
+At the PPT themes' 32 pt base size the defaults step the text down 2 pt
+at a time, to 30, 28, 26 and so on, down to 12 pt.
 
 The figure checked is the placement box plus the actual extent of the
 title, subtitle and caption text, placed by its \code{hjust} (and

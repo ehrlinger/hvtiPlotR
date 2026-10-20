@@ -80,7 +80,7 @@ an explicit \code{panel_box}. Pass
 \code{hv_consort} objects, which are always placed using their own metadata
 dimensions.}
 
-\item{fit}{\code{TRUE} (the default) to reduce a plot's text, 4 pt at a time
+\item{fit}{\code{TRUE} (the default) to reduce a plot's text, 2 pt at a time
 at the PPT themes' 32 pt base size, until its axis text, axis titles,
 facet strips and plot title lie on the slide and below the slide title;
 see \code{\link[=hv_fit_location]{hv_fit_location()}}. A message names each reduction, and a warning

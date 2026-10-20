@@ -142,6 +142,9 @@ test_that("facets and a plot title fit once sizes and margins scale together", {
   fit <- suppress_font_db_warnings(hv_fit_location(p, hv_panel_box()))
   expect_true(fit$fits)
   expect_lt(fit$scale, 1)
+  # The 2 pt steps stop above the 12 pt floor (14 pt, scale 0.4375, when
+  # measured with Arial on macOS); 4 pt steps had to fall to 12 pt.
+  expect_gt(fit$scale, 12 / 32)
   expect_gte(fit$location$top, 1.38)
 })
 

@@ -278,7 +278,7 @@ add_fitted_plot_slide <- function(doc, plot, title, layout, master, panel_box,
 #'   `top` arguments for every slide (legacy behavior). Ignored for
 #'   `hv_consort` objects, which are always placed using their own metadata
 #'   dimensions.
-#' @param fit `TRUE` (the default) to reduce a plot's text, 4 pt at a time
+#' @param fit `TRUE` (the default) to reduce a plot's text, 2 pt at a time
 #'   at the PPT themes' 32 pt base size, until its axis text, axis titles,
 #'   facet strips and plot title lie on the slide and below the slide title;
 #'   see [hv_fit_location()]. A message names each reduction, and a warning
