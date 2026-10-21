@@ -352,14 +352,14 @@ test_that("hv_add_plot puts the panel on panel_box whatever the y labels", {
   # Labels are measured on the device rvg draws the slide with. Measured on
   # pdf(NULL), whose font database has no Arial, the panel landed up to
   # half an inch off the box, by an amount that changed with the labels.
-  labelled <- function(labels) {
+  labeled <- function(labels) {
     d <- data.frame(x = seq_along(labels), y = factor(labels, levels = labels))
     ggplot(d, aes(.data$x, .data$y)) + geom_point() + theme_hv_ppt_dark() +
       theme(panel.background = element_rect(fill = "#123456"))
   }
   plots <- list(
-    labelled(c("A", "Bb", "Ccc")),
-    labelled(c("LV hypoplasia \u2191", "CAVV regurgitation \u2193", "Age"))
+    labeled(c("A", "Bb", "Ccc")),
+    labeled(c("LV hypoplasia \u2191", "CAVV regurgitation \u2193", "Age"))
   )
   box <- list(left = 4.2, top = 1.85, width = 8.68, height = 4.15)
   doc <- officer::read_pptx(system.file("extdata", "hv_ppt_template.pptx",
