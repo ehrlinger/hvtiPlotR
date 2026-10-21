@@ -7,7 +7,10 @@
   whole figure spans the slide, centered, with `margin` (default 0.45 in)
   clear on each side. Plots with short y labels (Sankeys, maps) no longer
   leave the 2.9 in reserved for long labels empty on the left. The fitted
-  result and the `"hv_fit"` attribute now carry the `panel_box` used.
+  result and the `"hv_fit"` attribute now carry the `panel_box` used. The
+  placement is repeated until the margins hold, since a title wider than the
+  plot overhangs by an amount that changes with the panel width, and text
+  too wide for the margins steps down like any other overflow.
 
 # hvtiPlotR 2.8.14
 

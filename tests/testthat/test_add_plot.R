@@ -164,7 +164,28 @@ test_that("align = 'fill' centers the figure across the slide", {
 
   narrow <- suppress_font_db_warnings(hv_fit_location(p, box, align = "fill", margin = 1))
   expect_equal(narrow$location$left, 1, tolerance = 1e-6)
-  expect_error(hv_fit_location(p, box, align = "centre"))
+  expect_error(hv_fit_location(p, box, align = "middle"))
+})
+
+test_that("align = 'fill' holds the margins under a title wider than the plot", {
+  box <- hv_panel_box()
+  long <- strrep("A very long slide figure title ", 3)
+  margins <- function(p) {
+    fit <- suppress_font_db_warnings(hv_fit_location(p, box, align = "fill"))
+    m <- suppress_font_db_warnings(.hv_measure_placement(fit$plot, fit$panel_box$width, fit$panel_box$height,
+                               fit$panel_box$left, fit$panel_box$top, "in"))
+    c(left = m$text_left, right = 13.333 - m$text_right)
+  }
+  base <- fit_plot() + ggplot2::labs(title = long) + theme_hv_ppt_dark(base_size = 20)
+  for (h in c(0, 1)) {
+    p <- base + ggplot2::theme(plot.title = ggplot2::element_text(hjust = h),
+                               plot.title.position = "plot")
+    expect_equal(unname(margins(p)), c(0.45, 0.45), tolerance = 1e-3)
+  }
+  # Centered: the overhang is even on both sides, and the text steps down
+  # until the title fits between the margins.
+  p <- base + ggplot2::theme(plot.title = ggplot2::element_text(hjust = 0.5))
+  expect_equal(unname(margins(p)), c(0.45, 0.45), tolerance = 1e-3)
 })
 
 test_that("hv_fit_location shrinks long y labels until they fit; the panel stays", {

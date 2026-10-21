@@ -106,6 +106,8 @@
 #'   clear on each side and sits centered. A plot with short y labels then
 #'   gets a wider panel instead of a gap on the left; one with long labels
 #'   keeps about the standard width. Panels no longer line up across slides.
+#'   Text too wide for the margins (a long title) is stepped down as `fit`
+#'   steps down any other overflow.
 #' @param margin Space kept clear on the left and right of the figure, in
 #'   inches, with `align = "fill"`. The default, `0.45`, matches the right
 #'   margin of the standard panel box.
@@ -160,12 +162,14 @@ hv_fit_location <- function(plot,
     stop("`min_scale` must be at most 1.", call. = FALSE)
 
   # The figure is the location box widened by any title, subtitle or caption
-  # text wider than its cell.
+  # text wider than its cell. With align = "fill" the side margins are the
+  # limit, so text too wide for them is stepped down like any other overflow.
+  side <- if (align == "fill") max(edge, margin) else edge
   inside <- function(m) {
     tol <- 1e-6
     loc <- m$location
-    m$text_left >= edge - tol &&
-      m$text_right <= slide_width - edge + tol &&
+    m$text_left >= side - tol &&
+      m$text_right <= slide_width - side + tol &&
       loc$top >= title_bottom - tol &&
       loc$top + loc$height <= slide_height - edge + tol
   }
@@ -188,8 +192,9 @@ hv_fit_location <- function(plot,
     box <- panel_box
     measured <- measure(scaled, box)
     if (align == "fill") {
-      box <- .hv_fill_box(measured, panel_box, slide_width, margin)
-      if (!is.null(box)) measured <- measure(scaled, box) else box <- panel_box
+      filled <- .hv_fill(scaled, panel_box, measured, measure, slide_width, margin)
+      box <- filled$box
+      measured <- filled$measured
     }
     loc <- measured$location
     fits <- inside(measured)
@@ -202,17 +207,46 @@ hv_fit_location <- function(plot,
 # The panel rectangle that makes a measured figure span the slide with
 # `margin` clear on each side, so it sits centered: the panel's height and
 # top are kept, and its left edge and width make room for the chrome
-# measured on each side (axis text and titles, legends, title overhang).
-# NULL when the chrome leaves no room for a panel.
-.hv_fill_box <- function(measured, panel_box, slide_width, margin) {
-  left_chrome  <- panel_box$left - measured$text_left
-  right_chrome <- measured$text_right - (panel_box$left + panel_box$width)
+# measured on each side of `box` (axis text and titles, legends, title
+# overhang). NULL when the chrome leaves no room for a panel.
+.hv_fill_box <- function(measured, box, slide_width, margin) {
+  left_chrome  <- box$left - measured$text_left
+  right_chrome <- measured$text_right - (box$left + box$width)
   width <- slide_width - 2 * margin - left_chrome - right_chrome
   if (width <= 0) return(NULL)
   list(width  = width,
-       height = panel_box$height,
+       height = box$height,
        left   = margin + left_chrome,
-       top    = panel_box$top)
+       top    = box$top)
+}
+
+# Fill placement for one text scale. A title wider than its cell overhangs
+# the figure by an amount that changes with the panel width, so one
+# adjustment can leave the margins uneven; repeat it until the panel stops
+# moving. A title wider than the space between the margins can never fit
+# them (each step would only narrow the panel), so the figure is instead
+# shifted until its overhang is even on both sides. Returns the panel `box`
+# and its `measured` placement.
+.hv_fill <- function(plot, panel_box, measured, measure, slide_width, margin,
+                     tol = 1e-4, max_iter = 20L) {
+  box <- panel_box
+  room <- slide_width - 2 * margin
+  for (i in seq_len(max_iter)) {
+    span <- measured$text_right - measured$text_left
+    if (span > room + tol && span > measured$location$width + tol) {
+      shift <- (slide_width - measured$text_right - measured$text_left) / 2
+      box$left <- box$left + shift
+      return(list(box = box, measured = measure(plot, box)))
+    }
+    nxt <- .hv_fill_box(measured, box, slide_width, margin)
+    if (is.null(nxt)) break
+    moved <- max(abs(unlist(nxt) - unlist(box)))
+    box <- nxt
+    measured <- measure(plot, box)
+    if (moved < tol) break
+  }
+  if (identical(box, panel_box)) measured <- measure(plot, panel_box)
+  list(box = box, measured = measured)
 }
 
 # The slide format of an rpptx, from its slide size.

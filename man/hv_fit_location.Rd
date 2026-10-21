@@ -46,7 +46,9 @@ panel's height and top but sets its left edge and width from the chrome
 measured around it, so the whole figure spans the slide with \code{margin}
 clear on each side and sits centered. A plot with short y labels then
 gets a wider panel instead of a gap on the left; one with long labels
-keeps about the standard width. Panels no longer line up across slides.}
+keeps about the standard width. Panels no longer line up across slides.
+Text too wide for the margins (a long title) is stepped down as \code{fit}
+steps down any other overflow.}
 
 \item{margin}{Space kept clear on the left and right of the figure, in
 inches, with \code{align = "fill"}. The default, \code{0.45}, matches the right
