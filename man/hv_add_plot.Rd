@@ -35,13 +35,16 @@ insert fails. \code{FALSE} lets the error through.}
 \item{dpi}{Resolution of the fallback PNG. Default \code{300}.}
 
 \item{...}{Further arguments to \code{\link[=hv_fit_location]{hv_fit_location()}}: \code{title_bottom},
-\code{edge}, \code{min_scale}, \code{step}. The slide size is read from \code{doc}.}
+\code{edge}, \code{min_scale}, \code{step}, \code{align}, \code{margin}. The slide size is read
+from \code{doc}. \code{align = "fill"} widens the panel so the figure spans the
+slide, centered, instead of anchoring it to \code{panel_box}.}
 }
 \value{
 \code{doc}, with the plot added, carrying an attribute \code{"hv_fit"}: a
 list \code{scale} (the text scale used), \code{fits} (whether the figure lies
-inside the slide limits), \code{png} (whether the PNG fallback was used) and
-\code{location} (the placement, in inches). A message reports reduced text;
+inside the slide limits), \code{png} (whether the PNG fallback was used),
+\code{location} (the placement, in inches) and \code{panel_box} (the panel
+rectangle used). A message reports reduced text;
 a warning reports a figure that still does not fit.
 }
 \description{

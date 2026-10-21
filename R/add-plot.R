@@ -99,6 +99,18 @@
 #'   size.
 #' @param step Amount the scale drops at each try. The default, `2/32`, is
 #'   2 pt at the 32 pt PPT base size.
+#' @param align `"panel"` (the default) keeps the panel on `panel_box`, so
+#'   every slide puts its panel in the same place. `"fill"` keeps the
+#'   panel's height and top but sets its left edge and width from the chrome
+#'   measured around it, so the whole figure spans the slide with `margin`
+#'   clear on each side and sits centered. A plot with short y labels then
+#'   gets a wider panel instead of a gap on the left; one with long labels
+#'   keeps about the standard width. Panels no longer line up across slides.
+#'   Text too wide for the margins (a long title) is stepped down as `fit`
+#'   steps down any other overflow.
+#' @param margin Space kept clear on the left and right of the figure, in
+#'   inches, with `align = "fill"`. The default, `0.45`, matches the right
+#'   margin of the standard panel box.
 #'
 #' @return A list with elements
 #'   * `plot`: the plot, its text sizes and margins scaled by `scale`;
@@ -108,6 +120,8 @@
 #'   * `scale`: the text scale used, `1` when the plot fit as it was;
 #'   * `fits`: `TRUE` when the figure lies inside the slide limits. When it
 #'     is `FALSE`, `plot` and `location` are those at `min_scale`.
+#'   * `panel_box`: the panel rectangle used, `panel_box` itself unless
+#'     `align = "fill"` moved it.
 #'
 #' @seealso [hv_add_plot()], which places the result on a slide;
 #'   [hv_panel_box()], [hv_ph_location()].
@@ -130,7 +144,10 @@ hv_fit_location <- function(plot,
                             title_bottom = 1.38,
                             edge         = 0.05,
                             min_scale    = 12 / 32,
-                            step         = 2 / 32) {
+                            step         = 2 / 32,
+                            align        = c("panel", "fill"),
+                            margin       = 0.45) {
+  align <- match.arg(align)
   if (!inherits(plot, "ggplot"))
     stop("`plot` must be a ggplot object.", call. = FALSE)
   .check_panel_box(panel_box)
@@ -140,38 +157,96 @@ hv_fit_location <- function(plot,
   .check_scalar_nonneg(edge,           "edge")
   .check_scalar_positive(min_scale,    "min_scale")
   .check_scalar_positive(step,         "step")
+  .check_scalar_nonneg(margin,         "margin")
   if (min_scale > 1)
     stop("`min_scale` must be at most 1.", call. = FALSE)
 
   # The figure is the location box widened by any title, subtitle or caption
-  # text wider than its cell.
+  # text wider than its cell. With align = "fill" the side margins are the
+  # limit, so text too wide for them is stepped down like any other overflow.
+  side <- if (align == "fill") max(edge, margin) else edge
   inside <- function(m) {
     tol <- 1e-6
     loc <- m$location
-    m$text_left >= edge - tol &&
-      m$text_right <= slide_width - edge + tol &&
+    m$text_left >= side - tol &&
+      m$text_right <= slide_width - side + tol &&
       loc$top >= title_bottom - tol &&
       loc$top + loc$height <= slide_height - edge + tol
   }
 
   scales <- unique(c(seq(1, min_scale, by = -step), min_scale))
   scales <- scales[scales >= min_scale - 1e-9]
-  for (f in scales) {
-    scaled <- .hv_scale_text(plot, f)
-    measured <- .hv_measure_placement(
-      scaled,
-      panel_width  = panel_box$width,
-      panel_height = panel_box$height,
-      panel_left   = panel_box$left,
-      panel_top    = panel_box$top,
+  measure <- function(p, box) {
+    .hv_measure_placement(
+      p,
+      panel_width  = box$width,
+      panel_height = box$height,
+      panel_left   = box$left,
+      panel_top    = box$top,
       units        = "in"
     )
+  }
+
+  for (f in scales) {
+    scaled <- .hv_scale_text(plot, f)
+    box <- panel_box
+    measured <- measure(scaled, box)
+    if (align == "fill") {
+      filled <- .hv_fill(scaled, panel_box, measured, measure, slide_width, margin)
+      box <- filled$box
+      measured <- filled$measured
+    }
     loc <- measured$location
     fits <- inside(measured)
     if (fits) break
   }
 
-  list(plot = scaled, location = loc, scale = f, fits = fits)
+  list(plot = scaled, location = loc, scale = f, fits = fits, panel_box = box)
+}
+
+# The panel rectangle that makes a measured figure span the slide with
+# `margin` clear on each side, so it sits centered: the panel's height and
+# top are kept, and its left edge and width make room for the chrome
+# measured on each side of `box` (axis text and titles, legends, title
+# overhang). NULL when the chrome leaves no room for a panel.
+.hv_fill_box <- function(measured, box, slide_width, margin) {
+  left_chrome  <- box$left - measured$text_left
+  right_chrome <- measured$text_right - (box$left + box$width)
+  width <- slide_width - 2 * margin - left_chrome - right_chrome
+  if (width <= 0) return(NULL)
+  list(width  = width,
+       height = box$height,
+       left   = margin + left_chrome,
+       top    = box$top)
+}
+
+# Fill placement for one text scale. A title wider than its cell overhangs
+# the figure by an amount that changes with the panel width, so one
+# adjustment can leave the margins uneven; repeat it until the panel stops
+# moving. A title wider than the space between the margins can never fit
+# them (each step would only narrow the panel), so the figure is instead
+# shifted until its overhang is even on both sides. Returns the panel `box`
+# and its `measured` placement.
+.hv_fill <- function(plot, panel_box, measured, measure, slide_width, margin,
+                     tol = 1e-4, max_iter = 20L) {
+  box <- panel_box
+  room <- slide_width - 2 * margin
+  for (i in seq_len(max_iter)) {
+    span <- measured$text_right - measured$text_left
+    if (span > room + tol && span > measured$location$width + tol) {
+      shift <- (slide_width - measured$text_right - measured$text_left) / 2
+      box$left <- box$left + shift
+      return(list(box = box, measured = measure(plot, box)))
+    }
+    nxt <- .hv_fill_box(measured, box, slide_width, margin)
+    if (is.null(nxt)) break
+    moved <- max(abs(unlist(nxt) - unlist(box)))
+    box <- nxt
+    measured <- measure(plot, box)
+    if (moved < tol) break
+  }
+  if (identical(box, panel_box)) measured <- measure(plot, panel_box)
+  list(box = box, measured = measured)
 }
 
 # The slide format of an rpptx, from its slide size.
@@ -254,12 +329,15 @@ hv_fit_location <- function(plot,
 #'   insert fails. `FALSE` lets the error through.
 #' @param dpi Resolution of the fallback PNG. Default `300`.
 #' @param ... Further arguments to [hv_fit_location()]: `title_bottom`,
-#'   `edge`, `min_scale`, `step`. The slide size is read from `doc`.
+#'   `edge`, `min_scale`, `step`, `align`, `margin`. The slide size is read
+#'   from `doc`. `align = "fill"` widens the panel so the figure spans the
+#'   slide, centered, instead of anchoring it to `panel_box`.
 #'
 #' @return `doc`, with the plot added, carrying an attribute `"hv_fit"`: a
 #'   list `scale` (the text scale used), `fits` (whether the figure lies
-#'   inside the slide limits), `png` (whether the PNG fallback was used) and
-#'   `location` (the placement, in inches). A message reports reduced text;
+#'   inside the slide limits), `png` (whether the PNG fallback was used),
+#'   `location` (the placement, in inches) and `panel_box` (the panel
+#'   rectangle used). A message reports reduced text;
 #'   a warning reports a figure that still does not fit.
 #'
 #' @seealso [save_ppt()], [hv_fit_location()], [hv_panel_box()].
@@ -336,6 +414,7 @@ hv_add_plot <- function(doc,
   attr(doc, "hv_fit") <- list(scale    = fitted$scale,
                               fits     = fitted$fits,
                               png      = placed$png,
-                              location = fitted$location)
+                              location  = fitted$location,
+                              panel_box = fitted$panel_box)
   doc
 }

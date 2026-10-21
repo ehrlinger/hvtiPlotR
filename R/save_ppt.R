@@ -163,7 +163,7 @@ add_plot_slide <- function(doc, plot, title, layout, master, width, height,
 # Add one slide whose plot is fitted around a fixed panel --------------------
 
 add_fitted_plot_slide <- function(doc, plot, title, layout, master, panel_box,
-                                  fit) {
+                                  fit, align) {
   doc <- officer_safe_call(
     officer::add_slide(doc, layout = layout, master = master),
     action = "add slide"
@@ -176,7 +176,7 @@ add_fitted_plot_slide <- function(doc, plot, title, layout, master, panel_box,
     ),
     action = "set slide title"
   )
-  hv_add_plot(doc, plot, panel_box = panel_box, fit = fit)
+  hv_add_plot(doc, plot, panel_box = panel_box, fit = fit, align = align)
 }
 
 # Public function ------------------------------------------------------------
@@ -285,6 +285,10 @@ add_fitted_plot_slide <- function(doc, plot, title, layout, master, panel_box,
 #'   names a plot that still does not fit at 12 pt. `FALSE` keeps the plot's
 #'   own sizes and warns when it runs off the slide. Used only with a
 #'   `panel_box`.
+#' @param align `"panel"` (the default) puts every plot's panel on
+#'   `panel_box`, so panels line up across slides. `"fill"` widens each
+#'   panel so the whole figure spans the slide, centered, with 0.45 in clear
+#'   on each side; see [hv_fit_location()]. Used only with a `panel_box`.
 #'
 #' @return Invisibly returns the path given by `powerpoint`.
 #'
@@ -454,7 +458,9 @@ save_ppt <- function(object,
                      left         = 0.0,
                      top          = 1.2,
                      panel_box    = hv_panel_box(format = .hv_template_format(template)),
-                     fit          = TRUE) {
+                     fit          = TRUE,
+                     align        = c("panel", "fill")) {
+  align <- match.arg(align)
 
   ensure_officer_available()
   ensure_rvg_available()
@@ -551,7 +557,8 @@ save_ppt <- function(object,
           layout    = layout,
           master    = master,
           panel_box = panel_box,
-          fit       = fit
+          fit       = fit,
+          align     = align
         )
       }
     }

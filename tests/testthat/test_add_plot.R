@@ -119,7 +119,8 @@ test_that("hv_fit_location keeps scale 1 for a plot that fits", {
   fit <- hv_fit_location(fit_plot(), box)
   expect_identical(fit$scale, 1)
   expect_true(fit$fits)
-  expect_named(fit, c("plot", "location", "scale", "fits"))
+  expect_named(fit, c("plot", "location", "scale", "fits", "panel_box"))
+  expect_identical(fit$panel_box, box)
 })
 
 test_that("a PPT-themed plot fits the wide window at full size", {
@@ -146,6 +147,45 @@ test_that("facets and a plot title fit once sizes and margins scale together", {
   # measured with Arial on macOS); 4 pt steps had to fall to 12 pt.
   expect_gt(fit$scale, 12 / 32)
   expect_gte(fit$location$top, 1.38)
+})
+
+test_that("align = 'fill' centers the figure across the slide", {
+  box <- hv_panel_box()
+  p <- fit_plot() + theme_hv_ppt_dark()
+  fit <- suppress_font_db_warnings(hv_fit_location(p, box, align = "fill"))
+  loc <- fit$location
+  expect_true(fit$fits)
+  expect_equal(loc$left, 0.45, tolerance = 1e-6)
+  expect_equal(13.333 - (loc$left + loc$width), 0.45, tolerance = 1e-6)
+  # Wider than the standard panel; height and top are kept.
+  expect_gt(fit$panel_box$width, box$width)
+  expect_identical(fit$panel_box$height, box$height)
+  expect_identical(fit$panel_box$top, box$top)
+
+  narrow <- suppress_font_db_warnings(hv_fit_location(p, box, align = "fill", margin = 1))
+  expect_equal(narrow$location$left, 1, tolerance = 1e-6)
+  expect_error(hv_fit_location(p, box, align = "middle"))
+})
+
+test_that("align = 'fill' holds the margins under a title wider than the plot", {
+  box <- hv_panel_box()
+  long <- strrep("A very long slide figure title ", 3)
+  margins <- function(p) {
+    fit <- suppress_font_db_warnings(hv_fit_location(p, box, align = "fill"))
+    m <- suppress_font_db_warnings(.hv_measure_placement(fit$plot, fit$panel_box$width, fit$panel_box$height,
+                               fit$panel_box$left, fit$panel_box$top, "in"))
+    c(left = m$text_left, right = 13.333 - m$text_right)
+  }
+  base <- fit_plot() + ggplot2::labs(title = long) + theme_hv_ppt_dark(base_size = 20)
+  for (h in c(0, 1)) {
+    p <- base + ggplot2::theme(plot.title = ggplot2::element_text(hjust = h),
+                               plot.title.position = "plot")
+    expect_equal(unname(margins(p)), c(0.45, 0.45), tolerance = 1e-3)
+  }
+  # Centered: the overhang is even on both sides, and the text steps down
+  # until the title fits between the margins.
+  p <- base + ggplot2::theme(plot.title = ggplot2::element_text(hjust = 0.5))
+  expect_equal(unname(margins(p)), c(0.45, 0.45), tolerance = 1e-3)
 })
 
 test_that("hv_fit_location shrinks long y labels until they fit; the panel stays", {
@@ -290,6 +330,21 @@ test_that("hv_add_plot places an editable vector on the panel box", {
   expect_equal(shapes$left, info$location$left, tolerance = 1e-3)
   expect_equal(shapes$top, info$location$top, tolerance = 1e-3)
   expect_equal(shapes$width, info$location$width, tolerance = 1e-3)
+})
+
+test_that("hv_add_plot passes align = 'fill' through and records the box", {
+  skip_if_not_installed("officer")
+  skip_if_not_installed("rvg")
+  out <- withr::local_tempfile(fileext = ".pptx")
+
+  doc <- hv_add_plot(fitted_doc(), fit_plot(), align = "fill")
+  info <- attr(doc, "hv_fit")
+  expect_gt(info$panel_box$width, hv_panel_box()$width)
+  print(doc, target = out)
+
+  shapes <- slide_graphics(out, 1)
+  expect_equal(shapes$left, 0.45, tolerance = 1e-3)
+  expect_equal(shapes$left + shapes$width, 13.333 - 0.45, tolerance = 1e-2)
 })
 
 test_that("hv_add_plot falls back to a PNG at the same location", {

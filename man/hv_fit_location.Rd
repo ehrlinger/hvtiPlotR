@@ -12,7 +12,9 @@ hv_fit_location(
   title_bottom = 1.38,
   edge = 0.05,
   min_scale = 12/32,
-  step = 2/32
+  step = 2/32,
+  align = c("panel", "fill"),
+  margin = 0.45
 )
 }
 \arguments{
@@ -37,6 +39,20 @@ size.}
 
 \item{step}{Amount the scale drops at each try. The default, \code{2/32}, is
 2 pt at the 32 pt PPT base size.}
+
+\item{align}{\code{"panel"} (the default) keeps the panel on \code{panel_box}, so
+every slide puts its panel in the same place. \code{"fill"} keeps the
+panel's height and top but sets its left edge and width from the chrome
+measured around it, so the whole figure spans the slide with \code{margin}
+clear on each side and sits centered. A plot with short y labels then
+gets a wider panel instead of a gap on the left; one with long labels
+keeps about the standard width. Panels no longer line up across slides.
+Text too wide for the margins (a long title) is stepped down as \code{fit}
+steps down any other overflow.}
+
+\item{margin}{Space kept clear on the left and right of the figure, in
+inches, with \code{align = "fill"}. The default, \code{0.45}, matches the right
+margin of the standard panel box.}
 }
 \value{
 A list with elements
@@ -48,6 +64,8 @@ A list with elements
 \item \code{scale}: the text scale used, \code{1} when the plot fit as it was;
 \item \code{fits}: \code{TRUE} when the figure lies inside the slide limits. When it
 is \code{FALSE}, \code{plot} and \code{location} are those at \code{min_scale}.
+\item \code{panel_box}: the panel rectangle used, \code{panel_box} itself unless
+\code{align = "fill"} moved it.
 }
 }
 \description{
