@@ -43,8 +43,8 @@ slide_graphics <- function(path, i) {
 }
 
 test_that("hv_panel_box depends on the slide format, not the color template", {
-  wide <- list(width = 9.98, height = 4.15, left = 2.9, top = 1.85)
-  standard <- list(width = 7.25, height = 4.15, left = 2.3, top = 1.85)
+  wide <- list(width = 9.98, height = 4.11, left = 2.9, top = 1.85)
+  standard <- list(width = 7.25, height = 4.11, left = 2.3, top = 1.85)
   for (mode in c("dark", "light", "slate")) {
     expect_identical(hv_panel_box(mode), wide)
     expect_identical(hv_panel_box(mode, format = "wide"), wide)
@@ -124,11 +124,10 @@ test_that("hv_fit_location keeps scale 1 for a plot that fits", {
 })
 
 test_that("a PPT-themed plot fits the wide window at full size", {
-  # 32 pt x text plus the 40 pt x title and its margin need about 1.43 in
-  # below the panel; the wide window leaves 1.45 in inside the slide edge.
+  # 32 pt x text plus the 40 pt x title and its margin need about 1.48 in
+  # below the panel in Arial Bold; the wide window leaves 1.49 in inside the
+  # slide edge.
   p <- fit_plot() + theme_hv_ppt_dark()
-  # The pdf(NULL) measuring device lacks Arial; filter that benign warning
-  # as hv_add_plot() does.
   fit <- suppress_font_db_warnings(hv_fit_location(p, hv_panel_box(format = "wide")))
   expect_identical(fit$scale, 1)
   expect_true(fit$fits)
@@ -202,9 +201,9 @@ test_that("hv_fit_location shrinks long y labels until they fit; the panel stays
 
   # The panel lands on the same rectangle at either scale.
   panel_of <- function(plot, loc) {
-    g <- ggplot2::ggplotGrob(plot)
-    grDevices::pdf(NULL)
+    rvg::dml_pptx(file = withr::local_tempfile(fileext = ".dml"))
     on.exit(grDevices::dev.off())
+    g <- ggplot2::ggplotGrob(plot)
     lo <- min(g$layout$l[g$layout$name == "panel"])
     left_chrome <- sum(grid::convertWidth(g$widths[seq_len(lo - 1L)], "in", valueOnly = TRUE))
     loc$left + left_chrome
@@ -330,6 +329,52 @@ test_that("hv_add_plot places an editable vector on the panel box", {
   expect_equal(shapes$left, info$location$left, tolerance = 1e-3)
   expect_equal(shapes$top, info$location$top, tolerance = 1e-3)
   expect_equal(shapes$width, info$location$width, tolerance = 1e-3)
+})
+
+# The panel background rectangle on slide `i` of a written deck, found by its
+# fill color, in inches.
+panel_rect <- function(path, i, fill) {
+  x <- xml2::read_xml(unz(path, sprintf("ppt/slides/slide%d.xml", i)))
+  sp <- xml2::xml_find_first(x, sprintf("//p:sp[p:spPr/a:solidFill/a:srgbClr[@val='%s']]", fill))
+  xfrm <- xml2::xml_find_first(sp, "./p:spPr/a:xfrm")
+  emu <- function(child, attr) {
+    as.numeric(xml2::xml_attr(xml2::xml_find_first(xfrm, child), attr)) / 914400
+  }
+  c(left = emu("a:off", "x"), top = emu("a:off", "y"),
+    width = emu("a:ext", "cx"), height = emu("a:ext", "cy"))
+}
+
+test_that("hv_add_plot puts the panel on panel_box whatever the y labels", {
+  skip_if_not_installed("officer")
+  skip_if_not_installed("rvg")
+  out <- withr::local_tempfile(fileext = ".pptx")
+
+  # Labels are measured on the device rvg draws the slide with. Measured on
+  # pdf(NULL), whose font database has no Arial, the panel landed up to
+  # half an inch off the box, by an amount that changed with the labels.
+  labelled <- function(labels) {
+    d <- data.frame(x = seq_along(labels), y = factor(labels, levels = labels))
+    ggplot(d, aes(.data$x, .data$y)) + geom_point() + theme_hv_ppt_dark() +
+      theme(panel.background = element_rect(fill = "#123456"))
+  }
+  plots <- list(
+    labelled(c("A", "Bb", "Ccc")),
+    labelled(c("LV hypoplasia \u2191", "CAVV regurgitation \u2193", "Age"))
+  )
+  box <- list(left = 4.2, top = 1.85, width = 8.68, height = 4.15)
+  doc <- officer::read_pptx(system.file("extdata", "hv_ppt_template.pptx",
+                                        package = "hvtiPlotR"))
+  for (p in plots) {
+    doc <- officer::add_slide(doc, layout = hv_ppt_layout("figure"))
+    doc <- hv_add_plot(doc, p, panel_box = box)
+  }
+  print(doc, target = out)
+
+  for (i in seq_along(plots)) {
+    rect <- panel_rect(out, i, "123456")
+    expect_equal(unname(rect[c("left", "top", "width", "height")]),
+                 c(box$left, box$top, box$width, box$height), tolerance = 1e-3)
+  }
 })
 
 test_that("hv_add_plot passes align = 'fill' through and records the box", {

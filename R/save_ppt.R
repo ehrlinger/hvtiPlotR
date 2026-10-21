@@ -46,11 +46,11 @@ suppress_officer_bg_warnings <- function(expr) {
   )
 }
 
-# hv_ph_location() measures the plot grob on a pdf(NULL) device, whose
-# PostScript font database does not know the PPT themes' default "Arial".
-# The device substitutes a metric-compatible font for the measurement only;
-# the actual slide graphic is rendered by rvg/dsvg via systemfonts, which
-# resolves "Arial" and embeds it correctly. Filter ONLY the benign Arial
+# A pdf() or postscript() device's PostScript font database does not know
+# the PPT themes' default "Arial", and warns when asked for it. Through
+# hvtiPlotR 2.8.15 hv_ph_location() measured on pdf(NULL) and raised this
+# warning; it now measures on rvg's device, which resolves "Arial" through
+# systemfonts as the slide graphic does. Filter ONLY the benign Arial
 # (package-default) warning -- a missing *user-specified* font should stay
 # visible, since its substituted metrics can shift panel placement.
 suppress_font_db_warnings <- function(expr) {
@@ -270,7 +270,7 @@ add_fitted_plot_slide <- function(doc, plot, title, layout, master, panel_box,
 #'   slide coordinates on every slide regardless of axis-label width.
 #'   Defaults to [hv_panel_box()] for the template's slide format, read
 #'   from its slide size: for the 16:9 bundled templates the standard CORR
-#'   rectangle `list(width = 9.98, height = 4.15, left = 2.9, top = 1.85)`,
+#'   rectangle `list(width = 9.98, height = 4.11, left = 2.9, top = 1.85)`,
 #'   the same for the dark, light and slate templates; for a 4:3 template
 #'   the provisional standard rectangle. A template of any other size needs
 #'   an explicit `panel_box`. Pass

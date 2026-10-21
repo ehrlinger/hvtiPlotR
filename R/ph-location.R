@@ -121,9 +121,17 @@ hv_ph_location <- function(plot,
 # fit check needs these as well as the location.
 .hv_measure_placement <- function(plot, panel_width, panel_height, panel_left,
                                   panel_top, units) {
-  # Null PDF sizing device so grid unit conversions resolve against a real
-  # device, opened before the grob is built so nothing opens Rplots.pdf.
-  grDevices::pdf(NULL)
+  # Measure on rvg's own PowerPoint device, opened before the grob is built
+  # so nothing opens Rplots.pdf. It resolves font families the way
+  # rvg::dml() does when it draws the slide (through systemfonts), so the
+  # label widths measured here are the ones the slide is laid out with. A
+  # pdf(NULL) device resolves them through the PostScript font database
+  # instead, which has no "Arial": its substitute metrics differ from the
+  # slide's by an amount that depends on the label text and the platform's
+  # fonts, and the panel missed panel_box by that much.
+  dml_file <- tempfile(fileext = ".dml")
+  rvg::dml_pptx(file = dml_file, bg = "transparent")
+  on.exit(unlink(dml_file), add = TRUE)
   on.exit(grDevices::dev.off(), add = TRUE, after = FALSE)
 
   g <- .hv_plot_gtable(plot)
@@ -228,26 +236,27 @@ hv_ph_location <- function(plot,
 #' strips and plot titles flow outside it; [hv_fit_location()] keeps them on
 #' the slide and out of the slide title.
 #'
-#' The wide rectangle is 9.98 by 4.15 in, 2.9 in from the left edge and
+#' The wide rectangle is 9.98 by 4.11 in, 2.9 in from the left edge and
 #' 1.85 in from the top. The numbers leave room for the chrome around the
 #' panel:
 #'
 #' * 2.9 in on the left for long y-axis labels and the rotated y-axis title;
 #' * about 0.45 in above the panel, below the title placeholder that ends at
 #'   1.33 in, for facet strips and plot titles;
-#' * 1.5 in below the panel (7.5 - 1.85 - 4.15), or 1.45 in inside the
+#' * 1.54 in below the panel (7.5 - 1.85 - 4.11), or 1.49 in inside the
 #'   0.05 in slide edge, for the x-axis chrome of [theme_hv_ppt_dark()],
 #'   [theme_hv_ppt_light()] and [theme_hv_ppt_slate()]: their 32 pt x-axis
-#'   text and 40 pt x-axis title with its margin need about 1.43 in, so a
-#'   plot in these themes fits at full size.
+#'   text and 40 pt x-axis title with its margin need about 1.48 in in
+#'   Arial Bold, so a plot in these themes fits at full size.
 #'
 #' The standard (4:3) rectangle is **provisional**: no 4:3 template is
 #' bundled, and the rectangle has not yet been checked on a real 4:3 deck.
 #' It follows the same rules, assuming the 4:3 title placeholder also ends
-#' near 1.33 in: the same top (1.85 in) and height (4.15 in), 2.3 in on the
-#' left for y labels and 0.45 in on the right, so 7.25 by 4.15 in at 2.3 in
+#' near 1.33 in: the same top (1.85 in) and height (4.11 in), 2.3 in on the
+#' left for y labels and 0.45 in on the right, so 7.25 by 4.11 in at 2.3 in
 #' left.
 #'
+#' In hvtiPlotR 2.8.14 and 2.8.15 both rectangles were 4.15 in high.
 #' Through hvtiPlotR 2.8.13 the rectangle was 8.79 by 3.9 in at 2.67 in
 #' left, 1.6 in top. Pass
 #' `panel_box = list(width = 8.79, height = 3.9, left = 2.67, top = 1.6)`
@@ -272,8 +281,8 @@ hv_panel_box <- function(mode = c("dark", "light", "slate"),
   match.arg(mode)
   format <- match.arg(format)
   switch(format,
-    wide     = list(width = 9.98, height = 4.15, left = 2.9, top = 1.85),
-    standard = list(width = 7.25, height = 4.15, left = 2.3, top = 1.85)
+    wide     = list(width = 9.98, height = 4.11, left = 2.9, top = 1.85),
+    standard = list(width = 7.25, height = 4.11, left = 2.3, top = 1.85)
   )
 }
 
