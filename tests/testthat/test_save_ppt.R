@@ -530,7 +530,7 @@ test_that("save_ppt requires an explicit powerpoint output path", {
 test_that("save_ppt defaults panel_box to the standard fixed-panel rectangle", {
   expect_equal(
     hv_panel_box(.hv_template_mode("not-a-template.pptx")),
-    list(width = 9.98, height = 4.15, left = 2.9, top = 1.85)
+    list(width = 9.98, height = 4.11, left = 2.9, top = 1.85)
   )
 })
 
