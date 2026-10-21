@@ -1,3 +1,14 @@
+# hvtiPlotR 2.8.15
+
+* `hv_fit_location()`, `hv_add_plot()` and `save_ppt()` gain
+  `align = c("panel", "fill")`. The default, `"panel"`, is unchanged: every
+  panel lands on `panel_box`. `"fill"` keeps the panel's height and top but
+  sets its left edge and width from the chrome measured around it, so the
+  whole figure spans the slide, centered, with `margin` (default 0.45 in)
+  clear on each side. Plots with short y labels (Sankeys, maps) no longer
+  leave the 2.9 in reserved for long labels empty on the left. The fitted
+  result and the `"hv_fit"` attribute now carry the `panel_box` used.
+
 # hvtiPlotR 2.8.14
 
 * `hv_panel_box()` returns a larger standard window,

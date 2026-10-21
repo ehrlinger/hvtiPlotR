@@ -17,7 +17,8 @@ save_ppt(
   left = 0,
   top = 1.2,
   panel_box = hv_panel_box(format = .hv_template_format(template)),
-  fit = TRUE
+  fit = TRUE,
+  align = c("panel", "fill")
 )
 }
 \arguments{
@@ -87,6 +88,11 @@ see \code{\link[=hv_fit_location]{hv_fit_location()}}. A message names each redu
 names a plot that still does not fit at 12 pt. \code{FALSE} keeps the plot's
 own sizes and warns when it runs off the slide. Used only with a
 \code{panel_box}.}
+
+\item{align}{\code{"panel"} (the default) puts every plot's panel on
+\code{panel_box}, so panels line up across slides. \code{"fill"} widens each
+panel so the whole figure spans the slide, centered, with 0.45 in clear
+on each side; see \code{\link[=hv_fit_location]{hv_fit_location()}}. Used only with a \code{panel_box}.}
 }
 \value{
 Invisibly returns the path given by \code{powerpoint}.
