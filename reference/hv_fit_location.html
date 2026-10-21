@@ -19,7 +19,7 @@ never moves; only the chrome shrinks."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">hvtiPlotR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.8.14</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.8.15</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -86,7 +86,9 @@ never moves; only the chrome shrinks.</p>
 <span>  title_bottom <span class="op">=</span> <span class="fl">1.38</span>,</span>
 <span>  edge <span class="op">=</span> <span class="fl">0.05</span>,</span>
 <span>  min_scale <span class="op">=</span> <span class="fl">12</span><span class="op">/</span><span class="fl">32</span>,</span>
-<span>  step <span class="op">=</span> <span class="fl">2</span><span class="op">/</span><span class="fl">32</span></span>
+<span>  step <span class="op">=</span> <span class="fl">2</span><span class="op">/</span><span class="fl">32</span>,</span>
+<span>  align <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"panel"</span>, <span class="st">"fill"</span><span class="op">)</span>,</span>
+<span>  margin <span class="op">=</span> <span class="fl">0.45</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -129,6 +131,24 @@ size.</p></dd>
 <dd><p>Amount the scale drops at each try. The default, <code>2/32</code>, is
 2 pt at the 32 pt PPT base size.</p></dd>
 
+
+<dt id="arg-align">align<a class="anchor" aria-label="anchor" href="#arg-align"></a></dt>
+<dd><p><code>"panel"</code> (the default) keeps the panel on <code>panel_box</code>, so
+every slide puts its panel in the same place. <code>"fill"</code> keeps the
+panel's height and top but sets its left edge and width from the chrome
+measured around it, so the whole figure spans the slide with <code>margin</code>
+clear on each side and sits centered. A plot with short y labels then
+gets a wider panel instead of a gap on the left; one with long labels
+keeps about the standard width. Panels no longer line up across slides.
+Text too wide for the margins (a long title) is stepped down as <code>fit</code>
+steps down any other overflow.</p></dd>
+
+
+<dt id="arg-margin">margin<a class="anchor" aria-label="anchor" href="#arg-margin"></a></dt>
+<dd><p>Space kept clear on the left and right of the figure, in
+inches, with <code>align = "fill"</code>. The default, <code>0.45</code>, matches the right
+margin of the standard panel box.</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
@@ -139,6 +159,8 @@ size.</p></dd>
 <li><p><code>scale</code>: the text scale used, <code>1</code> when the plot fit as it was;</p></li>
 <li><p><code>fits</code>: <code>TRUE</code> when the figure lies inside the slide limits. When it
 is <code>FALSE</code>, <code>plot</code> and <code>location</code> are those at <code>min_scale</code>.</p></li>
+<li><p><code>panel_box</code>: the panel rectangle used, <code>panel_box</code> itself unless
+<code>align = "fill"</code> moved it.</p></li>
 </ul></div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>

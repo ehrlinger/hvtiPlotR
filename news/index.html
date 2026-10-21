@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">hvtiPlotR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.8.14</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.8.15</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -53,6 +53,11 @@
       <small>Source: <a href="https://github.com/ehrlinger/hvtiPlotR/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="2.8.15" id="hvtiplotr-2815">hvtiPlotR 2.8.15<a class="anchor" aria-label="anchor" href="#hvtiplotr-2815"></a></h2>
+<ul><li>
+<code><a href="../reference/hv_fit_location.html">hv_fit_location()</a></code>, <code><a href="../reference/hv_add_plot.html">hv_add_plot()</a></code> and <code><a href="../reference/save_ppt.html">save_ppt()</a></code> gain <code>align = c("panel", "fill")</code>. The default, <code>"panel"</code>, is unchanged: every panel lands on <code>panel_box</code>. <code>"fill"</code> keeps the panel’s height and top but sets its left edge and width from the chrome measured around it, so the whole figure spans the slide, centered, with <code>margin</code> (default 0.45 in) clear on each side. Plots with short y labels (Sankeys, maps) no longer leave the 2.9 in reserved for long labels empty on the left. The fitted result and the <code>"hv_fit"</code> attribute now carry the <code>panel_box</code> used. The placement is repeated until the margins hold, since a title wider than the plot overhangs by an amount that changes with the panel width, and text too wide for the margins steps down like any other overflow.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="2.8.14" id="hvtiplotr-2814">hvtiPlotR 2.8.14<a class="anchor" aria-label="anchor" href="#hvtiplotr-2814"></a></h2>
 <ul><li><p><code><a href="../reference/hv_panel_box.html">hv_panel_box()</a></code> returns a larger standard window, <code>list(width = 9.98, height = 4.15, left = 2.9, top = 1.85)</code>, up from 8.79 by 3.9 in at 2.67 in left, 1.6 in top. The window now depends on the slide format, the slide’s aspect ratio, and not on the color template: the dark, light and slate templates share it. A new <code>format</code> argument picks <code>"wide"</code> (16:9, 13.333 by 7.5 in, the default and every bundled template) or <code>"standard"</code> (4:3, 10 by 7.5 in); <code>mode</code> is still accepted and has no effect. <code><a href="../reference/save_ppt.html">save_ppt()</a></code> and <code><a href="../reference/hv_add_plot.html">hv_add_plot()</a></code> read the format from the template’s slide size and stop on any other size unless <code>panel_box</code> is given. In the wide window the 2.9 in on the left leaves room for long y labels, the 0.45 in above the panel holds facet strips and plot titles below the slide title, which ends at 1.33 in, and the 1.5 in below (1.45 in inside the slide edge) holds the PPT themes’ 32 pt x-axis text and 40 pt x-axis title with its margin, about 1.43 in, so those themes fit at full size. <code><a href="../reference/save_ppt.html">save_ppt()</a></code> therefore places every figure larger. Pass <code>panel_box = list(width = 8.79, height = 3.9, left = 2.67, top = 1.6)</code> to rebuild an old deck at its old geometry.</p></li>

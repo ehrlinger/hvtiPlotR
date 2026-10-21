@@ -61,16 +61,19 @@ hv_add_plot(
 
   Further arguments to
   [`hv_fit_location()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_fit_location.md):
-  `title_bottom`, `edge`, `min_scale`, `step`. The slide size is read
-  from `doc`.
+  `title_bottom`, `edge`, `min_scale`, `step`, `align`, `margin`. The
+  slide size is read from `doc`. `align = "fill"` widens the panel so
+  the figure spans the slide, centered, instead of anchoring it to
+  `panel_box`.
 
 ## Value
 
 `doc`, with the plot added, carrying an attribute `"hv_fit"`: a list
 `scale` (the text scale used), `fits` (whether the figure lies inside
-the slide limits), `png` (whether the PNG fallback was used) and
-`location` (the placement, in inches). A message reports reduced text; a
-warning reports a figure that still does not fit.
+the slide limits), `png` (whether the PNG fallback was used), `location`
+(the placement, in inches) and `panel_box` (the panel rectangle used). A
+message reports reduced text; a warning reports a figure that still does
+not fit.
 
 ## Details
 

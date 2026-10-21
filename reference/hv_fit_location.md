@@ -20,7 +20,9 @@ hv_fit_location(
   title_bottom = 1.38,
   edge = 0.05,
   min_scale = 12/32,
-  step = 2/32
+  step = 2/32,
+  align = c("panel", "fill"),
+  margin = 0.45
 )
 ```
 
@@ -61,6 +63,24 @@ hv_fit_location(
   Amount the scale drops at each try. The default, `2/32`, is 2 pt at
   the 32 pt PPT base size.
 
+- align:
+
+  `"panel"` (the default) keeps the panel on `panel_box`, so every slide
+  puts its panel in the same place. `"fill"` keeps the panel's height
+  and top but sets its left edge and width from the chrome measured
+  around it, so the whole figure spans the slide with `margin` clear on
+  each side and sits centered. A plot with short y labels then gets a
+  wider panel instead of a gap on the left; one with long labels keeps
+  about the standard width. Panels no longer line up across slides. Text
+  too wide for the margins (a long title) is stepped down as `fit` steps
+  down any other overflow.
+
+- margin:
+
+  Space kept clear on the left and right of the figure, in inches, with
+  `align = "fill"`. The default, `0.45`, matches the right margin of the
+  standard panel box.
+
 ## Value
 
 A list with elements
@@ -77,6 +97,9 @@ A list with elements
 
 - `fits`: `TRUE` when the figure lies inside the slide limits. When it
   is `FALSE`, `plot` and `location` are those at `min_scale`.
+
+- `panel_box`: the panel rectangle used, `panel_box` itself unless
+  `align = "fill"` moved it.
 
 ## Details
 

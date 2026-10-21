@@ -17,7 +17,7 @@ title."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">hvtiPlotR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.8.14</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.8.15</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -123,15 +123,18 @@ insert fails. <code>FALSE</code> lets the error through.</p></dd>
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
 <dd><p>Further arguments to <code><a href="hv_fit_location.html">hv_fit_location()</a></code>: <code>title_bottom</code>,
-<code>edge</code>, <code>min_scale</code>, <code>step</code>. The slide size is read from <code>doc</code>.</p></dd>
+<code>edge</code>, <code>min_scale</code>, <code>step</code>, <code>align</code>, <code>margin</code>. The slide size is read
+from <code>doc</code>. <code>align = "fill"</code> widens the panel so the figure spans the
+slide, centered, instead of anchoring it to <code>panel_box</code>.</p></dd>
 
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p><code>doc</code>, with the plot added, carrying an attribute <code>"hv_fit"</code>: a
 list <code>scale</code> (the text scale used), <code>fits</code> (whether the figure lies
-inside the slide limits), <code>png</code> (whether the PNG fallback was used) and
-<code>location</code> (the placement, in inches). A message reports reduced text;
+inside the slide limits), <code>png</code> (whether the PNG fallback was used),
+<code>location</code> (the placement, in inches) and <code>panel_box</code> (the panel
+rectangle used). A message reports reduced text;
 a warning reports a figure that still does not fit.</p>
     </div>
     <div class="section level2">

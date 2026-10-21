@@ -27,7 +27,8 @@ save_ppt(
   left = 0,
   top = 1.2,
   panel_box = hv_panel_box(format = .hv_template_format(template)),
-  fit = TRUE
+  fit = TRUE,
+  align = c("panel", "fill")
 )
 ```
 
@@ -128,6 +129,14 @@ save_ppt(
   A message names each reduction, and a warning names a plot that still
   does not fit at 12 pt. `FALSE` keeps the plot's own sizes and warns
   when it runs off the slide. Used only with a `panel_box`.
+
+- align:
+
+  `"panel"` (the default) puts every plot's panel on `panel_box`, so
+  panels line up across slides. `"fill"` widens each panel so the whole
+  figure spans the slide, centered, with 0.45 in clear on each side; see
+  [`hv_fit_location()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_fit_location.md).
+  Used only with a `panel_box`.
 
 ## Value
 

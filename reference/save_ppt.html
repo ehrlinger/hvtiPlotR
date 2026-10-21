@@ -17,7 +17,7 @@ designated title placeholder via officer::ph_location_type()."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">hvtiPlotR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.8.14</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.8.15</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -88,7 +88,8 @@ designated title placeholder via <code><a href="https://davidgohel.github.io/off
 <span>  left <span class="op">=</span> <span class="fl">0</span>,</span>
 <span>  top <span class="op">=</span> <span class="fl">1.2</span>,</span>
 <span>  panel_box <span class="op">=</span> <span class="fu"><a href="hv_panel_box.html">hv_panel_box</a></span><span class="op">(</span>format <span class="op">=</span> <span class="fu">.hv_template_format</span><span class="op">(</span><span class="va">template</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>  fit <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span>  fit <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  align <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"panel"</span>, <span class="st">"fill"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -185,6 +186,13 @@ see <code><a href="hv_fit_location.html">hv_fit_location()</a></code>. A message
 names a plot that still does not fit at 12 pt. <code>FALSE</code> keeps the plot's
 own sizes and warns when it runs off the slide. Used only with a
 <code>panel_box</code>.</p></dd>
+
+
+<dt id="arg-align">align<a class="anchor" aria-label="anchor" href="#arg-align"></a></dt>
+<dd><p><code>"panel"</code> (the default) puts every plot's panel on
+<code>panel_box</code>, so panels line up across slides. <code>"fill"</code> widens each
+panel so the whole figure spans the slide, centered, with 0.45 in clear
+on each side; see <code><a href="hv_fit_location.html">hv_fit_location()</a></code>. Used only with a <code>panel_box</code>.</p></dd>
 
 </dl></div>
     <div class="section level2">
