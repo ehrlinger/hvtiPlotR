@@ -98,20 +98,7 @@ loc <- hv_ph_location(
   panel_width  = 10, panel_height = 5,
   panel_left   = 0.5, panel_top   = 1.5
 )
-#> Warning: font family 'Arial' not found in PostScript font database
-#> Warning: font family 'Arial' not found in PostScript font database
-#> Warning: font family 'Arial' not found in PostScript font database
-#> Warning: font family 'Arial' not found in PostScript font database
-#> Warning: font family 'Arial' not found in PostScript font database
-#> Warning: font family 'Arial' not found in PostScript font database
-#> Warning: font family 'Arial' not found in PostScript font database
-#> Warning: font family 'Arial' not found in PostScript font database
-#> Warning: font family 'Arial' not found in PostScript font database
-#> Warning: font family 'Arial' not found in PostScript font database
-#> Warning: font family 'Arial' not found in PostScript font database
-#> Warning: font family 'Arial' not found in PostScript font database
-#> Warning: font family 'Arial' not found in PostScript font database
-#> Warning: hv_ph_location(): plot chrome does not fit left/top of panel on slide (left=-0.987 in). Increase `panel_left`/`panel_top` to leave room for axis labels.
+#> Warning: hv_ph_location(): plot chrome does not fit left/top of panel on slide (left=-1.045 in). Increase `panel_left`/`panel_top` to leave room for axis labels.
 # doc <- officer::read_pptx(template)
 # doc <- officer::add_slide(doc, layout = "Title and Content")
 # doc <- officer::ph_with(

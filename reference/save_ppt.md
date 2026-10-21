@@ -112,7 +112,7 @@ save_ppt(
   [`hv_panel_box()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_panel_box.md)
   for the template's slide format, read from its slide size: for the
   16:9 bundled templates the standard CORR rectangle
-  `list(width = 9.98, height = 4.15, left = 2.9, top = 1.85)`, the same
+  `list(width = 9.98, height = 4.11, left = 2.9, top = 1.85)`, the same
   for the dark, light and slate templates; for a 4:3 template the
   provisional standard rectangle. A template of any other size needs an
   explicit `panel_box`. Pass `panel_box = NULL` to fall back to the
@@ -224,7 +224,7 @@ save_ppt(
   powerpoint   = file.path(tempdir(), "fuel_economy.pptx"),
   slide_titles = "Fuel Economy by Weight"
 )
-#> hv_add_plot(): text reduced to 69% so the figure fits on the slide.
+#> hv_add_plot(): text reduced to 62% so the figure fits on the slide.
 
 # List of plots — one slide per plot, individual titles
 p2 <- ggplot(mtcars, aes(x = factor(cyl), y = mpg)) +
@@ -238,7 +238,7 @@ save_ppt(
   powerpoint   = file.path(tempdir(), "deck.pptx"),
   slide_titles = c("Scatter: fuel economy", "Box: mpg by cylinder count")
 )
-#> hv_add_plot(): text reduced to 69% so the figure fits on the slide.
+#> hv_add_plot(): text reduced to 62% so the figure fits on the slide.
 
 # No y-axis label — let the slide title carry the meaning. `y = NULL`
 # drops the axis title; the numeric tick labels remain.
@@ -318,6 +318,7 @@ save_ppt(
   powerpoint   = file.path(tempdir(), "drifting_deck.pptx"),
   slide_titles = c("Small y-axis", "Big y-axis")
 )
+#> hv_add_plot(): text reduced to 94% so the figure fits on the slide.
 
 # With panel_box: target is an 8.88" x 4.51" panel at slide coordinates
 # (2.58", 1.63"). The panel content area lands at exactly that rectangle
@@ -332,7 +333,7 @@ save_ppt(
   panel_box    = list(width = 8.88, height = 4.51, left = 2.58, top = 1.63)
 )
 #> hv_add_plot(): text reduced to 88% so the figure fits on the slide.
-#> hv_add_plot(): text reduced to 88% so the figure fits on the slide.
+#> hv_add_plot(): text reduced to 81% so the figure fits on the slide.
 
 # Sizing advice: with `fit = TRUE` (the default) a plot whose chrome
 # would leave the slide or cross the title has its text reduced until it

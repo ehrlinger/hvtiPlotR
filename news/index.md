@@ -1,5 +1,32 @@
 # Changelog
 
+## hvtiPlotR 2.8.16
+
+- [`hv_fit_location()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_fit_location.md),
+  [`hv_add_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_add_plot.md),
+  [`save_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/save_ppt.md)
+  and
+  [`hv_ph_location()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_ph_location.md)
+  now measure the plot on the device
+  [`rvg::dml()`](https://davidgohel.github.io/rvg/reference/dml.html)
+  draws the slide with, so the panel lands on `panel_box` whatever the
+  axis labels say. They measured on `pdf(NULL)`, whose PostScript font
+  database has no “Arial”, the PPT themes’ font: the substitute metrics
+  put the panel’s left edge up to half an inch off the box on Linux (by
+  an amount that changed with the y labels) and about 0.2 in off on
+  macOS, while the right edge stayed put. The measurement now uses the
+  same fonts as the slide, so the fit-to-slide text scaling also sees
+  the true label sizes.
+- [`hv_panel_box()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_panel_box.md)
+  is 4.11 in high, down from 4.15 in, in both the wide (16:9) and the
+  provisional standard (4:3) windows; width, left and top are unchanged.
+  Measured in real Arial Bold, the PPT themes’ 32 pt x-axis text and 40
+  pt x-axis title need 1.48 in below the panel, not the 1.43 in the 4.15
+  in window was sized from, so at 4.15 in every default PPT slide would
+  have stepped down to 30 pt. Pass
+  `panel_box = list(width = 9.98, height = 4.15, left = 2.9, top = 1.85)`
+  to rebuild a deck at the 2.8.14 geometry.
+
 ## hvtiPlotR 2.8.15
 
 - [`hv_fit_location()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_fit_location.md),

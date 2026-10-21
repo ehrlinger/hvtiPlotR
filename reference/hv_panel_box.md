@@ -45,7 +45,7 @@ and
 
 ## Details
 
-The wide rectangle is 9.98 by 4.15 in, 2.9 in from the left edge and
+The wide rectangle is 9.98 by 4.11 in, 2.9 in from the left edge and
 1.85 in from the top. The numbers leave room for the chrome around the
 panel:
 
@@ -55,22 +55,24 @@ panel:
 - about 0.45 in above the panel, below the title placeholder that ends
   at 1.33 in, for facet strips and plot titles;
 
-- 1.5 in below the panel (7.5 - 1.85 - 4.15), or 1.45 in inside the 0.05
-  in slide edge, for the x-axis chrome of
+- 1.54 in below the panel (7.5 - 1.85 - 4.11), or 1.49 in inside the
+  0.05 in slide edge, for the x-axis chrome of
   [`theme_hv_ppt_dark()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md),
   [`theme_hv_ppt_light()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)
   and
   [`theme_hv_ppt_slate()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md):
   their 32 pt x-axis text and 40 pt x-axis title with its margin need
-  about 1.43 in, so a plot in these themes fits at full size.
+  about 1.48 in in Arial Bold, so a plot in these themes fits at full
+  size.
 
 The standard (4:3) rectangle is **provisional**: no 4:3 template is
 bundled, and the rectangle has not yet been checked on a real 4:3 deck.
 It follows the same rules, assuming the 4:3 title placeholder also ends
-near 1.33 in: the same top (1.85 in) and height (4.15 in), 2.3 in on the
-left for y labels and 0.45 in on the right, so 7.25 by 4.15 in at 2.3 in
+near 1.33 in: the same top (1.85 in) and height (4.11 in), 2.3 in on the
+left for y labels and 0.45 in on the right, so 7.25 by 4.11 in at 2.3 in
 left.
 
+In hvtiPlotR 2.8.14 and 2.8.15 both rectangles were 4.15 in high.
 Through hvtiPlotR 2.8.13 the rectangle was 8.79 by 3.9 in at 2.67 in
 left, 1.6 in top. Pass
 `panel_box = list(width = 8.79, height = 3.9, left = 2.67, top = 1.6)`
@@ -95,7 +97,7 @@ hv_panel_box()
 #> [1] 9.98
 #> 
 #> $height
-#> [1] 4.15
+#> [1] 4.11
 #> 
 #> $left
 #> [1] 2.9
@@ -108,7 +110,7 @@ hv_panel_box(format = "standard")
 #> [1] 7.25
 #> 
 #> $height
-#> [1] 4.15
+#> [1] 4.11
 #> 
 #> $left
 #> [1] 2.3

@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">hvtiPlotR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.8.15</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.8.16</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -53,6 +53,13 @@
       <small>Source: <a href="https://github.com/ehrlinger/hvtiPlotR/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="2.8.16" id="hvtiplotr-2816">hvtiPlotR 2.8.16<a class="anchor" aria-label="anchor" href="#hvtiplotr-2816"></a></h2>
+<ul><li>
+<code><a href="../reference/hv_fit_location.html">hv_fit_location()</a></code>, <code><a href="../reference/hv_add_plot.html">hv_add_plot()</a></code>, <code><a href="../reference/save_ppt.html">save_ppt()</a></code> and <code><a href="../reference/hv_ph_location.html">hv_ph_location()</a></code> now measure the plot on the device <code><a href="https://davidgohel.github.io/rvg/reference/dml.html" class="external-link">rvg::dml()</a></code> draws the slide with, so the panel lands on <code>panel_box</code> whatever the axis labels say. They measured on <code>pdf(NULL)</code>, whose PostScript font database has no “Arial”, the PPT themes’ font: the substitute metrics put the panel’s left edge up to half an inch off the box on Linux (by an amount that changed with the y labels) and about 0.2 in off on macOS, while the right edge stayed put. The measurement now uses the same fonts as the slide, so the fit-to-slide text scaling also sees the true label sizes.</li>
+<li>
+<code><a href="../reference/hv_panel_box.html">hv_panel_box()</a></code> is 4.11 in high, down from 4.15 in, in both the wide (16:9) and the provisional standard (4:3) windows; width, left and top are unchanged. Measured in real Arial Bold, the PPT themes’ 32 pt x-axis text and 40 pt x-axis title need 1.48 in below the panel, not the 1.43 in the 4.15 in window was sized from, so at 4.15 in every default PPT slide would have stepped down to 30 pt. Pass <code>panel_box = list(width = 9.98, height = 4.15, left = 2.9, top = 1.85)</code> to rebuild a deck at the 2.8.14 geometry.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="2.8.15" id="hvtiplotr-2815">hvtiPlotR 2.8.15<a class="anchor" aria-label="anchor" href="#hvtiplotr-2815"></a></h2>
 <ul><li>

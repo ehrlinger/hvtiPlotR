@@ -136,30 +136,17 @@ p <- ggplot2::ggplot(mtcars, ggplot2::aes(hp, mpg)) +
   ggplot2::labs(x = "Horsepower", y = "Miles per gallon") +
   theme_hv_ppt_dark()
 fit <- hv_fit_location(p, hv_panel_box("dark"))
-#> Warning: font family 'Arial' not found in PostScript font database
-#> Warning: font family 'Arial' not found in PostScript font database
-#> Warning: font family 'Arial' not found in PostScript font database
-#> Warning: font family 'Arial' not found in PostScript font database
-#> Warning: font family 'Arial' not found in PostScript font database
-#> Warning: font family 'Arial' not found in PostScript font database
-#> Warning: font family 'Arial' not found in PostScript font database
-#> Warning: font family 'Arial' not found in PostScript font database
-#> Warning: font family 'Arial' not found in PostScript font database
-#> Warning: font family 'Arial' not found in PostScript font database
-#> Warning: font family 'Arial' not found in PostScript font database
-#> Warning: font family 'Arial' not found in PostScript font database
-#> Warning: font family 'Arial' not found in PostScript font database
 fit$scale
 #> [1] 1
 fit$location
 #> $width
-#> [1] 11.46681
+#> [1] 11.52548
 #> 
 #> $height
-#> [1] 5.58348
+#> [1] 5.55918
 #> 
 #> $left
-#> [1] 1.413187
+#> [1] 1.35452
 #> 
 #> $top
 #> [1] 1.85
