@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">hvtiPlotR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.8.16</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.8.17</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -53,6 +53,15 @@
       <small>Source: <a href="https://github.com/ehrlinger/hvtiPlotR/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="2.8.17" id="hvtiplotr-2817">hvtiPlotR 2.8.17<a class="anchor" aria-label="anchor" href="#hvtiplotr-2817"></a></h2>
+<ul><li>
+<code><a href="../reference/hv_followup.html">hv_followup()</a></code> draws competing non-fatal events in one event panel. <code>event_col</code> and <code>event_time_col</code> take vectors, one element per event, and <code>event_levels</code> takes one label per event between “No event” and “Death”. The earliest event that strictly precedes death sets the state. A tie between two non-fatal events goes to the one listed first, and a tie with death still goes to death. A single event draws exactly as before.</li>
+<li>
+<code><a href="../reference/hv_followup.html">hv_followup()</a></code> gains an echo layer, a gray tick at each echo’s interval along the patient’s follow-up, on both panels. <code>echo_time_col</code> alone reads one echo per patient from <code>data</code>. A missing value there means no echo, not an incomplete record, and is counted in <code>meta$n_no_echo</code> without a warning. <code>echo</code>, a data frame with one row per echo, draws every echo instead, and incomplete rows are excluded with a warning. <code><a href="../reference/plot.hv_followup.html">plot.hv_followup()</a></code> gains <code>echo</code>, <code>echo_shape</code>, <code>echo_size</code> and <code>echo_color</code>.</li>
+<li>
+<code><a href="../reference/hv_followup_panels.html">hv_followup_panels()</a></code> passes both through: an <code>events</code> entry accepts vector <code>event</code>, <code>time</code> and <code>label</code>, and <code>echo</code>, <code>echo_time_col</code> and <code>echo_opyrs_col</code> reach every panel.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="2.8.16" id="hvtiplotr-2816">hvtiPlotR 2.8.16<a class="anchor" aria-label="anchor" href="#hvtiplotr-2816"></a></h2>
 <ul><li>
