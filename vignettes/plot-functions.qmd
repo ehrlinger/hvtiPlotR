@@ -570,7 +570,7 @@ plot(gf3, type = "event", alpha = 0.8) +
 ## Echo layer
 
 The echo layer marks when echoes happened along each patient's follow-up: a
-grey tick at the operation year and the echo interval, on top of either
+gray tick at the operation year and the echo interval, on top of either
 panel. A patient with follow-up but no recent echo stands out as a point
 with nothing beneath it. The layer has two sources, and both need only the
 operation interval and the echo interval, never a patient identifier.

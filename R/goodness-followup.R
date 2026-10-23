@@ -527,7 +527,7 @@ print.hv_followup <- function(x, ...) {
 #'   a short horizontal dash.
 #' @param echo_size          Size of the echo ticks.  Default \code{4}.
 #' @param echo_color         Color of the echo ticks.  Default
-#'   \code{"grey40"}.  The echo layer is drawn with fixed settings, like the
+#'   \code{"gray40"}.  The echo layer is drawn with fixed settings, like the
 #'   diagonal, so it stays out of the state color scale and its legend.
 #' @param ...                Ignored; present for S3 consistency.
 #'
@@ -573,7 +573,7 @@ plot.hv_followup <- function(x,
                                echo               = TRUE,
                                echo_shape         = 95,
                                echo_size          = 4,
-                               echo_color         = "grey40",
+                               echo_color         = "gray40",
                                ...) {
   type <- match.arg(type)
   .check_alpha(alpha)
@@ -765,7 +765,7 @@ gf_build_followup_plot <- function(data, diagonal, alpha,
                                    diagonal_color, diagonal_linetype,
                                    diagonal_linewidth, segment_drop,
                                    echo_data = NULL, echo_shape = 95,
-                                   echo_size = 4, echo_color = "grey40") {
+                                   echo_size = 4, echo_color = "gray40") {
   p <- ggplot2::ggplot(
     data,
     ggplot2::aes(.data[["operation_year"]], .data[["follow_up"]])

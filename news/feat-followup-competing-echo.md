@@ -4,7 +4,7 @@
   The earliest event that strictly precedes death sets the state. A tie
   between two non-fatal events goes to the one listed first, and a tie with
   death still goes to death. A single event draws exactly as before.
-* `hv_followup()` gains an echo layer, a grey tick at each echo's interval
+* `hv_followup()` gains an echo layer, a gray tick at each echo's interval
   along the patient's follow-up, on both panels. `echo_time_col` alone reads
   one echo per patient from `data`. A missing value there means no echo, not
   an incomplete record, and is counted in `meta$n_no_echo` without a warning.

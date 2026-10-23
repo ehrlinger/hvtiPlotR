@@ -14,7 +14,7 @@
   echo = TRUE,
   echo_shape = 95,
   echo_size = 4,
-  echo_color = "grey40",
+  echo_color = "gray40",
   ...
 )
 }
@@ -46,7 +46,7 @@ a short horizontal dash.}
 \item{echo_size}{Size of the echo ticks.  Default \code{4}.}
 
 \item{echo_color}{Color of the echo ticks.  Default
-\code{"grey40"}.  The echo layer is drawn with fixed settings, like the
+\code{"gray40"}.  The echo layer is drawn with fixed settings, like the
 diagonal, so it stays out of the state color scale and its legend.}
 
 \item{...}{Ignored; present for S3 consistency.}
