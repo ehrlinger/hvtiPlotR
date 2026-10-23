@@ -19,7 +19,10 @@ hv_followup(
   tolower_names = TRUE,
   death_levels = c("Alive", "Dead"),
   event_levels = c("No event", "Non-fatal event", "Death"),
-  segment_drop = 0
+  segment_drop = 0,
+  echo = NULL,
+  echo_time_col = NULL,
+  echo_opyrs_col = NULL
 )
 }
 \arguments{
@@ -35,15 +38,21 @@ Default \code{"dead"}.}
 \item{death_time_col}{Name of the time-to-death column.
 Default \code{"iv_dead"}.}
 
-\item{event_col}{Name of the non-fatal event indicator column.
+\item{event_col}{Name of the non-fatal event indicator column, or
+a vector of names for competing non-fatal events drawn in one panel.
 Required to compute the event panel (\code{type = "event"}).
 Default \code{NULL} (event panel unavailable).  The flag alone does not
-decide the state: the event time is compared against
+decide the state: each event time is compared against
 \code{death_time_col}, and a flagged event is only counted as non-fatal
-when it strictly precedes death.  Ties go to death.}
+when it strictly precedes death.  Ties go to death.  Among the events
+that qualify, the earliest sets the state, and a tie between two goes to
+the one listed first.}
 
-\item{event_time_col}{Name of the time-to-event column.
-Required when \code{event_col} is supplied.  Default \code{NULL}.}
+\item{event_time_col}{Name of the time-to-event column, or a vector the
+same length as \code{event_col}, one interval per event.  Required when
+\code{event_col} is supplied.  Default \code{NULL}.  A patient is drawn at
+the winning event's interval; with no qualifying event, at the first
+event's interval.}
 
 \item{death_for_event_col}{Name of the death column to use specifically in
 the event panel (defaults to \code{death_col} when \code{NULL}).}
@@ -66,13 +75,29 @@ materialising the data.  Default \code{TRUE}.}
 \item{death_levels}{Length-2 character vector labeling the two death
 states (alive first).  Default \code{c("Alive", "Dead")}.}
 
-\item{event_levels}{Length-3 character vector for the event panel
-(event-free, non-fatal event, death).
-Default \code{c("No event", "Non-fatal event", "Death")}.}
+\item{event_levels}{Character vector of distinct labels for the event
+panel: event-free, one per non-fatal event in the order of
+\code{event_col}, then death.  Its length is the number of events plus
+two.  Default \code{c("No event", "Non-fatal event", "Death")}.}
 
 \item{segment_drop}{Numeric; vertical offset (years) for the segment
 endpoint below the follow-up point.  Default \code{0} (no segment drawn).
 Set to a positive value to restore the legacy stem below each point.}
+
+\item{echo}{Optional data frame with one row per echo, for
+the echo layer.  Each row carries the operation interval
+(\code{echo_opyrs_col}) and the echo interval (\code{echo_time_col}), so
+no patient identifier is needed; a cohort column carried onto each joined
+echo row is enough.  Default \code{NULL}: with \code{echo_time_col} set,
+the echo is read from \code{data} instead, one per patient.}
+
+\item{echo_time_col}{Name of the echo interval column, in years since
+the operation.  Default \code{NULL}, which draws no echo layer.  With
+\code{echo = NULL} it names a column of \code{data}, the shape a join
+reduced to one echo per patient delivers.}
+
+\item{echo_opyrs_col}{Name of the operation interval column in
+\code{echo}.  Default \code{NULL}, meaning \code{iv_opyrs_col}.}
 }
 \value{
 An object of class \code{c("hv_followup", "hv_data")}:
@@ -82,8 +107,9 @@ An object of class \code{c("hv_followup", "hv_data")}:
 \code{has_event} flag, and the cohort counts \code{n_patients}
 (analyzed), \code{n_input}, and \code{n_excluded}.}
 \item{\code{$tables}}{Named list with \code{diagonal} (the study-period
-reference diagonal) and, when event columns are supplied,
-\code{event_data}.}
+reference diagonal), \code{event_data} when event columns are
+supplied, and \code{echo_data} (\code{operation_year},
+\code{follow_up}) when \code{echo_time_col} is.}
 }
 }
 \description{
@@ -93,6 +119,19 @@ Validates dates, builds per-patient follow-up frames, and returns an
 (\code{type = "event"}).  Call \code{\link{plot.hv_followup}} on the
 result to obtain a bare \code{ggplot2} object.
 }
+\section{Echo layer}{
+
+The echo layer marks when each echo happened along a patient's follow-up: a
+tick at the operation year (x) and the echo interval (y), drawn on both
+panels.  It has two sources.  One echo per patient is a column of
+\code{data}; a missing value there means no echo was recorded, so the
+patient gets no tick, is still drawn in the panel, and nothing is warned.
+\code{$meta$n_echo} and \code{$meta$n_no_echo} count the two.  Every echo is
+a separate \code{echo} data frame; a row missing either column is an
+incomplete record, excluded with a warning and counted in
+\code{$meta$n_echo_excluded}.
+}
+
 \section{Missing data}{
 
 Patients with a missing value in any required column are excluded, with a
@@ -139,6 +178,23 @@ plot(gf2, type = "event") +
   ggplot2::scale_shape_manual(values = c(1, 2, 4), name = NULL) +
   ggplot2::labs(x = "Operation Date", y = "Follow-up (years)") +
   theme_hv_poster()
+
+# Two competing non-fatal events in one panel: the first to happen wins
+dta$ev_stroke <- !dta$ev_event & seq_len(nrow(dta)) \%\% 4 == 0
+gf3 <- hv_followup(dta, event_col = c("ev_event", "ev_stroke"),
+                   event_time_col = c("iv_event", "iv_event"),
+                   event_levels = c("No event", "Reoperation", "Stroke", "Death"))
+table(gf3$tables$event_data$state)
+plot(gf3, type = "event")
+
+# Echo layer, one echo per patient: a column of the patient data
+dta$iv_echo <- dta$iv_dead * 0.6
+plot(hv_followup(dta, echo_time_col = "iv_echo"))
+
+# Echo layer, every echo: one row per echo, placed by the operation interval
+echoes <- data.frame(iv_opyrs = rep(dta$iv_opyrs[1:40], each = 3),
+                     iv_echo  = rep(dta$iv_dead[1:40], each = 3) * c(0.1, 0.5, 0.9))
+plot(hv_followup(dta, echo = echoes, echo_time_col = "iv_echo"))
 
 }
 \seealso{

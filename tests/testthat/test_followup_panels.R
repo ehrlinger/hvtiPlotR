@@ -132,3 +132,46 @@ test_that("an event label must be one string, distinct from the other two states
                                   panels = list(all = list(status = "dead", time = "iv_dead", title = c("a", "b")))),
                "`title`")
 })
+
+test_that("an events entry with vector event/time/label draws competing events", {
+  d <- dta
+  d$ev_event2 <- !d$ev_event & d$iv_event > 2
+  d$iv_event2 <- d$iv_event
+  two <- list(both = list(event = c("ev_event", "ev_event2"), time = c("iv_event", "iv_event2"),
+                          death = "deads", death_time = "iv_dead", label = c("Reop", "Stroke")))
+  fp <- hv_followup_panels(d, origin_year = 1990, panels = all_deaths, events = two)
+  ed <- fp$tables$panels$both$tables$event_data
+  expect_identical(levels(ed$state), c("No event", "Reop", "Stroke", "Death"))
+  expect_identical(fp$data$title[2], "Reop, Stroke")
+  expect_plot_has_data(plot(fp)$both)
+})
+
+test_that("competing events entries are validated", {
+  bad <- function(...) {
+    base <- list(event = c("ev_event", "ev_event"), time = c("iv_event", "iv_event"),
+                 death = "deads", death_time = "iv_dead", label = c("A", "B"))
+    list(x = utils::modifyList(base, list(...)))
+  }
+  expect_error(hv_followup_panels(dta, origin_year = 1990, panels = all_deaths,
+                                  events = bad(time = "iv_event")), "same length")
+  expect_error(hv_followup_panels(dta, origin_year = 1990, panels = all_deaths,
+                                  events = bad(label = "A")), "same length")
+  expect_error(hv_followup_panels(dta, origin_year = 1990, panels = all_deaths,
+                                  events = bad(label = c("A", "A"))), "distinct")
+  expect_error(hv_followup_panels(dta, origin_year = 1990, panels = all_deaths,
+                                  events = bad(label = c("A", "Death"))), "No event")
+})
+
+test_that("echo reaches every panel, from a patient column or an echo frame", {
+  d <- dta
+  d$iv_echo <- d$iv_dead / 2
+  fp <- hv_followup_panels(d, origin_year = 1990, panels = all_deaths, events = ev,
+                           echo_time_col = "iv_echo")
+  for (p in plot(fp)) expect_identical(layer_row_counts(p)[[length(p$layers)]], nrow(d))
+  echo <- data.frame(iv_opyrs = d$iv_opyrs[1:5], iv_echo = 1)
+  fp <- hv_followup_panels(d, origin_year = 1990, panels = all_deaths, events = ev,
+                           echo = echo, echo_time_col = "iv_echo")
+  expect_identical(fp$tables$panels$ev$meta$n_echo, 5L)
+  expect_error(hv_followup_panels(d, origin_year = 1990, panels = all_deaths, echo_time_col = "nope"),
+               "nope")
+})

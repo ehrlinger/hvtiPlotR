@@ -55,9 +55,17 @@
 #'   entry is a list with `event` and `time`, the event's indicator and
 #'   interval, `death` and `death_time`, the death it competes with, and
 #'   optionally `label`. A flagged event counts only when it strictly precedes
-#'   death.
+#'   death. For competing non-fatal events in one panel, give `event`, `time`
+#'   and `label` as vectors of the same length, one element per event: the
+#'   earliest qualifying event sets the state, and a tie between two goes to
+#'   the one listed first. Without `label`, a single event is labeled with the
+#'   entry's name and competing events with their column names.
 #' @param close_date `NULL` to estimate, or one date (a `Date` or a string
 #'   `as.Date()` reads), on or after the last operation.
+#' @param echo,echo_time_col,echo_opyrs_col The echo layer, passed to every
+#'   panel's [hv_followup()]. Set `echo_time_col` alone for one echo per
+#'   patient, read from `data`; add `echo`, a data frame with one row per echo,
+#'   to draw every echo. See the echo-layer section of [hv_followup()].
 #'
 #' @return An object of class `c("hv_followup_panels", "hv_data")`:
 #' \describe{
@@ -82,13 +90,29 @@
 #' )
 #' fp
 #' fp$meta$close_source
+#'
+#' # Competing events in one panel, and one echo per patient on every panel
+#' dta$ev_stroke <- !dta$ev_event & seq_len(nrow(dta)) %% 4 == 0
+#' dta$iv_echo <- dta$iv_dead * 0.6
+#' fp2 <- hv_followup_panels(
+#'   dta, origin_year = 1990, echo_time_col = "iv_echo",
+#'   panels = list(all = list(status = "dead", time = "iv_dead")),
+#'   events = list(nonfatal = list(event = c("ev_event", "ev_stroke"),
+#'                                 time = c("iv_event", "iv_event"),
+#'                                 death = "dead", death_time = "iv_dead",
+#'                                 label = c("Reoperation", "Stroke")))
+#' )
+#' plot(fp2)$nonfatal
 #' @export
 hv_followup_panels <- function(data,
                                opyrs_col   = "iv_opyrs",
                                origin_year,
                                panels,
                                events      = list(),
-                               close_date  = NULL) {
+                               close_date  = NULL,
+                               echo        = NULL,
+                               echo_time_col  = NULL,
+                               echo_opyrs_col = NULL) {
   .check_df(data)
   is_name <- function(x) is.character(x) && length(x) == 1L && !is.na(x) && nzchar(x)
   if (!is_name(opyrs_col)) stop("`opyrs_col` must name one column.", call. = FALSE)
@@ -121,18 +145,27 @@ hv_followup_panels <- function(data,
     }
     if (!is_text(p$title)) stop("`panels` entry `", nm, "`: `title` must be one non-empty string.", call. = FALSE)
   }
+  # A vector of names, each a non-empty string: one per competing event.
+  is_names <- function(x) is.character(x) && length(x) >= 1L && !anyNA(x) && all(nzchar(x))
   for (nm in names(events)) {
     e <- events[[nm]]
-    if (!is.list(e) || !all(vapply(c("event", "time", "death", "death_time"), function(k) is_name(e[[k]]),
-                                   logical(1L)))) {
-      stop("`events` entry `", nm, "` needs one `event`, `time`, `death` and `death_time` column.",
-           call. = FALSE)
+    if (!is.list(e) || !is_names(e$event) || !is_names(e$time) || !is_name(e$death) ||
+          !is_name(e$death_time)) {
+      stop("`events` entry `", nm, "` needs one `event` and `time` column per competing event, ",
+           "and one `death` and `death_time` column.", call. = FALSE)
     }
-    # The label becomes the middle of three state levels, so it must not repeat
-    # either of the other two.
-    if (!is_text(e$label) || (!is.null(e$label) && e$label %in% c("No event", "Death"))) {
-      stop("`events` entry `", nm, "`: `label` must be one non-empty string other than ",
+    if (length(e$time) != length(e$event) || (!is.null(e$label) && length(e$label) != length(e$event))) {
+      stop("`events` entry `", nm, "`: `event`, `time` and `label` must be the same length, ",
+           "one per competing event.", call. = FALSE)
+    }
+    # The labels sit between "No event" and "Death" in the state levels, so
+    # they must not repeat either, or each other.
+    if (!is.null(e$label) && (!is_names(e$label) || any(e$label %in% c("No event", "Death")))) {
+      stop("`events` entry `", nm, "`: each `label` must be a non-empty string other than ",
            "\"No event\" and \"Death\".", call. = FALSE)
+    }
+    if (anyDuplicated(e$label)) {
+      stop("`events` entry `", nm, "`: `label` values must be distinct.", call. = FALSE)
     }
   }
 
@@ -209,7 +242,8 @@ hv_followup_panels <- function(data,
 
   common <- list(data = data, iv_opyrs_col = opyrs_col, origin_year = origin_year,
                  study_start = study_start, study_end = study_end,
-                 close_date = close, tolower_names = FALSE)
+                 close_date = close, tolower_names = FALSE,
+                 echo = echo, echo_time_col = echo_time_col, echo_opyrs_col = echo_opyrs_col)
   built <- list()
   rows <- list()
   for (nm in names(panels)) {
@@ -222,12 +256,12 @@ hv_followup_panels <- function(data,
   }
   for (nm in names(events)) {
     e <- events[[nm]]
-    label <- if (is.null(e$label)) nm else e$label
+    label <- if (!is.null(e$label)) e$label else if (length(e$event) == 1L) nm else e$event
     gf <- do.call(hv_followup, c(common, list(death_col = e$death, death_time_col = e$death_time,
                                               event_col = e$event, event_time_col = e$time,
                                               event_levels = c("No event", label, "Death"))))
     built[[nm]] <- gf
-    rows[[nm]] <- data.frame(panel = nm, type = "event", title = label,
+    rows[[nm]] <- data.frame(panel = nm, type = "event", title = paste(label, collapse = ", "),
                              n_drawn = gf$meta$n_event_patients, n_excluded = gf$meta$n_event_excluded)
   }
   summary <- do.call(rbind, unname(rows))
@@ -276,8 +310,8 @@ print.hv_followup_panels <- function(x, ...) {
 #' Draws one bare goodness-of-follow-up figure per panel, through
 #' [plot.hv_followup()]. Colors, shapes, labels and themes are left to the
 #' caller, as everywhere in this package; the state levels are `"Alive"` and
-#' `"Dead"` for a death panel, and `"No event"`, the event's label and
-#' `"Death"` for an event panel.
+#' `"Dead"` for a death panel, and `"No event"`, the event's label (or labels,
+#' for competing events) and `"Death"` for an event panel.
 #'
 #' @param x An `hv_followup_panels` object.
 #' @param alpha Point transparency. Default `0.5`, which keeps a dense cohort
