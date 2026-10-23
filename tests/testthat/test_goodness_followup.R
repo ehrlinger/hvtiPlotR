@@ -593,3 +593,22 @@ test_that("echo reaches the event panel and errors name missing columns", {
   expect_error(hv_followup(d, echo = data.frame(x = 1), echo_time_col = "iv_echo"), "iv_echo")
   expect_error(hv_followup(d, echo = data.frame(iv_echo = 1)), "echo_time_col")
 })
+
+test_that("print names the echo column and its source", {
+  d <- make_gfup_data()
+  d$iv_echo <- d$iv_dead / 2
+  expect_output(print(hv_followup(d, echo_time_col = "iv_echo")),
+                "iv_echo, 80 echo\\(es\\) drawn \\(one per patient\\)")
+  echo <- data.frame(iv_opyrs = d$iv_opyrs[1:4], iv_echo = 1)
+  expect_output(print(hv_followup(d, echo = echo, echo_time_col = "iv_echo")), "4 echo\\(es\\) drawn \\(every echo\\)")
+  expect_output(print(hv_followup(d, event_col = c("ev_event", "ev_event"),
+                                  event_time_col = c("iv_event", "iv_event"),
+                                  event_levels = c("No event", "A", "B", "Death"))),
+                "ev_event / iv_event, ev_event / iv_event")
+})
+
+test_that("the event_levels count is spelled out to ten, then given as a number", {
+  d <- make_gfup_data()
+  expect_error(hv_followup(d, event_col = rep("ev_event", 9), event_time_col = rep("iv_event", 9)),
+               "exactly 11 labels")
+})
