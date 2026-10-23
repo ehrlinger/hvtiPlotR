@@ -477,3 +477,138 @@ test_that("no event-panel counts are reported when there is no event panel", {
   expect_null(gf$meta$n_event_patients)
   expect_null(gf$meta$n_event_excluded)
 })
+
+# ===========================================================================
+# Competing non-fatal events
+# ===========================================================================
+
+# One patient per case: A first, B first, an A/B tie, an event tied with death,
+# death first, and neither.
+make_competing_data <- function() {
+  data.frame(
+    iv_opyrs = rep(5, 6),
+    iv_dead  = c(9, 9, 9, 3, 1, 8),
+    dead     = c(FALSE, FALSE, FALSE, TRUE, TRUE, FALSE),
+    iv_a     = c(2, 6, 4, 3, 1, 8),
+    ev_a     = c(TRUE, TRUE, TRUE, FALSE, FALSE, FALSE),
+    iv_b     = c(5, 3, 4, 3, 2, 8),
+    ev_b     = c(TRUE, TRUE, TRUE, TRUE, TRUE, FALSE)
+  )
+}
+
+competing_levels <- c("No event", "Reop", "Stroke", "Death")
+
+test_that("competing events: the first qualifying event sets the state", {
+  gf <- hv_followup(make_competing_data(),
+                    event_col = c("ev_a", "ev_b"), event_time_col = c("iv_a", "iv_b"),
+                    event_levels = competing_levels)
+  ed <- gf$tables$event_data
+  expect_identical(levels(ed$state), competing_levels)
+  expect_identical(as.character(ed$state),
+                   c("Reop", "Stroke", "Reop", "Death", "Death", "No event"))
+})
+
+test_that("competing events: y is the winning event's time, else the first event's", {
+  gf <- hv_followup(make_competing_data(),
+                    event_col = c("ev_a", "ev_b"), event_time_col = c("iv_a", "iv_b"),
+                    event_levels = competing_levels)
+  expect_identical(gf$tables$event_data$follow_up, c(2, 3, 4, 3, 1, 8))
+})
+
+test_that("competing events: one event in a vector matches the scalar call", {
+  d <- make_competing_data()
+  scalar <- hv_followup(d, event_col = "ev_a", event_time_col = "iv_a")
+  expect_identical(scalar$tables$event_data,
+                   hv_followup(d, event_col = c(ev_a = "ev_a"), event_time_col = "iv_a")$tables$event_data)
+})
+
+test_that("competing events: the panel plots every patient", {
+  gf <- hv_followup(make_competing_data(),
+                    event_col = c("ev_a", "ev_b"), event_time_col = c("iv_a", "iv_b"),
+                    event_levels = competing_levels)
+  p <- plot(gf, type = "event")
+  expect_plot_has_data(p, min_groups = 4L)
+  expect_identical(layer_row_counts(p)[[1L]], 6L)
+})
+
+test_that("competing events: mismatched vectors and levels stop", {
+  d <- make_competing_data()
+  expect_error(hv_followup(d, event_col = c("ev_a", "ev_b"), event_time_col = "iv_a",
+                           event_levels = competing_levels),
+               "same length")
+  expect_error(hv_followup(d, event_col = c("ev_a", "ev_b"), event_time_col = c("iv_a", "iv_b")),
+               "four labels")
+  expect_error(hv_followup(d, event_col = c("ev_a", "ev_b"), event_time_col = c("iv_a", "iv_b"),
+                           event_levels = c("No event", "Reop", "Reop", "Death")),
+               "distinct")
+})
+
+# ===========================================================================
+# Echo layer
+# ===========================================================================
+
+test_that("no echo layer by default", {
+  gf <- hv_followup(make_gfup_data())
+  expect_null(gf$tables$echo_data)
+  expect_false("GeomPoint" %in% geom_classes(plot(gf))[-1])
+})
+
+test_that("one echo per patient: a tick per patient with an echo, NA is no echo", {
+  d <- make_gfup_data()
+  d$iv_echo <- d$iv_dead / 2
+  d$iv_echo[1:3] <- NA
+  gf <- expect_silent(hv_followup(d, echo_time_col = "iv_echo"))
+  expect_identical(gf$meta$n_patients, nrow(d))
+  expect_identical(gf$meta$n_echo, nrow(d) - 3L)
+  expect_identical(gf$meta$n_no_echo, 3L)
+  expect_identical(names(gf$tables$echo_data), c("operation_year", "follow_up"))
+  expect_equal(gf$tables$echo_data$follow_up, d$iv_echo[-(1:3)])
+  p <- plot(gf)
+  expect_plot_has_data(p)
+  expect_identical(layer_row_counts(p)[[1L]], nrow(d))
+  expect_identical(layer_row_counts(p)[[length(p$layers)]], nrow(d) - 3L)
+})
+
+test_that("every echo: one tick per complete echo row; incomplete rows warn", {
+  d <- make_gfup_data()
+  echo <- data.frame(iv_opyrs = rep(d$iv_opyrs[1:4], each = 3),
+                     iv_echo  = rep(c(0.1, 1, 2), 4))
+  echo$iv_echo[2] <- NA
+  expect_warning(gf <- hv_followup(d, echo = echo, echo_time_col = "iv_echo"), "echo")
+  expect_identical(gf$meta$n_echo, 11L)
+  expect_identical(gf$meta$n_echo_excluded, 1L)
+  expect_equal(gf$tables$echo_data$operation_year, 1990 + echo$iv_opyrs[-2])
+  p <- plot(gf)
+  expect_identical(layer_row_counts(p)[[length(p$layers)]], 11L)
+  expect_identical(length(plot(gf, echo = FALSE)$layers), length(p$layers) - 1L)
+})
+
+test_that("echo reaches the event panel and errors name missing columns", {
+  d <- make_gfup_data()
+  d$iv_echo <- d$iv_dead / 2
+  gf <- hv_followup(d, event_col = "ev_event", event_time_col = "iv_event", echo_time_col = "iv_echo")
+  p <- plot(gf, type = "event")
+  expect_identical(layer_row_counts(p)[[length(p$layers)]], nrow(d))
+  expect_error(hv_followup(d, echo_time_col = "nope"), "nope")
+  expect_error(hv_followup(d, echo = data.frame(x = 1), echo_time_col = "iv_echo"), "iv_echo")
+  expect_error(hv_followup(d, echo = data.frame(iv_echo = 1)), "echo_time_col")
+})
+
+test_that("print names the echo column and its source", {
+  d <- make_gfup_data()
+  d$iv_echo <- d$iv_dead / 2
+  expect_output(print(hv_followup(d, echo_time_col = "iv_echo")),
+                "iv_echo, 80 echo\\(es\\) drawn \\(one per patient\\)")
+  echo <- data.frame(iv_opyrs = d$iv_opyrs[1:4], iv_echo = 1)
+  expect_output(print(hv_followup(d, echo = echo, echo_time_col = "iv_echo")), "4 echo\\(es\\) drawn \\(every echo\\)")
+  expect_output(print(hv_followup(d, event_col = c("ev_event", "ev_event"),
+                                  event_time_col = c("iv_event", "iv_event"),
+                                  event_levels = c("No event", "A", "B", "Death"))),
+                "ev_event / iv_event, ev_event / iv_event")
+})
+
+test_that("the event_levels count is spelled out to ten, then given as a number", {
+  d <- make_gfup_data()
+  expect_error(hv_followup(d, event_col = rep("ev_event", 9), event_time_col = rep("iv_event", 9)),
+               "exactly 11 labels")
+})

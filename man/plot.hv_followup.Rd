@@ -11,6 +11,10 @@
   diagonal_color = "orange",
   diagonal_linetype = "dashed",
   diagonal_linewidth = 0.6,
+  echo = TRUE,
+  echo_shape = 95,
+  echo_size = 4,
+  echo_color = "gray40",
   ...
 )
 }
@@ -31,6 +35,19 @@ Default \code{"orange"}.}
 \code{"dashed"}.}
 
 \item{diagonal_linewidth}{Linewidth for the diagonal.  Default \code{0.6}.}
+
+\item{echo}{Logical; draw the echo layer when
+\code{hv_followup()} was given \code{echo_time_col}.  Default \code{TRUE};
+\code{FALSE} leaves it off.}
+
+\item{echo_shape}{Point shape for the echo ticks.  Default \code{95},
+a short horizontal dash.}
+
+\item{echo_size}{Size of the echo ticks.  Default \code{4}.}
+
+\item{echo_color}{Color of the echo ticks.  Default
+\code{"gray40"}.  The echo layer is drawn with fixed settings, like the
+diagonal, so it stays out of the state color scale and its legend.}
 
 \item{...}{Ignored; present for S3 consistency.}
 }

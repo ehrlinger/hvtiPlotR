@@ -182,14 +182,20 @@ sample_goodness_followup_data <- function(
 #'   Default \code{"dead"}.
 #' @param death_time_col     Name of the time-to-death column.
 #'   Default \code{"iv_dead"}.
-#' @param event_col          Name of the non-fatal event indicator column.
+#' @param event_col          Name of the non-fatal event indicator column, or
+#'   a vector of names for competing non-fatal events drawn in one panel.
 #'   Required to compute the event panel (\code{type = "event"}).
 #'   Default \code{NULL} (event panel unavailable).  The flag alone does not
-#'   decide the state: the event time is compared against
+#'   decide the state: each event time is compared against
 #'   \code{death_time_col}, and a flagged event is only counted as non-fatal
-#'   when it strictly precedes death.  Ties go to death.
-#' @param event_time_col     Name of the time-to-event column.
-#'   Required when \code{event_col} is supplied.  Default \code{NULL}.
+#'   when it strictly precedes death.  Ties go to death.  Among the events
+#'   that qualify, the earliest sets the state, and a tie between two goes to
+#'   the one listed first.
+#' @param event_time_col     Name of the time-to-event column, or a vector the
+#'   same length as \code{event_col}, one interval per event.  Required when
+#'   \code{event_col} is supplied.  Default \code{NULL}.  A patient is drawn at
+#'   the winning event's interval; with no qualifying event, at the first
+#'   event's interval.
 #' @param death_for_event_col Name of the death column to use specifically in
 #'   the event panel (defaults to \code{death_col} when \code{NULL}).
 #' @param origin_year        Integer; calendar year used as the y-axis origin.
@@ -204,12 +210,36 @@ sample_goodness_followup_data <- function(
 #'   materialising the data.  Default \code{TRUE}.
 #' @param death_levels       Length-2 character vector labeling the two death
 #'   states (alive first).  Default \code{c("Alive", "Dead")}.
-#' @param event_levels       Length-3 character vector for the event panel
-#'   (event-free, non-fatal event, death).
-#'   Default \code{c("No event", "Non-fatal event", "Death")}.
+#' @param event_levels       Character vector of distinct labels for the event
+#'   panel: event-free, one per non-fatal event in the order of
+#'   \code{event_col}, then death.  Its length is the number of events plus
+#'   two.  Default \code{c("No event", "Non-fatal event", "Death")}.
 #' @param segment_drop       Numeric; vertical offset (years) for the segment
 #'   endpoint below the follow-up point.  Default \code{0} (no segment drawn).
 #'   Set to a positive value to restore the legacy stem below each point.
+#' @param echo               Optional data frame with one row per echo, for
+#'   the echo layer.  Each row carries the operation interval
+#'   (\code{echo_opyrs_col}) and the echo interval (\code{echo_time_col}), so
+#'   no patient identifier is needed; a cohort column carried onto each joined
+#'   echo row is enough.  Default \code{NULL}: with \code{echo_time_col} set,
+#'   the echo is read from \code{data} instead, one per patient.
+#' @param echo_time_col      Name of the echo interval column, in years since
+#'   the operation.  Default \code{NULL}, which draws no echo layer.  With
+#'   \code{echo = NULL} it names a column of \code{data}, the shape a join
+#'   reduced to one echo per patient delivers.
+#' @param echo_opyrs_col     Name of the operation interval column in
+#'   \code{echo}.  Default \code{NULL}, meaning \code{iv_opyrs_col}.
+#'
+#' @section Echo layer:
+#' The echo layer marks when each echo happened along a patient's follow-up: a
+#' tick at the operation year (x) and the echo interval (y), drawn on both
+#' panels.  It has two sources.  One echo per patient is a column of
+#' \code{data}; a missing value there means no echo was recorded, so the
+#' patient gets no tick, is still drawn in the panel, and nothing is warned.
+#' \code{$meta$n_echo} and \code{$meta$n_no_echo} count the two.  Every echo is
+#' a separate \code{echo} data frame; a row missing either column is an
+#' incomplete record, excluded with a warning and counted in
+#' \code{$meta$n_echo_excluded}.
 #'
 #' @section Missing data:
 #' Patients with a missing value in any required column are excluded, with a
@@ -232,8 +262,9 @@ sample_goodness_followup_data <- function(
 #'     \code{has_event} flag, and the cohort counts \code{n_patients}
 #'     (analyzed), \code{n_input}, and \code{n_excluded}.}
 #'   \item{\code{$tables}}{Named list with \code{diagonal} (the study-period
-#'     reference diagonal) and, when event columns are supplied,
-#'     \code{event_data}.}
+#'     reference diagonal), \code{event_data} when event columns are
+#'     supplied, and \code{echo_data} (\code{operation_year},
+#'     \code{follow_up}) when \code{echo_time_col} is.}
 #' }
 #'
 #' @seealso Worked recipe with rendered output:
@@ -272,6 +303,23 @@ sample_goodness_followup_data <- function(
 #'   ggplot2::labs(x = "Operation Date", y = "Follow-up (years)") +
 #'   theme_hv_poster()
 #'
+#' # Two competing non-fatal events in one panel: the first to happen wins
+#' dta$ev_stroke <- !dta$ev_event & seq_len(nrow(dta)) %% 4 == 0
+#' gf3 <- hv_followup(dta, event_col = c("ev_event", "ev_stroke"),
+#'                    event_time_col = c("iv_event", "iv_event"),
+#'                    event_levels = c("No event", "Reoperation", "Stroke", "Death"))
+#' table(gf3$tables$event_data$state)
+#' plot(gf3, type = "event")
+#'
+#' # Echo layer, one echo per patient: a column of the patient data
+#' dta$iv_echo <- dta$iv_dead * 0.6
+#' plot(hv_followup(dta, echo_time_col = "iv_echo"))
+#'
+#' # Echo layer, every echo: one row per echo, placed by the operation interval
+#' echoes <- data.frame(iv_opyrs = rep(dta$iv_opyrs[1:40], each = 3),
+#'                      iv_echo  = rep(dta$iv_dead[1:40], each = 3) * c(0.1, 0.5, 0.9))
+#' plot(hv_followup(dta, echo = echoes, echo_time_col = "iv_echo"))
+#'
 #' @export
 hv_followup <- function(
   data,
@@ -288,16 +336,33 @@ hv_followup <- function(
   tolower_names        = TRUE,
   death_levels         = c("Alive", "Dead"),
   event_levels         = c("No event", "Non-fatal event", "Death"),
-  segment_drop         = 0
+  segment_drop         = 0,
+  echo                 = NULL,
+  echo_time_col        = NULL,
+  echo_opyrs_col       = NULL
 ) {
   if (length(death_levels) != 2L)
     stop("`death_levels` must contain exactly two labels.", call. = FALSE)
-  if (length(event_levels) != 3L)
-    stop("`event_levels` must contain exactly three labels.", call. = FALSE)
   if (!is.numeric(segment_drop) || segment_drop < 0)
     stop("`segment_drop` must be a non-negative numeric value.", call. = FALSE)
   if (!is.null(event_col) && is.null(event_time_col))
     stop("Supply `event_time_col` when `event_col` is provided.", call. = FALSE)
+  event_col      <- unname(event_col)
+  event_time_col <- unname(event_time_col)
+  if (length(event_col) != length(event_time_col))
+    stop("`event_col` and `event_time_col` must be the same length, one interval per event.",
+         call. = FALSE)
+  # No event, each non-fatal event in the order given, then death.
+  n_levels <- if (is.null(event_col)) 3L else length(event_col) + 2L
+  if (length(event_levels) != n_levels)
+    stop(sprintf("`event_levels` must contain exactly %s labels: no event, %s, then death.",
+                 gf_count_word(n_levels),
+                 if (n_levels == 3L) "the event" else "each event in order"),
+         call. = FALSE)
+  if (anyDuplicated(event_levels))
+    stop("`event_levels` must be distinct.", call. = FALSE)
+  if (!is.null(echo) && is.null(echo_time_col))
+    stop("Supply `echo_time_col` when `echo` is provided.", call. = FALSE)
 
   payload     <- gf_materialize_followup_data(data, tolower_names)
   study_start <- gf_coerce_date(study_start, "study_start")
@@ -353,8 +418,18 @@ hv_followup <- function(
     )
   }
 
+  # --- Echo layer (optional) ------------------------------------------------
+  echo_out <- NULL
+  if (!is.null(echo_time_col))
+    echo_out <- gf_build_echo_frame(
+      payload, echo, iv_opyrs_col,
+      if (is.null(echo_opyrs_col)) iv_opyrs_col else echo_opyrs_col,
+      echo_time_col, origin_year, tolower_names
+    )
+
   tables <- list(diagonal = diag_df)
   if (has_event) tables$event_data <- event_data
+  if (!is.null(echo_out)) tables$echo_data <- echo_out$data
 
   new_hv_data(
     data = death_data,
@@ -377,7 +452,12 @@ hv_followup <- function(
       n_input             = death_excl$n_input,
       n_excluded          = death_excl$n_excluded,
       n_event_patients    = if (has_event) event_excl$n_analyzed else NULL,
-      n_event_excluded    = if (has_event) event_excl$n_excluded else NULL
+      n_event_excluded    = if (has_event) event_excl$n_excluded else NULL,
+      echo_time_col       = echo_time_col,
+      echo_source         = echo_out$source,
+      n_echo              = echo_out$n_echo,
+      n_no_echo           = echo_out$n_no_echo,
+      n_echo_excluded     = echo_out$n_excluded
     ),
     tables   = tables,
     subclass = "hv_followup"
@@ -408,8 +488,11 @@ print.hv_followup <- function(x, ...) {
               format(m$close_date)))
   cat(sprintf("  Death col   : %s / %s\n", m$death_col, m$death_time_col))
   if (m$has_event)
-    cat(sprintf("  Event col   : %s / %s\n",
-                m$event_col, m$event_time_col))
+    cat(sprintf("  Event col   : %s\n",
+                paste(m$event_col, m$event_time_col, sep = " / ", collapse = ", ")))
+  if (!is.null(m$echo_time_col))
+    cat(sprintf("  Echo        : %s, %d echo(es) drawn (%s)\n", m$echo_time_col, m$n_echo,
+                if (identical(m$echo_source, "patient")) "one per patient" else "every echo"))
   cat(sprintf("  Panels      : followup%s\n",
               if (m$has_event) ", event" else ""))
   invisible(x)
@@ -437,6 +520,15 @@ print.hv_followup <- function(x, ...) {
 #' @param diagonal_linetype  Linetype for the diagonal.  Default
 #'   \code{"dashed"}.
 #' @param diagonal_linewidth Linewidth for the diagonal.  Default \code{0.6}.
+#' @param echo               Logical; draw the echo layer when
+#'   \code{hv_followup()} was given \code{echo_time_col}.  Default \code{TRUE};
+#'   \code{FALSE} leaves it off.
+#' @param echo_shape         Point shape for the echo ticks.  Default \code{95},
+#'   a short horizontal dash.
+#' @param echo_size          Size of the echo ticks.  Default \code{4}.
+#' @param echo_color         Color of the echo ticks.  Default
+#'   \code{"gray40"}.  The echo layer is drawn with fixed settings, like the
+#'   diagonal, so it stays out of the state color scale and its legend.
 #' @param ...                Ignored; present for S3 consistency.
 #'
 #' @return A bare \code{\link[ggplot2]{ggplot}} object.
@@ -478,6 +570,10 @@ plot.hv_followup <- function(x,
                                diagonal_color     = "orange",
                                diagonal_linetype  = "dashed",
                                diagonal_linewidth = 0.6,
+                               echo               = TRUE,
+                               echo_shape         = 95,
+                               echo_size          = 4,
+                               echo_color         = "gray40",
                                ...) {
   type <- match.arg(type)
   .check_alpha(alpha)
@@ -498,7 +594,11 @@ plot.hv_followup <- function(x,
     diagonal_color,
     diagonal_linetype,
     diagonal_linewidth,
-    segment_drop = x$meta$segment_drop
+    segment_drop = x$meta$segment_drop,
+    echo_data    = if (isTRUE(echo)) x$tables$echo_data,
+    echo_shape   = echo_shape,
+    echo_size    = echo_size,
+    echo_color   = echo_color
   )
 }
 
@@ -579,36 +679,80 @@ gf_build_death_frame <- function(df, iv_col, follow_col, flag_col,
   )
 }
 
-# Encapsulates event-panel transformations. Produces a three-level state:
-#   levels[1] = no event (alive and event-free at censoring)
-#   levels[2] = non-fatal event occurred first
-#   levels[3] = death before the non-fatal event
-# This mirrors the ev_evnt coding in the legacy tp.dp.gfup.R template.
+# Encapsulates event-panel transformations. Produces the state levels
+#   levels[1]       = no event (alive and event-free at censoring)
+#   levels[1 + i]   = non-fatal event i occurred first
+#   levels[N + 2]   = death before any non-fatal event
+# With one event this mirrors the ev_evnt coding in the legacy tp.dp.gfup.R
+# template.
 #
-# The event flag alone cannot distinguish levels[2] from levels[3]: a patient
-# who died at year 1 with an event recorded at year 2 would be labeled
-# "non-fatal event", contradicting the state definitions above. The event time
-# is therefore compared against the death time, and the event only wins when
+# The event flag alone cannot distinguish an event from death: a patient who
+# died at year 1 with an event recorded at year 2 would be labeled with the
+# event, contradicting the state definitions above. Each event time is
+# therefore compared against the death time, and an event only qualifies when
 # it strictly precedes death. Ties go to death, since an event recorded at the
 # moment of death is not a non-fatal one.
-gf_build_event_frame <- function(df, iv_col, follow_col, event_col,
+#
+# Among qualifying events the earliest wins, and a tie between two goes to the
+# one listed first (which.min() returns the first minimum). y is the winning
+# event's interval; with no qualifying event it is the first event's interval,
+# which is what a single event has always drawn.
+gf_build_event_frame <- function(df, iv_col, follow_cols, event_cols,
                                  death_col, death_time_col, levels,
                                  origin_year, segment_drop) {
+  n              <- nrow(df)
   operation_year <- origin_year + as.numeric(df[[iv_col]])
-  follow_up      <- as.numeric(df[[follow_col]])
-  event_flag     <- as.logical(df[[event_col]])
   death_flag     <- as.logical(df[[death_col]])
   death_time     <- as.numeric(df[[death_time_col]])
+  times <- matrix(unlist(lapply(follow_cols, function(v) as.numeric(df[[v]]))), nrow = n)
+  flags <- matrix(unlist(lapply(event_cols, function(v) as.logical(df[[v]]))), nrow = n)
 
-  event_first <- event_flag & (!death_flag | follow_up < death_time)
-  state <- ifelse(event_first, levels[2],
-                  ifelse(death_flag, levels[3], levels[1]))
+  qualifies <- flags & (!death_flag | times < death_time)
+  candidate <- ifelse(qualifies, times, Inf)
+  winner    <- apply(candidate, 1L, function(t) if (all(is.infinite(t))) 0L else which.min(t))
+
+  follow_up <- ifelse(winner > 0L, times[cbind(seq_len(n), pmax(winner, 1L))], times[, 1L])
+  state <- ifelse(winner > 0L, levels[winner + 1L],
+                  ifelse(death_flag, levels[length(levels)], levels[1L]))
   data.frame(
     operation_year = operation_year,
     follow_up      = follow_up,
     segment_end    = pmax(follow_up - segment_drop, 0),
     state          = factor(state, levels = levels)
   )
+}
+
+# Builds the echo layer's points from either source. With `echo = NULL` the
+# echo interval is a column of the patient data, one echo per patient (what a
+# JOIN reduced to one row per patient delivers); a missing value there means no
+# echo was recorded, so that patient gets no tick and nothing is warned. With
+# `echo` a data frame, it holds one row per echo, and a row missing either
+# column is an incomplete record, excluded with a warning.
+gf_build_echo_frame <- function(payload, echo, iv_opyrs_col, echo_opyrs_col,
+                                echo_time_col, origin_year, tolower_names) {
+  as_points <- function(d, opyrs_col) {
+    data.frame(operation_year = origin_year + as.numeric(d[[opyrs_col]]),
+               follow_up      = as.numeric(d[[echo_time_col]]))
+  }
+  if (is.null(echo)) {
+    gf_require_columns(payload, echo_time_col)
+    has_opyrs <- !is.na(payload[[iv_opyrs_col]])
+    has_echo  <- has_opyrs & !is.na(payload[[echo_time_col]])
+    return(list(data = as_points(payload[has_echo, , drop = FALSE], iv_opyrs_col),
+                source = "patient", n_echo = sum(has_echo),
+                n_no_echo = sum(has_opyrs & !has_echo), n_excluded = NULL))
+  }
+  echo <- gf_materialize_followup_data(echo, tolower_names)
+  cols <- c(echo_opyrs_col, echo_time_col)
+  gf_require_columns(echo, cols)
+  excl <- .exclude_incomplete(echo, cols, context = "echo layer")
+  list(data = as_points(excl$data, echo_opyrs_col), source = "echo",
+       n_echo = excl$n_analyzed, n_no_echo = NULL, n_excluded = excl$n_excluded)
+}
+
+gf_count_word <- function(n) {
+  words <- c("three", "four", "five", "six", "seven", "eight", "nine", "ten")
+  if (n >= 3L && n <= 10L) words[n - 2L] else as.character(n)
 }
 
 # Shared plotting scaffold — works for both the binary death panel and the
@@ -619,7 +763,9 @@ gf_build_event_frame <- function(df, iv_col, follow_col, event_col,
 # line to every legend key, striking through the point glyph.
 gf_build_followup_plot <- function(data, diagonal, alpha,
                                    diagonal_color, diagonal_linetype,
-                                   diagonal_linewidth, segment_drop) {
+                                   diagonal_linewidth, segment_drop,
+                                   echo_data = NULL, echo_shape = 95,
+                                   echo_size = 4, echo_color = "gray40") {
   p <- ggplot2::ggplot(
     data,
     ggplot2::aes(.data[["operation_year"]], .data[["follow_up"]])
@@ -642,7 +788,7 @@ gf_build_followup_plot <- function(data, diagonal, alpha,
       alpha = alpha
     )
 
-  p +
+  p <- p +
     ggplot2::geom_line(
       data         = diagonal,
       ggplot2::aes(.data[["operation_year"]], .data[["follow_up"]]),
@@ -651,4 +797,17 @@ gf_build_followup_plot <- function(data, diagonal, alpha,
       linetype     = diagonal_linetype,
       color        = diagonal_color
     )
+
+  # Drawn last, with fixed settings rather than a mapped aesthetic, so the
+  # echo ticks stay out of the state color scale and its legend.
+  if (!is.null(echo_data))
+    p <- p + ggplot2::geom_point(
+      data        = echo_data,
+      ggplot2::aes(.data[["operation_year"]], .data[["follow_up"]]),
+      inherit.aes = FALSE,
+      shape       = echo_shape,
+      size        = echo_size,
+      color       = echo_color
+    )
+  p
 }

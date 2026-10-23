@@ -523,6 +523,99 @@ plot(gf2, type = "event", alpha = 0.8) +
   theme_hv_poster()
 ```
 
+## Competing non-fatal events
+
+A study that tracks more than one non-fatal event, say reoperation and
+stroke, can draw them in one panel. Pass `event_col` and `event_time_col` as
+vectors, one element per event, and give `event_levels` one label per event
+between "No event" and "Death". Each patient takes the state of whichever
+event came first. An event counts only when it strictly precedes death, as
+with a single event, so a tie with death goes to death. A tie between two
+non-fatal events goes to the one listed first. The point sits at the winning
+event's interval.
+
+The sample data carry one event, so the chunk below derives a second.
+
+```{r}
+#| label: gfup_competing
+gfup_event_dta$ev_stroke <- !gfup_event_dta$ev_event & seq_len(nrow(gfup_event_dta)) %% 4 == 0
+
+gf3 <- hv_followup(
+  gfup_event_dta,
+  event_col           = c("ev_event", "ev_stroke"),
+  event_time_col      = c("iv_event", "iv_event"),
+  death_for_event_col = "deads",
+  event_levels        = c("No event", "Reoperation", "Stroke", "Death"),
+  origin_year         = 1990,
+  study_start         = as.Date("1990-01-01"),
+  study_end           = as.Date("2019-12-31"),
+  close_date          = as.Date("2021-08-06")
+)
+table(gf3$tables$event_data$state)
+
+plot(gf3, type = "event", alpha = 0.8) +
+  scale_color_manual(
+    values = c("No event" = "blue", "Reoperation" = "green3",
+               "Stroke" = "purple", "Death" = "red"),
+    name   = NULL
+  ) +
+  scale_shape_manual(
+    values = c("No event" = 1L, "Reoperation" = 2L, "Stroke" = 0L, "Death" = 4L),
+    name   = NULL
+  ) +
+  labs(x = "Operation Date", y = "Follow-up (years)") +
+  theme_hv_poster()
+```
+
+## Echo layer
+
+The echo layer marks when echoes happened along each patient's follow-up: a
+gray tick at the operation year and the echo interval, on top of either
+panel. A patient with follow-up but no recent echo stands out as a point
+with nothing beneath it. The layer has two sources, and both need only the
+operation interval and the echo interval, never a patient identifier.
+
+**One echo per patient** is a column of the patient data, which is what a
+join reduced to one row per patient delivers. Name it in `echo_time_col`. A
+missing value means no echo was recorded, so that patient gets no tick but
+is still drawn; `meta$n_echo` and `meta$n_no_echo` count the two.
+
+```{r}
+#| label: gfup_echo_patient
+gfup_event_dta$iv_echo <- gfup_event_dta$iv_dead * 0.6
+gf_echo <- hv_followup(gfup_event_dta, echo_time_col = "iv_echo")
+c(gf_echo$meta$n_echo, gf_echo$meta$n_no_echo)
+
+plot(gf_echo) +
+  scale_color_manual(values = c(Alive = "blue", Dead = "red"), name = NULL) +
+  labs(x = "Operation Date", y = "Follow-up (years)") +
+  theme_hv_poster()
+```
+
+**Every echo** is a separate data frame, `echo`, with one row per echo. A
+cohort column carried onto each joined echo row places it, so `iv_opyrs`
+must come along with the join. A row missing either column is an incomplete
+record and is dropped with a warning. `plot(..., echo = FALSE)` leaves the
+layer off, and `echo_shape`, `echo_size` and `echo_color` restyle it. These
+are fixed settings, like the diagonal's, so the ticks never enter the state
+legend.
+
+```{r}
+#| label: gfup_echo_every
+echoes <- data.frame(
+  iv_opyrs = rep(gfup_event_dta$iv_opyrs[1:60], each = 3),
+  iv_echo  = rep(gfup_event_dta$iv_dead[1:60], each = 3) * c(0.1, 0.5, 0.9)
+)
+plot(hv_followup(gfup_event_dta, echo = echoes, echo_time_col = "iv_echo")) +
+  scale_color_manual(values = c(Alive = "blue", Dead = "red"), name = NULL) +
+  labs(x = "Operation Date", y = "Follow-up (years)") +
+  theme_hv_poster()
+```
+
+`hv_followup_panels()` takes the same arguments. An `events` entry accepts
+vector `event`, `time` and `label`, and `echo`, `echo_time_col` and
+`echo_opyrs_col` reach every panel.
+
 ## Several panels over one window
 
 A study that ascertains deaths two ways, or tracks a non-fatal event as well,

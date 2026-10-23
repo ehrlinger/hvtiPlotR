@@ -10,7 +10,10 @@ hv_followup_panels(
   origin_year,
   panels,
   events = list(),
-  close_date = NULL
+  close_date = NULL,
+  echo = NULL,
+  echo_time_col = NULL,
+  echo_opyrs_col = NULL
 )
 }
 \arguments{
@@ -30,10 +33,19 @@ optionally \code{title}.}
 entry is a list with \code{event} and \code{time}, the event's indicator and
 interval, \code{death} and \code{death_time}, the death it competes with, and
 optionally \code{label}. A flagged event counts only when it strictly precedes
-death.}
+death. For competing non-fatal events in one panel, give \code{event}, \code{time}
+and \code{label} as vectors of the same length, one element per event: the
+earliest qualifying event sets the state, and a tie between two goes to
+the one listed first. Without \code{label}, a single event is labeled with the
+entry's name and competing events with their column names.}
 
 \item{close_date}{\code{NULL} to estimate, or one date (a \code{Date} or a string
 \code{as.Date()} reads), on or after the last operation.}
+
+\item{echo, echo_time_col, echo_opyrs_col}{The echo layer, passed to every
+panel's \code{\link[=hv_followup]{hv_followup()}}. Set \code{echo_time_col} alone for one echo per
+patient, read from \code{data}; add \code{echo}, a data frame with one row per echo,
+to draw every echo. See the echo-layer section of \code{\link[=hv_followup]{hv_followup()}}.}
 }
 \value{
 An object of class \code{c("hv_followup_panels", "hv_data")}:
@@ -89,6 +101,19 @@ fp <- hv_followup_panels(
 )
 fp
 fp$meta$close_source
+
+# Competing events in one panel, and one echo per patient on every panel
+dta$ev_stroke <- !dta$ev_event & seq_len(nrow(dta)) \%\% 4 == 0
+dta$iv_echo <- dta$iv_dead * 0.6
+fp2 <- hv_followup_panels(
+  dta, origin_year = 1990, echo_time_col = "iv_echo",
+  panels = list(all = list(status = "dead", time = "iv_dead")),
+  events = list(nonfatal = list(event = c("ev_event", "ev_stroke"),
+                                time = c("iv_event", "iv_event"),
+                                death = "dead", death_time = "iv_dead",
+                                label = c("Reoperation", "Stroke")))
+)
+plot(fp2)$nonfatal
 }
 \seealso{
 \code{\link[=plot.hv_followup_panels]{plot.hv_followup_panels()}}, \code{\link[=hv_followup]{hv_followup()}}
