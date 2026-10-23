@@ -86,6 +86,10 @@ with a positive <code>segment_drop</code>.</p>
 <span>  diagonal_color <span class="op">=</span> <span class="st">"orange"</span>,</span>
 <span>  diagonal_linetype <span class="op">=</span> <span class="st">"dashed"</span>,</span>
 <span>  diagonal_linewidth <span class="op">=</span> <span class="fl">0.6</span>,</span>
+<span>  echo <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  echo_shape <span class="op">=</span> <span class="fl">95</span>,</span>
+<span>  echo_size <span class="op">=</span> <span class="fl">4</span>,</span>
+<span>  echo_color <span class="op">=</span> <span class="st">"gray40"</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -121,6 +125,27 @@ Default <code>"orange"</code>.</p></dd>
 
 <dt id="arg-diagonal-linewidth">diagonal_linewidth<a class="anchor" aria-label="anchor" href="#arg-diagonal-linewidth"></a></dt>
 <dd><p>Linewidth for the diagonal.  Default <code>0.6</code>.</p></dd>
+
+
+<dt id="arg-echo">echo<a class="anchor" aria-label="anchor" href="#arg-echo"></a></dt>
+<dd><p>Logical; draw the echo layer when
+<code><a href="hv_followup.html">hv_followup()</a></code> was given <code>echo_time_col</code>.  Default <code>TRUE</code>;
+<code>FALSE</code> leaves it off.</p></dd>
+
+
+<dt id="arg-echo-shape">echo_shape<a class="anchor" aria-label="anchor" href="#arg-echo-shape"></a></dt>
+<dd><p>Point shape for the echo ticks.  Default <code>95</code>,
+a short horizontal dash.</p></dd>
+
+
+<dt id="arg-echo-size">echo_size<a class="anchor" aria-label="anchor" href="#arg-echo-size"></a></dt>
+<dd><p>Size of the echo ticks.  Default <code>4</code>.</p></dd>
+
+
+<dt id="arg-echo-color">echo_color<a class="anchor" aria-label="anchor" href="#arg-echo-color"></a></dt>
+<dd><p>Color of the echo ticks.  Default
+<code>"gray40"</code>.  The echo layer is drawn with fixed settings, like the
+diagonal, so it stays out of the state color scale and its legend.</p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>

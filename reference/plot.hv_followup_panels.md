@@ -4,8 +4,8 @@ Draws one bare goodness-of-follow-up figure per panel, through
 [`plot.hv_followup()`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hv_followup.md).
 Colors, shapes, labels and themes are left to the caller, as everywhere
 in this package; the state levels are `"Alive"` and `"Dead"` for a death
-panel, and `"No event"`, the event's label and `"Death"` for an event
-panel.
+panel, and `"No event"`, the event's label (or labels, for competing
+events) and `"Death"` for an event panel.
 
 ## Usage
 

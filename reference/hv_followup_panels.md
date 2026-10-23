@@ -16,7 +16,10 @@ hv_followup_panels(
   origin_year,
   panels,
   events = list(),
-  close_date = NULL
+  close_date = NULL,
+  echo = NULL,
+  echo_time_col = NULL,
+  echo_opyrs_col = NULL
 )
 ```
 
@@ -47,12 +50,26 @@ hv_followup_panels(
   list with `event` and `time`, the event's indicator and interval,
   `death` and `death_time`, the death it competes with, and optionally
   `label`. A flagged event counts only when it strictly precedes death.
+  For competing non-fatal events in one panel, give `event`, `time` and
+  `label` as vectors of the same length, one element per event: the
+  earliest qualifying event sets the state, and a tie between two goes
+  to the one listed first. Without `label`, a single event is labeled
+  with the entry's name and competing events with their column names.
 
 - close_date:
 
   `NULL` to estimate, or one date (a `Date` or a string
   [`as.Date()`](https://rdrr.io/r/base/as.Date.html) reads), on or after
   the last operation.
+
+- echo, echo_time_col, echo_opyrs_col:
+
+  The echo layer, passed to every panel's
+  [`hv_followup()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_followup.md).
+  Set `echo_time_col` alone for one echo per patient, read from `data`;
+  add `echo`, a data frame with one row per echo, to draw every echo.
+  See the echo-layer section of
+  [`hv_followup()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_followup.md).
 
 ## Value
 
@@ -127,4 +144,17 @@ fp
 #>   N obs       : 300
 fp$meta$close_source
 #> [1] "estimated: the latest operation plus follow-up in the data"
+
+# Competing events in one panel, and one echo per patient on every panel
+dta$ev_stroke <- !dta$ev_event & seq_len(nrow(dta)) %% 4 == 0
+dta$iv_echo <- dta$iv_dead * 0.6
+fp2 <- hv_followup_panels(
+  dta, origin_year = 1990, echo_time_col = "iv_echo",
+  panels = list(all = list(status = "dead", time = "iv_dead")),
+  events = list(nonfatal = list(event = c("ev_event", "ev_stroke"),
+                                time = c("iv_event", "iv_event"),
+                                death = "dead", death_time = "iv_dead",
+                                label = c("Reoperation", "Stroke")))
+)
+plot(fp2)$nonfatal
 ```

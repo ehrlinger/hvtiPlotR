@@ -21,6 +21,10 @@ plot(
   diagonal_color = "orange",
   diagonal_linetype = "dashed",
   diagonal_linewidth = 0.6,
+  echo = TRUE,
+  echo_shape = 95,
+  echo_size = 4,
+  echo_color = "gray40",
   ...
 )
 ```
@@ -52,6 +56,26 @@ plot(
 - diagonal_linewidth:
 
   Linewidth for the diagonal. Default `0.6`.
+
+- echo:
+
+  Logical; draw the echo layer when
+  [`hv_followup()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_followup.md)
+  was given `echo_time_col`. Default `TRUE`; `FALSE` leaves it off.
+
+- echo_shape:
+
+  Point shape for the echo ticks. Default `95`, a short horizontal dash.
+
+- echo_size:
+
+  Size of the echo ticks. Default `4`.
+
+- echo_color:
+
+  Color of the echo ticks. Default `"gray40"`. The echo layer is drawn
+  with fixed settings, like the diagonal, so it stays out of the state
+  color scale and its legend.
 
 - ...:
 
