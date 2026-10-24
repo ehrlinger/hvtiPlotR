@@ -21,7 +21,7 @@ same order.
 }
 \description{
 The house color rule for EDA and follow-up figures, as a named vector you
-can check or reuse: an event is vermillion, censored is blue, missing is
+can check or reuse: an event is red, censored is blue, missing is
 light gray, and every other level takes a colorblind-safe color in order.
 To apply the rule to a plot, use \code{\link[=scale_fill_hv]{scale_fill_hv()}} or \code{\link[=scale_color_hv]{scale_color_hv()}},
 which call this for each panel.
@@ -29,14 +29,15 @@ which call this for each panel.
 \details{
 Every color is decided from \code{levels} alone:
 \enumerate{
-\item A level named in \code{event} is \verb{#D55E00}, in \code{censored} \verb{#0072B2}, and in
-\code{missing} \verb{#CCCCCC}. These hold even when the level is the only one.
+\item A level named in \code{event} is \verb{#CC3311}, in \code{censored} \verb{#0077BB} (Paul
+Tol's vibrant red and blue), and in \code{missing} \verb{#CCCCCC}. These hold even
+when the level is the only one.
 \item Every other level, in \code{levels} order, takes the light series of
 \code{\link[=hv_ppt_palette]{hv_ppt_palette()}}: Okabe-Ito blue, vermilion, bluish green and reddish
 purple, then a darkened yellow and black, so a sole level with no role
 is blue.
 \item When any of \code{levels} is named in \code{event} or \code{censored}, blue and
-vermillion leave that series, so no other level can be mistaken for the
+vermilion leave that series, so no other level can be mistaken for the
 event or for censored. A role name absent from \code{levels} changes nothing,
 so one call can serve panels that do and do not carry the event.
 \item When the other levels outnumber the series, all of them switch to Paul
