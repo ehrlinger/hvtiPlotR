@@ -2,8 +2,15 @@
 # scale_color_hv() / scale_fill_hv() scales that apply it panel by panel.
 # The rule and its reasoning: dev/specs/2026-09-27-hv-palette-design.md.
 
-.HV_ROLE_EVENT <- "#D55E00"
-.HV_ROLE_CENSORED <- "#0072B2"
+# Paul Tol's vibrant red and blue, not Okabe-Ito's vermilion and blue: readers
+# asked for a red that reads as red. Beside the rotation's bluish green the
+# colorblind margin narrows a little (deutan 47, protan 34 CIELAB, against 53
+# and 37 for vermilion; colorspace::deutan()/protan()).
+.HV_ROLE_EVENT <- "#CC3311"
+.HV_ROLE_CENSORED <- "#0077BB"
+# The rotation's own blue and vermilion, which leave it when a role is present:
+# a level in either would read as censored or as the event.
+.HV_ROLE_LOOKALIKES <- c("#0072B2", "#D55E00")
 .HV_ROLE_MISSING <- "#CCCCCC"
 # Paul Tol's muted palette less sand #DDCC77 and cyan #88CCEE, which fall
 # under 2:1 against white. Rose comes first so it is the one to drop when a
@@ -59,7 +66,7 @@ hv_palette <- function(n = NULL) {
 #'
 #' @description
 #' The house color rule for EDA and follow-up figures, as a named vector you
-#' can check or reuse: an event is vermillion, censored is blue, missing is
+#' can check or reuse: an event is red, censored is blue, missing is
 #' light gray, and every other level takes a colorblind-safe color in order.
 #' To apply the rule to a plot, use [scale_fill_hv()] or [scale_color_hv()],
 #' which call this for each panel.
@@ -67,14 +74,15 @@ hv_palette <- function(n = NULL) {
 #' @details
 #' Every color is decided from `levels` alone:
 #'
-#' 1. A level named in `event` is `#D55E00`, in `censored` `#0072B2`, and in
-#'    `missing` `#CCCCCC`. These hold even when the level is the only one.
+#' 1. A level named in `event` is `#CC3311`, in `censored` `#0077BB` (Paul
+#'    Tol's vibrant red and blue), and in `missing` `#CCCCCC`. These hold even
+#'    when the level is the only one.
 #' 2. Every other level, in `levels` order, takes the light series of
 #'    [hv_ppt_palette()]: Okabe-Ito blue, vermilion, bluish green and reddish
 #'    purple, then a darkened yellow and black, so a sole level with no role
 #'    is blue.
 #' 3. When any of `levels` is named in `event` or `censored`, blue and
-#'    vermillion leave that series, so no other level can be mistaken for the
+#'    vermilion leave that series, so no other level can be mistaken for the
 #'    event or for censored. A role name absent from `levels` changes nothing,
 #'    so one call can serve panels that do and do not carry the event.
 #' 4. When the other levels outnumber the series, all of them switch to Paul
@@ -127,7 +135,7 @@ hv_role_palette <- function(levels, event = NULL, censored = NULL, missing = "(M
   rotation <- hv_ppt_palette("light")
   fallback <- .HV_TOL_MUTED
   if (any(is_event | is_censored)) {
-    rotation <- setdiff(rotation, c(.HV_ROLE_EVENT, .HV_ROLE_CENSORED))
+    rotation <- setdiff(rotation, c(.HV_ROLE_EVENT, .HV_ROLE_CENSORED, .HV_ROLE_LOOKALIKES))
     fallback <- fallback[-1L]
   }
   others <- !(is_event | is_censored | is_missing)
@@ -147,7 +155,7 @@ hv_role_palette <- function(levels, event = NULL, censored = NULL, missing = "(M
 #'
 #' @description
 #' Discrete scales that color each panel by [hv_role_palette()]: event
-#' vermillion, censored blue, missing light gray, and colorblind-safe colors
+#' red, censored blue, missing light gray, and colorblind-safe colors
 #' for everything else. Add one to a page of panels with `&` and every panel
 #' is colored from its own levels, so a panel without the event still draws
 #' its levels from blue.

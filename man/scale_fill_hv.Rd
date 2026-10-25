@@ -48,7 +48,7 @@ A discrete ggplot2 scale for the \code{color} or \code{fill} aesthetic.
 }
 \description{
 Discrete scales that color each panel by \code{\link[=hv_role_palette]{hv_role_palette()}}: event
-vermillion, censored blue, missing light gray, and colorblind-safe colors
+red, censored blue, missing light gray, and colorblind-safe colors
 for everything else. Add one to a page of panels with \code{&} and every panel
 is colored from its own levels, so a panel without the event still draws
 its levels from blue.

@@ -3,8 +3,11 @@
 library(testthat)
 library(ggplot2)
 
-event_col <- "#D55E00"
-censored_col <- "#0072B2"
+event_col <- "#CC3311"
+censored_col <- "#0077BB"
+# The rotation's blue and vermilion: the role colors' look-alikes.
+rotation_blue <- "#0072B2"
+rotation_vermilion <- "#D55E00"
 missing_col <- "#CCCCCC"
 
 # WCAG contrast of a color against white.
@@ -31,21 +34,21 @@ test_that("with no role present the rotation is hv_ppt_palette('light') in level
   expect_identical(hv_role_palette(c("x", "y", "z"), event = "Dead", censored = "Alive"), pal)
 })
 
-test_that("a role in the levels takes blue and vermillion out of the rotation", {
+test_that("a role in the levels takes blue and vermilion out of the rotation", {
   for (role in list(list(event = "e"), list(censored = "e"))) {
     pal <- do.call(hv_role_palette, c(list(levels = c("e", "p", "q")), role))
-    expect_false(any(pal[c("p", "q")] %in% c(event_col, censored_col)))
+    expect_false(any(pal[c("p", "q")] %in% c(event_col, censored_col, rotation_blue, rotation_vermilion)))
   }
 })
 
 test_that("a sole level is blue with no role, and keeps its role color otherwise", {
-  expect_identical(unname(hv_role_palette("only")), censored_col)
+  expect_identical(unname(hv_role_palette("only")), rotation_blue)
   expect_identical(unname(hv_role_palette("d", event = "d")), event_col)
   expect_identical(unname(hv_role_palette("a", censored = "a")), censored_col)
   expect_identical(unname(hv_role_palette("(Missing)")), missing_col)
 })
 
-test_that("dp-gfup's event panel draws blue, vermillion and green", {
+test_that("dp-gfup's event panel draws blue, red and green", {
   pal <- hv_role_palette(c("No event", "Reoperation", "Death"), event = "Death", censored = "No event")
   expect_identical(unname(pal), c(censored_col, "#009E73", event_col))
 })
@@ -106,7 +109,7 @@ test_that("one page scale colors each panel from that panel's own levels", {
   expect_plot_has_data(page[[1]])
   expect_plot_has_data(page[[2]])
   expect_identical(built_fill(page[[1]]), c(Alive = censored_col, Dead = event_col, x = "#009E73"))
-  expect_identical(built_fill(page[[2]]), c(p = censored_col, q = event_col))
+  expect_identical(built_fill(page[[2]]), c(p = rotation_blue, q = rotation_vermilion))
 })
 
 test_that("the legend shows the panel's colors", {

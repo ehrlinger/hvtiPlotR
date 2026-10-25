@@ -240,3 +240,18 @@ Decided by John Ehrlinger, 2026-09-27:
 - Dark backgrounds. The rule is for white; `hv_ppt_palette("dark")` serves
   slides.
 - The templates' adoption, which is hvtiRtemplates phase 3b.
+
+## Amendment, 2026-10-24: a redder event color
+
+Users of the `dc-gfup` follow-up figure found vermillion too orange to read as
+death. The role colors became Paul Tol's vibrant red `#CC3311` and blue
+`#0077BB`; the rotation and every other palette are unchanged. Against the
+rotation's bluish green `#009E73`, the three colors' smallest CIELAB distance is
+72 normal, 47 deuteranopic, 34 protanopic and 15 tritanopic
+(`colorspace::deutan()`, `protan()`, `tritan()`), against 70, 53, 37 and 16 for
+vermillion. Study jobs had set `dead = "red"` and `alive = "blue"` by hand, and
+that pair alone is safe (173 deuteranopic); it is a pure red beside a green that
+fails (28). The new pair is the studies' red and blue, softened, which is what
+readers expected to see. The rotation still drops its own
+blue and vermilion when a role is present, now named as the role colors'
+look-alikes rather than the role colors themselves.

@@ -657,13 +657,13 @@ share the same diagonal reference line and can be saved individually with `ggsav
 ## Role colors across panels
 
 The colors above are chosen by hand in each call. `scale_color_hv()` applies
-the house rule instead: an event is vermillion, censored is blue, missing is
+the house rule instead: an event is red, censored is blue, missing is
 light gray, and anything else takes a colorblind-safe color in order. Add it
 to a patchwork with `&` and each panel is colored from its own levels, so a
 role can name every spelling the panels use. `Dead` and `Death` are both the
 event; `Alive` and `No event` are both censored. The event panel's
-non-fatal event then takes green, the first color left once blue and
-vermillion are spoken for. `hv_role_palette()` returns the same colors as a
+non-fatal event then takes green, the first color left once the rotation's
+blue and vermilion, the role colors' look-alikes, leave it. `hv_role_palette()` returns the same colors as a
 named vector, for a table or a legend drawn by hand.
 
 ```{r}
