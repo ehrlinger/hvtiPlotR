@@ -2,13 +2,13 @@
 # scale_color_hv() / scale_fill_hv() scales that apply it panel by panel.
 # The rule and its reasoning: dev/specs/2026-09-27-hv-palette-design.md.
 
-# Paul Tol's vibrant red and blue, not Okabe-Ito's vermillion and blue: readers
-# asked for a red that reads as red, and these two keep the colorblind margin
-# beside the rotation's bluish green (deutan 47, protan 34 CIELAB, against 53
-# and 37 for vermillion; colorspace::deutan()/protan()).
+# Paul Tol's vibrant red and blue, not Okabe-Ito's vermilion and blue: readers
+# asked for a red that reads as red. Beside the rotation's bluish green the
+# colorblind margin narrows a little (deutan 47, protan 34 CIELAB, against 53
+# and 37 for vermilion; colorspace::deutan()/protan()).
 .HV_ROLE_EVENT <- "#CC3311"
 .HV_ROLE_CENSORED <- "#0077BB"
-# The rotation's own blue and vermillion, which leave it when a role is present:
+# The rotation's own blue and vermilion, which leave it when a role is present:
 # a level in either would read as censored or as the event.
 .HV_ROLE_LOOKALIKES <- c("#0072B2", "#D55E00")
 .HV_ROLE_MISSING <- "#CCCCCC"
