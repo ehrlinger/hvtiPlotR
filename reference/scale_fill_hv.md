@@ -2,10 +2,10 @@
 
 Discrete scales that color each panel by
 [`hv_role_palette()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_role_palette.md):
-event vermillion, censored blue, missing light gray, and colorblind-safe
-colors for everything else. Add one to a page of panels with `&` and
-every panel is colored from its own levels, so a panel without the event
-still draws its levels from blue.
+event red, censored blue, missing light gray, and colorblind-safe colors
+for everything else. Add one to a page of panels with `&` and every
+panel is colored from its own levels, so a panel without the event still
+draws its levels from blue.
 
 ## Usage
 

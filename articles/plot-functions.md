@@ -803,13 +803,14 @@ can be saved individually with
 
 The colors above are chosen by hand in each call.
 [`scale_color_hv()`](https://ehrlinger.github.io/hvtiPlotR/reference/scale_fill_hv.md)
-applies the house rule instead: an event is vermillion, censored is
-blue, missing is light gray, and anything else takes a colorblind-safe
-color in order. Add it to a patchwork with `&` and each panel is colored
-from its own levels, so a role can name every spelling the panels use.
-`Dead` and `Death` are both the event; `Alive` and `No event` are both
+applies the house rule instead: an event is red, censored is blue,
+missing is light gray, and anything else takes a colorblind-safe color
+in order. Add it to a patchwork with `&` and each panel is colored from
+its own levels, so a role can name every spelling the panels use. `Dead`
+and `Death` are both the event; `Alive` and `No event` are both
 censored. The event panel’s non-fatal event then takes green, the first
-color left once blue and vermillion are spoken for.
+color left once the rotation’s blue and vermilion, the role colors’
+look-alikes, leave it.
 [`hv_role_palette()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_role_palette.md)
 returns the same colors as a named vector, for a table or a legend drawn
 by hand.
@@ -831,7 +832,7 @@ hv_role_palette(c("No event", "Non-fatal event", "Death"),
 ```
 
            No event Non-fatal event           Death
-          "#0072B2"       "#009E73"       "#D55E00" 
+          "#0077BB"       "#009E73"       "#CC3311" 
 
 ## Covariate Balance Plot
 

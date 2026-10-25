@@ -1,9 +1,9 @@
 # Colors for a figure's levels, by role
 
 The house color rule for EDA and follow-up figures, as a named vector
-you can check or reuse: an event is vermillion, censored is blue,
-missing is light gray, and every other level takes a colorblind-safe
-color in order. To apply the rule to a plot, use
+you can check or reuse: an event is red, censored is blue, missing is
+light gray, and every other level takes a colorblind-safe color in
+order. To apply the rule to a plot, use
 [`scale_fill_hv()`](https://ehrlinger.github.io/hvtiPlotR/reference/scale_fill_hv.md)
 or
 [`scale_color_hv()`](https://ehrlinger.github.io/hvtiPlotR/reference/scale_fill_hv.md),
@@ -42,9 +42,9 @@ order.
 
 Every color is decided from `levels` alone:
 
-1.  A level named in `event` is `#D55E00`, in `censored` `#0072B2`, and
-    in `missing` `#CCCCCC`. These hold even when the level is the only
-    one.
+1.  A level named in `event` is `#CC3311`, in `censored` `#0077BB` (Paul
+    Tol's vibrant red and blue), and in `missing` `#CCCCCC`. These hold
+    even when the level is the only one.
 
 2.  Every other level, in `levels` order, takes the light series of
     [`hv_ppt_palette()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_ppt_palette.md):
@@ -52,7 +52,7 @@ Every color is decided from `levels` alone:
     darkened yellow and black, so a sole level with no role is blue.
 
 3.  When any of `levels` is named in `event` or `censored`, blue and
-    vermillion leave that series, so no other level can be mistaken for
+    vermilion leave that series, so no other level can be mistaken for
     the event or for censored. A role name absent from `levels` changes
     nothing, so one call can serve panels that do and do not carry the
     event.
@@ -81,7 +81,7 @@ for series colors with no role attached.
 hv_role_palette(c("No event", "Reoperation", "Death"),
                 event = "Death", censored = "No event")
 #>    No event Reoperation       Death 
-#>   "#0072B2"   "#009E73"   "#D55E00" 
+#>   "#0077BB"   "#009E73"   "#CC3311" 
 hv_role_palette(c("Female", "Male", "(Missing)"))
 #>    Female      Male (Missing) 
 #> "#0072B2" "#D55E00" "#CCCCCC" 
