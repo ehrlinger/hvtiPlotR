@@ -98,10 +98,8 @@
 <td>PR + push to <code>main</code>, manual</td>
 <td>the site build</td>
 </tr><tr><td><code>test-coverage.yaml</code></td>
-<td>PR + push to <code>main</code>
-</td>
-<td>coverage upload; snapshots upload via <code>upload-snapshots: true</code>
-</td>
+<td>push to <code>main</code>, and by hand</td>
+<td>coverage upload; snapshots upload via <code>upload-snapshots: true</code>. <strong>Post-merge only</strong> since 2026-10-26: it ran the whole suite a second time on every PR, and is not a required check</td>
 </tr><tr><td><code>check-manual.yaml</code></td>
 <td><strong>push to <code>main</code> only — never a PR</strong></td>
 <td>the PDF manual build — catches raw Unicode in <code>.Rd</code> that <code>--no-manual</code> skips</td>
