@@ -402,6 +402,63 @@ test_that("plot(km, conf_int=TRUE) has more layers than conf_int=FALSE", {
 })
 
 # ===========================================================================
+# plot.hv_survival: step or line curve
+# ===========================================================================
+
+curve_geoms <- function(p) vapply(p$layers, function(l) class(l$geom)[[1]], "")
+
+test_that("plot(km) draws steps by default, as before the curve argument", {
+  km <- hv_survival(sample_survival_data(n = 200, seed = 14))
+  for (type in c("survival", "cumhaz", "loglog")) {
+    geoms <- curve_geoms(plot(km, type = type))
+    expect_true("GeomStep" %in% geoms, info = type)
+    expect_false("GeomLine" %in% geoms, info = type)
+  }
+})
+
+test_that("curve = 'line' joins the events alone, from time zero to the end of follow-up", {
+  # Events at 1, 2.5 and 4; censored at 2, 3 and 5. Survival is flat from 4 to 5.
+  dta <- data.frame(iv_dead = c(1, 2, 2.5, 3, 4, 5), dead = c(1, 0, 1, 0, 1, 0))
+  km  <- hv_survival(dta)
+  p   <- plot(km, curve = "line")
+  geoms <- curve_geoms(p)
+  expect_true("GeomLine" %in% geoms)
+  expect_false("GeomStep" %in% geoms)
+  b <- ggplot2::ggplot_build(p)$data
+  line <- b[[which(geoms == "GeomLine")]]
+  expect_equal(line$x, c(0, 1, 2.5, 4, 5))
+  expect_equal(line$y, 100 * km$data$surv[match(c(0, 1, 2.5, 4, 5), km$data$time)])
+  # The band spans the same rows as the line.
+  expect_equal(b[[which(geoms == "GeomRibbon")]]$x, line$x)
+  # The cumulative hazard and log-log views draw lines through the same events.
+  expect_equal(ggplot2::ggplot_build(plot(km, type = "cumhaz", curve = "line"))$data[[1]]$x, c(0, 1, 2.5, 4, 5))
+  expect_equal(ggplot2::ggplot_build(plot(km, type = "loglog", curve = "line"))$data[[1]]$x,
+               log(c(1, 2.5, 4, 5)))
+})
+
+test_that("curve = 'line' keeps each stratum's own end, and a stratum with no event stays flat", {
+  dta <- data.frame(iv_dead = c(1, 2, 3, 1.5, 2.5, 6),
+                    dead    = c(1, 0, 0, 0,   0,   0),
+                    grp     = rep(c("a", "b"), each = 3))
+  km <- hv_survival(dta, group_col = "grp")
+  b  <- ggplot2::ggplot_build(plot(km, curve = "line", conf_int = FALSE))
+  line <- b$data[[which(curve_geoms(b$plot) == "GeomLine")]]
+  by_group <- split(line, line$group)
+  expect_equal(by_group[[1]]$x, c(0, 1, 3))
+  expect_equal(by_group[[2]]$x, c(0, 6))
+  expect_equal(unique(by_group[[2]]$y), 100)
+})
+
+test_that("curve is matched, and an unknown curve is an error", {
+  km <- hv_survival(sample_survival_data(n = 100, seed = 15))
+  expect_true("GeomLine" %in% curve_geoms(plot(km, curve = "li")))
+  expect_error(plot(km, curve = "smooth"), "should be one of")
+  # Types without a step curve ignore it.
+  expect_s3_class(plot(km, type = "hazard", curve = "line"), "ggplot")
+  expect_s3_class(plot(km, type = "life", curve = "line"), "ggplot")
+})
+
+# ===========================================================================
 # hv_survival — custom report_times
 # ===========================================================================
 

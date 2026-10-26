@@ -9,6 +9,7 @@
   type = c("survival", "cumhaz", "hazard", "loglog", "life"),
   conf_int = TRUE,
   alpha = 0.8,
+  curve = c("step", "line"),
   ...
 )
 }
@@ -17,7 +18,7 @@
 
 \item{type}{Which plot variant to produce.  One of:
 \describe{
-\item{\code{"survival"}}{(default, \code{PLOTS=1}) KM step function with
+\item{\code{"survival"}}{(default, \code{PLOTS=1}) KM curve (see \code{curve}) with
 optional CI ribbon; y-axis on the 0–100 percent scale.}
 \item{\code{"cumhaz"}}{(\code{PLOTC=1}) Nelson-Aalen cumulative hazard
 \eqn{H(t) = -\log S(t)}.}
@@ -35,6 +36,15 @@ hazards.}
 Default \code{TRUE}.  Ignored for other \code{type} values.}
 
 \item{alpha}{Line/point transparency in \eqn{[0,1]}.  Default \code{0.8}.}
+
+\item{curve}{How the \code{"survival"}, \code{"cumhaz"} and
+\code{"loglog"} curves join one event to the next. \code{"step"} (default)
+draws the Kaplan-Meier steps, flat between events. \code{"line"} joins the
+events with straight lines, as the SAS \code{\%kaplan} figures do: it draws
+time zero, each event and each stratum's last row, and skips censored rows
+between, so a censoring time puts no corner in the line. The CI ribbon
+follows the same rows. Ignored for \code{"hazard"}, which draws points,
+and \code{"life"}.}
 
 \item{...}{Ignored; present for S3 consistency.}
 }
@@ -54,6 +64,15 @@ km  <- hv_survival(dta)
 
 # Default survival curve
 plot(km) +
+  ggplot2::labs(x = "Years after Operation", y = "Survival (\%)") +
+  theme_hv_poster()
+
+# Events joined by straight lines, with a point at each event
+plot(km, curve = "line") +
+  ggplot2::geom_point(
+    data = km$data[km$data$n.event > 0, ],
+    ggplot2::aes(x = .data[["time"]], y = .data[["surv"]] * 100)
+  ) +
   ggplot2::labs(x = "Years after Operation", y = "Survival (\%)") +
   theme_hv_poster()
 

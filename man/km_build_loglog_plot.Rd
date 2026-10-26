@@ -4,10 +4,12 @@
 \alias{km_build_loglog_plot}
 \title{Build bare log-log survival ggplot (PLOTC extension)}
 \usage{
-km_build_loglog_plot(km_df, alpha)
+km_build_loglog_plot(km_df, alpha, curve = "step")
 }
 \arguments{
 \item{km_df}{Tidy KM data frame from \code{km_extract_tidy}.}
+
+\item{curve}{\code{"step"} or \code{"line"}; see \code{km_curve_rows()}.}
 }
 \value{
 A bare \code{ggplot} object.

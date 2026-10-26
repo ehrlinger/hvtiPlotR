@@ -4,10 +4,12 @@
 \alias{km_build_cumhaz_plot}
 \title{Build bare cumulative hazard ggplot}
 \usage{
-km_build_cumhaz_plot(km_df, alpha)
+km_build_cumhaz_plot(km_df, alpha, curve = "step")
 }
 \arguments{
 \item{km_df}{Tidy KM data frame.}
+
+\item{curve}{\code{"step"} or \code{"line"}; see \code{km_curve_rows()}.}
 }
 \value{
 A bare \code{ggplot} object.
