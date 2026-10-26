@@ -9,7 +9,7 @@ hazards. Corresponds to the SAS `LN_CUMHZ * LN_INT` plot produced when
 ## Usage
 
 ``` r
-km_build_loglog_plot(km_df, alpha)
+km_build_loglog_plot(km_df, alpha, curve = "step")
 ```
 
 ## Arguments
@@ -17,6 +17,11 @@ km_build_loglog_plot(km_df, alpha)
 - km_df:
 
   Tidy KM data frame from `km_extract_tidy`.
+
+- curve:
+
+  `"step"` or `"line"`; see
+  [`km_curve_rows()`](https://ehrlinger.github.io/hvtiPlotR/reference/km_curve_rows.md).
 
 ## Value
 

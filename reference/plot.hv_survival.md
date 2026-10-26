@@ -15,6 +15,7 @@ plot(
   type = c("survival", "cumhaz", "hazard", "loglog", "life"),
   conf_int = TRUE,
   alpha = 0.8,
+  curve = c("step", "line"),
   ...
 )
 ```
@@ -31,8 +32,8 @@ plot(
 
   `"survival"`
 
-  :   (default, `PLOTS=1`) KM step function with optional CI ribbon;
-      y-axis on the 0–100 percent scale.
+  :   (default, `PLOTS=1`) KM curve (see `curve`) with optional CI
+      ribbon; y-axis on the 0–100 percent scale.
 
   `"cumhaz"`
 
@@ -61,6 +62,16 @@ plot(
 - alpha:
 
   Line/point transparency in \\\[0,1\]\\. Default `0.8`.
+
+- curve:
+
+  How the `"survival"`, `"cumhaz"` and `"loglog"` curves join one event
+  to the next. `"step"` (default) draws the Kaplan-Meier steps, flat
+  between events. `"line"` joins the events with straight lines, as the
+  SAS `%kaplan` figures do: it draws time zero, each event and each
+  stratum's last row, and skips censored rows between, so a censoring
+  time puts no corner in the line. The CI ribbon follows the same rows.
+  Ignored for `"hazard"`, which draws points, and `"life"`.
 
 - ...:
 
@@ -91,6 +102,16 @@ km  <- hv_survival(dta)
 
 # Default survival curve
 plot(km) +
+  ggplot2::labs(x = "Years after Operation", y = "Survival (%)") +
+  theme_hv_poster()
+
+
+# Events joined by straight lines, with a point at each event
+plot(km, curve = "line") +
+  ggplot2::geom_point(
+    data = km$data[km$data$n.event > 0, ],
+    ggplot2::aes(x = .data[["time"]], y = .data[["surv"]] * 100)
+  ) +
   ggplot2::labs(x = "Years after Operation", y = "Survival (%)") +
   theme_hv_poster()
 
