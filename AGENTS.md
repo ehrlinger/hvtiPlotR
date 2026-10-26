@@ -51,7 +51,7 @@ to lower the bar.
 | `R-CMD-check.yaml` | PR + push to `main` | `R CMD check` across platforms |
 | `lint.yaml` | PR + push to `main` | **any lint under `.lintr`.** `LINTR_ERROR_ON_LINT: true` since 2.7.9, when the 98 pre-existing lints were cleared ([#89](https://github.com/ehrlinger/hvtiPlotR/issues/89)). Run `lintr::lint_package()` before pushing; it must return zero. The `house-style` job in the same workflow gates separately, on house-style artifact drift. |
 | `pkgdown.yaml` | PR + push to `main`, manual | the site build |
-| `test-coverage.yaml` | PR + push to `main` | coverage upload; snapshots upload via `upload-snapshots: true` |
+| `test-coverage.yaml` | push to `main`, and by hand | coverage upload; snapshots upload via `upload-snapshots: true`. **Post-merge only** since 2026-10-26: it ran the whole suite a second time on every PR, and is not a required check |
 | `check-manual.yaml` | **push to `main` only — never a PR** | the PDF manual build — catches raw Unicode in `.Rd` that `--no-manual` skips |
 
 ⚠️ **`check-manual.yaml` does not gate pull requests.** Its triggers are `push` to
