@@ -246,9 +246,39 @@ km_report_table <- function(km_df, report_times) {
   do.call(rbind, do.call(c, rows))
 }
 
+##' Rows and geometry for a step or a line curve
+##'
+##' A step curve uses every row. A line curve joins the events alone: it keeps
+##' each stratum's first row (time zero, or on the log-log scale the first row
+##' with a defined logarithm), each row with an event, and each stratum's last
+##' row, so a censored time between two events puts no corner where the
+##' estimate did not change, and the line still runs to the end of follow-up.
+##'
+##' @param km_df Tidy KM data frame.
+##' @param curve \code{"step"} or \code{"line"}.
+##' @return \code{km_curve_rows()}, the rows to draw; \code{km_curve_geom()},
+##'   the layer that draws them.
+##' @keywords internal
+km_curve_rows <- function(km_df, curve) {
+  if (curve == "step") return(km_df)
+  # Each stratum's start and end of follow-up, whatever order the rows come in.
+  first <- km_df$time == stats::ave(km_df$time, km_df$strata, FUN = min)
+  last  <- km_df$time == stats::ave(km_df$time, km_df$strata, FUN = max)
+  km_df[first | km_df$n.event > 0 | last, , drop = FALSE]
+}
+
+##' @rdname km_curve_rows
+##' @param alpha Line transparency.
+##' @keywords internal
+##' @importFrom ggplot2 geom_step geom_line
+km_curve_geom <- function(curve, alpha) {
+  if (curve == "step") ggplot2::geom_step(alpha = alpha) else ggplot2::geom_line(alpha = alpha)
+}
+
 ##' Build bare survival curve ggplot
 ##'
-##' Returns a \code{ggplot} with a \code{geom_step()} for the KM estimate,
+##' Returns a \code{ggplot} with a \code{geom_step()} (or, for a line curve,
+##' a \code{geom_line()} through the events) for the KM estimate,
 ##' an optional \code{geom_ribbon()} for the CI, and a \code{geom_hline} at
 ##' zero.  The y-axis is expressed as 0–100 (i.e., \code{surv * 100}).
 ##' Color and fill are mapped to \code{strata} so single-group plots display
@@ -256,13 +286,15 @@ km_report_table <- function(km_df, report_times) {
 ##'
 ##' @param km_df   Tidy KM data frame.
 ##' @param conf_int Logical; draw CI ribbon when \code{TRUE}.
+##' @param curve   \code{"step"} or \code{"line"}; see \code{km_curve_rows()}.
+##'   The ribbon spans the same rows as the curve.
 ##' @return A bare \code{ggplot} object.
 ##' @importFrom ggplot2 ggplot aes geom_step geom_ribbon geom_hline scale_y_continuous
 ##' @importFrom rlang .data
 ##' @keywords internal
-km_build_survival_plot <- function(km_df, conf_int, alpha) {
+km_build_survival_plot <- function(km_df, conf_int, alpha, curve = "step") {
   p <- ggplot2::ggplot(
-    km_df,
+    km_curve_rows(km_df, curve),
     ggplot2::aes(
       x     = .data[["time"]],
       y     = .data[["surv"]] * 100,
@@ -285,26 +317,27 @@ km_build_survival_plot <- function(km_df, conf_int, alpha) {
       )
   }
 
-  p + ggplot2::geom_step(alpha = alpha)
+  p + km_curve_geom(curve, alpha)
 }
 
 ##' Build bare cumulative hazard ggplot
 ##'
 ##' @param km_df Tidy KM data frame.
+##' @param curve \code{"step"} or \code{"line"}; see \code{km_curve_rows()}.
 ##' @return A bare \code{ggplot} object.
 ##' @importFrom ggplot2 ggplot aes geom_step
 ##' @importFrom rlang .data
 ##' @keywords internal
-km_build_cumhaz_plot <- function(km_df, alpha) {
+km_build_cumhaz_plot <- function(km_df, alpha, curve = "step") {
   ggplot2::ggplot(
-    km_df,
+    km_curve_rows(km_df, curve),
     ggplot2::aes(
       x     = .data[["time"]],
       y     = .data[["cumhaz"]],
       color = .data[["strata"]]
     )
   ) +
-    ggplot2::geom_step(alpha = alpha)
+    km_curve_geom(curve, alpha)
 }
 
 ##' Build bare hazard rate ggplot
@@ -344,12 +377,16 @@ km_build_hazard_plot <- function(km_df, alpha) {
 ##' when \code{PLOTC=1}.
 ##'
 ##' @param km_df Tidy KM data frame from \code{km_extract_tidy}.
+##' @param curve \code{"step"} or \code{"line"}; see \code{km_curve_rows()}.
 ##' @return A bare \code{ggplot} object.
 ##' @importFrom ggplot2 ggplot aes geom_step
 ##' @importFrom rlang .data
 ##' @keywords internal
-km_build_loglog_plot <- function(km_df, alpha) {
+km_build_loglog_plot <- function(km_df, alpha, curve = "step") {
+  # Drop the rows log() leaves undefined before thinning, or an event at time
+  # zero takes the line's first point with it.
   ll_df <- km_df[!is.na(km_df$log_cumhaz) & !is.na(km_df$log_time), ]
+  ll_df <- km_curve_rows(ll_df, curve)
 
   ggplot2::ggplot(
     ll_df,
@@ -359,7 +396,7 @@ km_build_loglog_plot <- function(km_df, alpha) {
       color = .data[["strata"]]
     )
   ) +
-    ggplot2::geom_step(alpha = alpha)
+    km_curve_geom(curve, alpha)
 }
 
 ##' Build bare integrated survivorship ggplot (PLOTL)
@@ -634,7 +671,7 @@ print.hv_survival <- function(x, ...) {
 #' @param x        An \code{hv_survival} object.
 #' @param type     Which plot variant to produce.  One of:
 #'   \describe{
-#'     \item{\code{"survival"}}{(default, \code{PLOTS=1}) KM step function with
+#'     \item{\code{"survival"}}{(default, \code{PLOTS=1}) KM curve (see \code{curve}) with
 #'       optional CI ribbon; y-axis on the 0–100 percent scale.}
 #'     \item{\code{"cumhaz"}}{(\code{PLOTC=1}) Nelson-Aalen cumulative hazard
 #'       \eqn{H(t) = -\log S(t)}.}
@@ -649,6 +686,14 @@ print.hv_survival <- function(x, ...) {
 #'   }
 #' @param conf_int Logical; draw a CI ribbon on the \code{"survival"} plot.
 #'   Default \code{TRUE}.  Ignored for other \code{type} values.
+#' @param curve    How the \code{"survival"}, \code{"cumhaz"} and
+#'   \code{"loglog"} curves join one event to the next. \code{"step"} (default)
+#'   draws the Kaplan-Meier steps, flat between events. \code{"line"} joins the
+#'   events with straight lines, as the SAS \code{\%kaplan} figures do: it draws
+#'   time zero, each event and each stratum's last row, and skips censored rows
+#'   between, so a censoring time puts no corner in the line. The CI ribbon
+#'   follows the same rows. Ignored for \code{"hazard"}, which draws points,
+#'   and \code{"life"}.
 #' @param alpha    Line/point transparency in \eqn{[0,1]}.  Default \code{0.8}.
 #' @param ...      Ignored; present for S3 consistency.
 #'
@@ -669,6 +714,15 @@ print.hv_survival <- function(x, ...) {
 #'   ggplot2::labs(x = "Years after Operation", y = "Survival (%)") +
 #'   theme_hv_poster()
 #'
+#' # Events joined by straight lines, with a point at each event
+#' plot(km, curve = "line") +
+#'   ggplot2::geom_point(
+#'     data = km$data[km$data$n.event > 0, ],
+#'     ggplot2::aes(x = .data[["time"]], y = .data[["surv"]] * 100)
+#'   ) +
+#'   ggplot2::labs(x = "Years after Operation", y = "Survival (%)") +
+#'   theme_hv_poster()
+#'
 #' # Cumulative hazard
 #' plot(km, type = "cumhaz") +
 #'   ggplot2::labs(x = "Years", y = "Cumulative Hazard") +
@@ -683,24 +737,26 @@ print.hv_survival <- function(x, ...) {
 #'   ggplot2::labs(x = "Years", y = "Instantaneous Hazard") +
 #'   theme_hv_poster()
 #'
-#' @importFrom ggplot2 ggplot aes geom_step geom_ribbon geom_hline scale_y_continuous geom_point
+#' @importFrom ggplot2 ggplot aes geom_step geom_line geom_ribbon geom_hline scale_y_continuous geom_point
 #' @export
 plot.hv_survival <- function(x,
                                type     = c("survival", "cumhaz",
                                             "hazard", "loglog", "life"),
                                conf_int = TRUE,
                                alpha    = 0.8,
+                               curve    = c("step", "line"),
                                ...) {
   type <- match.arg(type)
+  curve <- match.arg(curve)
   .check_alpha(alpha)
   km_df <- x$data
 
   switch(type,
     survival = km_build_survival_plot(km_df, conf_int = conf_int,
-                                      alpha = alpha),
-    cumhaz   = km_build_cumhaz_plot(km_df, alpha = alpha),
+                                      alpha = alpha, curve = curve),
+    cumhaz   = km_build_cumhaz_plot(km_df, alpha = alpha, curve = curve),
     hazard   = km_build_hazard_plot(km_df, alpha = alpha),
-    loglog   = km_build_loglog_plot(km_df, alpha = alpha),
+    loglog   = km_build_loglog_plot(km_df, alpha = alpha, curve = curve),
     life     = km_build_life_plot(km_df, alpha = alpha)
   )
 }

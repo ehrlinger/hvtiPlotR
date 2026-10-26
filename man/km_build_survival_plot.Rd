@@ -4,18 +4,22 @@
 \alias{km_build_survival_plot}
 \title{Build bare survival curve ggplot}
 \usage{
-km_build_survival_plot(km_df, conf_int, alpha)
+km_build_survival_plot(km_df, conf_int, alpha, curve = "step")
 }
 \arguments{
 \item{km_df}{Tidy KM data frame.}
 
 \item{conf_int}{Logical; draw CI ribbon when \code{TRUE}.}
+
+\item{curve}{\code{"step"} or \code{"line"}; see \code{km_curve_rows()}.
+The ribbon spans the same rows as the curve.}
 }
 \value{
 A bare \code{ggplot} object.
 }
 \description{
-Returns a \code{ggplot} with a \code{geom_step()} for the KM estimate,
+Returns a \code{ggplot} with a \code{geom_step()} (or, for a line curve,
+a \code{geom_line()} through the events) for the KM estimate,
 an optional \code{geom_ribbon()} for the CI, and a \code{geom_hline} at
 zero.  The y-axis is expressed as 0–100 (i.e., \code{surv * 100}).
 Color and fill are mapped to \code{strata} so single-group plots display
