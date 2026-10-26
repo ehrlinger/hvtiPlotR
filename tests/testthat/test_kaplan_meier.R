@@ -449,6 +449,18 @@ test_that("curve = 'line' keeps each stratum's own end, and a stratum with no ev
   expect_equal(unique(by_group[[2]]$y), 100)
 })
 
+test_that("curve = 'line' keeps an event at time zero, under either estimator", {
+  dta <- data.frame(iv_dead = c(0, 1, 2, 3), dead = c(1, 1, 0, 1))
+  for (method in c("kaplan-meier", "nelson-aalen")) {
+    km <- hv_survival(dta, method = method)
+    b  <- ggplot2::ggplot_build(plot(km, curve = "line", conf_int = FALSE))
+    line <- b$data[[which(curve_geoms(b$plot) == "GeomLine")]]
+    events <- km$data[km$data$n.event > 0, ]
+    expect_equal(line$x, c(0, 0, 1, 3), info = method)
+    expect_equal(line$y[-1], 100 * events$surv, info = method)
+  }
+})
+
 test_that("curve is matched, and an unknown curve is an error", {
   km <- hv_survival(sample_survival_data(n = 100, seed = 15))
   expect_true("GeomLine" %in% curve_geoms(plot(km, curve = "li")))

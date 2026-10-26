@@ -260,7 +260,8 @@ km_report_table <- function(km_df, report_times) {
 ##' @keywords internal
 km_curve_rows <- function(km_df, curve) {
   if (curve == "step") return(km_df)
-  last <- !duplicated(km_df$strata, fromLast = TRUE)
+  # The end of each stratum's follow-up, whatever order the rows come in.
+  last <- km_df$time == stats::ave(km_df$time, km_df$strata, FUN = max)
   km_df[km_df$time == 0 | km_df$n.event > 0 | last, , drop = FALSE]
 }
 
