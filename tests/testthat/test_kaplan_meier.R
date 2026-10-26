@@ -461,6 +461,14 @@ test_that("curve = 'line' keeps an event at time zero, under either estimator", 
   }
 })
 
+test_that("curve = 'line' draws a log-log line when the only event is at time zero", {
+  # log(0) is undefined, so thinning before dropping those rows left one point.
+  km <- hv_survival(data.frame(iv_dead = c(0, 1, 2, 3), dead = c(1, 0, 0, 0)))
+  line <- ggplot2::ggplot_build(plot(km, type = "loglog", curve = "line"))$data[[1]]
+  expect_equal(line$x, log(c(1, 3)))
+  expect_equal(unique(line$y), unique(km$data$log_cumhaz[km$data$time > 0]))
+})
+
 test_that("curve is matched, and an unknown curve is an error", {
   km <- hv_survival(sample_survival_data(n = 100, seed = 15))
   expect_true("GeomLine" %in% curve_geoms(plot(km, curve = "li")))

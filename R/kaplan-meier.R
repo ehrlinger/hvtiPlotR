@@ -249,9 +249,10 @@ km_report_table <- function(km_df, report_times) {
 ##' Rows and geometry for a step or a line curve
 ##'
 ##' A step curve uses every row. A line curve joins the events alone: it keeps
-##' time zero, each row with an event, and each stratum's last row, so a
-##' censored time between two events puts no corner where the estimate did not
-##' change, and the line still runs to the end of follow-up.
+##' each stratum's first row (time zero, or on the log-log scale the first row
+##' with a defined logarithm), each row with an event, and each stratum's last
+##' row, so a censored time between two events puts no corner where the
+##' estimate did not change, and the line still runs to the end of follow-up.
 ##'
 ##' @param km_df Tidy KM data frame.
 ##' @param curve \code{"step"} or \code{"line"}.
@@ -260,9 +261,10 @@ km_report_table <- function(km_df, report_times) {
 ##' @keywords internal
 km_curve_rows <- function(km_df, curve) {
   if (curve == "step") return(km_df)
-  # The end of each stratum's follow-up, whatever order the rows come in.
-  last <- km_df$time == stats::ave(km_df$time, km_df$strata, FUN = max)
-  km_df[km_df$time == 0 | km_df$n.event > 0 | last, , drop = FALSE]
+  # Each stratum's start and end of follow-up, whatever order the rows come in.
+  first <- km_df$time == stats::ave(km_df$time, km_df$strata, FUN = min)
+  last  <- km_df$time == stats::ave(km_df$time, km_df$strata, FUN = max)
+  km_df[first | km_df$n.event > 0 | last, , drop = FALSE]
 }
 
 ##' @rdname km_curve_rows
@@ -381,8 +383,10 @@ km_build_hazard_plot <- function(km_df, alpha) {
 ##' @importFrom rlang .data
 ##' @keywords internal
 km_build_loglog_plot <- function(km_df, alpha, curve = "step") {
-  ll_df <- km_curve_rows(km_df, curve)
-  ll_df <- ll_df[!is.na(ll_df$log_cumhaz) & !is.na(ll_df$log_time), ]
+  # Drop the rows log() leaves undefined before thinning, or an event at time
+  # zero takes the line's first point with it.
+  ll_df <- km_df[!is.na(km_df$log_cumhaz) & !is.na(km_df$log_time), ]
+  ll_df <- km_curve_rows(ll_df, curve)
 
   ggplot2::ggplot(
     ll_df,
