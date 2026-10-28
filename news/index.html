@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">hvtiPlotR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.8.18</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.8.19</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -53,6 +53,12 @@
       <small>Source: <a href="https://github.com/ehrlinger/hvtiPlotR/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="2.8.19" id="hvtiplotr-2819">hvtiPlotR 2.8.19<a class="anchor" aria-label="anchor" href="#hvtiplotr-2819"></a></h2>
+<ul><li><p><code><a href="../reference/plot.hv_survival.html">plot.hv_survival()</a></code> gains <code>curve = c("step", "line")</code>. <code>"line"</code> joins the events with straight lines, as the SAS <code>%kaplan</code> figures do, on the <code>"survival"</code>, <code>"cumhaz"</code> and <code>"loglog"</code> plots: it draws time zero, each event and each stratum’s last row, and skips the censored rows between, so a censoring time puts no corner in the line. The CI ribbon follows the same rows. The default, <code>"step"</code>, draws exactly as before.</p></li>
+<li><p><code><a href="../reference/plot.hv_mirror_hist.html">plot.hv_mirror_hist()</a></code> gains <code>split_tall</code> (default <code>FALSE</code>) and <code>split_mult</code> (default 1.5). When one arm piles into a single bin, say 648 of 685 patients at a score of 95 to 100%, that bar flattens the figure and the small arm and the matched bars cannot be read. With <code>split_tall = TRUE</code> the y-axis is sized to <code>split_mult</code> times the tallest matched (or weighted) bar or tallest bar of the smaller arm. Any taller “all patients” bar is cut by a white gap, set above the tallest matched bar, and labeled with its full count. The limits are set in <code><a href="https://ggplot2.tidyverse.org/reference/coord_cartesian.html" class="external-link">coord_cartesian()</a></code>, which clips the bar; the scale limits used otherwise would drop it.</p></li>
+<li><p>The mirrored histogram’s fill legend reads “SAVR, all”, “SAVR, matched” (or “weighted”), and so on, from <code>group_labels</code>, in place of the internal keys <code>before_g0</code>, <code>matched_g1</code>. <code><a href="../reference/hv_mirror_hist.html">hv_mirror_hist()</a></code> stores the labels in <code>meta$fill_labels</code> for a <code>scale_fill_manual(labels = )</code> that replaces the default fill scale.</p></li>
+</ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="2.8.18" id="hvtiplotr-2818">hvtiPlotR 2.8.18<a class="anchor" aria-label="anchor" href="#hvtiplotr-2818"></a></h2>
 <ul><li>The role colors are now Paul Tol’s vibrant red <code>#CC3311</code> for an event and blue <code>#0077BB</code> for censored, replacing Okabe-Ito vermilion <code>#D55E00</code> and blue <code>#0072B2</code>. Readers asked for a red that reads as red. Beside the rotation’s bluish green the colorblind margin narrows a little (smallest CIELAB distance 47 deuteranopic and 34 protanopic, against 53 and 37), and stays well clear of the red-green pairs that fail. When a role is present the rotation still drops its own blue and vermilion, so no other level is mistaken for the event or for censored. <code><a href="../reference/hv_palette.html">hv_palette()</a></code> and <code><a href="../reference/hv_ppt_palette.html">hv_ppt_palette()</a></code> are unchanged.</li>
