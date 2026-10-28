@@ -73,7 +73,7 @@ or weighted patients are shown in a contrasting shade.  Compose with
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="co"># S3 method for class 'hv_mirror_hist'</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">x</span>, alpha <span class="op">=</span> <span class="fl">0.8</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">x</span>, alpha <span class="op">=</span> <span class="fl">0.8</span>, split_tall <span class="op">=</span> <span class="cn">FALSE</span>, split_mult <span class="op">=</span> <span class="fl">1.5</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -82,11 +82,36 @@ or weighted patients are shown in a contrasting shade.  Compose with
 
 <dl><dt id="arg-x">x<a class="anchor" aria-label="anchor" href="#arg-x"></a></dt>
 <dd><p>An <code>hv_mirror_hist</code> object from
-<code><a href="hv_mirror_hist.html">hv_mirror_hist</a></code>.</p></dd>
+<code><a href="hv_mirror_hist.html">hv_mirror_hist</a></code>.
+The fill legend reads <code>"&lt;group&gt;, all"</code> and <code>"&lt;group&gt;, matched"</code>
+(or <code>", weighted"</code>) from <code>group_labels</code>.  A
+<code><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_fill_manual()</a></code> you add replaces that scale; pass
+<code>labels = x$meta$fill_labels</code> to keep the readable labels.</p>
+<p>When one arm piles into a single bin (say 648 of 685 patients at a score
+of 95 to 100\<!-- %), that bar flattens the rest of the figure and the small -->
+arm and the matched bars cannot be read.  <code>split_tall = TRUE</code> sizes
+the y-axis to the tallest bar of the matched (or weighted) layers or of the
+arm whose tallest bar is smaller, times <code>split_mult</code>.  Any taller
+"all patients" bar is clipped at the panel edge, cut by a white gap, and
+labeled with its full count on a white label.  The limits are set with
+<code><a href="https://ggplot2.tidyverse.org/reference/coord_cartesian.html" class="external-link">coord_cartesian</a></code>, which clips a bar instead of
+dropping it, so do not add <code><a href="https://ggplot2.tidyverse.org/reference/lims.html" class="external-link">ylim()</a></code> or scale limits on top; a
+<code>scale_y_continuous(labels = abs)</code> without limits is safe.</p></dd>
 
 
 <dt id="arg-alpha">alpha<a class="anchor" aria-label="anchor" href="#arg-alpha"></a></dt>
 <dd><p>Bar transparency in \([0,1]\).  Default <code>0.8</code>.</p></dd>
+
+
+<dt id="arg-split-tall">split_tall<a class="anchor" aria-label="anchor" href="#arg-split-tall"></a></dt>
+<dd><p>Logical.  Split "all patients" bars too tall for an axis
+sized to the matched bars and the smaller arm.  Default <code>FALSE</code>.</p></dd>
+
+
+<dt id="arg-split-mult">split_mult<a class="anchor" aria-label="anchor" href="#arg-split-mult"></a></dt>
+<dd><p>Number greater than 1: the axis cap as a multiple of the
+tallest matched bar or tallest bar of the smaller arm.  Used only when
+<code>split_tall = TRUE</code>.  Default <code>1.5</code>.</p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
@@ -97,7 +122,9 @@ or weighted patients are shown in a contrasting shade.  Compose with
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>A bare <code><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></code> object; compose with <code>+</code>
 to add color scales, axis limits, labels, and
-<code><a href="hvtiPlotR-themes.html">theme_hv_manuscript</a></code>.</p>
+<code><a href="hvtiPlotR-themes.html">theme_hv_manuscript</a></code>.  With <code>split_tall = TRUE</code> it
+carries two extra layers after the bars: the white gaps
+(<code>geom_rect</code>) and the count labels (<code>geom_label</code>).</p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
@@ -123,6 +150,17 @@ to add color scales, axis limits, labels, and
 <span class="r-in"><span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Propensity Score (%)"</span>, y <span class="op">=</span> <span class="st">"Count"</span><span class="op">)</span> <span class="op">+</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="hvtiPlotR-themes.html">theme_hv_poster</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="plot.hv_mirror_hist-1.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># One tall bar: most treated patients pile into the top bin.</span></span></span>
+<span class="r-in"><span><span class="va">dta_tall</span> <span class="op">&lt;-</span> <span class="va">dta</span></span></span>
+<span class="r-in"><span><span class="va">top</span> <span class="op">&lt;-</span> <span class="va">dta_tall</span><span class="op">$</span><span class="va">tavr</span> <span class="op">==</span> <span class="fl">1</span> <span class="op">&amp;</span> <span class="va">dta_tall</span><span class="op">$</span><span class="va">match</span> <span class="op">==</span> <span class="fl">0</span></span></span>
+<span class="r-in"><span><span class="va">dta_tall</span><span class="op">$</span><span class="va">prob_t</span><span class="op">[</span><span class="va">top</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fl">0.98</span></span></span>
+<span class="r-in"><span><span class="va">mh_tall</span> <span class="op">&lt;-</span> <span class="fu"><a href="hv_mirror_hist.html">hv_mirror_hist</a></span><span class="op">(</span><span class="va">dta_tall</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> mirror_histogram diagnostics: n=1000  dropped=0  [see $tables$diagnostics]</span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">mh_tall</span>, split_tall <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">+</span></span></span>
+<span class="r-in"><span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Propensity Score (%)"</span>, y <span class="op">=</span> <span class="st">"Count"</span><span class="op">)</span> <span class="op">+</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="hvtiPlotR-themes.html">theme_hv_poster</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="plot.hv_mirror_hist-2.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

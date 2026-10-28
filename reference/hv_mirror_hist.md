@@ -88,7 +88,9 @@ The list contains:
 - `$meta`:
 
   Named list: `score_col`, `group_col`, `match_col`, `group_labels`,
-  `binwidth`, `lower`, `upper`, `y_breaks`, `n_obs`, `n_dropped`.
+  `binwidth`, `lower`, `upper`, `y_breaks`, `fill_labels` (readable
+  legend labels named by fill key, for `scale_fill_manual(labels = )`),
+  `n_obs`, `n_dropped`.
 
 - `$tables`:
 
