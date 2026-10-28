@@ -4,20 +4,44 @@
 \alias{plot.hv_mirror_hist}
 \title{Plot an hv_mirror_hist object}
 \usage{
-\method{plot}{hv_mirror_hist}(x, alpha = 0.8, ...)
+\method{plot}{hv_mirror_hist}(x, alpha = 0.8, split_tall = FALSE, split_mult = 1.5, ...)
 }
 \arguments{
 \item{x}{An \code{hv_mirror_hist} object from
-\code{\link{hv_mirror_hist}}.}
+\code{\link{hv_mirror_hist}}.
+The fill legend reads \code{"<group>, all"} and \code{"<group>, matched"}
+(or \code{", weighted"}) from \code{group_labels}.  A
+\code{scale_fill_manual()} you add replaces that scale; pass
+\code{labels = x$meta$fill_labels} to keep the readable labels.
+
+When one arm piles into a single bin (say 648 of 685 patients at a score
+of 95 to 100\\%), that bar flattens the rest of the figure and the small
+arm and the matched bars cannot be read.  \code{split_tall = TRUE} sizes
+the y-axis to the tallest bar of the matched (or weighted) layers or of the
+arm whose tallest bar is smaller, times \code{split_mult}.  Any taller
+"all patients" bar is clipped at the panel edge, cut by a white gap, and
+labeled with its full count on a white label.  The limits are set with
+\code{\link[ggplot2]{coord_cartesian}}, which clips a bar instead of
+dropping it, so do not add \code{ylim()} or scale limits on top; a
+\code{scale_y_continuous(labels = abs)} without limits is safe.}
 
 \item{alpha}{Bar transparency in \eqn{[0,1]}.  Default \code{0.8}.}
+
+\item{split_tall}{Logical.  Split "all patients" bars too tall for an axis
+sized to the matched bars and the smaller arm.  Default \code{FALSE}.}
+
+\item{split_mult}{Number greater than 1: the axis cap as a multiple of the
+tallest matched bar or tallest bar of the smaller arm.  Used only when
+\code{split_tall = TRUE}.  Default \code{1.5}.}
 
 \item{...}{Ignored; present for S3 consistency.}
 }
 \value{
 A bare \code{\link[ggplot2]{ggplot}} object; compose with \code{+}
 to add color scales, axis limits, labels, and
-\code{\link{theme_hv_manuscript}}.
+\code{\link{theme_hv_manuscript}}.  With \code{split_tall = TRUE} it
+carries two extra layers after the bars: the white gaps
+(\code{geom_rect}) and the count labels (\code{geom_label}).
 }
 \description{
 Builds a bare mirrored-histogram \code{ggplot2} object from an
@@ -31,6 +55,15 @@ dta <- sample_mirror_histogram_data(n = 500)
 mh  <- hv_mirror_hist(dta)
 
 plot(mh) +
+  ggplot2::labs(x = "Propensity Score (\%)", y = "Count") +
+  theme_hv_poster()
+
+# One tall bar: most treated patients pile into the top bin.
+dta_tall <- dta
+top <- dta_tall$tavr == 1 & dta_tall$match == 0
+dta_tall$prob_t[top] <- 0.98
+mh_tall <- hv_mirror_hist(dta_tall)
+plot(mh_tall, split_tall = TRUE) +
   ggplot2::labs(x = "Propensity Score (\%)", y = "Count") +
   theme_hv_poster()
 

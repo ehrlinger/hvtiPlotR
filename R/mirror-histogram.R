@@ -12,6 +12,13 @@ HVTI_SCORE_BREAK_STEP       <- 10
 HVTI_SCORE_MARGIN_RATIO     <- 0.10
 HVTI_SCORE_FILL_RATIO       <- 0.95
 HVTI_SCORE_DEFAULT_MULTIPLIER <- 100
+# Split tall bars: the white gap sits in the headroom between the tallest
+# matched/weighted bar (ref) and the cap, as fractions of that headroom, so it
+# never covers a matched bar whatever split_mult is; the axis limit is a
+# fraction of the cap
+HVTI_SPLIT_GAP_LOW          <- 0.70
+HVTI_SPLIT_GAP_HIGH         <- 0.88
+HVTI_SPLIT_LIMIT_RATIO      <- 1.20
 
 # ---------------------------------------------------------------------------
 # Internal helpers
@@ -233,13 +240,43 @@ assemble_mirror_histogram_plot_df <- function(working, group_levels, group_label
   }
 }
 
+# Internal: Readable fill-legend labels keyed by fill_key
+mirror_fill_labels <- function(group_labels) {
+  c(before_g0   = paste0(group_labels[1], ", all"),
+    matched_g0  = paste0(group_labels[1], ", matched"),
+    weighted_g0 = paste0(group_labels[1], ", weighted"),
+    before_g1   = paste0(group_labels[2], ", all"),
+    matched_g1  = paste0(group_labels[2], ", matched"),
+    weighted_g1 = paste0(group_labels[2], ", weighted"))
+}
+
+# Internal: Find the "Before" bars too tall for a split axis.
+# The cap is split_mult times the tallest bar of the matched/weighted layers
+# or of the arm whose tallest "Before" bar is smaller.  Any "Before" bar
+# taller than the cap is returned in $split; the matched layers never are,
+# because split_mult > 1 keeps them below the cap.
+mirror_split_bars <- function(plot_df, split_mult, lower, upper) {
+  before  <- plot_df$layer == "Before"
+  top_max <- max(plot_df$y[before & plot_df$y > 0], 0)
+  bot_max <- max(-plot_df$y[before & plot_df$y < 0], 0)
+  ref     <- max(abs(plot_df$y[!before]), min(top_max, bot_max), 1)
+  cap     <- split_mult * ref
+  split   <- plot_df[before & abs(plot_df$y) > cap, ]
+  if (any(split$y > 0)) upper <- HVTI_SPLIT_LIMIT_RATIO * cap
+  if (any(split$y < 0)) lower <- -HVTI_SPLIT_LIMIT_RATIO * cap
+  list(ref = ref, cap = cap, split = split, lower = lower, upper = upper)
+}
+
 # Internal: Build ggplot object for mirrored histogram
 #' @importFrom ggplot2 ggplot geom_hline geom_col scale_fill_manual
 #' @importFrom ggplot2 scale_x_continuous scale_y_continuous labs annotate
-#' @importFrom ggplot2 coord_cartesian aes theme_minimal
+#' @importFrom ggplot2 coord_cartesian aes theme_minimal geom_rect geom_label
+#' @importFrom ggplot2 scale_fill_discrete
 build_mirror_histogram_plot <- function(plot_df, group_labels, binwidth,
-                                        lower, upper, y_breaks, alpha) {
-  ggplot2::ggplot() +
+                                        lower, upper, y_breaks, alpha,
+                                        split_tall = FALSE, split_mult = 1.5) {
+  fill_labels <- mirror_fill_labels(group_labels)
+  p <- ggplot2::ggplot() +
     ggplot2::geom_hline(yintercept = 0, linewidth = 0.7, color = "black") +
     ggplot2::geom_col(
       data = plot_df[plot_df$layer == "Before", ],
@@ -261,15 +298,58 @@ build_mirror_histogram_plot <- function(plot_df, group_labels, binwidth,
       limits = c(HVTI_SCORE_MIN, HVTI_SCORE_MAX),
       breaks = seq(HVTI_SCORE_MIN, HVTI_SCORE_MAX, HVTI_SCORE_BREAK_STEP)
     ) +
-    ggplot2::scale_y_continuous(
-      limits = c(lower, upper),
-      breaks = y_breaks,
-      labels = abs(y_breaks)
+    ggplot2::scale_fill_discrete(
+      labels = function(k) unname(fill_labels[k]),
+      name   = NULL
     ) +
     ggplot2::labs(x = "Propensity Score (%)",
                   y = "Number of patients / sum of weights") +
-    ggplot2::coord_cartesian(clip = "off") +
     ggplot2::theme_minimal(base_size = 12)
+
+  if (!split_tall) {
+    return(p +
+      ggplot2::scale_y_continuous(
+        limits = c(lower, upper),
+        breaks = y_breaks,
+        labels = abs(y_breaks)
+      ) +
+      ggplot2::coord_cartesian(clip = "off"))
+  }
+
+  # Split mode: the limits live in coord_cartesian(), which clips a tall bar
+  # at the panel edge; scale limits would drop it.
+  sp    <- mirror_split_bars(plot_df, split_mult, lower, upper)
+  split <- sp$split
+  sgn   <- sign(split$y)
+  gap   <- data.frame(
+    xmin = pmax(split$x - binwidth / 2, HVTI_SCORE_MIN),
+    xmax = pmin(split$x + binwidth / 2, HVTI_SCORE_MAX),
+    ymin = sgn * (sp$ref + HVTI_SPLIT_GAP_LOW * (sp$cap - sp$ref)),
+    ymax = sgn * (sp$ref + HVTI_SPLIT_GAP_HIGH * (sp$cap - sp$ref))
+  )
+  # The count label starts at the cap, beyond the gap with a strip of bar
+  # between them, and grows away from the axis, so it cannot reach down over
+  # a matched bar either
+  lab <- data.frame(x = split$x, y = sgn * sp$cap,
+                    vjust = ifelse(sgn > 0, 0, 1),
+                    label = format(abs(split$y), trim = TRUE))
+  y_breaks <- pretty(c(sp$lower, sp$upper), n = 8)
+  p +
+    ggplot2::geom_rect(
+      data = gap,
+      ggplot2::aes(xmin = .data[["xmin"]], xmax = .data[["xmax"]],
+                   ymin = .data[["ymin"]], ymax = .data[["ymax"]]),
+      fill = "white", color = NA, inherit.aes = FALSE
+    ) +
+    ggplot2::geom_label(
+      data = lab,
+      ggplot2::aes(x = .data[["x"]], y = .data[["y"]],
+                   label = .data[["label"]], vjust = .data[["vjust"]]),
+      size = 3.5, fill = "white", linewidth = 0,
+      label.padding = grid::unit(0.1, "lines"), inherit.aes = FALSE
+    ) +
+    ggplot2::scale_y_continuous(breaks = y_breaks, labels = abs(y_breaks)) +
+    ggplot2::coord_cartesian(ylim = c(sp$lower, sp$upper), clip = "on")
 }
 
 # Internal: Safely persist mirrored histogram to disk
@@ -366,7 +446,9 @@ mirror_histogram_diagnostics <- function(working, matched_idx, group_levels,
 #'     \code{\link{plot.hv_mirror_hist}}.}
 #'   \item{\code{$meta}}{Named list: \code{score_col}, \code{group_col},
 #'     \code{match_col}, \code{group_labels}, \code{binwidth}, \code{lower},
-#'     \code{upper}, \code{y_breaks}, \code{n_obs}, \code{n_dropped}.}
+#'     \code{upper}, \code{y_breaks}, \code{fill_labels} (readable legend
+#'     labels named by fill key, for \code{scale_fill_manual(labels = )}),
+#'     \code{n_obs}, \code{n_dropped}.}
 #'   \item{\code{$tables}}{Named list with two elements:
 #'     \describe{
 #'       \item{\code{diagnostics}}{A named list of diagnostic summaries.
@@ -478,6 +560,7 @@ hv_mirror_hist <- function(data,
       lower        = lower,
       upper        = upper,
       y_breaks     = y_breaks,
+      fill_labels  = mirror_fill_labels(group_labels),
       n_obs        = n_input,
       n_dropped    = n_dropped
     ),
@@ -521,12 +604,35 @@ print.hv_mirror_hist <- function(x, ...) {
 #'
 #' @param x     An \code{hv_mirror_hist} object from
 #'   \code{\link{hv_mirror_hist}}.
+#' The fill legend reads \code{"<group>, all"} and \code{"<group>, matched"}
+#' (or \code{", weighted"}) from \code{group_labels}.  A
+#' \code{scale_fill_manual()} you add replaces that scale; pass
+#' \code{labels = x$meta$fill_labels} to keep the readable labels.
+#'
+#' When one arm piles into a single bin (say 648 of 685 patients at a score
+#' of 95 to 100\%), that bar flattens the rest of the figure and the small
+#' arm and the matched bars cannot be read.  \code{split_tall = TRUE} sizes
+#' the y-axis to the tallest bar of the matched (or weighted) layers or of the
+#' arm whose tallest bar is smaller, times \code{split_mult}.  Any taller
+#' "all patients" bar is clipped at the panel edge, cut by a white gap, and
+#' labeled with its full count on a white label.  The limits are set with
+#' \code{\link[ggplot2]{coord_cartesian}}, which clips a bar instead of
+#' dropping it, so do not add \code{ylim()} or scale limits on top; a
+#' \code{scale_y_continuous(labels = abs)} without limits is safe.
+#'
 #' @param alpha Bar transparency in \eqn{[0,1]}.  Default \code{0.8}.
+#' @param split_tall Logical.  Split "all patients" bars too tall for an axis
+#'   sized to the matched bars and the smaller arm.  Default \code{FALSE}.
+#' @param split_mult Number greater than 1: the axis cap as a multiple of the
+#'   tallest matched bar or tallest bar of the smaller arm.  Used only when
+#'   \code{split_tall = TRUE}.  Default \code{1.5}.
 #' @param ...   Ignored; present for S3 consistency.
 #'
 #' @return A bare \code{\link[ggplot2]{ggplot}} object; compose with \code{+}
 #'   to add color scales, axis limits, labels, and
-#'   \code{\link{theme_hv_manuscript}}.
+#'   \code{\link{theme_hv_manuscript}}.  With \code{split_tall = TRUE} it
+#'   carries two extra layers after the bars: the white gaps
+#'   (\code{geom_rect}) and the count labels (\code{geom_label}).
 #'
 #' @seealso \code{\link{hv_mirror_hist}} to build the data object,
 #'   \code{\link{theme_hv_manuscript}} for the publication theme,
@@ -542,10 +648,25 @@ print.hv_mirror_hist <- function(x, ...) {
 #'   ggplot2::labs(x = "Propensity Score (%)", y = "Count") +
 #'   theme_hv_poster()
 #'
+#' # One tall bar: most treated patients pile into the top bin.
+#' dta_tall <- dta
+#' top <- dta_tall$tavr == 1 & dta_tall$match == 0
+#' dta_tall$prob_t[top] <- 0.98
+#' mh_tall <- hv_mirror_hist(dta_tall)
+#' plot(mh_tall, split_tall = TRUE) +
+#'   ggplot2::labs(x = "Propensity Score (%)", y = "Count") +
+#'   theme_hv_poster()
+#'
 #' @importFrom ggplot2 ggplot aes geom_bar scale_x_continuous scale_y_continuous
 #' @export
-plot.hv_mirror_hist <- function(x, alpha = 0.8, ...) {
+plot.hv_mirror_hist <- function(x, alpha = 0.8, split_tall = FALSE,
+                                split_mult = 1.5, ...) {
   .check_alpha(alpha)
+  if (!is.logical(split_tall) || length(split_tall) != 1L || is.na(split_tall))
+    stop("`split_tall` must be TRUE or FALSE.", call. = FALSE)
+  if (!is.numeric(split_mult) || length(split_mult) != 1L ||
+      is.na(split_mult) || !(split_mult > 1))
+    stop("`split_mult` must be a single number greater than 1.", call. = FALSE)
   build_mirror_histogram_plot(
     x$data,
     x$meta$group_labels,
@@ -553,7 +674,9 @@ plot.hv_mirror_hist <- function(x, alpha = 0.8, ...) {
     x$meta$lower,
     x$meta$upper,
     x$meta$y_breaks,
-    alpha
+    alpha,
+    split_tall = split_tall,
+    split_mult = split_mult
   )
 }
 
