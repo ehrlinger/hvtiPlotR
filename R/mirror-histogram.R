@@ -333,7 +333,7 @@ build_mirror_histogram_plot <- function(plot_df, group_labels, binwidth,
       data = gap,
       ggplot2::aes(xmin = .data[["xmin"]], xmax = .data[["xmax"]],
                    ymin = .data[["ymin"]], ymax = .data[["ymax"]]),
-      fill = "white", colour = NA, inherit.aes = FALSE
+      fill = "white", color = NA, inherit.aes = FALSE
     ) +
     ggplot2::geom_text(
       data = lab,
@@ -608,7 +608,7 @@ print.hv_mirror_hist <- function(x, ...) {
 #' the y-axis to the tallest bar of the matched (or weighted) layers or of the
 #' arm whose tallest bar is smaller, times \code{split_mult}.  Any taller
 #' "all patients" bar is clipped at the panel edge, cut by a white gap, and
-#' labelled with its full count.  The limits are set with
+#' labeled with its full count.  The limits are set with
 #' \code{\link[ggplot2]{coord_cartesian}}, which clips a bar instead of
 #' dropping it, so do not add \code{ylim()} or scale limits on top; a
 #' \code{scale_y_continuous(labels = abs)} without limits is safe.

@@ -6,7 +6,7 @@
   small arm and the matched bars cannot be read. With `split_tall = TRUE` the
   y-axis is sized to `split_mult` times the tallest matched (or weighted) bar
   or tallest bar of the smaller arm. Any taller "all patients" bar is cut by a
-  white gap and labelled with its full count. The limits are set in
+  white gap and labeled with its full count. The limits are set in
   `coord_cartesian()`, which clips the bar; the scale limits used otherwise
   would drop it.
 * The mirrored histogram's fill legend reads "SAVR, all", "SAVR, matched"

@@ -20,7 +20,7 @@ arm and the matched bars cannot be read.  \code{split_tall = TRUE} sizes
 the y-axis to the tallest bar of the matched (or weighted) layers or of the
 arm whose tallest bar is smaller, times \code{split_mult}.  Any taller
 "all patients" bar is clipped at the panel edge, cut by a white gap, and
-labelled with its full count.  The limits are set with
+labeled with its full count.  The limits are set with
 \code{\link[ggplot2]{coord_cartesian}}, which clips a bar instead of
 dropping it, so do not add \code{ylim()} or scale limits on top; a
 \code{scale_y_continuous(labels = abs)} without limits is safe.}
