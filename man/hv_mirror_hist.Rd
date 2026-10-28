@@ -57,7 +57,9 @@ An object of class \code{c("hv_mirror_hist", "hv_data")}; call
 \code{\link{plot.hv_mirror_hist}}.}
 \item{\code{$meta}}{Named list: \code{score_col}, \code{group_col},
 \code{match_col}, \code{group_labels}, \code{binwidth}, \code{lower},
-\code{upper}, \code{y_breaks}, \code{n_obs}, \code{n_dropped}.}
+\code{upper}, \code{y_breaks}, \code{fill_labels} (readable legend
+labels named by fill key, for \code{scale_fill_manual(labels = )}),
+\code{n_obs}, \code{n_dropped}.}
 \item{\code{$tables}}{Named list with two elements:
 \describe{
 \item{\code{diagnostics}}{A named list of diagnostic summaries.

@@ -347,3 +347,78 @@ test_that("print.hv_mirror_hist returns x invisibly", {
   expect_false(ret$visible)
   expect_identical(ret$value, mh)
 })
+
+# ---- split_tall ----------------------------------------------------------
+
+tall_mirror <- function() {
+  dta <- sample_mirror_histogram_data(n = 500)
+  top <- dta$tavr == 1 & dta$match == 0
+  dta$prob_t[top] <- 0.98
+  suppressMessages(hv_mirror_hist(dta))
+}
+
+test_that("plot legend shows readable labels, not fill keys", {
+  mh <- suppressMessages(hv_mirror_hist(sample_mirror_histogram_data(n = 200)))
+  sc <- ggplot2::ggplot_build(plot(mh))$plot$scales$get_scales("fill")
+  labs <- sc$get_labels(c("before_g0", "matched_g1"))
+  expect_equal(labs, c("SAVR, all", "TF-TAVR, matched"))
+  expect_equal(mh$meta$fill_labels[["weighted_g1"]], "TF-TAVR, weighted")
+})
+
+test_that("split_tall is off by default and keeps the scale limits", {
+  p <- plot(tall_mirror())
+  expect_length(p$layers, 3L)
+  expect_false(is.null(p$scales$get_scales("y")$limits))
+})
+
+test_that("split_tall splits bars above the cap and labels their counts", {
+  mh <- tall_mirror()
+  p  <- plot(mh, split_tall = TRUE)
+  expect_length(p$layers, 5L)
+  d      <- mh$data
+  before <- d$layer == "Before"
+  ref    <- max(abs(d$y[!before]),
+                min(max(d$y[before & d$y > 0]), max(-d$y[before & d$y < 0])))
+  cap    <- 1.5 * ref
+  tall   <- d[before & abs(d$y) > cap, ]
+  expect_gt(nrow(tall), 0L)
+  gap <- p$layers[[4]]$data
+  lab <- p$layers[[5]]$data
+  expect_equal(nrow(gap), nrow(tall))
+  expect_equal(lab$label, format(abs(tall$y), trim = TRUE))
+  expect_true(all(sign(lab$y) == sign(tall$y)))
+  expect_true(all(abs(gap$ymin) < cap & abs(gap$ymax) < cap))
+})
+
+test_that("split_tall leaves matched bars untouched and below the cap", {
+  mh <- tall_mirror()
+  p  <- plot(mh, split_tall = TRUE)
+  expect_equal(p$layers[[3]]$data, mh$data[mh$data$layer != "Before", ])
+  ylim <- p$coordinates$limits$y
+  m    <- mh$data$y[mh$data$layer != "Before"]
+  expect_true(all(m >= ylim[1] & m <= ylim[2]))
+})
+
+test_that("split_tall drops no bar: limits live in the coord, not the scale", {
+  mh <- tall_mirror()
+  p  <- plot(mh, split_tall = TRUE)
+  expect_null(p$scales$get_scales("y")$limits)
+  b  <- ggplot2::ggplot_build(p)
+  expect_equal(nrow(b$data[[2]]), sum(mh$data$layer == "Before"))
+  expect_false(anyNA(b$data[[2]]$ymin))
+  expect_false(anyNA(b$data[[2]]$ymax))
+})
+
+test_that("split_tall with no tall bar adds empty split layers", {
+  mh <- suppressMessages(hv_mirror_hist(sample_mirror_histogram_data(n = 200)))
+  p  <- plot(mh, split_tall = TRUE, split_mult = 100)
+  expect_equal(nrow(p$layers[[4]]$data), 0L)
+  expect_s3_class(ggplot2::ggplot_build(p), "ggplot_built")
+})
+
+test_that("plot.hv_mirror_hist validates split arguments", {
+  mh <- suppressMessages(hv_mirror_hist(sample_mirror_histogram_data(n = 100)))
+  expect_error(plot(mh, split_tall = NA), "split_tall")
+  expect_error(plot(mh, split_tall = TRUE, split_mult = 1), "split_mult")
+  expect_error(plot(mh, split_mult = "a"), "split_mult")
+})
