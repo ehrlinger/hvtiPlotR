@@ -20,7 +20,7 @@ arm and the matched bars cannot be read.  \code{split_tall = TRUE} sizes
 the y-axis to the tallest bar of the matched (or weighted) layers or of the
 arm whose tallest bar is smaller, times \code{split_mult}.  Any taller
 "all patients" bar is clipped at the panel edge, cut by a white gap, and
-labeled with its full count.  The limits are set with
+labeled with its full count on a white label.  The limits are set with
 \code{\link[ggplot2]{coord_cartesian}}, which clips a bar instead of
 dropping it, so do not add \code{ylim()} or scale limits on top; a
 \code{scale_y_continuous(labels = abs)} without limits is safe.}
@@ -41,7 +41,7 @@ A bare \code{\link[ggplot2]{ggplot}} object; compose with \code{+}
 to add color scales, axis limits, labels, and
 \code{\link{theme_hv_manuscript}}.  With \code{split_tall = TRUE} it
 carries two extra layers after the bars: the white gaps
-(\code{geom_rect}) and the count labels (\code{geom_text}).
+(\code{geom_rect}) and the count labels (\code{geom_label}).
 }
 \description{
 Builds a bare mirrored-histogram \code{ggplot2} object from an

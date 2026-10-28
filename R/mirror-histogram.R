@@ -268,7 +268,7 @@ mirror_split_bars <- function(plot_df, split_mult, lower, upper) {
 # Internal: Build ggplot object for mirrored histogram
 #' @importFrom ggplot2 ggplot geom_hline geom_col scale_fill_manual
 #' @importFrom ggplot2 scale_x_continuous scale_y_continuous labs annotate
-#' @importFrom ggplot2 coord_cartesian aes theme_minimal geom_rect geom_text
+#' @importFrom ggplot2 coord_cartesian aes theme_minimal geom_rect geom_label
 #' @importFrom ggplot2 scale_fill_discrete
 build_mirror_histogram_plot <- function(plot_df, group_labels, binwidth,
                                         lower, upper, y_breaks, alpha,
@@ -335,11 +335,12 @@ build_mirror_histogram_plot <- function(plot_df, group_labels, binwidth,
                    ymin = .data[["ymin"]], ymax = .data[["ymax"]]),
       fill = "white", color = NA, inherit.aes = FALSE
     ) +
-    ggplot2::geom_text(
+    ggplot2::geom_label(
       data = lab,
       ggplot2::aes(x = .data[["x"]], y = .data[["y"]],
                    label = .data[["label"]]),
-      size = 3.5, inherit.aes = FALSE
+      size = 3.5, fill = "white", linewidth = 0,
+      label.padding = grid::unit(0.1, "lines"), inherit.aes = FALSE
     ) +
     ggplot2::scale_y_continuous(breaks = y_breaks, labels = abs(y_breaks)) +
     ggplot2::coord_cartesian(ylim = c(sp$lower, sp$upper), clip = "on")
@@ -608,7 +609,7 @@ print.hv_mirror_hist <- function(x, ...) {
 #' the y-axis to the tallest bar of the matched (or weighted) layers or of the
 #' arm whose tallest bar is smaller, times \code{split_mult}.  Any taller
 #' "all patients" bar is clipped at the panel edge, cut by a white gap, and
-#' labeled with its full count.  The limits are set with
+#' labeled with its full count on a white label.  The limits are set with
 #' \code{\link[ggplot2]{coord_cartesian}}, which clips a bar instead of
 #' dropping it, so do not add \code{ylim()} or scale limits on top; a
 #' \code{scale_y_continuous(labels = abs)} without limits is safe.
@@ -625,7 +626,7 @@ print.hv_mirror_hist <- function(x, ...) {
 #'   to add color scales, axis limits, labels, and
 #'   \code{\link{theme_hv_manuscript}}.  With \code{split_tall = TRUE} it
 #'   carries two extra layers after the bars: the white gaps
-#'   (\code{geom_rect}) and the count labels (\code{geom_text}).
+#'   (\code{geom_rect}) and the count labels (\code{geom_label}).
 #'
 #' @seealso \code{\link{hv_mirror_hist}} to build the data object,
 #'   \code{\link{theme_hv_manuscript}} for the publication theme,
