@@ -444,11 +444,11 @@ test_that("split_tall gap never covers a matched bar, even with split_mult near 
   }
 })
 
-test_that("split_tall count label grows away from the axis from the gap edge", {
+test_that("split_tall count label sits beyond the gap and grows outward", {
   mh  <- tall_mirror()
   p   <- plot(mh, split_tall = TRUE)
   gap <- p$layers[[4]]$data
   lab <- p$layers[[5]]$data
-  expect_equal(abs(lab$y), pmax(abs(gap$ymin), abs(gap$ymax)))
+  expect_true(all(abs(lab$y) > pmax(abs(gap$ymin), abs(gap$ymax))))
   expect_equal(lab$vjust, ifelse(lab$y > 0, 0, 1))
 })

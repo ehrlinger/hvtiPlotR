@@ -18,7 +18,7 @@ HVTI_SCORE_DEFAULT_MULTIPLIER <- 100
 # fraction of the cap
 HVTI_SPLIT_GAP_LOW          <- 0.70
 HVTI_SPLIT_GAP_HIGH         <- 0.88
-HVTI_SPLIT_LIMIT_RATIO      <- 1.10
+HVTI_SPLIT_LIMIT_RATIO      <- 1.20
 
 # ---------------------------------------------------------------------------
 # Internal helpers
@@ -327,9 +327,10 @@ build_mirror_histogram_plot <- function(plot_df, group_labels, binwidth,
     ymin = sgn * (sp$ref + HVTI_SPLIT_GAP_LOW * (sp$cap - sp$ref)),
     ymax = sgn * (sp$ref + HVTI_SPLIT_GAP_HIGH * (sp$cap - sp$ref))
   )
-  # The count label starts at the gap's outer edge and grows away from the
-  # axis, so it cannot reach down over a matched bar either
-  lab <- data.frame(x = split$x, y = gap$ymax,
+  # The count label starts at the cap, beyond the gap with a strip of bar
+  # between them, and grows away from the axis, so it cannot reach down over
+  # a matched bar either
+  lab <- data.frame(x = split$x, y = sgn * sp$cap,
                     vjust = ifelse(sgn > 0, 0, 1),
                     label = format(abs(split$y), trim = TRUE))
   y_breaks <- pretty(c(sp$lower, sp$upper), n = 8)
