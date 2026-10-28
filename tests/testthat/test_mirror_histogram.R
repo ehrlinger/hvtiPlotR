@@ -422,3 +422,33 @@ test_that("plot.hv_mirror_hist validates split arguments", {
   expect_error(plot(mh, split_tall = TRUE, split_mult = 1), "split_mult")
   expect_error(plot(mh, split_mult = "a"), "split_mult")
 })
+
+test_that("split_tall gap never covers a matched bar, even with split_mult near 1", {
+  near_one <- function(big, small) {
+    d <- data.frame(
+      prob_t = c(rep(0.975, 100), seq(0.025, 0.925, length.out = 10)),
+      tavr   = c(rep(big, 100), rep(small, 10)),
+      match  = c(rep(1L, 10), rep(0L, 90), rep(1L, 10))
+    )
+    suppressMessages(hv_mirror_hist(d))
+  }
+  for (mh in list(near_one(0L, 1L), near_one(1L, 0L))) {
+    p   <- plot(mh, split_tall = TRUE, split_mult = 1.05)
+    gap <- p$layers[[4]]$data
+    adj <- mh$data[mh$data$layer != "Before", ]
+    expect_equal(nrow(gap), 1L)
+    in_bin <- adj[abs(adj$x - (gap$xmin + gap$xmax) / 2) < 1e-8, ]
+    gap_low <- pmin(abs(gap$ymin), abs(gap$ymax))
+    expect_true(all(abs(in_bin$y) < gap_low))
+    expect_true(all(abs(adj$y) < gap_low))
+  }
+})
+
+test_that("split_tall count label grows away from the axis from the gap edge", {
+  mh  <- tall_mirror()
+  p   <- plot(mh, split_tall = TRUE)
+  gap <- p$layers[[4]]$data
+  lab <- p$layers[[5]]$data
+  expect_equal(abs(lab$y), pmax(abs(gap$ymin), abs(gap$ymax)))
+  expect_equal(lab$vjust, ifelse(lab$y > 0, 0, 1))
+})

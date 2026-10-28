@@ -12,10 +12,12 @@ HVTI_SCORE_BREAK_STEP       <- 10
 HVTI_SCORE_MARGIN_RATIO     <- 0.10
 HVTI_SCORE_FILL_RATIO       <- 0.95
 HVTI_SCORE_DEFAULT_MULTIPLIER <- 100
-# Split tall bars: white gap and count label as fractions of the cap
-HVTI_SPLIT_GAP_LOW          <- 0.90
-HVTI_SPLIT_GAP_HIGH         <- 0.96
-HVTI_SPLIT_LABEL_RATIO      <- 1.04
+# Split tall bars: the white gap sits in the headroom between the tallest
+# matched/weighted bar (ref) and the cap, as fractions of that headroom, so it
+# never covers a matched bar whatever split_mult is; the axis limit is a
+# fraction of the cap
+HVTI_SPLIT_GAP_LOW          <- 0.70
+HVTI_SPLIT_GAP_HIGH         <- 0.88
 HVTI_SPLIT_LIMIT_RATIO      <- 1.10
 
 # ---------------------------------------------------------------------------
@@ -262,7 +264,7 @@ mirror_split_bars <- function(plot_df, split_mult, lower, upper) {
   split   <- plot_df[before & abs(plot_df$y) > cap, ]
   if (any(split$y > 0)) upper <- HVTI_SPLIT_LIMIT_RATIO * cap
   if (any(split$y < 0)) lower <- -HVTI_SPLIT_LIMIT_RATIO * cap
-  list(cap = cap, split = split, lower = lower, upper = upper)
+  list(ref = ref, cap = cap, split = split, lower = lower, upper = upper)
 }
 
 # Internal: Build ggplot object for mirrored histogram
@@ -322,10 +324,13 @@ build_mirror_histogram_plot <- function(plot_df, group_labels, binwidth,
   gap   <- data.frame(
     xmin = pmax(split$x - binwidth / 2, HVTI_SCORE_MIN),
     xmax = pmin(split$x + binwidth / 2, HVTI_SCORE_MAX),
-    ymin = sgn * HVTI_SPLIT_GAP_LOW * sp$cap,
-    ymax = sgn * HVTI_SPLIT_GAP_HIGH * sp$cap
+    ymin = sgn * (sp$ref + HVTI_SPLIT_GAP_LOW * (sp$cap - sp$ref)),
+    ymax = sgn * (sp$ref + HVTI_SPLIT_GAP_HIGH * (sp$cap - sp$ref))
   )
-  lab <- data.frame(x = split$x, y = sgn * HVTI_SPLIT_LABEL_RATIO * sp$cap,
+  # The count label starts at the gap's outer edge and grows away from the
+  # axis, so it cannot reach down over a matched bar either
+  lab <- data.frame(x = split$x, y = gap$ymax,
+                    vjust = ifelse(sgn > 0, 0, 1),
                     label = format(abs(split$y), trim = TRUE))
   y_breaks <- pretty(c(sp$lower, sp$upper), n = 8)
   p +
@@ -338,7 +343,7 @@ build_mirror_histogram_plot <- function(plot_df, group_labels, binwidth,
     ggplot2::geom_label(
       data = lab,
       ggplot2::aes(x = .data[["x"]], y = .data[["y"]],
-                   label = .data[["label"]]),
+                   label = .data[["label"]], vjust = .data[["vjust"]]),
       size = 3.5, fill = "white", linewidth = 0,
       label.padding = grid::unit(0.1, "lines"), inherit.aes = FALSE
     ) +
