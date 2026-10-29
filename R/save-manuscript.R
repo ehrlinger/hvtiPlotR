@@ -38,10 +38,12 @@
 #' measured with each output device's own font metrics, so a PDF, PNG and
 #' TIFF of one figure may get strips of slightly different height. It is set
 #' at 8 pt and shrinks to fit one line, down to a floor of 6 pt. Past the
-#' floor it wraps: first between fields, then inside a field at `/` and `.`,
-#' so a long job path breaks at its directory and name parts. The first field,
-#' the commit ID, is never broken. Nothing is clipped or truncated; the strip
-#' grows to as many lines as the note needs. The note goes on publication
+#' floor it wraps: first between fields, so a field that fits on a line, the
+#' commit ID among them, is never broken; then inside a field too wide for a
+#' line, at `/`, `.` and spaces, so a long job path breaks at its directory
+#' and name parts. Nothing is clipped or truncated; the strip grows to as many
+#' lines as the note needs. The saved height is rounded up to a whole pixel
+#' (raster) or point (PDF), so the reported height is the height written. The note goes on publication
 #' figures too: a journal crops it in typesetting, and the study's copy keeps
 #' the record of which version of the job drew it.
 #'
@@ -70,16 +72,15 @@
 #' @param footnote Optional provenance note, `NULL` (default) for none. A
 #'   character vector of fields, which are joined by a middle dot (U+00B7)
 #'   with a space either side, or a single string, which is split into fields
-#'   at that separator. The first
-#'   field is kept whole on every line break. With `NULL`, the output is
-#'   exactly what it is without the argument.
+#'   at that separator. Fields may not contain line breaks. With `NULL`, the
+#'   output is exactly what it is without the argument.
 #' @param ... Further arguments passed to [ggplot2::ggsave()] for the primary
 #'   `file`. Not applied to `draft_file`.
 #'
 #' @return Invisibly, the `file` path, with the extension `format` added when
 #'   it had none. With a `footnote`, the path carries the attribute `"dims"`,
-#'   a list of the saved `width`, `height` and `units` of `file`, the height
-#'   including the strip, and, when `draft_file` is written, `"draft_dims"`
+#'   a list of the saved `width`, `height` and `units` of `file`, after any
+#'   `scale` passed in `...`, the height including the strip, and, when `draft_file` is written, `"draft_dims"`
 #'   for that file.
 #'
 #' @seealso [provenance_footnote()] to build the `footnote` fields,
@@ -108,7 +109,7 @@
 #' out <- save_manuscript(
 #'   p, file.path(tempdir(), "survival.pdf"),
 #'   footnote = provenance_footnote(
-#'     commit = "3f9c2a1d8e", job = "30_analyses/survival.qmd",
+#'     commit = "3f9c2a1", job = "30_analyses/survival.qmd",
 #'     time = as.POSIXct("2026-10-29 14:40")
 #'   )
 #' )

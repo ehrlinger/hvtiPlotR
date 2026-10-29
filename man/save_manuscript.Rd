@@ -53,9 +53,8 @@ keeps it. Passing a \code{format} that contradicts a raster extension, such as
 \item{footnote}{Optional provenance note, \code{NULL} (default) for none. A
 character vector of fields, which are joined by a middle dot (U+00B7)
 with a space either side, or a single string, which is split into fields
-at that separator. The first
-field is kept whole on every line break. With \code{NULL}, the output is
-exactly what it is without the argument.}
+at that separator. Fields may not contain line breaks. With \code{NULL}, the
+output is exactly what it is without the argument.}
 
 \item{...}{Further arguments passed to \code{\link[ggplot2:ggsave]{ggplot2::ggsave()}} for the primary
 \code{file}. Not applied to \code{draft_file}.}
@@ -63,8 +62,8 @@ exactly what it is without the argument.}
 \value{
 Invisibly, the \code{file} path, with the extension \code{format} added when
 it had none. With a \code{footnote}, the path carries the attribute \code{"dims"},
-a list of the saved \code{width}, \code{height} and \code{units} of \code{file}, the height
-including the strip, and, when \code{draft_file} is written, \code{"draft_dims"}
+a list of the saved \code{width}, \code{height} and \code{units} of \code{file}, after any
+\code{scale} passed in \code{...}, the height including the strip, and, when \code{draft_file} is written, \code{"draft_dims"}
 for that file.
 }
 \description{
@@ -107,10 +106,12 @@ strip is added to the figure, never drawn over it: the plot keeps its
 measured with each output device's own font metrics, so a PDF, PNG and
 TIFF of one figure may get strips of slightly different height. It is set
 at 8 pt and shrinks to fit one line, down to a floor of 6 pt. Past the
-floor it wraps: first between fields, then inside a field at \code{/} and \code{.},
-so a long job path breaks at its directory and name parts. The first field,
-the commit ID, is never broken. Nothing is clipped or truncated; the strip
-grows to as many lines as the note needs. The note goes on publication
+floor it wraps: first between fields, so a field that fits on a line, the
+commit ID among them, is never broken; then inside a field too wide for a
+line, at \code{/}, \code{.} and spaces, so a long job path breaks at its directory
+and name parts. Nothing is clipped or truncated; the strip grows to as many
+lines as the note needs. The saved height is rounded up to a whole pixel
+(raster) or point (PDF), so the reported height is the height written. The note goes on publication
 figures too: a journal crops it in typesetting, and the study's copy keeps
 the record of which version of the job drew it.
 }
@@ -134,7 +135,7 @@ save_manuscript(p, file.path(tempdir(), "survival.pdf"),
 out <- save_manuscript(
   p, file.path(tempdir(), "survival.pdf"),
   footnote = provenance_footnote(
-    commit = "3f9c2a1d8e", job = "30_analyses/survival.qmd",
+    commit = "3f9c2a1", job = "30_analyses/survival.qmd",
     time = as.POSIXct("2026-10-29 14:40")
   )
 )

@@ -24,16 +24,21 @@
 #' hvtiPlotR and hvtiRtemplates versions and the time, which
 #' [save_manuscript()] joins with a middle dot.
 #'
-#' The commit comes first and is cut to its first 7 characters, so the
-#' shortest line that survives a crop still finds the render record, which
-#' names the job. Only the R, hvtiPlotR and hvtiRtemplates versions are
+#' The commit comes first, so the shortest line that survives a crop still
+#' finds the render record, which names the job. It is printed as given and
+#' never shortened here: hvtiPlotR cannot know which abbreviation is unique in
+#' the study's repository, so pass one that git verified, such as the output
+#' of `git rev-parse --short`, or the full ID. A marker the caller uses when
+#' no commit could be made, such as `"uncommitted"`, prints whole too.
+#'
+#' Only the R, hvtiPlotR and hvtiRtemplates versions are
 #' printed; the full package list belongs in the render provenance.
 #'
 #' hvtiPlotR does not know about studies or git. It formats the parts it is
 #' given; the commit and the job path come from the caller.
 #'
-#' @param commit The render commit ID, a single string. Only the first 7
-#'   characters are printed.
+#' @param commit The render commit ID, a single string printed as given: a
+#'   unique abbreviation, the full ID, or a marker such as `"uncommitted"`.
 #' @param job The job path, a single string, such as
 #'   `"30_analyses/survival.qmd"`.
 #' @param versions A named character vector of versions, printed as
@@ -51,7 +56,7 @@
 #'
 #' @examples
 #' provenance_footnote(
-#'   commit   = "3f9c2a1d8e4b",
+#'   commit   = "3f9c2a1",
 #'   job      = "30_analyses/rfs.explain.long_term_survival.primary.qmd",
 #'   versions = c(R = "4.5.1", hvtiPlotR = "2.8.19", hvtiRtemplates = "1.5.3"),
 #'   time     = as.POSIXct("2026-10-29 14:40")
@@ -66,7 +71,7 @@ provenance_footnote <- function(commit, job, versions = .default_versions(),
     stop("`versions` must be a named character vector.", call. = FALSE)
   if (!inherits(time, "POSIXct") || length(time) != 1L || is.na(time))
     stop("`time` must be a single POSIXct time.", call. = FALSE)
-  c(substr(commit, 1L, 7L), job, paste(names(versions), versions),
+  c(commit, job, paste(names(versions), versions),
     format(time, "%Y-%m-%d %H:%M"))
 }
 
@@ -91,6 +96,9 @@ provenance_footnote <- function(commit, job, versions = .default_versions(),
 .footnote_fields <- function(footnote) {
   if (!is.character(footnote) || !length(footnote) || anyNA(footnote))
     stop("`footnote` must be a character vector of fields, or NULL.", call. = FALSE)
+  # A line break of the caller's would draw a line the strip has no room for.
+  if (any(grepl("[\r\n]", footnote)))
+    stop("`footnote` must not contain line breaks; give the parts as fields.", call. = FALSE)
   if (length(footnote) == 1L) footnote <- strsplit(footnote, .FOOTNOTE_SEP, fixed = TRUE)[[1L]]
   footnote <- trimws(footnote)
   footnote <- footnote[nzchar(footnote)]
@@ -123,15 +131,16 @@ provenance_footnote <- function(commit, job, versions = .default_versions(),
 }
 
 # Greedy wrap. Each field is a piece, joined to the one before by the
-# separator. A field other than the first that is too wide for a line alone is
-# cut after each `/` and `.`; its pieces join with nothing, so the lines read
-# back as the whole path. A piece with no such break that is still too wide is
-# cut between characters as a last resort, so nothing is ever clipped.
+# separator, so a field that fits on a line is never broken; the commit, first
+# and at most 40 characters, always fits. A field too wide for a line alone is
+# cut after each `/`, `.` and space; its pieces join with nothing, so the lines
+# read back as the whole path. A piece with no such break that is still too
+# wide is cut between characters as a last resort, so nothing is ever clipped.
 .wrap_footnote <- function(fields, avail, width) {
   pieces <- list()
   for (i in seq_along(fields)) {
     f <- fields[[i]]
-    parts <- if (i == 1L || width(f) <= avail) f else .split_field(f, avail, width)
+    parts <- if (width(f) <= avail) f else .split_field(f, avail, width)
     for (j in seq_along(parts))
       pieces[[length(pieces) + 1L]] <- list(text = parts[[j]],
                                             sep = if (i > 1L && j == 1L) .FOOTNOTE_SEP else "")
@@ -151,7 +160,7 @@ provenance_footnote <- function(commit, job, versions = .default_versions(),
 }
 
 .split_field <- function(f, avail, width) {
-  parts <- regmatches(f, gregexpr("[^/.]*[/.]|[^/.]+$", f))[[1L]]
+  parts <- regmatches(f, gregexpr("[^/. ]*[/. ]|[^/. ]+$", f))[[1L]]
   unlist(lapply(parts, function(p) {
     if (width(p) <= avail) return(p)
     chars <- strsplit(p, "")[[1L]]
@@ -173,14 +182,22 @@ provenance_footnote <- function(commit, job, versions = .default_versions(),
   x / switch(units, `in` = 1, cm = 2.54, mm = 25.4, px = dpi)
 }
 
+# Formats a raster device writes. Its height is a whole number of pixels.
+.RASTER_EXT <- c("png", "tif", "tiff", "jpg", "jpeg", "bmp")
+
 # Save `plot` with the footnote in a strip below it. Two passes through
 # ggsave(), so the measuring runs on the very device, dpi and arguments the
 # file is written with: the first draws only a probe that fits the note and
 # reports the lines it needs; the second writes the figure at its own height
 # plus the strip. Returns the saved dimensions in the caller's units.
 .save_with_footnote <- function(path, plot, fields, device, width, height, units, dpi, dots) {
-  width_in  <- .to_inches(width, units, dpi)
-  height_in <- .to_inches(height, units, dpi)
+  # ggsave() multiplies the size by `scale`. Apply it here instead, so the note
+  # is fitted to, and the dims report, the size actually written.
+  scale <- if (is.null(dots$scale)) 1 else dots$scale
+  .check_scalar_positive(scale, "scale")
+  dots$scale <- NULL
+  width_in  <- .to_inches(width, units, dpi) * scale
+  height_in <- .to_inches(height, units, dpi) * scale
   avail <- width_in - 2 * .FOOTNOTE_MARGIN_IN
   # ggsave() takes the background from a ggplot but not from a grob, so pass
   # the plot's own, and the strip matches the figure.
@@ -198,7 +215,7 @@ provenance_footnote <- function(commit, job, versions = .default_versions(),
   }
 
   # recordGrob() evaluates its expression in the list with grid's namespace
-  # around it, so the fitting function travels in the list.
+  # around it, so the functions it calls travel in the list.
   fit <- new.env()
   fit_fn <- .fit_footnote
   probe <- grid::recordGrob(assign("value", fit_fn(fields, avail), envir = fit),
@@ -211,10 +228,16 @@ provenance_footnote <- function(commit, job, versions = .default_versions(),
 
   strip_in <- length(note$lines) * note$fontsize * .FOOTNOTE_LINEHEIGHT / 72 +
     2 * .FOOTNOTE_MARGIN_IN
+  # The plot's gtable is built at draw time, on the output device: built here,
+  # ggplot2 would lay it out on the caller's device, or open R's default one
+  # and leave an Rplots.pdf behind. A patchwork needs patchworkGrob(), which
+  # .hv_plot_gtable() picks.
+  gtable_fn <- .hv_plot_gtable
   composite <- grid::gTree(children = grid::gList(
-    grid::gTree(children = grid::gList(ggplot2::ggplotGrob(plot)),
-                vp = grid::viewport(y = 1, height = grid::unit(1, "npc") - grid::unit(strip_in, "in"),
-                                    just = "top")),
+    grid::recordGrob(grid::grid.draw(gtable_fn(plot)),
+                     list(gtable_fn = gtable_fn, plot = plot),
+                     vp = grid::viewport(y = 1, height = grid::unit(1, "npc") - grid::unit(strip_in, "in"),
+                                         just = "top")),
     grid::textGrob(paste(note$lines, collapse = "\n"),
                    x = grid::unit(.FOOTNOTE_MARGIN_IN, "in"),
                    y = grid::unit(strip_in - .FOOTNOTE_MARGIN_IN, "in"),
@@ -223,8 +246,18 @@ provenance_footnote <- function(commit, job, versions = .default_versions(),
                                    col = grDevices::gray(0.3)),
                    name = "hv_footnote")
   ))
-  save(path, composite, height_in + strip_in)
+
+  # Devices round the page height to whole units, and not all the same way: a
+  # raster to pixels (on Linux 1277.9 px came out 1277, on macOS 1278), R's
+  # pdf() to whole points, truncating. Ask for a whole number of units plus a
+  # quarter, which any rounding takes to that whole number, so the reported
+  # height is the height written.
+  raster <- if (is.null(device)) ext %in% .RASTER_EXT else is.character(device) && device %in% .RASTER_EXT
+  per_in <- if (raster) dpi else 72
+  n <- ceiling((height_in + strip_in) * per_in)
+  save(path, composite, (n + 0.25) / per_in)
+  total_in <- n / per_in
 
   to_units <- function(x) x * switch(units, `in` = 1, cm = 2.54, mm = 25.4, px = dpi)
-  list(width = width, height = to_units(height_in + strip_in), units = units)
+  list(width = to_units(width_in), height = to_units(total_in), units = units)
 }

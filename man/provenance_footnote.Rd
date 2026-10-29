@@ -12,8 +12,8 @@ provenance_footnote(
 )
 }
 \arguments{
-\item{commit}{The render commit ID, a single string. Only the first 7
-characters are printed.}
+\item{commit}{The render commit ID, a single string printed as given: a
+unique abbreviation, the full ID, or a marker such as \code{"uncommitted"}.}
 
 \item{job}{The job path, a single string, such as
 \code{"30_analyses/survival.qmd"}.}
@@ -37,9 +37,14 @@ hvtiPlotR and hvtiRtemplates versions and the time, which
 \code{\link[=save_manuscript]{save_manuscript()}} joins with a middle dot.
 }
 \details{
-The commit comes first and is cut to its first 7 characters, so the
-shortest line that survives a crop still finds the render record, which
-names the job. Only the R, hvtiPlotR and hvtiRtemplates versions are
+The commit comes first, so the shortest line that survives a crop still
+finds the render record, which names the job. It is printed as given and
+never shortened here: hvtiPlotR cannot know which abbreviation is unique in
+the study's repository, so pass one that git verified, such as the output
+of \verb{git rev-parse --short}, or the full ID. A marker the caller uses when
+no commit could be made, such as \code{"uncommitted"}, prints whole too.
+
+Only the R, hvtiPlotR and hvtiRtemplates versions are
 printed; the full package list belongs in the render provenance.
 
 hvtiPlotR does not know about studies or git. It formats the parts it is
@@ -47,7 +52,7 @@ given; the commit and the job path come from the caller.
 }
 \examples{
 provenance_footnote(
-  commit   = "3f9c2a1d8e4b",
+  commit   = "3f9c2a1",
   job      = "30_analyses/rfs.explain.long_term_survival.primary.qmd",
   versions = c(R = "4.5.1", hvtiPlotR = "2.8.19", hvtiRtemplates = "1.5.3"),
   time     = as.POSIXct("2026-10-29 14:40")
