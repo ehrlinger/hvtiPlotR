@@ -80,6 +80,7 @@ out at a consistent size in one call. It is the manuscript counterpart of
 <span>  draft_file <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  draft_dpi <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  format <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"tiff"</span>, <span class="st">"png"</span><span class="op">)</span>,</span>
+<span>  footnote <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -134,6 +135,14 @@ keeps it. Passing a <code>format</code> that contradicts a raster extension, suc
 <code>format = "png"</code> with a <code>.tiff</code> path, is an error.</p></dd>
 
 
+<dt id="arg-footnote">footnote<a class="anchor" aria-label="anchor" href="#arg-footnote"></a></dt>
+<dd><p>Optional provenance note, <code>NULL</code> (default) for none. A
+character vector of fields, which are joined by a middle dot (U+00B7)
+with a space either side, or a single string, which is split into fields
+at that separator. Fields may not contain line breaks. With <code>NULL</code>, the
+output is exactly what it is without the argument.</p></dd>
+
+
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
 <dd><p>Further arguments passed to <code><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggplot2::ggsave()</a></code> for the primary
 <code>file</code>. Not applied to <code>draft_file</code>.</p></dd>
@@ -142,7 +151,10 @@ keeps it. Passing a <code>format</code> that contradicts a raster extension, suc
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>Invisibly, the <code>file</code> path, with the extension <code>format</code> added when
-it had none.</p>
+it had none. With a <code>footnote</code>, the path carries the attribute <code>"dims"</code>,
+a list of the saved <code>width</code>, <code>height</code> and <code>units</code> of <code>file</code>, after any
+<code>scale</code> passed in <code>...</code>, the height including the strip, and, when <code>draft_file</code> is written, <code>"draft_dims"</code>
+for that file.</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
@@ -168,10 +180,26 @@ and silently converts them to bloated, sometimes unreadable EMF. Pass
 alongside <code>file</code> in the same call: keep <code>file</code> as the publisher deliverable
 submitted to the journal, and drag <code>draft_file</code> into the Word
 draft instead.</p>
+<p>Pass <code>footnote</code> to print the figure's provenance, typically the fields
+<code><a href="provenance_footnote.html">provenance_footnote()</a></code> builds, in a strip reserved below the plot. The
+strip is added to the figure, never drawn over it: the plot keeps its
+<code>width</code> x <code>height</code> and the saved file is taller by the strip. The note is
+measured with each output device's own font metrics, so a PDF, PNG and
+TIFF of one figure may get strips of slightly different height. It is set
+at 8 pt and shrinks to fit one line, down to a floor of 6 pt. Past the
+floor it wraps: first between fields, so a field that fits on a line, the
+commit ID among them, is never broken; then inside a field too wide for a
+line, at <code>/</code>, <code>.</code> and spaces, so a long job path breaks at its directory
+and name parts. Nothing is clipped or truncated; the strip grows to as many
+lines as the note needs. The saved height is rounded up to a whole pixel
+(raster) or point (PDF), so the reported height is the height written. The note goes on publication
+figures too: a journal crops it in typesetting, and the study's copy keeps
+the record of which version of the job drew it.</p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
-    <div class="dont-index"><p><code><a href="save_ppt.html">save_ppt()</a></code> for slides, <code><a href="hvtiPlotR-themes.html">theme_hv_manuscript()</a></code> for the 12 pt
+    <div class="dont-index"><p><code><a href="provenance_footnote.html">provenance_footnote()</a></code> to build the <code>footnote</code> fields,
+<code><a href="save_ppt.html">save_ppt()</a></code> for slides, <code><a href="hvtiPlotR-themes.html">theme_hv_manuscript()</a></code> for the 12 pt
 typography, <code><a href="hv_ggsave_dims.html">hv_ggsave_dims()</a></code> for fixed-panel sizing. Worked examples live
 in the HVTI ggplot graphics recipes book,
 <a href="https://ehrlinger.github.io/hvtiGraphics/" class="external-link">https://ehrlinger.github.io/hvtiGraphics/</a>.</p></div>
@@ -193,6 +221,25 @@ in the HVTI ggplot graphics recipes book,
 <span class="r-in"><span><span class="co"># also write a small draft PNG for dragging into Word</span></span></span>
 <span class="r-in"><span><span class="fu">save_manuscript</span><span class="op">(</span><span class="va">p</span>, <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"survival.pdf"</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>                 draft_file <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"survival_draft.png"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># print the render's provenance in a strip below the figure</span></span></span>
+<span class="r-in"><span><span class="va">out</span> <span class="op">&lt;-</span> <span class="fu">save_manuscript</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  <span class="va">p</span>, <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"survival.pdf"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  footnote <span class="op">=</span> <span class="fu"><a href="provenance_footnote.html">provenance_footnote</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>    commit <span class="op">=</span> <span class="st">"3f9c2a1"</span>, job <span class="op">=</span> <span class="st">"30_analyses/survival.qmd"</span>,</span></span>
+<span class="r-in"><span>    time <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/as.POSIXlt.html" class="external-link">as.POSIXct</a></span><span class="op">(</span><span class="st">"2026-10-29 14:40"</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">out</span>, <span class="st">"dims"</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $width</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $height</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 4.291667</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $units</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "in"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span><span class="co"># }</span></span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>

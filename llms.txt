@@ -644,11 +644,14 @@ summaries, and set-membership visualization.
 
 ## Saving & Utilities
 
-Save figures to PowerPoint or PDF. Add draft footnotes during analysis;
-omit them for publication-ready output.
+Save figures to PowerPoint or PDF. Print a saved figure’s provenance in
+a strip below it; add draft footnotes on screen during analysis.
 
 - [`save_manuscript()`](https://ehrlinger.github.io/hvtiPlotR/reference/save_manuscript.md)
   : Save a ggplot at HVTI manuscript defaults
+
+- [`provenance_footnote()`](https://ehrlinger.github.io/hvtiPlotR/reference/provenance_footnote.md)
+  : Build the provenance footnote for a saved figure
 
 - [`save_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/save_ppt.md)
   : Save ggplot Objects to an Editable PowerPoint Presentation

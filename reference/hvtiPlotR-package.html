@@ -145,11 +145,13 @@ ggplot2's <code>half_line</code> convention.</p>
 
 <ul><li><p><code><a href="save_manuscript.html">save_manuscript()</a></code>: Save a ggplot at the house manuscript size
 (6 x 4 in) in one call; the manuscript counterpart of <code><a href="save_ppt.html">save_ppt()</a></code>.
-Pair with <code><a href="hvtiPlotR-themes.html">theme_hv_manuscript()</a></code> for 12 pt type.</p></li>
+Pair with <code><a href="hvtiPlotR-themes.html">theme_hv_manuscript()</a></code> for 12 pt type. Its <code>footnote</code>, built by
+<code><a href="provenance_footnote.html">provenance_footnote()</a></code>, prints the render's provenance in a strip below
+the plot, on publication figures too.</p></li>
 <li><p><code><a href="save_ppt.html">save_ppt()</a></code>: Insert one or more ggplot objects into a PowerPoint
 file as editable DrawingML vector graphics via <code>officer</code> + <code>rvg</code>.</p></li>
-<li><p><code><a href="make_footnote.html">make_footnote()</a></code> / <code><a href="make_footnote.html">makeFootnote()</a></code>: Add a draft footnote during
-analysis; omit for publication-ready output.</p></li>
+<li><p><code><a href="make_footnote.html">make_footnote()</a></code> / <code><a href="make_footnote.html">makeFootnote()</a></code>: Add a draft footnote over a
+figure on screen during analysis.</p></li>
 </ul><div class="section">
 <h4 id="fixed-panel-geometry-v-">Fixed-panel geometry (v2.0.0)<a class="anchor" aria-label="anchor" href="#fixed-panel-geometry-v-"></a></h4>
 

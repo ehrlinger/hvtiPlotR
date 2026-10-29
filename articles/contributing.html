@@ -593,7 +593,7 @@
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/document.html" class="external-link">document</a></span><span class="op">(</span><span class="op">)</span>   <span class="co"># regenerate NAMESPACE + .Rd without errors</span></span>
 <span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/test.html" class="external-link">test</a></span><span class="op">(</span><span class="op">)</span>       <span class="co"># all tests pass</span></span>
-<span><span class="fu">lintr</span><span class="fu">::</span><span class="fu"><a href="https://lintr.r-lib.org/reference/lint.html" class="external-link">lint_package</a></span><span class="op">(</span><span class="op">)</span>  <span class="co"># zero lints; CI fails on any</span></span>
+<span><span class="fu">lintr</span><span class="fu">::</span><span class="fu">lint_package</span><span class="op">(</span><span class="op">)</span>  <span class="co"># zero lints; CI fails on any</span></span>
 <span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/check.html" class="external-link">check</a></span><span class="op">(</span><span class="op">)</span>      <span class="co"># 0 errors, 0 warnings, 0 notes</span></span></code></pre></div>
 <hr></section></section><section class="section level2"><h2 id="track-b">Track B: Package infrastructure<a class="anchor" aria-label="anchor" href="#track-b"></a>
 </h2>
@@ -745,7 +745,7 @@
 <div class="sourceCode cell-code" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>R version 4.6.1 (2026-06-24)
+<pre><code>R version 4.6.2 (2026-10-29)
 Platform: x86_64-pc-linux-gnu
 Running under: Ubuntu 24.04.5 LTS
 
@@ -766,7 +766,7 @@ attached base packages:
 [1] stats     graphics  grDevices utils     datasets  methods   base
 
 loaded via a namespace (and not attached):
- [1] compiler_4.6.1  fastmap_1.2.0   cli_3.6.6       tools_4.6.1
+ [1] compiler_4.6.2  fastmap_1.2.0   cli_3.6.6       tools_4.6.2
  [5] htmltools_0.5.9 otel_0.2.0      yaml_2.3.12     rmarkdown_2.32
  [9] knitr_1.52      jsonlite_2.0.0  xfun_0.62       digest_0.6.39
 [13] rlang_1.3.0     evaluate_1.0.5 </code></pre>

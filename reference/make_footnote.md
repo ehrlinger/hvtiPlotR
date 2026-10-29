@@ -2,8 +2,11 @@
 
 Writes a small text annotation in the bottom-right corner of the
 **current** graphics device using grid. Call this *after* printing or
-displaying the plot. For publication-ready figures, omit the call; the
-plot is unchanged.
+displaying the plot. It draws over the figure, so it suits a draft on
+screen. For a saved figure, publication included, pass `footnote` to
+[`save_manuscript()`](https://ehrlinger.github.io/hvtiPlotR/reference/save_manuscript.md)
+instead: it prints the render's provenance in a strip below the plot,
+which a journal crops in typesetting while the study's copy keeps it.
 
 ## Usage
 
@@ -106,11 +109,16 @@ Called for its side effect (draws text on the current device). Returns
     print(p)
     make_footnote("analysis/mortality.R")   # adds draft annotation
 
-    # For publication — just don't call make_footnote()
-    ggsave("figures/fig1.pdf", p, width = 11, height = 8.5)
+    # Saved figure, publication included: provenance in a strip below the plot
+    save_manuscript(p, "figures/fig1.pdf",
+                    footnote = provenance_footnote(commit, "analysis/mortality.R"))
 
 ## See also
 
+[`save_manuscript()`](https://ehrlinger.github.io/hvtiPlotR/reference/save_manuscript.md)
+and
+[`provenance_footnote()`](https://ehrlinger.github.io/hvtiPlotR/reference/provenance_footnote.md)
+for the note on a saved figure,
 [`save_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/save_ppt.md),
 [`theme_hv_manuscript()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)
 
@@ -135,8 +143,9 @@ print(p)
 make_footnote("R/exploratory.R")
 
 
-# Publication: save without footnote
-ggsave(file.path(tempdir(), "fig1.pdf"), p, width = 11, height = 8.5)
+# Saved figure: the provenance goes in a strip below the plot
+save_manuscript(p, file.path(tempdir(), "fig1.pdf"),
+                footnote = provenance_footnote("3f9c2a1", "R/exploratory.R"))
 # }
 
 # --- Custom position and no timestamp ------------------------------------

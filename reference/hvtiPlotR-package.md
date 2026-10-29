@@ -91,7 +91,10 @@ ggplot2's `half_line` convention.
   [`save_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/save_ppt.md).
   Pair with
   [`theme_hv_manuscript()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)
-  for 12 pt type.
+  for 12 pt type. Its `footnote`, built by
+  [`provenance_footnote()`](https://ehrlinger.github.io/hvtiPlotR/reference/provenance_footnote.md),
+  prints the render's provenance in a strip below the plot, on
+  publication figures too.
 
 - [`save_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/save_ppt.md):
   Insert one or more ggplot objects into a PowerPoint file as editable
@@ -100,8 +103,7 @@ ggplot2's `half_line` convention.
 - [`make_footnote()`](https://ehrlinger.github.io/hvtiPlotR/reference/make_footnote.md)
   /
   [`makeFootnote()`](https://ehrlinger.github.io/hvtiPlotR/reference/make_footnote.md):
-  Add a draft footnote during analysis; omit for publication-ready
-  output.
+  Add a draft footnote over a figure on screen during analysis.
 
 #### Fixed-panel geometry (v2.0.0)
 

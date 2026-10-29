@@ -22,6 +22,7 @@ save_manuscript(
   draft_file = NULL,
   draft_dpi = NULL,
   format = c("tiff", "png"),
+  footnote = NULL,
   ...
 )
 ```
@@ -77,6 +78,14 @@ save_manuscript(
   keeps it. Passing a `format` that contradicts a raster extension, such
   as `format = "png"` with a `.tiff` path, is an error.
 
+- footnote:
+
+  Optional provenance note, `NULL` (default) for none. A character
+  vector of fields, which are joined by a middle dot (U+00B7) with a
+  space either side, or a single string, which is split into fields at
+  that separator. Fields may not contain line breaks. With `NULL`, the
+  output is exactly what it is without the argument.
+
 - ...:
 
   Further arguments passed to
@@ -86,7 +95,10 @@ save_manuscript(
 ## Value
 
 Invisibly, the `file` path, with the extension `format` added when it
-had none.
+had none. With a `footnote`, the path carries the attribute `"dims"`, a
+list of the saved `width`, `height` and `units` of `file`, after any
+`scale` passed in `...`, the height including the strip, and, when
+`draft_file` is written, `"draft_dims"` for that file.
 
 ## Details
 
@@ -119,8 +131,28 @@ copy alongside `file` in the same call: keep `file` as the publisher
 deliverable submitted to the journal, and drag `draft_file` into the
 Word draft instead.
 
+Pass `footnote` to print the figure's provenance, typically the fields
+[`provenance_footnote()`](https://ehrlinger.github.io/hvtiPlotR/reference/provenance_footnote.md)
+builds, in a strip reserved below the plot. The strip is added to the
+figure, never drawn over it: the plot keeps its `width` x `height` and
+the saved file is taller by the strip. The note is measured with each
+output device's own font metrics, so a PDF, PNG and TIFF of one figure
+may get strips of slightly different height. It is set at 8 pt and
+shrinks to fit one line, down to a floor of 6 pt. Past the floor it
+wraps: first between fields, so a field that fits on a line, the commit
+ID among them, is never broken; then inside a field too wide for a line,
+at `/`, `.` and spaces, so a long job path breaks at its directory and
+name parts. Nothing is clipped or truncated; the strip grows to as many
+lines as the note needs. The saved height is rounded up to a whole pixel
+(raster) or point (PDF), so the reported height is the height written.
+The note goes on publication figures too: a journal crops it in
+typesetting, and the study's copy keeps the record of which version of
+the job drew it.
+
 ## See also
 
+[`provenance_footnote()`](https://ehrlinger.github.io/hvtiPlotR/reference/provenance_footnote.md)
+to build the `footnote` fields,
 [`save_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/save_ppt.md)
 for slides,
 [`theme_hv_manuscript()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)
@@ -146,5 +178,24 @@ save_manuscript(p, file.path(tempdir(), "survival"), format = "png")
 # also write a small draft PNG for dragging into Word
 save_manuscript(p, file.path(tempdir(), "survival.pdf"),
                  draft_file = file.path(tempdir(), "survival_draft.png"))
+
+# print the render's provenance in a strip below the figure
+out <- save_manuscript(
+  p, file.path(tempdir(), "survival.pdf"),
+  footnote = provenance_footnote(
+    commit = "3f9c2a1", job = "30_analyses/survival.qmd",
+    time = as.POSIXct("2026-10-29 14:40")
+  )
+)
+attr(out, "dims")
+#> $width
+#> [1] 6
+#> 
+#> $height
+#> [1] 4.291667
+#> 
+#> $units
+#> [1] "in"
+#> 
 # }
 ```
