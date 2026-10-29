@@ -71,6 +71,8 @@ color.
   : Series colors for a slide or a manuscript figure
 - [`hv_role_palette()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_role_palette.md)
   : Colors for a figure's levels, by role
+- [`hv_group_palette()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_group_palette.md)
+  : Colors for the groups compared in an outcome figure
 - [`scale_fill_hv()`](https://ehrlinger.github.io/hvtiPlotR/reference/scale_fill_hv.md)
   [`scale_color_hv()`](https://ehrlinger.github.io/hvtiPlotR/reference/scale_fill_hv.md)
   [`scale_colour_hv()`](https://ehrlinger.github.io/hvtiPlotR/reference/scale_fill_hv.md)
