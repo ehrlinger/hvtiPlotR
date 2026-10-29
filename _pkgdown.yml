@@ -87,6 +87,7 @@ reference:
   - hv_palette
   - hv_ppt_palette
   - hv_role_palette
+  - hv_group_palette
   - scale_fill_hv
   - scale_color_hv
 

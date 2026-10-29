@@ -16,6 +16,10 @@
 # under 2:1 against white. Rose comes first so it is the one to drop when a
 # role is present: it reads as the event.
 .HV_TOL_MUTED <- c("#CC6677", "#332288", "#117733", "#882255", "#44AA99", "#999933", "#AA4499")
+# Paul Tol's vibrant palette less orange and gray, reordered to lead with its
+# red and blue, the role colors above: hv_group_palette()'s colors for compared
+# groups, where red and blue carry no role.
+.HV_TOL_VIBRANT <- c(.HV_ROLE_EVENT, .HV_ROLE_CENSORED, "#009988", "#EE3377", "#33BBEE")
 # The full nine for filled areas such as Sankey nodes, where sand and cyan
 # carry no thin line and their low contrast against white is no bar.
 # hv_sankey() uses it as the default node fill. The order is not Tol's: it was
@@ -149,6 +153,59 @@ hv_role_palette <- function(levels, event = NULL, censored = NULL, missing = "(M
   }
   out[others] <- if (n <= length(rotation)) rotation[seq_len(n)] else fallback[seq_len(n)]
   out
+}
+
+#' Colors for the groups compared in an outcome figure
+#'
+#' @description
+#' The house colors for the groups of a survival, hazard or other outcome
+#' curve, named by group so each group keeps its color in every figure of a
+#' paper. A single group is black. Two to five groups take Paul Tol's vibrant
+#' palette, led by red and blue: red `#CC3311`, blue `#0077BB`, teal `#009988`,
+#' magenta `#EE3377`, cyan `#33BBEE`.
+#'
+#' @details
+#' Red and blue mean the event and censored only in a figure that draws those
+#' roles, which is [hv_role_palette()]'s job. In an outcome curve the colors
+#' stand for groups, so the strongest two go to the first two groups: they stay
+#' apart for a reader with deuteranopia or protanopia (CIELAB distance 104 and
+#' 84 under `colorspace::deutan()` and `protan()`), and they are hues the
+#' team's JTCVS working palette names.
+#'
+#' Six or seven groups all switch to Paul Tol's muted palette less sand and
+#' cyan, the overflow [hv_role_palette()] uses. Beyond seven there are no more
+#' colorblind-safe colors, and the function stops with an error of class
+#' `hv_group_palette_capacity`.
+#'
+#' Pass every level of the grouping factor, not only those a figure draws, so
+#' that a figure missing one group does not shift the colors of the rest.
+#'
+#' @param levels Character vector of distinct group names, in drawing order.
+#'
+#' @return A character vector of hex colors, named by `levels` and in the same
+#'   order, for `ggplot2::scale_color_manual(values = )`.
+#'
+#' @seealso [hv_role_palette()] for figures whose levels are the event,
+#'   censored or missing; [hv_palette()] for categorical groups that are not
+#'   compared as outcomes.
+#'
+#' @examples
+#' hv_group_palette("All")
+#' hv_group_palette(c("Sternotomy", "Robotic", "Thoracotomy"))
+#' @export
+hv_group_palette <- function(levels) {
+  if (!is.character(levels) || !length(levels) || anyNA(levels) || anyDuplicated(levels))
+    stop("`levels` must be a non-empty character vector of distinct, non-missing names.", call. = FALSE)
+  n <- length(levels)
+  if (n == 1L) return(stats::setNames("#000000", levels))
+  if (n > length(.HV_TOL_MUTED)) {
+    stop(errorCondition(
+      sprintf("%d groups need a color, and the colorblind-safe palettes hold %d.", n, length(.HV_TOL_MUTED)),
+      class = "hv_group_palette_capacity"
+    ))
+  }
+  pal <- if (n <= length(.HV_TOL_VIBRANT)) .HV_TOL_VIBRANT else .HV_TOL_MUTED
+  stats::setNames(pal[seq_len(n)], levels)
 }
 
 #' Color and fill scales that apply the role rule to each panel
