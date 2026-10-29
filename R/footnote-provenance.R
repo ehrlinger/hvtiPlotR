@@ -11,7 +11,7 @@
 # resolution R4 ("measure, shrink to a floor, then wrap; never clip").
 
 # Spaced middle dot between fields.
-.FOOTNOTE_SEP <- " · "
+.FOOTNOTE_SEP <- " \u00b7 "
 .FOOTNOTE_START_PT <- 8
 .FOOTNOTE_FLOOR_PT <- 6
 .FOOTNOTE_LINEHEIGHT <- 1.2

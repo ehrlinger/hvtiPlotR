@@ -132,7 +132,7 @@ test_that("a path too long for one line at 6 pt wraps and reads back whole", {
 
 test_that("wrapping breaks between fields, then at / and ., never in the first field", {
   w <- function(s) nchar(s)
-  sep <- " · "
+  sep <- " \u00b7 "
   # Fields fit on lines of their own: break between them.
   expect_identical(hvtiPlotR:::.wrap_footnote(c("abc1234", "x.qmd"), 10, w),
                    c("abc1234", "x.qmd"))
@@ -152,7 +152,7 @@ test_that("wrapping breaks between fields, then at / and ., never in the first f
 })
 
 test_that("a single footnote string is split into fields at the separator", {
-  expect_identical(hvtiPlotR:::.footnote_fields(paste(note(), collapse = " · ")), note())
+  expect_identical(hvtiPlotR:::.footnote_fields(paste(note(), collapse = " \u00b7 ")), note())
 })
 
 test_that("draft_file gets its own strip, measured on its own device", {
