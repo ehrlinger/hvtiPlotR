@@ -78,11 +78,13 @@
 #'
 #' * [save_manuscript()]: Save a ggplot at the house manuscript size
 #'   (6 x 4 in) in one call; the manuscript counterpart of [save_ppt()].
-#'   Pair with [theme_hv_manuscript()] for 12 pt type.
+#'   Pair with [theme_hv_manuscript()] for 12 pt type. Its `footnote`, built by
+#'   [provenance_footnote()], prints the render's provenance in a strip below
+#'   the plot, on publication figures too.
 #' * [save_ppt()]: Insert one or more ggplot objects into a PowerPoint
 #'   file as editable DrawingML vector graphics via `officer` + `rvg`.
-#' * [make_footnote()] / [makeFootnote()]: Add a draft footnote during
-#'   analysis; omit for publication-ready output.
+#' * [make_footnote()] / [makeFootnote()]: Add a draft footnote over a
+#'   figure on screen during analysis.
 #'
 #' ### Fixed-panel geometry (v2.0.0)
 #'

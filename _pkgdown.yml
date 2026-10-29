@@ -256,10 +256,11 @@ reference:
 
 - title: "Saving & Utilities"
   desc: >
-    Save figures to PowerPoint or PDF. Add draft footnotes during analysis;
-    omit them for publication-ready output.
+    Save figures to PowerPoint or PDF. Print a saved figure's provenance in
+    a strip below it; add draft footnotes on screen during analysis.
   contents:
   - save_manuscript
+  - provenance_footnote
   - save_ppt
   - hv_ggsave_dims
   - hv_panel_size
