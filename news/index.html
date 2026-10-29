@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">hvtiPlotR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.8.19</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.8.20</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -53,6 +53,10 @@
       <small>Source: <a href="https://github.com/ehrlinger/hvtiPlotR/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="2.8.20" id="hvtiplotr-2820">hvtiPlotR 2.8.20<a class="anchor" aria-label="anchor" href="#hvtiplotr-2820"></a></h2>
+<ul><li>New <code>hv_group_palette(levels)</code>: the house colors for the groups compared in an outcome figure, named by group. One group is black; two to five take Paul Tol’s vibrant palette led by red <code>#CC3311</code> and blue <code>#0077BB</code>, then teal, magenta and cyan; six or seven switch to the muted overflow; more is an error of class <code>hv_group_palette_capacity</code>. Red and blue now mean the event and censored only in figures that draw those roles (<code><a href="../reference/hv_role_palette.html">hv_role_palette()</a></code>); in an outcome curve they are the two groups that stay most distinct for a colorblind reader.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="2.8.19" id="hvtiplotr-2819">hvtiPlotR 2.8.19<a class="anchor" aria-label="anchor" href="#hvtiplotr-2819"></a></h2>
 <ul><li><p><code><a href="../reference/plot.hv_survival.html">plot.hv_survival()</a></code> gains <code>curve = c("step", "line")</code>. <code>"line"</code> joins the events with straight lines, as the SAS <code>%kaplan</code> figures do, on the <code>"survival"</code>, <code>"cumhaz"</code> and <code>"loglog"</code> plots: it draws time zero, each event and each stratum’s last row, and skips the censored rows between, so a censoring time puts no corner in the line. The CI ribbon follows the same rows. The default, <code>"step"</code>, draws exactly as before.</p></li>
