@@ -82,11 +82,13 @@ ggplot2's \code{half_line} convention.
 \itemize{
 \item \code{\link[=save_manuscript]{save_manuscript()}}: Save a ggplot at the house manuscript size
 (6 x 4 in) in one call; the manuscript counterpart of \code{\link[=save_ppt]{save_ppt()}}.
-Pair with \code{\link[=theme_hv_manuscript]{theme_hv_manuscript()}} for 12 pt type.
+Pair with \code{\link[=theme_hv_manuscript]{theme_hv_manuscript()}} for 12 pt type. Its \code{footnote}, built by
+\code{\link[=provenance_footnote]{provenance_footnote()}}, prints the render's provenance in a strip below
+the plot, on publication figures too.
 \item \code{\link[=save_ppt]{save_ppt()}}: Insert one or more ggplot objects into a PowerPoint
 file as editable DrawingML vector graphics via \code{officer} + \code{rvg}.
-\item \code{\link[=make_footnote]{make_footnote()}} / \code{\link[=makeFootnote]{makeFootnote()}}: Add a draft footnote during
-analysis; omit for publication-ready output.
+\item \code{\link[=make_footnote]{make_footnote()}} / \code{\link[=makeFootnote]{makeFootnote()}}: Add a draft footnote over a
+figure on screen during analysis.
 }
 \subsection{Fixed-panel geometry (v2.0.0)}{
 

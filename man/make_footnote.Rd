@@ -69,8 +69,10 @@ Returns \code{invisible(NULL)}.
 \description{
 Writes a small text annotation in the bottom-right corner of the \strong{current}
 graphics device using grid. Call this \emph{after} printing or displaying the
-plot. For publication-ready figures, omit the call; the plot is
-unchanged.
+plot. It draws over the figure, so it suits a draft on screen. For a saved
+figure, publication included, pass \code{footnote} to \code{\link[=save_manuscript]{save_manuscript()}}
+instead: it prints the render's provenance in a strip below the plot, which
+a journal crops in typesetting while the study's copy keeps it.
 }
 \details{
 \strong{Typical workflow:}
@@ -80,8 +82,9 @@ p <- plot(hv_hazard(...)) + theme_hv_manuscript()
 print(p)
 make_footnote("analysis/mortality.R")   # adds draft annotation
 
-# For publication — just don't call make_footnote()
-ggsave("figures/fig1.pdf", p, width = 11, height = 8.5)
+# Saved figure, publication included: provenance in a strip below the plot
+save_manuscript(p, "figures/fig1.pdf",
+                footnote = provenance_footnote(commit, "analysis/mortality.R"))
 }\if{html}{\out{</div>}}
 }
 \examples{
@@ -101,8 +104,9 @@ p <- ggplot(mtcars, aes(wt, mpg)) +
 print(p)
 make_footnote("R/exploratory.R")
 
-# Publication: save without footnote
-ggsave(file.path(tempdir(), "fig1.pdf"), p, width = 11, height = 8.5)
+# Saved figure: the provenance goes in a strip below the plot
+save_manuscript(p, file.path(tempdir(), "fig1.pdf"),
+                footnote = provenance_footnote("3f9c2a1", "R/exploratory.R"))
 }
 
 # --- Custom position and no timestamp ------------------------------------
@@ -119,5 +123,6 @@ make_footnote(
 
 }
 \seealso{
-\code{\link[=save_ppt]{save_ppt()}}, \code{\link[=theme_hv_manuscript]{theme_hv_manuscript()}}
+\code{\link[=save_manuscript]{save_manuscript()}} and \code{\link[=provenance_footnote]{provenance_footnote()}} for the note on a
+saved figure, \code{\link[=save_ppt]{save_ppt()}}, \code{\link[=theme_hv_manuscript]{theme_hv_manuscript()}}
 }

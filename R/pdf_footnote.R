@@ -2,8 +2,8 @@
 #
 # Add a small footnote to the bottom-right corner of the current figure using
 # grid graphics. Intended for draft plots: include the script name, timestamp,
-# and analyst name during analysis; simply omit the call for publication-ready
-# figures.
+# and analyst name during analysis. A saved figure, publication included, takes
+# its provenance from save_manuscript(footnote =) instead.
 #
 # Adapted from:
 # https://ryouready.wordpress.com/2009/02/17/r-good-practice-adding-footnotes-to-graphics/
@@ -12,8 +12,10 @@
 #'
 #' Writes a small text annotation in the bottom-right corner of the **current**
 #' graphics device using grid. Call this *after* printing or displaying the
-#' plot. For publication-ready figures, omit the call; the plot is
-#' unchanged.
+#' plot. It draws over the figure, so it suits a draft on screen. For a saved
+#' figure, publication included, pass `footnote` to [save_manuscript()]
+#' instead: it prints the render's provenance in a strip below the plot, which
+#' a journal crops in typesetting while the study's copy keeps it.
 #'
 #' **Typical workflow:**
 #' ```r
@@ -22,8 +24,9 @@
 #' print(p)
 #' make_footnote("analysis/mortality.R")   # adds draft annotation
 #'
-#' # For publication — just don't call make_footnote()
-#' ggsave("figures/fig1.pdf", p, width = 11, height = 8.5)
+#' # Saved figure, publication included: provenance in a strip below the plot
+#' save_manuscript(p, "figures/fig1.pdf",
+#'                 footnote = provenance_footnote(commit, "analysis/mortality.R"))
 #' ```
 #'
 #' @param text     Text to display. Defaults to the current working directory;
@@ -52,7 +55,8 @@
 #' @return Called for its side effect (draws text on the current device).
 #'   Returns `invisible(NULL)`.
 #'
-#' @seealso [save_ppt()], [theme_hv_manuscript()]
+#' @seealso [save_manuscript()] and [provenance_footnote()] for the note on a
+#'   saved figure, [save_ppt()], [theme_hv_manuscript()]
 #'
 #' @examples
 #' # --- Basic use after a base-R plot ----------------------------------------
@@ -71,8 +75,9 @@
 #' print(p)
 #' make_footnote("R/exploratory.R")
 #'
-#' # Publication: save without footnote
-#' ggsave(file.path(tempdir(), "fig1.pdf"), p, width = 11, height = 8.5)
+#' # Saved figure: the provenance goes in a strip below the plot
+#' save_manuscript(p, file.path(tempdir(), "fig1.pdf"),
+#'                 footnote = provenance_footnote("3f9c2a1", "R/exploratory.R"))
 #' }
 #'
 #' # --- Custom position and no timestamp ------------------------------------

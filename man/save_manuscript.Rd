@@ -15,6 +15,7 @@ save_manuscript(
   draft_file = NULL,
   draft_dpi = NULL,
   format = c("tiff", "png"),
+  footnote = NULL,
   ...
 )
 }
@@ -49,12 +50,21 @@ back to \code{dpi}.}
 keeps it. Passing a \code{format} that contradicts a raster extension, such as
 \code{format = "png"} with a \code{.tiff} path, is an error.}
 
+\item{footnote}{Optional provenance note, \code{NULL} (default) for none. A
+character vector of fields, which are joined by a middle dot (U+00B7)
+with a space either side, or a single string, which is split into fields
+at that separator. Fields may not contain line breaks. With \code{NULL}, the
+output is exactly what it is without the argument.}
+
 \item{...}{Further arguments passed to \code{\link[ggplot2:ggsave]{ggplot2::ggsave()}} for the primary
 \code{file}. Not applied to \code{draft_file}.}
 }
 \value{
 Invisibly, the \code{file} path, with the extension \code{format} added when
-it had none.
+it had none. With a \code{footnote}, the path carries the attribute \code{"dims"},
+a list of the saved \code{width}, \code{height} and \code{units} of \code{file}, after any
+\code{scale} passed in \code{...}, the height including the strip, and, when \code{draft_file} is written, \code{"draft_dims"}
+for that file.
 }
 \description{
 A thin wrapper around \code{\link[ggplot2:ggsave]{ggplot2::ggsave()}} that enforces the house manuscript
@@ -88,6 +98,22 @@ and silently converts them to bloated, sometimes unreadable EMF. Pass
 alongside \code{file} in the same call: keep \code{file} as the publisher deliverable
 submitted to the journal, and drag \code{draft_file} into the Word
 draft instead.
+
+Pass \code{footnote} to print the figure's provenance, typically the fields
+\code{\link[=provenance_footnote]{provenance_footnote()}} builds, in a strip reserved below the plot. The
+strip is added to the figure, never drawn over it: the plot keeps its
+\code{width} x \code{height} and the saved file is taller by the strip. The note is
+measured with each output device's own font metrics, so a PDF, PNG and
+TIFF of one figure may get strips of slightly different height. It is set
+at 8 pt and shrinks to fit one line, down to a floor of 6 pt. Past the
+floor it wraps: first between fields, so a field that fits on a line, the
+commit ID among them, is never broken; then inside a field too wide for a
+line, at \code{/}, \code{.} and spaces, so a long job path breaks at its directory
+and name parts. Nothing is clipped or truncated; the strip grows to as many
+lines as the note needs. The saved height is rounded up to a whole pixel
+(raster) or point (PDF), so the reported height is the height written. The note goes on publication
+figures too: a journal crops it in typesetting, and the study's copy keeps
+the record of which version of the job drew it.
 }
 \examples{
 \donttest{
@@ -104,10 +130,21 @@ save_manuscript(p, file.path(tempdir(), "survival"), format = "png")
 # also write a small draft PNG for dragging into Word
 save_manuscript(p, file.path(tempdir(), "survival.pdf"),
                  draft_file = file.path(tempdir(), "survival_draft.png"))
+
+# print the render's provenance in a strip below the figure
+out <- save_manuscript(
+  p, file.path(tempdir(), "survival.pdf"),
+  footnote = provenance_footnote(
+    commit = "3f9c2a1", job = "30_analyses/survival.qmd",
+    time = as.POSIXct("2026-10-29 14:40")
+  )
+)
+attr(out, "dims")
 }
 
 }
 \seealso{
+\code{\link[=provenance_footnote]{provenance_footnote()}} to build the \code{footnote} fields,
 \code{\link[=save_ppt]{save_ppt()}} for slides, \code{\link[=theme_hv_manuscript]{theme_hv_manuscript()}} for the 12 pt
 typography, \code{\link[=hv_ggsave_dims]{hv_ggsave_dims()}} for fixed-panel sizing. Worked examples live
 in the HVTI ggplot graphics recipes book,
