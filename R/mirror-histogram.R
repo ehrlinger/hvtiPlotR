@@ -543,10 +543,11 @@ hv_mirror_hist <- function(data,
   diagnostics <- mirror_histogram_diagnostics(working, matched_idx,
                                               group_levels, n_input, n_dropped)
 
-  if (n_dropped > 0L) {
+  n_removed <- diagnostics$n_dropped_missing_or_other_group
+  if (n_removed > 0L) {
     message(sprintf(
       "mirror_histogram dropped %d of %d rows [see $tables$diagnostics]",
-      n_dropped, n_input
+      n_removed, n_input
     ))
   }
 

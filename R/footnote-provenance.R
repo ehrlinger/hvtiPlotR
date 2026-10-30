@@ -211,11 +211,15 @@ provenance_footnote <- function(commit, job, versions = .default_versions(),
   ext <- .file_ext(path)
   # Devices round the page to whole units, and not all the same way: a raster
   # to pixels (on Linux 1277.9 px came out 1277, on macOS 1278), R's pdf() to
-  # whole points, truncating. A function says nothing of what it writes, so the
-  # file's extension decides for it. Ask for a whole number of units plus a
-  # quarter, which any rounding takes to that whole number, so the reported
-  # size is the size written.
-  raster <- if (is.character(device)) device %in% .RASTER_EXT else ext %in% .RASTER_EXT
+  # whole points, truncating. A raster device function has a `res` argument, and
+  # a wrapper without one is left to the file's extension. Ask for a whole number
+  # of units plus a quarter, which any rounding takes to that whole number, so
+  # the reported size is the size written.
+  raster <- if (is.character(device)) {
+    device %in% .RASTER_EXT
+  } else {
+    (is.function(device) && "res" %in% names(formals(device))) || ext %in% .RASTER_EXT
+  }
   per_in <- if (raster) dpi else 72
   page <- function(n) (n + 0.25) / per_in
   width_n   <- round(.to_inches(width, units, dpi) * scale * per_in)

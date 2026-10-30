@@ -253,6 +253,14 @@ test_that("a raster device given as a function reports the pixels written", {
   expect_equal(attr(path, "dims")$height * 300, png_height(path))
 })
 
+test_that("an extensionless path with a raster device reports the pixels written", {
+  skip_if_not_installed("ragg")
+  path <- save_manuscript(mk_plot(), tempfile(), device = ragg::agg_png, dpi = 300, footnote = note())
+  expect_equal(attr(path, "dims")$height * 300, png_height(path))
+  b <- readBin(path, "raw", 24L)
+  expect_equal(attr(path, "dims")$width * 300, sum(as.integer(b[17:20]) * 256^(3:0)))
+})
+
 test_that("the width reported is the width written", {
   path <- save_manuscript(mk_plot(), tempfile(fileext = ".png"), width = 6.003,
                           dpi = 300, footnote = note())
