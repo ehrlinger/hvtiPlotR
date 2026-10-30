@@ -1,3 +1,39 @@
+# hvtiPlotR 2.8.21
+
+* `hv_mirror_hist()` prints its message only when it drops rows, rather than on
+  every call. The counts stay in `$tables$diagnostics`.
+* `scales` moves from Suggests to Imports. It is already a hard dependency of
+  `ggplot2`, so this installs nothing new, and examples and vignettes can use it
+  directly.
+
+* `save_manuscript()` gains `footnote`, which prints a figure's provenance in a
+  strip reserved below the plot, in `file` and `draft_file` alike, PDF, PNG and
+  TIFF. The plot keeps its `width` x `height`; the file is taller by the strip,
+  and the saved dimensions come back in the `"dims"` attribute of the returned
+  path (`"draft_dims"` for the draft). The note is measured with each output
+  device's own metrics, set at 8 pt and shrunk to fit one line down to a 6 pt
+  floor; past the floor it wraps, between fields first, so a field that fits
+  a line, the commit ID among them, is never broken, and then inside a field
+  too wide for a line at `/`, `.` and spaces. It is never clipped. The height
+  is rounded up to a whole pixel or point, so `"dims"` reports the height
+  written. A patchwork keeps every panel.
+  `footnote = NULL`, the default, writes exactly what it wrote before
+  (hvtiR figure-provenance design, section 3 and R4).
+* New `provenance_footnote()` builds the note's fields from the parts it is
+  given, the render commit first and printed as given, never shortened, so a
+  verified unique abbreviation or an `"uncommitted"` marker survives whole:
+  `<commit> · <job path> · R x.y.z · hvtiPlotR a.b.c · hvtiRtemplates d.e.f · YYYY-MM-DD HH:MM`.
+  hvtiPlotR knows nothing of git or studies and takes no new dependency.
+* `save_manuscript(footnote =)` reports the width written as well as the height,
+  including from a raster device passed as a function, such as
+  `device = ragg::agg_png`, and keeps the note 6 to 8 pt under ragg's `scaling`,
+  which clipped it. The strip takes a patchwork's `plot_annotation(theme =)` background.
+* `provenance_footnote()` rejects a blank `job` or `commit`, and an `NA` version
+  name.
+* `make_footnote()` no longer says to omit provenance from publication
+  figures: a saved figure, publication included, takes it from
+  `save_manuscript(footnote =)`.
+
 # hvtiPlotR 2.8.20
 
 * New `hv_group_palette(levels)`: the house colors for the groups compared in

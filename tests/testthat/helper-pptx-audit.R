@@ -13,6 +13,7 @@
 #   untyped       parts with neither a Default nor an Override content type
 
 pptx_audit <- function(path) {
+  testthat::skip_if_not_installed("xml2")
   files <- utils::unzip(path, list = TRUE)$Name
   files <- files[!endsWith(files, "/")]
   read  <- function(part) xml2::read_xml(unz(path, part))

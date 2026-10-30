@@ -203,9 +203,13 @@ test_that("hv_mirror_hist $tables$working is not NULL", {
   expect_false(is.null(mh$tables$working))
 })
 
-test_that("hv_mirror_hist emits a diagnostics message", {
+test_that("hv_mirror_hist speaks only when it drops rows", {
   dta <- sample_mirror_histogram_data(n = 50, seed = 1)
-  expect_message(hv_mirror_hist(dta), "mirror_histogram diagnostics")
+  expect_no_message(hv_mirror_hist(dta))
+  dta$prob_t[1:3] <- NA
+  expect_message(hv_mirror_hist(dta), "dropped 3 of 100 rows")
+  dta$tavr[4:5] <- 99L
+  expect_message(hv_mirror_hist(dta), "dropped 5 of 100 rows")
 })
 
 # ============================================================================

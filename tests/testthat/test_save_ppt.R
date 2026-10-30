@@ -389,6 +389,7 @@ test_that("save_ppt defaults template to the bundled template", {
 })
 
 test_that("bundled dark and light templates carry layouts but no slides", {
+  skip_if_not_installed("xml2")
   skip_if_not_installed("officer")
   skip_if_not_installed("rvg")
 

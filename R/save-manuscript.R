@@ -73,7 +73,9 @@
 #'   character vector of fields, which are joined by a middle dot (U+00B7)
 #'   with a space either side, or a single string, which is split into fields
 #'   at that separator. Fields may not contain line breaks. With `NULL`, the
-#'   output is exactly what it is without the argument.
+#'   output is exactly what it is without the argument. R's `pdf()` device
+#'   draws only Latin-1 text and warns on anything else; use
+#'   `device = grDevices::cairo_pdf` for a note in another script.
 #' @param ... Further arguments passed to [ggplot2::ggsave()] for the primary
 #'   `file`. Not applied to `draft_file`.
 #'

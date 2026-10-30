@@ -1,8 +1,8 @@
 Package: hvtiPlotR
 Type: Package
-Title: HVTI 'ggplot2' Themes and Clinical Plot Functions for the Cleveland Clinic Heart & Vascular Institute
-Version: 2.8.20
-Date: 2026-10-29
+Title: HVTI Themes and Clinical Plot Functions for the Cleveland Clinic Heart & Vascular Institute
+Version: 2.8.21
+Date: 2026-10-30
 Authors@R: c(
     person(
       "John", "Ehrlinger",
@@ -10,18 +10,19 @@ Authors@R: c(
       role = c("aut", "cre")
     )
   )
-Maintainer: John Ehrlinger <john.ehrlinger@gmail.com>
 License: GPL-3
 Encoding: UTF-8
 URL: https://github.com/ehrlinger/hvtiPlotR, https://ehrlinger.github.io/hvtiPlotR/, https://ehrlinger.github.io/hvtiGraphics/
 BugReports: https://github.com/ehrlinger/hvtiPlotR/issues
 Description: Themes, clinical plot constructors and methods for creating
     publication quality 'ggplot2' graphics in R that conform to the standards of Cardiovascular
-    Outcomes Registries and Research (CORR) within The Heart \& Vascular Institute at the
-    Cleveland Clinic.
+    Outcomes Registries and Research (CORR) within the Heart & Vascular Institute at the
+    Cleveland Clinic. Each figure type pairs a data constructor with a plot method, so that
+    manuscript figures are consistent and reproducible rather than restyled by hand.
 Depends:
     R (>= 4.4.0)
 Imports:
+    scales,
     consort (>= 0.2.0),
     ggalluvial (>= 0.12.3),
     ggplot2 (>= 4.0.0),
@@ -43,7 +44,6 @@ Suggests:
     testthat (>= 3.0.0),
     devtools,
     haven,
-    scales,
     tidyr,
     quarto,
     pkgload,
