@@ -238,12 +238,12 @@ test_that("saving with a footnote leaves no device open and no Rplots.pdf", {
   expect_false(file.exists(file.path(dir, "Rplots.pdf")))
 })
 
-test_that("ragg's scaling gets room in the strip", {
+test_that("ragg's scaling leaves the note 6 to 8 pt on the page", {
   skip_if_not_installed("ragg")
   plain <- save_manuscript(mk_plot(), tempfile(fileext = ".png"), footnote = note())
   big   <- save_manuscript(mk_plot(), tempfile(fileext = ".png"), footnote = note(), scaling = 2)
   strip <- function(p) attr(p, "dims")$height - 4
-  expect_gt(strip(big), 1.5 * strip(plain))
+  expect_equal(strip(big), strip(plain), tolerance = 0.05)
 })
 
 test_that("a raster device given as a function reports the pixels written", {

@@ -110,23 +110,27 @@ provenance_footnote <- function(commit, job, versions = .default_versions(),
 
 # Fit the fields to `avail` inches on the current device: the largest size
 # from the start size down to the floor that holds them on one line, else the
-# floor, wrapped. Returns the font size and the lines.
-.fit_footnote <- function(fields, avail) {
+# floor, wrapped. `scaling` is ragg's: it enlarges what is drawn, so the sizes
+# here are divided by it and the note stays 6 to 8 pt on the page. Returns the
+# font size and the lines.
+.fit_footnote <- function(fields, avail, scaling = 1) {
+  start <- .FOOTNOTE_START_PT / scaling
+  floor_pt <- .FOOTNOTE_FLOOR_PT / scaling
   one <- paste(fields, collapse = .FOOTNOTE_SEP)
   width_at <- function(s, fs) {
     grid::convertWidth(grid::grobWidth(grid::textGrob(s, gp = grid::gpar(fontsize = fs))),
                        "in", valueOnly = TRUE)
   }
-  w <- width_at(one, .FOOTNOTE_START_PT)
-  if (w <= avail) return(list(fontsize = .FOOTNOTE_START_PT, lines = one))
+  w <- width_at(one, start)
+  if (w <= avail) return(list(fontsize = start, lines = one))
   # Width is near linear in size; step down in 0.1 pt from the estimate in
   # case the device's hinting is not.
-  fs <- floor(10 * .FOOTNOTE_START_PT * avail / w) / 10
-  while (fs >= .FOOTNOTE_FLOOR_PT) {
+  fs <- floor(10 * start * avail / w) / 10
+  while (fs >= floor_pt) {
     if (width_at(one, fs) <= avail) return(list(fontsize = fs, lines = one))
     fs <- round(fs - 0.1, 1)
   }
-  fs <- .FOOTNOTE_FLOOR_PT
+  fs <- floor_pt
   list(fontsize = fs,
        lines = .wrap_footnote(fields, avail, function(s) width_at(s, fs)))
 }
@@ -241,8 +245,9 @@ provenance_footnote <- function(commit, job, versions = .default_versions(),
   # around it, so the functions it calls travel in the list.
   fit <- new.env()
   fit_fn <- .fit_footnote
-  probe <- grid::recordGrob(assign("value", fit_fn(fields, avail), envir = fit),
-                            list(fit = fit, fit_fn = fit_fn, fields = fields, avail = avail))
+  probe <- grid::recordGrob(assign("value", fit_fn(fields, avail, scaling), envir = fit),
+                            list(fit = fit, fit_fn = fit_fn, fields = fields, avail = avail,
+                                 scaling = scaling))
   probe_file <- tempfile(fileext = if (nzchar(ext)) paste0(".", ext) else "")
   on.exit(unlink(probe_file), add = TRUE)
   save(probe_file, probe, height_in)

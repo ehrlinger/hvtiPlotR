@@ -26,8 +26,8 @@
   hvtiPlotR knows nothing of git or studies and takes no new dependency.
 * `save_manuscript(footnote =)` reports the width written as well as the height,
   including from a raster device passed as a function, such as
-  `device = ragg::agg_png`, and fits the note under ragg's `scaling`, which clipped
-  it. The strip takes a patchwork's `plot_annotation(theme =)` background.
+  `device = ragg::agg_png`, and keeps the note 6 to 8 pt under ragg's `scaling`,
+  which clipped it. The strip takes a patchwork's `plot_annotation(theme =)` background.
 * `provenance_footnote()` rejects a blank `job` or `commit`, and an `NA` version
   name.
 * `make_footnote()` no longer says to omit provenance from publication
