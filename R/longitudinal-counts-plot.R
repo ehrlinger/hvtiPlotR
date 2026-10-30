@@ -274,11 +274,7 @@ plot.hv_longitudinal <- function(x,
   } else {
     # type == "table"
     if (is.null(label_format)) {
-      if (requireNamespace("scales", quietly = TRUE)) {
-        label_format <- scales::comma
-      } else {
-        label_format <- as.character
-      }
+      label_format <- scales::comma
     }
 
     table_data        <- data

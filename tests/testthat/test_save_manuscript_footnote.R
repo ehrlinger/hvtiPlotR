@@ -237,3 +237,38 @@ test_that("saving with a footnote leaves no device open and no Rplots.pdf", {
   expect_identical(grDevices::dev.list(), before)
   expect_false(file.exists(file.path(dir, "Rplots.pdf")))
 })
+
+test_that("ragg's scaling gets room in the strip", {
+  skip_if_not_installed("ragg")
+  plain <- save_manuscript(mk_plot(), tempfile(fileext = ".png"), footnote = note())
+  big   <- save_manuscript(mk_plot(), tempfile(fileext = ".png"), footnote = note(), scaling = 2)
+  strip <- function(p) attr(p, "dims")$height - 4
+  expect_gt(strip(big), 1.5 * strip(plain))
+})
+
+test_that("a raster device given as a function reports the pixels written", {
+  skip_if_not_installed("ragg")
+  path <- save_manuscript(mk_plot(), tempfile(fileext = ".png"), device = ragg::agg_png,
+                          dpi = 300, footnote = note())
+  expect_equal(attr(path, "dims")$height * 300, png_height(path))
+})
+
+test_that("the width reported is the width written", {
+  path <- save_manuscript(mk_plot(), tempfile(fileext = ".png"), width = 6.003,
+                          dpi = 300, footnote = note())
+  b <- readBin(path, "raw", 24L)
+  expect_equal(attr(path, "dims")$width * 300, sum(as.integer(b[17:20]) * 256^(3:0)))
+})
+
+test_that("the strip takes a patchwork annotation's background", {
+  skip_if_not_installed("patchwork")
+  pw <- patchwork::wrap_plots(mk_plot(), mk_plot()) +
+    patchwork::plot_annotation(theme = theme(plot.background = element_rect(fill = "yellow")))
+  fill <- calc_element("plot.background", complete_theme(hvtiPlotR:::.plot_theme(pw)))$fill
+  expect_identical(fill, "yellow")
+})
+
+test_that("provenance_footnote() rejects what would print wrongly", {
+  expect_error(provenance_footnote("a", " ", versions = c(R = "4")), "`job`")
+  expect_error(provenance_footnote("a", "j", versions = stats::setNames("1", NA)), "`versions`")
+})

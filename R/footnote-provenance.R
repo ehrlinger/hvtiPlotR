@@ -67,7 +67,8 @@ provenance_footnote <- function(commit, job, versions = .default_versions(),
   .check_single_string(commit, "commit")
   .check_single_string(job, "job")
   if (!is.character(versions) || is.null(names(versions)) ||
-      anyNA(versions) || !all(nzchar(names(versions))))
+      anyNA(versions) || anyNA(names(versions)) ||
+      !all(nzchar(names(versions))))
     stop("`versions` must be a named character vector.", call. = FALSE)
   if (!inherits(time, "POSIXct") || length(time) != 1L || is.na(time))
     stop("`time` must be a single POSIXct time.", call. = FALSE)
@@ -86,7 +87,7 @@ provenance_footnote <- function(commit, job, versions = .default_versions(),
 }
 
 .check_single_string <- function(x, arg) {
-  if (!is.character(x) || length(x) != 1L || is.na(x) || !nzchar(x))
+  if (!is.character(x) || length(x) != 1L || is.na(x) || !nzchar(trimws(x)))
     stop(sprintf("`%s` must be a single non-empty string.", arg), call. = FALSE)
   invisible(x)
 }
@@ -131,8 +132,8 @@ provenance_footnote <- function(commit, job, versions = .default_versions(),
 }
 
 # Greedy wrap. Each field is a piece, joined to the one before by the
-# separator, so a field that fits on a line is never broken; the commit, first
-# and at most 40 characters, always fits. A field too wide for a line alone is
+# separator, so a field that fits on a line is never broken; a full 40-character
+# commit fits at the floor on a figure about 2 in wide or more. A field too wide for a line alone is
 # cut after each `/`, `.` and space; its pieces join with nothing, so the lines
 # read back as the whole path. A piece with no such break that is still too
 # wide is cut between characters as a last resort, so nothing is ever clipped.
@@ -177,6 +178,13 @@ provenance_footnote <- function(commit, job, versions = .default_versions(),
   }), use.names = FALSE)
 }
 
+# The theme that sets a plot's background: a patchwork's plot_annotation(theme =)
+# draws over its own.
+.plot_theme <- function(plot) {
+  annotation <- if (inherits(plot, "patchwork")) plot$patches$annotation$theme
+  if (inherits(annotation, "theme")) ggplot2::theme() + plot$theme + annotation else plot$theme
+}
+
 # Unit conversion to inches, as ggsave() does it.
 .to_inches <- function(x, units, dpi) {
   x / switch(units, `in` = 1, cm = 2.54, mm = 25.4, px = dpi)
@@ -196,14 +204,29 @@ provenance_footnote <- function(commit, job, versions = .default_versions(),
   scale <- if (is.null(dots$scale)) 1 else dots$scale
   .check_scalar_positive(scale, "scale")
   dots$scale <- NULL
-  width_in  <- .to_inches(width, units, dpi) * scale
+  ext <- .file_ext(path)
+  # Devices round the page to whole units, and not all the same way: a raster
+  # to pixels (on Linux 1277.9 px came out 1277, on macOS 1278), R's pdf() to
+  # whole points, truncating. A function says nothing of what it writes, so the
+  # file's extension decides for it. Ask for a whole number of units plus a
+  # quarter, which any rounding takes to that whole number, so the reported
+  # size is the size written.
+  raster <- if (is.character(device)) device %in% .RASTER_EXT else ext %in% .RASTER_EXT
+  per_in <- if (raster) dpi else 72
+  page <- function(n) (n + 0.25) / per_in
+  width_n   <- round(.to_inches(width, units, dpi) * scale * per_in)
+  width_in  <- width_n / per_in
   height_in <- .to_inches(height, units, dpi) * scale
-  avail <- width_in - 2 * .FOOTNOTE_MARGIN_IN
+  # ragg's `scaling` makes a device inch that many inches on the page. The note
+  # is measured and placed in device inches; the page is sized in real ones.
+  scaling <- if (is.null(dots$scaling)) 1 else dots$scaling
+  margin <- .FOOTNOTE_MARGIN_IN / scaling
+  avail <- width_in / scaling - 2 * margin
   # ggsave() takes the background from a ggplot but not from a grob, so pass
   # the plot's own, and the strip matches the figure.
   if (is.null(dots$bg)) {
     fill <- tryCatch(
-      ggplot2::calc_element("plot.background", ggplot2::complete_theme(plot$theme))$fill,
+      ggplot2::calc_element("plot.background", ggplot2::complete_theme(.plot_theme(plot)))$fill,
       error = function(e) NULL
     )
     dots$bg <- if (is.null(fill)) "transparent" else fill
@@ -211,7 +234,7 @@ provenance_footnote <- function(commit, job, versions = .default_versions(),
   save <- function(filename, grob, h) {
     do.call(ggplot2::ggsave,
             c(list(filename = filename, plot = list(grob), device = device,
-                   width = width_in, height = h, units = "in", dpi = dpi), dots))
+                   width = page(width_n), height = h, units = "in", dpi = dpi), dots))
   }
 
   # recordGrob() evaluates its expression in the list with grid's namespace
@@ -220,14 +243,13 @@ provenance_footnote <- function(commit, job, versions = .default_versions(),
   fit_fn <- .fit_footnote
   probe <- grid::recordGrob(assign("value", fit_fn(fields, avail), envir = fit),
                             list(fit = fit, fit_fn = fit_fn, fields = fields, avail = avail))
-  ext <- .file_ext(path)
   probe_file <- tempfile(fileext = if (nzchar(ext)) paste0(".", ext) else "")
   on.exit(unlink(probe_file), add = TRUE)
   save(probe_file, probe, height_in)
   note <- fit$value
 
-  strip_in <- length(note$lines) * note$fontsize * .FOOTNOTE_LINEHEIGHT / 72 +
-    2 * .FOOTNOTE_MARGIN_IN
+  strip_device <- length(note$lines) * note$fontsize * .FOOTNOTE_LINEHEIGHT / 72 + 2 * margin
+  strip_in <- strip_device * scaling
   # The plot's gtable is built at draw time, on the output device: built here,
   # ggplot2 would lay it out on the caller's device, or open R's default one
   # and leave an Rplots.pdf behind. A patchwork needs patchworkGrob(), which
@@ -236,26 +258,19 @@ provenance_footnote <- function(commit, job, versions = .default_versions(),
   composite <- grid::gTree(children = grid::gList(
     grid::recordGrob(grid::grid.draw(gtable_fn(plot)),
                      list(gtable_fn = gtable_fn, plot = plot),
-                     vp = grid::viewport(y = 1, height = grid::unit(1, "npc") - grid::unit(strip_in, "in"),
+                     vp = grid::viewport(y = 1, height = grid::unit(1, "npc") - grid::unit(strip_device, "in"),
                                          just = "top")),
     grid::textGrob(paste(note$lines, collapse = "\n"),
-                   x = grid::unit(.FOOTNOTE_MARGIN_IN, "in"),
-                   y = grid::unit(strip_in - .FOOTNOTE_MARGIN_IN, "in"),
+                   x = grid::unit(margin, "in"),
+                   y = grid::unit(strip_device - margin, "in"),
                    just = c("left", "top"),
                    gp = grid::gpar(fontsize = note$fontsize, lineheight = .FOOTNOTE_LINEHEIGHT,
                                    col = grDevices::gray(0.3)),
                    name = "hv_footnote")
   ))
 
-  # Devices round the page height to whole units, and not all the same way: a
-  # raster to pixels (on Linux 1277.9 px came out 1277, on macOS 1278), R's
-  # pdf() to whole points, truncating. Ask for a whole number of units plus a
-  # quarter, which any rounding takes to that whole number, so the reported
-  # height is the height written.
-  raster <- if (is.null(device)) ext %in% .RASTER_EXT else is.character(device) && device %in% .RASTER_EXT
-  per_in <- if (raster) dpi else 72
   n <- ceiling((height_in + strip_in) * per_in)
-  save(path, composite, (n + 0.25) / per_in)
+  save(path, composite, page(n))
   total_in <- n / per_in
 
   to_units <- function(x) x * switch(units, `in` = 1, cm = 2.54, mm = 25.4, px = dpi)

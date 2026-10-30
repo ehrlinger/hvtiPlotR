@@ -1,5 +1,11 @@
 # hvtiPlotR 2.8.21
 
+* `hv_mirror_hist()` prints its message only when it drops rows, rather than on
+  every call. The counts stay in `$tables$diagnostics`.
+* `scales` moves from Suggests to Imports. It is already a hard dependency of
+  `ggplot2`, so this installs nothing new, and examples and vignettes can use it
+  directly.
+
 * `save_manuscript()` gains `footnote`, which prints a figure's provenance in a
   strip reserved below the plot, in `file` and `draft_file` alike, PDF, PNG and
   TIFF. The plot keeps its `width` x `height`; the file is taller by the strip,
@@ -18,6 +24,12 @@
   verified unique abbreviation or an `"uncommitted"` marker survives whole:
   `<commit> · <job path> · R x.y.z · hvtiPlotR a.b.c · hvtiRtemplates d.e.f · YYYY-MM-DD HH:MM`.
   hvtiPlotR knows nothing of git or studies and takes no new dependency.
+* `save_manuscript(footnote =)` reports the width written as well as the height,
+  including from a raster device passed as a function, such as
+  `device = ragg::agg_png`, and fits the note under ragg's `scaling`, which clipped
+  it. The strip takes a patchwork's `plot_annotation(theme =)` background.
+* `provenance_footnote()` rejects a blank `job` or `commit`, and an `NA` version
+  name.
 * `make_footnote()` no longer says to omit provenance from publication
   figures: a saved figure, publication included, takes it from
   `save_manuscript(footnote =)`.

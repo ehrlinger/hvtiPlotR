@@ -27,6 +27,7 @@ fitted_doc <- function(template = system.file("extdata", "hv_ppt_template.pptx",
 # Top-level vector groups ("grpSp", from rvg) and pictures ("pic") on slide
 # `i` of a written deck, with their placement in inches.
 slide_graphics <- function(path, i) {
+  skip_if_not_installed("xml2")
   x <- xml2::read_xml(unz(path, sprintf("ppt/slides/slide%d.xml", i)))
   nodes <- xml2::xml_find_all(x, "//p:spTree/p:grpSp | //p:spTree/p:pic")
   inches <- function(node, child, attr) {
@@ -334,6 +335,7 @@ test_that("hv_add_plot places an editable vector on the panel box", {
 # The panel background rectangle on slide `i` of a written deck, found by its
 # fill color, in inches.
 panel_rect <- function(path, i, fill) {
+  skip_if_not_installed("xml2")
   x <- xml2::read_xml(unz(path, sprintf("ppt/slides/slide%d.xml", i)))
   sp <- xml2::xml_find_first(x, sprintf("//p:sp[p:spPr/a:solidFill/a:srgbClr[@val='%s']]", fill))
   xfrm <- xml2::xml_find_first(sp, "./p:spPr/a:xfrm")
