@@ -139,7 +139,6 @@ dta <- sample_mirror_histogram_data(n = 500, separation = 1.5)
 
 # 1. Build data object
 mh <- hv_mirror_hist(dta)
-#> mirror_histogram diagnostics: n=1000  dropped=0  [see $tables$diagnostics]
 mh                    # print diagnostics summary
 #> <hv_mirror_hist>
 #>   Groups      : SAVR (control) vs TF-TAVR (treated)

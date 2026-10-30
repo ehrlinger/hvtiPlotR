@@ -13,7 +13,7 @@ save_ppt(), which enforces the slide panel box."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">hvtiPlotR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.8.20</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.8.21</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -140,7 +140,9 @@ keeps it. Passing a <code>format</code> that contradicts a raster extension, suc
 character vector of fields, which are joined by a middle dot (U+00B7)
 with a space either side, or a single string, which is split into fields
 at that separator. Fields may not contain line breaks. With <code>NULL</code>, the
-output is exactly what it is without the argument.</p></dd>
+output is exactly what it is without the argument. R's <code><a href="https://rdrr.io/r/grDevices/pdf.html" class="external-link">pdf()</a></code> device
+draws only Latin-1 text and warns on anything else; use
+<code>device = grDevices::cairo_pdf</code> for a note in another script.</p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>

@@ -15,7 +15,7 @@ or weighted patients are shown in a contrasting shade.  Compose with
 
     <a class="navbar-brand me-2" href="../index.html">hvtiPlotR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.8.20</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.8.21</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -144,7 +144,6 @@ carries two extra layers after the bars: the white gaps
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">dta</span> <span class="op">&lt;-</span> <span class="fu"><a href="sample_mirror_histogram_data.html">sample_mirror_histogram_data</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">500</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">mh</span>  <span class="op">&lt;-</span> <span class="fu"><a href="hv_mirror_hist.html">hv_mirror_hist</a></span><span class="op">(</span><span class="va">dta</span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> mirror_histogram diagnostics: n=1000  dropped=0  [see $tables$diagnostics]</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">mh</span><span class="op">)</span> <span class="op">+</span></span></span>
 <span class="r-in"><span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Propensity Score (%)"</span>, y <span class="op">=</span> <span class="st">"Count"</span><span class="op">)</span> <span class="op">+</span></span></span>
@@ -156,7 +155,6 @@ carries two extra layers after the bars: the white gaps
 <span class="r-in"><span><span class="va">top</span> <span class="op">&lt;-</span> <span class="va">dta_tall</span><span class="op">$</span><span class="va">tavr</span> <span class="op">==</span> <span class="fl">1</span> <span class="op">&amp;</span> <span class="va">dta_tall</span><span class="op">$</span><span class="va">match</span> <span class="op">==</span> <span class="fl">0</span></span></span>
 <span class="r-in"><span><span class="va">dta_tall</span><span class="op">$</span><span class="va">prob_t</span><span class="op">[</span><span class="va">top</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fl">0.98</span></span></span>
 <span class="r-in"><span><span class="va">mh_tall</span> <span class="op">&lt;-</span> <span class="fu"><a href="hv_mirror_hist.html">hv_mirror_hist</a></span><span class="op">(</span><span class="va">dta_tall</span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> mirror_histogram diagnostics: n=1000  dropped=0  [see $tables$diagnostics]</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">mh_tall</span>, split_tall <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">+</span></span></span>
 <span class="r-in"><span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Propensity Score (%)"</span>, y <span class="op">=</span> <span class="st">"Count"</span><span class="op">)</span> <span class="op">+</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="hvtiPlotR-themes.html">theme_hv_poster</a></span><span class="op">(</span><span class="op">)</span></span></span>

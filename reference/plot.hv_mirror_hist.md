@@ -89,7 +89,6 @@ Other Propensity Score & Matching:
 ``` r
 dta <- sample_mirror_histogram_data(n = 500)
 mh  <- hv_mirror_hist(dta)
-#> mirror_histogram diagnostics: n=1000  dropped=0  [see $tables$diagnostics]
 
 plot(mh) +
   ggplot2::labs(x = "Propensity Score (%)", y = "Count") +
@@ -101,7 +100,6 @@ dta_tall <- dta
 top <- dta_tall$tavr == 1 & dta_tall$match == 0
 dta_tall$prob_t[top] <- 0.98
 mh_tall <- hv_mirror_hist(dta_tall)
-#> mirror_histogram diagnostics: n=1000  dropped=0  [see $tables$diagnostics]
 plot(mh_tall, split_tall = TRUE) +
   ggplot2::labs(x = "Propensity Score (%)", y = "Count") +
   theme_hv_poster()

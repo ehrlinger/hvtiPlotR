@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">hvtiPlotR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.8.20</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.8.21</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -53,6 +53,16 @@
       <small>Source: <a href="https://github.com/ehrlinger/hvtiPlotR/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="2.8.21" id="hvtiplotr-2821">hvtiPlotR 2.8.21<a class="anchor" aria-label="anchor" href="#hvtiplotr-2821"></a></h2>
+<ul><li><p><code><a href="../reference/hv_mirror_hist.html">hv_mirror_hist()</a></code> prints its message only when it drops rows, rather than on every call. The counts stay in <code>$tables$diagnostics</code>.</p></li>
+<li><p><code>scales</code> moves from Suggests to Imports. It is already a hard dependency of <code>ggplot2</code>, so this installs nothing new, and examples and vignettes can use it directly.</p></li>
+<li><p><code><a href="../reference/save_manuscript.html">save_manuscript()</a></code> gains <code>footnote</code>, which prints a figure’s provenance in a strip reserved below the plot, in <code>file</code> and <code>draft_file</code> alike, PDF, PNG and TIFF. The plot keeps its <code>width</code> x <code>height</code>; the file is taller by the strip, and the saved dimensions come back in the <code>"dims"</code> attribute of the returned path (<code>"draft_dims"</code> for the draft). The note is measured with each output device’s own metrics, set at 8 pt and shrunk to fit one line down to a 6 pt floor; past the floor it wraps, between fields first, so a field that fits a line, the commit ID among them, is never broken, and then inside a field too wide for a line at <code>/</code>, <code>.</code> and spaces. It is never clipped. The height is rounded up to a whole pixel or point, so <code>"dims"</code> reports the height written. A patchwork keeps every panel. <code>footnote = NULL</code>, the default, writes exactly what it wrote before (hvtiR figure-provenance design, section 3 and R4).</p></li>
+<li><p>New <code><a href="../reference/provenance_footnote.html">provenance_footnote()</a></code> builds the note’s fields from the parts it is given, the render commit first and printed as given, never shortened, so a verified unique abbreviation or an <code>"uncommitted"</code> marker survives whole: <code>&lt;commit&gt; · &lt;job path&gt; · R x.y.z · hvtiPlotR a.b.c · hvtiRtemplates d.e.f · YYYY-MM-DD HH:MM</code>. hvtiPlotR knows nothing of git or studies and takes no new dependency.</p></li>
+<li><p><code>save_manuscript(footnote =)</code> reports the width written as well as the height, including from a raster device passed as a function, such as <code>device = ragg::agg_png</code>, and keeps the note 6 to 8 pt under ragg’s <code>scaling</code>, which clipped it. The strip takes a patchwork’s <code>plot_annotation(theme =)</code> background.</p></li>
+<li><p><code><a href="../reference/provenance_footnote.html">provenance_footnote()</a></code> rejects a blank <code>job</code> or <code>commit</code>, and an <code>NA</code> version name.</p></li>
+<li><p><code><a href="../reference/make_footnote.html">make_footnote()</a></code> no longer says to omit provenance from publication figures: a saved figure, publication included, takes it from <code>save_manuscript(footnote =)</code>.</p></li>
+</ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="2.8.20" id="hvtiplotr-2820">hvtiPlotR 2.8.20<a class="anchor" aria-label="anchor" href="#hvtiplotr-2820"></a></h2>
 <ul><li>New <code>hv_group_palette(levels)</code>: the house colors for the groups compared in an outcome figure, named by group. One group is black; two to five take Paul Tol’s vibrant palette led by red <code>#CC3311</code> and blue <code>#0077BB</code>, then teal, magenta and cyan; six or seven switch to the muted overflow; more is an error of class <code>hv_group_palette_capacity</code>. Red and blue now mean the event and censored only in figures that draw those roles (<code><a href="../reference/hv_role_palette.html">hv_role_palette()</a></code>); in an outcome curve they are the two groups that stay most distinct for a colorblind reader.</li>
