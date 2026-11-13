@@ -57,10 +57,10 @@ plot(
 - interactive:
 
   Give categorical bars hover labels? `NULL` (the default) means yes in
-  knitr HTML output when the ggiraph package is installed, and no
-  otherwise; `TRUE` or `FALSE` decide it. With hover labels each bar
-  carries a tooltip naming its category, its `x` bin and its count and
-  percent of the bin, shown once the plot is rendered with
+  knitr HTML output, and no otherwise; `TRUE` or `FALSE` decide it. With
+  hover labels each bar carries a tooltip naming its category, its `x`
+  bin and its count and percent of the bin, shown once the plot is
+  rendered with
   [`hv_girafe`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_girafe.md).
   Printed or saved, the plot is the same as without them. Continuous
   plots are unaffected.
