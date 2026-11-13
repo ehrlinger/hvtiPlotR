@@ -37,8 +37,8 @@ Default \code{FALSE}.}
 Default \code{0.4}.}
 
 \item{interactive}{Give categorical bars hover labels? \code{NULL}
-(the default) means yes in knitr HTML output when the ggiraph package is
-installed, and no otherwise; \code{TRUE} or \code{FALSE} decide it.
+(the default) means yes in knitr HTML output, and no otherwise;
+\code{TRUE} or \code{FALSE} decide it.
 With hover labels each bar carries a tooltip naming its category, its
 \code{x} bin and its count and percent of the bin, shown once the plot is
 rendered with \code{\link{hv_girafe}}. Printed or saved, the plot is the
