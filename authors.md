@@ -11,12 +11,12 @@ Source:
 
 Ehrlinger J (2026). *hvtiPlotR: HVTI Themes and Clinical Plot Functions
 for the Cleveland Clinic Heart & Vascular Institute*. R package version
-2.8.21, <https://github.com/ehrlinger/hvtiPlotR>.
+2.8.22, <https://github.com/ehrlinger/hvtiPlotR>.
 
     @Manual{,
       title = {hvtiPlotR: HVTI Themes and Clinical Plot Functions for the Cleveland Clinic Heart & Vascular Institute},
       author = {John Ehrlinger},
       year = {2026},
-      note = {R package version 2.8.21},
+      note = {R package version 2.8.22},
       url = {https://github.com/ehrlinger/hvtiPlotR},
     }
