@@ -75,13 +75,11 @@ utils::globalVariables(c("count", "PANEL", "tooltip"))
 #' @seealso [plot.hv_eda()], [plot.hv_eda_pages()]
 #'
 #' @examples
-#' if (requireNamespace("ggiraph", quietly = TRUE)) {
-#'   dta <- sample_eda_data(n = 300, seed = 42)
-#'   pages <- plot(hv_eda_pages(dta, section = "percent"),
-#'                 ncol = 2, nrow = 2, interactive = TRUE)
-#'   widget <- hv_girafe(pages[[1]], width = 6.5, height = 6)
-#'   class(widget)
-#' }
+#' dta <- sample_eda_data(n = 300, seed = 42)
+#' pages <- plot(hv_eda_pages(dta, section = "percent"),
+#'               ncol = 2, nrow = 2, interactive = TRUE)
+#' widget <- hv_girafe(pages[[1]], width = 6.5, height = 6)
+#' class(widget)
 #' @export
 hv_girafe <- function(x, width = 6.5, height = 9, ...) {
   if (!requireNamespace("ggiraph", quietly = TRUE)) {
