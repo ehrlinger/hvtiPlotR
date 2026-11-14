@@ -92,7 +92,7 @@ hv_girafe <- function(x, width = 6.5, height = 9, ...) {
             call. = FALSE)
     return(ggiraph::girafe(ggobj = x, width_svg = width, height_svg = height, ...))
   }
-  # ggiraph 0.9.5 imports gdtools (>= 0.5.0), so it is installed with it.
+  # gdtools is an import: ggiraph 0.9.5 needs it anyway, and calling it here makes it ours.
   fonts <- gdtools::font_set_auto()
   fonts$dependencies <- list()
   ggiraph::girafe(ggobj = x, width_svg = width, height_svg = height,
