@@ -29,13 +29,11 @@ text is set in Arial (or the nearest system sans serif) and the browser
 draws it in the reader's own copy. Saved PNG and PDF output is unaffected.
 }
 \examples{
-if (requireNamespace("ggiraph", quietly = TRUE)) {
-  dta <- sample_eda_data(n = 300, seed = 42)
-  pages <- plot(hv_eda_pages(dta, section = "percent"),
-                ncol = 2, nrow = 2, interactive = TRUE)
-  widget <- hv_girafe(pages[[1]], width = 6.5, height = 6)
-  class(widget)
-}
+dta <- sample_eda_data(n = 300, seed = 42)
+pages <- plot(hv_eda_pages(dta, section = "percent"),
+              ncol = 2, nrow = 2, interactive = TRUE)
+widget <- hv_girafe(pages[[1]], width = 6.5, height = 6)
+class(widget)
 }
 \seealso{
 \code{\link[=plot.hv_eda]{plot.hv_eda()}}, \code{\link[=plot.hv_eda_pages]{plot.hv_eda_pages()}}
