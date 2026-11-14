@@ -1,3 +1,9 @@
+# hvtiPlotR 2.8.22
+
+* `ggiraph` moves from Suggests to Imports, so installing hvtiPlotR installs it. Without it, EDA pages drawn with `interactive = NULL`, the default, fell back to static bars with no hover labels and said nothing, and studies were installing it by hand to get them.
+
+* The `hv_girafe()` example no longer guards on ggiraph being installed, since ggiraph is now an import and the example runs wherever the package does.
+
 # hvtiPlotR 2.8.21
 
 * `hv_mirror_hist()` prints its message only when it drops rows, rather than on
