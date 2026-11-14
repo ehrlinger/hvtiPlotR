@@ -4,6 +4,8 @@
 
 * The `hv_girafe()` example no longer guards on ggiraph being installed, since ggiraph is now an import and the example runs wherever the package does.
 
+* `gdtools` moves from Suggests to Imports. `hv_girafe()` calls it directly, and `ggiraph` already required it, so this installs nothing new.
+
 # hvtiPlotR 2.8.21
 
 * `hv_mirror_hist()` prints its message only when it drops rows, rather than on
