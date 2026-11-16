@@ -7,7 +7,7 @@
 \method{plot}{hv_spaghetti}(
   x,
   line_colour = "gray50",
-  line_width = 0.2,
+  linewidth = 0.2,
   alpha = 0.8,
   add_smooth = FALSE,
   smooth_method = "loess",
@@ -15,7 +15,8 @@
   smooth_width = 1.2,
   y_labels = NULL,
   ...,
-  line_color = line_colour
+  line_color = line_colour,
+  line_width
 )
 }
 \arguments{
@@ -25,7 +26,7 @@
 existing code. Give one or the other; both with different values is an
 error.}
 
-\item{line_width}{Line width for individual trajectories. Default \code{0.2}.}
+\item{linewidth}{Line width for individual trajectories. Default \code{0.2}.}
 
 \item{alpha}{Transparency of plot elements in \eqn{[0,1]}.
 Default \code{0.8}.}
@@ -48,6 +49,9 @@ Default \code{NULL} (standard numeric axis).}
 
 \item{line_color}{Fixed line color used when the object has no
 \code{color_col}. Default \code{"gray50"}.}
+
+\item{line_width}{Deprecated name of \code{linewidth}; works with a once-per-session
+warning until hvtiPlotR 2.9.0.}
 }
 \value{
 A bare \code{\link[ggplot2]{ggplot}} object; compose with \code{+}

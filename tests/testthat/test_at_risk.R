@@ -101,8 +101,8 @@ test_that("hv_atrisk renders a single-stratum (unstratified) object", {
 
 test_that("hv_atrisk computes from subject-level data via time/status/group", {
   dta <- sample_survival_data(n = 200, strata_levels = c("A", "B"), seed = 1)
-  p   <- hv_atrisk(dta, time = "iv_dead", status = "dead",
-                   group = "valve_type", report_times = c(0, 5, 10))
+  p   <- hv_atrisk(dta, time_col = "iv_dead", event_col = "dead",
+                   group_col = "valve_type", report_times = c(0, 5, 10))
   expect_s3_class(p, "ggplot")
   expect_equal(nrow(ggplot2::layer_data(p, 1)), 6L)  # 2 strata x 3 times
 
@@ -123,8 +123,8 @@ test_that("an hv_survival object and its subject-level data give the same counts
   counts <- function(d, group) {
     km <- suppressWarnings(hv_survival(d, group_col = group, report_times = rt))
     m1 <- hv_atrisk(km)$data
-    m3 <- suppressWarnings(hv_atrisk(d, time = "iv_dead", status = "dead",
-                                     group = group, report_times = rt))$data
+    m3 <- suppressWarnings(hv_atrisk(d, time_col = "iv_dead", event_col = "dead",
+                                     group_col = group, report_times = rt))$data
     list(m1 = m1[c("report_time", "n.risk")], m3 = m3[c("report_time", "n.risk")])
   }
   for (g in list(NULL, "valve_type")) {
@@ -136,13 +136,13 @@ test_that("an hv_survival object and its subject-level data give the same counts
   miss$dead[seq(1, 60, by = 3)] <- NA
   got <- counts(miss, "valve_type")
   expect_equal(got$m1, got$m3, ignore_attr = TRUE)
-  expect_warning(hv_atrisk(miss, time = "iv_dead", status = "dead", report_times = rt),
+  expect_warning(hv_atrisk(miss, time_col = "iv_dead", event_col = "dead", report_times = rt),
                  "20 of 300 row\\(s\\) excluded.*`dead`")
 })
 
 test_that("hv_atrisk derives report_times from the time range when NULL", {
   dta <- sample_survival_data(n = 100, seed = 1)
-  p   <- hv_atrisk(dta, time = "iv_dead")
+  p   <- hv_atrisk(dta, time_col = "iv_dead")
   built <- ggplot2::layer_data(p, 1)
   expect_gt(nrow(built), 0L)
   # derived points lie inside the observed follow-up range
@@ -239,7 +239,7 @@ test_that("hv_atrisk errors on NA strata in a precomputed table", {
 
 test_that("raw-data path errors when time has no finite values", {
   dta <- data.frame(t = c(NA_real_, NA_real_), g = c("A", "B"))
-  expect_error(hv_atrisk(dta, time = "t", group = "g"), "no finite values")
+  expect_error(hv_atrisk(dta, time_col = "t", group_col = "g"), "no finite values")
 })
 
 # ===========================================================================

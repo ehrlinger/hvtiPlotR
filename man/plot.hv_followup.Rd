@@ -22,7 +22,7 @@
 \item{x}{An \code{hv_followup} object.}
 
 \item{type}{Which panel to produce: \code{"followup"}
-(default, death states) or \code{"event"} (requires \code{event_col} to
+(default, death states) or \code{"event"} (requires \code{event_cols} to
 have been supplied to \code{\link{hv_followup}}).}
 
 \item{alpha}{Point/segment transparency in \eqn{[0,1]}.
@@ -67,8 +67,8 @@ with a positive \code{segment_drop}.
 dta <- sample_goodness_followup_data()
 gf  <- hv_followup(dta, origin_year = 1990, study_start = "1990-01-01",
                    study_end = "2019-12-31", close_date = "2021-08-06",
-                   event_col = "ev_event",
-                     event_time_col = "iv_event")
+                   event_cols = "ev_event",
+                     event_time_cols = "iv_event")
 
 # Death panel
 plot(gf) +

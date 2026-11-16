@@ -11,15 +11,15 @@
 
 ensure_officer_available <- function() {
   if (!requireNamespace("officer", quietly = TRUE)) {
-    stop("Package `officer` must be installed to use `save_ppt()`.",
-         call. = FALSE)
+    stop(errorCondition("save_ppt(): package `officer` must be installed.",
+                        class = "hvtiPlotR_missing_package", call = NULL))
   }
 }
 
 ensure_rvg_available <- function() {
   if (!requireNamespace("rvg", quietly = TRUE)) {
-    stop("Package `rvg` must be installed to use `save_ppt()`.",
-         call. = FALSE)
+    stop(errorCondition("save_ppt(): package `rvg` must be installed.",
+                        class = "hvtiPlotR_missing_package", call = NULL))
   }
 }
 
@@ -237,7 +237,9 @@ add_fitted_plot_slide <- function(doc, plot, title, layout, master, panel_box,
 #'   template. Defaults to the `hvtiPlotR.ppt_template` option when set,
 #'   otherwise to the template shipped in `inst/extdata`, whose 16:9 slide
 #'   fits the default `panel_box`. See Details.
-#' @param powerpoint  Output path for the new `.pptx` file. Required.
+#' @param file        Output path for the new `.pptx` file. Required.
+#' @param powerpoint  Deprecated name of `file`; works with a once-per-session
+#'   warning until hvtiPlotR 2.9.0.
 #' @param slide_titles A character vector of slide titles. Recycled to the
 #'   number of plots: supply one string for all slides, or one per plot.
 #'   Default `"Plot"`.
@@ -290,7 +292,7 @@ add_fitted_plot_slide <- function(doc, plot, title, layout, master, panel_box,
 #'   panel so the whole figure spans the slide, centered, with 0.45 in clear
 #'   on each side; see [hv_fit_location()]. Used only with a `panel_box`.
 #'
-#' @return Invisibly returns the path given by `powerpoint`.
+#' @return Invisibly returns the path given by `file`.
 #'
 #' @seealso Worked recipe with rendered output:
 #'   \url{https://ehrlinger.github.io/hvtiGraphics/presentations.html}.
@@ -324,7 +326,7 @@ add_fitted_plot_slide <- function(doc, plot, title, layout, master, panel_box,
 #' save_ppt(
 #'   object       = p_slide,
 #'   template     = template,
-#'   powerpoint   = file.path(tempdir(), "fuel_economy.pptx"),
+#'   file         = file.path(tempdir(), "fuel_economy.pptx"),
 #'   slide_titles = "Fuel Economy by Weight"
 #' )
 #'
@@ -337,7 +339,7 @@ add_fitted_plot_slide <- function(doc, plot, title, layout, master, panel_box,
 #' save_ppt(
 #'   object       = list(p_slide, p2),
 #'   template     = template,
-#'   powerpoint   = file.path(tempdir(), "deck.pptx"),
+#'   file         = file.path(tempdir(), "deck.pptx"),
 #'   slide_titles = c("Scatter: fuel economy", "Box: mpg by cylinder count")
 #' )
 #'
@@ -351,7 +353,7 @@ add_fitted_plot_slide <- function(doc, plot, title, layout, master, panel_box,
 #' save_ppt(
 #'   object       = p_noy,
 #'   template     = template,
-#'   powerpoint   = file.path(tempdir(), "mpg_by_cyl.pptx"),
+#'   file         = file.path(tempdir(), "mpg_by_cyl.pptx"),
 #'   slide_titles = "Miles per Gallon by Cylinder Count"
 #' )
 #'
@@ -364,7 +366,7 @@ add_fitted_plot_slide <- function(doc, plot, title, layout, master, panel_box,
 #' save_ppt(
 #'   object       = pm,
 #'   template     = template,
-#'   powerpoint   = file.path(tempdir(), "manuscript.pptx"),
+#'   file         = file.path(tempdir(), "manuscript.pptx"),
 #'   slide_titles = "Fuel Economy"
 #' )
 #'
@@ -416,7 +418,7 @@ add_fitted_plot_slide <- function(doc, plot, title, layout, master, panel_box,
 #' save_ppt(
 #'   object       = list(p_small, p_big),
 #'   template     = template,
-#'   powerpoint   = file.path(tempdir(), "drifting_deck.pptx"),
+#'   file         = file.path(tempdir(), "drifting_deck.pptx"),
 #'   slide_titles = c("Small y-axis", "Big y-axis")
 #' )
 #'
@@ -428,7 +430,7 @@ add_fitted_plot_slide <- function(doc, plot, title, layout, master, panel_box,
 #' save_ppt(
 #'   object       = list(p_small, p_big),
 #'   template     = template,
-#'   powerpoint   = file.path(tempdir(), "anchored_deck.pptx"),
+#'   file         = file.path(tempdir(), "anchored_deck.pptx"),
 #'   slide_titles = c("Small y-axis", "Big y-axis"),
 #'   panel_box    = list(width = 8.88, height = 4.51, left = 2.58, top = 1.63)
 #' )
@@ -449,7 +451,7 @@ save_ppt <- function(object,
                        system.file("extdata", "hv_ppt_template.pptx",
                                    package = "hvtiPlotR")
                      ),
-                     powerpoint,
+                     file,
                      slide_titles = "Plot",
                      layout       = "Title and Content",
                      master       = NULL,
@@ -459,7 +461,19 @@ save_ppt <- function(object,
                      top          = 1.2,
                      panel_box    = hv_panel_box(format = .hv_template_format(template)),
                      fit          = TRUE,
-                     align        = c("panel", "fill")) {
+                     align        = c("panel", "fill"),
+                     powerpoint) {
+  # Resolved by hand rather than through .hv_rename_arg(), so that a call
+  # with neither name still reaches the explicit "`file` is required" error.
+  if (!missing(powerpoint)) {
+    if (!missing(file))
+      stop("save_ppt(): pass `file` only. `powerpoint` is its old name, and both were given.",
+           call. = FALSE)
+    .hv_deprecate("save_ppt:powerpoint", sprintf(
+      "save_ppt(): `powerpoint` is renamed `file`. The old name works until hvtiPlotR %s.",
+      .hv_removal_version))
+    file <- powerpoint
+  }
   align <- match.arg(align)
 
   ensure_officer_available()
@@ -486,12 +500,12 @@ save_ppt <- function(object,
     stop("`template` must be the path to an existing PowerPoint file.",
          call. = FALSE)
   }
-  if (missing(powerpoint))
-    stop("`powerpoint` is required: the output path for the new .pptx file.",
+  if (missing(file))
+    stop("save_ppt(): `file` is required: the output path for the new .pptx file.",
          call. = FALSE)
-  if (!(is.character(powerpoint) && length(powerpoint) == 1L &&
-        dir.exists(dirname(powerpoint))))
-    stop("`powerpoint` must be a writable file path.", call. = FALSE)
+  if (!(is.character(file) && length(file) == 1L &&
+        dir.exists(dirname(file))))
+    stop("save_ppt(): `file` must be a writable file path.", call. = FALSE)
   if (!(is.character(slide_titles) && length(slide_titles) >= 1L))
     stop("`slide_titles` must be a non-empty character vector.", call. = FALSE)
   # width/height/left/top are always validated: they drive the legacy
@@ -566,9 +580,9 @@ save_ppt <- function(object,
 
   # --- Write output ----------------------------------------------------------
   officer_safe_call(
-    print(doc, target = powerpoint),
+    print(doc, target = file),
     action = "write PowerPoint file"
   )
 
-  invisible(powerpoint)
+  invisible(file)
 }

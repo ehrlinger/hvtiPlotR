@@ -4,26 +4,29 @@
 \alias{eda_select_vars}
 \title{Select and Reorder Variables from a Data Frame}
 \usage{
-eda_select_vars(data, vars)
+eda_select_vars(data, var_cols, vars)
 }
 \arguments{
 \item{data}{A data frame.}
 
-\item{vars}{A character vector of column names, or a single string of
+\item{var_cols}{A character vector of column names, or a single string of
 space-separated names, e.g. \code{"age ht wt bmi"}.}
+
+\item{vars}{Deprecated name of \code{var_cols}; works, with a once-per-session
+warning, until hvtiPlotR 2.9.0.}
 }
 \value{
 A data frame containing only the requested columns in the requested
 order.
 }
 \description{
-Returns the subset of \code{data} containing only the columns named in \code{vars},
+Returns the subset of \code{data} containing only the columns named in \code{var_cols},
 in the order given. Replaces the \code{Order_Variables()} helper and the
 \code{Mod_Data <- dta[, Order_Var]} pattern from
 \code{tp.dp.EDA_barplots_scatterplots_varnames.R}.
 }
 \details{
-\code{vars} may be supplied as a character vector or as a single
+\code{var_cols} may be supplied as a character vector or as a single
 space-separated string (matching the \code{Var_CatList} / \code{Var_ContList} style
 from the template).
 }

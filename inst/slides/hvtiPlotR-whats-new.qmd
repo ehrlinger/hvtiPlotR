@@ -257,20 +257,20 @@ p <- plot(hv_survival(my_data, "time", "event")) +
 
 save_ppt(
   object       = p,
-  powerpoint   = "output/figure1.pptx",
+  file         = "output/figure1.pptx",
   slide_titles = "Kaplan–Meier: All Patients"
 )
 
 # List of plots → one slide per plot
 save_ppt(
   object       = list(p_km, p_balance, p_trends),
-  powerpoint   = "output/full_deck.pptx",
+  file         = "output/full_deck.pptx",
   slide_titles = c("KM Curve", "Covariate Balance", "Annual Trends")
 )
 ```
 
 **Argument names changed from the old API:**
-`plot =` → `object =`   |   `filename =` → `powerpoint =`
+`plot =` → `object =`   |   `filename =` → `file =`
 
 Every plot lands as an **editable DrawingML vector** — shapes, lines,
 and text remain selectable in PowerPoint.
@@ -294,7 +294,7 @@ Supply `panel_box` to anchor the **panel content area** to a fixed rectangle:
 save_ppt(
   object       = list(p_small_labels, p_wide_labels),
   template     = "graphs/RD-dark.pptx",
-  powerpoint   = "output/anchored_deck.pptx",
+  file         = "output/anchored_deck.pptx",
   slide_titles = c("Survival Curve", "Hazard Difference"),
   panel_box    = list(
     width  = 8.88,   # target panel width in inches
@@ -331,7 +331,7 @@ IDE viewer; save into your dark template at export time.
 
 **PowerPoint Export**
 
-- Update `save_ppt()` arg names: `plot =` → `object =`, `filename =` → `powerpoint =`
+- Update `save_ppt()` arg names: `plot =` → `object =`, `filename =` → `file =`
 - Add `panel_box = list(width, height, left, top)` if your deck has variable y-axis label widths
 
 *Deprecated aliases emit a one-shot warning — will be removed in v3.0.0.*

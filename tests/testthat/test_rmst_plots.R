@@ -75,7 +75,7 @@ test_that("default x label is RMST difference (days) and can be overridden", {
 test_that("hv_rmst_contrast accepts custom column names and a ps_rmst object", {
   d <- rmst_estimates()
   names(d)[names(d) == "diff_days"] <- "d"
-  expect_plot_has_data(plot(hv_rmst_contrast(d, diff = "d")))
+  expect_plot_has_data(plot(hv_rmst_contrast(d, diff_col = "d")))
   rc <- hv_rmst_contrast(rmst_ps())
   expect_equal(rc$meta$n_estimators, 3L)
   expect_plot_has_data(plot(rc))
@@ -85,7 +85,7 @@ test_that("hv_rmst_contrast errors on bad input", {
   expect_error(hv_rmst_contrast(1:3), "data frame")
   expect_error(hv_rmst_contrast(rmst_estimates()[, c("estimator", "diff_days")]),
                "Missing required column.*lo_days")
-  expect_error(hv_rmst_contrast(rmst_estimates(), diff = "nope"), "nope")
+  expect_error(hv_rmst_contrast(rmst_estimates(), diff_col = "nope"), "nope")
   d <- rmst_estimates()
   d$diff_days <- as.character(d$diff_days)
   expect_error(hv_rmst_contrast(d), "numeric")
@@ -171,7 +171,7 @@ test_that("a ps_rmst-like list supplies curves, estimates and works end to end",
 test_that("hv_rmst_curves supports a custom facet column", {
   d <- rmst_curves()
   names(d)[1] <- "method"
-  expect_plot_has_data(plot(hv_rmst_curves(d, facet = "method", tau = 300)), geoms = "GeomRibbon")
+  expect_plot_has_data(plot(hv_rmst_curves(d, facet_col = "method", tau = 300)), geoms = "GeomRibbon")
 })
 
 test_that("hv_rmst_curves errors on bad input", {

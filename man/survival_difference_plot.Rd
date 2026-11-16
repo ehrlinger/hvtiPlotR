@@ -5,18 +5,20 @@
 \title{Survival Difference (Life-Gained) Plot}
 \usage{
 survival_difference_plot(
-  diff_data,
+  data,
   x_col = "time",
   estimate_col = "difference",
   lower_col = NULL,
   upper_col = NULL,
   group_col = NULL,
   ci_alpha = 0.2,
-  line_width = 1
+  linewidth = 1,
+  diff_data,
+  line_width
 )
 }
 \arguments{
-\item{diff_data}{Data frame of pre-computed survival differences. See
+\item{data}{Data frame of pre-computed survival differences. See
 \code{\link[=sample_survival_difference_data]{sample_survival_difference_data()}}.}
 
 \item{x_col}{Name of the time column. Default \code{"time"}.}
@@ -32,7 +34,13 @@ survival_difference_plot(
 
 \item{ci_alpha}{Transparency of the CI ribbon. Default \code{0.20}.}
 
-\item{line_width}{Line width. Default \code{1.0}.}
+\item{linewidth}{Line width. Default \code{1.0}.}
+
+\item{diff_data}{Deprecated name of \code{data}; works with a once-per-session
+warning until hvtiPlotR 2.9.0.}
+
+\item{line_width}{Deprecated name of \code{linewidth}; works with a once-per-session
+warning until hvtiPlotR 2.9.0.}
 }
 \value{
 A \code{\link[ggplot2:ggplot]{ggplot2::ggplot()}} object.

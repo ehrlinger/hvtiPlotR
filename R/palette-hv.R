@@ -93,7 +93,8 @@ hv_palette <- function(n = NULL) {
 #'    Tol's muted palette, without its sand and cyan, and without its rose when
 #'    a role is present. Beyond that there are no more colorblind-safe
 #'    colors, and the function stops with an error of class
-#'    `hv_role_palette_capacity`.
+#'    `hvtiPlotR_role_palette_capacity`. It also carries the old class,
+#'    `hv_role_palette_capacity`, until hvtiPlotR 2.9.0.
 #'
 #' Every color except the missing gray is at least 2:1 against white. The
 #' gray is fainter on purpose: missing is the one level meant to recede.
@@ -148,7 +149,7 @@ hv_role_palette <- function(levels, event = NULL, censored = NULL, missing = "(M
     stop(errorCondition(
       sprintf("%d levels need a color, and the colorblind-safe palettes hold %d%s.",
               n, length(fallback), if (any(is_event | is_censored)) " beside the event and censored levels" else ""),
-      class = "hv_role_palette_capacity"
+      class = c("hvtiPlotR_role_palette_capacity", "hv_role_palette_capacity")
     ))
   }
   out[others] <- if (n <= length(rotation)) rotation[seq_len(n)] else fallback[seq_len(n)]
@@ -175,7 +176,8 @@ hv_role_palette <- function(levels, event = NULL, censored = NULL, missing = "(M
 #' Six or seven groups all switch to Paul Tol's muted palette less sand and
 #' cyan, the overflow [hv_role_palette()] uses. Beyond seven there are no more
 #' colorblind-safe colors, and the function stops with an error of class
-#' `hv_group_palette_capacity`.
+#' `hvtiPlotR_group_palette_capacity`. It also carries the old class,
+#' `hv_group_palette_capacity`, until hvtiPlotR 2.9.0.
 #'
 #' Pass every level of the grouping factor, not only those a figure draws, so
 #' that a figure missing one group does not shift the colors of the rest.
@@ -201,7 +203,7 @@ hv_group_palette <- function(levels) {
   if (n > length(.HV_TOL_MUTED)) {
     stop(errorCondition(
       sprintf("%d groups need a color, and the colorblind-safe palettes hold %d.", n, length(.HV_TOL_MUTED)),
-      class = "hv_group_palette_capacity"
+      class = c("hvtiPlotR_group_palette_capacity", "hv_group_palette_capacity")
     ))
   }
   pal <- if (n <= length(.HV_TOL_VIBRANT)) .HV_TOL_VIBRANT else .HV_TOL_MUTED
@@ -283,7 +285,7 @@ scale_colour_hv <- scale_color_hv
       limits <- as.character(limits[!is.na(limits)])
       pal <- tryCatch(
         hv_role_palette(limits, event, censored, missing),
-        hv_role_palette_capacity = function(e) {
+        hvtiPlotR_role_palette_capacity = function(e) {
           if (!self$capacity_warned) {
             self$capacity_warned <- TRUE
             warning(sprintf("A panel with %d levels (%s) has more than the colorblind-safe palettes hold; ",

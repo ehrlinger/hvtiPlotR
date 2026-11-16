@@ -68,10 +68,10 @@ hv_ppt_layout <- function(role = c("figure", "section", "title", "content",
     if (new %in% available) {
       if (!isTRUE(.hv_layout_alias_env[[layout]])) {
         .hv_layout_alias_env[[layout]] <- TRUE
-        message("hvtiPlotR: layout '", layout, "' is now '", new,
-                "' in the bundled templates (hvtiPlotR 2.8.12); using '",
-                new, "'. Use hv_ppt_layout() to name layouts by role. ",
-                "This message prints once per session.")
+        .hvti_inform("hvtiPlotR: layout '", layout, "' is now '", new,
+                     "' in the bundled templates (hvtiPlotR 2.8.12); using '",
+                     new, "'. Use hv_ppt_layout() to name layouts by role. ",
+                     "This message prints once per session.")
       }
       return(new)
     }

@@ -4,14 +4,17 @@
 \alias{hv_upset}
 \title{Prepare UpSet co-occurrence data for plotting}
 \usage{
-hv_upset(data, intersect)
+hv_upset(data, set_cols, intersect)
 }
 \arguments{
 \item{data}{A data frame. Each set-membership column must be logical
 or integer (0/1).}
 
-\item{intersect}{Character vector of column names to treat as sets. Must
+\item{set_cols}{Character vector of column names to treat as sets. Must
 contain at least two names that exist in \code{data}.}
+
+\item{intersect}{Deprecated name of \code{set_cols}; works, with a once-per-session
+warning, until hvtiPlotR 2.9.0.}
 }
 \value{
 An object of class \code{c("hv_upset", "hv_data")}:
@@ -38,7 +41,7 @@ sets <- c("AV_Replacement", "AV_Repair", "MV_Replacement", "MV_Repair",
 dta <- sample_upset_data(n = 300, seed = 42)
 
 # 1. Build data object
-up <- hv_upset(dta, intersect = sets)
+up <- hv_upset(dta, set_cols = sets)
 up  # prints set counts
 
 # 2. Plot. The default (set_size = TRUE) returns a patchwork composite,

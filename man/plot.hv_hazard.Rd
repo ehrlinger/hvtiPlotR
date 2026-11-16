@@ -7,11 +7,12 @@
 \method{plot}{hv_hazard}(
   x,
   ci_alpha = 0.2,
-  line_width = 1,
+  linewidth = 1,
   point_size = 2,
   point_shape = 1L,
   errorbar_width = 0.25,
-  ...
+  ...,
+  line_width
 )
 }
 \arguments{
@@ -19,7 +20,7 @@
 
 \item{ci_alpha}{Transparency of the CI ribbon. Default \code{0.20}.}
 
-\item{line_width}{Width of the parametric curve line. Default \code{1.0}.}
+\item{linewidth}{Width of the parametric curve line. Default \code{1.0}.}
 
 \item{point_size}{Size of empirical overlay points (used when
 \code{emp_geom = "point"} was set in \code{\link[=hv_hazard]{hv_hazard()}}). Default \code{2.0}.}
@@ -31,6 +32,9 @@
 \code{0.25}.}
 
 \item{...}{Ignored; present for S3 consistency.}
+
+\item{line_width}{Deprecated name of \code{linewidth}; works with a once-per-session
+warning until hvtiPlotR 2.9.0.}
 }
 \value{
 A \code{\link[ggplot2:ggplot]{ggplot2::ggplot()}} object; compose with \code{+} to add scales,

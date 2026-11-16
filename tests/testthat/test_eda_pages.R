@@ -26,7 +26,7 @@ test_that("each section keeps exactly the variables of its class, in column orde
 })
 
 test_that("vars sets the order and the subset", {
-  x <- hv_eda_pages(dta, section = "continuous", vars = c("peak_grad", "ef", "male"))
+  x <- hv_eda_pages(dta, section = "continuous", var_cols = c("peak_grad", "ef", "male"))
   expect_identical(x$data$variable, c("peak_grad", "ef"))
   expect_identical(x$meta$n_other, 1L)
 })
@@ -46,14 +46,14 @@ test_that("vars = NULL leaves out identifier columns, and naming one draws it", 
   cont <- hv_eda_pages(ids, x_col = "year", section = "continuous")
   expect_false(any(c("ccfid", "mrn", "eMRN") %in% cont$data$variable))
   expect_true(all(c("PatientID", "pt_mrn_num") %in% cont$data$variable))
-  named <- hv_eda_pages(ids, x_col = "year", section = "continuous", vars = c("ef", "ccfid"))
+  named <- hv_eda_pages(ids, x_col = "year", section = "continuous", var_cols = c("ef", "ccfid"))
   expect_identical(named$data$variable, c("ef", "ccfid"))
   expect_identical(named$meta$ignored, character(0))
 })
 
 test_that("every missing variable is named in one error", {
   expect_error(
-    hv_eda_pages(dta, section = "continuous", vars = c("ef", "nope1", "nope2")),
+    hv_eda_pages(dta, section = "continuous", var_cols = c("ef", "nope1", "nope2")),
     "nope1, nope2"
   )
 })
@@ -106,7 +106,7 @@ test_that("every panel on every page has data", {
 })
 
 test_that("alpha reaches the points of continuous panels", {
-  pages <- plot(hv_eda_pages(dta, section = "continuous", vars = "ef"), alpha = 0.5)
+  pages <- plot(hv_eda_pages(dta, section = "continuous", var_cols = "ef"), alpha = 0.5)
   built <- ggplot2::ggplot_build(pages[[1]][[1]])
   expect_true(all(built$data[[1]]$alpha == 0.5))
   expect_error(plot(hv_eda_pages(dta, section = "continuous"), alpha = 2))
@@ -121,11 +121,11 @@ test_that("bar pages share one y axis per row; continuous panels keep their own"
       titles = sum(grepl("^ylab-l", g$layout$name) & drawn))
   }
   for (section in c("percent", "count")) {
-    page <- plot(hv_eda_pages(dta, x_col = "year", section = section, vars = c("male", "nyha")),
+    page <- plot(hv_eda_pages(dta, x_col = "year", section = section, var_cols = c("male", "nyha")),
                  ncol = 2, nrow = 1)[[1]]
     expect_identical(drawn_y(page), c(axes = 1L, titles = 1L), info = section)
   }
-  page <- plot(hv_eda_pages(dta, x_col = "year", section = "continuous", vars = c("ef", "peak_grad")),
+  page <- plot(hv_eda_pages(dta, x_col = "year", section = "continuous", var_cols = c("ef", "peak_grad")),
                ncol = 2, nrow = 1)[[1]]
   expect_identical(drawn_y(page), c(axes = 2L, titles = 2L))
 })
@@ -136,7 +136,7 @@ test_that("plot.hv_eda keeps its 0.4 point alpha by default", {
 })
 
 test_that("a section with no variables plots as no pages", {
-  x <- hv_eda_pages(dta, section = "continuous", vars = cat_vars)
+  x <- hv_eda_pages(dta, section = "continuous", var_cols = cat_vars)
   expect_identical(x$meta$n_vars, 0L)
   expect_identical(plot(x), list())
 })
@@ -175,7 +175,7 @@ test_that("page structure is stable for each section", {
   small <- sample_eda_data(n = 60, seed = 1)
   for (section in c("continuous", "percent", "count")) {
     pages <- plot(hv_eda_pages(small, x_col = "year", section = section,
-                               vars = c("ef", "peak_grad", "male", "nyha")),
+                               var_cols = c("ef", "peak_grad", "male", "nyha")),
                   ncol = 2, nrow = 1)
     expect_snapshot(for (page in pages) page_structure(page))
   }

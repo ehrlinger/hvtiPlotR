@@ -81,8 +81,10 @@ sample_upset_data <- function(n = 500, seed = 42L) {
 #'
 #' @param data      A data frame. Each set-membership column must be logical
 #'   or integer (0/1).
-#' @param intersect Character vector of column names to treat as sets. Must
+#' @param set_cols Character vector of column names to treat as sets. Must
 #'   contain at least two names that exist in \code{data}.
+#' @param intersect Deprecated name of `set_cols`; works, with a once-per-session
+#'   warning, until hvtiPlotR 2.9.0.
 #'
 #' @return An object of class \code{c("hv_upset", "hv_data")}:
 #' \describe{
@@ -105,7 +107,7 @@ sample_upset_data <- function(n = 500, seed = 42L) {
 #' dta <- sample_upset_data(n = 300, seed = 42)
 #'
 #' # 1. Build data object
-#' up <- hv_upset(dta, intersect = sets)
+#' up <- hv_upset(dta, set_cols = sets)
 #' up  # prints set counts
 #'
 #' # 2. Plot. The default (set_size = TRUE) returns a patchwork composite,
@@ -116,12 +118,14 @@ sample_upset_data <- function(n = 500, seed = 42L) {
 #'
 #' @importFrom rlang .data
 #' @export
-hv_upset <- function(data, intersect) {
+hv_upset <- function(data, set_cols, intersect) {
+  intersect <- .hv_rename_arg("hv_upset", "intersect", "set_cols", missing(intersect),
+                              missing(set_cols), intersect, set_cols)
   .check_df(data)
   if (!(is.character(intersect) && length(intersect) >= 2L))
-    stop("`intersect` must be a character vector of at least 2 column names.",
+    stop("hv_upset(): `set_cols` must be a character vector of at least 2 column names.",
          call. = FALSE)
-  .check_no_duplicates(intersect, "intersect")
+  .check_no_duplicates(intersect, "set_cols")
   .check_cols(data, intersect)
   non_binary <- intersect[!vapply(
     data[intersect],
@@ -217,7 +221,7 @@ print.hv_upset <- function(x, ...) {
 #'   intersection-bar ggplot.
 #' @param set_size_position   `"right"` (default) or `"left"`.
 #' @param set_size_sort       Sort order for the sidebar: `"descending"`
-#'   (default), `"ascending"`, or `"none"` (preserve `intersect` order).
+#'   (default), `"ascending"`, or `"none"` (preserve `set_cols` order).
 #' @param set_size_fill       Fill color for the sidebar bars. Default
 #'   `"steelblue"`.
 #' @param width_ratio         Fraction of horizontal space given to the
@@ -234,7 +238,7 @@ print.hv_upset <- function(x, ...) {
 #' sets <- c("AV_Replacement", "AV_Repair", "MV_Replacement", "MV_Repair",
 #'           "TV_Repair", "Aorta", "CABG")
 #' dta <- sample_upset_data(n = 300, seed = 42)
-#' up  <- hv_upset(dta, intersect = sets)
+#' up  <- hv_upset(dta, set_cols = sets)
 #'
 #' # Default: intersection bars + set-size sidebar (patchwork composite).
 #' # Use `&` to theme every sub-panel.
@@ -246,7 +250,7 @@ print.hv_upset <- function(x, ...) {
 #'
 #' # Fill bars by an external grouping variable (e.g. era).
 #' dta$era <- ifelse(seq_len(nrow(dta)) <= 150, "Early", "Recent")
-#' up_era  <- hv_upset(dta, intersect = sets)
+#' up_era  <- hv_upset(dta, set_cols = sets)
 #' plot(up_era, fill_col = "era", set_size = FALSE) +
 #'   ggplot2::scale_fill_manual(
 #'     values = c(Early = "gray60", Recent = "steelblue"),

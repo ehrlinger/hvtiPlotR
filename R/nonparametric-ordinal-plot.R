@@ -213,8 +213,10 @@ sample_nonparametric_ordinal_points <- function(
 #'   (individual grade probs, after wide-to-long reshape)
 #' - \code{grade} <- a new column created during the reshape
 #'
-#' @param curve_data  Long-format data frame: one row per (time, grade)
+#' @param data        Long-format data frame: one row per (time, grade)
 #'   combination. Columns: \code{x_col}, \code{estimate_col}, \code{grade_col}.
+#' @param curve_data Deprecated name of `data`; works with a once-per-session
+#'   warning until hvtiPlotR 2.9.0.
 #' @param x_col       Name of the time column. Default \code{"time"}.
 #' @param estimate_col Name of the predicted probability column.
 #'   Default \code{"estimate"}.
@@ -277,13 +279,16 @@ sample_nonparametric_ordinal_points <- function(
 #'
 #' @importFrom rlang .data
 #' @export
-hv_ordinal <- function(curve_data,
+hv_ordinal <- function(data,
                           x_col        = "time",
                           estimate_col = "estimate",
                           grade_col    = "grade",
-                          data_points  = NULL) {
-  .check_df(curve_data, "curve_data")
-  .check_cols(curve_data, c(x_col, estimate_col, grade_col), "curve_data")
+                          data_points  = NULL,
+                          curve_data) {
+  curve_data <- .hv_rename_arg("hv_ordinal", "curve_data", "data",
+                               missing(curve_data), missing(data), curve_data, data)
+  .check_df(curve_data, "data")
+  .check_cols(curve_data, c(x_col, estimate_col, grade_col), "data")
 
   has_data_points <- !is.null(data_points)
   if (has_data_points) {
@@ -333,7 +338,9 @@ print.hv_ordinal <- function(x, ...) {
 #' summary point overlay.
 #'
 #' @param x            An \code{hv_ordinal} object.
-#' @param line_width   Width of grade-specific curve lines. Default \code{1.0}.
+#' @param linewidth    Width of grade-specific curve lines. Default \code{1.0}.
+#' @param line_width Deprecated name of `linewidth`; works with a once-per-session
+#'   warning until hvtiPlotR 2.9.0.
 #' @param point_size   Size of binned data summary points. Default \code{2.5}.
 #' @param point_shape  Integer shape for summary points. Default \code{20}.
 #' @param ...          Ignored; present for S3 consistency.
@@ -370,10 +377,13 @@ print.hv_ordinal <- function(x, ...) {
 #' @importFrom rlang .data
 #' @export
 plot.hv_ordinal <- function(x,
-                               line_width  = 1.0,
+                               linewidth   = 1.0,
                                point_size  = 2.5,
                                point_shape = 20L,
-                               ...) {
+                               ...,
+                               line_width) {
+  line_width <- .hv_rename_arg("plot.hv_ordinal", "line_width", "linewidth",
+                               missing(line_width), missing(linewidth), line_width, linewidth)
   curve_data   <- x$data
   m            <- x$meta
   x_col        <- m$x_col

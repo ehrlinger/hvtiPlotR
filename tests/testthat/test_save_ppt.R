@@ -30,7 +30,7 @@ test_that("save_ppt writes a file for a single ggplot", {
   on.exit(unlink(c(temp_ppt, temp_template)))
 
   expect_no_error(
-    save_ppt(p, template = temp_template, powerpoint = temp_ppt)
+    save_ppt(p, template = temp_template, file = temp_ppt)
   )
   expect_true(file.exists(temp_ppt))
 })
@@ -47,7 +47,7 @@ test_that("save_ppt writes a file for a list of ggplots", {
   on.exit(unlink(c(temp_ppt, temp_template)))
 
   expect_no_error(
-    save_ppt(plots, template = temp_template, powerpoint = temp_ppt,
+    save_ppt(plots, template = temp_template, file = temp_ppt,
              slide_titles = c("Plot A", "Plot B"))
   )
   expect_true(file.exists(temp_ppt))
@@ -63,7 +63,7 @@ test_that("save_ppt recycles a single slide_titles string across all plots", {
   on.exit(unlink(c(temp_ppt, temp_template)))
 
   expect_no_error(
-    save_ppt(plots, template = temp_template, powerpoint = temp_ppt,
+    save_ppt(plots, template = temp_template, file = temp_ppt,
              slide_titles = "Same title")
   )
 })
@@ -78,7 +78,7 @@ test_that("save_ppt works with custom width, height, left, top", {
   on.exit(unlink(c(temp_ppt, temp_template)))
 
   expect_no_error(
-    save_ppt(p, template = temp_template, powerpoint = temp_ppt,
+    save_ppt(p, template = temp_template, file = temp_ppt,
              panel_box = NULL,
              width = 8, height = 5, left = 0.5, top = 1.5)
   )
@@ -94,7 +94,7 @@ test_that("save_ppt works with theme_hv_ppt_dark", {
   on.exit(unlink(c(temp_ppt, temp_template)))
 
   expect_no_error(
-    save_ppt(p, template = temp_template, powerpoint = temp_ppt)
+    save_ppt(p, template = temp_template, file = temp_ppt)
   )
 })
 
@@ -112,7 +112,7 @@ test_that("save_ppt runs without warnings (officer bg-namespace noise suppressed
   # filters them. Lock that in so a regression (officer change, filter
   # typo) would fail this test.
   expect_no_warning(
-    save_ppt(p, template = temp_template, powerpoint = temp_ppt,
+    save_ppt(p, template = temp_template, file = temp_ppt,
              slide_titles = "warning-free")
   )
 })
@@ -128,7 +128,7 @@ test_that("save_ppt renders a transparent dml canvas (no white box)", {
   ud            <- tempfile()
   on.exit(unlink(c(temp_ppt, temp_template, ud), recursive = TRUE))
 
-  save_ppt(p, template = temp_template, powerpoint = temp_ppt)
+  save_ppt(p, template = temp_template, file = temp_ppt)
 
   dir.create(ud)
   utils::unzip(temp_ppt, exdir = ud)
@@ -183,7 +183,7 @@ test_that("save_ppt works with all hvtiPlotR themes", {
   on.exit(unlink(c(temp_ppt, temp_template)))
 
   expect_no_error(
-    save_ppt(plots, template = temp_template, powerpoint = temp_ppt)
+    save_ppt(plots, template = temp_template, file = temp_ppt)
   )
 })
 
@@ -196,7 +196,7 @@ test_that("save_ppt returns the output path invisibly", {
   temp_ppt     <- tempfile(fileext = ".pptx")
   on.exit(unlink(c(temp_ppt, temp_template)))
 
-  result <- save_ppt(p, template = temp_template, powerpoint = temp_ppt)
+  result <- save_ppt(p, template = temp_template, file = temp_ppt)
   expect_equal(result, temp_ppt)
 })
 
@@ -212,7 +212,7 @@ test_that("save_ppt errors on empty list", {
 
   expect_error(
     save_ppt(list(), template = temp_template,
-             powerpoint = tempfile(fileext = ".pptx")),
+             file       = tempfile(fileext = ".pptx")),
     "list cannot be empty"
   )
 })
@@ -226,7 +226,7 @@ test_that("save_ppt errors when list contains non-ggplot objects", {
   expect_error(
     save_ppt(list(create_test_plot(), "not a plot"),
              template  = temp_template,
-             powerpoint = tempfile(fileext = ".pptx")),
+             file       = tempfile(fileext = ".pptx")),
     "must be ggplot objects"
   )
 })
@@ -239,7 +239,7 @@ test_that("save_ppt errors when object is neither ggplot nor list", {
 
   expect_error(
     save_ppt("not a plot", template = temp_template,
-             powerpoint = tempfile(fileext = ".pptx")),
+             file       = tempfile(fileext = ".pptx")),
     "ggplot"
   )
 })
@@ -250,7 +250,7 @@ test_that("save_ppt errors when template path does not exist", {
   expect_error(
     save_ppt(create_test_plot(),
              template   = tempfile(fileext = ".pptx"),
-             powerpoint = tempfile(fileext = ".pptx")),
+             file       = tempfile(fileext = ".pptx")),
     "existing PowerPoint file"
   )
 })
@@ -263,7 +263,7 @@ test_that("save_ppt errors on non-positive width", {
 
   expect_error(
     save_ppt(create_test_plot(), template = temp_template,
-             powerpoint = tempfile(fileext = ".pptx"), width = 0),
+             file       = tempfile(fileext = ".pptx"), width = 0),
     "width"
   )
 })
@@ -276,7 +276,7 @@ test_that("save_ppt errors on non-positive height", {
 
   expect_error(
     save_ppt(create_test_plot(), template = temp_template,
-             powerpoint = tempfile(fileext = ".pptx"), height = -1),
+             file       = tempfile(fileext = ".pptx"), height = -1),
     "height"
   )
 })
@@ -289,7 +289,7 @@ test_that("save_ppt errors on negative left offset", {
 
   expect_error(
     save_ppt(create_test_plot(), template = temp_template,
-             powerpoint = tempfile(fileext = ".pptx"), left = -0.5),
+             file       = tempfile(fileext = ".pptx"), left = -0.5),
     "left"
   )
 })
@@ -314,7 +314,7 @@ test_that("save_ppt recycles a single slide_title across a multi-plot list", {
     save_ppt(
       object       = plots,
       template     = temp_template,
-      powerpoint   = pptx_out,
+      file         = pptx_out,
       slide_titles = "Shared Title"   # single title recycled to both slides
     )
   )
@@ -343,7 +343,7 @@ test_that("save_ppt writes a deck using panel_box layout", {
     save_ppt(
       list(p1, p2),
       template     = tmp_tpl,
-      powerpoint   = tmp_out,
+      file         = tmp_out,
       slide_titles = c("Small", "Big"),
       panel_box    = list(width = 10, height = 5, left = 1.5, top = 1.5)
     )
@@ -363,7 +363,7 @@ test_that("save_ppt works against the bundled CORR test template", {
   on.exit(unlink(out))
 
   expect_no_error(
-    save_ppt(p, template = tpl, powerpoint = out, slide_titles = "Test")
+    save_ppt(p, template = tpl, file = out, slide_titles = "Test")
   )
   doc <- officer::read_pptx(out)
   expect_gte(length(doc), 1L)
@@ -384,7 +384,7 @@ test_that("save_ppt defaults template to the bundled template", {
   # no study-relative ../graphs/RD.pptx needed
   out <- tempfile(fileext = ".pptx")
   on.exit(unlink(out), add = TRUE)
-  expect_no_error(save_ppt(create_test_plot(), powerpoint = out))
+  expect_no_error(save_ppt(create_test_plot(), file = out))
   expect_gte(length(officer::read_pptx(out)), 1L)
 })
 
@@ -430,7 +430,7 @@ test_that("bundled dark and light templates carry layouts but no slides", {
   light <- system.file("extdata", "hv_ppt_template_light.pptx",
                        package = "hvtiPlotR")
   save_ppt(create_test_plot() + theme_hv_ppt_light(),
-           template = light, powerpoint = out)
+           template = light, file = out)
   expect_identical(length(officer::read_pptx(out)), 1L)
   # and the deck save_ppt() writes from it is as sound as the template
   audit <- pptx_audit(out)
@@ -513,19 +513,19 @@ test_that("save_ppt takes its default template from hvtiPlotR.ppt_template", {
   # option, since a path set in .Rprofile is nowhere in the call (#174)
   options(hvtiPlotR.ppt_template = tempfile(fileext = ".pptx"))
   expect_error(
-    save_ppt(create_test_plot(), powerpoint = tempfile(fileext = ".pptx")),
+    save_ppt(create_test_plot(), file = tempfile(fileext = ".pptx")),
     "`options(hvtiPlotR.ppt_template)`", fixed = TRUE
   )
   # an explicit template argument is blamed, not the option
   expect_error(
     save_ppt(create_test_plot(), template = tempfile(fileext = ".pptx"),
-             powerpoint = tempfile(fileext = ".pptx")),
+             file       = tempfile(fileext = ".pptx")),
     "`template` must be the path to an existing PowerPoint file"
   )
 })
 
-test_that("save_ppt requires an explicit powerpoint output path", {
-  expect_error(save_ppt(create_test_plot()), "`powerpoint` is required")
+test_that("save_ppt requires an explicit file output path", {
+  expect_error(save_ppt(create_test_plot()), "`file` is required")
 })
 
 test_that("save_ppt defaults panel_box to the standard fixed-panel rectangle", {
@@ -563,7 +563,7 @@ test_that("save_ppt uses the panel_box path by default (no explicit panel_box)",
   # A default call must succeed and write a file even though it now routes
   # through hv_ph_location() (panel_box default is non-NULL).
   expect_no_error(
-    save_ppt(p, template = tmp_tpl, powerpoint = tmp_out)
+    save_ppt(p, template = tmp_tpl, file = tmp_out)
   )
   expect_true(file.exists(tmp_out))
 })
@@ -578,7 +578,7 @@ test_that("save_ppt rejects panel_box missing required fields", {
   on.exit(unlink(c(tmp_tpl, tmp_out)))
 
   expect_error(
-    save_ppt(p, template = tmp_tpl, powerpoint = tmp_out,
+    save_ppt(p, template = tmp_tpl, file = tmp_out,
              panel_box = list(width = 10, height = 5)),
     "panel_box"
   )

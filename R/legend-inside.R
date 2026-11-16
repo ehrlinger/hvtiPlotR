@@ -122,8 +122,8 @@ hv_legend_inside <- function(plot, threshold = 0.08, box_frac = 0.30,
 
   b <- ggplot2::ggplot_build(plot)
   if (length(b$layout$panel_params) > 1L) {
-    message("hv_legend_inside(): multiple panels; using the fallback legend ",
-            "position ('", fallback, "').")
+    .hvti_inform("hv_legend_inside(): multiple panels; using the fallback legend ",
+                 "position ('", fallback, "').")
     return(plot + fb)
   }
 

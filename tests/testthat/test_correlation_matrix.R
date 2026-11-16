@@ -16,7 +16,7 @@ test_that("sample correlation groups agree with displayed boundary values", {
 
 test_that("hv_correlation_matrix builds the lower triangle", {
   d <- sample_correlation_data(n = 100)
-  cm <- hv_correlation_matrix(d, vars = c("a1c", "glucose", "creatinine", "albumin"))
+  cm <- hv_correlation_matrix(d, var_cols = c("a1c", "glucose", "creatinine", "albumin"))
   expect_s3_class(cm, c("hv_correlation_matrix", "hv_data"))
   panels <- unique(cm$data[c("col_var", "row_var")])
   expect_equal(nrow(panels), 6L)
@@ -28,7 +28,7 @@ test_that("hv_correlation_matrix builds the lower triangle", {
 test_that("rows missing either coordinate are dropped per panel", {
   d <- sample_correlation_data(n = 100)
   d$glucose[1:10] <- NA
-  cm <- hv_correlation_matrix(d, vars = c("a1c", "glucose", "albumin"))
+  cm <- hv_correlation_matrix(d, var_cols = c("a1c", "glucose", "albumin"))
   counts <- table(paste(cm$data$col_var, cm$data$row_var))
   expect_equal(as.integer(counts[["a1c glucose"]]), 90L)
   expect_equal(as.integer(counts[["a1c albumin"]]), 100L)
@@ -36,7 +36,7 @@ test_that("rows missing either coordinate are dropped per panel", {
 
 test_that("coefficients are the pairwise matrix under labels", {
   d <- sample_correlation_data(n = 100)
-  cm <- hv_correlation_matrix(d, vars = c("a1c", "glucose"),
+  cm <- hv_correlation_matrix(d, var_cols = c("a1c", "glucose"),
                               labels = c("HbA1c", "Glucose"), method = "spearman")
   expect_equal(dimnames(cm$tables$coefficients)[[1]], c("HbA1c", "Glucose"))
   expect_equal(cm$tables$coefficients[1, 2],
@@ -46,7 +46,7 @@ test_that("coefficients are the pairwise matrix under labels", {
 
 test_that("the default coefficient is Spearman", {
   d  <- sample_correlation_data(n = 100)
-  cm <- hv_correlation_matrix(d, vars = c("a1c", "glucose"))
+  cm <- hv_correlation_matrix(d, var_cols = c("a1c", "glucose"))
   expect_equal(cm$meta$method, "spearman")
   expect_equal(cm$tables$coefficients[1, 2],
                stats::cor(d$a1c, d$glucose, method = "spearman"))
@@ -54,27 +54,27 @@ test_that("the default coefficient is Spearman", {
 
 test_that("errors are clear", {
   d <- sample_correlation_data(n = 20)
-  expect_error(hv_correlation_matrix(d, vars = "a1c"), "at least two")
-  expect_error(hv_correlation_matrix(d, vars = c("a1c", "a1c_grp")), "numeric")
-  expect_error(hv_correlation_matrix(d, vars = c("a1c", "glucose"), labels = "x"),
+  expect_error(hv_correlation_matrix(d, var_cols = "a1c"), "at least two")
+  expect_error(hv_correlation_matrix(d, var_cols = c("a1c", "a1c_grp")), "numeric")
+  expect_error(hv_correlation_matrix(d, var_cols = c("a1c", "glucose"), labels = "x"),
                "one label per")
 })
 
 test_that("a missing column is reported before the length check", {
   d <- sample_correlation_data(n = 20)
-  expect_error(hv_correlation_matrix(d, vars = "nope"), "Missing required column")
+  expect_error(hv_correlation_matrix(d, var_cols = "nope"), "Missing required column")
 })
 
 test_that("duplicate vars is an error", {
   d <- sample_correlation_data(n = 20)
-  expect_error(hv_correlation_matrix(d, vars = c("a1c", "a1c", "glucose")),
-               "vars.*duplicate")
+  expect_error(hv_correlation_matrix(d, var_cols = c("a1c", "a1c", "glucose")),
+               "var_cols.*duplicate")
 })
 
 test_that("duplicate labels is an error", {
   d <- sample_correlation_data(n = 20)
   expect_error(
-    hv_correlation_matrix(d, vars = c("a1c", "glucose"), labels = c("x", "x")),
+    hv_correlation_matrix(d, var_cols = c("a1c", "glucose"), labels = c("x", "x")),
     "labels"
   )
 })
@@ -82,7 +82,7 @@ test_that("duplicate labels is an error", {
 test_that("an NA label is an error", {
   d <- sample_correlation_data(n = 20)
   expect_error(
-    hv_correlation_matrix(d, vars = c("a1c", "glucose"), labels = c("x", NA_character_)),
+    hv_correlation_matrix(d, var_cols = c("a1c", "glucose"), labels = c("x", NA_character_)),
     "labels"
   )
 })
@@ -90,7 +90,7 @@ test_that("an NA label is an error", {
 test_that("numeric labels are an error", {
   d <- sample_correlation_data(n = 20)
   expect_error(
-    hv_correlation_matrix(d, vars = c("a1c", "glucose"), labels = c(1, 2)),
+    hv_correlation_matrix(d, var_cols = c("a1c", "glucose"), labels = c(1, 2)),
     "labels"
   )
 })
@@ -100,7 +100,7 @@ test_that("degenerate variables warn once, naming only the degenerate ones", {
   d$all_na <- NA_real_
   d$const  <- 5
   w <- expect_warning(
-    hv_correlation_matrix(d, vars = c("a1c", "glucose", "all_na", "const"))
+    hv_correlation_matrix(d, var_cols = c("a1c", "glucose", "all_na", "const"))
   )
   expect_match(w$message, "all_na")
   expect_match(w$message, "const")

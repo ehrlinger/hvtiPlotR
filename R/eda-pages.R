@@ -34,7 +34,7 @@
 #' @param x_col Name of the reference column, usually the year of operation.
 #'   Default `"year"`.
 #' @param section One of `"continuous"`, `"percent"` or `"count"`.
-#' @param vars Character vector of the variables to consider, in page order.
+#' @param var_cols Character vector of the variables to consider, in page order.
 #'   `NULL` (the default) means every column except `x_col` and the patient
 #'   identifiers `ccfid`, `MRN` and `eMRN` (ignoring case), the names
 #'   hvtiRtemplates' data contract uses. No other name is guessed at, so
@@ -43,6 +43,8 @@
 #'   patient.
 #'   `meta$ignored` lists what was left out; name a column here to draw it.
 #'   Every name is checked at once, and the error lists all that are missing.
+#' @param vars Deprecated name of `var_cols`; works, with a once-per-session
+#'   warning, until hvtiPlotR 2.9.0.
 #' @param labels Optional named character vector of display labels, names
 #'   being column names. A variable without a label is shown by its name.
 #' @param unique_limit,unique_bound,type_overrides Passed to
@@ -82,11 +84,13 @@
 hv_eda_pages <- function(data,
                          x_col          = "year",
                          section        = c("continuous", "percent", "count"),
-                         vars           = NULL,
+                         var_cols       = NULL,
                          labels         = NULL,
                          unique_limit   = 6L,
                          unique_bound   = 100,
-                         type_overrides = NULL) {
+                         type_overrides = NULL,
+                         vars) {
+  vars <- .hv_rename_arg("hv_eda_pages", "vars", "var_cols", missing(vars), missing(var_cols), vars, var_cols)
   .check_df(data)
   section <- match.arg(section)
   .check_cols(data, x_col)
@@ -96,7 +100,7 @@ hv_eda_pages <- function(data,
     ignored <- vars[.eda_identifier_name(vars)]
     vars <- setdiff(vars, ignored)
   } else if (!is.character(vars) || anyNA(vars) || anyDuplicated(vars)) {
-    stop("`vars` must be NULL or a character vector of distinct column names.", call. = FALSE)
+    stop("hv_eda_pages(): `var_cols` must be NULL or a character vector of distinct column names.", call. = FALSE)
   }
   .check_cols(data, vars)
   vars <- setdiff(vars, x_col)

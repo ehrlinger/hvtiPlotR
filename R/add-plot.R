@@ -393,7 +393,7 @@ hv_add_plot <- function(doc,
       if (fit) sprintf(" even with text at %.0f%%", 100 * fitted$scale) else ""
     ), call. = FALSE)
   } else if (fitted$scale < 1) {
-    message(sprintf(
+    .hvti_inform(sprintf(
       "hv_add_plot(): text reduced to %.0f%% so the figure fits on the slide.",
       100 * fitted$scale
     ))

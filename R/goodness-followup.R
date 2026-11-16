@@ -21,8 +21,8 @@
 #'
 #' The column names match the defaults of [hv_followup()]:
 #' `iv_opyrs`, `iv_dead`, `dead`. The event-panel columns (`iv_event`,
-#' `ev_event`, `deads`) are included so callers can pass `event_col`,
-#' `event_time_col`, and `death_for_event_col` directly.
+#' `ev_event`, `deads`) are included so callers can pass `event_cols`,
+#' `event_time_cols`, and `death_for_event_col` directly.
 #'
 #' @param n Integer number of patients to simulate. Default `300`.
 #' @param origin_year Integer calendar year corresponding to zero in
@@ -69,8 +69,8 @@
 #' # Event panel
 #' gf2 <- hv_followup(dta, origin_year = 1990, study_start = "1990-01-01",
 #'                    study_end = "2019-12-31", close_date = "2021-08-06",
-#'                    event_col = "ev_event",
-#'                       event_time_col = "iv_event",
+#'                    event_cols = "ev_event",
+#'                       event_time_cols = "iv_event",
 #'                       death_for_event_col = "deads")
 #' plot(gf2, type = "event") +
 #'   ggplot2::scale_color_manual(
@@ -181,11 +181,25 @@ sample_goodness_followup_data <- function(
 #'   See \code{\link{sample_goodness_followup_data}}.
 #' @param iv_opyrs_col       Name of the operation-year column.
 #'   Default \code{"iv_opyrs"}.
-#' @param death_col          Name of the binary death-indicator column.
-#'   Default \code{"dead"}.
 #' @param death_time_col     Name of the time-to-death column.
 #'   Default \code{"iv_dead"}.
-#' @param event_col          Name of the non-fatal event indicator column, or
+#' @param death_col          Name of the binary death-indicator column.
+#'   Default \code{"dead"}.
+#'   Each time column comes before its status column, as in
+#'   \code{survival::Surv(time, event)}. The order of these four arguments
+#'   changed after 2.8.22, so they must be passed by name: a value given by
+#'   position that would bind to any argument after \code{iv_opyrs_col},
+#'   including in a call that names \code{data} or \code{iv_opyrs_col} or
+#'   forwards through \code{...}, is an error (class
+#'   \code{hvtiPlotR_positional_reorder}) rather than a silent swap. A status
+#'   column must be logical, 0/1, or text or a factor that \code{as.logical()}
+#'   reads (\code{"TRUE"}/\code{"FALSE"}).
+#' @param event_time_cols    Name of the time-to-event column, or a vector the
+#'   same length as \code{event_cols}, one interval per event.  Required when
+#'   \code{event_cols} is supplied.  Default \code{NULL}.  A patient is drawn at
+#'   the winning event's interval; with no qualifying event, at the first
+#'   event's interval.
+#' @param event_cols         Name of the non-fatal event indicator column, or
 #'   a vector of names for competing non-fatal events drawn in one panel.
 #'   Required to compute the event panel (\code{type = "event"}).
 #'   Default \code{NULL} (event panel unavailable).  The flag alone does not
@@ -194,11 +208,9 @@ sample_goodness_followup_data <- function(
 #'   when it strictly precedes death.  Ties go to death.  Among the events
 #'   that qualify, the earliest sets the state, and a tie between two goes to
 #'   the one listed first.
-#' @param event_time_col     Name of the time-to-event column, or a vector the
-#'   same length as \code{event_col}, one interval per event.  Required when
-#'   \code{event_col} is supplied.  Default \code{NULL}.  A patient is drawn at
-#'   the winning event's interval; with no qualifying event, at the first
-#'   event's interval.
+#' @param event_time_col,event_col Deprecated names of \code{event_time_cols}
+#'   and \code{event_cols}, which take one or more columns. They work, with a
+#'   once-per-session warning, until hvtiPlotR 2.9.0.
 #' @param death_for_event_col Name of the death column to use specifically in
 #'   the event panel (defaults to \code{death_col} when \code{NULL}).
 #' @param origin_year        Integer; calendar year used as the y-axis origin.
@@ -219,7 +231,7 @@ sample_goodness_followup_data <- function(
 #'   states (alive first).  Default \code{c("Alive", "Dead")}.
 #' @param event_levels       Character vector of distinct labels for the event
 #'   panel: event-free, one per non-fatal event in the order of
-#'   \code{event_col}, then death.  Its length is the number of events plus
+#'   \code{event_cols}, then death.  Its length is the number of events plus
 #'   two.  Default \code{c("No event", "Non-fatal event", "Death")}.
 #' @param segment_drop       Numeric; vertical offset (years) for the segment
 #'   endpoint below the follow-up point.  Default \code{0} (no segment drawn).
@@ -302,7 +314,7 @@ sample_goodness_followup_data <- function(
 #' # With event panel -- same 3-step pattern
 #' gf2 <- hv_followup(dta, origin_year = 1990, study_start = "1990-01-01",
 #'                    study_end = "2019-12-31", close_date = "2021-08-06",
-#'                    event_col = "ev_event", event_time_col = "iv_event")
+#'                    event_cols = "ev_event", event_time_cols = "iv_event")
 #' plot(gf2, type = "event") +
 #'   ggplot2::scale_color_manual(
 #'     values = c("No event" = "blue", "Non-fatal event" = "green3",
@@ -317,8 +329,8 @@ sample_goodness_followup_data <- function(
 #' dta$ev_stroke <- !dta$ev_event & seq_len(nrow(dta)) %% 4 == 0
 #' gf3 <- hv_followup(dta, origin_year = 1990, study_start = "1990-01-01",
 #'                    study_end = "2019-12-31", close_date = "2021-08-06",
-#'                    event_col = c("ev_event", "ev_stroke"),
-#'                    event_time_col = c("iv_event", "iv_event"),
+#'                    event_cols = c("ev_event", "ev_stroke"),
+#'                    event_time_cols = c("iv_event", "iv_event"),
 #'                    event_levels = c("No event", "Reoperation", "Stroke", "Death"))
 #' table(gf3$tables$event_data$state)
 #' plot(gf3, type = "event")
@@ -340,10 +352,10 @@ sample_goodness_followup_data <- function(
 hv_followup <- function(
   data,
   iv_opyrs_col         = "iv_opyrs",
-  death_col            = "dead",
   death_time_col       = "iv_dead",
-  event_col            = NULL,
-  event_time_col       = NULL,
+  death_col            = "dead",
+  event_time_cols      = NULL,
+  event_cols           = NULL,
   death_for_event_col  = NULL,
   origin_year          = 1990,
   study_start          = as.Date("1990-01-01"),
@@ -355,8 +367,16 @@ hv_followup <- function(
   segment_drop         = 0,
   echo                 = NULL,
   echo_time_col        = NULL,
-  echo_opyrs_col       = NULL
+  echo_opyrs_col       = NULL,
+  event_time_col,
+  event_col
 ) {
+  gf_positional_guard(sys.call(), sys.function(), parent.frame())
+  event_time_col <- .hv_rename_arg("hv_followup", "event_time_col", "event_time_cols",
+                                   missing(event_time_col), missing(event_time_cols),
+                                   event_time_col, event_time_cols)
+  event_col <- .hv_rename_arg("hv_followup", "event_col", "event_cols", missing(event_col),
+                              missing(event_cols), event_col, event_cols)
   omitted <- c(origin_year = missing(origin_year), study_start = missing(study_start),
                study_end = missing(study_end), close_date = missing(close_date))
   .hv_deprecate_study_default(
@@ -369,11 +389,11 @@ hv_followup <- function(
   if (!is.numeric(segment_drop) || segment_drop < 0)
     stop("`segment_drop` must be a non-negative numeric value.", call. = FALSE)
   if (!is.null(event_col) && is.null(event_time_col))
-    stop("Supply `event_time_col` when `event_col` is provided.", call. = FALSE)
+    stop("hv_followup(): supply `event_time_cols` when `event_cols` is provided.", call. = FALSE)
   event_col      <- unname(event_col)
   event_time_col <- unname(event_time_col)
   if (length(event_col) != length(event_time_col))
-    stop("`event_col` and `event_time_col` must be the same length, one interval per event.",
+    stop("hv_followup(): `event_cols` and `event_time_cols` must be the same length, one interval per event.",
          call. = FALSE)
   # No event, each non-fatal event in the order given, then death.
   n_levels <- if (is.null(event_col)) 3L else length(event_col) + 2L
@@ -404,6 +424,7 @@ hv_followup <- function(
 
   # --- Death panel ----------------------------------------------------------
   gf_require_columns(payload, c(iv_opyrs_col, death_time_col, death_col))
+  gf_check_status(payload, death_col, "death_col")
   death_excl <- .exclude_incomplete(payload, c(iv_opyrs_col, death_time_col,
                                                death_col),
                                     context = "death panel")
@@ -424,15 +445,18 @@ hv_followup <- function(
       death_for_event_col
     # death_time_col is required here, not just for the death panel: without
     # it the event panel cannot tell whether death preceded the flagged event.
-    event_cols <- c(iv_opyrs_col, event_time_col, event_col, eff_death_col,
+    panel_cols <- c(iv_opyrs_col, event_time_col, event_col, eff_death_col,
                     death_time_col)
-    gf_require_columns(payload, event_cols)
+    gf_require_columns(payload, panel_cols)
+    gf_check_status(payload, event_col, "event_cols")
+    gf_check_status(payload, eff_death_col,
+                    if (is.null(death_for_event_col)) "death_col" else "death_for_event_col")
     # The event panel needs more columns than the death panel, so it has its
     # own cohort. Reporting only the death panel's counts would describe a
     # different set of patients than event_data actually contains.
-    event_excl <- .exclude_incomplete(payload, event_cols,
+    event_excl <- .exclude_incomplete(payload, panel_cols,
                                       context = "event panel")
-    event_df   <- event_excl$data[, event_cols, drop = FALSE]
+    event_df   <- event_excl$data[, panel_cols, drop = FALSE]
     if (!nrow(event_df))
       stop("No rows available to build the event follow-up plot.", call. = FALSE)
     event_data <- gf_build_event_frame(
@@ -534,7 +558,7 @@ print.hv_followup <- function(x, ...) {
 #'
 #' @param x                  An \code{hv_followup} object.
 #' @param type               Which panel to produce: \code{"followup"}
-#'   (default, death states) or \code{"event"} (requires \code{event_col} to
+#'   (default, death states) or \code{"event"} (requires \code{event_cols} to
 #'   have been supplied to \code{\link{hv_followup}}).
 #' @param alpha              Point/segment transparency in \eqn{[0,1]}.
 #'   Default \code{0.8}.
@@ -562,8 +586,8 @@ print.hv_followup <- function(x, ...) {
 #' dta <- sample_goodness_followup_data()
 #' gf  <- hv_followup(dta, origin_year = 1990, study_start = "1990-01-01",
 #'                    study_end = "2019-12-31", close_date = "2021-08-06",
-#'                    event_col = "ev_event",
-#'                      event_time_col = "iv_event")
+#'                    event_cols = "ev_event",
+#'                      event_time_cols = "iv_event")
 #'
 #' # Death panel
 #' plot(gf) +
@@ -607,7 +631,7 @@ plot.hv_followup <- function(x,
 
   if (type == "event" && !x$meta$has_event)
     stop(
-      'type = "event" requires event_col and event_time_col to be supplied ',
+      'plot.hv_followup(): type = "event" requires event_cols and event_time_cols to be supplied ',
       "to hv_followup().",
       call. = FALSE
     )
@@ -645,6 +669,58 @@ gf_materialize_followup_data <- function(data, tolower_names) {
   data <- as.data.frame(data)
   if (tolower_names) names(data) <- tolower(names(data))
   data
+}
+
+# The time and status arguments changed places after 2.8.22, so a call written
+# for the old order would bind each column to the other's role. A status check
+# alone cannot catch that when a time column happens to hold only 0/1, so any
+# value given by position that binds to a formal after `iv_opyrs_col` is
+# refused. Counting unnamed arguments is not enough: R matches names first and
+# fills the remaining formals in order, so `hv_followup(data = d,
+# iv_opyrs_col = "x", "dead", "iv_dead")` binds both unnamed values past
+# `iv_opyrs_col`. The guard therefore asks match.call() where each value
+# lands, after expanding any `...` the call was forwarded through.
+gf_positional_guard <- function(call, fn, envir) {
+  # The name each argument was given ("" when positional), with any `...`
+  # expanded into the names of the values it forwards.
+  arg_names <- function(x) if (is.null(names(x))) rep("", length(x)) else names(x)
+  args <- as.list(call)[-1L]
+  flat_nms <- unlist(lapply(seq_along(args), function(k) {
+    if (identical(args[[k]], quote(...)))
+      arg_names(eval(quote(as.list(substitute(list(...)))[-1L]), envir))
+    else arg_names(args)[k]
+  }))
+  if (all(nzchar(flat_nms))) return(invisible())
+  # Replace each value by its position, then let R's own matching bind them.
+  probe <- as.call(c(list(quote(f)), stats::setNames(as.list(seq_along(flat_nms)), flat_nms)))
+  bound <- unlist(as.list(match.call(fn, probe))[-1L])
+  positional <- names(bound)[bound %in% which(!nzchar(flat_nms))]
+  if (any(!positional %in% c("data", "iv_opyrs_col")))
+    stop(errorCondition(paste0(
+      "hv_followup(): pass every argument after `iv_opyrs_col` by name. The time ",
+      "columns now come before their status columns (`death_time_col, death_col`, ",
+      "`event_time_cols, event_cols`), so a value given by position would swap them."),
+      class = "hvtiPlotR_positional_reorder", call = NULL))
+  invisible()
+}
+
+# A status column must be logical, 0/1, or text or a factor that as.logical()
+# reads ("TRUE"/"FALSE"), the inputs as.logical() has always accepted here.
+# Anything else, a follow-up time above all, would read every nonzero value as
+# an event and draw a plausible wrong plot.
+gf_check_status <- function(payload, cols, arg) {
+  for (cl in unique(cols)) {
+    v <- payload[[cl]]
+    v <- v[!is.na(v)]
+    if (is.factor(v)) v <- as.character(v)
+    ok <- is.logical(v) || (is.numeric(v) && all(v %in% c(0, 1))) ||
+      (is.character(v) && !anyNA(as.logical(v)))
+    if (!ok)
+      stop(sprintf(paste0("hv_followup(): status column '%s' (`%s`) must be logical, 0/1 ",
+                          "or \"TRUE\"/\"FALSE\"; check that it is not a time column."),
+                   cl, arg), call. = FALSE)
+  }
+  invisible()
 }
 
 # Centralizes loose date inputs so validation stays consistent and new date

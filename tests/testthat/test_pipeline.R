@@ -115,7 +115,7 @@ test_that("full pipeline: hv_survival + theme_hv_* + save_ppt (single plot)", {
     save_ppt(
       object       = plot(km) + theme_hv_ppt_dark(),
       template     = template,
-      powerpoint   = pptx_out,
+      file         = pptx_out,
       slide_titles = "KM: SAVR vs TAVR"
     )
   )
@@ -140,7 +140,7 @@ test_that("full pipeline: list of plots → save_ppt (multi-slide)", {
     save_ppt(
       object       = list(plot(km) + theme_hv_ppt_dark(), p2 + theme_hv_ppt_dark()),
       template     = template,
-      powerpoint   = pptx_out,
+      file         = pptx_out,
       slide_titles = c("Kaplan-Meier", "EF vs Follow-up Years")
     )
   )

@@ -5,17 +5,18 @@
 \title{Prepare nonparametric temporal trend curve data for plotting}
 \usage{
 hv_nonparametric(
-  curve_data,
+  data,
   x_col = "time",
   estimate_col = "estimate",
   lower_col = NULL,
   upper_col = NULL,
   group_col = NULL,
-  data_points = NULL
+  data_points = NULL,
+  curve_data
 )
 }
 \arguments{
-\item{curve_data}{Data frame; one row per (time, group) combination.}
+\item{data}{Data frame; one row per (time, group) combination.}
 
 \item{x_col}{Name of the x-axis column. Default \code{"time"}.}
 
@@ -34,6 +35,9 @@ Default \code{NULL}.}
 \item{data_points}{Optional data frame of binned data summary points.
 Must have columns matching \code{x_col} and \code{"value"}, plus
 \code{group_col} when stratified. Default \code{NULL}.}
+
+\item{curve_data}{Deprecated name of \code{data}; works with a once-per-session
+warning until hvtiPlotR 2.9.0.}
 }
 \value{
 An object of class \code{c("hv_nonparametric", "hv_data")}; call

@@ -70,8 +70,8 @@ for complete follow-up, with every survivor censored at \code{close_date}.
 
 The column names match the defaults of \code{\link[=hv_followup]{hv_followup()}}:
 \code{iv_opyrs}, \code{iv_dead}, \code{dead}. The event-panel columns (\code{iv_event},
-\code{ev_event}, \code{deads}) are included so callers can pass \code{event_col},
-\code{event_time_col}, and \code{death_for_event_col} directly.
+\code{ev_event}, \code{deads}) are included so callers can pass \code{event_cols},
+\code{event_time_cols}, and \code{death_for_event_col} directly.
 }
 \examples{
 dta <- sample_goodness_followup_data()
@@ -90,8 +90,8 @@ plot(gf) +
 # Event panel
 gf2 <- hv_followup(dta, origin_year = 1990, study_start = "1990-01-01",
                    study_end = "2019-12-31", close_date = "2021-08-06",
-                   event_col = "ev_event",
-                      event_time_col = "iv_event",
+                   event_cols = "ev_event",
+                      event_time_cols = "iv_event",
                       death_for_event_col = "deads")
 plot(gf2, type = "event") +
   ggplot2::scale_color_manual(

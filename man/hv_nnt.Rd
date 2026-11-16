@@ -5,17 +5,18 @@
 \title{Prepare number-needed-to-treat data for plotting}
 \usage{
 hv_nnt(
-  nnt_data,
+  data,
   x_col = "time",
   estimate_col = "nnt",
   lower_col = NULL,
   upper_col = NULL,
   group_col = NULL,
-  na_rm = TRUE
+  na_rm = TRUE,
+  nnt_data
 )
 }
 \arguments{
-\item{nnt_data}{Data frame of pre-computed NNT estimates.
+\item{data}{Data frame of pre-computed NNT estimates.
 See \code{\link[=sample_nnt_data]{sample_nnt_data()}}.}
 
 \item{x_col}{Name of the time column. Default \code{"time"}.}
@@ -31,6 +32,9 @@ Default \code{NULL}.}
 
 \item{na_rm}{Remove rows where \code{estimate_col} is \code{NA} before storing
 in \verb{$data}. Applied at construction time. Default \code{TRUE}.}
+
+\item{nnt_data}{Deprecated name of \code{data}; works with a once-per-session
+warning until hvtiPlotR 2.9.0.}
 }
 \value{
 An S3 object of class \code{c("hv_nnt", "hv_data")}.

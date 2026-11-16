@@ -5,15 +5,16 @@
 \title{Prepare nonparametric ordinal outcome curve data for plotting}
 \usage{
 hv_ordinal(
-  curve_data,
+  data,
   x_col = "time",
   estimate_col = "estimate",
   grade_col = "grade",
-  data_points = NULL
+  data_points = NULL,
+  curve_data
 )
 }
 \arguments{
-\item{curve_data}{Long-format data frame: one row per (time, grade)
+\item{data}{Long-format data frame: one row per (time, grade)
 combination. Columns: \code{x_col}, \code{estimate_col}, \code{grade_col}.}
 
 \item{x_col}{Name of the time column. Default \code{"time"}.}
@@ -26,6 +27,9 @@ Default \code{"estimate"}.}
 \item{data_points}{Optional long-format data frame of binned data summary
 points. Must have columns matching \code{x_col}, \code{"value"}, and
 \code{grade_col}. Default \code{NULL}.}
+
+\item{curve_data}{Deprecated name of \code{data}; works with a once-per-session
+warning until hvtiPlotR 2.9.0.}
 }
 \value{
 An object of class \code{c("hv_ordinal", "hv_data")}:

@@ -6,21 +6,25 @@
 \usage{
 hv_correlation_matrix(
   data,
-  vars,
+  var_cols,
   labels = NULL,
-  method = c("spearman", "pearson")
+  method = c("spearman", "pearson"),
+  vars
 )
 }
 \arguments{
 \item{data}{Data frame; one row per patient.}
 
-\item{vars}{Character vector of at least two numeric columns, in display order.}
+\item{var_cols}{Character vector of at least two numeric columns, in display order.}
 
-\item{labels}{Optional character vector of display labels, one per \code{vars}.}
+\item{labels}{Optional character vector of display labels, one per \code{var_cols}.}
 
 \item{method}{Coefficient stored in \verb{$tables$coefficients}: \code{"spearman"} (the
 default, matching \code{hvtiRtables::hv_correlation_table()} and the SAS exemplar)
 or \code{"pearson"}.}
+
+\item{vars}{Deprecated name of \code{var_cols}; works, with a once-per-session
+warning, until hvtiPlotR 2.9.0.}
 }
 \value{
 An object of class \code{c("hv_correlation_matrix", "hv_data")}:
@@ -31,7 +35,7 @@ pairwise coefficient matrix.
 }
 \description{
 The scatter-plot-matrix analogue of SAS \verb{proc corr ... plots=matrix}: one
-scatter panel per unordered pair of \code{vars}, lower triangle only. It is the
+scatter panel per unordered pair of \code{var_cols}, lower triangle only. It is the
 plot half of the \code{dc-tables} job in the hvtiR job catalog. Call \code{\link[=plot]{plot()}}
 on the result for a bare \code{ggplot}; the coefficient table with Fisher
 intervals is \code{hvtiRtables::hv_correlation_table()}.

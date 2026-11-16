@@ -562,7 +562,7 @@ hv_mirror_hist <- function(data,
 
   n_removed <- diagnostics$n_dropped_missing_or_other_group
   if (n_removed > 0L) {
-    message(sprintf(
+    .hvti_inform(sprintf(
       "hv_mirror_hist(): dropped %d of %d rows [see $tables$diagnostics]",
       n_removed, n_input
     ))

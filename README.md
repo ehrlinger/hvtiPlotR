@@ -61,7 +61,7 @@ p <- ggplot(mtcars, aes(wt, mpg)) + geom_point() + theme_hv_ppt_dark()
 save_ppt(
   object     = p,
   template   = system.file("extdata", "hv_ppt_template.pptx", package = "hvtiPlotR"),
-  powerpoint = "outputs/figure1.pptx"
+  file       = "outputs/figure1.pptx"
 )
 ```
 

@@ -19,3 +19,14 @@ local_fresh_deprecations <- function(env = parent.frame()) {
     list2env(seen, envir = .hv_deprecation_seen)
   }, envir = env)
 }
+
+# Evaluate `expr`, muffling and collecting every hvtiPlotR_deprecated warning.
+# Any other warning passes through. Returns list(value, warnings).
+collect_deprecations <- function(expr) {
+  msgs <- character()
+  value <- withCallingHandlers(expr, hvtiPlotR_deprecated = function(w) {
+    msgs <<- c(msgs, conditionMessage(w))
+    invokeRestart("muffleWarning")
+  })
+  list(value = value, warnings = msgs)
+}

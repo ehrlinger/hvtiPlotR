@@ -45,11 +45,20 @@
 #'   `"<name> <version>"` in the order given. The default is R, the installed
 #'   hvtiPlotR and, when it is installed, hvtiRtemplates.
 #' @param time The time of the render, a `POSIXct` printed as
-#'   `"%Y-%m-%d %H:%M"`. Default `Sys.time()`.
+#'   `"%Y-%m-%d %H:%M"`. Default `Sys.time()`. An `NA` time prints as
+#'   `"time unknown"`, a gap rather than a plausible value.
+#' @param record Optional provenance record, the named list every hvtiR package
+#'   returns: `package`, `version`, `sha`, `method`, `seed`, `rng_kind` and
+#'   `time` (extra fields are ignored). When given, it supplies `commit` (its
+#'   `sha`, or `"commit unknown"` when that is `NA`) and `time` unless they are
+#'   passed, adds `"<package> <version>"` to `versions`, and appends
+#'   `"seed <seed>"` when the seed is not `NA`. `job` is still required: the
+#'   record does not carry it.
 #'
 #' @return A character vector of fields: the commit, the job, one field per
 #'   version and the time. Pass it to the `footnote` argument of
-#'   [save_manuscript()], which joins and fits it.
+#'   [save_manuscript()], which joins and fits it. An error carries class
+#'   `hvtiPlotR_invalid_provenance`.
 #'
 #' @seealso [save_manuscript()], which prints the note in a strip below the
 #'   figure.
@@ -61,19 +70,71 @@
 #'   versions = c(R = "4.5.1", hvtiPlotR = "2.8.19", hvtiRtemplates = "1.5.3"),
 #'   time     = as.POSIXct("2026-10-29 14:40")
 #' )
+#'
+#' # From an hvtiR provenance record
+#' rec <- list(package = "hvtiRbootstrap", version = "1.0.4", sha = "3f9c2a1",
+#'             method = "stepwise", seed = 42L, rng_kind = RNGkind(),
+#'             time = as.POSIXct("2026-10-29 14:40"))
+#' provenance_footnote(job = "30_analyses/boot.qmd", record = rec)
 #' @export
 provenance_footnote <- function(commit, job, versions = .default_versions(),
-                                time = Sys.time()) {
+                                time = Sys.time(), record = NULL) {
+  if (!is.null(record)) {
+    .check_provenance_record(record)
+    if (missing(commit))
+      commit <- if (is.na(record$sha)) "commit unknown" else record$sha
+    if (missing(time)) time <- record$time
+    if (!record$package %in% names(versions))
+      versions <- c(versions, stats::setNames(record$version, record$package))
+  }
   .check_single_string(commit, "commit")
   .check_single_string(job, "job")
   if (!is.character(versions) || is.null(names(versions)) ||
       anyNA(versions) || anyNA(names(versions)) ||
       !all(nzchar(names(versions))))
-    stop("`versions` must be a named character vector.", call. = FALSE)
-  if (!inherits(time, "POSIXct") || length(time) != 1L || is.na(time))
-    stop("`time` must be a single POSIXct time.", call. = FALSE)
-  c(commit, job, paste(names(versions), versions),
-    format(time, "%Y-%m-%d %H:%M"))
+    .provenance_error("`versions` must be a named character vector.")
+  if (!inherits(time, "POSIXct") || length(time) != 1L)
+    .provenance_error("`time` must be a single POSIXct time.")
+  # An NA time prints a gap, as an NA commit does: never a plausible value.
+  out <- c(commit, job, paste(names(versions), versions),
+           if (is.na(time)) "time unknown" else format(time, "%Y-%m-%d %H:%M"))
+  if (!is.null(record) && !is.na(record$seed)) out <- c(out, paste("seed", record$seed))
+  out
+}
+
+# The family provenance record (hvtiR API rubric, "Provenance record"): a
+# named list whose names include these seven, each of the stated type and
+# length. A value that does not apply is NA of that type.
+.PROVENANCE_FIELDS <- list(
+  package  = list(type = "character", n = 1L),
+  version  = list(type = "character", n = 1L),
+  sha      = list(type = "character", n = 1L),
+  method   = list(type = "character", n = NA_integer_),
+  seed     = list(type = "integer",   n = 1L),
+  rng_kind = list(type = "character", n = 3L),
+  time     = list(type = "POSIXct",   n = 1L)
+)
+
+.check_provenance_record <- function(record) {
+  if (!is.list(record) || is.null(names(record)))
+    .provenance_error("`record` must be a named list, the hvtiR provenance record.")
+  absent <- setdiff(names(.PROVENANCE_FIELDS), names(record))
+  if (length(absent))
+    .provenance_error(sprintf("`record` lacks field(s) %s.",
+                              paste0("`", absent, "`", collapse = ", ")))
+  for (nm in names(.PROVENANCE_FIELDS)) {
+    spec <- .PROVENANCE_FIELDS[[nm]]
+    v <- record[[nm]]
+    ok <- switch(spec$type, character = is.character(v), integer = is.integer(v),
+                 POSIXct = inherits(v, "POSIXct"))
+    ok <- ok && (is.na(spec$n) || length(v) == spec$n)
+    if (!ok)
+      .provenance_error(sprintf("`record$%s` must be %s of length %s.", nm, spec$type,
+                                if (is.na(spec$n)) "one or more" else spec$n))
+  }
+  if (is.na(record$package) || is.na(record$version))
+    .provenance_error("`record$package` and `record$version` must not be NA.")
+  invisible(record)
 }
 
 # R, hvtiPlotR and, when it is installed, hvtiRtemplates.
@@ -88,8 +149,14 @@ provenance_footnote <- function(commit, job, versions = .default_versions(),
 
 .check_single_string <- function(x, arg) {
   if (!is.character(x) || length(x) != 1L || is.na(x) || !nzchar(trimws(x)))
-    stop(sprintf("`%s` must be a single non-empty string.", arg), call. = FALSE)
+    .provenance_error(sprintf("`%s` must be a single non-empty string.", arg))
   invisible(x)
+}
+
+# Every provenance_footnote() error names the function and carries one class.
+.provenance_error <- function(msg) {
+  stop(errorCondition(paste0("provenance_footnote(): ", msg),
+                      class = "hvtiPlotR_invalid_provenance", call = NULL))
 }
 
 # A footnote given as one string is split into fields at the separator, so it

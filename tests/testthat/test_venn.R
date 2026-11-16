@@ -30,7 +30,7 @@ test_that(".venn_regions has 7 regions for 3 sets and treats NA as absent", {
 
 test_that("hv_venn returns an hv_venn / hv_data object with region table", {
   dta <- sample_upset_data(n = 200, seed = 1)
-  v   <- hv_venn(dta, sets = c("AV_Replacement", "MV_Replacement", "CABG"))
+  v   <- hv_venn(dta, set_cols = c("AV_Replacement", "MV_Replacement", "CABG"))
   expect_s3_class(v, "hv_venn")
   expect_s3_class(v, "hv_data")
   expect_equal(v$meta$sets, c("AV_Replacement", "MV_Replacement", "CABG"))
@@ -40,7 +40,7 @@ test_that("hv_venn returns an hv_venn / hv_data object with region table", {
 
 test_that("hv_venn errors on fewer than 2 sets", {
   dta <- sample_upset_data(n = 50, seed = 1)
-  expect_error(hv_venn(dta, sets = "CABG"), "at least 2")
+  expect_error(hv_venn(dta, set_cols = "CABG"), "at least 2")
 })
 
 test_that("hv_venn errors on duplicate set names", {
@@ -49,7 +49,7 @@ test_that("hv_venn errors on duplicate set names", {
   # contradictory "AV_Replacement only" regions and a nonsense self-
   # intersection rather than an error.
   expect_error(
-    hv_venn(dta, sets = c("AV_Replacement", "AV_Replacement")),
+    hv_venn(dta, set_cols = c("AV_Replacement", "AV_Replacement")),
     "duplicate names"
   )
 })
@@ -57,7 +57,7 @@ test_that("hv_venn errors on duplicate set names", {
 test_that("hv_upset errors on duplicate set names", {
   dta <- sample_upset_data(n = 50, seed = 1)
   expect_error(
-    hv_upset(dta, intersect = c("CABG", "AV_Replacement", "CABG")),
+    hv_upset(dta, set_cols = c("CABG", "AV_Replacement", "CABG")),
     "duplicate names"
   )
 })
@@ -65,7 +65,7 @@ test_that("hv_upset errors on duplicate set names", {
 test_that("hv_venn errors on more than 3 sets and names hv_upset", {
   dta <- sample_upset_data(n = 50, seed = 1)
   expect_error(
-    hv_venn(dta, sets = c("AV_Replacement", "AV_Repair",
+    hv_venn(dta, set_cols = c("AV_Replacement", "AV_Repair",
                           "MV_Replacement", "CABG")),
     "hv_upset"
   )
@@ -74,31 +74,31 @@ test_that("hv_venn errors on more than 3 sets and names hv_upset", {
 test_that("hv_venn errors on a non-binary column", {
   dta <- sample_upset_data(n = 50, seed = 1)
   dta$age <- rnorm(nrow(dta), 65, 10)
-  expect_error(hv_venn(dta, sets = c("CABG", "age")), "binary")
+  expect_error(hv_venn(dta, set_cols = c("CABG", "age")), "binary")
 })
 
 test_that("hv_venn errors on a missing column", {
   dta <- sample_upset_data(n = 50, seed = 1)
-  expect_error(hv_venn(dta, sets = c("CABG", "nonexistent")),
+  expect_error(hv_venn(dta, set_cols = c("CABG", "nonexistent")),
                "not found|not a column|not in|Missing")
 })
 
 test_that("plot(hv_venn) returns a ggplot", {
   dta <- sample_upset_data(n = 200, seed = 1)
-  v   <- hv_venn(dta, sets = c("AV_Replacement", "MV_Replacement"))
+  v   <- hv_venn(dta, set_cols = c("AV_Replacement", "MV_Replacement"))
   expect_s3_class(plot(v), "ggplot")
 })
 
 test_that("plot(hv_venn) is composable with theme_hv_manuscript()", {
   dta <- sample_upset_data(n = 200, seed = 1)
-  v   <- hv_venn(dta, sets = c("AV_Replacement", "MV_Replacement", "CABG"))
+  v   <- hv_venn(dta, set_cols = c("AV_Replacement", "MV_Replacement", "CABG"))
   p   <- plot(v) + theme_hv_manuscript()
   expect_s3_class(p, "ggplot")
 })
 
 test_that("plot(hv_venn) accepts show_percentage and a fill override", {
   dta <- sample_upset_data(n = 200, seed = 1)
-  v   <- hv_venn(dta, sets = c("AV_Replacement", "MV_Replacement"))
+  v   <- hv_venn(dta, set_cols = c("AV_Replacement", "MV_Replacement"))
   p   <- plot(v, show_percentage = FALSE,
               fill = c("steelblue", "firebrick"))
   expect_s3_class(p, "ggplot")
@@ -106,13 +106,13 @@ test_that("plot(hv_venn) accepts show_percentage and a fill override", {
 
 test_that("plot(hv_venn) errors on a wrong-length fill", {
   dta <- sample_upset_data(n = 100, seed = 1)
-  v   <- hv_venn(dta, sets = c("AV_Replacement", "MV_Replacement", "CABG"))
+  v   <- hv_venn(dta, set_cols = c("AV_Replacement", "MV_Replacement", "CABG"))
   expect_error(plot(v, fill = c("red", "blue")), "one color per set")
 })
 
 test_that("plot(hv_venn) errors when fill and fill_color are both given", {
   dta <- sample_upset_data(n = 100, seed = 1)
-  v   <- hv_venn(dta, sets = c("AV_Replacement", "MV_Replacement"))
+  v   <- hv_venn(dta, set_cols = c("AV_Replacement", "MV_Replacement"))
   expect_error(
     plot(v, fill = c("red", "blue"), fill_color = c("green", "yellow")),
     "not `fill_color`"
@@ -121,7 +121,7 @@ test_that("plot(hv_venn) errors when fill and fill_color are both given", {
 
 test_that("print.hv_venn produces a <hv_venn> header", {
   dta <- sample_upset_data(n = 100, seed = 1)
-  v   <- hv_venn(dta, sets = c("AV_Replacement", "MV_Replacement"))
+  v   <- hv_venn(dta, set_cols = c("AV_Replacement", "MV_Replacement"))
   expect_output(print(v), "<hv_venn>")
   expect_output(print(v), "N patients")
   expect_output(print(v), "Sets")
@@ -130,7 +130,7 @@ test_that("print.hv_venn produces a <hv_venn> header", {
 
 test_that("print.hv_venn returns x invisibly", {
   dta <- sample_upset_data(n = 100, seed = 1)
-  v   <- hv_venn(dta, sets = c("AV_Replacement", "MV_Replacement"))
+  v   <- hv_venn(dta, set_cols = c("AV_Replacement", "MV_Replacement"))
   ret <- withVisible(print(v))
   expect_false(ret$visible)
   expect_identical(ret$value, v)
@@ -138,7 +138,7 @@ test_that("print.hv_venn returns x invisibly", {
 
 test_that("plot(hv_venn) rejects reserved ggvenn args passed via ...", {
   dta <- sample_upset_data(n = 100, seed = 1)
-  v   <- hv_venn(dta, sets = c("AV_Replacement", "MV_Replacement"))
+  v   <- hv_venn(dta, set_cols = c("AV_Replacement", "MV_Replacement"))
   expect_error(plot(v, columns = c("AV_Replacement")), "via `\\.\\.\\.`")
   expect_error(plot(v, data = dta), "via `\\.\\.\\.`")
 })

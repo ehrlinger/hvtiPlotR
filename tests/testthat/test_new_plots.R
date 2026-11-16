@@ -73,22 +73,22 @@ sets <- c("AV_Replacement", "AV_Repair", "MV_Replacement",
 
 test_that("hv_upset returns an hv_data object", {
   dta <- sample_upset_data(n = 200, seed = 1)
-  expect_s3_class(hv_upset(dta, intersect = sets), "hv_data")
+  expect_s3_class(hv_upset(dta, set_cols = sets), "hv_data")
 })
 
 test_that("hv_upset errors when data is not a data frame", {
-  expect_error(hv_upset(list(), intersect = sets), "data frame")
+  expect_error(hv_upset(list(), set_cols = sets), "data frame")
 })
 
 test_that("hv_upset errors when intersect has only one element", {
   dta <- sample_upset_data(n = 100, seed = 1)
-  expect_error(hv_upset(dta, intersect = "AV_Replacement"), "at least 2")
+  expect_error(hv_upset(dta, set_cols = "AV_Replacement"), "at least 2")
 })
 
 test_that("hv_upset errors when intersect names are absent from data", {
   dta <- sample_upset_data(n = 100, seed = 1)
   expect_error(
-    hv_upset(dta, intersect = c("AV_Replacement", "DoesNotExist")),
+    hv_upset(dta, set_cols = c("AV_Replacement", "DoesNotExist")),
     "column"
   )
 })
@@ -150,25 +150,25 @@ test_that("sample_alluvial_data differs across seeds", {
 test_that("hv_alluvial returns an hv_data object", {
   dta  <- sample_alluvial_data(n = 150, seed = 1)
   axes <- c("pre_ar", "procedure", "post_ar")
-  expect_s3_class(hv_alluvial(dta, axes = axes, y_col = "freq"), "hv_data")
+  expect_s3_class(hv_alluvial(dta, axis_cols = axes, y_col = "freq"), "hv_data")
 })
 
 test_that("plot(hv_alluvial) returns a ggplot with three axes", {
   dta  <- sample_alluvial_data(n = 150, seed = 1)
   axes <- c("pre_ar", "procedure", "post_ar")
-  p    <- plot(hv_alluvial(dta, axes = axes, y_col = "freq"))
+  p    <- plot(hv_alluvial(dta, axis_cols = axes, y_col = "freq"))
   expect_s3_class(p, "ggplot")
 })
 
 test_that("plot(hv_alluvial) works with only two axes", {
   dta <- sample_alluvial_data(n = 100, seed = 1)
-  p   <- plot(hv_alluvial(dta, axes = c("pre_ar", "post_ar"), y_col = "freq"))
+  p   <- plot(hv_alluvial(dta, axis_cols = c("pre_ar", "post_ar"), y_col = "freq"))
   expect_s3_class(p, "ggplot")
 })
 
 test_that("plot(hv_alluvial) has a geom_text layer when show_labels=TRUE", {
   dta <- sample_alluvial_data(n = 100, seed = 1)
-  p   <- plot(hv_alluvial(dta, axes = c("pre_ar", "post_ar"), y_col = "freq"),
+  p   <- plot(hv_alluvial(dta, axis_cols = c("pre_ar", "post_ar"), y_col = "freq"),
               show_labels = TRUE)
   geoms <- sapply(p$layers, function(l) class(l$geom)[1])
   expect_true("GeomText" %in% geoms)
@@ -176,7 +176,7 @@ test_that("plot(hv_alluvial) has a geom_text layer when show_labels=TRUE", {
 
 test_that("plot(hv_alluvial) omits geom_text when show_labels=FALSE", {
   dta <- sample_alluvial_data(n = 100, seed = 1)
-  p   <- plot(hv_alluvial(dta, axes = c("pre_ar", "post_ar"), y_col = "freq"),
+  p   <- plot(hv_alluvial(dta, axis_cols = c("pre_ar", "post_ar"), y_col = "freq"),
               show_labels = FALSE)
   geoms <- sapply(p$layers, function(l) class(l$geom)[1])
   expect_false("GeomText" %in% geoms)
@@ -185,13 +185,13 @@ test_that("plot(hv_alluvial) omits geom_text when show_labels=FALSE", {
 test_that("plot(hv_alluvial) with fill_col returns a ggplot", {
   dta  <- sample_alluvial_data(n = 150, seed = 1)
   axes <- c("pre_ar", "procedure", "post_ar")
-  p    <- plot(hv_alluvial(dta, axes = axes, y_col = "freq", fill_col = "pre_ar"))
+  p    <- plot(hv_alluvial(dta, axis_cols = axes, y_col = "freq", fill_col = "pre_ar"))
   expect_s3_class(p, "ggplot")
 })
 
 test_that("show_yaxis = FALSE blanks the four y-axis elements", {
   dta <- sample_alluvial_data(n = 100, seed = 1)
-  p   <- plot(hv_alluvial(dta, axes = c("pre_ar", "post_ar"), y_col = "freq"),
+  p   <- plot(hv_alluvial(dta, axis_cols = c("pre_ar", "post_ar"), y_col = "freq"),
               show_yaxis = FALSE)
   th  <- p$theme
   for (el in c("axis.title.y", "axis.text.y", "axis.ticks.y", "axis.line.y"))
@@ -200,7 +200,7 @@ test_that("show_yaxis = FALSE blanks the four y-axis elements", {
 
 test_that("show_yaxis = TRUE leaves the y-axis elements untouched", {
   dta <- sample_alluvial_data(n = 100, seed = 1)
-  p   <- plot(hv_alluvial(dta, axes = c("pre_ar", "post_ar"), y_col = "freq"),
+  p   <- plot(hv_alluvial(dta, axis_cols = c("pre_ar", "post_ar"), y_col = "freq"),
               show_yaxis = TRUE)
   th  <- p$theme
   blanked <- vapply(
@@ -211,18 +211,18 @@ test_that("show_yaxis = TRUE leaves the y-axis elements untouched", {
 })
 
 test_that("hv_alluvial errors when data is not a data frame", {
-  expect_error(hv_alluvial(list(), axes = c("a", "b")), "data frame")
+  expect_error(hv_alluvial(list(), axis_cols = c("a", "b")), "data frame")
 })
 
 test_that("hv_alluvial errors when axes has fewer than two elements", {
   dta <- sample_alluvial_data(n = 100, seed = 1)
-  expect_error(hv_alluvial(dta, axes = "pre_ar"), "at least 2")
+  expect_error(hv_alluvial(dta, axis_cols = "pre_ar"), "at least 2")
 })
 
 test_that("hv_alluvial errors when an axis name is absent from data", {
   dta <- sample_alluvial_data(n = 100, seed = 1)
   expect_error(
-    hv_alluvial(dta, axes = c("pre_ar", "nonexistent")),
+    hv_alluvial(dta, axis_cols = c("pre_ar", "nonexistent")),
     "column"
   )
 })
@@ -230,7 +230,7 @@ test_that("hv_alluvial errors when an axis name is absent from data", {
 test_that("hv_alluvial errors when y_col is absent from data", {
   dta <- sample_alluvial_data(n = 100, seed = 1)
   expect_error(
-    hv_alluvial(dta, axes = c("pre_ar", "post_ar"), y_col = "missing_col"),
+    hv_alluvial(dta, axis_cols = c("pre_ar", "post_ar"), y_col = "missing_col"),
     "not found"
   )
 })
@@ -238,7 +238,7 @@ test_that("hv_alluvial errors when y_col is absent from data", {
 test_that("plot(hv_alluvial) errors when alpha is out of [0, 1]", {
   dta <- sample_alluvial_data(n = 100, seed = 1)
   expect_error(
-    plot(hv_alluvial(dta, axes = c("pre_ar", "post_ar"), y_col = "freq"),
+    plot(hv_alluvial(dta, axis_cols = c("pre_ar", "post_ar"), y_col = "freq"),
          alpha = 1.5),
     "alpha"
   )
@@ -658,14 +658,14 @@ test_that("theme_hv_ppt_light respects base_size: size 12 differs from size 48",
 test_that("print.hv_alluvial produces <hv_alluvial> header", {
   dta  <- sample_alluvial_data(n = 100, seed = 1)
   axes <- c("pre_ar", "procedure", "post_ar")
-  obj  <- hv_alluvial(dta, axes = axes, y_col = "freq")
+  obj  <- hv_alluvial(dta, axis_cols = axes, y_col = "freq")
   expect_output(print(obj), "<hv_alluvial>")
 })
 
 test_that("print.hv_alluvial returns x invisibly", {
   dta  <- sample_alluvial_data(n = 100, seed = 1)
   axes <- c("pre_ar", "procedure", "post_ar")
-  obj  <- hv_alluvial(dta, axes = axes, y_col = "freq")
+  obj  <- hv_alluvial(dta, axis_cols = axes, y_col = "freq")
   ret  <- withVisible(print(obj))
   expect_false(ret$visible)
   expect_identical(ret$value, obj)
@@ -695,13 +695,13 @@ test_that("print.hv_longitudinal returns x invisibly", {
 
 test_that("print.hv_upset produces <hv_upset> header", {
   dta <- sample_upset_data(n = 200, seed = 1)
-  obj <- hv_upset(dta, intersect = sets)
+  obj <- hv_upset(dta, set_cols = sets)
   expect_output(print(obj), "<hv_upset>")
 })
 
 test_that("print.hv_upset returns x invisibly", {
   dta <- sample_upset_data(n = 200, seed = 1)
-  obj <- hv_upset(dta, intersect = sets)
+  obj <- hv_upset(dta, set_cols = sets)
   ret <- withVisible(print(obj))
   expect_false(ret$visible)
   expect_identical(ret$value, obj)

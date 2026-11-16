@@ -7,10 +7,10 @@
 hv_followup(
   data,
   iv_opyrs_col = "iv_opyrs",
-  death_col = "dead",
   death_time_col = "iv_dead",
-  event_col = NULL,
-  event_time_col = NULL,
+  death_col = "dead",
+  event_time_cols = NULL,
+  event_cols = NULL,
   death_for_event_col = NULL,
   origin_year = 1990,
   study_start = as.Date("1990-01-01"),
@@ -22,7 +22,9 @@ hv_followup(
   segment_drop = 0,
   echo = NULL,
   echo_time_col = NULL,
-  echo_opyrs_col = NULL
+  echo_opyrs_col = NULL,
+  event_time_col,
+  event_col
 )
 }
 \arguments{
@@ -32,13 +34,28 @@ See \code{\link{sample_goodness_followup_data}}.}
 \item{iv_opyrs_col}{Name of the operation-year column.
 Default \code{"iv_opyrs"}.}
 
-\item{death_col}{Name of the binary death-indicator column.
-Default \code{"dead"}.}
-
 \item{death_time_col}{Name of the time-to-death column.
 Default \code{"iv_dead"}.}
 
-\item{event_col}{Name of the non-fatal event indicator column, or
+\item{death_col}{Name of the binary death-indicator column.
+Default \code{"dead"}.
+Each time column comes before its status column, as in
+\code{survival::Surv(time, event)}. The order of these four arguments
+changed after 2.8.22, so they must be passed by name: a value given by
+position that would bind to any argument after \code{iv_opyrs_col},
+including in a call that names \code{data} or \code{iv_opyrs_col} or
+forwards through \code{...}, is an error (class
+\code{hvtiPlotR_positional_reorder}) rather than a silent swap. A status
+column must be logical, 0/1, or text or a factor that \code{as.logical()}
+reads (\code{"TRUE"}/\code{"FALSE"}).}
+
+\item{event_time_cols}{Name of the time-to-event column, or a vector the
+same length as \code{event_cols}, one interval per event.  Required when
+\code{event_cols} is supplied.  Default \code{NULL}.  A patient is drawn at
+the winning event's interval; with no qualifying event, at the first
+event's interval.}
+
+\item{event_cols}{Name of the non-fatal event indicator column, or
 a vector of names for competing non-fatal events drawn in one panel.
 Required to compute the event panel (\code{type = "event"}).
 Default \code{NULL} (event panel unavailable).  The flag alone does not
@@ -47,12 +64,6 @@ decide the state: each event time is compared against
 when it strictly precedes death.  Ties go to death.  Among the events
 that qualify, the earliest sets the state, and a tie between two goes to
 the one listed first.}
-
-\item{event_time_col}{Name of the time-to-event column, or a vector the
-same length as \code{event_col}, one interval per event.  Required when
-\code{event_col} is supplied.  Default \code{NULL}.  A patient is drawn at
-the winning event's interval; with no qualifying event, at the first
-event's interval.}
 
 \item{death_for_event_col}{Name of the death column to use specifically in
 the event panel (defaults to \code{death_col} when \code{NULL}).}
@@ -81,7 +92,7 @@ states (alive first).  Default \code{c("Alive", "Dead")}.}
 
 \item{event_levels}{Character vector of distinct labels for the event
 panel: event-free, one per non-fatal event in the order of
-\code{event_col}, then death.  Its length is the number of events plus
+\code{event_cols}, then death.  Its length is the number of events plus
 two.  Default \code{c("No event", "Non-fatal event", "Death")}.}
 
 \item{segment_drop}{Numeric; vertical offset (years) for the segment
@@ -102,6 +113,10 @@ reduced to one echo per patient delivers.}
 
 \item{echo_opyrs_col}{Name of the operation interval column in
 \code{echo}.  Default \code{NULL}, meaning \code{iv_opyrs_col}.}
+
+\item{event_time_col, event_col}{Deprecated names of \code{event_time_cols}
+and \code{event_cols}, which take one or more columns. They work, with a
+once-per-session warning, until hvtiPlotR 2.9.0.}
 }
 \value{
 An object of class \code{c("hv_followup", "hv_data")}:
@@ -175,7 +190,7 @@ p +
 # With event panel -- same 3-step pattern
 gf2 <- hv_followup(dta, origin_year = 1990, study_start = "1990-01-01",
                    study_end = "2019-12-31", close_date = "2021-08-06",
-                   event_col = "ev_event", event_time_col = "iv_event")
+                   event_cols = "ev_event", event_time_cols = "iv_event")
 plot(gf2, type = "event") +
   ggplot2::scale_color_manual(
     values = c("No event" = "blue", "Non-fatal event" = "green3",
@@ -190,8 +205,8 @@ plot(gf2, type = "event") +
 dta$ev_stroke <- !dta$ev_event & seq_len(nrow(dta)) \%\% 4 == 0
 gf3 <- hv_followup(dta, origin_year = 1990, study_start = "1990-01-01",
                    study_end = "2019-12-31", close_date = "2021-08-06",
-                   event_col = c("ev_event", "ev_stroke"),
-                   event_time_col = c("iv_event", "iv_event"),
+                   event_cols = c("ev_event", "ev_stroke"),
+                   event_time_cols = c("iv_event", "iv_event"),
                    event_levels = c("No event", "Reoperation", "Stroke", "Death"))
 table(gf3$tables$event_data$state)
 plot(gf3, type = "event")

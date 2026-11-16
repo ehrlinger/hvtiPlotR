@@ -91,8 +91,10 @@ sample_alluvial_data <- function(n = 300, seed = 42L) {
 #'
 #' @param data        A data frame in wide alluvial format: one row per
 #'   axis-value combination, a numeric weight column, and one column per axis.
-#' @param axes        Character vector of column names to use as axes, in
+#' @param axis_cols   Character vector of column names to use as axes, in
 #'   left-to-right display order. Minimum two columns.
+#' @param axes Deprecated name of `axis_cols`; works, with a once-per-session
+#'   warning, until hvtiPlotR 2.9.0.
 #' @param y_col       Name of the numeric weight column (counts or
 #'   proportions). Default \code{"freq"}.
 #' @param fill_col    Name of the column to map to the flow fill and color
@@ -117,7 +119,7 @@ sample_alluvial_data <- function(n = 300, seed = 42L) {
 #' axes <- c("pre_ar", "procedure", "post_ar")
 #'
 #' # 1. Build data object
-#' al <- hv_alluvial(dta, axes = axes, y_col = "freq", fill_col = "pre_ar")
+#' al <- hv_alluvial(dta, axis_cols = axes, y_col = "freq", fill_col = "pre_ar")
 #' al  # prints axes and observation count
 #'
 #' # 2. Bare plot -- undecorated ggplot returned by plot.hv_alluvial
@@ -146,13 +148,15 @@ sample_alluvial_data <- function(n = 300, seed = 42L) {
 #' @importFrom rlang .data
 #' @export
 hv_alluvial <- function(data,
-                           axes,
+                           axis_cols,
                            y_col       = "freq",
                            fill_col    = NULL,
-                           axis_labels = NULL) {
+                           axis_labels = NULL,
+                           axes) {
+  axes <- .hv_rename_arg("hv_alluvial", "axes", "axis_cols", missing(axes), missing(axis_cols), axes, axis_cols)
   .check_df(data)
   if (!(is.character(axes) && length(axes) >= 2L))
-    stop("`axes` must be a character vector of at least 2 column names.",
+    stop("hv_alluvial(): `axis_cols` must be a character vector of at least 2 column names.",
          call. = FALSE)
   .check_cols(data, axes)
   .check_col(data, y_col)
@@ -161,7 +165,7 @@ hv_alluvial <- function(data,
   if (!(is.null(axis_labels) ||
           (is.character(axis_labels) && length(axis_labels) == length(axes))))
     stop(paste("`axis_labels` must be NULL or a character vector the same",
-               "length as `axes`."), call. = FALSE)
+               "length as `axis_cols`."), call. = FALSE)
 
   if (is.null(axis_labels)) axis_labels <- axes
 
@@ -231,7 +235,7 @@ print.hv_alluvial <- function(x, ...) {
 #' axes <- c("pre_ar", "procedure", "post_ar")
 #'
 #' # Fill flows by procedure
-#' plot(hv_alluvial(dta, axes = axes, y_col = "freq",
+#' plot(hv_alluvial(dta, axis_cols = axes, y_col = "freq",
 #'                    fill_col = "procedure")) +
 #'   ggplot2::scale_fill_manual(values = hv_palette(), name = "Procedure") +
 #'   ggplot2::scale_color_manual(values = hv_palette(), guide = "none") +
@@ -240,7 +244,7 @@ print.hv_alluvial <- function(x, ...) {
 #'
 #' # Two-axis (before / after)
 #' plot(hv_alluvial(
-#'   dta, axes = c("pre_ar", "post_ar"), y_col = "freq",
+#'   dta, axis_cols = c("pre_ar", "post_ar"), y_col = "freq",
 #'   fill_col = "pre_ar",
 #'   axis_labels = c("Pre-operative", "Post-operative")
 #' )) +

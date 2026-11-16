@@ -8,7 +8,8 @@ provenance_footnote(
   commit,
   job,
   versions = .default_versions(),
-  time = Sys.time()
+  time = Sys.time(),
+  record = NULL
 )
 }
 \arguments{
@@ -23,12 +24,22 @@ unique abbreviation, the full ID, or a marker such as \code{"uncommitted"}.}
 hvtiPlotR and, when it is installed, hvtiRtemplates.}
 
 \item{time}{The time of the render, a \code{POSIXct} printed as
-\code{"\%Y-\%m-\%d \%H:\%M"}. Default \code{Sys.time()}.}
+\code{"\%Y-\%m-\%d \%H:\%M"}. Default \code{Sys.time()}. An \code{NA} time prints as
+\code{"time unknown"}, a gap rather than a plausible value.}
+
+\item{record}{Optional provenance record, the named list every hvtiR package
+returns: \code{package}, \code{version}, \code{sha}, \code{method}, \code{seed}, \code{rng_kind} and
+\code{time} (extra fields are ignored). When given, it supplies \code{commit} (its
+\code{sha}, or \code{"commit unknown"} when that is \code{NA}) and \code{time} unless they are
+passed, adds \code{"<package> <version>"} to \code{versions}, and appends
+\code{"seed <seed>"} when the seed is not \code{NA}. \code{job} is still required: the
+record does not carry it.}
 }
 \value{
 A character vector of fields: the commit, the job, one field per
 version and the time. Pass it to the \code{footnote} argument of
-\code{\link[=save_manuscript]{save_manuscript()}}, which joins and fits it.
+\code{\link[=save_manuscript]{save_manuscript()}}, which joins and fits it. An error carries class
+\code{hvtiPlotR_invalid_provenance}.
 }
 \description{
 Formats the fields \code{\link[=save_manuscript]{save_manuscript()}} prints below a figure to identify
@@ -57,6 +68,12 @@ provenance_footnote(
   versions = c(R = "4.5.1", hvtiPlotR = "2.8.19", hvtiRtemplates = "1.5.3"),
   time     = as.POSIXct("2026-10-29 14:40")
 )
+
+# From an hvtiR provenance record
+rec <- list(package = "hvtiRbootstrap", version = "1.0.4", sha = "3f9c2a1",
+            method = "stepwise", seed = 42L, rng_kind = RNGkind(),
+            time = as.POSIXct("2026-10-29 14:40"))
+provenance_footnote(job = "30_analyses/boot.qmd", record = rec)
 }
 \seealso{
 \code{\link[=save_manuscript]{save_manuscript()}}, which prints the note in a strip below the

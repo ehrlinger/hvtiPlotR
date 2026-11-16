@@ -5,7 +5,7 @@
 \title{Parametric Hazard / Survival Plot}
 \usage{
 hazard_plot(
-  curve_data,
+  data,
   x_col = "time",
   estimate_col = "survival",
   lower_col = NULL,
@@ -23,14 +23,16 @@ hazard_plot(
   ref_estimate_col = estimate_col,
   ref_group_col = NULL,
   ci_alpha = 0.2,
-  line_width = 1,
+  linewidth = 1,
   point_size = 2,
   point_shape = 1L,
-  errorbar_width = 0.25
+  errorbar_width = 0.25,
+  curve_data,
+  line_width
 )
 }
 \arguments{
-\item{curve_data}{Data frame of parametric predictions (fine grid).
+\item{data}{Data frame of parametric predictions (fine grid).
 Typical source: SAS \code{predict} dataset exported to CSV, or
 \code{\link[=sample_hazard_data]{sample_hazard_data()}}.}
 
@@ -89,7 +91,7 @@ curves (e.g. age group). Default \code{NULL}.}
 \item{ci_alpha}{Transparency of the parametric CI ribbon (\verb{[0, 1]}).
 Default \code{0.20}.}
 
-\item{line_width}{Width of the parametric curve line. SAS \code{width=3}
+\item{linewidth}{Width of the parametric curve line. SAS \code{width=3}
 corresponds roughly to \code{1.2}. Default \code{1.0}.}
 
 \item{point_size}{Size of empirical overlay points. Default \code{2.0}.}
@@ -100,6 +102,12 @@ Default \code{1}.}
 
 \item{errorbar_width}{Width of the error bars on empirical points.
 Default \code{0.25}.}
+
+\item{curve_data}{Deprecated name of \code{data}; works with a once-per-session
+warning until hvtiPlotR 2.9.0.}
+
+\item{line_width}{Deprecated name of \code{linewidth}; works with a once-per-session
+warning until hvtiPlotR 2.9.0.}
 }
 \value{
 A \code{\link[ggplot2:ggplot]{ggplot2::ggplot()}} object.

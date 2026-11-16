@@ -155,8 +155,8 @@ test_that("plot(hv_followup) returns a ggplot", {
 test_that("plot(hv_followup, type='event') returns a ggplot", {
   dta <- sample_goodness_followup_data(n = 50, seed = 1)
   gf  <- hv_followup(dta,
-                        event_col      = "ev_event",
-                        event_time_col = "iv_event")
+                        event_cols     = "ev_event",
+                        event_time_cols = "iv_event")
   expect_s3_class(plot(gf, type = "event"), "ggplot")
 })
 
@@ -264,14 +264,14 @@ test_that("plot(hv_longitudinal) returns a ggplot", {
 test_that("hv_alluvial returns an hv_data object", {
   dta  <- sample_alluvial_data(n = 100, seed = 1)
   axes <- c("pre_ar", "procedure", "post_ar")
-  al   <- hv_alluvial(dta, axes = axes, y_col = "freq")
+  al   <- hv_alluvial(dta, axis_cols = axes, y_col = "freq")
   expect_s3_class(al, "hv_data")
 })
 
 test_that("plot(hv_alluvial) returns a ggplot", {
   dta  <- sample_alluvial_data(n = 100, seed = 1)
   axes <- c("pre_ar", "procedure", "post_ar")
-  expect_s3_class(plot(hv_alluvial(dta, axes = axes, y_col = "freq")),
+  expect_s3_class(plot(hv_alluvial(dta, axis_cols = axes, y_col = "freq")),
                   "ggplot")
 })
 
@@ -316,7 +316,7 @@ test_that("plot(hv_upset) returns a patchwork from sample data", {
             "MV_Repair", "TV_Repair", "Aorta", "CABG")
   dta  <- sample_upset_data(n = 100, seed = 1)
   # ggupset emits "Removed N rows" when n_intersections trims the tail; benign
-  result <- suppressWarnings(plot(hv_upset(dta, intersect = sets)))
+  result <- suppressWarnings(plot(hv_upset(dta, set_cols = sets)))
   expect_s3_class(result, "patchwork")
 })
 
@@ -325,7 +325,7 @@ test_that("plot(hv_upset, set_size = FALSE) returns a bare ggplot", {
             "MV_Repair", "TV_Repair", "Aorta", "CABG")
   dta  <- sample_upset_data(n = 100, seed = 1)
   p <- suppressWarnings(
-    plot(hv_upset(dta, intersect = sets), set_size = FALSE)
+    plot(hv_upset(dta, set_cols = sets), set_size = FALSE)
   )
   expect_s3_class(p, "ggplot")
 })
