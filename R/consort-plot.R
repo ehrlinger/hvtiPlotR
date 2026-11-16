@@ -35,6 +35,12 @@ ct_snakify <- function(x) {
   x
 }
 
+# Exclusion reason recorded for a patient whose value for an exclusion
+# criterion is missing, so the rule could not be evaluated.
+ct_missing_reason <- function(reason) {
+  paste0("Criterion missing: ", reason)
+}
+
 # Return the include (boolean) column name for the current (last) stage.
 ct_current_include <- function(tracker) {
   n <- length(tracker$stages)
@@ -64,7 +70,8 @@ ct_validate_tracker <- function(x, arg = "tracker") {
 #'
 #' @param data       A data frame, one row per patient.
 #' @param patient_id <[`data-masking`][rlang::args_data_masking]> Unquoted
-#'   name of the unique patient identifier column.
+#'   name of the unique patient identifier column. Its values must be unique
+#'   and not missing; a repeated or missing ID is an error.
 #' @param label      Character label for the initial population box.
 #'   Default `"Screened"`.
 #' @param pass_col   Column name for the initial boolean column.  Defaults to
@@ -90,6 +97,19 @@ hv_consort_start <- function(data, patient_id, label = "Screened",
   .check_df(data)
   patient_id_col <- as.character(substitute(patient_id))
   .check_cols(data, patient_id_col)
+  ids <- data[[patient_id_col]]
+  if (anyNA(ids))
+    stop(sprintf("hv_consort_start(): `patient_id` column '%s' has %d missing value(s).",
+                 patient_id_col, sum(is.na(ids))), call. = FALSE)
+  if (anyDuplicated(ids)) {
+    dup <- unique(ids[duplicated(ids)])
+    stop(sprintf(paste0("hv_consort_start(): `patient_id` column '%s' must be unique; ",
+                        "%d ID(s) repeat, e.g. %s. A CONSORT diagram counts patients, ",
+                        "so one row per patient is required."),
+                 patient_id_col, length(dup),
+                 paste(utils::head(dup, 3L), collapse = ", ")),
+         call. = FALSE)
+  }
 
   if (is.null(pass_col)) pass_col <- ct_snakify(label)
   if (!nzchar(pass_col))
@@ -142,7 +162,13 @@ hv_consort_start <- function(data, patient_id, label = "Screened",
 #'   `<condition> ~ "<reason string>"`.  Conditions are evaluated with data
 #'   masking against the tracker's data frame.  The **first** matching formula
 #'   assigns the reason; subsequent formulas are not evaluated for already-
-#'   excluded patients.
+#'   excluded patients. A patient for whom a condition evaluates to `NA` (a
+#'   missing value in the criterion) and who matches no other rule is not
+#'   passed through: it is excluded with the reason
+#'   `"Criterion missing: <reason>"` for the first such rule, a separate line
+#'   in the diagram's side box and a separate count, `n_missing`, in
+#'   [hv_consort_summary()]. A definite match on a later rule takes
+#'   precedence over a missing value on an earlier one.
 #'
 #' @return The updated `hv_consort_tracker` (invisibly, so it is pipe-safe).
 #'
@@ -205,15 +231,22 @@ hv_consort_exclude <- function(tracker, label, col, ...,
   excl_reasons <- rep(NA_character_, nrow(dat))
   data_env     <- rlang::as_data_mask(dat)
 
+  # A criterion that evaluates to NA cannot say whether the patient meets it.
+  # Such a patient is neither passed through nor silently excluded under the
+  # rule's reason: a definite match on any rule wins first, and a patient with
+  # no definite match but an NA on some rule is excluded as "criterion missing"
+  # for the first such rule, a separate count shown in the diagram.
+  missing_first <- rep(NA_character_, nrow(dat))
   for (f in formulas) {
     condition <- rlang::eval_tidy(rlang::f_lhs(f), data = data_env)
-    # Normalize to strict TRUE/FALSE: a patient with a missing value for the
-    # exclusion criterion is treated as not matching the rule.
-    condition <- !is.na(condition) & condition
     reason    <- rlang::f_rhs(f)
-    to_excl   <- active & condition & is.na(excl_reasons)
+    to_excl   <- active & !is.na(condition) & condition & is.na(excl_reasons)
     excl_reasons[to_excl] <- reason
+    to_miss   <- active & is.na(condition) & is.na(missing_first)
+    missing_first[to_miss] <- ct_missing_reason(reason)
   }
+  to_miss <- is.na(excl_reasons) & !is.na(missing_first)
+  excl_reasons[to_miss] <- missing_first[to_miss]
 
   dat[[col]]      <- excl_reasons
   dat[[pass_col]] <- active & is.na(excl_reasons)
@@ -221,6 +254,7 @@ hv_consort_exclude <- function(tracker, label, col, ...,
   n                              <- length(tracker$stages)
   tracker$stages[[n]]$excl_col   <- col
   tracker$stages[[n]]$excl_label <- excl_label
+  tracker$stages[[n]]$n_missing  <- sum(to_miss)
 
   tracker$stages[[n + 1L]] <- list(
     label       = label,
@@ -267,8 +301,10 @@ print.hv_consort_tracker <- function(x, ...) {
 #'
 #' @param tracker An `hv_consort_tracker`.
 #' @return A data frame with columns `label`, `include_col`, `n_included`,
-#'   `excl_col`, `n_excluded`.  `n_excluded` and `excl_col` are `NA` for the
-#'   final stage (no downstream exclusion defined yet).
+#'   `excl_col`, `n_excluded`, `n_missing`.  `n_missing` is the part of
+#'   `n_excluded` excluded because an exclusion criterion was missing (see
+#'   [hv_consort_exclude()]).  `n_excluded`, `n_missing` and `excl_col` are
+#'   `NA` for the final stage (no downstream exclusion defined yet).
 #'
 #' @examples
 #' hv_consort_summary(sample_consort_data())
@@ -282,12 +318,16 @@ hv_consort_summary <- function(tracker) {
     n_excl <- if (!is.null(s$excl_col))
                 sum(!is.na(tracker$data[[s$excl_col]]), na.rm = TRUE)
               else NA_integer_
+    n_miss <- if (!is.null(s$excl_col))
+                if (is.null(s$n_missing)) 0L else as.integer(s$n_missing)
+              else NA_integer_
     data.frame(
       label       = s$label,
       include_col = s$include_col,
       n_included  = n_in,
       excl_col    = if (!is.null(s$excl_col)) s$excl_col else NA_character_,
       n_excluded  = n_excl,
+      n_missing   = n_miss,
       stringsAsFactors = FALSE
     )
   })

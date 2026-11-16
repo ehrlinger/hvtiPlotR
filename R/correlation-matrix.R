@@ -49,7 +49,9 @@ sample_correlation_data <- function(n = 300, seed = 42) {
 #' @param data Data frame; one row per patient.
 #' @param vars Character vector of at least two numeric columns, in display order.
 #' @param labels Optional character vector of display labels, one per `vars`.
-#' @param method Coefficient stored in `$tables$coefficients`: `"pearson"` or `"spearman"`.
+#' @param method Coefficient stored in `$tables$coefficients`: `"spearman"` (the
+#'   default, matching `hvtiRtables::hv_correlation_table()` and the SAS exemplar)
+#'   or `"pearson"`.
 #' @return An object of class `c("hv_correlation_matrix", "hv_data")`:
 #'   `$data` (columns `col_var`, `row_var`, `x`, `y`), `$meta` (`vars`,
 #'   `labels`, `method`, `n_obs`, which is `nrow(data)` before any pairwise
@@ -65,7 +67,7 @@ sample_correlation_data <- function(n = 300, seed = 42) {
 #' plot(cm) + ggplot2::theme(strip.placement = "outside")
 #' @export
 hv_correlation_matrix <- function(data, vars, labels = NULL,
-                                  method = c("pearson", "spearman")) {
+                                  method = c("spearman", "pearson")) {
   .check_df(data)
   method <- match.arg(method)
   .check_cols(data, vars)

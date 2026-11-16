@@ -393,7 +393,7 @@ test_that("hv_consort_exclude propagates a custom excl_label into stage metadata
 # Copilot review follow-ups (PR #67)
 # ---------------------------------------------------------------------------
 
-test_that("hv_consort_exclude treats NA conditions as non-matches", {
+test_that("hv_consort_exclude counts a missing criterion separately", {
   cohort <- data.frame(
     mrn = paste0("P", 1:5),
     age = c(15L, NA, 25L, 30L, 16L),
@@ -402,9 +402,49 @@ test_that("hv_consort_exclude treats NA conditions as non-matches", {
   tracker <- hv_consort_start(cohort, patient_id = mrn) |>
     hv_consort_exclude(label = "Eligible", col = "excl_screen",
                        age < 18 ~ "Age < 18")
-  # P1 (15) and P5 (16) excluded; P2 (NA age) is NOT excluded and does not error
+  # P2 (NA age) is neither passed through nor counted under "Age < 18".
   expect_equal(tracker$data$excl_screen,
-               c("Age < 18", NA, NA, NA, "Age < 18"))
+               c("Age < 18", "Criterion missing: Age < 18", NA, NA, "Age < 18"))
+  expect_equal(tracker$data$eligible, c(FALSE, FALSE, TRUE, TRUE, FALSE))
+  summ <- hv_consort_summary(tracker)
+  expect_equal(summ$n_excluded[1], 3L)
+  expect_equal(summ$n_missing[1], 1L)
+  expect_true(is.na(summ$n_missing[2]))
+})
+
+test_that("a definite match on a later rule beats a missing earlier criterion", {
+  cohort <- data.frame(
+    mrn  = paste0("P", 1:3),
+    age  = c(NA, NA, 40L),
+    echo = c(FALSE, TRUE, TRUE)
+  )
+  tracker <- hv_consort_start(cohort, patient_id = mrn) |>
+    hv_consort_exclude(label = "Eligible", col = "excl",
+                       age < 18 ~ "Age < 18",
+                       !echo    ~ "No echo")
+  expect_equal(tracker$data$excl,
+               c("No echo", "Criterion missing: Age < 18", NA))
+  expect_equal(hv_consort_summary(tracker)$n_missing[1], 1L)
+})
+
+test_that("the missing-criterion count appears in the diagram", {
+  skip_if_not_installed("consort")
+  cohort <- data.frame(mrn = paste0("P", 1:6), age = c(15L, NA, 25L, 30L, 40L, 50L))
+  tracker <- hv_consort_start(cohort, patient_id = mrn) |>
+    hv_consort_exclude(label = "Eligible", col = "excl_screen",
+                       age < 18 ~ "Age < 18")
+  fig   <- hv_consort(tracker)
+  texts <- vapply(unclass(fig$plot), function(node) node$text, character(1))
+  side  <- texts[grepl("^Excluded", texts)]
+  expect_match(side, "Criterion missing: Age < 18 (n=1)", fixed = TRUE)
+  expect_match(side, "Age < 18 (n=1)", fixed = TRUE)
+})
+
+test_that("hv_consort_start refuses a non-unique or missing patient_id", {
+  dup <- data.frame(mrn = c("P1", "P2", "P2"), age = 1:3)
+  expect_error(hv_consort_start(dup, patient_id = mrn), "must be unique")
+  na_id <- data.frame(mrn = c("P1", NA, "P3"), age = 1:3)
+  expect_error(hv_consort_start(na_id, patient_id = mrn), "missing value")
 })
 
 test_that("hv_consort_exclude errors when a formula RHS is not a single string", {

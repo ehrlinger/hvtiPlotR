@@ -46,8 +46,10 @@
 ##' @param conf_level Confidence level for the CI band (default 0.95).
 ##' @param method Method for survival curve estimation: `"kaplan-meier"` uses
 ##'   product-limit S(t) with logit CI (matches SAS `%kaplan`), or
-##'   `"nelson-aalen"` uses Fleming-Harrington H(t) with log CI (matches
-##'   SAS `%nelsont`).
+##'   `"nelson-aalen"` uses Fleming-Harrington H(t) with a log CI (matches
+##'   SAS `%nelsont`). "Log" is on the survival scale: the interval for
+##'   \eqn{\log S(t) = -H(t)} is symmetric, so it is a plain Wald interval on
+##'   \eqn{H(t)}, not one on \eqn{\log H(t)}.
 ##' @return A \code{survfit} object.
 ##' @importFrom survival Surv survfit
 ##' @keywords internal
@@ -57,7 +59,9 @@ km_fit <- function(data, time_col, event_col, group_col, conf_level, method) {
 
   # method -> survfit type and CI transform
   # "kaplan-meier": product-limit S(t), logit CI  — matches SAS %kaplan
-  # "nelson-aalen": Fleming-Harrington H(t), log CI — matches SAS %nelsont
+  # "nelson-aalen": Fleming-Harrington H(t), log CI: matches SAS %nelsont.
+  # "log" is survfit's conf.type: the interval is built on log S(t) = -H(t),
+  # so it is a plain Wald interval on H, S(t) * exp(-/+ z * se(H)).
   surv_type <- if (method == "kaplan-meier") "kaplan-meier" else "fleming-harrington"
   conf_type <- if (method == "kaplan-meier") "logit"        else "log"
 
@@ -88,8 +92,15 @@ km_fit <- function(data, time_col, event_col, group_col, conf_level, method) {
 ##' computes derived columns that match the SAS \code{\%kaplan} macro outputs:
 ##'
 ##' \describe{
-##'   \item{\code{cumhaz}}{Cumulative hazard H(t) = -log S(t).}
-##'   \item{\code{log_cumhaz}}{log H(t), the y-axis of the log-log survival
+##'   \item{\code{cumhaz}}{Nelson-Aalen cumulative hazard
+##'     \eqn{H(t) = \sum_{t_j \le t} d_j / n_j}, as \code{survfit()} reports
+##'     it. Under \code{method = "kaplan-meier"} this is \emph{not}
+##'     \eqn{-\log S(t)} of the product-limit curve; the two agree only
+##'     approximately, and diverge in the tail where \eqn{S(t)} is small. Only
+##'     a \code{survfit} summary without a \code{cumhaz} component falls back to
+##'     \eqn{-\log S(t)}.}
+##'   \item{\code{log_cumhaz}}{log H(t) of the Nelson-Aalen H above, the
+##'     y-axis of the log-log survival
 ##'     plot used to assess the proportional-hazards assumption.}
 ##'   \item{\code{log_time}}{log(t), the x-axis of log-scale PLOTC plots.}
 ##'   \item{\code{hazard}}{Instantaneous hazard estimate:
@@ -98,9 +109,18 @@ km_fit <- function(data, time_col, event_col, group_col, conf_level, method) {
 ##'   \item{\code{density}}{Probability density: (S(t_prev) - S(t)) / delta_t.}
 ##'   \item{\code{mid_time}}{Midpoint of the interval (t_prev, t], used as
 ##'     the x-axis of hazard-rate plots.}
-##'   \item{\code{life}}{Cumulative integral of the survival function
-##'     (restricted mean survival time) using the SAS trapezoidal rule:
-##'     LIFE += delta_t * (3*S(t) - S(t_prev)) / 2.}
+##'   \item{\code{life}}{Cumulative integral of the survival function, by the
+##'     SAS \code{\%kaplan} formula, kept for SAS parity:
+##'     \eqn{LIFE \mathrel{+}= \Delta t (3 S(t) - S(t_{prev})) / 2}. This is
+##'     \strong{not} a trapezoid. The Kaplan-Meier curve is a right-continuous
+##'     step, constant at \eqn{S(t_{prev})} across \eqn{[t_{prev}, t)}, so the
+##'     exact area of an interval is \eqn{\Delta t \, S(t_{prev})}; the
+##'     trapezoid would be \eqn{\Delta t (S(t) + S(t_{prev})) / 2}. The SAS
+##'     formula falls short of the exact area by
+##'     \eqn{\frac{3}{2} \Delta t (S(t_{prev}) - S(t))} at each event
+##'     (and equals it across a censoring-only interval), so \code{life}
+##'     understates the restricted mean survival time. For the exact RMST use
+##'     \code{hvtiRpropensity::ps_rmst()}.}
 ##'   \item{\code{proplife}}{LIFE / t, the proportionate life length.}
 ##' }
 ##'
@@ -209,35 +229,42 @@ km_risk_table <- function(time, report_times, group = NULL) {
 
 ##' Build report table at specified time points
 ##'
-##' For each stratum and report time, extracts the survival estimate (and CI
-##' bounds, n.risk, and n.event) at the last observed time \eqn{\le} the
-##' report time.
+##' For each stratum and report time, extracts the survival estimate and CI
+##' bounds at the last observed time \eqn{\le} the report time. A report time
+##' past a stratum's last observed time has no estimate, so its \code{surv},
+##' \code{lower}, \code{upper} and \code{n.event} are \code{NA} rather than
+##' the final row carried forward. \code{n.risk} is taken from the risk table,
+##' the number still under observation at the report time itself, so the two
+##' tables agree.
 ##'
 ##' @param km_df        Tidy KM data frame from \code{km_extract_tidy}.
 ##' @param report_times Numeric vector of time points.
+##' @param risk_tbl     Risk table from \code{km_risk_table}.
 ##' @return A data frame with columns \code{strata}, \code{report_time},
 ##'   \code{surv}, \code{lower}, \code{upper}, \code{n.risk}, \code{n.event}.
 ##' @keywords internal
-km_report_table <- function(km_df, report_times) {
+km_report_table <- function(km_df, report_times, risk_tbl) {
   strata_levels <- unique(km_df$strata)
 
   rows <- lapply(strata_levels, function(st) {
     sub_df <- km_df[km_df$strata == st, ]
+    last_t <- max(sub_df$time)
     lapply(report_times, function(t) {
-      idx <- which(sub_df$time <= t)
-      if (length(idx) == 0L) {
-        row <- sub_df[1L, ]
+      n_risk <- risk_tbl$n.risk[risk_tbl$strata == st & risk_tbl$report_time == t][1L]
+      if (t > last_t) {
+        est <- list(surv = NA_real_, lower = NA_real_, upper = NA_real_,
+                    n.event = NA_real_)
       } else {
-        row <- sub_df[max(idx), ]
+        est <- sub_df[max(which(sub_df$time <= t)), ]
       }
       data.frame(
         strata      = st,
         report_time = t,
-        surv        = row$surv,
-        lower       = row$lower,
-        upper       = row$upper,
-        n.risk      = row$n.risk,
-        n.event     = row$n.event,
+        surv        = est$surv,
+        lower       = est$lower,
+        upper       = est$upper,
+        n.risk      = n_risk,
+        n.event     = est$n.event,
         stringsAsFactors = FALSE
       )
     })
@@ -401,8 +428,9 @@ km_build_loglog_plot <- function(km_df, alpha, curve = "step") {
 
 ##' Build bare integrated survivorship ggplot (PLOTL)
 ##'
-##' Plots the cumulative integral of the survival function (restricted mean
-##' survival time, LIFE) against time, matching the SAS \code{\%kaplan}
+##' Plots the cumulative integral of the survival function (LIFE, by the SAS
+##' formula documented in \code{km_extract_tidy}) against time, matching the
+##' SAS \code{\%kaplan}
 ##' \code{PLOTL=1} output.  The proportionate life length
 ##' (\code{proplife = LIFE / t}) is also available in \code{km_data} for
 ##' a secondary plot.
@@ -449,7 +477,8 @@ km_build_life_plot <- function(km_df, alpha) {
 #'   estimate labeled \code{"All"}.
 #' @param method       Estimator: \code{"kaplan-meier"} (default, logit CI;
 #'   mirrors SAS \code{\%kaplan}) or \code{"nelson-aalen"} (Fleming-Harrington
-#'   cumulative hazard with log CI; mirrors SAS \code{\%nelsont}, preferred
+#'   cumulative hazard with a CI on the log-survival scale, which is a plain
+#'   Wald interval on \eqn{H(t)}; mirrors SAS \code{\%nelsont}, preferred
 #'   when \eqn{S(t)} approaches zero).
 #' @param conf_level   Confidence level for the CI band.  Default \code{0.95}.
 #' @param report_times Numeric vector of time points at which survival
@@ -464,7 +493,16 @@ km_build_life_plot <- function(km_df, alpha) {
 #'     Columns: \code{time}, \code{surv}, \code{lower}, \code{upper},
 #'     \code{n.risk}, \code{n.event}, \code{n.censor}, \code{cumhaz},
 #'     \code{strata}, \code{hazard}, \code{density}, \code{mid_time},
-#'     \code{life}, \code{proplife}, \code{log_cumhaz}, \code{log_time}.}
+#'     \code{life}, \code{proplife}, \code{log_cumhaz}, \code{log_time}.
+#'     \code{cumhaz} is the Nelson-Aalen estimate under either \code{method},
+#'     not \eqn{-\log S(t)}, and \code{log_cumhaz} is built on it.
+#'     \code{life} is integrated by the SAS \code{\%kaplan} formula
+#'     \eqn{\Delta t (3 S(t) - S(t_{prev})) / 2}, kept for SAS parity. It is
+#'     not a trapezoid: it falls short of the exact step-function area
+#'     \eqn{\Delta t \, S(t_{prev})} by
+#'     \eqn{\frac{3}{2} \Delta t (S(t_{prev}) - S(t))} at each event, so it
+#'     understates the restricted mean survival time.
+#'     \code{hvtiRpropensity::ps_rmst()} computes the exact RMST.}
 #'   \item{\code{$meta}}{Named list: \code{time_col}, \code{event_col},
 #'     \code{group_col}, \code{method}, \code{conf_level},
 #'     \code{report_times}, \code{n_obs} (the \emph{analyzed} cohort),
@@ -604,7 +642,7 @@ hv_survival <- function(data,
     factor(as.character(data[[group_col]]), levels = unique(km_df$strata))
   }
   risk_tbl   <- km_risk_table(data[[time_col]], report_times, risk_group)
-  report_tbl <- km_report_table(km_df, report_times)
+  report_tbl <- km_report_table(km_df, report_times, risk_tbl)
 
   # --- Assemble -------------------------------------------------------------
   new_hv_data(
@@ -681,8 +719,12 @@ print.hv_survival <- function(x, ...) {
 #'     \item{\code{"loglog"}}{Log-log diagnostic: \eqn{\log H(t)} vs
 #'       \eqn{\log t}.  Parallel lines across strata support proportional
 #'       hazards.}
-#'     \item{\code{"life"}}{(\code{PLOTL=1}) Restricted mean survival time
-#'       (integral of \eqn{S(t)}) vs time.}
+#'     \item{\code{"life"}}{(\code{PLOTL=1}) Integrated survivorship vs
+#'       time, by the SAS \code{\%kaplan} formula
+#'       \eqn{\Delta t (3 S(t) - S(t_{prev})) / 2}, which is neither the
+#'       exact step-function area nor a trapezoid and understates the
+#'       restricted mean survival time; see \code{\link{hv_survival}}. For the
+#'       exact RMST use \code{hvtiRpropensity::ps_rmst()}.}
 #'   }
 #' @param conf_int Logical; draw a CI ribbon on the \code{"survival"} plot.
 #'   Default \code{TRUE}.  Ignored for other \code{type} values.

@@ -388,7 +388,11 @@ mirror_histogram_diagnostics <- function(working, matched_idx, group_levels,
   if (is.null(matched_idx)) {
     # Weighted IPTW mode
     c(base, list(
-      effective_n_by_group = tapply(working$weight, working$group, sum),
+      # Kish effective sample size, (sum w)^2 / sum w^2: the family-wide
+      # meaning of "effective N". The plain weight total is sum_weights.
+      effective_n_by_group = tapply(working$weight, working$group,
+                                    function(w) sum(w)^2 / sum(w^2)),
+      sum_weights          = tapply(working$weight, working$group, sum),
       smd_weighted         = calc_weighted_smd(working$score, working$weight,
                                                working$group, group_levels)
     ))
@@ -460,7 +464,10 @@ mirror_histogram_diagnostics <- function(working, matched_idx, group_levels,
 #'         \code{group_counts_matched}, \code{matched_rate_by_group},
 #'         \code{score_summary_matched}, and \code{smd_matched}.
 #'         In weighted IPTW mode, additionally contains
-#'         \code{effective_n_by_group} and \code{smd_weighted}.}
+#'         \code{effective_n_by_group} (Kish's effective sample size,
+#'         \eqn{(\sum w)^2 / \sum w^2}, per group), \code{sum_weights}
+#'         (the plain weight total per group, which \code{effective_n_by_group}
+#'         reported under the old name) and \code{smd_weighted}.
 #'       \item{\code{working}}{The per-patient data frame after score
 #'         rescaling and complete-case filtering, used for custom
 #'         downstream diagnostics.}
