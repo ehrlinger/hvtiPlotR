@@ -54,6 +54,24 @@ test_that("each bar's tooltip names its category, bin, count and percent", {
   expect_true("a\n2001: 2 (66.7%)" %in% cnt$tooltip)
 })
 
+test_that("a missing bin keeps one tooltip per category", {
+  # A discrete x scale keeps NA as a bin. interaction() returned NA for those
+  # rows, so every category's bar in the missing bin shared one group, the
+  # tooltip varied within it, and the stat dropped it: "object 'tooltip' not
+  # found" while building the plot.
+  skip_if_not_installed("ggiraph")
+  d <- data.frame(year = c(2001, 2001, NA, NA, NA), grp = c("a", "b", "a", "a", "b"))
+  for (show_percent in c(TRUE, FALSE)) {
+    expect_no_warning(
+      tips <- ggplot2::layer_data(plot(hv_eda(d, x_col = "year", y_col = "grp", show_percent = show_percent),
+                                       interactive = TRUE))$tooltip
+    )
+    expect_length(tips, 4L)
+  }
+  pct <- ggplot2::layer_data(plot(hv_eda(d, x_col = "year", y_col = "grp", show_percent = TRUE), interactive = TRUE))
+  expect_true(all(c("a\nNA: 66.7% (2 of 3)", "b\nNA: 33.3% (1 of 3)") %in% pct$tooltip))
+})
+
 test_that("interactive passes through plot.hv_eda_pages and leaves continuous panels alone", {
   skip_if_not_installed("ggiraph")
   pages <- plot(hv_eda_pages(dta, section = "count"), ncol = 2, nrow = 2, interactive = TRUE)

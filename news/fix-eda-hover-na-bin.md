@@ -1,0 +1,1 @@
+* Hover labels on a categorical EDA panel no longer fail when the x variable has missing values. Every category's bar in the missing bin shared one group, so its tooltip was dropped and the plot stopped with "object 'tooltip' not found". Each bar in that bin now keeps its own tooltip.

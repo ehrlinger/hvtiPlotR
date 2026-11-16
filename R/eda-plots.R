@@ -542,8 +542,10 @@ plot.hv_eda <- function(x,
   if (interactive) {
     # Group by category and bin, not category alone, so each bar keeps its
     # own tooltip through the stat. Within a bin the groups keep the order of
-    # `stack`, so the bars stack and dodge as before.
-    data$hover_group <- interaction(data$stack, data$x, lex.order = TRUE, drop = TRUE)
+    # `stack`, so the bars stack and dodge as before. addNA() gives a missing
+    # bin its own level: interaction() is NA wherever x is, which put every
+    # category's bar in that bin into one group and lost their tooltips.
+    data$hover_group <- interaction(data$stack, addNA(as.factor(data$x)), lex.order = TRUE, drop = TRUE)
     data$hover_start <- .eda_tooltip_start(data$fill, data$x)
     tip <- function(start, count, x, panel) .eda_tooltips(start, count, x, panel, show_percent)
     bar <- function(...) {
