@@ -187,8 +187,10 @@ sample_goodness_followup_data <- function(
 #'   Default \code{"dead"}.
 #'   Each time column comes before its status column, as in
 #'   \code{survival::Surv(time, event)}. The order of these four arguments
-#'   changed after 2.8.22, so they must be passed by name: a call that gives
-#'   any argument after \code{iv_opyrs_col} by position is an error (class
+#'   changed after 2.8.22, so they must be passed by name: a value given by
+#'   position that would bind to any argument after \code{iv_opyrs_col},
+#'   including in a call that names \code{data} or \code{iv_opyrs_col} or
+#'   forwards through \code{...}, is an error (class
 #'   \code{hvtiPlotR_positional_reorder}) rather than a silent swap. A status
 #'   column must be logical, 0/1, or text or a factor that \code{as.logical()}
 #'   reads (\code{"TRUE"}/\code{"FALSE"}).
@@ -369,7 +371,7 @@ hv_followup <- function(
   event_time_col,
   event_col
 ) {
-  gf_positional_guard(sys.call())
+  gf_positional_guard(sys.call(), sys.function(), parent.frame())
   event_time_col <- .hv_rename_arg("hv_followup", "event_time_col", "event_time_cols",
                                    missing(event_time_col), missing(event_time_cols),
                                    event_time_col, event_time_cols)
@@ -672,16 +674,32 @@ gf_materialize_followup_data <- function(data, tolower_names) {
 # The time and status arguments changed places after 2.8.22, so a call written
 # for the old order would bind each column to the other's role. A status check
 # alone cannot catch that when a time column happens to hold only 0/1, so any
-# argument after `data` and `iv_opyrs_col` given by position is refused.
-gf_positional_guard <- function(call) {
+# value given by position that binds to a formal after `iv_opyrs_col` is
+# refused. Counting unnamed arguments is not enough: R matches names first and
+# fills the remaining formals in order, so `hv_followup(data = d,
+# iv_opyrs_col = "x", "dead", "iv_dead")` binds both unnamed values past
+# `iv_opyrs_col`. The guard therefore asks match.call() where each value
+# lands, after expanding any `...` the call was forwarded through.
+gf_positional_guard <- function(call, fn, envir) {
+  # The name each argument was given ("" when positional), with any `...`
+  # expanded into the names of the values it forwards.
+  arg_names <- function(x) if (is.null(names(x))) rep("", length(x)) else names(x)
   args <- as.list(call)[-1L]
-  nms  <- names(args)
-  if (is.null(nms)) nms <- rep("", length(args))
-  if (sum(!nzchar(nms)) > 2L)
+  flat_nms <- unlist(lapply(seq_along(args), function(k) {
+    if (identical(args[[k]], quote(...)))
+      arg_names(eval(quote(as.list(substitute(list(...)))[-1L]), envir))
+    else arg_names(args)[k]
+  }))
+  if (all(nzchar(flat_nms))) return(invisible())
+  # Replace each value by its position, then let R's own matching bind them.
+  probe <- as.call(c(list(quote(f)), stats::setNames(as.list(seq_along(flat_nms)), flat_nms)))
+  bound <- unlist(as.list(match.call(fn, probe))[-1L])
+  positional <- names(bound)[bound %in% which(!nzchar(flat_nms))]
+  if (any(!positional %in% c("data", "iv_opyrs_col")))
     stop(errorCondition(paste0(
       "hv_followup(): pass every argument after `iv_opyrs_col` by name. The time ",
       "columns now come before their status columns (`death_time_col, death_col`, ",
-      "`event_time_cols, event_cols`), so a positional call would swap them."),
+      "`event_time_cols, event_cols`), so a value given by position would swap them."),
       class = "hvtiPlotR_positional_reorder", call = NULL))
   invisible()
 }

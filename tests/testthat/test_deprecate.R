@@ -120,6 +120,30 @@ test_that("hv_followup refuses a positional call, since the column order changed
   expect_s3_class(do.call(hv_followup, c(list(dta, "iv_opyrs"), dates)), "hv_data")
 })
 
+test_that("hv_followup refuses positional binding past iv_opyrs_col in a mixed call", {
+  dta <- sample_goodness_followup_data(n = 40)
+  dta$t01 <- as.numeric(dta$iv_dead > stats::median(dta$iv_dead))
+  dates <- list(origin_year = 1990, study_start = "1990-01-01",
+                study_end = "2019-12-31", close_date = "2021-08-06")
+  # data and iv_opyrs_col named, so the two unnamed values would bind to
+  # death_time_col and death_col: the old order, silently swapped.
+  expect_error(do.call(hv_followup, c(list(data = dta, iv_opyrs_col = "iv_opyrs", "dead", "t01"),
+                                      dates)),
+               class = "hvtiPlotR_positional_reorder")
+  # One named, one positional: the positional value binds to iv_opyrs_col and is fine.
+  expect_s3_class(do.call(hv_followup, c(list("iv_opyrs", data = dta), dates)), "hv_data")
+  # Forwarded through `...` by a wrapper.
+  wrap <- function(...) hv_followup(...)
+  expect_error(do.call(wrap, c(list(dta, "iv_opyrs", "dead", "t01"), dates)),
+               class = "hvtiPlotR_positional_reorder")
+  expect_error(wrap(data = dta, iv_opyrs_col = "iv_opyrs", "dead", "t01", origin_year = 1990,
+                    study_start = "1990-01-01", study_end = "2019-12-31",
+                    close_date = "2021-08-06"),
+               class = "hvtiPlotR_positional_reorder")
+  expect_s3_class(wrap(dta, "iv_opyrs", origin_year = 1990, study_start = "1990-01-01",
+                       study_end = "2019-12-31", close_date = "2021-08-06"), "hv_data")
+})
+
 test_that("hv_followup accepts a factor status, as as.logical() did", {
   dta <- sample_goodness_followup_data(n = 40)
   dta$dead <- factor(as.character(as.logical(dta$dead)), levels = c("FALSE", "TRUE"))

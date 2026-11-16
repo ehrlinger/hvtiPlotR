@@ -7,7 +7,7 @@
   - `hv_consort_start()` takes the ID column as a string, `patient_id_col`. An unquoted name, named `patient_id` or passed by position, still works.
   - `plot.hv_sankey()`'s deprecated `alpha` now warns once per session, like the others, instead of printing a message that quiet mode would hide.
 
-* `hv_followup()` puts each time column before its status column, as `survival::Surv(time, event)` does: `death_time_col, death_col`, then `event_time_col, event_col`. Every argument after `iv_opyrs_col` must therefore be passed by name; a positional call is an error (class `hvtiPlotR_positional_reorder`) rather than a silent swap. A status column must be logical, 0/1, or text or a factor that `as.logical()` reads.
+* `hv_followup()` puts each time column before its status column, as `survival::Surv(time, event)` does: `death_time_col, death_col`, then `event_time_col, event_col`. Every argument after `iv_opyrs_col` must therefore be passed by name; a value given by position that would bind there, in a fully positional call or a mixed one, is an error (class `hvtiPlotR_positional_reorder`) rather than a silent swap. A status column must be logical, 0/1, or text or a factor that `as.logical()` reads.
 
 * Informational messages go through the family quiet mode: `options(hvti.quiet = TRUE)` silences them. Warnings and errors are unaffected.
 

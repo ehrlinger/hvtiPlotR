@@ -41,8 +41,10 @@ Default \code{"iv_dead"}.}
 Default \code{"dead"}.
 Each time column comes before its status column, as in
 \code{survival::Surv(time, event)}. The order of these four arguments
-changed after 2.8.22, so they must be passed by name: a call that gives
-any argument after \code{iv_opyrs_col} by position is an error (class
+changed after 2.8.22, so they must be passed by name: a value given by
+position that would bind to any argument after \code{iv_opyrs_col},
+including in a call that names \code{data} or \code{iv_opyrs_col} or
+forwards through \code{...}, is an error (class
 \code{hvtiPlotR_positional_reorder}) rather than a silent swap. A status
 column must be logical, 0/1, or text or a factor that \code{as.logical()}
 reads (\code{"TRUE"}/\code{"FALSE"}).}
