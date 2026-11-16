@@ -101,13 +101,14 @@ hv_consort_start <- function(data, patient_id, label = "Screened",
   if (anyNA(ids))
     stop(sprintf("hv_consort_start(): `patient_id` column '%s' has %d missing value(s).",
                  patient_id_col, sum(is.na(ids))), call. = FALSE)
+  # The message gives a count only. Identifiers stay in the data, never in a
+  # message that can reach a render or job log; find them with
+  # `data[duplicated(data[[col]]) | duplicated(data[[col]], fromLast = TRUE), ]`.
   if (anyDuplicated(ids)) {
-    dup <- unique(ids[duplicated(ids)])
     stop(sprintf(paste0("hv_consort_start(): `patient_id` column '%s' must be unique; ",
-                        "%d ID(s) repeat, e.g. %s. A CONSORT diagram counts patients, ",
+                        "%d ID(s) repeat. A CONSORT diagram counts patients, ",
                         "so one row per patient is required."),
-                 patient_id_col, length(dup),
-                 paste(utils::head(dup, 3L), collapse = ", ")),
+                 patient_id_col, length(unique(ids[duplicated(ids)]))),
          call. = FALSE)
   }
 
