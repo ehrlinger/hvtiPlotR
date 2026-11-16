@@ -60,8 +60,7 @@ test_that("hv_panel_box depends on the slide format, not the color template", {
 })
 
 test_that("hv_panel_box(mode) is deprecated: it has no effect", {
-  .hv_deprecate_reset()
-  withr::defer(.hv_deprecate_reset())
+  local_fresh_deprecations()
   expect_warning(hv_panel_box("dark"), "no effect", class = "hvtiPlotR_deprecated")
   expect_no_warning(hv_panel_box(format = "wide"))
 })

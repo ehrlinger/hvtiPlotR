@@ -17,6 +17,10 @@
 .hv_deprecate <- function(id, msg) {
   if (isTRUE(.hv_deprecation_seen[[id]])) return(invisible(FALSE))
   assign(id, TRUE, envir = .hv_deprecation_seen)
+  .hv_deprecation_warning(msg)
+}
+
+.hv_deprecation_warning <- function(msg) {
   warning(warningCondition(
     paste0(msg, " This warning is shown once per session."),
     class = c("hvtiPlotR_deprecated", "deprecatedWarning")
@@ -31,11 +35,18 @@
 }
 
 # A study-specific default was relied on. `args` names the omitted arguments
-# and `values` gives the default each still falls back to, as text.
+# and `values` gives the default each still falls back to, as text. Each
+# argument warns once per session: a later call that omits only arguments
+# already warned about is silent.
 .hv_deprecate_study_default <- function(fn, args, values) {
   if (!length(args)) return(invisible(FALSE))
-  .hv_deprecate(
-    paste0(fn, ":", paste(args, collapse = ",")),
+  ids  <- paste0(fn, ":", args)
+  new  <- !vapply(ids, function(id) isTRUE(.hv_deprecation_seen[[id]]), logical(1))
+  args <- args[new]
+  values <- values[new]
+  if (!length(args)) return(invisible(FALSE))
+  for (id in ids[new]) assign(id, TRUE, envir = .hv_deprecation_seen)
+  .hv_deprecation_warning(
     sprintf(paste0(
       "%s(): %s %s study-specific and will have no default from hvtiPlotR %s. ",
       "Pass %s explicitly. Using the old default%s for now: %s."),

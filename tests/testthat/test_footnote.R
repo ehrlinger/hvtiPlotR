@@ -97,8 +97,7 @@ test_that("makeFootnote validates inputs", {
 # ============================================================================
 
 test_that("omitting the footnote text stamps no path and warns once", {
-  .hv_deprecate_reset()
-  withr::defer(.hv_deprecate_reset())
+  local_fresh_deprecations()
   drawn <- NULL
   local_mocked_bindings(grid.text = function(label, ...) drawn <<- label)
 
