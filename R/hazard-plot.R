@@ -577,7 +577,7 @@ sample_nnt_data <- function(n        = 500,
 #' Parametric Hazard / Survival Plot
 #'
 #' @description
-#' **Superseded.**
+#' **Superseded, not deprecated: no removal is scheduled.**
 #'
 #' `hazard_plot()` has been superseded by the S3 constructor [hv_hazard()]
 #' plus [plot.hv_hazard()].
@@ -1114,7 +1114,7 @@ hazard_plot <- function(curve_data,
 #' Survival Difference (Life-Gained) Plot
 #'
 #' @description
-#' **Superseded.**
+#' **Superseded, not deprecated: no removal is scheduled.**
 #'
 #' `survival_difference_plot()` has been superseded by the S3 constructor
 #' [hv_survival_difference()] plus [plot.hv_survival_difference()].
@@ -1252,7 +1252,7 @@ survival_difference_plot <- function(diff_data,
 #' Number Needed to Treat (NNT) Plot
 #'
 #' @description
-#' **Superseded.**
+#' **Superseded, not deprecated: no removal is scheduled.**
 #'
 #' `nnt_plot()` has been superseded by the S3 constructor [hv_nnt()] plus
 #' [plot.hv_nnt()].

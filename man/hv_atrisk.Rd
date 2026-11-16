@@ -11,8 +11,7 @@ hv_atrisk(
   group = NULL,
   report_times = NULL,
   size = NULL,
-  strata_labels = NULL,
-  ...
+  strata_labels = NULL
 )
 }
 \arguments{
@@ -45,8 +44,6 @@ arbitrary times for a Kaplan-Meier object, rebuild it with
 
 \item{strata_labels}{Optional named character vector remapping stratum row
 labels. Default \code{NULL}.}
-
-\item{...}{Ignored; present for S3 consistency.}
 }
 \value{
 A bare \code{\link[ggplot2]{ggplot}} object: one text label per

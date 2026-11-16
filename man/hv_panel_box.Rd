@@ -10,9 +10,9 @@ hv_panel_box(
 )
 }
 \arguments{
-\item{mode}{\code{"dark"}, \code{"light"} or \code{"slate"}. Kept for backward
-compatibility: every color template gets the same rectangle, so it has
-no effect.}
+\item{mode}{Deprecated. \code{"dark"}, \code{"light"} or \code{"slate"}, but every color
+template gets the same rectangle, so it has no effect. Supplying it warns
+once per session; it is removed in hvtiPlotR 2.9.0.}
 
 \item{format}{\code{"wide"} (16:9, the default) or \code{"standard"} (4:3,
 provisional).}

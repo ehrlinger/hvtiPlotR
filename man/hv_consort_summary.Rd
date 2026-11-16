@@ -11,8 +11,10 @@ hv_consort_summary(tracker)
 }
 \value{
 A data frame with columns \code{label}, \code{include_col}, \code{n_included},
-\code{excl_col}, \code{n_excluded}.  \code{n_excluded} and \code{excl_col} are \code{NA} for the
-final stage (no downstream exclusion defined yet).
+\code{excl_col}, \code{n_excluded}, \code{n_missing}.  \code{n_missing} is the part of
+\code{n_excluded} excluded because an exclusion criterion was missing (see
+\code{\link[=hv_consort_exclude]{hv_consort_exclude()}}).  \code{n_excluded}, \code{n_missing} and \code{excl_col} are
+\code{NA} for the final stage (no downstream exclusion defined yet).
 }
 \description{
 Returns a data frame with one row per stage showing patient counts

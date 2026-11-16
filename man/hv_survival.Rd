@@ -29,7 +29,8 @@ estimate labeled \code{"All"}.}
 
 \item{method}{Estimator: \code{"kaplan-meier"} (default, logit CI;
 mirrors SAS \code{\%kaplan}) or \code{"nelson-aalen"} (Fleming-Harrington
-cumulative hazard with log CI; mirrors SAS \code{\%nelsont}, preferred
+cumulative hazard with a CI on the log-survival scale, which is a plain
+Wald interval on \eqn{H(t)}; mirrors SAS \code{\%nelsont}, preferred
 when \eqn{S(t)} approaches zero).}
 
 \item{conf_level}{Confidence level for the CI band.  Default \code{0.95}.}
@@ -47,7 +48,16 @@ call \code{plot()} on the result to render the figure; see
 Columns: \code{time}, \code{surv}, \code{lower}, \code{upper},
 \code{n.risk}, \code{n.event}, \code{n.censor}, \code{cumhaz},
 \code{strata}, \code{hazard}, \code{density}, \code{mid_time},
-\code{life}, \code{proplife}, \code{log_cumhaz}, \code{log_time}.}
+\code{life}, \code{proplife}, \code{log_cumhaz}, \code{log_time}.
+\code{cumhaz} is the Nelson-Aalen estimate under either \code{method},
+not \eqn{-\log S(t)}, and \code{log_cumhaz} is built on it.
+\code{life} is integrated by the SAS \code{\%kaplan} formula
+\eqn{\Delta t (3 S(t) - S(t_{prev})) / 2}, kept for SAS parity. It is
+not a trapezoid: it falls short of the exact step-function area
+\eqn{\Delta t \, S(t_{prev})} by
+\eqn{\frac{3}{2} \Delta t (S(t_{prev}) - S(t))} at each event, so it
+understates the restricted mean survival time.
+\code{hvtiRpropensity::ps_rmst()} computes the exact RMST.}
 \item{\code{$meta}}{Named list: \code{time_col}, \code{event_col},
 \code{group_col}, \code{method}, \code{conf_level},
 \code{report_times}, \code{n_obs} (the \emph{analyzed} cohort),

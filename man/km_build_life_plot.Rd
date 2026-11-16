@@ -13,8 +13,9 @@ km_build_life_plot(km_df, alpha)
 A bare \code{ggplot} object.
 }
 \description{
-Plots the cumulative integral of the survival function (restricted mean
-survival time, LIFE) against time, matching the SAS \code{\%kaplan}
+Plots the cumulative integral of the survival function (LIFE, by the SAS
+formula documented in \code{km_extract_tidy}) against time, matching the
+SAS \code{\%kaplan}
 \code{PLOTL=1} output.  The proportionate life length
 (\code{proplife = LIFE / t}) is also available in \code{km_data} for
 a secondary plot.

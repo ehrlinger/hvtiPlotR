@@ -59,7 +59,11 @@ draws only Latin-1 text and warns on anything else; use
 \code{device = grDevices::cairo_pdf} for a note in another script.}
 
 \item{...}{Further arguments passed to \code{\link[ggplot2:ggsave]{ggplot2::ggsave()}} for the primary
-\code{file}. Not applied to \code{draft_file}.}
+\code{file}. A \code{draft_file} in the same format as \code{file} gets all of them, and
+\code{device} too. A \code{draft_file} in another format gets only the ones that
+mean the same on every device (\code{scale}, \code{bg}, \code{limitsize},
+\code{create.dir}), so it keeps the deliverable's size and background, and its
+device is picked from its extension.}
 }
 \value{
 Invisibly, the \code{file} path, with the extension \code{format} added when

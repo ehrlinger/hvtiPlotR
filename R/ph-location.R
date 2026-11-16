@@ -263,9 +263,9 @@ hv_ph_location <- function(plot,
 #' to [save_ppt()] or [hv_add_plot()] to rebuild an old deck at its old
 #' geometry.
 #'
-#' @param mode `"dark"`, `"light"` or `"slate"`. Kept for backward
-#'   compatibility: every color template gets the same rectangle, so it has
-#'   no effect.
+#' @param mode Deprecated. `"dark"`, `"light"` or `"slate"`, but every color
+#'   template gets the same rectangle, so it has no effect. Supplying it warns
+#'   once per session; it is removed in hvtiPlotR 2.9.0.
 #' @param format `"wide"` (16:9, the default) or `"standard"` (4:3,
 #'   provisional).
 #' @return A named list `width`, `height`, `left`, `top`, in inches, ready for
@@ -278,7 +278,13 @@ hv_ph_location <- function(plot,
 #' @export
 hv_panel_box <- function(mode = c("dark", "light", "slate"),
                          format = c("wide", "standard")) {
-  match.arg(mode)
+  if (!missing(mode)) {
+    match.arg(mode)
+    .hv_deprecate("hv_panel_box:mode", sprintf(paste0(
+      "hv_panel_box(): `mode` has no effect, since every color template gets ",
+      "the same rectangle, and is removed in hvtiPlotR %s. Drop it, and pass ",
+      "`format` by name."), .hv_removal_version))
+  }
   format <- match.arg(format)
   switch(format,
     wide     = list(width = 9.98, height = 4.11, left = 2.9, top = 1.85),

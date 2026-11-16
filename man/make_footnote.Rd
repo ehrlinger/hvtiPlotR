@@ -6,7 +6,7 @@
 \title{Add a Draft Footnote to a Figure}
 \usage{
 make_footnote(
-  text = getwd(),
+  text,
   timestamp = TRUE,
   prefix = "DRAFT — ",
   size = 0.7,
@@ -19,16 +19,14 @@ make_footnote(
   color = colour
 )
 
-makeFootnote(
-  footnoteText = getwd(),
-  size = 0.7,
-  color = gray(0.5),
-  timestamp = TRUE
-)
+makeFootnote(footnoteText, size = 0.7, color = gray(0.5), timestamp = TRUE)
 }
 \arguments{
-\item{text}{Text to display. Defaults to the current working directory;
-for most uses pass the script filename instead: \code{make_footnote("R/analysis.R")}.}
+\item{text}{Text to display, usually the script filename:
+\code{make_footnote("R/analysis.R")}. Required. It once defaulted to
+\code{getwd()}, which stamped a filesystem path on the figure unasked; omitting
+it now draws only the prefix and timestamp, with a once-per-session
+deprecation warning, and from hvtiPlotR 2.9.0 it is an error.}
 
 \item{timestamp}{Logical; if TRUE, \code{Sys.time()} is appended to \code{text}. Default \code{TRUE}.
 Set to \code{FALSE} for reproducible output.}

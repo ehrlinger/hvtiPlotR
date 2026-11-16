@@ -11,8 +11,7 @@ hv_rmst_curves(
   facet = "estimator",
   arm = "arm",
   time = "time",
-  surv = "surv",
-  ...
+  surv = "surv"
 )
 }
 \arguments{
@@ -35,8 +34,6 @@ column is ordered \code{"treated"}, \code{"control"}, then any other value.}
 
 \item{time, surv}{Names of the time and survival columns. Defaults
 \code{"time"} and \code{"surv"}.}
-
-\item{...}{Ignored; present for S3 consistency.}
 }
 \value{
 An object of class \code{c("hv_rmst_curves", "hv_data")}: a list with

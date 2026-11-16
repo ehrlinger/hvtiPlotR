@@ -56,6 +56,36 @@ test_that("save_manuscript draft_file honors an explicit draft_dpi", {
   expect_true(file.exists(d))
 })
 
+test_that("a draft in another format keeps the deliverable's scale", {
+  p <- mk_plot()
+  f <- tempfile(fileext = ".pdf")
+  d <- tempfile(fileext = ".png")
+  on.exit(unlink(c(f, d)), add = TRUE)
+  save_manuscript(p, f, width = 2, height = 1, dpi = 50, draft_file = d,
+                  scale = 2, bg = "white")
+  # Width and height from the PNG header (IHDR, bytes 17-24, big-endian).
+  hdr  <- readBin(d, "raw", 24L)
+  dims <- c(readBin(hdr[17:20], "integer", endian = "big"),
+            readBin(hdr[21:24], "integer", endian = "big"))
+  # scale = 2 doubles the 2 x 1 in figure: 200 x 100 px at 50 dpi.
+  expect_equal(dims, c(200L, 100L))
+})
+
+test_that("a draft in the file's own format takes its device and arguments", {
+  p <- mk_plot()
+  f <- tempfile(fileext = ".png")
+  d <- tempfile(fileext = ".png")
+  on.exit(unlink(c(f, d)), add = TRUE)
+  used <- character(0)
+  dev <- function(filename, ...) {
+    used <<- c(used, basename(filename))
+    grDevices::png(filename, ...)
+  }
+  save_manuscript(p, f, width = 2, height = 1, dpi = 50, device = dev,
+                  draft_file = d)
+  expect_setequal(used, basename(c(f, d)))
+})
+
 test_that("save_manuscript validates draft_file inputs", {
   p <- mk_plot()
   f <- tempfile(fileext = ".pdf")

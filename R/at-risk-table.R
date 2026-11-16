@@ -162,7 +162,6 @@ utils::globalVariables(c("n.risk", "report_time", "strata"))
 #' @param size Text size for the counts. Default \code{NULL} (3.5).
 #' @param strata_labels Optional named character vector remapping stratum row
 #'   labels. Default \code{NULL}.
-#' @param ... Ignored; present for S3 consistency.
 #'
 #' @return A bare \code{\link[ggplot2]{ggplot}} object: one text label per
 #'   stratum and report time, strata as y rows (first stratum on top), time on
@@ -181,7 +180,7 @@ utils::globalVariables(c("n.risk", "report_time", "strata"))
 #' @export
 hv_atrisk <- function(x, time = NULL, status = NULL, group = NULL,
                       report_times = NULL, size = NULL,
-                      strata_labels = NULL, ...) {
+                      strata_labels = NULL) {
   rdf <- .resolve_risk_df(x, time, status, group, report_times)
 
   if (is.null(rdf))

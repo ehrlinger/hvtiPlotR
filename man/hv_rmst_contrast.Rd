@@ -9,8 +9,7 @@ hv_rmst_contrast(
   estimator = "estimator",
   diff = "diff_days",
   lo = "lo_days",
-  hi = "hi_days",
-  ...
+  hi = "hi_days"
 )
 }
 \arguments{
@@ -26,8 +25,6 @@ days). Default \code{"diff_days"}.}
 
 \item{lo, hi}{Names of the numeric columns with the lower and upper
 interval limits (in days). Defaults \code{"lo_days"} and \code{"hi_days"}.}
-
-\item{...}{Ignored; present for S3 consistency.}
 }
 \value{
 An object of class \code{c("hv_rmst_contrast", "hv_data")}: a list with

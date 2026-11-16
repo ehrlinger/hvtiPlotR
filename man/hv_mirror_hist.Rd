@@ -24,7 +24,9 @@ hv_mirror_hist(
 before multiplier is applied). Default \code{"prob_t"}.}
 
 \item{group_col}{Name of the binary group-indicator column.
-Default \code{"tavr"}.}
+Required: the old default \code{"tavr"} names one study's exposure, and
+omitting it falls back to that value with a once-per-session deprecation
+warning until hvtiPlotR 2.9.0.}
 
 \item{match_col}{Name of the binary match-indicator column
 (1 = matched). Default \code{"match"}.}
@@ -34,8 +36,10 @@ Default \code{"tavr"}.}
 Default \code{c(0, 1)}.}
 
 \item{group_labels}{Length-2 character vector of display labels
-corresponding to \code{group_levels}.
-Default \code{c("SAVR", "TF-TAVR")}.}
+corresponding to \code{group_levels}.  Required: the old default
+\code{c("SAVR", "TF-TAVR")} names one study's arms. Omitting it still
+falls back to that value with a once-per-session deprecation warning,
+and from hvtiPlotR 2.9.0 it is an error.}
 
 \item{matched_value}{Value in \code{match_col} that flags a matched
 patient.  Default \code{1}.}
@@ -71,7 +75,10 @@ In binary-match mode, additionally contains
 \code{group_counts_matched}, \code{matched_rate_by_group},
 \code{score_summary_matched}, and \code{smd_matched}.
 In weighted IPTW mode, additionally contains
-\code{effective_n_by_group} and \code{smd_weighted}.}
+\code{effective_n_by_group} (Kish's effective sample size,
+\eqn{(\sum w)^2 / \sum w^2}, per group), \code{sum_weights}
+(the plain weight total per group, which \code{effective_n_by_group}
+reported under the old name) and \code{smd_weighted}.
 \item{\code{working}}{The per-patient data frame after score
 rescaling and complete-case filtering, used for custom
 downstream diagnostics.}
@@ -90,7 +97,8 @@ on the result to obtain a bare \code{ggplot2} object.
 dta <- sample_mirror_histogram_data(n = 500, separation = 1.5)
 
 # 1. Build data object
-mh <- hv_mirror_hist(dta)
+mh <- hv_mirror_hist(dta, group_col = "tavr",
+                     group_labels = c("SAVR", "TF-TAVR"))
 mh                    # print diagnostics summary
 mh$tables$diagnostics # full diagnostics list
 
