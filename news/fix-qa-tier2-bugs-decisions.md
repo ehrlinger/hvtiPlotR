@@ -10,7 +10,7 @@
 
 * `hv_consort_exclude()` no longer passes through a patient whose value for an exclusion criterion is missing. When no rule matches outright, the patient is excluded as `"Criterion missing: <reason>"` for the first rule it could not be checked against, a separate line in the diagram's side box and a new `n_missing` column in `hv_consort_summary()`, and a count in the tracker's print.
 
-* `hv_consort_start()` refuses a `patient_id` column with a repeated or missing value.
+* `hv_consort_start()` refuses a `patient_id` column with a repeated or missing value. The error gives the column and a count, never the identifiers themselves.
 
 * Study-specific defaults are deprecated, and from 2.9.0 each argument is required. `hv_followup()`'s `origin_year`, `study_start`, `study_end` and `close_date`, and `hv_mirror_hist()`'s `group_col` (`"tavr"`) and `group_labels` (`"SAVR"`, `"TF-TAVR"`), still fall back to the old values for now, with a warning once per session.
 

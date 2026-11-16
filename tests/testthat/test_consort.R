@@ -448,6 +448,15 @@ test_that("hv_consort_start refuses a non-unique or missing patient_id", {
   expect_error(hv_consort_start(na_id, patient_id_col = "mrn"), "missing value")
 })
 
+test_that("the duplicate-ID error names the column and a count, never an ID", {
+  # Identifiers stay in the data: never in tables, figures or messages.
+  dup <- data.frame(mrn = c("MRN123", "MRN123", "MRN456", "MRN456", "MRN789"), age = 1:5)
+  msg <- tryCatch(hv_consort_start(dup, patient_id_col = "mrn"), error = conditionMessage)
+  expect_match(msg, "'mrn'")
+  expect_match(msg, "2 ID\\(s\\) repeat")
+  expect_false(grepl("MRN", msg))
+})
+
 test_that("hv_consort_exclude errors when a formula RHS is not a single string", {
   expect_error(
     hv_consort_exclude(make_tracker(), label = "Eligible", col = "excl_screen",
