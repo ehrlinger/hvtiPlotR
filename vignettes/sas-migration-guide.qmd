@@ -139,7 +139,7 @@ prints beneath its survival plot.
 | `tp.dp.longitudinal_patients_measures.R` | dp | `hv_longitudinal()` | [Longitudinal counts](#dp-long-counts) |
 | `Function_DataPlotting()` in `tp.dp.EDA_barplots_scatterplots*.R` (one panel) | dp | `hv_eda()` | [EDA postage stamps](#dp-eda) |
 | `tp.dp.EDA_barplots_scatterplots.R` | dp | `hv_eda_pages()` | [EDA postage stamps](#dp-eda) |
-| `tp.dp.EDA_barplots_scatterplots_varnames.R` | dp | `hv_eda_pages(vars = ..., labels = ...)` | [EDA postage stamps](#dp-eda) |
+| `tp.dp.EDA_barplots_scatterplots_varnames.R` | dp | `hv_eda_pages(var_cols = ..., labels = ...)` | [EDA postage stamps](#dp-eda) |
 | `tp.lp.mirror-histogram_SAVR-TF-TAVR.R` | lp | `hv_mirror_hist()` | [Mirror histogram: binary-match](#dp-mirror) |
 | `tp.lp.mirror_histo_before_after_wt.R` | lp | `hv_mirror_hist(weight_col = ...)` | [Mirror histogram: weighted IPTW](#dp-mirror) |
 | Stacked histogram | dp | `hv_stacked()` | [Stacked histogram](#dp-stacked) |
@@ -834,7 +834,7 @@ producing the flowing band diagram that the original script builds with
 `ggalluvial`. The R port wraps this with `hv_alluvial()`, which builds the
 `geom_alluvium()`/`geom_stratum()` layers and sets default fill aesthetics for
 you. You supply a data frame with one column per state, name those columns in
-`axes`, and let `scale_fill_brewer()` or a
+`axis_cols`, and let `scale_fill_brewer()` or a
 manual fill scale control the colors. See the
 [Alluvial section of the plot-functions vignette](plot-functions.html#dp-sankey)
 for a decorated worked example with labels.
@@ -926,7 +926,7 @@ overlap question that Venn diagrams can't answer cleanly past three sets. The
 SAS version used a custom `PROC TABULATE` / `SGPLOT` workaround; the R port
 replaces it with `ggupset::scale_x_upset()` wrapped in `hv_upset()`. You pass
 a binary-indicator data frame (one column per set, 1 = member) and the
-`intersect` argument names the sets to include.
+`set_cols` argument names the sets to include.
 
 Two things to know about the display. `plot()` shows the largest
 `n_intersections` combinations (default 10). Patients whose combination
@@ -938,7 +938,7 @@ intersection bars plus a set-size panel), so themes apply with `&`; pass
 ```r
 sets <- c("CABG", "Valve", "MAZE", "Aorta")
 dta  <- sample_upset_data(n = 300, sets = sets)
-hu   <- hv_upset(data = dta, intersect = sets)
+hu   <- hv_upset(data = dta, set_cols = sets)
 
 plot(hu)
 ```
@@ -1100,7 +1100,7 @@ and Fisher intervals.
 dta_cor <- sample_correlation_data(n = 300, seed = 42)
 cm <- hv_correlation_matrix(
   dta_cor,
-  vars = c("a1c", "glucose", "creatinine", "albumin"),
+  var_cols = c("a1c", "glucose", "creatinine", "albumin"),
   labels = c("HbA1c", "Glucose", "Creatinine", "Albumin")
 )
 

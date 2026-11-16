@@ -258,7 +258,7 @@ hv_followup_panels <- function(data,
     e <- events[[nm]]
     label <- if (!is.null(e$label)) e$label else if (length(e$event) == 1L) nm else e$event
     gf <- do.call(hv_followup, c(common, list(death_col = e$death, death_time_col = e$death_time,
-                                              event_col = e$event, event_time_col = e$time,
+                                              event_cols = e$event, event_time_cols = e$time,
                                               event_levels = c("No event", label, "Death"))))
     built[[nm]] <- gf
     rows[[nm]] <- data.frame(panel = nm, type = "event", title = paste(label, collapse = ", "),

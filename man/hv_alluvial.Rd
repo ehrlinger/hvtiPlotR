@@ -4,13 +4,20 @@
 \alias{hv_alluvial}
 \title{Prepare alluvial / Sankey diagram data for plotting}
 \usage{
-hv_alluvial(data, axes, y_col = "freq", fill_col = NULL, axis_labels = NULL)
+hv_alluvial(
+  data,
+  axis_cols,
+  y_col = "freq",
+  fill_col = NULL,
+  axis_labels = NULL,
+  axes
+)
 }
 \arguments{
 \item{data}{A data frame in wide alluvial format: one row per
 axis-value combination, a numeric weight column, and one column per axis.}
 
-\item{axes}{Character vector of column names to use as axes, in
+\item{axis_cols}{Character vector of column names to use as axes, in
 left-to-right display order. Minimum two columns.}
 
 \item{y_col}{Name of the numeric weight column (counts or
@@ -21,6 +28,9 @@ aesthetics, or \code{NULL} for a single fill. Default \code{NULL}.}
 
 \item{axis_labels}{Character vector of axis labels for the x-axis, the
 same length as \code{axes}. Defaults to \code{axes} (column names).}
+
+\item{axes}{Deprecated name of \code{axis_cols}; works, with a once-per-session
+warning, until hvtiPlotR 2.9.0.}
 }
 \value{
 An object of class \code{c("hv_alluvial", "hv_data")}:
@@ -42,7 +52,7 @@ dta  <- sample_alluvial_data(n = 300, seed = 42)
 axes <- c("pre_ar", "procedure", "post_ar")
 
 # 1. Build data object
-al <- hv_alluvial(dta, axes = axes, y_col = "freq", fill_col = "pre_ar")
+al <- hv_alluvial(dta, axis_cols = axes, y_col = "freq", fill_col = "pre_ar")
 al  # prints axes and observation count
 
 # 2. Bare plot -- undecorated ggplot returned by plot.hv_alluvial

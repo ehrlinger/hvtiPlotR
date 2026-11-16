@@ -4,13 +4,16 @@
 \alias{hv_venn}
 \title{Prepare a Venn diagram for plotting}
 \usage{
-hv_venn(data, sets)
+hv_venn(data, set_cols, sets)
 }
 \arguments{
 \item{data}{A data frame; one row per patient. Each set column must be
 logical or 0/1 numeric.}
 
-\item{sets}{Character vector of 2 to 3 column names to draw as sets.}
+\item{set_cols}{Character vector of 2 to 3 column names to draw as sets.}
+
+\item{sets}{Deprecated name of \code{set_cols}; works, with a once-per-session
+warning, until hvtiPlotR 2.9.0.}
 }
 \value{
 An object of class \code{c("hv_venn", "hv_data")}:
@@ -32,7 +35,7 @@ for more than three sets use \code{\link{hv_upset}}.
 }
 \examples{
 dta <- sample_upset_data(n = 300, seed = 42)
-v   <- hv_venn(dta, sets = c("AV_Replacement", "MV_Replacement", "CABG"))
+v   <- hv_venn(dta, set_cols = c("AV_Replacement", "MV_Replacement", "CABG"))
 v$tables$regions
 
 }

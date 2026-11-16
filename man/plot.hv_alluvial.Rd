@@ -55,7 +55,7 @@ dta  <- sample_alluvial_data(n = 300, seed = 42)
 axes <- c("pre_ar", "procedure", "post_ar")
 
 # Fill flows by procedure
-plot(hv_alluvial(dta, axes = axes, y_col = "freq",
+plot(hv_alluvial(dta, axis_cols = axes, y_col = "freq",
                    fill_col = "procedure")) +
   ggplot2::scale_fill_manual(values = hv_palette(), name = "Procedure") +
   ggplot2::scale_color_manual(values = hv_palette(), guide = "none") +
@@ -64,7 +64,7 @@ plot(hv_alluvial(dta, axes = axes, y_col = "freq",
 
 # Two-axis (before / after)
 plot(hv_alluvial(
-  dta, axes = c("pre_ar", "post_ar"), y_col = "freq",
+  dta, axis_cols = c("pre_ar", "post_ar"), y_col = "freq",
   fill_col = "pre_ar",
   axis_labels = c("Pre-operative", "Post-operative")
 )) +

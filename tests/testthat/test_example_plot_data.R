@@ -84,8 +84,8 @@ test_that("hv_followup default plot has point + reference line", {
 test_that("hv_followup event plot has data", {
   dta <- sample_goodness_followup_data(n = 80, seed = 1)
   gf  <- hv_followup(dta,
-                     event_col      = "ev_event",
-                     event_time_col = "iv_event")
+                     event_cols     = "ev_event",
+                     event_time_cols = "iv_event")
   expect_plot_has_data(plot(gf, type = "event"),
                        geoms = c("GeomPoint", "GeomLine"))
 })
@@ -174,7 +174,7 @@ test_that("hv_longitudinal plot has bar data", {
 test_that("hv_alluvial plot has alluvium + stratum + text layers with rows", {
   dta  <- sample_alluvial_data(n = 200, seed = 1)
   axes <- c("pre_ar", "procedure", "post_ar")
-  al   <- suppressWarnings(hv_alluvial(dta, axes = axes, y_col = "freq"))
+  al   <- suppressWarnings(hv_alluvial(dta, axis_cols = axes, y_col = "freq"))
   # ggalluvial emits "Some strata appear at multiple axes" during build
   suppressWarnings({
     p <- plot(al)
@@ -187,7 +187,7 @@ test_that("hv_alluvial plot has alluvium + stratum + text layers with rows", {
 test_that("hv_alluvial with fill_col preserves fill levels in layer data", {
   dta  <- sample_alluvial_data(n = 200, seed = 1)
   axes <- c("pre_ar", "procedure", "post_ar")
-  al   <- suppressWarnings(hv_alluvial(dta, axes = axes,
+  al   <- suppressWarnings(hv_alluvial(dta, axis_cols = axes,
                                        y_col = "freq", fill_col = "pre_ar"))
   suppressWarnings({
     p <- plot(al)
@@ -325,7 +325,7 @@ test_that("hv_upset bars-only plot has non-empty intersection data", {
   sets <- c("AV_Replacement", "AV_Repair", "MV_Replacement",
             "MV_Repair", "TV_Repair", "Aorta", "CABG")
   dta  <- sample_upset_data(n = 200, seed = 1)
-  up   <- hv_upset(dta, intersect = sets)
+  up   <- hv_upset(dta, set_cols = sets)
   # ggupset emits "Removed N rows" when n_intersections trims the tail; benign
   suppressWarnings(
     expect_plot_has_data(plot(up, set_size = FALSE), geoms = "GeomBar")
@@ -336,7 +336,7 @@ test_that("hv_upset default plot is a patchwork carrying bars + sidebar with row
   sets <- c("AV_Replacement", "AV_Repair", "MV_Replacement",
             "MV_Repair", "TV_Repair", "Aorta", "CABG")
   dta  <- sample_upset_data(n = 200, seed = 1)
-  result <- suppressWarnings(plot(hv_upset(dta, intersect = sets)))
+  result <- suppressWarnings(plot(hv_upset(dta, set_cols = sets)))
   expect_s3_class(result, "patchwork")
 
   sub_rows <- vapply(result$patches$plots, function(sp) {
@@ -354,7 +354,7 @@ test_that("hv_upset coerces NA indicator entries to FALSE in the list-column", {
             "MV_Repair", "TV_Repair", "Aorta", "CABG")
   dta  <- sample_upset_data(n = 50, seed = 1)
   dta$AV_Replacement[1:5] <- NA
-  up <- hv_upset(dta, intersect = sets)
+  up <- hv_upset(dta, set_cols = sets)
   has_na <- any(vapply(up$data$.Procedures,
                        function(s) any(is.na(s)), logical(1)))
   expect_false(has_na)
@@ -365,14 +365,14 @@ test_that("hv_upset errors if input already has a .Procedures column", {
             "MV_Repair", "TV_Repair", "Aorta", "CABG")
   dta  <- sample_upset_data(n = 50, seed = 1)
   dta$.Procedures <- "oops"
-  expect_error(hv_upset(dta, intersect = sets), "\\.Procedures")
+  expect_error(hv_upset(dta, set_cols = sets), "\\.Procedures")
 })
 
 test_that("hv_upset set_size_sort = 'descending' puts the largest set at the top", {
   sets <- c("AV_Replacement", "AV_Repair", "MV_Replacement",
             "MV_Repair", "TV_Repair", "Aorta", "CABG")
   dta  <- sample_upset_data(n = 200, seed = 1)
-  up   <- hv_upset(dta, intersect = sets)
+  up   <- hv_upset(dta, set_cols = sets)
   p <- suppressWarnings(plot(up, set_size_sort = "descending"))
   # patchwork host plot for set_size_position = "right" is the sidebar,
   # which carries the (set, n) factor frame
@@ -389,7 +389,7 @@ test_that("hv_upset fill_col stacks bars by an external grouping variable", {
             "MV_Repair", "TV_Repair", "Aorta", "CABG")
   dta  <- sample_upset_data(n = 200, seed = 1)
   dta$era <- ifelse(seq_len(nrow(dta)) <= 100, "Early", "Recent")
-  up <- hv_upset(dta, intersect = sets)
+  up <- hv_upset(dta, set_cols = sets)
   p  <- plot(up, fill_col = "era", set_size = FALSE)
   # 19 of the 200 patients fall outside the default top-10 intersections and
   # are not drawn; ggplot2 reports them as removed rows. Expected, not a

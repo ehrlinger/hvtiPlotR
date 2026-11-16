@@ -120,3 +120,41 @@ test_that("hv_followup refuses a time column where a status column belongs", {
     "hv_data"
   )
 })
+
+# One-release renames for arguments that take one or more columns (`_cols`).
+
+test_that("vars, axes, sets and intersect are deprecated in favor of _cols", {
+  local_fresh_deprecations()
+  num <- data.frame(a = c(1, 2, 3, 5), b = c(2, 1, 4, 3), c = c(9, 7, 8, 6))
+  res <- collect_deprecations(hv_correlation_matrix(num, vars = c("a", "b")))
+  expect_match(res$warnings, "`vars` is renamed `var_cols`")
+  expect_equal(res$value$data, hv_correlation_matrix(num, var_cols = c("a", "b"))$data)
+  expect_error(hv_correlation_matrix(num, var_cols = c("a", "b"), vars = c("a", "b")),
+               "both were given")
+  expect_warning(out <- eda_select_vars(num, vars = "a c"), class = "hvtiPlotR_deprecated")
+  expect_identical(names(out), c("a", "c"))
+
+  sets <- data.frame(s1 = c(1, 0, 1, 1), s2 = c(0, 1, 1, 1), s3 = c(1, 1, 0, 1))
+  expect_warning(v <- hv_venn(sets, sets = c("s1", "s2")), class = "hvtiPlotR_deprecated")
+  expect_equal(v$data, hv_venn(sets, set_cols = c("s1", "s2"))$data)
+  expect_warning(u <- hv_upset(sets, intersect = c("s1", "s2", "s3")),
+                 class = "hvtiPlotR_deprecated")
+  expect_equal(u$data, hv_upset(sets, set_cols = c("s1", "s2", "s3"))$data)
+
+  al <- data.frame(pre = c("A", "B"), post = c("B", "B"), freq = c(3, 4))
+  expect_warning(a <- hv_alluvial(al, axes = c("pre", "post")), class = "hvtiPlotR_deprecated")
+  expect_equal(a$data, hv_alluvial(al, axis_cols = c("pre", "post"))$data)
+})
+
+test_that("hv_followup's event_col and event_time_col become plural", {
+  local_fresh_deprecations()
+  dta <- sample_goodness_followup_data(n = 40)
+  dates <- list(origin_year = 1990, study_start = "1990-01-01",
+                study_end = "2019-12-31", close_date = "2021-08-06")
+  res <- collect_deprecations(do.call(hv_followup, c(list(dta, event_col = "ev_event",
+                                                         event_time_col = "iv_event"), dates)))
+  expect_length(res$warnings, 2L)
+  new <- do.call(hv_followup, c(list(dta, event_cols = "ev_event", event_time_cols = "iv_event"),
+                                dates))
+  expect_equal(res$value$tables$event_data, new$tables$event_data)
+})

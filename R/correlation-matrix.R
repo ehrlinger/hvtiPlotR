@@ -28,7 +28,7 @@ sample_correlation_data <- function(n = 300, seed = 42) {
 #' Prepare a scatter-plot matrix
 #'
 #' The scatter-plot-matrix analogue of SAS `proc corr ... plots=matrix`: one
-#' scatter panel per unordered pair of `vars`, lower triangle only. It is the
+#' scatter panel per unordered pair of `var_cols`, lower triangle only. It is the
 #' plot half of the `dc-tables` job in the hvtiR job catalog. Call [plot()]
 #' on the result for a bare `ggplot`; the coefficient table with Fisher
 #' intervals is `hvtiRtables::hv_correlation_table()`.
@@ -47,8 +47,10 @@ sample_correlation_data <- function(n = 300, seed = 42) {
 #' a PDF, and lower `alpha` so overplotted panels stay legible.
 #'
 #' @param data Data frame; one row per patient.
-#' @param vars Character vector of at least two numeric columns, in display order.
-#' @param labels Optional character vector of display labels, one per `vars`.
+#' @param var_cols Character vector of at least two numeric columns, in display order.
+#' @param vars Deprecated name of `var_cols`; works, with a once-per-session
+#'   warning, until hvtiPlotR 2.9.0.
+#' @param labels Optional character vector of display labels, one per `var_cols`.
 #' @param method Coefficient stored in `$tables$coefficients`: `"spearman"` (the
 #'   default, matching `hvtiRtables::hv_correlation_table()` and the SAS exemplar)
 #'   or `"pearson"`.
@@ -66,24 +68,25 @@ sample_correlation_data <- function(n = 300, seed = 42) {
 #' # strip.placement moves the variable names outside the axis
 #' plot(cm) + ggplot2::theme(strip.placement = "outside")
 #' @export
-hv_correlation_matrix <- function(data, vars, labels = NULL,
-                                  method = c("spearman", "pearson")) {
+hv_correlation_matrix <- function(data, var_cols, labels = NULL,
+                                  method = c("spearman", "pearson"), vars) {
+  vars <- .hv_rename_arg("hv_correlation_matrix", "vars", "var_cols", missing(vars), missing(var_cols), vars, var_cols)
   .check_df(data)
   method <- match.arg(method)
   .check_cols(data, vars)
   if (!is.character(vars) || length(vars) < 2L)
-    stop("`vars` needs at least two column names.", call. = FALSE)
-  .check_no_duplicates(vars, "vars")
+    stop("hv_correlation_matrix(): `var_cols` needs at least two column names.", call. = FALSE)
+  .check_no_duplicates(vars, "var_cols")
   not_num <- vars[!vapply(data[vars], is.numeric, logical(1))]
   if (length(not_num))
     stop("A scatter-plot matrix needs numeric columns; not numeric: ",
          paste(not_num, collapse = ", "), call. = FALSE)
   if (is.null(labels)) labels <- vars
   if (length(labels) != length(vars))
-    stop("`labels` needs one label per `vars` entry (", length(vars), ").",
+    stop("`labels` needs one label per `var_cols` entry (", length(vars), ").",
          call. = FALSE)
   if (!is.character(labels) || anyNA(labels) || anyDuplicated(labels))
-    stop("`labels` must be unique, non-missing strings, one per `vars` entry.",
+    stop("`labels` must be unique, non-missing strings, one per `var_cols` entry.",
          call. = FALSE)
 
   idx <- utils::combn(seq_along(vars), 2L)

@@ -154,18 +154,20 @@ sample_eda_data <- function(n          = 300L,
 
 #' Select and Reorder Variables from a Data Frame
 #'
-#' Returns the subset of `data` containing only the columns named in `vars`,
+#' Returns the subset of `data` containing only the columns named in `var_cols`,
 #' in the order given. Replaces the `Order_Variables()` helper and the
 #' `Mod_Data <- dta[, Order_Var]` pattern from
 #' `tp.dp.EDA_barplots_scatterplots_varnames.R`.
 #'
-#' `vars` may be supplied as a character vector or as a single
+#' `var_cols` may be supplied as a character vector or as a single
 #' space-separated string (matching the `Var_CatList` / `Var_ContList` style
 #' from the template).
 #'
 #' @param data A data frame.
-#' @param vars A character vector of column names, or a single string of
+#' @param var_cols A character vector of column names, or a single string of
 #'   space-separated names, e.g. `"age ht wt bmi"`.
+#' @param vars Deprecated name of `var_cols`; works, with a once-per-session
+#'   warning, until hvtiPlotR 2.9.0.
 #'
 #' @return A data frame containing only the requested columns in the requested
 #'   order.
@@ -183,7 +185,8 @@ sample_eda_data <- function(n          = 300L,
 #' sub2 <- eda_select_vars(dta, "male cabg nyha valve_morph")
 #' names(sub2)
 #' @export
-eda_select_vars <- function(data, vars) {
+eda_select_vars <- function(data, var_cols, vars) {
+  vars <- .hv_rename_arg("eda_select_vars", "vars", "var_cols", missing(vars), missing(var_cols), vars, var_cols)
   .check_df(data)
   if (is.character(vars) && length(vars) == 1L) {
     vars <- unlist(strsplit(trimws(vars), "\\s+"))

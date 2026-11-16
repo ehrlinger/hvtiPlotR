@@ -8,11 +8,12 @@ hv_eda_pages(
   data,
   x_col = "year",
   section = c("continuous", "percent", "count"),
-  vars = NULL,
+  var_cols = NULL,
   labels = NULL,
   unique_limit = 6L,
   unique_bound = 100,
-  type_overrides = NULL
+  type_overrides = NULL,
+  vars
 )
 }
 \arguments{
@@ -23,7 +24,7 @@ Default \code{"year"}.}
 
 \item{section}{One of \code{"continuous"}, \code{"percent"} or \code{"count"}.}
 
-\item{vars}{Character vector of the variables to consider, in page order.
+\item{var_cols}{Character vector of the variables to consider, in page order.
 \code{NULL} (the default) means every column except \code{x_col} and the patient
 identifiers \code{ccfid}, \code{MRN} and \code{eMRN} (ignoring case), the names
 hvtiRtemplates' data contract uses. No other name is guessed at, so
@@ -38,6 +39,9 @@ being column names. A variable without a label is shown by its name.}
 
 \item{unique_limit, unique_bound, type_overrides}{Passed to
 \code{\link[=eda_classify_var]{eda_classify_var()}}.}
+
+\item{vars}{Deprecated name of \code{var_cols}; works, with a once-per-session
+warning, until hvtiPlotR 2.9.0.}
 }
 \value{
 An object of class \code{c("hv_eda_pages", "hv_data")}:

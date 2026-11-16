@@ -232,8 +232,8 @@ test_that("hv_followup errors when close_date is before study_end", {
 make_gfup_event <- function(n = 80, seed = 42) {
   hv_followup(
     sample_goodness_followup_data(n = n, seed = seed),
-    event_col      = "ev_event",
-    event_time_col = "iv_event"
+    event_cols     = "ev_event",
+    event_time_cols = "iv_event"
   )
 }
 
@@ -259,8 +259,8 @@ test_that("plot(hv_followup, type='event') state has exactly three levels", {
 test_that("hv_followup event_levels are respected in event plot", {
   lvls <- c("No event", "Relapse", "Death")
   gf   <- hv_followup(make_gfup_data(),
-                         event_col      = "ev_event",
-                         event_time_col = "iv_event",
+                         event_cols     = "ev_event",
+                         event_time_cols = "iv_event",
                          event_levels   = lvls)
   p <- plot(gf, type = "event")
   expect_equal(levels(p$data$state), lvls)
@@ -268,8 +268,8 @@ test_that("hv_followup event_levels are respected in event plot", {
 
 test_that("hv_followup death_for_event_col is respected", {
   gf <- hv_followup(make_gfup_data(),
-                       event_col           = "ev_event",
-                       event_time_col      = "iv_event",
+                       event_cols          = "ev_event",
+                       event_time_cols     = "iv_event",
                        death_for_event_col = "deads")
   p <- plot(gf, type = "event")
   expect_s3_class(p, "ggplot")
@@ -287,8 +287,8 @@ test_that("plot(hv_followup, type='event') contains geom_point and geom_line", {
 test_that("followup and event plots both have a GeomLine (diagonal)", {
   dta <- make_gfup_data()
   gf  <- hv_followup(dta,
-                        event_col      = "ev_event",
-                        event_time_col = "iv_event")
+                        event_cols     = "ev_event",
+                        event_time_cols = "iv_event")
   p_d <- plot(gf, type = "followup")
   p_e <- plot(gf, type = "event")
   has_line <- function(p) {
@@ -316,7 +316,7 @@ test_that("plot.hv_followup type='event' errors when event_col not supplied", {
 
 test_that("hv_followup errors when event_col supplied without event_time_col", {
   expect_error(
-    hv_followup(make_gfup_data(), event_col = "ev_event"),
+    hv_followup(make_gfup_data(), event_cols = "ev_event"),
     "event_time_col"
   )
 })
@@ -324,8 +324,8 @@ test_that("hv_followup errors when event_col supplied without event_time_col", {
 test_that("hv_followup errors when event_levels is not length 3", {
   expect_error(
     hv_followup(make_gfup_data(),
-                  event_col      = "ev_event",
-                  event_time_col = "iv_event",
+                  event_cols     = "ev_event",
+                  event_time_cols = "iv_event",
                   event_levels   = c("A", "B")),
     "exactly three labels"
   )
@@ -334,8 +334,8 @@ test_that("hv_followup errors when event_levels is not length 3", {
 test_that("hv_followup errors when event_col is absent from data", {
   expect_error(
     hv_followup(make_gfup_data(),
-                  event_col      = "nonexistent",
-                  event_time_col = "iv_event"),
+                  event_cols     = "nonexistent",
+                  event_time_cols = "iv_event"),
     "Missing required column"
   )
 })
@@ -376,7 +376,7 @@ test_that("event panel labels death-before-event as Death, not Non-fatal event",
     iv_event = c(2, 1, 3),
     ev_event = c(TRUE, FALSE, TRUE)
   )
-  gf <- hv_followup(dta, event_col = "ev_event", event_time_col = "iv_event",
+  gf <- hv_followup(dta, event_cols = "ev_event", event_time_cols = "iv_event",
                     death_for_event_col = "dead")
   state <- as.character(gf$tables$event_data$state)
 
@@ -390,7 +390,7 @@ test_that("event panel keeps the event when it strictly precedes death", {
     iv_opyrs = 5, iv_dead = 6, dead = TRUE,
     iv_event = 2, ev_event = TRUE
   )
-  gf <- hv_followup(dta, event_col = "ev_event", event_time_col = "iv_event",
+  gf <- hv_followup(dta, event_cols = "ev_event", event_time_cols = "iv_event",
                     death_for_event_col = "dead")
   expect_equal(as.character(gf$tables$event_data$state), "Non-fatal event")
 })
@@ -400,7 +400,7 @@ test_that("event panel gives ties to death", {
     iv_opyrs = 5, iv_dead = 3, dead = TRUE,
     iv_event = 3, ev_event = TRUE
   )
-  gf <- hv_followup(dta, event_col = "ev_event", event_time_col = "iv_event",
+  gf <- hv_followup(dta, event_cols = "ev_event", event_time_cols = "iv_event",
                     death_for_event_col = "dead")
   expect_equal(as.character(gf$tables$event_data$state), "Death")
 })
@@ -438,7 +438,7 @@ test_that("event panel reports its own cohort when only event columns are missin
     ev_event = c(TRUE, FALSE, TRUE)
   )
   expect_warning(
-    gf <- hv_followup(dta, event_col = "ev_event", event_time_col = "iv_event"),
+    gf <- hv_followup(dta, event_cols = "ev_event", event_time_cols = "iv_event"),
     "excluded from the event panel"
   )
   # Death panel keeps all three -- it does not need the event columns.
@@ -462,7 +462,7 @@ test_that("each panel's exclusion warning names its own panel", {
   )
   w <- character()
   withCallingHandlers(
-    hv_followup(dta, event_col = "ev_event", event_time_col = "iv_event"),
+    hv_followup(dta, event_cols = "ev_event", event_time_cols = "iv_event"),
     warning = function(x) {
       w <<- c(w, conditionMessage(x))
       invokeRestart("muffleWarning")
@@ -500,7 +500,7 @@ competing_levels <- c("No event", "Reop", "Stroke", "Death")
 
 test_that("competing events: the first qualifying event sets the state", {
   gf <- hv_followup(make_competing_data(),
-                    event_col = c("ev_a", "ev_b"), event_time_col = c("iv_a", "iv_b"),
+                    event_cols = c("ev_a", "ev_b"), event_time_cols = c("iv_a", "iv_b"),
                     event_levels = competing_levels)
   ed <- gf$tables$event_data
   expect_identical(levels(ed$state), competing_levels)
@@ -510,21 +510,21 @@ test_that("competing events: the first qualifying event sets the state", {
 
 test_that("competing events: y is the winning event's time, else the first event's", {
   gf <- hv_followup(make_competing_data(),
-                    event_col = c("ev_a", "ev_b"), event_time_col = c("iv_a", "iv_b"),
+                    event_cols = c("ev_a", "ev_b"), event_time_cols = c("iv_a", "iv_b"),
                     event_levels = competing_levels)
   expect_identical(gf$tables$event_data$follow_up, c(2, 3, 4, 3, 1, 8))
 })
 
 test_that("competing events: one event in a vector matches the scalar call", {
   d <- make_competing_data()
-  scalar <- hv_followup(d, event_col = "ev_a", event_time_col = "iv_a")
+  scalar <- hv_followup(d, event_cols = "ev_a", event_time_cols = "iv_a")
   expect_identical(scalar$tables$event_data,
-                   hv_followup(d, event_col = c(ev_a = "ev_a"), event_time_col = "iv_a")$tables$event_data)
+                   hv_followup(d, event_cols = c(ev_a = "ev_a"), event_time_cols = "iv_a")$tables$event_data)
 })
 
 test_that("competing events: the panel plots every patient", {
   gf <- hv_followup(make_competing_data(),
-                    event_col = c("ev_a", "ev_b"), event_time_col = c("iv_a", "iv_b"),
+                    event_cols = c("ev_a", "ev_b"), event_time_cols = c("iv_a", "iv_b"),
                     event_levels = competing_levels)
   p <- plot(gf, type = "event")
   expect_plot_has_data(p, min_groups = 4L)
@@ -533,12 +533,12 @@ test_that("competing events: the panel plots every patient", {
 
 test_that("competing events: mismatched vectors and levels stop", {
   d <- make_competing_data()
-  expect_error(hv_followup(d, event_col = c("ev_a", "ev_b"), event_time_col = "iv_a",
+  expect_error(hv_followup(d, event_cols = c("ev_a", "ev_b"), event_time_cols = "iv_a",
                            event_levels = competing_levels),
                "same length")
-  expect_error(hv_followup(d, event_col = c("ev_a", "ev_b"), event_time_col = c("iv_a", "iv_b")),
+  expect_error(hv_followup(d, event_cols = c("ev_a", "ev_b"), event_time_cols = c("iv_a", "iv_b")),
                "four labels")
-  expect_error(hv_followup(d, event_col = c("ev_a", "ev_b"), event_time_col = c("iv_a", "iv_b"),
+  expect_error(hv_followup(d, event_cols = c("ev_a", "ev_b"), event_time_cols = c("iv_a", "iv_b"),
                            event_levels = c("No event", "Reop", "Reop", "Death")),
                "distinct")
 })
@@ -586,7 +586,7 @@ test_that("every echo: one tick per complete echo row; incomplete rows warn", {
 test_that("echo reaches the event panel and errors name missing columns", {
   d <- make_gfup_data()
   d$iv_echo <- d$iv_dead / 2
-  gf <- hv_followup(d, event_col = "ev_event", event_time_col = "iv_event", echo_time_col = "iv_echo")
+  gf <- hv_followup(d, event_cols = "ev_event", event_time_cols = "iv_event", echo_time_col = "iv_echo")
   p <- plot(gf, type = "event")
   expect_identical(layer_row_counts(p)[[length(p$layers)]], nrow(d))
   expect_error(hv_followup(d, echo_time_col = "nope"), "nope")
@@ -601,14 +601,14 @@ test_that("print names the echo column and its source", {
                 "iv_echo, 80 echo\\(es\\) drawn \\(one per patient\\)")
   echo <- data.frame(iv_opyrs = d$iv_opyrs[1:4], iv_echo = 1)
   expect_output(print(hv_followup(d, echo = echo, echo_time_col = "iv_echo")), "4 echo\\(es\\) drawn \\(every echo\\)")
-  expect_output(print(hv_followup(d, event_col = c("ev_event", "ev_event"),
-                                  event_time_col = c("iv_event", "iv_event"),
+  expect_output(print(hv_followup(d, event_cols = c("ev_event", "ev_event"),
+                                  event_time_cols = c("iv_event", "iv_event"),
                                   event_levels = c("No event", "A", "B", "Death"))),
                 "ev_event / iv_event, ev_event / iv_event")
 })
 
 test_that("the event_levels count is spelled out to ten, then given as a number", {
   d <- make_gfup_data()
-  expect_error(hv_followup(d, event_col = rep("ev_event", 9), event_time_col = rep("iv_event", 9)),
+  expect_error(hv_followup(d, event_cols = rep("ev_event", 9), event_time_cols = rep("iv_event", 9)),
                "exactly 11 labels")
 })

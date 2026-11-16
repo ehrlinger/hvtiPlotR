@@ -47,7 +47,9 @@ utils::globalVariables(c("region", "n"))
 #'
 #' @param data A data frame; one row per patient. Each set column must be
 #'   logical or 0/1 numeric.
-#' @param sets Character vector of 2 to 3 column names to draw as sets.
+#' @param set_cols Character vector of 2 to 3 column names to draw as sets.
+#' @param sets Deprecated name of `set_cols`; works, with a once-per-session
+#'   warning, until hvtiPlotR 2.9.0.
 #'
 #' @return An object of class \code{c("hv_venn", "hv_data")}:
 #' \describe{
@@ -66,14 +68,15 @@ utils::globalVariables(c("region", "n"))
 #'
 #' @examples
 #' dta <- sample_upset_data(n = 300, seed = 42)
-#' v   <- hv_venn(dta, sets = c("AV_Replacement", "MV_Replacement", "CABG"))
+#' v   <- hv_venn(dta, set_cols = c("AV_Replacement", "MV_Replacement", "CABG"))
 #' v$tables$regions
 #'
 #' @export
-hv_venn <- function(data, sets) {
+hv_venn <- function(data, set_cols, sets) {
+  sets <- .hv_rename_arg("hv_venn", "sets", "set_cols", missing(sets), missing(set_cols), sets, set_cols)
   .check_df(data)
   if (!(is.character(sets) && length(sets) >= 2L))
-    stop("`sets` must be a character vector of at least 2 column names.",
+    stop("hv_venn(): `set_cols` must be a character vector of at least 2 column names.",
          call. = FALSE)
   if (length(sets) > 3L)
     stop("`hv_venn()` supports at most 3 sets; use `hv_upset()` for more.",
@@ -131,7 +134,7 @@ hv_venn <- function(data, sets) {
 #'
 #' @examples
 #' dta <- sample_upset_data(n = 300, seed = 42)
-#' v   <- hv_venn(dta, sets = c("AV_Replacement", "MV_Replacement", "CABG"))
+#' v   <- hv_venn(dta, set_cols = c("AV_Replacement", "MV_Replacement", "CABG"))
 #' plot(v)
 #'
 #' @export
