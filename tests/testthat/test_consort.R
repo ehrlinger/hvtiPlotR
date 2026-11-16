@@ -410,6 +410,7 @@ test_that("hv_consort_exclude counts a missing criterion separately", {
   expect_equal(summ$n_excluded[1], 3L)
   expect_equal(summ$n_missing[1], 1L)
   expect_true(is.na(summ$n_missing[2]))
+  expect_output(print(tracker), "3 \\(1 with a criterion missing\\)")
 })
 
 test_that("a definite match on a later rule beats a missing earlier criterion", {

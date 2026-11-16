@@ -391,7 +391,7 @@ mirror_histogram_diagnostics <- function(working, matched_idx, group_levels,
       # Kish effective sample size, (sum w)^2 / sum w^2: the family-wide
       # meaning of "effective N". The plain weight total is sum_weights.
       effective_n_by_group = tapply(working$weight, working$group,
-                                    function(w) sum(w)^2 / sum(w^2)),
+                                    function(w) if (sum(w^2) > 0) sum(w)^2 / sum(w^2) else 0),
       sum_weights          = tapply(working$weight, working$group, sum),
       smd_weighted         = calc_weighted_smd(working$score, working$weight,
                                                working$group, group_levels)

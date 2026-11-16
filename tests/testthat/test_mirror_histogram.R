@@ -469,3 +469,12 @@ test_that("split_tall count label sits beyond the gap and grows outward", {
   expect_true(all(abs(lab$y) > pmax(abs(gap$ymin), abs(gap$ymax))))
   expect_equal(lab$vjust, ifelse(lab$y > 0, 0, 1))
 })
+
+test_that("effective_n_by_group is 0, not NaN, for an all-zero-weight group", {
+  df <- sample_mirror_histogram_data(40, add_weights = TRUE)
+  df$mt_wt[df$tavr == 0] <- 0
+  diag <- hv_mirror_hist(df, group_col = "tavr", group_labels = c("A", "B"),
+                         weight_col = "mt_wt")$tables$diagnostics
+  expect_equal(as.numeric(diag$effective_n_by_group[["0"]]), 0)
+  expect_false(any(is.nan(diag$effective_n_by_group)))
+})

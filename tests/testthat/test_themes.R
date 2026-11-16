@@ -444,3 +444,7 @@ test_that("theme_hv_ppt_slate ... overrides default elements", {
   expect_identical(theme_hv_ppt_slate(legend.position = "right")$legend.position,
                    "right")
 })
+
+test_that("deprecated theme aliases warn with the hvtiPlotR_deprecated class", {
+  expect_warning(theme_man(), "removed in hvtiPlotR", class = "hvtiPlotR_deprecated")
+})

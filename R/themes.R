@@ -328,16 +328,17 @@ theme_hv_ppt_light <- function(base_size      = 32,
 # ----------------------------------------------------------------------------
 # Deprecated aliases (v2.x)
 #
-# Old names continue to work but emit a one-shot deprecation warning. They
+# Old names continue to work but warn on each call, with the class
+# hvtiPlotR_deprecated. They
 # are removed in the release named by .hv_removal_version (R/deprecate.R).
 # ----------------------------------------------------------------------------
 
 .hv_theme_deprecated <- function(old, new) {
-  .Deprecated(new = new, old = old,
-              package = "hvtiPlotR",
-              msg = sprintf(
-                "'%s()' is deprecated and is removed in hvtiPlotR %s. Use '%s()' instead.",
-                old, .hv_removal_version, new))
+  warning(warningCondition(
+    sprintf("'%s()' is deprecated and is removed in hvtiPlotR %s. Use '%s()' instead.",
+            old, .hv_removal_version, new),
+    class = c("hvtiPlotR_deprecated", "deprecatedWarning")
+  ))
 }
 
 #' @rdname hvtiPlotR-themes

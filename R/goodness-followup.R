@@ -361,8 +361,8 @@ hv_followup <- function(
                study_end = missing(study_end), close_date = missing(close_date))
   .hv_deprecate_study_default(
     "hv_followup", names(omitted)[omitted],
-    c(origin_year = "1990", study_start = "1990-01-01", study_end = "2019-12-31",
-      close_date = "2021-08-06")[omitted]
+    c(origin_year = "1990", study_start = 'as.Date("1990-01-01")',
+      study_end = 'as.Date("2019-12-31")', close_date = 'as.Date("2021-08-06")')[omitted]
   )
   if (length(death_levels) != 2L)
     stop("`death_levels` must contain exactly two labels.", call. = FALSE)

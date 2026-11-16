@@ -284,7 +284,9 @@ print.hv_consort_tracker <- function(x, ...) {
     cat(sprintf("    [%s] %s -- N = %d\n", s$include_col, s$label, n_in))
     if (!is.null(s$excl_col)) {
       n_excl <- sum(!is.na(x$data[[s$excl_col]]), na.rm = TRUE)
-      cat(sprintf("      -> excl [%s]: %d\n", s$excl_col, n_excl))
+      n_miss <- if (is.null(s$n_missing)) 0L else s$n_missing
+      cat(sprintf("      -> excl [%s]: %d%s\n", s$excl_col, n_excl,
+                  if (n_miss > 0L) sprintf(" (%d with a criterion missing)", n_miss) else ""))
     }
   }
   invisible(x)

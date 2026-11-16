@@ -8,7 +8,7 @@
 
 * `hv_correlation_matrix()` defaults to `method = "spearman"`, matching `hvtiRtables::hv_correlation_table()` and the SAS exemplar. Pass `method = "pearson"` for the old coefficient.
 
-* `hv_consort_exclude()` no longer passes through a patient whose value for an exclusion criterion is missing. When no rule matches outright, the patient is excluded as `"Criterion missing: <reason>"` for the first rule it could not be checked against, a separate line in the diagram's side box and a new `n_missing` column in `hv_consort_summary()`.
+* `hv_consort_exclude()` no longer passes through a patient whose value for an exclusion criterion is missing. When no rule matches outright, the patient is excluded as `"Criterion missing: <reason>"` for the first rule it could not be checked against, a separate line in the diagram's side box and a new `n_missing` column in `hv_consort_summary()`, and a count in the tracker's print.
 
 * `hv_consort_start()` refuses a `patient_id` column with a repeated or missing value.
 
@@ -28,4 +28,4 @@
 
 * The deprecated theme aliases name the release that removes them, 2.9.0. `hazard_plot()`, `survival_difference_plot()` and `nnt_plot()` say they are superseded, not deprecated, with no removal scheduled.
 
-* Deprecation warnings carry the class `hvtiPlotR_deprecated`.
+* The new deprecation warnings and the theme aliases' warnings carry the class `hvtiPlotR_deprecated`, so a caller can catch or muffle them precisely.
