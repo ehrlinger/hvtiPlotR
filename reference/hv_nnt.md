@@ -11,19 +11,20 @@ to render the plot. Covers the NNT component of
 
 ``` r
 hv_nnt(
-  nnt_data,
+  data,
   x_col = "time",
   estimate_col = "nnt",
   lower_col = NULL,
   upper_col = NULL,
   group_col = NULL,
-  na_rm = TRUE
+  na_rm = TRUE,
+  nnt_data
 )
 ```
 
 ## Arguments
 
-- nnt_data:
+- data:
 
   Data frame of pre-computed NNT estimates. See
   [`sample_nnt_data()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_nnt_data.md).
@@ -52,6 +53,11 @@ hv_nnt(
 
   Remove rows where `estimate_col` is `NA` before storing in `$data`.
   Applied at construction time. Default `TRUE`.
+
+- nnt_data:
+
+  Deprecated name of `data`; works with a once-per-session warning until
+  hvtiPlotR 2.9.0.
 
 ## Value
 

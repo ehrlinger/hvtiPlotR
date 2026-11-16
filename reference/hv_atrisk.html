@@ -64,13 +64,17 @@ stack under a survival curve with <code><a href="hv_atrisk_compose.html">hv_atri
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">hv_atrisk</span><span class="op">(</span></span>
-<span>  <span class="va">x</span>,</span>
-<span>  time <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  status <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  group <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  <span class="va">data</span>,</span>
+<span>  time_col <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  event_col <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  group_col <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  report_times <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  size <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  strata_labels <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  strata_labels <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  <span class="va">x</span>,</span>
+<span>  <span class="va">time</span>,</span>
+<span>  <span class="va">status</span>,</span>
+<span>  <span class="va">group</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -78,24 +82,24 @@ stack under a survival curve with <code><a href="hv_atrisk_compose.html">hv_atri
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
 
 
-<dl><dt id="arg-x">x<a class="anchor" aria-label="anchor" href="#arg-x"></a></dt>
+<dl><dt id="arg-data">data<a class="anchor" aria-label="anchor" href="#arg-data"></a></dt>
 <dd><p>One of: an <code>hv_data</code> object that carries <code>$tables$risk</code>
 (e.g. from <code><a href="hv_survival.html">hv_survival</a></code>); a precomputed risk data frame with
 <code>strata</code>, <code>report_time</code> (or <code>time</code>), and <code>n.risk</code>
 (or <code>n</code>) columns; or a subject-level data frame supplied together
-with the <code>time</code> (and optional <code>status</code>/<code>group</code>) column
-names, from which counts are computed.</p></dd>
+with <code>time_col</code> (and optional <code>event_col</code>/<code>group_col</code>),
+from which counts are computed.</p></dd>
 
 
-<dt id="arg-time-status-group">time, status, group<a class="anchor" aria-label="anchor" href="#arg-time-status-group"></a></dt>
-<dd><p>Column names in <code>x</code> when <code>x</code> is a
-subject-level data frame. <code>time</code> triggers the raw-data path;
-<code>status</code>, when named, leaves out rows whose status is missing (with
-a warning), as <code><a href="hv_survival.html">hv_survival</a></code> does, so the two tables agree;
-<code>group</code> splits the
-table into strata. Pass <code>group</code> as a factor to control the stratum
-row order (its levels set the order); a character column orders rows
-alphabetically. Default <code>NULL</code>.</p></dd>
+<dt id="arg-time-col-event-col-group-col">time_col, event_col, group_col<a class="anchor" aria-label="anchor" href="#arg-time-col-event-col-group-col"></a></dt>
+<dd><p>Column names in <code>data</code> when it is a
+subject-level data frame. <code>time_col</code> triggers the raw-data path;
+<code>event_col</code>, when named, leaves out rows whose event status is
+missing (with a warning), as <code><a href="hv_survival.html">hv_survival</a></code> does, so the two
+tables agree; <code>group_col</code> splits the table into strata. Pass the
+group as a factor to control the stratum row order (its levels set the
+order); a character column orders rows alphabetically. Default
+<code>NULL</code>.</p></dd>
 
 
 <dt id="arg-report-times">report_times<a class="anchor" aria-label="anchor" href="#arg-report-times"></a></dt>
@@ -116,6 +120,12 @@ arbitrary times for a Kaplan-Meier object, rebuild it with
 <dt id="arg-strata-labels">strata_labels<a class="anchor" aria-label="anchor" href="#arg-strata-labels"></a></dt>
 <dd><p>Optional named character vector remapping stratum row
 labels. Default <code>NULL</code>.</p></dd>
+
+
+<dt id="arg-x-time-status-group">x, time, status, group<a class="anchor" aria-label="anchor" href="#arg-x-time-status-group"></a></dt>
+<dd><p>Deprecated names of <code>data</code>,
+<code>time_col</code>, <code>event_col</code> and <code>group_col</code>. They still work,
+with a once-per-session warning, until hvtiPlotR 2.9.0.</p></dd>
 
 </dl></div>
     <div class="section level2">

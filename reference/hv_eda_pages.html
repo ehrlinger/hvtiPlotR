@@ -70,11 +70,12 @@ belong to <code>section</code>, and prepares one <code><a href="hv_eda.html">hv_
 <span>  <span class="va">data</span>,</span>
 <span>  x_col <span class="op">=</span> <span class="st">"year"</span>,</span>
 <span>  section <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"continuous"</span>, <span class="st">"percent"</span>, <span class="st">"count"</span><span class="op">)</span>,</span>
-<span>  vars <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  var_cols <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  labels <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  unique_limit <span class="op">=</span> <span class="fl">6L</span>,</span>
 <span>  unique_bound <span class="op">=</span> <span class="fl">100</span>,</span>
-<span>  type_overrides <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  type_overrides <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  <span class="va">vars</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -95,7 +96,7 @@ Default <code>"year"</code>.</p></dd>
 <dd><p>One of <code>"continuous"</code>, <code>"percent"</code> or <code>"count"</code>.</p></dd>
 
 
-<dt id="arg-vars">vars<a class="anchor" aria-label="anchor" href="#arg-vars"></a></dt>
+<dt id="arg-var-cols">var_cols<a class="anchor" aria-label="anchor" href="#arg-var-cols"></a></dt>
 <dd><p>Character vector of the variables to consider, in page order.
 <code>NULL</code> (the default) means every column except <code>x_col</code> and the patient
 identifiers <code>ccfid</code>, <code>MRN</code> and <code>eMRN</code> (ignoring case), the names
@@ -115,6 +116,11 @@ being column names. A variable without a label is shown by its name.</p></dd>
 <dt id="arg-unique-limit-unique-bound-type-overrides">unique_limit, unique_bound, type_overrides<a class="anchor" aria-label="anchor" href="#arg-unique-limit-unique-bound-type-overrides"></a></dt>
 <dd><p>Passed to
 <code><a href="eda_classify_var.html">eda_classify_var()</a></code>.</p></dd>
+
+
+<dt id="arg-vars">vars<a class="anchor" aria-label="anchor" href="#arg-vars"></a></dt>
+<dd><p>Deprecated name of <code>var_cols</code>; works, with a once-per-session
+warning, until hvtiPlotR 2.9.0.</p></dd>
 
 </dl></div>
     <div class="section level2">

@@ -12,7 +12,7 @@ reading the same input; for more than three sets use
 ## Usage
 
 ``` r
-hv_venn(data, sets)
+hv_venn(data, set_cols, sets)
 ```
 
 ## Arguments
@@ -22,9 +22,14 @@ hv_venn(data, sets)
   A data frame; one row per patient. Each set column must be logical or
   0/1 numeric.
 
-- sets:
+- set_cols:
 
   Character vector of 2 to 3 column names to draw as sets.
+
+- sets:
+
+  Deprecated name of `set_cols`; works, with a once-per-session warning,
+  until hvtiPlotR 2.9.0.
 
 ## Value
 
@@ -56,7 +61,7 @@ Worked recipe with rendered output:
 
 ``` r
 dta <- sample_upset_data(n = 300, seed = 42)
-v   <- hv_venn(dta, sets = c("AV_Replacement", "MV_Replacement", "CABG"))
+v   <- hv_venn(dta, set_cols = c("AV_Replacement", "MV_Replacement", "CABG"))
 v$tables$regions
 #>   AV_Replacement MV_Replacement  CABG                                 region
 #> 1           TRUE          FALSE FALSE                    AV_Replacement only

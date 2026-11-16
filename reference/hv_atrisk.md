@@ -8,37 +8,41 @@ under a survival curve with
 
 ``` r
 hv_atrisk(
-  x,
-  time = NULL,
-  status = NULL,
-  group = NULL,
+  data,
+  time_col = NULL,
+  event_col = NULL,
+  group_col = NULL,
   report_times = NULL,
   size = NULL,
-  strata_labels = NULL
+  strata_labels = NULL,
+  x,
+  time,
+  status,
+  group
 )
 ```
 
 ## Arguments
 
-- x:
+- data:
 
   One of: an `hv_data` object that carries `$tables$risk` (e.g. from
   [`hv_survival`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_survival.md));
   a precomputed risk data frame with `strata`, `report_time` (or
   `time`), and `n.risk` (or `n`) columns; or a subject-level data frame
-  supplied together with the `time` (and optional `status`/`group`)
-  column names, from which counts are computed.
+  supplied together with `time_col` (and optional
+  `event_col`/`group_col`), from which counts are computed.
 
-- time, status, group:
+- time_col, event_col, group_col:
 
-  Column names in `x` when `x` is a subject-level data frame. `time`
-  triggers the raw-data path; `status`, when named, leaves out rows
-  whose status is missing (with a warning), as
+  Column names in `data` when it is a subject-level data frame.
+  `time_col` triggers the raw-data path; `event_col`, when named, leaves
+  out rows whose event status is missing (with a warning), as
   [`hv_survival`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_survival.md)
-  does, so the two tables agree; `group` splits the table into strata.
-  Pass `group` as a factor to control the stratum row order (its levels
-  set the order); a character column orders rows alphabetically. Default
-  `NULL`.
+  does, so the two tables agree; `group_col` splits the table into
+  strata. Pass the group as a factor to control the stratum row order
+  (its levels set the order); a character column orders rows
+  alphabetically. Default `NULL`.
 
 - report_times:
 
@@ -59,6 +63,12 @@ hv_atrisk(
 
   Optional named character vector remapping stratum row labels. Default
   `NULL`.
+
+- x, time, status, group:
+
+  Deprecated names of `data`, `time_col`, `event_col` and `group_col`.
+  They still work, with a once-per-session warning, until hvtiPlotR
+  2.9.0.
 
 ## Value
 

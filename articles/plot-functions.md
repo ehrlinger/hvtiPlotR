@@ -582,7 +582,7 @@ ggsave(
 ### Non-fatal event panel
 
 When the dataset includes a non-fatal competing event (e.g. relapse,
-reoperation), pass `event_col`, `event_time_col`, and optionally
+reoperation), pass `event_cols`, `event_time_cols`, and optionally
 `death_for_event_col` to the constructor and then call
 [`plot()`](https://rdrr.io/r/graphics/plot.default.html) with
 `type = "event"` to render the event panel.
@@ -596,8 +596,8 @@ gfup_event_dta <- sample_goodness_followup_data(n = 300, seed = 42)
 
 gf2 <- hv_followup(
   gfup_event_dta,
-  event_col           = "ev_event",
-  event_time_col      = "iv_event",
+  event_cols          = "ev_event",
+  event_time_cols     = "iv_event",
   death_for_event_col = "deads",
   event_levels        = c("No event", "Relapse", "Death"),
   origin_year         = 1990,
@@ -634,8 +634,8 @@ plot(gf2, type = "event", alpha = 0.8) +
 ### Competing non-fatal events
 
 A study that tracks more than one non-fatal event, say reoperation and
-stroke, can draw them in one panel. Pass `event_col` and
-`event_time_col` as vectors, one element per event, and give
+stroke, can draw them in one panel. Pass `event_cols` and
+`event_time_cols` as vectors, one element per event, and give
 `event_levels` one label per event between “No event” and “Death”. Each
 patient takes the state of whichever event came first. An event counts
 only when it strictly precedes death, as with a single event, so a tie
@@ -650,8 +650,8 @@ gfup_event_dta$ev_stroke <- !gfup_event_dta$ev_event & seq_len(nrow(gfup_event_d
 
 gf3 <- hv_followup(
   gfup_event_dta,
-  event_col           = c("ev_event", "ev_stroke"),
-  event_time_col      = c("iv_event", "iv_event"),
+  event_cols          = c("ev_event", "ev_stroke"),
+  event_time_cols     = c("iv_event", "iv_event"),
   death_for_event_col = "deads",
   event_levels        = c("No event", "Reoperation", "Stroke", "Death"),
   origin_year         = 1990,
@@ -1421,7 +1421,7 @@ with Fisher intervals is `hvtiRtables::hv_correlation_table()`.
 dta_cor <- sample_correlation_data(n = 300, seed = 42)
 cm <- hv_correlation_matrix(
   dta_cor,
-  vars = c("a1c", "glucose", "creatinine", "albumin"),
+  var_cols = c("a1c", "glucose", "creatinine", "albumin"),
   labels = c("HbA1c", "Glucose", "Creatinine", "Albumin")
 )
 
@@ -1746,7 +1746,7 @@ eda_vars <- c("ef", "lv_mass", "peak_grad", "male", "cabg", "nyha", "valve_morph
 sections <- lapply(
   c(continuous = "continuous", percent = "percent", count = "count"),
   function(s) {
-    hv_eda_pages(dta_eda, x_col = "op_years", section = s, vars = eda_vars,
+    hv_eda_pages(dta_eda, x_col = "op_years", section = s, var_cols = eda_vars,
                  labels = c(ef = "Ejection Fraction (%)", male = "Male",
                             nyha = "NYHA Class", valve_morph = "Valve Morphology"))
   }
@@ -1863,7 +1863,7 @@ combination that does not occur in the data.
 
 ``` r
 
-al <- hv_alluvial(dta_al, axes = axes, y_col = "freq")
+al <- hv_alluvial(dta_al, axis_cols = axes, y_col = "freq")
 plot(al)
 ```
 
@@ -1882,7 +1882,7 @@ when your levels map naturally to a diverging palette.
 
 ``` r
 
-al_filled <- hv_alluvial(dta_al, axes = axes, y_col = "freq",
+al_filled <- hv_alluvial(dta_al, axis_cols = axes, y_col = "freq",
                             fill_col = "pre_ar")
 
 plot(al_filled) +
@@ -1915,8 +1915,8 @@ plot(al_filled) +
 ### Two-axis before / after comparison
 
 When you only need to compare two time points (pre- and post-operative),
-drop the middle axis and pass just two columns to `axes`. Use custom
-`axis_labels` to replace the raw column names with readable stage
+drop the middle axis and pass just two columns to `axis_cols`. Use
+custom `axis_labels` to replace the raw column names with readable stage
 labels, and
 [`annotate()`](https://ggplot2.tidyverse.org/reference/annotate.html) to
 call out the direction of change directly on the panel.
@@ -1925,7 +1925,7 @@ call out the direction of change directly on the panel.
 
 al2 <- hv_alluvial(
   dta_al,
-  axes        = c("pre_ar", "post_ar"),
+  axis_cols   = c("pre_ar", "post_ar"),
   y_col       = "freq",
   fill_col    = "pre_ar",
   axis_labels = c("Pre-operative", "Post-operative")
@@ -2146,7 +2146,7 @@ cohort <- data.frame(
   echo        = sample(c(TRUE, FALSE), 300, replace = TRUE, prob = c(0.85, 0.15))
 )
 
-tracker2 <- hv_consort_start(cohort, patient_id = mrn, label = "Screened") |>
+tracker2 <- hv_consort_start(cohort, patient_id_col = "mrn", label = "Screened") |>
   hv_consort_exclude(
     label        = "Eligible",
     col          = "excl_screen",
@@ -2236,7 +2236,7 @@ time), so `width`/`height` are not needed here.
 
 save_ppt(
   object       = hv_consort(tracker),
-  powerpoint   = here::here("graphs", "consort.pptx"),
+  file         = here::here("graphs", "consort.pptx"),
   slide_titles = "CONSORT Patient Flow"
 )
 ```
@@ -3484,7 +3484,7 @@ overlay. The bare plot and the decorated plot share the same object.
 ``` r
 
 np <- hv_nonparametric(
-  curve_data  = curve_dat,
+  data        = curve_dat,
   lower_col   = "lower",
   upper_col   = "upper",
   data_points = pts_dat
@@ -3570,7 +3570,7 @@ pts_grp <- sample_nonparametric_curve_points(
 )
 
 np_grp <- hv_nonparametric(
-  curve_data  = curve_grp,
+  data        = curve_grp,
   group_col   = "group",
   lower_col   = "lower",
   upper_col   = "upper",
@@ -3618,7 +3618,7 @@ ggsave(here::here("graphs", "np_afib_prevalence.pdf"),
 # Editable PowerPoint
 save_ppt(p_np,
          template   = system.file("extdata", "hv_ppt_template.pptx", package = "hvtiPlotR"),
-         powerpoint = here::here("graphs", "np_afib_prevalence.pptx"))
+         file       = here::here("graphs", "np_afib_prevalence.pptx"))
 ```
 
 ## Nonparametric Ordinal Outcome Curve
@@ -3685,7 +3685,7 @@ drives the bare and decorated plots below.
 
 ``` r
 
-np_ord <- hv_ordinal(curve_data = ord_dat, data_points = ord_pts)
+np_ord <- hv_ordinal(data = ord_dat, data_points = ord_pts)
 ```
 
 #### Bare plot
@@ -3766,7 +3766,7 @@ ord_collapsed <- subset(ord_collapsed, grade %in% c("None", "Mild", "Moderate/Se
 # Show three-level version using only two grades from sample data
 ord_two <- subset(ord_dat, grade %in% c("None", "Severe"))
 
-plot(hv_ordinal(curve_data = ord_two)) +
+plot(hv_ordinal(data = ord_two)) +
   ggplot2::scale_color_manual(
     values = c("None" = "steelblue", "Severe" = "firebrick"),
     name   = NULL
@@ -3947,7 +3947,7 @@ ggsave(here::here("graphs", "longitudinal_participation.pdf"),
 # PowerPoint (bar chart only — patchwork composites may need ggsave first)
 save_ppt(p_lc_bar,
          template   = system.file("extdata", "hv_ppt_template.pptx", package = "hvtiPlotR"),
-         powerpoint = here::here("graphs", "longitudinal_participation.pptx"))
+         file       = here::here("graphs", "longitudinal_participation.pptx"))
 ```
 
 ## UpSet Plot
@@ -3977,7 +3977,7 @@ plot(hu, set_size = FALSE) + theme_hv_poster() # single ggplot
 [`sample_upset_data()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_upset_data.md)
 returns a binary indicator matrix: one column per procedure, one row per
 patient, with 1 indicating the procedure was performed. Pass the column
-names to `intersect` in the constructor to define the set membership
+names to `set_cols` in the constructor to define the set membership
 axes. [`colSums()`](https://rdrr.io/r/base/colSums.html) confirms the
 marginal counts before you build.
 
@@ -4010,7 +4010,7 @@ colSums(upset_dta)
 
 ``` r
 
-hu <- hv_upset(upset_dta, intersect = sets)
+hu <- hv_upset(upset_dta, set_cols = sets)
 ```
 
 ### Default plot
@@ -4053,7 +4053,7 @@ for explicit color assignment.
 ``` r
 
 upset_dta$era <- ifelse(seq_len(nrow(upset_dta)) <= 200, "Early", "Recent")
-hu_era <- hv_upset(upset_dta, intersect = sets)
+hu_era <- hv_upset(upset_dta, set_cols = sets)
 
 plot(hu_era, fill_col = "era", set_size = FALSE) +
   ggplot2::scale_fill_manual(
@@ -4081,7 +4081,7 @@ are kept in `v$tables$regions` for a methods table.
 ``` r
 
 dta <- sample_upset_data(n = 400, seed = 7)
-v   <- hv_venn(dta, sets = c("AV_Replacement", "MV_Replacement", "CABG"))
+v   <- hv_venn(dta, set_cols = c("AV_Replacement", "MV_Replacement", "CABG"))
 
 plot(v) + theme_hv_manuscript()
 ```

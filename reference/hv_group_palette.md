@@ -38,7 +38,9 @@ Six or seven groups all switch to Paul Tol's muted palette less sand and
 cyan, the overflow
 [`hv_role_palette()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_role_palette.md)
 uses. Beyond seven there are no more colorblind-safe colors, and the
-function stops with an error of class `hv_group_palette_capacity`.
+function stops with an error of class
+`hvtiPlotR_group_palette_capacity`. It also carries the old class,
+`hv_group_palette_capacity`, until hvtiPlotR 2.9.0.
 
 Pass every level of the grouping factor, not only those a figure draws,
 so that a figure missing one group does not shift the colors of the

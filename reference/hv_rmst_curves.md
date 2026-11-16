@@ -13,19 +13,24 @@ interval.
 
 ``` r
 hv_rmst_curves(
-  curves,
+  data,
   estimates = NULL,
   tau = NULL,
-  facet = "estimator",
-  arm = "arm",
-  time = "time",
-  surv = "surv"
+  facet_col = "estimator",
+  arm_col = "arm",
+  time_col = "time",
+  surv_col = "surv",
+  curves,
+  facet,
+  arm,
+  time,
+  surv
 )
 ```
 
 ## Arguments
 
-- curves:
+- data:
 
   A data frame of curve steps, or a `ps_rmst` object.
 
@@ -34,7 +39,7 @@ hv_rmst_curves(
   Optional data frame with the
   [`hv_rmst_contrast()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_rmst_contrast.md)
   columns (`estimator`, `diff_days`, `lo_days`, `hi_days`), used for the
-  facet annotations. If `NULL` and `curves` is a `ps_rmst`-like object,
+  facet annotations. If `NULL` and `data` is a `ps_rmst`-like object,
   its `$tables$estimates` is used when present. `NULL` otherwise: no
   annotation.
 
@@ -43,20 +48,26 @@ hv_rmst_curves(
   Optional single positive number: the RMST horizon, on the same scale
   as `time`.
 
-- facet:
+- facet_col:
 
   Name of the column defining facets. Default `"estimator"`. Factor
   levels set the facet order.
 
-- arm:
+- arm_col:
 
   Name of the arm column. Default `"arm"`. A character column is ordered
   `"treated"`, `"control"`, then any other value.
 
-- time, surv:
+- time_col, surv_col:
 
   Names of the time and survival columns. Defaults `"time"` and
   `"surv"`.
+
+- curves, facet, arm, time, surv:
+
+  Deprecated names of `data`, `facet_col`, `arm_col`, `time_col` and
+  `surv_col`. They still work, with a once-per-session warning, until
+  hvtiPlotR 2.9.0.
 
 ## Value
 
@@ -84,7 +95,7 @@ The input follows the `tables$curves` contract of
 columns `estimator`, `arm` (`"treated"` or `"control"`), `time` and
 `surv`, as right-continuous steps that start at time 0 with `surv` 1.
 hvtiRpropensity is not required: pass plain data frames, or the
-`ps_rmst` object itself as `curves` and its `$tables$curves` (and, when
+`ps_rmst` object itself as `data` and its `$tables$curves` (and, when
 `estimates` is `NULL`, `$tables$estimates`) are read.
 
 ## See also

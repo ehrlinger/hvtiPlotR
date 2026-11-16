@@ -10,18 +10,19 @@ survival-difference component of `tp.hp.numtreat.survdiff.matched.sas`.
 
 ``` r
 hv_survival_difference(
-  diff_data,
+  data,
   x_col = "time",
   estimate_col = "difference",
   lower_col = NULL,
   upper_col = NULL,
-  group_col = NULL
+  group_col = NULL,
+  diff_data
 )
 ```
 
 ## Arguments
 
-- diff_data:
+- data:
 
   Data frame of pre-computed survival differences. See
   [`sample_survival_difference_data()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_survival_difference_data.md).
@@ -45,6 +46,11 @@ hv_survival_difference(
 - group_col:
 
   Grouping column for multiple comparisons, or `NULL`. Default `NULL`.
+
+- diff_data:
+
+  Deprecated name of `data`; works with a once-per-session warning until
+  hvtiPlotR 2.9.0.
 
 ## Value
 

@@ -73,11 +73,12 @@ color scales and <code><a href="hvtiPlotR-themes.html">theme_hv_manuscript</a></
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">hv_ordinal</span><span class="op">(</span></span>
-<span>  <span class="va">curve_data</span>,</span>
+<span>  <span class="va">data</span>,</span>
 <span>  x_col <span class="op">=</span> <span class="st">"time"</span>,</span>
 <span>  estimate_col <span class="op">=</span> <span class="st">"estimate"</span>,</span>
 <span>  grade_col <span class="op">=</span> <span class="st">"grade"</span>,</span>
-<span>  data_points <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  data_points <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  <span class="va">curve_data</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -85,7 +86,7 @@ color scales and <code><a href="hvtiPlotR-themes.html">theme_hv_manuscript</a></
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
 
 
-<dl><dt id="arg-curve-data">curve_data<a class="anchor" aria-label="anchor" href="#arg-curve-data"></a></dt>
+<dl><dt id="arg-data">data<a class="anchor" aria-label="anchor" href="#arg-data"></a></dt>
 <dd><p>Long-format data frame: one row per (time, grade)
 combination. Columns: <code>x_col</code>, <code>estimate_col</code>, <code>grade_col</code>.</p></dd>
 
@@ -107,6 +108,11 @@ Default <code>"estimate"</code>.</p></dd>
 <dd><p>Optional long-format data frame of binned data summary
 points. Must have columns matching <code>x_col</code>, <code>"value"</code>, and
 <code>grade_col</code>. Default <code>NULL</code>.</p></dd>
+
+
+<dt id="arg-curve-data">curve_data<a class="anchor" aria-label="anchor" href="#arg-curve-data"></a></dt>
+<dd><p>Deprecated name of <code>data</code>; works with a once-per-session
+warning until hvtiPlotR 2.9.0.</p></dd>
 
 </dl></div>
     <div class="section level2">

@@ -48,7 +48,7 @@ Returns a **bare ggplot object**; compose with `scale_color_*`,
 
 ``` r
 hazard_plot(
-  curve_data,
+  data,
   x_col = "time",
   estimate_col = "survival",
   lower_col = NULL,
@@ -66,16 +66,18 @@ hazard_plot(
   ref_estimate_col = estimate_col,
   ref_group_col = NULL,
   ci_alpha = 0.2,
-  line_width = 1,
+  linewidth = 1,
   point_size = 2,
   point_shape = 1L,
-  errorbar_width = 0.25
+  errorbar_width = 0.25,
+  curve_data,
+  line_width
 )
 ```
 
 ## Arguments
 
-- curve_data:
+- data:
 
   Data frame of parametric predictions (fine grid). Typical source: SAS
   `predict` dataset exported to CSV, or
@@ -166,7 +168,7 @@ hazard_plot(
 
   Transparency of the parametric CI ribbon (`[0, 1]`). Default `0.20`.
 
-- line_width:
+- linewidth:
 
   Width of the parametric curve line. SAS `width=3` corresponds roughly
   to `1.2`. Default `1.0`.
@@ -184,6 +186,16 @@ hazard_plot(
 - errorbar_width:
 
   Width of the error bars on empirical points. Default `0.25`.
+
+- curve_data:
+
+  Deprecated name of `data`; works with a once-per-session warning until
+  hvtiPlotR 2.9.0.
+
+- line_width:
+
+  Deprecated name of `linewidth`; works with a once-per-session warning
+  until hvtiPlotR 2.9.0.
 
 ## Value
 

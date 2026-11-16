@@ -1,20 +1,21 @@
 # Prepare a scatter-plot matrix
 
 The scatter-plot-matrix analogue of SAS `proc corr ... plots=matrix`:
-one scatter panel per unordered pair of `vars`, lower triangle only. It
-is the plot half of the `dc-tables` job in the hvtiR job catalog. Call
-[`plot()`](https://rdrr.io/r/graphics/plot.default.html) on the result
-for a bare `ggplot`; the coefficient table with Fisher intervals is
-`hvtiRtables::hv_correlation_table()`.
+one scatter panel per unordered pair of `var_cols`, lower triangle only.
+It is the plot half of the `dc-tables` job in the hvtiR job catalog.
+Call [`plot()`](https://rdrr.io/r/graphics/plot.default.html) on the
+result for a bare `ggplot`; the coefficient table with Fisher intervals
+is `hvtiRtables::hv_correlation_table()`.
 
 ## Usage
 
 ``` r
 hv_correlation_matrix(
   data,
-  vars,
+  var_cols,
   labels = NULL,
-  method = c("spearman", "pearson")
+  method = c("spearman", "pearson"),
+  vars
 )
 ```
 
@@ -24,19 +25,24 @@ hv_correlation_matrix(
 
   Data frame; one row per patient.
 
-- vars:
+- var_cols:
 
   Character vector of at least two numeric columns, in display order.
 
 - labels:
 
-  Optional character vector of display labels, one per `vars`.
+  Optional character vector of display labels, one per `var_cols`.
 
 - method:
 
   Coefficient stored in `$tables$coefficients`: `"spearman"` (the
   default, matching `hvtiRtables::hv_correlation_table()` and the SAS
   exemplar) or `"pearson"`.
+
+- vars:
+
+  Deprecated name of `var_cols`; works, with a once-per-session warning,
+  until hvtiPlotR 2.9.0.
 
 ## Value
 

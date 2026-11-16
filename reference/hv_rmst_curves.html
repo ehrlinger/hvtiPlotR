@@ -76,13 +76,18 @@ facet is annotated with its RMST difference and interval.</p>
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">hv_rmst_curves</span><span class="op">(</span></span>
-<span>  <span class="va">curves</span>,</span>
+<span>  <span class="va">data</span>,</span>
 <span>  estimates <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  tau <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  facet <span class="op">=</span> <span class="st">"estimator"</span>,</span>
-<span>  arm <span class="op">=</span> <span class="st">"arm"</span>,</span>
-<span>  time <span class="op">=</span> <span class="st">"time"</span>,</span>
-<span>  surv <span class="op">=</span> <span class="st">"surv"</span></span>
+<span>  facet_col <span class="op">=</span> <span class="st">"estimator"</span>,</span>
+<span>  arm_col <span class="op">=</span> <span class="st">"arm"</span>,</span>
+<span>  time_col <span class="op">=</span> <span class="st">"time"</span>,</span>
+<span>  surv_col <span class="op">=</span> <span class="st">"surv"</span>,</span>
+<span>  <span class="va">curves</span>,</span>
+<span>  <span class="va">facet</span>,</span>
+<span>  <span class="va">arm</span>,</span>
+<span>  <span class="va">time</span>,</span>
+<span>  <span class="va">surv</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -90,14 +95,14 @@ facet is annotated with its RMST difference and interval.</p>
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
 
 
-<dl><dt id="arg-curves">curves<a class="anchor" aria-label="anchor" href="#arg-curves"></a></dt>
+<dl><dt id="arg-data">data<a class="anchor" aria-label="anchor" href="#arg-data"></a></dt>
 <dd><p>A data frame of curve steps, or a <code>ps_rmst</code> object.</p></dd>
 
 
 <dt id="arg-estimates">estimates<a class="anchor" aria-label="anchor" href="#arg-estimates"></a></dt>
 <dd><p>Optional data frame with the <code><a href="hv_rmst_contrast.html">hv_rmst_contrast()</a></code> columns
 (<code>estimator</code>, <code>diff_days</code>, <code>lo_days</code>, <code>hi_days</code>), used for the facet
-annotations. If <code>NULL</code> and <code>curves</code> is a <code>ps_rmst</code>-like object, its
+annotations. If <code>NULL</code> and <code>data</code> is a <code>ps_rmst</code>-like object, its
 <code>$tables$estimates</code> is used when present. <code>NULL</code> otherwise: no
 annotation.</p></dd>
 
@@ -107,19 +112,25 @@ annotation.</p></dd>
 same scale as <code>time</code>.</p></dd>
 
 
-<dt id="arg-facet">facet<a class="anchor" aria-label="anchor" href="#arg-facet"></a></dt>
+<dt id="arg-facet-col">facet_col<a class="anchor" aria-label="anchor" href="#arg-facet-col"></a></dt>
 <dd><p>Name of the column defining facets. Default
 <code>"estimator"</code>. Factor levels set the facet order.</p></dd>
 
 
-<dt id="arg-arm">arm<a class="anchor" aria-label="anchor" href="#arg-arm"></a></dt>
+<dt id="arg-arm-col">arm_col<a class="anchor" aria-label="anchor" href="#arg-arm-col"></a></dt>
 <dd><p>Name of the arm column. Default <code>"arm"</code>. A character
 column is ordered <code>"treated"</code>, <code>"control"</code>, then any other value.</p></dd>
 
 
-<dt id="arg-time-surv">time, surv<a class="anchor" aria-label="anchor" href="#arg-time-surv"></a></dt>
+<dt id="arg-time-col-surv-col">time_col, surv_col<a class="anchor" aria-label="anchor" href="#arg-time-col-surv-col"></a></dt>
 <dd><p>Names of the time and survival columns. Defaults
 <code>"time"</code> and <code>"surv"</code>.</p></dd>
+
+
+<dt id="arg-curves-facet-arm-time-surv">curves, facet, arm, time, surv<a class="anchor" aria-label="anchor" href="#arg-curves-facet-arm-time-surv"></a></dt>
+<dd><p>Deprecated names of <code>data</code>, <code>facet_col</code>,
+<code>arm_col</code>, <code>time_col</code> and <code>surv_col</code>. They still work, with a
+once-per-session warning, until hvtiPlotR 2.9.0.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -144,7 +155,7 @@ facet (zero rows when <code>estimates</code> is <code>NULL</code>).</p></dd>
 <code><a href="https://ehrlinger.github.io/hvtiRpropensity/reference/ps_rmst.html" class="external-link">hvtiRpropensity::ps_rmst()</a></code>: columns <code>estimator</code>, <code>arm</code> (<code>"treated"</code> or
 <code>"control"</code>), <code>time</code> and <code>surv</code>, as right-continuous steps that start at
 time 0 with <code>surv</code> 1. hvtiRpropensity is not required: pass plain data
-frames, or the <code>ps_rmst</code> object itself as <code>curves</code> and its
+frames, or the <code>ps_rmst</code> object itself as <code>data</code> and its
 <code>$tables$curves</code> (and, when <code>estimates</code> is <code>NULL</code>, <code>$tables$estimates</code>) are
 read.</p>
     </div>

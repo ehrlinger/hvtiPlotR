@@ -10,7 +10,7 @@ to render the figure.
 
 ``` r
 hv_hazard(
-  curve_data,
+  data,
   x_col = "time",
   estimate_col = "survival",
   lower_col = NULL,
@@ -26,13 +26,14 @@ hv_hazard(
   reference = NULL,
   ref_x_col = x_col,
   ref_estimate_col = estimate_col,
-  ref_group_col = NULL
+  ref_group_col = NULL,
+  curve_data
 )
 ```
 
 ## Arguments
 
-- curve_data:
+- data:
 
   Data frame of parametric predictions (fine grid). Typical source: SAS
   `predict` dataset exported to CSV, or
@@ -107,6 +108,11 @@ hv_hazard(
 - ref_group_col:
 
   Linetype-grouping column in `reference`, or `NULL`. Default `NULL`.
+
+- curve_data:
+
+  Deprecated name of `data`; works with a once-per-session warning until
+  hvtiPlotR 2.9.0.
 
 ## Value
 

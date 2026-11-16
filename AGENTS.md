@@ -128,7 +128,7 @@ precisely what checks that artifact.
   ⚠️ The gate is live, so the temptation is to widen a rule here to
   clear one awkward site. Do not. A genuine false positive goes behind a
   `# nolint: <linter>.` on the line, with a comment saying why the tool
-  is wrong; there are five of them, three in `R/` and two in `tests/`,
+  is wrong; there are eight of them, five in `R/` and three in `tests/`,
   and each one carries its reason.
 - **Test files are `test_*.R` with an underscore**, not the `test-*.R`
   hyphen used in `hvtiRutilities` and `hvtiRtemplates`. Match the local

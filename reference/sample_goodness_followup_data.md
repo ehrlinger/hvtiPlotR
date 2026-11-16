@@ -106,8 +106,8 @@ diagonal. No patient has follow-up past `close_date`. Set
 The column names match the defaults of
 [`hv_followup()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_followup.md):
 `iv_opyrs`, `iv_dead`, `dead`. The event-panel columns (`iv_event`,
-`ev_event`, `deads`) are included so callers can pass `event_col`,
-`event_time_col`, and `death_for_event_col` directly.
+`ev_event`, `deads`) are included so callers can pass `event_cols`,
+`event_time_cols`, and `death_for_event_col` directly.
 
 ## See also
 
@@ -140,8 +140,8 @@ plot(gf) +
 # Event panel
 gf2 <- hv_followup(dta, origin_year = 1990, study_start = "1990-01-01",
                    study_end = "2019-12-31", close_date = "2021-08-06",
-                   event_col = "ev_event",
-                      event_time_col = "iv_event",
+                   event_cols = "ev_event",
+                      event_time_cols = "iv_event",
                       death_for_event_col = "deads")
 plot(gf2, type = "event") +
   ggplot2::scale_color_manual(

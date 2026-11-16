@@ -11,17 +11,18 @@ can decorate with color scales and
 
 ``` r
 hv_ordinal(
-  curve_data,
+  data,
   x_col = "time",
   estimate_col = "estimate",
   grade_col = "grade",
-  data_points = NULL
+  data_points = NULL,
+  curve_data
 )
 ```
 
 ## Arguments
 
-- curve_data:
+- data:
 
   Long-format data frame: one row per (time, grade) combination.
   Columns: `x_col`, `estimate_col`, `grade_col`.
@@ -43,6 +44,11 @@ hv_ordinal(
   Optional long-format data frame of binned data summary points. Must
   have columns matching `x_col`, `"value"`, and `grade_col`. Default
   `NULL`.
+
+- curve_data:
+
+  Deprecated name of `data`; works with a once-per-session warning until
+  hvtiPlotR 2.9.0.
 
 ## Value
 

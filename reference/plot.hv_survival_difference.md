@@ -11,7 +11,7 @@ survival-difference curve. Compose with `geom_hline(yintercept = 0)`,
 
 ``` r
 # S3 method for class 'hv_survival_difference'
-plot(x, ci_alpha = 0.2, line_width = 1, ...)
+plot(x, ci_alpha = 0.2, linewidth = 1, ..., line_width)
 ```
 
 ## Arguments
@@ -24,13 +24,18 @@ plot(x, ci_alpha = 0.2, line_width = 1, ...)
 
   Transparency of the CI ribbon. Default `0.20`.
 
-- line_width:
+- linewidth:
 
   Line width. Default `1.0`.
 
 - ...:
 
   Ignored.
+
+- line_width:
+
+  Deprecated name of `linewidth`; works with a once-per-session warning
+  until hvtiPlotR 2.9.0.
 
 ## Value
 

@@ -73,12 +73,13 @@ tp.hp.numtreat.survdiff.matched.sas."></head><body>
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">hv_survival_difference</span><span class="op">(</span></span>
-<span>  <span class="va">diff_data</span>,</span>
+<span>  <span class="va">data</span>,</span>
 <span>  x_col <span class="op">=</span> <span class="st">"time"</span>,</span>
 <span>  estimate_col <span class="op">=</span> <span class="st">"difference"</span>,</span>
 <span>  lower_col <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  upper_col <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  group_col <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  group_col <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  <span class="va">diff_data</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -86,7 +87,7 @@ tp.hp.numtreat.survdiff.matched.sas."></head><body>
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
 
 
-<dl><dt id="arg-diff-data">diff_data<a class="anchor" aria-label="anchor" href="#arg-diff-data"></a></dt>
+<dl><dt id="arg-data">data<a class="anchor" aria-label="anchor" href="#arg-data"></a></dt>
 <dd><p>Data frame of pre-computed survival differences.
 See <code><a href="sample_survival_difference_data.html">sample_survival_difference_data()</a></code>.</p></dd>
 
@@ -110,6 +111,11 @@ See <code><a href="sample_survival_difference_data.html">sample_survival_differe
 <dt id="arg-group-col">group_col<a class="anchor" aria-label="anchor" href="#arg-group-col"></a></dt>
 <dd><p>Grouping column for multiple comparisons, or <code>NULL</code>.
 Default <code>NULL</code>.</p></dd>
+
+
+<dt id="arg-diff-data">diff_data<a class="anchor" aria-label="anchor" href="#arg-diff-data"></a></dt>
+<dd><p>Deprecated name of <code>data</code>; works with a once-per-session
+warning until hvtiPlotR 2.9.0.</p></dd>
 
 </dl></div>
     <div class="section level2">

@@ -38,7 +38,7 @@ plot(
 - type:
 
   Which panel to produce: `"followup"` (default, death states) or
-  `"event"` (requires `event_col` to have been supplied to
+  `"event"` (requires `event_cols` to have been supplied to
   [`hv_followup`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_followup.md)).
 
 - alpha:
@@ -97,8 +97,8 @@ object.
 dta <- sample_goodness_followup_data()
 gf  <- hv_followup(dta, origin_year = 1990, study_start = "1990-01-01",
                    study_end = "2019-12-31", close_date = "2021-08-06",
-                   event_col = "ev_event",
-                     event_time_col = "iv_event")
+                   event_cols = "ev_event",
+                     event_time_cols = "iv_event")
 
 # Death panel
 plot(gf) +

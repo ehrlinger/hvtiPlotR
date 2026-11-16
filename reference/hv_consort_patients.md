@@ -42,7 +42,7 @@ A character vector of patient IDs (from the column named in
 
 ``` r
 tracker <- hv_consort_start(data.frame(id = 1:10, age = c(rep(15,3), rep(30,7))),
-                             patient_id = id) |>
+                             patient_id_col = "id") |>
   hv_consort_exclude(label = "Eligible", col = "excl_screen",
                       age < 18 ~ "Age < 18")
 hv_consort_patients(tracker, "eligible")

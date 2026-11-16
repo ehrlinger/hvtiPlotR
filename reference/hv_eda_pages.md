@@ -15,11 +15,12 @@ hv_eda_pages(
   data,
   x_col = "year",
   section = c("continuous", "percent", "count"),
-  vars = NULL,
+  var_cols = NULL,
   labels = NULL,
   unique_limit = 6L,
   unique_bound = 100,
-  type_overrides = NULL
+  type_overrides = NULL,
+  vars
 )
 ```
 
@@ -38,7 +39,7 @@ hv_eda_pages(
 
   One of `"continuous"`, `"percent"` or `"count"`.
 
-- vars:
+- var_cols:
 
   Character vector of the variables to consider, in page order. `NULL`
   (the default) means every column except `x_col` and the patient
@@ -59,6 +60,11 @@ hv_eda_pages(
 
   Passed to
   [`eda_classify_var()`](https://ehrlinger.github.io/hvtiPlotR/reference/eda_classify_var.md).
+
+- vars:
+
+  Deprecated name of `var_cols`; works, with a once-per-session warning,
+  until hvtiPlotR 2.9.0.
 
 ## Value
 

@@ -79,7 +79,7 @@ designated title placeholder via <code><a href="https://davidgohel.github.io/off
 <span>  <span class="va">object</span>,</span>
 <span>  template <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">getOption</a></span><span class="op">(</span><span class="st">"hvtiPlotR.ppt_template"</span>, <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>,</span>
 <span>    <span class="st">"hv_ppt_template.pptx"</span>, package <span class="op">=</span> <span class="st">"hvtiPlotR"</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>  <span class="va">powerpoint</span>,</span>
+<span>  <span class="va">file</span>,</span>
 <span>  slide_titles <span class="op">=</span> <span class="st">"Plot"</span>,</span>
 <span>  layout <span class="op">=</span> <span class="st">"Title and Content"</span>,</span>
 <span>  master <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -89,7 +89,8 @@ designated title placeholder via <code><a href="https://davidgohel.github.io/off
 <span>  top <span class="op">=</span> <span class="fl">1.2</span>,</span>
 <span>  panel_box <span class="op">=</span> <span class="fu"><a href="hv_panel_box.html">hv_panel_box</a></span><span class="op">(</span>format <span class="op">=</span> <span class="fu">.hv_template_format</span><span class="op">(</span><span class="va">template</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>  fit <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  align <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"panel"</span>, <span class="st">"fill"</span><span class="op">)</span></span>
+<span>  align <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"panel"</span>, <span class="st">"fill"</span><span class="op">)</span>,</span>
+<span>  <span class="va">powerpoint</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -110,7 +111,7 @@ otherwise to the template shipped in <code>inst/extdata</code>, whose 16:9 slide
 fits the default <code>panel_box</code>. See Details.</p></dd>
 
 
-<dt id="arg-powerpoint">powerpoint<a class="anchor" aria-label="anchor" href="#arg-powerpoint"></a></dt>
+<dt id="arg-file">file<a class="anchor" aria-label="anchor" href="#arg-file"></a></dt>
 <dd><p>Output path for the new <code>.pptx</code> file. Required.</p></dd>
 
 
@@ -194,10 +195,15 @@ own sizes and warns when it runs off the slide. Used only with a
 panel so the whole figure spans the slide, centered, with 0.45 in clear
 on each side; see <code><a href="hv_fit_location.html">hv_fit_location()</a></code>. Used only with a <code>panel_box</code>.</p></dd>
 
+
+<dt id="arg-powerpoint">powerpoint<a class="anchor" aria-label="anchor" href="#arg-powerpoint"></a></dt>
+<dd><p>Deprecated name of <code>file</code>; works with a once-per-session
+warning until hvtiPlotR 2.9.0.</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>Invisibly returns the path given by <code>powerpoint</code>.</p>
+    <p>Invisibly returns the path given by <code>file</code>.</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
@@ -263,7 +269,7 @@ updates.</p>
 <span class="r-in"><span><span class="fu">save_ppt</span><span class="op">(</span></span></span>
 <span class="r-in"><span>  object       <span class="op">=</span> <span class="va">p_slide</span>,</span></span>
 <span class="r-in"><span>  template     <span class="op">=</span> <span class="va">template</span>,</span></span>
-<span class="r-in"><span>  powerpoint   <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"fuel_economy.pptx"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  file         <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"fuel_economy.pptx"</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>  slide_titles <span class="op">=</span> <span class="st">"Fuel Economy by Weight"</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> hv_add_plot(): text reduced to 62% so the figure fits on the slide.</span>
@@ -277,7 +283,7 @@ updates.</p>
 <span class="r-in"><span><span class="fu">save_ppt</span><span class="op">(</span></span></span>
 <span class="r-in"><span>  object       <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">p_slide</span>, <span class="va">p2</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>  template     <span class="op">=</span> <span class="va">template</span>,</span></span>
-<span class="r-in"><span>  powerpoint   <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"deck.pptx"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  file         <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"deck.pptx"</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>  slide_titles <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Scatter: fuel economy"</span>, <span class="st">"Box: mpg by cylinder count"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> hv_add_plot(): text reduced to 62% so the figure fits on the slide.</span>
@@ -292,7 +298,7 @@ updates.</p>
 <span class="r-in"><span><span class="fu">save_ppt</span><span class="op">(</span></span></span>
 <span class="r-in"><span>  object       <span class="op">=</span> <span class="va">p_noy</span>,</span></span>
 <span class="r-in"><span>  template     <span class="op">=</span> <span class="va">template</span>,</span></span>
-<span class="r-in"><span>  powerpoint   <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"mpg_by_cyl.pptx"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  file         <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"mpg_by_cyl.pptx"</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>  slide_titles <span class="op">=</span> <span class="st">"Miles per Gallon by Cylinder Count"</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
@@ -305,7 +311,7 @@ updates.</p>
 <span class="r-in"><span><span class="fu">save_ppt</span><span class="op">(</span></span></span>
 <span class="r-in"><span>  object       <span class="op">=</span> <span class="va">pm</span>,</span></span>
 <span class="r-in"><span>  template     <span class="op">=</span> <span class="va">template</span>,</span></span>
-<span class="r-in"><span>  powerpoint   <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"manuscript.pptx"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  file         <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"manuscript.pptx"</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>  slide_titles <span class="op">=</span> <span class="st">"Fuel Economy"</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
@@ -357,7 +363,7 @@ updates.</p>
 <span class="r-in"><span><span class="fu">save_ppt</span><span class="op">(</span></span></span>
 <span class="r-in"><span>  object       <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">p_small</span>, <span class="va">p_big</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>  template     <span class="op">=</span> <span class="va">template</span>,</span></span>
-<span class="r-in"><span>  powerpoint   <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"drifting_deck.pptx"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  file         <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"drifting_deck.pptx"</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>  slide_titles <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Small y-axis"</span>, <span class="st">"Big y-axis"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> hv_add_plot(): text reduced to 94% so the figure fits on the slide.</span>
@@ -370,7 +376,7 @@ updates.</p>
 <span class="r-in"><span><span class="fu">save_ppt</span><span class="op">(</span></span></span>
 <span class="r-in"><span>  object       <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">p_small</span>, <span class="va">p_big</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>  template     <span class="op">=</span> <span class="va">template</span>,</span></span>
-<span class="r-in"><span>  powerpoint   <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"anchored_deck.pptx"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  file         <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"anchored_deck.pptx"</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>  slide_titles <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Small y-axis"</span>, <span class="st">"Big y-axis"</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>  panel_box    <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>width <span class="op">=</span> <span class="fl">8.88</span>, height <span class="op">=</span> <span class="fl">4.51</span>, left <span class="op">=</span> <span class="fl">2.58</span>, top <span class="op">=</span> <span class="fl">1.63</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>

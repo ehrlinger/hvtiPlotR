@@ -10,7 +10,7 @@ by color and with a LOESS (or other) smooth overlay.
 plot(
   x,
   line_colour = "gray50",
-  line_width = 0.2,
+  linewidth = 0.2,
   alpha = 0.8,
   add_smooth = FALSE,
   smooth_method = "loess",
@@ -18,7 +18,8 @@ plot(
   smooth_width = 1.2,
   y_labels = NULL,
   ...,
-  line_color = line_colour
+  line_color = line_colour,
+  line_width
 )
 ```
 
@@ -33,7 +34,7 @@ plot(
   The same as `line_color`: an alias kept for existing code. Give one or
   the other; both with different values is an error.
 
-- line_width:
+- linewidth:
 
   Line width for individual trajectories. Default `0.2`.
 
@@ -73,6 +74,11 @@ plot(
 
   Fixed line color used when the object has no `color_col`. Default
   `"gray50"`.
+
+- line_width:
+
+  Deprecated name of `linewidth`; works with a once-per-session warning
+  until hvtiPlotR 2.9.0.
 
 ## Value
 

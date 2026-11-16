@@ -64,7 +64,7 @@ plot(
 - set_size_sort:
 
   Sort order for the sidebar: `"descending"` (default), `"ascending"`,
-  or `"none"` (preserve `intersect` order).
+  or `"none"` (preserve `set_cols` order).
 
 - set_size_fill:
 
@@ -109,7 +109,7 @@ customization; themes then apply via `+`:
 sets <- c("AV_Replacement", "AV_Repair", "MV_Replacement", "MV_Repair",
           "TV_Repair", "Aorta", "CABG")
 dta <- sample_upset_data(n = 300, seed = 42)
-up  <- hv_upset(dta, intersect = sets)
+up  <- hv_upset(dta, set_cols = sets)
 
 # Default: intersection bars + set-size sidebar (patchwork composite).
 # Use `&` to theme every sub-panel.
@@ -125,7 +125,7 @@ plot(up, set_size = FALSE) + theme_hv_poster()
 
 # Fill bars by an external grouping variable (e.g. era).
 dta$era <- ifelse(seq_len(nrow(dta)) <= 150, "Early", "Recent")
-up_era  <- hv_upset(dta, intersect = sets)
+up_era  <- hv_upset(dta, set_cols = sets)
 plot(up_era, fill_col = "era", set_size = FALSE) +
   ggplot2::scale_fill_manual(
     values = c(Early = "gray60", Recent = "steelblue"),

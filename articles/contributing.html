@@ -270,7 +270,7 @@
 <span><span class="co">#' was given CI columns.</span></span>
 <span><span class="co">#'</span></span>
 <span><span class="co">#' @param x          An `hv_bmi_curve` object.</span></span>
-<span><span class="co">#' @param line_width Width of the curve line. Default `1.0`.</span></span>
+<span><span class="co">#' @param linewidth Width of the curve line. Default `1.0`.</span></span>
 <span><span class="co">#' @param alpha      Transparency of the ribbon in \eqn{[0,1]}. Default `0.2`.</span></span>
 <span><span class="co">#' @param ...        Ignored; present for S3 consistency.</span></span>
 <span><span class="co">#'</span></span>
@@ -292,7 +292,7 @@
 <span><span class="co">#' @importFrom ggplot2 ggplot aes geom_line geom_ribbon</span></span>
 <span><span class="co">#' @importFrom rlang .data</span></span>
 <span><span class="co">#' @export</span></span>
-<span><span class="va">plot.hv_bmi_curve</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span>, <span class="va">line_width</span> <span class="op">=</span> <span class="fl">1.0</span>, <span class="va">alpha</span> <span class="op">=</span> <span class="fl">0.2</span>, <span class="va">...</span><span class="op">)</span> <span class="op">{</span></span>
+<span><span class="va">plot.hv_bmi_curve</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span>, <span class="va">linewidth</span> <span class="op">=</span> <span class="fl">1.0</span>, <span class="va">alpha</span> <span class="op">=</span> <span class="fl">0.2</span>, <span class="va">...</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="fu">.check_alpha</span><span class="op">(</span><span class="va">alpha</span><span class="op">)</span></span>
 <span>  <span class="va">m</span> <span class="op">&lt;-</span> <span class="va">x</span><span class="op">$</span><span class="va">meta</span></span>
 <span></span>
@@ -308,7 +308,7 @@
 <span>    <span class="op">)</span></span>
 <span>  <span class="op">}</span></span>
 <span></span>
-<span>  <span class="va">p</span> <span class="op">+</span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">geom_line</a></span><span class="op">(</span>linewidth <span class="op">=</span> <span class="va">line_width</span><span class="op">)</span></span>
+<span>  <span class="va">p</span> <span class="op">+</span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">geom_line</a></span><span class="op">(</span>linewidth <span class="op">=</span> <span class="va">linewidth</span><span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre></div>
 <p>The conventions these two functions follow are the ones in the conventions table in <code>CONTRIBUTING.md</code>:</p>
 <ul>

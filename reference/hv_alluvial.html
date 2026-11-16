@@ -69,7 +69,14 @@ decorate with color scales, axis labels, and <code><a href="hvtiPlotR-themes.htm
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">hv_alluvial</span><span class="op">(</span><span class="va">data</span>, <span class="va">axes</span>, y_col <span class="op">=</span> <span class="st">"freq"</span>, fill_col <span class="op">=</span> <span class="cn">NULL</span>, axis_labels <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">hv_alluvial</span><span class="op">(</span></span>
+<span>  <span class="va">data</span>,</span>
+<span>  <span class="va">axis_cols</span>,</span>
+<span>  y_col <span class="op">=</span> <span class="st">"freq"</span>,</span>
+<span>  fill_col <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  axis_labels <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  <span class="va">axes</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -81,7 +88,7 @@ decorate with color scales, axis labels, and <code><a href="hvtiPlotR-themes.htm
 axis-value combination, a numeric weight column, and one column per axis.</p></dd>
 
 
-<dt id="arg-axes">axes<a class="anchor" aria-label="anchor" href="#arg-axes"></a></dt>
+<dt id="arg-axis-cols">axis_cols<a class="anchor" aria-label="anchor" href="#arg-axis-cols"></a></dt>
 <dd><p>Character vector of column names to use as axes, in
 left-to-right display order. Minimum two columns.</p></dd>
 
@@ -99,6 +106,11 @@ aesthetics, or <code>NULL</code> for a single fill. Default <code>NULL</code>.</
 <dt id="arg-axis-labels">axis_labels<a class="anchor" aria-label="anchor" href="#arg-axis-labels"></a></dt>
 <dd><p>Character vector of axis labels for the x-axis, the
 same length as <code>axes</code>. Defaults to <code>axes</code> (column names).</p></dd>
+
+
+<dt id="arg-axes">axes<a class="anchor" aria-label="anchor" href="#arg-axes"></a></dt>
+<dd><p>Deprecated name of <code>axis_cols</code>; works, with a once-per-session
+warning, until hvtiPlotR 2.9.0.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -128,7 +140,7 @@ same length as <code>axes</code>. Defaults to <code>axes</code> (column names).<
 <span class="r-in"><span><span class="va">axes</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"pre_ar"</span>, <span class="st">"procedure"</span>, <span class="st">"post_ar"</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># 1. Build data object</span></span></span>
-<span class="r-in"><span><span class="va">al</span> <span class="op">&lt;-</span> <span class="fu">hv_alluvial</span><span class="op">(</span><span class="va">dta</span>, axes <span class="op">=</span> <span class="va">axes</span>, y_col <span class="op">=</span> <span class="st">"freq"</span>, fill_col <span class="op">=</span> <span class="st">"pre_ar"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">al</span> <span class="op">&lt;-</span> <span class="fu">hv_alluvial</span><span class="op">(</span><span class="va">dta</span>, axis_cols <span class="op">=</span> <span class="va">axes</span>, y_col <span class="op">=</span> <span class="st">"freq"</span>, fill_col <span class="op">=</span> <span class="st">"pre_ar"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">al</span>  <span class="co"># prints axes and observation count</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;hv_alluvial&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Axes (3)    : pre_ar → procedure → post_ar</span>

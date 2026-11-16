@@ -10,7 +10,7 @@ on the result to obtain a ggplot2 UpSet diagram (backed by
 ## Usage
 
 ``` r
-hv_upset(data, intersect)
+hv_upset(data, set_cols, intersect)
 ```
 
 ## Arguments
@@ -20,10 +20,15 @@ hv_upset(data, intersect)
   A data frame. Each set-membership column must be logical or integer
   (0/1).
 
-- intersect:
+- set_cols:
 
   Character vector of column names to treat as sets. Must contain at
   least two names that exist in `data`.
+
+- intersect:
+
+  Deprecated name of `set_cols`; works, with a once-per-session warning,
+  until hvtiPlotR 2.9.0.
 
 ## Value
 
@@ -59,7 +64,7 @@ sets <- c("AV_Replacement", "AV_Repair", "MV_Replacement", "MV_Repair",
 dta <- sample_upset_data(n = 300, seed = 42)
 
 # 1. Build data object
-up <- hv_upset(dta, intersect = sets)
+up <- hv_upset(dta, set_cols = sets)
 up  # prints set counts
 #> <hv_upset>
 #>   N patients  : 300  (7 sets)

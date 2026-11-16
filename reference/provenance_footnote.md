@@ -15,7 +15,8 @@ provenance_footnote(
   commit,
   job,
   versions = .default_versions(),
-  time = Sys.time()
+  time = Sys.time(),
+  record = NULL
 )
 ```
 
@@ -39,14 +40,26 @@ provenance_footnote(
 - time:
 
   The time of the render, a `POSIXct` printed as `"%Y-%m-%d %H:%M"`.
-  Default [`Sys.time()`](https://rdrr.io/r/base/Sys.time.html).
+  Default [`Sys.time()`](https://rdrr.io/r/base/Sys.time.html). An `NA`
+  time prints as `"time unknown"`, a gap rather than a plausible value.
+
+- record:
+
+  Optional provenance record, the named list every hvtiR package
+  returns: `package`, `version`, `sha`, `method`, `seed`, `rng_kind` and
+  `time` (extra fields are ignored). When given, it supplies `commit`
+  (its `sha`, or `"commit unknown"` when that is `NA`) and `time` unless
+  they are passed, adds `"<package> <version>"` to `versions`, and
+  appends `"seed <seed>"` when the seed is not `NA`. `job` is still
+  required: the record does not carry it.
 
 ## Value
 
 A character vector of fields: the commit, the job, one field per version
 and the time. Pass it to the `footnote` argument of
 [`save_manuscript()`](https://ehrlinger.github.io/hvtiPlotR/reference/save_manuscript.md),
-which joins and fits it.
+which joins and fits it. An error carries class
+`hvtiPlotR_invalid_provenance`.
 
 ## Details
 
@@ -84,4 +97,13 @@ provenance_footnote(
 #> [4] "hvtiPlotR 2.8.19"                                      
 #> [5] "hvtiRtemplates 1.5.3"                                  
 #> [6] "2026-10-29 14:40"                                      
+
+# From an hvtiR provenance record
+rec <- list(package = "hvtiRbootstrap", version = "1.0.4", sha = "3f9c2a1",
+            method = "stepwise", seed = 42L, rng_kind = RNGkind(),
+            time = as.POSIXct("2026-10-29 14:40"))
+provenance_footnote(job = "30_analyses/boot.qmd", record = rec)
+#> [1] "3f9c2a1"              "30_analyses/boot.qmd" "R 4.6.2"             
+#> [4] "hvtiPlotR 2.8.22"     "hvtiRbootstrap 1.0.4" "2026-10-29 14:40"    
+#> [7] "seed 42"             
 ```

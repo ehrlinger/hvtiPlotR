@@ -72,7 +72,7 @@ onto it.
 
 ``` r
 dta <- sample_upset_data(n = 300, seed = 42)
-v   <- hv_venn(dta, sets = c("AV_Replacement", "MV_Replacement", "CABG"))
+v   <- hv_venn(dta, set_cols = c("AV_Replacement", "MV_Replacement", "CABG"))
 plot(v)
 
 ```

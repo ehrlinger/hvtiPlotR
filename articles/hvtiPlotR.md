@@ -235,7 +235,7 @@ SAS script.
 | `plot.sas` command | R / ggplot2 equivalent | Notes |
 |----|----|----|
 | `%plot(goptions device=pscolor, ...)` | `ggsave(filename = "fig.pdf", width = 11, height = 8.5)` | Manuscript PDF |
-| `%plot(goptions device=cgmmppa, ...)` | `save_ppt(object = p, template = ..., powerpoint = ...)` | Editable PPT vector |
+| `%plot(goptions device=cgmmppa, ...)` | `save_ppt(object = p, template = ..., file = ...)` | Editable PPT vector |
 | `gaccess=gsasfile "path/file.ps"` | `ggsave(filename = here::here("graphs", "fig.pdf"), ...)` | Output file path |
 | `id l="path/file"` | `labs(caption = getwd())` or [`make_footnote()`](https://ehrlinger.github.io/hvtiPlotR/reference/make_footnote.md) | Figure footnote / path label |
 
@@ -955,7 +955,7 @@ p_ppt <- ccf_ppt_plot + theme_hv_ppt_dark()
 save_ppt(
   object       = p_ppt,
   template     = system.file("extdata", "hv_ppt_template.pptx", package = "hvtiPlotR"),
-  powerpoint   = here::here("graphs", "presentation.pptx"),
+  file         = here::here("graphs", "presentation.pptx"),
   slide_titles = "Competing Risks"
 )
 ```

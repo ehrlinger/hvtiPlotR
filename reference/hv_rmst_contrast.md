@@ -13,10 +13,14 @@ zero.
 ``` r
 hv_rmst_contrast(
   data,
-  estimator = "estimator",
-  diff = "diff_days",
-  lo = "lo_days",
-  hi = "hi_days"
+  estimator_col = "estimator",
+  diff_col = "diff_days",
+  lo_col = "lo_days",
+  hi_col = "hi_days",
+  estimator,
+  diff,
+  lo,
+  hi
 )
 ```
 
@@ -27,21 +31,27 @@ hv_rmst_contrast(
   A data frame with one row per estimator, or a `ps_rmst` object (any
   list whose `$tables$estimates` is a data frame).
 
-- estimator:
+- estimator_col:
 
   Name of the column holding estimator labels. Default `"estimator"`. If
   it is a factor, its levels set the display order; otherwise the order
   of first appearance is used.
 
-- diff:
+- diff_col:
 
   Name of the numeric column with the RMST difference (in days). Default
   `"diff_days"`.
 
-- lo, hi:
+- lo_col, hi_col:
 
   Names of the numeric columns with the lower and upper interval limits
   (in days). Defaults `"lo_days"` and `"hi_days"`.
+
+- estimator, diff, lo, hi:
+
+  Deprecated names of `estimator_col`, `diff_col`, `lo_col` and
+  `hi_col`. They still work, with a once-per-session warning, until
+  hvtiPlotR 2.9.0.
 
 ## Value
 

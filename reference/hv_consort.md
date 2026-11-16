@@ -86,7 +86,7 @@ cohort <- data.frame(
   age  = sample(15:80, 100, TRUE),
   echo = sample(c(TRUE, FALSE), 100, TRUE, prob = c(0.9, 0.1))
 )
-tracker <- hv_consort_start(cohort, patient_id = mrn) |>
+tracker <- hv_consort_start(cohort, patient_id_col = "mrn") |>
   hv_consort_exclude(label = "Eligible", col = "excl_screen",
                       age < 18 ~ "Age < 18") |>
   hv_consort_exclude(label = "Analyzed", col = "excl_eligible",

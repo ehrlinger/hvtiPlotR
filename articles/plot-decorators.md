@@ -554,7 +554,7 @@ p_ppt <- p_base +
 save_ppt(
   object       = p_ppt,
   template     = template,
-  powerpoint   = here::here("graphs", "trends_slides.pptx"),
+  file         = here::here("graphs", "trends_slides.pptx"),
   slide_titles = "Temporal Trends by Group"
 )
 ```
@@ -585,7 +585,7 @@ p_km_ppt <- plot(km2) +
 save_ppt(
   object       = list(trends = p_ppt, survival = p_km_ppt),
   template     = template,
-  powerpoint   = here::here("graphs", "multi_slide_deck.pptx"),
+  file         = here::here("graphs", "multi_slide_deck.pptx"),
   slide_titles = c("Temporal Trends by Group", "Overall Survival")
 )
 ```
@@ -613,7 +613,7 @@ panel box as needed; device dimensions vary per plot.
 save_ppt(
   object       = list(trends = p_ppt, survival = p_km_ppt),
   template     = template,
-  powerpoint   = here::here("graphs", "multi_slide_deck_aligned.pptx"),
+  file         = here::here("graphs", "multi_slide_deck_aligned.pptx"),
   slide_titles = c("Temporal Trends by Group", "Overall Survival"),
   panel_box    = list(width = 10, height = 5, left = 1.5, top = 1.5)
 )

@@ -1,14 +1,14 @@
 # Select and Reorder Variables from a Data Frame
 
 Returns the subset of `data` containing only the columns named in
-`vars`, in the order given. Replaces the `Order_Variables()` helper and
-the `Mod_Data <- dta[, Order_Var]` pattern from
+`var_cols`, in the order given. Replaces the `Order_Variables()` helper
+and the `Mod_Data <- dta[, Order_Var]` pattern from
 `tp.dp.EDA_barplots_scatterplots_varnames.R`.
 
 ## Usage
 
 ``` r
-eda_select_vars(data, vars)
+eda_select_vars(data, var_cols, vars)
 ```
 
 ## Arguments
@@ -17,10 +17,15 @@ eda_select_vars(data, vars)
 
   A data frame.
 
-- vars:
+- var_cols:
 
   A character vector of column names, or a single string of
   space-separated names, e.g. `"age ht wt bmi"`.
+
+- vars:
+
+  Deprecated name of `var_cols`; works, with a once-per-session warning,
+  until hvtiPlotR 2.9.0.
 
 ## Value
 
@@ -29,7 +34,7 @@ order.
 
 ## Details
 
-`vars` may be supplied as a character vector or as a single
+`var_cols` may be supplied as a character vector or as a single
 space-separated string (matching the `Var_CatList` / `Var_ContList`
 style from the template).
 

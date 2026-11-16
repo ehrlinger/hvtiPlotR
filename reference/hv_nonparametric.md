@@ -11,19 +11,20 @@ color/fill scales, axis limits, and
 
 ``` r
 hv_nonparametric(
-  curve_data,
+  data,
   x_col = "time",
   estimate_col = "estimate",
   lower_col = NULL,
   upper_col = NULL,
   group_col = NULL,
-  data_points = NULL
+  data_points = NULL,
+  curve_data
 )
 ```
 
 ## Arguments
 
-- curve_data:
+- data:
 
   Data frame; one row per (time, group) combination.
 
@@ -52,6 +53,11 @@ hv_nonparametric(
   Optional data frame of binned data summary points. Must have columns
   matching `x_col` and `"value"`, plus `group_col` when stratified.
   Default `NULL`.
+
+- curve_data:
+
+  Deprecated name of `data`; works with a once-per-session warning until
+  hvtiPlotR 2.9.0.
 
 ## Value
 

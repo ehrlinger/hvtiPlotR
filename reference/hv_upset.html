@@ -72,7 +72,7 @@ obtain a ggplot2 UpSet diagram (backed by
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">hv_upset</span><span class="op">(</span><span class="va">data</span>, <span class="va">intersect</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">hv_upset</span><span class="op">(</span><span class="va">data</span>, <span class="va">set_cols</span>, <span class="va">intersect</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -84,9 +84,14 @@ obtain a ggplot2 UpSet diagram (backed by
 or integer (0/1).</p></dd>
 
 
-<dt id="arg-intersect">intersect<a class="anchor" aria-label="anchor" href="#arg-intersect"></a></dt>
+<dt id="arg-set-cols">set_cols<a class="anchor" aria-label="anchor" href="#arg-set-cols"></a></dt>
 <dd><p>Character vector of column names to treat as sets. Must
 contain at least two names that exist in <code>data</code>.</p></dd>
+
+
+<dt id="arg-intersect">intersect<a class="anchor" aria-label="anchor" href="#arg-intersect"></a></dt>
+<dd><p>Deprecated name of <code>set_cols</code>; works, with a once-per-session
+warning, until hvtiPlotR 2.9.0.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -120,7 +125,7 @@ named integer vector of per-set patient counts.</p></dd>
 <span class="r-in"><span><span class="va">dta</span> <span class="op">&lt;-</span> <span class="fu"><a href="sample_upset_data.html">sample_upset_data</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">300</span>, seed <span class="op">=</span> <span class="fl">42</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># 1. Build data object</span></span></span>
-<span class="r-in"><span><span class="va">up</span> <span class="op">&lt;-</span> <span class="fu">hv_upset</span><span class="op">(</span><span class="va">dta</span>, intersect <span class="op">=</span> <span class="va">sets</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">up</span> <span class="op">&lt;-</span> <span class="fu">hv_upset</span><span class="op">(</span><span class="va">dta</span>, set_cols <span class="op">=</span> <span class="va">sets</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">up</span>  <span class="co"># prints set counts</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;hv_upset&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   N patients  : 300  (7 sets)</span>

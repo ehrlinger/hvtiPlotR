@@ -7,7 +7,7 @@ summary point overlay.
 
 ``` r
 # S3 method for class 'hv_ordinal'
-plot(x, line_width = 1, point_size = 2.5, point_shape = 20L, ...)
+plot(x, linewidth = 1, point_size = 2.5, point_shape = 20L, ..., line_width)
 ```
 
 ## Arguments
@@ -16,7 +16,7 @@ plot(x, line_width = 1, point_size = 2.5, point_shape = 20L, ...)
 
   An `hv_ordinal` object.
 
-- line_width:
+- linewidth:
 
   Width of grade-specific curve lines. Default `1.0`.
 
@@ -31,6 +31,11 @@ plot(x, line_width = 1, point_size = 2.5, point_shape = 20L, ...)
 - ...:
 
   Ignored; present for S3 consistency.
+
+- line_width:
+
+  Deprecated name of `linewidth`; works with a once-per-session warning
+  until hvtiPlotR 2.9.0.
 
 ## Value
 

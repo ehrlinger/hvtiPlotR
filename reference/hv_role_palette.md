@@ -61,7 +61,8 @@ Every color is decided from `levels` alone:
     Paul Tol's muted palette, without its sand and cyan, and without its
     rose when a role is present. Beyond that there are no more
     colorblind-safe colors, and the function stops with an error of
-    class `hv_role_palette_capacity`.
+    class `hvtiPlotR_role_palette_capacity`. It also carries the old
+    class, `hv_role_palette_capacity`, until hvtiPlotR 2.9.0.
 
 Every color except the missing gray is at least 2:1 against white. The
 gray is fainter on purpose: missing is the one level meant to recede.

@@ -168,8 +168,8 @@ diagonal. No patient has follow-up past <code>close_date</code>. Set <code>loss_
 for complete follow-up, with every survivor censored at <code>close_date</code>.</p>
 <p>The column names match the defaults of <code><a href="hv_followup.html">hv_followup()</a></code>:
 <code>iv_opyrs</code>, <code>iv_dead</code>, <code>dead</code>. The event-panel columns (<code>iv_event</code>,
-<code>ev_event</code>, <code>deads</code>) are included so callers can pass <code>event_col</code>,
-<code>event_time_col</code>, and <code>death_for_event_col</code> directly.</p>
+<code>ev_event</code>, <code>deads</code>) are included so callers can pass <code>event_cols</code>,
+<code>event_time_cols</code>, and <code>death_for_event_col</code> directly.</p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
@@ -202,8 +202,8 @@ for complete follow-up, with every survivor censored at <code>close_date</code>.
 <span class="r-in"><span><span class="co"># Event panel</span></span></span>
 <span class="r-in"><span><span class="va">gf2</span> <span class="op">&lt;-</span> <span class="fu"><a href="hv_followup.html">hv_followup</a></span><span class="op">(</span><span class="va">dta</span>, origin_year <span class="op">=</span> <span class="fl">1990</span>, study_start <span class="op">=</span> <span class="st">"1990-01-01"</span>,</span></span>
 <span class="r-in"><span>                   study_end <span class="op">=</span> <span class="st">"2019-12-31"</span>, close_date <span class="op">=</span> <span class="st">"2021-08-06"</span>,</span></span>
-<span class="r-in"><span>                   event_col <span class="op">=</span> <span class="st">"ev_event"</span>,</span></span>
-<span class="r-in"><span>                      event_time_col <span class="op">=</span> <span class="st">"iv_event"</span>,</span></span>
+<span class="r-in"><span>                   event_cols <span class="op">=</span> <span class="st">"ev_event"</span>,</span></span>
+<span class="r-in"><span>                      event_time_cols <span class="op">=</span> <span class="st">"iv_event"</span>,</span></span>
 <span class="r-in"><span>                      death_for_event_col <span class="op">=</span> <span class="st">"deads"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">gf2</span>, type <span class="op">=</span> <span class="st">"event"</span><span class="op">)</span> <span class="op">+</span></span></span>
 <span class="r-in"><span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_color_manual</a></span><span class="op">(</span></span></span>

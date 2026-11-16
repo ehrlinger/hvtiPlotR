@@ -17,11 +17,12 @@ to complete the figure.
 plot(
   x,
   ci_alpha = 0.2,
-  line_width = 1,
+  linewidth = 1,
   point_size = 2,
   point_shape = 1L,
   errorbar_width = 0.25,
-  ...
+  ...,
+  line_width
 )
 ```
 
@@ -36,7 +37,7 @@ plot(
 
   Transparency of the CI ribbon. Default `0.20`.
 
-- line_width:
+- linewidth:
 
   Width of the parametric curve line. Default `1.0`.
 
@@ -59,6 +60,11 @@ plot(
 - ...:
 
   Ignored; present for S3 consistency.
+
+- line_width:
+
+  Deprecated name of `linewidth`; works with a once-per-session warning
+  until hvtiPlotR 2.9.0.
 
 ## Value
 

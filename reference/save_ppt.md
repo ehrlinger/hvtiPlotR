@@ -18,7 +18,7 @@ save_ppt(
   object,
   template = getOption("hvtiPlotR.ppt_template", system.file("extdata",
     "hv_ppt_template.pptx", package = "hvtiPlotR")),
-  powerpoint,
+  file,
   slide_titles = "Plot",
   layout = "Title and Content",
   master = NULL,
@@ -28,7 +28,8 @@ save_ppt(
   top = 1.2,
   panel_box = hv_panel_box(format = .hv_template_format(template)),
   fit = TRUE,
-  align = c("panel", "fill")
+  align = c("panel", "fill"),
+  powerpoint
 )
 ```
 
@@ -48,7 +49,7 @@ save_ppt(
   template shipped in `inst/extdata`, whose 16:9 slide fits the default
   `panel_box`. See Details.
 
-- powerpoint:
+- file:
 
   Output path for the new `.pptx` file. Required.
 
@@ -138,9 +139,14 @@ save_ppt(
   [`hv_fit_location()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_fit_location.md).
   Used only with a `panel_box`.
 
+- powerpoint:
+
+  Deprecated name of `file`; works with a once-per-session warning until
+  hvtiPlotR 2.9.0.
+
 ## Value
 
-Invisibly returns the path given by `powerpoint`.
+Invisibly returns the path given by `file`.
 
 ## Details
 
@@ -221,7 +227,7 @@ p_slide <- p_preview + theme_hv_ppt_dark()
 save_ppt(
   object       = p_slide,
   template     = template,
-  powerpoint   = file.path(tempdir(), "fuel_economy.pptx"),
+  file         = file.path(tempdir(), "fuel_economy.pptx"),
   slide_titles = "Fuel Economy by Weight"
 )
 #> hv_add_plot(): text reduced to 62% so the figure fits on the slide.
@@ -235,7 +241,7 @@ p2 <- ggplot(mtcars, aes(x = factor(cyl), y = mpg)) +
 save_ppt(
   object       = list(p_slide, p2),
   template     = template,
-  powerpoint   = file.path(tempdir(), "deck.pptx"),
+  file         = file.path(tempdir(), "deck.pptx"),
   slide_titles = c("Scatter: fuel economy", "Box: mpg by cylinder count")
 )
 #> hv_add_plot(): text reduced to 62% so the figure fits on the slide.
@@ -250,7 +256,7 @@ p_noy <- ggplot(mtcars, aes(x = factor(cyl), y = mpg)) +
 save_ppt(
   object       = p_noy,
   template     = template,
-  powerpoint   = file.path(tempdir(), "mpg_by_cyl.pptx"),
+  file         = file.path(tempdir(), "mpg_by_cyl.pptx"),
   slide_titles = "Miles per Gallon by Cylinder Count"
 )
 
@@ -263,7 +269,7 @@ pm <- ggplot(mtcars, aes(x = wt, y = mpg)) +
 save_ppt(
   object       = pm,
   template     = template,
-  powerpoint   = file.path(tempdir(), "manuscript.pptx"),
+  file         = file.path(tempdir(), "manuscript.pptx"),
   slide_titles = "Fuel Economy"
 )
 
@@ -315,7 +321,7 @@ p_big <- ggplot(mtcars, aes(hp, mpg)) +
 save_ppt(
   object       = list(p_small, p_big),
   template     = template,
-  powerpoint   = file.path(tempdir(), "drifting_deck.pptx"),
+  file         = file.path(tempdir(), "drifting_deck.pptx"),
   slide_titles = c("Small y-axis", "Big y-axis")
 )
 #> hv_add_plot(): text reduced to 94% so the figure fits on the slide.
@@ -328,7 +334,7 @@ save_ppt(
 save_ppt(
   object       = list(p_small, p_big),
   template     = template,
-  powerpoint   = file.path(tempdir(), "anchored_deck.pptx"),
+  file         = file.path(tempdir(), "anchored_deck.pptx"),
   slide_titles = c("Small y-axis", "Big y-axis"),
   panel_box    = list(width = 8.88, height = 4.51, left = 2.58, top = 1.63)
 )

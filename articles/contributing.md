@@ -232,7 +232,7 @@ print.hv_bmi_curve <- function(x, ...) {
 #' was given CI columns.
 #'
 #' @param x          An `hv_bmi_curve` object.
-#' @param line_width Width of the curve line. Default `1.0`.
+#' @param linewidth Width of the curve line. Default `1.0`.
 #' @param alpha      Transparency of the ribbon in \eqn{[0,1]}. Default `0.2`.
 #' @param ...        Ignored; present for S3 consistency.
 #'
@@ -254,7 +254,7 @@ print.hv_bmi_curve <- function(x, ...) {
 #' @importFrom ggplot2 ggplot aes geom_line geom_ribbon
 #' @importFrom rlang .data
 #' @export
-plot.hv_bmi_curve <- function(x, line_width = 1.0, alpha = 0.2, ...) {
+plot.hv_bmi_curve <- function(x, linewidth = 1.0, alpha = 0.2, ...) {
   .check_alpha(alpha)
   m <- x$meta
 
@@ -270,7 +270,7 @@ plot.hv_bmi_curve <- function(x, line_width = 1.0, alpha = 0.2, ...) {
     )
   }
 
-  p + ggplot2::geom_line(linewidth = line_width)
+  p + ggplot2::geom_line(linewidth = linewidth)
 }
 ```
 

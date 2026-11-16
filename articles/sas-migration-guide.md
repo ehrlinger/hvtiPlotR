@@ -114,7 +114,7 @@ its survival plot.
 | `tp.dp.longitudinal_patients_measures.R` | dp | [`hv_longitudinal()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_longitudinal.md) | [Longitudinal counts](#dp-long-counts) |
 | `Function_DataPlotting()` in `tp.dp.EDA_barplots_scatterplots*.R` (one panel) | dp | [`hv_eda()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_eda.md) | [EDA postage stamps](#dp-eda) |
 | `tp.dp.EDA_barplots_scatterplots.R` | dp | [`hv_eda_pages()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_eda_pages.md) | [EDA postage stamps](#dp-eda) |
-| `tp.dp.EDA_barplots_scatterplots_varnames.R` | dp | `hv_eda_pages(vars = ..., labels = ...)` | [EDA postage stamps](#dp-eda) |
+| `tp.dp.EDA_barplots_scatterplots_varnames.R` | dp | `hv_eda_pages(var_cols = ..., labels = ...)` | [EDA postage stamps](#dp-eda) |
 | `tp.lp.mirror-histogram_SAVR-TF-TAVR.R` | lp | [`hv_mirror_hist()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_mirror_hist.md) | [Mirror histogram: binary-match](#dp-mirror) |
 | `tp.lp.mirror_histo_before_after_wt.R` | lp | `hv_mirror_hist(weight_col = ...)` | [Mirror histogram: weighted IPTW](#dp-mirror) |
 | Stacked histogram | dp | [`hv_stacked()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_stacked.md) | [Stacked histogram](#dp-stacked) |
@@ -871,7 +871,7 @@ script builds with `ggalluvial`. The R port wraps this with
 [`hv_alluvial()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_alluvial.md),
 which builds the `geom_alluvium()`/`geom_stratum()` layers and sets
 default fill aesthetics for you. You supply a data frame with one column
-per state, name those columns in `axes`, and let
+per state, name those columns in `axis_cols`, and let
 [`scale_fill_brewer()`](https://ggplot2.tidyverse.org/reference/scale_brewer.html)
 or a manual fill scale control the colors. See the [Alluvial section of
 the plot-functions
@@ -978,7 +978,7 @@ cleanly past three sets. The SAS version used a custom `PROC TABULATE` /
 wrapped in
 [`hv_upset()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_upset.md).
 You pass a binary-indicator data frame (one column per set, 1 = member)
-and the `intersect` argument names the sets to include.
+and the `set_cols` argument names the sets to include.
 
 Two things to know about the display.
 [`plot()`](https://rdrr.io/r/graphics/plot.default.html) shows the
@@ -993,7 +993,7 @@ extend with `+`.
 
 sets <- c("CABG", "Valve", "MAZE", "Aorta")
 dta  <- sample_upset_data(n = 300, sets = sets)
-hu   <- hv_upset(data = dta, intersect = sets)
+hu   <- hv_upset(data = dta, set_cols = sets)
 
 plot(hu)
 ```
@@ -1175,7 +1175,7 @@ Pearson/Spearman table and Fisher intervals.
 dta_cor <- sample_correlation_data(n = 300, seed = 42)
 cm <- hv_correlation_matrix(
   dta_cor,
-  vars = c("a1c", "glucose", "creatinine", "albumin"),
+  var_cols = c("a1c", "glucose", "creatinine", "albumin"),
   labels = c("HbA1c", "Glucose", "Creatinine", "Albumin")
 )
 
@@ -1608,7 +1608,7 @@ p_ppt <- p +
 save_ppt(
   object       = p_ppt,
   template     = template,
-  powerpoint   = "figures/afib_prevalence.pptx",
+  file         = "figures/afib_prevalence.pptx",
   slide_titles = "AF Prevalence over Time"
 )
 
@@ -1616,7 +1616,7 @@ save_ppt(
 save_ppt(
   object       = list(fig1 = p_binary, fig2 = p_multi),
   template     = template,
-  powerpoint   = "figures/np_curves.pptx",
+  file         = "figures/np_curves.pptx",
   slide_titles = c("Binary Outcome", "Multi-group Comparison")
 )
 ```

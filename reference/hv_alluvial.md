@@ -10,7 +10,14 @@ decorate with color scales, axis labels, and
 ## Usage
 
 ``` r
-hv_alluvial(data, axes, y_col = "freq", fill_col = NULL, axis_labels = NULL)
+hv_alluvial(
+  data,
+  axis_cols,
+  y_col = "freq",
+  fill_col = NULL,
+  axis_labels = NULL,
+  axes
+)
 ```
 
 ## Arguments
@@ -20,7 +27,7 @@ hv_alluvial(data, axes, y_col = "freq", fill_col = NULL, axis_labels = NULL)
   A data frame in wide alluvial format: one row per axis-value
   combination, a numeric weight column, and one column per axis.
 
-- axes:
+- axis_cols:
 
   Character vector of column names to use as axes, in left-to-right
   display order. Minimum two columns.
@@ -39,6 +46,11 @@ hv_alluvial(data, axes, y_col = "freq", fill_col = NULL, axis_labels = NULL)
 
   Character vector of axis labels for the x-axis, the same length as
   `axes`. Defaults to `axes` (column names).
+
+- axes:
+
+  Deprecated name of `axis_cols`; works, with a once-per-session
+  warning, until hvtiPlotR 2.9.0.
 
 ## Value
 
@@ -72,7 +84,7 @@ dta  <- sample_alluvial_data(n = 300, seed = 42)
 axes <- c("pre_ar", "procedure", "post_ar")
 
 # 1. Build data object
-al <- hv_alluvial(dta, axes = axes, y_col = "freq", fill_col = "pre_ar")
+al <- hv_alluvial(dta, axis_cols = axes, y_col = "freq", fill_col = "pre_ar")
 al  # prints axes and observation count
 #> <hv_alluvial>
 #>   Axes (3)    : pre_ar → procedure → post_ar

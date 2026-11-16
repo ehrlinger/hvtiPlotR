@@ -20,20 +20,22 @@ it here with the appropriate column names.
 
 ``` r
 survival_difference_plot(
-  diff_data,
+  data,
   x_col = "time",
   estimate_col = "difference",
   lower_col = NULL,
   upper_col = NULL,
   group_col = NULL,
   ci_alpha = 0.2,
-  line_width = 1
+  linewidth = 1,
+  diff_data,
+  line_width
 )
 ```
 
 ## Arguments
 
-- diff_data:
+- data:
 
   Data frame of pre-computed survival differences. See
   [`sample_survival_difference_data()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_survival_difference_data.md).
@@ -63,9 +65,19 @@ survival_difference_plot(
 
   Transparency of the CI ribbon. Default `0.20`.
 
-- line_width:
+- linewidth:
 
   Line width. Default `1.0`.
+
+- diff_data:
+
+  Deprecated name of `data`; works with a once-per-session warning until
+  hvtiPlotR 2.9.0.
+
+- line_width:
+
+  Deprecated name of `linewidth`; works with a once-per-session warning
+  until hvtiPlotR 2.9.0.
 
 ## Value
 

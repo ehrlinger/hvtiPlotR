@@ -21,20 +21,22 @@ for examples.
 
 ``` r
 nnt_plot(
-  nnt_data,
+  data,
   x_col = "time",
   estimate_col = "nnt",
   lower_col = NULL,
   upper_col = NULL,
   na_rm = TRUE,
   ci_alpha = 0.2,
-  line_width = 1
+  linewidth = 1,
+  nnt_data,
+  line_width
 )
 ```
 
 ## Arguments
 
-- nnt_data:
+- data:
 
   Data frame of pre-computed NNT estimates. See
   [`sample_nnt_data()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_nnt_data.md).
@@ -64,9 +66,19 @@ nnt_plot(
 
   Transparency of the CI ribbon. Default `0.20`.
 
-- line_width:
+- linewidth:
 
   Line width. Default `1.0`.
+
+- nnt_data:
+
+  Deprecated name of `data`; works with a once-per-session warning until
+  hvtiPlotR 2.9.0.
+
+- line_width:
+
+  Deprecated name of `linewidth`; works with a once-per-session warning
+  until hvtiPlotR 2.9.0.
 
 ## Value
 

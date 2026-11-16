@@ -70,11 +70,12 @@ to complete the figure.</p>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span></span>
 <span>  <span class="va">x</span>,</span>
 <span>  ci_alpha <span class="op">=</span> <span class="fl">0.2</span>,</span>
-<span>  line_width <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  linewidth <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  point_size <span class="op">=</span> <span class="fl">2</span>,</span>
 <span>  point_shape <span class="op">=</span> <span class="fl">1L</span>,</span>
 <span>  errorbar_width <span class="op">=</span> <span class="fl">0.25</span>,</span>
-<span>  <span class="va">...</span></span>
+<span>  <span class="va">...</span>,</span>
+<span>  <span class="va">line_width</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -90,7 +91,7 @@ to complete the figure.</p>
 <dd><p>Transparency of the CI ribbon. Default <code>0.20</code>.</p></dd>
 
 
-<dt id="arg-line-width">line_width<a class="anchor" aria-label="anchor" href="#arg-line-width"></a></dt>
+<dt id="arg-linewidth">linewidth<a class="anchor" aria-label="anchor" href="#arg-linewidth"></a></dt>
 <dd><p>Width of the parametric curve line. Default <code>1.0</code>.</p></dd>
 
 
@@ -111,6 +112,11 @@ to complete the figure.</p>
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
 <dd><p>Ignored; present for S3 consistency.</p></dd>
+
+
+<dt id="arg-line-width">line_width<a class="anchor" aria-label="anchor" href="#arg-line-width"></a></dt>
+<dd><p>Deprecated name of <code>linewidth</code>; works with a once-per-session
+warning until hvtiPlotR 2.9.0.</p></dd>
 
 </dl></div>
     <div class="section level2">

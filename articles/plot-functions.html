@@ -658,7 +658,7 @@
 </div>
 </section><section class="level2"><h3 id="non-fatal-event-panel">Non-fatal event panel<a class="anchor" aria-label="anchor" href="#non-fatal-event-panel"></a>
 </h3>
-<p>When the dataset includes a non-fatal competing event (e.g. relapse, reoperation), pass <code>event_col</code>, <code>event_time_col</code>, and optionally <code>death_for_event_col</code> to the constructor and then call <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code> with <code>type = "event"</code> to render the event panel.</p>
+<p>When the dataset includes a non-fatal competing event (e.g. relapse, reoperation), pass <code>event_cols</code>, <code>event_time_cols</code>, and optionally <code>death_for_event_col</code> to the constructor and then call <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code> with <code>type = "event"</code> to render the event panel.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb31"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">gfup_event_dta</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sample_goodness_followup_data.html">sample_goodness_followup_data</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">300</span>, seed <span class="op">=</span> <span class="fl">42</span><span class="op">)</span></span></code></pre></div>
@@ -667,8 +667,8 @@
 <div class="sourceCode cell-code" id="cb32"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">gf2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hv_followup.html">hv_followup</a></span><span class="op">(</span></span>
 <span>  <span class="va">gfup_event_dta</span>,</span>
-<span>  event_col           <span class="op">=</span> <span class="st">"ev_event"</span>,</span>
-<span>  event_time_col      <span class="op">=</span> <span class="st">"iv_event"</span>,</span>
+<span>  event_cols          <span class="op">=</span> <span class="st">"ev_event"</span>,</span>
+<span>  event_time_cols     <span class="op">=</span> <span class="st">"iv_event"</span>,</span>
 <span>  death_for_event_col <span class="op">=</span> <span class="st">"deads"</span>,</span>
 <span>  event_levels        <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"No event"</span>, <span class="st">"Relapse"</span>, <span class="st">"Death"</span><span class="op">)</span>,</span>
 <span>  origin_year         <span class="op">=</span> <span class="fl">1990</span>,</span>
@@ -707,7 +707,7 @@
 </div>
 </section><section class="level2"><h3 id="competing-non-fatal-events">Competing non-fatal events<a class="anchor" aria-label="anchor" href="#competing-non-fatal-events"></a>
 </h3>
-<p>A study that tracks more than one non-fatal event, say reoperation and stroke, can draw them in one panel. Pass <code>event_col</code> and <code>event_time_col</code> as vectors, one element per event, and give <code>event_levels</code> one label per event between “No event” and “Death”. Each patient takes the state of whichever event came first. An event counts only when it strictly precedes death, as with a single event, so a tie with death goes to death. A tie between two non-fatal events goes to the one listed first. The point sits at the winning event’s interval.</p>
+<p>A study that tracks more than one non-fatal event, say reoperation and stroke, can draw them in one panel. Pass <code>event_cols</code> and <code>event_time_cols</code> as vectors, one element per event, and give <code>event_levels</code> one label per event between “No event” and “Death”. Each patient takes the state of whichever event came first. An event counts only when it strictly precedes death, as with a single event, so a tie with death goes to death. A tie between two non-fatal events goes to the one listed first. The point sits at the winning event’s interval.</p>
 <p>The sample data carry one event, so the chunk below derives a second.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb33"><pre class="downlit sourceCode r">
@@ -715,8 +715,8 @@
 <span></span>
 <span><span class="va">gf3</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hv_followup.html">hv_followup</a></span><span class="op">(</span></span>
 <span>  <span class="va">gfup_event_dta</span>,</span>
-<span>  event_col           <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ev_event"</span>, <span class="st">"ev_stroke"</span><span class="op">)</span>,</span>
-<span>  event_time_col      <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"iv_event"</span>, <span class="st">"iv_event"</span><span class="op">)</span>,</span>
+<span>  event_cols          <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ev_event"</span>, <span class="st">"ev_stroke"</span><span class="op">)</span>,</span>
+<span>  event_time_cols     <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"iv_event"</span>, <span class="st">"iv_event"</span><span class="op">)</span>,</span>
 <span>  death_for_event_col <span class="op">=</span> <span class="st">"deads"</span>,</span>
 <span>  event_levels        <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"No event"</span>, <span class="st">"Reoperation"</span>, <span class="st">"Stroke"</span>, <span class="st">"Death"</span><span class="op">)</span>,</span>
 <span>  origin_year         <span class="op">=</span> <span class="fl">1990</span>,</span>
@@ -1340,7 +1340,7 @@ Figure 1
 <code class="sourceCode R"><span><span class="va">dta_cor</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sample_correlation_data.html">sample_correlation_data</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">300</span>, seed <span class="op">=</span> <span class="fl">42</span><span class="op">)</span></span>
 <span><span class="va">cm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hv_correlation_matrix.html">hv_correlation_matrix</a></span><span class="op">(</span></span>
 <span>  <span class="va">dta_cor</span>,</span>
-<span>  vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"a1c"</span>, <span class="st">"glucose"</span>, <span class="st">"creatinine"</span>, <span class="st">"albumin"</span><span class="op">)</span>,</span>
+<span>  var_cols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"a1c"</span>, <span class="st">"glucose"</span>, <span class="st">"creatinine"</span>, <span class="st">"albumin"</span><span class="op">)</span>,</span>
 <span>  labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"HbA1c"</span>, <span class="st">"Glucose"</span>, <span class="st">"Creatinine"</span>, <span class="st">"Albumin"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
@@ -1617,7 +1617,7 @@ Albumin    -0.24269734 -0.18196059  0.03386094  1.00000000</code></pre>
 <span><span class="va">sections</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>continuous <span class="op">=</span> <span class="st">"continuous"</span>, percent <span class="op">=</span> <span class="st">"percent"</span>, count <span class="op">=</span> <span class="st">"count"</span><span class="op">)</span>,</span>
 <span>  <span class="kw">function</span><span class="op">(</span><span class="va">s</span><span class="op">)</span> <span class="op">{</span></span>
-<span>    <span class="fu"><a href="../reference/hv_eda_pages.html">hv_eda_pages</a></span><span class="op">(</span><span class="va">dta_eda</span>, x_col <span class="op">=</span> <span class="st">"op_years"</span>, section <span class="op">=</span> <span class="va">s</span>, vars <span class="op">=</span> <span class="va">eda_vars</span>,</span>
+<span>    <span class="fu"><a href="../reference/hv_eda_pages.html">hv_eda_pages</a></span><span class="op">(</span><span class="va">dta_eda</span>, x_col <span class="op">=</span> <span class="st">"op_years"</span>, section <span class="op">=</span> <span class="va">s</span>, var_cols <span class="op">=</span> <span class="va">eda_vars</span>,</span>
 <span>                 labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>ef <span class="op">=</span> <span class="st">"Ejection Fraction (%)"</span>, male <span class="op">=</span> <span class="st">"Male"</span>,</span>
 <span>                            nyha <span class="op">=</span> <span class="st">"NYHA Class"</span>, valve_morph <span class="op">=</span> <span class="st">"Valve Morphology"</span><span class="op">)</span><span class="op">)</span></span>
 <span>  <span class="op">}</span></span>
@@ -1705,7 +1705,7 @@ Albumin    -0.24269734 -0.18196059  0.03386094  1.00000000</code></pre>
 <p>The bare panel shows flows between the three axis stages with uniform fill and no color, labels, or theme. Look for: bands that connect every level of <code>pre_ar</code> through <code>procedure</code> to every level of <code>post_ar</code>, with band widths proportional to the <code>freq</code> column; missing bands indicate a combination that does not occur in the data.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb108"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">al</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hv_alluvial.html">hv_alluvial</a></span><span class="op">(</span><span class="va">dta_al</span>, axes <span class="op">=</span> <span class="va">axes</span>, y_col <span class="op">=</span> <span class="st">"freq"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">al</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hv_alluvial.html">hv_alluvial</a></span><span class="op">(</span><span class="va">dta_al</span>, axis_cols <span class="op">=</span> <span class="va">axes</span>, y_col <span class="op">=</span> <span class="st">"freq"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">al</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
 <div>
@@ -1719,7 +1719,7 @@ Albumin    -0.24269734 -0.18196059  0.03386094  1.00000000</code></pre>
 <p>Pass <code>fill_col</code> to the constructor to color each flow band by the value of a categorical column. Here pre-operative AR grade colors the bands so you can trace how each grade distributes across procedure types and post-operative outcomes. Swap <code><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_fill_manual()</a></code> for <code><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_fill_brewer()</a></code> when your levels map naturally to a diverging palette.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb109"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">al_filled</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hv_alluvial.html">hv_alluvial</a></span><span class="op">(</span><span class="va">dta_al</span>, axes <span class="op">=</span> <span class="va">axes</span>, y_col <span class="op">=</span> <span class="st">"freq"</span>,</span>
+<code class="sourceCode R"><span><span class="va">al_filled</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hv_alluvial.html">hv_alluvial</a></span><span class="op">(</span><span class="va">dta_al</span>, axis_cols <span class="op">=</span> <span class="va">axes</span>, y_col <span class="op">=</span> <span class="st">"freq"</span>,</span>
 <span>                            fill_col <span class="op">=</span> <span class="st">"pre_ar"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">al_filled</span><span class="op">)</span> <span class="op">+</span></span>
@@ -1754,12 +1754,12 @@ Albumin    -0.24269734 -0.18196059  0.03386094  1.00000000</code></pre>
 </div>
 </section><section class="level2"><h3 id="two-axis-before-after-comparison">Two-axis before / after comparison<a class="anchor" aria-label="anchor" href="#two-axis-before-after-comparison"></a>
 </h3>
-<p>When you only need to compare two time points (pre- and post-operative), drop the middle axis and pass just two columns to <code>axes</code>. Use custom <code>axis_labels</code> to replace the raw column names with readable stage labels, and <code><a href="https://ggplot2.tidyverse.org/reference/annotate.html" class="external-link">annotate()</a></code> to call out the direction of change directly on the panel.</p>
+<p>When you only need to compare two time points (pre- and post-operative), drop the middle axis and pass just two columns to <code>axis_cols</code>. Use custom <code>axis_labels</code> to replace the raw column names with readable stage labels, and <code><a href="https://ggplot2.tidyverse.org/reference/annotate.html" class="external-link">annotate()</a></code> to call out the direction of change directly on the panel.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb110"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">al2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hv_alluvial.html">hv_alluvial</a></span><span class="op">(</span></span>
 <span>  <span class="va">dta_al</span>,</span>
-<span>  axes        <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"pre_ar"</span>, <span class="st">"post_ar"</span><span class="op">)</span>,</span>
+<span>  axis_cols   <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"pre_ar"</span>, <span class="st">"post_ar"</span><span class="op">)</span>,</span>
 <span>  y_col       <span class="op">=</span> <span class="st">"freq"</span>,</span>
 <span>  fill_col    <span class="op">=</span> <span class="st">"pre_ar"</span>,</span>
 <span>  axis_labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Pre-operative"</span>, <span class="st">"Post-operative"</span><span class="op">)</span></span>
@@ -1921,7 +1921,7 @@ Albumin    -0.24269734 -0.18196059  0.03386094  1.00000000</code></pre>
 <span>  echo        <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">TRUE</span>, <span class="cn">FALSE</span><span class="op">)</span>, <span class="fl">300</span>, replace <span class="op">=</span> <span class="cn">TRUE</span>, prob <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.85</span>, <span class="fl">0.15</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">tracker2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hv_consort_start.html">hv_consort_start</a></span><span class="op">(</span><span class="va">cohort</span>, patient_id <span class="op">=</span> <span class="va">mrn</span>, label <span class="op">=</span> <span class="st">"Screened"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span><span class="va">tracker2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hv_consort_start.html">hv_consort_start</a></span><span class="op">(</span><span class="va">cohort</span>, patient_id_col <span class="op">=</span> <span class="st">"mrn"</span>, label <span class="op">=</span> <span class="st">"Screened"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/hv_consort_exclude.html">hv_consort_exclude</a></span><span class="op">(</span></span>
 <span>    label        <span class="op">=</span> <span class="st">"Eligible"</span>,</span>
 <span>    col          <span class="op">=</span> <span class="st">"excl_screen"</span>,</span>
@@ -1995,7 +1995,7 @@ Albumin    -0.24269734 -0.18196059  0.03386094  1.00000000</code></pre>
 <div class="sourceCode cell-code" id="cb132"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/save_ppt.html">save_ppt</a></span><span class="op">(</span></span>
 <span>  object       <span class="op">=</span> <span class="fu"><a href="../reference/hv_consort.html">hv_consort</a></span><span class="op">(</span><span class="va">tracker</span><span class="op">)</span>,</span>
-<span>  powerpoint   <span class="op">=</span> <span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org/reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="st">"graphs"</span>, <span class="st">"consort.pptx"</span><span class="op">)</span>,</span>
+<span>  file         <span class="op">=</span> <span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org/reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="st">"graphs"</span>, <span class="st">"consort.pptx"</span><span class="op">)</span>,</span>
 <span>  slide_titles <span class="op">=</span> <span class="st">"CONSORT Patient Flow"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 </div>
@@ -3152,7 +3152,7 @@ Albumin    -0.24269734 -0.18196059  0.03386094  1.00000000</code></pre>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb188"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">np</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hv_nonparametric.html">hv_nonparametric</a></span><span class="op">(</span></span>
-<span>  curve_data  <span class="op">=</span> <span class="va">curve_dat</span>,</span>
+<span>  data        <span class="op">=</span> <span class="va">curve_dat</span>,</span>
 <span>  lower_col   <span class="op">=</span> <span class="st">"lower"</span>,</span>
 <span>  upper_col   <span class="op">=</span> <span class="st">"upper"</span>,</span>
 <span>  data_points <span class="op">=</span> <span class="va">pts_dat</span></span>
@@ -3221,7 +3221,7 @@ Albumin    -0.24269734 -0.18196059  0.03386094  1.00000000</code></pre>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">np_grp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hv_nonparametric.html">hv_nonparametric</a></span><span class="op">(</span></span>
-<span>  curve_data  <span class="op">=</span> <span class="va">curve_grp</span>,</span>
+<span>  data        <span class="op">=</span> <span class="va">curve_grp</span>,</span>
 <span>  group_col   <span class="op">=</span> <span class="st">"group"</span>,</span>
 <span>  lower_col   <span class="op">=</span> <span class="st">"lower"</span>,</span>
 <span>  upper_col   <span class="op">=</span> <span class="st">"upper"</span>,</span>
@@ -3263,7 +3263,7 @@ Albumin    -0.24269734 -0.18196059  0.03386094  1.00000000</code></pre>
 <span><span class="co"># Editable PowerPoint</span></span>
 <span><span class="fu"><a href="../reference/save_ppt.html">save_ppt</a></span><span class="op">(</span><span class="va">p_np</span>,</span>
 <span>         template   <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"hv_ppt_template.pptx"</span>, package <span class="op">=</span> <span class="st">"hvtiPlotR"</span><span class="op">)</span>,</span>
-<span>         powerpoint <span class="op">=</span> <span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org/reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="st">"graphs"</span>, <span class="st">"np_afib_prevalence.pptx"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span>         file       <span class="op">=</span> <span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org/reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="st">"graphs"</span>, <span class="st">"np_afib_prevalence.pptx"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 </div>
 </section></section><section class="section level2"><h2 id="nonparametric-ordinal-outcome-curve">Nonparametric Ordinal Outcome Curve<a class="anchor" aria-label="anchor" href="#nonparametric-ordinal-outcome-curve"></a>
 </h2>
@@ -3308,7 +3308,7 @@ Albumin    -0.24269734 -0.18196059  0.03386094  1.00000000</code></pre>
 <p>Build the S3 object once with <code><a href="../reference/hv_ordinal.html">hv_ordinal()</a></code>, passing both the curve data and the summary points. The same object drives the bare and decorated plots below.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb196"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">np_ord</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hv_ordinal.html">hv_ordinal</a></span><span class="op">(</span>curve_data <span class="op">=</span> <span class="va">ord_dat</span>, data_points <span class="op">=</span> <span class="va">ord_pts</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">np_ord</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hv_ordinal.html">hv_ordinal</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">ord_dat</span>, data_points <span class="op">=</span> <span class="va">ord_pts</span><span class="op">)</span></span></code></pre></div>
 </div>
 <section class="level3"><h4 id="bare-plot-6">Bare plot<a class="anchor" aria-label="anchor" href="#bare-plot-6"></a>
 </h4>
@@ -3381,7 +3381,7 @@ Albumin    -0.24269734 -0.18196059  0.03386094  1.00000000</code></pre>
 <span><span class="co"># Show three-level version using only two grades from sample data</span></span>
 <span><span class="va">ord_two</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">ord_dat</span>, <span class="va">grade</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"None"</span>, <span class="st">"Severe"</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="../reference/hv_ordinal.html">hv_ordinal</a></span><span class="op">(</span>curve_data <span class="op">=</span> <span class="va">ord_two</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="../reference/hv_ordinal.html">hv_ordinal</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">ord_two</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_color_manual</a></span><span class="op">(</span></span>
 <span>    values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"None"</span> <span class="op">=</span> <span class="st">"steelblue"</span>, <span class="st">"Severe"</span> <span class="op">=</span> <span class="st">"firebrick"</span><span class="op">)</span>,</span>
 <span>    name   <span class="op">=</span> <span class="cn">NULL</span></span>
@@ -3529,7 +3529,7 @@ Albumin    -0.24269734 -0.18196059  0.03386094  1.00000000</code></pre>
 <span><span class="co"># PowerPoint (bar chart only — patchwork composites may need ggsave first)</span></span>
 <span><span class="fu"><a href="../reference/save_ppt.html">save_ppt</a></span><span class="op">(</span><span class="va">p_lc_bar</span>,</span>
 <span>         template   <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"hv_ppt_template.pptx"</span>, package <span class="op">=</span> <span class="st">"hvtiPlotR"</span><span class="op">)</span>,</span>
-<span>         powerpoint <span class="op">=</span> <span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org/reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="st">"graphs"</span>, <span class="st">"longitudinal_participation.pptx"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span>         file       <span class="op">=</span> <span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org/reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="st">"graphs"</span>, <span class="st">"longitudinal_participation.pptx"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 </div>
 </section></section><section class="section level2"><h2 id="upset-plot">UpSet Plot<a class="anchor" aria-label="anchor" href="#upset-plot"></a>
 </h2>
@@ -3540,7 +3540,7 @@ Albumin    -0.24269734 -0.18196059  0.03386094  1.00000000</code></pre>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">hu</span>, set_size <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="../reference/hvtiPlotR-themes.html">theme_hv_poster</a></span><span class="op">(</span><span class="op">)</span> <span class="co"># single ggplot</span></span></code></pre></div>
 <section class="level2"><h3 id="sample-data-15">Sample data<a class="anchor" aria-label="anchor" href="#sample-data-15"></a>
 </h3>
-<p><code><a href="../reference/sample_upset_data.html">sample_upset_data()</a></code> returns a binary indicator matrix: one column per procedure, one row per patient, with 1 indicating the procedure was performed. Pass the column names to <code>intersect</code> in the constructor to define the set membership axes. <code><a href="https://rdrr.io/r/base/colSums.html" class="external-link">colSums()</a></code> confirms the marginal counts before you build.</p>
+<p><code><a href="../reference/sample_upset_data.html">sample_upset_data()</a></code> returns a binary indicator matrix: one column per procedure, one row per patient, with 1 indicating the procedure was performed. Pass the column names to <code>set_cols</code> in the constructor to define the set membership axes. <code><a href="https://rdrr.io/r/base/colSums.html" class="external-link">colSums()</a></code> confirms the marginal counts before you build.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb210"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">sets</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"AV_Replacement"</span>, <span class="st">"AV_Repair"</span>, <span class="st">"MV_Replacement"</span>, <span class="st">"MV_Repair"</span>,</span>
@@ -3566,7 +3566,7 @@ Albumin    -0.24269734 -0.18196059  0.03386094  1.00000000</code></pre>
             56            147 </code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb214"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">hu</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hv_upset.html">hv_upset</a></span><span class="op">(</span><span class="va">upset_dta</span>, intersect <span class="op">=</span> <span class="va">sets</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">hu</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hv_upset.html">hv_upset</a></span><span class="op">(</span><span class="va">upset_dta</span>, set_cols <span class="op">=</span> <span class="va">sets</span><span class="op">)</span></span></code></pre></div>
 </div>
 </section><section class="level2"><h3 id="default-plot">Default plot<a class="anchor" aria-label="anchor" href="#default-plot"></a>
 </h3>
@@ -3603,7 +3603,7 @@ Albumin    -0.24269734 -0.18196059  0.03386094  1.00000000</code></pre>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb217"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">upset_dta</span><span class="op">$</span><span class="va">era</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_len</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">upset_dta</span><span class="op">)</span><span class="op">)</span> <span class="op">&lt;=</span> <span class="fl">200</span>, <span class="st">"Early"</span>, <span class="st">"Recent"</span><span class="op">)</span></span>
-<span><span class="va">hu_era</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hv_upset.html">hv_upset</a></span><span class="op">(</span><span class="va">upset_dta</span>, intersect <span class="op">=</span> <span class="va">sets</span><span class="op">)</span></span>
+<span><span class="va">hu_era</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hv_upset.html">hv_upset</a></span><span class="op">(</span><span class="va">upset_dta</span>, set_cols <span class="op">=</span> <span class="va">sets</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">hu_era</span>, fill_col <span class="op">=</span> <span class="st">"era"</span>, set_size <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_fill_manual</a></span><span class="op">(</span></span>
@@ -3625,7 +3625,7 @@ Albumin    -0.24269734 -0.18196059  0.03386094  1.00000000</code></pre>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb218"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">dta</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sample_upset_data.html">sample_upset_data</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">400</span>, seed <span class="op">=</span> <span class="fl">7</span><span class="op">)</span></span>
-<span><span class="va">v</span>   <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hv_venn.html">hv_venn</a></span><span class="op">(</span><span class="va">dta</span>, sets <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"AV_Replacement"</span>, <span class="st">"MV_Replacement"</span>, <span class="st">"CABG"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">v</span>   <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hv_venn.html">hv_venn</a></span><span class="op">(</span><span class="va">dta</span>, set_cols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"AV_Replacement"</span>, <span class="st">"MV_Replacement"</span>, <span class="st">"CABG"</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">v</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="../reference/hvtiPlotR-themes.html">theme_hv_manuscript</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">

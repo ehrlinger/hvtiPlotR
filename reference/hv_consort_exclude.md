@@ -81,7 +81,7 @@ cohort <- data.frame(
   echo = sample(c(TRUE, FALSE), 100, TRUE, prob = c(0.9, 0.1))
 )
 
-tracker <- hv_consort_start(cohort, patient_id = mrn) |>
+tracker <- hv_consort_start(cohort, patient_id_col = "mrn") |>
   hv_consort_exclude(
     label    = "Eligible",
     col      = "excl_screen",
