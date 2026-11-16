@@ -75,7 +75,7 @@ haz  <- hv_hazard(
 )
 hv_atrisk_compose(
   plot(haz),
-  hv_atrisk(coh2, time = "time", status = "status", group = "group",
+  hv_atrisk(coh2, time_col = "time", event_col = "status", group_col = "group",
             report_times = c(0, 2, 4, 6, 8, 10))
 )
 }

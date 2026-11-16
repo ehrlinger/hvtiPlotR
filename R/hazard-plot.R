@@ -337,7 +337,7 @@ sample_hazard_empirical <- function(n        = 500,
 #' )
 #' hv_atrisk_compose(
 #'   plot(haz),
-#'   hv_atrisk(coh2, time = "time", status = "status", group = "group",
+#'   hv_atrisk(coh2, time_col = "time", event_col = "status", group_col = "group",
 #'             report_times = c(0, 2, 4, 6, 8, 10))
 #' )
 #' @export
@@ -609,9 +609,11 @@ sample_nnt_data <- function(n        = 500,
 #' Returns a **bare ggplot object**; compose with `scale_color_*`,
 #' `scale_y_continuous()`, `labs()`, [theme_hv_manuscript()].
 #'
-#' @param curve_data   Data frame of parametric predictions (fine grid).
+#' @param data         Data frame of parametric predictions (fine grid).
 #'   Typical source: SAS `predict` dataset exported to CSV, or
 #'   [sample_hazard_data()].
+#' @param curve_data Deprecated name of `data`; works with a once-per-session
+#'   warning until hvtiPlotR 2.9.0.
 #' @param x_col        Name of the time (or age) column. Corresponds to `YEARS`
 #'   / `iv_dead` in SAS. Default `"time"`.
 #' @param estimate_col Name of the predicted-value column. Use `"survival"` for
@@ -650,8 +652,10 @@ sample_nnt_data <- function(n        = 500,
 #'   curves (e.g. age group). Default `NULL`.
 #' @param ci_alpha     Transparency of the parametric CI ribbon (`[0, 1]`).
 #'   Default `0.20`.
-#' @param line_width   Width of the parametric curve line. SAS `width=3`
+#' @param linewidth    Width of the parametric curve line. SAS `width=3`
 #'   corresponds roughly to `1.2`. Default `1.0`.
+#' @param line_width Deprecated name of `linewidth`; works with a once-per-session
+#'   warning until hvtiPlotR 2.9.0.
 #' @param point_size   Size of empirical overlay points. Default `2.0`.
 #' @param point_shape  Shape code for empirical points. `1` = open circle
 #'   (SAS `symbol=circle`); `0` = open square (SAS `symbol=square`).
@@ -952,7 +956,7 @@ sample_nnt_data <- function(n        = 500,
 #' @importFrom rlang .data
 #' @keywords internal
 #' @export
-hazard_plot <- function(curve_data,
+hazard_plot <- function(data,
                          x_col            = "time",
                          estimate_col     = "survival",
                          lower_col        = NULL,
@@ -970,10 +974,15 @@ hazard_plot <- function(curve_data,
                          ref_estimate_col = estimate_col,
                          ref_group_col    = NULL,
                          ci_alpha         = 0.20,
-                         line_width       = 1.0,
+                         linewidth        = 1.0,
                          point_size       = 2.0,
                          point_shape      = 1L,
-                         errorbar_width   = 0.25) {
+                         errorbar_width   = 0.25,
+                         curve_data, line_width) {
+  curve_data <- .hv_rename_arg("hazard_plot", "curve_data", "data",
+                               missing(curve_data), missing(data), curve_data, data)
+  line_width <- .hv_rename_arg("hazard_plot", "line_width", "linewidth",
+                               missing(line_width), missing(linewidth), line_width, linewidth)
   .check_band_pair(lower_col, upper_col, "hazard_plot")
   .check_band_pair(emp_lower_col, emp_upper_col, "hazard_plot",
                    "emp_lower_col", "emp_upper_col")
@@ -981,11 +990,11 @@ hazard_plot <- function(curve_data,
   emp_geom <- match.arg(emp_geom)
 
   # --- Validate curve_data --------------------------------------------------
-  .check_df(curve_data, "curve_data")
-  .check_cols(curve_data, c(x_col, estimate_col), "curve_data")
-  .check_col(curve_data, lower_col,  "curve_data")
-  .check_col(curve_data, upper_col,  "curve_data")
-  .check_col(curve_data, group_col,  "curve_data")
+  .check_df(curve_data, "data")
+  .check_cols(curve_data, c(x_col, estimate_col), "data")
+  .check_col(curve_data, lower_col,  "data")
+  .check_col(curve_data, upper_col,  "data")
+  .check_col(curve_data, group_col,  "data")
 
   # --- Validate empirical ---------------------------------------------------
   if (!is.null(empirical)) {
@@ -1128,8 +1137,10 @@ hazard_plot <- function(curve_data,
 #' stores the result in a `diffout` dataset. Export that dataset and pass it
 #' here with the appropriate column names.
 #'
-#' @param diff_data    Data frame of pre-computed survival differences. See
+#' @param data         Data frame of pre-computed survival differences. See
 #'   [sample_survival_difference_data()].
+#' @param diff_data Deprecated name of `data`; works with a once-per-session
+#'   warning until hvtiPlotR 2.9.0.
 #' @param x_col        Name of the time column. Default `"time"`.
 #' @param estimate_col Name of the difference column. Default `"difference"`.
 #' @param lower_col    Name of the lower CI column, or `NULL`. Default `NULL`.
@@ -1137,7 +1148,9 @@ hazard_plot <- function(curve_data,
 #' @param group_col    Name of a grouping column for multiple comparisons, or
 #'   `NULL`. Default `NULL`.
 #' @param ci_alpha     Transparency of the CI ribbon. Default `0.20`.
-#' @param line_width   Line width. Default `1.0`.
+#' @param linewidth    Line width. Default `1.0`.
+#' @param line_width Deprecated name of `linewidth`; works with a once-per-session
+#'   warning until hvtiPlotR 2.9.0.
 #'
 #' @return A [ggplot2::ggplot()] object.
 #'
@@ -1200,18 +1213,23 @@ hazard_plot <- function(curve_data,
 #' @importFrom rlang .data
 #' @keywords internal
 #' @export
-survival_difference_plot <- function(diff_data,
+survival_difference_plot <- function(data,
                                      x_col        = "time",
                                      estimate_col = "difference",
                                      lower_col    = NULL,
                                      upper_col    = NULL,
                                      group_col    = NULL,
                                      ci_alpha     = 0.20,
-                                     line_width   = 1.0) {
+                                     linewidth    = 1.0,
+                                     diff_data, line_width) {
+  diff_data <- .hv_rename_arg("survival_difference_plot", "diff_data", "data",
+                              missing(diff_data), missing(data), diff_data, data)
+  line_width <- .hv_rename_arg("survival_difference_plot", "line_width", "linewidth",
+                               missing(line_width), missing(linewidth), line_width, linewidth)
   .check_band_pair(lower_col, upper_col, "survival_difference_plot")
-  .check_df(diff_data, "diff_data")
+  .check_df(diff_data, "data")
   for (col in c(x_col, estimate_col, lower_col, upper_col, group_col))
-    .check_col(diff_data, col, "diff_data")
+    .check_col(diff_data, col, "data")
 
   if (!is.null(group_col)) {
     base_aes <- ggplot2::aes(x      = .data[[x_col]],
@@ -1266,8 +1284,10 @@ survival_difference_plot <- function(diff_data,
 #' as a curve. Export the NNT dataset and pass it directly, or use
 #' [sample_nnt_data()] for examples.
 #'
-#' @param nnt_data     Data frame of pre-computed NNT estimates. See
+#' @param data         Data frame of pre-computed NNT estimates. See
 #'   [sample_nnt_data()].
+#' @param nnt_data Deprecated name of `data`; works with a once-per-session
+#'   warning until hvtiPlotR 2.9.0.
 #' @param x_col        Name of the time column. Default `"time"`.
 #' @param estimate_col Name of the NNT column. Default `"nnt"`.
 #' @param lower_col    Name of the lower CI column, or `NULL`. Default `NULL`.
@@ -1275,7 +1295,9 @@ survival_difference_plot <- function(diff_data,
 #' @param na_rm        Remove `NA` NNT values (undefined when ARR \eqn{\approx} 0) before
 #'   plotting. Default `TRUE`.
 #' @param ci_alpha     Transparency of the CI ribbon. Default `0.20`.
-#' @param line_width   Line width. Default `1.0`.
+#' @param linewidth    Line width. Default `1.0`.
+#' @param line_width Deprecated name of `linewidth`; works with a once-per-session
+#'   warning until hvtiPlotR 2.9.0.
 #'
 #' @return A [ggplot2::ggplot()] object.
 #'
@@ -1326,18 +1348,23 @@ survival_difference_plot <- function(diff_data,
 #' @importFrom rlang .data
 #' @keywords internal
 #' @export
-nnt_plot <- function(nnt_data,
+nnt_plot <- function(data,
                      x_col        = "time",
                      estimate_col = "nnt",
                      lower_col    = NULL,
                      upper_col    = NULL,
                      na_rm        = TRUE,
                      ci_alpha     = 0.20,
-                     line_width   = 1.0) {
+                     linewidth    = 1.0,
+                     nnt_data, line_width) {
+  nnt_data <- .hv_rename_arg("nnt_plot", "nnt_data", "data",
+                             missing(nnt_data), missing(data), nnt_data, data)
+  line_width <- .hv_rename_arg("nnt_plot", "line_width", "linewidth",
+                               missing(line_width), missing(linewidth), line_width, linewidth)
   .check_band_pair(lower_col, upper_col, "nnt_plot")
-  .check_df(nnt_data, "nnt_data")
+  .check_df(nnt_data, "data")
   for (col in c(x_col, estimate_col, lower_col, upper_col))
-    .check_col(nnt_data, col, "nnt_data")
+    .check_col(nnt_data, col, "data")
 
   if (na_rm) {
     nnt_data <- nnt_data[!is.na(nnt_data[[estimate_col]]), , drop = FALSE]
@@ -1379,9 +1406,11 @@ nnt_plot <- function(nnt_data,
 #' time; aesthetic parameters (`ci_alpha`, `line_width`, etc.) are passed to
 #' `plot()`.
 #'
-#' @param curve_data     Data frame of parametric predictions (fine grid).
+#' @param data           Data frame of parametric predictions (fine grid).
 #'   Typical source: SAS `predict` dataset exported to CSV, or
 #'   [sample_hazard_data()].
+#' @param curve_data Deprecated name of `data`; works with a once-per-session
+#'   warning until hvtiPlotR 2.9.0.
 #' @param x_col          Name of the time / age column. Default `"time"`.
 #' @param estimate_col   Name of the predicted-value column: `"survival"`,
 #'   `"hazard"`, or `"cumhaz"`. Default `"survival"`.
@@ -1484,7 +1513,7 @@ nnt_plot <- function(nnt_data,
 #'
 #' @importFrom rlang .data
 #' @export
-hv_hazard <- function(curve_data,
+hv_hazard <- function(data,
                         x_col            = "time",
                         estimate_col     = "survival",
                         lower_col        = NULL,
@@ -1500,7 +1529,10 @@ hv_hazard <- function(curve_data,
                         reference        = NULL,
                         ref_x_col        = x_col,
                         ref_estimate_col = estimate_col,
-                        ref_group_col    = NULL) {
+                        ref_group_col    = NULL,
+                        curve_data) {
+  curve_data <- .hv_rename_arg("hv_hazard", "curve_data", "data",
+                               missing(curve_data), missing(data), curve_data, data)
   .check_band_pair(lower_col, upper_col, "hv_hazard")
   .check_band_pair(emp_lower_col, emp_upper_col, "hv_hazard",
                    "emp_lower_col", "emp_upper_col")
@@ -1508,11 +1540,11 @@ hv_hazard <- function(curve_data,
   emp_geom <- match.arg(emp_geom)
 
   # --- Validate curve_data --------------------------------------------------
-  .check_df(curve_data, "curve_data")
-  .check_cols(curve_data, c(x_col, estimate_col), "curve_data")
-  .check_col(curve_data, lower_col,  "curve_data")
-  .check_col(curve_data, upper_col,  "curve_data")
-  .check_col(curve_data, group_col,  "curve_data")
+  .check_df(curve_data, "data")
+  .check_cols(curve_data, c(x_col, estimate_col), "data")
+  .check_col(curve_data, lower_col,  "data")
+  .check_col(curve_data, upper_col,  "data")
+  .check_col(curve_data, group_col,  "data")
 
   # --- Validate empirical ---------------------------------------------------
   if (!is.null(empirical)) {
@@ -1591,7 +1623,9 @@ print.hv_hazard <- function(x, ...) {
 #'
 #' @param x             An `hv_hazard` object from [hv_hazard()].
 #' @param ci_alpha      Transparency of the CI ribbon. Default `0.20`.
-#' @param line_width    Width of the parametric curve line. Default `1.0`.
+#' @param linewidth     Width of the parametric curve line. Default `1.0`.
+#' @param line_width Deprecated name of `linewidth`; works with a once-per-session
+#'   warning until hvtiPlotR 2.9.0.
 #' @param point_size    Size of empirical overlay points. Default `2.0`.
 #' @param point_size    Size of empirical overlay points (used when
 #'   `emp_geom = "point"` was set in [hv_hazard()]). Default `2.0`.
@@ -1614,11 +1648,14 @@ print.hv_hazard <- function(x, ...) {
 #' @export
 plot.hv_hazard <- function(x,
                              ci_alpha       = 0.20,
-                             line_width     = 1.0,
+                             linewidth      = 1.0,
                              point_size     = 2.0,
                              point_shape    = 1L,
                              errorbar_width = 0.25,
-                             ...) {
+                             ...,
+                             line_width) {
+  line_width <- .hv_rename_arg("plot.hv_hazard", "line_width", "linewidth",
+                               missing(line_width), missing(linewidth), line_width, linewidth)
   m          <- x$meta
   curve_data <- x$data
   empirical  <- x$tables$empirical
@@ -1761,8 +1798,10 @@ plot.hv_hazard <- function(x,
 #' `tp.hp.dead.life-gained.sas` and the survival-difference component of
 #' `tp.hp.numtreat.survdiff.matched.sas`.
 #'
-#' @param diff_data    Data frame of pre-computed survival differences.
+#' @param data         Data frame of pre-computed survival differences.
 #'   See [sample_survival_difference_data()].
+#' @param diff_data Deprecated name of `data`; works with a once-per-session
+#'   warning until hvtiPlotR 2.9.0.
 #' @param x_col        Name of the time column. Default `"time"`.
 #' @param estimate_col Name of the difference column. Default `"difference"`.
 #' @param lower_col    Lower CI column, or `NULL`. Default `NULL`.
@@ -1796,16 +1835,19 @@ plot.hv_hazard <- function(x,
 #'   theme_hv_poster()
 #'
 #' @export
-hv_survival_difference <- function(diff_data,
+hv_survival_difference <- function(data,
                                      x_col        = "time",
                                      estimate_col = "difference",
                                      lower_col    = NULL,
                                      upper_col    = NULL,
-                                     group_col    = NULL) {
+                                     group_col    = NULL,
+                                     diff_data) {
+  diff_data <- .hv_rename_arg("hv_survival_difference", "diff_data", "data",
+                              missing(diff_data), missing(data), diff_data, data)
   .check_band_pair(lower_col, upper_col, "hv_survival_difference")
-  .check_df(diff_data, "diff_data")
+  .check_df(diff_data, "data")
   for (col in c(x_col, estimate_col, lower_col, upper_col, group_col))
-    .check_col(diff_data, col, "diff_data")
+    .check_col(diff_data, col, "data")
 
   new_hv_data(
     data = as.data.frame(diff_data),
@@ -1901,7 +1943,9 @@ print.hv_survival_difference <- function(x, ...) {
 #'
 #' @param x          An `hv_survival_difference` object.
 #' @param ci_alpha   Transparency of the CI ribbon. Default `0.20`.
-#' @param line_width Line width. Default `1.0`.
+#' @param linewidth  Line width. Default `1.0`.
+#' @param line_width Deprecated name of `linewidth`; works with a once-per-session
+#'   warning until hvtiPlotR 2.9.0.
 #' @param ...        Ignored.
 #'
 #' @return A [ggplot2::ggplot()] object.
@@ -1913,8 +1957,11 @@ print.hv_survival_difference <- function(x, ...) {
 #' @export
 plot.hv_survival_difference <- function(x,
                                           ci_alpha   = 0.20,
-                                          line_width = 1.0,
-                                          ...) {
+                                          linewidth  = 1.0,
+                                          ...,
+                                          line_width) {
+  line_width <- .hv_rename_arg("plot.hv_survival_difference", "line_width", "linewidth",
+                               missing(line_width), missing(linewidth), line_width, linewidth)
   .plot_simple_curve(x, ci_alpha = ci_alpha, line_width = line_width)
 }
 
@@ -1931,8 +1978,10 @@ plot.hv_survival_difference <- function(x,
 #' [plot.hv_nnt()] to render the plot.  Covers the NNT component of
 #' `tp.hp.numtreat.survdiff.matched.sas`.
 #'
-#' @param nnt_data     Data frame of pre-computed NNT estimates.
+#' @param data         Data frame of pre-computed NNT estimates.
 #'   See [sample_nnt_data()].
+#' @param nnt_data Deprecated name of `data`; works with a once-per-session
+#'   warning until hvtiPlotR 2.9.0.
 #' @param x_col        Name of the time column. Default `"time"`.
 #' @param estimate_col Name of the NNT (or ARR) column. Default `"nnt"`.
 #' @param lower_col    Lower CI column, or `NULL`. Default `NULL`.
@@ -1982,17 +2031,20 @@ plot.hv_survival_difference <- function(x,
 #'   theme_hv_poster()
 #'
 #' @export
-hv_nnt <- function(nnt_data,
+hv_nnt <- function(data,
                      x_col        = "time",
                      estimate_col = "nnt",
                      lower_col    = NULL,
                      upper_col    = NULL,
                      group_col    = NULL,
-                     na_rm        = TRUE) {
+                     na_rm        = TRUE,
+                     nnt_data) {
+  nnt_data <- .hv_rename_arg("hv_nnt", "nnt_data", "data",
+                             missing(nnt_data), missing(data), nnt_data, data)
   .check_band_pair(lower_col, upper_col, "hv_nnt")
-  .check_df(nnt_data, "nnt_data")
+  .check_df(nnt_data, "data")
   for (col in c(x_col, estimate_col, lower_col, upper_col, group_col))
-    .check_col(nnt_data, col, "nnt_data")
+    .check_col(nnt_data, col, "data")
 
   if (na_rm)
     nnt_data <- nnt_data[!is.na(nnt_data[[estimate_col]]), , drop = FALSE]
@@ -2044,7 +2096,9 @@ print.hv_nnt <- function(x, ...) {
 #'
 #' @param x          An `hv_nnt` object from [hv_nnt()].
 #' @param ci_alpha   Transparency of the CI ribbon. Default `0.20`.
-#' @param line_width Line width. Default `1.0`.
+#' @param linewidth  Line width. Default `1.0`.
+#' @param line_width Deprecated name of `linewidth`; works with a once-per-session
+#'   warning until hvtiPlotR 2.9.0.
 #' @param ...        Ignored.
 #'
 #' @return A [ggplot2::ggplot()] object.
@@ -2056,7 +2110,10 @@ print.hv_nnt <- function(x, ...) {
 #' @export
 plot.hv_nnt <- function(x,
                           ci_alpha   = 0.20,
-                          line_width = 1.0,
-                          ...) {
+                          linewidth  = 1.0,
+                          ...,
+                          line_width) {
+  line_width <- .hv_rename_arg("plot.hv_nnt", "line_width", "linewidth",
+                               missing(line_width), missing(linewidth), line_width, linewidth)
   .plot_simple_curve(x, ci_alpha = ci_alpha, line_width = line_width)
 }

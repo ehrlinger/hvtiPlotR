@@ -210,7 +210,9 @@ print.hv_spaghetti <- function(x, ...) {
 #' @param line_colour   The same as \code{line_color}: an alias kept for
 #'   existing code. Give one or the other; both with different values is an
 #'   error.
-#' @param line_width    Line width for individual trajectories. Default \code{0.2}.
+#' @param linewidth     Line width for individual trajectories. Default \code{0.2}.
+#' @param line_width Deprecated name of `linewidth`; works with a once-per-session
+#'   warning until hvtiPlotR 2.9.0.
 #' @param alpha         Transparency of plot elements in \eqn{[0,1]}.
 #'   Default \code{0.8}.
 #' @param add_smooth    Logical; overlay a smoother? Default \code{FALSE}.
@@ -267,7 +269,7 @@ print.hv_spaghetti <- function(x, ...) {
 #' @export
 plot.hv_spaghetti <- function(x,
                                 line_colour   = "gray50",
-                                line_width    = 0.2,
+                                linewidth     = 0.2,
                                 alpha         = 0.8,
                                 add_smooth    = FALSE,
                                 smooth_method = "loess",
@@ -275,7 +277,10 @@ plot.hv_spaghetti <- function(x,
                                 smooth_width  = 1.2,
                                 y_labels      = NULL,
                                 ...,
-                                line_color    = line_colour) {
+                                line_color    = line_colour,
+                                line_width) {
+  line_width <- .hv_rename_arg("plot.hv_spaghetti", "line_width", "linewidth",
+                               missing(line_width), missing(linewidth), line_width, linewidth)
   .check_spelling_pair("line_color", "line_colour", !missing(line_color), !missing(line_colour),
                        line_color, line_colour)
   .check_alpha(alpha)
@@ -331,7 +336,7 @@ plot.hv_spaghetti <- function(x,
       method      = smooth_method,
       formula     = y ~ x,
       se          = smooth_se,
-      linewidth   = smooth_width,
+      linewidth    = smooth_width,
       inherit.aes = FALSE
     )
   }

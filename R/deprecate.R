@@ -59,3 +59,19 @@
       paste(args, "=", values, collapse = ", "))
   )
 }
+
+# A renamed argument. Returns the value to use: the old one when only the old
+# name was passed (with a once-per-session warning), else the new one. Passing
+# both is an error, since the two could disagree. `new_value` is a promise and
+# is evaluated only when it is the one used, so a required new argument with
+# no default is fine to pass along.
+.hv_rename_arg <- function(fn, old, new, old_missing, new_missing, old_value, new_value) {
+  if (old_missing) return(new_value)
+  if (!new_missing)
+    stop(sprintf("%s(): pass `%s` only. `%s` is its old name, and both were given.",
+                 fn, new, old), call. = FALSE)
+  .hv_deprecate(paste0(fn, ":", old), sprintf(
+    "%s(): `%s` is renamed `%s`. The old name works until hvtiPlotR %s.",
+    fn, old, new, .hv_removal_version))
+  old_value
+}

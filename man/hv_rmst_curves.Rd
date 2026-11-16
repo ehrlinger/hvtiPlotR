@@ -5,35 +5,44 @@
 \title{Prepare weighted Kaplan-Meier curves for an RMST figure}
 \usage{
 hv_rmst_curves(
-  curves,
+  data,
   estimates = NULL,
   tau = NULL,
-  facet = "estimator",
-  arm = "arm",
-  time = "time",
-  surv = "surv"
+  facet_col = "estimator",
+  arm_col = "arm",
+  time_col = "time",
+  surv_col = "surv",
+  curves,
+  facet,
+  arm,
+  time,
+  surv
 )
 }
 \arguments{
-\item{curves}{A data frame of curve steps, or a \code{ps_rmst} object.}
+\item{data}{A data frame of curve steps, or a \code{ps_rmst} object.}
 
 \item{estimates}{Optional data frame with the \code{hv_rmst_contrast()} columns
 (\code{estimator}, \code{diff_days}, \code{lo_days}, \code{hi_days}), used for the facet
-annotations. If \code{NULL} and \code{curves} is a \code{ps_rmst}-like object, its
+annotations. If \code{NULL} and \code{data} is a \code{ps_rmst}-like object, its
 \verb{$tables$estimates} is used when present. \code{NULL} otherwise: no
 annotation.}
 
 \item{tau}{Optional single positive number: the RMST horizon, on the
 same scale as \code{time}.}
 
-\item{facet}{Name of the column defining facets. Default
+\item{facet_col}{Name of the column defining facets. Default
 \code{"estimator"}. Factor levels set the facet order.}
 
-\item{arm}{Name of the arm column. Default \code{"arm"}. A character
+\item{arm_col}{Name of the arm column. Default \code{"arm"}. A character
 column is ordered \code{"treated"}, \code{"control"}, then any other value.}
 
-\item{time, surv}{Names of the time and survival columns. Defaults
+\item{time_col, surv_col}{Names of the time and survival columns. Defaults
 \code{"time"} and \code{"surv"}.}
+
+\item{curves, facet, arm, time, surv}{Deprecated names of \code{data}, \code{facet_col},
+\code{arm_col}, \code{time_col} and \code{surv_col}. They still work, with a
+once-per-session warning, until hvtiPlotR 2.9.0.}
 }
 \value{
 An object of class \code{c("hv_rmst_curves", "hv_data")}: a list with
@@ -59,7 +68,7 @@ The input follows the \code{tables$curves} contract of
 \code{hvtiRpropensity::ps_rmst()}: columns \code{estimator}, \code{arm} (\code{"treated"} or
 \code{"control"}), \code{time} and \code{surv}, as right-continuous steps that start at
 time 0 with \code{surv} 1. hvtiRpropensity is not required: pass plain data
-frames, or the \code{ps_rmst} object itself as \code{curves} and its
+frames, or the \code{ps_rmst} object itself as \code{data} and its
 \verb{$tables$curves} (and, when \code{estimates} is \code{NULL}, \verb{$tables$estimates}) are
 read.
 }

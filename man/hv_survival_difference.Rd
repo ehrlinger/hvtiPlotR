@@ -5,16 +5,17 @@
 \title{Prepare survival difference (life-gained) data for plotting}
 \usage{
 hv_survival_difference(
-  diff_data,
+  data,
   x_col = "time",
   estimate_col = "difference",
   lower_col = NULL,
   upper_col = NULL,
-  group_col = NULL
+  group_col = NULL,
+  diff_data
 )
 }
 \arguments{
-\item{diff_data}{Data frame of pre-computed survival differences.
+\item{data}{Data frame of pre-computed survival differences.
 See \code{\link[=sample_survival_difference_data]{sample_survival_difference_data()}}.}
 
 \item{x_col}{Name of the time column. Default \code{"time"}.}
@@ -27,6 +28,9 @@ See \code{\link[=sample_survival_difference_data]{sample_survival_difference_dat
 
 \item{group_col}{Grouping column for multiple comparisons, or \code{NULL}.
 Default \code{NULL}.}
+
+\item{diff_data}{Deprecated name of \code{data}; works with a once-per-session
+warning until hvtiPlotR 2.9.0.}
 }
 \value{
 An S3 object of class \code{c("hv_survival_difference", "hv_data")}.

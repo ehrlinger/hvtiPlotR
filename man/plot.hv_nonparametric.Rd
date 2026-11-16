@@ -7,10 +7,11 @@
 \method{plot}{hv_nonparametric}(
   x,
   ci_alpha = 0.2,
-  line_width = 1,
+  linewidth = 1,
   point_size = 2.5,
   point_shape = 20L,
-  ...
+  ...,
+  line_width
 )
 }
 \arguments{
@@ -18,7 +19,7 @@
 
 \item{ci_alpha}{Transparency of the confidence ribbon. Default \code{0.2}.}
 
-\item{line_width}{Width of the predicted curve line. Default \code{1.0}.}
+\item{linewidth}{Width of the predicted curve line. Default \code{1.0}.}
 
 \item{point_size}{Size of binned data summary points. Default \code{2.5}.}
 
@@ -26,6 +27,9 @@
 Default \code{20} (filled circle).}
 
 \item{...}{Ignored; present for S3 consistency.}
+
+\item{line_width}{Deprecated name of \code{linewidth}; works with a once-per-session
+warning until hvtiPlotR 2.9.0.}
 }
 \value{
 A bare \code{\link[ggplot2]{ggplot}} object; compose with \code{+}

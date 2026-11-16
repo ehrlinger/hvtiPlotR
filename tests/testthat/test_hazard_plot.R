@@ -985,7 +985,7 @@ test_that("sample_hazard_cohort feeds hv_atrisk with descending counts", {
 test_that("hv_atrisk on a hazard cohort draws a table carrying data", {
   arms <- c("No Takedown" = 1.0, "Takedown" = 0.65)
   coh  <- sample_hazard_cohort(n = 200, time_max = 10, groups = arms, seed = 4)
-  p <- hv_atrisk(coh, time = "time", status = "status", group = "group",
+  p <- hv_atrisk(coh, time_col = "time", event_col = "status", group_col = "group",
                  report_times = c(0, 2, 4, 6, 8, 10))
   # 2 strata x 6 report times = 12 labels; a table that renders with fewer
   # has silently dropped a stratum or a time.
@@ -1001,7 +1001,7 @@ test_that("hazard curve composes over a cohort at-risk table", {
   )
   cmp <- hv_atrisk_compose(
     plot(haz),
-    hv_atrisk(coh, time = "time", status = "status", group = "group",
+    hv_atrisk(coh, time_col = "time", event_col = "status", group_col = "group",
               report_times = c(0, 2, 4, 6, 8, 10))
   )
   expect_s3_class(cmp, "patchwork")

@@ -4,18 +4,21 @@
 \alias{plot.hv_ordinal}
 \title{Plot an hv_ordinal object}
 \usage{
-\method{plot}{hv_ordinal}(x, line_width = 1, point_size = 2.5, point_shape = 20L, ...)
+\method{plot}{hv_ordinal}(x, linewidth = 1, point_size = 2.5, point_shape = 20L, ..., line_width)
 }
 \arguments{
 \item{x}{An \code{hv_ordinal} object.}
 
-\item{line_width}{Width of grade-specific curve lines. Default \code{1.0}.}
+\item{linewidth}{Width of grade-specific curve lines. Default \code{1.0}.}
 
 \item{point_size}{Size of binned data summary points. Default \code{2.5}.}
 
 \item{point_shape}{Integer shape for summary points. Default \code{20}.}
 
 \item{...}{Ignored; present for S3 consistency.}
+
+\item{line_width}{Deprecated name of \code{linewidth}; works with a once-per-session
+warning until hvtiPlotR 2.9.0.}
 }
 \value{
 A bare \code{\link[ggplot2]{ggplot}} object.

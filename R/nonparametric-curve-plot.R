@@ -291,7 +291,9 @@ sample_nonparametric_curve_points <- function(n            = 500,
 #' - \code{upper_col} <- \code{clu_p68} or \code{clu_p95}
 #' - \code{group_col} <- indicator added after wide-to-long reshape
 #'
-#' @param curve_data  Data frame; one row per (time, group) combination.
+#' @param data        Data frame; one row per (time, group) combination.
+#' @param curve_data Deprecated name of `data`; works with a once-per-session
+#'   warning until hvtiPlotR 2.9.0.
 #' @param x_col       Name of the x-axis column. Default \code{"time"}.
 #' @param estimate_col Name of the predicted value column. Default
 #'   \code{"estimate"}.
@@ -365,19 +367,22 @@ sample_nonparametric_curve_points <- function(n            = 500,
 #'
 #' @importFrom rlang .data
 #' @export
-hv_nonparametric <- function(curve_data,
+hv_nonparametric <- function(data,
                                 x_col        = "time",
                                 estimate_col = "estimate",
                                 lower_col    = NULL,
                                 upper_col    = NULL,
                                 group_col    = NULL,
-                                data_points  = NULL) {
-  .check_df(curve_data, "curve_data")
+                                data_points  = NULL,
+                                curve_data) {
+  curve_data <- .hv_rename_arg("hv_nonparametric", "curve_data", "data",
+                               missing(curve_data), missing(data), curve_data, data)
+  .check_df(curve_data, "data")
   .check_band_pair(lower_col, upper_col, "hv_nonparametric")
-  .check_cols(curve_data, c(x_col, estimate_col), "curve_data")
-  .check_col(curve_data, lower_col, "curve_data")
-  .check_col(curve_data, upper_col, "curve_data")
-  .check_col(curve_data, group_col, "curve_data")
+  .check_cols(curve_data, c(x_col, estimate_col), "data")
+  .check_col(curve_data, lower_col, "data")
+  .check_col(curve_data, upper_col, "data")
+  .check_col(curve_data, group_col, "data")
 
   has_ci          <- !is.null(lower_col) && !is.null(upper_col)
   has_data_points <- !is.null(data_points)
@@ -436,7 +441,9 @@ print.hv_nonparametric <- function(x, ...) {
 #'
 #' @param x            An \code{hv_nonparametric} object.
 #' @param ci_alpha     Transparency of the confidence ribbon. Default \code{0.2}.
-#' @param line_width   Width of the predicted curve line. Default \code{1.0}.
+#' @param linewidth    Width of the predicted curve line. Default \code{1.0}.
+#' @param line_width Deprecated name of `linewidth`; works with a once-per-session
+#'   warning until hvtiPlotR 2.9.0.
 #' @param point_size   Size of binned data summary points. Default \code{2.5}.
 #' @param point_shape  Integer shape code for data summary points.
 #'   Default \code{20} (filled circle).
@@ -481,10 +488,13 @@ print.hv_nonparametric <- function(x, ...) {
 #' @export
 plot.hv_nonparametric <- function(x,
                                      ci_alpha    = 0.2,
-                                     line_width  = 1.0,
+                                     linewidth   = 1.0,
                                      point_size  = 2.5,
                                      point_shape = 20L,
-                                     ...) {
+                                     ...,
+                                     line_width) {
+  line_width <- .hv_rename_arg("plot.hv_nonparametric", "line_width", "linewidth",
+                               missing(line_width), missing(linewidth), line_width, linewidth)
   curve_data   <- x$data
   m            <- x$meta
   x_col        <- m$x_col

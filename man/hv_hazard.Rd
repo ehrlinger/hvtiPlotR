@@ -5,7 +5,7 @@
 \title{Prepare parametric hazard / survival data for plotting}
 \usage{
 hv_hazard(
-  curve_data,
+  data,
   x_col = "time",
   estimate_col = "survival",
   lower_col = NULL,
@@ -21,11 +21,12 @@ hv_hazard(
   reference = NULL,
   ref_x_col = x_col,
   ref_estimate_col = estimate_col,
-  ref_group_col = NULL
+  ref_group_col = NULL,
+  curve_data
 )
 }
 \arguments{
-\item{curve_data}{Data frame of parametric predictions (fine grid).
+\item{data}{Data frame of parametric predictions (fine grid).
 Typical source: SAS \code{predict} dataset exported to CSV, or
 \code{\link[=sample_hazard_data]{sample_hazard_data()}}.}
 
@@ -70,6 +71,9 @@ Default \code{NULL}.}
 
 \item{ref_group_col}{Linetype-grouping column in \code{reference}, or \code{NULL}.
 Default \code{NULL}.}
+
+\item{curve_data}{Deprecated name of \code{data}; works with a once-per-session
+warning until hvtiPlotR 2.9.0.}
 }
 \value{
 An S3 object of class \code{c("hv_hazard", "hv_data")}; call

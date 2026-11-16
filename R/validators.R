@@ -22,22 +22,22 @@
 .check_cols <- function(data, cols, data_arg = "data") {
   missing <- setdiff(cols, names(data))
   if (length(missing))
-    stop(
+    stop(errorCondition(
       sprintf("Missing required column(s) in `%s`: %s",
               data_arg, paste(missing, collapse = ", ")),
-      call. = FALSE
-    )
+      class = "hvtiPlotR_missing_column", call = NULL
+    ))
   invisible(data)
 }
 
 #' @noRd
 .check_col <- function(data, col, data_arg = "data") {
   if (!is.null(col) && !(col %in% names(data)))
-    stop(
+    stop(errorCondition(
       sprintf("Column '%s' not found in `%s`. Available: %s",
               col, data_arg, paste(names(data), collapse = ", ")),
-      call. = FALSE
-    )
+      class = "hvtiPlotR_missing_column", call = NULL
+    ))
   invisible(data)
 }
 

@@ -37,7 +37,7 @@
     return(invisible())
   }
   .hv_font_fallback_env$warned <- TRUE
-  message(
+  .hvti_inform(
     "hvtiPlotR: the active graphics device cannot resolve the 'Arial' ",
     "font family (common on postscript()/pdf() output, e.g. headless ",
     "Linux rendering); falling back to 'Helvetica', a metrically ",

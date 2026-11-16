@@ -35,26 +35,26 @@ test_that("ct_validate_tracker errors on non-tracker", {
 
 test_that("hv_consort_start returns hv_consort_tracker", {
   cohort  <- make_cohort()
-  tracker <- hv_consort_start(cohort, patient_id = mrn)
+  tracker <- hv_consort_start(cohort, patient_id_col = "mrn")
   expect_s3_class(tracker, "hv_consort_tracker")
 })
 
 test_that("hv_consort_start stores patient_id_col correctly", {
   cohort  <- make_cohort()
-  tracker <- hv_consort_start(cohort, patient_id = mrn)
+  tracker <- hv_consort_start(cohort, patient_id_col = "mrn")
   expect_equal(tracker$patient_id_col, "mrn")
 })
 
 test_that("hv_consort_start adds screened = TRUE for all rows", {
   cohort  <- make_cohort()
-  tracker <- hv_consort_start(cohort, patient_id = mrn)
+  tracker <- hv_consort_start(cohort, patient_id_col = "mrn")
   expect_true(all(tracker$data$screened))
   expect_equal(nrow(tracker$data), nrow(cohort))
 })
 
 test_that("hv_consort_start respects explicit pass_col", {
   cohort  <- make_cohort()
-  tracker <- hv_consort_start(cohort, patient_id = mrn,
+  tracker <- hv_consort_start(cohort, patient_id_col = "mrn",
                                label    = "All Patients",
                                pass_col = "all_pts")
   expect_true("all_pts" %in% names(tracker$data))
@@ -63,14 +63,14 @@ test_that("hv_consort_start respects explicit pass_col", {
 
 test_that("hv_consort_start registers one stage with correct label", {
   cohort  <- make_cohort()
-  tracker <- hv_consort_start(cohort, patient_id = mrn, label = "Screened")
+  tracker <- hv_consort_start(cohort, patient_id_col = "mrn", label = "Screened")
   expect_length(tracker$stages, 1L)
   expect_equal(tracker$stages[[1L]]$label, "Screened")
   expect_null(tracker$stages[[1L]]$excl_col)
 })
 
 test_that("print.hv_consort_tracker prints without error", {
-  tracker <- hv_consort_start(make_cohort(), patient_id = mrn)
+  tracker <- hv_consort_start(make_cohort(), patient_id_col = "mrn")
   expect_output(print(tracker), "hv_consort_tracker")
   expect_output(print(tracker), "Screened")
 })
@@ -82,7 +82,7 @@ test_that("print.hv_consort_tracker prints without error", {
 # `mrn` is a column of the fixture, not a variable this helper binds:
 # hv_consort_start() substitute()s the bare symbol under data-masking.
 make_tracker <- function() {
-  hv_consort_start(make_cohort(), patient_id = mrn) # nolint: object_usage_linter.
+  hv_consort_start(make_cohort(), patient_id_col = "mrn")
 }
 
 test_that("hv_consort_exclude adds exclusion and pass columns", {
@@ -116,7 +116,7 @@ test_that("hv_consort_exclude uses first-match logic", {
     has_surg = FALSE,
     stringsAsFactors = FALSE
   )
-  tracker <- hv_consort_start(cohort, patient_id = mrn) |>
+  tracker <- hv_consort_start(cohort, patient_id_col = "mrn") |>
     hv_consort_exclude(
       label     = "Eligible",
       col       = "excl_screen",
@@ -129,7 +129,7 @@ test_that("hv_consort_exclude uses first-match logic", {
 
 test_that("hv_consort_exclude counts excluded patients correctly", {
   cohort  <- make_cohort(n = 20L)
-  tracker <- hv_consort_start(cohort, patient_id = mrn) |>
+  tracker <- hv_consort_start(cohort, patient_id_col = "mrn") |>
     hv_consort_exclude(
       label     = "Eligible",
       col       = "excl_screen",
@@ -178,7 +178,7 @@ test_that("hv_consort_exclude errors on non-tracker input", {
 # `mrn` is a column of the fixture, not a variable this helper binds:
 # hv_consort_start() substitute()s the bare symbol under data-masking.
 make_full_tracker <- function() {
-  hv_consort_start(make_cohort(), patient_id = mrn) |> # nolint: object_usage_linter.
+  hv_consort_start(make_cohort(), patient_id_col = "mrn") |>
     hv_consort_exclude(
       label     = "Eligible",
       col       = "excl_screen",
@@ -399,7 +399,7 @@ test_that("hv_consort_exclude counts a missing criterion separately", {
     age = c(15L, NA, 25L, 30L, 16L),
     stringsAsFactors = FALSE
   )
-  tracker <- hv_consort_start(cohort, patient_id = mrn) |>
+  tracker <- hv_consort_start(cohort, patient_id_col = "mrn") |>
     hv_consort_exclude(label = "Eligible", col = "excl_screen",
                        age < 18 ~ "Age < 18")
   # P2 (NA age) is neither passed through nor counted under "Age < 18".
@@ -419,7 +419,7 @@ test_that("a definite match on a later rule beats a missing earlier criterion", 
     age  = c(NA, NA, 40L),
     echo = c(FALSE, TRUE, TRUE)
   )
-  tracker <- hv_consort_start(cohort, patient_id = mrn) |>
+  tracker <- hv_consort_start(cohort, patient_id_col = "mrn") |>
     hv_consort_exclude(label = "Eligible", col = "excl",
                        age < 18 ~ "Age < 18",
                        !echo    ~ "No echo")
@@ -431,7 +431,7 @@ test_that("a definite match on a later rule beats a missing earlier criterion", 
 test_that("the missing-criterion count appears in the diagram", {
   skip_if_not_installed("consort")
   cohort <- data.frame(mrn = paste0("P", 1:6), age = c(15L, NA, 25L, 30L, 40L, 50L))
-  tracker <- hv_consort_start(cohort, patient_id = mrn) |>
+  tracker <- hv_consort_start(cohort, patient_id_col = "mrn") |>
     hv_consort_exclude(label = "Eligible", col = "excl_screen",
                        age < 18 ~ "Age < 18")
   fig   <- hv_consort(tracker)
@@ -443,9 +443,9 @@ test_that("the missing-criterion count appears in the diagram", {
 
 test_that("hv_consort_start refuses a non-unique or missing patient_id", {
   dup <- data.frame(mrn = c("P1", "P2", "P2"), age = 1:3)
-  expect_error(hv_consort_start(dup, patient_id = mrn), "must be unique")
+  expect_error(hv_consort_start(dup, patient_id_col = "mrn"), "must be unique")
   na_id <- data.frame(mrn = c("P1", NA, "P3"), age = 1:3)
-  expect_error(hv_consort_start(na_id, patient_id = mrn), "missing value")
+  expect_error(hv_consort_start(na_id, patient_id_col = "mrn"), "missing value")
 })
 
 test_that("hv_consort_exclude errors when a formula RHS is not a single string", {
@@ -458,10 +458,31 @@ test_that("hv_consort_exclude errors when a formula RHS is not a single string",
 
 test_that("hv_consort_patients returns character IDs for an integer ID column", {
   cohort  <- data.frame(id = 1:10, age = c(rep(15L, 3L), rep(30L, 7L)))
-  tracker <- hv_consort_start(cohort, patient_id = id) |>
+  tracker <- hv_consort_start(cohort, patient_id_col = "id") |>
     hv_consort_exclude(label = "Eligible", col = "excl_screen",
                        age < 18 ~ "Age < 18")
   expect_type(hv_consort_patients(tracker, "eligible"), "character")
   expect_type(hv_consort_patients(tracker, "screened", reason = "Age < 18"),
               "character")
+})
+
+# `mrn` below is a column name the deprecated bare form reads unevaluated, so
+# object_usage_linter reports it as an undefined global; it is not one.
+test_that("hv_consort_start's bare patient_id still works, deprecated", {
+  local_fresh_deprecations()
+  cohort <- data.frame(mrn = paste0("P", 1:4), age = c(10, 20, 30, 40))
+  expect_warning(t1 <- hv_consort_start(cohort, patient_id = mrn), # nolint: object_usage_linter.
+                 class = "hvtiPlotR_deprecated")
+  expect_identical(t1$patient_id_col, "mrn")
+  local_fresh_deprecations()
+  # By position, as the old signature allowed.
+  expect_warning(t2 <- hv_consort_start(cohort, mrn), # nolint: object_usage_linter.
+                 class = "hvtiPlotR_deprecated")
+  expect_identical(t2$patient_id_col, "mrn")
+  # A variable holding the name is a string, not a bare column.
+  col <- "mrn"
+  expect_no_warning(t3 <- hv_consort_start(cohort, col))
+  expect_identical(t3$patient_id_col, "mrn")
+  expect_error(hv_consort_start(cohort, patient_id_col = "mrn", patient_id = mrn), # nolint: object_usage_linter.
+               "both were given")
 })

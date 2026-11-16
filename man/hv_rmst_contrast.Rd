@@ -6,25 +6,33 @@
 \usage{
 hv_rmst_contrast(
   data,
-  estimator = "estimator",
-  diff = "diff_days",
-  lo = "lo_days",
-  hi = "hi_days"
+  estimator_col = "estimator",
+  diff_col = "diff_days",
+  lo_col = "lo_days",
+  hi_col = "hi_days",
+  estimator,
+  diff,
+  lo,
+  hi
 )
 }
 \arguments{
 \item{data}{A data frame with one row per estimator, or a \code{ps_rmst}
 object (any list whose \verb{$tables$estimates} is a data frame).}
 
-\item{estimator}{Name of the column holding estimator labels. Default
+\item{estimator_col}{Name of the column holding estimator labels. Default
 \code{"estimator"}. If it is a factor, its levels set the display order;
 otherwise the order of first appearance is used.}
 
-\item{diff}{Name of the numeric column with the RMST difference (in
+\item{diff_col}{Name of the numeric column with the RMST difference (in
 days). Default \code{"diff_days"}.}
 
-\item{lo, hi}{Names of the numeric columns with the lower and upper
+\item{lo_col, hi_col}{Names of the numeric columns with the lower and upper
 interval limits (in days). Defaults \code{"lo_days"} and \code{"hi_days"}.}
+
+\item{estimator, diff, lo, hi}{Deprecated names of \code{estimator_col},
+\code{diff_col}, \code{lo_col} and \code{hi_col}. They still work, with a
+once-per-session warning, until hvtiPlotR 2.9.0.}
 }
 \value{
 An object of class \code{c("hv_rmst_contrast", "hv_data")}: a list with

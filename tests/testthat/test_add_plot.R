@@ -447,7 +447,7 @@ test_that("save_ppt writes fitted slides for all three bundled templates", {
     template <- system.file("extdata", files[[mode]], package = "hvtiPlotR")
     out <- withr::local_tempfile(fileext = ".pptx")
     p <- fit_plot() + themes[[mode]]
-    suppressMessages(save_ppt(list(p, p), template = template, powerpoint = out,
+    suppressMessages(save_ppt(list(p, p), template = template, file = out,
                               slide_titles = c("One", "Two")))
     expect_equal(length(officer::read_pptx(out)), 2L)
     for (i in 1:2) {

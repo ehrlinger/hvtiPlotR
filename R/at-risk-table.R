@@ -74,31 +74,31 @@ utils::globalVariables(c("n.risk", "report_time", "strata"))
     rdf <- x$tables$risk
     if (is.null(rdf))
       stop("This object has no `$tables$risk`. Pass subject-level data with ",
-           "`time`/`status`/`group`, or a precomputed risk data frame.",
+           "`time_col`/`event_col`/`group_col`, or a precomputed risk data frame.",
            call. = FALSE)
     return(.select_report_times(rdf, report_times))
   }
 
   if (!is.data.frame(x))
-    stop("`x` must be an hv_data object, a precomputed risk data frame ",
+    stop("hv_atrisk(): `data` must be an hv_data object, a precomputed risk data frame ",
          "(strata/time/n columns), or a subject-level data frame plus ",
-         "`time` (and optional `status`/`group`).", call. = FALSE)
+         "`time_col` (and optional `event_col`/`group_col`).", call. = FALSE)
 
   # Mode 3: subject-level data frame + column names -> compute counts.
   if (!is.null(time)) {
     if (!(time %in% names(x)))
-      stop("`time` column \"", time, "\" not found in `x`.", call. = FALSE)
+      stop("hv_atrisk(): `time_col` column \"", time, "\" not found in `data`.", call. = FALSE)
     if (!is.null(group) && !(group %in% names(x)))
-      stop("`group` column \"", group, "\" not found in `x`.", call. = FALSE)
+      stop("hv_atrisk(): `group_col` column \"", group, "\" not found in `data`.", call. = FALSE)
     if (!is.null(status) && !(status %in% names(x)))
-      stop("`status` column \"", status, "\" not found in `x`.", call. = FALSE)
+      stop("hv_atrisk(): `event_col` column \"", status, "\" not found in `data`.", call. = FALSE)
     # A row with no event status is left out of the fit hv_survival() makes,
     # so it is not at risk either; otherwise this table overstates that one.
     if (!is.null(status))
       x <- .exclude_incomplete(x, status, context = "at-risk table")$data
     tv <- x[[time]]
     if (!is.numeric(tv) || !any(is.finite(tv)))
-      stop("`time` column \"", time, "\" has no finite values.", call. = FALSE)
+      stop("hv_atrisk(): `time_col` column \"", time, "\" has no finite values.", call. = FALSE)
     gv <- if (!is.null(group)) x[[group]] else NULL
     sv <- if (!is.null(status)) x[[status]] else NULL
     rt <- report_times
@@ -137,20 +137,23 @@ utils::globalVariables(c("n.risk", "report_time", "strata"))
 #' Renders a numbers-at-risk table as a bare \pkg{ggplot2} panel, ready to
 #' stack under a survival curve with \code{\link{hv_atrisk_compose}}.
 #'
-#' @param x One of: an \code{hv_data} object that carries \code{$tables$risk}
+#' @param data One of: an \code{hv_data} object that carries \code{$tables$risk}
 #'   (e.g. from \code{\link{hv_survival}}); a precomputed risk data frame with
 #'   \code{strata}, \code{report_time} (or \code{time}), and \code{n.risk}
 #'   (or \code{n}) columns; or a subject-level data frame supplied together
-#'   with the \code{time} (and optional \code{status}/\code{group}) column
-#'   names, from which counts are computed.
-#' @param time,status,group Column names in \code{x} when \code{x} is a
-#'   subject-level data frame. \code{time} triggers the raw-data path;
-#'   \code{status}, when named, leaves out rows whose status is missing (with
-#'   a warning), as \code{\link{hv_survival}} does, so the two tables agree;
-#'   \code{group} splits the
-#'   table into strata. Pass \code{group} as a factor to control the stratum
-#'   row order (its levels set the order); a character column orders rows
-#'   alphabetically. Default \code{NULL}.
+#'   with \code{time_col} (and optional \code{event_col}/\code{group_col}),
+#'   from which counts are computed.
+#' @param time_col,event_col,group_col Column names in \code{data} when it is a
+#'   subject-level data frame. \code{time_col} triggers the raw-data path;
+#'   \code{event_col}, when named, leaves out rows whose event status is
+#'   missing (with a warning), as \code{\link{hv_survival}} does, so the two
+#'   tables agree; \code{group_col} splits the table into strata. Pass the
+#'   group as a factor to control the stratum row order (its levels set the
+#'   order); a character column orders rows alphabetically. Default
+#'   \code{NULL}.
+#' @param x,time,status,group Deprecated names of \code{data},
+#'   \code{time_col}, \code{event_col} and \code{group_col}. They still work,
+#'   with a once-per-session warning, until hvtiPlotR 2.9.0.
 #' @param report_times Numeric time points for the columns. \code{NULL}
 #'   (default) uses the table's own points or, on the raw-data path, an
 #'   even spread derived from the observed time range. On the object and
@@ -178,15 +181,22 @@ utils::globalVariables(c("n.risk", "report_time", "strata"))
 #' @importFrom ggplot2 ggplot aes geom_text scale_y_discrete theme_minimal theme element_blank
 #' @importFrom rlang .data
 #' @export
-hv_atrisk <- function(x, time = NULL, status = NULL, group = NULL,
+hv_atrisk <- function(data, time_col = NULL, event_col = NULL, group_col = NULL,
                       report_times = NULL, size = NULL,
-                      strata_labels = NULL) {
-  rdf <- .resolve_risk_df(x, time, status, group, report_times)
+                      strata_labels = NULL, x, time, status, group) {
+  data      <- .hv_rename_arg("hv_atrisk", "x", "data", missing(x), missing(data), x, data)
+  time_col  <- .hv_rename_arg("hv_atrisk", "time", "time_col", missing(time),
+                              missing(time_col), time, time_col)
+  event_col <- .hv_rename_arg("hv_atrisk", "status", "event_col", missing(status),
+                              missing(event_col), status, event_col)
+  group_col <- .hv_rename_arg("hv_atrisk", "group", "group_col", missing(group),
+                              missing(group_col), group, group_col)
+  rdf <- .resolve_risk_df(data, time_col, event_col, group_col, report_times)
 
   if (is.null(rdf))
-    stop("Could not resolve `x` into a risk table. Supply an hv_data object ",
+    stop("hv_atrisk(): could not resolve `data` into a risk table. Supply an hv_data object ",
          "carrying `$tables$risk`, a precomputed risk data frame, or a ",
-         "subject-level data frame with a `time` column.", call. = FALSE)
+         "subject-level data frame with `time_col`.", call. = FALSE)
 
   if (anyNA(rdf$strata))
     stop("The risk table has missing `strata` values; label or drop them.",

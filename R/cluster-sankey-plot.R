@@ -431,8 +431,8 @@ plot.hv_sankey <- function(x,
 
   if (!is.null(alpha)) {
     .check_alpha(alpha)
-    message("`alpha` is deprecated in plot.hv_sankey(); use `flow_alpha` and ",
-            "`label_alpha`. Setting both to ", alpha, ".")
+    .hvti_inform("`alpha` is deprecated in plot.hv_sankey(); use `flow_alpha` and ",
+                 "`label_alpha`. Setting both to ", alpha, ".")
     flow_alpha  <- alpha
     label_alpha <- alpha
   }

@@ -212,6 +212,6 @@
 # One message per hv_balance() call when a bal.tab skipped its unadjusted group.
 .cb_note_no_unadjusted <- function(flag) {
   if (flag)
-    message("`bal.tab()` result has no unadjusted balance; re-run it with un = TRUE ",
-            "to draw the Before group.")
+    .hvti_inform("`bal.tab()` result has no unadjusted balance; re-run it with un = TRUE ",
+                 "to draw the Before group.")
 }

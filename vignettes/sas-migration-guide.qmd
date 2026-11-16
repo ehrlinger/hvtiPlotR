@@ -1486,7 +1486,7 @@ p_ppt <- p +
 save_ppt(
   object       = p_ppt,
   template     = template,
-  powerpoint   = "figures/afib_prevalence.pptx",
+  file         = "figures/afib_prevalence.pptx",
   slide_titles = "AF Prevalence over Time"
 )
 
@@ -1494,7 +1494,7 @@ save_ppt(
 save_ppt(
   object       = list(fig1 = p_binary, fig2 = p_multi),
   template     = template,
-  powerpoint   = "figures/np_curves.pptx",
+  file         = "figures/np_curves.pptx",
   slide_titles = c("Binary Outcome", "Multi-group Comparison")
 )
 ```

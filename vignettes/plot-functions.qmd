@@ -1711,7 +1711,7 @@ cohort <- data.frame(
   echo        = sample(c(TRUE, FALSE), 300, replace = TRUE, prob = c(0.85, 0.15))
 )
 
-tracker2 <- hv_consort_start(cohort, patient_id = mrn, label = "Screened") |>
+tracker2 <- hv_consort_start(cohort, patient_id_col = "mrn", label = "Screened") |>
   hv_consort_exclude(
     label        = "Eligible",
     col          = "excl_screen",
@@ -1772,7 +1772,7 @@ itself (set at `hv_consort()` time), so `width`/`height` are not needed here.
 #| eval: false
 save_ppt(
   object       = hv_consort(tracker),
-  powerpoint   = here::here("graphs", "consort.pptx"),
+  file         = here::here("graphs", "consort.pptx"),
   slide_titles = "CONSORT Patient Flow"
 )
 ```
@@ -2812,7 +2812,7 @@ The bare plot and the decorated plot share the same object.
 ```{r}
 #| label: np_curve_single_build
 np <- hv_nonparametric(
-  curve_data  = curve_dat,
+  data        = curve_dat,
   lower_col   = "lower",
   upper_col   = "upper",
   data_points = pts_dat
@@ -2887,7 +2887,7 @@ pts_grp <- sample_nonparametric_curve_points(
 )
 
 np_grp <- hv_nonparametric(
-  curve_data  = curve_grp,
+  data        = curve_grp,
   group_col   = "group",
   lower_col   = "lower",
   upper_col   = "upper",
@@ -2929,7 +2929,7 @@ ggsave(here::here("graphs", "np_afib_prevalence.pdf"),
 # Editable PowerPoint
 save_ppt(p_np,
          template   = system.file("extdata", "hv_ppt_template.pptx", package = "hvtiPlotR"),
-         powerpoint = here::here("graphs", "np_afib_prevalence.pptx"))
+         file       = here::here("graphs", "np_afib_prevalence.pptx"))
 ```
 
 # Nonparametric Ordinal Outcome Curve
@@ -2981,7 +2981,7 @@ the summary points. The same object drives the bare and decorated plots below.
 
 ```{r}
 #| label: np_ordinal_basic_build
-np_ord <- hv_ordinal(curve_data = ord_dat, data_points = ord_pts)
+np_ord <- hv_ordinal(data = ord_dat, data_points = ord_pts)
 ```
 
 ### Bare plot
@@ -3058,7 +3058,7 @@ ord_collapsed <- subset(ord_collapsed, grade %in% c("None", "Mild", "Moderate/Se
 # Show three-level version using only two grades from sample data
 ord_two <- subset(ord_dat, grade %in% c("None", "Severe"))
 
-plot(hv_ordinal(curve_data = ord_two)) +
+plot(hv_ordinal(data = ord_two)) +
   ggplot2::scale_color_manual(
     values = c("None" = "steelblue", "Severe" = "firebrick"),
     name   = NULL
@@ -3201,7 +3201,7 @@ ggsave(here::here("graphs", "longitudinal_participation.pdf"),
 # PowerPoint (bar chart only — patchwork composites may need ggsave first)
 save_ppt(p_lc_bar,
          template   = system.file("extdata", "hv_ppt_template.pptx", package = "hvtiPlotR"),
-         powerpoint = here::here("graphs", "longitudinal_participation.pptx"))
+         file       = here::here("graphs", "longitudinal_participation.pptx"))
 ```
 
 # UpSet Plot

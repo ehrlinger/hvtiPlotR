@@ -18,9 +18,6 @@
 ##   print.hv_consort_tracker() -- stage-by-stage summary
 ###############################################################################
 
-# Suppress R CMD check note for bare symbol used in substitute() NSE call
-# inside sample_consort_data().
-utils::globalVariables("patient_id")
 
 # ---------------------------------------------------------------------------
 # Internal helpers
@@ -69,9 +66,12 @@ ct_validate_tracker <- function(x, arg = "tracker") {
 #' then convert to a diagram with [hv_consort()].
 #'
 #' @param data       A data frame, one row per patient.
-#' @param patient_id <[`data-masking`][rlang::args_data_masking]> Unquoted
-#'   name of the unique patient identifier column. Its values must be unique
-#'   and not missing; a repeated or missing ID is an error.
+#' @param patient_id_col Name of the unique patient identifier column, as a
+#'   string. Its values must be unique and not missing; a repeated or missing
+#'   ID is an error.
+#' @param patient_id Deprecated: the identifier column unquoted. It works,
+#'   with a once-per-session warning, until hvtiPlotR 2.9.0; so does an
+#'   unquoted name passed by position.
 #' @param label      Character label for the initial population box.
 #'   Default `"Screened"`.
 #' @param pass_col   Column name for the initial boolean column.  Defaults to
@@ -88,22 +88,46 @@ ct_validate_tracker <- function(x, arg = "tracker") {
 #'
 #' @examples
 #' cohort  <- data.frame(mrn = paste0("P", 1:100), age = sample(15:80, 100, TRUE))
-#' tracker <- hv_consort_start(cohort, patient_id = mrn)
+#' tracker <- hv_consort_start(cohort, patient_id_col = "mrn")
 #' print(tracker)
 #'
 #' @export
-hv_consort_start <- function(data, patient_id, label = "Screened",
-                              pass_col = NULL) {
+hv_consort_start <- function(data, patient_id_col, label = "Screened",
+                              pass_col = NULL, patient_id) {
   .check_df(data)
-  patient_id_col <- as.character(substitute(patient_id))
+  bare_msg <- sprintf(paste0(
+    "hv_consort_start(): an unquoted `patient_id` column is deprecated; pass its name as ",
+    "a string, `patient_id_col = \"...\"`. The old form works until hvtiPlotR %s."),
+    .hv_removal_version)
+  if (!missing(patient_id)) {
+    if (!missing(patient_id_col))
+      stop("hv_consort_start(): pass `patient_id_col` only. `patient_id` is its old name, ",
+           "and both were given.", call. = FALSE)
+    .hv_deprecate("hv_consort_start:patient_id", bare_msg)
+    patient_id_col <- as.character(substitute(patient_id))
+  } else {
+    if (missing(patient_id_col))
+      stop("hv_consort_start(): `patient_id_col` is required.", call. = FALSE)
+    # A bare column name passed by position, as the old signature allowed:
+    # a symbol naming a column of `data` and no variable in the caller.
+    sym <- substitute(patient_id_col)
+    if (is.name(sym) && as.character(sym) %in% names(data) &&
+          !exists(as.character(sym), envir = parent.frame())) {
+      .hv_deprecate("hv_consort_start:patient_id", bare_msg)
+      patient_id_col <- as.character(sym)
+    }
+  }
+  if (!is.character(patient_id_col) || length(patient_id_col) != 1L || is.na(patient_id_col))
+    stop("hv_consort_start(): `patient_id_col` must be one column name, as a string.",
+         call. = FALSE)
   .check_cols(data, patient_id_col)
   ids <- data[[patient_id_col]]
   if (anyNA(ids))
-    stop(sprintf("hv_consort_start(): `patient_id` column '%s' has %d missing value(s).",
+    stop(sprintf("hv_consort_start(): `patient_id_col` column '%s' has %d missing value(s).",
                  patient_id_col, sum(is.na(ids))), call. = FALSE)
   if (anyDuplicated(ids)) {
     dup <- unique(ids[duplicated(ids)])
-    stop(sprintf(paste0("hv_consort_start(): `patient_id` column '%s' must be unique; ",
+    stop(sprintf(paste0("hv_consort_start(): `patient_id_col` column '%s' must be unique; ",
                         "%d ID(s) repeat, e.g. %s. A CONSORT diagram counts patients, ",
                         "so one row per patient is required."),
                  patient_id_col, length(dup),
@@ -181,7 +205,7 @@ hv_consort_start <- function(data, patient_id, label = "Screened",
 #'   echo = sample(c(TRUE, FALSE), 100, TRUE, prob = c(0.9, 0.1))
 #' )
 #'
-#' tracker <- hv_consort_start(cohort, patient_id = mrn) |>
+#' tracker <- hv_consort_start(cohort, patient_id_col = "mrn") |>
 #'   hv_consort_exclude(
 #'     label    = "Eligible",
 #'     col      = "excl_screen",
@@ -357,7 +381,7 @@ hv_consort_summary <- function(tracker) {
 #'
 #' @examples
 #' tracker <- hv_consort_start(data.frame(id = 1:10, age = c(rep(15,3), rep(30,7))),
-#'                              patient_id = id) |>
+#'                              patient_id_col = "id") |>
 #'   hv_consort_exclude(label = "Eligible", col = "excl_screen",
 #'                       age < 18 ~ "Age < 18")
 #' hv_consort_patients(tracker, "eligible")
@@ -436,7 +460,7 @@ hv_consort_patients <- function(tracker, stage, reason = NULL) {
 #'   age  = sample(15:80, 100, TRUE),
 #'   echo = sample(c(TRUE, FALSE), 100, TRUE, prob = c(0.9, 0.1))
 #' )
-#' tracker <- hv_consort_start(cohort, patient_id = mrn) |>
+#' tracker <- hv_consort_start(cohort, patient_id_col = "mrn") |>
 #'   hv_consort_exclude(label = "Eligible", col = "excl_screen",
 #'                       age < 18 ~ "Age < 18") |>
 #'   hv_consort_exclude(label = "Analyzed", col = "excl_eligible",
@@ -597,7 +621,7 @@ sample_consort_data <- function(n = 300L, seed = 42L) {
     stringsAsFactors = FALSE
   )
 
-  hv_consort_start(data, patient_id = patient_id, label = "Screened") |>
+  hv_consort_start(data, patient_id_col = "patient_id", label = "Screened") |>
     hv_consort_exclude(
       label        = "Eligible",
       col          = "excl_screen",

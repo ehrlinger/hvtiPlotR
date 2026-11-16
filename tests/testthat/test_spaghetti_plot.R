@@ -159,7 +159,7 @@ test_that("plot.hv_spaghetti custom line_colour is accepted without error", {
 
 test_that("plot.hv_spaghetti custom line_width is accepted without error", {
   sp <- hv_spaghetti(dta_grp)
-  expect_s3_class(plot(sp, line_width = 0.5), "ggplot")
+  expect_s3_class(plot(sp, linewidth = 0.5), "ggplot")
 })
 
 test_that("plot.hv_spaghetti alpha=0 is accepted (boundary)", {

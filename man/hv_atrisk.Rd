@@ -5,31 +5,35 @@
 \title{Numbers-at-risk table panel}
 \usage{
 hv_atrisk(
-  x,
-  time = NULL,
-  status = NULL,
-  group = NULL,
+  data,
+  time_col = NULL,
+  event_col = NULL,
+  group_col = NULL,
   report_times = NULL,
   size = NULL,
-  strata_labels = NULL
+  strata_labels = NULL,
+  x,
+  time,
+  status,
+  group
 )
 }
 \arguments{
-\item{x}{One of: an \code{hv_data} object that carries \code{$tables$risk}
+\item{data}{One of: an \code{hv_data} object that carries \code{$tables$risk}
 (e.g. from \code{\link{hv_survival}}); a precomputed risk data frame with
 \code{strata}, \code{report_time} (or \code{time}), and \code{n.risk}
 (or \code{n}) columns; or a subject-level data frame supplied together
-with the \code{time} (and optional \code{status}/\code{group}) column
-names, from which counts are computed.}
+with \code{time_col} (and optional \code{event_col}/\code{group_col}),
+from which counts are computed.}
 
-\item{time, status, group}{Column names in \code{x} when \code{x} is a
-subject-level data frame. \code{time} triggers the raw-data path;
-\code{status}, when named, leaves out rows whose status is missing (with
-a warning), as \code{\link{hv_survival}} does, so the two tables agree;
-\code{group} splits the
-table into strata. Pass \code{group} as a factor to control the stratum
-row order (its levels set the order); a character column orders rows
-alphabetically. Default \code{NULL}.}
+\item{time_col, event_col, group_col}{Column names in \code{data} when it is a
+subject-level data frame. \code{time_col} triggers the raw-data path;
+\code{event_col}, when named, leaves out rows whose event status is
+missing (with a warning), as \code{\link{hv_survival}} does, so the two
+tables agree; \code{group_col} splits the table into strata. Pass the
+group as a factor to control the stratum row order (its levels set the
+order); a character column orders rows alphabetically. Default
+\code{NULL}.}
 
 \item{report_times}{Numeric time points for the columns. \code{NULL}
 (default) uses the table's own points or, on the raw-data path, an
@@ -44,6 +48,10 @@ arbitrary times for a Kaplan-Meier object, rebuild it with
 
 \item{strata_labels}{Optional named character vector remapping stratum row
 labels. Default \code{NULL}.}
+
+\item{x, time, status, group}{Deprecated names of \code{data},
+\code{time_col}, \code{event_col} and \code{group_col}. They still work,
+with a once-per-session warning, until hvtiPlotR 2.9.0.}
 }
 \value{
 A bare \code{\link[ggplot2]{ggplot}} object: one text label per

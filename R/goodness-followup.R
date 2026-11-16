@@ -181,10 +181,20 @@ sample_goodness_followup_data <- function(
 #'   See \code{\link{sample_goodness_followup_data}}.
 #' @param iv_opyrs_col       Name of the operation-year column.
 #'   Default \code{"iv_opyrs"}.
-#' @param death_col          Name of the binary death-indicator column.
-#'   Default \code{"dead"}.
 #' @param death_time_col     Name of the time-to-death column.
 #'   Default \code{"iv_dead"}.
+#' @param death_col          Name of the binary death-indicator column.
+#'   Default \code{"dead"}.
+#'   Each time column comes before its status column, as in
+#'   \code{survival::Surv(time, event)}. The order of these four arguments
+#'   changed after 2.8.22; a status column that is not 0/1 or logical is an
+#'   error, so a positional call written for the old order fails rather than
+#'   swapping them.
+#' @param event_time_col     Name of the time-to-event column, or a vector the
+#'   same length as \code{event_col}, one interval per event.  Required when
+#'   \code{event_col} is supplied.  Default \code{NULL}.  A patient is drawn at
+#'   the winning event's interval; with no qualifying event, at the first
+#'   event's interval.
 #' @param event_col          Name of the non-fatal event indicator column, or
 #'   a vector of names for competing non-fatal events drawn in one panel.
 #'   Required to compute the event panel (\code{type = "event"}).
@@ -194,11 +204,6 @@ sample_goodness_followup_data <- function(
 #'   when it strictly precedes death.  Ties go to death.  Among the events
 #'   that qualify, the earliest sets the state, and a tie between two goes to
 #'   the one listed first.
-#' @param event_time_col     Name of the time-to-event column, or a vector the
-#'   same length as \code{event_col}, one interval per event.  Required when
-#'   \code{event_col} is supplied.  Default \code{NULL}.  A patient is drawn at
-#'   the winning event's interval; with no qualifying event, at the first
-#'   event's interval.
 #' @param death_for_event_col Name of the death column to use specifically in
 #'   the event panel (defaults to \code{death_col} when \code{NULL}).
 #' @param origin_year        Integer; calendar year used as the y-axis origin.
@@ -340,10 +345,10 @@ sample_goodness_followup_data <- function(
 hv_followup <- function(
   data,
   iv_opyrs_col         = "iv_opyrs",
-  death_col            = "dead",
   death_time_col       = "iv_dead",
-  event_col            = NULL,
+  death_col            = "dead",
   event_time_col       = NULL,
+  event_col            = NULL,
   death_for_event_col  = NULL,
   origin_year          = 1990,
   study_start          = as.Date("1990-01-01"),
@@ -404,6 +409,7 @@ hv_followup <- function(
 
   # --- Death panel ----------------------------------------------------------
   gf_require_columns(payload, c(iv_opyrs_col, death_time_col, death_col))
+  gf_check_status(payload, death_col, "death_col")
   death_excl <- .exclude_incomplete(payload, c(iv_opyrs_col, death_time_col,
                                                death_col),
                                     context = "death panel")
@@ -427,6 +433,7 @@ hv_followup <- function(
     event_cols <- c(iv_opyrs_col, event_time_col, event_col, eff_death_col,
                     death_time_col)
     gf_require_columns(payload, event_cols)
+    gf_check_status(payload, c(event_col, eff_death_col), "event_col")
     # The event panel needs more columns than the death panel, so it has its
     # own cohort. Reporting only the death panel's counts would describe a
     # different set of patients than event_data actually contains.
@@ -649,6 +656,21 @@ gf_materialize_followup_data <- function(data, tolower_names) {
 
 # Centralizes loose date inputs so validation stays consistent and new date
 # types only need to be supported in one place.
+# A status column must be logical or 0/1. Anything else, a follow-up time
+# above all, means the time and status columns were swapped: as.logical()
+# would read every nonzero time as an event and draw a plausible wrong plot.
+gf_check_status <- function(payload, cols, arg) {
+  for (cl in unique(cols)) {
+    v <- payload[[cl]]
+    ok <- is.logical(v) || (is.numeric(v) && all(v[!is.na(v)] %in% c(0, 1)))
+    if (!ok)
+      stop(sprintf(paste0("hv_followup(): status column '%s' (`%s`) must be logical or 0/1. ",
+                          "Each time column now comes before its status column; check ",
+                          "that the two are not swapped."), cl, arg), call. = FALSE)
+  }
+  invisible()
+}
+
 gf_coerce_date <- function(x, label) {
   if (inherits(x, "Date")) return(x)
   out <- try(as.Date(x), silent = TRUE)

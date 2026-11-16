@@ -85,13 +85,16 @@ rmst_shade_table <- function(curves, facet_col, arm_col, time_col, surv_col, tau
 #'
 #' @param data      A data frame with one row per estimator, or a `ps_rmst`
 #'   object (any list whose `$tables$estimates` is a data frame).
-#' @param estimator Name of the column holding estimator labels. Default
+#' @param estimator_col Name of the column holding estimator labels. Default
 #'   `"estimator"`. If it is a factor, its levels set the display order;
 #'   otherwise the order of first appearance is used.
-#' @param diff      Name of the numeric column with the RMST difference (in
+#' @param diff_col  Name of the numeric column with the RMST difference (in
 #'   days). Default `"diff_days"`.
-#' @param lo,hi     Names of the numeric columns with the lower and upper
+#' @param lo_col,hi_col Names of the numeric columns with the lower and upper
 #'   interval limits (in days). Defaults `"lo_days"` and `"hi_days"`.
+#' @param estimator,diff,lo,hi Deprecated names of `estimator_col`,
+#'   `diff_col`, `lo_col` and `hi_col`. They still work, with a
+#'   once-per-session warning, until hvtiPlotR 2.9.0.
 #'
 #' @return An object of class `c("hv_rmst_contrast", "hv_data")`: a list with
 #' \describe{
@@ -122,10 +125,17 @@ rmst_shade_table <- function(curves, facet_col, arm_col, time_col, surv_col, tau
 #'
 #' @export
 hv_rmst_contrast <- function(data,
-                             estimator = "estimator",
-                             diff      = "diff_days",
-                             lo        = "lo_days",
-                             hi        = "hi_days") {
+                             estimator_col = "estimator",
+                             diff_col      = "diff_days",
+                             lo_col        = "lo_days",
+                             hi_col        = "hi_days",
+                             estimator, diff, lo, hi) {
+  fn <- "hv_rmst_contrast"
+  estimator <- .hv_rename_arg(fn, "estimator", "estimator_col", missing(estimator),
+                              missing(estimator_col), estimator, estimator_col)
+  diff <- .hv_rename_arg(fn, "diff", "diff_col", missing(diff), missing(diff_col), diff, diff_col)
+  lo   <- .hv_rename_arg(fn, "lo", "lo_col", missing(lo), missing(lo_col), lo, lo_col)
+  hi   <- .hv_rename_arg(fn, "hi", "hi_col", missing(hi), missing(hi_col), hi, hi_col)
   data <- rmst_pull_table(data, "estimates", "data")
   .check_df(data)
   .check_cols(data, c(estimator, diff, lo, hi))
@@ -249,24 +259,27 @@ plot.hv_rmst_contrast <- function(x,
 #' `hvtiRpropensity::ps_rmst()`: columns `estimator`, `arm` (`"treated"` or
 #' `"control"`), `time` and `surv`, as right-continuous steps that start at
 #' time 0 with `surv` 1. hvtiRpropensity is not required: pass plain data
-#' frames, or the `ps_rmst` object itself as `curves` and its
+#' frames, or the `ps_rmst` object itself as `data` and its
 #' `$tables$curves` (and, when `estimates` is `NULL`, `$tables$estimates`) are
 #' read.
 #'
-#' @param curves    A data frame of curve steps, or a `ps_rmst` object.
+#' @param data      A data frame of curve steps, or a `ps_rmst` object.
 #' @param estimates Optional data frame with the `hv_rmst_contrast()` columns
 #'   (`estimator`, `diff_days`, `lo_days`, `hi_days`), used for the facet
-#'   annotations. If `NULL` and `curves` is a `ps_rmst`-like object, its
+#'   annotations. If `NULL` and `data` is a `ps_rmst`-like object, its
 #'   `$tables$estimates` is used when present. `NULL` otherwise: no
 #'   annotation.
 #' @param tau       Optional single positive number: the RMST horizon, on the
 #'   same scale as `time`.
-#' @param facet     Name of the column defining facets. Default
+#' @param facet_col Name of the column defining facets. Default
 #'   `"estimator"`. Factor levels set the facet order.
-#' @param arm       Name of the arm column. Default `"arm"`. A character
+#' @param arm_col   Name of the arm column. Default `"arm"`. A character
 #'   column is ordered `"treated"`, `"control"`, then any other value.
-#' @param time,surv Names of the time and survival columns. Defaults
+#' @param time_col,surv_col Names of the time and survival columns. Defaults
 #'   `"time"` and `"surv"`.
+#' @param curves,facet,arm,time,surv Deprecated names of `data`, `facet_col`,
+#'   `arm_col`, `time_col` and `surv_col`. They still work, with a
+#'   once-per-session warning, until hvtiPlotR 2.9.0.
 #'
 #' @return An object of class `c("hv_rmst_curves", "hv_data")`: a list with
 #' \describe{
@@ -303,19 +316,29 @@ plot.hv_rmst_contrast <- function(x,
 #'   theme_hv_manuscript()
 #'
 #' @export
-hv_rmst_curves <- function(curves,
+hv_rmst_curves <- function(data,
                            estimates = NULL,
                            tau       = NULL,
-                           facet     = "estimator",
-                           arm       = "arm",
-                           time      = "time",
-                           surv      = "surv") {
+                           facet_col = "estimator",
+                           arm_col   = "arm",
+                           time_col  = "time",
+                           surv_col  = "surv",
+                           curves, facet, arm, time, surv) {
+  fn <- "hv_rmst_curves"
+  curves <- .hv_rename_arg(fn, "curves", "data", missing(curves), missing(data), curves, data)
+  facet  <- .hv_rename_arg(fn, "facet", "facet_col", missing(facet), missing(facet_col),
+                           facet, facet_col)
+  arm    <- .hv_rename_arg(fn, "arm", "arm_col", missing(arm), missing(arm_col), arm, arm_col)
+  time   <- .hv_rename_arg(fn, "time", "time_col", missing(time), missing(time_col),
+                           time, time_col)
+  surv   <- .hv_rename_arg(fn, "surv", "surv_col", missing(surv), missing(surv_col),
+                           surv, surv_col)
   if (is.null(estimates) && is.list(curves) && !is.data.frame(curves) && is.list(curves$tables) &&
         is.data.frame(curves$tables$estimates))
     estimates <- curves$tables$estimates
-  curves <- rmst_pull_table(curves, "curves", "curves")
-  .check_df(curves, "curves")
-  .check_cols(curves, c(facet, arm, time, surv), data_arg = "curves")
+  curves <- rmst_pull_table(curves, "curves", "data")
+  .check_df(curves, "data")
+  .check_cols(curves, c(facet, arm, time, surv), data_arg = "data")
   .check_numeric_col(curves, time)
   .check_numeric_col(curves, surv)
   .check_complete_labels(curves, c(facet, arm))

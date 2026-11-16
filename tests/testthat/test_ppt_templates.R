@@ -148,7 +148,7 @@ test_that("save_ppt accepts an old layout name on the renamed light template", {
   p <- ggplot2::ggplot(mtcars, ggplot2::aes(wt, mpg)) + ggplot2::geom_point()
   expect_message(
     save_ppt(p, template = tpl("hv_ppt_template_light.pptx"),
-             powerpoint = out, layout = "Custom Layout"),
+             file       = out, layout = "Custom Layout"),
     "is now 'Title Only'")
   d <- tempfile("chk-")
   utils::unzip(out, exdir = d)
@@ -166,7 +166,7 @@ test_that("save_ppt writes a figure slide on every bundled template", {
   p <- ggplot2::ggplot(mtcars, ggplot2::aes(wt, mpg)) + ggplot2::geom_point()
   for (f in templates) {
     out <- tempfile(fileext = ".pptx")
-    save_ppt(p, template = tpl(f), powerpoint = out,
+    save_ppt(p, template = tpl(f), file = out,
              layout = hv_ppt_layout("figure"))
     expect_identical(length(officer::read_pptx(out)), 1L, info = f)
   }

@@ -44,7 +44,8 @@ so one call can serve panels that do and do not carry the event.
 Tol's muted palette, without its sand and cyan, and without its rose when
 a role is present. Beyond that there are no more colorblind-safe
 colors, and the function stops with an error of class
-\code{hv_role_palette_capacity}.
+\code{hvtiPlotR_role_palette_capacity}. It also carries the old class,
+\code{hv_role_palette_capacity}, until hvtiPlotR 2.9.0.
 }
 
 Every color except the missing gray is at least 2:1 against white. The

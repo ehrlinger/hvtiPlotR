@@ -4,16 +4,19 @@
 \alias{plot.hv_survival_difference}
 \title{Plot an hv_survival_difference object}
 \usage{
-\method{plot}{hv_survival_difference}(x, ci_alpha = 0.2, line_width = 1, ...)
+\method{plot}{hv_survival_difference}(x, ci_alpha = 0.2, linewidth = 1, ..., line_width)
 }
 \arguments{
 \item{x}{An \code{hv_survival_difference} object.}
 
 \item{ci_alpha}{Transparency of the CI ribbon. Default \code{0.20}.}
 
-\item{line_width}{Line width. Default \code{1.0}.}
+\item{linewidth}{Line width. Default \code{1.0}.}
 
 \item{...}{Ignored.}
+
+\item{line_width}{Deprecated name of \code{linewidth}; works with a once-per-session
+warning until hvtiPlotR 2.9.0.}
 }
 \value{
 A \code{\link[ggplot2:ggplot]{ggplot2::ggplot()}} object.

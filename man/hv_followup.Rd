@@ -7,10 +7,10 @@
 hv_followup(
   data,
   iv_opyrs_col = "iv_opyrs",
-  death_col = "dead",
   death_time_col = "iv_dead",
-  event_col = NULL,
+  death_col = "dead",
   event_time_col = NULL,
+  event_col = NULL,
   death_for_event_col = NULL,
   origin_year = 1990,
   study_start = as.Date("1990-01-01"),
@@ -32,11 +32,22 @@ See \code{\link{sample_goodness_followup_data}}.}
 \item{iv_opyrs_col}{Name of the operation-year column.
 Default \code{"iv_opyrs"}.}
 
-\item{death_col}{Name of the binary death-indicator column.
-Default \code{"dead"}.}
-
 \item{death_time_col}{Name of the time-to-death column.
 Default \code{"iv_dead"}.}
+
+\item{death_col}{Name of the binary death-indicator column.
+Default \code{"dead"}.
+Each time column comes before its status column, as in
+\code{survival::Surv(time, event)}. The order of these four arguments
+changed after 2.8.22; a status column that is not 0/1 or logical is an
+error, so a positional call written for the old order fails rather than
+swapping them.}
+
+\item{event_time_col}{Name of the time-to-event column, or a vector the
+same length as \code{event_col}, one interval per event.  Required when
+\code{event_col} is supplied.  Default \code{NULL}.  A patient is drawn at
+the winning event's interval; with no qualifying event, at the first
+event's interval.}
 
 \item{event_col}{Name of the non-fatal event indicator column, or
 a vector of names for competing non-fatal events drawn in one panel.
@@ -47,12 +58,6 @@ decide the state: each event time is compared against
 when it strictly precedes death.  Ties go to death.  Among the events
 that qualify, the earliest sets the state, and a tie between two goes to
 the one listed first.}
-
-\item{event_time_col}{Name of the time-to-event column, or a vector the
-same length as \code{event_col}, one interval per event.  Required when
-\code{event_col} is supplied.  Default \code{NULL}.  A patient is drawn at
-the winning event's interval; with no qualifying event, at the first
-event's interval.}
 
 \item{death_for_event_col}{Name of the death column to use specifically in
 the event panel (defaults to \code{death_col} when \code{NULL}).}
