@@ -109,10 +109,12 @@ hv_consort_start <- function(data, patient_id_col, label = "Screened",
     if (missing(patient_id_col))
       stop("hv_consort_start(): `patient_id_col` is required.", call. = FALSE)
     # A bare column name passed by position, as the old signature allowed:
-    # a symbol naming a column of `data` and no variable in the caller.
+    # a symbol naming a column of `data` that does not evaluate, in the
+    # caller, to a string. Evaluating rather than asking exists() keeps a
+    # column named like a base object (`date`, `t`) on this path too.
     sym <- substitute(patient_id_col)
     if (is.name(sym) && as.character(sym) %in% names(data) &&
-          !exists(as.character(sym), envir = parent.frame())) {
+          !is.character(tryCatch(eval(sym, parent.frame()), error = function(e) NULL))) {
       .hv_deprecate("hv_consort_start:patient_id", bare_msg)
       patient_id_col <- as.character(sym)
     }

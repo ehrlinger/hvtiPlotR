@@ -250,10 +250,12 @@ test_that("flow_alpha and label_alpha reach the corresponding layers", {
   expect_true(0.2 %in% alphas)   # geom_sankey_label
 })
 
-test_that("deprecated alpha sets both alphas and emits a message", {
+test_that("deprecated alpha sets both alphas and warns", {
   skip_if_not_installed("ggsankey")
+  local_fresh_deprecations()
   dta <- sample_cluster_sankey_data(n = 100, seed = 1)
-  expect_message(p <- plot(hv_sankey(dta), alpha = 0.7), "deprecated")
+  expect_warning(p <- plot(hv_sankey(dta), alpha = 0.7), "deprecated",
+                 class = "hvtiPlotR_deprecated")
   alphas <- vapply(p$layers, function(l) {
     a <- l$aes_params$alpha
     if (is.null(a)) NA_real_ else a

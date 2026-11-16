@@ -336,7 +336,7 @@ plot.hv_spaghetti <- function(x,
       method      = smooth_method,
       formula     = y ~ x,
       se          = smooth_se,
-      linewidth    = smooth_width,
+      linewidth   = smooth_width,
       inherit.aes = FALSE
     )
   }

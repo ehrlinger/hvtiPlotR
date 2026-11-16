@@ -80,7 +80,7 @@ test_that("print.hv_consort_tracker prints without error", {
 # ---------------------------------------------------------------------------
 
 # `mrn` is a column of the fixture, not a variable this helper binds:
-# hv_consort_start() substitute()s the bare symbol under data-masking.
+# hv_consort_start() takes the identifier column's name as a string.
 make_tracker <- function() {
   hv_consort_start(make_cohort(), patient_id_col = "mrn")
 }
@@ -176,7 +176,7 @@ test_that("hv_consort_exclude errors on non-tracker input", {
 # ---------------------------------------------------------------------------
 
 # `mrn` is a column of the fixture, not a variable this helper binds:
-# hv_consort_start() substitute()s the bare symbol under data-masking.
+# hv_consort_start() takes the identifier column's name as a string.
 make_full_tracker <- function() {
   hv_consort_start(make_cohort(), patient_id_col = "mrn") |>
     hv_consort_exclude(
@@ -485,4 +485,9 @@ test_that("hv_consort_start's bare patient_id still works, deprecated", {
   expect_identical(t3$patient_id_col, "mrn")
   expect_error(hv_consort_start(cohort, patient_id_col = "mrn", patient_id = mrn), # nolint: object_usage_linter.
                "both were given")
+  # A column named like a base object (here `date`) is still read as bare.
+  local_fresh_deprecations()
+  cohort2 <- data.frame(date = paste0("P", 1:4), age = c(10, 20, 30, 40))
+  expect_warning(t4 <- hv_consort_start(cohort2, date), class = "hvtiPlotR_deprecated")
+  expect_identical(t4$patient_id_col, "date")
 })

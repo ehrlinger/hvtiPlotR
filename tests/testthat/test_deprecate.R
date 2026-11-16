@@ -110,6 +110,13 @@ test_that("hv_followup refuses a time column where a status column belongs", {
   expect_error(
     hv_followup(dta, death_time_col = "dead", death_col = "iv_dead", origin_year = 1990,
                 study_start = "1990-01-01", study_end = "2019-12-31", close_date = "2021-08-06"),
-    "must be logical or 0/1"
+    "must be logical, 0/1"
+  )
+  # Text that as.logical() reads is a valid status, as it was before the check.
+  dta$dead <- as.character(as.logical(dta$dead))
+  expect_s3_class(
+    hv_followup(dta, origin_year = 1990, study_start = "1990-01-01",
+                study_end = "2019-12-31", close_date = "2021-08-06"),
+    "hv_data"
   )
 })

@@ -654,23 +654,26 @@ gf_materialize_followup_data <- function(data, tolower_names) {
   data
 }
 
-# Centralizes loose date inputs so validation stays consistent and new date
-# types only need to be supported in one place.
-# A status column must be logical or 0/1. Anything else, a follow-up time
-# above all, means the time and status columns were swapped: as.logical()
-# would read every nonzero time as an event and draw a plausible wrong plot.
+# A status column must be logical, 0/1, or text that as.logical() reads
+# ("TRUE"/"FALSE"). Anything else, a follow-up time above all, means the time
+# and status columns were swapped: as.logical() would read every nonzero time
+# as an event and draw a plausible wrong plot.
 gf_check_status <- function(payload, cols, arg) {
   for (cl in unique(cols)) {
     v <- payload[[cl]]
-    ok <- is.logical(v) || (is.numeric(v) && all(v[!is.na(v)] %in% c(0, 1)))
+    v <- v[!is.na(v)]
+    ok <- is.logical(v) || (is.numeric(v) && all(v %in% c(0, 1))) ||
+      (is.character(v) && !anyNA(as.logical(v)))
     if (!ok)
-      stop(sprintf(paste0("hv_followup(): status column '%s' (`%s`) must be logical or 0/1. ",
-                          "Each time column now comes before its status column; check ",
-                          "that the two are not swapped."), cl, arg), call. = FALSE)
+      stop(sprintf(paste0("hv_followup(): status column '%s' (`%s`) must be logical, 0/1 ",
+                          "or \"TRUE\"/\"FALSE\". Each time column now comes before its status column; ",
+                          "check that the two are not swapped."), cl, arg), call. = FALSE)
   }
   invisible()
 }
 
+# Centralizes loose date inputs so validation stays consistent and new date
+# types only need to be supported in one place.
 gf_coerce_date <- function(x, label) {
   if (inherits(x, "Date")) return(x)
   out <- try(as.Date(x), silent = TRUE)

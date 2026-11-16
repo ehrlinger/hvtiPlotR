@@ -4,8 +4,9 @@
   - `save_ppt()`'s `powerpoint` becomes `file`.
   - `line_width` becomes `linewidth`, ggplot2's name, in `hazard_plot()`, `survival_difference_plot()`, `nnt_plot()` and the `plot()` methods for `hv_hazard`, `hv_survival_difference`, `hv_nnt`, `hv_nonparametric`, `hv_ordinal` and `hv_spaghetti`.
   - `hv_consort_start()` takes the ID column as a string, `patient_id_col`. An unquoted name, named `patient_id` or passed by position, still works.
+  - `plot.hv_sankey()`'s deprecated `alpha` now warns once per session, like the others, instead of printing a message that quiet mode would hide.
 
-* `hv_followup()` puts each time column before its status column, as `survival::Surv(time, event)` does: `death_time_col, death_col`, then `event_time_col, event_col`. A status column must now be logical or 0/1, so a positional call written for the old order is an error rather than a silent swap.
+* `hv_followup()` puts each time column before its status column, as `survival::Surv(time, event)` does: `death_time_col, death_col`, then `event_time_col, event_col`. A status column must now be logical, 0/1 or `"TRUE"`/`"FALSE"` text, so a positional call written for the old order is an error rather than a silent swap.
 
 * Informational messages go through the family quiet mode: `options(hvti.quiet = TRUE)` silences them. Warnings and errors are unaffected.
 
