@@ -78,7 +78,7 @@ In weighted IPTW mode, additionally contains
 \code{effective_n_by_group} (Kish's effective sample size,
 \eqn{(\sum w)^2 / \sum w^2}, per group), \code{sum_weights}
 (the plain weight total per group, which \code{effective_n_by_group}
-reported under the old name) and \code{smd_weighted}.
+reported under the old name) and \code{smd_weighted}.}
 \item{\code{working}}{The per-patient data frame after score
 rescaling and complete-case filtering, used for custom
 downstream diagnostics.}
