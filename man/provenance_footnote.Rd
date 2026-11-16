@@ -24,7 +24,8 @@ unique abbreviation, the full ID, or a marker such as \code{"uncommitted"}.}
 hvtiPlotR and, when it is installed, hvtiRtemplates.}
 
 \item{time}{The time of the render, a \code{POSIXct} printed as
-\code{"\%Y-\%m-\%d \%H:\%M"}. Default \code{Sys.time()}.}
+\code{"\%Y-\%m-\%d \%H:\%M"}. Default \code{Sys.time()}. An \code{NA} time prints as
+\code{"time unknown"}, a gap rather than a plausible value.}
 
 \item{record}{Optional provenance record, the named list every hvtiR package
 returns: \code{package}, \code{version}, \code{sha}, \code{method}, \code{seed}, \code{rng_kind} and
@@ -37,7 +38,8 @@ record does not carry it.}
 \value{
 A character vector of fields: the commit, the job, one field per
 version and the time. Pass it to the \code{footnote} argument of
-\code{\link[=save_manuscript]{save_manuscript()}}, which joins and fits it.
+\code{\link[=save_manuscript]{save_manuscript()}}, which joins and fits it. An error carries class
+\code{hvtiPlotR_invalid_provenance}.
 }
 \description{
 Formats the fields \code{\link[=save_manuscript]{save_manuscript()}} prints below a figure to identify

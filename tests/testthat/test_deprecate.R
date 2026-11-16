@@ -105,6 +105,38 @@ test_that("save_ppt(powerpoint) is deprecated in favor of file", {
   expect_error(save_ppt(p, file = out, powerpoint = out), "both were given")
 })
 
+test_that("hv_followup refuses a positional call, since the column order changed", {
+  dta <- sample_goodness_followup_data(n = 40)
+  dates <- list(origin_year = 1990, study_start = "1990-01-01",
+                study_end = "2019-12-31", close_date = "2021-08-06")
+  # Old order, by position: death_col then death_time_col.
+  expect_error(do.call(hv_followup, c(list(dta, "iv_opyrs", "dead", "iv_dead"), dates)),
+               "by name", class = "hvtiPlotR_positional_reorder")
+  # A 0/1 time column would pass any status check; the guard still refuses it.
+  dta$t01 <- as.numeric(dta$iv_dead > stats::median(dta$iv_dead))
+  expect_error(do.call(hv_followup, c(list(dta, "iv_opyrs", "dead", "t01"), dates)),
+               class = "hvtiPlotR_positional_reorder")
+  # data and iv_opyrs_col keep their places and may still go by position.
+  expect_s3_class(do.call(hv_followup, c(list(dta, "iv_opyrs"), dates)), "hv_data")
+})
+
+test_that("hv_followup accepts a factor status, as as.logical() did", {
+  dta <- sample_goodness_followup_data(n = 40)
+  dta$dead <- factor(as.character(as.logical(dta$dead)), levels = c("FALSE", "TRUE"))
+  expect_s3_class(hv_followup(dta, origin_year = 1990, study_start = "1990-01-01",
+                              study_end = "2019-12-31", close_date = "2021-08-06"),
+                  "hv_data")
+})
+
+test_that("a bad death_for_event_col is reported under its own name", {
+  dta <- sample_goodness_followup_data(n = 40)
+  expect_error(hv_followup(dta, event_cols = "ev_event", event_time_cols = "iv_event",
+                           death_for_event_col = "iv_dead", origin_year = 1990,
+                           study_start = "1990-01-01", study_end = "2019-12-31",
+                           close_date = "2021-08-06"),
+               "`death_for_event_col`")
+})
+
 test_that("hv_followup refuses a time column where a status column belongs", {
   dta <- sample_goodness_followup_data(n = 40)
   expect_error(

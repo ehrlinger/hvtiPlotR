@@ -61,3 +61,27 @@ test_that("catchable errors carry hvtiPlotR_<condition> classes", {
   expect_error(hv_role_palette(letters[1:8]), class = "hv_role_palette_capacity")
   expect_error(hv_group_palette(paste0("g", 1:8)), class = "hvtiPlotR_group_palette_capacity")
 })
+
+test_that("an NA time in the record prints a gap too", {
+  out <- provenance_footnote(job = "j.qmd", versions = c(R = "4.5.1"),
+                             record = rec(time = as.POSIXct(NA)))
+  expect_identical(out, c("3f9c2a1", "j.qmd", "R 4.5.1", "hvtiRbootstrap 1.0.4",
+                          "time unknown", "seed 42"))
+})
+
+test_that("provenance_footnote() errors name the function and carry a class", {
+  expect_error(provenance_footnote(commit = 1, job = "j"),
+               "^provenance_footnote\\(\\): `commit`", class = "hvtiPlotR_invalid_provenance")
+  expect_error(provenance_footnote(commit = "c", job = "j", versions = "4.5.1"),
+               "^provenance_footnote\\(\\): `versions`", class = "hvtiPlotR_invalid_provenance")
+  expect_error(provenance_footnote(commit = "c", job = "j", time = "today"),
+               "^provenance_footnote\\(\\): `time`", class = "hvtiPlotR_invalid_provenance")
+  expect_error(provenance_footnote(job = "j", record = list(package = "x")),
+               "^provenance_footnote\\(\\): `record`", class = "hvtiPlotR_invalid_provenance")
+})
+
+test_that("the slides use save_ppt()'s current argument name", {
+  qmd <- system.file("slides", "hvtiPlotR-whats-new.qmd", package = "hvtiPlotR")
+  skip_if(!nzchar(qmd), "slides not installed")
+  expect_false(any(grepl("powerpoint", readLines(qmd, warn = FALSE))))
+})

@@ -187,9 +187,11 @@ sample_goodness_followup_data <- function(
 #'   Default \code{"dead"}.
 #'   Each time column comes before its status column, as in
 #'   \code{survival::Surv(time, event)}. The order of these four arguments
-#'   changed after 2.8.22; a status column that is not 0/1 or logical is an
-#'   error, so a positional call written for the old order fails rather than
-#'   swapping them.
+#'   changed after 2.8.22, so they must be passed by name: a call that gives
+#'   any argument after \code{iv_opyrs_col} by position is an error (class
+#'   \code{hvtiPlotR_positional_reorder}) rather than a silent swap. A status
+#'   column must be logical, 0/1, or text or a factor that \code{as.logical()}
+#'   reads (\code{"TRUE"}/\code{"FALSE"}).
 #' @param event_time_cols    Name of the time-to-event column, or a vector the
 #'   same length as \code{event_cols}, one interval per event.  Required when
 #'   \code{event_cols} is supplied.  Default \code{NULL}.  A patient is drawn at
@@ -367,6 +369,7 @@ hv_followup <- function(
   event_time_col,
   event_col
 ) {
+  gf_positional_guard(sys.call())
   event_time_col <- .hv_rename_arg("hv_followup", "event_time_col", "event_time_cols",
                                    missing(event_time_col), missing(event_time_cols),
                                    event_time_col, event_time_cols)
@@ -443,7 +446,9 @@ hv_followup <- function(
     panel_cols <- c(iv_opyrs_col, event_time_col, event_col, eff_death_col,
                     death_time_col)
     gf_require_columns(payload, panel_cols)
-    gf_check_status(payload, c(event_col, eff_death_col), "event_cols")
+    gf_check_status(payload, event_col, "event_cols")
+    gf_check_status(payload, eff_death_col,
+                    if (is.null(death_for_event_col)) "death_col" else "death_for_event_col")
     # The event panel needs more columns than the death panel, so it has its
     # own cohort. Reporting only the death panel's counts would describe a
     # different set of patients than event_data actually contains.
@@ -664,20 +669,38 @@ gf_materialize_followup_data <- function(data, tolower_names) {
   data
 }
 
-# A status column must be logical, 0/1, or text that as.logical() reads
-# ("TRUE"/"FALSE"). Anything else, a follow-up time above all, means the time
-# and status columns were swapped: as.logical() would read every nonzero time
-# as an event and draw a plausible wrong plot.
+# The time and status arguments changed places after 2.8.22, so a call written
+# for the old order would bind each column to the other's role. A status check
+# alone cannot catch that when a time column happens to hold only 0/1, so any
+# argument after `data` and `iv_opyrs_col` given by position is refused.
+gf_positional_guard <- function(call) {
+  args <- as.list(call)[-1L]
+  nms  <- names(args)
+  if (is.null(nms)) nms <- rep("", length(args))
+  if (sum(!nzchar(nms)) > 2L)
+    stop(errorCondition(paste0(
+      "hv_followup(): pass every argument after `iv_opyrs_col` by name. The time ",
+      "columns now come before their status columns (`death_time_col, death_col`, ",
+      "`event_time_cols, event_cols`), so a positional call would swap them."),
+      class = "hvtiPlotR_positional_reorder", call = NULL))
+  invisible()
+}
+
+# A status column must be logical, 0/1, or text or a factor that as.logical()
+# reads ("TRUE"/"FALSE"), the inputs as.logical() has always accepted here.
+# Anything else, a follow-up time above all, would read every nonzero value as
+# an event and draw a plausible wrong plot.
 gf_check_status <- function(payload, cols, arg) {
   for (cl in unique(cols)) {
     v <- payload[[cl]]
     v <- v[!is.na(v)]
+    if (is.factor(v)) v <- as.character(v)
     ok <- is.logical(v) || (is.numeric(v) && all(v %in% c(0, 1))) ||
       (is.character(v) && !anyNA(as.logical(v)))
     if (!ok)
       stop(sprintf(paste0("hv_followup(): status column '%s' (`%s`) must be logical, 0/1 ",
-                          "or \"TRUE\"/\"FALSE\". Each time column now comes before its status column; ",
-                          "check that the two are not swapped."), cl, arg), call. = FALSE)
+                          "or \"TRUE\"/\"FALSE\"; check that it is not a time column."),
+                   cl, arg), call. = FALSE)
   }
   invisible()
 }
