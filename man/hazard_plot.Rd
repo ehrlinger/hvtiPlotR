@@ -105,7 +105,7 @@ Default \code{0.25}.}
 A \code{\link[ggplot2:ggplot]{ggplot2::ggplot()}} object.
 }
 \description{
-\strong{Superseded.}
+\strong{Superseded, not deprecated: no removal is scheduled.}
 
 \code{hazard_plot()} has been superseded by the S3 constructor \code{\link[=hv_hazard]{hv_hazard()}}
 plus \code{\link[=plot.hv_hazard]{plot.hv_hazard()}}.

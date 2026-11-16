@@ -47,14 +47,22 @@ test_that("hv_panel_box depends on the slide format, not the color template", {
   wide <- list(width = 9.98, height = 4.11, left = 2.9, top = 1.85)
   standard <- list(width = 7.25, height = 4.11, left = 2.3, top = 1.85)
   for (mode in c("dark", "light", "slate")) {
-    expect_identical(hv_panel_box(mode), wide)
-    expect_identical(hv_panel_box(mode, format = "wide"), wide)
-    expect_identical(hv_panel_box(mode, format = "standard"), standard)
+    suppressWarnings({
+      expect_identical(hv_panel_box(mode), wide)
+      expect_identical(hv_panel_box(mode, format = "wide"), wide)
+      expect_identical(hv_panel_box(mode, format = "standard"), standard)
+    })
   }
   expect_false(identical(hv_panel_box(format = "wide"), hv_panel_box(format = "standard")))
   # The standard box fits a 10 in slide with 0.45 in on the right.
   expect_equal(10 - standard$left - standard$width, 0.45)
   expect_error(hv_panel_box(format = "square"))
+})
+
+test_that("hv_panel_box(mode) is deprecated: it has no effect", {
+  local_fresh_deprecations()
+  expect_warning(hv_panel_box("dark"), "no effect", class = "hvtiPlotR_deprecated")
+  expect_no_warning(hv_panel_box(format = "wide"))
 })
 
 test_that(".hv_template_format reads the slide format from the template", {

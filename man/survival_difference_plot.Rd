@@ -38,7 +38,7 @@ survival_difference_plot(
 A \code{\link[ggplot2:ggplot]{ggplot2::ggplot()}} object.
 }
 \description{
-\strong{Superseded.}
+\strong{Superseded, not deprecated: no removal is scheduled.}
 
 \code{survival_difference_plot()} has been superseded by the S3 constructor
 \code{\link[=hv_survival_difference]{hv_survival_difference()}} plus \code{\link[=plot.hv_survival_difference]{plot.hv_survival_difference()}}.

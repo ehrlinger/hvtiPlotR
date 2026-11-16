@@ -38,7 +38,7 @@ plotting. Default \code{TRUE}.}
 A \code{\link[ggplot2:ggplot]{ggplot2::ggplot()}} object.
 }
 \description{
-\strong{Superseded.}
+\strong{Superseded, not deprecated: no removal is scheduled.}
 
 \code{nnt_plot()} has been superseded by the S3 constructor \code{\link[=hv_nnt]{hv_nnt()}} plus
 \code{\link[=plot.hv_nnt]{plot.hv_nnt()}}.

@@ -21,8 +21,15 @@ computes derived columns that match the SAS \code{\%kaplan} macro outputs:
 }
 \details{
 \describe{
-\item{\code{cumhaz}}{Cumulative hazard H(t) = -log S(t).}
-\item{\code{log_cumhaz}}{log H(t), the y-axis of the log-log survival
+\item{\code{cumhaz}}{Nelson-Aalen cumulative hazard
+\eqn{H(t) = \sum_{t_j \le t} d_j / n_j}, as \code{survfit()} reports
+it. Under \code{method = "kaplan-meier"} this is \emph{not}
+\eqn{-\log S(t)} of the product-limit curve; the two agree only
+approximately, and diverge in the tail where \eqn{S(t)} is small. Only
+a \code{survfit} summary without a \code{cumhaz} component falls back to
+\eqn{-\log S(t)}.}
+\item{\code{log_cumhaz}}{log H(t) of the Nelson-Aalen H above, the
+y-axis of the log-log survival
 plot used to assess the proportional-hazards assumption.}
 \item{\code{log_time}}{log(t), the x-axis of log-scale PLOTC plots.}
 \item{\code{hazard}}{Instantaneous hazard estimate:
@@ -31,9 +38,18 @@ with \code{delta_t > 0}; \code{NA} at censoring times.}
 \item{\code{density}}{Probability density: (S(t_prev) - S(t)) / delta_t.}
 \item{\code{mid_time}}{Midpoint of the interval (t_prev, t], used as
 the x-axis of hazard-rate plots.}
-\item{\code{life}}{Cumulative integral of the survival function
-(restricted mean survival time) using the SAS trapezoidal rule:
-LIFE += delta_t * (3*S(t) - S(t_prev)) / 2.}
+\item{\code{life}}{Cumulative integral of the survival function, by the
+SAS \code{\%kaplan} formula, kept for SAS parity:
+\eqn{LIFE \mathrel{+}= \Delta t (3 S(t) - S(t_{prev})) / 2}. This is
+\strong{not} a trapezoid. The Kaplan-Meier curve is a right-continuous
+step, constant at \eqn{S(t_{prev})} across \eqn{[t_{prev}, t)}, so the
+exact area of an interval is \eqn{\Delta t \, S(t_{prev})}; the
+trapezoid would be \eqn{\Delta t (S(t) + S(t_{prev})) / 2}. The SAS
+formula falls short of the exact area by
+\eqn{\frac{3}{2} \Delta t (S(t_{prev}) - S(t))} at each event
+(and equals it across a censoring-only interval), so \code{life}
+understates the restricted mean survival time. For the exact RMST use
+\code{hvtiRpropensity::ps_rmst()}.}
 \item{\code{proplife}}{LIFE / t, the proportionate life length.}
 }
 }

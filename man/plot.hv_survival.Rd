@@ -28,8 +28,12 @@ publication curve.}
 \item{\code{"loglog"}}{Log-log diagnostic: \eqn{\log H(t)} vs
 \eqn{\log t}.  Parallel lines across strata support proportional
 hazards.}
-\item{\code{"life"}}{(\code{PLOTL=1}) Restricted mean survival time
-(integral of \eqn{S(t)}) vs time.}
+\item{\code{"life"}}{(\code{PLOTL=1}) Integrated survivorship vs
+time, by the SAS \code{\%kaplan} formula
+\eqn{\Delta t (3 S(t) - S(t_{prev})) / 2}, which is neither the
+exact step-function area nor a trapezoid and understates the
+restricted mean survival time; see \code{\link{hv_survival}}. For the
+exact RMST use \code{hvtiRpropensity::ps_rmst()}.}
 }}
 
 \item{conf_int}{Logical; draw a CI ribbon on the \code{"survival"} plot.

@@ -44,6 +44,14 @@ test_that("coefficients are the pairwise matrix under labels", {
   expect_equal(levels(cm$data$col_var), c("HbA1c", "Glucose"))
 })
 
+test_that("the default coefficient is Spearman", {
+  d  <- sample_correlation_data(n = 100)
+  cm <- hv_correlation_matrix(d, vars = c("a1c", "glucose"))
+  expect_equal(cm$meta$method, "spearman")
+  expect_equal(cm$tables$coefficients[1, 2],
+               stats::cor(d$a1c, d$glucose, method = "spearman"))
+})
+
 test_that("errors are clear", {
   d <- sample_correlation_data(n = 20)
   expect_error(hv_correlation_matrix(d, vars = "a1c"), "at least two")

@@ -92,7 +92,6 @@ rmst_shade_table <- function(curves, facet_col, arm_col, time_col, surv_col, tau
 #'   days). Default `"diff_days"`.
 #' @param lo,hi     Names of the numeric columns with the lower and upper
 #'   interval limits (in days). Defaults `"lo_days"` and `"hi_days"`.
-#' @param ...       Ignored; present for S3 consistency.
 #'
 #' @return An object of class `c("hv_rmst_contrast", "hv_data")`: a list with
 #' \describe{
@@ -126,8 +125,7 @@ hv_rmst_contrast <- function(data,
                              estimator = "estimator",
                              diff      = "diff_days",
                              lo        = "lo_days",
-                             hi        = "hi_days",
-                             ...) {
+                             hi        = "hi_days") {
   data <- rmst_pull_table(data, "estimates", "data")
   .check_df(data)
   .check_cols(data, c(estimator, diff, lo, hi))
@@ -269,7 +267,6 @@ plot.hv_rmst_contrast <- function(x,
 #'   column is ordered `"treated"`, `"control"`, then any other value.
 #' @param time,surv Names of the time and survival columns. Defaults
 #'   `"time"` and `"surv"`.
-#' @param ...       Ignored; present for S3 consistency.
 #'
 #' @return An object of class `c("hv_rmst_curves", "hv_data")`: a list with
 #' \describe{
@@ -312,8 +309,7 @@ hv_rmst_curves <- function(curves,
                            facet     = "estimator",
                            arm       = "arm",
                            time      = "time",
-                           surv      = "surv",
-                           ...) {
+                           surv      = "surv") {
   if (is.null(estimates) && is.list(curves) && !is.data.frame(curves) && is.list(curves$tables) &&
         is.data.frame(curves$tables$estimates))
     estimates <- curves$tables$estimates

@@ -65,7 +65,9 @@ with a positive \code{segment_drop}.
 }
 \examples{
 dta <- sample_goodness_followup_data()
-gf  <- hv_followup(dta, event_col = "ev_event",
+gf  <- hv_followup(dta, origin_year = 1990, study_start = "1990-01-01",
+                   study_end = "2019-12-31", close_date = "2021-08-06",
+                   event_col = "ev_event",
                      event_time_col = "iv_event")
 
 # Death panel
@@ -88,7 +90,9 @@ plot(gf, type = "event") +
   theme_hv_poster()
 
 # Legacy stem below each point -- restored with a positive segment_drop
-plot(hv_followup(dta, segment_drop = 0.2))
+plot(hv_followup(dta, origin_year = 1990, study_start = "1990-01-01",
+                 study_end = "2019-12-31", close_date = "2021-08-06",
+                 segment_drop = 0.2))
 
 }
 \seealso{

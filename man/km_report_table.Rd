@@ -4,20 +4,26 @@
 \alias{km_report_table}
 \title{Build report table at specified time points}
 \usage{
-km_report_table(km_df, report_times)
+km_report_table(km_df, report_times, risk_tbl)
 }
 \arguments{
 \item{km_df}{Tidy KM data frame from \code{km_extract_tidy}.}
 
 \item{report_times}{Numeric vector of time points.}
+
+\item{risk_tbl}{Risk table from \code{km_risk_table}.}
 }
 \value{
 A data frame with columns \code{strata}, \code{report_time},
 \code{surv}, \code{lower}, \code{upper}, \code{n.risk}, \code{n.event}.
 }
 \description{
-For each stratum and report time, extracts the survival estimate (and CI
-bounds, n.risk, and n.event) at the last observed time \eqn{\le} the
-report time.
+For each stratum and report time, extracts the survival estimate and CI
+bounds at the last observed time \eqn{\le} the report time. A report time
+past a stratum's last observed time has no estimate, so its \code{surv},
+\code{lower}, \code{upper} and \code{n.event} are \code{NA} rather than
+the final row carried forward. \code{n.risk} is taken from the risk table,
+the number still under observation at the report time itself, so the two
+tables agree.
 }
 \keyword{internal}

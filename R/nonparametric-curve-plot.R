@@ -373,6 +373,7 @@ hv_nonparametric <- function(curve_data,
                                 group_col    = NULL,
                                 data_points  = NULL) {
   .check_df(curve_data, "curve_data")
+  .check_band_pair(lower_col, upper_col, "hv_nonparametric")
   .check_cols(curve_data, c(x_col, estimate_col), "curve_data")
   .check_col(curve_data, lower_col, "curve_data")
   .check_col(curve_data, upper_col, "curve_data")

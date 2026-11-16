@@ -29,8 +29,11 @@
 #'                 footnote = provenance_footnote(commit, "analysis/mortality.R"))
 #' ```
 #'
-#' @param text     Text to display. Defaults to the current working directory;
-#'   for most uses pass the script filename instead: `make_footnote("R/analysis.R")`.
+#' @param text     Text to display, usually the script filename:
+#'   `make_footnote("R/analysis.R")`. Required. It once defaulted to
+#'   `getwd()`, which stamped a filesystem path on the figure unasked; omitting
+#'   it now draws only the prefix and timestamp, with a once-per-session
+#'   deprecation warning, and from hvtiPlotR 2.9.0 it is an error.
 #' @param timestamp Logical; if TRUE, `Sys.time()` is appended to `text`. Default `TRUE`.
 #'   Set to `FALSE` for reproducible output.
 #' @param prefix   String prepended to `text` before the timestamp. Default
@@ -95,7 +98,7 @@
 #' @importFrom grid pushViewport viewport popViewport gpar grid.text unit
 #' @importFrom grDevices gray
 #' @export
-make_footnote <- function(text       = getwd(),
+make_footnote <- function(text,
                           timestamp  = TRUE,
                           prefix     = "DRAFT \u2014 ",
                           size       = 0.7,
@@ -107,6 +110,16 @@ make_footnote <- function(text       = getwd(),
                           margin_mm  = 2,
                           color      = colour) {
   .check_spelling_pair("color", "colour", !missing(color), !missing(colour), color, colour)
+  if (missing(text)) {
+    # The old default stamped getwd(), a filesystem path, on every figure
+    # without the caller asking for it. Nothing path-like is drawn now.
+    .hv_deprecate("make_footnote:text", sprintf(paste0(
+      "make_footnote(): `text` has no default. The old default, getwd(), ",
+      "stamped the working directory on the figure; nothing is stamped in its ",
+      "place, and from hvtiPlotR %s omitting `text` is an error. Pass the ",
+      "footnote text explicitly."), .hv_removal_version))
+    text <- ""
+  }
 
   if (!is.character(text) || length(text) != 1L)
     stop("`text` must be a single string.", call. = FALSE)
@@ -151,7 +164,7 @@ make_footnote <- function(text       = getwd(),
 # camelCase on purpose: makeFootnote() and footnoteText are the names this
 # package exported before the rename to make_footnote(), and an export is
 # part of the contract with every package that draws through this one.
-makeFootnote <- function(footnoteText = getwd(), # nolint: object_name_linter.
+makeFootnote <- function(footnoteText, # nolint: object_name_linter.
                          size         = 0.7,
                          color        = gray(0.5),
                          timestamp    = TRUE) {

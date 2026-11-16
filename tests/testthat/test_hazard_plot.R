@@ -459,7 +459,7 @@ test_that("hv_hazard errors when estimate_col is absent from curve_data", {
 
 test_that("hv_hazard errors when lower_col is absent from curve_data", {
   dat <- sample_hazard_data(n = 50, seed = 1)
-  expect_error(hv_hazard(dat, lower_col = "nonexistent"), "not found")
+  expect_error(hv_hazard(dat, lower_col = "nonexistent", upper_col = "nonexistent"), "not found")
 })
 
 test_that("hv_hazard errors when group_col is absent from curve_data", {
@@ -602,7 +602,8 @@ test_that("hv_survival_difference errors when estimate_col is absent", {
 test_that("hv_survival_difference errors when lower_col is absent", {
   diff_dat <- sample_survival_difference_data(seed = 1)
   expect_error(
-    hv_survival_difference(diff_dat, lower_col = "nonexistent"),
+    hv_survival_difference(diff_dat, lower_col = "nonexistent",
+                           upper_col = "nonexistent"),
     "not found"
   )
 })
@@ -751,7 +752,7 @@ test_that("hv_nnt errors when estimate_col is absent", {
 
 test_that("hv_nnt errors when lower_col is absent", {
   nnt_dat <- sample_nnt_data(seed = 1)
-  expect_error(hv_nnt(nnt_dat, lower_col = "nonexistent"), "not found")
+  expect_error(hv_nnt(nnt_dat, lower_col = "nonexistent", upper_col = "nonexistent"), "not found")
 })
 
 test_that("hv_nnt errors when group_col is absent", {

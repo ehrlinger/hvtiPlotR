@@ -410,7 +410,14 @@ positive `segment_drop` (in years) to restore them:
 
 ```{r}
 #| label: gfup_segment_drop
-plot(hv_followup(gfup_dta, segment_drop = 0.2))
+plot(hv_followup(
+  gfup_dta,
+  segment_drop   = 0.2,
+  origin_year    = 1990,
+  study_start    = as.Date("1990-01-01"),
+  study_end      = as.Date("2019-12-31"),
+  close_date     = as.Date("2021-08-06")
+))
 ```
 
 ## Adding scales, labels, and annotations
@@ -583,7 +590,14 @@ is still drawn; `meta$n_echo` and `meta$n_no_echo` count the two.
 ```{r}
 #| label: gfup_echo_patient
 gfup_event_dta$iv_echo <- gfup_event_dta$iv_dead * 0.6
-gf_echo <- hv_followup(gfup_event_dta, echo_time_col = "iv_echo")
+gf_echo <- hv_followup(
+  gfup_event_dta,
+  echo_time_col  = "iv_echo",
+  origin_year    = 1990,
+  study_start    = as.Date("1990-01-01"),
+  study_end      = as.Date("2019-12-31"),
+  close_date     = as.Date("2021-08-06")
+)
 c(gf_echo$meta$n_echo, gf_echo$meta$n_no_echo)
 
 plot(gf_echo) +
@@ -606,7 +620,15 @@ echoes <- data.frame(
   iv_opyrs = rep(gfup_event_dta$iv_opyrs[1:60], each = 3),
   iv_echo  = rep(gfup_event_dta$iv_dead[1:60], each = 3) * c(0.1, 0.5, 0.9)
 )
-plot(hv_followup(gfup_event_dta, echo = echoes, echo_time_col = "iv_echo")) +
+plot(hv_followup(
+  gfup_event_dta,
+  echo           = echoes,
+  echo_time_col  = "iv_echo",
+  origin_year    = 1990,
+  study_start    = as.Date("1990-01-01"),
+  study_end      = as.Date("2019-12-31"),
+  close_date     = as.Date("2021-08-06")
+)) +
   scale_color_manual(values = c(Alive = "blue", Dead = "red"), name = NULL) +
   labs(x = "Operation Date", y = "Follow-up (years)") +
   theme_hv_poster()

@@ -252,12 +252,29 @@ test_that("hv_mirror_hist weighted diagnostics omits binary-match fields", {
   expect_false("group_counts_matched" %in% names(diag))
 })
 
-test_that("hv_mirror_hist weighted effective_n_by_group sums weights", {
-  df             <- sample_mirror_histogram_data(50, add_weights = TRUE)
-  mh             <- hv_mirror_hist(df, weight_col = "mt_wt")
-  expected_total <- sum(df$mt_wt)
-  observed_total <- sum(mh$tables$diagnostics$effective_n_by_group)
-  expect_equal(observed_total, expected_total, tolerance = 1e-6)
+test_that("hv_mirror_hist weighted effective_n_by_group is Kish's", {
+  df   <- sample_mirror_histogram_data(50, add_weights = TRUE)
+  mh   <- hv_mirror_hist(df, weight_col = "mt_wt")
+  diag <- mh$tables$diagnostics
+  w    <- mh$tables$working$weight
+  g    <- mh$tables$working$group
+  kish <- tapply(w, g, function(x) sum(x)^2 / sum(x^2))
+  expect_equal(as.numeric(diag$effective_n_by_group), as.numeric(kish),
+               tolerance = 1e-9)
+  # Kish never exceeds the count of observations in the group.
+  expect_true(all(diag$effective_n_by_group <= table(g) + 1e-9))
+  # The old meaning, the weight total, lives on as sum_weights.
+  expect_equal(sum(diag$sum_weights), sum(df$mt_wt), tolerance = 1e-6)
+})
+
+test_that("effective_n_by_group equals n under equal weights", {
+  df       <- sample_mirror_histogram_data(40, add_weights = TRUE)
+  df$mt_wt <- 2.5
+  diag     <- hv_mirror_hist(df, weight_col = "mt_wt")$tables$diagnostics
+  expect_equal(as.numeric(diag$effective_n_by_group),
+               as.numeric(diag$group_counts_before))
+  expect_equal(as.numeric(diag$sum_weights),
+               2.5 * as.numeric(diag$group_counts_before))
 })
 
 test_that("hv_mirror_hist weighted mode does not require match_col", {
@@ -451,4 +468,13 @@ test_that("split_tall count label sits beyond the gap and grows outward", {
   lab <- p$layers[[5]]$data
   expect_true(all(abs(lab$y) > pmax(abs(gap$ymin), abs(gap$ymax))))
   expect_equal(lab$vjust, ifelse(lab$y > 0, 0, 1))
+})
+
+test_that("effective_n_by_group is 0, not NaN, for an all-zero-weight group", {
+  df <- sample_mirror_histogram_data(40, add_weights = TRUE)
+  df$mt_wt[df$tavr == 0] <- 0
+  diag <- hv_mirror_hist(df, group_col = "tavr", group_labels = c("A", "B"),
+                         weight_col = "mt_wt")$tables$diagnostics
+  expect_equal(as.numeric(diag$effective_n_by_group[["0"]]), 0)
+  expect_false(any(is.nan(diag$effective_n_by_group)))
 })

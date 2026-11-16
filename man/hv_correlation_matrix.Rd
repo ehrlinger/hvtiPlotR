@@ -8,7 +8,7 @@ hv_correlation_matrix(
   data,
   vars,
   labels = NULL,
-  method = c("pearson", "spearman")
+  method = c("spearman", "pearson")
 )
 }
 \arguments{
@@ -18,7 +18,9 @@ hv_correlation_matrix(
 
 \item{labels}{Optional character vector of display labels, one per \code{vars}.}
 
-\item{method}{Coefficient stored in \verb{$tables$coefficients}: \code{"pearson"} or \code{"spearman"}.}
+\item{method}{Coefficient stored in \verb{$tables$coefficients}: \code{"spearman"} (the
+default, matching \code{hvtiRtables::hv_correlation_table()} and the SAS exemplar)
+or \code{"pearson"}.}
 }
 \value{
 An object of class \code{c("hv_correlation_matrix", "hv_data")}:

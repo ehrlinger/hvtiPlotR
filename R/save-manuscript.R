@@ -77,7 +77,11 @@
 #'   draws only Latin-1 text and warns on anything else; use
 #'   `device = grDevices::cairo_pdf` for a note in another script.
 #' @param ... Further arguments passed to [ggplot2::ggsave()] for the primary
-#'   `file`. Not applied to `draft_file`.
+#'   `file`. A `draft_file` in the same format as `file` gets all of them, and
+#'   `device` too. A `draft_file` in another format gets only the ones that
+#'   mean the same on every device (`scale`, `bg`, `limitsize`,
+#'   `create.dir`), so it keeps the deliverable's size and background, and its
+#'   device is picked from its extension.
 #'
 #' @return Invisibly, the `file` path, with the extension `format` added when
 #'   it had none. With a `footnote`, the path carries the attribute `"dims"`,
@@ -171,15 +175,26 @@ save_manuscript <- function(plot, file, width = 6, height = 4, units = "in",
   }
 
   if (!is.null(draft_file)) {
-    draft_dots <- if (.is_tiff(draft_file)) list(compression = "lzw")
+    # A draft in the file's own format takes the same device and every
+    # ggsave() argument. A draft in another format (a .png beside a .pdf, the
+    # usual case) lets ggplot2 pick its device from the extension and takes
+    # only the arguments that mean the same on every device, so it keeps the
+    # deliverable's scale and background without a device-specific argument
+    # breaking it.
+    same_format  <- identical(.file_ext(draft_file), .file_ext(file))
+    draft_device <- if (same_format) device else NULL
+    draft_dots   <- if (same_format) dots else
+      dots[intersect(names(dots), c("scale", "bg", "limitsize", "create.dir"))]
+    if (.is_tiff(draft_file, draft_device) && is.null(draft_dots$compression))
+      draft_dots$compression <- "lzw"
     if (is.null(footnote)) {
       do.call(ggplot2::ggsave,
-              c(list(filename = draft_file, plot = plot, device = NULL,
+              c(list(filename = draft_file, plot = plot, device = draft_device,
                      width = width, height = height, units = units,
                      dpi = draft_dpi), draft_dots))
     } else {
-      attr(file, "draft_dims") <- .save_with_footnote(draft_file, plot, footnote, NULL, width,
-                                                      height, units, draft_dpi, draft_dots)
+      attr(file, "draft_dims") <- .save_with_footnote(draft_file, plot, footnote, draft_device,
+                                                      width, height, units, draft_dpi, draft_dots)
     }
   }
 

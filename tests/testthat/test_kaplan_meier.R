@@ -246,6 +246,48 @@ test_that("hv_survival reports no one at risk past the end of follow-up", {
   expect_equal(km$tables$risk$n.risk, c(2, 1, 0))
 })
 
+# The same failure in the report table: the last estimate was carried past
+# the end of follow-up, and n.risk was the count at the last event time
+# rather than at the report time. Mirrors the risk-table test above.
+test_that("hv_survival report table is NA past the end of follow-up", {
+  dta <- data.frame(
+    follow_up = c(1, 2, 3, 4),
+    event     = c(1, 0, 1, 0)
+  )
+
+  km <- hv_survival(
+    dta,
+    time_col  = "follow_up",
+    event_col = "event",
+    report_times = c(2.5, 3, 4, 6)
+  )
+  rep_tbl <- km$tables$report
+
+  expect_equal(rep_tbl$report_time, c(2.5, 3, 4, 6))
+  # Year 6 is past the last observed time (4): no estimate exists there.
+  expect_true(all(is.na(unlist(rep_tbl[4, c("surv", "lower", "upper")]))))
+  expect_false(anyNA(rep_tbl$surv[1:3]))
+  # n.risk agrees with the risk table at every report time, 2.5 included.
+  expect_equal(rep_tbl$n.risk, km$tables$risk$n.risk)
+  expect_equal(rep_tbl$n.risk, c(2, 2, 1, 0))
+})
+
+test_that("hv_survival report table ends each stratum at its own follow-up", {
+  dta <- data.frame(
+    follow_up = c(1, 2, 3, 4, 1, 2, 5, 6),
+    event     = c(1, 0, 1, 0, 0, 1, 0, 1),
+    grp       = rep(c("A", "B"), each = 4)
+  )
+  km <- hv_survival(dta, time_col = "follow_up", event_col = "event",
+                    group_col = "grp", report_times = c(3, 5))
+  rep_tbl <- km$tables$report
+  a5 <- rep_tbl[rep_tbl$strata == "A" & rep_tbl$report_time == 5, ]
+  b5 <- rep_tbl[rep_tbl$strata == "B" & rep_tbl$report_time == 5, ]
+  expect_true(is.na(a5$surv))
+  expect_false(is.na(b5$surv))
+  expect_equal(rep_tbl$n.risk, km$tables$risk$n.risk)
+})
+
 test_that("plot(hv_survival) returns a ggplot", {
   dta <- sample_survival_data(n = 100, seed = 1)
   km  <- hv_survival(dta)
