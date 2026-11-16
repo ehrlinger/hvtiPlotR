@@ -321,3 +321,17 @@
     )
   invisible(groups)
 }
+
+# A confidence band needs both bounds. Supplying one alone used to drop the
+# band without a word, so the caller saw a curve with no interval and no
+# reason why.
+.check_band_pair <- function(lower, upper, fn,
+                             lower_arg = "lower_col", upper_arg = "upper_col") {
+  if (is.null(lower) != is.null(upper)) {
+    given <- if (is.null(lower)) upper_arg else lower_arg
+    stop(sprintf(paste0("%s(): supply both `%s` and `%s` for a confidence band, ",
+                        "or neither. Only `%s` was given."),
+                 fn, lower_arg, upper_arg, given), call. = FALSE)
+  }
+  invisible()
+}

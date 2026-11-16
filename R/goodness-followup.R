@@ -57,7 +57,8 @@
 #' head(dta)
 #'
 #' # Death panel
-#' gf <- hv_followup(dta)
+#' gf <- hv_followup(dta, origin_year = 1990, study_start = "1990-01-01",
+#'                   study_end = "2019-12-31", close_date = "2021-08-06")
 #' plot(gf) +
 #'   ggplot2::scale_color_manual(
 #'     values = c("Alive" = "blue", "Dead" = "red"), name = NULL
@@ -66,7 +67,9 @@
 #'   ggplot2::labs(x = "Operation Date", y = "Follow-up (years)")
 #'
 #' # Event panel
-#' gf2 <- hv_followup(dta, event_col = "ev_event",
+#' gf2 <- hv_followup(dta, origin_year = 1990, study_start = "1990-01-01",
+#'                    study_end = "2019-12-31", close_date = "2021-08-06",
+#'                    event_col = "ev_event",
 #'                       event_time_col = "iv_event",
 #'                       death_for_event_col = "deads")
 #' plot(gf2, type = "event") +
@@ -199,13 +202,17 @@ sample_goodness_followup_data <- function(
 #' @param death_for_event_col Name of the death column to use specifically in
 #'   the event panel (defaults to \code{death_col} when \code{NULL}).
 #' @param origin_year        Integer; calendar year used as the y-axis origin.
-#'   Default \code{1990}.
-#' @param study_start        Start of study period.  Default
-#'   \code{as.Date("1990-01-01")}.
-#' @param study_end          End of study enrollment.  Default
-#'   \code{as.Date("2019-12-31")}.
+#'   Required. These four dates belong to one study, so none of them is a
+#'   real default: omitting one still falls back to the old value
+#'   (\code{1990}) with a once-per-session deprecation warning, and from
+#'   hvtiPlotR 2.9.0 it is an error.
+#' @param study_start        Start of study period.  Required; the old
+#'   fallback is \code{as.Date("1990-01-01")}.
+#' @param study_end          End of study enrollment.  Required; the old
+#'   fallback is \code{as.Date("2019-12-31")}.
 #' @param close_date         Data close date.  Must be \eqn{\geq}
-#'   \code{study_end}.  Default \code{as.Date("2021-08-06")}.
+#'   \code{study_end}.  Required; the old fallback is
+#'   \code{as.Date("2021-08-06")}.
 #' @param tolower_names      Logical; if TRUE, column names are lower-cased when
 #'   materialising the data.  Default \code{TRUE}.
 #' @param death_levels       Length-2 character vector labeling the two death
@@ -276,7 +283,8 @@ sample_goodness_followup_data <- function(
 #' dta <- sample_goodness_followup_data()
 #'
 #' # 1. Build data object
-#' gf <- hv_followup(dta)
+#' gf <- hv_followup(dta, origin_year = 1990, study_start = "1990-01-01",
+#'                   study_end = "2019-12-31", close_date = "2021-08-06")
 #' gf  # prints follow-up summary
 #'
 #' # 2. Bare plot -- undecorated ggplot returned by plot.hv_followup
@@ -292,7 +300,9 @@ sample_goodness_followup_data <- function(
 #'   theme_hv_poster()
 #'
 #' # With event panel -- same 3-step pattern
-#' gf2 <- hv_followup(dta, event_col = "ev_event", event_time_col = "iv_event")
+#' gf2 <- hv_followup(dta, origin_year = 1990, study_start = "1990-01-01",
+#'                    study_end = "2019-12-31", close_date = "2021-08-06",
+#'                    event_col = "ev_event", event_time_col = "iv_event")
 #' plot(gf2, type = "event") +
 #'   ggplot2::scale_color_manual(
 #'     values = c("No event" = "blue", "Non-fatal event" = "green3",
@@ -305,7 +315,9 @@ sample_goodness_followup_data <- function(
 #'
 #' # Two competing non-fatal events in one panel: the first to happen wins
 #' dta$ev_stroke <- !dta$ev_event & seq_len(nrow(dta)) %% 4 == 0
-#' gf3 <- hv_followup(dta, event_col = c("ev_event", "ev_stroke"),
+#' gf3 <- hv_followup(dta, origin_year = 1990, study_start = "1990-01-01",
+#'                    study_end = "2019-12-31", close_date = "2021-08-06",
+#'                    event_col = c("ev_event", "ev_stroke"),
 #'                    event_time_col = c("iv_event", "iv_event"),
 #'                    event_levels = c("No event", "Reoperation", "Stroke", "Death"))
 #' table(gf3$tables$event_data$state)
@@ -313,12 +325,16 @@ sample_goodness_followup_data <- function(
 #'
 #' # Echo layer, one echo per patient: a column of the patient data
 #' dta$iv_echo <- dta$iv_dead * 0.6
-#' plot(hv_followup(dta, echo_time_col = "iv_echo"))
+#' plot(hv_followup(dta, origin_year = 1990, study_start = "1990-01-01",
+#'                  study_end = "2019-12-31", close_date = "2021-08-06",
+#'                  echo_time_col = "iv_echo"))
 #'
 #' # Echo layer, every echo: one row per echo, placed by the operation interval
 #' echoes <- data.frame(iv_opyrs = rep(dta$iv_opyrs[1:40], each = 3),
 #'                      iv_echo  = rep(dta$iv_dead[1:40], each = 3) * c(0.1, 0.5, 0.9))
-#' plot(hv_followup(dta, echo = echoes, echo_time_col = "iv_echo"))
+#' plot(hv_followup(dta, origin_year = 1990, study_start = "1990-01-01",
+#'                  study_end = "2019-12-31", close_date = "2021-08-06",
+#'                  echo = echoes, echo_time_col = "iv_echo"))
 #'
 #' @export
 hv_followup <- function(
@@ -341,6 +357,13 @@ hv_followup <- function(
   echo_time_col        = NULL,
   echo_opyrs_col       = NULL
 ) {
+  omitted <- c(origin_year = missing(origin_year), study_start = missing(study_start),
+               study_end = missing(study_end), close_date = missing(close_date))
+  .hv_deprecate_study_default(
+    "hv_followup", names(omitted)[omitted],
+    c(origin_year = "1990", study_start = "1990-01-01", study_end = "2019-12-31",
+      close_date = "2021-08-06")[omitted]
+  )
   if (length(death_levels) != 2L)
     stop("`death_levels` must contain exactly two labels.", call. = FALSE)
   if (!is.numeric(segment_drop) || segment_drop < 0)
@@ -537,7 +560,9 @@ print.hv_followup <- function(x, ...) {
 #'
 #' @examples
 #' dta <- sample_goodness_followup_data()
-#' gf  <- hv_followup(dta, event_col = "ev_event",
+#' gf  <- hv_followup(dta, origin_year = 1990, study_start = "1990-01-01",
+#'                    study_end = "2019-12-31", close_date = "2021-08-06",
+#'                    event_col = "ev_event",
 #'                      event_time_col = "iv_event")
 #'
 #' # Death panel
@@ -560,7 +585,9 @@ print.hv_followup <- function(x, ...) {
 #'   theme_hv_poster()
 #'
 #' # Legacy stem below each point -- restored with a positive segment_drop
-#' plot(hv_followup(dta, segment_drop = 0.2))
+#' plot(hv_followup(dta, origin_year = 1990, study_start = "1990-01-01",
+#'                  study_end = "2019-12-31", close_date = "2021-08-06",
+#'                  segment_drop = 0.2))
 #'
 #' @importFrom ggplot2 ggplot aes geom_point geom_segment geom_line
 #' @export

@@ -425,15 +425,19 @@ mirror_histogram_diagnostics <- function(working, matched_idx, group_levels,
 #' @param score_col        Name of the propensity-score column (0–1 scale
 #'   before multiplier is applied). Default \code{"prob_t"}.
 #' @param group_col        Name of the binary group-indicator column.
-#'   Default \code{"tavr"}.
+#'   Required: the old default \code{"tavr"} names one study's exposure, and
+#'   omitting it falls back to that value with a once-per-session deprecation
+#'   warning until hvtiPlotR 2.9.0.
 #' @param match_col        Name of the binary match-indicator column
 #'   (1 = matched). Default \code{"match"}.
 #' @param group_levels     Length-2 vector of the two values in
 #'   \code{group_col} (control first, treated second).
 #'   Default \code{c(0, 1)}.
 #' @param group_labels     Length-2 character vector of display labels
-#'   corresponding to \code{group_levels}.
-#'   Default \code{c("SAVR", "TF-TAVR")}.
+#'   corresponding to \code{group_levels}.  Required: the old default
+#'   \code{c("SAVR", "TF-TAVR")} names one study's arms. Omitting it still
+#'   falls back to that value with a once-per-session deprecation warning,
+#'   and from hvtiPlotR 2.9.0 it is an error.
 #' @param matched_value    Value in \code{match_col} that flags a matched
 #'   patient.  Default \code{1}.
 #' @param score_multiplier Scalar applied to \code{score_col} to convert to
@@ -489,7 +493,8 @@ mirror_histogram_diagnostics <- function(working, matched_idx, group_levels,
 #' dta <- sample_mirror_histogram_data(n = 500, separation = 1.5)
 #'
 #' # 1. Build data object
-#' mh <- hv_mirror_hist(dta)
+#' mh <- hv_mirror_hist(dta, group_col = "tavr",
+#'                      group_labels = c("SAVR", "TF-TAVR"))
 #' mh                    # print diagnostics summary
 #' mh$tables$diagnostics # full diagnostics list
 #'
@@ -513,6 +518,11 @@ hv_mirror_hist <- function(data,
                         score_multiplier = HVTI_SCORE_DEFAULT_MULTIPLIER,
                         binwidth         = 5,
                         weight_col       = NULL) {
+  omitted <- c(group_col = missing(group_col), group_labels = missing(group_labels))
+  .hv_deprecate_study_default(
+    "hv_mirror_hist", names(omitted)[omitted],
+    c(group_col = '"tavr"', group_labels = 'c("SAVR", "TF-TAVR")')[omitted]
+  )
 
   validate_mirror_histogram_input(data, score_col, group_col, match_col,
                                   group_levels, group_labels, binwidth,
@@ -652,7 +662,8 @@ print.hv_mirror_hist <- function(x, ...) {
 #'
 #' @examples
 #' dta <- sample_mirror_histogram_data(n = 500)
-#' mh  <- hv_mirror_hist(dta)
+#' mh  <- hv_mirror_hist(dta, group_col = "tavr",
+#'                      group_labels = c("SAVR", "TF-TAVR"))
 #'
 #' plot(mh) +
 #'   ggplot2::labs(x = "Propensity Score (%)", y = "Count") +
@@ -662,7 +673,8 @@ print.hv_mirror_hist <- function(x, ...) {
 #' dta_tall <- dta
 #' top <- dta_tall$tavr == 1 & dta_tall$match == 0
 #' dta_tall$prob_t[top] <- 0.98
-#' mh_tall <- hv_mirror_hist(dta_tall)
+#' mh_tall <- hv_mirror_hist(dta_tall, group_col = "tavr",
+#'                      group_labels = c("SAVR", "TF-TAVR"))
 #' plot(mh_tall, split_tall = TRUE) +
 #'   ggplot2::labs(x = "Propensity Score (%)", y = "Count") +
 #'   theme_hv_poster()

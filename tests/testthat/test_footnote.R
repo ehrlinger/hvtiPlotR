@@ -12,7 +12,7 @@ test_that("makeFootnote executes without error", {
   pdf(NULL)
   plot(1:10)
 
-  expect_error(makeFootnote(), NA)
+  expect_error(makeFootnote("test"), NA)
 
   dev.off()
 })
@@ -96,21 +96,27 @@ test_that("makeFootnote validates inputs", {
 # Default parameter tests
 # ============================================================================
 
-test_that("makeFootnote uses getwd() as default footnote text", {
-  pdf(NULL)
-  plot(1:10)
+test_that("omitting the footnote text stamps no path and warns once", {
+  .hv_deprecate_reset()
+  withr::defer(.hv_deprecate_reset())
+  drawn <- NULL
+  local_mocked_bindings(grid.text = function(label, ...) drawn <<- label)
 
-  # Should use current working directory as default
-  expect_error(makeFootnote(), NA)
+  expect_warning(make_footnote(timestamp = FALSE),
+                 class = "hvtiPlotR_deprecated")
+  expect_identical(drawn, "DRAFT \u2014 ")
+  expect_false(grepl(getwd(), drawn, fixed = TRUE))
 
-  dev.off()
+  # The camelCase alias takes the same path, and the warning does not repeat.
+  expect_no_warning(makeFootnote(timestamp = FALSE))
+  expect_identical(drawn, "DRAFT \u2014 ")
 })
 
 test_that("makeFootnote default size is 0.7", {
   pdf(NULL)
   plot(1:10)
 
-  expect_error(makeFootnote(), NA)
+  expect_error(makeFootnote("test"), NA)
 
   dev.off()
 })
@@ -119,7 +125,7 @@ test_that("makeFootnote default color is gray(0.5)", {
   pdf(NULL)
   plot(1:10)
 
-  expect_error(makeFootnote(), NA)
+  expect_error(makeFootnote("test"), NA)
 
   dev.off()
 })
@@ -128,7 +134,7 @@ test_that("makeFootnote default timestamp is TRUE", {
   pdf(NULL)
   plot(1:10)
 
-  expect_error(makeFootnote(), NA)
+  expect_error(makeFootnote("test"), NA)
 
   dev.off()
 })
@@ -142,7 +148,7 @@ test_that("makeFootnote works with base R plots", {
 
   # Scatter plot
   plot(1:10, 1:10)
-  expect_error(makeFootnote(), NA)
+  expect_error(makeFootnote("test"), NA)
 
   # Line plot
   plot(1:10, type = "l")
@@ -265,7 +271,7 @@ test_that("makeFootnote uses grid graphics correctly", {
   plot(1:10)
 
   # Should use grid.text, viewport, etc. without error
-  expect_error(makeFootnote(), NA)
+  expect_error(makeFootnote("test"), NA)
 
   dev.off()
 })

@@ -974,6 +974,9 @@ hazard_plot <- function(curve_data,
                          point_size       = 2.0,
                          point_shape      = 1L,
                          errorbar_width   = 0.25) {
+  .check_band_pair(lower_col, upper_col, "hazard_plot")
+  .check_band_pair(emp_lower_col, emp_upper_col, "hazard_plot",
+                   "emp_lower_col", "emp_upper_col")
 
   emp_geom <- match.arg(emp_geom)
 
@@ -1205,6 +1208,7 @@ survival_difference_plot <- function(diff_data,
                                      group_col    = NULL,
                                      ci_alpha     = 0.20,
                                      line_width   = 1.0) {
+  .check_band_pair(lower_col, upper_col, "survival_difference_plot")
   .check_df(diff_data, "diff_data")
   for (col in c(x_col, estimate_col, lower_col, upper_col, group_col))
     .check_col(diff_data, col, "diff_data")
@@ -1330,6 +1334,7 @@ nnt_plot <- function(nnt_data,
                      na_rm        = TRUE,
                      ci_alpha     = 0.20,
                      line_width   = 1.0) {
+  .check_band_pair(lower_col, upper_col, "nnt_plot")
   .check_df(nnt_data, "nnt_data")
   for (col in c(x_col, estimate_col, lower_col, upper_col))
     .check_col(nnt_data, col, "nnt_data")
@@ -1496,6 +1501,9 @@ hv_hazard <- function(curve_data,
                         ref_x_col        = x_col,
                         ref_estimate_col = estimate_col,
                         ref_group_col    = NULL) {
+  .check_band_pair(lower_col, upper_col, "hv_hazard")
+  .check_band_pair(emp_lower_col, emp_upper_col, "hv_hazard",
+                   "emp_lower_col", "emp_upper_col")
 
   emp_geom <- match.arg(emp_geom)
 
@@ -1794,6 +1802,7 @@ hv_survival_difference <- function(diff_data,
                                      lower_col    = NULL,
                                      upper_col    = NULL,
                                      group_col    = NULL) {
+  .check_band_pair(lower_col, upper_col, "hv_survival_difference")
   .check_df(diff_data, "diff_data")
   for (col in c(x_col, estimate_col, lower_col, upper_col, group_col))
     .check_col(diff_data, col, "diff_data")
@@ -1980,6 +1989,7 @@ hv_nnt <- function(nnt_data,
                      upper_col    = NULL,
                      group_col    = NULL,
                      na_rm        = TRUE) {
+  .check_band_pair(lower_col, upper_col, "hv_nnt")
   .check_df(nnt_data, "nnt_data")
   for (col in c(x_col, estimate_col, lower_col, upper_col, group_col))
     .check_col(nnt_data, col, "nnt_data")
