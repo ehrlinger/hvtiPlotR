@@ -1448,7 +1448,11 @@ run;</code></pre>
 <p><code>tp.lp.mirror-histogram_SAVR-TF-TAVR.R</code> compares propensity score distributions for SAVR and TF-TAVR patients before and after 1:1 nearest-neighbor matching. Upper bars show pre-match counts; a darker overlaid bar shows the matched subset in each bin. Pass <code>match_col</code> to <code><a href="../reference/hv_mirror_hist.html">hv_mirror_hist()</a></code> to activate this mode. The four internal fill levels (<code>before_g0</code>, <code>matched_g0</code>, <code>before_g1</code>, <code>matched_g1</code>) then map directly to the four <code><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_fill_manual()</a></code> values.</p>
 <div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">dta</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sample_mirror_histogram_data.html">sample_mirror_histogram_data</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">400</span>, separation <span class="op">=</span> <span class="fl">1.5</span><span class="op">)</span></span>
-<span><span class="va">mh</span>  <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hv_mirror_hist.html">hv_mirror_hist</a></span><span class="op">(</span><span class="va">dta</span><span class="op">)</span>   <span class="co"># defaults: prob_t / tavr / match</span></span>
+<span><span class="va">mh</span>  <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hv_mirror_hist.html">hv_mirror_hist</a></span><span class="op">(</span></span>
+<span>  <span class="va">dta</span>,</span>
+<span>  group_col    <span class="op">=</span> <span class="st">"tavr"</span>,</span>
+<span>  group_labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"SAVR"</span>, <span class="st">"TF-TAVR"</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">mh</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_fill_manual</a></span><span class="op">(</span></span>
@@ -1470,6 +1474,7 @@ run;</code></pre>
 <code class="sourceCode R"><span><span class="va">dta</span>   <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sample_mirror_histogram_data.html">sample_mirror_histogram_data</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">400</span>, add_weights <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="va">mh_wt</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hv_mirror_hist.html">hv_mirror_hist</a></span><span class="op">(</span></span>
 <span>  <span class="va">dta</span>,</span>
+<span>  group_col    <span class="op">=</span> <span class="st">"tavr"</span>,</span>
 <span>  group_labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Limited"</span>, <span class="st">"Extended"</span><span class="op">)</span>,</span>
 <span>  weight_col   <span class="op">=</span> <span class="st">"mt_wt"</span></span>
 <span><span class="op">)</span></span>

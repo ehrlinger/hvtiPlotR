@@ -16,8 +16,7 @@ hv_rmst_contrast(
   estimator = "estimator",
   diff = "diff_days",
   lo = "lo_days",
-  hi = "hi_days",
-  ...
+  hi = "hi_days"
 )
 ```
 
@@ -43,10 +42,6 @@ hv_rmst_contrast(
 
   Names of the numeric columns with the lower and upper interval limits
   (in days). Defaults `"lo_days"` and `"hi_days"`.
-
-- ...:
-
-  Ignored; present for S3 consistency.
 
 ## Value
 

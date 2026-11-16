@@ -145,22 +145,26 @@ the event panel (defaults to <code>death_col</code> when <code>NULL</code>).</p>
 
 <dt id="arg-origin-year">origin_year<a class="anchor" aria-label="anchor" href="#arg-origin-year"></a></dt>
 <dd><p>Integer; calendar year used as the y-axis origin.
-Default <code>1990</code>.</p></dd>
+Required. These four dates belong to one study, so none of them is a
+real default: omitting one still falls back to the old value
+(<code>1990</code>) with a once-per-session deprecation warning, and from
+hvtiPlotR 2.9.0 it is an error.</p></dd>
 
 
 <dt id="arg-study-start">study_start<a class="anchor" aria-label="anchor" href="#arg-study-start"></a></dt>
-<dd><p>Start of study period.  Default
-<code>as.Date("1990-01-01")</code>.</p></dd>
+<dd><p>Start of study period.  Required; the old
+fallback is <code>as.Date("1990-01-01")</code>.</p></dd>
 
 
 <dt id="arg-study-end">study_end<a class="anchor" aria-label="anchor" href="#arg-study-end"></a></dt>
-<dd><p>End of study enrollment.  Default
-<code>as.Date("2019-12-31")</code>.</p></dd>
+<dd><p>End of study enrollment.  Required; the old
+fallback is <code>as.Date("2019-12-31")</code>.</p></dd>
 
 
 <dt id="arg-close-date">close_date<a class="anchor" aria-label="anchor" href="#arg-close-date"></a></dt>
 <dd><p>Data close date.  Must be \(\geq\)
-<code>study_end</code>.  Default <code>as.Date("2021-08-06")</code>.</p></dd>
+<code>study_end</code>.  Required; the old fallback is
+<code>as.Date("2021-08-06")</code>.</p></dd>
 
 
 <dt id="arg-tolower-names">tolower_names<a class="anchor" aria-label="anchor" href="#arg-tolower-names"></a></dt>
@@ -268,7 +272,8 @@ counts are reported as <code>$meta$n_event_patients</code> and
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">dta</span> <span class="op">&lt;-</span> <span class="fu"><a href="sample_goodness_followup_data.html">sample_goodness_followup_data</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># 1. Build data object</span></span></span>
-<span class="r-in"><span><span class="va">gf</span> <span class="op">&lt;-</span> <span class="fu">hv_followup</span><span class="op">(</span><span class="va">dta</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">gf</span> <span class="op">&lt;-</span> <span class="fu">hv_followup</span><span class="op">(</span><span class="va">dta</span>, origin_year <span class="op">=</span> <span class="fl">1990</span>, study_start <span class="op">=</span> <span class="st">"1990-01-01"</span>,</span></span>
+<span class="r-in"><span>                  study_end <span class="op">=</span> <span class="st">"2019-12-31"</span>, close_date <span class="op">=</span> <span class="st">"2021-08-06"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">gf</span>  <span class="co"># prints follow-up summary</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;hv_followup&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   N patients  : 300</span>
@@ -290,7 +295,9 @@ counts are reported as <code>$meta$n_event_patients</code> and
 <span class="r-plt img"><img src="hv_followup-1.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># With event panel -- same 3-step pattern</span></span></span>
-<span class="r-in"><span><span class="va">gf2</span> <span class="op">&lt;-</span> <span class="fu">hv_followup</span><span class="op">(</span><span class="va">dta</span>, event_col <span class="op">=</span> <span class="st">"ev_event"</span>, event_time_col <span class="op">=</span> <span class="st">"iv_event"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">gf2</span> <span class="op">&lt;-</span> <span class="fu">hv_followup</span><span class="op">(</span><span class="va">dta</span>, origin_year <span class="op">=</span> <span class="fl">1990</span>, study_start <span class="op">=</span> <span class="st">"1990-01-01"</span>,</span></span>
+<span class="r-in"><span>                   study_end <span class="op">=</span> <span class="st">"2019-12-31"</span>, close_date <span class="op">=</span> <span class="st">"2021-08-06"</span>,</span></span>
+<span class="r-in"><span>                   event_col <span class="op">=</span> <span class="st">"ev_event"</span>, event_time_col <span class="op">=</span> <span class="st">"iv_event"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">gf2</span>, type <span class="op">=</span> <span class="st">"event"</span><span class="op">)</span> <span class="op">+</span></span></span>
 <span class="r-in"><span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_color_manual</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>    values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"No event"</span> <span class="op">=</span> <span class="st">"blue"</span>, <span class="st">"Non-fatal event"</span> <span class="op">=</span> <span class="st">"green3"</span>,</span></span>
@@ -304,7 +311,9 @@ counts are reported as <code>$meta$n_event_patients</code> and
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Two competing non-fatal events in one panel: the first to happen wins</span></span></span>
 <span class="r-in"><span><span class="va">dta</span><span class="op">$</span><span class="va">ev_stroke</span> <span class="op">&lt;-</span> <span class="op">!</span><span class="va">dta</span><span class="op">$</span><span class="va">ev_event</span> <span class="op">&amp;</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_len</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">dta</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/r/base/Arithmetic.html" class="external-link">%%</a></span> <span class="fl">4</span> <span class="op">==</span> <span class="fl">0</span></span></span>
-<span class="r-in"><span><span class="va">gf3</span> <span class="op">&lt;-</span> <span class="fu">hv_followup</span><span class="op">(</span><span class="va">dta</span>, event_col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ev_event"</span>, <span class="st">"ev_stroke"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span><span class="va">gf3</span> <span class="op">&lt;-</span> <span class="fu">hv_followup</span><span class="op">(</span><span class="va">dta</span>, origin_year <span class="op">=</span> <span class="fl">1990</span>, study_start <span class="op">=</span> <span class="st">"1990-01-01"</span>,</span></span>
+<span class="r-in"><span>                   study_end <span class="op">=</span> <span class="st">"2019-12-31"</span>, close_date <span class="op">=</span> <span class="st">"2021-08-06"</span>,</span></span>
+<span class="r-in"><span>                   event_col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ev_event"</span>, <span class="st">"ev_stroke"</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>                   event_time_col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"iv_event"</span>, <span class="st">"iv_event"</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>                   event_levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"No event"</span>, <span class="st">"Reoperation"</span>, <span class="st">"Stroke"</span>, <span class="st">"Death"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">gf3</span><span class="op">$</span><span class="va">tables</span><span class="op">$</span><span class="va">event_data</span><span class="op">$</span><span class="va">state</span><span class="op">)</span></span></span>
@@ -316,13 +325,17 @@ counts are reported as <code>$meta$n_event_patients</code> and
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Echo layer, one echo per patient: a column of the patient data</span></span></span>
 <span class="r-in"><span><span class="va">dta</span><span class="op">$</span><span class="va">iv_echo</span> <span class="op">&lt;-</span> <span class="va">dta</span><span class="op">$</span><span class="va">iv_dead</span> <span class="op">*</span> <span class="fl">0.6</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu">hv_followup</span><span class="op">(</span><span class="va">dta</span>, echo_time_col <span class="op">=</span> <span class="st">"iv_echo"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu">hv_followup</span><span class="op">(</span><span class="va">dta</span>, origin_year <span class="op">=</span> <span class="fl">1990</span>, study_start <span class="op">=</span> <span class="st">"1990-01-01"</span>,</span></span>
+<span class="r-in"><span>                 study_end <span class="op">=</span> <span class="st">"2019-12-31"</span>, close_date <span class="op">=</span> <span class="st">"2021-08-06"</span>,</span></span>
+<span class="r-in"><span>                 echo_time_col <span class="op">=</span> <span class="st">"iv_echo"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="hv_followup-4.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Echo layer, every echo: one row per echo, placed by the operation interval</span></span></span>
 <span class="r-in"><span><span class="va">echoes</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>iv_opyrs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="va">dta</span><span class="op">$</span><span class="va">iv_opyrs</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">40</span><span class="op">]</span>, each <span class="op">=</span> <span class="fl">3</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>                     iv_echo  <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="va">dta</span><span class="op">$</span><span class="va">iv_dead</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">40</span><span class="op">]</span>, each <span class="op">=</span> <span class="fl">3</span><span class="op">)</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.1</span>, <span class="fl">0.5</span>, <span class="fl">0.9</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu">hv_followup</span><span class="op">(</span><span class="va">dta</span>, echo <span class="op">=</span> <span class="va">echoes</span>, echo_time_col <span class="op">=</span> <span class="st">"iv_echo"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu">hv_followup</span><span class="op">(</span><span class="va">dta</span>, origin_year <span class="op">=</span> <span class="fl">1990</span>, study_start <span class="op">=</span> <span class="st">"1990-01-01"</span>,</span></span>
+<span class="r-in"><span>                 study_end <span class="op">=</span> <span class="st">"2019-12-31"</span>, close_date <span class="op">=</span> <span class="st">"2021-08-06"</span>,</span></span>
+<span class="r-in"><span>                 echo <span class="op">=</span> <span class="va">echoes</span>, echo_time_col <span class="op">=</span> <span class="st">"iv_echo"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="hv_followup-5.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>

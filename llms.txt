@@ -146,7 +146,7 @@ km$tables$risk                         # risk-table data frame
 ``` r
 
 mh <- hv_mirror_hist(sample_mirror_histogram_data(n = 2000),
-                  group_labels = c("SAVR", "TF-TAVR"))
+                     group_col = "tavr", group_labels = c("SAVR", "TF-TAVR"))
 plot(mh) + theme_hv_manuscript()
 ```
 

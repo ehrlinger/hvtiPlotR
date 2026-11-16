@@ -77,8 +77,10 @@ and the exclusion column name, suitable for a methods-section table.</p>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>A data frame with columns <code>label</code>, <code>include_col</code>, <code>n_included</code>,
-<code>excl_col</code>, <code>n_excluded</code>.  <code>n_excluded</code> and <code>excl_col</code> are <code>NA</code> for the
-final stage (no downstream exclusion defined yet).</p>
+<code>excl_col</code>, <code>n_excluded</code>, <code>n_missing</code>.  <code>n_missing</code> is the part of
+<code>n_excluded</code> excluded because an exclusion criterion was missing (see
+<code><a href="hv_consort_exclude.html">hv_consort_exclude()</a></code>).  <code>n_excluded</code>, <code>n_missing</code> and <code>excl_col</code> are
+<code>NA</code> for the final stage (no downstream exclusion defined yet).</p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
@@ -88,10 +90,10 @@ final stage (no downstream exclusion defined yet).</p>
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">hv_consort_summary</span><span class="op">(</span><span class="fu"><a href="sample_consort_data.html">sample_consort_data</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>      label include_col n_included      excl_col n_excluded</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 Screened    screened        300   excl_screen         73</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2 Eligible    eligible        227 excl_eligible         41</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3 Analyzed    analyzed        186          &lt;NA&gt;         NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      label include_col n_included      excl_col n_excluded n_missing</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 Screened    screened        300   excl_screen         73         0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 Eligible    eligible        227 excl_eligible         41         0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 Analyzed    analyzed        186          &lt;NA&gt;         NA        NA</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

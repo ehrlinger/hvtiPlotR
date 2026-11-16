@@ -47,10 +47,10 @@ print(tracker)
 #>       -> excl [excl_eligible]: 41
 #>     [analyzed] Analyzed -- N = 186
 hv_consort_summary(tracker)
-#>      label include_col n_included      excl_col n_excluded
-#> 1 Screened    screened        300   excl_screen         73
-#> 2 Eligible    eligible        227 excl_eligible         41
-#> 3 Analyzed    analyzed        186          <NA>         NA
+#>      label include_col n_included      excl_col n_excluded n_missing
+#> 1 Screened    screened        300   excl_screen         73         0
+#> 2 Eligible    eligible        227 excl_eligible         41         0
+#> 3 Analyzed    analyzed        186          <NA>         NA        NA
 # \donttest{
   hv_consort(tracker) |> plot()
 

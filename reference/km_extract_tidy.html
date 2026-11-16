@@ -89,10 +89,17 @@ computes derived columns that match the SAS <code>%kaplan</code> macro outputs:<
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
 
 <dl><dt><code>cumhaz</code></dt>
-<dd><p>Cumulative hazard H(t) = -log S(t).</p></dd>
+<dd><p>Nelson-Aalen cumulative hazard
+\(H(t) = \sum_{t_j \le t} d_j / n_j\), as <code>survfit()</code> reports
+it. Under <code>method = "kaplan-meier"</code> this is <em>not</em>
+\(-\log S(t)\) of the product-limit curve; the two agree only
+approximately, and diverge in the tail where \(S(t)\) is small. Only
+a <code>survfit</code> summary without a <code>cumhaz</code> component falls back to
+\(-\log S(t)\).</p></dd>
 
 <dt><code>log_cumhaz</code></dt>
-<dd><p>log H(t), the y-axis of the log-log survival
+<dd><p>log H(t) of the Nelson-Aalen H above, the
+y-axis of the log-log survival
 plot used to assess the proportional-hazards assumption.</p></dd>
 
 <dt><code>log_time</code></dt>
@@ -111,9 +118,18 @@ with <code>delta_t &gt; 0</code>; <code>NA</code> at censoring times.</p></dd>
 the x-axis of hazard-rate plots.</p></dd>
 
 <dt><code>life</code></dt>
-<dd><p>Cumulative integral of the survival function
-(restricted mean survival time) using the SAS trapezoidal rule:
-LIFE += delta_t * (3*S(t) - S(t_prev)) / 2.</p></dd>
+<dd><p>Cumulative integral of the survival function, by the
+SAS <code>%kaplan</code> formula, kept for SAS parity:
+\(LIFE \mathrel{+}= \Delta t (3 S(t) - S(t_{prev})) / 2\). This is
+<strong>not</strong> a trapezoid. The Kaplan-Meier curve is a right-continuous
+step, constant at \(S(t_{prev})\) across \([t_{prev}, t)\), so the
+exact area of an interval is \(\Delta t \, S(t_{prev})\); the
+trapezoid would be \(\Delta t (S(t) + S(t_{prev})) / 2\). The SAS
+formula falls short of the exact area by
+\(\frac{3}{2} \Delta t (S(t_{prev}) - S(t))\) at each event
+(and equals it across a censoring-only interval), so <code>life</code>
+understates the restricted mean survival time. For the exact RMST use
+<code><a href="https://ehrlinger.github.io/hvtiRpropensity/reference/ps_rmst.html" class="external-link">hvtiRpropensity::ps_rmst()</a></code>.</p></dd>
 
 <dt><code>proplife</code></dt>
 <dd><p>LIFE / t, the proportionate life length.</p></dd>

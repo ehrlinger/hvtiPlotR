@@ -28,12 +28,17 @@ A data frame.
 
 - `cumhaz`:
 
-  Cumulative hazard H(t) = -log S(t).
+  Nelson-Aalen cumulative hazard \\H(t) = \sum\_{t_j \le t} d_j / n_j\\,
+  as `survfit()` reports it. Under `method = "kaplan-meier"` this is
+  *not* \\-\log S(t)\\ of the product-limit curve; the two agree only
+  approximately, and diverge in the tail where \\S(t)\\ is small. Only a
+  `survfit` summary without a `cumhaz` component falls back to \\-\log
+  S(t)\\.
 
 - `log_cumhaz`:
 
-  log H(t), the y-axis of the log-log survival plot used to assess the
-  proportional-hazards assumption.
+  log H(t) of the Nelson-Aalen H above, the y-axis of the log-log
+  survival plot used to assess the proportional-hazards assumption.
 
 - `log_time`:
 
@@ -56,9 +61,17 @@ A data frame.
 
 - `life`:
 
-  Cumulative integral of the survival function (restricted mean survival
-  time) using the SAS trapezoidal rule: LIFE += delta_t \* (3\*S(t) -
-  S(t_prev)) / 2.
+  Cumulative integral of the survival function, by the SAS `%kaplan`
+  formula, kept for SAS parity: \\LIFE \mathrel{+}= \Delta t (3 S(t) -
+  S(t\_{prev})) / 2\\. This is **not** a trapezoid. The Kaplan-Meier
+  curve is a right-continuous step, constant at \\S(t\_{prev})\\ across
+  \\\[t\_{prev}, t)\\, so the exact area of an interval is \\\Delta t \\
+  S(t\_{prev})\\; the trapezoid would be \\\Delta t (S(t) +
+  S(t\_{prev})) / 2\\. The SAS formula falls short of the exact area by
+  \\\frac{3}{2} \Delta t (S(t\_{prev}) - S(t))\\ at each event (and
+  equals it across a censoring-only interval), so `life` understates the
+  restricted mean survival time. For the exact RMST use
+  [`hvtiRpropensity::ps_rmst()`](https://ehrlinger.github.io/hvtiRpropensity/reference/ps_rmst.html).
 
 - `proplife`:
 

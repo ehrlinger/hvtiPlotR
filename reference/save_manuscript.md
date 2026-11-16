@@ -93,7 +93,11 @@ save_manuscript(
 
   Further arguments passed to
   [`ggplot2::ggsave()`](https://ggplot2.tidyverse.org/reference/ggsave.html)
-  for the primary `file`. Not applied to `draft_file`.
+  for the primary `file`. A `draft_file` in the same format as `file`
+  gets all of them, and `device` too. A `draft_file` in another format
+  gets only the ones that mean the same on every device (`scale`, `bg`,
+  `limitsize`, `create.dir`), so it keeps the deliverable's size and
+  background, and its device is picked from its extension.
 
 ## Value
 

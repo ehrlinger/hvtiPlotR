@@ -76,7 +76,7 @@ intervals is <code>hvtiRtables::hv_correlation_table()</code>.</p>
 <span>  <span class="va">data</span>,</span>
 <span>  <span class="va">vars</span>,</span>
 <span>  labels <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  method <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"pearson"</span>, <span class="st">"spearman"</span><span class="op">)</span></span>
+<span>  method <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"spearman"</span>, <span class="st">"pearson"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -97,7 +97,9 @@ intervals is <code>hvtiRtables::hv_correlation_table()</code>.</p>
 
 
 <dt id="arg-method">method<a class="anchor" aria-label="anchor" href="#arg-method"></a></dt>
-<dd><p>Coefficient stored in <code>$tables$coefficients</code>: <code>"pearson"</code> or <code>"spearman"</code>.</p></dd>
+<dd><p>Coefficient stored in <code>$tables$coefficients</code>: <code>"spearman"</code> (the
+default, matching <code>hvtiRtables::hv_correlation_table()</code> and the SAS exemplar)
+or <code>"pearson"</code>.</p></dd>
 
 </dl></div>
     <div class="section level2">

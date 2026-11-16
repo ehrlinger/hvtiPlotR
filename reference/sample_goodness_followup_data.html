@@ -189,7 +189,8 @@ for complete follow-up, with every survivor censored at <code>close_date</code>.
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6  24.1620  0.2802 FALSE   0.2802    FALSE FALSE</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Death panel</span></span></span>
-<span class="r-in"><span><span class="va">gf</span> <span class="op">&lt;-</span> <span class="fu"><a href="hv_followup.html">hv_followup</a></span><span class="op">(</span><span class="va">dta</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">gf</span> <span class="op">&lt;-</span> <span class="fu"><a href="hv_followup.html">hv_followup</a></span><span class="op">(</span><span class="va">dta</span>, origin_year <span class="op">=</span> <span class="fl">1990</span>, study_start <span class="op">=</span> <span class="st">"1990-01-01"</span>,</span></span>
+<span class="r-in"><span>                  study_end <span class="op">=</span> <span class="st">"2019-12-31"</span>, close_date <span class="op">=</span> <span class="st">"2021-08-06"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">gf</span><span class="op">)</span> <span class="op">+</span></span></span>
 <span class="r-in"><span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_color_manual</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>    values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Alive"</span> <span class="op">=</span> <span class="st">"blue"</span>, <span class="st">"Dead"</span> <span class="op">=</span> <span class="st">"red"</span><span class="op">)</span>, name <span class="op">=</span> <span class="cn">NULL</span></span></span>
@@ -199,7 +200,9 @@ for complete follow-up, with every survivor censored at <code>close_date</code>.
 <span class="r-plt img"><img src="sample_goodness_followup_data-1.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Event panel</span></span></span>
-<span class="r-in"><span><span class="va">gf2</span> <span class="op">&lt;-</span> <span class="fu"><a href="hv_followup.html">hv_followup</a></span><span class="op">(</span><span class="va">dta</span>, event_col <span class="op">=</span> <span class="st">"ev_event"</span>,</span></span>
+<span class="r-in"><span><span class="va">gf2</span> <span class="op">&lt;-</span> <span class="fu"><a href="hv_followup.html">hv_followup</a></span><span class="op">(</span><span class="va">dta</span>, origin_year <span class="op">=</span> <span class="fl">1990</span>, study_start <span class="op">=</span> <span class="st">"1990-01-01"</span>,</span></span>
+<span class="r-in"><span>                   study_end <span class="op">=</span> <span class="st">"2019-12-31"</span>, close_date <span class="op">=</span> <span class="st">"2021-08-06"</span>,</span></span>
+<span class="r-in"><span>                   event_col <span class="op">=</span> <span class="st">"ev_event"</span>,</span></span>
 <span class="r-in"><span>                      event_time_col <span class="op">=</span> <span class="st">"iv_event"</span>,</span></span>
 <span class="r-in"><span>                      death_for_event_col <span class="op">=</span> <span class="st">"deads"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">gf2</span>, type <span class="op">=</span> <span class="st">"event"</span><span class="op">)</span> <span class="op">+</span></span></span>

@@ -1,6 +1,6 @@
 # Number Needed to Treat (NNT) Plot
 
-**Superseded.**
+**Superseded, not deprecated: no removal is scheduled.**
 
 `nnt_plot()` has been superseded by the S3 constructor
 [`hv_nnt()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_nnt.md)

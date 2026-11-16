@@ -22,7 +22,8 @@ hv_consort_start(data, patient_id, label = "Screened", pass_col = NULL)
 - patient_id:
 
   \<[`data-masking`](https://rlang.r-lib.org/reference/args_data_masking.html)\>
-  Unquoted name of the unique patient identifier column.
+  Unquoted name of the unique patient identifier column. Its values must
+  be unique and not missing; a repeated or missing ID is an error.
 
 - label:
 

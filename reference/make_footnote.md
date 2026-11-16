@@ -12,7 +12,7 @@ which a journal crops in typesetting while the study's copy keeps it.
 
 ``` r
 make_footnote(
-  text = getwd(),
+  text,
   timestamp = TRUE,
   prefix = "DRAFT — ",
   size = 0.7,
@@ -25,21 +25,19 @@ make_footnote(
   color = colour
 )
 
-makeFootnote(
-  footnoteText = getwd(),
-  size = 0.7,
-  color = gray(0.5),
-  timestamp = TRUE
-)
+makeFootnote(footnoteText, size = 0.7, color = gray(0.5), timestamp = TRUE)
 ```
 
 ## Arguments
 
 - text:
 
-  Text to display. Defaults to the current working directory; for most
-  uses pass the script filename instead:
-  `make_footnote("R/analysis.R")`.
+  Text to display, usually the script filename:
+  `make_footnote("R/analysis.R")`. Required. It once defaulted to
+  [`getwd()`](https://rdrr.io/r/base/getwd.html), which stamped a
+  filesystem path on the figure unasked; omitting it now draws only the
+  prefix and timestamp, with a once-per-session deprecation warning, and
+  from hvtiPlotR 2.9.0 it is an error.
 
 - timestamp:
 

@@ -37,8 +37,10 @@ km_fit(data, time_col, event_col, group_col, conf_level, method)
 
   Method for survival curve estimation: `"kaplan-meier"` uses
   product-limit S(t) with logit CI (matches SAS `%kaplan`), or
-  `"nelson-aalen"` uses Fleming-Harrington H(t) with log CI (matches SAS
-  `%nelsont`).
+  `"nelson-aalen"` uses Fleming-Harrington H(t) with a log CI (matches
+  SAS `%nelsont`). "Log" is on the survival scale: the interval for
+  \\\log S(t) = -H(t)\\ is symmetric, so it is a plain Wald interval on
+  \\H(t)\\, not one on \\\log H(t)\\.
 
 ## Value
 

@@ -76,20 +76,25 @@ hv_followup(
 
 - origin_year:
 
-  Integer; calendar year used as the y-axis origin. Default `1990`.
+  Integer; calendar year used as the y-axis origin. Required. These four
+  dates belong to one study, so none of them is a real default: omitting
+  one still falls back to the old value (`1990`) with a once-per-session
+  deprecation warning, and from hvtiPlotR 2.9.0 it is an error.
 
 - study_start:
 
-  Start of study period. Default `as.Date("1990-01-01")`.
+  Start of study period. Required; the old fallback is
+  `as.Date("1990-01-01")`.
 
 - study_end:
 
-  End of study enrollment. Default `as.Date("2019-12-31")`.
+  End of study enrollment. Required; the old fallback is
+  `as.Date("2019-12-31")`.
 
 - close_date:
 
-  Data close date. Must be \\\geq\\ `study_end`. Default
-  `as.Date("2021-08-06")`.
+  Data close date. Must be \\\geq\\ `study_end`. Required; the old
+  fallback is `as.Date("2021-08-06")`.
 
 - tolower_names:
 
@@ -194,7 +199,8 @@ Worked recipe with rendered output:
 dta <- sample_goodness_followup_data()
 
 # 1. Build data object
-gf <- hv_followup(dta)
+gf <- hv_followup(dta, origin_year = 1990, study_start = "1990-01-01",
+                  study_end = "2019-12-31", close_date = "2021-08-06")
 gf  # prints follow-up summary
 #> <hv_followup>
 #>   N patients  : 300
@@ -216,7 +222,9 @@ p +
 
 
 # With event panel -- same 3-step pattern
-gf2 <- hv_followup(dta, event_col = "ev_event", event_time_col = "iv_event")
+gf2 <- hv_followup(dta, origin_year = 1990, study_start = "1990-01-01",
+                   study_end = "2019-12-31", close_date = "2021-08-06",
+                   event_col = "ev_event", event_time_col = "iv_event")
 plot(gf2, type = "event") +
   ggplot2::scale_color_manual(
     values = c("No event" = "blue", "Non-fatal event" = "green3",
@@ -230,7 +238,9 @@ plot(gf2, type = "event") +
 
 # Two competing non-fatal events in one panel: the first to happen wins
 dta$ev_stroke <- !dta$ev_event & seq_len(nrow(dta)) %% 4 == 0
-gf3 <- hv_followup(dta, event_col = c("ev_event", "ev_stroke"),
+gf3 <- hv_followup(dta, origin_year = 1990, study_start = "1990-01-01",
+                   study_end = "2019-12-31", close_date = "2021-08-06",
+                   event_col = c("ev_event", "ev_stroke"),
                    event_time_col = c("iv_event", "iv_event"),
                    event_levels = c("No event", "Reoperation", "Stroke", "Death"))
 table(gf3$tables$event_data$state)
@@ -242,12 +252,16 @@ plot(gf3, type = "event")
 
 # Echo layer, one echo per patient: a column of the patient data
 dta$iv_echo <- dta$iv_dead * 0.6
-plot(hv_followup(dta, echo_time_col = "iv_echo"))
+plot(hv_followup(dta, origin_year = 1990, study_start = "1990-01-01",
+                 study_end = "2019-12-31", close_date = "2021-08-06",
+                 echo_time_col = "iv_echo"))
 
 
 # Echo layer, every echo: one row per echo, placed by the operation interval
 echoes <- data.frame(iv_opyrs = rep(dta$iv_opyrs[1:40], each = 3),
                      iv_echo  = rep(dta$iv_dead[1:40], each = 3) * c(0.1, 0.5, 0.9))
-plot(hv_followup(dta, echo = echoes, echo_time_col = "iv_echo"))
+plot(hv_followup(dta, origin_year = 1990, study_start = "1990-01-01",
+                 study_end = "2019-12-31", close_date = "2021-08-06",
+                 echo = echoes, echo_time_col = "iv_echo"))
 
 ```

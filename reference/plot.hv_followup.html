@@ -164,7 +164,9 @@ diagonal, so it stays out of the state color scale and its legend.</p></dd>
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">dta</span> <span class="op">&lt;-</span> <span class="fu"><a href="sample_goodness_followup_data.html">sample_goodness_followup_data</a></span><span class="op">(</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">gf</span>  <span class="op">&lt;-</span> <span class="fu"><a href="hv_followup.html">hv_followup</a></span><span class="op">(</span><span class="va">dta</span>, event_col <span class="op">=</span> <span class="st">"ev_event"</span>,</span></span>
+<span class="r-in"><span><span class="va">gf</span>  <span class="op">&lt;-</span> <span class="fu"><a href="hv_followup.html">hv_followup</a></span><span class="op">(</span><span class="va">dta</span>, origin_year <span class="op">=</span> <span class="fl">1990</span>, study_start <span class="op">=</span> <span class="st">"1990-01-01"</span>,</span></span>
+<span class="r-in"><span>                   study_end <span class="op">=</span> <span class="st">"2019-12-31"</span>, close_date <span class="op">=</span> <span class="st">"2021-08-06"</span>,</span></span>
+<span class="r-in"><span>                   event_col <span class="op">=</span> <span class="st">"ev_event"</span>,</span></span>
 <span class="r-in"><span>                     event_time_col <span class="op">=</span> <span class="st">"iv_event"</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Death panel</span></span></span>
@@ -189,7 +191,9 @@ diagonal, so it stays out of the state color scale and its legend.</p></dd>
 <span class="r-plt img"><img src="plot.hv_followup-2.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Legacy stem below each point -- restored with a positive segment_drop</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="hv_followup.html">hv_followup</a></span><span class="op">(</span><span class="va">dta</span>, segment_drop <span class="op">=</span> <span class="fl">0.2</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="hv_followup.html">hv_followup</a></span><span class="op">(</span><span class="va">dta</span>, origin_year <span class="op">=</span> <span class="fl">1990</span>, study_start <span class="op">=</span> <span class="st">"1990-01-01"</span>,</span></span>
+<span class="r-in"><span>                 study_end <span class="op">=</span> <span class="st">"2019-12-31"</span>, close_date <span class="op">=</span> <span class="st">"2021-08-06"</span>,</span></span>
+<span class="r-in"><span>                 segment_drop <span class="op">=</span> <span class="fl">0.2</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="plot.hv_followup-3.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>

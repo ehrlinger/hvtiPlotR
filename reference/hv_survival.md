@@ -47,7 +47,8 @@ hv_survival(
 - method:
 
   Estimator: `"kaplan-meier"` (default, logit CI; mirrors SAS `%kaplan`)
-  or `"nelson-aalen"` (Fleming-Harrington cumulative hazard with log CI;
+  or `"nelson-aalen"` (Fleming-Harrington cumulative hazard with a CI on
+  the log-survival scale, which is a plain Wald interval on \\H(t)\\;
   mirrors SAS `%nelsont`, preferred when \\S(t)\\ approaches zero).
 
 - conf_level:
@@ -72,7 +73,15 @@ The list has three elements:
   Tidy data frame with one row per (time, strata) pair. Columns: `time`,
   `surv`, `lower`, `upper`, `n.risk`, `n.event`, `n.censor`, `cumhaz`,
   `strata`, `hazard`, `density`, `mid_time`, `life`, `proplife`,
-  `log_cumhaz`, `log_time`.
+  `log_cumhaz`, `log_time`. `cumhaz` is the Nelson-Aalen estimate under
+  either `method`, not \\-\log S(t)\\, and `log_cumhaz` is built on it.
+  `life` is integrated by the SAS `%kaplan` formula \\\Delta t (3 S(t) -
+  S(t\_{prev})) / 2\\, kept for SAS parity. It is not a trapezoid: it
+  falls short of the exact step-function area \\\Delta t \\
+  S(t\_{prev})\\ by \\\frac{3}{2} \Delta t (S(t\_{prev}) - S(t))\\ at
+  each event, so it understates the restricted mean survival time.
+  [`hvtiRpropensity::ps_rmst()`](https://ehrlinger.github.io/hvtiRpropensity/reference/ps_rmst.html)
+  computes the exact RMST.
 
 - `$meta`:
 
@@ -135,12 +144,12 @@ km               # print method shows key metadata
 #>   $tables     : risk, report
 km$tables$report # survival estimates at report_times
 #>   strata report_time  surv     lower     upper n.risk n.event
-#> 1    All           1 0.954 0.9317320 0.9692443    478       1
-#> 2    All           5 0.822 0.7859710 0.8530976    412       1
-#> 3    All          10 0.642 0.5989814 0.6828473    322       1
-#> 4    All          15 0.518 0.4741762 0.5615486    260       1
+#> 1    All           1 0.954 0.9317320 0.9692443    477       1
+#> 2    All           5 0.822 0.7859710 0.8530976    411       1
+#> 3    All          10 0.642 0.5989814 0.6828473    321       1
+#> 4    All          15 0.518 0.4741762 0.5615486    259       1
 #> 5    All          20 0.414 0.3715880 0.4577269    207       0
-#> 6    All          25 0.414 0.3715880 0.4577269    207       0
+#> 6    All          25    NA        NA        NA      0      NA
 km$tables$risk   # numbers at risk
 #>   strata report_time n.risk
 #> 1    All           1    477

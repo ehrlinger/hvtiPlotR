@@ -136,6 +136,7 @@ p <- ggplot2::ggplot(mtcars, ggplot2::aes(hp, mpg)) +
   ggplot2::labs(x = "Horsepower", y = "Miles per gallon") +
   theme_hv_ppt_dark()
 fit <- hv_fit_location(p, hv_panel_box("dark"))
+#> Warning: hv_panel_box(): `mode` has no effect, since every color template gets the same rectangle, and is removed in hvtiPlotR 2.9.0. Drop it, and pass `format` by name. This warning is shown once per session.
 fit$scale
 #> [1] 1
 fit$location

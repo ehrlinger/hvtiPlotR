@@ -113,7 +113,8 @@ estimate labeled <code>"All"</code>.</p></dd>
 <dt id="arg-method">method<a class="anchor" aria-label="anchor" href="#arg-method"></a></dt>
 <dd><p>Estimator: <code>"kaplan-meier"</code> (default, logit CI;
 mirrors SAS <code>%kaplan</code>) or <code>"nelson-aalen"</code> (Fleming-Harrington
-cumulative hazard with log CI; mirrors SAS <code>%nelsont</code>, preferred
+cumulative hazard with a CI on the log-survival scale, which is a plain
+Wald interval on \(H(t)\); mirrors SAS <code>%nelsont</code>, preferred
 when \(S(t)\) approaches zero).</p></dd>
 
 
@@ -136,7 +137,16 @@ call <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="externa
 Columns: <code>time</code>, <code>surv</code>, <code>lower</code>, <code>upper</code>,
 <code>n.risk</code>, <code>n.event</code>, <code>n.censor</code>, <code>cumhaz</code>,
 <code>strata</code>, <code>hazard</code>, <code>density</code>, <code>mid_time</code>,
-<code>life</code>, <code>proplife</code>, <code>log_cumhaz</code>, <code>log_time</code>.</p></dd>
+<code>life</code>, <code>proplife</code>, <code>log_cumhaz</code>, <code>log_time</code>.
+<code>cumhaz</code> is the Nelson-Aalen estimate under either <code>method</code>,
+not \(-\log S(t)\), and <code>log_cumhaz</code> is built on it.
+<code>life</code> is integrated by the SAS <code>%kaplan</code> formula
+\(\Delta t (3 S(t) - S(t_{prev})) / 2\), kept for SAS parity. It is
+not a trapezoid: it falls short of the exact step-function area
+\(\Delta t \, S(t_{prev})\) by
+\(\frac{3}{2} \Delta t (S(t_{prev}) - S(t))\) at each event, so it
+understates the restricted mean survival time.
+<code><a href="https://ehrlinger.github.io/hvtiRpropensity/reference/ps_rmst.html" class="external-link">hvtiRpropensity::ps_rmst()</a></code> computes the exact RMST.</p></dd>
 
 <dt><code>$meta</code></dt>
 <dd><p>Named list: <code>time_col</code>, <code>event_col</code>,
@@ -199,12 +209,12 @@ cohort the estimates describe.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   $tables     : risk, report</span>
 <span class="r-in"><span><span class="va">km</span><span class="op">$</span><span class="va">tables</span><span class="op">$</span><span class="va">report</span> <span class="co"># survival estimates at report_times</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   strata report_time  surv     lower     upper n.risk n.event</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1    All           1 0.954 0.9317320 0.9692443    478       1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2    All           5 0.822 0.7859710 0.8530976    412       1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3    All          10 0.642 0.5989814 0.6828473    322       1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4    All          15 0.518 0.4741762 0.5615486    260       1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1    All           1 0.954 0.9317320 0.9692443    477       1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2    All           5 0.822 0.7859710 0.8530976    411       1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3    All          10 0.642 0.5989814 0.6828473    321       1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4    All          15 0.518 0.4741762 0.5615486    259       1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5    All          20 0.414 0.3715880 0.4577269    207       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6    All          25 0.414 0.3715880 0.4577269    207       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6    All          25    NA        NA        NA      0      NA</span>
 <span class="r-in"><span><span class="va">km</span><span class="op">$</span><span class="va">tables</span><span class="op">$</span><span class="va">risk</span>   <span class="co"># numbers at risk</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   strata report_time n.risk</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1    All           1    477</span>

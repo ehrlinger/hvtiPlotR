@@ -1466,7 +1466,11 @@ values.
 ``` r
 
 dta <- sample_mirror_histogram_data(n = 400, separation = 1.5)
-mh  <- hv_mirror_hist(dta)   # defaults: prob_t / tavr / match
+mh  <- hv_mirror_hist(
+  dta,
+  group_col    = "tavr",
+  group_labels = c("SAVR", "TF-TAVR")
+)
 
 plot(mh) +
   scale_fill_manual(
@@ -1498,6 +1502,7 @@ values accordingly.
 dta   <- sample_mirror_histogram_data(n = 400, add_weights = TRUE)
 mh_wt <- hv_mirror_hist(
   dta,
+  group_col    = "tavr",
   group_labels = c("Limited", "Extended"),
   weight_col   = "mt_wt"
 )

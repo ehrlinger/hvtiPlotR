@@ -108,8 +108,12 @@ publication curve.</p></dd>
 hazards.</p></dd>
 
 <dt><code>"life"</code></dt>
-<dd><p>(<code>PLOTL=1</code>) Restricted mean survival time
-(integral of \(S(t)\)) vs time.</p></dd>
+<dd><p>(<code>PLOTL=1</code>) Integrated survivorship vs
+time, by the SAS <code>%kaplan</code> formula
+\(\Delta t (3 S(t) - S(t_{prev})) / 2\), which is neither the
+exact step-function area nor a trapezoid and understates the
+restricted mean survival time; see <code><a href="hv_survival.html">hv_survival</a></code>. For the
+exact RMST use <code><a href="https://ehrlinger.github.io/hvtiRpropensity/reference/ps_rmst.html" class="external-link">hvtiRpropensity::ps_rmst()</a></code>.</p></dd>
 
 
 </dl></dd>

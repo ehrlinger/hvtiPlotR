@@ -43,7 +43,15 @@ hv_consort_exclude(
   Two-sided formulas of the form `<condition> ~ "<reason string>"`.
   Conditions are evaluated with data masking against the tracker's data
   frame. The **first** matching formula assigns the reason; subsequent
-  formulas are not evaluated for already- excluded patients.
+  formulas are not evaluated for already- excluded patients. A patient
+  for whom a condition evaluates to `NA` (a missing value in the
+  criterion) and who matches no other rule is not passed through: it is
+  excluded with the reason `"Criterion missing: <reason>"` for the first
+  such rule, a separate line in the diagram's side box and a separate
+  count, `n_missing`, in
+  [`hv_consort_summary()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_consort_summary.md).
+  A definite match on a later rule takes precedence over a missing value
+  on an earlier one.
 
 - excl_label:
 

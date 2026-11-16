@@ -147,7 +147,11 @@ draws only Latin-1 text and warns on anything else; use
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
 <dd><p>Further arguments passed to <code><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggplot2::ggsave()</a></code> for the primary
-<code>file</code>. Not applied to <code>draft_file</code>.</p></dd>
+<code>file</code>. A <code>draft_file</code> in the same format as <code>file</code> gets all of them, and
+<code>device</code> too. A <code>draft_file</code> in another format gets only the ones that
+mean the same on every device (<code>scale</code>, <code>bg</code>, <code>limitsize</code>,
+<code>create.dir</code>), so it keeps the deliverable's size and background, and its
+device is picked from its extension.</p></dd>
 
 </dl></div>
     <div class="section level2">

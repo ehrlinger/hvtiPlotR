@@ -51,8 +51,13 @@ plot(
 
   `"life"`
 
-  :   (`PLOTL=1`) Restricted mean survival time (integral of \\S(t)\\)
-      vs time.
+  :   (`PLOTL=1`) Integrated survivorship vs time, by the SAS `%kaplan`
+      formula \\\Delta t (3 S(t) - S(t\_{prev})) / 2\\, which is neither
+      the exact step-function area nor a trapezoid and understates the
+      restricted mean survival time; see
+      [`hv_survival`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_survival.md).
+      For the exact RMST use
+      [`hvtiRpropensity::ps_rmst()`](https://ehrlinger.github.io/hvtiRpropensity/reference/ps_rmst.html).
 
 - conf_int:
 

@@ -18,8 +18,11 @@ hv_consort_summary(tracker)
 ## Value
 
 A data frame with columns `label`, `include_col`, `n_included`,
-`excl_col`, `n_excluded`. `n_excluded` and `excl_col` are `NA` for the
-final stage (no downstream exclusion defined yet).
+`excl_col`, `n_excluded`, `n_missing`. `n_missing` is the part of
+`n_excluded` excluded because an exclusion criterion was missing (see
+[`hv_consort_exclude()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_consort_exclude.md)).
+`n_excluded`, `n_missing` and `excl_col` are `NA` for the final stage
+(no downstream exclusion defined yet).
 
 ## See also
 
@@ -29,8 +32,8 @@ final stage (no downstream exclusion defined yet).
 
 ``` r
 hv_consort_summary(sample_consort_data())
-#>      label include_col n_included      excl_col n_excluded
-#> 1 Screened    screened        300   excl_screen         73
-#> 2 Eligible    eligible        227 excl_eligible         41
-#> 3 Analyzed    analyzed        186          <NA>         NA
+#>      label include_col n_included      excl_col n_excluded n_missing
+#> 1 Screened    screened        300   excl_screen         73         0
+#> 2 Eligible    eligible        227 excl_eligible         41         0
+#> 3 Analyzed    analyzed        186          <NA>         NA        NA
 ```

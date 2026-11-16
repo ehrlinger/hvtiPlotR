@@ -1,6 +1,6 @@
 # Parametric Hazard / Survival Plot
 
-**Superseded.**
+**Superseded, not deprecated: no removal is scheduled.**
 
 `hazard_plot()` has been superseded by the S3 constructor
 [`hv_hazard()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_hazard.md)

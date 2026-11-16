@@ -315,8 +315,8 @@ mh_wt$tables$diagnostics$smd_weighted
 mh_wt$tables$diagnostics$effective_n_by_group
 ```
 
-       0    1
-    2000 2000 
+           0        1
+    1478.467 1499.532 
 
 ## Stacked Histogram
 
@@ -500,7 +500,14 @@ point cloud and strike a line through each legend key. Pass a positive
 
 ``` r
 
-plot(hv_followup(gfup_dta, segment_drop = 0.2))
+plot(hv_followup(
+  gfup_dta,
+  segment_drop   = 0.2,
+  origin_year    = 1990,
+  study_start    = as.Date("1990-01-01"),
+  study_end      = as.Date("2019-12-31"),
+  close_date     = as.Date("2021-08-06")
+))
 ```
 
 ![](plot-functions_files/figure-html/gfup_segment_drop-1.png)
@@ -695,7 +702,14 @@ patient gets no tick but is still drawn; `meta$n_echo` and
 ``` r
 
 gfup_event_dta$iv_echo <- gfup_event_dta$iv_dead * 0.6
-gf_echo <- hv_followup(gfup_event_dta, echo_time_col = "iv_echo")
+gf_echo <- hv_followup(
+  gfup_event_dta,
+  echo_time_col  = "iv_echo",
+  origin_year    = 1990,
+  study_start    = as.Date("1990-01-01"),
+  study_end      = as.Date("2019-12-31"),
+  close_date     = as.Date("2021-08-06")
+)
 c(gf_echo$meta$n_echo, gf_echo$meta$n_no_echo)
 ```
 
@@ -725,7 +739,15 @@ echoes <- data.frame(
   iv_opyrs = rep(gfup_event_dta$iv_opyrs[1:60], each = 3),
   iv_echo  = rep(gfup_event_dta$iv_dead[1:60], each = 3) * c(0.1, 0.5, 0.9)
 )
-plot(hv_followup(gfup_event_dta, echo = echoes, echo_time_col = "iv_echo")) +
+plot(hv_followup(
+  gfup_event_dta,
+  echo           = echoes,
+  echo_time_col  = "iv_echo",
+  origin_year    = 1990,
+  study_start    = as.Date("1990-01-01"),
+  study_end      = as.Date("2019-12-31"),
+  close_date     = as.Date("2021-08-06")
+)) +
   scale_color_manual(values = c(Alive = "blue", Dead = "red"), name = NULL) +
   labs(x = "Operation Date", y = "Follow-up (years)") +
   theme_hv_poster()
@@ -1160,12 +1182,12 @@ km$tables$report
 ```
 
       strata report_time  surv     lower     upper n.risk n.event
-    1    All           1 0.954 0.9317320 0.9692443    478       1
-    2    All           5 0.822 0.7859710 0.8530976    412       1
-    3    All          10 0.642 0.5989814 0.6828473    322       1
-    4    All          15 0.518 0.4741762 0.5615486    260       1
+    1    All           1 0.954 0.9317320 0.9692443    477       1
+    2    All           5 0.822 0.7859710 0.8530976    411       1
+    3    All          10 0.642 0.5989814 0.6828473    321       1
+    4    All          15 0.518 0.4741762 0.5615486    259       1
     5    All          20 0.414 0.3715880 0.4577269    207       0
-    6    All          25 0.414 0.3715880 0.4577269    207       0
+    6    All          25    NA        NA        NA      0      NA
 
 ### Saving
 
@@ -1406,11 +1428,11 @@ cm <- hv_correlation_matrix(
 cm$tables$coefficients
 ```
 
-                    HbA1c    Glucose  Creatinine     Albumin
-    HbA1c       1.0000000  0.7009743 -0.10219372 -0.24999981
-    Glucose     0.7009743  1.0000000 -0.11322375 -0.18131165
-    Creatinine -0.1021937 -0.1132238  1.00000000  0.05984457
-    Albumin    -0.2499998 -0.1813117  0.05984457  1.00000000
+                     HbA1c     Glucose  Creatinine     Albumin
+    HbA1c       1.00000000  0.68011437 -0.06390511 -0.24269734
+    Glucose     0.68011437  1.00000000 -0.04882407 -0.18196059
+    Creatinine -0.06390511 -0.04882407  1.00000000  0.03386094
+    Albumin    -0.24269734 -0.18196059  0.03386094  1.00000000
 
 ``` r
 
@@ -2176,10 +2198,10 @@ returns a per-stage count table suitable for a methods section:
 hv_consort_summary(tracker)
 ```
 
-         label include_col n_included      excl_col n_excluded
-    1 Screened    screened        300   excl_screen         73
-    2 Eligible    eligible        227 excl_eligible         41
-    3 Analyzed    analyzed        186          <NA>         NA
+         label include_col n_included      excl_col n_excluded n_missing
+    1 Screened    screened        300   excl_screen         73         0
+    2 Eligible    eligible        227 excl_eligible         41         0
+    3 Analyzed    analyzed        186          <NA>         NA        NA
 
 [`hv_consort_patients()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_consort_patients.md)
 returns the patient IDs active at a stage, or the subset excluded for a

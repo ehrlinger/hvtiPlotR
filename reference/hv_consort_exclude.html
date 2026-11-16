@@ -106,7 +106,13 @@ for survivors.  Required; there is no default.</p></dd>
 <code>&lt;condition&gt; ~ "&lt;reason string&gt;"</code>.  Conditions are evaluated with data
 masking against the tracker's data frame.  The <strong>first</strong> matching formula
 assigns the reason; subsequent formulas are not evaluated for already-
-excluded patients.</p></dd>
+excluded patients. A patient for whom a condition evaluates to <code>NA</code> (a
+missing value in the criterion) and who matches no other rule is not
+passed through: it is excluded with the reason
+<code>"Criterion missing: &lt;reason&gt;"</code> for the first such rule, a separate line
+in the diagram's side box and a separate count, <code>n_missing</code>, in
+<code><a href="hv_consort_summary.html">hv_consort_summary()</a></code>. A definite match on a later rule takes
+precedence over a missing value on an earlier one.</p></dd>
 
 
 <dt id="arg-excl-label">excl_label<a class="anchor" aria-label="anchor" href="#arg-excl-label"></a></dt>

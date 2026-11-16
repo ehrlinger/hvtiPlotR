@@ -82,7 +82,8 @@ then convert to a diagram with <code><a href="hv_consort.html">hv_consort()</a><
 
 <dt id="arg-patient-id">patient_id<a class="anchor" aria-label="anchor" href="#arg-patient-id"></a></dt>
 <dd><p>&lt;<code><a href="https://rlang.r-lib.org/reference/args_data_masking.html" class="external-link">data-masking</a></code>&gt; Unquoted
-name of the unique patient identifier column.</p></dd>
+name of the unique patient identifier column. Its values must be unique
+and not missing; a repeated or missing ID is an error.</p></dd>
 
 
 <dt id="arg-label">label<a class="anchor" aria-label="anchor" href="#arg-label"></a></dt>

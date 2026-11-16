@@ -1,6 +1,6 @@
 # Survival Difference (Life-Gained) Plot
 
-**Superseded.**
+**Superseded, not deprecated: no removal is scheduled.**
 
 `survival_difference_plot()` has been superseded by the S3 constructor
 [`hv_survival_difference()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_survival_difference.md)

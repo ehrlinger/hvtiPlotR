@@ -14,8 +14,7 @@ hv_atrisk(
   group = NULL,
   report_times = NULL,
   size = NULL,
-  strata_labels = NULL,
-  ...
+  strata_labels = NULL
 )
 ```
 
@@ -60,10 +59,6 @@ hv_atrisk(
 
   Optional named character vector remapping stratum row labels. Default
   `NULL`.
-
-- ...:
-
-  Ignored; present for S3 consistency.
 
 ## Value
 

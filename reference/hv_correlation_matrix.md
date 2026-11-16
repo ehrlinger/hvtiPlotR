@@ -14,7 +14,7 @@ hv_correlation_matrix(
   data,
   vars,
   labels = NULL,
-  method = c("pearson", "spearman")
+  method = c("spearman", "pearson")
 )
 ```
 
@@ -34,8 +34,9 @@ hv_correlation_matrix(
 
 - method:
 
-  Coefficient stored in `$tables$coefficients`: `"pearson"` or
-  `"spearman"`.
+  Coefficient stored in `$tables$coefficients`: `"spearman"` (the
+  default, matching `hvtiRtables::hv_correlation_table()` and the SAS
+  exemplar) or `"pearson"`.
 
 ## Value
 

@@ -127,7 +127,8 @@ head(dta)
 #> 6  24.1620  0.2802 FALSE   0.2802    FALSE FALSE
 
 # Death panel
-gf <- hv_followup(dta)
+gf <- hv_followup(dta, origin_year = 1990, study_start = "1990-01-01",
+                  study_end = "2019-12-31", close_date = "2021-08-06")
 plot(gf) +
   ggplot2::scale_color_manual(
     values = c("Alive" = "blue", "Dead" = "red"), name = NULL
@@ -137,7 +138,9 @@ plot(gf) +
 
 
 # Event panel
-gf2 <- hv_followup(dta, event_col = "ev_event",
+gf2 <- hv_followup(dta, origin_year = 1990, study_start = "1990-01-01",
+                   study_end = "2019-12-31", close_date = "2021-08-06",
+                   event_col = "ev_event",
                       event_time_col = "iv_event",
                       death_for_event_col = "deads")
 plot(gf2, type = "event") +

@@ -37,7 +37,10 @@ hv_mirror_hist(
 
 - group_col:
 
-  Name of the binary group-indicator column. Default `"tavr"`.
+  Name of the binary group-indicator column. Required: the old default
+  `"tavr"` names one study's exposure, and omitting it falls back to
+  that value with a once-per-session deprecation warning until hvtiPlotR
+  2.9.0.
 
 - match_col:
 
@@ -52,7 +55,10 @@ hv_mirror_hist(
 - group_labels:
 
   Length-2 character vector of display labels corresponding to
-  `group_levels`. Default `c("SAVR", "TF-TAVR")`.
+  `group_levels`. Required: the old default `c("SAVR", "TF-TAVR")` names
+  one study's arms. Omitting it still falls back to that value with a
+  once-per-session deprecation warning, and from hvtiPlotR 2.9.0 it is
+  an error.
 
 - matched_value:
 
@@ -105,7 +111,10 @@ The list contains:
       additionally contains `group_counts_matched`,
       `matched_rate_by_group`, `score_summary_matched`, and
       `smd_matched`. In weighted IPTW mode, additionally contains
-      `effective_n_by_group` and `smd_weighted`.
+      `effective_n_by_group` (Kish's effective sample size, \\(\sum w)^2
+      / \sum w^2\\, per group), `sum_weights` (the plain weight total
+      per group, which `effective_n_by_group` reported under the old
+      name) and `smd_weighted`.
 
   `working`
 
@@ -138,7 +147,8 @@ Other Propensity Score & Matching:
 dta <- sample_mirror_histogram_data(n = 500, separation = 1.5)
 
 # 1. Build data object
-mh <- hv_mirror_hist(dta)
+mh <- hv_mirror_hist(dta, group_col = "tavr",
+                     group_labels = c("SAVR", "TF-TAVR"))
 mh                    # print diagnostics summary
 #> <hv_mirror_hist>
 #>   Groups      : SAVR (control) vs TF-TAVR (treated)

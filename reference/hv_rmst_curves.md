@@ -19,8 +19,7 @@ hv_rmst_curves(
   facet = "estimator",
   arm = "arm",
   time = "time",
-  surv = "surv",
-  ...
+  surv = "surv"
 )
 ```
 
@@ -58,10 +57,6 @@ hv_rmst_curves(
 
   Names of the time and survival columns. Defaults `"time"` and
   `"surv"`.
-
-- ...:
-
-  Ignored; present for S3 consistency.
 
 ## Value
 

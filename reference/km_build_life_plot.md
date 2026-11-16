@@ -1,9 +1,10 @@
 # Build bare integrated survivorship ggplot (PLOTL)
 
-Plots the cumulative integral of the survival function (restricted mean
-survival time, LIFE) against time, matching the SAS `%kaplan` `PLOTL=1`
-output. The proportionate life length (`proplife = LIFE / t`) is also
-available in `km_data` for a secondary plot.
+Plots the cumulative integral of the survival function (LIFE, by the SAS
+formula documented in `km_extract_tidy`) against time, matching the SAS
+`%kaplan` `PLOTL=1` output. The proportionate life length
+(`proplife = LIFE / t`) is also available in `km_data` for a secondary
+plot.
 
 ## Usage
 
