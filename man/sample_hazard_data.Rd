@@ -38,8 +38,9 @@ the time at which \code{S = exp(-1)} \eqn{\approx} 37\%). Default \code{8.0}.}
 
 \item{ci_level}{Confidence level for the CI bands. Default \code{0.95}.}
 
-\item{seed}{Random seed (unused for deterministic Weibull predictions;
-kept for API consistency with other sample functions). Default \code{42}.}
+\item{seed}{Unused. The curve is computed analytically, so every \code{seed}
+gives the same result; the argument is kept so all \verb{sample_*()}
+generators take it.}
 }
 \value{
 A data frame with columns \code{time}, \code{survival}, \code{surv_lower},

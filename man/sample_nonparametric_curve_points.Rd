@@ -38,8 +38,9 @@ Default \code{0.68}.}
 
 \item{n_bins}{Number of equal-sized data-summary bins. Default \code{10}.}
 
-\item{seed}{Random seed. Default \code{42}.
-\code{NULL} uses the session's random-number stream and sets no seed.}
+\item{seed}{Unused. The curve is computed analytically, so every \code{seed}
+gives the same result; the argument is kept so all \verb{sample_*()}
+generators take it.}
 }
 \value{
 A data frame with columns \code{time}, \code{value}, and (if \code{groups} is not

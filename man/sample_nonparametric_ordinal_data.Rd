@@ -29,8 +29,9 @@ in ascending order. Default
 \item{n_bins}{Number of equal-sized bins for the data summary points.
 Default \code{10}.}
 
-\item{seed}{Random seed. Default \code{42}.
-\code{NULL} uses the session's random-number stream and sets no seed.}
+\item{seed}{Unused. The curve is computed analytically, so every \code{seed}
+gives the same result; the argument is kept so all \verb{sample_*()}
+generators take it.}
 }
 \value{
 A long-format data frame: \code{time}, \code{estimate}, \code{grade} (factor).

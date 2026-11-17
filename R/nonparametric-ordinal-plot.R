@@ -61,8 +61,9 @@
 #'   `c("Grade 0", "Grade 1", "Grade 2", "Grade 3")`.
 #' @param n_bins       Number of equal-sized bins for the data summary points.
 #'   Default `10`.
-#' @param seed         Random seed. Default `42`.
-#'   `NULL` uses the session's random-number stream and sets no seed.
+#' @param seed         Unused. The curve is computed analytically, so every `seed`
+#'   gives the same result; the argument is kept so all `sample_*()`
+#'   generators take it.
 #'
 #' @return A long-format data frame: `time`, `estimate`, `grade` (factor).
 #'   Individual grade probabilities sum to 1 at each time point.

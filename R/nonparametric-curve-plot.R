@@ -72,8 +72,9 @@
 #' @param ci_level    Confidence level for bootstrap-style CI bands.
 #'   Default `0.68`.
 #' @param n_bins      Number of equal-sized data-summary bins. Default `10`.
-#' @param seed        Random seed. Default `42`.
-#'   `NULL` uses the session's random-number stream and sets no seed.
+#' @param seed        Unused. The curve is computed analytically, so every `seed`
+#'   gives the same result; the argument is kept so all `sample_*()`
+#'   generators take it.
 #'
 #' @return A data frame with columns `time`, `estimate`, `lower`, `upper`,
 #'   and (if `groups` is not `NULL`) `group`.

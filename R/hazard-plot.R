@@ -138,8 +138,9 @@
 #' @param scale    Weibull scale parameter (characteristic time in years, i.e.
 #'   the time at which `S = exp(-1)` \eqn{\approx} 37%). Default `8.0`.
 #' @param ci_level Confidence level for the CI bands. Default `0.95`.
-#' @param seed     Random seed (unused for deterministic Weibull predictions;
-#'   kept for API consistency with other sample functions). Default `42`.
+#' @param seed     Unused. The curve is computed analytically, so every `seed`
+#'   gives the same result; the argument is kept so all `sample_*()`
+#'   generators take it.
 #'
 #' @return A data frame with columns `time`, `survival`, `surv_lower`,
 #'   `surv_upper`, `hazard`, `haz_lower`, `haz_upper`, `cumhaz`, and
@@ -457,8 +458,9 @@ sample_life_table <- function(age_groups = NULL,
 #' @param shape    Weibull shape. Default `1.5`.
 #' @param scale    Weibull scale (years). Default `8.0`.
 #' @param ci_level Confidence level. Default `0.95`.
-#' @param seed     Random seed. Default `42`.
-#'   `NULL` uses the session's random-number stream and sets no seed.
+#' @param seed     Unused. The curve is computed analytically, so every `seed`
+#'   gives the same result; the argument is kept so all `sample_*()`
+#'   generators take it.
 #'
 #' @return A data frame with columns `time`, `difference`, `diff_lower`,
 #'   `diff_upper`, `group1_surv`, `group2_surv`.
