@@ -156,7 +156,6 @@ p +
 
 
 # --- Global theme (set once per session) ----------------------------------
-# \donttest{
 old <- ggplot2::theme_set(theme_hv_manuscript())
 plot(np) +
   ggplot2::scale_color_manual(values = c("steelblue"), guide = "none") +
@@ -167,7 +166,6 @@ plot(np) +
 #   ggplot2::scale_color_manual(values = hv_palette(), name = NULL)
 #   ggplot2::scale_fill_manual(values = hv_palette(), guide = "none")
 ggplot2::theme_set(old)
-# }
 
 # See vignette("plot-decorators", package = "hvtiPlotR") for theming,
 # color scales, annotation labels, and saving plots.

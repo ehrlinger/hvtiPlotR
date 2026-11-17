@@ -19,7 +19,8 @@ sample_consort_data(n = 300L, seed = 42L)
 
 - seed:
 
-  Integer random seed for reproducibility. Default `42`.
+  Integer random seed for reproducibility. Default `42`. `NULL` uses the
+  session's random-number stream and sets no seed.
 
 ## Value
 
@@ -51,8 +52,6 @@ hv_consort_summary(tracker)
 #> 1 Screened    screened        300   excl_screen         73         0
 #> 2 Eligible    eligible        227 excl_eligible         41         0
 #> 3 Analyzed    analyzed        186          <NA>         NA        NA
-# \donttest{
   hv_consort(tracker) |> plot()
 
-# }
 ```

@@ -28,7 +28,8 @@ sample_eda_data(n = 300L, year_range = c(2005L, 2020L), seed = 42L)
 
 - seed:
 
-  Random seed for reproducibility. Default `42`.
+  Random seed for reproducibility. Default `42`. `NULL` uses the
+  session's random-number stream and sets no seed.
 
 ## Value
 

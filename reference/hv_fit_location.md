@@ -130,7 +130,6 @@ which places the result on a slide;
 ## Examples
 
 ``` r
-# \donttest{
 p <- ggplot2::ggplot(mtcars, ggplot2::aes(hp, mpg)) +
   ggplot2::geom_point() +
   ggplot2::labs(x = "Horsepower", y = "Miles per gallon") +
@@ -151,5 +150,4 @@ fit$location
 #> $top
 #> [1] 1.85
 #> 
-# }
 ```

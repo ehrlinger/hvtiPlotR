@@ -43,7 +43,8 @@ sample_mirror_histogram_data(
 
 - seed:
 
-  Integer random seed for reproducibility (default 42L).
+  Integer random seed for reproducibility (default 42L). `NULL` uses the
+  session's random-number stream and sets no seed.
 
 - add_weights:
 

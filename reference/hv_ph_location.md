@@ -88,7 +88,6 @@ which accepts a `panel_box` argument that delegates to this helper.
 ## Examples
 
 ``` r
-# \donttest{
 p <- ggplot2::ggplot(mtcars, ggplot2::aes(hp, mpg)) +
   ggplot2::geom_point() +
   theme_hv_ppt_dark()
@@ -105,5 +104,4 @@ loc <- hv_ph_location(
 #   doc, rvg::dml(ggobj = p),
 #   location = do.call(officer::ph_location, loc)
 # )
-# }
 ```

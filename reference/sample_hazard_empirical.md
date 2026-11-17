@@ -57,7 +57,8 @@ sample_hazard_empirical(
 
 - seed:
 
-  Random seed. Default `42`.
+  Random seed. Default `42`. `NULL` uses the session's random-number
+  stream and sets no seed.
 
 ## Value
 

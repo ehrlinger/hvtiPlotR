@@ -203,14 +203,12 @@ plot(km, type = "loglog") +
 
 
 # --- Global theme + RColorBrewer (set once per session) ------------------
-# \donttest{
 old <- ggplot2::theme_set(theme_hv_manuscript())
 plot(km_s) +
   ggplot2::scale_color_manual(values = hv_palette(), name = "Valve Type") +
   ggplot2::labs(x = "Years after Operation", y = "Survival (%)")
 
 ggplot2::theme_set(old)
-# }
 
 # See vignette("plot-decorators", package = "hvtiPlotR") for theming,
 # color scales, annotation labels, and saving plots.

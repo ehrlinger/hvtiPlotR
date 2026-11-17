@@ -24,7 +24,8 @@ sample_alluvial_data(n = 300, seed = 42L)
 
 - seed:
 
-  Random seed for reproducibility. Default `42`.
+  Random seed for reproducibility. Default `42`. `NULL` uses the
+  session's random-number stream and sets no seed.
 
 ## Value
 

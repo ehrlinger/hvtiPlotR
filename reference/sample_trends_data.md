@@ -40,7 +40,8 @@ sample_trends_data(
 
 - seed:
 
-  Random seed for reproducibility. Default `42`.
+  Random seed for reproducibility. Default `42`. `NULL` uses the
+  session's random-number stream and sets no seed.
 
 ## Value
 

@@ -200,7 +200,6 @@ Worked recipe with rendered output:
 ## Examples
 
 ``` r
-# \donttest{
 library(ggplot2)
 
 # The bundled copy of the HVTI blue master template (also the default);
@@ -344,5 +343,4 @@ save_ppt(
 # Sizing advice: with `fit = TRUE` (the default) a plot whose chrome
 # would leave the slide or cross the title has its text reduced until it
 # fits; save_ppt() warns only when even 12 pt text does not fit.
-# }
 ```

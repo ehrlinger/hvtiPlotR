@@ -117,7 +117,6 @@ plot(up) & theme_hv_poster()
 #> Warning: Removed 30 rows containing non-finite outside the scale range (`stat_count()`).
 
 
-# \donttest{
 # Intersection bars only — single ggplot, themes apply with `+`.
 plot(up, set_size = FALSE) + theme_hv_poster()
 #> Warning: Removed 30 rows containing non-finite outside the scale range (`stat_count()`).
@@ -134,5 +133,4 @@ plot(up_era, fill_col = "era", set_size = FALSE) +
   theme_hv_poster()
 #> Warning: Removed 30 rows containing non-finite outside the scale range (`stat_count()`).
 
-# }
 ```

@@ -61,8 +61,9 @@ sample_hazard_data(
 
 - seed:
 
-  Random seed (unused for deterministic Weibull predictions; kept for
-  API consistency with other sample functions). Default `42`.
+  Unused. The curve is computed analytically, so every `seed` gives the
+  same result; the argument is kept so all `sample_*()` generators take
+  it.
 
 ## Value
 

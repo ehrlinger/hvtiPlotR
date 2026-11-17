@@ -171,7 +171,6 @@ recipes book, <https://ehrlinger.github.io/hvtiGraphics/>.
 ## Examples
 
 ``` r
-# \donttest{
 p <- plot(hv_survival(sample_survival_data(n = 200, seed = 42))) +
   theme_hv_manuscript()
 save_manuscript(p, file.path(tempdir(), "survival.pdf"))
@@ -204,5 +203,4 @@ attr(out, "dims")
 #> $units
 #> [1] "in"
 #> 
-# }
 ```

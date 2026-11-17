@@ -100,7 +100,6 @@ does all of this for a list of plots.
 ## Examples
 
 ``` r
-# \donttest{
 p <- ggplot2::ggplot(mtcars, ggplot2::aes(hp, mpg)) +
   ggplot2::geom_point() +
   ggplot2::labs(x = "Horsepower", y = "Miles per gallon") +
@@ -116,5 +115,4 @@ doc <- hv_add_plot(doc, p)
 attr(doc, "hv_fit")$scale
 #> [1] 1
 print(doc, target = file.path(tempdir(), "fitted.pptx"))
-# }
 ```

@@ -46,7 +46,8 @@ sample_survival_data(
 
 - seed:
 
-  Integer random seed for reproducibility. Defaults to `42`.
+  Integer random seed for reproducibility. Defaults to `42`. `NULL` uses
+  the session's random-number stream and sets no seed.
 
 ## Value
 

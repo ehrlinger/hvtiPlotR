@@ -32,7 +32,8 @@ sample_stacked_histogram_data(
 - seed:
 
   Integer passed to [`set.seed`](https://rdrr.io/r/base/Random.html) for
-  reproducibility. Defaults to `42`.
+  reproducibility. Defaults to `42`. `NULL` uses the session's
+  random-number stream and sets no seed.
 
 ## Value
 

@@ -60,7 +60,6 @@ for the slide-placement analogue used with
 ## Examples
 
 ``` r
-# \donttest{
 p <- ggplot2::ggplot(mtcars, ggplot2::aes(hp, mpg)) +
   ggplot2::geom_point() +
   ggplot2::labs(title = "Long title that eats vertical space",
@@ -71,5 +70,4 @@ do.call(
   ggplot2::ggsave,
   c(list(filename = file.path(tempdir(), "fig.pdf"), plot = p), dims)
 )
-# }
 ```

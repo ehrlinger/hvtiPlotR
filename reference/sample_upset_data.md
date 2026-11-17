@@ -21,7 +21,8 @@ sample_upset_data(n = 500, seed = 42L)
 
 - seed:
 
-  Random seed for reproducibility. Default `42`.
+  Random seed for reproducibility. Default `42`. `NULL` uses the
+  session's random-number stream and sets no seed.
 
 ## Value
 

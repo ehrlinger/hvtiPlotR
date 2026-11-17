@@ -122,8 +122,9 @@ the time at which <code>S = exp(-1)</code> \(\approx\) 37%). Default <code>8.0</
 
 
 <dt id="arg-seed">seed<a class="anchor" aria-label="anchor" href="#arg-seed"></a></dt>
-<dd><p>Random seed (unused for deterministic Weibull predictions;
-kept for API consistency with other sample functions). Default <code>42</code>.</p></dd>
+<dd><p>Unused. The curve is computed analytically, so every <code>seed</code>
+gives the same result; the argument is kept so all <code>sample_*()</code>
+generators take it.</p></dd>
 
 </dl></div>
     <div class="section level2">

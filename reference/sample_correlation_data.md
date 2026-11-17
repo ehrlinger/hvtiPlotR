@@ -17,7 +17,8 @@ sample_correlation_data(n = 300, seed = 42)
 
 - seed:
 
-  Random seed.
+  Random seed. `NULL` uses the session's random-number stream and sets
+  no seed.
 
 ## Value
 

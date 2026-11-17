@@ -30,7 +30,8 @@ sample_cluster_sankey_data(
 
 - seed:
 
-  Random seed. Default `42L`.
+  Random seed. Default `42L`. `NULL` uses the session's random-number
+  stream and sets no seed.
 
 ## Value
 

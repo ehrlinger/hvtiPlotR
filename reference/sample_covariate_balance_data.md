@@ -53,7 +53,8 @@ sample_covariate_balance_data(
 
 - seed:
 
-  Integer random seed for reproducibility. Default `42`.
+  Integer random seed for reproducibility. Default `42`. `NULL` uses the
+  session's random-number stream and sets no seed.
 
 ## Value
 

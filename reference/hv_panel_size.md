@@ -78,7 +78,6 @@ which measures the chrome.
 ## Examples
 
 ``` r
-# \donttest{
 p <- ggplot2::ggplot(mtcars, ggplot2::aes(hp, mpg)) +
   ggplot2::geom_point() +
   ggplot2::facet_wrap(~cyl)
@@ -87,5 +86,4 @@ do.call(
   ggplot2::ggsave,
   c(list(filename = file.path(tempdir(), "facets.pdf"), plot = p), dims)
 )
-# }
 ```

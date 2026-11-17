@@ -28,7 +28,8 @@ sample_longitudinal_counts_data(n_patients = 300, max_obs = 6, seed = 42L)
 
 - seed:
 
-  Random seed. Default `42`.
+  Random seed. Default `42`. `NULL` uses the session's random-number
+  stream and sets no seed.
 
 ## Value
 

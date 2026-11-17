@@ -43,7 +43,9 @@ sample_nonparametric_ordinal_points(
 
 - seed:
 
-  Random seed. Default `42`.
+  Unused. The curve is computed analytically, so every `seed` gives the
+  same result; the argument is kept so all `sample_*()` generators take
+  it.
 
 ## Value
 
