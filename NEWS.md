@@ -1,3 +1,80 @@
+# hvtiPlotR 2.8.23
+
+* `hv_survival()`'s `$tables$report` no longer carries the last estimate past the end of follow-up. A report time beyond a stratum's last observed time now gives `NA` for `surv`, `lower`, `upper` and `n.event`, and `n.risk` is taken from `$tables$risk`, so the two tables agree at every report time. Before, `n.risk` was the count at the last event at or before the report time, one or more too high.
+
+* `hv_survival()`'s `life` and `proplife` keep the SAS `%kaplan` formula `Δt(3S − S_prev)/2` for SAS parity, and the documentation now says what it is. It was described as a trapezoid; it is not. It falls short of the exact step-function area `Δt·S_prev` by `1.5·Δt·(S_prev − S)` at each event, so it understates the restricted mean survival time. `hvtiRpropensity::ps_rmst()` computes the exact RMST. Flagged for a later look in [#258](https://github.com/ehrlinger/hvtiPlotR/issues/258).
+
+* `hv_survival()`'s documentation now says that `cumhaz` is the Nelson-Aalen estimate under either `method`, not `-log S(t)`, and that `log_cumhaz` is built on it. The `"nelson-aalen"` method's "log" interval is on the survival scale, a plain Wald interval on `H(t)`.
+
+* `hv_mirror_hist()`'s `effective_n_by_group` is now Kish's effective sample size, `(Σw)²/Σw²`, the one meaning effective N has across the hvtiR family. It was the plain weight total, which moves to a new `sum_weights` element.
+
+* `hv_correlation_matrix()` defaults to `method = "spearman"`, matching `hvtiRtables::hv_correlation_table()` and the SAS exemplar. Pass `method = "pearson"` for the old coefficient.
+
+* `hv_consort_exclude()` no longer passes through a patient whose value for an exclusion criterion is missing. When no rule matches outright, the patient is excluded as `"Criterion missing: <reason>"` for the first rule it could not be checked against, a separate line in the diagram's side box and a new `n_missing` column in `hv_consort_summary()`, and a count in the tracker's print.
+
+* `hv_consort_start()` refuses a `patient_id` column with a repeated or missing value. The error gives the column and a count, never the identifiers themselves.
+
+* Study-specific defaults are deprecated, and from 2.9.0 each argument is required. `hv_followup()`'s `origin_year`, `study_start`, `study_end` and `close_date`, and `hv_mirror_hist()`'s `group_col` (`"tavr"`) and `group_labels` (`"SAVR"`, `"TF-TAVR"`), still fall back to the old values for now, with a warning once per session.
+
+* `make_footnote()` and `makeFootnote()` lose the `getwd()` default for the footnote text, which stamped a filesystem path on the figure. Omitting the text now draws only the prefix and timestamp, with a once-per-session warning, and from 2.9.0 it is an error.
+
+* Supplying only one of `lower_col` and `upper_col` (or `emp_lower_col` and `emp_upper_col`) is now an error in `hv_hazard()`, `hv_survival_difference()`, `hv_nnt()`, `hv_nonparametric()`, `hazard_plot()`, `survival_difference_plot()` and `nnt_plot()`. The band used to vanish without a word.
+
+* `save_manuscript()`'s `draft_file` keeps the deliverable's `scale` and `bg`. A draft in the file's own format takes `device` and every `...` argument; a draft in another format takes the device-independent ones.
+
+* `hv_atrisk()`, `hv_rmst_contrast()` and `hv_rmst_curves()` no longer swallow arguments they do not use: a misspelled argument is now R's "unused argument" error.
+
+* `hv_panel_box(mode)` is deprecated. It never had an effect, and it is removed in 2.9.0.
+
+* `hv_mirror_hist()`'s dropped-rows message names `hv_mirror_hist()`, not the old `mirror_histogram`.
+
+* The deprecated theme aliases name the release that removes them, 2.9.0. `hazard_plot()`, `survival_difference_plot()` and `nnt_plot()` say they are superseded, not deprecated, with no removal scheduled.
+
+* The new deprecation warnings and the theme aliases' warnings carry the class `hvtiPlotR_deprecated`, so a caller can catch or muffle them precisely.
+
+* Argument names follow the hvtiR API rubric. Every old name keeps working, with a warning once per session (class `hvtiPlotR_deprecated`), until 2.9.0. Passing both the old and the new name is an error.
+  - Every argument that names a column ends in `_col`. In `hv_atrisk()`, `time`, `status` and `group` become `time_col`, `event_col` and `group_col`. In `hv_rmst_contrast()`, `estimator`, `diff`, `lo` and `hi` become `estimator_col`, `diff_col`, `lo_col` and `hi_col`. In `hv_rmst_curves()`, `facet`, `arm`, `time` and `surv` become `facet_col`, `arm_col`, `time_col` and `surv_col`.
+  - The data frame comes first, as `data`. That replaces `curve_data` in `hv_hazard()`, `hazard_plot()`, `hv_nonparametric()` and `hv_ordinal()`; `diff_data` in `hv_survival_difference()` and `survival_difference_plot()`; `nnt_data` in `hv_nnt()` and `nnt_plot()`; `curves` in `hv_rmst_curves()`; and `x` in `hv_atrisk()`.
+  - Every argument that takes one or more columns ends in `_cols`. `vars` becomes `var_cols` in `hv_correlation_matrix()`, `hv_eda_pages()` and `eda_select_vars()`; `axes` becomes `axis_cols` in `hv_alluvial()`; `sets` in `hv_venn()` and `intersect` in `hv_upset()` become `set_cols`; and `event_col`, `event_time_col` become `event_cols`, `event_time_cols` in `hv_followup()`.
+  - `save_ppt()`'s `powerpoint` becomes `file`.
+  - `line_width` becomes `linewidth`, ggplot2's name, in `hazard_plot()`, `survival_difference_plot()`, `nnt_plot()` and the `plot()` methods for `hv_hazard`, `hv_survival_difference`, `hv_nnt`, `hv_nonparametric`, `hv_ordinal` and `hv_spaghetti`.
+  - `hv_consort_start()` takes the ID column as a string, `patient_id_col`. An unquoted name, named `patient_id` or passed by position, still works.
+  - `plot.hv_sankey()`'s deprecated `alpha` now warns once per session, like the others, instead of printing a message that quiet mode would hide.
+
+* `hv_followup()` puts each time column before its status column, as `survival::Surv(time, event)` does: `death_time_col, death_col`, then `event_time_col, event_col`. Every argument after `iv_opyrs_col` must therefore be passed by name; a value given by position that would bind there, in a fully positional call or a mixed one, is an error (class `hvtiPlotR_positional_reorder`) rather than a silent swap. A status column must be logical, 0/1, or text or a factor that `as.logical()` reads.
+
+* Informational messages go through the family quiet mode: `options(hvti.quiet = TRUE)` silences them. Warnings and errors are unaffected.
+
+* Errors a caller may want to catch carry `hvtiPlotR_<condition>` classes: `hvtiPlotR_missing_column`, `hvtiPlotR_missing_package`, `hvtiPlotR_role_palette_capacity` and `hvtiPlotR_group_palette_capacity`. The palette errors keep their old classes, `hv_role_palette_capacity` and `hv_group_palette_capacity`, until 2.9.0.
+
+* `provenance_footnote()` gains `record`, which reads the hvtiR seven-field provenance record. The record supplies the commit (its `sha`), the producing package's version and the time; it adds the seed when the seed is not `NA`, and prints `"commit unknown"` or `"time unknown"` when the `sha` or `time` is `NA`. Its errors name the function and carry class `hvtiPlotR_invalid_provenance`.
+
+* Messages and errors touched here name their function, as `fn(): `.
+
+* Hover labels on a categorical EDA panel no longer fail when the x variable has missing values. Every category's bar in the missing bin shared one group, so its tooltip was dropped and the plot stopped with "object 'tooltip' not found". Each bar in that bin now keeps its own tooltip.
+
+* Documentation uses the renamed arguments throughout. The `hv_hazard()` and `hazard_plot()` column arguments refer to `data`, not `curve_data`; `hv_eda_pages()` describes `var_cols`; the vignettes name `axis_cols`, `var_cols`, `event_cols`, `event_time_cols` and `save_ppt()`'s `file`; and the `hv_fit_location()` example no longer passes `hv_panel_box()` its deprecated `mode`.
+
+* The SAS migration guide's alluvial example names its `axis_cols`, and its UpSet example no longer passes `sample_upset_data()` an argument it does not have, so both run as written.
+
+* The `save_ppt()` argument table in the decorators vignette adds `panel_box`, `fit` and `align`, the default panel-anchored placement, and notes that `width`, `height`, `left` and `top` place the plot only when `panel_box = NULL`. The README and that vignette list `theme_hv_ppt_slate()` among the themes.
+
+* The `sample_*()` generators that draw random data take `seed = NULL` to draw from the session's random-number stream without setting a seed. The default, `42`, still gives the same data on every call and leaves the caller's stream as it was. Before, `seed = NULL` warned and could not opt out.
+
+* `sample_hazard_data()`, `sample_nnt_data()`, `sample_survival_difference_data()`, `sample_nonparametric_curve_data()` and `sample_nonparametric_ordinal_data()` compute their curves analytically, and their documentation now says `seed` has no effect on them. Before, it called `seed` a random seed, implying different seeds give different curves.
+
+* Examples that run in a few seconds are no longer wrapped in `\donttest{}`, so `R CMD check` runs them every time.
+
+* The maintainer is declared as copyright holder (`cph`) in `Authors@R`.
+
+* The installed vignettes draw their figures as SVG through 'svglite', a new Suggests, so the package tarball drops from 9.6 MB to 4.3 MB, under the 5 MB the CRAN Cookbook asks for, and the figures stay sharp at any zoom. The pkgdown site keeps its retina PNGs, as does a build without 'svglite'.
+
+* `hv_followup_panels()` can read the origin year from the data. Name the operation date in the new
+  `opdate_col` and leave `origin_year` `NULL`: each patient's date less their `opyrs_col` lands on the
+  origin the build counted from. Given both, a disagreement stops, since a wrong origin slides every
+  point along the x-axis and shows no other symptom; this is the "first operation in 1992" report on a
+  2014 to 2026 cohort. `meta$origin_source` says which it was.
+
 # hvtiPlotR 2.8.22
 
 * `ggiraph` moves from Suggests to Imports, so installing hvtiPlotR installs it. Without it, EDA pages drawn with `interactive = NULL`, the default, fell back to static bars with no hover labels and said nothing, and studies were installing it by hand to get them.
