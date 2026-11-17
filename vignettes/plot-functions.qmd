@@ -1013,8 +1013,8 @@ plot(km_s, alpha = 0.8) +
 carries into a bare table panel, and `hv_atrisk_compose()` stacks the curve over it
 with the time axes aligned. The non-KM curves (`hv_nonparametric`, `hv_ordinal`,
 `hv_hazard`) take pre-summarized curve data and carry no risk table, so for
-those you hand `hv_atrisk()` the subject-level `time`/`status`/`group` columns
-instead.
+those you hand `hv_atrisk()` the subject-level columns instead, named in `time_col`, `event_col` and
+`group_col`.
 
 ```{r}
 #| label: fig-km-atrisk
@@ -1457,7 +1457,7 @@ draws flows proportional to that count. Ports
 ## Sample data
 
 `sample_alluvial_data()` simulates 300 patients with pre-operative AR grade,
-procedure type, and post-operative AR grade columns. The `axes` vector defines
+procedure type, and post-operative AR grade columns. The `axis_cols` vector defines
 the left-to-right display order; each unique combination of axis values becomes
 one band, sized by its `freq` count.
 
@@ -1971,7 +1971,7 @@ hazard_plot(
 
 ## The `hv_hazard()` object interface
 
-Every `hazard_plot()` call above re-validates and re-passes `curve_data`,
+Every `hazard_plot()` call above re-validates and re-passes `data`,
 `empirical`, and `reference` from scratch. `hv_hazard()` does that
 validation once and stores the result as an S3 object: the same
 build-once, `plot()`-as-needed pattern `hv_survival()` uses for the KM

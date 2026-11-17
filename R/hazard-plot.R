@@ -620,11 +620,11 @@ sample_nnt_data <- function(n        = 500,
 #'   a survival plot, `"hazard"` for a hazard-rate plot, or `"cumhaz"` for a
 #'   cumulative-hazard plot. Corresponds to `SSURVIV`, `hazard`, or `cumhaz`
 #'   in the SAS output. Default `"survival"`.
-#' @param lower_col    Name of the lower CI column in `curve_data`, or `NULL`
+#' @param lower_col    Name of the lower CI column in `data`, or `NULL`
 #'   for no ribbon. Corresponds to `SCLLSURV` / `cll_p95`. Default `NULL`.
-#' @param upper_col    Name of the upper CI column in `curve_data`, or `NULL`.
+#' @param upper_col    Name of the upper CI column in `data`, or `NULL`.
 #'   Corresponds to `SCLUSURV` / `clu_p95`. Default `NULL`.
-#' @param group_col    Name of the stratification column in `curve_data`, or
+#' @param group_col    Name of the stratification column in `data`, or
 #'   `NULL` for a single curve. Default `NULL`.
 #' @param empirical    Optional data frame of Kaplan-Meier empirical estimates
 #'   (discrete time points). Corresponds to the SAS `plout` / `acpdms`
@@ -1403,7 +1403,7 @@ nnt_plot <- function(data,
 #'
 #' This constructor covers the complete `tp.hp.dead.*` SAS template family.
 #' All column-name mappings and all three data frames are fixed at construction
-#' time; aesthetic parameters (`ci_alpha`, `line_width`, etc.) are passed to
+#' time; aesthetic parameters (`ci_alpha`, `linewidth`, etc.) are passed to
 #' `plot()`.
 #'
 #' @param data           Data frame of parametric predictions (fine grid).
@@ -1414,11 +1414,11 @@ nnt_plot <- function(data,
 #' @param x_col          Name of the time / age column. Default `"time"`.
 #' @param estimate_col   Name of the predicted-value column: `"survival"`,
 #'   `"hazard"`, or `"cumhaz"`. Default `"survival"`.
-#' @param lower_col      Lower CI column in `curve_data`, or `NULL` for no
+#' @param lower_col      Lower CI column in `data`, or `NULL` for no
 #'   ribbon. Default `NULL`.
-#' @param upper_col      Upper CI column in `curve_data`, or `NULL`. Default
+#' @param upper_col      Upper CI column in `data`, or `NULL`. Default
 #'   `NULL`.
-#' @param group_col      Stratification column in `curve_data`, or `NULL` for
+#' @param group_col      Stratification column in `data`, or `NULL` for
 #'   a single curve. Default `NULL`.
 #' @param empirical      Optional data frame of KM empirical points (SAS
 #'   `plout` dataset). Stored in `$tables$empirical`. Default `NULL`.

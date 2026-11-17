@@ -35,13 +35,13 @@ Typical source: SAS \code{predict} dataset exported to CSV, or
 \item{estimate_col}{Name of the predicted-value column: \code{"survival"},
 \code{"hazard"}, or \code{"cumhaz"}. Default \code{"survival"}.}
 
-\item{lower_col}{Lower CI column in \code{curve_data}, or \code{NULL} for no
+\item{lower_col}{Lower CI column in \code{data}, or \code{NULL} for no
 ribbon. Default \code{NULL}.}
 
-\item{upper_col}{Upper CI column in \code{curve_data}, or \code{NULL}. Default
+\item{upper_col}{Upper CI column in \code{data}, or \code{NULL}. Default
 \code{NULL}.}
 
-\item{group_col}{Stratification column in \code{curve_data}, or \code{NULL} for
+\item{group_col}{Stratification column in \code{data}, or \code{NULL} for
 a single curve. Default \code{NULL}.}
 
 \item{empirical}{Optional data frame of KM empirical points (SAS
@@ -90,7 +90,7 @@ the figure.
 \details{
 This constructor covers the complete \verb{tp.hp.dead.*} SAS template family.
 All column-name mappings and all three data frames are fixed at construction
-time; aesthetic parameters (\code{ci_alpha}, \code{line_width}, etc.) are passed to
+time; aesthetic parameters (\code{ci_alpha}, \code{linewidth}, etc.) are passed to
 \code{plot()}.
 }
 \examples{
