@@ -50,6 +50,7 @@ Suggests:
     quarto,
     pkgload,
     here,
+    svglite,
     xml2,
     cobalt (>= 5.0.0),
     hvtiRpropensity
