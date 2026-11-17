@@ -33,7 +33,8 @@ is \code{NULL}.}
 event-free beyond this point are censored. Defaults to \code{20}.}
 
 \item{seed}{Integer random seed for reproducibility.
-Defaults to \code{42}.}
+Defaults to \code{42}.
+\code{NULL} uses the session's random-number stream and sets no seed.}
 }
 \value{
 A data frame with columns:

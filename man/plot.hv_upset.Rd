@@ -83,7 +83,6 @@ up  <- hv_upset(dta, set_cols = sets)
 # Use `&` to theme every sub-panel.
 plot(up) & theme_hv_poster()
 
-\donttest{
 # Intersection bars only — single ggplot, themes apply with `+`.
 plot(up, set_size = FALSE) + theme_hv_poster()
 
@@ -96,7 +95,6 @@ plot(up_era, fill_col = "era", set_size = FALSE) +
     name   = "Era"
   ) +
   theme_hv_poster()
-}
 
 }
 \seealso{

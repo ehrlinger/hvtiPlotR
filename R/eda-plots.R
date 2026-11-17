@@ -95,6 +95,7 @@ eda_classify_var <- function(x, unique_limit = 6L, unique_bound = 100,
 #' @param year_range Integer vector `c(start, end)` for surgery years.
 #'   Default `c(2005L, 2020L)`.
 #' @param seed       Random seed for reproducibility. Default `42`.
+#'   `NULL` uses the session's random-number stream and sets no seed.
 #'
 #' @return A data frame with columns:
 #'   - `year`: integer surgery year (discrete x for barplots)
@@ -119,7 +120,7 @@ eda_classify_var <- function(x, unique_limit = 6L, unique_bound = 100,
 sample_eda_data <- function(n          = 300L,
                             year_range = c(2005L, 2020L),
                             seed       = 42L) {
-  withr::local_seed(seed)
+  .hv_local_seed(seed)
   years    <- seq(year_range[1L], year_range[2L])
   year     <- sample(years, n, replace = TRUE)
   op_years <- year - year_range[1L] + stats::runif(n, 0, 0.99)

@@ -21,7 +21,8 @@ from \code{start_year}. Defaults to \code{20}.}
 \item{n_categories}{Integer; number of distinct groups. Defaults to \code{3}.}
 
 \item{seed}{Integer passed to \code{\link[base]{set.seed}} for
-reproducibility. Defaults to \code{42}.}
+reproducibility. Defaults to \code{42}.
+\code{NULL} uses the session's random-number stream and sets no seed.}
 }
 \value{
 A data frame with columns \code{year} (integer) and

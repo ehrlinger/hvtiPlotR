@@ -23,7 +23,8 @@ single-group figure (no \code{group} column returned; use with
 \code{hv_trends(..., group_col = NULL)}). Default
 \code{c("Group I", "Group II", "Group III", "Group IV")}.}
 
-\item{seed}{Random seed for reproducibility. Default \code{42}.}
+\item{seed}{Random seed for reproducibility. Default \code{42}.
+\code{NULL} uses the session's random-number stream and sets no seed.}
 }
 \value{
 A data frame with columns:

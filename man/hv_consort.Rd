@@ -55,7 +55,7 @@ tracker <- hv_consort_start(cohort, patient_id_col = "mrn") |>
   hv_consort_exclude(label = "Analyzed", col = "excl_eligible",
                       !echo ~ "Missing echocardiogram")
 fig <- hv_consort(tracker)
-\donttest{plot(fig)}
+plot(fig)
 
 }
 \seealso{

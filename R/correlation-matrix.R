@@ -5,13 +5,14 @@
 #'
 #' @param n Number of patients.
 #' @param seed Random seed.
+#'   `NULL` uses the session's random-number stream and sets no seed.
 #' @return A data frame with numeric `a1c`, `glucose`, `creatinine`,
 #'   `albumin`, and a three-level factor `a1c_grp`.
 #' @examples
 #' head(sample_correlation_data(n = 10))
 #' @export
 sample_correlation_data <- function(n = 300, seed = 42) {
-  withr::local_seed(seed)
+  .hv_local_seed(seed)
   a1c <- round(stats::rnorm(n, 6.5, 1.2), 1)
   data.frame(
     a1c        = a1c,

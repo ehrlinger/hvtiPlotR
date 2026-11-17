@@ -62,6 +62,7 @@
 #' @param n_bins       Number of equal-sized bins for the data summary points.
 #'   Default `10`.
 #' @param seed         Random seed. Default `42`.
+#'   `NULL` uses the session's random-number stream and sets no seed.
 #'
 #' @return A long-format data frame: `time`, `estimate`, `grade` (factor).
 #'   Individual grade probabilities sum to 1 at each time point.
@@ -85,7 +86,7 @@ sample_nonparametric_ordinal_data <- function(n            = 1000,
                                                                "Grade 3"),
                                               n_bins       = 10,
                                               seed         = 42L) {
-  withr::local_seed(seed)
+  .hv_local_seed(seed)
   n_grades <- length(grade_labels)
 
   a_first       <- 0.5
@@ -157,7 +158,7 @@ sample_nonparametric_ordinal_points <- function(
   n_bins       = 10,
   seed         = 42L
 ) {
-  withr::local_seed(seed)
+  .hv_local_seed(seed)
   n_grades <- length(grade_labels)
 
   a_first       <- 0.5

@@ -469,7 +469,7 @@ hv_consort_patients <- function(tracker, stage, reason = NULL) {
 #'   hv_consort_exclude(label = "Analyzed", col = "excl_eligible",
 #'                       !echo ~ "Missing echocardiogram")
 #' fig <- hv_consort(tracker)
-#' \donttest{plot(fig)}
+#' plot(fig)
 #'
 #' @export
 hv_consort <- function(tracker, side_box = "all", cex = 0.9,
@@ -591,6 +591,7 @@ plot.hv_consort <- function(x, ...) {
 #'
 #' @param n    Integer. Total number of simulated patients.  Default `300`.
 #' @param seed Integer random seed for reproducibility.  Default `42`.
+#'   `NULL` uses the session's random-number stream and sets no seed.
 #'
 #' @return An `hv_consort_tracker` with three stages:
 #'   *Screened* -> *Eligible* (excl: age < 18, no STS procedure) ->
@@ -602,9 +603,7 @@ plot.hv_consort <- function(x, ...) {
 #' tracker <- sample_consort_data()
 #' print(tracker)
 #' hv_consort_summary(tracker)
-#' \donttest{
 #'   hv_consort(tracker) |> plot()
-#' }
 #'
 #' @importFrom stats runif rbinom
 #' @export
@@ -612,7 +611,7 @@ sample_consort_data <- function(n = 300L, seed = 42L) {
   if (!is.numeric(n) || length(n) != 1L || n < 10L || n %% 1 != 0)
     stop("`n` must be a positive integer >= 10.", call. = FALSE)
 
-  withr::local_seed(seed)
+  .hv_local_seed(seed)
   n <- as.integer(n)
 
   data <- data.frame(

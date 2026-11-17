@@ -9,7 +9,8 @@ sample_consort_data(n = 300L, seed = 42L)
 \arguments{
 \item{n}{Integer. Total number of simulated patients.  Default \code{300}.}
 
-\item{seed}{Integer random seed for reproducibility.  Default \code{42}.}
+\item{seed}{Integer random seed for reproducibility.  Default \code{42}.
+\code{NULL} uses the session's random-number stream and sets no seed.}
 }
 \value{
 An \code{hv_consort_tracker} with three stages:
@@ -25,9 +26,7 @@ the tracker API.
 tracker <- sample_consort_data()
 print(tracker)
 hv_consort_summary(tracker)
-\donttest{
   hv_consort(tracker) |> plot()
-}
 
 }
 \seealso{

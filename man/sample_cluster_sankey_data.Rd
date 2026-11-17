@@ -18,7 +18,8 @@ sample_cluster_sankey_data(
 sum to 1), in the order \code{c(B, F, H, D, I, C, E, G, A)}. Default uses
 approximate equal-area proportions.}
 
-\item{seed}{Random seed. Default \code{42L}.}
+\item{seed}{Random seed. Default \code{42L}.
+\code{NULL} uses the session's random-number stream and sets no seed.}
 }
 \value{
 A data frame with \code{n} rows and columns \code{C2}–\code{C9}, each a factor

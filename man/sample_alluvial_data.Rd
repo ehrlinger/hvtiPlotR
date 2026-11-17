@@ -10,7 +10,8 @@ sample_alluvial_data(n = 300, seed = 42L)
 \item{n}{Total number of simulated patients before aggregation.
 Default \code{300}.}
 
-\item{seed}{Random seed for reproducibility. Default \code{42}.}
+\item{seed}{Random seed for reproducibility. Default \code{42}.
+\code{NULL} uses the session's random-number stream and sets no seed.}
 }
 \value{
 A data frame with columns:

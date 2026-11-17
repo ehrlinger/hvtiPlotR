@@ -92,7 +92,6 @@ and is left alone. For a patchwork, \code{panel_box} holds the union of its
 panels and the whole composition is measured; see \code{\link[=hv_ph_location]{hv_ph_location()}}.
 }
 \examples{
-\donttest{
 p <- ggplot2::ggplot(mtcars, ggplot2::aes(hp, mpg)) +
   ggplot2::geom_point() +
   ggplot2::labs(x = "Horsepower", y = "Miles per gallon") +
@@ -100,7 +99,6 @@ p <- ggplot2::ggplot(mtcars, ggplot2::aes(hp, mpg)) +
 fit <- hv_fit_location(p, hv_panel_box())
 fit$scale
 fit$location
-}
 }
 \seealso{
 \code{\link[=hv_add_plot]{hv_add_plot()}}, which places the result on a slide;

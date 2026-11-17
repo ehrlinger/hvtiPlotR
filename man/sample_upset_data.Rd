@@ -9,7 +9,8 @@ sample_upset_data(n = 500, seed = 42L)
 \arguments{
 \item{n}{Number of patients. Default \code{500}.}
 
-\item{seed}{Random seed for reproducibility. Default \code{42}.}
+\item{seed}{Random seed for reproducibility. Default \code{42}.
+\code{NULL} uses the session's random-number stream and sets no seed.}
 }
 \value{
 A data frame with \code{n} rows and the following logical columns:

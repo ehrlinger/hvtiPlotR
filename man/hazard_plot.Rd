@@ -381,7 +381,6 @@ hazard_plot(
   theme_hv_poster()
 
 # --- (9) Save ------------------------------------------------------------
-\donttest{
 p <- hazard_plot(dat, estimate_col = "survival",
                  lower_col = "surv_lower", upper_col = "surv_upper",
                  empirical = emp,
@@ -392,10 +391,8 @@ p <- hazard_plot(dat, estimate_col = "survival",
   theme_hv_poster()
 ggplot2::ggsave(file.path(tempdir(), "survival.pdf"), p,
                 width = 11.5, height = 8)
-}
 
 # --- Global theme + RColorBrewer (set once per session) ------------------
-\donttest{
 old <- ggplot2::theme_set(theme_hv_manuscript())
 hazard_plot(
   dat2,
@@ -414,7 +411,6 @@ hazard_plot(
                               labels = function(x) paste0(x, "\%")) +
   ggplot2::labs(x = "Years", y = "Survival (\%)")
 ggplot2::theme_set(old)
-}
 
 # See vignette("plot-decorators", package = "hvtiPlotR") for theming,
 # color scales, annotation labels, and saving plots.

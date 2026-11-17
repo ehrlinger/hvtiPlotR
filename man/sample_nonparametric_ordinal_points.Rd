@@ -29,7 +29,8 @@ in ascending order. Default
 \item{n_bins}{Number of equal-sized bins for the data summary points.
 Default \code{10}.}
 
-\item{seed}{Random seed. Default \code{42}.}
+\item{seed}{Random seed. Default \code{42}.
+\code{NULL} uses the session's random-number stream and sets no seed.}
 }
 \value{
 A data frame with columns \code{time}, \code{value}, \code{grade}.
