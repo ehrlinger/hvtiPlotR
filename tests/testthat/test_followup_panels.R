@@ -233,3 +233,20 @@ test_that("without opdate_col the origin source says it was supplied", {
   fp <- hv_followup_panels(dta, origin_year = 1990, panels = all_deaths)
   expect_identical(fp$meta$origin_source, "set in origin_year")
 })
+
+test_that("a minority counted from another origin stops, though the median is on 1 January", {
+  # John's reproduction on #265: two intervals from 1990, one from 2000.
+  mixed <- data.frame(dt_surg = as.Date(rep("2015-06-01", 3)), dead = 0, iv_dead = 1)
+  mixed$iv_opyrs <- as.numeric(mixed$dt_surg - as.Date(c("1990-01-01", "1990-01-01", "2000-01-01"))) / 365.2425
+  expect_error(hv_followup_panels(mixed, opdate_col = "dt_surg", panels = all_deaths),
+               "1 of 3 patient\\(s\\).*away from 1990-01-01, at 2000-01")
+  expect_error(hv_followup_panels(mixed, origin_year = 1990, opdate_col = "dt_surg", panels = all_deaths),
+               "1 of 3 patient\\(s\\)")
+})
+
+test_that("a uniformly later origin is read, not mixed", {
+  later <- dated
+  later$iv_opyrs <- as.numeric(later$dt_surg - as.Date("2000-01-01")) / 365.2425
+  later <- later[later$iv_opyrs >= 0, ]
+  expect_identical(hv_followup_panels(later, opdate_col = "dt_surg", panels = all_deaths)$meta$origin_year, 2000L)
+})

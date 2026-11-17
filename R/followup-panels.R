@@ -20,10 +20,12 @@
 #' **The origin can be read from the data.** With `opdate_col` naming the
 #' operation date, `origin_year` may be left `NULL`: each patient's date less
 #' their `opyrs_col` lands on the origin the build counted from, and the year
-#' of the median is used. It must land within a month of 1 January, the origin
-#' [hv_followup()] assumes, or it stops. When `origin_year` is given as well,
-#' it must agree with the year the data say, or it stops: a wrong origin slides
-#' every point along the x-axis without any other symptom. `meta$origin_source`
+#' of the median is used. Every patient's must land within a month of that
+#' 1 January, the origin [hv_followup()] assumes, or it stops and says how many
+#' do not: a cohort counted from two origins cannot be drawn on one. When
+#' `origin_year` is given as well, it must agree with the year the data say,
+#' or it stops: a wrong origin slides every point along the x-axis without any
+#' other symptom. `meta$origin_source`
 #' says which it was.
 #'
 #' **The study window starts on 1 January of `origin_year`**, because
@@ -320,10 +322,13 @@ hv_followup_panels <- function(data,
 
 
 # The origin year the build counted `opyrs` from: each patient's operation
-# date less their interval, in years. The median, so a few mistyped dates do
-# not move it, and it must sit within a month of 1 January, the origin
-# hv_followup() draws from; anything else is a build that counted from another
-# day, which no whole year describes.
+# date less their interval, in years. The median picks the year, and then
+# EVERY patient's origin must sit within a month of its 1 January, the origin
+# hv_followup() draws from. Checking the median alone passed a cohort built
+# from two extracts, two patients counted from 1990 and one from 2000: the
+# third was drawn ten years out with no warning (review of #265). A patient
+# outside the month is an origin no single origin_year describes, so it stops
+# and says how many and which origins, rather than drawing them shifted.
 .followup_origin_year <- function(dates, opyrs, opdate_col, opyrs_col) {
   if (!inherits(dates, c("Date", "POSIXt"))) {
     stop("`", opdate_col, "` must be a Date or date-time column.", call. = FALSE)
@@ -342,6 +347,13 @@ hv_followup_panels <- function(data,
   if (min(abs(off)) > 31) {
     stop("`", opdate_col, "` less `", opyrs_col, "` puts the origin at ", format(at),
          ", not a 1 January. Give `origin_year`, and check the origin the data build used.",
+         call. = FALSE)
+  }
+  stray <- abs(as.numeric(origin - as.Date(paste0(year, "-01-01")))) > 31
+  if (any(stray)) {
+    stop(sum(stray), " of ", length(origin), " patient(s) have `", opdate_col, "` less `", opyrs_col,
+         "` away from ", year, "-01-01, at ", paste(sort(unique(format(origin[stray], "%Y-%m"))), collapse = ", "),
+         ". One origin_year cannot draw them all; check the origin the data build used for `", opyrs_col, "`.",
          call. = FALSE)
   }
   year

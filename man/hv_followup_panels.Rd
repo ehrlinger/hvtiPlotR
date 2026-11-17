@@ -73,10 +73,12 @@ Call \code{\link[=plot.hv_followup_panels]{plot.hv_followup_panels()}} on the re
 \strong{The origin can be read from the data.} With \code{opdate_col} naming the
 operation date, \code{origin_year} may be left \code{NULL}: each patient's date less
 their \code{opyrs_col} lands on the origin the build counted from, and the year
-of the median is used. It must land within a month of 1 January, the origin
-\code{\link[=hv_followup]{hv_followup()}} assumes, or it stops. When \code{origin_year} is given as well,
-it must agree with the year the data say, or it stops: a wrong origin slides
-every point along the x-axis without any other symptom. \code{meta$origin_source}
+of the median is used. Every patient's must land within a month of that
+1 January, the origin \code{\link[=hv_followup]{hv_followup()}} assumes, or it stops and says how many
+do not: a cohort counted from two origins cannot be drawn on one. When
+\code{origin_year} is given as well, it must agree with the year the data say,
+or it stops: a wrong origin slides every point along the x-axis without any
+other symptom. \code{meta$origin_source}
 says which it was.
 
 \strong{The study window starts on 1 January of \code{origin_year}}, because
