@@ -7,13 +7,14 @@
 hv_followup_panels(
   data,
   opyrs_col = "iv_opyrs",
-  origin_year,
+  origin_year = NULL,
   panels,
   events = list(),
   close_date = NULL,
   echo = NULL,
   echo_time_col = NULL,
-  echo_opyrs_col = NULL
+  echo_opyrs_col = NULL,
+  opdate_col = NULL
 )
 }
 \arguments{
@@ -23,7 +24,7 @@ hv_followup_panels(
 Default \code{"iv_opyrs"}.}
 
 \item{origin_year}{The calendar year \code{opyrs_col} counts from, a whole
-number.}
+number. \code{NULL}, the default, reads it from \code{opdate_col}.}
 
 \item{panels}{Named list of death panels. Each entry is a list with
 \code{status}, the 1/0 death indicator, \code{time}, its follow-up in years, and
@@ -46,6 +47,10 @@ entry's name and competing events with their column names.}
 panel's \code{\link[=hv_followup]{hv_followup()}}. Set \code{echo_time_col} alone for one echo per
 patient, read from \code{data}; add \code{echo}, a data frame with one row per echo,
 to draw every echo. See the echo-layer section of \code{\link[=hv_followup]{hv_followup()}}.}
+
+\item{opdate_col}{Name of the operation date column, a \code{Date} or a
+date-time. Optional when \code{origin_year} is given, where it checks it;
+required when \code{origin_year} is \code{NULL}, where it supplies it.}
 }
 \value{
 An object of class \code{c("hv_followup_panels", "hv_data")}:
@@ -53,7 +58,7 @@ An object of class \code{c("hv_followup_panels", "hv_data")}:
 \item{\verb{$data}}{One row per panel, in order, death panels first:
 \code{panel}, \code{type} (\code{"followup"} or \code{"event"}), \code{title}, \code{n_drawn} and
 \code{n_excluded}.}
-\item{\verb{$meta}}{Named list: \code{opyrs_col}, \code{origin_year}, \code{study_start},
+\item{\verb{$meta}}{Named list: \code{opyrs_col}, \code{origin_year}, \code{origin_source}, \code{study_start},
 \code{study_end}, \code{first_operation}, \code{close_date}, \code{close_source},
 \code{n_obs}, \code{n_opyrs_missing} and \code{n_opyrs_negative}.}
 \item{\verb{$tables}}{\code{panels}, a named list of \code{\link[=hv_followup]{hv_followup()}} objects.}
@@ -65,6 +70,15 @@ study window they share, and prepares one \code{\link[=hv_followup]{hv_followup(
 Call \code{\link[=plot.hv_followup_panels]{plot.hv_followup_panels()}} on the result for the figures.
 }
 \details{
+\strong{The origin can be read from the data.} With \code{opdate_col} naming the
+operation date, \code{origin_year} may be left \code{NULL}: each patient's date less
+their \code{opyrs_col} lands on the origin the build counted from, and the year
+of the median is used. It must land within a month of 1 January, the origin
+\code{\link[=hv_followup]{hv_followup()}} assumes, or it stops. When \code{origin_year} is given as well,
+it must agree with the year the data say, or it stops: a wrong origin slides
+every point along the x-axis without any other symptom. \code{meta$origin_source}
+says which it was.
+
 \strong{The study window starts on 1 January of \code{origin_year}}, because
 \code{\link[=hv_followup]{hv_followup()}} draws its potential-follow-up diagonal from \code{origin_year}
 whatever \code{study_start} is. It ends at the latest operation in the data.
