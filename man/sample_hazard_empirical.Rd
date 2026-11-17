@@ -34,7 +34,8 @@ multipliers must be finite and greater than zero.}
 
 \item{ci_level}{Confidence level. Default \code{0.95}.}
 
-\item{seed}{Random seed. Default \code{42}.}
+\item{seed}{Random seed. Default \code{42}.
+\code{NULL} uses the session's random-number stream and sets no seed.}
 }
 \value{
 A data frame with columns \code{time}, \code{estimate}, \code{lower}, \code{upper}, and

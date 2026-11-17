@@ -20,7 +20,8 @@ sample_spaghetti_data(
 sampling probabilities (summing to 1). Default
 \code{c(Female = 0.45, Male = 0.55)}.}
 
-\item{seed}{Random seed for reproducibility. Default \code{42}.}
+\item{seed}{Random seed for reproducibility. Default \code{42}.
+\code{NULL} uses the session's random-number stream and sets no seed.}
 }
 \value{
 A data frame with columns:

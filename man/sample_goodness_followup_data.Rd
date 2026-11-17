@@ -34,7 +34,8 @@ date. Must be >= \code{study_end}.}
 \item{event_rate}{Annual hazard for the non-fatal event (exponential
 model). Default \code{0.08} (median time-to-event ~9 years).}
 
-\item{seed}{Integer random seed for reproducibility. Default \code{42}.}
+\item{seed}{Integer random seed for reproducibility. Default \code{42}.
+\code{NULL} uses the session's random-number stream and sets no seed.}
 
 \item{loss_rate}{Annual hazard of loss to active follow-up (exponential
 model). Default \code{0.03}. \code{0} means nobody is lost.}

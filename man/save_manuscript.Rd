@@ -122,7 +122,6 @@ figures too: a journal crops it in typesetting, and the study's copy keeps
 the record of which version of the job drew it.
 }
 \examples{
-\donttest{
 p <- plot(hv_survival(sample_survival_data(n = 200, seed = 42))) +
   theme_hv_manuscript()
 save_manuscript(p, file.path(tempdir(), "survival.pdf"))
@@ -146,7 +145,6 @@ out <- save_manuscript(
   )
 )
 attr(out, "dims")
-}
 
 }
 \seealso{

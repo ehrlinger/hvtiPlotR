@@ -300,7 +300,6 @@ add_fitted_plot_slide <- function(doc, plot, title, layout, master, panel_box,
 #'   [theme_hv_manuscript()]
 #'
 #' @examples
-#' \donttest{
 #' library(ggplot2)
 #'
 #' # The bundled copy of the HVTI blue master template (also the default);
@@ -438,7 +437,6 @@ add_fitted_plot_slide <- function(doc, plot, title, layout, master, panel_box,
 #' # Sizing advice: with `fit = TRUE` (the default) a plot whose chrome
 #' # would leave the slide or cross the title has its text reduced until it
 #' # fits; save_ppt() warns only when even 12 pt text does not fit.
-#' }
 #'
 #' @importFrom officer read_pptx add_slide ph_with ph_location ph_location_type
 #' @importFrom rvg dml

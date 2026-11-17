@@ -13,7 +13,8 @@ sample_longitudinal_counts_data(n_patients = 300, max_obs = 6, seed = 42L)
 \item{max_obs}{Maximum observations per patient passed to
 \code{\link[=sample_spaghetti_data]{sample_spaghetti_data()}}. Default \code{6}.}
 
-\item{seed}{Random seed. Default \code{42}.}
+\item{seed}{Random seed. Default \code{42}.
+\code{NULL} uses the session's random-number stream and sets no seed.}
 }
 \value{
 A data frame in long format with columns:

@@ -33,7 +33,9 @@ multipliers must be finite and greater than zero.}
 
 \item{ci_level}{Confidence level. Default \code{0.95}.}
 
-\item{seed}{Random seed. Default \code{42}.}
+\item{seed}{Unused. The curve is computed analytically, so every \code{seed}
+gives the same result; the argument is kept so all \verb{sample_*()}
+generators take it.}
 }
 \value{
 A data frame with columns \code{time}, \code{difference}, \code{diff_lower},

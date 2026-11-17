@@ -23,6 +23,7 @@
 #'
 #' @param n    Number of patients. Default `500`.
 #' @param seed Random seed for reproducibility. Default `42`.
+#'   `NULL` uses the session's random-number stream and sets no seed.
 #'
 #' @return A data frame with `n` rows and the following logical columns:
 #'   `AV_Replacement`, `AV_Repair`, `MV_Replacement`, `MV_Repair`,
@@ -35,7 +36,7 @@
 #' colSums(dta)
 #' @export
 sample_upset_data <- function(n = 500, seed = 42L) {
-  withr::local_seed(seed)
+  .hv_local_seed(seed)
 
   # Latent primary procedure drives realistic co-occurrence
   primary <- sample(
@@ -244,7 +245,6 @@ print.hv_upset <- function(x, ...) {
 #' # Use `&` to theme every sub-panel.
 #' plot(up) & theme_hv_poster()
 #'
-#' \donttest{
 #' # Intersection bars only — single ggplot, themes apply with `+`.
 #' plot(up, set_size = FALSE) + theme_hv_poster()
 #'
@@ -257,7 +257,6 @@ print.hv_upset <- function(x, ...) {
 #'     name   = "Era"
 #'   ) +
 #'   theme_hv_poster()
-#' }
 #'
 #' @importFrom ggupset scale_x_upset
 #' @importFrom ggplot2 aes geom_bar geom_col ggplot labs scale_x_reverse element_blank theme

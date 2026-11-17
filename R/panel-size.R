@@ -45,7 +45,6 @@
 #' @seealso [hv_ggsave_dims()], which measures the chrome.
 #'
 #' @examples
-#' \donttest{
 #' p <- ggplot2::ggplot(mtcars, ggplot2::aes(hp, mpg)) +
 #'   ggplot2::geom_point() +
 #'   ggplot2::facet_wrap(~cyl)
@@ -54,7 +53,6 @@
 #'   ggplot2::ggsave,
 #'   c(list(filename = file.path(tempdir(), "facets.pdf"), plot = p), dims)
 #' )
-#' }
 #' @export
 hv_panel_size <- function(plot, max_width = NULL, max_height = NULL, units = c("in", "cm", "mm")) {
   if (!inherits(plot, "ggplot"))

@@ -70,7 +70,7 @@
 # sample_hazard_cohort() so the KM overlay and the at-risk counts describe the
 # same subjects for a given seed.
 .hp_draw_cohort <- function(n, shape, scale, time_max, seed) {
-  withr::local_seed(seed)
+  .hv_local_seed(seed)
   u        <- stats::runif(n)
   t_event  <- scale * (-log(pmax(u, 1e-9)))^(1 / shape)
   t_censor <- stats::runif(n, time_max * 0.2, time_max * 1.5)
@@ -138,8 +138,9 @@
 #' @param scale    Weibull scale parameter (characteristic time in years, i.e.
 #'   the time at which `S = exp(-1)` \eqn{\approx} 37%). Default `8.0`.
 #' @param ci_level Confidence level for the CI bands. Default `0.95`.
-#' @param seed     Random seed (unused for deterministic Weibull predictions;
-#'   kept for API consistency with other sample functions). Default `42`.
+#' @param seed     Unused. The curve is computed analytically, so every `seed`
+#'   gives the same result; the argument is kept so all `sample_*()`
+#'   generators take it.
 #'
 #' @return A data frame with columns `time`, `survival`, `surv_lower`,
 #'   `surv_upper`, `hazard`, `haz_lower`, `haz_upper`, `cumhaz`, and
@@ -233,6 +234,7 @@ sample_hazard_data <- function(n        = 500,
 #' @param scale    Weibull scale parameter (years). Default `8.0`.
 #' @param ci_level Confidence level. Default `0.95`.
 #' @param seed     Random seed. Default `42`.
+#'   `NULL` uses the session's random-number stream and sets no seed.
 #'
 #' @return A data frame with columns `time`, `estimate`, `lower`, `upper`, and
 #'   (when `groups` is not `NULL`) `group`.
@@ -265,7 +267,7 @@ sample_hazard_empirical <- function(n        = 500,
     grp_names <- names(groups)
     emp_list  <- lapply(seq_along(groups), function(i) {
       df        <- .hp_km_binned(n, shape, scale / groups[[i]],
-                                 time_max, n_bins, ci_level, seed + i * 100L)
+                                 time_max, n_bins, ci_level, .hv_offset_seed(seed, i * 100L))
       df$group  <- grp_names[[i]]
       df
     })
@@ -314,6 +316,7 @@ sample_hazard_empirical <- function(n        = 500,
 #' @param shape    Weibull shape parameter. Default `1.5`.
 #' @param scale    Weibull scale parameter (years). Default `8.0`.
 #' @param seed     Random seed. Default `42`.
+#'   `NULL` uses the session's random-number stream and sets no seed.
 #'
 #' @return A data frame with one row per subject and columns `time` (follow-up
 #'   time, years) and `status` (`1` event, `0` censored), plus a factor `group`
@@ -353,7 +356,7 @@ sample_hazard_cohort <- function(n        = 500,
   .check_group_multipliers(groups)
   grp_names <- names(groups)
   coh_list <- lapply(seq_along(groups), function(i) {
-    df       <- .hp_draw_cohort(n, shape, scale / groups[[i]], time_max, seed + i * 100L)
+    df       <- .hp_draw_cohort(n, shape, scale / groups[[i]], time_max, .hv_offset_seed(seed, i * 100L))
     df$group <- grp_names[[i]]
     df
   })
@@ -455,7 +458,9 @@ sample_life_table <- function(age_groups = NULL,
 #' @param shape    Weibull shape. Default `1.5`.
 #' @param scale    Weibull scale (years). Default `8.0`.
 #' @param ci_level Confidence level. Default `0.95`.
-#' @param seed     Random seed. Default `42`.
+#' @param seed     Unused. The curve is computed analytically, so every `seed`
+#'   gives the same result; the argument is kept so all `sample_*()`
+#'   generators take it.
 #'
 #' @return A data frame with columns `time`, `difference`, `diff_lower`,
 #'   `diff_upper`, `group1_surv`, `group2_surv`.
@@ -914,7 +919,6 @@ sample_nnt_data <- function(n        = 500,
 #'   theme_hv_poster()
 #'
 #' # --- (9) Save ------------------------------------------------------------
-#' \donttest{
 #' p <- hazard_plot(dat, estimate_col = "survival",
 #'                  lower_col = "surv_lower", upper_col = "surv_upper",
 #'                  empirical = emp,
@@ -925,10 +929,8 @@ sample_nnt_data <- function(n        = 500,
 #'   theme_hv_poster()
 #' ggplot2::ggsave(file.path(tempdir(), "survival.pdf"), p,
 #'                 width = 11.5, height = 8)
-#' }
 #'
 #' # --- Global theme + RColorBrewer (set once per session) ------------------
-#' \donttest{
 #' old <- ggplot2::theme_set(theme_hv_manuscript())
 #' hazard_plot(
 #'   dat2,
@@ -947,7 +949,6 @@ sample_nnt_data <- function(n        = 500,
 #'                               labels = function(x) paste0(x, "%")) +
 #'   ggplot2::labs(x = "Years", y = "Survival (%)")
 #' ggplot2::theme_set(old)
-#' }
 #'
 #' # See vignette("plot-decorators", package = "hvtiPlotR") for theming,
 #' # color scales, annotation labels, and saving plots.
@@ -1496,7 +1497,6 @@ nnt_plot <- function(data,
 #'   theme_hv_poster()
 #'
 #' # --- Global theme + RColorBrewer (set once per session) ------------------
-#' \donttest{
 #' old <- ggplot2::theme_set(theme_hv_manuscript())
 #' plot(hp2) +
 #'   scale_color_manual(values = hv_palette(), name = NULL) +
@@ -1506,7 +1506,6 @@ nnt_plot <- function(data,
 #'                      labels = function(x) paste0(x, "%")) +
 #'   labs(x = "Years", y = "Survival (%)")
 #' ggplot2::theme_set(old)
-#' }
 #'
 #' # See vignette("plot-decorators", package = "hvtiPlotR") for theming,
 #' # color scales, annotation labels, and saving plots.

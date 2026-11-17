@@ -726,6 +726,7 @@ plot.hv_mirror_hist <- function(x, alpha = 0.8, split_tall = FALSE,
 #'   (0–1 scale, default 0.05).  Treated patients without a control partner
 #'   within this distance are left unmatched.
 #' @param seed Integer random seed for reproducibility (default 42L).
+#'   `NULL` uses the session's random-number stream and sets no seed.
 #' @param add_weights Logical. When `TRUE` an `mt_wt` column of
 #'   ATE-style IPTW weights derived from the simulated propensity scores is
 #'   appended and normalized to mean 1 within each group (default `FALSE`).
@@ -771,7 +772,7 @@ sample_mirror_histogram_data <- function(n          = 500,
   if (!is.logical(add_weights) || length(add_weights) != 1L)
     stop("`add_weights` must be TRUE or FALSE.", call. = FALSE)
 
-  withr::local_seed(seed)
+  .hv_local_seed(seed)
 
   # Logistic propensity score model.
   # Control LP ~ N(-sep/2, 1) -> scores cluster below 0.5.

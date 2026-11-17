@@ -50,7 +50,6 @@
 #'   argument that delegates to this helper.
 #'
 #' @examples
-#' \donttest{
 #' p <- ggplot2::ggplot(mtcars, ggplot2::aes(hp, mpg)) +
 #'   ggplot2::geom_point() +
 #'   theme_hv_ppt_dark()
@@ -66,7 +65,6 @@
 #' #   doc, rvg::dml(ggobj = p),
 #' #   location = do.call(officer::ph_location, loc)
 #' # )
-#' }
 #'
 #' @importFrom ggplot2 ggplotGrob
 #' @importFrom grid convertWidth convertHeight

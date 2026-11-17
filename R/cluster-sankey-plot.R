@@ -41,6 +41,7 @@ utils::globalVariables(c("node", "freq"))
 #'   sum to 1), in the order `c(B, F, H, D, I, C, E, G, A)`. Default uses
 #'   approximate equal-area proportions.
 #' @param seed  Random seed. Default `42L`.
+#'   `NULL` uses the session's random-number stream and sets no seed.
 #'
 #' @return A data frame with `n` rows and columns `C2`–`C9`, each a factor
 #'   ordered by the hierarchical cluster labels.
@@ -59,7 +60,7 @@ sample_cluster_sankey_data <- function(
               C = 0.14, E = 0.11, G = 0.08, A = 0.15),
     seed  = 42L) {
 
-  withr::local_seed(seed)
+  .hv_local_seed(seed)
 
   # Hierarchical merge table: each row is C2:C3:C4:C5:C6:C7:C8:C9
   merge_tree <- list(

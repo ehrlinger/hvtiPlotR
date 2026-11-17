@@ -38,7 +38,6 @@ Always measured with a PDF sizing device, which is why \code{units} is limited
 to length (inches, cm, mm); DPI is irrelevant for vector output.
 }
 \examples{
-\donttest{
 p <- ggplot2::ggplot(mtcars, ggplot2::aes(hp, mpg)) +
   ggplot2::geom_point() +
   ggplot2::labs(title = "Long title that eats vertical space",
@@ -49,7 +48,6 @@ do.call(
   ggplot2::ggsave,
   c(list(filename = file.path(tempdir(), "fig.pdf"), plot = p), dims)
 )
-}
 }
 \seealso{
 \code{\link[=hv_ph_location]{hv_ph_location()}} for the slide-placement analogue used with

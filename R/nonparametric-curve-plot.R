@@ -72,7 +72,9 @@
 #' @param ci_level    Confidence level for bootstrap-style CI bands.
 #'   Default `0.68`.
 #' @param n_bins      Number of equal-sized data-summary bins. Default `10`.
-#' @param seed        Random seed. Default `42`.
+#' @param seed        Unused. The curve is computed analytically, so every `seed`
+#'   gives the same result; the argument is kept so all `sample_*()`
+#'   generators take it.
 #'
 #' @return A data frame with columns `time`, `estimate`, `lower`, `upper`,
 #'   and (if `groups` is not `NULL`) `group`.
@@ -102,7 +104,7 @@ sample_nonparametric_curve_data <- function(n            = 500,
                                             n_bins       = 10,
                                             seed         = 42L) {
   outcome_type <- match.arg(outcome_type)
-  withr::local_seed(seed)
+  .hv_local_seed(seed)
 
   z_score <- stats::qnorm(1 - (1 - ci_level) / 2)
 
@@ -212,7 +214,7 @@ sample_nonparametric_curve_points <- function(n            = 500,
                                               n_bins       = 10,
                                               seed         = 42L) {
   outcome_type <- match.arg(outcome_type)
-  withr::local_seed(seed)
+  .hv_local_seed(seed)
 
   thalf1 <- time_max * 0.15
   thalf2 <- time_max * 0.55
@@ -350,7 +352,6 @@ sample_nonparametric_curve_points <- function(n            = 500,
 #'   theme_hv_poster()
 #'
 #' # --- Global theme (set once per session) ----------------------------------
-#' \donttest{
 #' old <- ggplot2::theme_set(theme_hv_manuscript())
 #' plot(np) +
 #'   ggplot2::scale_color_manual(values = c("steelblue"), guide = "none") +
@@ -360,7 +361,6 @@ sample_nonparametric_curve_points <- function(n            = 500,
 #' #   ggplot2::scale_color_manual(values = hv_palette(), name = NULL)
 #' #   ggplot2::scale_fill_manual(values = hv_palette(), guide = "none")
 #' ggplot2::theme_set(old)
-#' }
 #'
 #' # See vignette("plot-decorators", package = "hvtiPlotR") for theming,
 #' # color scales, annotation labels, and saving plots.

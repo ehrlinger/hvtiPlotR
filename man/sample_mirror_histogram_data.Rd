@@ -24,7 +24,8 @@ and increase the proportion of unmatched patients at the extremes
 (0–1 scale, default 0.05).  Treated patients without a control partner
 within this distance are left unmatched.}
 
-\item{seed}{Integer random seed for reproducibility (default 42L).}
+\item{seed}{Integer random seed for reproducibility (default 42L).
+\code{NULL} uses the session's random-number stream and sets no seed.}
 
 \item{add_weights}{Logical. When \code{TRUE} an \code{mt_wt} column of
 ATE-style IPTW weights derived from the simulated propensity scores is

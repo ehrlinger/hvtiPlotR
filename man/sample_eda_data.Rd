@@ -12,7 +12,8 @@ sample_eda_data(n = 300L, year_range = c(2005L, 2020L), seed = 42L)
 \item{year_range}{Integer vector \code{c(start, end)} for surgery years.
 Default \code{c(2005L, 2020L)}.}
 
-\item{seed}{Random seed for reproducibility. Default \code{42}.}
+\item{seed}{Random seed for reproducibility. Default \code{42}.
+\code{NULL} uses the session's random-number stream and sets no seed.}
 }
 \value{
 A data frame with columns:

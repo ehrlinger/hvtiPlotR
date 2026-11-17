@@ -51,7 +51,6 @@ around it varies: a long axis title or a legend at the top would otherwise
 come out of every panel.
 }
 \examples{
-\donttest{
 p <- ggplot2::ggplot(mtcars, ggplot2::aes(hp, mpg)) +
   ggplot2::geom_point() +
   ggplot2::facet_wrap(~cyl)
@@ -60,7 +59,6 @@ do.call(
   ggplot2::ggsave,
   c(list(filename = file.path(tempdir(), "facets.pdf"), plot = p), dims)
 )
-}
 }
 \seealso{
 \code{\link[=hv_ggsave_dims]{hv_ggsave_dims()}}, which measures the chrome.

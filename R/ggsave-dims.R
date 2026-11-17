@@ -37,7 +37,6 @@
 #'   [save_ppt()].
 #'
 #' @examples
-#' \donttest{
 #' p <- ggplot2::ggplot(mtcars, ggplot2::aes(hp, mpg)) +
 #'   ggplot2::geom_point() +
 #'   ggplot2::labs(title = "Long title that eats vertical space",
@@ -48,7 +47,6 @@
 #'   ggplot2::ggsave,
 #'   c(list(filename = file.path(tempdir(), "fig.pdf"), plot = p), dims)
 #' )
-#' }
 #' @importFrom ggplot2 ggplotGrob
 #' @importFrom grid convertWidth convertHeight
 #' @importFrom grDevices pdf dev.off

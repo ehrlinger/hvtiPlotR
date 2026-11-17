@@ -36,6 +36,7 @@
 #' @param event_rate Annual hazard for the non-fatal event (exponential
 #'   model). Default `0.08` (median time-to-event ~9 years).
 #' @param seed Integer random seed for reproducibility. Default `42`.
+#'   `NULL` uses the session's random-number stream and sets no seed.
 #' @param loss_rate Annual hazard of loss to active follow-up (exponential
 #'   model). Default `0.03`. `0` means nobody is lost.
 #'
@@ -119,7 +120,7 @@ sample_goodness_followup_data <- function(
   if (close_date < study_end)
     stop("`close_date` must be on or after `study_end`.", call. = FALSE)
 
-  withr::local_seed(seed)
+  .hv_local_seed(seed)
 
   # Operation dates: uniform over the study period
   study_span <- as.integer(study_end - study_start)

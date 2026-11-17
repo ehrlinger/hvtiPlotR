@@ -28,6 +28,7 @@
 #' @param max_obs    Maximum observations per patient passed to
 #'   [sample_spaghetti_data()]. Default `6`.
 #' @param seed       Random seed. Default `42`.
+#'   `NULL` uses the session's random-number stream and sets no seed.
 #'
 #' @return A data frame in long format with columns:
 #'   - `time_label`: ordered factor of follow-up windows

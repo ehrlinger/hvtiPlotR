@@ -32,7 +32,8 @@ greater than zero.}
 
 \item{scale}{Weibull scale parameter (years). Default \code{8.0}.}
 
-\item{seed}{Random seed. Default \code{42}.}
+\item{seed}{Random seed. Default \code{42}.
+\code{NULL} uses the session's random-number stream and sets no seed.}
 }
 \value{
 A data frame with one row per subject and columns \code{time} (follow-up

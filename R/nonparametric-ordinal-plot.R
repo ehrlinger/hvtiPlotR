@@ -61,7 +61,9 @@
 #'   `c("Grade 0", "Grade 1", "Grade 2", "Grade 3")`.
 #' @param n_bins       Number of equal-sized bins for the data summary points.
 #'   Default `10`.
-#' @param seed         Random seed. Default `42`.
+#' @param seed         Unused. The curve is computed analytically, so every `seed`
+#'   gives the same result; the argument is kept so all `sample_*()`
+#'   generators take it.
 #'
 #' @return A long-format data frame: `time`, `estimate`, `grade` (factor).
 #'   Individual grade probabilities sum to 1 at each time point.
@@ -85,7 +87,7 @@ sample_nonparametric_ordinal_data <- function(n            = 1000,
                                                                "Grade 3"),
                                               n_bins       = 10,
                                               seed         = 42L) {
-  withr::local_seed(seed)
+  .hv_local_seed(seed)
   n_grades <- length(grade_labels)
 
   a_first       <- 0.5
@@ -157,7 +159,7 @@ sample_nonparametric_ordinal_points <- function(
   n_bins       = 10,
   seed         = 42L
 ) {
-  withr::local_seed(seed)
+  .hv_local_seed(seed)
   n_grades <- length(grade_labels)
 
   a_first       <- 0.5

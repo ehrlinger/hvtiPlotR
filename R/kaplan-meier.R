@@ -580,13 +580,11 @@ km_build_life_plot <- function(km_df, alpha) {
 #'   theme_hv_poster()
 #'
 #' # --- Global theme + RColorBrewer (set once per session) ------------------
-#' \donttest{
 #' old <- ggplot2::theme_set(theme_hv_manuscript())
 #' plot(km_s) +
 #'   ggplot2::scale_color_manual(values = hv_palette(), name = "Valve Type") +
 #'   ggplot2::labs(x = "Years after Operation", y = "Survival (%)")
 #' ggplot2::theme_set(old)
-#' }
 #'
 #' # See vignette("plot-decorators", package = "hvtiPlotR") for theming,
 #' # color scales, annotation labels, and saving plots.
@@ -824,6 +822,7 @@ plot.hv_survival <- function(x,
 #'   event-free beyond this point are censored. Defaults to \code{20}.
 #' @param seed          Integer random seed for reproducibility.
 #'   Defaults to \code{42}.
+#'   `NULL` uses the session's random-number stream and sets no seed.
 #'
 #' @return A data frame with columns:
 #' \describe{
@@ -890,7 +889,7 @@ sample_survival_data <- function(n             = 500,
   }
 
   # --- Simulation -----------------------------------------------------------
-  withr::local_seed(seed)
+  .hv_local_seed(seed)
 
   simulate_group <- function(n_grp, rate) {
     surv_times  <- stats::rexp(n_grp, rate = rate)

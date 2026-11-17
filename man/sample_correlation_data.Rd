@@ -9,7 +9,8 @@ sample_correlation_data(n = 300, seed = 42)
 \arguments{
 \item{n}{Number of patients.}
 
-\item{seed}{Random seed.}
+\item{seed}{Random seed.
+\code{NULL} uses the session's random-number stream and sets no seed.}
 }
 \value{
 A data frame with numeric \code{a1c}, \code{glucose}, \code{creatinine},

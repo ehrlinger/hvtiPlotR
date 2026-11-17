@@ -542,6 +542,7 @@ hv_balance_height <- function(n_rows, base_size = 12, n_pairs = 1) {
 #' @param group_levels Length-2 character vector of group labels. Default
 #'   `c("Before match", "After match")`.
 #' @param seed Integer random seed for reproducibility. Default `42`.
+#'   `NULL` uses the session's random-number stream and sets no seed.
 #'
 #' @return A data frame with `2 * n_vars` rows and columns `variable`, `group`,
 #'   and `std_diff` (standardized mean difference as a percentage).
@@ -595,7 +596,7 @@ sample_covariate_balance_data <- function(
       paste("Covariate", seq_len(n_vars - length(default_vars))))
   }
 
-  withr::local_seed(seed)
+  .hv_local_seed(seed)
 
   # --- Patient-level simulation ----------------------------------------------
   # Covariate matrix: each column ~ N(0,1).

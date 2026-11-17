@@ -17,10 +17,14 @@ vignette: >
 ---
 
 ```{r setup, include=FALSE}
-# Installed vignettes embed every figure, so 1x resolution halves the tarball
-# (17 MB to 9 MB). The pkgdown site links its figures and keeps retina 2.
+# Installed vignettes embed every figure. As 1x PNG they made a 9.6 MB tarball,
+# over the CRAN Cookbook's 5 MB; as SVG they compress to a fraction of that and
+# stay sharp at any zoom. The pkgdown site links its figures and keeps retina-2
+# PNG, as does a build without svglite.
+.pkgdown <- identical(Sys.getenv("IN_PKGDOWN"), "true")
+.fig_dev <- if (.pkgdown || !requireNamespace("svglite", quietly = TRUE)) "png" else "svglite"
 knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE,
-                      fig.retina = if (identical(Sys.getenv("IN_PKGDOWN"), "true")) 2 else 1)
+                      fig.retina = if (.pkgdown) 2 else 1, dev = .fig_dev)
 ```
 
 ```{r libraries}

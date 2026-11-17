@@ -66,7 +66,6 @@ Add the slide and its title first, with \code{\link[officer:add_slide]{officer::
 \code{\link[officer:ph_with]{officer::ph_with()}}; \code{\link[=save_ppt]{save_ppt()}} does all of this for a list of plots.
 }
 \examples{
-\donttest{
 p <- ggplot2::ggplot(mtcars, ggplot2::aes(hp, mpg)) +
   ggplot2::geom_point() +
   ggplot2::labs(x = "Horsepower", y = "Miles per gallon") +
@@ -81,7 +80,6 @@ doc <- officer::ph_with(doc, "Fuel economy",
 doc <- hv_add_plot(doc, p)
 attr(doc, "hv_fit")$scale
 print(doc, target = file.path(tempdir(), "fitted.pptx"))
-}
 }
 \seealso{
 \code{\link[=save_ppt]{save_ppt()}}, \code{\link[=hv_fit_location]{hv_fit_location()}}, \code{\link[=hv_panel_box]{hv_panel_box()}}.

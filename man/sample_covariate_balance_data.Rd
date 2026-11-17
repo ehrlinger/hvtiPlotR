@@ -31,7 +31,8 @@ unmatched.  Default \code{0.05}.}
 \item{group_levels}{Length-2 character vector of group labels. Default
 \code{c("Before match", "After match")}.}
 
-\item{seed}{Integer random seed for reproducibility. Default \code{42}.}
+\item{seed}{Integer random seed for reproducibility. Default \code{42}.
+\code{NULL} uses the session's random-number stream and sets no seed.}
 }
 \value{
 A data frame with \code{2 * n_vars} rows and columns \code{variable}, \code{group},

@@ -41,6 +41,7 @@
 #'   `hv_trends(..., group_col = NULL)`). Default
 #'   `c("Group I", "Group II", "Group III", "Group IV")`.
 #' @param seed       Random seed for reproducibility. Default `42`.
+#'   `NULL` uses the session's random-number stream and sets no seed.
 #'
 #' @return A data frame with columns:
 #'   - `year`: x-axis value (integer; surgery year or patient age)
@@ -60,7 +61,7 @@ sample_trends_data <- function(n          = 600,
                                groups     = c("Group I", "Group II",
                                               "Group III", "Group IV"),
                                seed       = 42L) {
-  withr::local_seed(seed)
+  .hv_local_seed(seed)
 
   single_group <- is.null(groups)
   if (single_group) groups <- "Group I"
@@ -334,7 +335,6 @@ print.hv_trends <- function(x, ...) {
 #'   theme_hv_poster()
 #'
 #' # --- Save ----------------------------------------------------------------
-#' \donttest{
 #' tr <- hv_trends(
 #'   sample_trends_data(n = 800, year_range = c(1985L, 2015L),
 #'                      groups = c("I", "II", "III", "IV")),
@@ -348,15 +348,12 @@ print.hv_trends <- function(x, ...) {
 #'   theme_hv_poster()
 #' ggplot2::ggsave(file.path(tempdir(), "trends.pdf"), p,
 #'                 width = 11.5, height = 8)
-#' }
 #'
 #' # --- Global theme (set once per session) ----------------------------------
-#' \donttest{
 #' old <- ggplot2::theme_set(theme_hv_manuscript())
 #' plot(hv_trends(dta_poly)) +
 #'   ggplot2::scale_color_manual(values = hv_palette(), name = "Repair type")
 #' ggplot2::theme_set(old)
-#' }
 #'
 #' # See vignette("plot-decorators", package = "hvtiPlotR") for theming,
 #' # color scales, annotation labels, and saving plots.

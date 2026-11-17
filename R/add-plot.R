@@ -127,7 +127,6 @@
 #'   [hv_panel_box()], [hv_ph_location()].
 #'
 #' @examples
-#' \donttest{
 #' p <- ggplot2::ggplot(mtcars, ggplot2::aes(hp, mpg)) +
 #'   ggplot2::geom_point() +
 #'   ggplot2::labs(x = "Horsepower", y = "Miles per gallon") +
@@ -135,7 +134,6 @@
 #' fit <- hv_fit_location(p, hv_panel_box())
 #' fit$scale
 #' fit$location
-#' }
 #' @export
 hv_fit_location <- function(plot,
                             panel_box,
@@ -343,7 +341,6 @@ hv_fit_location <- function(plot,
 #' @seealso [save_ppt()], [hv_fit_location()], [hv_panel_box()].
 #'
 #' @examples
-#' \donttest{
 #' p <- ggplot2::ggplot(mtcars, ggplot2::aes(hp, mpg)) +
 #'   ggplot2::geom_point() +
 #'   ggplot2::labs(x = "Horsepower", y = "Miles per gallon") +
@@ -358,7 +355,6 @@ hv_fit_location <- function(plot,
 #' doc <- hv_add_plot(doc, p)
 #' attr(doc, "hv_fit")$scale
 #' print(doc, target = file.path(tempdir(), "fitted.pptx"))
-#' }
 #' @export
 hv_add_plot <- function(doc,
                         plot,

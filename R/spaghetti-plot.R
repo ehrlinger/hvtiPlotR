@@ -30,6 +30,7 @@
 #'   sampling probabilities (summing to 1). Default
 #'   `c(Female = 0.45, Male = 0.55)`.
 #' @param seed        Random seed for reproducibility. Default `42`.
+#'   `NULL` uses the session's random-number stream and sets no seed.
 #'
 #' @return A data frame with columns:
 #'   - `id`: patient identifier (integer)
@@ -48,7 +49,7 @@ sample_spaghetti_data <- function(n_patients = 150,
                                   max_obs    = 6,
                                   groups     = c(Female = 0.45, Male = 0.55),
                                   seed       = 42L) {
-  withr::local_seed(seed)
+  .hv_local_seed(seed)
 
   group_labels <- names(groups)
   group_probs  <- unname(groups)
@@ -253,13 +254,11 @@ print.hv_spaghetti <- function(x, ...) {
 #'   theme_hv_poster()
 #'
 #' # --- Global theme (set once per session) ----------------------------------
-#' \donttest{
 #' old <- ggplot2::theme_set(theme_hv_manuscript())
 #' plot(sp, add_smooth = TRUE) +
 #'   ggplot2::scale_color_manual(values = hv_palette(), name = NULL) +
 #'   ggplot2::labs(x = "Years", y = "AV Mean Gradient (mmHg)")
 #' ggplot2::theme_set(old)
-#' }
 #'
 #' # See vignette("plot-decorators", package = "hvtiPlotR") for theming,
 #' # color scales, annotation labels, and saving plots.

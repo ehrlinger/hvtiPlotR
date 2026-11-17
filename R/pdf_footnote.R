@@ -67,7 +67,6 @@
 #' make_footnote("examples/basic.R")
 #'
 #' # --- With a ggplot2 figure and manuscript theme ---------------------------
-#' \donttest{
 #' library(ggplot2)
 #' p <- ggplot(mtcars, aes(wt, mpg)) +
 #'   geom_point() +
@@ -81,7 +80,6 @@
 #' # Saved figure: the provenance goes in a strip below the plot
 #' save_manuscript(p, file.path(tempdir(), "fig1.pdf"),
 #'                 footnote = provenance_footnote("3f9c2a1", "R/exploratory.R"))
-#' }
 #'
 #' # --- Custom position and no timestamp ------------------------------------
 #' plot(1:10)

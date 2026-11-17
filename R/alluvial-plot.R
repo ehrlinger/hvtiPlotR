@@ -28,6 +28,7 @@
 #' @param n    Total number of simulated patients before aggregation.
 #'   Default `300`.
 #' @param seed Random seed for reproducibility. Default `42`.
+#'   `NULL` uses the session's random-number stream and sets no seed.
 #'
 #' @return A data frame with columns:
 #'   `pre_ar` (factor), `procedure` (factor), `post_ar` (factor), `freq`
@@ -42,7 +43,7 @@
 #' with(dta, tapply(freq, list(pre_ar, post_ar), sum, default = 0))
 #' @export
 sample_alluvial_data <- function(n = 300, seed = 42L) {
-  withr::local_seed(seed)
+  .hv_local_seed(seed)
 
   grade_levels <- c("None", "Mild", "Moderate", "Severe")
   proc_levels  <- c("TAVR", "Repair", "Replacement")

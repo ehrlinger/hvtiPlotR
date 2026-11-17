@@ -191,6 +191,7 @@ plot.hv_stacked <- function(x, ...) {
 #' @param n_categories Integer; number of distinct groups. Defaults to `3`.
 #' @param seed         Integer passed to \code{\link[base]{set.seed}} for
 #'   reproducibility. Defaults to `42`.
+#'   `NULL` uses the session's random-number stream and sets no seed.
 #'
 #' @return A data frame with columns \code{year} (integer) and
 #'   \code{category} (integer, 1 to \code{n_categories}).
@@ -218,7 +219,7 @@ sample_stacked_histogram_data <- function(n_years      = 20,
       !is.finite(start_year) || start_year %% 1 != 0)
     stop("`start_year` must be a finite integer-valued number.", call. = FALSE)
 
-  withr::local_seed(seed)
+  .hv_local_seed(seed)
   years <- start_year + seq_len(n_years) - 1L
 
   rows <- lapply(years, function(yr) {
