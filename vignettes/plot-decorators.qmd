@@ -457,8 +457,10 @@ Key arguments:
 | `slide_titles` | `"Plot"` | Character vector recycled to the number of plots |
 | `layout` | `"Title and Content"` | Slide layout from the template |
 | `panel_box` | `hv_panel_box()` for the template's slide format | `list(width, height, left, top)` in inches: where the panel lands on every slide |
-| `fit` | `TRUE` | Reduce a plot's text, 2 pt at a time, until it lies on the slide |
+| `fit` | `TRUE` | Reduce the theme's text (axis text and titles, strips, plot title; not `geom_text()` labels), 2 pt at a time at the 32 pt base, until it lies on the slide; stops at 12 pt and warns if the plot still does not fit |
 | `align` | `"panel"` | `"panel"` lines panels up across slides; `"fill"` widens each to span the slide |
+| `width` / `height` | `10.1` / `5.8` | Plot area in inches; used only when `panel_box = NULL` |
+| `left` / `top` | `0.0` / `1.2` | Position from slide edges, in inches; used only when `panel_box = NULL` |
 
 Apply `theme_hv_ppt_dark()` or `theme_hv_ppt_light()` before saving to
 match the slide background.

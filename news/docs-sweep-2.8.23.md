@@ -2,4 +2,4 @@
 
 * The SAS migration guide's alluvial example names its `axis_cols`, and its UpSet example no longer passes `sample_upset_data()` an argument it does not have, so both run as written.
 
-* The `save_ppt()` argument table in the decorators vignette lists `panel_box`, `fit` and `align` in place of the `width`, `height`, `left` and `top` arguments it no longer has, and the README and that vignette list `theme_hv_ppt_slate()` among the themes.
+* The `save_ppt()` argument table in the decorators vignette adds `panel_box`, `fit` and `align`, the default panel-anchored placement, and notes that `width`, `height`, `left` and `top` place the plot only when `panel_box = NULL`. The README and that vignette list `theme_hv_ppt_slate()` among the themes.
