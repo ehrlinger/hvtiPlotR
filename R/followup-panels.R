@@ -17,6 +17,17 @@
 #' study window they share, and prepares one [hv_followup()] object per panel.
 #' Call [plot.hv_followup_panels()] on the result for the figures.
 #'
+#' **The origin can be read from the data.** With `opdate_col` naming the
+#' operation date, `origin_year` may be left `NULL`: each patient's date less
+#' their `opyrs_col` lands on the origin the build counted from, and the year
+#' of the median is used. Every patient's must land within a month of that
+#' 1 January, the origin [hv_followup()] assumes, or it stops and says how many
+#' do not: a cohort counted from two origins cannot be drawn on one. When
+#' `origin_year` is given as well, it must agree with the year the data say,
+#' or it stops: a wrong origin slides every point along the x-axis without any
+#' other symptom. `meta$origin_source`
+#' says which it was.
+#'
 #' **The study window starts on 1 January of `origin_year`**, because
 #' [hv_followup()] draws its potential-follow-up diagonal from `origin_year`
 #' whatever `study_start` is. It ends at the latest operation in the data.
@@ -47,7 +58,7 @@
 #' @param opyrs_col Name of the years-since-origin interval to the operation.
 #'   Default `"iv_opyrs"`.
 #' @param origin_year The calendar year `opyrs_col` counts from, a whole
-#'   number.
+#'   number. `NULL`, the default, reads it from `opdate_col`.
 #' @param panels Named list of death panels. Each entry is a list with
 #'   `status`, the 1/0 death indicator, `time`, its follow-up in years, and
 #'   optionally `title`.
@@ -66,13 +77,16 @@
 #'   panel's [hv_followup()]. Set `echo_time_col` alone for one echo per
 #'   patient, read from `data`; add `echo`, a data frame with one row per echo,
 #'   to draw every echo. See the echo-layer section of [hv_followup()].
+#' @param opdate_col Name of the operation date column, a `Date` or a
+#'   date-time. Optional when `origin_year` is given, where it checks it;
+#'   required when `origin_year` is `NULL`, where it supplies it.
 #'
 #' @return An object of class `c("hv_followup_panels", "hv_data")`:
 #' \describe{
 #'   \item{`$data`}{One row per panel, in order, death panels first:
 #'     `panel`, `type` (`"followup"` or `"event"`), `title`, `n_drawn` and
 #'     `n_excluded`.}
-#'   \item{`$meta`}{Named list: `opyrs_col`, `origin_year`, `study_start`,
+#'   \item{`$meta`}{Named list: `opyrs_col`, `origin_year`, `origin_source`, `study_start`,
 #'     `study_end`, `first_operation`, `close_date`, `close_source`,
 #'     `n_obs`, `n_opyrs_missing` and `n_opyrs_negative`.}
 #'   \item{`$tables`}{`panels`, a named list of [hv_followup()] objects.}
@@ -106,19 +120,24 @@
 #' @export
 hv_followup_panels <- function(data,
                                opyrs_col   = "iv_opyrs",
-                               origin_year,
+                               origin_year = NULL,
                                panels,
                                events      = list(),
                                close_date  = NULL,
                                echo        = NULL,
                                echo_time_col  = NULL,
-                               echo_opyrs_col = NULL) {
+                               echo_opyrs_col = NULL,
+                               opdate_col     = NULL) {
   .check_df(data)
   is_name <- function(x) is.character(x) && length(x) == 1L && !is.na(x) && nzchar(x)
   if (!is_name(opyrs_col)) stop("`opyrs_col` must name one column.", call. = FALSE)
-  if (!is.numeric(origin_year) || length(origin_year) != 1L || is.na(origin_year) ||
-        origin_year != round(origin_year)) {
-    stop("`origin_year` must be one whole calendar year.", call. = FALSE)
+  if (!is.null(origin_year) && (!is.numeric(origin_year) || length(origin_year) != 1L ||
+                                   is.na(origin_year) || origin_year != round(origin_year))) {
+    stop("`origin_year` must be NULL or one whole calendar year.", call. = FALSE)
+  }
+  if (!is.null(opdate_col) && !is_name(opdate_col)) stop("`opdate_col` must name one column.", call. = FALSE)
+  if (is.null(origin_year) && is.null(opdate_col)) {
+    stop("Give `origin_year`, or `opdate_col` to read it from the operation dates.", call. = FALSE)
   }
   if (!is.list(panels) || !length(panels) || is.null(names(panels)) || any(!nzchar(names(panels)))) {
     stop("`panels` must be a named list with at least one entry.", call. = FALSE)
@@ -175,7 +194,7 @@ hv_followup_panels <- function(data,
                           unlist(lapply(events, `[`, c("event", "death")), use.names = FALSE)))
   time_cols <- unique(c(vapply(panels, `[[`, "", "time"),
                         unlist(lapply(events, `[`, c("time", "death_time")), use.names = FALSE)))
-  unknown <- setdiff(c(opyrs_col, status_cols, time_cols), names(data))
+  unknown <- setdiff(c(opyrs_col, opdate_col, status_cols, time_cols), names(data))
   if (length(unknown)) {
     stop("Column(s) not in the data: ", paste(unknown, collapse = ", "), ".", call. = FALSE)
   }
@@ -195,6 +214,20 @@ hv_followup_panels <- function(data,
 
   opyrs <- data[[opyrs_col]]
   if (all(is.na(opyrs))) stop("`", opyrs_col, "` is missing for every patient.", call. = FALSE)
+  origin_source <- "set in origin_year"
+  if (!is.null(opdate_col)) {
+    derived <- .followup_origin_year(data[[opdate_col]], opyrs, opdate_col, opyrs_col)
+    if (is.null(origin_year)) {
+      origin_year <- derived
+      origin_source <- paste0("read from `", opdate_col, "` less `", opyrs_col, "`")
+    } else if (origin_year != derived) {
+      stop("origin_year = ", origin_year, ", but `", opdate_col, "` less `", opyrs_col, "` puts the ",
+           "origin in ", derived, ". Check `origin_year`, or leave it NULL to use ", derived, ".",
+           call. = FALSE)
+    } else {
+      origin_source <- paste0("set in origin_year, agreeing with `", opdate_col, "`")
+    }
+  }
   # A plausible window, not a precise one: it catches the wrong-origin mistake,
   # which lands decades out. It is checked on the operation years themselves, so
   # an operation before the origin still has to fall after 1900.
@@ -272,6 +305,7 @@ hv_followup_panels <- function(data,
     meta = list(
       opyrs_col       = opyrs_col,
       origin_year     = origin_year,
+      origin_source   = origin_source,
       study_start     = study_start,
       study_end       = study_end,
       first_operation = study_start + round(min(opyrs, na.rm = TRUE) * year_days),
@@ -284,6 +318,45 @@ hv_followup_panels <- function(data,
     tables   = list(panels = built),
     subclass = "hv_followup_panels"
   )
+}
+
+
+# The origin year the build counted `opyrs` from: each patient's operation
+# date less their interval, in years. The median picks the year, and then
+# EVERY patient's origin must sit within a month of its 1 January, the origin
+# hv_followup() draws from. Checking the median alone passed a cohort built
+# from two extracts, two patients counted from 1990 and one from 2000: the
+# third was drawn ten years out with no warning (review of #265). A patient
+# outside the month is an origin no single origin_year describes, so it stops
+# and says how many and which origins, rather than drawing them shifted.
+.followup_origin_year <- function(dates, opyrs, opdate_col, opyrs_col) {
+  if (!inherits(dates, c("Date", "POSIXt"))) {
+    stop("`", opdate_col, "` must be a Date or date-time column.", call. = FALSE)
+  }
+  ok <- !is.na(dates) & !is.na(opyrs)
+  if (!any(ok)) {
+    stop("No patient has both `", opdate_col, "` and `", opyrs_col, "`.", call. = FALSE)
+  }
+  origin <- as.Date(dates[ok]) - opyrs[ok] * 365.2425
+  mid <- stats::median(as.numeric(origin))
+  at <- as.Date(mid, origin = "1970-01-01")
+  year <- as.integer(format(at, "%Y"))
+  jan1 <- as.numeric(as.Date(paste0(c(year, year + 1L), "-01-01")))
+  off <- mid - jan1
+  if (abs(off[2]) < abs(off[1])) year <- year + 1L
+  if (min(abs(off)) > 31) {
+    stop("`", opdate_col, "` less `", opyrs_col, "` puts the origin at ", format(at),
+         ", not a 1 January. Give `origin_year`, and check the origin the data build used.",
+         call. = FALSE)
+  }
+  stray <- abs(as.numeric(origin - as.Date(paste0(year, "-01-01")))) > 31
+  if (any(stray)) {
+    stop(sum(stray), " of ", length(origin), " patient(s) have `", opdate_col, "` less `", opyrs_col,
+         "` away from ", year, "-01-01, at ", paste(sort(unique(format(origin[stray], "%Y-%m"))), collapse = ", "),
+         ". One origin_year cannot draw them all; check the origin the data build used for `", opyrs_col, "`.",
+         call. = FALSE)
+  }
+  year
 }
 
 

@@ -175,3 +175,78 @@ test_that("echo reaches every panel, from a patient column or an echo frame", {
   expect_error(hv_followup_panels(d, origin_year = 1990, panels = all_deaths, echo_time_col = "nope"),
                "nope")
 })
+
+# The origin read from the operation dates ---------------------------------
+dated <- dta
+dated$dt_surg <- as.Date("1990-01-01") + round(dated$iv_opyrs * 365.2425)
+
+test_that("origin_year is read from opdate_col when NULL", {
+  fp <- hv_followup_panels(dated, opdate_col = "dt_surg", panels = all_deaths)
+  expect_identical(fp$meta$origin_year, 1990L)
+  expect_identical(fp$meta$study_start, as.Date("1990-01-01"))
+  expect_match(fp$meta$origin_source, "read from `dt_surg`")
+})
+
+test_that("a date-time operation column reads the same origin", {
+  dated$dt_time <- as.POSIXct(dated$dt_surg) + 3600
+  fp <- hv_followup_panels(dated, opdate_col = "dt_time", panels = all_deaths)
+  expect_identical(fp$meta$origin_year, 1990L)
+})
+
+test_that("a supplied origin_year that agrees with the dates is kept", {
+  fp <- hv_followup_panels(dated, origin_year = 1990, opdate_col = "dt_surg", panels = all_deaths)
+  expect_identical(fp$meta$origin_year, 1990)
+  expect_match(fp$meta$origin_source, "agreeing")
+})
+
+test_that("a supplied origin_year that disagrees with the dates stops", {
+  expect_error(
+    hv_followup_panels(dated, origin_year = 1991, opdate_col = "dt_surg", panels = all_deaths),
+    "puts the origin in 1990"
+  )
+})
+
+test_that("an origin a few days either side of 1 January rounds to the nearer year", {
+  late <- dated
+  late$dt_surg <- late$dt_surg - 5
+  expect_identical(hv_followup_panels(late, opdate_col = "dt_surg", panels = all_deaths)$meta$origin_year,
+                   1990L)
+})
+
+test_that("an origin that is not near 1 January stops", {
+  mid <- dated
+  mid$dt_surg <- mid$dt_surg + 180
+  expect_error(hv_followup_panels(mid, opdate_col = "dt_surg", panels = all_deaths), "not a 1 January")
+})
+
+test_that("neither origin_year nor opdate_col stops", {
+  expect_error(hv_followup_panels(dta, panels = all_deaths), "Give `origin_year`, or `opdate_col`")
+})
+
+test_that("opdate_col must be a date column in the data", {
+  expect_error(hv_followup_panels(dated, opdate_col = "nope", panels = all_deaths), "not in the data: nope")
+  dated$num <- 1
+  expect_error(hv_followup_panels(dated, opdate_col = "num", panels = all_deaths), "Date or date-time")
+})
+
+test_that("without opdate_col the origin source says it was supplied", {
+  fp <- hv_followup_panels(dta, origin_year = 1990, panels = all_deaths)
+  expect_identical(fp$meta$origin_source, "set in origin_year")
+})
+
+test_that("a minority counted from another origin stops, though the median is on 1 January", {
+  # John's reproduction on #265: two intervals from 1990, one from 2000.
+  mixed <- data.frame(dt_surg = as.Date(rep("2015-06-01", 3)), dead = 0, iv_dead = 1)
+  mixed$iv_opyrs <- as.numeric(mixed$dt_surg - as.Date(c("1990-01-01", "1990-01-01", "2000-01-01"))) / 365.2425
+  expect_error(hv_followup_panels(mixed, opdate_col = "dt_surg", panels = all_deaths),
+               "1 of 3 patient\\(s\\).*away from 1990-01-01, at 2000-01")
+  expect_error(hv_followup_panels(mixed, origin_year = 1990, opdate_col = "dt_surg", panels = all_deaths),
+               "1 of 3 patient\\(s\\)")
+})
+
+test_that("a uniformly later origin is read, not mixed", {
+  later <- dated
+  later$iv_opyrs <- as.numeric(later$dt_surg - as.Date("2000-01-01")) / 365.2425
+  later <- later[later$iv_opyrs >= 0, ]
+  expect_identical(hv_followup_panels(later, opdate_col = "dt_surg", panels = all_deaths)$meta$origin_year, 2000L)
+})
