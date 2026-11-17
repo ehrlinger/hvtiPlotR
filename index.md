@@ -85,7 +85,7 @@ save_ppt(
 
 ## Themes
 
-Four themes cover the publication contexts we use. Each follows the
+Five themes cover the publication contexts we use. Each follows the
 [`theme_bw()`](https://ggplot2.tidyverse.org/reference/ggtheme.html)
 contract. Pass `base_size` / `base_family`, or chain `+ theme(...)`, to
 override anything:
@@ -96,6 +96,7 @@ override anything:
 | [`theme_hv_poster()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md) | Conference posters |
 | [`theme_hv_ppt_dark()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md) | Dark-background PowerPoint slides (black panel, white text) |
 | [`theme_hv_ppt_light()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md) | Light/transparent PowerPoint slides |
+| [`theme_hv_ppt_slate()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md) | The slate slide template (`hv_ppt_template_slate.pptx`), white panel |
 
 ``` r
 
@@ -105,7 +106,7 @@ p + theme_hv_ppt_light()    # light PPT slide
 p + theme_hv_poster()       # poster
 ```
 
-The two PPT themes default to Arial 32 Bold axis tick labels and Arial
+The three PPT themes default to Arial 32 Bold axis tick labels and Arial
 40 Bold axis titles, matching the standard CORR slide deck.
 
 > The earlier alias functions
@@ -115,8 +116,8 @@ The two PPT themes default to Arial 32 Bold axis tick labels and Arial
 > [`theme_light_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md),
 > [`theme_poster()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md),
 > and the `hv_theme_*()` family) still work but are deprecated (one-time
-> warning); prefer the `theme_hv_*()` names above. The old
-> `hv_theme("...")` string dispatcher has been removed.
+> warning) and are removed in 2.9.0; prefer the `theme_hv_*()` names
+> above. The old `hv_theme("...")` string dispatcher has been removed.
 
 ## Plot Function Gallery
 

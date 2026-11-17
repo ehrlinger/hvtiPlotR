@@ -78,7 +78,7 @@
       <h1>Decorating and Saving hvtiPlotR Plots</h1>
 
       <p class="author">John Ehrlinger <a href="mailto:ehrlinj@ccf.org" class="email">ehrlinj@ccf.org</a></p>
-      <p class="date">2026-11-16</p>
+      <p class="date">2026-11-17</p>
 
       <small class="dont-index">Source: <a href="https://github.com/ehrlinger/hvtiPlotR/blob/main/vignettes/plot-decorators.qmd" class="external-link"><code>vignettes/plot-decorators.qmd</code></a></small>
       <div class="d-none name"><code></code></div>
@@ -125,8 +125,12 @@
 </div>
 </section><section class="section level2"><h2 id="themes">Themes<a class="anchor" aria-label="anchor" href="#themes"></a>
 </h2>
-<p>The <strong>hvtiPlotR</strong> package provides four themes, one per output target.</p>
+<p>The <strong>hvtiPlotR</strong> package provides five themes, one per output target.</p>
 <table class="table caption-top">
+<colgroup>
+<col style="width: 46%">
+<col style="width: 53%">
+</colgroup>
 <thead><tr class="header">
 <th>Theme</th>
 <th>Target</th>
@@ -147,6 +151,10 @@
 <tr class="even">
 <td><code><a href="../reference/hvtiPlotR-themes.html">theme_hv_ppt_dark()</a></code></td>
 <td>PowerPoint on dark/blue background</td>
+</tr>
+<tr class="odd">
+<td><code><a href="../reference/hvtiPlotR-themes.html">theme_hv_ppt_slate()</a></code></td>
+<td>PowerPoint on the slate template, white panel</td>
 </tr>
 </tbody>
 </table>
@@ -512,9 +520,9 @@
 <td>Existing <code>.pptx</code> used as the slide template</td>
 </tr>
 <tr class="odd">
-<td><code>powerpoint</code></td>
+<td><code>file</code></td>
 <td>(required)</td>
-<td>Output file path</td>
+<td>Output file path (<code>powerpoint</code> is its deprecated name)</td>
 </tr>
 <tr class="even">
 <td><code>slide_titles</code></td>
@@ -527,22 +535,42 @@
 <td>Slide layout from the template</td>
 </tr>
 <tr class="even">
+<td><code>panel_box</code></td>
+<td>
+<code><a href="../reference/hv_panel_box.html">hv_panel_box()</a></code> for the template’s slide format</td>
+<td>
+<code>list(width, height, left, top)</code> in inches: where the panel lands on every slide</td>
+</tr>
+<tr class="odd">
+<td><code>fit</code></td>
+<td><code>TRUE</code></td>
+<td>Reduce the theme’s text (axis text and titles, strips, plot title; not <code><a href="https://ggplot2.tidyverse.org/reference/geom_text.html" class="external-link">geom_text()</a></code> labels), 2 pt at a time at the 32 pt base, until it lies on the slide; stops at 12 pt and warns if the plot still does not fit</td>
+</tr>
+<tr class="even">
+<td><code>align</code></td>
+<td><code>"panel"</code></td>
+<td>
+<code>"panel"</code> lines panels up across slides; <code>"fill"</code> widens each to span the slide</td>
+</tr>
+<tr class="odd">
 <td>
 <code>width</code> / <code>height</code>
 </td>
 <td>
 <code>10.1</code> / <code>5.8</code>
 </td>
-<td>Plot area in inches</td>
+<td>Plot area in inches; used only when <code>panel_box = NULL</code>
+</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td>
 <code>left</code> / <code>top</code>
 </td>
 <td>
 <code>0.0</code> / <code>1.2</code>
 </td>
-<td>Position from slide edges, in inches</td>
+<td>Position from slide edges, in inches; used only when <code>panel_box = NULL</code>
+</td>
 </tr>
 </tbody>
 </table>

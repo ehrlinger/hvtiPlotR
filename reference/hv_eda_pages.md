@@ -79,7 +79,7 @@ An object of class `c("hv_eda_pages", "hv_data")`:
 
   Named list: `x_col`, `section`, `x_binned`, `n_vars`, `n_obs`,
   `n_other`, the number of considered variables that belong to other
-  sections, and `ignored`, the identifier columns `vars = NULL` left
+  sections, and `ignored`, the identifier columns `var_cols = NULL` left
   out.
 
 - `$tables`:

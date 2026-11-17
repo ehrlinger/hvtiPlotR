@@ -1258,7 +1258,8 @@ stacks the curve over it with the time axes aligned. The non-KM curves
 (`hv_nonparametric`, `hv_ordinal`, `hv_hazard`) take pre-summarized
 curve data and carry no risk table, so for those you hand
 [`hv_atrisk()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_atrisk.md)
-the subject-level `time`/`status`/`group` columns instead.
+the subject-level columns instead, named in `time_col`, `event_col` and
+`group_col`.
 
 ``` r
 
@@ -1834,7 +1835,7 @@ proportional to that count. Ports `tp.dp.female_bicus_preAR_sankey.R`.
 
 [`sample_alluvial_data()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_alluvial_data.md)
 simulates 300 patients with pre-operative AR grade, procedure type, and
-post-operative AR grade columns. The `axes` vector defines the
+post-operative AR grade columns. The `axis_cols` vector defines the
 left-to-right display order; each unique combination of axis values
 becomes one band, sized by its `freq` count.
 
@@ -2469,7 +2470,7 @@ hazard_plot(
 
 Every
 [`hazard_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/hazard_plot.md)
-call above re-validates and re-passes `curve_data`, `empirical`, and
+call above re-validates and re-passes `data`, `empirical`, and
 `reference` from scratch.
 [`hv_hazard()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_hazard.md)
 does that validation once and stores the result as an S3 object: the

@@ -49,7 +49,7 @@ km     <- hv_survival(dta_km)
 
 ## Themes
 
-The **hvtiPlotR** package provides four themes, one per output target.
+The **hvtiPlotR** package provides five themes, one per output target.
 
 | Theme | Target |
 |----|----|
@@ -57,6 +57,7 @@ The **hvtiPlotR** package provides four themes, one per output target.
 | [`theme_hv_poster()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md) | Conference poster, slightly larger text |
 | [`theme_hv_ppt_light()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md) | PowerPoint on white/light background |
 | [`theme_hv_ppt_dark()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md) | PowerPoint on dark/blue background |
+| [`theme_hv_ppt_slate()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md) | PowerPoint on the slate template, white panel |
 
 ### Manuscript
 
@@ -513,11 +514,14 @@ Key arguments:
 |----|----|----|
 | `object` | (required) | A single ggplot **or** a named/unnamed list of ggplots |
 | `template` | shipped `hv_ppt_template.pptx` | Existing `.pptx` used as the slide template |
-| `powerpoint` | (required) | Output file path |
+| `file` | (required) | Output file path (`powerpoint` is its deprecated name) |
 | `slide_titles` | `"Plot"` | Character vector recycled to the number of plots |
 | `layout` | `"Title and Content"` | Slide layout from the template |
-| `width` / `height` | `10.1` / `5.8` | Plot area in inches |
-| `left` / `top` | `0.0` / `1.2` | Position from slide edges, in inches |
+| `panel_box` | [`hv_panel_box()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_panel_box.md) for the template’s slide format | `list(width, height, left, top)` in inches: where the panel lands on every slide |
+| `fit` | `TRUE` | Reduce the theme’s text (axis text and titles, strips, plot title; not [`geom_text()`](https://ggplot2.tidyverse.org/reference/geom_text.html) labels), 2 pt at a time at the 32 pt base, until it lies on the slide; stops at 12 pt and warns if the plot still does not fit |
+| `align` | `"panel"` | `"panel"` lines panels up across slides; `"fill"` widens each to span the slide |
+| `width` / `height` | `10.1` / `5.8` | Plot area in inches; used only when `panel_box = NULL` |
+| `left` / `top` | `0.0` / `1.2` | Position from slide edges, in inches; used only when `panel_box = NULL` |
 
 Apply
 [`theme_hv_ppt_dark()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)

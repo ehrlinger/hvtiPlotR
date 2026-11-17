@@ -774,8 +774,8 @@ plot(gf) +
   theme_hv_poster()
 ```
 
-For the competing non-fatal event panel, supply `event_col` and
-`event_time_col` to
+For the competing non-fatal event panel, supply `event_cols` and
+`event_time_cols` to
 [`hv_followup()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_followup.md)
 and pass `type = "event"` to
 [`plot()`](https://rdrr.io/r/graphics/plot.default.html).
@@ -881,7 +881,7 @@ for a decorated worked example with labels.
 ``` r
 
 dta <- sample_alluvial_data(n = 200)
-al  <- hv_alluvial(dta)
+al  <- hv_alluvial(dta, axis_cols = c("pre_ar", "procedure", "post_ar"))
 
 plot(al) +
   scale_fill_manual(values = hv_palette()) +
@@ -991,8 +991,8 @@ extend with `+`.
 
 ``` r
 
-sets <- c("CABG", "Valve", "MAZE", "Aorta")
-dta  <- sample_upset_data(n = 300, sets = sets)
+sets <- c("CABG", "AV_Replacement", "MV_Repair", "Aorta")
+dta  <- sample_upset_data(n = 300)
 hu   <- hv_upset(data = dta, set_cols = sets)
 
 plot(hu)
@@ -1433,9 +1433,9 @@ builds one of those sections and
 pages as a list of patchwork layouts, `ncol` by `nrow`, each naming its
 variables in `attr(page, "variables")`. In the varnames template,
 `Var_CatList`, `Var_ContList` and `Order_Variables()` choose the
-variables and their order; that becomes `vars`, whose order is the page
-order. The `var_labels` / `var.names` override becomes `labels`, a named
-vector keyed by column. A single panel is
+variables and their order; that becomes `var_cols`, whose order is the
+page order. The `var_labels` / `var.names` override becomes `labels`, a
+named vector keyed by column. A single panel is
 [`hv_eda()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_eda.md);
 both are worked through in the “Plot Functions” vignette.
 
@@ -1591,7 +1591,8 @@ inserts ggplot objects into a PowerPoint file as **editable DrawingML
 vector graphics** via the `officer` and `rvg` packages, so shapes,
 lines, and text remain individually selectable in PowerPoint after
 export. The first argument is `object` (not `plot`); the output path is
-`powerpoint` (not `file` or `filename`).
+`file` (not `filename`; the older `powerpoint` still works, with a
+warning, until 2.9.0).
 
 ``` r
 
@@ -1946,7 +1947,7 @@ sessionInfo()
     [34] vctrs_0.7.3             R6_2.6.1                lifecycle_1.0.5
     [37] ragg_1.5.2              pkgconfig_2.0.3         pillar_1.11.1
     [40] gtable_0.3.6            glue_1.8.1              Rcpp_1.1.2
-    [43] systemfonts_1.3.2       xfun_0.62               rvg_0.4.2
+    [43] systemfonts_1.3.3       xfun_0.62               rvg_0.4.2
     [46] tibble_3.3.1            tidyselect_1.2.1        knitr_1.52
     [49] farver_2.1.2            htmltools_0.5.9         patchwork_1.3.2
     [52] labeling_0.4.3          rmarkdown_2.32          ggalluvial_0.12.6

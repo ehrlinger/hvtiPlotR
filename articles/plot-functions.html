@@ -78,7 +78,7 @@
       <h1>hvtiPlotR Plot Functions</h1>
 
       <p class="author">John Ehrlinger <a href="mailto:ehrlinj@ccf.org" class="email">ehrlinj@ccf.org</a></p>
-      <p class="date">2026-11-16</p>
+      <p class="date">2026-11-17</p>
 
       <small class="dont-index">Source: <a href="https://github.com/ehrlinger/hvtiPlotR/blob/main/vignettes/plot-functions.qmd" class="external-link"><code>vignettes/plot-functions.qmd</code></a></small>
       <div class="d-none name"><code></code></div>
@@ -1186,7 +1186,7 @@ Age.After match                    Age  After match      3.5</code></pre>
 </div>
 <section class="level3"><h4 id="survival-curve-with-a-numbers-at-risk-table">Survival curve with a numbers-at-risk table<a class="anchor" aria-label="anchor" href="#survival-curve-with-a-numbers-at-risk-table"></a>
 </h4>
-<p><code><a href="../reference/hv_atrisk.html">hv_atrisk()</a></code> turns the <code>$tables$risk</code> that an <code>hv_survival</code> object already carries into a bare table panel, and <code><a href="../reference/hv_atrisk_compose.html">hv_atrisk_compose()</a></code> stacks the curve over it with the time axes aligned. The non-KM curves (<code>hv_nonparametric</code>, <code>hv_ordinal</code>, <code>hv_hazard</code>) take pre-summarized curve data and carry no risk table, so for those you hand <code><a href="../reference/hv_atrisk.html">hv_atrisk()</a></code> the subject-level <code>time</code>/<code>status</code>/<code>group</code> columns instead.</p>
+<p><code><a href="../reference/hv_atrisk.html">hv_atrisk()</a></code> turns the <code>$tables$risk</code> that an <code>hv_survival</code> object already carries into a bare table panel, and <code><a href="../reference/hv_atrisk_compose.html">hv_atrisk_compose()</a></code> stacks the curve over it with the time axes aligned. The non-KM curves (<code>hv_nonparametric</code>, <code>hv_ordinal</code>, <code>hv_hazard</code>) take pre-summarized curve data and carry no risk table, so for those you hand <code><a href="../reference/hv_atrisk.html">hv_atrisk()</a></code> the subject-level columns instead, named in <code>time_col</code>, <code>event_col</code> and <code>group_col</code>.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb69"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">dta</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sample_survival_data.html">sample_survival_data</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">400</span>, strata_levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Bioprosthetic"</span>,</span>
@@ -1684,7 +1684,7 @@ Albumin    -0.24269734 -0.18196059  0.03386094  1.00000000</code></pre>
 <p><code><a href="../reference/hv_alluvial.html">hv_alluvial()</a></code> prepares an alluvial (Sankey-style) diagram using <code>ggalluvial</code>, so you can see how patients flow between states across time points or treatment stages. Each row of the input is a unique combination of axis values with an associated patient count; <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code> draws flows proportional to that count. Ports <code>tp.dp.female_bicus_preAR_sankey.R</code>.</p>
 <section class="level2"><h3 id="sample-data-4">Sample data<a class="anchor" aria-label="anchor" href="#sample-data-4"></a>
 </h3>
-<p><code><a href="../reference/sample_alluvial_data.html">sample_alluvial_data()</a></code> simulates 300 patients with pre-operative AR grade, procedure type, and post-operative AR grade columns. The <code>axes</code> vector defines the left-to-right display order; each unique combination of axis values becomes one band, sized by its <code>freq</code> count.</p>
+<p><code><a href="../reference/sample_alluvial_data.html">sample_alluvial_data()</a></code> simulates 300 patients with pre-operative AR grade, procedure type, and post-operative AR grade columns. The <code>axis_cols</code> vector defines the left-to-right display order; each unique combination of axis values becomes one band, sized by its <code>freq</code> count.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb106"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">dta_al</span>  <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sample_alluvial_data.html">sample_alluvial_data</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">300</span>, seed <span class="op">=</span> <span class="fl">42</span><span class="op">)</span></span>
@@ -2236,7 +2236,7 @@ Albumin    -0.24269734 -0.18196059  0.03386094  1.00000000</code></pre>
 </div>
 </section><section class="level2"><h3 id="the-hv_hazard-object-interface">The <code>hv_hazard()</code> object interface<a class="anchor" aria-label="anchor" href="#the-hv_hazard-object-interface"></a>
 </h3>
-<p>Every <code><a href="../reference/hazard_plot.html">hazard_plot()</a></code> call above re-validates and re-passes <code>curve_data</code>, <code>empirical</code>, and <code>reference</code> from scratch. <code><a href="../reference/hv_hazard.html">hv_hazard()</a></code> does that validation once and stores the result as an S3 object: the same build-once, <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code>-as-needed pattern <code><a href="../reference/hv_survival.html">hv_survival()</a></code> uses for the KM curve. Reach for it when a hazard fit feeds more than one figure, or when downstream code already dispatches on <code>hv_data</code> subclasses and you want the hazard curve to fit that pattern too.</p>
+<p>Every <code><a href="../reference/hazard_plot.html">hazard_plot()</a></code> call above re-validates and re-passes <code>data</code>, <code>empirical</code>, and <code>reference</code> from scratch. <code><a href="../reference/hv_hazard.html">hv_hazard()</a></code> does that validation once and stores the result as an S3 object: the same build-once, <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code>-as-needed pattern <code><a href="../reference/hv_survival.html">hv_survival()</a></code> uses for the KM curve. Reach for it when a hazard fit feeds more than one figure, or when downstream code already dispatches on <code>hv_data</code> subclasses and you want the hazard curve to fit that pattern too.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb140"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">hz</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hv_hazard.html">hv_hazard</a></span><span class="op">(</span></span>

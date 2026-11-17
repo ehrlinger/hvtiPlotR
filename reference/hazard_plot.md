@@ -97,18 +97,18 @@ hazard_plot(
 
 - lower_col:
 
-  Name of the lower CI column in `curve_data`, or `NULL` for no ribbon.
+  Name of the lower CI column in `data`, or `NULL` for no ribbon.
   Corresponds to `SCLLSURV` / `cll_p95`. Default `NULL`.
 
 - upper_col:
 
-  Name of the upper CI column in `curve_data`, or `NULL`. Corresponds to
+  Name of the upper CI column in `data`, or `NULL`. Corresponds to
   `SCLUSURV` / `clu_p95`. Default `NULL`.
 
 - group_col:
 
-  Name of the stratification column in `curve_data`, or `NULL` for a
-  single curve. Default `NULL`.
+  Name of the stratification column in `data`, or `NULL` for a single
+  curve. Default `NULL`.
 
 - empirical:
 

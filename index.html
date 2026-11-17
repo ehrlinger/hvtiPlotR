@@ -122,7 +122,7 @@
 <div class="section level2">
 <h2 id="themes">Themes<a class="anchor" aria-label="anchor" href="#themes"></a>
 </h2>
-<p>Four themes cover the publication contexts we use. Each follows the <code><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw()</a></code> contract. Pass <code>base_size</code> / <code>base_family</code>, or chain <code>+ theme(...)</code>, to override anything:</p>
+<p>Five themes cover the publication contexts we use. Each follows the <code><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw()</a></code> contract. Pass <code>base_size</code> / <code>base_family</code>, or chain <code>+ theme(...)</code>, to override anything:</p>
 <table class="table">
 <colgroup>
 <col width="50%">
@@ -149,6 +149,10 @@
 <td><code><a href="reference/hvtiPlotR-themes.html">theme_hv_ppt_light()</a></code></td>
 <td>Light/transparent PowerPoint slides</td>
 </tr>
+<tr>
+<td><code><a href="reference/hvtiPlotR-themes.html">theme_hv_ppt_slate()</a></code></td>
+<td>The slate slide template (<code>hv_ppt_template_slate.pptx</code>), white panel</td>
+</tr>
 </tbody>
 </table>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
@@ -156,9 +160,9 @@
 <span><span class="va">p</span> <span class="op">+</span> <span class="fu"><a href="reference/hvtiPlotR-themes.html">theme_hv_ppt_dark</a></span><span class="op">(</span><span class="op">)</span>     <span class="co"># dark PPT slide</span></span>
 <span><span class="va">p</span> <span class="op">+</span> <span class="fu"><a href="reference/hvtiPlotR-themes.html">theme_hv_ppt_light</a></span><span class="op">(</span><span class="op">)</span>    <span class="co"># light PPT slide</span></span>
 <span><span class="va">p</span> <span class="op">+</span> <span class="fu"><a href="reference/hvtiPlotR-themes.html">theme_hv_poster</a></span><span class="op">(</span><span class="op">)</span>       <span class="co"># poster</span></span></code></pre></div>
-<p>The two PPT themes default to Arial 32 Bold axis tick labels and Arial 40 Bold axis titles, matching the standard CORR slide deck.</p>
+<p>The three PPT themes default to Arial 32 Bold axis tick labels and Arial 40 Bold axis titles, matching the standard CORR slide deck.</p>
 <blockquote>
-<p>The earlier alias functions (<code><a href="reference/hvtiPlotR-themes.html">theme_man()</a></code>, <code><a href="reference/hvtiPlotR-themes.html">theme_ppt()</a></code>, <code><a href="reference/hvtiPlotR-themes.html">theme_dark_ppt()</a></code>, <code><a href="reference/hvtiPlotR-themes.html">theme_light_ppt()</a></code>, <code><a href="reference/hvtiPlotR-themes.html">theme_poster()</a></code>, and the <code>hv_theme_*()</code> family) still work but are deprecated (one-time warning); prefer the <code>theme_hv_*()</code> names above. The old <code>hv_theme("...")</code> string dispatcher has been removed.</p>
+<p>The earlier alias functions (<code><a href="reference/hvtiPlotR-themes.html">theme_man()</a></code>, <code><a href="reference/hvtiPlotR-themes.html">theme_ppt()</a></code>, <code><a href="reference/hvtiPlotR-themes.html">theme_dark_ppt()</a></code>, <code><a href="reference/hvtiPlotR-themes.html">theme_light_ppt()</a></code>, <code><a href="reference/hvtiPlotR-themes.html">theme_poster()</a></code>, and the <code>hv_theme_*()</code> family) still work but are deprecated (one-time warning) and are removed in 2.9.0; prefer the <code>theme_hv_*()</code> names above. The old <code>hv_theme("...")</code> string dispatcher has been removed.</p>
 </blockquote>
 </div>
 <div class="section level2">

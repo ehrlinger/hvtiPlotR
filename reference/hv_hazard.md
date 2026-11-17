@@ -50,17 +50,16 @@ hv_hazard(
 
 - lower_col:
 
-  Lower CI column in `curve_data`, or `NULL` for no ribbon. Default
-  `NULL`.
+  Lower CI column in `data`, or `NULL` for no ribbon. Default `NULL`.
 
 - upper_col:
 
-  Upper CI column in `curve_data`, or `NULL`. Default `NULL`.
+  Upper CI column in `data`, or `NULL`. Default `NULL`.
 
 - group_col:
 
-  Stratification column in `curve_data`, or `NULL` for a single curve.
-  Default `NULL`.
+  Stratification column in `data`, or `NULL` for a single curve. Default
+  `NULL`.
 
 - empirical:
 
@@ -127,7 +126,7 @@ column-name mappings), `$tables$empirical`, `$tables$reference`.
 
 This constructor covers the complete `tp.hp.dead.*` SAS template family.
 All column-name mappings and all three data frames are fixed at
-construction time; aesthetic parameters (`ci_alpha`, `line_width`, etc.)
+construction time; aesthetic parameters (`ci_alpha`, `linewidth`, etc.)
 are passed to [`plot()`](https://rdrr.io/r/graphics/plot.default.html).
 
 ## See also
