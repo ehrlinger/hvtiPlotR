@@ -104,6 +104,6 @@ rec <- list(package = "hvtiRbootstrap", version = "1.0.4", sha = "3f9c2a1",
             time = as.POSIXct("2026-10-29 14:40"))
 provenance_footnote(job = "30_analyses/boot.qmd", record = rec)
 #> [1] "3f9c2a1"              "30_analyses/boot.qmd" "R 4.6.2"             
-#> [4] "hvtiPlotR 2.8.22"     "hvtiRbootstrap 1.0.4" "2026-10-29 14:40"    
+#> [4] "hvtiPlotR 2.8.23"     "hvtiRbootstrap 1.0.4" "2026-10-29 14:40"    
 #> [7] "seed 42"             
 ```

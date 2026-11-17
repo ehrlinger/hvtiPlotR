@@ -1,5 +1,282 @@
 # Changelog
 
+## hvtiPlotR 2.8.23
+
+- [`hv_survival()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_survival.md)’s
+  `$tables$report` no longer carries the last estimate past the end of
+  follow-up. A report time beyond a stratum’s last observed time now
+  gives `NA` for `surv`, `lower`, `upper` and `n.event`, and `n.risk` is
+  taken from `$tables$risk`, so the two tables agree at every report
+  time. Before, `n.risk` was the count at the last event at or before
+  the report time, one or more too high.
+
+- [`hv_survival()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_survival.md)’s
+  `life` and `proplife` keep the SAS `%kaplan` formula
+  `Δt(3S − S_prev)/2` for SAS parity, and the documentation now says
+  what it is. It was described as a trapezoid; it is not. It falls short
+  of the exact step-function area `Δt·S_prev` by `1.5·Δt·(S_prev − S)`
+  at each event, so it understates the restricted mean survival time.
+  [`hvtiRpropensity::ps_rmst()`](https://ehrlinger.github.io/hvtiRpropensity/reference/ps_rmst.html)
+  computes the exact RMST. Flagged for a later look in
+  [\#258](https://github.com/ehrlinger/hvtiPlotR/issues/258).
+
+- [`hv_survival()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_survival.md)’s
+  documentation now says that `cumhaz` is the Nelson-Aalen estimate
+  under either `method`, not `-log S(t)`, and that `log_cumhaz` is built
+  on it. The `"nelson-aalen"` method’s “log” interval is on the survival
+  scale, a plain Wald interval on `H(t)`.
+
+- [`hv_mirror_hist()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_mirror_hist.md)’s
+  `effective_n_by_group` is now Kish’s effective sample size,
+  `(Σw)²/Σw²`, the one meaning effective N has across the hvtiR family.
+  It was the plain weight total, which moves to a new `sum_weights`
+  element.
+
+- [`hv_correlation_matrix()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_correlation_matrix.md)
+  defaults to `method = "spearman"`, matching
+  `hvtiRtables::hv_correlation_table()` and the SAS exemplar. Pass
+  `method = "pearson"` for the old coefficient.
+
+- [`hv_consort_exclude()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_consort_exclude.md)
+  no longer passes through a patient whose value for an exclusion
+  criterion is missing. When no rule matches outright, the patient is
+  excluded as `"Criterion missing: <reason>"` for the first rule it
+  could not be checked against, a separate line in the diagram’s side
+  box and a new `n_missing` column in
+  [`hv_consort_summary()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_consort_summary.md),
+  and a count in the tracker’s print.
+
+- [`hv_consort_start()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_consort_start.md)
+  refuses a `patient_id` column with a repeated or missing value. The
+  error gives the column and a count, never the identifiers themselves.
+
+- Study-specific defaults are deprecated, and from 2.9.0 each argument
+  is required.
+  [`hv_followup()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_followup.md)’s
+  `origin_year`, `study_start`, `study_end` and `close_date`, and
+  [`hv_mirror_hist()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_mirror_hist.md)’s
+  `group_col` (`"tavr"`) and `group_labels` (`"SAVR"`, `"TF-TAVR"`),
+  still fall back to the old values for now, with a warning once per
+  session.
+
+- [`make_footnote()`](https://ehrlinger.github.io/hvtiPlotR/reference/make_footnote.md)
+  and
+  [`makeFootnote()`](https://ehrlinger.github.io/hvtiPlotR/reference/make_footnote.md)
+  lose the [`getwd()`](https://rdrr.io/r/base/getwd.html) default for
+  the footnote text, which stamped a filesystem path on the figure.
+  Omitting the text now draws only the prefix and timestamp, with a
+  once-per-session warning, and from 2.9.0 it is an error.
+
+- Supplying only one of `lower_col` and `upper_col` (or `emp_lower_col`
+  and `emp_upper_col`) is now an error in
+  [`hv_hazard()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_hazard.md),
+  [`hv_survival_difference()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_survival_difference.md),
+  [`hv_nnt()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_nnt.md),
+  [`hv_nonparametric()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_nonparametric.md),
+  [`hazard_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/hazard_plot.md),
+  [`survival_difference_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/survival_difference_plot.md)
+  and
+  [`nnt_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/nnt_plot.md).
+  The band used to vanish without a word.
+
+- [`save_manuscript()`](https://ehrlinger.github.io/hvtiPlotR/reference/save_manuscript.md)’s
+  `draft_file` keeps the deliverable’s `scale` and `bg`. A draft in the
+  file’s own format takes `device` and every `...` argument; a draft in
+  another format takes the device-independent ones.
+
+- [`hv_atrisk()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_atrisk.md),
+  [`hv_rmst_contrast()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_rmst_contrast.md)
+  and
+  [`hv_rmst_curves()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_rmst_curves.md)
+  no longer swallow arguments they do not use: a misspelled argument is
+  now R’s “unused argument” error.
+
+- `hv_panel_box(mode)` is deprecated. It never had an effect, and it is
+  removed in 2.9.0.
+
+- [`hv_mirror_hist()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_mirror_hist.md)’s
+  dropped-rows message names
+  [`hv_mirror_hist()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_mirror_hist.md),
+  not the old `mirror_histogram`.
+
+- The deprecated theme aliases name the release that removes them,
+  2.9.0.
+  [`hazard_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/hazard_plot.md),
+  [`survival_difference_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/survival_difference_plot.md)
+  and
+  [`nnt_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/nnt_plot.md)
+  say they are superseded, not deprecated, with no removal scheduled.
+
+- The new deprecation warnings and the theme aliases’ warnings carry the
+  class `hvtiPlotR_deprecated`, so a caller can catch or muffle them
+  precisely.
+
+- Argument names follow the hvtiR API rubric. Every old name keeps
+  working, with a warning once per session (class
+  `hvtiPlotR_deprecated`), until 2.9.0. Passing both the old and the new
+  name is an error.
+
+  - Every argument that names a column ends in `_col`. In
+    [`hv_atrisk()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_atrisk.md),
+    `time`, `status` and `group` become `time_col`, `event_col` and
+    `group_col`. In
+    [`hv_rmst_contrast()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_rmst_contrast.md),
+    `estimator`, `diff`, `lo` and `hi` become `estimator_col`,
+    `diff_col`, `lo_col` and `hi_col`. In
+    [`hv_rmst_curves()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_rmst_curves.md),
+    `facet`, `arm`, `time` and `surv` become `facet_col`, `arm_col`,
+    `time_col` and `surv_col`.
+  - The data frame comes first, as `data`. That replaces `curve_data` in
+    [`hv_hazard()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_hazard.md),
+    [`hazard_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/hazard_plot.md),
+    [`hv_nonparametric()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_nonparametric.md)
+    and
+    [`hv_ordinal()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_ordinal.md);
+    `diff_data` in
+    [`hv_survival_difference()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_survival_difference.md)
+    and
+    [`survival_difference_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/survival_difference_plot.md);
+    `nnt_data` in
+    [`hv_nnt()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_nnt.md)
+    and
+    [`nnt_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/nnt_plot.md);
+    `curves` in
+    [`hv_rmst_curves()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_rmst_curves.md);
+    and `x` in
+    [`hv_atrisk()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_atrisk.md).
+  - Every argument that takes one or more columns ends in `_cols`.
+    `vars` becomes `var_cols` in
+    [`hv_correlation_matrix()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_correlation_matrix.md),
+    [`hv_eda_pages()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_eda_pages.md)
+    and
+    [`eda_select_vars()`](https://ehrlinger.github.io/hvtiPlotR/reference/eda_select_vars.md);
+    `axes` becomes `axis_cols` in
+    [`hv_alluvial()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_alluvial.md);
+    `sets` in
+    [`hv_venn()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_venn.md)
+    and `intersect` in
+    [`hv_upset()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_upset.md)
+    become `set_cols`; and `event_col`, `event_time_col` become
+    `event_cols`, `event_time_cols` in
+    [`hv_followup()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_followup.md).
+  - [`save_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/save_ppt.md)’s
+    `powerpoint` becomes `file`.
+  - `line_width` becomes `linewidth`, ggplot2’s name, in
+    [`hazard_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/hazard_plot.md),
+    [`survival_difference_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/survival_difference_plot.md),
+    [`nnt_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/nnt_plot.md)
+    and the [`plot()`](https://rdrr.io/r/graphics/plot.default.html)
+    methods for `hv_hazard`, `hv_survival_difference`, `hv_nnt`,
+    `hv_nonparametric`, `hv_ordinal` and `hv_spaghetti`.
+  - [`hv_consort_start()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_consort_start.md)
+    takes the ID column as a string, `patient_id_col`. An unquoted name,
+    named `patient_id` or passed by position, still works.
+  - [`plot.hv_sankey()`](https://ehrlinger.github.io/hvtiPlotR/reference/plot.hv_sankey.md)’s
+    deprecated `alpha` now warns once per session, like the others,
+    instead of printing a message that quiet mode would hide.
+
+- [`hv_followup()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_followup.md)
+  puts each time column before its status column, as
+  `survival::Surv(time, event)` does: `death_time_col, death_col`, then
+  `event_time_col, event_col`. Every argument after `iv_opyrs_col` must
+  therefore be passed by name; a value given by position that would bind
+  there, in a fully positional call or a mixed one, is an error (class
+  `hvtiPlotR_positional_reorder`) rather than a silent swap. A status
+  column must be logical, 0/1, or text or a factor that
+  [`as.logical()`](https://rdrr.io/r/base/logical.html) reads.
+
+- Informational messages go through the family quiet mode:
+  `options(hvti.quiet = TRUE)` silences them. Warnings and errors are
+  unaffected.
+
+- Errors a caller may want to catch carry `hvtiPlotR_<condition>`
+  classes: `hvtiPlotR_missing_column`, `hvtiPlotR_missing_package`,
+  `hvtiPlotR_role_palette_capacity` and
+  `hvtiPlotR_group_palette_capacity`. The palette errors keep their old
+  classes, `hv_role_palette_capacity` and `hv_group_palette_capacity`,
+  until 2.9.0.
+
+- [`provenance_footnote()`](https://ehrlinger.github.io/hvtiPlotR/reference/provenance_footnote.md)
+  gains `record`, which reads the hvtiR seven-field provenance record.
+  The record supplies the commit (its `sha`), the producing package’s
+  version and the time; it adds the seed when the seed is not `NA`, and
+  prints `"commit unknown"` or `"time unknown"` when the `sha` or `time`
+  is `NA`. Its errors name the function and carry class
+  `hvtiPlotR_invalid_provenance`.
+
+- Messages and errors touched here name their function, as `fn():`.
+
+- Hover labels on a categorical EDA panel no longer fail when the x
+  variable has missing values. Every category’s bar in the missing bin
+  shared one group, so its tooltip was dropped and the plot stopped with
+  “object ‘tooltip’ not found”. Each bar in that bin now keeps its own
+  tooltip.
+
+- Documentation uses the renamed arguments throughout. The
+  [`hv_hazard()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_hazard.md)
+  and
+  [`hazard_plot()`](https://ehrlinger.github.io/hvtiPlotR/reference/hazard_plot.md)
+  column arguments refer to `data`, not `curve_data`;
+  [`hv_eda_pages()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_eda_pages.md)
+  describes `var_cols`; the vignettes name `axis_cols`, `var_cols`,
+  `event_cols`, `event_time_cols` and
+  [`save_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/save_ppt.md)’s
+  `file`; and the
+  [`hv_fit_location()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_fit_location.md)
+  example no longer passes
+  [`hv_panel_box()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_panel_box.md)
+  its deprecated `mode`.
+
+- The SAS migration guide’s alluvial example names its `axis_cols`, and
+  its UpSet example no longer passes
+  [`sample_upset_data()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_upset_data.md)
+  an argument it does not have, so both run as written.
+
+- The
+  [`save_ppt()`](https://ehrlinger.github.io/hvtiPlotR/reference/save_ppt.md)
+  argument table in the decorators vignette adds `panel_box`, `fit` and
+  `align`, the default panel-anchored placement, and notes that `width`,
+  `height`, `left` and `top` place the plot only when
+  `panel_box = NULL`. The README and that vignette list
+  [`theme_hv_ppt_slate()`](https://ehrlinger.github.io/hvtiPlotR/reference/hvtiPlotR-themes.md)
+  among the themes.
+
+- The `sample_*()` generators that draw random data take `seed = NULL`
+  to draw from the session’s random-number stream without setting a
+  seed. The default, `42`, still gives the same data on every call and
+  leaves the caller’s stream as it was. Before, `seed = NULL` warned and
+  could not opt out.
+
+- [`sample_hazard_data()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_hazard_data.md),
+  [`sample_nnt_data()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_nnt_data.md),
+  [`sample_survival_difference_data()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_survival_difference_data.md),
+  [`sample_nonparametric_curve_data()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_nonparametric_curve_data.md)
+  and
+  [`sample_nonparametric_ordinal_data()`](https://ehrlinger.github.io/hvtiPlotR/reference/sample_nonparametric_ordinal_data.md)
+  compute their curves analytically, and their documentation now says
+  `seed` has no effect on them. Before, it called `seed` a random seed,
+  implying different seeds give different curves.
+
+- Examples that run in a few seconds are no longer wrapped in
+  `\donttest{}`, so `R CMD check` runs them every time.
+
+- The maintainer is declared as copyright holder (`cph`) in `Authors@R`.
+
+- The installed vignettes draw their figures as SVG through ‘svglite’, a
+  new Suggests, so the package tarball drops from 9.6 MB to 4.3 MB,
+  under the 5 MB the CRAN Cookbook asks for, and the figures stay sharp
+  at any zoom. The pkgdown site keeps its retina PNGs, as does a build
+  without ‘svglite’.
+
+- [`hv_followup_panels()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_followup_panels.md)
+  can read the origin year from the data. Name the operation date in the
+  new `opdate_col` and leave `origin_year` `NULL`: each patient’s date
+  less their `opyrs_col` lands on the origin the build counted from.
+  Given both, a disagreement stops, since a wrong origin slides every
+  point along the x-axis and shows no other symptom; this is the “first
+  operation in 1992” report on a 2014 to 2026 cohort.
+  `meta$origin_source` says which it was.
+
 ## hvtiPlotR 2.8.22
 
 - `ggiraph` moves from Suggests to Imports, so installing hvtiPlotR
