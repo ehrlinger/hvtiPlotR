@@ -69,13 +69,14 @@ Call <code><a href="plot.hv_followup_panels.html">plot.hv_followup_panels()</a><
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">hv_followup_panels</span><span class="op">(</span></span>
 <span>  <span class="va">data</span>,</span>
 <span>  opyrs_col <span class="op">=</span> <span class="st">"iv_opyrs"</span>,</span>
-<span>  <span class="va">origin_year</span>,</span>
+<span>  origin_year <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  <span class="va">panels</span>,</span>
 <span>  events <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  close_date <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  echo <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  echo_time_col <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  echo_opyrs_col <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  echo_opyrs_col <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  opdate_col <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -94,7 +95,7 @@ Default <code>"iv_opyrs"</code>.</p></dd>
 
 <dt id="arg-origin-year">origin_year<a class="anchor" aria-label="anchor" href="#arg-origin-year"></a></dt>
 <dd><p>The calendar year <code>opyrs_col</code> counts from, a whole
-number.</p></dd>
+number. <code>NULL</code>, the default, reads it from <code>opdate_col</code>.</p></dd>
 
 
 <dt id="arg-panels">panels<a class="anchor" aria-label="anchor" href="#arg-panels"></a></dt>
@@ -126,6 +127,12 @@ panel's <code><a href="hv_followup.html">hv_followup()</a></code>. Set <code>ech
 patient, read from <code>data</code>; add <code>echo</code>, a data frame with one row per echo,
 to draw every echo. See the echo-layer section of <code><a href="hv_followup.html">hv_followup()</a></code>.</p></dd>
 
+
+<dt id="arg-opdate-col">opdate_col<a class="anchor" aria-label="anchor" href="#arg-opdate-col"></a></dt>
+<dd><p>Name of the operation date column, a <code>Date</code> or a
+date-time. Optional when <code>origin_year</code> is given, where it checks it;
+required when <code>origin_year</code> is <code>NULL</code>, where it supplies it.</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
@@ -135,7 +142,7 @@ to draw every echo. See the echo-layer section of <code><a href="hv_followup.htm
 <code>n_excluded</code>.</p></dd>
 
 <dt><code>$meta</code></dt>
-<dd><p>Named list: <code>opyrs_col</code>, <code>origin_year</code>, <code>study_start</code>,
+<dd><p>Named list: <code>opyrs_col</code>, <code>origin_year</code>, <code>origin_source</code>, <code>study_start</code>,
 <code>study_end</code>, <code>first_operation</code>, <code>close_date</code>, <code>close_source</code>,
 <code>n_obs</code>, <code>n_opyrs_missing</code> and <code>n_opyrs_negative</code>.</p></dd>
 
@@ -146,7 +153,17 @@ to draw every echo. See the echo-layer section of <code><a href="hv_followup.htm
 </dl></div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p><strong>The study window starts on 1 January of <code>origin_year</code></strong>, because
+    <p><strong>The origin can be read from the data.</strong> With <code>opdate_col</code> naming the
+operation date, <code>origin_year</code> may be left <code>NULL</code>: each patient's date less
+their <code>opyrs_col</code> lands on the origin the build counted from, and the year
+of the median is used. Every patient's must land within a month of that
+1 January, the origin <code><a href="hv_followup.html">hv_followup()</a></code> assumes, or it stops and says how many
+do not: a cohort counted from two origins cannot be drawn on one. When
+<code>origin_year</code> is given as well, it must agree with the year the data say,
+or it stops: a wrong origin slides every point along the x-axis without any
+other symptom. <code>meta$origin_source</code>
+says which it was.</p>
+<p><strong>The study window starts on 1 January of <code>origin_year</code></strong>, because
 <code><a href="hv_followup.html">hv_followup()</a></code> draws its potential-follow-up diagonal from <code>origin_year</code>
 whatever <code>study_start</code> is. It ends at the latest operation in the data.</p>
 <p><strong>The close date</strong> is <code>close_date</code> when given. When <code>NULL</code> it is estimated

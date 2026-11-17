@@ -13,13 +13,14 @@ on the result for the figures.
 hv_followup_panels(
   data,
   opyrs_col = "iv_opyrs",
-  origin_year,
+  origin_year = NULL,
   panels,
   events = list(),
   close_date = NULL,
   echo = NULL,
   echo_time_col = NULL,
-  echo_opyrs_col = NULL
+  echo_opyrs_col = NULL,
+  opdate_col = NULL
 )
 ```
 
@@ -36,7 +37,8 @@ hv_followup_panels(
 
 - origin_year:
 
-  The calendar year `opyrs_col` counts from, a whole number.
+  The calendar year `opyrs_col` counts from, a whole number. `NULL`, the
+  default, reads it from `opdate_col`.
 
 - panels:
 
@@ -71,6 +73,12 @@ hv_followup_panels(
   See the echo-layer section of
   [`hv_followup()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_followup.md).
 
+- opdate_col:
+
+  Name of the operation date column, a `Date` or a date-time. Optional
+  when `origin_year` is given, where it checks it; required when
+  `origin_year` is `NULL`, where it supplies it.
+
 ## Value
 
 An object of class `c("hv_followup_panels", "hv_data")`:
@@ -82,9 +90,9 @@ An object of class `c("hv_followup_panels", "hv_data")`:
 
 - `$meta`:
 
-  Named list: `opyrs_col`, `origin_year`, `study_start`, `study_end`,
-  `first_operation`, `close_date`, `close_source`, `n_obs`,
-  `n_opyrs_missing` and `n_opyrs_negative`.
+  Named list: `opyrs_col`, `origin_year`, `origin_source`,
+  `study_start`, `study_end`, `first_operation`, `close_date`,
+  `close_source`, `n_obs`, `n_opyrs_missing` and `n_opyrs_negative`.
 
 - `$tables`:
 
@@ -93,6 +101,18 @@ An object of class `c("hv_followup_panels", "hv_data")`:
   objects.
 
 ## Details
+
+**The origin can be read from the data.** With `opdate_col` naming the
+operation date, `origin_year` may be left `NULL`: each patient's date
+less their `opyrs_col` lands on the origin the build counted from, and
+the year of the median is used. Every patient's must land within a month
+of that 1 January, the origin
+[`hv_followup()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_followup.md)
+assumes, or it stops and says how many do not: a cohort counted from two
+origins cannot be drawn on one. When `origin_year` is given as well, it
+must agree with the year the data say, or it stops: a wrong origin
+slides every point along the x-axis without any other symptom.
+`meta$origin_source` says which it was.
 
 **The study window starts on 1 January of `origin_year`**, because
 [`hv_followup()`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_followup.md)
