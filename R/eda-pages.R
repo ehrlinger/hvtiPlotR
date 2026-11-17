@@ -56,7 +56,7 @@
 #'     `variable`, `label`, `var_type`.}
 #'   \item{`$meta`}{Named list: `x_col`, `section`, `x_binned`, `n_vars`,
 #'     `n_obs`, `n_other`, the number of considered variables that belong
-#'     to other sections, and `ignored`, the identifier columns `vars = NULL`
+#'     to other sections, and `ignored`, the identifier columns `var_cols = NULL`
 #'     left out.}
 #'   \item{`$tables`}{`panels`, a named list of [hv_eda()] objects, one per
 #'     variable.}

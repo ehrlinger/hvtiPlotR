@@ -44,13 +44,13 @@ a survival plot, \code{"hazard"} for a hazard-rate plot, or \code{"cumhaz"} for 
 cumulative-hazard plot. Corresponds to \code{SSURVIV}, \code{hazard}, or \code{cumhaz}
 in the SAS output. Default \code{"survival"}.}
 
-\item{lower_col}{Name of the lower CI column in \code{curve_data}, or \code{NULL}
+\item{lower_col}{Name of the lower CI column in \code{data}, or \code{NULL}
 for no ribbon. Corresponds to \code{SCLLSURV} / \code{cll_p95}. Default \code{NULL}.}
 
-\item{upper_col}{Name of the upper CI column in \code{curve_data}, or \code{NULL}.
+\item{upper_col}{Name of the upper CI column in \code{data}, or \code{NULL}.
 Corresponds to \code{SCLUSURV} / \code{clu_p95}. Default \code{NULL}.}
 
-\item{group_col}{Name of the stratification column in \code{curve_data}, or
+\item{group_col}{Name of the stratification column in \code{data}, or
 \code{NULL} for a single curve. Default \code{NULL}.}
 
 \item{empirical}{Optional data frame of Kaplan-Meier empirical estimates

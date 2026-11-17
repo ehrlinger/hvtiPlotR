@@ -97,7 +97,7 @@ p <- ggplot2::ggplot(mtcars, ggplot2::aes(hp, mpg)) +
   ggplot2::geom_point() +
   ggplot2::labs(x = "Horsepower", y = "Miles per gallon") +
   theme_hv_ppt_dark()
-fit <- hv_fit_location(p, hv_panel_box("dark"))
+fit <- hv_fit_location(p, hv_panel_box())
 fit$scale
 fit$location
 }

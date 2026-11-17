@@ -748,8 +748,8 @@ plot(gf) +
   theme_hv_poster()
 ```
 
-For the competing non-fatal event panel, supply `event_col` and
-`event_time_col` to `hv_followup()` and pass `type = "event"` to `plot()`.
+For the competing non-fatal event panel, supply `event_cols` and
+`event_time_cols` to `hv_followup()` and pass `type = "event"` to `plot()`.
 
 `tp.dp.gfup.R` usually draws several of these, all deaths, systematic deaths
 and an event, over the same window. `hv_followup_panels()` takes them as named
@@ -841,7 +841,7 @@ for a decorated worked example with labels.
 
 ```r
 dta <- sample_alluvial_data(n = 200)
-al  <- hv_alluvial(dta)
+al  <- hv_alluvial(dta, axis_cols = c("pre_ar", "procedure", "post_ar"))
 
 plot(al) +
   scale_fill_manual(values = hv_palette()) +
@@ -936,8 +936,8 @@ intersection bars plus a set-size panel), so themes apply with `&`; pass
 `set_size = FALSE` for a plain ggplot you can extend with `+`.
 
 ```r
-sets <- c("CABG", "Valve", "MAZE", "Aorta")
-dta  <- sample_upset_data(n = 300, sets = sets)
+sets <- c("CABG", "AV_Replacement", "MV_Repair", "Aorta")
+dta  <- sample_upset_data(n = 300)
 hu   <- hv_upset(data = dta, set_cols = sets)
 
 plot(hu)
@@ -1331,7 +1331,7 @@ builds one of those sections and `plot()` returns its pages as a list of
 patchwork layouts, `ncol` by `nrow`, each naming its variables in
 `attr(page, "variables")`. In the varnames template, `Var_CatList`,
 `Var_ContList` and `Order_Variables()` choose the variables and their order;
-that becomes `vars`, whose order is the page order. The `var_labels` /
+that becomes `var_cols`, whose order is the page order. The `var_labels` /
 `var.names` override becomes `labels`, a named vector keyed by column. A single
 panel is `hv_eda()`; both are worked through in the "Plot Functions" vignette.
 
@@ -1469,8 +1469,8 @@ p + theme_hv_poster(base_size = 24)   # larger text for A0 poster
 `save_ppt()` inserts ggplot objects into a PowerPoint file as **editable
 DrawingML vector graphics** via the `officer` and `rvg` packages, so shapes,
 lines, and text remain individually selectable in PowerPoint after export.
-The first argument is `object` (not `plot`); the output path is `powerpoint`
-(not `file` or `filename`).
+The first argument is `object` (not `plot`); the output path is `file`
+(not `filename`; the older `powerpoint` still works, with a warning, until 2.9.0).
 
 ```r
 # Locate the bundled Cleveland Clinic slide template

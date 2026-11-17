@@ -50,7 +50,7 @@ An object of class \code{c("hv_eda_pages", "hv_data")}:
 \code{variable}, \code{label}, \code{var_type}.}
 \item{\verb{$meta}}{Named list: \code{x_col}, \code{section}, \code{x_binned}, \code{n_vars},
 \code{n_obs}, \code{n_other}, the number of considered variables that belong
-to other sections, and \code{ignored}, the identifier columns \code{vars = NULL}
+to other sections, and \code{ignored}, the identifier columns \code{var_cols = NULL}
 left out.}
 \item{\verb{$tables}}{\code{panels}, a named list of \code{\link[=hv_eda]{hv_eda()}} objects, one per
 variable.}

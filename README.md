@@ -67,7 +67,7 @@ save_ppt(
 
 ## Themes
 
-Four themes cover the publication contexts we use. Each follows the
+Five themes cover the publication contexts we use. Each follows the
 `theme_bw()` contract. Pass `base_size` / `base_family`, or chain `+ theme(...)`,
 to override anything:
 
@@ -77,6 +77,7 @@ to override anything:
 | `theme_hv_poster()` | Conference posters |
 | `theme_hv_ppt_dark()` | Dark-background PowerPoint slides (black panel, white text) |
 | `theme_hv_ppt_light()` | Light/transparent PowerPoint slides |
+| `theme_hv_ppt_slate()` | The slate slide template (`hv_ppt_template_slate.pptx`), white panel |
 
 ```r
 p + theme_hv_manuscript()   # journal figure
@@ -85,12 +86,12 @@ p + theme_hv_ppt_light()    # light PPT slide
 p + theme_hv_poster()       # poster
 ```
 
-The two PPT themes default to Arial 32 Bold axis tick labels and Arial 40
+The three PPT themes default to Arial 32 Bold axis tick labels and Arial 40
 Bold axis titles, matching the standard CORR slide deck.
 
 > The earlier alias functions (`theme_man()`, `theme_ppt()`, `theme_dark_ppt()`,
 > `theme_light_ppt()`, `theme_poster()`, and the `hv_theme_*()` family) still
-> work but are deprecated (one-time warning); prefer the `theme_hv_*()` names
+> work but are deprecated (one-time warning) and are removed in 2.9.0; prefer the `theme_hv_*()` names
 > above. The old `hv_theme("...")` string dispatcher has been removed.
 
 ## Plot Function Gallery

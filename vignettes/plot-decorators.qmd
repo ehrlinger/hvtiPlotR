@@ -68,7 +68,7 @@ km     <- hv_survival(dta_km)
 
 # Themes
 
-The **hvtiPlotR** package provides four themes, one per output target.
+The **hvtiPlotR** package provides five themes, one per output target.
 
 | Theme | Target |
 |-------|--------|
@@ -76,6 +76,7 @@ The **hvtiPlotR** package provides four themes, one per output target.
 | `theme_hv_poster()` | Conference poster, slightly larger text |
 | `theme_hv_ppt_light()` | PowerPoint on white/light background |
 | `theme_hv_ppt_dark()` | PowerPoint on dark/blue background |
+| `theme_hv_ppt_slate()` | PowerPoint on the slate template, white panel |
 
 ## Manuscript
 
@@ -452,11 +453,12 @@ Key arguments:
 |---|---|---|
 | `object` | (required) | A single ggplot **or** a named/unnamed list of ggplots |
 | `template` | shipped `hv_ppt_template.pptx` | Existing `.pptx` used as the slide template |
-| `powerpoint` | (required) | Output file path |
+| `file` | (required) | Output file path (`powerpoint` is its deprecated name) |
 | `slide_titles` | `"Plot"` | Character vector recycled to the number of plots |
 | `layout` | `"Title and Content"` | Slide layout from the template |
-| `width` / `height` | `10.1` / `5.8` | Plot area in inches |
-| `left` / `top` | `0.0` / `1.2` | Position from slide edges, in inches |
+| `panel_box` | `hv_panel_box()` for the template's slide format | `list(width, height, left, top)` in inches: where the panel lands on every slide |
+| `fit` | `TRUE` | Reduce a plot's text, 2 pt at a time, until it lies on the slide |
+| `align` | `"panel"` | `"panel"` lines panels up across slides; `"fill"` widens each to span the slide |
 
 Apply `theme_hv_ppt_dark()` or `theme_hv_ppt_light()` before saving to
 match the slide background.
