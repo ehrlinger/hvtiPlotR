@@ -345,6 +345,21 @@ test_that("km$data life is the exact area under the step curve", {
   got <- km$data[km$data$time > 0, ]
   expect_equal(got$life, expected, tolerance = 1e-12)
   expect_equal(got$proplife, expected / got$time, tolerance = 1e-12)
+  t0 <- km$data[km$data$time == 0, ]
+  expect_identical(t0$life, 0)
+  expect_true(is.na(t0$proplife))
+})
+
+test_that("plot(km, type = 'life') joins rows with lines, exact between them", {
+  dta <- data.frame(iv_dead = c(2, 3, 4, 5, 7, 9, 10),
+                    dead    = c(1, 0, 0, 1, 0, 1, 0))
+  p   <- plot(hv_survival(dta), type = "life")
+  expect_s3_class(p$layers[[1]]$geom, "GeomLine")
+  # The integral is linear between rows: at t = 2.5 it is 2 + 0.5 * 6/7.
+  ld <- ggplot2::layer_data(p, 1L)
+  expect_equal(stats::approx(ld$x, ld$y, xout = 2.5)$y, 2 + 0.5 * 6 / 7,
+               tolerance = 1e-12)
+  expect_equal(ld$y[ld$x == 0], 0)
 })
 
 test_that("km$data life at the last time equals survival's restricted mean", {

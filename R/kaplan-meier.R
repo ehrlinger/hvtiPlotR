@@ -178,7 +178,10 @@ km_extract_tidy <- function(fit, group_col) {
     cum_life <- 0
 
     for (i in seq_len(n)) {
-      if (i == 1L) next          # time=0 anchor row
+      if (i == 1L) {             # time=0 anchor row: no area yet
+        life[i] <- 0
+        next
+      }
       delta_t  <- sub$time[i] - sub$time[i - 1L]
       lag_surv <- sub$surv[i - 1L]
       cur_surv <- sub$surv[i]
@@ -432,11 +435,12 @@ km_build_loglog_plot <- function(km_df, alpha, curve = "step") {
 ##' counterpart of the SAS \code{\%kaplan}
 ##' \code{PLOTL=1} output.  The proportionate life length
 ##' (\code{proplife = LIFE / t}) is also available in \code{km_data} for
-##' a secondary plot.
+##' a secondary plot. The integral is piecewise linear between rows, so it is
+##' drawn with \code{geom_line()}, not as steps.
 ##'
 ##' @param km_df Tidy KM data frame from \code{km_extract_tidy}.
 ##' @return A bare \code{ggplot} object.
-##' @importFrom ggplot2 ggplot aes geom_step
+##' @importFrom ggplot2 ggplot aes geom_line
 ##' @importFrom rlang .data
 ##' @keywords internal
 km_build_life_plot <- function(km_df, alpha) {
@@ -450,7 +454,7 @@ km_build_life_plot <- function(km_df, alpha) {
       color = .data[["strata"]]
     )
   ) +
-    ggplot2::geom_step(alpha = alpha)
+    ggplot2::geom_line(alpha = alpha)
 }
 
 # ---------------------------------------------------------------------------
@@ -728,7 +732,8 @@ print.hv_survival <- function(x, ...) {
 #'   time zero, each event and each stratum's last row, and skips censored rows
 #'   between, so a censoring time puts no corner in the line. The CI ribbon
 #'   follows the same rows. Ignored for \code{"hazard"}, which draws points,
-#'   and \code{"life"}.
+#'   and \code{"life"}, which is always a line: the integral of a step curve
+#'   is piecewise linear, so joining its rows is exact.
 #' @param alpha    Line/point transparency in \eqn{[0,1]}.  Default \code{0.8}.
 #' @param ...      Ignored; present for S3 consistency.
 #'

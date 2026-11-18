@@ -18,6 +18,7 @@ step-function area documented in \code{km_extract_tidy}) against time, the
 counterpart of the SAS \code{\%kaplan}
 \code{PLOTL=1} output.  The proportionate life length
 (\code{proplife = LIFE / t}) is also available in \code{km_data} for
-a secondary plot.
+a secondary plot. The integral is piecewise linear between rows, so it is
+drawn with \code{geom_line()}, not as steps.
 }
 \keyword{internal}
