@@ -109,11 +109,9 @@ hazards.</p></dd>
 
 <dt><code>"life"</code></dt>
 <dd><p>(<code>PLOTL=1</code>) Integrated survivorship vs
-time, by the SAS <code>%kaplan</code> formula
-\(\Delta t (3 S(t) - S(t_{prev})) / 2\), which is neither the
-exact step-function area nor a trapezoid and understates the
-restricted mean survival time; see <code><a href="hv_survival.html">hv_survival</a></code>. For the
-exact RMST use <code><a href="https://ehrlinger.github.io/hvtiRpropensity/reference/ps_rmst.html" class="external-link">hvtiRpropensity::ps_rmst()</a></code>.</p></dd>
+time: the exact area under the step curve, which is the restricted
+mean survival time. It differs from the SAS <code>%kaplan</code>
+<code>LIFE</code> column; see <code><a href="hv_survival.html">hv_survival</a></code>.</p></dd>
 
 
 </dl></dd>
@@ -136,7 +134,8 @@ events with straight lines, as the SAS <code>%kaplan</code> figures do: it draws
 time zero, each event and each stratum's last row, and skips censored rows
 between, so a censoring time puts no corner in the line. The CI ribbon
 follows the same rows. Ignored for <code>"hazard"</code>, which draws points,
-and <code>"life"</code>.</p></dd>
+and <code>"life"</code>, which is always a line: the integral of a step curve
+is piecewise linear, so joining its rows is exact.</p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>

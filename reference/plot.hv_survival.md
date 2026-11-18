@@ -51,13 +51,10 @@ plot(
 
   `"life"`
 
-  :   (`PLOTL=1`) Integrated survivorship vs time, by the SAS `%kaplan`
-      formula \\\Delta t (3 S(t) - S(t\_{prev})) / 2\\, which is neither
-      the exact step-function area nor a trapezoid and understates the
-      restricted mean survival time; see
+  :   (`PLOTL=1`) Integrated survivorship vs time: the exact area under
+      the step curve, which is the restricted mean survival time. It
+      differs from the SAS `%kaplan` `LIFE` column; see
       [`hv_survival`](https://ehrlinger.github.io/hvtiPlotR/reference/hv_survival.md).
-      For the exact RMST use
-      [`hvtiRpropensity::ps_rmst()`](https://ehrlinger.github.io/hvtiRpropensity/reference/ps_rmst.html).
 
 - conf_int:
 
@@ -76,7 +73,9 @@ plot(
   SAS `%kaplan` figures do: it draws time zero, each event and each
   stratum's last row, and skips censored rows between, so a censoring
   time puts no corner in the line. The CI ribbon follows the same rows.
-  Ignored for `"hazard"`, which draws points, and `"life"`.
+  Ignored for `"hazard"`, which draws points, and `"life"`, which is
+  always a line: the integral of a step curve is piecewise linear, so
+  joining its rows is exact.
 
 - ...:
 

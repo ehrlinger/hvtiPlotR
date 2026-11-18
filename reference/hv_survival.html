@@ -140,13 +140,11 @@ Columns: <code>time</code>, <code>surv</code>, <code>lower</code>, <code>upper</
 <code>life</code>, <code>proplife</code>, <code>log_cumhaz</code>, <code>log_time</code>.
 <code>cumhaz</code> is the Nelson-Aalen estimate under either <code>method</code>,
 not \(-\log S(t)\), and <code>log_cumhaz</code> is built on it.
-<code>life</code> is integrated by the SAS <code>%kaplan</code> formula
-\(\Delta t (3 S(t) - S(t_{prev})) / 2\), kept for SAS parity. It is
-not a trapezoid: it falls short of the exact step-function area
-\(\Delta t \, S(t_{prev})\) by
-\(\frac{3}{2} \Delta t (S(t_{prev}) - S(t))\) at each event, so it
-understates the restricted mean survival time.
-<code><a href="https://ehrlinger.github.io/hvtiRpropensity/reference/ps_rmst.html" class="external-link">hvtiRpropensity::ps_rmst()</a></code> computes the exact RMST.</p></dd>
+<code>life</code> is the exact area under the step curve,
+\(\sum \Delta t \, S(t_{prev})\), which is the restricted mean
+survival time and matches <code><a href="https://ehrlinger.github.io/hvtiRpropensity/reference/ps_rmst.html" class="external-link">hvtiRpropensity::ps_rmst()</a></code>. It does
+not reproduce the SAS <code>%kaplan</code> <code>LIFE</code> column, whose
+formula \(\Delta t (3 S(t) - S(t_{prev})) / 2\) understates it.</p></dd>
 
 <dt><code>$meta</code></dt>
 <dd><p>Named list: <code>time_col</code>, <code>event_col</code>,

@@ -61,17 +61,15 @@ A data frame.
 
 - `life`:
 
-  Cumulative integral of the survival function, by the SAS `%kaplan`
-  formula, kept for SAS parity: \\LIFE \mathrel{+}= \Delta t (3 S(t) -
-  S(t\_{prev})) / 2\\. This is **not** a trapezoid. The Kaplan-Meier
-  curve is a right-continuous step, constant at \\S(t\_{prev})\\ across
-  \\\[t\_{prev}, t)\\, so the exact area of an interval is \\\Delta t \\
-  S(t\_{prev})\\; the trapezoid would be \\\Delta t (S(t) +
-  S(t\_{prev})) / 2\\. The SAS formula falls short of the exact area by
-  \\\frac{3}{2} \Delta t (S(t\_{prev}) - S(t))\\ at each event (and
-  equals it across a censoring-only interval), so `life` understates the
-  restricted mean survival time. For the exact RMST use
-  [`hvtiRpropensity::ps_rmst()`](https://ehrlinger.github.io/hvtiRpropensity/reference/ps_rmst.html).
+  Cumulative integral of the survival function, the restricted mean
+  survival time to \\t\\. The Kaplan-Meier curve is a right-continuous
+  step, constant at \\S(t\_{prev})\\ across \\\[t\_{prev}, t)\\, so each
+  interval adds its exact area \\\Delta t \\ S(t\_{prev})\\. This
+  matches
+  [`hvtiRpropensity::ps_rmst()`](https://ehrlinger.github.io/hvtiRpropensity/reference/ps_rmst.html)
+  and the `rmean` of `summary.survfit()`. It does **not** reproduce the
+  SAS `%kaplan` `LIFE` column, which accumulates \\\Delta t (3 S(t) -
+  S(t\_{prev})) / 2\\ between events and so understates the area.
 
 - `proplife`:
 

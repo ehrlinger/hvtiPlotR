@@ -78,7 +78,7 @@
       <h1>SAS Template Migration Guide: Finding Your Plot in R</h1>
 
       <p class="author">John Ehrlinger <a href="mailto:ehrlinj@ccf.org" class="email">ehrlinj@ccf.org</a></p>
-      <p class="date">2026-11-17</p>
+      <p class="date">2026-11-18</p>
 
       <small class="dont-index">Source: <a href="https://github.com/ehrlinger/hvtiPlotR/blob/main/vignettes/sas-migration-guide.qmd" class="external-link"><code>vignettes/sas-migration-guide.qmd</code></a></small>
       <div class="d-none name"><code></code></div>
@@ -926,6 +926,7 @@ run;</code></pre>
 <p><strong>R equivalent:</strong> <code><a href="../reference/hv_survival.html">hv_survival()</a></code></p>
 <p><code><a href="../reference/hv_survival.html">hv_survival()</a></code> wraps <code>survfit()</code> from the <strong>survival</strong> package and returns an S3 object. Call <code>plot(km, type = ...)</code> to render one of five panels. Four map onto the SAS <code>%kaplan</code> / <code>%nelsont</code> output flags: <code>"survival"</code> (<code>PLOTS</code>), <code>"cumhaz"</code> (<code>PLOTC</code>), <code>"hazard"</code> (<code>PLOTH</code>) and <code>"life"</code> (<code>PLOTL</code>). The fifth, <code>"loglog"</code>, is the extra one, the log-log plot you read to check the proportional-hazards assumption. Because the estimates come from <code>survfit()</code>, the survival curve, confidence limits, and numbers at risk match what <code>%kaplan</code> reports; you are swapping the plotting step, not the estimator. Tidy data frames live in <code>km$tables</code>.</p>
 <p>One difference from SAS worth knowing. <code>survfit()</code> drops records with a missing time, event, or strata value, and <code><a href="../reference/hv_survival.html">hv_survival()</a></code> makes that visible rather than leaving you to infer it: it warns, naming the columns responsible, and <code>print(km)</code> reports the <strong>analyzed</strong> cohort alongside the input count. So the N you see is always the N the curve describes. Check it the way you would read the SAS log for <code>NMISS</code>.</p>
+<p>A second difference is in <code>PLOTL</code>. <code>km$data$life</code> is the exact area under the step curve, the restricted mean survival time. <code>%kaplan</code> accumulates its <code>LIFE</code> column as <code>DELTA_TM*(3*CUM_SURV - LAG_SURV)/2</code> between events, which comes out lower, so expect the R values to be larger than the SAS listing.</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">dta</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sample_survival_data.html">sample_survival_data</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">500</span>, seed <span class="op">=</span> <span class="fl">42</span><span class="op">)</span></span>
 <span><span class="va">km</span>  <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hv_survival.html">hv_survival</a></span><span class="op">(</span><span class="va">dta</span><span class="op">)</span></span>
@@ -1854,7 +1855,7 @@ loaded via a namespace (and not attached):
 [49] farver_2.1.2            htmltools_0.5.9         patchwork_1.3.2
 [52] labeling_0.4.3          rmarkdown_2.32          ggalluvial_0.12.6
 [55] compiler_4.6.2          S7_0.2.2                askpass_1.2.1
-[58] openssl_2.5.0          </code></pre>
+[58] openssl_2.6.0          </code></pre>
 </div>
 </div>
 </section><script id="quarto-html-after-body" type="application/javascript">

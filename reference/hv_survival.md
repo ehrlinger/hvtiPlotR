@@ -75,13 +75,11 @@ The list has three elements:
   `strata`, `hazard`, `density`, `mid_time`, `life`, `proplife`,
   `log_cumhaz`, `log_time`. `cumhaz` is the Nelson-Aalen estimate under
   either `method`, not \\-\log S(t)\\, and `log_cumhaz` is built on it.
-  `life` is integrated by the SAS `%kaplan` formula \\\Delta t (3 S(t) -
-  S(t\_{prev})) / 2\\, kept for SAS parity. It is not a trapezoid: it
-  falls short of the exact step-function area \\\Delta t \\
-  S(t\_{prev})\\ by \\\frac{3}{2} \Delta t (S(t\_{prev}) - S(t))\\ at
-  each event, so it understates the restricted mean survival time.
-  [`hvtiRpropensity::ps_rmst()`](https://ehrlinger.github.io/hvtiRpropensity/reference/ps_rmst.html)
-  computes the exact RMST.
+  `life` is the exact area under the step curve, \\\sum \Delta t \\
+  S(t\_{prev})\\, which is the restricted mean survival time and matches
+  [`hvtiRpropensity::ps_rmst()`](https://ehrlinger.github.io/hvtiRpropensity/reference/ps_rmst.html).
+  It does not reproduce the SAS `%kaplan` `LIFE` column, whose formula
+  \\\Delta t (3 S(t) - S(t\_{prev})) / 2\\ understates it.
 
 - `$meta`:
 

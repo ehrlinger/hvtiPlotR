@@ -663,6 +663,12 @@ the columns responsible, and `print(km)` reports the **analyzed** cohort
 alongside the input count. So the N you see is always the N the curve
 describes. Check it the way you would read the SAS log for `NMISS`.
 
+A second difference is in `PLOTL`. `km$data$life` is the exact area
+under the step curve, the restricted mean survival time. `%kaplan`
+accumulates its `LIFE` column as `DELTA_TM*(3*CUM_SURV - LAG_SURV)/2`
+between events, which comes out lower, so expect the R values to be
+larger than the SAS listing.
+
 ``` r
 
 dta <- sample_survival_data(n = 500, seed = 42)
@@ -1952,4 +1958,4 @@ sessionInfo()
     [49] farver_2.1.2            htmltools_0.5.9         patchwork_1.3.2
     [52] labeling_0.4.3          rmarkdown_2.32          ggalluvial_0.12.6
     [55] compiler_4.6.2          S7_0.2.2                askpass_1.2.1
-    [58] openssl_2.5.0          
+    [58] openssl_2.6.0          

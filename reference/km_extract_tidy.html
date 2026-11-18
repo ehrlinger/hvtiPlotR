@@ -118,18 +118,16 @@ with <code>delta_t &gt; 0</code>; <code>NA</code> at censoring times.</p></dd>
 the x-axis of hazard-rate plots.</p></dd>
 
 <dt><code>life</code></dt>
-<dd><p>Cumulative integral of the survival function, by the
-SAS <code>%kaplan</code> formula, kept for SAS parity:
-\(LIFE \mathrel{+}= \Delta t (3 S(t) - S(t_{prev})) / 2\). This is
-<strong>not</strong> a trapezoid. The Kaplan-Meier curve is a right-continuous
-step, constant at \(S(t_{prev})\) across \([t_{prev}, t)\), so the
-exact area of an interval is \(\Delta t \, S(t_{prev})\); the
-trapezoid would be \(\Delta t (S(t) + S(t_{prev})) / 2\). The SAS
-formula falls short of the exact area by
-\(\frac{3}{2} \Delta t (S(t_{prev}) - S(t))\) at each event
-(and equals it across a censoring-only interval), so <code>life</code>
-understates the restricted mean survival time. For the exact RMST use
-<code><a href="https://ehrlinger.github.io/hvtiRpropensity/reference/ps_rmst.html" class="external-link">hvtiRpropensity::ps_rmst()</a></code>.</p></dd>
+<dd><p>Cumulative integral of the survival function, the
+restricted mean survival time to \(t\). The Kaplan-Meier curve is a
+right-continuous step, constant at \(S(t_{prev})\) across
+\([t_{prev}, t)\), so each interval adds its exact area
+\(\Delta t \, S(t_{prev})\). This matches
+<code><a href="https://ehrlinger.github.io/hvtiRpropensity/reference/ps_rmst.html" class="external-link">hvtiRpropensity::ps_rmst()</a></code> and the <code>rmean</code> of
+<code>summary.survfit()</code>. It does <strong>not</strong> reproduce the SAS
+<code>%kaplan</code> <code>LIFE</code> column, which accumulates
+\(\Delta t (3 S(t) - S(t_{prev})) / 2\) between events and so
+understates the area.</p></dd>
 
 <dt><code>proplife</code></dt>
 <dd><p>LIFE / t, the proportionate life length.</p></dd>
