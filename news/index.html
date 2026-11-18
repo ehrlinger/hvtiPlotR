@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">hvtiPlotR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.8.23</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.8.24</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -53,6 +53,11 @@
       <small>Source: <a href="https://github.com/ehrlinger/hvtiPlotR/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="2.8.24" id="hvtiplotr-2824">hvtiPlotR 2.8.24<a class="anchor" aria-label="anchor" href="#hvtiplotr-2824"></a></h2>
+<ul><li>
+<code><a href="../reference/hv_survival.html">hv_survival()</a></code>: <code>km$data$life</code>, and the <code>plot(km, type = "life")</code> curve drawn from it, is now the exact area under the Kaplan-Meier step curve, the restricted mean survival time, matching <code><a href="https://ehrlinger.github.io/hvtiRpropensity/reference/ps_rmst.html" class="external-link">hvtiRpropensity::ps_rmst()</a></code> and <code>summary.survfit()</code>’s <code>rmean</code>. It used the SAS <code>%kaplan</code> formula <code>Δt·(3·S(t) − S(t_prev))/2</code>, and applied it on censored rows as well as event rows, so it matched neither SAS nor the exact area. <code>life</code> and <code>proplife</code> are now larger than before wherever an event has occurred. <code>life</code> is <code>0</code> at time zero rather than <code>NA</code>, and the <code>"life"</code> plot is drawn as a line rather than steps, since the integral is piecewise linear (<a href="https://github.com/ehrlinger/hvtiPlotR/issues/258" class="external-link">#258</a>).</li>
+</ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="2.8.23" id="hvtiplotr-2823">hvtiPlotR 2.8.23<a class="anchor" aria-label="anchor" href="#hvtiplotr-2823"></a></h2>
 <ul><li><p><code><a href="../reference/hv_survival.html">hv_survival()</a></code>’s <code>$tables$report</code> no longer carries the last estimate past the end of follow-up. A report time beyond a stratum’s last observed time now gives <code>NA</code> for <code>surv</code>, <code>lower</code>, <code>upper</code> and <code>n.event</code>, and <code>n.risk</code> is taken from <code>$tables$risk</code>, so the two tables agree at every report time. Before, <code>n.risk</code> was the count at the last event at or before the report time, one or more too high.</p></li>
