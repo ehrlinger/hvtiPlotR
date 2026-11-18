@@ -29,11 +29,9 @@ publication curve.}
 \eqn{\log t}.  Parallel lines across strata support proportional
 hazards.}
 \item{\code{"life"}}{(\code{PLOTL=1}) Integrated survivorship vs
-time, by the SAS \code{\%kaplan} formula
-\eqn{\Delta t (3 S(t) - S(t_{prev})) / 2}, which is neither the
-exact step-function area nor a trapezoid and understates the
-restricted mean survival time; see \code{\link{hv_survival}}. For the
-exact RMST use \code{hvtiRpropensity::ps_rmst()}.}
+time: the exact area under the step curve, which is the restricted
+mean survival time. It differs from the SAS \code{\%kaplan}
+\code{LIFE} column; see \code{\link{hv_survival}}.}
 }}
 
 \item{conf_int}{Logical; draw a CI ribbon on the \code{"survival"} plot.
@@ -48,7 +46,8 @@ events with straight lines, as the SAS \code{\%kaplan} figures do: it draws
 time zero, each event and each stratum's last row, and skips censored rows
 between, so a censoring time puts no corner in the line. The CI ribbon
 follows the same rows. Ignored for \code{"hazard"}, which draws points,
-and \code{"life"}.}
+and \code{"life"}, which is always a line: the integral of a step curve
+is piecewise linear, so joining its rows is exact.}
 
 \item{...}{Ignored; present for S3 consistency.}
 }

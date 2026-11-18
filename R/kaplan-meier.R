@@ -109,18 +109,16 @@ km_fit <- function(data, time_col, event_col, group_col, conf_level, method) {
 ##'   \item{\code{density}}{Probability density: (S(t_prev) - S(t)) / delta_t.}
 ##'   \item{\code{mid_time}}{Midpoint of the interval (t_prev, t], used as
 ##'     the x-axis of hazard-rate plots.}
-##'   \item{\code{life}}{Cumulative integral of the survival function, by the
-##'     SAS \code{\%kaplan} formula, kept for SAS parity:
-##'     \eqn{LIFE \mathrel{+}= \Delta t (3 S(t) - S(t_{prev})) / 2}. This is
-##'     \strong{not} a trapezoid. The Kaplan-Meier curve is a right-continuous
-##'     step, constant at \eqn{S(t_{prev})} across \eqn{[t_{prev}, t)}, so the
-##'     exact area of an interval is \eqn{\Delta t \, S(t_{prev})}; the
-##'     trapezoid would be \eqn{\Delta t (S(t) + S(t_{prev})) / 2}. The SAS
-##'     formula falls short of the exact area by
-##'     \eqn{\frac{3}{2} \Delta t (S(t_{prev}) - S(t))} at each event
-##'     (and equals it across a censoring-only interval), so \code{life}
-##'     understates the restricted mean survival time. For the exact RMST use
-##'     \code{hvtiRpropensity::ps_rmst()}.}
+##'   \item{\code{life}}{Cumulative integral of the survival function, the
+##'     restricted mean survival time to \eqn{t}. The Kaplan-Meier curve is a
+##'     right-continuous step, constant at \eqn{S(t_{prev})} across
+##'     \eqn{[t_{prev}, t)}, so each interval adds its exact area
+##'     \eqn{\Delta t \, S(t_{prev})}. This matches
+##'     \code{hvtiRpropensity::ps_rmst()} and the \code{rmean} of
+##'     \code{summary.survfit()}. It does \strong{not} reproduce the SAS
+##'     \code{\%kaplan} \code{LIFE} column, which accumulates
+##'     \eqn{\Delta t (3 S(t) - S(t_{prev})) / 2} between events and so
+##'     understates the area.}
 ##'   \item{\code{proplife}}{LIFE / t, the proportionate life length.}
 ##' }
 ##'
@@ -180,7 +178,10 @@ km_extract_tidy <- function(fit, group_col) {
     cum_life <- 0
 
     for (i in seq_len(n)) {
-      if (i == 1L) next          # time=0 anchor row
+      if (i == 1L) {             # time=0 anchor row: no area yet
+        life[i] <- 0
+        next
+      }
       delta_t  <- sub$time[i] - sub$time[i - 1L]
       lag_surv <- sub$surv[i - 1L]
       cur_surv <- sub$surv[i]
@@ -191,8 +192,9 @@ km_extract_tidy <- function(fit, group_col) {
         dens[i] <- (lag_surv - cur_surv) / delta_t
         mid[i]  <- (sub$time[i - 1L] + sub$time[i]) / 2
       }
-      # SAS: LIFE += delta_t * (3*CUM_SURV - LAG_SURV) / 2
-      cum_life <- cum_life + delta_t * (3 * cur_surv - lag_surv) / 2
+      # Exact area: the KM step is constant at S(t_prev) across [t_prev, t).
+      # Not SAS %kaplan's delta_t * (3*CUM_SURV - LAG_SURV) / 2 (#258).
+      cum_life <- cum_life + delta_t * lag_surv
       life[i]  <- cum_life
       prop[i]  <- if (sub$time[i] > 0) cum_life / sub$time[i] else NA_real_
     }
@@ -428,16 +430,17 @@ km_build_loglog_plot <- function(km_df, alpha, curve = "step") {
 
 ##' Build bare integrated survivorship ggplot (PLOTL)
 ##'
-##' Plots the cumulative integral of the survival function (LIFE, by the SAS
-##' formula documented in \code{km_extract_tidy}) against time, matching the
-##' SAS \code{\%kaplan}
+##' Plots the cumulative integral of the survival function (LIFE, the exact
+##' step-function area documented in \code{km_extract_tidy}) against time, the
+##' counterpart of the SAS \code{\%kaplan}
 ##' \code{PLOTL=1} output.  The proportionate life length
 ##' (\code{proplife = LIFE / t}) is also available in \code{km_data} for
-##' a secondary plot.
+##' a secondary plot. The integral is piecewise linear between rows, so it is
+##' drawn with \code{geom_line()}, not as steps.
 ##'
 ##' @param km_df Tidy KM data frame from \code{km_extract_tidy}.
 ##' @return A bare \code{ggplot} object.
-##' @importFrom ggplot2 ggplot aes geom_step
+##' @importFrom ggplot2 ggplot aes geom_line
 ##' @importFrom rlang .data
 ##' @keywords internal
 km_build_life_plot <- function(km_df, alpha) {
@@ -451,7 +454,7 @@ km_build_life_plot <- function(km_df, alpha) {
       color = .data[["strata"]]
     )
   ) +
-    ggplot2::geom_step(alpha = alpha)
+    ggplot2::geom_line(alpha = alpha)
 }
 
 # ---------------------------------------------------------------------------
@@ -496,13 +499,11 @@ km_build_life_plot <- function(km_df, alpha) {
 #'     \code{life}, \code{proplife}, \code{log_cumhaz}, \code{log_time}.
 #'     \code{cumhaz} is the Nelson-Aalen estimate under either \code{method},
 #'     not \eqn{-\log S(t)}, and \code{log_cumhaz} is built on it.
-#'     \code{life} is integrated by the SAS \code{\%kaplan} formula
-#'     \eqn{\Delta t (3 S(t) - S(t_{prev})) / 2}, kept for SAS parity. It is
-#'     not a trapezoid: it falls short of the exact step-function area
-#'     \eqn{\Delta t \, S(t_{prev})} by
-#'     \eqn{\frac{3}{2} \Delta t (S(t_{prev}) - S(t))} at each event, so it
-#'     understates the restricted mean survival time.
-#'     \code{hvtiRpropensity::ps_rmst()} computes the exact RMST.}
+#'     \code{life} is the exact area under the step curve,
+#'     \eqn{\sum \Delta t \, S(t_{prev})}, which is the restricted mean
+#'     survival time and matches \code{hvtiRpropensity::ps_rmst()}. It does
+#'     not reproduce the SAS \code{\%kaplan} \code{LIFE} column, whose
+#'     formula \eqn{\Delta t (3 S(t) - S(t_{prev})) / 2} understates it.}
 #'   \item{\code{$meta}}{Named list: \code{time_col}, \code{event_col},
 #'     \code{group_col}, \code{method}, \code{conf_level},
 #'     \code{report_times}, \code{n_obs} (the \emph{analyzed} cohort),
@@ -718,11 +719,9 @@ print.hv_survival <- function(x, ...) {
 #'       \eqn{\log t}.  Parallel lines across strata support proportional
 #'       hazards.}
 #'     \item{\code{"life"}}{(\code{PLOTL=1}) Integrated survivorship vs
-#'       time, by the SAS \code{\%kaplan} formula
-#'       \eqn{\Delta t (3 S(t) - S(t_{prev})) / 2}, which is neither the
-#'       exact step-function area nor a trapezoid and understates the
-#'       restricted mean survival time; see \code{\link{hv_survival}}. For the
-#'       exact RMST use \code{hvtiRpropensity::ps_rmst()}.}
+#'       time: the exact area under the step curve, which is the restricted
+#'       mean survival time. It differs from the SAS \code{\%kaplan}
+#'       \code{LIFE} column; see \code{\link{hv_survival}}.}
 #'   }
 #' @param conf_int Logical; draw a CI ribbon on the \code{"survival"} plot.
 #'   Default \code{TRUE}.  Ignored for other \code{type} values.
@@ -733,7 +732,8 @@ print.hv_survival <- function(x, ...) {
 #'   time zero, each event and each stratum's last row, and skips censored rows
 #'   between, so a censoring time puts no corner in the line. The CI ribbon
 #'   follows the same rows. Ignored for \code{"hazard"}, which draws points,
-#'   and \code{"life"}.
+#'   and \code{"life"}, which is always a line: the integral of a step curve
+#'   is piecewise linear, so joining its rows is exact.
 #' @param alpha    Line/point transparency in \eqn{[0,1]}.  Default \code{0.8}.
 #' @param ...      Ignored; present for S3 consistency.
 #'

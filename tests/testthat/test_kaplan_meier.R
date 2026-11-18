@@ -331,6 +331,51 @@ test_that("km$data life is non-decreasing within strata", {
   expect_true(all(diff(life_vals) >= -1e-9))
 })
 
+test_that("km$data life is the exact area under the step curve", {
+  # Censorings at 3, 4 and 7 fall between the events at 2, 5 and 9, which is
+  # where the SAS %kaplan formula and the exact area part company.
+  dta <- data.frame(iv_dead = c(2, 3, 4, 5, 7, 9, 10),
+                    dead    = c(1, 0, 0, 1, 0, 1, 0))
+  km  <- hv_survival(dta)
+  s1 <- 6 / 7
+  s2 <- s1 * 3 / 4
+  s3 <- s2 / 2
+  expected <- c(2, 2 + s1, 2 + 2 * s1, 2 + 3 * s1, 2 + 3 * s1 + 2 * s2,
+                2 + 3 * s1 + 4 * s2, 2 + 3 * s1 + 4 * s2 + s3)
+  got <- km$data[km$data$time > 0, ]
+  expect_equal(got$life, expected, tolerance = 1e-12)
+  expect_equal(got$proplife, expected / got$time, tolerance = 1e-12)
+  t0 <- km$data[km$data$time == 0, ]
+  expect_identical(t0$life, 0)
+  expect_true(is.na(t0$proplife))
+})
+
+test_that("plot(km, type = 'life') joins rows with lines, exact between them", {
+  dta <- data.frame(iv_dead = c(2, 3, 4, 5, 7, 9, 10),
+                    dead    = c(1, 0, 0, 1, 0, 1, 0))
+  p   <- plot(hv_survival(dta), type = "life")
+  expect_s3_class(p$layers[[1]]$geom, "GeomLine")
+  # The integral is linear between rows: at t = 2.5 it is 2 + 0.5 * 6/7.
+  ld <- ggplot2::layer_data(p, 1L)
+  expect_equal(stats::approx(ld$x, ld$y, xout = 2.5)$y, 2 + 0.5 * 6 / 7,
+               tolerance = 1e-12)
+  expect_equal(ld$y[ld$x == 0], 0)
+})
+
+test_that("km$data life at the last time equals survival's restricted mean", {
+  dta <- sample_survival_data(n = 300, seed = 11)
+  dta$grp <- rep(c("A", "B"), length.out = nrow(dta))
+  km  <- hv_survival(dta, group_col = "grp")
+  fit <- survival::survfit(survival::Surv(iv_dead, dead) ~ grp, data = dta)
+  for (g in c("A", "B")) {
+    sub  <- km$data[km$data$strata == g, ]
+    tmax <- max(sub$time)
+    sfit <- fit[paste0("grp=", g)]
+    rmst <- summary(sfit, rmean = tmax)$table[["rmean"]]
+    expect_equal(sub$life[sub$time == tmax], rmst, tolerance = 1e-10)
+  }
+})
+
 test_that("km$data hazard is positive at event times", {
   km       <- hv_survival(sample_survival_data(n = 300, seed = 7))
   haz_vals <- km$data$hazard[!is.na(km$data$hazard)]

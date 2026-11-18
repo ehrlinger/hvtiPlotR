@@ -38,18 +38,16 @@ with \code{delta_t > 0}; \code{NA} at censoring times.}
 \item{\code{density}}{Probability density: (S(t_prev) - S(t)) / delta_t.}
 \item{\code{mid_time}}{Midpoint of the interval (t_prev, t], used as
 the x-axis of hazard-rate plots.}
-\item{\code{life}}{Cumulative integral of the survival function, by the
-SAS \code{\%kaplan} formula, kept for SAS parity:
-\eqn{LIFE \mathrel{+}= \Delta t (3 S(t) - S(t_{prev})) / 2}. This is
-\strong{not} a trapezoid. The Kaplan-Meier curve is a right-continuous
-step, constant at \eqn{S(t_{prev})} across \eqn{[t_{prev}, t)}, so the
-exact area of an interval is \eqn{\Delta t \, S(t_{prev})}; the
-trapezoid would be \eqn{\Delta t (S(t) + S(t_{prev})) / 2}. The SAS
-formula falls short of the exact area by
-\eqn{\frac{3}{2} \Delta t (S(t_{prev}) - S(t))} at each event
-(and equals it across a censoring-only interval), so \code{life}
-understates the restricted mean survival time. For the exact RMST use
-\code{hvtiRpropensity::ps_rmst()}.}
+\item{\code{life}}{Cumulative integral of the survival function, the
+restricted mean survival time to \eqn{t}. The Kaplan-Meier curve is a
+right-continuous step, constant at \eqn{S(t_{prev})} across
+\eqn{[t_{prev}, t)}, so each interval adds its exact area
+\eqn{\Delta t \, S(t_{prev})}. This matches
+\code{hvtiRpropensity::ps_rmst()} and the \code{rmean} of
+\code{summary.survfit()}. It does \strong{not} reproduce the SAS
+\code{\%kaplan} \code{LIFE} column, which accumulates
+\eqn{\Delta t (3 S(t) - S(t_{prev})) / 2} between events and so
+understates the area.}
 \item{\code{proplife}}{LIFE / t, the proportionate life length.}
 }
 }

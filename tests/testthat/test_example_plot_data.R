@@ -41,7 +41,7 @@ test_that("hv_survival loglog plot has data", {
 test_that("hv_survival life-table plot has data", {
   km <- hv_survival(sample_survival_data(n = 200, seed = 42))
   expect_plot_has_data(plot(km, type = "life"),
-                       geoms = "GeomStep")
+                       geoms = "GeomLine")
 })
 
 test_that("hv_survival stratified plot preserves all strata in layer data", {

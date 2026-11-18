@@ -51,13 +51,11 @@ Columns: \code{time}, \code{surv}, \code{lower}, \code{upper},
 \code{life}, \code{proplife}, \code{log_cumhaz}, \code{log_time}.
 \code{cumhaz} is the Nelson-Aalen estimate under either \code{method},
 not \eqn{-\log S(t)}, and \code{log_cumhaz} is built on it.
-\code{life} is integrated by the SAS \code{\%kaplan} formula
-\eqn{\Delta t (3 S(t) - S(t_{prev})) / 2}, kept for SAS parity. It is
-not a trapezoid: it falls short of the exact step-function area
-\eqn{\Delta t \, S(t_{prev})} by
-\eqn{\frac{3}{2} \Delta t (S(t_{prev}) - S(t))} at each event, so it
-understates the restricted mean survival time.
-\code{hvtiRpropensity::ps_rmst()} computes the exact RMST.}
+\code{life} is the exact area under the step curve,
+\eqn{\sum \Delta t \, S(t_{prev})}, which is the restricted mean
+survival time and matches \code{hvtiRpropensity::ps_rmst()}. It does
+not reproduce the SAS \code{\%kaplan} \code{LIFE} column, whose
+formula \eqn{\Delta t (3 S(t) - S(t_{prev})) / 2} understates it.}
 \item{\code{$meta}}{Named list: \code{time_col}, \code{event_col},
 \code{group_col}, \code{method}, \code{conf_level},
 \code{report_times}, \code{n_obs} (the \emph{analyzed} cohort),
